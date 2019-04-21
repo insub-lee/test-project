@@ -1,0 +1,10 @@
+export const GET_IFBOARD_CFG_GRP_LIST = 'apps/boards/widgets/widgetSetting/GET_IFBOARD_CFG_GRP_LIST';
+export const GET_IFBOARD_CFG_CATE_LIST = 'apps/boards/widgets/widgetSetting/GET_IFBOARD_CFG_CATE_LIST';
+export const SET_IFBOARD_CFG_CATE_LIST = 'apps/boards/widgets/widgetSetting/SET_IFBOARD_CFG_CATE_LIST';
+export const SET_IFBOARD_CFG_GRP_LIST = 'apps/boards/widgets/widgetSetting/SET_IFBOARD_CFG_GRP_LIST';
+export const UPDATE_GRID_DATA = 'apps/boards/widgets/widgetSetting/UPDATE_GRID_DATA';
+export const DELETE_IFBOARD_CFG = 'apps/boards/widgets/widgetSetting/DELETE_IFBOARD_CFG';
+export const DELETE_BIZIFBOARD_CFG = 'apps/boards/widgets/widgetSetting/DELETE_BIZIFBOARD_CFG';
+export const SET_IFBOARD_CFG = 'apps/boards/widgets/widgetSetting/SET_IFBOARD_CFG';
+export const SET_BIZIFBOARD_CFG = 'apps/boards/widgets/widgetSetting/SET_BIZIFBOARD_CFG';
+export const SET_GR_SEQ = 'apps/boards/widgets/widgetSetting/SET_GR_SEQ';

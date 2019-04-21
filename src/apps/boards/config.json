@@ -1,0 +1,45 @@
+{
+  "appKey": "UIUELCXSNLSWJD:LFJKSLKD",
+  "appInfo": {
+    "path": "/quickmenu/index",
+    "type": "app"
+  },
+  "widgets": [
+    {
+      "title": "quickmenu",
+      "isTitle": true,
+      "desc": "quickmenu",
+      "path": "quickmenu/widgets/index",
+      "settingPath": "quickmenu/widgets/widgetSetting",
+      "type": "app",
+      "size": "1X1",
+      "bgColor": "#FFFFFF",
+      "color": "#999",
+      "functions": [
+        "notify",
+        "close",
+        "reload",
+        "settings",
+        "details"
+      ]
+    },
+    {
+      "title": "quickmenu",
+      "isTitle": true,
+      "desc": "quickmenu",
+      "path": "quickmenu/widgets/index",
+      "settingPath": "quickmenu/widgets/widgetSetting",
+      "type": "app",
+      "size": "1X2",
+      "bgColor": "#FFFFFF",
+      "color": "#999",
+      "functions": [
+        "notify",
+        "close",
+        "reload",
+        "settings",
+        "details"
+      ]
+    }
+  ]
+}

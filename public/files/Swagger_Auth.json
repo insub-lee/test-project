@@ -1,0 +1,200 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a Auth Server.",
+    "version": "1.0.0",
+    "title": "NRP-API-COMMON-AUTH"
+  },
+  "host": "10.158.122.195:17001",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/common/v1/auth/login": {
+      "post": {
+        "tags": [
+          "AuthLoginHandler"
+        ],
+        "summary": "Confirm Login user",
+        "description": "",
+        "operationId": "AuthService",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Auth Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuthLoginParam"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/AuthLoginRes"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "AuthLoginHandler"
+        ],
+        "summary": "Confirm Login user",
+        "description": "",
+        "operationId": "AuthLoginService",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "200": {
+            "description": "[OK]"
+          }
+        }
+      }
+    },
+    
+    "/api/common/v1/auth/ssoCheck": {
+      "get": {
+        "tags": [
+          "AuthSSOCheckHandler"
+        ],
+        "summary": "SSO Check Service",
+        "description": "",
+        "operationId": "SSOCheck",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]: Check not-null fields, fields data type, and arSeq must exist in temp or real DB"
+          },
+          "400": {
+            "description": "[Bad Request]: Invalid schema detected. Check the pushArticleSchema.json"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/AuthSSOCheckRes"
+            }
+          }
+        }
+      }
+    },
+
+    "/api/common/v1/auth/sso": {
+      "get": {
+        "tags": [
+          "AuthSSOHandler"
+        ],
+        "summary": "Auth SSO Service",
+        "description": "",
+        "operationId": "AuthSSO",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Template Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuthSSOParam"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/AuthSSORes"
+            }
+          }
+        }
+      }
+    },
+  },
+
+  "definitions": {
+    "AuthLoginParam": {
+      "type": "object",
+      "properties": {
+        "empNo": {
+          "type": "string"
+        },
+      }
+    },
+    "AuthLoginRes": {
+      "type": "object",
+      "properties": {
+        "empNo": {
+          "type": "string"
+        },
+      }
+    },
+    "AuthSSOCheckRes": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+      }
+    },
+    "AuthSSOParam": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+      }
+    },
+    "AuthSSORes": {
+      "type": "object",
+      "properties": {
+        "uuid": {
+          "type": "string"
+        },
+      }
+    },
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

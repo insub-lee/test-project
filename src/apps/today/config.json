@@ -1,0 +1,36 @@
+{
+    "appInfo": {
+      "path": "/today2/index",
+      "type": "app"
+    },
+    "widgets": [
+      {
+        "title": "Today",
+        "isTitle": true,
+        "desc": "Today",
+        "path": "today2/widgets/index",
+        "settingPath": "today2/widgets/widgetSetting",
+        "type": "app",
+        "size": "1X1",
+        "bgColor": "#FFFFFF",
+        "color": "#999",
+        "functions": [
+          "notify", "close", "reload", "settings", "details"
+        ]
+      },
+      {
+          "title": "Today",
+          "isTitle": true,
+          "desc": "Today",
+          "path": "today2/widgets/index2",
+          "settingPath": "today2/widgets/widgetSetting",
+          "type": "app",
+          "size": "1X2",
+          "bgColor": "#FFFFFF",
+          "color": "#999",
+          "functions": [
+            "notify", "close", "reload", "settings", "details"
+          ]
+      }
+    ]
+  }

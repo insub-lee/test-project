@@ -1,0 +1,10 @@
+export const LOADING_BOOKED_ROOMS_SAGA = 'apps/bookroom/TimeTable/LOADING_BOOKED_ROOMS_SAGA';
+export const LOADING_BOOKED_ROOMS = 'apps/bookroom/TimeTable/LOADING_BOOKED_ROOMS';
+export const LOADING_PARAM_SAGA = 'apps/bookroom/TimeTable/LOADING_PARAM_SAGA';
+export const LOADING_PARAM = 'apps/bookroom/TimeTable/LOADING_PARAM';
+export const LOADING_MEET_ROOM_SAGA = 'apps/bookroom/TimeTable/LOADING_MEET_ROOM_SAGA';
+export const LOADING_MEET_ROOM = 'apps/bookroom/TimeTable/LOADING_MEET_ROOM';
+export const LOADING_MEMBERS_SAGA = 'apps/bookroom/TimeTable/LOADING_MEMBERS_SAGA';
+export const LOADING_MEMBERS = 'apps/bookroom/TimeTable/LOADING_MEMBERES';
+export const LOADING_FAVORITE_LOC_LIST_SAGA = 'apps/bookroom/TimeTable/LOADING_FAVORITE_LOC_LIST_SAGA';
+export const LOADING_FAVORITE_LOC_LIST = 'apps/bookroom/TimeTable/LOADING_FAVORITE_LOC_LIST';

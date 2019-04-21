@@ -1,0 +1,182 @@
+@charset 'UTF-8';
+@viewport { min-width: 320px; }
+
+@font-face{
+	font-family:'Noto Sans Light';
+	src: url(/css/fonts/NotoSansKR-Light.woff2) format('woff2'),
+	url(/css/fonts/NotoSansKR-Light.woff) format('woff'),
+	url(/css/fonts/NotoSansKR-Light.otf) format('opentype');
+	font-style:normal;
+	font-weight:400;
+}
+@font-face{
+	font-family:'Noto Sans Regular';
+	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),
+	url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),
+	url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');
+	font-style:normal;
+	font-weight:400;
+}
+/*
+@font-face{
+	font-family:'Noto Sans Light';
+	src: url(/font/notocvt1/light.eot);
+	src: url(/font/notocvt1/light.eot?#iefix) format('embedded-opentype'),
+	url(/font/notocvt1/light.woff) format('woff'),
+	url(/font/notocvt1/light.otf) format('truetype');
+	font-style:normal;
+	font-weight:400;
+} 
+
+@font-face{
+	font-family:'Noto Sans DemiLight';
+	src: url(/font/notocvt1/demiLight.eot);
+	src: url(/font/notocvt1/demiLight.eot?#iefix) format('embedded-opentype'),
+	url(/font/notocvt1/demiLight.woff) format('woff'),
+	url(/font/notocvt1/demiLight.otf) format('truetype');
+	font-style:normal;
+	font-weight:400;
+} */
+
+/********** Global CSS Here **********/
+* {outline: none;}
+*:focus, .ant-input:focus {outline: 0; border-color: inherit; -webkit-box-shadow: 0 0 0 0 !important; box-shadow: 0 0 0 0 !important;}
+* button, * button:focus {outline: 0; border: 0;}
+
+html h1, html h2, html h3, html h4, html h5, html h6,
+html a, html p, html li, input, textarea, span, div, html, body, html a {
+  margin-bottom: 0;
+  font-family: 'Noto Sans Light', 'Malgun Gothic', 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+}
+
+html {min-height: 100%;}
+html ul {-webkit-padding-start: 0px;list-style: none;margin-bottom: 0;}
+body {padding: 0; margin: 0;}
+ul { padding: 0; }
+button { padding: 0; cursor: pointer; }
+a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
+
+::-webkit-input-placeholder {color: #bababa; font-weight: 400;} /* Chrome ≤56, Safari 5-10.0, iOS Safari 4.2-10.2, Opera 15-43, Opera Mobile >12, Android Browser 2.1-4.4.4, Samsung Internet, UC Browser for Android, QQ Browser */
+:-moz-placeholder {color: #bababa; font-weight: 400;} /* Firefox 4-18 */
+::-moz-placeholder {color: #bababa; font-weight: 400;} /* Firefox 19-50 */
+:-ms-input-placeholder {color: #bababa !important; font-weight: 400 !important;} /* - Internet Explorer 10–11, Internet Explorer Mobile 10-11 */
+::-ms-input-placeholder {color: #bababa; font-weight: 400;} /* Edge (also supports ::-webkit-input-placeholder) */
+::placeholder {color: #bababa; font-weight: 400;} /* CSS Pseudo-Elements Level 4 Editor's Draft */
+.ant-input::placeholder {color: #bababa !important; font-weight: 400;}
+
+/* Select Dropdown */
+.ant-select-dropdown {margin-top: -5px; z-index: 10000;}
+.ant-select-selection, .ant-select-selection:hover, .ant-select-selection:active {border-color:#c1c1c1 !important; box-shadow: none !important;}
+.ant-select.ant-select-focused .ant-select-selection:focus, 
+.ant-select.ant-select-focused .ant-select-selection:active {border-color: #c1c1c1 !important;}
+.ant-select-dropdown-menu-item-active,
+.ant-select-dropdown-menu-item:hover,
+.ant-select-dropdown-menu-item-selected,
+.ant-select-dropdown-menu-item-selected:hover {background-color: #ffffff;}
+.ant-select-arrow:before {color:#727272;}
+
+/* 탭(ant-tabs) */
+.ant-tabs.ant-tabs-card > .ant-tabs-bar {border-bottom-color: #d3d3d3 !important;}
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {background: transparent !important;}
+.ant-tabs, .ant-tabs-nav .ant-tabs-tab:hover {color: rgba(34,34,34,0.7) !important;}
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {color: #222222 !important;}
+.ant-tabs-bar .ant-tabs-nav .ant-tabs-tab {border-top: none !important; border-left: none !important; border-right: none !important;}
+.ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {bottom: 0; background-color: #222222; visibility: visible !important;}
+
+/* 뱃지(Badge) */
+.ant-badge-dot {-webkit-box-shadow: none; box-shadow: none !important;}
+.ant-scroll-number .ant-scroll-number-only {transition: none !important;}
+
+/* Notification [화면 하단에 나오는 알림 메시지] */
+.ant-notification {margin-right: 48px !important;}
+.ant-notification-notice-close {top: 12px !important; right: 16px !important;}
+.ant-notification-notice {padding: 12px 16px !important;}
+.ant-notification-notice-message {display: block !important; color: #222222 !important;	font-size: 14px !important; font-weight: 600; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;} /* 제목 */
+.ant-notification-notice-btn {float: none; display: inline-block; width: 100%; margin-top: 8px !important; text-align: right;}
+
+/* Popover */
+.ant-popover.ant-popover-placement-bottomRight { z-index:999; }
+.ant-popover-content .highlight {color: #fd8c08 !important;}
+
+/* Modal(ant-modal) */
+.ant-modal-mask {background-color: rgba(0, 0, 0, 0.3) !important;}
+.ant-modal-content  input, .ant-modal-content textarea, .ant-modal-content .ant-input {border: 1px solid #cccccc !important; border-radius: 0;}
+.ant-modal-content  input:hover, .ant-modal-content textarea:hover, .ant-modal-content .ant-input:hover,
+.ant-modal-content  input:focus, .ant-modal-content textarea:focus, .ant-modal-content .ant-input:focus {border-color: #cccccc;}
+.ant-modal-content  input:read-only, .ant-modal-content textarea:read-only, .ant-modal-content .ant-input:read-only {background: #f5f5f5; cursor: default;}
+
+/* Calendar(ant-calendar-picker) [비즈스토어 App 심사 > 날짜 선택] */
+.ant-calendar-picker .ant-calendar-picker-input.ant-input {border-color: #c1c1c1; border-radius: 4px;}
+.ant-calendar-picker:hover .ant-calendar-picker-input:not(.ant-input-disabled), .ant-input:hover {border-color: #c1c1c1 !important;}
+.ant-calendar-picker-container {font-family: 'Noto Sans Light', 'Malgun Gothic', 'Roboto', sans-serif;}
+.ant-calendar {border: 1px solid #c1c1c1 !important; font-size: 13px !important;}
+.ant-calendar-today .ant-calendar-date {border-color: #fd8c08 !important; color: #fd8c08 !important;}
+.ant-calendar-selected-day .ant-calendar-date, .ant-calendar-date:hover {background-color: #f5f5f5 !important; color: #ffffff;}
+.ant-calendar-selected-date .ant-calendar-date, .ant-calendar-selected-start-date .ant-calendar-date, .ant-calendar-selected-end-date .ant-calendar-date {background-color: #fd8c08 !important;}
+.ant-calendar-today-btn {color: #fd8c08 !important;}
+.ant-calendar-range .ant-calendar-in-range-cell:before {background: #f5f5f5 !important;}
+.ant-tag.ant-tag-blue {color: #fd8c08 !important; background: #f5f5f5 !important; border-color: #fd8c08 !important;}
+
+/***** 애니메이션(animation) *****/
+/* Widget Header 메뉴 애니메이션 */
+@-webkit-keyframes fadeInDown {from {opacity: 0; top: -35px;} to {opacity: 1; top: 0;}}
+@keyframes fadeInDown {from {opacity: 0; top: -35px;} to {opacity: 1; top: 0;}}
+
+/* React Grid 애니메이션 */
+.react-grid-layout {position: relative; transition: height 200ms ease;}
+.react-grid-item {transition: all 200ms ease; transition-property: left, top;}
+.react-grid-item.cssTransforms {transition-property: transform;}
+/* .react-grid-item.resizing {z-index: 1; will-change: width, height;} */
+.react-grid-item.react-draggable-dragging {transition: none; z-index: 3; will-change: transform;}
+.react-grid-item.react-grid-placeholder {background: red; opacity: 0.2; transition-duration: 100ms; z-index: 2; -webkit-user-select: none;	-moz-user-select: none;	-ms-user-select: none;-o-user-select: none;	user-select: none;}
+/* .react-grid-item > .react-resizable-handle {position: absolute; width: 20px; height: 20px; bottom: 0; right: 0; cursor: se-resize;} */
+/* .react-grid-item > .react-resizable-handle::after {content: ""; position: absolute; right: 3px; bottom: 3px; width: 5px; height: 5px; 
+	border-right: 2px solid rgba(0, 0, 0, 0.4); border-bottom: 2px solid rgba(0, 0, 0, 0.4);} */
+	
+/* react-router-modal 애니메이션 (My Page와 업무그룹 관리 > 위젯 세팅 화면) */ 
+.widgetsetting-modal {position: fixed; top: 0%; left: 100%;/* transform: translate3d(-50%, -50%, 0); */ background-color: white; width: 100%; opacity: 1;} 
+.widgetsetting-modal-in {transition: opacity 0.5s ease-in, left 0.5s ease-in; opacity: 1; left: 0%;} 
+.widgetsetting-modal-out {transition: opacity 1s ease-out, left 1s ease-out; opacity: 1; left: 100%;}
+
+/* react-data-grid focus시 outline 안 생기게 */
+.react-grid-Cell:focus {outline-color: transparent !important;}
+
+/***** 그 외 *****/
+.noBorderBtm {border-bottom: none !important;} /* border 스타일 */
+
+.mainColor {color: #f85123;} /* 색상 */
+
+.ellipsis {text-overflow: ellipsis; white-space: nowrap; overflow: hidden;} /* 생략부호(ellipsis) */
+
+/* .CustomSCRB:after: sortableTree(트리)를 감싸는 custom scrollbar에서
+  IE인 경우 하단이 끝까지 내려가지 않는 현상이 보임. 그에 대한 해결 클래스
+  IE10+ specific styles go here */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+	a, a:hover, a:active {color: inherit !important;} /* antd a color 적용 안되게 */
+	.ant-input { line-height: 1 !important; }
+  .CustomSCRB:after {content: ''; display: block; width: 100%; height: 20px; padding-right: 10px;}
+}
+
+.ag-root ::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+	background-color: #F5F5F5;
+}
+.ag-root ::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+	border-radius: 10px;
+}
+.ag-root ::-webkit-scrollbar-track:hover {
+    background-color:#f4f4f4
+}
+.ag-root ::-webkit-scrollbar-thumb {
+    background-color: rgb(158, 163, 172);	
+	border-radius: 10px;										  
+}
+.ag-root ::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(241, 236, 236, 0.4); 
+}

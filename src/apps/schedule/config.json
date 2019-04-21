@@ -1,0 +1,36 @@
+{
+    "appInfo": {
+      "path": "/schedule/index",
+      "type": "app"
+    },
+    "widgets": [
+      {
+        "title": "Schedule",
+        "isTitle": true,
+        "desc": "Schedule",
+        "path": "schedule/widgets/index",
+        "settingPath": "schedule2/widgets/widgetSetting",
+        "type": "app",
+        "size": "1X1",
+        "bgColor": "#FFFFFF",
+        "color": "#999",
+        "functions": [
+          "notify", "close", "reload", "settings", "details"
+        ]
+      },
+      {
+          "title": "Schedule",
+          "isTitle": true,
+          "desc": "Schedule",
+          "path": "schedule2/widgets/index2",
+          "settingPath": "schedule/widgets/widgetSetting",
+          "type": "app",
+          "size": "1X2",
+          "bgColor": "#FFFFFF",
+          "color": "#999",
+          "functions": [
+            "notify", "close", "reload", "settings", "details"
+          ]
+      }
+    ]
+  }

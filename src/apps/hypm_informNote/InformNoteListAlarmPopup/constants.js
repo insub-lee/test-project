@@ -1,0 +1,9 @@
+export const LOADING_PARAM_SAGA = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_PARAM_SAGA';
+export const LOADING_PARAM = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_PARAM';
+export const LOADING_SDPT_PARAM_SAGA = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_SDPT_PARAM_SAGA';
+export const LOADING_SDPT_PARAM = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_SDPT_PARAM';
+export const LOADING_FL_PARAM_SAGA = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_FL_PARAM_SAGA';
+export const LOADING_FL_PARAM = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_FL_PARAM';
+export const LOADING_ALARM_SEARCH_SAGA = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_ALARM_SEARCH_SAGA';
+export const LOADING_ALARM_SEARCH = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_ALARM_SEARCH';
+export const LOADING_ALARM_SAVE_SAGA = 'src/apps/hyPm/Popup/InformNoteListAlarmPopup/LOADING_ALARM_SAVE_SAGA';

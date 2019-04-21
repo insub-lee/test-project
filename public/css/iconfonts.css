@@ -1,0 +1,94 @@
+@font-face {
+  font-family: 'skhynix-icon';
+  src:  url('../iconfont/skhynix-icon.eot?b9335p');
+  src:  url('../iconfont/skhynix-icon.eot?b9335p#iefix') format('embedded-opentype'),
+    url('../iconfont/skhynix-icon.ttf?b9335p') format('truetype'),
+    url('../iconfont/skhynix-icon.woff?b9335p') format('woff'),
+    url('../iconfont/skhynix-icon.svg?b9335p#skhynix-icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'skhynix-icon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* 1. header 왼쪽 */
+.icon-menu:before {
+  content: "\e908";
+  color: #575958;
+}
+
+/* 2. header 오른쪽 */
+.icon-search:before {
+  content: "\e90a";
+  color: #686868;
+}
+.icon-bell:before {
+  content: "\e901";
+  color: #686868;
+}
+
+.icon-full:before {
+  content: "\e904";
+  color: #686868;
+}
+
+/* sidebar */
+.icon-app:before {
+  content: "\e900";
+  color: #fff;
+}
+.icon-home:before {
+  content: "\e905";
+  color: #fff;
+}
+.icon-setting:before {
+  content: "\e90b";
+  color: #fff;
+}
+
+/* 3. footer 로고(왼쪽) */
+.icon-logo:before {
+  content: "\e907";
+  color: #979797;
+}
+
+/* 4. footer 오른쪽 */
+.icon-list:before {
+  content: "\e906";
+  color: #8a8a8a;
+}
+.icon-contact:before {
+  content: "\e902";
+  color: #8a8a8a;
+}
+.icon-user:before {
+  content: "\e90d";
+  color: #8a8a8a;
+}
+
+/* 5. widget */
+.icon-setting2:before {
+  content: "\e90c";
+  color: #606060;
+}
+.icon-reload:before {
+  content: "\e909";
+  color: #606060;
+}
+.icon-export:before {
+  content: "\e903";
+  color: #606060;
+}

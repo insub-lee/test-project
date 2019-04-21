@@ -1,0 +1,5 @@
+// CICD PROJECT LIST SEARCH
+export const LOADING_PROJECTLISTSEARCH_SAGA = 'src/apps/cicdProject/projectList/LOADING_PROJECTLISTSEARCH_SAGA';
+export const LOADING_PROJECTLISTSEARCH = 'src/apps/cicdProject/projectList/LOADING_PROJECTLISTSEARCH';
+export const LOADING_PROJECTCOUNTINFO_SAGA = 'src/apps/cicdProject/projectList/LOADING_PROJECTCOUNTINFO_SAGA';
+export const LOADING_PROJECTCOUNTINFO = 'src/apps/cicdProject/projectList/LOADING_PROJECTCOUNTINFO';

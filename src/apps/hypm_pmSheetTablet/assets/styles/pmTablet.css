@@ -1,0 +1,82 @@
+@charset "utf-8";
+/* antd reset */
+/* select */
+.hypmTablet .ant-select-dropdown-menu-item {
+  font-size: 16px;
+  color: rgba(0,0,0, .87);
+  line-height: 48px;
+}
+.hypmTablet .ant-select-dropdown-menu-item-active,
+.hypmTablet .ant-select-dropdown-menu-item:focus,
+.hypmTablet .ant-select-dropdown-menu-item:active {
+  background-color: rgba(248,168,165,0.16);
+}
+
+/* dropdown */
+
+.hypmTablet.ant-dropdown {
+  left: auto !important;
+  top: 50px !important;
+  right: 20px;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu {
+  padding: 8px 0;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item, 
+.hypmTablet.ant-dropdown .ant-dropdown-menu-submenu-title {
+  padding: 0 !important;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item:hover {
+  background-color: rgba(248,168,165,0.16);
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item .ant-btn {
+  background-color: transparent !important;
+  border: none !important;
+  width: 184px;
+  height: 48px;
+  color: rgba(0,0,0,0.87) !important;
+  font-size: 14px;
+  text-align: left;
+  padding-left: 0;
+  box-shadow: none;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item .ant-btn > span {
+  display: block;
+  position: relative;
+  padding-left: 68px;
+  height: 48px;
+  line-height: 48px;
+  color: rgba(0,0,0, .87);
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item .ant-btn > span:before {
+  content:"" !important;
+  position: absolute;
+  top: 12px;
+  left: 24px;
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item .ant-btn[disabled] > span {
+  opacity: .5;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item .ant-btn.change > span:before {
+  background: transparent url(../images/Worker.png) no-repeat 50% 50%;
+  background-size: 100% 100%;
+}
+.hypmTablet.ant-dropdown .ant-dropdown-menu-item .ant-btn.logout > span:before {
+  background: transparent url(../images/Logout.png) no-repeat 50% 50%;
+  background-size: 100% 100%;
+}
+
+/* pseudo class reset */
+
+.hypmTablet .ant-btn:hover, .hypmTablet .ant-btn:focus, 
+.hypmTablet .ant-btn:active, .hypmTablet .ant-btn.active {
+  color:  rgba(0,0,0, .87);
+  box-shadow: none !important;
+}
+.hypmTablet [ant-click-animating-without-extra-node='true']::after, 
+.hypmTablet .ant-click-animating-node {
+  content: none !important;
+}

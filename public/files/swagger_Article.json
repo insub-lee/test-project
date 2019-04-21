@@ -1,0 +1,1561 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a ITF Article Server.",
+    "version": "1.0.0",
+    "title": "ITF Article Server"
+  },
+  "host": "10.158.122.198:8081",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/itf/v1/main/articles": {
+      "post": {
+        "tags": [
+          "Article Publish"
+        ],
+        "summary": "Post Article Service",
+        "description": "",
+        "operationId": "Post Article Service",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Article Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArticleInsert"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/articles/{id}": {
+      "put": {
+        "tags": [
+          "Article Publish"
+        ],
+        "summary": "Publish or Update Article Service",
+        "description": "",
+        "operationId": "Publish or Update Article Service",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Article Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArticlePublish"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID of articles to publish or update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]: Invalid schema detected. Check the pushArticleSchema.json"
+          },
+          "405": {
+            "description": "[Invalid Input]: Check not-null fields, fields data type, and arSeq must exist in temp or real DB"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/template": {
+      "post": {
+        "tags": [
+          "Template"
+        ],
+        "summary": "Post Template Service",
+        "description": "",
+        "operationId": "Post Template Service",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Template Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TemplatePost"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/template/{id}": {
+      "put": {
+        "tags": [
+          "Template"
+        ],
+        "summary": "Update Template Table for Delete",
+        "description": "",
+        "operationId": "Update Template Table for Delete",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Template Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TemplatePut"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID of Template to update or publish",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/pub/create": {
+      "post": {
+        "tags": [
+          "Publish Category Management "
+        ],
+        "summary": "create publish category",
+        "description": "",
+        "operationId": "create publish category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Publish Category Create Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PubCategoryCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/pub/mod": {
+      "put": {
+        "tags": [
+          "Publish Category Management "
+        ],
+        "summary": "modify publish category",
+        "description": "",
+        "operationId": "modify publish category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Publish Category Modify Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PubCategoryModify"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/pub/del": {
+      "delete": {
+        "tags": [
+          "Publish Category Management "
+        ],
+        "summary": "delete publish category",
+        "description": "",
+        "operationId": "delete publish category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Publish Category Delete Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PubCategoryDelete"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub/create": {
+      "post": {
+        "tags": [
+          "Subscribe Category Management "
+        ],
+        "summary": "create subscribe category",
+        "description": "",
+        "operationId": "create subscribe category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Subscribe Category Create Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubCategoryCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub/mod": {
+      "put": {
+        "tags": [
+          "Subscribe Category Management "
+        ],
+        "summary": "modify subscribe category",
+        "description": "",
+        "operationId": "modify subscribe category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Subscribe Category Modify Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubCategoryModify"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub/del": {
+      "delete": {
+        "tags": [
+          "Subscribe Category Management "
+        ],
+        "summary": "delete subscribe category",
+        "description": "",
+        "operationId": "delete subscribe category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Subscribe Category Delete Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubCategoryDelete"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/pub": {
+      "post": {
+        "tags": [
+          "Publish Config "
+        ],
+        "summary": "get published category",
+        "description": "",
+        "operationId": "get published category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Meta Data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Meta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/pub/config": {
+      "post": {
+        "tags": [
+          "Publish Config "
+        ],
+        "summary": "set publish category",
+        "description": "",
+        "operationId": "set publish category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PubCategoryConfig"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/pub/configs": {
+      "post": {
+        "tags": [
+          "Publish Config "
+        ],
+        "summary": "set publish categories",
+        "description": "",
+        "operationId": "set publish categories",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PubCategoryConfigs"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub": {
+      "post": {
+        "tags": [
+          "Subscribe Config "
+        ],
+        "summary": "get subscribe category",
+        "description": "",
+        "operationId": "get subscribe category",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Meta Data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Meta"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub/configs": {
+      "post": {
+        "tags": [
+          "Subscribe Config "
+        ],
+        "summary": "set subscribe categories",
+        "description": "",
+        "operationId": "set subscribe categories",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubCategoryConfigs"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub/add": {
+      "post": {
+        "tags": [
+          "Subscribe Config "
+        ],
+        "summary": "subscribe categories position change",
+        "description": "",
+        "operationId": "subscribe categories position change",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubCategoryPositionChange"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/sub/reqcategory": {
+      "post": {
+        "tags": [
+          "Subscribe Config "
+        ],
+        "summary": "Request For Subscribe",
+        "description": "",
+        "operationId": "Request For Subscribe",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CategorySubscribeReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/mypage/delrequest": {
+      "post": {
+        "tags": [
+          "Mypage Config "
+        ],
+        "summary": "mypage delete request",
+        "description": "",
+        "operationId": "mypage delete request",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MypageRequestDel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/mypage/accept": {
+      "post": {
+        "tags": [
+          "Mypage Config "
+        ],
+        "summary": "mypage accept request",
+        "description": "",
+        "operationId": "mypage accept request",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MypageAcceptReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    },
+    "/api/itf/v1/main/categories/mypage/reject": {
+      "post": {
+        "tags": [
+          "Mypage Config "
+        ],
+        "summary": "mypage reject request",
+        "description": "",
+        "operationId": "mypage reject request",
+        "consumes": [
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Config Parameters",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MypageRejectReq"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "[OK]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "405": {
+            "description": "[Invalid Input]"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Meta": {
+      "type": "object",
+      "properties": {
+        "reqType": {
+          "type": "string"
+        },
+        "apiName": {
+          "type": "string"
+        },
+        "uuid": {
+          "type": "string"
+        },
+        "client": {
+          "type": "integer"
+        }
+      }
+    },
+    "ArticleInsert": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "article": {
+              "type": "object",
+              "properties": {
+                "arCtcode": {
+                  "type": "integer"
+                },
+                "arCtname": {
+                  "type": "string"
+                },
+                "arKeyword": {
+                  "type": "string"
+                },
+                "arStatus": {
+                  "type": "integer"
+                },
+                "arSubtitle": {
+                  "type": "string"
+                },
+                "arText": {
+                  "type": "string"
+                },
+                "arThumb": {
+                  "type": "string"
+                },
+                "arTitle": {
+                  "type": "string"
+                },
+                "arType": {
+                  "type": "integer"
+                },
+                "empnoApproval": {
+                  "type": "string"
+                },
+                "empnoRegist": {
+                  "type": "string"
+                }
+              }
+            },
+            "articleContents": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "contDetail": {
+                    "type": "object"
+                  },
+                  "contOrd": {
+                    "type": "integer"
+                  },
+                  "contSeq": {
+                    "type": "integer"
+                  },
+                  "contText": {
+                    "type": "string"
+                  },
+                  "contType": {
+                    "type": "integer"
+                  },
+                  "contVal1": {
+                    "type": "string"
+                  },
+                  "contVal2": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "articleFiles": {
+              "type": "array",
+              "items": {}
+            },
+            "articleReference": {
+              "type": "object",
+              "properties": {
+                "arSeq": {
+                  "type": "integer"
+                },
+                "refSeq": {
+                  "type": "integer"
+                },
+                "refType": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "ArticlePublish": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "article": {
+              "type": "object",
+              "properties": {
+                "arCtcode": {
+                  "type": "integer"
+                },
+                "arCtname": {
+                  "type": "string"
+                },
+                "arKeyword": {
+                  "type": "string"
+                },
+                "arStatus": {
+                  "type": "integer"
+                },
+                "arSubtitle": {
+                  "type": "string"
+                },
+                "arText": {
+                  "type": "string"
+                },
+                "arThumb": {
+                  "type": "string"
+                },
+                "arTitle": {
+                  "type": "string"
+                },
+                "arType": {
+                  "type": "integer"
+                },
+                "empnoApproval": {
+                  "type": "string"
+                },
+                "empnoRegist": {
+                  "type": "string"
+                }
+              }
+            },
+            "articleAuth": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "articleContents": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "contDetail": {
+                    "type": "object"
+                  },
+                  "contOrd": {
+                    "type": "integer"
+                  },
+                  "contSeq": {
+                    "type": "integer"
+                  },
+                  "contText": {
+                    "type": "string"
+                  },
+                  "contType": {
+                    "type": "integer"
+                  },
+                  "contVal1": {
+                    "type": "string"
+                  },
+                  "contVal2": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "articleFiles": {
+              "type": "array",
+              "items": {}
+            },
+            "articleReference": {
+              "type": "object",
+              "properties": {
+                "arSeq": {
+                  "type": "integer"
+                },
+                "refSeq": {
+                  "type": "integer"
+                },
+                "refType": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "TemplatePost": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "template": {
+              "type": "object",
+              "properties": {
+                "empnoRegist": {
+                  "type": "string"
+                },
+                "tpCtcode": {
+                  "type": "integer"
+                },
+                "tpCtname": {
+                  "type": "string"
+                },
+                "tpStatus": {
+                  "type": "integer"
+                },
+                "tpTitle": {
+                  "type": "string"
+                },
+                "tpType": {
+                  "type": "integer"
+                }
+              }
+            },
+            "templateCategories": {
+              "type": "array",
+              "items": {}
+            },
+            "tepmlateContents": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "contDetail": {
+                    "type": "object"
+                  },
+                  "contOrd": {
+                    "type": "integer"
+                  },
+                  "contSeq": {
+                    "type": "integer"
+                  },
+                  "contText": {
+                    "type": "string"
+                  },
+                  "contType": {
+                    "type": "integer"
+                  },
+                  "contVal1": {
+                    "type": "string"
+                  },
+                  "contVal2": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "tpSeq": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "TemplatePut": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "empnoRegist": {
+              "type": "string"
+            },
+            "tpSeq": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "PubCategoryCreate": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctName": {
+              "type": "string"
+            },
+            "upCtSeq": {
+              "type": "integer"
+            },
+            "ctOrd": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "PubCategoryModify": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctName": {
+              "type": "string"
+            },
+            "ctSeq": {
+              "type": "integer"
+            },
+            "upCtSeq": {
+              "type": "integer"
+            },
+            "ctOrd": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "PubCategoryDelete": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctSeq": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "SubCategoryCreate": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctName": {
+              "type": "string"
+            },
+            "upCtSeq": {
+              "type": "integer"
+            },
+            "ctOrd": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "SubCategoryModify": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctName": {
+              "type": "string"
+            },
+            "ctSeq": {
+              "type": "integer"
+            },
+            "upCtSeq": {
+              "type": "integer"
+            },
+            "ctOrd": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "SubCategoryDelete": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctSeq": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "PubCategoryConfig": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctSeq": {
+              "type": "integer"
+            },
+            "categoryAuth": {
+              "type": "object",
+              "properties": {
+                "empnoPub": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "categoryConfig": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "confCode": {
+                    "type": "string"
+                  },
+                  "confName": {
+                    "type": "string"
+                  },
+                  "confValue": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "PubCategoryConfigs": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "configs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "confCode": {
+                          "type": "string"
+                        },
+                        "confName": {
+                          "type": "string"
+                        },
+                        "confValue": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  },
+                  "categoryAuth": {
+                    "type": "object",
+                    "properties": {
+                      "empnoPub": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "ctLevel": {
+                    "type": "integer"
+                  },
+                  "ctName": {
+                    "type": "string"
+                  },
+                  "ctOrd": {
+                    "type": "integer"
+                  },
+                  "ctSeq": {
+                    "type": "integer"
+                  },
+                  "ctType": {
+                    "type": "integer"
+                  },
+                  "empNo": {
+                    "type": "string"
+                  },
+                  "upCtSeq": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "delCategories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "ctSeq": {
+                    "type": "integer"
+                  },
+                  "empNo": {
+                    "type": "string"
+                  },
+                  "upCtSeq": {
+                    "type": "integer"
+                  },
+                  "ctOrd": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "SubCategoryConfigs": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "categories": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "configs": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {}
+                    }
+                  },
+                  "ctLevel": {
+                    "type": "integer"
+                  },
+                  "ctName": {
+                    "type": "string"
+                  },
+                  "ctOrd": {
+                    "type": "integer"
+                  },
+                  "ctSeq": {
+                    "type": "integer"
+                  },
+                  "ctType": {
+                    "type": "integer"
+                  },
+                  "empNo": {
+                    "type": "string"
+                  },
+                  "upCtSeq": {
+                    "type": "integer"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "SubCategoryPositionChange": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "disableCtSeqs": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "enableCtSeqs": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "pubArticle": {
+              "type": "object",
+              "properties": {
+                "empNo": {
+                  "type": "string"
+                },
+                "ctSeq": {
+                  "type": "integer"
+                },
+                "arSeq": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "MypageRequestDel": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "ctSeq": {
+              "type": "integer"
+            },
+            "empNo": {
+              "type": "string"
+            },
+            "empnoPub": {
+              "type": "string"
+            },
+            "unsubscribe": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    },
+    "CategorySubscribeReq": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "pubCategory": {
+              "type": "object",
+              "properties": {
+                "empNo": {
+                  "type": "string"
+                },
+                "ctSeq": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "MypageAcceptReq": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "authVal": {
+              "type": "string"
+            },
+            "ctSeq": {
+              "type": "integer"
+            },
+            "empNo": {
+              "type": "string"
+            },
+            "empnoPub": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "MypageRejectReq": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "authVal": {
+              "type": "string"
+            },
+            "ctSeq": {
+              "type": "integer"
+            },
+            "empNo": {
+              "type": "string"
+            },
+            "empnoPub": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

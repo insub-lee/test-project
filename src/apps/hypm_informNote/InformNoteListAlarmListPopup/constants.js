@@ -1,0 +1,9 @@
+export const LOADING_PARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_PARAM_SAGA';
+export const LOADING_PARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_PARAM';
+export const LOADING_SDPT_PARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_SDPT_PARAM_SAGA';
+export const LOADING_SDPT_PARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_SDPT_PARAM';
+export const LOADING_FL_PARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_FL_PARAM_SAGA';
+export const LOADING_FL_PARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_FL_PARAM';
+export const LOADING_ALARM_SEARCH_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_ALARM_SEARCH_SAGA';
+export const LOADING_ALARM_SEARCH = 'guide/components/Article/Articles/Test/GridSheet/LOADING_ALARM_SEARCH';
+export const LOADING_ALARM_SAVE_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_ALARM_SAVE_SAGA';

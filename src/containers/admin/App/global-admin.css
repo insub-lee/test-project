@@ -1,0 +1,30 @@
+/*** 어드민 공통 스타일 ***/
+/* 페이지 제목 */
+.pageTitle {color: #404040; font-size: 17px;}
+.pageTitle.regist {margin-bottom: 8px;}
+.pageTitle.list {height: 47px; line-height: 42px; border-bottom: 4px solid #efefef;}
+
+/* 입력 폼 테이블 */
+.adminTbl {width: 100%;}
+.adminTbl th {width: 140px; padding: 9px 0 10px 11px; border-bottom: 1px solid #dadbdb; color: #404040; text-align: left; background-color: #f5f5f5;}
+.adminTbl th, .adminTbl th label {font-size: 13px !important; font-weight: 400;}
+.adminTbl th.required label:before {content: ''; position: relative; top: -2px; left: -3px; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background-color: #f85023;} /* 입력 필수 */
+
+.adminTbl td {padding: 9px 163px 10px 20px; border-bottom: 1px solid #dadbdb;}
+.adminTbl td .ant-input {width: 100%; font-size: 13px;}
+
+/* 읽기 모드(상세내용) */
+.modeD .adminTbl td .ant-input, .adminTbl td .ant-input:read-only,
+.adminTbl td .ant-input.readonly {padding-left: 0; background: #ffffff; border-color: #ffffff !important; cursor: default; resize: none;}
+.modeD .adminTbl td .ant-input:hover, .adminTbl td .ant-input.readonly:hover {border-color: #ffffff;}
+
+.adminTbl .has-feedback .ant-form-item-children-icon {top: 20px;} /* 입력값 validation feedback 아이콘 위치 */
+.adminTbl .tipText {height: 19px; font-size: 12px;} /* 입력값 validation feedback 문구 */
+
+/* 목록 하단 버튼 감싸는 래퍼 */
+.buttonWrapper {width: 100%; padding: 20px 0 0;}
+
+/* PmSheet 테이블 */
+.pmSheetTbl {width: 100%;}
+.pmSheetTbl th {width: 120px; padding: 9px 0 10px 11px; border-bottom: 1px solid #dadbdb; color: #404040; text-align: left; background-color: #f5f5f5;}
+.pmSheetTbl td {padding: 9px 163px 10px 20px; border-bottom: 1px solid #dadbdb;}

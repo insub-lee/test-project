@@ -1,0 +1,13 @@
+export const GET_VGROUP_TREE_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/GET_VGROUP_TREE_LIST';
+export const SET_VGROUP_TREE_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/SET_VGROUP_TREE_LIST';
+export const GET_VGROUP_COMBO_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/GET_VGROUP_COMBO_LIST';
+export const SET_VGROUP_COMBO_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/SET_VGROUP_COMBO_LIST';
+export const GET_VGROUP_DTL_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/GET_VGROUP_DTL_INFO';
+export const SET_VGROUP_MANAGER_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/SET_VGROUP_MANAGER_LIST';
+export const SET_VGROUP_MEMBER_U_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/SET_VGROUP_MEMBER_U_LIST';
+export const SET_VGROUP_MEMBER_D_LIST = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/SET_VGROUP_MEMBER_D_LIST';
+export const INSERT_VGROUP_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/INSERT_VGROUP_INFO';
+export const DELETE_VGROUP_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/DELETE_VGROUP_INFO';
+export const UPDATE_VGROUP_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/UPDATE_VGROUP_INFO';
+export const UPDATE_VGROUP_MANAGER = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/UPDATE_VGROUP_MANAGER';
+export const UPDATE_VGROUP_MEMBER = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/UPDATE_VGROUP_MEMBER';

@@ -1,0 +1,37 @@
+{
+  "appKey": "UIUELCXSNLSWJD:LFJKSLKD",
+  "appInfo": {
+    "path": "/banner/index",
+    "type": "app"
+  },
+  "widgets": [
+    {
+      "title": "Banner",
+      "isTitle": true,
+      "desc": "Banner",
+      "path": "banner/widgets/index",
+      "settingPath": "banner/widgets/widgetSetting",
+      "type": "app",
+      "size": "1X1",
+      "bgColor": "#FFFFFF",
+      "color": "#999",
+      "functions": [
+        "notify", "close", "reload", "settings", "details"
+      ]
+    },
+    {
+        "title": "Banner",
+        "isTitle": true,
+        "desc": "Banner",
+        "path": "banner/widgets/index2",
+        "settingPath": "banner/widgets/widgetSetting",
+        "type": "app",
+        "size": "1X2",
+        "bgColor": "#FFFFFF",
+        "color": "#999",
+        "functions": [
+          "notify", "close", "reload", "settings", "details"
+        ]
+    }
+  ]
+}

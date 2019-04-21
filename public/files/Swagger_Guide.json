@@ -1,0 +1,694 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a GIPMS Api-guide Server.",
+    "version": "1.0.0",
+    "title": "GIPMS-GUIDE"
+  },
+  "host": "portalloc.skhynix.com",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/api/gipms/v1/guide/commonCombo": {
+      "post": {
+        "tags": [
+          "CommonCombo"
+        ],
+        "summary": "get combo list",
+        "description": "CommonCombo Des.",
+        "operationId": "CommonCombo",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "CommonCombo Param Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommonComboParam"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/CommonComboRes"
+            }
+          }
+        }
+      },
+    },
+    
+    "/api/gipms/v1/guide/fncLocList": {
+      "post": {
+        "tags": [
+          "FncLocList"
+        ],
+        "summary": "get Function Location List",
+        "description": "Funcion Location 설명",
+        "operationId": "FncLocList",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "FncLocList Param Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FncLocListParam"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]: Check not-null fields, fields data type, and arSeq must exist in temp or real DB"
+          },
+          "400": {
+            "description": "[Bad Request]: Invalid schema detected. Check the pushArticleSchema.json"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/FncLocListRes"
+            }
+          }
+        }
+      }
+    },
+
+    "/api/gipms/v1/guide/loadingTidnParam": {
+      "post": {
+        "tags": [
+          "LoadingTidnParam"
+        ],
+        "summary": "get Technical Id Number List",
+        "description": "",
+        "operationId": "LoadingTidnParam",
+        "consumes": [
+          "application/json",
+          "application/json;charset=UTF-8",
+          "application/jsonp;charset=UTF-8",
+          "application/x-www-form-urlencoded",
+          "text/plain; charset=utf-8"
+        ],
+        "produces": [
+          "application/json",
+          "application/json;charset=UTF-8",
+          "application/jsonp;charset=UTF-8",
+          "text/plain; charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "LoadingTidnParam Param Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoadingTidnParam"
+            }
+          },
+          {
+            "name": "accept",
+            "in": "header",
+            "required": false,
+            "type": "string",
+          },
+          {
+            "name": "META",
+            "in": "header",
+            "required": false,
+            "type": "string",
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/LoadingTidnParamRes"
+            }
+          }
+        }
+      }
+    },
+    "/api/gipms/v1/guide/loadingPmSheetSearchParam": {
+      "post": {
+        "tags": [
+          "loadingPmSheetSearchParam"
+        ],
+        "summary": "get loadingPmSheetSearchParam List",
+        "description": "",
+        "operationId": "loadingPmSheetSearchParam",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "loadingPmSheetSearchParam Param Json",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/loadingPmSheetSearchParam"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "[Invalid Input]"
+          },
+          "400": {
+            "description": "[Bad Request]"
+          },
+          "200": {
+            "description": "[OK]",
+            "schema": {
+              "$ref": "#/definitions/loadingPmSheetSearchParamRes"
+            }
+          }
+        }
+      }
+    },
+  },
+
+  "definitions": {
+    "CommonComboParam": {
+      "type": "object",
+      "properties": {
+        "param": {
+          "type": "object",
+          "properties": {
+            "PARAM_MENU": {
+              "type": "string"
+            },
+            "comboType": {
+              "type": "string"
+            },
+            "PARAM_BEBER": {
+              "type": "string"
+            },
+            "PARAM_STAND": {
+              "type": "string"
+            },
+            "PARAM_ARBPL": {
+              "type": "string"
+            },
+            "MULTI_PARAM_CODEGRUPPE": {
+              "type": "string"
+            },
+            "MULTI_PARAM_TPLNR": {
+              "type": "string"
+            },
+          }
+        }  
+      }
+    },
+    "CommonComboRes": {
+      "type": "object",
+      "properties": {
+        "comboList": {
+          "type": "object",
+          "properties": {
+            "CODE": {
+              "type": "string"
+            },
+            "NAME": {
+              "type": "string"
+            },
+          }
+        }
+      }
+    },
+    "FncLocListParam": {
+      "type": "object",
+      "properties": {
+        "param": {
+          "type": "object",
+          "properties": {
+            "TPLMA": {
+              "type": "string"
+            },
+            "FLTYP": {
+              "type": "string"
+            },
+            "WERKS": {
+              "type": "string"
+            },
+            "MULTI_PARAM_FLTYP": {
+              "type": "string"
+            },
+            "MULTI_PARAM_WERKS": {
+              "type": "string"
+            },
+          }
+        }
+      }
+    },
+    "FncLocListRes": {
+      "type": "object",
+      "properties": {
+        "dataList": {
+          "type": "object",
+          "properties": {
+            "key": {
+              "type": "string"
+            },
+            "PRNT_ID": {
+              "type": "string"
+            },
+            "NAME_KOR": {
+              "type": "string"
+            },
+            "NAME_ENG": {
+              "type": "string"
+            },
+            "NAME_CHN": {
+              "type": "string"
+            },
+            "TPLMA": {
+              "type": "string"
+            },
+            "TPLNR": {
+              "type": "string"
+            },
+            "ID": {
+              "type": "string"
+            },
+            "PLTXT": {
+              "type": "string"
+            },
+            "HASCHILDREN": {
+              "type": "string"
+            },
+            "GUBUN": {
+              "type": "string"
+            },
+            "CLASSES": {
+              "type": "string"
+            },
+          }
+        }
+      }
+    },
+    "LoadingTidnParam": {
+      "type": "object",
+      "properties": {
+        "param": {
+          "type": "object",
+          "properties": {
+            "PARAM_HTIDNR_NOTNULL": {
+              "type": "string"
+            },
+            "P_SWERK": {
+              "type": "string"
+            },
+            "P_BEBER": {
+              "type": "string"
+            },
+            "P_TPLNR": {
+              "type": "string"
+            },
+            "P_STAND": {
+              "type": "string"
+            },
+            "P_ARBPL": {
+              "type": "string"
+            },
+            "PARAM_WERKS": {
+              "type": "string"
+            },
+            "PARAM_BEBER": {
+              "type": "string"
+            },
+            "PARAM_TPLNR": {
+              "type": "string"
+            },
+            "PARAM_STAND": {
+              "type": "string"
+            },
+            "PARAM_STORT": {
+              "type": "string"
+            },
+            "PARAM_ARBPL": {
+              "type": "string"
+            },
+            "PARAM_EQART": {
+              "type": "string"
+            },
+            "PARAM_TIDNR": {
+              "type": "string"
+            },
+            "PARAM_HERST": {
+              "type": "string"
+            },
+            "PARAM_INGRP": {
+              "type": "string"
+            },
+            "MULTI_PARAM_INGRP": {
+              "type": "string"
+            },
+            "MULTI_PARAM_TPLNR": {
+              "type": "string"
+            },
+            "MULTI_PARAM_STAND": {
+              "type": "string"
+            },
+            "MULTI_PARAM_STORT": {
+              "type": "string"
+            },
+            "MULTI_PARAM_ARBPL": {
+              "type": "string"
+            },
+            "MULTI_PARAM_EQART": {
+              "type": "string"
+            },
+            "MULTI_PARAM_TIDNR": {
+              "type": "string"
+            },
+            "MULTI_PARAM_HERST": {
+              "type": "string"
+            },
+            "pick": {
+              "type": "integer"
+            },
+            "PARAM_LIKE_SEARCH_WORD": {
+              "type": "string"
+            },
+          }
+        }
+      }
+    },
+    "LoadingTidnParamRes": {
+      "type": "object",
+      "properties": {
+        "tidnList": {
+          "type": "object",
+          "properties": {
+            "CODE": {
+              "type": "string"
+            },
+            "NAME": {
+              "type": "string"
+            },
+            "EQUNR": {
+              "type": "string"
+            },
+            "TPLNR": {
+              "type": "string"
+            },
+          }
+        }
+      }
+    },
+    "loadingPmSheetSearchParam": {
+      "type": "object",
+      "properties": {
+        "param": {
+          "type": "object",
+          "properties": {
+            "PARAM_U_ID": {
+              "type": "string"
+            },
+            "PARAM_REVISION": {
+              "type": "string"
+            },
+            "PARAM_EQUNR": {
+              "type": "string"
+            },
+            "PARAM_PLNNR": {
+              "type": "string"
+            },
+            "PARAM_PLNAL": {
+              "type": "string"
+            },
+            "PARAM_WERKS": {
+              "type": "string"
+            },
+            "PARAM_TIDNR": {
+              "type": "string"
+            },
+            "tabGubun": {
+              "type": "string"
+            },
+            "MULTI_PARAM_INGPR": {
+              "type": "string"
+            },
+            "PARAM_INGPR": {
+              "type": "string"
+            },
+            "PARAM_BEBER": {
+              "type": "string"
+            },
+            "PARAM_STORT": {
+              "type": "string"
+            },
+            "PARAM_ARBPL": {
+              "type": "string"
+            },
+            "MULTI_PARAM_ARBPL": {
+              "type": "string"
+            },
+            "PARAM_ACTIVE": {
+              "type": "string"
+            },
+            "PARAM_APPROVAL": {
+              "type": "string"
+            },
+            "MULTI_PARAM_TPLNR": {
+              "type": "string"
+            },
+            "MULTI_PARAM_EQART": {
+              "type": "string"
+            },
+            "PARAM_EQART": {
+              "type": "string"
+            },
+            "MULTI_PARAM_EQUNR": {
+              "type": "string"
+            },
+            "MULTI_PARAM_ACTIVE": {
+              "type": "string"
+            },
+          }
+        }  
+      }
+    },
+    "loadingPmSheetSearchParamRes": {
+      "type": "object",
+      "properties": {
+        "dataList": {
+          "type": "object",
+          "properties": {
+            "ROWNUM": {
+              "type": "integer"
+            },
+            "U_ID": {
+              "type": "string"
+            },
+            "REVISION": {
+              "type": "string"
+            },
+            "EQUNR": {
+              "type": "string"
+            },
+            "PLNNR": {
+              "type": "string"
+            },
+            "PLNAL": {
+              "type": "string"
+            },
+            "TARGET": {
+              "type": "string"
+            },
+            "ACTIVE": {
+              "type": "string"
+            },
+            "KTEXT": {
+              "type": "string"
+            },
+            "BEBER": {
+              "type": "string"
+            },
+            "FING": {
+              "type": "string"
+            },
+            "STORT": {
+              "type": "string"
+            },
+            "KTEXT2": {
+              "type": "string"
+            },
+            "TPLNR": {
+              "type": "string"
+            },
+            "PLTXT": {
+              "type": "string"
+            },
+            "EQART": {
+              "type": "string"
+            },
+            "EQKTX": {
+              "type": "string"
+            },
+            "TIDNR": {
+              "type": "string"
+            },
+            "ARBPL": {
+              "type": "string"
+            },
+            "KTEXT3": {
+              "type": "string"
+            },
+            "DUE_PACKAGES": {
+              "type": "string"
+            },
+            "ZYKLOFFSET": {
+              "type": "string"
+            },
+            "ZYKLUNIT": {
+              "type": "string"
+            },
+            "PLAN_SORT": {
+              "type": "string"
+            },
+            "PLAN_COMMENT": {
+              "type": "string"
+            },
+            "REQ_ID": {
+              "type": "string"
+            },
+            "REQ_NAME": {
+              "type": "string"
+            },
+            "REQ_DT": {
+              "type": "string"
+            },
+            "APPROVE_ID": {
+              "type": "string"
+            },
+            "APPROVE_NAME": {
+              "type": "string"
+            },
+            "APPROVE_DT": {
+              "type": "string"
+            },
+            "REQ_COMMENT": {
+              "type": "string"
+            },
+            "APP_COMMENT": {
+              "type": "string"
+            },
+            "ASIS_COMMENT": {
+              "type": "string"
+            },
+            "TOBE_COMMENT": {
+              "type": "string"
+            },
+            "STATUS": {
+              "type": "string"
+            },
+            "SWERK": {
+              "type": "string"
+            },
+            "ACTIVE_TEMP": {
+              "type": "string"
+            },
+            "STATUS_T": {
+              "type": "string"
+            },
+            "WARPL": {
+              "type": "string"
+            },
+            "INGRP_T": {
+              "type": "string"
+            },
+            "CREATE_DATE": {
+              "type": "string"
+            },
+            "STRAT": {
+              "type": "string"
+            },
+            "INGRP": {
+              "type": "string"
+            },
+            "INGRP_NM": {
+              "type": "string"
+            },
+            "CYCLE_CHG_CD": {
+              "type": "string"
+            },
+            "CYCLE_CHG_DESC": {
+              "type": "string"
+            },
+            "PM_CYCLE_COMPLET_DT": {
+              "type": "string"
+            },
+            "MAX_PM_CYCLE": {
+              "type": "string"
+            },
+            "HIQ1_FAB": {
+              "type": "string"
+            },
+            "HIQ1_TECH": {
+              "type": "string"
+            },
+            "HIQ1_OPER": {
+              "type": "string"
+            },
+            "HIQ1_OPER_DESC": {
+              "type": "string"
+            },
+            "HIQ1_GRADE_ID": {
+              "type": "string"
+            },
+            "HIQ1_GRADE_DESC": {
+              "type": "string"
+            },
+            "ISSUE_FREQUENCY": {
+              "type": "string"
+            },
+            "EDMSID": {
+              "type": "string"
+            },
+            "TEST_RESULT": {
+              "type": "string"
+            },
+            "INV_NAM": {
+              "type": "string"
+            },
+          }
+        }
+      }
+    },
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}

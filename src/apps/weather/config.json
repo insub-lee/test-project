@@ -1,0 +1,36 @@
+{
+    "appInfo": {
+      "path": "/weather/index",
+      "type": "app"
+    },
+    "widgets": [
+      {
+        "title": "Weather",
+        "isTitle": true,
+        "desc": "날씨",
+        "path": "weather/widgets/index",
+        "settingPath": "weather/widgets/widgetSetting",
+        "type": "app",
+        "size": "1X1",
+        "bgColor": "#FFFFFF",
+        "color": "#999",
+        "functions": [
+          "notify", "close", "reload", "settings", "details"
+        ]
+      },
+      {
+          "title": "Weather",
+          "isTitle": true,
+          "desc": "날씨",
+          "path": "weather/widgets/index2",
+          "settingPath": "weather/widgets/widgetSetting",
+          "type": "app",
+          "size": "1X2",
+          "bgColor": "#FFFFFF",
+          "color": "#999",
+          "functions": [
+            "notify", "close", "reload", "settings", "details"
+          ]
+      }
+    ]
+  }

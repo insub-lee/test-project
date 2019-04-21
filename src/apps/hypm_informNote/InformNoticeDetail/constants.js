@@ -1,0 +1,14 @@
+export const LOADING_FAB_PARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_FAB_PARAM_SAGA';
+export const LOADING_FAB_PARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_FAB_PARAM';
+export const LOADING_PARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_PARAM_SAGA';
+export const LOADING_PARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_PARAM';
+export const LOADING_TEAMPARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_TEAMPARAM_SAGA';
+export const LOADING_TEAMPARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_TEAMPARAM';
+export const LOADING_SDPTPARAM_SAGA = 'guide/components/Article/Articles/Test/GridSheet/LOADING_SDPTPARAM_SAGA';
+export const LOADING_SDPTPARAM = 'guide/components/Article/Articles/Test/GridSheet/LOADING_SDPTPARAM';
+export const LOADING_INFORMNOTICE_SAGA = 'src/apps/hyPm/Popup/InformNotice/LOADING_INFORMNOTICE_SAGA';
+export const LOADING_INFORMNOTICE = 'src/apps/hyPm/Popup/InformNotice/LOADING_INFORMNOTICE';
+export const LOADING_INFORMNOTICEDETAIL_SAGA = 'src/apps/hyPm/Popup/InformNotice/LOADING_INFORMNOTICEDETAIL_SAGA';
+export const LOADING_INFORMNOTICEDETAIL = 'src/apps/hyPm/Popup/InformNotice/LOADING_INFORMNOTICEDETAIL';
+export const SAVE_INFORMNOTICE_SAGA = 'src/apps/hyPm/Popup/InformNotice/SAVE_INFORMNOTICE_SAGA';
+export const INFORMNOTICE_SAVERESULT = 'src/apps/hyPm/Popup/InformNotice/INFORMNOTICE_SAVERESULT';
