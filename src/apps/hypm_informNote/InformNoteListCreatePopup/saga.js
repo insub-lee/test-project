@@ -2,6 +2,7 @@ import { takeLatest, put, call } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
+import message from 'components/Feedback/message';
 
 export function* loadingParam(payload) {
   const data1 = { // SDPT
