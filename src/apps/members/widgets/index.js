@@ -94,7 +94,7 @@ class Members extends PureComponent {
             <span className='photoWrapper'>
               <img
                 alt='q1'
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${member.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${member.EMP_NO}.jpg`}
                 style={{ width: 50, height:50 }}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
                 onClick={() => { this.onModal(member); }}

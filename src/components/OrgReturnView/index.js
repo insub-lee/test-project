@@ -280,7 +280,7 @@ class OrgReturnView extends Component {
                         >
                           <img
                             className="listImg"
-                            src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
+                            src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
                             alt={lang.get('NAME', user)}
                           />
                         </div>
@@ -313,7 +313,7 @@ class OrgReturnView extends Component {
                         >
                           <img
                             className="listImg"
-                            src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${manager.EMP_NO}.jpg`}
+                            src={`/portalWeb/uploadfile/pictures/${manager.EMP_NO}.jpg`}
                             alt={lang.get('NAME', manager)}
                           />
                         </div>
@@ -505,7 +505,7 @@ class OrgReturnView extends Component {
                       >
                         <img
                           className="listImg"
-                          src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
+                          src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
                           alt={lang.get('NAME', user)}
                         />
                       </div>
@@ -538,7 +538,7 @@ class OrgReturnView extends Component {
                       >
                         <img
                           className="listImg"
-                          src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${manager.EMP_NO}.jpg`}
+                          src={`/portalWeb/uploadfile/pictures/${manager.EMP_NO}.jpg`}
                           alt={lang.get('NAME', manager)}
                         />
                       </div>

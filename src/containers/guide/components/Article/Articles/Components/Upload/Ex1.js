@@ -51,7 +51,7 @@ class App extends PureComponent {
                   {uploadFiles.map(f => (
                     <div>
                       <img
-                        src={`http://10.158.122.195/img/thumb/200x200/${f.seq}`}
+                        src={`/img/thumb/200x200/${f.seq}`}
                         alt={f.fileName}
                         style={{ width: '100%', maxHeight: 100 }}
                       />
@@ -126,7 +126,7 @@ class App extends PureComponent {
                   {uploadFiles.map(f => (
                     <div>
                       <img
-                        src={&#96;http://10.158.122.195/img/thumb/200x200/&#36;{f.seq}&#96;}
+                        src={&#96;/img/thumb/200x200/&#36;{f.seq}&#96;}
                         alt={f.fileName}
                         style={{ width: '100%', maxHeight: 100 }}
                       />

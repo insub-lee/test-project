@@ -202,7 +202,7 @@ class AppDetailForm extends React.Component {
           >
             <div className="appIcon">
               <img
-                // src={`http://10.158.122.195/img/thumb/120x120/${setMyAppDetail.ICON}`}
+                // src={`/img/thumb/120x120/${setMyAppDetail.ICON}`}
                 src={imgUrl.get('120x120', setMyAppDetail.ICON)}
                 alt="APPICON"
               />

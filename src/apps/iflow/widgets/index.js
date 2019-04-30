@@ -84,7 +84,7 @@ class Iflow extends PureComponent {
         <div className="empInfo">
           <div className="empPicWrapper">
             <img
-              src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${val.dependentValues.empNo}.jpg`}
+              src={`/portalWeb/uploadfile/pictures/${val.dependentValues.empNo}.jpg`}
               alt={val.dependentValues.empNo}
               onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               // style={{ height: 20, width: 15 }}

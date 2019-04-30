@@ -77,7 +77,7 @@ class Upload extends React.Component {
     const serviceKey = this.props.serviceKey || '';
 
     if (this.props.serviceEnv !== 'real') {
-      xhr.open('POST', `http://10.158.122.195/upload/?key=${serviceKey}`);
+      xhr.open('POST', `/upload/?key=${serviceKey}`);
     } else {
       xhr.open('POST', `http://cdn.skhynix.com/upload/?key=${serviceKey}`);
     }

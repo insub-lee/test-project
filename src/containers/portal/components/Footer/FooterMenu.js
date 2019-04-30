@@ -9,11 +9,7 @@ const FooterMenu = () => (
       <span className="icon-list" />
       <Button
         type="button"
-        onClick={() => window.open(
-          'http://skynet.skhynix.com/portlet/ptl/cmm/ptlprivacy.jsp',
-          'privacy',
-          'width=766, height=535, toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=yes, resizable=0',
-        )}
+        onClick={() => alert('준비중입니다.')}
         className="personalInfo"
       >{intlObj.get(messages.privateInfo)}
       </Button>
@@ -28,11 +24,7 @@ const FooterMenu = () => (
       <span className="icon-user" />
       <Button
         type="button"
-        onClick={() => window.open(
-            'http://skynet.skhynix.com/portlet/ptl/cmm/ptlhelptel.jsp?addToRoster=y',
-            'HelpTel',
-            'width=575, height=650, toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=0',
-          )}
+        onClick={() => alert('준비중입니다.')}
         className="systemCharger"
       >{intlObj.get(messages.systemManager)}
       </Button>

@@ -489,7 +489,7 @@ class AppSec extends Component {
               <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
               <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
               <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-              <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
+              {/* <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
             </ul>
           </div>
         )}
@@ -534,7 +534,7 @@ class AppSec extends Component {
               <li><Button onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValues.CONF_USER_EMP_NO }, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
               <li><Button onClick={() => this.handleClickToMoveToSite({ EMAIL: val.dependentValues.CONF_USER_EAMIL }, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
               <li><Button onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValue.CONF_USER_EMP_NO }, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-              <li><Button onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValues.CONF_USER_EMP_NO }, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
+              {/* <li><Button onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValues.CONF_USER_EMP_NO }, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
             </ul>
           </div>
         )}
