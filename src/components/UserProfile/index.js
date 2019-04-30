@@ -18,7 +18,7 @@ class UserProfile extends Component {
           <div className="userInfo">
             <div className="myPicture">
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`}
                 alt={profile.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               />

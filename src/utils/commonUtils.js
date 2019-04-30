@@ -59,11 +59,11 @@ const sortBy = (field, reverse, primer) => {
 };
 
 const imgUrl = {
-  get: (size, seq) => `http://10.158.122.195/img/thumb/${size}/${seq}`,
+  get: (size, seq) => `/img/thumb/${size}/${seq}`,
 };
 
 const bannerImgUrl = {
-  get: (size, seq) => `http://10.158.122.195/img/thumb/crop/${size}/${seq}`,
+  get: (size, seq) => `/img/thumb/crop/${size}/${seq}`,
 };
 
 function searchTreeEn(element, matchingAppId, payload) {

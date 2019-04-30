@@ -121,7 +121,7 @@ class QuickMenu extends Component {
 
   getMenu = (quickMenu, widgetWidth, widgetHeight, widgetView) => {
     let tableCellArr = [];
-    let noImagePath = 'app_icon/icon_no_image.png';
+    let noImagePath = '/app_icon/icon_no_image.png';
     {
       for (var i = 0; i < quickMenu.length; i++) {
         const appID = quickMenu[i];

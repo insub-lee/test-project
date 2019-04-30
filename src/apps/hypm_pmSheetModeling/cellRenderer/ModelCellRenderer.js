@@ -21,7 +21,7 @@ export default class ModelCellRenderer extends Component {
       <div className="myPicture">
         {/* {b.map(num => (
           <img
-            src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${num}.jpg`}
+            src={`/portalWeb/uploadfile/pictures/${num}.jpg`}
             alt={num}
             onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
             style={{
@@ -34,7 +34,7 @@ export default class ModelCellRenderer extends Component {
           />
         ))} */}
         {/* <img
-          src="http://skynet.skhynix.com/portalWeb/uploadfile/pictures/X0106067.jpg"
+          src="/portalWeb/uploadfile/pictures/X0106067.jpg"
           alt="X0106067"
           onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
           style={{
@@ -46,7 +46,7 @@ export default class ModelCellRenderer extends Component {
           }}
         />
         <img
-          src="http://skynet.skhynix.com/portalWeb/uploadfile/pictures/X0100947.jpg"
+          src="/portalWeb/uploadfile/pictures/X0100947.jpg"
           alt="X0100947"
           onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
           style={{

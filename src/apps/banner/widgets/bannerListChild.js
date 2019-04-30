@@ -117,7 +117,7 @@ class BannerListChild extends PureComponent {
                                                     {
                                                         uploadFiles.map(f => (
                                                             <img
-                                                                src={`http://10.158.122.195/img/thumb/200x200/${f.seq}`}
+                                                                src={`/img/thumb/200x200/${f.seq}`}
                                                                 alt={f.fileName}
                                                                 style={{ width: '100%', maxHeight: 100 }}
                                                             />

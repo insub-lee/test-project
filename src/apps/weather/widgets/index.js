@@ -602,7 +602,10 @@ class Weather extends Component {
 
   getMonthDay = (day) => {
     // console.log('day', day);
-    const today = new Date(day * 1000);
+    let today = new Date();
+    if(day > 0){
+      today.setDate(new Date().getDate()+day)
+    }
 
     const week = new Array('일', '월', '화', '수', '목', '금', '토');
     const month = '00'.concat(today.getMonth() + 1).slice(-2);
@@ -674,7 +677,7 @@ class Weather extends Component {
                   <Option value='Seoul'>서울</Option>
                   <Option value='Bundang'>분당</Option>
                 </Select>
-                <span className="date">{this.getMonthDay(new Date().getTime()/1000)}</span>
+                <span className="date">{this.getMonthDay(0)}</span>
               </td>
             </tr>
             <tr>
@@ -693,9 +696,9 @@ class Weather extends Component {
         <table className="otherDaysWeather">
           <tbody>
           {
-            futureWether.map(list =>
+            futureWether.map((list, i) =>
               <tr>
-                <td>{this.getMonthDay(list.dt)}</td>
+                <td>{this.getMonthDay(i+1)}</td>
                 <td className="wStateIconSm">{getImageWeather(list.weather[0].icon)}</td>
                 <td>
                   <span className="minTemp">{this.toCelsius(list.temp.min, 'small')}</span>

@@ -54,7 +54,7 @@ class UserProfile extends React.Component {
                 <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
                 <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
                 <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-                <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
+                {/* <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
               </ul>
             </div>
           )}
@@ -79,7 +79,7 @@ class UserProfile extends React.Component {
                 left: '0',
                 width: '100%',
               }}
-              src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
+              src={`/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
               onError={(e) => { e.target.src = noImgPro }}
               alt=""
             />
@@ -105,7 +105,7 @@ class UserProfile extends React.Component {
               left: '0',
               width: '100%',
             }}
-            src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
+            src={`/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
             onError={(e) => { e.target.src = noImgPro }}
             alt=""
           />

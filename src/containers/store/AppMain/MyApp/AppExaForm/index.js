@@ -157,7 +157,7 @@ class AppExaForm extends React.Component {
             <div className="memPic">
               <img
                 className="listImg"
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${item.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${item.EMP_NO}.jpg`}
                 alt={lang.get('NAME', item)}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               />
@@ -185,7 +185,7 @@ class AppExaForm extends React.Component {
             <div className="memPic">
               <img
                 className="listImg"
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${item.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${item.EMP_NO}.jpg`}
                 alt={lang.get('NAME', item)}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               />

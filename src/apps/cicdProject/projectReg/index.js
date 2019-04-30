@@ -530,7 +530,6 @@ class ProjectReg extends React.Component {
                 <tbody>
                   <tr>
                     <td> ※ 위 기준용량 외 추가 용량 필요시 담당자에게 문의 해주세요.<br />
-                    &nbsp;&nbsp;&nbsp;&nbsp;담당자 : 김표성 책임｜이메일 : hyoweong.kim@skhynix.com｜연락처 : 02-518-2528
                     </td>
                   </tr>
                 </tbody>

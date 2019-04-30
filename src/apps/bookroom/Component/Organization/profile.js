@@ -82,13 +82,13 @@ class Profile extends PureComponent {
           <div className="picWrapper">
             {selectedUser.length ?
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${selectedUser.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${selectedUser.EMP_NO}.jpg`}
                 alt={selectedUser.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               /> :
 
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${loadProfile.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${loadProfile.EMP_NO}.jpg`}
                 alt={loadProfile.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               />

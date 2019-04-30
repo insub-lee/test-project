@@ -82,7 +82,7 @@ const notificationConfig = (args) => {
                   className="linkedImg"
                 >
                   <img
-                    src={`http://10.158.122.195/img/thumb/200x200/${image.seq}`}
+                    src={`/img/thumb/200x200/${image.seq}`}
                     alt={image.id}
                   />
                 </a>

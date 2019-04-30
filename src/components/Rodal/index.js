@@ -122,7 +122,7 @@ class testModal extends Component {
                   <li>
                     <div className="empPicture">
                       <img
-                        src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${article.empnoRegist}.jpg`}
+                        src={`/portalWeb/uploadfile/pictures/${article.empnoRegist}.jpg`}
                         alt={article.empnoRegist}
                         onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
                       />

@@ -64,7 +64,7 @@ class AppManagerList extends React.Component {
                                   <li><Button type="button" onClick={() => this.handleClickManagerInfo('talk', user.EMP_NO)} className="icon-talk"><FormattedMessage {...messages.sendToCube} /></Button></li>
                                   <li><Button type="button" onClick={() => this.handleClickManagerInfo('mail', user.EMAIL)} className="icon-mail"><FormattedMessage {...messages.sendToMail} /></Button></li>
                                   <li><Button type="button" onClick={() => this.handleClickManagerInfo('todo', user.EMP_NO)} className="icon-todo"><FormattedMessage {...messages.todoRegist} /></Button></li>
-                                  <li><Button type="button" onClick={() => this.handleClickManagerInfo('hithanks', user.EMP_NO)} className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li>
+                                  {/* <li><Button type="button" onClick={() => this.handleClickManagerInfo('hithanks', user.EMP_NO)} className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
                                 </ul>
                               )}
                               trigger={(this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ? "hover" : ""}
@@ -77,7 +77,7 @@ class AppManagerList extends React.Component {
                               >
                                 <img
                                   className="listImg"
-                                  src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
+                                  src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
                                   alt={lang.get('NAME', user)}
                                 />
                               </div>
