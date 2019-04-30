@@ -25,15 +25,18 @@ class AppManagerList extends React.Component {
   handleClickManagerInfo = (gubun, param1) => {
     if (gubun === 'org') {
       this.props.userProfile(param1, true);
-    } else if (gubun === 'talk') {
-      window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${param1}`);
-    } else if (gubun === 'mail') {
-      window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${param1}`);
-    } else if (gubun === 'todo') {
-      window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${param1}`);
-    } else if (gubun === 'hithanks') {
-      window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${param1}`);
+    }else {
+      alert('준비중입니다.');
     }
+    // } else if (gubun === 'talk') {
+    //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${param1}`);
+    // } else if (gubun === 'mail') {
+    //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${param1}`);
+    // } else if (gubun === 'todo') {
+    //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${param1}`);
+    // } else if (gubun === 'hithanks') {
+    //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${param1}`);
+    // }
   }
 
   render() {
