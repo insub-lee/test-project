@@ -15,7 +15,7 @@ export function* getBizMenu(payload) {
   // get menuId by appId or pageId
   let selectedIndex = -1;
 
-  if (result.length > 1) {
+  if (result.length > 0) {
     const bizMenuData = result[0];
     let children = treeFunc.setFlatDataKey(result, 'MENU_ID');
     children = treeFunc.getTreeFromFlatTreeData(children, rootId);
