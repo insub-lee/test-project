@@ -320,7 +320,7 @@ class BizGroupReg extends Component {
                 grps: convertOrgData(result.checkedGrp, 'id', SEC_TYPE, GRP),
               };
 
-              this.onChangeData({ I: mData });
+              this.onChangeData({ V: mData });
             }}
           />
         );
