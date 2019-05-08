@@ -26,8 +26,6 @@ import SignIn from '../Auth/index';
 import PortalApp from '../../portal/App/index';
 import PortalSingleModeApp from '../../portal/SingleModeApp/index';
 import StoreApp from '../../store/App/index';
-import AdminApp from '../../admin/App/index';
-import GuideApp from '../../guide/App/index';
 import Preview from '../../portal/Preview/index';
 import * as authSelectors from '../Auth/selectors';
 import { basicPath } from '../constants';
@@ -207,18 +205,6 @@ class PublicRoutes extends Component {
           <RestrictedRoute
             path="/store"
             component={StoreApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path="/admin"
-            component={AdminApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path="/guide"
-            component={GuideApp}
             isLoggedIn={isLoggedIn}
             profile={profile}
           />
