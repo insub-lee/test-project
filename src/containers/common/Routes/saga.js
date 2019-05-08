@@ -163,8 +163,10 @@ export function* loadAuthorization(action) {
     });
   }
   if (data.uuid === null || data.uuid === undefined) {
+    console.log('loadAuthorization !!!!', action.payload);
     // const response = yield call(Axios.get, `/api/common/v1/auth/sso?URL=${action.payload.url}`, { });
-    const response = yield call(Axios.get, '/api/common/v1/auth/login?empno=X0101006', {});
+    const username = action.payload.username === undefined || action.payload.username === '' ? 'X0101006' : action.payload.username;
+    const response = yield call(Axios.get, `/api/common/v1/auth/login?empno=${username}`, {});
     data = response;
   }
   console.log('LOAD AUTH:', data);
@@ -186,7 +188,9 @@ export function* loadAuthorization(action) {
 
 export function* checkAuthorization(action) {
   const authInfo = yield select(state => state.get('auth'));
-  const payload = { url: action.payload.url };
+  const payload = {
+    ...action.payload,
+  };
   authInfo.lastUrl = action.payload.url;
   console.log('profile:', authInfo.get('uuid'));
   if (authInfo.get('uuid') !== null) {
