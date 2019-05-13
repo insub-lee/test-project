@@ -7,7 +7,7 @@ export default function () {
       <h3>
         <Link to="/guide">
           {/* {'DEV GUIDE'} */}
-          SK하이닉스 포털 사이트 개발 가이드
+          포털 사이트 개발 가이드
         </Link>
       </h3>
     </div>

@@ -7,19 +7,19 @@ export default defineMessages({
   },
   skManagement: {
     id: 'portal.App.components.Header.skManagement',
-    defaultMessage: 'SK경영',
+    defaultMessage: '경영',
   },
   skMediaCenter: {
     id: 'portal.App.components.Header.skMediaCenter',
-    defaultMessage: 'SK미디어센터',
+    defaultMessage: '미디어센터',
   },
   skCommunity: {
     id: 'portal.App.components.Header.skCommunity',
-    defaultMessage: 'SK커뮤니티',
+    defaultMessage: '커뮤니티',
   },
   skLife: {
     id: 'portal.App.components.Header.skLife',
-    defaultMessage: 'SK라이프',
+    defaultMessage: '라이프',
   },
   linkToTokTok: {
     id: 'portal.App.components.Header.linkToTokTok',
@@ -27,7 +27,7 @@ export default defineMessages({
   },
   skEthicalManagementReport: {
     id: 'portal.App.components.Header.skEthicalManagementReport',
-    defaultMessage: 'SK윤리경영제보',
+    defaultMessage: '윤리경영제보',
   },
   linkToBizStore: {
     id: 'portal.App.components.Header.linkToBizStore',
@@ -35,7 +35,7 @@ export default defineMessages({
   },
   skHynix: {
     id: 'portal.App.components.Header.skHynix',
-    defaultMessage: 'SK하이닉스',
+    defaultMessage: 'Company',
   },
   knowledgeSearch: {
     id: 'portal.App.components.Header.knowledgeSearch',

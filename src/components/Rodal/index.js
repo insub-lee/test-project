@@ -61,7 +61,8 @@ class testModal extends Component {
 
       const c = Detail.replace(/\\/ig, '').replace(/"/ig, '');
       const a = c.indexOf("html:");
-      const b = c.lastIndexOf("addDiv");
+      //const b = c.lastIndexOf("addDiv");
+      const b = c.indexOf("addDiv");
 
       const result = c.substring(a + 5, b - 1);
 
