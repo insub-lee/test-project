@@ -55,7 +55,7 @@ SignIn.propTypes = {
   location: PropTypes.object.isRequired,
   history: PropTypes.object, // eslint-disable-line
   intl: PropTypes.object, // eslint-disable-line
-  isLoggedIn: PropTypes.string.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = dispatch => (
