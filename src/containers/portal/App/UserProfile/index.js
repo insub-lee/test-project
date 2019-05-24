@@ -15,6 +15,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
 import messages from '../UserSearch/messages';
+import { Cookies } from 'react-cookie';
 
 class UserProfile extends Component {
   constructor(props) {
@@ -43,6 +44,12 @@ class UserProfile extends Component {
       case 'org':
         this.onModal();
         break;
+      case 'logout': {
+        const cookies = new Cookies();
+        cookies.remove('token', { path: '/' })
+        window.location.href = '/signin';
+        break;
+      }
       // case 'talk':
       //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${profile.EMP_NO}`);
       //   break;
@@ -76,6 +83,7 @@ class UserProfile extends Component {
           <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
           <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
           <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
+          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-logout">{intlObj.get(messages.logout)}</Button></li>
           {/* <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
         </ul>
       </div>
