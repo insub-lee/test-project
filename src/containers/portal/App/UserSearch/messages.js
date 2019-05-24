@@ -41,4 +41,8 @@ export default defineMessages({
     id: 'portal.App.UserSearch.delete',
     defaultMessage: '삭제',
   },
+  logout: {
+    id: 'portal.App.components.Header.logout',
+    defaultMessage: '로그아웃',
+  },
 });
