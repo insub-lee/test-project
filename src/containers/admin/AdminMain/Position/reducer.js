@@ -6,6 +6,7 @@ const initialState = fromJS({
   pstnTreeData: [],
   titleModalVisible: false,
   selectedIndex: -1,
+  selectedDept: 0,
   tempRowInfo: {},
 });
 

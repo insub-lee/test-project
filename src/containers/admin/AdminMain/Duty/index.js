@@ -34,6 +34,7 @@ class Duty extends React.Component {
     super(prop);
     this.state = {
       selectedIndex: -1,
+      selectedDept: 0,
       mode: 'D',
     };
     this.props.getDutyTreeData();

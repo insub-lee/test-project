@@ -34,6 +34,7 @@ class Dept extends React.Component {
     super(prop);
     this.state = {
       selectedIndex: -1,
+      selectedDept: 0,
       mode: 'D',
     };
     this.props.getDeptTreeData();
@@ -57,6 +58,7 @@ class Dept extends React.Component {
           mode: 'D',
         });
       }
+      console.log('this.state.selectedDept', this.state.selectedDept);
       if (this.state.selectedDept === 0) {
         this.setState({
           selectedDept: nextProps.selectedDept,

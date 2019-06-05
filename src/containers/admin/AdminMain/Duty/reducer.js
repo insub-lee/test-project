@@ -6,6 +6,7 @@ const initialState = fromJS({
   dutyTreeData: [],
   titleModalVisible: false,
   selectedIndex: -1,
+  selectedDept: 0,
   tempRowInfo: {},
 });
 
