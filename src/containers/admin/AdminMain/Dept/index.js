@@ -58,7 +58,6 @@ class Dept extends React.Component {
           mode: 'D',
         });
       }
-      console.log('this.state.selectedDept', this.state.selectedDept);
       if (this.state.selectedDept === 0) {
         this.setState({
           selectedDept: nextProps.selectedDept,
