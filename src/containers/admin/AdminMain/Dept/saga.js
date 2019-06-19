@@ -22,6 +22,10 @@ export function* getDeptComboList(payload) {
     deptComboData: fromJS(response.list),
     selectedDept,
   });
+  yield put({
+    type: actionType.GET_CHANGE_DEPT_DATA,
+    DEPT_ID: selectedDept,
+  });
 }
 
 export function* getDeptTreeData() {

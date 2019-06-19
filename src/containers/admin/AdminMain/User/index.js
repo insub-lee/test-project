@@ -20,7 +20,7 @@ import StyleUserForm from './StyleUserForm';
 import StyleUserDtl from './StyleUserDtl';
 import { LinkBtnLgtGray, BtnDkGray } from '../../../store/components/uielements/buttons.style';
 import messages from './messages';
-import UserRegTree from '../../components/UserRegTree';
+import UserRegTree from './userRegTree';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
@@ -37,7 +37,6 @@ class UserReg extends React.Component {
   constructor(prop) {
     super(prop);
     this.state = {
-      title: `${intlObj.get(messages.titleUserReg)}`,
       modalTitle: '',
       modalType: '',
       empNo: '',
@@ -55,8 +54,8 @@ class UserReg extends React.Component {
       officeTel: '',
       mobileTel: '',
       compCd: '',
-      visible: false,
       selectedNode: {},
+      visible: false,
     };
   }
 
@@ -66,13 +65,30 @@ class UserReg extends React.Component {
 
   // eslint-disable-next-line no-unused-vars
   componentWillReceiveProps(nextProps) {
-
+    console.log('PARENT::componentWillReceiveProps');
   }
 
   getSelectNode = (node) => {
+    console.log(node);
     this.setState({
       selectedNode: node,
     });
+  }
+
+  getSelectDept = (id) => {
+    switch (this.state.modalType) {
+      case 'dept':
+        this.props.getChangeDeptTreeData(id);
+        break;
+      case 'duty':
+        this.props.getChangeDutyTreeData(id);
+        break;
+      case 'pstn':
+        this.props.getChangePSTNTreeData(id);
+        break;
+      default:
+        break;
+    }
   }
 
   handleChange = (e) => {
@@ -137,24 +153,38 @@ class UserReg extends React.Component {
 
   // eslint-disable-next-line arrow-body-style
   regUser = () => {
-    /*
-    this.state.empNo,
-    this.state.nameKor,
-    this.state.nameEng,
-    this.state.nameChn,
-    this.state.email,
-    this.state.statusCd,
-    this.state.deptId,
-    this.state.pstnId,
-    this.state.dutyId,
-    this.state.officeTel,
-    this.state.mobileTel,
-    this.state.compCd,
-    */
-    return '';
+    const userInfo = {
+      empNo: this.state.empNo,
+      nameKor: this.state.nameKor,
+      nameEng: this.state.nameEng,
+      nameChn: this.state.nameChn,
+      email: this.state.email,
+      statusCd: this.state.statusCd,
+      deptId: this.state.deptId,
+      pstnId: this.state.pstnId,
+      dutyId: this.state.dutyId,
+      officeTel: this.state.officeTel,
+      mobileTel: this.state.mobileTel,
+      compCd: this.state.compCd,
+    };
+    this.props.registUser(userInfo);
   }
 
   showModal = (title, type) => {
+    switch (type) {
+      case 'dept':
+        this.props.getDeptComboData();
+        break;
+      case 'duty':
+        this.props.getDutyComboData();
+        break;
+      case 'pstn':
+        this.props.getPSTNComboData();
+        break;
+      default:
+        break;
+    }
+
     this.setState({
       visible: true,
       modalTitle: title,
@@ -166,7 +196,7 @@ class UserReg extends React.Component {
     this.setState({
       visible: false,
       [`${this.state.modalType}Name`]: this.state.selectedNode.NAME_KOR,
-      [`${this.state.modalType}Id`]: this.state.selectedNode.CATG_ID,
+      [`${this.state.modalType}Id`]: this.state.selectedNode.key,
 
     });
   }
@@ -176,13 +206,14 @@ class UserReg extends React.Component {
       visible: false,
       selectedNode: {},
       modalType: '',
+      // eslint-disable-next-line react/no-unused-state
+      treeData: [],
     });
   }
 
   dupCheckEmpNo = (stat) => {
     if (this.state.empNo !== '') {
-      if (stat) return (<font color="RED">{intlObj.get(messages.dupEmpNo)}</font>);
-      return (<font color="GREEN">{intlObj.get(messages.dupEmpNoX)}</font>);
+      if (!stat) return (<font color="RED">{intlObj.get(messages.dupEmpNo)}</font>);
     }
     return '';
   };
@@ -198,7 +229,7 @@ class UserReg extends React.Component {
         sm: { span: 20 },
       },
     };
-
+    console.log('PARENT::render');
     return (
       <div>
         <Modal
@@ -212,11 +243,15 @@ class UserReg extends React.Component {
         >
           <UserRegTree
             treeType={this.state.modalType}
+            treeData={this.props.treeData}
+            comboData={this.props.comboData}
             getSelectNode={this.getSelectNode}
+            getSelectDept={this.getSelectDept}
+            isLoading={this.props.isLoading}
           />
         </Modal>
         <StyleUserDtl>
-          <h3 className="pageTitle regist">{this.state.title}</h3>
+          <h3 className="pageTitle regist">{intlObj.get(messages.titleUserReg)}</h3>
           <StyleUserForm>
             <table className="adminTbl userTbl">
               <tbody>
@@ -231,7 +266,7 @@ class UserReg extends React.Component {
                       {...formItemLayout}
                       hasFeedback
                       validateStatus={
-                        this.state.empNo !== '' && !this.props.getEmpCheck
+                        this.state.empNo !== '' && this.props.getEmpCheck
                           ? 'success'
                           : 'error'
                       }
@@ -242,7 +277,8 @@ class UserReg extends React.Component {
                           name="empNo"
                           value={this.state.empNo}
                           onChange={this.handleChange}
-                          maxLength="200"
+                          onBlur={() => this.state.empNo !== '' && this.props.empCheck(this.state.empNo)}
+                          maxLength={200}
                           id="s1"
                           autoFocus // Default로 포커스를 주는 법
                         />
@@ -273,7 +309,7 @@ class UserReg extends React.Component {
                           name="nameKor"
                           value={this.state.nameKor}
                           onChange={this.handleChange}
-                          maxLength="200"
+                          maxLength={200}
                           id="s2"
                         />
                       </ErrorBoundary>
@@ -297,7 +333,7 @@ class UserReg extends React.Component {
                           name="nameEng"
                           value={this.state.nameEng}
                           onChange={this.handleChange}
-                          maxLength="200"
+                          maxLength={200}
                           // style={{ width: '60%', marginRight: 10 }}
                           id="s3"
                         />
@@ -322,7 +358,7 @@ class UserReg extends React.Component {
                           name="nameChn"
                           value={this.state.nameChn}
                           onChange={this.handleChange}
-                          maxLength="200"
+                          maxLength={200}
                           // style={{ width: '60%', marginRight: 10 }}
                           id="s4"
                         />
@@ -347,12 +383,11 @@ class UserReg extends React.Component {
                     >
                       <ErrorBoundary>
                         <Input
-                          type="email"
                           placeholder={intlObj.get(messages.lblEmailLPlaceholder)}
                           name="email"
                           value={this.state.email}
                           onChange={this.handleChange}
-                          maxLength="380"
+                          maxLength={380}
                           id="s5"
                           style={{ width: 285, marginRight: 10 }}
                         />
@@ -368,15 +403,7 @@ class UserReg extends React.Component {
                     </label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={
-                        this.state.statusCd !== ''
-                          ? 'success'
-                          : 'error'
-                      }
-                    >
+                    <FormItem {...formItemLayout}>
                       <ErrorBoundary>
                         <Select name="statusCd" onChange={this.handleStatusChange} value={this.state.statusCd} id="s6" style={{ width: 300 }}>
                           <Option value="C">재직</Option>
@@ -411,7 +438,7 @@ class UserReg extends React.Component {
                           name="deptName"
                           value={this.state.deptName}
                           onClick={() => this.showModal(intlObj.get(messages.titleUserDept), 'dept')}
-                          maxLength="380"
+                          maxLength={380}
                           id="s7"
                           style={{ width: 285, marginRight: 10 }}
                         />
@@ -442,7 +469,7 @@ class UserReg extends React.Component {
                           name="deptName"
                           value={this.state.pstnName}
                           onClick={() => this.showModal(intlObj.get(messages.titleUserPSTN), 'pstn')}
-                          maxLength="380"
+                          maxLength={380}
                           id="s8"
                           style={{ width: 285, marginRight: 10 }}
                         />
@@ -473,7 +500,7 @@ class UserReg extends React.Component {
                           name="deptName"
                           value={this.state.dutyName}
                           onClick={() => this.showModal(intlObj.get(messages.titleUserDuty), 'duty')}
-                          maxLength="380"
+                          maxLength={380}
                           id="s9"
                           style={{ width: 285, marginRight: 10 }}
                         />
@@ -493,9 +520,9 @@ class UserReg extends React.Component {
                       {...formItemLayout}
                       hasFeedback
                       validateStatus={
-                        this.state.officeTel !== '' && phonelValid(this.state.officeTel)
-                          ? 'success'
-                          : this.state.officeTel !== '' && 'error'
+                        this.state.officeTel !== '' && !phonelValid(this.state.officeTel)
+                          ? 'error'
+                          : ''
                       }
                     >
                       <ErrorBoundary>
@@ -504,7 +531,7 @@ class UserReg extends React.Component {
                           name="officeTel"
                           value={this.state.officeTel}
                           onChange={this.handleChange}
-                          maxLength="200"
+                          maxLength={200}
                           id="s10"
                         />
                       </ErrorBoundary>
@@ -523,9 +550,9 @@ class UserReg extends React.Component {
                       {...formItemLayout}
                       hasFeedback
                       validateStatus={
-                        this.state.mobileTel !== '' && phonelValid(this.state.mobileTel)
-                          ? 'success'
-                          : this.state.mobileTel !== '' && 'error'
+                        this.state.mobileTel !== '' && !phonelValid(this.state.mobileTel)
+                          ? 'error'
+                          : ''
                       }
                     >
                       <ErrorBoundary>
@@ -534,7 +561,7 @@ class UserReg extends React.Component {
                           name="mobileTel"
                           value={this.state.mobileTel}
                           onChange={this.handleChange}
-                          maxLength="200"
+                          maxLength={200}
                           id="s11"
                         />
                       </ErrorBoundary>
@@ -557,7 +584,7 @@ class UserReg extends React.Component {
                           placeholder={intlObj.get(messages.lblCompPlaceholder)}
                           name="compCd"
                           value={this.state.compCd}
-                          maxLength="200"
+                          maxLength={200}
                           id="s12"
                         />
                       </ErrorBoundary>
@@ -590,21 +617,42 @@ class UserReg extends React.Component {
 
 UserReg.propTypes = {
   getEmpCheck: PropTypes.bool, //eslint-disable-line
+  treeData: PropTypes.array, //eslint-disable-line
+  isLoading: PropTypes.bool, //eslint-disable-line
+  registUser: PropTypes.func, //eslint-disable-line
+  comboData: PropTypes.array, //eslint-disable-line
+  getChangeDeptTreeData: PropTypes.func, //eslint-disable-line
+  getDeptComboData: PropTypes.func, //eslint-disable-line
+  getChangeDutyTreeData: PropTypes.func, //eslint-disable-line
+  getDutyComboData: PropTypes.func, //eslint-disable-line
+  getChangePSTNTreeData: PropTypes.func, //eslint-disable-line
+  getPSTNComboData: PropTypes.func, //eslint-disable-line
+  empCheck: PropTypes.func, //eslint-disable-line
 };
 
 const mapDispatchToProps = dispatch => ({
-  empCheck: empNo =>
-    dispatch(actions.checkEmpNo(empNo)),
+  empCheck: empNo => dispatch(actions.checkEmpNo(empNo)),
+  getChangeDeptTreeData: DEPT_ID => dispatch(actions.getChangeDeptTreeData(DEPT_ID)),
+  getDeptComboData: () => dispatch(actions.getDeptComboData()),
+  getChangeDutyTreeData: DUTY_ID => dispatch(actions.getChangeDutyTreeData(DUTY_ID)),
+  getDutyComboData: () => dispatch(actions.getDutyComboData()),
+  getChangePSTNTreeData: PSTN_ID => dispatch(actions.getChangePSTNTreeData(PSTN_ID)),
+  getPSTNComboData: () => dispatch(actions.getPSTNComboData()),
+  registUser: userInfo => dispatch(actions.insertUser(userInfo)),
 });
 
 const mapStateToProps = createStructuredSelector({
   getEmpCheck: selectors.makeEmpNoCheck(),
+  comboData: selectors.makeSelectComboData(),
+  treeData: selectors.makeTreeData(),
+  isLoading: selectors.makeIsLoading(),
 });
 
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
+
 const withSaga = injectSaga({ key: 'UserReg', saga });
 const withReducer = injectReducer({ key: 'UserReg', reducer });
 

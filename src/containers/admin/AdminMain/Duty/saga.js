@@ -22,6 +22,10 @@ export function* getDutyComboList(payload) {
     dutyComboData: fromJS(response.list),
     selectedDept,
   });
+  yield put({
+    type: actionType.GET_CHANGE_DUTY_DATA,
+    DUTY_ID: selectedDept,
+  });
 }
 
 export function* getDutyTreeData() {

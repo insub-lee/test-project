@@ -37,7 +37,7 @@ class Duty extends React.Component {
       selectedDept: 0,
       mode: 'D',
     };
-    this.props.getDutyTreeData();
+    // this.props.getDutyTreeData();
     this.props.getDutyComboList(0);
   }
 
@@ -92,6 +92,7 @@ class Duty extends React.Component {
     });
     if (val === 0) { // 최상위 등록
       this.setState({ mode: 'I' });
+      this.textKor.focus();
     }
     this.props.getChangeDutyTreeData(val);
   }

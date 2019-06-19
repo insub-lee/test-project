@@ -22,6 +22,10 @@ export function* getPstnComboList(payload) {
     pstnComboData: fromJS(response.list),
     selectedDept,
   });
+  yield put({
+    type: actionType.GET_CHANGE_PSTN_DATA,
+    PSTN_ID: selectedDept,
+  });
 }
 
 export function* getPstnTreeData() {

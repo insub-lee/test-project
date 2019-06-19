@@ -480,14 +480,14 @@ class SiteReg extends React.Component {
         }
         <ErrorBoundary>
           <Organization
-            isDeptSelectbox={false}
-            isTreeCheckbox={false}
+            isDeptSelectbox={true}
+            isTreeCheckbox={true}
             show={this.state.allOrgShow}
             closeModal={this.allOrgClose}
             userTab={true}
             pstnTab={true}
             dutyTab={true}
-            grpTab={false}
+            grpTab={true}
             getDataFromOrganization={getDataFromOrganizationAll}
             // 조직도로 가져갈 데이터
             selectedUsers={this.state.userSetMembers.slice()}
