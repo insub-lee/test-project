@@ -47,7 +47,7 @@ FileThemeTreeNodeRenderer.defaultProps = {
   swapFrom: null,
   swapDepth: null,
   swapLength: null,
-  canDrop: false,
+  canDrop: () => false,
   draggedNode: null,
 };
 
@@ -66,7 +66,7 @@ FileThemeTreeNodeRenderer.propTypes = {
   // Drop target
   connectDropTarget: PropTypes.func.isRequired,
   isOver: PropTypes.bool.isRequired,
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.func,
   draggedNode: PropTypes.shape({}),
 
   // used in dndManager

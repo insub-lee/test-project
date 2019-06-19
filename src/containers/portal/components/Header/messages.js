@@ -3,23 +3,23 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   skPortalTitle: {
     id: 'portal.App.components.Header.skPortalTitle',
-    defaultMessage: '차세대반응형포털',
+    defaultMessage: 'WORKPLACE',
   },
   skManagement: {
     id: 'portal.App.components.Header.skManagement',
-    defaultMessage: '경영',
+    defaultMessage: 'SK경영',
   },
   skMediaCenter: {
     id: 'portal.App.components.Header.skMediaCenter',
-    defaultMessage: '미디어센터',
+    defaultMessage: 'SK미디어센터',
   },
   skCommunity: {
     id: 'portal.App.components.Header.skCommunity',
-    defaultMessage: '커뮤니티',
+    defaultMessage: 'SK커뮤니티',
   },
   skLife: {
     id: 'portal.App.components.Header.skLife',
-    defaultMessage: '라이프',
+    defaultMessage: 'SK라이프',
   },
   linkToTokTok: {
     id: 'portal.App.components.Header.linkToTokTok',
@@ -27,7 +27,7 @@ export default defineMessages({
   },
   skEthicalManagementReport: {
     id: 'portal.App.components.Header.skEthicalManagementReport',
-    defaultMessage: '윤리경영제보',
+    defaultMessage: 'SK윤리경영제보',
   },
   linkToBizStore: {
     id: 'portal.App.components.Header.linkToBizStore',
@@ -35,7 +35,7 @@ export default defineMessages({
   },
   skHynix: {
     id: 'portal.App.components.Header.skHynix',
-    defaultMessage: 'Company',
+    defaultMessage: 'SK하이닉스',
   },
   knowledgeSearch: {
     id: 'portal.App.components.Header.knowledgeSearch',

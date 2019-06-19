@@ -53,7 +53,7 @@ const RenderSearchHistoryView = (props, t) => {
                                   <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
                                   <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
                                   <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-                                  {/* <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
+                                  <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
                                 </ul>
                                 : <div />
                               }
@@ -65,11 +65,11 @@ const RenderSearchHistoryView = (props, t) => {
                           <div
                             className="listDivImg"
                             role="presentation"
-                            onError={(e) => { e.target.src = '/no_img_pro_old.jpg'; }}
+                            onError={(e) => { e.target.src = 'http://skynet.skhynix.com/portalWeb/styles/images/common/no_img_pro90x120.jpg'; }}
                           >
                             <img
                               className="listImg"
-                              src={`/uploadfile/pictures/${history.EMP_NO}.jpg`}
+                              src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${history.EMP_NO}.jpg`}
                               alt={lang.get('NAME', history)}
                             />
                           </div>
@@ -162,7 +162,7 @@ const RenderSearchView = (props, t) => {
                               <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'talk')} type="button" className="icon-talk"><FormattedMessage {...messages.sendToCube} /></Button></li>
                               <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'mail')} type="button" className="icon-mail"><FormattedMessage {...messages.sendToMail} /></Button></li>
                               <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'todo')} type="button" className="icon-todo"><FormattedMessage {...messages.todoRegist} /></Button></li>
-                              {/* <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
+                              <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li>
                             </ul>
                           )}
                           trigger="hover"
@@ -171,11 +171,11 @@ const RenderSearchView = (props, t) => {
                           <div
                             className="listDivImg"
                             role="presentation"
-                            onError={(e) => { e.target.src = '/portalWeb/styles/images/common/no_img_pro90x120.jpg'; }}
+                            onError={(e) => { e.target.src = 'http://skynet.skhynix.com/portalWeb/styles/images/common/no_img_pro90x120.jpg'; }}
                           >
                             <img
                               className="listImg"
-                              src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
+                              src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
                               alt={lang.get('NAME', user)}
                             />
                           </div>
@@ -262,20 +262,19 @@ class UserSearch extends Component {
       case 'org':
         this.onModal();
         break;
-      // case 'talk':
-      //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${user.EMP_NO}`);
-      //   break;
-      // case 'mail':
-      //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${user.EMAIL}`);
-      //   break;
-      // case 'todo':
-      //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${user.EMP_NO}`);
-      //   break;
-      // case 'hithanks':
-      //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${user.EMP_NO}`);
-      //   break;
+      case 'talk':
+        window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${user.EMP_NO}`);
+        break;
+      case 'mail':
+        window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${user.EMAIL}`);
+        break;
+      case 'todo':
+        window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${user.EMP_NO}`);
+        break;
+      case 'hithanks':
+        window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${user.EMP_NO}`);
+        break;
       default:
-        alert('준비중입니다.');
         return false;
     }
   }

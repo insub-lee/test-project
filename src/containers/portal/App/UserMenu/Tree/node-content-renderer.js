@@ -161,7 +161,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label="ordinary"
                 // className={styles.ordinaryButton}
-                className={`${styles.ordinaryButton} ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
+                className={`${styles.ordinaryButton} ${node.active ? 'active' : ''}`}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
               />
             </div>
@@ -191,8 +191,8 @@ class CustomThemeNodeContentRenderer extends Component {
 
 CustomThemeNodeContentRenderer.defaultProps = {
   buttons: [],
-  canDrag: false,
-  canDrop: false,
+  canDrag: () => false,
+  canDrop: () => false,
   className: '',
   draggedNode: null,
   icons: [],
@@ -212,7 +212,7 @@ CustomThemeNodeContentRenderer.defaultProps = {
 
 CustomThemeNodeContentRenderer.propTypes = {
   buttons: PropTypes.arrayOf(PropTypes.node),
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.func,
   className: PropTypes.string,
   icons: PropTypes.arrayOf(PropTypes.node),
   isSearchFocus: PropTypes.bool,
@@ -241,7 +241,7 @@ CustomThemeNodeContentRenderer.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   parentNode: PropTypes.shape({}), // Needed for dndManager
   // Drop target
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.func,
   isOver: PropTypes.bool.isRequired,
 };
 

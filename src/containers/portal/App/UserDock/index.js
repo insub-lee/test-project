@@ -43,6 +43,8 @@ class UserDock extends React.Component {
         bottom: '20px',
         right: '-20%',
       },
+      dockItemList: [],
+      dockDivArray: [],
       // 독의 세팅버튼 클릭 여부
       isSettingArea: false,
 
@@ -76,6 +78,8 @@ class UserDock extends React.Component {
       view,
       dockFixedYn,
       dockIconType,
+      dockCallbacks,
+      dockAppList,
     } = this.props;
 
     if (prevProps.view !== view ||
@@ -84,9 +88,105 @@ class UserDock extends React.Component {
       this.setStyleObj();
     }
 
-    // DockItem을 추가했을 경우, 독의 스크롤을 내려주는기능
+    // DockItem을 추가했을 경우, 독의 스크롤을 내려주는 기능
     if (this.props.dockAppList.length > prevProps.dockAppList.length && this.ReactScrollbar && this.ReactScrollbar.scrollArea.children[1]) {
       this.ReactScrollbar.updateSizeForAddDockItem((this.ReactScrollbar.state.scrollAreaHeight - this.ReactScrollbar.state.scrollWrapperHeight) + 70);
+    }
+
+    if ((this.props.dockAppList !== prevProps.dockAppList && this.props.dockAppList.length > 0)
+      || this.props.dockIconType !== prevProps.dockIconType
+      || this.props.view !== prevProps.view) {
+      /*
+        dockAppList에 변화가 있을 때마다 dockItemList는 새로 생성된다 (새로운 객체)
+        그런데 dockItemList 내부에 들어가는 <DockItem> 컴포넌트의 경우, 코드상에는 새로 생성되는 것 처럼 보이지만,
+        실제로 <DockItem> 컴포넌트의 생성자는 호출되지 않고 render()만 호출된다..............
+      */
+
+      switch (isDesktop(view)) {
+        case true: {
+          // 데스크탑일 경우
+          const dockItemList = this.props.dockAppList.map((o) => {
+            const dockItemStyleObject = this.makeDockItemStyleObject(o);
+            return (
+              <DockItem
+                key={o.DOCK_ID}
+                dockItem={o}
+                dockItemStyleObject={dockItemStyleObject}
+                dndChangePosition={dockCallbacks.handleDndChangePosition}
+                dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
+                exitDockItem={dockCallbacks.handleExitDockItem}
+                fixDockItem={dockCallbacks.handleFixDockItem}
+                unfixDockItem={dockCallbacks.handleUnfixDockItem}
+                dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
+                execPage={this.props.execPage}
+                changeIsDockItemDragged={this.changeIsDockItemDragged}
+                dockIconType={dockIconType}
+                view={view}
+                isClose={
+                  this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false
+                }
+                setIsCloseToTrue={this.props.setIsCloseToTrue}
+                setIsCloseToFalse={this.props.setIsCloseToFalse}
+                history={this.props.history}
+              />);
+          });
+          this.setDockItemList(dockItemList);
+          break;
+        }
+        default: {
+          // 모바일, 태블릿
+
+          const dockItemWidth = 70;
+          const dockDivArray = [];
+          // 하나의 dockDiv에 들어갈 dockItem의 개수
+          let dockItemNumberInDockDiv = Math.floor(window.innerWidth / dockItemWidth);
+          if (dockItemNumberInDockDiv * 10 > window.innerWidth - (dockItemWidth * dockItemNumberInDockDiv)) {
+            dockItemNumberInDockDiv -= 1;
+          }
+          if (dockAppList.length < dockItemNumberInDockDiv) {
+            dockItemNumberInDockDiv = dockAppList.length;
+          }
+
+          let content = [];
+          this.props.dockAppList.forEach((o, i, arr) => {
+            const dockItemStyleObject = this.makeDockItemStyleObject(o, i, arr, dockItemNumberInDockDiv);
+            content.push(<DockItem
+              key={o.DOCK_ID}
+              dockItem={o}
+              dockItemStyleObject={dockItemStyleObject}
+              dndChangePosition={dockCallbacks.handleDndChangePosition}
+              dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
+              exitDockItem={dockCallbacks.handleExitDockItem}
+              fixDockItem={dockCallbacks.handleFixDockItem}
+              unfixDockItem={dockCallbacks.handleUnfixDockItem}
+              dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
+              execPage={this.props.execPage}
+              changeIsDockItemDragged={this.changeIsDockItemDragged}
+              dockIconType={dockIconType}
+              view={view}
+              isClose={
+                this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false
+              }
+              setIsCloseToTrue={this.props.setIsCloseToTrue}
+              setIsCloseToFalse={this.props.setIsCloseToFalse}
+              history={this.props.history}
+            />);
+            if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
+              const dockDiv = (
+                <div
+                  className="dockDiv positionBottom"
+                >
+                  {content}
+                </div>
+              );
+              dockDivArray.push(dockDiv);
+              content = [];
+            }
+          });
+          this.setDockDivArray(dockDivArray);
+          break;
+        }
+      }
     }
   }
 
@@ -97,6 +197,18 @@ class UserDock extends React.Component {
   onDragDockVerticalScrollbar = (top) => {
     this.setState({
       pos: top,
+    });
+  }
+
+  setDockDivArray = (dockDivArray) => {
+    this.setState({
+      dockDivArray,
+    });
+  }
+
+  setDockItemList = (dockItemList) => {
+    this.setState({
+      dockItemList,
     });
   }
 
@@ -220,14 +332,8 @@ class UserDock extends React.Component {
       appYn,
       dockIconType,
       handleSetDockIconType,
-      isClose,
-      setIsCloseToTrue,
-      setIsCloseToFalse,
-
-      execApp,
     } = this.props;
 
-    const dockItemHeight = dockIconType === 'MAX' ? '70px' : '34px';
     const dockItemHeightWithoutPx = dockIconType === 'MAX' ? 70 : 34;
 
     const {
@@ -263,13 +369,6 @@ class UserDock extends React.Component {
           setFloattingClassHidden={this.setFloattingClassHidden}
         >
           {() => {
-            const content = [];
-
-            const {
-              execPage,
-              dockAppList,
-            } = this.props;
-
             const myScrollbar = {
               width: '100%',
               height: '100%',
@@ -282,56 +381,6 @@ class UserDock extends React.Component {
               isDockItemDragged,
             } = this.state;
 
-            if (dockAppList !== undefined && dockAppList.length > 0) {
-              for (let i = 0; i < dockAppList.length; i += 1) {
-                if (dockAppList[i].DOCK_YN === 'Y' || dockAppList[i].EXEC_YN === 'Y') {
-                  const dockItemStyleObject = {
-                    height: dockItemHeight,
-                    width: dockIconType === 'MAX' ? '70px' : '34px',
-
-                    marginTop: '9px',
-                    marginRight: 'auto',
-                    marginBottom: 'auto',
-                    marginLeft: dockIconType === 'MAX' ? '9px' : '4px',
-                  };
-
-                  // 홈 앱
-                if (dockAppList[i].HOME_YN === 'Y') {
-                  dockItemStyleObject.marginTop = (dockIconType === 'MAX' && isDesktopValue) ? '9px' : '4px';
-                } else {
-                  // 일반 앱
-                  dockItemStyleObject.marginTop = isDesktopValue ? '9px' : '4px';
-                }
-
-                  content.push(<DockItem
-                    key={i}
-                    dockItem={dockAppList[i]}
-                    dockItemStyleObject={dockItemStyleObject}
-
-                    dndChangePosition={dockCallbacks.handleDndChangePosition}
-                    dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
-
-                    exitDockItem={dockCallbacks.handleExitDockItem}
-                    fixDockItem={dockCallbacks.handleFixDockItem}
-                    unfixDockItem={dockCallbacks.handleUnfixDockItem}
-                    dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
-                    execPage={execPage}
-                    changeIsDockItemDragged={this.changeIsDockItemDragged}
-                    dockIconType={dockIconType}
-                    view={view}
-                    isClose={
-                      isClose[dockAppList[i].DOCK_ID] ? isClose[dockAppList[i].DOCK_ID] : false
-                    }
-                    setIsCloseToTrue={setIsCloseToTrue}
-                    setIsCloseToFalse={setIsCloseToFalse}
-
-                    history={this.props.history}
-
-                    execApp={execApp}
-                  />);
-                }
-              }
-            }
             return (
               <ReactScrollbar
                 style={myScrollbar}
@@ -343,7 +392,7 @@ class UserDock extends React.Component {
                 <div
                   className={`dockDiv ${dockDivClass}`}
                 >
-                  {content}
+                  { this.state.dockItemList }
                   {
                     position === 'right' ?
                       <div
@@ -538,29 +587,13 @@ class UserDock extends React.Component {
   };
 
   getMobileDock = () => {
-    const {
-      styleObj,
-    } = this.state;
+    const { styleObj } = this.state;
 
     const {
-      view,
-      dockCallbacks,
       dockFixedYn,
       appYn,
       dockIconType,
-      isClose,
-      setIsCloseToTrue,
-      setIsCloseToFalse,
-      dockAppList,
-
-      execApp,
     } = this.props;
-
-    const {
-      execPage,
-    } = this.props;
-
-    const dockItemHeight = dockIconType === 'MAX' ? '70px' : '34px';
 
     return (
       <AppWrapper
@@ -579,110 +612,69 @@ class UserDock extends React.Component {
           setFloattingClassShow={this.setFloattingClassShow}
           setFloattingClassHidden={this.setFloattingClassHidden}
         >
-          {() => {
-            // dockDiv의 넓이 구하기 (dockDiv 넓이 = window의 넓이)
-            let dockDivWidth = window.innerWidth; // 375
-            const dockItemWidth = 70;
-            let half = false;
-
-            // 하나의 dockDiv에 들어갈 dockItem의 개수
-            let dockItemNumberInDockDiv = Math.floor(dockDivWidth / dockItemWidth);
-            if (dockItemNumberInDockDiv * 10 > dockDivWidth - (dockItemWidth * dockItemNumberInDockDiv)) {
-              dockItemNumberInDockDiv -= 1;
-            }
-            if (dockAppList.length < dockItemNumberInDockDiv) {
-              dockItemNumberInDockDiv = dockAppList.length;
-            }
-
-            // 화면 넓이에 비해 독아이템이 너무 적을 때 양쪽 마진값 늘림
-            if (dockDivWidth / 2 > dockItemWidth * dockItemNumberInDockDiv) {
-              dockDivWidth /= 2;
-              half = true;
-            }
-
-            const dockItemMargin = (dockDivWidth - (dockItemWidth * dockItemNumberInDockDiv)) / (dockItemNumberInDockDiv + 1);
-
-            const dockDivArray = [];
-            let content = [];
-            if (dockAppList !== undefined && dockAppList.length > 0) {
-              for (let i = 0; i < dockAppList.length; i += 1) {
-                // dockItem Style객체 만들기
-                const dockItemStyleObject = {
-                  height: dockItemHeight,
-                  width: dockIconType === 'MAX' ? '70px' : '34px',
-
-                  marginTop: '9px',
-                  marginRight: 'auto',
-                  marginBottom: 'auto',
-                  marginLeft: 'auto',
-                };
-
-                // 처음 앱
-                if (i % dockItemNumberInDockDiv === 0) {
-                  dockItemStyleObject.marginLeft = half ? `${dockItemMargin + (dockDivWidth / 2)}px` : `${dockItemMargin}px`;
-                  dockItemStyleObject.marginRight = `${dockItemMargin / 2}px`;
-                } else if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
-                  // 마지막 앱
-                  dockItemStyleObject.marginLeft = `${dockItemMargin / 2}px`;
-                  dockItemStyleObject.marginRight = half ? `${dockItemMargin + (dockDivWidth / 2)}px` : `${dockItemMargin}px`;
-                } else {
-                  dockItemStyleObject.marginLeft = `${dockItemMargin / 2}px`;
-                  dockItemStyleObject.marginRight = `${dockItemMargin / 2}px`;
-                }
-
-                content.push(<DockItem
-                  key={i}
-                  dockItem={dockAppList[i]}
-                  dockItemStyleObject={dockItemStyleObject}
-
-                  dndChangePosition={dockCallbacks.handleDndChangePosition}
-                  dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
-                  execDockItem={dockCallbacks.handleExecDockItem}
-                  exitDockItem={dockCallbacks.handleExitDockItem}
-                  fixDockItem={dockCallbacks.handleFixDockItem}
-                  unfixDockItem={dockCallbacks.handleUnfixDockItem}
-                  dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
-                  execPage={execPage}
-                  changeIsDockItemDragged={this.changeIsDockItemDragged}
-                  dockIconType={dockIconType}
-                  view={view}
-                  isClose={
-                    isClose[dockAppList[i].DOCK_ID] ? isClose[dockAppList[i].DOCK_ID] : false
-                  }
-                  setIsCloseToTrue={setIsCloseToTrue}
-                  setIsCloseToFalse={setIsCloseToFalse}
-
-                  history={this.props.history}
-
-                  execApp={execApp}
-                />);
-
-                if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
-                  const dockDiv = (
-                    <div
-                      className="dockDiv positionBottom"
-                    >
-                      {content}
-                    </div>
-                  );
-                  dockDivArray.push(dockDiv);
-                  content = [];
-                }
-              }
-            }
-
-            return (
-              <Carousel>
-                {dockDivArray}
-              </Carousel>
-            );
-          }}
+          {() => (
+            <Carousel>
+              {this.state.dockDivArray}
+            </Carousel>
+          )}
         </Dock>
         <Switch>
           <Route exact path="/cube" />
         </Switch>
       </AppWrapper>
     );
+  }
+
+  // dockItemStyleObject 생성 작업
+  makeDockItemStyleObject = (dockItem, i, arr, dockItemNumberInDockDiv) => {
+    const { dockIconType, dockAppList } = this.props;
+    const dockItemHeight = dockIconType === 'MAX' ? '70px' : '34px';
+    const dockItemStyleObject = {
+      height: dockItemHeight,
+      width: dockIconType === 'MAX' ? '70px' : '34px',
+
+      marginTop: '9px',
+      marginRight: 'auto',
+      marginBottom: 'auto',
+      marginLeft: dockIconType === 'MAX' ? '9px' : '4px',
+    };
+    if (isDesktop(this.props.view)) {
+      // 홈 앱
+      if (dockItem.HOME_YN === 'Y') {
+        dockItemStyleObject.marginTop = dockIconType === 'MAX' ? '9px' : '4px';
+      }
+    } else {
+      dockItemStyleObject.marginLeft = 'auto';
+      dockItemStyleObject.marginTop = '4px';
+
+      // dockDiv의 넓이 구하기 (dockDiv 넓이 = window의 넓이)
+      let dockDivWidth = window.innerWidth; // 375
+      const dockItemWidth = 70;
+      let half = false;
+
+      // 화면 넓이에 비해 독아이템이 너무 적을 때 양쪽 마진값 늘림
+      if (dockDivWidth / 2 > dockItemWidth * dockItemNumberInDockDiv) {
+        dockDivWidth /= 2;
+        half = true;
+      }
+
+      const dockItemMargin = (dockDivWidth - (dockItemWidth * dockItemNumberInDockDiv)) / (dockItemNumberInDockDiv + 1);
+
+      // 처음 앱
+      if (i % dockItemNumberInDockDiv === 0) {
+        dockItemStyleObject.marginLeft = half ? `${dockItemMargin + (dockDivWidth / 2)}px` : `${dockItemMargin}px`;
+        dockItemStyleObject.marginRight = `${dockItemMargin / 2}px`;
+      } else if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
+        // 마지막 앱
+        dockItemStyleObject.marginLeft = `${dockItemMargin / 2}px`;
+        dockItemStyleObject.marginRight = half ? `${dockItemMargin + (dockDivWidth / 2)}px` : `${dockItemMargin}px`;
+      } else {
+        dockItemStyleObject.marginLeft = `${dockItemMargin / 2}px`;
+        dockItemStyleObject.marginRight = `${dockItemMargin / 2}px`;
+      }
+    }
+
+    return dockItemStyleObject;
   }
 
   scrollUp = () => {
@@ -806,8 +798,6 @@ UserDock.propTypes = {
   appYn: PropTypes.string,
 
   history: PropTypes.object.isRequired,
-
-  execApp: PropTypes.func.isRequired,
 };
 
 UserDock.defaultProps = {

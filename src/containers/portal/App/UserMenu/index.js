@@ -2,9 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Table } from 'semantic-ui-react';
-import { Button } from 'antd';
 import Sidebar from 'react-sidebar';
-import { intlObj, lang } from 'utils/commonUtils';
+import { lang } from 'utils/commonUtils';
 import Scrollbars from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
 import Badge from 'components/Badge/StyleBadge';
@@ -15,10 +14,9 @@ import * as routeActions from 'containers/common/Routes/actions';
 // import makeMyAppTree from './selectors';
 import * as selectors from './selectors';
 import Tree from './Tree';
-import StoreTree from './StoreTree';
 import Notification from './Notification';
-import ExtraMenus from './ExtraMenus';
-import messages from '../../components/Header/messages';
+// import ExtraMenus from './ExtraMenus';
+// import messages from '../../components/Header/messages';
 
 const ResultsTableWrapper = styled.div`
   width: 230px;
@@ -32,7 +30,10 @@ const ResultsTableWrapper = styled.div`
       color: #404040;
       font-size: 12px;
 
-      &:first-child {width: 175px; padding-left: 16px;}
+      &:first-child {
+        width: 175px;
+        padding-left: 16px;
+      }
 
       &:last-child {
         width: calc(100% - 175px);
@@ -51,12 +52,9 @@ const ResultsTableWrapper = styled.div`
             box-shadow: none;
           }
         }
-
       }
     }
-
   }
-
 `;
 
 class UserMenu extends React.Component {
@@ -66,7 +64,6 @@ class UserMenu extends React.Component {
     this.state = {
       visible: false,
       showNoti: false,
-      editTree: false,
     };
   }
 
@@ -78,29 +75,29 @@ class UserMenu extends React.Component {
 
   onClick = () => {
     this.setState({ visible: !this.state.visible });
-  }
+  };
 
   onNoneClick = () => {
     this.setState({ visible: false });
     this.props.setMenuClose();
-  }
+  };
 
   onMenuClick = () => {
     this.setState({ visible: false });
-  }
+  };
 
-  onClickNode = () => {
-  }
+  onClickNode = () => {};
 
   onMouseEnter = () => {
     this.setState({ visible: !this.state.visible });
-  }
+  };
 
   onClickNotiButton = () => {
     this.setState({ showNoti: !this.state.showNoti });
-  }
+  };
 
-  getNotiList = () => { //eslint-disable-line
+  getNotiList = () => {
+    //eslint-disable-line
     const {
       execMenu,
       execPage,
@@ -116,7 +113,7 @@ class UserMenu extends React.Component {
     } = this.props;
     return (
       <div>
-        <ExtraMenus>
+        {/* <ExtraMenus>
           <ul className="extraMenusList">
             <li>
               <Link to="/store" className="storeLink" title={intlObj.get(messages.linkToBizStore)} target="_blank">
@@ -129,15 +126,12 @@ class UserMenu extends React.Component {
               </button>
             </li>
             <li>
-              {/* <Link to="/apps/settings" className="settingLink" title="환경세팅">
-                <span className="icon-setting" />
-              </Link> */}
               <button title="환경세팅" onClick={() => execPage('set')}>
                 <span className="icon-setting" />
               </button>
             </li>
           </ul>
-        </ExtraMenus>
+        </ExtraMenus> */}
         <Notification
           myMNotiCnt={myMNotiCnt}
           myMNotiList={myMNotiList}
@@ -152,90 +146,58 @@ class UserMenu extends React.Component {
           view={view}
           onClickNotiButton={this.onClickNotiButton}
         />
-        {this.state.showNoti ?
+        {this.state.showNoti ? (
           <div className="unreadNotiContent">
-            <Scrollbars
-              className="custom-scrollbar"
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={100}
-              autoHeight
-              autoHeightMin={0}
-              autoHeightMax={290}
-            >
+            <Scrollbars className="custom-scrollbar" autoHide autoHideTimeout={1000} autoHideDuration={100} autoHeight autoHeightMin={0} autoHeightMax={290}>
               <ResultsTableWrapper>
                 <Table size="small" style={{ width: '100%' }}>
                   <Table.Body>
-                    {
-                      myMNotiList.map(noti => (
-                        <Table.Row key={noti.MENU_ID}>
-                          <Table.Cell /* onClick={() => onClickItem(noti)} */>
-                            {noti.SEC_YN === 'Y' ?
-                              <p>{lang.get('NAME', noti)}</p>
-                              :
-                              <p style={{ color: 'lightgray' }}>{lang.get('NAME', noti)}</p>
-                            }
-                          </Table.Cell>
-                          <Table.Cell>
-                            <Badge count={noti.UNREAD_CNT ? noti.UNREAD_CNT : ''} overflowCount={99} className="badgeCount">
-                              <Link to="/" className="badgeLink" />
-                            </Badge>
-                          </Table.Cell>
-                        </Table.Row>
-                      ))
-                    }
+                    {myMNotiList.map(noti => (
+                      <Table.Row key={noti.MENU_ID}>
+                        <Table.Cell /* onClick={() => onClickItem(noti)} */>
+                          {noti.SEC_YN === 'Y' ? <p>{lang.get('NAME', noti)}</p> : <p style={{ color: 'lightgray' }}>{lang.get('NAME', noti)}</p>}
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Badge count={noti.UNREAD_CNT ? noti.UNREAD_CNT : ''} overflowCount={99} className="badgeCount">
+                            <Link to="/" className="badgeLink" />
+                          </Badge>
+                        </Table.Cell>
+                      </Table.Row>
+                    ))}
                   </Table.Body>
                 </Table>
               </ResultsTableWrapper>
             </Scrollbars>
           </div>
-          :
+        ) : (
           <div />
-        }
-        <Button
-          className="editTree"
-          onClick={() => this.setState({
-            editTree: !this.state.editTree,
-          })}
-          title="트리편집"
-        >
-          트리편집
-        </Button>
-        {
-          this.state.editTree ? (
-            <StoreTree
-              treeData={this.props.myAppStoreTreeData}
-              moveNode={this.props.moveNode}
-              updateMymenuDisp={this.props.updateMymenuDisp}
-              canDrag={true}
-              showNoti={myMNotiCnt > 0}
-            />
-          ) : (
-            <Tree
-              treeData={this.props.myAppTreeData}
-              saveData={this.props.saveData}
-              onClick={this.onClickNode}
-              execMenu={execMenu}
-              execPage={execPage}
-              selectedIndex={selectedIndex}
-              menuName={menuName}
-              handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-              setClose={this.props.setClose}
-              onMenuClick={this.onMenuClick}
-              showNoti={myMNotiCnt > 0}
-
-              execApp={execApp}
-            />
-          )
-        }
+        )}
+        <Tree
+          treeData={this.props.myAppTreeData}
+          saveData={this.props.saveData}
+          editMenu={this.onSetEditClick}
+          onClick={this.onClickNode}
+          execMenu={execMenu}
+          execPage={execPage}
+          selectedIndex={selectedIndex}
+          menuName={menuName}
+          handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+          setClose={this.props.setClose}
+          onMenuClick={this.onMenuClick}
+          showNoti={myMNotiCnt > 0}
+          myAppStoreTreeData={this.props.myAppStoreTreeData}
+          moveNode={this.props.moveNode}
+          updateMymenuDisp={this.props.updateMymenuDisp}
+          execApp={execApp}
+        />
       </div>
     );
-  }
+  };
 
   gotoHome = () => {
     const { execPage } = this.props;
     execPage('common');
-  }
+  };
   render() {
     const sidebarContent = this.getNotiList();
     const styleObj = {
@@ -258,7 +220,7 @@ class UserMenu extends React.Component {
         overflow: 'hidden',
         overflowY: 'hidden',
         width: 360,
-        paddingLeft: 50,
+        // paddingLeft: 50,
         backgroundColor: '#FFFFFF',
       },
       content: {
@@ -270,6 +232,7 @@ class UserMenu extends React.Component {
         overflowY: 'scroll',
         WebkitOverflowScrolling: 'touch',
         transition: 'left .3s ease-out, right .3s ease-out',
+        backgroundColor: 'transparent',
       },
       overlay: {
         zIndex: 1,
@@ -294,13 +257,9 @@ class UserMenu extends React.Component {
     const { open } = this.props;
     return (
       <div onMouseLeave={this.onNoneClick} onMouseEnter={this.onMenuClick}>
-        <Sidebar
-          sidebar={sidebarContent}
-          open={open}
-          styles={styleObj}
-          touch={true}
-          shadow={true}
-        />
+        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch={true} shadow={true}>
+          <p style={{ dispaly: 'none' }}>remove children undefined error</p>
+        </Sidebar>
       </div>
     );
   }
@@ -326,11 +285,12 @@ UserMenu.propTypes = {
   setMenuClose: PropTypes.func.isRequired,
   view: PropTypes.string.isRequired,
 
-  execApp: PropTypes.func.isRequired,
+  execApp: PropTypes.func,
 };
 
 UserMenu.defaultProps = {
   setClose: undefined,
+  execApp: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -345,5 +305,8 @@ export function mapDispatchToProps(dispatch) {
     updateMymenuDisp: node => dispatch(routeActions.updateMymenuDisp(node)),
   };
 }
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 export default compose(withConnect)(UserMenu);

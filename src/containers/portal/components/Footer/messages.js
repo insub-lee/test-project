@@ -7,7 +7,7 @@ export default defineMessages({
   },
   itHelpDesk: {
     id: 'portal.App.components.Footer.itHelpDesk',
-    defaultMessage: 'IT Helpdesk',
+    defaultMessage: 'IT Helpdesk 이천 3344 (031-630-3344)',
   },
   systemManager: {
     id: 'portal.App.components.Footer.systemManager',
