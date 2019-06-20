@@ -47,7 +47,8 @@ class wrap extends PureComponent {
         <Route path="/admin/adminmain/position" component={Position} />
         <Route path="/admin/adminmain/duty" component={Duty} />
         <Route path="/admin/adminmain/dept" component={Dept} />
-        <Route path="/admin/adminmain/account" component={UserReg} />
+        <Route path="/admin/adminmain/account" exact component={UserReg} />
+        <Route path="/admin/adminmain/account/:USER_ID" component={UserReg} />
       </div>
     );
   }

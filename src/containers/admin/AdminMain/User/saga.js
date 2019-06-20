@@ -1,8 +1,10 @@
 import React from 'react';
 import { put, takeLatest, call } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 // eslint-disable-next-line no-unused-vars
 import { fromJS } from 'immutable';
 import { intlObj } from 'utils/commonUtils';
+import * as feed from 'components/Feedback/functions';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import messages from './messages';
@@ -12,33 +14,43 @@ import { Axios } from '../../../../utils/AxiosFunc';
 
 export function* getUserInfo(payload) {
   const { userId } = payload;
-  const response = yield call(Axios.post, '/api/admin/v1/common/getUserInfo/', {
-    userId,
-  });
+  const response = yield call(Axios.post, '/api/admin/v1/common/getUserInfo/', { userId });
   const data = response.userInfo;
-
-  if (!data) {
-    yield put({ type: actionType.SET_USER_DATA, data });
+  if (data) {
+    yield put({
+      type: actionType.SET_USER_DATA,
+      payload: data,
+    });
   }
 }
 
 export function* insertUserInfo(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registUser/', payload.userInfo);
   const data = response;
-  if (!data.code) {
+  if (data.code === 200 && data.userId !== 0) {
     message.success(
       <MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>,
       3,
     );
-    yield put({ type: actionType.SET_USER_DATA, data });
+    const { userId } = data;
+    yield put(push(`/admin/adminmain/account/${userId}`));
+  } else {
+    feed.error(`${intlObj.get(messages.regFail)}`);
   }
 }
 
 export function* updatetUserInfo(payload) {
-  const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', payload);
+  const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', payload.userInfo);
   const data = response;
-  if (!data.code) {
-    yield put({ type: actionType.SET_USER_DATA, data });
+  if (data.code === 200) {
+    message.success(
+      <MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>,
+      3,
+    );
+    const { userId } = data;
+    yield put(push(`/admin/adminmain/account/${userId}`));
+  } else {
+    feed.error(`${intlObj.get(messages.udtFail)}`);
   }
 }
 
@@ -47,10 +59,10 @@ export function* getEmpNo(payload) {
   const { empNo } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/userDupCheck', { empNo });
   const data = response;
-  if (!data.result) {
+  if (data.result) {
     yield put({
       type: actionType.SET_EMPNO,
-      payload: data.result === 'ok',
+      payload: Number(data.result === 'ok'),
     });
   }
 }
@@ -161,7 +173,9 @@ export function* getChangePstnTreeData(payload) {
 }
 
 export default function* userRegSage() {
+  yield takeLatest(actionType.GET_USER_DATA, getUserInfo);
   yield takeLatest(actionType.INSERT_USER_DATA, insertUserInfo);
+  yield takeLatest(actionType.UPDATE_USER_DATA, updatetUserInfo);
   yield takeLatest(actionType.GET_EMPNO, getEmpNo);
   yield takeLatest(actionType.GET_DEPT_COMBO_LIST, getDeptComboData);
   yield takeLatest(actionType.GET_CHANGE_DEPT_DATA, getChangeDeptTreeData);

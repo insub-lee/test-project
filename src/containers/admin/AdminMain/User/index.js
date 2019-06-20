@@ -20,7 +20,7 @@ import StyleUserForm from './StyleUserForm';
 import StyleUserDtl from './StyleUserDtl';
 import { LinkBtnLgtGray, BtnDkGray } from '../../../store/components/uielements/buttons.style';
 import messages from './messages';
-import UserRegTree from './userRegTree';
+import UserRegTree from '../../components/UserRegTree';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
@@ -36,7 +36,10 @@ const phonelValid = (str) => {
 class UserReg extends React.Component {
   constructor(prop) {
     super(prop);
+    const userId = prop.match.params.USER_ID ? prop.match.params.USER_ID : 0;
     this.state = {
+      // eslint-disable-next-line react/no-unused-state
+      userId,
       modalTitle: '',
       modalType: '',
       empNo: '',
@@ -56,7 +59,11 @@ class UserReg extends React.Component {
       compCd: '',
       selectedNode: {},
       visible: false,
+      mode: prop.match.params.USER_ID ? 'D' : 'I',
     };
+    if (userId && this.state.mode === 'D') {
+      this.props.getUser(Number(userId));
+    }
   }
 
   componentDidMount() {
@@ -66,6 +73,31 @@ class UserReg extends React.Component {
   // eslint-disable-next-line no-unused-vars
   componentWillReceiveProps(nextProps) {
     console.log('PARENT::componentWillReceiveProps');
+    if (this.state.mode === 'D' && nextProps.userInfo) {
+      const { userInfo } = nextProps;
+      console.log(userInfo);
+      this.setUserInfo(userInfo);
+    }
+  }
+
+  setUserInfo = (userInfo) => {
+    this.setState({
+      empNo: userInfo.EMP_NO,
+      nameKor: userInfo.NAME_KOR,
+      nameEng: userInfo.NAME_ENG,
+      nameChn: userInfo.NAME_CHN,
+      email: userInfo.EMAIL,
+      statusCd: userInfo.STATUS_CD,
+      deptId: userInfo.DEPT_ID,
+      deptName: userInfo.DEPT_NAME_KOR,
+      pstnId: userInfo.PSTN_ID,
+      pstnName: userInfo.PSTN_NAME_KOR,
+      dutyId: userInfo.DUTY_ID,
+      dutyName: userInfo.DUTY_NAME_KOR,
+      officeTel: userInfo.OFFICE_TEL_NO,
+      mobileTel: userInfo.MOBILE_TEL_NO,
+      compCd: userInfo.COMP_CD,
+    });
   }
 
   getSelectNode = (node) => {
@@ -88,6 +120,12 @@ class UserReg extends React.Component {
         break;
       default:
         break;
+    }
+  }
+
+  getEmpCheck = (empNo) => {
+    if (empNo !== this.props.userInfo.EMP_NO) {
+      this.props.getEmpCheck(empNo);
     }
   }
 
@@ -115,9 +153,22 @@ class UserReg extends React.Component {
     });
   }
 
+  validStatus = (val, type) => {
+    if (this.state.mode === 'D') return '';
+    switch (type) {
+      case 'phone':
+        return val !== '' && !phonelValid(val) ? 'error' : '';
+      case 'email':
+        return val !== '' && emailValid(val) ? 'success' : 'error';
+      case 'empNocheck':
+        return val !== '' && (this.props.empCheck === 1 || this.state.empNo === this.props.userInfo.EMP_NO) ? 'success' : 'error';
+      default:
+        return val !== '' ? 'success' : 'error';
+    }
+  }
   vaildChk = () => {
-    if (this.state.empNo !== '' && this.state.empNo !== null
-    && this.state.nameKor !== '' && this.state.nameKor !== null
+    if (this.state.empNo.trim() !== '' && this.state.empNo !== null
+    && this.state.nameKor.trim() !== '' && this.state.nameKor !== null
     && emailValid(this.state.email) && this.state.email !== null
     && this.state.statusCd !== '' && this.state.statusCd !== null
     && this.state.deptId !== '' && this.state.deptId !== null
@@ -136,10 +187,14 @@ class UserReg extends React.Component {
           return false;
         }
       }
+      console.log(this.state);
+      console.log(this.props);
+      if (this.props.empCheck !== 1 && this.state.empNo !== this.props.userInfo.EMP_NO) {
+        message.error(`${intlObj.get(messages.chkInput)}`, 2);
+        return false;
+      }
 
-      if (!this.props.getEmpCheck) return true;
-      message.error(`${intlObj.get(messages.chkInput)}`, 2);
-      return false;
+      return true;
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
@@ -154,6 +209,7 @@ class UserReg extends React.Component {
   // eslint-disable-next-line arrow-body-style
   regUser = () => {
     const userInfo = {
+      userId: Number(this.state.userId),
       empNo: this.state.empNo,
       nameKor: this.state.nameKor,
       nameEng: this.state.nameEng,
@@ -167,29 +223,31 @@ class UserReg extends React.Component {
       mobileTel: this.state.mobileTel,
       compCd: this.state.compCd,
     };
-    this.props.registUser(userInfo);
+    if (this.state.mode === 'I') this.props.registUser(userInfo);
+    else this.props.updateUser(userInfo);
   }
 
   showModal = (title, type) => {
-    switch (type) {
-      case 'dept':
-        this.props.getDeptComboData();
-        break;
-      case 'duty':
-        this.props.getDutyComboData();
-        break;
-      case 'pstn':
-        this.props.getPSTNComboData();
-        break;
-      default:
-        break;
+    if (this.state.mode !== 'D') {
+      switch (type) {
+        case 'dept':
+          this.props.getDeptComboData();
+          break;
+        case 'duty':
+          this.props.getDutyComboData();
+          break;
+        case 'pstn':
+          this.props.getPSTNComboData();
+          break;
+        default:
+          break;
+      }
+      this.setState({
+        visible: true,
+        modalTitle: title,
+        modalType: type,
+      });
     }
-
-    this.setState({
-      visible: true,
-      modalTitle: title,
-      modalType: type,
-    });
   }
 
   handleOk = () => {
@@ -211,9 +269,9 @@ class UserReg extends React.Component {
     });
   }
 
-  dupCheckEmpNo = (stat) => {
-    if (this.state.empNo !== '') {
-      if (!stat) return (<font color="RED">{intlObj.get(messages.dupEmpNo)}</font>);
+  dupCheckEmpNo = (empCheck) => {
+    if (this.state.empNo !== '' && this.state.empNo !== this.props.userInfo.EMP_NO) {
+      if (empCheck === 0) return (<font color="RED">{intlObj.get(messages.dupEmpNo)}</font>);
     }
     return '';
   };
@@ -228,6 +286,36 @@ class UserReg extends React.Component {
         xs: { span: 20 },
         sm: { span: 20 },
       },
+    };
+
+    const button = () => {
+      if (this.state.mode === 'D') {
+        return (
+          <ErrorBoundary>
+            <LinkBtnLgtGray>
+              <Link to="/admin/adminmain/account">{intlObj.get(messages.lblCancel)}</Link>
+            </LinkBtnLgtGray>
+            <BtnDkGray onClick={() => this.setState({ mode: 'U' })}>{intlObj.get(messages.lblUdt)}</BtnDkGray>
+          </ErrorBoundary>
+        );
+      } else if (this.state.mode === 'U') {
+        return (
+          <ErrorBoundary>
+            <LinkBtnLgtGray onClick={() => { this.setUserInfo(this.props.userInfo); this.setState({ mode: 'D' }); }}>
+              {intlObj.get(messages.lblCancel)}
+            </LinkBtnLgtGray>
+            <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblSave)}</BtnDkGray>
+          </ErrorBoundary>
+        );
+      }
+      return (
+        <ErrorBoundary>
+          <LinkBtnLgtGray>
+            <Link to="/admin/adminmain/account">{intlObj.get(messages.lblCancel)}</Link>
+          </LinkBtnLgtGray>
+          <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblReg)}</BtnDkGray>
+        </ErrorBoundary>
+      );
     };
     console.log('PARENT::render');
     return (
@@ -265,11 +353,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.empNo !== '' && this.props.getEmpCheck
-                          ? 'success'
-                          : 'error'
-                      }
+                      validateStatus={this.validStatus(this.state.empNo, 'empNocheck')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -277,13 +361,14 @@ class UserReg extends React.Component {
                           name="empNo"
                           value={this.state.empNo}
                           onChange={this.handleChange}
-                          onBlur={() => this.state.empNo !== '' && this.props.empCheck(this.state.empNo)}
+                          onBlur={() => this.state.empNo !== '' && this.getEmpCheck(this.state.empNo)}
                           maxLength={200}
                           id="s1"
+                          readOnly={this.state.mode === 'D'}
                           autoFocus // Default로 포커스를 주는 법
                         />
                       </ErrorBoundary>
-                      <span className="tipText">{this.dupCheckEmpNo(this.props.getEmpCheck)}</span>
+                      <span className="tipText">{this.dupCheckEmpNo(this.props.empCheck)}</span>
                     </FormItem>
                   </td>
                 </tr>
@@ -297,11 +382,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.nameKor !== ''
-                          ? 'success'
-                          : 'error'
-                      }
+                      validateStatus={this.validStatus(this.state.nameKor, '')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -311,6 +392,7 @@ class UserReg extends React.Component {
                           onChange={this.handleChange}
                           maxLength={200}
                           id="s2"
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -336,6 +418,7 @@ class UserReg extends React.Component {
                           maxLength={200}
                           // style={{ width: '60%', marginRight: 10 }}
                           id="s3"
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -361,6 +444,7 @@ class UserReg extends React.Component {
                           maxLength={200}
                           // style={{ width: '60%', marginRight: 10 }}
                           id="s4"
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -375,11 +459,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        emailValid(this.state.email)
-                          ? 'success'
-                          : 'error'
-                      }
+                      validateStatus={this.validStatus(this.state.email, 'email')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -390,6 +470,7 @@ class UserReg extends React.Component {
                           maxLength={380}
                           id="s5"
                           style={{ width: 285, marginRight: 10 }}
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -405,11 +486,18 @@ class UserReg extends React.Component {
                   <td>
                     <FormItem {...formItemLayout}>
                       <ErrorBoundary>
-                        <Select name="statusCd" onChange={this.handleStatusChange} value={this.state.statusCd} id="s6" style={{ width: 300 }}>
-                          <Option value="C">재직</Option>
-                          <Option value="D">파견</Option>
-                          <Option value="H">휴직</Option>
-                          <Option value="T">퇴직</Option>
+                        <Select
+                          name="statusCd"
+                          onChange={this.handleStatusChange}
+                          value={this.state.statusCd}
+                          id="s6"
+                          style={{ width: 300 }}
+                          disabled={this.state.mode === 'D'}
+                        >
+                          <Option value="C">{intlObj.get(messages.statusCdWork)}</Option>
+                          <Option value="D">{intlObj.get(messages.statusCdDispatch)}</Option>
+                          <Option value="H">{intlObj.get(messages.statusCdLeave)}</Option>
+                          <Option value="T">{intlObj.get(messages.statusCdRetired)}</Option>
                         </Select>
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -426,11 +514,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.deptName !== ''
-                          ? 'success'
-                          : 'error'
-                      }
+                      validateStatus={this.validStatus(this.state.deptId, '')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -441,6 +525,7 @@ class UserReg extends React.Component {
                           maxLength={380}
                           id="s7"
                           style={{ width: 285, marginRight: 10 }}
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -457,11 +542,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.pstnName !== ''
-                          ? 'success'
-                          : 'error'
-                      }
+                      validateStatus={this.validStatus(this.state.pstnId, '')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -472,6 +553,7 @@ class UserReg extends React.Component {
                           maxLength={380}
                           id="s8"
                           style={{ width: 285, marginRight: 10 }}
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -488,11 +570,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.dutyName !== ''
-                          ? 'success'
-                          : 'error'
-                      }
+                      validateStatus={this.validStatus(this.state.dutyId, '')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -503,6 +581,7 @@ class UserReg extends React.Component {
                           maxLength={380}
                           id="s9"
                           style={{ width: 285, marginRight: 10 }}
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -519,11 +598,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.officeTel !== '' && !phonelValid(this.state.officeTel)
-                          ? 'error'
-                          : ''
-                      }
+                      validateStatus={this.validStatus(this.state.officeTel, 'phone')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -533,6 +608,7 @@ class UserReg extends React.Component {
                           onChange={this.handleChange}
                           maxLength={200}
                           id="s10"
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -549,11 +625,7 @@ class UserReg extends React.Component {
                     <FormItem
                       {...formItemLayout}
                       hasFeedback
-                      validateStatus={
-                        this.state.mobileTel !== '' && !phonelValid(this.state.mobileTel)
-                          ? 'error'
-                          : ''
-                      }
+                      validateStatus={this.validStatus(this.state.mobileTel, 'phone')}
                     >
                       <ErrorBoundary>
                         <Input
@@ -563,6 +635,7 @@ class UserReg extends React.Component {
                           onChange={this.handleChange}
                           maxLength={200}
                           id="s11"
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -586,6 +659,7 @@ class UserReg extends React.Component {
                           value={this.state.compCd}
                           maxLength={200}
                           id="s12"
+                          readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
                       <span className="tipText" />
@@ -596,18 +670,7 @@ class UserReg extends React.Component {
             </table>
           </StyleUserForm>
           <div className="buttonWrapper">
-            <ErrorBoundary>
-              <LinkBtnLgtGray>
-                <Link to="/admin/adminMain">
-                  {intlObj.get(messages.lblCancel)}
-                </Link>
-              </LinkBtnLgtGray>
-            </ErrorBoundary>
-            <ErrorBoundary>
-              <BtnDkGray onClick={this.regConfirm}>
-                {intlObj.get(messages.lblReg)}
-              </BtnDkGray>
-            </ErrorBoundary>
+            {button()}
           </div>
         </StyleUserDtl>
       </div>
@@ -616,10 +679,11 @@ class UserReg extends React.Component {
 }
 
 UserReg.propTypes = {
-  getEmpCheck: PropTypes.bool, //eslint-disable-line
+  empCheck: PropTypes.int, //eslint-disable-line
   treeData: PropTypes.array, //eslint-disable-line
   isLoading: PropTypes.bool, //eslint-disable-line
   registUser: PropTypes.func, //eslint-disable-line
+  updateUser: PropTypes.func, //eslint-disable-line
   comboData: PropTypes.array, //eslint-disable-line
   getChangeDeptTreeData: PropTypes.func, //eslint-disable-line
   getDeptComboData: PropTypes.func, //eslint-disable-line
@@ -627,11 +691,14 @@ UserReg.propTypes = {
   getDutyComboData: PropTypes.func, //eslint-disable-line
   getChangePSTNTreeData: PropTypes.func, //eslint-disable-line
   getPSTNComboData: PropTypes.func, //eslint-disable-line
-  empCheck: PropTypes.func, //eslint-disable-line
+  getEmpCheck: PropTypes.func, //eslint-disable-line
+  getUser: PropTypes.func, //eslint-disable-line
+  empNo: PropTypes.String, //eslint-disable-line
+  userInfo: PropTypes.object, //eslint-disable-line
 };
 
 const mapDispatchToProps = dispatch => ({
-  empCheck: empNo => dispatch(actions.checkEmpNo(empNo)),
+  getEmpCheck: empNo => dispatch(actions.checkEmpNo(empNo)),
   getChangeDeptTreeData: DEPT_ID => dispatch(actions.getChangeDeptTreeData(DEPT_ID)),
   getDeptComboData: () => dispatch(actions.getDeptComboData()),
   getChangeDutyTreeData: DUTY_ID => dispatch(actions.getChangeDutyTreeData(DUTY_ID)),
@@ -639,13 +706,16 @@ const mapDispatchToProps = dispatch => ({
   getChangePSTNTreeData: PSTN_ID => dispatch(actions.getChangePSTNTreeData(PSTN_ID)),
   getPSTNComboData: () => dispatch(actions.getPSTNComboData()),
   registUser: userInfo => dispatch(actions.insertUser(userInfo)),
+  updateUser: userId => dispatch(actions.updateUser(userId)),
+  getUser: userId => dispatch(actions.getUser(userId)),
 });
 
 const mapStateToProps = createStructuredSelector({
-  getEmpCheck: selectors.makeEmpNoCheck(),
+  empCheck: selectors.makeEmpNoCheck(),
   comboData: selectors.makeSelectComboData(),
   treeData: selectors.makeTreeData(),
   isLoading: selectors.makeIsLoading(),
+  userInfo: selectors.makeUserInfo(),
 });
 
 const withConnect = connect(

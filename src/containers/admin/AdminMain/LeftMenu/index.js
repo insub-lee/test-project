@@ -130,6 +130,8 @@ class menuList extends React.Component {
 
     if (url === strCurUrl) {
       clsStr = 'menu current';
+    } else if (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) {
+      clsStr = 'menu current';
     // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin') {
     //   clsStr = 'menu current';
     // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/') {

@@ -1,8 +1,8 @@
 import * as constants from './constants';
 
-export const getUser = empNo => ({
+export const getUser = userId => ({
   type: constants.GET_USER_DATA,
-  empNo,
+  userId,
 });
 
 export const insertUser = userInfo => ({

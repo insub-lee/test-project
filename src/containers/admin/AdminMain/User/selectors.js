@@ -22,10 +22,16 @@ const makeIsLoading = () => createSelector(
   userReg => userReg.get('isLoading'),
 );
 
+const makeUserInfo = () => createSelector(
+  selectUserReg,
+  userReg => userReg.get('userInfo'),
+);
+
 export {
   selectUserReg,
   makeEmpNoCheck,
   makeSelectComboData,
   makeTreeData,
   makeIsLoading,
+  makeUserInfo,
 };

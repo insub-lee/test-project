@@ -189,4 +189,20 @@ export default defineMessages({
     id: 'admin.AdminMain.UserAdmin.udtError',
     defaultMessage: '수정 중 오류가 발생하였습니다.',
   },
+  statusCdWork: {
+    id: 'admin.AdminMain.UserAdmin.statusCdWork',
+    defaultMessage: '재직',
+  },
+  statusCdDispatch: {
+    id: 'admin.AdminMain.UserAdmin.statusCdDispatch',
+    defaultMessage: '파견',
+  },
+  statusCdLeave: {
+    id: 'admin.AdminMain.UserAdmin.statusCdLeave',
+    defaultMessage: '휴직',
+  },
+  statusCdRetired: {
+    id: 'admin.AdminMain.UserAdmin.statusCdRetired',
+    defaultMessage: '퇴직',
+  },
 });

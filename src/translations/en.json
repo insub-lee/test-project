@@ -697,5 +697,9 @@
   "admin.AdminMain.UserAdmin.titleUserUdt": "@사용자 수정",
   "admin.AdminMain.UserAdmin.udtComplete": "@수정에 성공하였습니다.",
   "admin.AdminMain.UserAdmin.udtConfirm": "@수정 하시겠습니까?",
-  "admin.AdminMain.UserAdmin.udtError": "@수정 중 오류가 발생하였습니다."
+  "admin.AdminMain.UserAdmin.udtError": "@수정 중 오류가 발생하였습니다.",
+  "admin.AdminMain.UserAdmin.statusCdWork": "@재직",
+  "admin.AdminMain.UserAdmin.statusCdDispatch": "@파견",
+  "admin.AdminMain.UserAdmin.statusCdLeave": "@휴직",
+  "admin.AdminMain.UserAdmin.statusCdRetired": "@퇴직"
 }
