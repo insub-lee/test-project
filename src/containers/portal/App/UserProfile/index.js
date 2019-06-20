@@ -46,8 +46,9 @@ class UserProfile extends Component {
         break;
       case 'logout': {
         const cookies = new Cookies();
-        cookies.remove('token', { path: '/' })
-        window.location.href = '/signin';
+        cookies.remove('empNo', { path: '/' })
+        cookies.remove('access_token', { path: '/' })
+        window.location.href = `/signin`;
         break;
       }
       // case 'talk':

@@ -130,7 +130,7 @@
     "whatwg-fetch": "2.0.3"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "node --max-old-space-size=8192 scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "fml": "cross-env LIMIT=9184 increase-memory-limit"
