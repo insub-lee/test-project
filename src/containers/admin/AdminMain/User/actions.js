@@ -15,12 +15,10 @@ export const updateUser = userInfo => ({
   userInfo,
 });
 
-export const checkEmpNo = empNo => (
-  {
-    type: constants.GET_EMPNO,
-    empNo,
-  }
-);
+export const checkEmpNo = empNo => ({
+  type: constants.GET_EMPNO,
+  empNo,
+});
 
 export const getDeptComboData = () => ({
   type: constants.GET_DEPT_COMBO_LIST,

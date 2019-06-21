@@ -28,10 +28,7 @@ export function* insertUserInfo(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registUser/', payload.userInfo);
   const data = response;
   if (data.code === 200 && data.userId !== 0) {
-    message.success(
-      <MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>, 3);
     const { userId } = data;
     yield put(push(`/admin/adminmain/account/${userId}`));
   } else {
@@ -43,10 +40,7 @@ export function* updatetUserInfo(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', payload.userInfo);
   const data = response;
   if (data.code === 200) {
-    message.success(
-      <MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>, 3);
     const { userId } = data;
     yield put(push(`/admin/adminmain/account/${userId}`));
   } else {
@@ -62,7 +56,7 @@ export function* getEmpNo(payload) {
   if (data.result) {
     yield put({
       type: actionType.SET_EMPNO,
-      payload: Number(data.result === 'ok'),
+      payload: data.result === 'ok' ? data.empNO : '',
     });
   }
 }
