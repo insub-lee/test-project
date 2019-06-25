@@ -33,7 +33,7 @@ import reducer from './reducer';
 import UserDock from './UserDock';
 import UserMenu from './UserMenu';
 import UserSetting from './UserSetting';
-import AppsRouter from '../../../apps/appsRouter';
+import UserStore from './UserStore';
 import RodalPage from '../../../components/Rodal';
 import Page from '../../../components/Page';
 import MenuCategory from './MenuCategory';
@@ -503,7 +503,9 @@ class App extends React.PureComponent {
   };
   execPage = (node, type) => {
     const { dockAppList } = this.props;
-
+    console.debug('>>>>>>>>execPage1: ', node);
+    console.debug('>>>>>>>>execPage2: ', type);
+    console.debug('>>>>>>>>execPage3: ', basicPath);
     if (node === 'common') {
       const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
       this.props.history.push(`/${basicPath.PAGE}/${homeApp.PAGE_ID}`);
@@ -532,19 +534,19 @@ class App extends React.PureComponent {
       };
 
       if (node.INTL_TYPE === 'Y') {
-        console.log('!!!!!!!!!!!!!! INTL TYPE !!!!!!!!!!', node);
+        // console.log('!!!!!!!!!!!!!! INTL TYPE !!!!!!!!!!', node);
         this.props.history.push({
           pathname: `/${basicPath.APPS}/${node.SRC_PATH}`,
           execInfo: state,
         });
       } else if (node.SRC_PATH === 'legacySVC') {
-        console.log('!!!!!!!!!!!!!! INTL TYPE2 !!!!!!!!!', node);
+        // console.log('!!!!!!!!!!!!!! INTL TYPE2 !!!!!!!!!', node);
         this.props.history.push({
           pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
           execInfo: state,
         });
       } else {
-        console.log('!!!!!!!!!!!!!! INTL TYPE3 !!!!!!!!!!', node);
+        // console.log('!!!!!!!!!!!!!! INTL TYPE3 !!!!!!!!!!', node);
         this.props.history.push({
           pathname: `/${basicPath.PAGE}/${node.PAGE_ID}`,
           execInfo: state,
@@ -568,18 +570,17 @@ class App extends React.PureComponent {
     this.setState({ show: false });
   };
 
-  goHome = item => {
-    if (item) {
-      this.execPage(item, 'execDock');
-    }
+  goStore = () => {
+    this.props.history.push(`/${basicPath.PORTAL}/userStore`);
+    this.setState({ open: false });
+    return;
   };
 
-  goStore = () => {
-    this.props.history.push({
-      pathname: `/store`,
-      // execInfo: state,
-    });
-  }
+  goSettings = () => {
+    this.props.history.push(`/${basicPath.PORTAL}/settings`);
+    this.setState({ open: false });
+    return;
+  };
 
   render() {
     const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
@@ -635,21 +636,21 @@ class App extends React.PureComponent {
 
     const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
     const dockHomeItem = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
-    console.debug('@@@@@@@@@@@dockAppList: ', dockHomeItem);
+    console.debug('@@@@@@@@@@@dockAppList: ', dockAppList);
+    console.debug('@@@@@@@@@@@this.props.apps: ', this.props.apps);
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          <Layout>
-            <Scrollbars
-              className="custom-scrollbar"
-              style={{ width: 'auto', minHeight: '100vh', height: 'auto' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              <AppWrapper style={{ width: '100%' }}>
-                {/* rendering check count 초기화용 버튼 */}
-                {/* <button
+          <Scrollbars
+            className="custom-scrollbar"
+            style={{ width: 'auto', minHeight: '100vh', height: 'auto' }}
+            autoHide
+            autoHideTimeout={1000}
+            autoHideDuration={200}
+          >
+            <AppWrapper style={{ width: '100%' }}>
+              {/* rendering check count 초기화용 버튼 */}
+              {/* <button
                 onClick={() => {
                   initializeCount(this);
                 }}
@@ -661,151 +662,163 @@ class App extends React.PureComponent {
               >
                 초기화버튼
               </button> */}
-                <MenuCategory
-                  open={headerMenuOpen}
-                  execMenu={this.execMenu}
-                  execPage={this.execPage}
-                  myMNotiCnt={myMNotiCnt}
-                  myHNotiCnt={myHNotiCnt}
-                  myMNotiList={myMNotiList}
-                  selectedIndex={selectedIndex}
-                  menuName={menuName}
-                  handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-                  setMyMenuData={setMyMenuData}
-                  visible={this.state.visible}
-                  setMenuClose={this.setMenuClose}
-                  view={view}
-                />
-                <UserMenu
-                  open={open}
-                  execMenu={this.execMenu}
-                  execPage={this.execPage}
-                  myMNotiCnt={myMNotiCnt}
-                  myHNotiCnt={myHNotiCnt}
-                  myMNotiList={myMNotiList}
-                  selectedIndex={selectedIndex}
-                  menuName={menuName}
-                  handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-                  setMyMenuData={setMyMenuData}
-                  visible={this.state.visible}
-                  setMenuClose={this.setMenuClose}
-                  view={view}
-                />
-                <Header
-                  className="portalHeader"
-                  setOpen={this.setMenuOpen}
-                  execPage={this.execPage}
-                  handleClick={this.handleClick}
-                  setMyMenuData={setMyMenuData}
-                  // UserSetting으로 전달될 콜백
-                  myHNotiCnt={myHNotiCnt}
-                  managerInfo={managerInfo}
-                  view={view}
-                />
-                {/* test layout */}
-                <div className="testDiv">
-                  <div className="testDiv02">
-                    <div class="button">
-                      {/* <input type="button" value="Start App" /> */}
-                      <section class="links">
-                        {/* <a class="link l1" href="#" value="Pure" /> */}
-                        <Button class="link l1" icon="vertical-left" onClick={this.setOpen} />
-                      </section>
+              <MenuCategory
+                open={headerMenuOpen}
+                execMenu={this.execMenu}
+                execPage={this.execPage}
+                myMNotiCnt={myMNotiCnt}
+                myHNotiCnt={myHNotiCnt}
+                myMNotiList={myMNotiList}
+                selectedIndex={selectedIndex}
+                menuName={menuName}
+                handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+                setMyMenuData={setMyMenuData}
+                visible={this.state.visible}
+                setMenuClose={this.setMenuClose}
+                view={view}
+              />
+              <UserMenu
+                open={open}
+                execMenu={this.execMenu}
+                execPage={this.execPage}
+                myMNotiCnt={myMNotiCnt}
+                myHNotiCnt={myHNotiCnt}
+                myMNotiList={myMNotiList}
+                selectedIndex={selectedIndex}
+                menuName={menuName}
+                handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+                setMyMenuData={setMyMenuData}
+                visible={this.state.visible}
+                setMenuClose={this.setMenuClose}
+                view={view}
+              />
+              <Header
+                className="portalHeader"
+                setOpen={this.setMenuOpen}
+                execPage={this.execPage}
+                handleClick={this.handleClick}
+                setMyMenuData={setMyMenuData}
+                // UserSetting으로 전달될 콜백
+                myHNotiCnt={myHNotiCnt}
+                managerInfo={managerInfo}
+                view={view}
+              />
+              {/* test layout */}
+              <div className="testDiv">
+                <div className="testDiv02">
+                  <div class="button">
+                    {/* <input type="button" value="Start App" /> */}
+                    <section class="links">
+                      {/* <a class="link l1" href="#" value="Pure" /> */}
+                      <Button class="link l1" icon="vertical-left" onClick={this.setOpen} />
+                    </section>
+                  </div>
+                  <div className="testClass">
+                    <div className="iconPositon" style={{ marginTop: '60px' }}>
+                      <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
                     </div>
-                    <div className="testClass">
-                      <div className="iconPositon" style={{ marginTop: '60px' }}>
-                        <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHome(dockHomeItem)} />
-                      </div>
-                      <div className="iconPositon" style={{ marginTop: '20px' }}>
-                        <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore}/>
-                      </div>
+                    <div className="iconPositon" style={{ marginTop: '20px' }}>
+                      <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                    </div>
+                    <div className="iconPositon" style={{ marginTop: '20px' }}>
+                      <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
                     </div>
                   </div>
                 </div>
-                {/* test layout */}
-                <Fullscreen
-                  enabled={this.state.isFullscreenEnabled}
-                  onChange={this.setIsFullscreenEnabled}
-                  dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                  dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                  exitDockItem={handleExitDockItem}
-                  fixDockItem={handleFixDockItem}
-                  unfixDockItem={handleUnfixDockItem}
-                  // 모바일 Dock ContextMenu 플래그 설정
-                  view={view}
-                  setIsCloseToFalse={this.setIsCloseToFalse}
-                  setMyMenuData={setMyMenuData}
-                >
-                  <div id="child" className={setMyMenuData.APP_YN === 'Y' || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
-                    <Content
-                      className="portalContent"
-                      style={{
-                        flexShrink: '0',
-                      }}
-                    >
-                      <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} />
-                      {this.props.apps}
-                    </Content>
-                    <Route
-                      path={`/${basicPath.PORTAL}/settings`}
-                      render={() => (
-                        <UserSetting //eslint-disable-line
-                          applySkin={this.applySkin}
-                        />
-                      )}
-                    />
-                  </div>
-                </Fullscreen>
-                {setMyMenuData.APP_YN !== 'Y' ? (
-                  <Footer
+              </div>
+              {/* test layout */}
+              <Fullscreen
+                enabled={this.state.isFullscreenEnabled}
+                onChange={this.setIsFullscreenEnabled}
+                dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                exitDockItem={handleExitDockItem}
+                fixDockItem={handleFixDockItem}
+                unfixDockItem={handleUnfixDockItem}
+                // 모바일 Dock ContextMenu 플래그 설정
+
+                view={view}
+                setIsCloseToFalse={this.setIsCloseToFalse}
+                setMyMenuData={setMyMenuData}
+              >
+                <div id="child" className={setMyMenuData.APP_YN === 'Y' || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
+                  <Content
+                    className="portalContent"
                     style={{
-                      background: 'transparent',
+                      flexShrink: '0',
                     }}
-                    dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                    dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                    view={view}
+                  >
+                    <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} />
+                    {this.props.apps}
+                  </Content>
+                  <Route
+                    path={`/${basicPath.PORTAL}/settings`}
+                    render={() => (
+                      <UserSetting //eslint-disable-line
+                        applySkin={this.applySkin}
+                      />
+                    )}
                   />
-                ) : (
-                  <div />
-                )}
-                <UserDock
-                  execPage={this.execPage}
-                  dockAppList={dockAppList}
-                  isUnfixDockItem={isUnfixDockItem}
-                  dockCallbacks={dockCallbacks}
-                  setMyMenuNodeData={setMyMenuNodeData}
-                  dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                  handleSetDockFixedYn={handleSetDockFixedYn}
-                  appYn={setMyMenuData.APP_YN}
-                  dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                  handleSetDockIconType={handleSetDockIconType}
-                  // 모바일 Dock ContextMenu 플래그 설정
-                  isClose={isClose}
-                  setIsCloseToTrue={this.setIsCloseToTrue}
-                  setIsCloseToFalse={this.setIsCloseToFalse}
-                  history={this.props.history}
-                />
-                <Rodal
-                  className="drillDownCon"
-                  visible={this.state.show}
-                  onClose={this.hide}
-                  animation="slideRight"
-                  showCloseButton={false}
-                  // leaveAnimation="slideLeft"
-                  duration={1000}
-                  customStyles={{
-                    position: 'absolute',
-                    width: 1580,
-                    height: 'calc(100vh - 200px)',
-                    backgroundColor: '#646567',
+                  <Route
+                    path={`/${basicPath.PORTAL}/userStore`}
+                    render={props => (
+                      <UserStore //eslint-disable-line
+                        {...props}
+                        applySkin={this.applySkin}
+                      />
+                    )}
+                  />
+                </div>
+              </Fullscreen>
+              {setMyMenuData.APP_YN !== 'Y' ? (
+                <Footer
+                  style={{
+                    background: 'transparent',
                   }}
-                  // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
-                >
-                  {this.state.show === true ? <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} /> : <div />}
-                </Rodal>
-              </AppWrapper>
-            </Scrollbars>
-          </Layout>
+                  dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                  dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                  view={view}
+                />
+              ) : (
+                <div />
+              )}
+              <UserDock
+                execPage={this.execPage}
+                dockAppList={dockAppList}
+                isUnfixDockItem={isUnfixDockItem}
+                dockCallbacks={dockCallbacks}
+                setMyMenuNodeData={setMyMenuNodeData}
+                dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                handleSetDockFixedYn={handleSetDockFixedYn}
+                appYn={setMyMenuData.APP_YN}
+                dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                handleSetDockIconType={handleSetDockIconType}
+                // 모바일 Dock ContextMenu 플래그 설정
+                isClose={isClose}
+                setIsCloseToTrue={this.setIsCloseToTrue}
+                setIsCloseToFalse={this.setIsCloseToFalse}
+                history={this.props.history}
+              />
+              <Rodal
+                className="drillDownCon"
+                visible={this.state.show}
+                onClose={this.hide}
+                animation="slideRight"
+                showCloseButton={false}
+                // leaveAnimation="slideLeft"
+                duration={1000}
+                customStyles={{
+                  position: 'absolute',
+                  width: 1580,
+                  height: 'calc(100vh - 200px)',
+                  backgroundColor: '#646567',
+                }}
+                // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
+              >
+                {this.state.show === true ? <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} /> : <div />}
+              </Rodal>
+            </AppWrapper>
+          </Scrollbars>
         </Layout>
       </ThemeProvider>
     );

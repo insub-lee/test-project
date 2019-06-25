@@ -39,14 +39,9 @@ import Watermark from './Watermark';
 
 // 포탈에서 앱을 실행했을 때 사용되는 경로
 // getLoaddata 함수가 실행되야함
-const portalPath = [
-  'apps',
-  'page',
-];
+const portalPath = ['apps', 'page'];
 
-const portalSinglePath = [
-  'sm',
-];
+const portalSinglePath = ['sm'];
 
 const etcPath = [
   'store',
@@ -121,11 +116,13 @@ class PublicRoutes extends Component {
           }
         }
         getLoaddata(param1, param2, param3);
-      } else if (checkPath(pathArray[1], portalSinglePath)) { // eslint-disable-line
+      } else if (checkPath(pathArray[1], portalSinglePath)) {
+        // eslint-disable-line
         const param1 = pathArray[1];
         const param2 = pathArray[2];
         getSingleModeLoaddata(param1, param2);
-      } else if (checkPath(pathArray[1], etcPath)) { // eslint-disable-line
+      } else if (checkPath(pathArray[1], etcPath)) {
+        // eslint-disable-line
         // getLoaddata를 호출할 필요 없는 경로 (stroe, guide, admin ...)
       } else {
         // go to error
@@ -156,94 +153,26 @@ class PublicRoutes extends Component {
     return (
       <div>
         <Debounce time="400" handler="onResize">
-          <WindowResizeListener
-            onResize={windowSize => this.props.windowResize(windowSize)}
-          />
+          <WindowResizeListener onResize={windowSize => this.props.windowResize(windowSize)} />
         </Debounce>
         <Switch>
-          <RestrictedRoute
-            exact
-            path="/"
-            component={PortalApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            exact
-            path="/preview/page/:pageID"
-            component={Preview}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            exact
-            path={`/${basicPath.PAGE}/:PAGE_ID`}
-            component={PortalApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path={`/${basicPath.APPS}/:PAGE_ID`}
-            component={PortalApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path={`/${basicPath.SINGLE}/:PAGE_ID`}
-            component={PortalSingleModeApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path="/portal/settings"
-            component={PortalApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <Route
-            path="/signin"
-            component={SignIn}
-          />
-          <RestrictedRoute
-            path="/store"
-            component={StoreApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path="/admin"
-            component={AdminApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            path="/guide"
-            component={GuideApp}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            exact
-            path="/popup/organization/:lang/:deptId/:userId"
-            component={OrganizationPopup}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            exact
-            path="/popup/organization/:lang/:deptId"
-            component={OrganizationPopup}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
-          <RestrictedRoute
-            component={ErrorPage}
-            isLoggedIn={isLoggedIn}
-            profile={profile}
-          />
+          <RestrictedRoute exact path="/" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute exact path="/preview/page/:pageID" component={Preview} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute exact path={`/${basicPath.PAGE}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path={`/${basicPath.APPS}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path={`/${basicPath.SINGLE}/:PAGE_ID`} component={PortalSingleModeApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path="/portal/settings" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <Route path="/signin" component={SignIn} />
+          <RestrictedRoute path="/store" component={StoreApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path="/portal/userStore" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path="/admin" component={AdminApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path="/guide" component={GuideApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute exact path="/popup/organization/:lang/:deptId/:userId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute exact path="/popup/organization/:lang/:deptId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute component={ErrorPage} isLoggedIn={isLoggedIn} profile={profile} />
         </Switch>
         <Loading />
-        { profile !== null ? <Watermark profile={profile} /> : <div /> }
+        {profile !== null ? <Watermark profile={profile} /> : <div />}
       </div>
     );
   }
@@ -274,21 +203,25 @@ const mapStateToProps = createStructuredSelector({
   SMSESSION: authSelectors.makeSMSESSION(),
 });
 
-const mapDispatchToProps = dispatch => (
-  {
-    windowResize: w => dispatch(actions.windowResize(w.windowWidth, w.windowHeight)),
-    getLoaddata: (path, param, data) => dispatch(actions.getLoaddata(path, param, data)),
-    getSingleModeLoaddata: (path, param) => dispatch(actions.getSingleModeLoaddata(path, param)),
-    checkSession: (ctype, payload) => dispatch(actions.checkSession(ctype, payload)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  windowResize: w => dispatch(actions.windowResize(w.windowWidth, w.windowHeight)),
+  getLoaddata: (path, param, data) => dispatch(actions.getLoaddata(path, param, data)),
+  getSingleModeLoaddata: (path, param) => dispatch(actions.getSingleModeLoaddata(path, param)),
+  checkSession: (ctype, payload) => dispatch(actions.checkSession(ctype, payload)),
+});
 
 const withReducer = injectReducer({ key: 'hynix.common', reducer });
 const withSaga = injectSaga({ key: 'auth', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
-
-export default injectIntl(compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(PublicRoutes));
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+/* eslint-disable */
+export default injectIntl(
+  compose(
+    withSaga,
+    withReducer,
+    withConnect,
+  )(PublicRoutes),
+);
+/* eslint-disable */
