@@ -4,7 +4,12 @@ const selectUserReg = state => state.get('UserReg');
 
 const makeEmpNoCheck = () => createSelector(
   selectUserReg,
-  userReg => userReg.get('empCheck'),
+  userReg => userReg.get('empNoCheck'),
+);
+
+const makeEmpNoFlag = () => createSelector(
+  selectUserReg,
+  userReg => userReg.get('empNoFlag'),
 );
 
 const makeSelectComboData = () => createSelector(
@@ -30,6 +35,7 @@ const makeUserInfo = () => createSelector(
 export {
   selectUserReg,
   makeEmpNoCheck,
+  makeEmpNoFlag,
   makeSelectComboData,
   makeTreeData,
   makeIsLoading,

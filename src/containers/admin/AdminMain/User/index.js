@@ -24,11 +24,11 @@ import UserRegTree from '../../components/UserRegTree';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
-const emailValid = str => {
+const emailValid = (str) => {
   const re = /^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i;
   return re.test(String(str).toLowerCase());
 };
-const phonelValid = str => {
+const phonelValid = (str) => {
   const re = /^\d{2,3}-\d{3,4}-\d{4}$/;
   return re.test(String(str).toLowerCase());
 };
@@ -74,7 +74,7 @@ class UserReg extends React.Component {
     }
   }
 
-  setUserInfo = userInfo => {
+  setUserInfo = (userInfo) => {
     this.setState({
       empNo: userInfo.EMP_NO,
       nameKor: userInfo.NAME_KOR,
@@ -94,13 +94,13 @@ class UserReg extends React.Component {
     });
   };
 
-  getSelectNode = node => {
+  getSelectNode = (node) => {
     this.setState({
       selectedNode: node,
     });
   };
 
-  getSelectDept = id => {
+  getSelectDept = (id) => {
     switch (this.state.modalType) {
       case 'dept':
         this.props.getChangeDeptTreeData(id);
@@ -116,13 +116,11 @@ class UserReg extends React.Component {
     }
   };
 
-  getEmpCheck = empNo => {
-    if (empNo !== this.props.userInfo.EMP_NO) {
-      this.props.getEmpCheck(empNo);
-    }
+  getEmpCheck = (userId, empNo) => {
+    this.props.getEmpCheck(userId, empNo.toUpperCase());
   };
 
-  handleChange = e => {
+  handleChange = (e) => {
     let { value } = e.target;
     switch (e.target.name) {
       case 'officeTel':
@@ -139,7 +137,7 @@ class UserReg extends React.Component {
     });
   };
 
-  handleStatusChange = val => {
+  handleStatusChange = (val) => {
     this.setState({
       statusCd: val,
     });
@@ -153,7 +151,7 @@ class UserReg extends React.Component {
       case 'email':
         return val !== '' && emailValid(val) ? 'success' : 'error';
       case 'empNocheck':
-        return val !== '' && this.props.empCheck === this.state.empNo ? 'success' : 'error';
+        return val !== '' && this.props.empNoCheck.toUpperCase() === this.state.empNo.toUpperCase() && this.props.empNoFlag !== 0 ? 'success' : 'error';
       default:
         return val !== '' ? 'success' : 'error';
     }
@@ -189,7 +187,7 @@ class UserReg extends React.Component {
           return false;
         }
       }
-      if (this.props.empCheck !== this.state.empNo) {
+      if (this.props.empNoCheck.toUpperCase() !== this.state.empNo.toUpperCase()) {
         message.error(`${intlObj.get(messages.chkInput)}`, 2);
         return false;
       }
@@ -210,7 +208,7 @@ class UserReg extends React.Component {
   regUser = () => {
     const userInfo = {
       userId: Number(this.state.userId),
-      empNo: this.state.empNo,
+      empNo: this.state.empNo.toUpperCase(),
       nameKor: this.state.nameKor,
       nameEng: this.state.nameEng,
       nameChn: this.state.nameChn,
@@ -274,8 +272,8 @@ class UserReg extends React.Component {
     });
   };
 
-  dupCheckEmpNo = empCheck => {
-    if (this.state.empNo !== '' && this.state.empNo !== empCheck) {
+  dupCheckEmpNo = () => {
+    if (this.props.empNoFlag === 0 && this.state.empNo.toUpperCase() === this.props.empNoCheck.toUpperCase()) {
       return <font color="RED">{intlObj.get(messages.dupEmpNo)}</font>;
     }
     return '';
@@ -364,14 +362,14 @@ class UserReg extends React.Component {
                           name="empNo"
                           value={this.state.empNo}
                           onChange={this.handleChange}
-                          onBlur={() => this.state.empNo !== '' && this.getEmpCheck(this.state.empNo)}
+                          onBlur={() => this.state.empNo !== '' && this.getEmpCheck(this.state.userId, this.state.empNo)}
                           maxLength={200}
                           id="s1"
                           readOnly={this.state.mode === 'D'}
                           autoFocus // Default로 포커스를 주는 법
                         />
                       </ErrorBoundary>
-                      <span className="tipText">{this.dupCheckEmpNo(this.props.empCheck)}</span>
+                      <span className="tipText">{this.dupCheckEmpNo()}</span>
                     </FormItem>
                   </td>
                 </tr>
@@ -626,7 +624,8 @@ class UserReg extends React.Component {
 }
 
 UserReg.propTypes = {
-  empCheck: PropTypes.string, //eslint-disable-line
+  empNoCheck: PropTypes.string, //eslint-disable-line
+  empNoFlag: PropTypes.number, //eslint-disable-line
   treeData: PropTypes.array, //eslint-disable-line
   isLoading: PropTypes.bool, //eslint-disable-line
   registUser: PropTypes.func, //eslint-disable-line
@@ -645,7 +644,7 @@ UserReg.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getEmpCheck: empNo => dispatch(actions.checkEmpNo(empNo)),
+  getEmpCheck: (userId, empNo) => dispatch(actions.checkEmpNo(userId, empNo)),
   getChangeDeptTreeData: DEPT_ID => dispatch(actions.getChangeDeptTreeData(DEPT_ID)),
   getDeptComboData: () => dispatch(actions.getDeptComboData()),
   getChangeDutyTreeData: DUTY_ID => dispatch(actions.getChangeDutyTreeData(DUTY_ID)),
@@ -658,7 +657,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  empCheck: selectors.makeEmpNoCheck(),
+  empNoCheck: selectors.makeEmpNoCheck(),
+  empNoFlag: selectors.makeEmpNoFlag(),
   comboData: selectors.makeSelectComboData(),
   treeData: selectors.makeTreeData(),
   isLoading: selectors.makeIsLoading(),

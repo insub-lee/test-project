@@ -50,13 +50,15 @@ export function* updatetUserInfo(payload) {
 
 // eslint-disable-next-line no-unused-vars
 export function* getEmpNo(payload) {
-  const { empNo } = payload;
-  const response = yield call(Axios.post, '/api/admin/v1/common/userDupCheck', { empNo });
+  const empNo = payload.empNo.toUpperCase();
+  const userId = Number(payload.userId);
+  const response = yield call(Axios.post, '/api/admin/v1/common/userDupCheck', { empNo, userId });
   const data = response;
   if (data.result) {
     yield put({
       type: actionType.SET_EMPNO,
-      payload: data.result === 'ok' ? data.empNO : '',
+      empNoCheck: data.empNo,
+      empNoFlag: data.result === 'ok' ? 1 : 0,
     });
   }
 }

@@ -15,8 +15,9 @@ export const updateUser = userInfo => ({
   userInfo,
 });
 
-export const checkEmpNo = empNo => ({
+export const checkEmpNo = (userId, empNo) => ({
   type: constants.GET_EMPNO,
+  userId,
   empNo,
 });
 
