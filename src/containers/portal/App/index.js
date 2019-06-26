@@ -503,9 +503,6 @@ class App extends React.PureComponent {
   };
   execPage = (node, type) => {
     const { dockAppList } = this.props;
-    console.debug('>>>>>>>>execPage1: ', node);
-    console.debug('>>>>>>>>execPage2: ', type);
-    console.debug('>>>>>>>>execPage3: ', basicPath);
     if (node === 'common') {
       const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
       this.props.history.push(`/${basicPath.PAGE}/${homeApp.PAGE_ID}`);
@@ -571,7 +568,7 @@ class App extends React.PureComponent {
   };
 
   goStore = () => {
-    this.props.history.push(`/${basicPath.PORTAL}/userStore`);
+    this.props.history.push(`/${basicPath.PORTAL}/store`);
     this.setState({ open: false });
     return;
   };
@@ -636,8 +633,6 @@ class App extends React.PureComponent {
 
     const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
     const dockHomeItem = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
-    console.debug('@@@@@@@@@@@dockAppList: ', dockAppList);
-    console.debug('@@@@@@@@@@@this.props.apps: ', this.props.apps);
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
@@ -760,7 +755,7 @@ class App extends React.PureComponent {
                     )}
                   />
                   <Route
-                    path={`/${basicPath.PORTAL}/userStore`}
+                    path={`/${basicPath.PORTAL}/store`}
                     render={props => (
                       <UserStore //eslint-disable-line
                         {...props}

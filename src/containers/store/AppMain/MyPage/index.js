@@ -138,7 +138,6 @@ class MyPage extends Component {
               selectedIndex={selectedIndex}
               onClick={handleTreeOnClick}
               canDrag={true}
-              canDrop={true}
               insertNode={insertNode}
               updateNode={updateNode}
               saveData={saveData}

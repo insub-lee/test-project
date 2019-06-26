@@ -29,12 +29,10 @@ import * as actionsApp from '../../App/actions';
 import ItemList from './ItemList';
 import AppCategory from '../../components/AppCategory';
 
-
 class AppList extends Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-    };
+    this.state = {};
     this.props.appBizGubun(0);
   }
   componentDidMount() {
@@ -62,15 +60,10 @@ class AppList extends Component {
     const { params } = match;
     const { CATG_ID, searchword } = params;
 
-    if (searchword
-      && nextProps.searchword
-      && nextProps.searchword !== ''
-      && nextProps.searchword !== searchword) {
+    if (searchword && nextProps.searchword && nextProps.searchword !== '' && nextProps.searchword !== searchword) {
       loadingOn();
       this.props.handleGetMapAppListSearch(searchword);
-    } else if (CATG_ID
-      && this.CATG_ID !== -1
-      && this.CATG_ID !== Number(CATG_ID)) {
+    } else if (CATG_ID && this.CATG_ID !== -1 && this.CATG_ID !== Number(CATG_ID)) {
       this.CATG_ID = Number(CATG_ID);
       loadingOn();
       this.props.handleGetMapListOne(this.CATG_ID);
@@ -113,23 +106,19 @@ class AppList extends Component {
         <BackTop />
         <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
         <ErrorBoundary>
-          <AppCategory
-            handleOnClick={handleOnClick}
-            selectedIndex={this.CATG_ID}
-            preUrl="/store/appMain/bizStore"
-          />
+          <AppCategory handleOnClick={handleOnClick} selectedIndex={this.CATG_ID} preUrl="/store/appMain/bizStore" />
         </ErrorBoundary>
 
         <NavList className="navTabs">
           <NavListItem>
-            <NavLink to="/store/appMain/bizStore/app/list" className="current"> {/* 현재 활성화된 상태에 current 클래스 적용 */}
+            <NavLink to="/store/appMain/bizStore/app/list" className="current">
+              {' '}
+              {/* 현재 활성화된 상태에 current 클래스 적용 */}
               {intlObj.get(messages.category)}
             </NavLink>
           </NavListItem>
           <NavListItem>
-            <NavLink to="/store/appMain/bizStore/biz/list">
-              {intlObj.get(messages.bizGroup)}
-            </NavLink>
+            <NavLink to="/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
           </NavListItem>
         </NavList>
 
@@ -207,7 +196,10 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'appList', reducer });
 const withSaga = injectSaga({ key: 'appList', saga });

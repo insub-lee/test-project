@@ -1,11 +1,6 @@
 import { createSelector } from 'reselect';
 
-// const selectApp = state => state.get('userStore-app');
-const selectApp = (state) => {
-  console.debug('@@@', state);
-  console.debug('###', state.toJS());
-  return state.get('userStore-app');
-};
+const selectApp = state => state.get('userStore-app');
 
 const makeSelectCollapsed = () =>
   createSelector(

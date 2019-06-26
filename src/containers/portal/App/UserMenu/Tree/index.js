@@ -86,7 +86,7 @@ class Tree extends Component {
         .get('NAME', node)
         .toLowerCase()
         .indexOf(searchQuery.toLowerCase()) > -1;
-
+    console.debug('>>>>>>>>>>>edit mode: ', this.state.editTree);
     return (
       <TreeWrapper>
         <div
@@ -155,8 +155,6 @@ class Tree extends Component {
                   style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
                   isVirtualized={false}
                   generateNodeProps={({ node }) => {
-                    console.debug('>>>>>>>node: ', node);
-                    console.debug('>>>>>>>treeData: ', treeData);
                     node.active = node.key === selectedIndex;
                     const handleOnClick = () => {
                       if (node.TARGET === 'NEW') {
@@ -206,8 +204,6 @@ Tree.propTypes = {
   handleSetMenuNameSelectedIndex: PropTypes.func.isRequired,
   saveData: PropTypes.func.isRequired,
   showNoti: PropTypes.bool.isRequired,
-
-  // execApp: PropTypes.func.isRequired,
 };
 
 Tree.defaultProps = {

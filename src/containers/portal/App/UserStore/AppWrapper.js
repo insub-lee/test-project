@@ -175,9 +175,10 @@ const AppWrapper = styled.div`
 }
 
 .storeContent {
-  min-height: 100vh;
+  height: calc(100vh - 99.5px);
+  overflow-y: auto;
+  // min-height: 100vh;
   // padding: 45px 0 0 300px;
-  padding: 42px 0 0 0;
   flex-shrink: 0;
   background: #ffffff;
 
@@ -185,14 +186,14 @@ const AppWrapper = styled.div`
     position: relative;
     display: flex;
     width: 100%;
-    min-height: calc(100vh - 42px);
+    min-height: calc(100vh - 99px);
 
     > div {
       width: 100%;
     }
     
     .storeLayoutContentWrapper {
-      min-height: calc(100vh - 100px);  //header와 footer 높이값 빼기
+      min-height: calc(100vh - 154px);  //header와 footer 높이값 빼기
     }
     
   }

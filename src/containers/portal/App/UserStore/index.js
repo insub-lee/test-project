@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-// import { Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { Layout } from 'antd';
 import { createStructuredSelector } from 'reselect';
 // import { lang } from 'utils/commonUtils';
 import { ThemeProvider } from 'styled-components';
 
-import injectReducer from '../../../../utils/injectReducer';
-import injectSaga from '../../../../utils/injectSaga';
-import themes from '../../../../config/themes/index';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
+import themes from 'config/themes/index';
 
 import * as selectors from './selectors';
 import reducer from './reducer';
@@ -19,6 +19,9 @@ import * as actions from './actions';
 import saga from './saga';
 import AppWrapper from './AppWrapper';
 import StyleUserSetting from './StyleUserSetting';
+
+import AppList from './AppMain/AppList';
+import AppMain from './AppMain';
 
 import './global-store.css';
 
@@ -38,16 +41,16 @@ class UserStore extends Component {
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
-          <h2 className="pageHeader">설정</h2>
+          <h2 className="pageHeader">App Store</h2>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
               <Sider trigger={null} collapsible collapsed={collapsed} className="siderLayout" />
               <AppWrapper style={{ width: '100%' }}>
                 <Content className="storeContent">
                   <div className="contentWrapper">
-                    list
-                    {/* <Route exact path="/potal/userStore" component={AppList} />
-                <Route path="/potal/userStore/appMain" component={AppMain} /> */}
+                    {/* <AppList props={this.props} /> */}
+                    <Route exact path="/portal/store" component={AppList} />
+                    <Route path="/portal/store/appMain" component={AppMain} />
                   </div>
                 </Content>
               </AppWrapper>
