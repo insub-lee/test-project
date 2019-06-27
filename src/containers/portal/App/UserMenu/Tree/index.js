@@ -1,22 +1,35 @@
 import React, { Component } from 'react';
 import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 import { Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { lang } from 'utils/commonUtils';
 import Input from 'components/Input';
+import Widget from 'components/appSetting';
 import ScrollBar from 'react-custom-scrollbars';
+import { ModalContainer, ModalRoute } from 'react-router-modal';
+
+import 'react-router-modal/css/react-router-modal.css';
+
 import CustomTheme from './theme';
-import { Badge, Button, Switch } from 'antd';
+import { Badge, Button, Switch, Tooltip } from 'antd';
 import './app.css';
-import StoreTree from '../StoreTree';
-import icon_store from '../../../../../images/portal/icon-store.png';
-import nextIcon from '../../../../../images/portal/icon-store.png';
-import icon_unlock from '../../../../../images/portal/icon-unlock.png';
-import icon_lock from '../../../../../images/portal/icon_lock.png';
-import IconGo from '../../../../../images/portal/icon_go.png';
-// import nextIcon from 'images/bizstore/icon-reply.png';
+// import StoreTree from '../StoreTree';
+import icon_store from 'images/portal/icon-store.png';
+import nextIcon from 'images/portal/icon-store.png';
+import icon_unlock from 'images/portal/icon-unlock.png';
+import icon_lock from 'images/portal/icon_lock.png';
+import IconGo from 'images/portal/icon_go.png';
 import TreeWrapper from './TreeWrapper';
+import MyPageTree from '../../UserStore/components/MyPageTree';
+
+import Main from '../../UserStore/AppMain/MyPage/Main';
+import AppInfo from '../../UserStore/AppMain/MyPage/AppInfo';
+import PageInfo from '../../UserStore/AppMain/MyPage/PageInfo';
+import AppBizModal from '../../UserStore/AppMain/MyPage/AppBizModal';
+import BizDetail from '../../UserStore/AppMain/Biz/BizDetail';
+import BizMenuList from '../../UserStore/AppMain/Biz/BizMenuList';
 
 class Tree extends Component {
   constructor(props) {
@@ -67,6 +80,16 @@ class Tree extends Component {
     });
   };
 
+  handleTreeOnClick = node => {
+    changeSelectedIndex(node.key);
+
+    if (node.NODE_TYPE !== 'F') {
+      const url = getUrl(node);
+      history.push(url);
+      window.scrollTo(0, 0);
+    }
+  };
+
   render() {
     const {
       // treeData,
@@ -86,7 +109,6 @@ class Tree extends Component {
         .get('NAME', node)
         .toLowerCase()
         .indexOf(searchQuery.toLowerCase()) > -1;
-    console.debug('>>>>>>>>>>>edit mode: ', this.state.editTree);
     return (
       <TreeWrapper>
         <div
@@ -109,10 +131,10 @@ class Tree extends Component {
               autoComplete="off"
             />
             <Button className="searchBtn" title="찾기" />
-            <div className="myMenuEdit">
-              <Link to="/store" className="storeLink" style={{ padding: '10px' }} title="Biz스토어" target="_blank">
+            <div className="myMenuEdit" style={{ textAlign: 'center' }}>
+              {/* <Link to="/store" className="storeLink" style={{ padding: '10px' }} title="Biz스토어" target="_blank">
                 <img src={icon_store} alt="Biz스토어 바로가기" title="Biz스토어 바로가기" />
-              </Link>
+              </Link> */}
               <img onClick={this.onSetEditClick} src={editMenuMode ? icon_unlock : icon_lock} alt="메뉴수정" title="메뉴수정" />
             </div>
             {/* <Button className="myMenuEdit" onClick={this.onSetEditClick} title="메뉴수정" /> */}
@@ -121,7 +143,7 @@ class Tree extends Component {
             {this.tree !== undefined && !editTree ? (
               <div className="searchResultMessage" style={{ display: this.tree !== null && this.tree.state.searchMatches.length !== 0 ? 'none' : 'block' }}>
                 <span>해당 내용 검색결과가 없습니다. Biz Store로 이동하시겠습니까?</span>
-                <Link to={`/store/appMain/bizStore/app/search/${searchString}`} className="storeLink" title="스토어 홈 바로가기" target="_blank">
+                <Link to={`/portal/store/appMain/bizStore/app/search/${searchString}`} className="storeLink" title="스토어 홈 바로가기" target="_blank">
                   <img src={IconGo} style={{ paddingLeft: '7px', marginTop: '-2px' }} className="nextIcon" alt="스토어 홈 바로가기" />
                 </Link>
               </div>
@@ -130,12 +152,34 @@ class Tree extends Component {
             )}
           </div>
           {this.state.editTree ? (
-            <StoreTree
-              treeData={this.props.myAppStoreTreeData}
-              moveNode={this.props.moveNode}
-              updateMymenuDisp={this.props.updateMymenuDisp}
-              showNoti={this.props.showNoti}
-            />
+            <div style={{ padding: '10px' }}>
+              <MyPageTree
+                treeData={this.props.myAppStoreTreeData}
+                moveNode={this.props.moveNode}
+                updateMymenuDisp={this.props.updateMymenuDisp}
+                showNoti={this.props.showNoti}
+                // selectedIndex={selectedIndex}
+                onClick={this.handleTreeOnClick}
+                canDrag={true}
+                canDrop={true}
+                // insertNode={insertNode}
+                // updateNode={updateNode}
+                // saveData={saveData}
+                // moveNode={moveNode}
+                // deleteNode={deleteNode}
+                // history={history}
+              />
+              <ModalRoute path="/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} outDelay={1200} />
+              <ModalContainer />
+              <div className="myPageContentWrapper">
+                <Route path="/portal/store/appMain/myPage" component={Main} exact />
+                <Route path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
+                <Route path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
+                <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
+                <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
+                <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+              </div>
+            </div>
           ) : (
             <div
               className="treeBox"
@@ -204,6 +248,8 @@ Tree.propTypes = {
   handleSetMenuNameSelectedIndex: PropTypes.func.isRequired,
   saveData: PropTypes.func.isRequired,
   showNoti: PropTypes.bool.isRequired,
+  // 수정모드일때 사용하는 func, type 정의
+  selectedIndex: PropTypes.number.isRequired,
 };
 
 Tree.defaultProps = {

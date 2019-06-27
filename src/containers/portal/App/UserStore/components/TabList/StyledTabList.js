@@ -25,7 +25,7 @@ const StyledTabList = styled.div`
       .react-tabs__tab {
         float: left;
         display: inline-block;
-        width: 100%;
+        width: 50%;
         height: inherit;
         text-align: center;
 

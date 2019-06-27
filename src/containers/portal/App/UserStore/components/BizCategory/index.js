@@ -8,8 +8,8 @@ import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import * as actionsApp from 'containers/store/App/actions';
 import Tree from '../Tree';
-import injectReducer from '../../../../utils/injectReducer';
-import injectSaga from '../../../../utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
@@ -22,7 +22,7 @@ class BizCategory extends Component {
   componentWillMount() {
     this.props.handleInitCategoryData();
   }
-
+  /* eslint-disable */
   componentDidCatch(error, info) {
     // console.log(error);
     // console.log(info);
@@ -47,31 +47,30 @@ class BizCategory extends Component {
 
     return (
       <StyledTabList className="treeWrapper">
-        {(currentView !== 'Mobile' && currentView !== 'Tablet') ? (
-          <Tabs
-            onSelect={() => { }}
-            selectedIndex={1}
-          >
+        {currentView !== 'Mobile' && currentView !== 'Tablet' ? (
+          <Tabs onSelect={() => {}} selectedIndex={1}>
             <TabList>
               <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
-              {
-                !isBizManage ? (
-                  <Tab>
-                    <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
-                      <FormattedMessage {...messages.bizGroup} />
-                    </Link>
-                  </Tab>
-                ) : ''
-              }
+              {!isBizManage ? (
+                <Tab>
+                  <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
+                    <FormattedMessage {...messages.bizGroup} />
+                  </Link>
+                </Tab>
+              ) : (
+                ''
+              )}
             </TabList>
             <TabPanel />
             <TabPanel />
           </Tabs>
-        ) : ''}
+        ) : (
+          ''
+        )}
         <Tree
           type="biz"
           treeData={categoryData}
@@ -100,7 +99,6 @@ BizCategory.defaultProps = {
   categoryData: [],
 };
 
-
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
@@ -116,13 +114,18 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'bizcategory', reducer });
 const withSaga = injectSaga({ key: 'bizcategory', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withConnect,
-  withSaga,
-)(BizCategory));
+export default injectIntl(
+  compose(
+    withReducer,
+    withConnect,
+    withSaga,
+  )(BizCategory),
+);

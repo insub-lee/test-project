@@ -117,7 +117,7 @@ class MyPage extends Component {
       updateMymenuDisp,
     } = this.props;
 
-    console.debug('>>>>>>>>>>categoryData: ', categoryData);
+    console.debug('>>>>>>>>>>categoryData: ', this.props);
 
     const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);

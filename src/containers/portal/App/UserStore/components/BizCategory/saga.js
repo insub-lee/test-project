@@ -3,7 +3,7 @@ import { fromJS } from 'immutable';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 // import _ from 'lodash';
 
-import { Axios } from '../../../../utils/AxiosFunc';
+import { Axios } from 'utils/AxiosFunc';
 import { SET_CATEGORY_DATA, INIT_CATEGORY_DATA } from './constants';
 
 export function* getTreeData() {

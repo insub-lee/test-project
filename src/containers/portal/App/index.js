@@ -8,7 +8,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
 import { Route } from 'react-router-dom';
-import { Layout, Spin, Icon, Button } from 'antd';
+import { Layout, Spin, Icon, Button, Tooltip } from 'antd';
 import Scrollbars from 'react-custom-scrollbars';
 import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
@@ -579,6 +579,12 @@ class App extends React.PureComponent {
     return;
   };
 
+  goBusinessReg = () => {
+    this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
+    this.setState({ open: false });
+    return;
+  }
+
   render() {
     const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
     const {
@@ -710,13 +716,24 @@ class App extends React.PureComponent {
                   </div>
                   <div className="testClass">
                     <div className="iconPositon" style={{ marginTop: '60px' }}>
-                      <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+                      <Tooltip placement="right" title="home">
+                        <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+                      </Tooltip>
                     </div>
                     <div className="iconPositon" style={{ marginTop: '20px' }}>
-                      <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                      <Tooltip placement="right" title="app-store">
+                        <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+                      </Tooltip>
                     </div>
                     <div className="iconPositon" style={{ marginTop: '20px' }}>
-                      <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
+                      <Tooltip placement="right" title="환경설정">
+                        <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
+                      </Tooltip>
+                    </div>
+                    <div className="iconPositon" style={{ marginTop: '20px' }}>
+                      <Tooltip placement="right" title="업무등록">
+                        <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg}/>
+                      </Tooltip>
                     </div>
                   </div>
                 </div>

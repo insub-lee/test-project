@@ -68,7 +68,6 @@ class AppList extends Component {
 
   render() {
     console.debug('>>>>>>>>props: ', this.props);
-    console.debug('>>>>>>>>: message.category', intlObj.get(messages.category));
     const {
       initType,
       mapList,
@@ -115,9 +114,9 @@ class AppList extends Component {
               {intlObj.get(messages.category)}
             </NavLink>
           </NavListItem>
-          {/* <NavListItem>
-            <NavLink to="/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
-          </NavListItem> */}
+          <NavListItem>
+            <NavLink to="/portal/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
+          </NavListItem>
         </NavList>
 
         <ErrorBoundary>

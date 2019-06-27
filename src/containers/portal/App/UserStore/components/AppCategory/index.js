@@ -47,6 +47,15 @@ class AppCategory extends Component {
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
+              {!isBizManage ? (
+                <Tab>
+                  <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
+                    <FormattedMessage {...messages.bizGroup} />
+                  </Link>
+                </Tab>
+              ) : (
+                ''
+              )}
             </TabList>
             <TabPanel />
             <TabPanel />

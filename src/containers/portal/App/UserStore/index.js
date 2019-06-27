@@ -38,6 +38,7 @@ class UserStore extends Component {
   render() {
     const { collapsed, menuList } = this.props;
     console.debug('>>>>>>>>>menuList: ', menuList);
+    console.debug('>>>>>>>>>collapsed : ', collapsed);
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
@@ -48,7 +49,6 @@ class UserStore extends Component {
               <AppWrapper style={{ width: '100%' }}>
                 <Content className="storeContent">
                   <div className="contentWrapper">
-                    {/* <AppList props={this.props} /> */}
                     <Route exact path="/portal/store" component={AppList} />
                     <Route path="/portal/store/appMain" component={AppMain} />
                   </div>

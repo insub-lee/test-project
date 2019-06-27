@@ -269,7 +269,7 @@ export function* registerBiz(payload) {
 
   if (code === 200) {
     const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
-
+    console.debug('>>>>>>>itemBiz mapList: ', mapList);
     yield put({ type: constants.SET_MAPLIST, mapList });
   } else if (code === 201) {
     // feed.error(`${intlObj.get(messages.bizRegistfail)}`);

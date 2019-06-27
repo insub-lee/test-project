@@ -13,18 +13,9 @@ const isoModal = ModalStyle(Modals);
 const Modal = WithDirection(isoModal);
 
 class WidgetSettingModal extends PureComponent {
-  constructor(props) {
-    super(props);
-    /*
-    this.state = {
-      show: this.props.show,
-    };
-    */
-  }
-
   closeModal = () => {
     this.props.closeModal();
-  }
+  };
 
   createComponents = (item) => {
     const { closeModal } = this.props;
@@ -33,10 +24,8 @@ class WidgetSettingModal extends PureComponent {
       loading: Loading,
     };
     const COMP = Loadable(param);
-    return (
-      <COMP item={item} closeModal={closeModal} />
-    );
-  }
+    return <COMP item={item} closeModal={closeModal} />;
+  };
   render() {
     const {
       // actions,
@@ -52,15 +41,12 @@ class WidgetSettingModal extends PureComponent {
         onCancel={this.closeModal}
         maskClosable={false}
         width={470}
-        footer={[
-        ]}
+        footer={[]}
         wrapClassName="widgetModal"
         bodyStyle={{ margin: '0 20px' }}
         zIndex={1011}
       >
-        <div className="widgetContent">
-          {this.createComponents(item)}
-        </div>
+        <div className="widgetContent">{this.createComponents(item)}</div>
       </Modal>
     );
   }

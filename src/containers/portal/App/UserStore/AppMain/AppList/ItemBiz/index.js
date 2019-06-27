@@ -15,7 +15,7 @@ class ItemBiz extends PureComponent {
     const { appId, title, subTitle, registed, registBiz, appIcon } = this.props;
 
     const subTit = subTitle.length > 40 ? `${subTitle.substring(0, 40)}...` : subTitle.substring(0, 40);
-
+    console.debug('>>>>>>>itemBiz props: ', this.props);
     return (
       <Card className="categoryAppCard">
         {registed === 'false' ? (
@@ -59,8 +59,8 @@ class ItemBiz extends PureComponent {
         <Link
           to={
             this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet'
-              ? `/store/appMain/bizStore/biz/detail/info/${appId}`
-              : `/store/appMain/bizStore/biz/menulist/${appId}`
+              ? `/portal/store/appMain/bizStore/biz/detail/info/${appId}`
+              : `/portal/store/appMain/bizStore/biz/menulist/${appId}`
           }
           title={subTit}
         >

@@ -1,13 +1,15 @@
+/* eslint-disable react/jsx-closing-bracket-location */
+/* eslint-disable react/jsx-indent */
+/* eslint-disable react/jsx-indent-props */
+/* eslint-disable react/jsx-closing-tag-location */
+/* eslint-disable comma-spacing */
+/* eslint-disable comma-dangle */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './node-content-renderer.scss';
 
 function isDescendant(older, younger) {
-  return (
-    !!older.children &&
-    typeof older.children !== 'function' &&
-    older.children.some(child => child === younger || isDescendant(child, younger))
-  );
+  return !!older.children && typeof older.children !== 'function' && older.children.some(child => child === younger || isDescendant(child, younger));
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -50,7 +52,7 @@ class CustomThemeNodeContentRenderer extends Component {
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
 
-    const nodeContent = connectDragPreview((
+    const dragPreview = (
       <div
         className={
           styles.row +
@@ -65,18 +67,10 @@ class CustomThemeNodeContentRenderer extends Component {
           ...style,
         }}
       >
-        <div
-          className={
-            styles.rowContents +
-            (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')
-          }
-        >
+        <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')}>
           <div className={styles.rowLabel}>
             <span
-              className={
-                styles.rowTitle +
-                (node.subtitle ? ` ${styles.rowTitleWithSubtitle}` : '')
-              }
+              className={styles.rowTitle + (node.subtitle ? ` ${styles.rowTitleWithSubtitle}` : '')}
               // onClick={() => toggleChildrenVisibility({
               //   node,
               //   path,
@@ -117,12 +111,18 @@ class CustomThemeNodeContentRenderer extends Component {
           </div>
         </div>
       </div>
-    ));
+    );
+
+    const nodeContent = connectDragPreview(dragPreview);
 
     const renderButton = () => {
       let jsx = '';
       if (toggleChildrenVisibility) {
-        if (node.NODE_TYPE === 'F' || (node.REF_TYPE === 'B' && node.NODE_TYPE === 'R') || node.children && (node.children.length > 0 || typeof node.children === 'function')) {
+        if (
+          node.NODE_TYPE === 'F' ||
+          (node.REF_TYPE === 'B' && node.NODE_TYPE === 'R') ||
+          (node.children && (node.children.length > 0 || typeof node.children === 'function'))
+        ) {
           jsx = (
             <div>
               <button
@@ -132,9 +132,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 // 클릭 시 글자와 버튼 모두 같이 색상 변경
                 type="button"
                 aria-label={node.expanded ? 'Collapse' : 'Expand'}
-                className={
-                  node.expanded ? styles.collapseButton : styles.expandButton
-                }
+                className={node.expanded ? styles.collapseButton : styles.expandButton}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
                 onClick={() =>
                   toggleChildrenVisibility({
@@ -145,13 +143,12 @@ class CustomThemeNodeContentRenderer extends Component {
                 }
               />
 
-              {node.expanded &&
-                !isDragging && (
-                  <div
-                    style={{ width: scaffoldBlockPxWidth }}
-                    // className={styles.lineChildren}
-                  />
-                )}
+              {node.expanded && !isDragging && (
+                <div
+                  style={{ width: scaffoldBlockPxWidth }}
+                  // className={styles.lineChildren}
+                />
+              )}
             </div>
           );
         } else {
@@ -161,7 +158,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label="ordinary"
                 // className={styles.ordinaryButton}
-                className={`${styles.ordinaryButton} ${node.selectedIndex===node.key?'active':`${node.selectedIndex}/${node.key}`}`}
+                className={`${styles.ordinaryButton} ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
               />
             </div>
@@ -174,15 +171,8 @@ class CustomThemeNodeContentRenderer extends Component {
     return (
       <div style={{ height: '100%' }} {...otherProps}>
         {renderButton()}
-        <div
-          className={
-            styles.rowWrapper +
-            (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')
-          }
-        >
-          {canDrag
-            ? connectDragSource(nodeContent, { dropEffect: 'copy' })
-            : nodeContent}
+        <div className={styles.rowWrapper + (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')}>
+          {canDrag ? connectDragSource(nodeContent, { dropEffect: 'copy' }) : nodeContent}
         </div>
       </div>
     );
