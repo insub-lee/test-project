@@ -2,7 +2,8 @@ import { fromJS } from 'immutable';
 import * as constants from './constants';
 
 const initialState = fromJS({
-  empCheck: -1,
+  empNoCheck: '',
+  empNoFlag: -1,
   comboData: [],
   treeData: [],
   isLoading: false,
@@ -24,9 +25,9 @@ const UserRegReducer = (state = initialState, action) => {
     case constants.SET_CHANGE_PSTN_DATA:
       return state.set('treeData', action.pstnTreeData);
     case constants.SET_EMPNO:
-      return state.set('empCheck', action.payload);
+      return state.set('empNoCheck', action.empNoCheck).set('empNoFlag', action.empNoFlag);
     case constants.SET_USER_DATA:
-      return state.set('userInfo', action.payload);
+      return state.set('userInfo', action.payload).set('empNoCheck', action.payload.EMP_NO);
     case constants.IS_LOADING:
       return state.set('isLoading', action.isLoading);
     default:

@@ -27,6 +27,8 @@ const StyleUserForm = styled.div`
               position: relative;
               display: block;
 
+              .upper {text-transform: uppercase;}
+              
               // 목록
               .treeList {
                 min-height: 33px;

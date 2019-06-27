@@ -12,18 +12,9 @@ class UserRegTree extends Component {
       selectedIndex: -1,
       selectedDept: '',
     };
-    console.log('constructor');
-  }
-  componentWillMount() {
-    console.log('componentWillMount');
-  }
-
-  componentDidMount() {
-    console.log('componentDidMount');
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps');
     if (nextProps.treeData.length > 0) {
       this.setState({
         selectedDept: nextProps.treeData[0].key,
@@ -31,32 +22,26 @@ class UserRegTree extends Component {
     }
   }
 
-  componentWillUnmount() {
-    console.log('componentWillUnmount');
-  }
+  handleOnClick = (node) => {
+    // node - 선택한 트리 노드의 데이터 object
+    this.setState({
+      selectedIndex: node.key,
+    });
+    this.props.getSelectNode(node);
+  };
 
   render() {
+
     const {
       selectedIndex,
     } = this.state;
 
     const {
-      getSelectNode,
       getSelectDept,
       treeType,
       comboData,
       isLoading,
     } = this.props;
-
-    console.log('render');
-
-    const handleOnClick = (node) => {
-      // node - 선택한 트리 노드의 데이터 object
-      this.setState({
-        selectedIndex: node.key,
-      });
-      getSelectNode(node);
-    };
 
     return (
       <div
@@ -88,13 +73,13 @@ class UserRegTree extends Component {
               }}
             >
               <Select value={this.state.selectedDept} onChange={e => getSelectDept(e)}>
-                {comboData.map(item => (
-                  <Option value={item[`${treeType.toUpperCase()}_ID`]}>{item.NAME_KOR}</Option>
+                {comboData.map((item, idx) => (
+                  <Option value={item[`${treeType.toUpperCase()}_ID`]} key={idx}>{item.NAME_KOR}</Option>
                 ))}
               </Select>
               <Tree
                 treeData={this.props.treeData} // 트리데이터
-                handleOnClick={handleOnClick} // onClick 이벤트
+                handleOnClick={this.handleOnClick} // onClick 이벤트
                 selectedIndex={selectedIndex} // 선택한 트리노드 KEY
               />
             </div>

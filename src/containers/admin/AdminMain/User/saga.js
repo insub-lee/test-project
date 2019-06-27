@@ -28,10 +28,7 @@ export function* insertUserInfo(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registUser/', payload.userInfo);
   const data = response;
   if (data.code === 200 && data.userId !== 0) {
-    message.success(
-      <MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>, 3);
     const { userId } = data;
     yield put(push(`/admin/adminmain/account/${userId}`));
   } else {
@@ -43,10 +40,7 @@ export function* updatetUserInfo(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', payload.userInfo);
   const data = response;
   if (data.code === 200) {
-    message.success(
-      <MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>, 3);
     const { userId } = data;
     yield put(push(`/admin/adminmain/account/${userId}`));
   } else {
@@ -56,13 +50,15 @@ export function* updatetUserInfo(payload) {
 
 // eslint-disable-next-line no-unused-vars
 export function* getEmpNo(payload) {
-  const { empNo } = payload;
-  const response = yield call(Axios.post, '/api/admin/v1/common/userDupCheck', { empNo });
+  const empNo = payload.empNo.toUpperCase();
+  const userId = Number(payload.userId);
+  const response = yield call(Axios.post, '/api/admin/v1/common/userDupCheck', { empNo, userId });
   const data = response;
   if (data.result) {
     yield put({
       type: actionType.SET_EMPNO,
-      payload: Number(data.result === 'ok'),
+      empNoCheck: data.empNo,
+      empNoFlag: data.result === 'ok' ? 1 : 0,
     });
   }
 }
