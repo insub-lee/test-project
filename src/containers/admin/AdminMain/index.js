@@ -14,6 +14,7 @@ import Position from './Position';
 import Duty from './Duty';
 import Dept from './Dept';
 import UserReg from './User';
+import AppStore from './AppStore';
 
 // const wrap = dragDropContext(HTML5Backend);
 
@@ -49,6 +50,7 @@ class wrap extends PureComponent {
         <Route path="/admin/adminmain/dept" component={Dept} />
         <Route path="/admin/adminmain/account" exact component={UserReg} />
         <Route path="/admin/adminmain/account/:USER_ID" component={UserReg} />
+        <Route path="/admin/adminmain/appstore" component={AppStore} />
       </div>
     );
   }
