@@ -1,5 +1,5 @@
-import styled from './node_modules/styled-components';
-import iconSearch from './node_modules/images/common/icon-search2.png';
+import styled from 'styled-components';
+import iconSearch from 'images/common/icon-search2.png';
 
 const StyleAppBizModal = styled.div`
   position: relative;

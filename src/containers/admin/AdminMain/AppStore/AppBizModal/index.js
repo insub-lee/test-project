@@ -1,9 +1,9 @@
-import React, { PureComponent } from './node_modules/react';
-import PropTypes from './node_modules/prop-types';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 // import { Tabs, Tab } from 'react-bootstrap-tabs';
-import { Route } from './node_modules/react-router-dom';
-import ErrorBoundary from './node_modules/containers/common/ErrorBoundary';
-import * as commonjs from './node_modules/containers/common/functions/common';
+import { Route } from 'react-router-dom';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
+import * as commonjs from 'containers/common/functions/common';
 // import Button from 'components/Button';
 // import { ModalRoute } from 'react-router-modal';
 // import Modal from 'react-modal';

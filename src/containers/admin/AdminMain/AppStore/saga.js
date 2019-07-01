@@ -1,18 +1,19 @@
+import { takeLatest, put, call, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import { takeLatest, put, call, select } from './node_modules/redux-saga/effects';
-import _ from './node_modules/lodash';
-import { Axios } from './node_modules/utils/AxiosFunc';
-import { lang, intlObj } from './node_modules/utils/commonUtils';
-import message from './node_modules/components/Feedback/message';
-import * as treeFunc from './node_modules/containers/common/functions/treeFunc';
-import * as constantsCommon from './node_modules/containers/common/constants';
+import _ from 'lodash';
+import { Axios } from 'utils/AxiosFunc';
+import { lang, intlObj } from 'utils/commonUtils';
+import message from 'components/Feedback/message';
+import * as treeFunc from 'containers/common/functions/treeFunc';
+import * as constantsCommon from 'containers/common/constants';
 
 import messages from './messages';
 import * as constantsAppList from './AppBizModal/AppModal/AppList/constants';
 import * as constants from './constants';
 
 export function* getTreeData() {
-  const response = yield call(Axios.get, '/api/admin/v1/common/myappcategory', { data: 1 });
+  // const response = yield call(Axios.get, '/api/admin/v1/common/myappcategory', { data: 1 });
+  const response = yield call(Axios.get, '/api/bizstore/v1/mypage/myTree', { data: 'temp' });
   const result = fromJS(JSON.parse(`[${response.result}]`));
   if (result.size > 0) {
     const categoryData = result.get(0).get('children');

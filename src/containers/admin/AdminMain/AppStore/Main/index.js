@@ -1,14 +1,14 @@
-import React, { Component } from './node_modules/react';
-import PropTypes from './node_modules/prop-types';
-import styled from './node_modules/styled-components';
-import { Row, Col } from './node_modules/antd';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Row, Col } from 'antd';
 
-import MenuBg01 from './node_modules/images/bizstore/mp-menu01.png';
-import MenuBg02 from './node_modules/images/bizstore/mp-menu02.png';
-import MenuBg03 from './node_modules/images/bizstore/mp-menu03.png';
-import MenuBg04 from './node_modules/images/bizstore/mp-menu04.png';
-import MenuBg05 from './node_modules/images/bizstore/mp-menu05.png';
-import MenuBg06 from './node_modules/images/bizstore/mp-menu06.png';
+import MenuBg01 from 'images/bizstore/mp-menu01.png';
+import MenuBg02 from 'images/bizstore/mp-menu02.png';
+import MenuBg03 from 'images/bizstore/mp-menu03.png';
+import MenuBg04 from 'images/bizstore/mp-menu04.png';
+import MenuBg05 from 'images/bizstore/mp-menu05.png';
+import MenuBg06 from 'images/bizstore/mp-menu06.png';
 
 const MyPageMainStyle = styled.div`
   width: 1260px;

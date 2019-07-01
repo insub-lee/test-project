@@ -1,12 +1,12 @@
-import React, { PureComponent } from './node_modules/react';
-import { Button } from './node_modules/antd';
-import PropTypes from './node_modules/prop-types';
+import React, { PureComponent } from 'react';
+import { Button } from 'antd';
+import PropTypes from 'prop-types';
 // import { Link } from 'react-router-dom';
 // import * as feed from 'components/Feedback/functions';
-import { intlObj } from './node_modules/utils/commonUtils';
-import bizAppIcon from './node_modules/images/bizstore/biz-app-icon.png';
-import menuRgtIcon from './node_modules/images/bizstore/icon-menu-rgt.png';
-import Card from './node_modules/containers/store/components/uielements/card.style';
+import { intlObj } from 'utils/commonUtils';
+import bizAppIcon from 'images/bizstore/biz-app-icon.png';
+import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
+import Card from 'containers/store/components/uielements/card.style';
 import messages from '../messages';
 
 class Item extends PureComponent {

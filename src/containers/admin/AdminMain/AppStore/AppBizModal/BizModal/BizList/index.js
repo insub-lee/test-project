@@ -1,15 +1,15 @@
-import React, { Component } from './node_modules/react';
-import PropTypes from './node_modules/prop-types';
-import { compose } from './node_modules/redux';
-import { connect } from './node_modules/react-redux';
-import { createStructuredSelector } from './node_modules/reselect';
-import injectReducer from './node_modules/utils/injectReducer';
-import injectSaga from './node_modules/utils/injectSaga';
-import reducer from './node_modules/containers/store/AppMain/Biz/BizList/reducer';
-import saga from './node_modules/containers/store/AppMain/Biz/BizList/saga';
-import * as selectors from './node_modules/containers/store/AppMain/Biz/BizList/selectors';
-import * as actions from './node_modules/containers/store/AppMain/Biz/BizList/actions';
-import * as commonjs from './node_modules/containers/common/functions/common';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
+import reducer from 'containers/store/AppMain/Biz/BizList/reducer';
+import saga from 'containers/store/AppMain/Biz/BizList/saga';
+import * as selectors from 'containers/store/AppMain/Biz/BizList/selectors';
+import * as actions from 'containers/store/AppMain/Biz/BizList/actions';
+import * as commonjs from 'containers/common/functions/common';
 import ItemList from './ItemList';
 
 class BizList extends Component {

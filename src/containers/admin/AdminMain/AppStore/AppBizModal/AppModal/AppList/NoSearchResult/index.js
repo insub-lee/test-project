@@ -1,8 +1,8 @@
-import React, { PureComponent } from './node_modules/react';
-import PropTypes from './node_modules/prop-types';
-import { intlObj } from './node_modules/utils/commonUtils';
-import noResultImage from './node_modules/images/bizstore/no-result.png';
-import messages from './node_modules/containers/store/AppMain/AppList/NoSearchResult/messages';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import { intlObj } from 'utils/commonUtils';
+import noResultImage from 'images/bizstore/no-result.png';
+import messages from 'containers/store/AppMain/AppList/NoSearchResult/messages';
 import NoResultBox from './noResultStyle';
 
 class NoSearchResult extends PureComponent {

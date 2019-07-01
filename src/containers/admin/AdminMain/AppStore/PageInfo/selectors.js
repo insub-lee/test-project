@@ -1,4 +1,4 @@
-import { createSelector } from './node_modules/reselect';
+import { createSelector } from 'reselect';
 
 const selectOrg = state => state.get('pageInfo');
 

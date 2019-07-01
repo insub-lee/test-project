@@ -1,6 +1,6 @@
-import { createSelector } from './node_modules/reselect';
+import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('mypage');
+const selectOrg = state => state.get('appstore');
 
 const makeCategoryData = () => createSelector(
   selectOrg,

@@ -1,4 +1,4 @@
-import * as appConstants from './node_modules/containers/store/App/constants';
+import * as appConstants from 'containers/store/App/constants';
 import * as constants from './constants';
 
 export const initPage = (initType, param) => ({

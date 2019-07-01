@@ -1,21 +1,21 @@
+import PropTypes from 'prop-types';
+import { Route } from 'react-router-dom';
+import React, { Component } from 'react';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import PropTypes from './node_modules/prop-types';
-import { Route } from './node_modules/react-router-dom';
-import React, { Component } from './node_modules/react';
-import { compose } from './node_modules/redux';
-import { connect } from './node_modules/react-redux';
-import { createStructuredSelector } from './node_modules/reselect';
-import { ModalContainer, ModalRoute } from './node_modules/react-router-modal';
+import { ModalContainer, ModalRoute } from 'react-router-modal';
 
-import './node_modules/react-router-modal/css/react-router-modal.css';
+import 'react-router-modal/css/react-router-modal.css';
 
-import Widget from './node_modules/components/appSetting';
-import Footer from './node_modules/containers/store/App/Footer';
+import Widget from 'components/appSetting';
+import Footer from 'containers/store/App/Footer';
 
-import ErrorBoundary from './node_modules/containers/common/ErrorBoundary';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 
-import injectReducer from './node_modules/utils/injectReducer';
-import injectSaga from './node_modules/utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';

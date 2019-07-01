@@ -1,12 +1,12 @@
+import { takeLatest, put, select, call } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import { takeLatest, put, select, call } from './node_modules/redux-saga/effects';
-import _ from './node_modules/lodash';
-import { lang } from './node_modules/utils/commonUtils';
-import { Axios } from './node_modules/utils/AxiosFunc';
+import _ from 'lodash';
+import { lang } from 'utils/commonUtils';
+import { Axios } from 'utils/AxiosFunc';
 
-import * as treeFunc from './node_modules/containers/common/functions/treeFunc';
-import * as constantsMyPage from './node_modules/containers/store/AppMain/MyPage/constants';
-import * as constantsLoading from './node_modules/containers/common/Loading/constants';
+import * as treeFunc from 'containers/common/functions/treeFunc';
+import * as constantsMyPage from 'containers/store/AppMain/MyPage/constants';
+import * as constantsLoading from 'containers/common/Loading/constants';
 import * as constants from './constants';
 
 

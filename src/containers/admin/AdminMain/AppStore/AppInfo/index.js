@@ -1,8 +1,8 @@
-import React, { Component } from './node_modules/react';
-import PropTypes from './node_modules/prop-types';
-import ErrorBoundary from './node_modules/containers/common/ErrorBoundary';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 
-import AppDetailStyle from './node_modules/containers/store/AppMain/AppDetail/appDetailStyle';
+import AppDetailStyle from 'containers/store/AppMain/AppDetail/appDetailStyle';
 import AppBasicInfo from '../../../../store/AppMain/AppDetail/AppBasicInfo';
 import AppScreenshot from '../../../../store/AppMain/AppDetail/AppScreenshot';
 import AppQna from '../../../../store/AppMain/AppDetail/AppQna/index';

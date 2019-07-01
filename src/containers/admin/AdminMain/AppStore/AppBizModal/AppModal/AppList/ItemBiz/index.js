@@ -1,10 +1,10 @@
-import React, { PureComponent } from './node_modules/react';
-import { Button, Popover } from './node_modules/antd';
-import PropTypes from './node_modules/prop-types';
-import { intlObj, imgUrl } from './node_modules/utils/commonUtils';
-import menuRgtIcon from './node_modules/images/bizstore/icon-menu-rgt.png';
-import moreMenu from './node_modules/images/bizstore/icon-more-menu.png';
-import Card from './node_modules/containers/store/components/uielements/card.style';
+import React, { PureComponent } from 'react';
+import { Button, Popover } from 'antd';
+import PropTypes from 'prop-types';
+import { intlObj, imgUrl } from 'utils/commonUtils';
+import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
+import moreMenu from 'images/bizstore/icon-more-menu.png';
+import Card from 'containers/store/components/uielements/card.style';
 
 import messages from './messages';
 

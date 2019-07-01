@@ -1,9 +1,9 @@
+import { takeLatest, put, call, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import { takeLatest, put, call, select } from './node_modules/redux-saga/effects';
-import { intlObj } from './node_modules/utils/commonUtils';
-import message from './node_modules/components/Feedback/message';
-import { Axios } from './node_modules/utils/AxiosFunc';
-import * as constantsCommon from './node_modules/containers/common/constants';
+import { intlObj } from 'utils/commonUtils';
+import message from 'components/Feedback/message';
+import { Axios } from 'utils/AxiosFunc';
+import * as constantsCommon from 'containers/common/constants';
 import messages from '../messages';
 import * as constants from './constants';
 
