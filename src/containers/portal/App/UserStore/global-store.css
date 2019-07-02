@@ -170,6 +170,7 @@
 .mypageTreePopupMenu.ant-popover-placement-right {
   padding-left: 0;
   margin-left: -40px;
+  z-index: 9999;
 }
 
 .mypageTreePopupMenu .ant-popover-arrow {

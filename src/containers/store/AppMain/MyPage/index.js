@@ -69,6 +69,7 @@ class MyPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.debug('>>>>>>nextProps: ', nextProps);
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;

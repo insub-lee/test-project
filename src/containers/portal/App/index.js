@@ -583,7 +583,7 @@ class App extends React.PureComponent {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
     this.setState({ open: false });
     return;
-  }
+  };
 
   render() {
     const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
@@ -616,6 +616,7 @@ class App extends React.PureComponent {
       // selectedApp,
       // history,
     } = this.props;
+    console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
       handleDndChangePosition,
       handleDndChangePositionSaga,
@@ -692,6 +693,7 @@ class App extends React.PureComponent {
                 visible={this.state.visible}
                 setMenuClose={this.setMenuClose}
                 view={view}
+                history={this.props.history}
               />
               <Header
                 className="portalHeader"
@@ -732,7 +734,7 @@ class App extends React.PureComponent {
                     </div>
                     <div className="iconPositon" style={{ marginTop: '20px' }}>
                       <Tooltip placement="right" title="업무등록">
-                        <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg}/>
+                        <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
                       </Tooltip>
                     </div>
                   </div>
@@ -767,6 +769,15 @@ class App extends React.PureComponent {
                     path={`/${basicPath.PORTAL}/settings`}
                     render={() => (
                       <UserSetting //eslint-disable-line
+                        applySkin={this.applySkin}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
+                    render={props => (
+                      <UserStore //eslint-disable-line
+                        {...props}
                         applySkin={this.applySkin}
                       />
                     )}

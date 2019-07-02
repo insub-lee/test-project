@@ -108,9 +108,10 @@ class UserMenu extends React.Component {
       menuName,
       handleSetMenuNameSelectedIndex,
       view,
-
+      history,
       execApp,
     } = this.props;
+    console.debug('>>>>>>>현재 props: ', this.props);
     return (
       <div>
         {/* <ExtraMenus>
@@ -189,6 +190,7 @@ class UserMenu extends React.Component {
           moveNode={this.props.moveNode}
           updateMymenuDisp={this.props.updateMymenuDisp}
           execApp={execApp}
+          history={history}
         />
       </div>
     );
@@ -286,6 +288,8 @@ UserMenu.propTypes = {
   view: PropTypes.string.isRequired,
 
   execApp: PropTypes.func,
+
+  history: PropTypes.object.isRequired,
 };
 
 UserMenu.defaultProps = {

@@ -22,7 +22,7 @@ import icon_unlock from 'images/portal/icon-unlock.png';
 import icon_lock from 'images/portal/icon_lock.png';
 import IconGo from 'images/portal/icon_go.png';
 import TreeWrapper from './TreeWrapper';
-import MyPageTree from '../../UserStore/components/MyPageTree';
+import MyPage from '../../UserStore/AppMain/MyPage';
 
 import Main from '../../UserStore/AppMain/MyPage/Main';
 import AppInfo from '../../UserStore/AppMain/MyPage/AppInfo';
@@ -102,6 +102,8 @@ class Tree extends Component {
 
     const { treeData, execMenu, execPage, selectedIndex, saveData, showNoti, editMenu } = this.props;
 
+    console.debug('$$$my menu treeData: ', this.props);
+
     const customSearchMethod = ({ node, searchQuery }) =>
       searchQuery &&
       // 스페이스 제거(lang.get('NAME', node).toLowerCase()).replace(" ", "").indexOf((searchQuery.toLowerCase()).replace(" ","")) > -1;
@@ -153,7 +155,8 @@ class Tree extends Component {
           </div>
           {this.state.editTree ? (
             <div style={{ padding: '10px' }}>
-              <MyPageTree
+              <MyPage history={this.props.history} />
+              {/* <MyPageTree
                 treeData={this.props.myAppStoreTreeData}
                 moveNode={this.props.moveNode}
                 updateMymenuDisp={this.props.updateMymenuDisp}
@@ -168,17 +171,7 @@ class Tree extends Component {
                 // moveNode={moveNode}
                 // deleteNode={deleteNode}
                 // history={history}
-              />
-              <ModalRoute path="/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} outDelay={1200} />
-              <ModalContainer />
-              <div className="myPageContentWrapper">
-                <Route path="/portal/store/appMain/myPage" component={Main} exact />
-                <Route path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
-                <Route path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
-                <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
-                <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
-                <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
-              </div>
+              /> */}
             </div>
           ) : (
             <div

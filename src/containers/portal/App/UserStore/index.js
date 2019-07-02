@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
 import { createStructuredSelector } from 'reselect';
 // import { lang } from 'utils/commonUtils';
@@ -23,6 +23,13 @@ import StyleUserSetting from './StyleUserSetting';
 import AppList from './AppMain/AppList';
 import AppMain from './AppMain';
 
+import Main from './AppMain/MyPage/Main';
+import AppInfo from './AppMain/MyPage/AppInfo';
+import PageInfo from './AppMain/MyPage/PageInfo';
+import AppBizModal from './AppMain/MyPage/AppBizModal';
+import BizDetail from './AppMain/Biz/BizDetail';
+import BizMenuList from './AppMain/Biz/BizMenuList';
+
 import './global-store.css';
 
 const { Content, Sider } = Layout;
@@ -36,9 +43,8 @@ class UserStore extends Component {
   }
 
   render() {
-    const { collapsed, menuList } = this.props;
-    console.debug('>>>>>>>>>menuList: ', menuList);
-    console.debug('>>>>>>>>>collapsed : ', collapsed);
+    const { collapsed } = this.props;
+
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
@@ -49,8 +55,16 @@ class UserStore extends Component {
               <AppWrapper style={{ width: '100%' }}>
                 <Content className="storeContent">
                   <div className="contentWrapper">
-                    <Route exact path="/portal/store" component={AppList} />
-                    <Route path="/portal/store/appMain" component={AppMain} />
+                    <Switch>
+                      <Route exact path="/portal/store" component={AppList} />
+                      <Route exact path="/portal/store/appMain" component={AppMain} />
+                      <Route exact path="/portal/store/appMain/myPage" component={Main} />
+                      <Route path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} />
+                      <Route path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
+                      <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
+                      <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
+                      <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+                    </Switch>
                   </div>
                 </Content>
               </AppWrapper>

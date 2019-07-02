@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+// import { Route } from 'react-router-dom';
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -10,7 +10,7 @@ import { ModalContainer, ModalRoute } from 'react-router-modal';
 import 'react-router-modal/css/react-router-modal.css';
 
 import Widget from 'components/appSetting';
-import Footer from 'containers/store/App/Footer';
+import Footer from '../../Footer';
 
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
@@ -21,17 +21,17 @@ import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
-import Main from './Main';
+// import Main from './Main';
 import MyPageTree from '../../components/MyPageTree';
 import StyledTabList from '../../components/TabList/StyledTabList';
-import AppInfo from './AppInfo';
-import PageInfo from './PageInfo';
-import BizDetail from '../Biz/BizDetail';
-import BizMenuList from '../Biz/BizMenuList';
+// import AppInfo from './AppInfo';
+// import PageInfo from './PageInfo';
+// import BizDetail from '../Biz/BizDetail';
+// import BizMenuList from '../Biz/BizMenuList';
 // import Popup from './Popup';
-import AppBizModal from './AppBizModal';
+// import AppBizModal from './AppBizModal';
 
-const homeUrl = '/store/appMain/myPage';
+const homeUrl = '/portal/store/appMain/myPage';
 
 function getUrl(node) {
   /* eslint-disable */
@@ -69,6 +69,7 @@ class MyPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.debug('>>>>>>>>>nextProps: ', nextProps);
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
@@ -91,9 +92,9 @@ class MyPage extends Component {
 
         generateList(nextProps.categoryData);
 
-        if (url) {
-          nextProps.history.push(url);
-        }
+        // if (url) {
+        //   nextProps.history.push(url);
+        // }
       } else {
         // 트리 데이터가 없는 경우. main화면
       }
@@ -117,7 +118,8 @@ class MyPage extends Component {
       updateMymenuDisp,
     } = this.props;
 
-    console.debug('>>>>>>>>>>categoryData: ', categoryData);
+    console.debug('>>>>>>>>>>categoryData111: ', categoryData);
+    console.debug('>>>>>>>>>>PORTAL MY PAGE: ', this.props);
 
     const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);
@@ -137,7 +139,7 @@ class MyPage extends Component {
               treeData={categoryData}
               selectedIndex={selectedIndex}
               onClick={handleTreeOnClick}
-              canDrag={true}
+              // canDrag={true}
               canDrop={true}
               insertNode={insertNode}
               updateNode={updateNode}
@@ -152,7 +154,7 @@ class MyPage extends Component {
 
         <ErrorBoundary>
           <ModalRoute
-            path="/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
+            path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
             component={Widget}
             // className="widgetsetting-modal"
             // inClassName="widgetsetting-modal-in"
@@ -163,16 +165,16 @@ class MyPage extends Component {
         </ErrorBoundary>
 
         <ModalContainer />
-        <div className="myPageContentWrapper">
-          <ErrorBoundary>
-            <Route path="/store/appMain/myPage" component={Main} exact />
-            <Route path="/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
-            <Route path="/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
-            <Route path="/store/appMain/myPage/modal" component={AppBizModal} />
-            <Route path="/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
-            <Route path="/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
-          </ErrorBoundary>
-        </div>
+        {/* <div className="myPageContentWrapper"> */}
+        {/* <ErrorBoundary>
+          <Route path="/portal/store/appMain/myPage" component={Main} exact />
+          <Route path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
+          <Route path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
+          <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
+          <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
+          <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+        </ErrorBoundary> */}
+        {/* </div> */}
         <Footer />
       </div>
     );

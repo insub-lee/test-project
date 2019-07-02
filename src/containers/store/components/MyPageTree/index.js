@@ -13,10 +13,10 @@ import messages from './messages';
 import CustomTheme from './theme';
 import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
 
-const replaceSpecialCharacter = (str) => {
+const replaceSpecialCharacter = str => {
   var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-  return str.replace(regExp, "");
-}
+  return str.replace(regExp, '');
+};
 
 class MyPageTree extends Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class MyPageTree extends Component {
         NAME_CHN: '',
         NAME_JPN: '',
         NAME_ETC: '',
-      }
+      },
     };
 
     this.updateTreeData = this.updateTreeData.bind(this);
@@ -103,7 +103,7 @@ class MyPageTree extends Component {
       showInsert: true,
       showEdit: false,
       selectedIndex: PRNT_ID,
-      data : {
+      data: {
         PRNT_ID,
         NODE_TYPE,
         NAME_KOR: '',
@@ -136,10 +136,10 @@ class MyPageTree extends Component {
     });
   };
 
-  changeShowInsert = (visible) => {
+  changeShowInsert = visible => {
     this.setState({ showInsert: visible });
   };
-  changeShowEdit = (visible) => {
+  changeShowEdit = visible => {
     this.setState({ showEdit: visible });
   };
 
@@ -205,9 +205,7 @@ class MyPageTree extends Component {
         <div className="mypageTree">
           <ul className="entryName">
             <li>
-              <label htmlFor="l_ko">
-                {intlObj.get(messages.kor)}
-              </label>
+              <label htmlFor="l_ko">{intlObj.get(messages.kor)}</label>
               <Input
                 placeholder=""
                 title={intlObj.get(messages.kor)}
@@ -220,17 +218,17 @@ class MyPageTree extends Component {
 
                     setTimeout(() => {
                       const input = ref.input;
-                      if (input){
+                      if (input) {
                         if ('selectionStart' in input) {
-                            // Standard-compliant browsers
-                            input.focus();
-                            input.selectionStart = data.NAME_KOR.length;
+                          // Standard-compliant browsers
+                          input.focus();
+                          input.selectionStart = data.NAME_KOR.length;
                         } else if (document.selection) {
-                            // IE
-                            input.focus();
-                            var sel = document.selection.createRange();
-                            var selLen = document.selection.createRange().text.length;
-                            sel.moveStart('character', -input.value.length);
+                          // IE
+                          input.focus();
+                          var sel = document.selection.createRange();
+                          var selLen = document.selection.createRange().text.length;
+                          sel.moveStart('character', -input.value.length);
                         }
                       }
                     }, 100);
@@ -246,9 +244,7 @@ class MyPageTree extends Component {
               />
             </li>
             <li>
-              <label htmlFor="l_en">
-                {intlObj.get(messages.eng)}
-              </label>
+              <label htmlFor="l_en">{intlObj.get(messages.eng)}</label>
               <Input
                 placeholder=""
                 title={intlObj.get(messages.eng)}
@@ -263,9 +259,7 @@ class MyPageTree extends Component {
               />
             </li>
             <li>
-              <label htmlFor="l_ch">
-                {intlObj.get(messages.chn)}
-              </label>
+              <label htmlFor="l_ch">{intlObj.get(messages.chn)}</label>
               <Input
                 placeholder=""
                 title={intlObj.get(messages.chn)}
@@ -281,12 +275,8 @@ class MyPageTree extends Component {
             </li>
           </ul>
           <div className="buttonWrapper">
-            <button onClick={() => this.closeModal()}>
-              {intlObj.get(messages.cancle)}
-            </button>
-            <button onClick={() => this.onOkCate(rowInfo, treeData)}>
-              {intlObj.get(messages.save)}
-            </button>
+            <button onClick={() => this.closeModal()}>{intlObj.get(messages.cancle)}</button>
+            <button onClick={() => this.onOkCate(rowInfo, treeData)}>{intlObj.get(messages.save)}</button>
           </div>
         </div>
       );
@@ -306,12 +296,12 @@ class MyPageTree extends Component {
         canDrag={({ node }) => {
           // [ 노드 드래그 가능 여부 ]
           // 조건 : 드래그가능 && 업무그룹 하위를 제외한 모든경우 && 폴더/페이지명 수정중이지 않을때
-          return canDrag && !(node.REF_TYPE === 'B' && node.NODE_TYPE !== 'R')
+          return canDrag && !(node.REF_TYPE === 'B' && node.NODE_TYPE !== 'R');
         }}
         canDrop={({ nextParent }) => {
           // [ 노드 드롭 가능 여부 ]
           // 조건 : 최하위 노드 하위에 이동불가 && 업무그룹폴더 하위에 이동불가
-          return !nextParent || nextParent.NODE_TYPE !== 'E' && !(nextParent.NODE_TYPE === 'R' && nextParent.REF_TYPE === 'B')
+          return !nextParent || (nextParent.NODE_TYPE !== 'E' && !(nextParent.NODE_TYPE === 'R' && nextParent.REF_TYPE === 'B'));
         }}
         onMoveNode={({ treeData, node, nextParentNode }) => {
           // [ 노드 드래그 이동 후 실행됨 ]
@@ -320,14 +310,15 @@ class MyPageTree extends Component {
           let PRNT_ID = -1; // 최상위 루트
           const ROOT_ID = node.path[0];
 
-          if (nextParentNode) { // 부모가 있는 경우 PRNT_ID지정
+          if (nextParentNode) {
+            // 부모가 있는 경우 PRNT_ID지정
             PRNT_ID = nextParentNode.MENU_ID;
           }
 
           const resortTreeData = (data, lvl, pathArr) => {
             for (let i = 0; i < data.length; i += 1) {
               const node = data[i];
-              const path = [ ...pathArr, node.key];
+              const path = [...pathArr, node.key];
 
               node['SORT_SQ'] = i + 1;
               node['LVL'] = lvl;
@@ -348,7 +339,7 @@ class MyPageTree extends Component {
         }}
         rowHeight={35}
         scaffoldBlockPxWidth={22}
-        generateNodeProps={(rowInfo) => {
+        generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
@@ -367,166 +358,181 @@ class MyPageTree extends Component {
               selectedIndex: node.key,
             });
             saveData(rowInfo, treeData);
-          onClick(node);
-        };
+            onClick(node);
+          };
 
-        // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-        if (onHoverKey === node.key) {
-          buttons = [
-            // [앱등록 버튼]
-            isFolder ?
-              <AppListBtn
-                key="appListBtn"
-                title="앱등록"
+          console.debug('$$$$$$$$ node.key: ', node.key);
+          console.debug('>>>>>>>>>tree onHoverKey: ', onHoverKey);
+          console.debug('>>>>>>>>>tree isFolder: ', isFolder);
+
+          // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
+          if (onHoverKey === node.key) {
+            buttons = [
+              // [앱등록 버튼]
+              isFolder ? (
+                <AppListBtn
+                  key="appListBtn"
+                  title="앱등록"
+                  onClick={() => {
+                    saveData(rowInfo, treeData);
+                    history.push('/store/appMain/myPage/modal/app/list');
+                  }}
+                />
+              ) : (
+                ''
+              ),
+
+              // [폴더추가 버튼]
+              isFolder ? (
+                <FolderBtn
+                  key="folderBtn"
+                  title="폴더추가"
+                  onClick={() => {
+                    // cateInsert(rowInfo);
+                    this.addNode(node.key, 'F');
+                  }}
+                />
+              ) : (
+                ''
+              ),
+
+              // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
+              isFolder ? (
+                <CopyBtn
+                  key="copybtn"
+                  title="페이지 추가"
+                  onClick={() => {
+                    this.addNode(node.key, 'E');
+                  }}
+                />
+              ) : (
+                ''
+              ),
+
+              // [메뉴노출여부 버튼]
+              // btnCondition2 ?
+              <VisionBtn
+                key="visionBtn"
+                title="메뉴노출"
                 onClick={() => {
                   saveData(rowInfo, treeData);
-                  history.push('/store/appMain/myPage/modal/app/list');
+                  updateMymenuDisp();
                 }}
-              /> : '',
+                className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
+              />,
+              // : '',
 
-            // [폴더추가 버튼]
-            isFolder ? (
-              <FolderBtn
-                key="folderBtn"
-                title="폴더추가"
-                onClick={() => {
-                  // cateInsert(rowInfo);
-                  this.addNode(node.key, 'F');
-                }}
+              // [메뉴명수정]
+              canEditName ? (
+                <EditBtn
+                  key="editBtn"
+                  title="편집"
+                  onClick={() => {
+                    this.editNode(node);
+                  }}
+                />
+              ) : (
+                ''
+              ),
+
+              // [메뉴삭제 버튼]
+              isRootBizGroup || isEmptyFolder ? (
+                <RemoveBtn
+                  key="removeBtn"
+                  title="삭제"
+                  onClick={() => {
+                    let message = '';
+                    if (node.NODE_TYPE === 'F') {
+                      // 폴더
+                      message = messages.deleteFolder;
+                    } else if (node.APP_YN === 'Y') {
+                      // 앱
+                      message = messages.deleteApp;
+                    } else {
+                      // 페이지
+                      message = messages.deletePage;
+                    }
+
+                    const messageStr = `${node.title} ${intlObj.get(message)}`;
+                    feed.showConfirm(messageStr, '', () => deleteNode(rowInfo, this.state.treeData, history));
+                  }}
+                />
+              ) : (
+                ''
+              ),
+            ];
+            // div 감쌈
+            buttons = (
+              <div className="btnsWrapper" style={{ display: this.state.showInsert ? 'none' : 'block' }}>
+                {buttons}
+              </div>
+            );
+          }
+
+          const insertTitleBoxJsx = showInsert && node.key === selectedIndex ? getModalJsx(rowInfo, treeData) : '';
+          const editTitleBoxJsx = showEdit && node.key === selectedIndex ? getModalJsx(rowInfo, treeData) : '';
+
+          title = (
+            <div>
+              <Popover placement="right" content={buttons} trigger="hover" overlayClassName="mypageTreePopupMenu">
+                <button
+                  className={`${node.key === selectedIndex ? 'active' : ''}`}
+                  onClick={handleTreeOnClick}
+                  onMouseOver={() => (!showInsert && !showEdit ? this.onHoverTreeNode(node.key) : '')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {node.title}
+                </button>
+              </Popover>
+              <Popover
+                placement="right"
+                content={insertTitleBoxJsx}
+                trigger="click"
+                visible={showInsert && node.key === selectedIndex}
+                onVisibleChange={visible => this.changeShowInsert(visible)}
+                overlayClassName="mypageTreePopupMenu"
               />
-              ) : '',
-
-            // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
-            isFolder ?
-              <CopyBtn
-                key="copybtn"
-                title="페이지 추가"
-                onClick={() => {
-                  this.addNode(node.key, 'E');
-                }}
-              /> : '',
-
-            // [메뉴노출여부 버튼]
-            // btnCondition2 ?
-            <VisionBtn
-              key="visionBtn"
-              title="메뉴노출"
-              onClick={() => {
-                saveData(rowInfo, treeData);
-                updateMymenuDisp();
-              }}
-              className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
-            />,
-            // : '',
-
-            // [메뉴명수정]
-            canEditName ?
-              <EditBtn
-                key="editBtn"
-                title="편집"
-                onClick={() => {
-                  this.editNode(node);
-                }}
-              /> : '',
-
-            // [메뉴삭제 버튼]
-            isRootBizGroup || isEmptyFolder ?
-              <RemoveBtn
-                key="removeBtn"
-                title="삭제"
-                onClick={() => {
-                  let message = '';
-                  if (node.NODE_TYPE === 'F') { // 폴더
-                    message = messages.deleteFolder;
-                  } else if (node.APP_YN === 'Y') { // 앱
-                    message = messages.deleteApp;
-                  } else { // 페이지
-                    message = messages.deletePage;
-                  }
-
-                  const messageStr = `${node.title} ${intlObj.get(message)}`;
-                  feed.showConfirm(messageStr, '', () => deleteNode(rowInfo, this.state.treeData, history));
-                }}
-              /> : '',
-          ];
-          // div 감쌈
-          buttons = (
-            <div className="btnsWrapper" style={{ display: this.state.showInsert? 'none' : 'block' }}>
-              {buttons}                  
+              <Popover
+                placement="right"
+                content={editTitleBoxJsx}
+                trigger="click"
+                visible={showEdit && node.key === selectedIndex}
+                onVisibleChange={visible => this.changeShowInsert(visible)}
+                overlayClassName="mypageTreePopupMenu"
+              />
             </div>
           );
-        }
 
-        const insertTitleBoxJsx = showInsert && node.key === selectedIndex ? getModalJsx(rowInfo, treeData) : '';
-        const editTitleBoxJsx = showEdit && node.key === selectedIndex ? getModalJsx(rowInfo, treeData) : '';
+          return {
+            title,
 
-        title = (
-          <div>
-            <Popover
-              placement="right"
-              content={buttons}
-              trigger="hover"
-              overlayClassName="mypageTreePopupMenu"
-            >
-              <button
-                className={`${node.key === selectedIndex ? 'active' : ''}`}
-                onClick={handleTreeOnClick}
-                onMouseOver={() => !showInsert && !showEdit ? this.onHoverTreeNode(node.key) : ''}
-                style={{ cursor: 'pointer' }}>
-                {node.title}
-              </button>
-            </Popover>
-            <Popover
-              placement="right"
-              content={insertTitleBoxJsx}
-              trigger="click"
-              visible={showInsert && node.key === selectedIndex}
-              onVisibleChange={visible => this.changeShowInsert(visible)}
-              overlayClassName="mypageTreePopupMenu"
-            />
-            <Popover
-              placement="right"
-              content={editTitleBoxJsx}
-              trigger="click"
-              visible={showEdit && node.key === selectedIndex}
-              onVisibleChange={visible => this.changeShowInsert(visible)}
-              overlayClassName="mypageTreePopupMenu"
-            />
-          </div>
-        );
-
-        return {
-          title,
-
-          // buttons,
-        };
-      }}
-      className="sortableTreeWrapper CustomSCRB"
-    />
+            // buttons,
+          };
+        }}
+        className="sortableTreeWrapper CustomSCRB"
+      />
     );
-
+    console.debug('>>>>>>>>>>>>tree: ', tree);
     return (
-        <StyleMyPageTree
-          style={{
-            display: 'flex', flex: '1 0 50%', padding: 0,
-            flexDirection: 'column', height: 'calc(100vh - 65px)', width: '100%',
-          }}
-        >
-          
-        {
-          treeData.length > 0 ? (
-            <ScrollBar
-              style={{ width: 280, height: '100%' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              {tree}
-            </ScrollBar>
-          ) : tree
-        }
+      <StyleMyPageTree
+        style={{
+          display: 'flex',
+          flex: '1 0 50%',
+          padding: 0,
+          flexDirection: 'column',
+          height: 'calc(100vh - 65px)',
+          width: '100%',
+        }}
+      >
+        {treeData.length > 0 ? (
+          <ScrollBar style={{ width: 280, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            {tree}
+          </ScrollBar>
+        ) : (
+          tree
+        )}
 
-        { rootInsertBox }
+        {rootInsertBox}
 
         <div className="fixedMenu">
           <AppListBtn

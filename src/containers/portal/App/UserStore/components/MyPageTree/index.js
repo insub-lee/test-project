@@ -22,8 +22,8 @@ import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
 import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
-
-const replaceSpecialCharacter = (str) => {
+/* eslint-disable */
+const replaceSpecialCharacter = str => {
   const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
   return str.replace(regExp, '');
 };
@@ -147,10 +147,10 @@ class MyPageTree extends Component {
     });
   };
 
-  changeShowInsert = (visible) => {
+  changeShowInsert = visible => {
     this.setState({ showInsert: visible });
   };
-  changeShowEdit = (visible) => {
+  changeShowEdit = visible => {
     this.setState({ showEdit: visible });
   };
 
@@ -208,6 +208,8 @@ class MyPageTree extends Component {
       updateMymenuDisp, // 메뉴 노출 여부 변경 func()
     } = this.props;
 
+    console.debug('>>>>>>>>> MyPageTree save Data: ', this.props);
+
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
 
@@ -220,7 +222,7 @@ class MyPageTree extends Component {
               placeholder=""
               title={intlObj.get(messages.kor)}
               maxLength="100"
-              ref={(ref) => {
+              ref={ref => {
                 if (ref) {
                   this.inputKor = ref;
                   // console.log(ref);
@@ -259,7 +261,7 @@ class MyPageTree extends Component {
               placeholder=""
               title={intlObj.get(messages.eng)}
               maxLength="100"
-              ref={(ref) => {
+              ref={ref => {
                 if (ref) {
                   this.inputEng = ref;
                 }
@@ -274,7 +276,7 @@ class MyPageTree extends Component {
               placeholder=""
               title={intlObj.get(messages.chn)}
               maxLength="100"
-              ref={(ref) => {
+              ref={ref => {
                 if (ref) {
                   this.inputChn = ref;
                 }
@@ -353,12 +355,10 @@ class MyPageTree extends Component {
         }}
         rowHeight={35}
         scaffoldBlockPxWidth={22}
-        generateNodeProps={(rowInfo) => {
+        generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
-
-          console.debug('>>>>>>>>>tree node: ', node);
 
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE !== 'E' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
@@ -546,7 +546,7 @@ class MyPageTree extends Component {
 
         {rootInsertBox}
 
-        <div className="fixedMenu">
+        {/* <div className="fixedMenu">
           <AppListBtn
             key="rootAppListBtn"
             className="apps"
@@ -572,7 +572,7 @@ class MyPageTree extends Component {
               this.addNode(-1, 'E');
             }}
           />
-        </div>
+        </div> */}
       </StyleMyPageTree>
     );
   }
