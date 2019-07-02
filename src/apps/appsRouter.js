@@ -13,6 +13,7 @@ import PMSheetModeling from './hypm_pmSheetModeling';
 import InformNote from './hypm_informNote';
 import CicdProject from './cicdProject';
 import CicdService from './cicdService';
+import Builder from './builder';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -49,6 +50,7 @@ class AppsRouter extends React.PureComponent {
             <Route path={`/${basicPath.APPS}/pmSheetTablet`} component={PmSheetTablet} />
             <Route path={`/${basicPath.APPS}/cicdProject`} component={CicdProject} />
             <Route path={`/${basicPath.APPS}/cicdService`} component={CicdService} />
+            <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={Builder} />
           </div>
         )
       } else {

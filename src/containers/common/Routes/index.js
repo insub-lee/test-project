@@ -89,7 +89,9 @@ class PublicRoutes extends Component {
       } else if (checkPath(pathArray[1], portalPath)) {
         // go to getLoaddata
         const param1 = pathArray[1];
-        const param2 = Number.isInteger(Number(pathArray[2])) ? Number(pathArray[2]) : pathArray[2];
+        let param2 = pathArray[2];
+        if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
+        else if (pathArray[2] === 'workBuilder') param2 = `${pathArray[2]}/${pathArray[3]}`;
         const param3 = {
           isCssTarget: true,
         };
