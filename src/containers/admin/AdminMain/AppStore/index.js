@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
-
+import { Select } from 'antd';
 import 'react-router-modal/css/react-router-modal.css';
 
 import Widget from 'components/appSetting';
@@ -22,13 +22,15 @@ import reducer from './reducer';
 import saga from './saga';
 
 import Main from './Main';
-import MyPageTree from '../../../store/components/MyPageTree';
-import StyledTabList from '../../../store/components/TabList/StyledTabList';
+import AppStoreTree from './AppStoreTree';
+// import StyledTabList from '../../../store/components/TabList/StyledTabList';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
 // import Popup from './Popup';
 import AppBizModal from './AppBizModal';
+import StyleAppStore from './StyleAppStore';
 
+const Option = Select.Option; // eslint-disable-line
 const homeUrl = '/store/appMain/myPage';
 
 function getUrl(node) {
@@ -57,7 +59,8 @@ function getUrl(node) {
 
 class AppStore extends Component {
   componentWillMount() {
-    this.props.initCategoryData();
+    this.props.getCategoryComboList();
+    this.props.getCategoryData(1);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -92,6 +95,15 @@ class AppStore extends Component {
     }
   }
 
+  onChangeSite = (siteId) => {
+    /*
+    this.setState({
+      siteId,
+    });
+    */
+    this.props.getCategoryData(siteId);
+  }
+
   render() {
     const {
       // data
@@ -112,7 +124,7 @@ class AppStore extends Component {
     const handleTreeOnClick = (node) => {
       changeSelectedIndex(node.key);
 
-      if (node.NODE_TYPE !== 'F') {
+      if (node.NODE_TYPE === 'A') {
         const url = getUrl(node);
         history.push(url);
         window.scrollTo(0, 0);
@@ -120,51 +132,62 @@ class AppStore extends Component {
     };
 
     return (
-      <div className="appMyPageWrapper">
-        <StyledTabList className="treeWrapper">
-          <ErrorBoundary>
-            <MyPageTree
-              treeData={categoryData}
-              selectedIndex={selectedIndex}
-              onClick={handleTreeOnClick}
-              canDrag={true}
-              canDrop={true}
+      <div>
+        <StyleAppStore>
+          <h3 className="pageTitle list">AppStore 관리</h3>
+          {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
+          <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
+            <div className="appstoreTreeWrapper">
+              <div>
+                <ErrorBoundary>
+                  <Select defaultValue={1} onChange={this.onChangeSite}>
+                    {this.props.categoryComboList.map(item =>
+                      <Option value={item.SITE_ID} key={item.SITE_ID}>{item.NAME_KOR}</Option>)}
+                  </Select>
+                  <AppStoreTree
+                    treeData={categoryData}
+                    selectedIndex={selectedIndex}
+                    onClick={handleTreeOnClick}
+                    canDrag={true}
+                    canDrop={true}
 
-              insertNode={insertNode}
-              updateNode={updateNode}
+                    insertNode={insertNode}
+                    updateNode={updateNode}
 
-              saveData={saveData}
-              moveNode={moveNode}
-              deleteNode={deleteNode}
-              updateMymenuDisp={updateMymenuDisp}
+                    saveData={saveData}
+                    moveNode={moveNode}
+                    deleteNode={deleteNode}
+                    updateMymenuDisp={updateMymenuDisp}
 
-              history={history}
-            />
-          </ErrorBoundary>
-        </StyledTabList>
+                    history={history}
+                  />
+                </ErrorBoundary>
+              </div>
+            </div>
+            <ErrorBoundary>
+              <ModalRoute
+                path="/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
+                component={Widget}
+                // className="widgetsetting-modal"
+                // inClassName="widgetsetting-modal-in"
+                // outClassName="widgetsetting-modal-out"
+                // backdropClassName="widgetsetting-backdrop"
+                outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
+              />
+            </ErrorBoundary>
 
-        <ErrorBoundary>
-          <ModalRoute
-            path="/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
-            component={Widget}
-            // className="widgetsetting-modal"
-            // inClassName="widgetsetting-modal-in"
-            // outClassName="widgetsetting-modal-out"
-            // backdropClassName="widgetsetting-backdrop"
-            outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
-          />
-        </ErrorBoundary>
-
-        <ModalContainer />
-        <div className="myPageContentWrapper">
-          <ErrorBoundary>
-            <Route path="/store/appMain/myPage" component={Main} exact />
-            <Route path="/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
-            <Route path="/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
-            <Route path="/store/appMain/myPage/modal" component={AppBizModal} />
-          </ErrorBoundary>
-        </div>
-        <Footer />
+            <ModalContainer />
+            <div>
+              <ErrorBoundary>
+                <Route path="/store/appMain/myPage" component={Main} exact />
+                <Route path="/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
+                <Route path="/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
+                <Route path="/store/appMain/myPage/modal" component={AppBizModal} />
+              </ErrorBoundary>
+            </div>
+          </div>
+          <Footer />
+        </StyleAppStore>
       </div>
     );
   }
@@ -172,15 +195,14 @@ class AppStore extends Component {
 
 AppStore.propTypes = {
   history: PropTypes.object.isRequired,
-
+  categoryComboList: PropTypes.array.isRequired,
+  getCategoryComboList: PropTypes.func.isRequired,
   categoryData: PropTypes.array.isRequired,
-  initCategoryData: PropTypes.func.isRequired,
+  getCategoryData: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   changeSelectedIndex: PropTypes.func.isRequired,
-
   insertNode: PropTypes.func.isRequired,
   updateNode: PropTypes.func.isRequired,
-
   saveData: PropTypes.func.isRequired,
   moveNode: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired,
@@ -193,7 +215,8 @@ AppStore.defaultProps = {
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
-    initCategoryData: () => dispatch(actions.initCategoryData()),
+    getCategoryComboList: () => dispatch(actions.getCategoryComboList()),
+    getCategoryData: siteId => dispatch(actions.getCategoryData(siteId)),
     changeSelectedIndex: selectedIndex =>
       dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
@@ -212,6 +235,7 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   // 카테고리
+  categoryComboList: selectors.makeCategoryComboList(),
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
 });

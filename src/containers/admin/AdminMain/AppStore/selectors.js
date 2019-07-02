@@ -1,25 +1,25 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('appstore');
+const selectAppStore = state => state.get('appstore');
+
+const makeCategoryComboList = () => createSelector(
+  selectAppStore,
+  appStoreState => appStoreState.get('categoryComboList').toJS(),
+);
 
 const makeCategoryData = () => createSelector(
-  selectOrg,
-  org => org.get('categoryData').toJS(),
+  selectAppStore,
+  appStoreState => appStoreState.get('categoryData').toJS(),
 );
 
 const makeSelectedIndex = () => createSelector(
-  selectOrg,
-  org => org.get('selectedIndex'),
+  selectAppStore,
+  appStoreState => appStoreState.get('selectedIndex'),
 );
 
-// const makeModalVisible = () => createSelector(
-//   selectOrg,
-//   org => org.get('titleModalVisible'),
-// );
-
 export {
-  selectOrg,
+  selectAppStore,
+  makeCategoryComboList,
   makeCategoryData,
   makeSelectedIndex,
-  // makeModalVisible,
 };

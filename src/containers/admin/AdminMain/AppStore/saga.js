@@ -11,14 +11,26 @@ import messages from './messages';
 import * as constantsAppList from './AppBizModal/AppModal/AppList/constants';
 import * as constants from './constants';
 
-export function* getTreeData() {
-  // const response = yield call(Axios.get, '/api/admin/v1/common/myappcategory', { data: 1 });
-  const response = yield call(Axios.get, '/api/bizstore/v1/mypage/myTree', { data: 'temp' });
-  const result = fromJS(JSON.parse(`[${response.result}]`));
-  if (result.size > 0) {
-    const categoryData = result.get(0).get('children');
+export function* getCategoryComboList() {
+  const response = yield call(Axios.get, '/api/common/v1/account/organizationGrpList', { data: 'temp' });
+  if (response.list.length > 0) {
+    yield put({ type: constants.SET_CATEGORY_COMBO_LIST, payload: fromJS(response.list) });
+  }
+}
 
-    yield put({ type: constants.SET_CATEGORY_DATA, categoryData });
+export function* getTreeData(payload) {
+  const { siteId } = payload;
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/getAppListWithCategory', { SITE_ID: siteId });
+  // const response = yield call(Axios.get, '/api/bizstore/v1/mypage/myTree', { data: 'temp' });
+  const result = JSON.parse(`[${response.result.join('')}]`);
+  if (result) {
+    // const categoryData = result.get(0).get('children');
+    const selectedIndex = result[0].key;
+    yield put({
+      type: constants.SET_CATEGORY_DATA,
+      categoryData: fromJS(result),
+      selectedIndex,
+    });
   }
 }
 
@@ -234,7 +246,8 @@ export function* updateMymenuDisp() {
 }
 
 export default function* rootSaga() {
-  yield takeLatest(constants.INIT_CATEGORY_DATA, getTreeData);
+  yield takeLatest(constants.GET_CATEGORY_COMBO_LIST, getCategoryComboList);
+  yield takeLatest(constants.GET_CATEGORY_DATA, getTreeData);
   yield takeLatest(constants.INSERT_NODE, insertNode);
   yield takeLatest(constants.UPDATE_NODE, updateNode);
   yield takeLatest(constants.MOVE_MYMENU, moveNode);

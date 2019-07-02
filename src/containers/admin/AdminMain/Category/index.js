@@ -299,7 +299,8 @@ class Category extends React.Component {
         <StyleCategory>
           <h3 className="pageTitle list">AppCategory 관리</h3>
           {/* <div style={{ display: 'inline-block', width: '100%', minHeight: 'calc(100vh - 200px)' }}> */}
-          <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}>
+          {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
+          <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
             <div className="categoryTreeWrapper">
               <div>
                 <Select defaultValue={1} onChange={this.onChangeSite}>

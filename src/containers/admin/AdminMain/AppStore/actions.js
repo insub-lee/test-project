@@ -2,8 +2,15 @@ import { fromJS } from 'immutable';
 
 import * as constants from './constants';
 
-export const initCategoryData = () => ({
-  type: constants.INIT_CATEGORY_DATA,
+export const getCategoryComboList = () => (
+  {
+    type: constants.GET_CATEGORY_COMBO_LIST,
+  }
+);
+
+export const getCategoryData = siteId => ({
+  type: constants.GET_CATEGORY_DATA,
+  siteId,
 });
 
 export const saveData = (tempRowInfo, categoryData) => ({
