@@ -140,14 +140,14 @@ module.exports = {
         test: /\.(js|jsx|mjs)$/,
         enforce: 'pre',
         use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
-
-            },
-            loader: require.resolve('eslint-loader'),
-          },
+          // {
+          //   options: {
+          //     formatter: eslintFormatter,
+          //     eslintPath: require.resolve('eslint'),
+          //
+          //   },
+          //   loader: require.resolve('eslint-loader'),
+          // },
         ],
         include: paths.appSrc,
       },
