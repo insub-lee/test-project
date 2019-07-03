@@ -5,10 +5,31 @@ export const getView = id => ({
   id,
 });
 
-export const successGetView = (boxes, formStuffs) => ({
+export const successGetView = (columns, list) => ({
   type: actionTypes.SUCCESS_GET_VIEW,
+  columns,
+  list,
+});
+
+export const openEditModal = (workSeq, taskSeq) => ({
+  type: actionTypes.OPEN_EDIT_MODAL,
+  workSeq,
+  taskSeq,
+});
+
+export const closeEditModal = () => ({
+  type: actionTypes.CLOSE_EDIT_MODAL,
+});
+
+export const successGetFormData = (boxes, formStuffs) => ({
+  type: actionTypes.SUCCESS_GET_FORM_DATA,
   boxes,
   formStuffs,
+});
+
+export const toggleFormModal = value => ({
+  type: actionTypes.TOGGLE_FORM_MODAL,
+  value,
 });
 
 export const postData = payload => ({
@@ -18,4 +39,18 @@ export const postData = payload => ({
 
 export const successPostData = () => ({
   type: actionTypes.SUCCESS_POST_DATA,
+});
+
+export const getTaskSeq = () => ({
+  type: actionTypes.GET_TASK_SEQ,
+});
+
+export const successGetTaskSeq = taskSeq => ({
+  type: actionTypes.SUCCESS_GET_TASK_SEQ,
+  taskSeq,
+});
+
+export const successGetEditData = data => ({
+  type: actionTypes.SUCCESS_GET_EDIT_DATA,
+  data,
 });
