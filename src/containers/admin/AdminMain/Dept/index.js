@@ -306,8 +306,8 @@ class Dept extends React.Component {
       <div>
         <StyleCategory>
           <h3 className="pageTitle list">부서 관리</h3>
-          {/* <div style={{ display: 'inline-block', width: '100%', minHeight: 'calc(100vh - 200px)' }}> */}
-          <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}>
+          {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
+          <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
             <div className="categoryTreeWrapper">
               <div>
                 <Select value={this.props.selectedDept} onChange={this.onChangeDept}>
