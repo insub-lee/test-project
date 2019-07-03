@@ -52,14 +52,32 @@ export const changeBoxType = (index, value) => ({
   value,
 });
 
+export const successChangeBoxType = (index, value) => ({
+  type: actionTypes.SUCCESS_CHANGE_BOX_TYPE,
+  index,
+  value,
+});
+
 export const changeFormStuffSpan = (index, value) => ({
   type: actionTypes.CHANGE_FORM_STUFF_SPAN,
   index,
   value,
 });
 
+export const successChangeFormStuffSpan = (index, value) => ({
+  type: actionTypes.SUCCESS_CHANGE_FORM_STUFF_SPAN,
+  index,
+  value,
+});
+
 export const changeBoxColumnCount = (index, value) => ({
   type: actionTypes.CHANGE_BOX_COLUMN_COUNT,
+  index,
+  value,
+});
+
+export const successChangeBoxColumnCount = (index, value) => ({
+  type: actionTypes.SUCCESS_CHANGE_BOX_COLUMN_COUNT,
   index,
   value,
 });
@@ -73,8 +91,27 @@ export const changeId = ({ type, index, value }) => ({
   },
 });
 
+export const successChangeId = ({ type, index, value, id }) => ({
+  type: actionTypes.SUCCESS_CHANGE_ID,
+  payload: {
+    type,
+    index,
+    value,
+    id,
+  },
+});
+
 export const changeTitle = ({ type, index, value }) => ({
   type: actionTypes.CHANGE_TITLE,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
+export const successChangeTitle = ({ type, index, value }) => ({
+  type: actionTypes.SUCCESS_CHANGE_TITLE,
   payload: {
     type,
     index,
@@ -91,8 +128,26 @@ export const changeName = ({ type, index, value }) => ({
   },
 });
 
+export const successChangeName = ({ type, index, value }) => ({
+  type: actionTypes.SUCCESS_CHANGE_NAME,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
 export const changeUseLabel = ({ type, index, value }) => ({
   type: actionTypes.CHANGE_USE_LABEL,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
+export const successChangeUseLabel = ({ type, index, value }) => ({
+  type: actionTypes.SUCCESS_CHANGE_USE_LABEL,
   payload: {
     type,
     index,

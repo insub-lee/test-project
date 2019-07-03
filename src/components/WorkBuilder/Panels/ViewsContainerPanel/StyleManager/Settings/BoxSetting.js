@@ -17,7 +17,7 @@ const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeU
             <div className="input-holder">
               <input
                 type="text"
-                defaultValue={target.property.label}
+                value={target.property.label}
                 placeholder="eg. Text here"
                 onChange={e => changeTitle(type, targetIndex, e.target.value)}
               />
@@ -30,7 +30,7 @@ const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeU
           </div>
           <div className="field field-text">
             <div className="input-holder">
-              <select className="field-select" defaultValue={target.property.type} onChange={e => changeBoxType(targetIndex, e.target.value)}>
+              <select className="field-select" value={target.property.type} onChange={e => changeBoxType(targetIndex, e.target.value)}>
                 <option value="normal">normal</option>
                 <option value="table">table</option>
               </select>
@@ -47,7 +47,7 @@ const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeU
             </div>
             <div className="field field-text">
               <div className="input-holder">
-                <select className="field-select" defaultValue={target.property.column} onChange={e => changeBoxColumnCount(targetIndex, e.target.value)}>
+                <select className="field-select" value={target.property.column} onChange={e => changeBoxColumnCount(targetIndex, e.target.value)}>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>

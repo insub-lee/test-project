@@ -62,31 +62,44 @@ const reducer = (state = initialState, action) => {
       const { id } = action;
       return state.set('workSeq', id);
     }
+    case actionTypes.SUCCESS_FETCH_DATA: {
+      const { data } = action;
+      const boxesData = data.filter(meta => meta.COMP_TYPE === 'BOX');
+      const boxes = boxesData.map(({ WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG }) => ({
+        ...JSON.parse(CONFIG).property,
+        WORK_SEQ,
+        PRNT_SEQ,
+        ORD,
+        NAME_KOR,
+        DCSR,
+        COMP_TYPE,
+        COMP_TAG,
+        META_SEQ,
+        COMP_FIELD,
+      }));
+      const formStuffsData = data.filter(meta => meta.COMP_TYPE === 'FIELD');
+      const formStuffs = formStuffsData.map(({ WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG }) => ({
+        ...JSON.parse(CONFIG).property,
+        WORK_SEQ,
+        PRNT_SEQ,
+        ORD,
+        NAME_KOR,
+        DCSR,
+        COMP_TYPE,
+        COMP_TAG,
+        META_SEQ,
+        COMP_FIELD,
+      }));
+      return state.set('boxes', fromJS(boxes)).set('formStuffs', fromJS(formStuffs));
+    }
     case actionTypes.ACTIVE_TAB: {
       const { tabId } = action;
       return state.set('tabId', tabId);
     }
-    // case actionTypes.ADD_BOX: {
-    //   const defaultBox = { type: 'Box', id: `box-${new Date().getTime()}`, property: { label: 'Box Title', useLabel: true, type: 'normal', column: 1 } };
-    //   return state.update('boxes', arr => arr.push(fromJS(defaultBox)));
-    // }
     case actionTypes.SUCCESS_ADD_BOX: {
       const { box } = action;
       return state.update('boxes', arr => arr.push(fromJS(box)));
     }
-    // case actionTypes.ADD_FORM_STUFF: {
-    //   const { formStuffType } = action;
-    //   const viewTargetId = state.get('viewTargetId');
-    //   const newId = `${formStuffType}-${new Date().getTime()}`;
-    //   const newObj = {
-    //     type: formStuffType,
-    //     id: newId,
-    //     // groupId: viewTargetId,
-    //     parentId: viewTargetId,
-    //     property: getDefaultFormProperty(formStuffType, newId),
-    //   };
-    //   return state.update('formStuffs', arr => arr.push(fromJS(newObj)));
-    // }
     case actionTypes.SUCCESS_ADD_FORM_STUFF: {
       const { formStuff } = action;
       return state.update('formStuffs', arr => arr.push(fromJS(formStuff)));
@@ -119,33 +132,35 @@ const reducer = (state = initialState, action) => {
     case actionTypes.DISABLE_LAYERS: {
       return state.set('viewTargetId', '').set('viewTargetType', '');
     }
-    case actionTypes.CHANGE_BOX_TYPE: {
+
+
+    case actionTypes.SUCCESS_CHANGE_BOX_TYPE: {
       const { index, value } = action;
-      return state.setIn(['boxes', index, 'property', 'type'], value);
+      return state.setIn(['boxes', index], fromJS(value));
     }
-    case actionTypes.CHANGE_FORM_STUFF_SPAN: {
+    case actionTypes.SUCCESS_CHANGE_FORM_STUFF_SPAN: {
       const { index, value } = action;
-      return state.setIn(['formStuffs', index, 'property', 'span'], parseInt(value, 10));
+      return state.setIn(['formStuffs', index], fromJS(value));
     }
-    case actionTypes.CHANGE_BOX_COLUMN_COUNT: {
+    case actionTypes.SUCCESS_CHANGE_BOX_COLUMN_COUNT: {
       const { index, value } = action;
-      return state.setIn(['boxes', index, 'property', 'column'], parseInt(value, 10));
+      return state.setIn(['boxes', index], fromJS(value));
     }
-    case actionTypes.CHANGE_ID: {
-      const { type, index, value } = action.payload;
-      return state.setIn([type, index, 'id'], value).set('viewTargetId', value);
+    case actionTypes.SUCCESS_CHANGE_ID: {
+      const { type, index, value, id } = action.payload;
+      return state.setIn([type, index], fromJS(value)).set('viewTargetId', id);
     }
-    case actionTypes.CHANGE_TITLE: {
+    case actionTypes.SUCCESS_CHANGE_TITLE: {
       const { type, index, value } = action.payload;
-      return state.setIn([type, index, 'property', 'label'], value);
+      return state.setIn([type, index], fromJS(value));
     }
-    case actionTypes.CHANGE_NAME: {
+    case actionTypes.SUCCESS_CHANGE_NAME: {
       const { type, index, value } = action.payload;
-      return state.setIn([type, index, 'property', 'name'], value);
+      return state.setIn([type, index], fromJS(value));
     }
-    case actionTypes.CHANGE_USE_LABEL: {
+    case actionTypes.SUCCESS_CHANGE_USE_LABEL: {
       const { type, index, value } = action.payload;
-      return state.setIn([type, index, 'property', 'useLabel'], value);
+      return state.setIn([type, index], fromJS(value));
     }
     case actionTypes.TOGGLE_BLOCK_OPEN_STATUS: {
       const { blockType } = action;
@@ -170,11 +185,6 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.CLEAR_LAYERS: {
       return initialState;
-    }
-    case actionTypes.SUCCESS_FETCH_DATA: {
-      const { data } = action;
-      console.debug('@@ success', data);
-      return state;
     }
     case actionTypes.ON_PREVIEW: {
       return state.set('onPreview', true);

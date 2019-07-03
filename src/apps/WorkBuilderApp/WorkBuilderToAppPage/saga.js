@@ -13,16 +13,16 @@ function* fetchData() {
 
 function* postRegistWBApp({ appName, id }) {
   const payload = {
-    APP_NAME: appName,
-    ID: id,
+    NAME_KOR: appName,
+    ID: id.toString(),
   };
   console.debug('@@@', payload);
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/registWBApp', payload);
   console.debug(response);
   if (response.code === 200) {
-    const { META_ID, appId, categoryId } = response;
+    const { appId, categoryId } = response;
     // Todo - Update Data after get response
-    yield put(actions.updateWorkData(META_ID, appId, categoryId));
+    yield put(actions.updateWorkData(id, appId, categoryId));
   }
 }
 
