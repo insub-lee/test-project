@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 import 'antd/dist/antd.css';
+import 'xeicon/xeicon.min.css';
+import 'font-awesome/css/font-awesome.min.css';
 
 import Routes from './containers/common/Routes';
 import LanguageProvider from './containers/common/LanguageProvider';
