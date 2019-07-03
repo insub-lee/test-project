@@ -139,13 +139,14 @@ class MyPageTree extends Component {
     });
   }
 
-  addNode(PRNT_ID, NODE_TYPE) {
+  addNode(parentNode, NODE_TYPE) {
     this.setState({
       showInsert: true,
       showEdit: false,
-      selectedIndex: PRNT_ID,
+      selectedIndex: parentNode.key,
       data: {
-        PRNT_ID,
+        SITE_ID: parentNode.SITE_ID,
+        PRNT_ID: parentNode.CATG_ID,
         NODE_TYPE,
         NAME_KOR: '',
         NAME_ENG: '',
@@ -362,6 +363,7 @@ class MyPageTree extends Component {
 
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
+          const isCategoryRoot = node.NODE_TYPE === 'R' && node.REF_TYPE !== 'B'; // 앱카테고리 Root
           const isRootBizGroup = node.REF_TYPE === 'B' && node.NODE_TYPE === 'R'; // 업무그룹O
           const isEmptyFolder = node.REF_TYPE !== 'B' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
           const canEditName = (node.REF_TYPE !== 'B' && node.NODE_TYPE === 'F') || (node.REF_TYPE === 'M' && node.PAGE_ID !== -1); // 페이지O 폴더O(업무X)
@@ -381,50 +383,49 @@ class MyPageTree extends Component {
         if (onHoverKey === node.key) {
           buttons = [
             // [앱등록 버튼]
-            isFolder ?
+            isFolder && !isCategoryRoot ?
               <AppListBtn
                 key="appListBtn"
                 title="앱등록"
                 onClick={() => {
                   saveData(rowInfo, treeData);
-                  history.push('/store/appMain/myPage/modal/app/list');
+                  history.push('/admin/adminmain/appstore/modal/app/list');
                 }}
               /> : '',
 
-            // [폴더추가 버튼]
+            // [카테고리 버튼]
             isFolder ? (
               <FolderBtn
                 key="folderBtn"
-                title="폴더추가"
+                title="카테고리추가"
                 onClick={() => {
                   // cateInsert(rowInfo);
-                  this.addNode(node.key, 'F');
+                  this.addNode(node, 'F');
                 }}
               />
               ) : '',
 
             // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
-            isFolder ?
+            isFolder && !isCategoryRoot ?
               <CopyBtn
                 key="copybtn"
                 title="페이지 추가"
                 onClick={() => {
-                  this.addNode(node.key, 'E');
+                  this.addNode(node, 'E');
                 }}
               /> : '',
 
             // [메뉴노출여부 버튼]
-            // btnCondition2 ?
-            <VisionBtn
-              key="visionBtn"
-              title="메뉴노출"
-              onClick={() => {
-                saveData(rowInfo, treeData);
-                updateMymenuDisp();
-              }}
-              className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
-            />,
-            // : '',
+            isRootBizGroup ?
+              <VisionBtn
+                key="visionBtn"
+                title="메뉴노출"
+                onClick={() => {
+                  saveData(rowInfo, treeData);
+                  updateMymenuDisp();
+                }}
+                className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
+              /> : '',
 
             // [메뉴명수정]
             canEditName ?
@@ -546,7 +547,7 @@ class MyPageTree extends Component {
 
 MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
-  selectedIndex: PropTypes.number,
+  selectedIndex: PropTypes.string,
   canDrag: PropTypes.bool, //eslint-disable-line
   canDrop: PropTypes.bool, //eslint-disable-line
   history: PropTypes.object.isRequired,

@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const StyleAppStore = styled.div`
-  max-width: 1200px;
+  // max-width: 1200px;
+  max-width: 1450px;
   min-width: 900px;
   width: 100%;
   margin: 12px auto 0;
@@ -62,6 +63,22 @@ const StyleAppStore = styled.div`
 
       > div:first-child {
         max-height: 212px !important;
+      }
+    }
+
+    //새 위젯 추가
+    .addNew {
+      height: 100px !important;
+
+      .isoWidgetsWrapper {
+        border-color: transparent;
+        background: transparent;
+        text-align: center;
+
+        .widgetBody {
+          height: 100% !important;
+          cursor: default;
+        }
       }
     }
   }

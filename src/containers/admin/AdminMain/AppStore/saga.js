@@ -1,11 +1,14 @@
+import React from 'react';
 import { takeLatest, put, call, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 import _ from 'lodash';
 import { Axios } from 'utils/AxiosFunc';
 import { lang, intlObj } from 'utils/commonUtils';
 import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
-import * as constantsCommon from 'containers/common/constants';
+// import * as constantsCommon from 'containers/common/constants';
 
 import messages from './messages';
 import * as constantsAppList from './AppBizModal/AppModal/AppList/constants';
@@ -20,17 +23,61 @@ export function* getCategoryComboList() {
 
 export function* getTreeData(payload) {
   const { siteId } = payload;
+  const index = payload.selectedIndex && payload.selectedIndex !== '' ? payload.selectedIndex : '';
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/getAppListWithCategory', { SITE_ID: siteId });
   // const response = yield call(Axios.get, '/api/bizstore/v1/mypage/myTree', { data: 'temp' });
   const result = JSON.parse(`[${response.result.join('')}]`);
   if (result) {
     // const categoryData = result.get(0).get('children');
-    const selectedIndex = result[0].key;
+    const selectedIndex = index !== '' ? index : result[0].key;
     yield put({
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(result),
       selectedIndex,
     });
+  }
+}
+
+export function* insertCategory(payload) {
+  const siteId = payload.SITE_ID;
+  const response = yield call(Axios.post, '/api/admin/v1/common/regiscategory/', payload);
+  const { code, catgId } = response;
+  if (code === 200) {
+    message.success(
+      <MessageContent>
+        {intlObj.get(messages.cateInsert)}
+      </MessageContent>,
+      3,
+    );
+    yield put({
+      type: constants.GET_CATEGORY_DATA,
+      siteId,
+      selectedIndex: `F-${catgId}`,
+    });
+  } else {
+    feed.error(`${intlObj.get(messages.cateInsertFail)}`);
+  }
+}
+
+export function* updateCategory(payload) {
+  const siteId = payload.SITE_ID;
+  const catgId = payload.CATG_ID;
+  const response = yield call(Axios.post, '/api/admin/v1/common/updatecategory/', payload);
+  const { code } = response;
+  if (code === 200) {
+    message.success(
+      <MessageContent>
+        {intlObj.get(messages.cateUpdate)}
+      </MessageContent>,
+      3,
+    );
+    yield put({
+      type: constants.GET_CATEGORY_DATA,
+      siteId,
+      selectedIndex: `F-${catgId}`,
+    });
+  } else {
+    feed.error(`${intlObj.get(messages.cateUpdateFail)}`);
   }
 }
 
@@ -93,7 +140,7 @@ export function* insertNode(payload) {
     }
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/store/appMain/myPage/page/${newNode.PAGE_ID}`);
+      history.push(`/admin/adminmain/appstore/page/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -133,7 +180,7 @@ export function* updateNode(payload) {
     });
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/store/appMain/myPage/page/${newNode.PAGE_ID}`);
+      history.push(`/admin/adminmain/appstore/page/${newNode.PAGE_ID}`);
     }
   }
   // else {
@@ -185,7 +232,7 @@ export function* deleteNode(payload) {
 
     // main으로 화면 전환(현재 열려있는 메뉴가 삭제된 경우)
     if (node.APP_ID === APP_ID || node.PAGE_ID === PAGE_ID) {
-      history.push('/store/appMain/myPage');
+      history.push('/admin/adminmain/appstore');
     } else {
       // 메뉴 사용중 -> 사용안함 상태로 변경(앱, 업무그룹, 업무메뉴 리스트 화면인 경우)
       const { location } = history;
@@ -248,10 +295,12 @@ export function* updateMymenuDisp() {
 export default function* rootSaga() {
   yield takeLatest(constants.GET_CATEGORY_COMBO_LIST, getCategoryComboList);
   yield takeLatest(constants.GET_CATEGORY_DATA, getTreeData);
-  yield takeLatest(constants.INSERT_NODE, insertNode);
-  yield takeLatest(constants.UPDATE_NODE, updateNode);
-  yield takeLatest(constants.MOVE_MYMENU, moveNode);
-  yield takeLatest(constants.DELETE_NODE, deleteNode);
-  yield takeLatest(constants.UPDATE_MYMENU_DISP, updateMymenuDisp);
-  yield takeLatest(constantsCommon.RESET_MYMENU_CATEGORY_DATA, resetTreeData);
+  yield takeLatest(constants.INSERT_CATEGORY, insertCategory);
+  yield takeLatest(constants.UPDATE_CATEGORY, updateCategory);
+  // yield takeLatest(constants.INSERT_NODE, insertNode);
+  // yield takeLatest(constants.UPDATE_NODE, updateNode);
+  // yield takeLatest(constants.MOVE_MYMENU, moveNode);
+  // yield takeLatest(constants.DELETE_NODE, deleteNode);
+  // yield takeLatest(constants.UPDATE_MYMENU_DISP, updateMymenuDisp);
+  // yield takeLatest(constantsCommon.RESET_MYMENU_CATEGORY_DATA, resetTreeData);
 }

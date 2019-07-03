@@ -10,7 +10,7 @@ import { Select } from 'antd';
 import 'react-router-modal/css/react-router-modal.css';
 
 import Widget from 'components/appSetting';
-import Footer from 'containers/store/App/Footer';
+import Footer from 'containers/admin/App/Footer';
 
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
@@ -27,18 +27,38 @@ import AppStoreTree from './AppStoreTree';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
 // import Popup from './Popup';
-import AppBizModal from './AppBizModal';
+import AppModal from './AppBizModal/AppModal';
 import StyleAppStore from './StyleAppStore';
 
 const Option = Select.Option; // eslint-disable-line
-const homeUrl = '/store/appMain/myPage';
+const homeUrl = '/admin/adminmain/appstore';
 
 function getUrl(node) {
+  console.log('getUrl');
+  console.log(node);
+
+  const {
+    NODE_TYPE, APP_ID,
+  } = node;
+
+  let url = homeUrl;
+
+  if (NODE_TYPE === 'A' && APP_ID !== 0) { // [앱] 상세
+    url = `${homeUrl}/app/${APP_ID}`;
+  } else if (NODE_TYPE === 'P' && APP_ID !== 0) { // [페이지] 상세
+    // 페이지 정보 조회 필요
+    // url = `${homeUrl}/page/${PAGE_ID}`;
+    url = `${homeUrl}/page/${APP_ID}`;
+  } else {
+    url = '/admin/adminmain/appstore';
+  }
+  /*
   const {
     NODE_TYPE, REF_TYPE, REF_ID, APP_ID, PAGE_ID, APP_YN,
   } = node;
 
   let url = homeUrl;
+
   if (REF_TYPE === 'A' && APP_ID !== 0) { // [앱] 상세
     url = `${homeUrl}/app/${APP_ID}`;
   } else if (REF_TYPE !== 'B' && PAGE_ID !== 0) { // [페이지] 상세
@@ -53,7 +73,7 @@ function getUrl(node) {
       url = `${homeUrl}/biz/detail/page/${REF_ID}/${PAGE_ID}`;
     }
   }
-
+  */
   return url;
 }
 
@@ -63,7 +83,9 @@ class AppStore extends Component {
     this.props.getCategoryData(1);
   }
 
+  // eslint-disable-next-line no-unused-vars
   componentWillReceiveProps(nextProps) {
+    /* 첫(기본)페이지일 경우 우측에 띄와줄 화면 세팅
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
@@ -72,7 +94,7 @@ class AppStore extends Component {
             const node = data[i];
 
             if (url === undefined) {
-              if (node.NODE_TYPE !== 'F') {
+              if (node.NODE_TYPE === 'A') {
                 url = getUrl(node);
                 this.props.changeSelectedIndex(node.key);
               }
@@ -93,6 +115,7 @@ class AppStore extends Component {
         // 트리 데이터가 없는 경우. main화면
       }
     }
+    */
   }
 
   onChangeSite = (siteId) => {
@@ -104,6 +127,42 @@ class AppStore extends Component {
     this.props.getCategoryData(siteId);
   }
 
+  insertAppNode = (rowInfo, treeData, data, history) => {
+    console.log('insertAppNode');
+    console.log(rowInfo);
+    console.log(treeData);
+    console.log(data);
+    console.log(history);
+    /*
+    if (data.NODE_TYPE === 'F') { // 앱 카테고리 수정
+      const {
+        SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN,
+      } = data;
+      this.props.insertCategory(SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN);
+    } else {
+      this.props.insertNode(rowInfo, treeData, data, history);
+    }
+    */
+  }
+
+  updateAppNode = (rowInfo, treeData, data, history) => {
+    console.log('updateAppNode');
+    console.log(rowInfo);
+    console.log(treeData);
+    console.log(data);
+    console.log(history);
+    /*
+    if (data.NODE_TYPE === 'F') { // 앱 카테고리 수정
+      const {
+        SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN,
+      } = data;
+      this.props.updateCategory(SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN)
+    } else {
+      this.props.updateNode(rowInfo, treeData, data, history);
+    }
+    */
+  }
+
   render() {
     const {
       // data
@@ -111,10 +170,6 @@ class AppStore extends Component {
       categoryData,
       selectedIndex,
       changeSelectedIndex,
-
-      insertNode,
-      updateNode,
-
       saveData,
       moveNode,
       deleteNode,
@@ -123,12 +178,9 @@ class AppStore extends Component {
 
     const handleTreeOnClick = (node) => {
       changeSelectedIndex(node.key);
-
-      if (node.NODE_TYPE === 'A') {
-        const url = getUrl(node);
-        history.push(url);
-        window.scrollTo(0, 0);
-      }
+      const url = getUrl(node);
+      history.push(url);
+      window.scrollTo(0, 0);
     };
 
     return (
@@ -141,49 +193,50 @@ class AppStore extends Component {
               <div>
                 <ErrorBoundary>
                   <Select defaultValue={1} onChange={this.onChangeSite}>
-                    {this.props.categoryComboList.map(item =>
-                      <Option value={item.SITE_ID} key={item.SITE_ID}>{item.NAME_KOR}</Option>)}
+                    {this.props.categoryComboList.map(item => (
+                      <Option value={item.SITE_ID} key={item.SITE_ID}>
+                        {item.NAME_KOR}
+                      </Option>
+                    ))}
                   </Select>
                   <AppStoreTree
                     treeData={categoryData}
                     selectedIndex={selectedIndex}
                     onClick={handleTreeOnClick}
-                    canDrag={true}
-                    canDrop={true}
-
-                    insertNode={insertNode}
-                    updateNode={updateNode}
-
+                    canDrag={false}
+                    canDrop={false}
+                    insertNode={this.insertAppNode}
+                    updateNode={this.updateAppNode}
                     saveData={saveData}
                     moveNode={moveNode}
                     deleteNode={deleteNode}
                     updateMymenuDisp={updateMymenuDisp}
-
                     history={history}
                   />
                 </ErrorBoundary>
               </div>
             </div>
-            <ErrorBoundary>
-              <ModalRoute
-                path="/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
-                component={Widget}
-                // className="widgetsetting-modal"
-                // inClassName="widgetsetting-modal-in"
-                // outClassName="widgetsetting-modal-out"
-                // backdropClassName="widgetsetting-backdrop"
-                outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
-              />
-            </ErrorBoundary>
-
-            <ModalContainer />
-            <div>
+            <div className="appstoreContents">
               <ErrorBoundary>
-                <Route path="/store/appMain/myPage" component={Main} exact />
-                <Route path="/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
-                <Route path="/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
-                <Route path="/store/appMain/myPage/modal" component={AppBizModal} />
+                <ModalRoute
+                  path="/admin/adminmain/appstore/widgetsetting/:PAGE_ID/:WIDGET_ID"
+                  component={Widget}
+                  // className="widgetsetting-modal"
+                  // inClassName="widgetsetting-modal-in"
+                  // outClassName="widgetsetting-modal-out"
+                  // backdropClassName="widgetsetting-backdrop"
+                  outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
+                />
               </ErrorBoundary>
+              <ModalContainer />
+              <div>
+                <ErrorBoundary>
+                  <Route path="/admin/adminmain/appstore" component={Main} exact />
+                  <Route path="/admin/adminmain/appstore/app/:APP_ID" component={AppInfo} exact />
+                  <Route path="/admin/adminmain/appstore/page/:PAGE_ID" component={PageInfo} exact />
+                  <Route path="/admin/adminmain/appstore/modal/app/list" component={AppModal} />
+                </ErrorBoundary>
+              </div>
             </div>
           </div>
           <Footer />
@@ -194,19 +247,22 @@ class AppStore extends Component {
 }
 
 AppStore.propTypes = {
-  history: PropTypes.object.isRequired,
   categoryComboList: PropTypes.array.isRequired,
   getCategoryComboList: PropTypes.func.isRequired,
+  selectedIndex: PropTypes.string.isRequired,
   categoryData: PropTypes.array.isRequired,
   getCategoryData: PropTypes.func.isRequired,
-  selectedIndex: PropTypes.number.isRequired,
+  insertCategory: PropTypes.func.isRequired, //eslint-disable-line
+  updateCategory: PropTypes.func.isRequired, //eslint-disable-line
+  // 현재미사용
   changeSelectedIndex: PropTypes.func.isRequired,
-  insertNode: PropTypes.func.isRequired,
-  updateNode: PropTypes.func.isRequired,
+  insertNode: PropTypes.func.isRequired, //eslint-disable-line
+  updateNode: PropTypes.func.isRequired, //eslint-disable-line
   saveData: PropTypes.func.isRequired,
   moveNode: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired,
   updateMymenuDisp: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 AppStore.defaultProps = {
@@ -217,15 +273,20 @@ export function mapDispatchToProps(dispatch) {
     // 카테고리
     getCategoryComboList: () => dispatch(actions.getCategoryComboList()),
     getCategoryData: siteId => dispatch(actions.getCategoryData(siteId)),
+    insertCategory: (SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
+      dispatch(actions.insertCategory(SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN));
+    },
+    updateCategory: (SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
+      dispatch(actions.updateCategory(SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN));
+    },
+    // 현재미사용
     changeSelectedIndex: selectedIndex =>
       dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
-
     moveNode: treeData => dispatch(actions.moveNode(treeData)),
     deleteNode: (rowInfo, categoryData, history) =>
       dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateMymenuDisp: () => dispatch(actions.updateMymenuDisp()),
-
     insertNode: (rowInfo, treeData, data, history) =>
       dispatch(actions.insertNode(rowInfo, treeData, data, history)),
     updateNode: (rowInfo, treeData, data, history) =>
