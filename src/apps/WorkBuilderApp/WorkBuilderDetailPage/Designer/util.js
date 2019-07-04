@@ -11,7 +11,7 @@ export const makeInfo = ({ type, property }) => {
     case 'number':
       return {
         type: 'NUMBER',
-        size: property.maxLength || 2000,
+        size: 10,
         nullable: property.required || false,
         defaultValue: 0,
       };

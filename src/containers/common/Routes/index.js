@@ -171,6 +171,20 @@ class PublicRoutes extends Component {
             profile={profile}
           />
           <RestrictedRoute
+            exact
+            path="/preview/page/:pageID"
+            component={Preview}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
+          <RestrictedRoute
+            exact
+            path={`/${basicPath.PAGE}/:PAGE_ID`}
+            component={PortalApp}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
+          <RestrictedRoute
             path={`/${basicPath.APPS}/:PAGE_ID`}
             component={PortalApp}
             isLoggedIn={isLoggedIn}
@@ -182,6 +196,12 @@ class PublicRoutes extends Component {
             isLoggedIn={isLoggedIn}
             profile={profile}
           />
+          <RestrictedRoute
+            path="/portal/settings"
+            component={PortalApp}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
           <Route
             path="/signin"
             component={SignIn}
@@ -189,6 +209,32 @@ class PublicRoutes extends Component {
           <RestrictedRoute
             path="/store"
             component={StoreApp}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
+          <RestrictedRoute
+            path="/admin"
+            component={AdminApp}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
+          <RestrictedRoute
+            path="/guide"
+            component={GuideApp}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
+          <RestrictedRoute
+            exact
+            path="/popup/organization/:lang/:deptId/:userId"
+            component={OrganizationPopup}
+            isLoggedIn={isLoggedIn}
+            profile={profile}
+          />
+          <RestrictedRoute
+            exact
+            path="/popup/organization/:lang/:deptId"
+            component={OrganizationPopup}
             isLoggedIn={isLoggedIn}
             profile={profile}
           />
