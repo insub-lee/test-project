@@ -9,4 +9,8 @@ export default defineMessages({
     id: 'store.App.search',
     defaultMessage: 'search',
   },
+  category: {
+    id: 'store.components.AppCategory.category',
+    defaultMessage: 'category',
+  },
 });

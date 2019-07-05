@@ -5,7 +5,7 @@ const initialState = fromJS({
   categoryComboList: [],
   searchString: '',
   searchFocusIndex: -1,
-  selectedIndex: -1,
+  selectedIndex: '',
   categoryData: [],
   tempRowInfo: {},
   // titleModalVisible: false,

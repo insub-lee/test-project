@@ -128,6 +128,10 @@ class Header extends React.Component {
                 <li>
                   <UserProfile execPage={this.props.execPage} />{/* 프로필 */}
                 </li>
+                {/* { setMyMenuData.HOME_YN === 'Y' &&
+                <li>
+                  <Link to="/admin" className="icon-setting" target="_blank" />
+                </li> } */}
               </ul>
             </li>
           </ul>

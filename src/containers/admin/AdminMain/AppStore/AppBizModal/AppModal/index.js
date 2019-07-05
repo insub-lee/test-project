@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Link } from 'react-router-dom';
 import Button from 'components/Button';
 import { intlObj } from 'utils/commonUtils';
 import { Input } from 'antd';
@@ -11,8 +11,8 @@ import { Input } from 'antd';
 // import * as selectorsApp from 'containers/store/App/selectors';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-import AppCategory from 'containers/store/components/AppCategory';
 import * as commonjs from 'containers/common/functions/common';
+// import AppCategory from '../../AppCategory';
 import messages from './messages';
 import AppList from './AppList';
 import StyleAppBizModal from '../StyleAppBizModal';
@@ -38,38 +38,39 @@ class AppModal extends PureComponent {
   }
 
   render() {
-    const {
-      history,
-      // isLoading,
-    } = this.props;
+    // const {
+    //   history,
+    //   // isLoading,
+    // } = this.props;
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
 
-    const handleOnClick = (node) => {
-      this.searchword = '';
-      this.searchInput.input.value = '';
-      history.push(`${preUrl}/app/list/${node.key}`);
-      window.scrollTo(0, 0);
-    };
+    // const handleOnClick = (node) => {
+    //   this.searchword = '';
+    //   this.searchInput.input.value = '';
+    //   history.push(`${preUrl}/app/list/${node.key}`);
+    //   window.scrollTo(0, 0);
+    // };
 
-    let selectedCategoryId = -1;
-    const pn = history.location.pathname;
-    const str = 'list/';
-    if (pn.indexOf(str) > -1) {
-      selectedCategoryId = Number(pn.substring(pn.indexOf(str) + str.length, pn.length));
-    }
+    // let selectedCategoryId = -1;
+    // const pn = history.location.pathname;
+    // const str = 'list/';
+    // if (pn.indexOf(str) > -1) {
+    //   selectedCategoryId = Number(pn.substring(pn.indexOf(str) + str.length, pn.length));
+    // }
 
     return (
       <StyleAppBizModal>
-        <ErrorBoundary>
+        {/* <ErrorBoundary>
           <AppCategory
             handleOnClick={handleOnClick}
             selectedIndex={selectedCategoryId}
             preUrl={preUrl}
-          />
-        </ErrorBoundary>
+          />n
+        </ErrorBoundary> */}
         <div className="topPart">
           <div className="searchInput">
+            <Link to={`${preUrl}/app/list`}>{intlObj.get(messages.category)}</Link>
             <Input
               placeholder=""
               title={intlObj.get(messages.searchBizStore)}

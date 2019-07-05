@@ -11,6 +11,7 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
+// eslint-disable-next-line no-unused-vars
 import StyleAppStoreTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn } from './StyleAppStoreTree';
 
 const replaceSpecialCharacter = (str) => {
@@ -139,13 +140,14 @@ class MyPageTree extends Component {
     });
   }
 
-  addNode(PRNT_ID, NODE_TYPE) {
+  addNode(parentNode, NODE_TYPE) {
     this.setState({
       showInsert: true,
       showEdit: false,
-      selectedIndex: PRNT_ID,
+      selectedIndex: parentNode.key,
       data: {
-        PRNT_ID,
+        SITE_ID: parentNode.SITE_ID,
+        PRNT_ID: parentNode.CATG_ID,
         NODE_TYPE,
         NAME_KOR: '',
         NAME_ENG: '',
@@ -197,7 +199,7 @@ class MyPageTree extends Component {
       saveData, // 임시데이터 저장 func(treeData, rowInfo)
       moveNode, // 메뉴 드래그 이동 func(treeData)
       deleteNode, // 메뉴 삭제 func(rowInfo, treeData)
-      updateMymenuDisp, // 메뉴 노출 여부 변경 func()
+      // updateMymenuDisp, // 메뉴 노출 여부 변경 func()
     } = this.props;
 
     const rootRowInfo = {};
@@ -361,10 +363,10 @@ class MyPageTree extends Component {
           node.title = lang.get('NAME', node);
 
           // 버튼 노출 조건(아이콘 별)
-          const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
-          const isRootBizGroup = node.REF_TYPE === 'B' && node.NODE_TYPE === 'R'; // 업무그룹O
-          const isEmptyFolder = node.REF_TYPE !== 'B' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
-          const canEditName = (node.REF_TYPE !== 'B' && node.NODE_TYPE === 'F') || (node.REF_TYPE === 'M' && node.PAGE_ID !== -1); // 페이지O 폴더O(업무X)
+          const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.NODE_TYPE !== 'P' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
+          const isCategoryRoot = node.NODE_TYPE === 'R'; // 앱카테고리 Root
+          const isEmptyFolder = node.NODE_TYPE !== 'R' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
+          const canEditName = node.NODE_TYPE === 'F' || node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P'; // 페이지O 폴더O(업무X)
 
           let title; // 트리 노드 제목
           let buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
@@ -380,51 +382,48 @@ class MyPageTree extends Component {
         // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
         if (onHoverKey === node.key) {
           buttons = [
+            // [카테고리 버튼]
+            isFolder ? (
+              <FolderBtn
+                key="folderBtn"
+                title="카테고리추가"
+                onClick={() => {
+                  // cateInsert(rowInfo);
+                  this.addNode(node, 'F');
+                }}
+              />
+              ) : '',
             // [앱등록 버튼]
-            isFolder ?
+            isFolder && !isCategoryRoot ?
               <AppListBtn
                 key="appListBtn"
                 title="앱등록"
                 onClick={() => {
                   saveData(rowInfo, treeData);
-                  history.push('/store/appMain/myPage/modal/app/list');
+                  history.push('/admin/adminmain/appstore/modal/app/list');
                 }}
               /> : '',
-
-            // [폴더추가 버튼]
-            isFolder ? (
-              <FolderBtn
-                key="folderBtn"
-                title="폴더추가"
-                onClick={() => {
-                  // cateInsert(rowInfo);
-                  this.addNode(node.key, 'F');
-                }}
-              />
-              ) : '',
-
             // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
-            isFolder ?
+            isFolder && !isCategoryRoot ?
               <CopyBtn
                 key="copybtn"
                 title="페이지 추가"
                 onClick={() => {
-                  this.addNode(node.key, 'E');
+                  this.addNode(node, 'E');
                 }}
               /> : '',
 
-            // [메뉴노출여부 버튼]
-            // btnCondition2 ?
-            <VisionBtn
-              key="visionBtn"
-              title="메뉴노출"
-              onClick={() => {
-                saveData(rowInfo, treeData);
-                updateMymenuDisp();
-              }}
-              className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
-            />,
-            // : '',
+            // // [메뉴노출여부 버튼]
+            // isRootBizGroup ?
+            //   <VisionBtn
+            //     key="visionBtn"
+            //     title="메뉴노출"
+            //     onClick={() => {
+            //       saveData(rowInfo, treeData);
+            //       updateMymenuDisp();
+            //     }}
+            //     className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
+            //   /> : '',
 
             // [메뉴명수정]
             canEditName ?
@@ -435,9 +434,8 @@ class MyPageTree extends Component {
                   this.editNode(node);
                 }}
               /> : '',
-
             // [메뉴삭제 버튼]
-            isRootBizGroup || isEmptyFolder ?
+            isEmptyFolder ?
               <RemoveBtn
                 key="removeBtn"
                 title="삭제"
@@ -445,12 +443,9 @@ class MyPageTree extends Component {
                   let message = '';
                   if (node.NODE_TYPE === 'F') { // 폴더
                     message = messages.deleteFolder;
-                  } else if (node.APP_YN === 'Y') { // 앱
+                  } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') { // 앱
                     message = messages.deleteApp;
-                  } else { // 페이지
-                    message = messages.deletePage;
                   }
-
                   const messageStr = `${node.title} ${intlObj.get(message)}`;
                   feed.showConfirm(messageStr, '', () => deleteNode(rowInfo, this.state.treeData, history));
                 }}
@@ -546,7 +541,7 @@ class MyPageTree extends Component {
 
 MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
-  selectedIndex: PropTypes.number,
+  selectedIndex: PropTypes.string,
   canDrag: PropTypes.bool, //eslint-disable-line
   canDrop: PropTypes.bool, //eslint-disable-line
   history: PropTypes.object.isRequired,
