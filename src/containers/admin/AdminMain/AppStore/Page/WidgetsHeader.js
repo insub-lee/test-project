@@ -62,7 +62,7 @@ export default class WidgetsHeader extends PureComponent {
             >
               <Link
                 className="setupWidget"
-                to={`/store/appMain/myPage/widgetsetting/${item.PAGE_ID}/${item.id}`}
+                to={`/admin/adminmain/appstore/widgetsetting/${item.PAGE_ID}/${item.id}`}
                 title="위젯 설정"
               />
             </li>

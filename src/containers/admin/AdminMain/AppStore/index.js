@@ -38,17 +38,15 @@ function getUrl(node) {
   console.log(node);
 
   const {
-    NODE_TYPE, APP_ID,
+    NODE_TYPE, APP_ID, PAGE_ID,
   } = node;
 
   let url = homeUrl;
 
-  if (NODE_TYPE === 'A' && APP_ID !== 0) { // [앱] 상세
+  if (NODE_TYPE === 'A' && APP_ID > 0) { // [앱] 상세
     url = `${homeUrl}/app/${APP_ID}`;
-  } else if (NODE_TYPE === 'P' && APP_ID !== 0) { // [페이지] 상세
-    // 페이지 정보 조회 필요
-    // url = `${homeUrl}/page/${PAGE_ID}`;
-    url = `${homeUrl}/page/${APP_ID}`;
+  } else if (NODE_TYPE === 'P' && PAGE_ID > 0) { // [페이지] 상세
+    url = `${homeUrl}/page/${PAGE_ID}`;
   } else {
     url = '/admin/adminmain/appstore';
   }

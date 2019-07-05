@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -170,13 +171,13 @@ class PublicRoutes extends Component {
             isLoggedIn={isLoggedIn}
             profile={profile}
           />
-          <RestrictedRoute
+          {/* <RestrictedRoute
             exact
             path="/preview/page/:pageID"
             component={Preview}
             isLoggedIn={isLoggedIn}
             profile={profile}
-          />
+          /> */}
           <RestrictedRoute
             exact
             path={`/${basicPath.PAGE}/:PAGE_ID`}
@@ -190,41 +191,41 @@ class PublicRoutes extends Component {
             isLoggedIn={isLoggedIn}
             profile={profile}
           />
-          <RestrictedRoute
+          {/* <RestrictedRoute
             path={`/${basicPath.SINGLE}/:PAGE_ID`}
             component={PortalSingleModeApp}
             isLoggedIn={isLoggedIn}
             profile={profile}
-          />
-          <RestrictedRoute
+          /> */}
+          {/* <RestrictedRoute
             path="/portal/settings"
             component={PortalApp}
             isLoggedIn={isLoggedIn}
             profile={profile}
-          />
+          /> */}
           <Route
             path="/signin"
             component={SignIn}
           />
-          <RestrictedRoute
+          {/* <RestrictedRoute
             path="/store"
             component={StoreApp}
             isLoggedIn={isLoggedIn}
             profile={profile}
-          />
+          /> */}
           <RestrictedRoute
             path="/admin"
             component={AdminApp}
             isLoggedIn={isLoggedIn}
             profile={profile}
           />
-          <RestrictedRoute
+          {/* <RestrictedRoute
             path="/guide"
             component={GuideApp}
             isLoggedIn={isLoggedIn}
             profile={profile}
-          />
-          <RestrictedRoute
+          /> */}
+          {/* <RestrictedRoute
             exact
             path="/popup/organization/:lang/:deptId/:userId"
             component={OrganizationPopup}
@@ -237,7 +238,7 @@ class PublicRoutes extends Component {
             component={OrganizationPopup}
             isLoggedIn={isLoggedIn}
             profile={profile}
-          />
+          /> */}
           <RestrictedRoute
             component={ErrorPage}
             isLoggedIn={isLoggedIn}
