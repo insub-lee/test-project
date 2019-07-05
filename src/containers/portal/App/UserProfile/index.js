@@ -5,11 +5,11 @@ import { compose } from 'redux';
 import { intlObj, lang } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
 import { createStructuredSelector } from 'reselect';
-import NewWindow from 'react-new-window'
+import NewWindow from 'react-new-window';
 import { Link } from 'react-router-dom';
 import Organization from 'containers/portal/components/Organization';
-import injectReducer from '../../../../utils/injectReducer';
-import injectSaga from '../../../../utils/injectSaga';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -30,24 +30,25 @@ class UserProfile extends Component {
     this.setState({
       show: true,
     });
-  }
+  };
 
   closeModal = () => {
     this.setState({
       show: false,
     });
-  }
-
-  handleClickToMoveToSite = (profile, type) => { //eslint-disable-line
+  };
+  /* eslint-disable */
+  handleClickToMoveToSite = (profile, type) => {
+    //eslint-disable-line
     const { execPage } = this.props;
     switch (type) {
       case 'org':
         this.onModal();
         break;
-      case 'logout': {
+      case 'logout':
         const cookies = new Cookies();
-        cookies.remove('empNo', { path: '/' })
-        cookies.remove('access_token', { path: '/' })
+        cookies.remove('empNo', { path: '/' });
+        cookies.remove('access_token', { path: '/' });
         window.location.href = `/signin`;
         break;
       case 'mail':
@@ -65,7 +66,7 @@ class UserProfile extends Component {
       default:
         return false;
     }
-  }
+  };
 
   moveToSite = () => {
     const { profile, locale, execPage } = this.props;
@@ -77,17 +78,39 @@ class UserProfile extends Component {
             {/* <Link to={linkTo} target="organizationPopup">
               <Button type="button" className="highlight icon-info">{intlObj.get(messages.userProfile)}</Button>
             </Link> */}
-            <Button onClick={() => this.handleClickToMoveToSite(profile, 'org')} type="button" className="highlight icon-info">{intlObj.get(messages.userProfile)}</Button>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'org')} type="button" className="highlight icon-info">
+              {intlObj.get(messages.userProfile)}
+            </Button>
           </li>
-          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
-          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
-          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
-          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'set')} type="button" className="icon-settings">환경설정</Button></li>
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">
+              {intlObj.get(messages.sendToCube)}
+            </Button>
+          </li>
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'mail')} type="button" className="icon-mail">
+              {intlObj.get(messages.sendToMail)}
+            </Button>
+          </li>
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'todo')} type="button" className="icon-todo">
+              {intlObj.get(messages.todoRegist)}
+            </Button>
+          </li>
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">
+              {intlObj.get(messages.hyThanks)}
+            </Button>
+          </li>
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'set')} type="button" className="icon-settings">
+              환경설정
+            </Button>
+          </li>
         </ul>
       </div>
     );
-  }
+  };
 
   render() {
     const { profile } = this.props;
@@ -95,33 +118,24 @@ class UserProfile extends Component {
     const contents = this.moveToSite();
     return (
       <div>
-        {profile != null ?
+        {profile != null ? (
           <div className="userInfo">
-            <Popover
-              placement="left"
-              content={contents}
-              trigger="hover"
-              overlayClassName="userProfileMenu"
-            >
+            <Popover placement="left" content={contents} trigger="hover" overlayClassName="userProfileMenu">
               <div className="myPicture">
                 <img
                   src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`}
                   alt={profile.EMP_NO}
-                  onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+                  onError={e => {
+                    e.target.src = '/no_img_pro.jpg';
+                  }}
                 />
               </div>
             </Popover>
           </div>
-          : <div />
-        }
-        <Organization
-          show={show}
-          closeModal={this.closeModal}
-          isModal={true}
-          userProfile={profile}
-          isProfile={true}
-          orgName="유저프로필"
-        />
+        ) : (
+          <div />
+        )}
+        <Organization show={show} closeModal={this.closeModal} isModal={true} userProfile={profile} isProfile={true} orgName="유저프로필" />
       </div>
     );
   }
@@ -131,7 +145,7 @@ UserProfile.propTypes = {
   profile: PropTypes.object.isRequired,
   // fullPath: PropTypes.object.isRequired,
   // handleGetFullPath: PropTypes.func.isRequired,
-  
+
   // language 스토어의 locale값을 가져옴
   // 왜냐하면, 환경설정에서 intl의 locale값을 변경해도 UserProfile에는 영향이 없어 re-render가 일어나지 않아
   // moveToSite의 Link에 연결된 url이 변경되지 않는다. 그러므로 language의 locale을 직접 가져오게하여
@@ -151,7 +165,10 @@ export function mapDispatchToProps(dispatch) {
   };
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'userProfile', reducer });
 
