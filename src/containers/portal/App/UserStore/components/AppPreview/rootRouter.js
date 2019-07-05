@@ -1,9 +1,8 @@
 import React from 'react';
-import Apps from '../../../../apps';
-import Page from '../../../../components/Page';
+import Apps from '../../../../../../apps';
+import Page from '../Page';
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
-
 const {
     Content,
 } = Layout;

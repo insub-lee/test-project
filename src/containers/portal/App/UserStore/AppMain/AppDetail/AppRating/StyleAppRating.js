@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-// import { transition, borderRadius, boxShadow } from '../../../../../config/style-util';
+// import { transition, borderRadius, boxShadow } from 'config/style-util';
 
 const StyleAppRating = styled.div`
   position: relative;
