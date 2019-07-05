@@ -44,8 +44,11 @@ class UserProfile extends Component {
       case 'org':
         this.onModal();
         break;
-      case 'talk':
-        window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${profile.EMP_NO}`);
+      case 'logout': {
+        const cookies = new Cookies();
+        cookies.remove('empNo', { path: '/' })
+        cookies.remove('access_token', { path: '/' })
+        window.location.href = `/signin`;
         break;
       case 'mail':
         window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${profile.EMAIL}`);

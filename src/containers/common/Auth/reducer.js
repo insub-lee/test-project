@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable';
-import { Cookies } from 'react-cookie';
 import * as actionTypes from './constants';
 
 const initialState = fromJS({
@@ -33,8 +32,6 @@ const authReducer = (state = initialState, action) => {
       ) {
         document.location.href = `callNative://function/saveToken?token=${action.token}`;
       }
-      const cookies = new Cookies();
-      cookies.set('token', action.token, { path: '/' });
       return state.set('profile', action.profile)
         .set('meta', {
           uuid: action.token,
