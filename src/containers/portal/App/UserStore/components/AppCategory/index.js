@@ -37,17 +37,21 @@ class AppCategory extends Component {
     } = this.props;
     const isBizManage = preUrl.indexOf('bizManage') > -1;
 
+    const preUrlSplitArr = preUrl.split('/');
+    const preUrlLast = preUrlSplitArr[preUrlSplitArr.length - 1];
+    const appStyleModify = preUrlLast !== 'bizStore' ? `0px` : '134px';
+
     return (
-      <StyledTabList className="treeWrapper">
+      <StyledTabList className="treeWrapper" style={{ left: appStyleModify }}>
         {showTabs && (currentView !== 'Mobile' && currentView !== 'Tablet') ? (
           <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
-              <Tab>
+              <Tab style={{ width: '100%' }}>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
-              {!isBizManage ? (
+              {/* {!isBizManage ? (
                 <Tab>
                   <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
                     <FormattedMessage {...messages.bizGroup} />
@@ -55,7 +59,7 @@ class AppCategory extends Component {
                 </Tab>
               ) : (
                 ''
-              )}
+              )} */}
             </TabList>
             <TabPanel />
             <TabPanel />

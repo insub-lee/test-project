@@ -111,7 +111,7 @@ class UserMenu extends React.Component {
       history,
       execApp,
     } = this.props;
-    console.debug('>>>>>>>현재 props: ', this.props);
+
     return (
       <div>
         {/* <ExtraMenus>

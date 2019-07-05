@@ -23,7 +23,7 @@ import saga from './saga';
 
 // import Main from './Main';
 import MyPageTree from '../../components/MyPageTree';
-import StyledTabList from '../../components/TabList/StyledTabList';
+import MyStoreTreeStyledTabList from '../../components/TabList/MyStoreTreeStyledTabList';
 // import AppInfo from './AppInfo';
 // import PageInfo from './PageInfo';
 // import BizDetail from '../Biz/BizDetail';
@@ -69,7 +69,6 @@ class MyPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.debug('>>>>>>>>>nextProps: ', nextProps);
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
@@ -92,9 +91,9 @@ class MyPage extends Component {
 
         generateList(nextProps.categoryData);
 
-        // if (url) {
-        //   nextProps.history.push(url);
-        // }
+        if (url) {
+          nextProps.history.push(url);
+        }
       } else {
         // 트리 데이터가 없는 경우. main화면
       }
@@ -118,9 +117,6 @@ class MyPage extends Component {
       updateMymenuDisp,
     } = this.props;
 
-    console.debug('>>>>>>>>>>categoryData111: ', categoryData);
-    console.debug('>>>>>>>>>>PORTAL MY PAGE: ', this.props);
-
     const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);
 
@@ -133,7 +129,7 @@ class MyPage extends Component {
 
     return (
       <div className="appMyPageWrapper">
-        <StyledTabList className="treeWrapper">
+        <MyStoreTreeStyledTabList className="treeWrapper">
           <ErrorBoundary>
             <MyPageTree
               treeData={categoryData}
@@ -150,7 +146,7 @@ class MyPage extends Component {
               history={history}
             />
           </ErrorBoundary>
-        </StyledTabList>
+        </MyStoreTreeStyledTabList>
 
         <ErrorBoundary>
           <ModalRoute

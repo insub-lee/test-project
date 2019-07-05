@@ -11,7 +11,8 @@ import { Input } from 'antd';
 // import * as selectorsApp from 'containers/store/App/selectors';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-import AppCategory from 'containers/store/components/AppCategory';
+import AppCategory from '../../../../components/AppCategory';
+
 import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import AppList from './AppList';
@@ -22,7 +23,7 @@ class AppModal extends PureComponent {
     if (e.key === 'Enter') {
       this.search();
     }
-  }
+  };
 
   search = () => {
     const searchword = this.searchInput.input.value;
@@ -35,7 +36,7 @@ class AppModal extends PureComponent {
     }
 
     this.searchword = searchword;
-  }
+  };
 
   render() {
     const {
@@ -62,11 +63,7 @@ class AppModal extends PureComponent {
     return (
       <StyleAppBizModal>
         <ErrorBoundary>
-          <AppCategory
-            handleOnClick={handleOnClick}
-            selectedIndex={selectedCategoryId}
-            preUrl={preUrl}
-          />
+          <AppCategory handleOnClick={handleOnClick} selectedIndex={selectedCategoryId} preUrl={preUrl} />
         </ErrorBoundary>
         <div className="topPart">
           <div className="searchInput">
@@ -75,13 +72,11 @@ class AppModal extends PureComponent {
               title={intlObj.get(messages.searchBizStore)}
               // onChange={this.onChange}
               onKeyPress={this.searchEnter}
-              ref={(ref) => { this.searchInput = ref; }}
+              ref={(ref) => {
+                this.searchInput = ref;
+              }}
             />
-            <Button
-              type="button"
-              onClick={() => this.search()}
-              title={intlObj.get(messages.search)}
-            />
+            <Button type="button" onClick={() => this.search()} title={intlObj.get(messages.search)} />
 
             {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
           </div>
@@ -102,4 +97,3 @@ AppModal.propTypes = {
   match: PropTypes.object.isRequired,
 };
 export default AppModal;
-

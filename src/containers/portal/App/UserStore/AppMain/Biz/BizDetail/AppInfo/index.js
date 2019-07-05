@@ -20,33 +20,21 @@ class AppInfo extends Component {
     const { params } = match;
     const { appId } = params;
 
-    if (appId
-      && this.state.appId !== appId) {
+    if (appId && this.state.appId !== appId) {
       this.setState({
         appId,
       });
     }
   }
 
-
   render() {
+    console.debug('>>>>>>>여긴 어디???');
     return (
       <div>
-        <AppBasicInfo
-          targetUrl={window.location.href}
-          appId={this.state.appId}
-        />
-        <AppScreenshot
-          appId={this.state.appId}
-          gubun={2}
-        />
-        <AppQna
-          appId={this.state.appId}
-          gubun="b"
-        />
-        <AppRating
-          appId={this.state.appId}
-        />
+        <AppBasicInfo targetUrl={window.location.href} appId={this.state.appId} />
+        <AppScreenshot appId={this.state.appId} gubun={2} />
+        <AppQna appId={this.state.appId} gubun="b" />
+        <AppRating appId={this.state.appId} />
       </div>
     );
   }

@@ -82,6 +82,11 @@ class App extends React.PureComponent {
     }
   }
 
+  componentDidMount() {
+    // 공통 Home 위젯 페이지를 1회성으로 새창 띄우기
+    // 레이어 팝업으로 띄우는게 나을지 확인이 필요함.
+  }
+
   componentDidUpdate(prevProps) {
     const {
       isUnreadCnt,

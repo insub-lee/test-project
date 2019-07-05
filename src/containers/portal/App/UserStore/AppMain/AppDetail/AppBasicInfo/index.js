@@ -19,9 +19,10 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import StyleAppBasicInfo from './StyleAppBasicInfo';
-import { BtnWhiteArr, BtnRedShare, BtnRedCgrRegist, BtnRedMnRegist, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
-import RgtCategoryIcon from 'images/bizstore/icon-category-rgt3.png';
-import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
+import { BtnWhiteArr, BtnRedShare, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
+// import { BtnWhiteArr, BtnRedShare, BtnRedCgrRegist, BtnRedMnRegist, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
+// import RgtCategoryIcon from 'images/bizstore/icon-category-rgt3.png';
+// import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
 
 import AppMaNagerList from '../../../components/AppManagerList';
 
@@ -94,15 +95,15 @@ class AppBasicInfo extends React.Component {
       }
     };
 
-    const registerApps = () => this.props.registApp(this.props.resAppBasicInfo.APP_ID);
-    const handleRegistApp = () => feed.showConfirm(`${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`, '', registerApps);
-    const registerCategorys = () => this.props.registCategory(this.props.resAppBasicInfo.APP_ID);
-    const handleRegistCategory = () =>
-      feed.showConfirm(
-        `${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`,
-        `${intlObj.get(messages.catgAppInput)}`,
-        registerCategorys,
-      );
+    // const registerApps = () => this.props.registApp(this.props.resAppBasicInfo.APP_ID);
+    // const handleRegistApp = () => feed.showConfirm(`${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`, '', registerApps);
+    // const registerCategorys = () => this.props.registCategory(this.props.resAppBasicInfo.APP_ID);
+    // const handleRegistCategory = () =>
+    //   feed.showConfirm(
+    //     `${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`,
+    //     `${intlObj.get(messages.catgAppInput)}`,
+    //     registerCategorys,
+    //   );
 
     const userProfile = (userinfo, orgShow) => {
       this.setState({ orgShow, userinfo });
@@ -184,7 +185,7 @@ class AppBasicInfo extends React.Component {
                       display: this.props.resAppBasicInfo.WG_COUNT === 0 ? 'block' : 'none',
                     }}
                   >
-                    <div className="regstBtnsGroup">
+                    {/* <div className="regstBtnsGroup">
                       <BtnRedCgrRegist className="category" onClick={handleRegistCategory}>
                         <img src={RgtCategoryIcon} alt="" />
                         {intlObj.get(messages.catgInput)}
@@ -193,7 +194,7 @@ class AppBasicInfo extends React.Component {
                         <img src={RgtMenuIcon} alt="" />
                         {intlObj.get(messages.menuInput)}
                       </BtnRedMnRegist>
-                    </div>
+                    </div> */}
                   </div>
                   <div
                     className="regstBtns registered"

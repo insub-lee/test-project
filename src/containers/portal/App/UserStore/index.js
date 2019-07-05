@@ -29,6 +29,8 @@ import PageInfo from './AppMain/MyPage/PageInfo';
 import AppBizModal from './AppMain/MyPage/AppBizModal';
 import BizDetail from './AppMain/Biz/BizDetail';
 import BizMenuList from './AppMain/Biz/BizMenuList';
+import BizStore from './AppMain/BizStore';
+import BizManage from './AppMain/BizManage';
 
 import './global-store.css';
 
@@ -48,7 +50,7 @@ class UserStore extends Component {
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
-          <h2 className="pageHeader">App Store</h2>
+          <h2 className="pageHeader">Store</h2>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
               <Sider trigger={null} collapsible collapsed={collapsed} className="siderLayout" />
@@ -59,11 +61,14 @@ class UserStore extends Component {
                       <Route exact path="/portal/store" component={AppList} />
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
-                      <Route path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} />
-                      <Route path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
+                      <Route exact path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} />
+                      <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
                       <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
                       <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
-                      <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+                      <Route exact path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+                      <Route path="/portal/store/appMain/bizManage" component={BizManage} />
+                      <Route path="/portal/store/appMain/bizStore" component={BizStore} />
+                      <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
                     </Switch>
                   </div>
                 </Content>

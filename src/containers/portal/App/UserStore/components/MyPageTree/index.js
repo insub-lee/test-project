@@ -1,15 +1,6 @@
-/* eslint-disable no-useless-escape */
-/* eslint-disable jsx-a11y/mouse-events-have-key-events */
-/* eslint-disable react/require-default-props */
-/* eslint-disable prefer-const */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-shadow */
-/* eslint-disable react/prop-types */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable react/sort-comp */
 import React, { Component } from 'react';
 import { SortableTreeWithoutDndContext as SortableTree } from 'react-sortable-tree';
+import _ from 'lodash';
 import { Input, Popover } from 'antd';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
@@ -55,6 +46,10 @@ class MyPageTree extends Component {
       treeData,
       onHoverKey: -1,
 
+      myHomeIndex: -1,
+      myAppFoldIndex: -1,
+      myBizFoldIndex: -1,
+
       showInsert: false,
       showEdit: false,
       data: {
@@ -73,6 +68,28 @@ class MyPageTree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // if (!Object.is(this.state.treeData[0], nextProps.treeData[0])) {
+    //   if (nextProps.treeData && nextProps.treeData.length > 0) {
+    //     nextProps.treeData.map(e => {
+    //       this.setDefaultMenuIndex(e.NAME_KOR);
+    //       if (e.NAME_KOR === 'My Home') {
+    //         this.setState(
+    //           myHomeIndex: e.MENU_ID
+    //         );
+    //       }
+    //       else if(e.NAME_KOR === '개인 업무') {
+    //         this.setState(
+    //           myBizFoldIndex: e.MENU_ID
+    //         );
+    //       }else if(e.NAME_KOR === '개인 Biz') {
+    //         this.setState(
+    //           myAppFoldIndex: e.MENU_ID
+    //         );
+    //       }
+    //     });
+    //   }
+    // }
+
     if (nextProps.treeData && nextProps.treeData.length > 0) {
       if (nextProps.selectedIndex === -1) {
         this.setState({
@@ -208,7 +225,11 @@ class MyPageTree extends Component {
       updateMymenuDisp, // 메뉴 노출 여부 변경 func()
     } = this.props;
 
-    console.debug('>>>>>>>>> MyPageTree save Data: ', this.props);
+    // 조건 DEFAULT_YN 조건으로 변경하기 - daemon 쿼리 변경 후
+    const findRootAppMenuIndex = _.filter(treeData, { NAME_KOR: '개인 App' });
+    const findRootBizMenuIndex = _.filter(treeData, { NAME_KOR: '개인 업무' });
+    const findRootAppMenuID = findRootAppMenuIndex[0] ? findRootAppMenuIndex[0].MENU_ID : '';
+    const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
 
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
@@ -387,7 +408,23 @@ class MyPageTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push('/portal/store/appMain/myPage/modal/app/list');
+                    let tabName = '';
+
+                    if (findRootAppMenuID && findRootBizMenuID && (node.NAME_KOR !== '개인 App' && node.NAME_KOR !== '개인 업무')) {
+                      if (findRootBizMenuID === node.PRNT_ID) {
+                        tabName = 'biz';
+                      } else if (findRootAppMenuID === node.PRNT_ID) {
+                        tabName = 'app';
+                      }
+                    } else {
+                      if (node.NAME_KOR === '개인 App') {
+                        tabName = 'app';
+                      } else if (node.NAME_KOR === '개인 업무') {
+                        tabName = 'biz';
+                      }
+                    }
+
+                    history.push(`/portal/store/appMain/myPage/modal/${tabName}/list`);
                   }}
                 />
               ) : (
