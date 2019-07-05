@@ -8,7 +8,10 @@ background: ${props => props.theme.portalContentBackground};
 
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
   /* IE10+ specific styles go here */
-  padding-bottom: 65px;
+  /* padding-bottom: 65px; */
+  .sc-kEYyzF { 
+    height:66px; 
+  }
 }
 
 //커스텀 스크롤로 오른쪽에 치우친 화면 중앙으로 이동
@@ -30,6 +33,17 @@ background: ${props => props.theme.portalContentBackground};
 
   .portalContent {
     padding-top: 0;
+  }
+
+  //각각 풀 스크린 정의 
+  .hypmWeb { 
+    height:100vh; 
+  } 
+  .gipms { 
+    height:100vh; 
+  } 
+  .hypmTablet { 
+    height:100vh; 
   }
 
   .gridWrapper {

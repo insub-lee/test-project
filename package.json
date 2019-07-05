@@ -134,7 +134,7 @@
   },
   "scripts": {
     "start": "node --max-old-space-size=8192 scripts/start.js",
-    "build": "node scripts/build.js",
+    "build": "node --max-old-space-size=8192 scripts/build.js",
     "test": "node scripts/test.js --env=jsdom",
     "fml": "cross-env LIMIT=9184 increase-memory-limit"
   },

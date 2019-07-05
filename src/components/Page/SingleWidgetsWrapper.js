@@ -6,16 +6,10 @@ import WidgetBox from './WidgetsBox';
 
 export default class SingleWidgetsWrapper extends PureComponent {
   render() {
-    const {
-      width,
-      gutterTop,
-      gutterRight,
-      gutterBottom,
-      gutterLeft,
-      padding,
-      children,
-      item,
-    } = this.props;
+    console.debug('>>>>>>>>>widget props: ', this.props);
+    /* eslint-disable */
+    const { width, gutterTop, gutterRight, gutterBottom, gutterLeft, padding, children, item } = this.props;
+    /* eslint-disable */
 
     const wrapperStyle = {
       marginTop: gutterTop,
@@ -46,15 +40,8 @@ export default class SingleWidgetsWrapper extends PureComponent {
           width: 'calc(100% - 8px)',
         }}
       >
-        <SingleStyleWidget
-          className="isoSingleWidgetsWrapper"
-          style={wrapperStyle}
-        >
-          <WidgetBox
-            item={item}
-          >
-            {children}
-          </WidgetBox>
+        <SingleStyleWidget className="isoSingleWidgetsWrapper" style={wrapperStyle}>
+          <WidgetBox item={item}>{children}</WidgetBox>
         </SingleStyleWidget>
       </div>
     );

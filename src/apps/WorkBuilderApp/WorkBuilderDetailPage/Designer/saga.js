@@ -192,7 +192,7 @@ function* addFormStuff({ formStuffType }) {
   const prntTargetIndex = boxes.findIndex(box => box.id === viewTargetId);
   if (prntTargetIndex > -1) {
     const prntSeq = boxes[prntTargetIndex].META_SEQ;
-    const newId = `${formStuffType}_${new Date().getTime()}`;
+    const newId = `${formStuffType}_${new Date().getTime()}`.substring(0, 20);
     const newObj = {
       type: formStuffType,
       id: newId,
@@ -264,7 +264,7 @@ function* changeBoxType({ index, value }) {
 function* changeFormStuffSpan({ index, value }) {
   const { formStuffs } = yield select(selectors.makeSelectCanvasProperty());
   const formStuff = formStuffs[index];
-  formStuff.property.span = value;
+  formStuff.property.span = parseInt(value, 10);
   const param = {
     WORK_SEQ: formStuff.WORK_SEQ,
     META_SEQ: formStuff.META_SEQ,
@@ -290,7 +290,7 @@ function* changeFormStuffSpan({ index, value }) {
 function* changeBoxColumnCount({ index, value }) {
   const { boxes } = yield select(selectors.makeSelectCanvasProperty());
   const box = boxes[index];
-  box.property.column = value;
+  box.property.column = parseInt(value, 10);
   const param = {
     WORK_SEQ: box.WORK_SEQ,
     META_SEQ: box.META_SEQ,

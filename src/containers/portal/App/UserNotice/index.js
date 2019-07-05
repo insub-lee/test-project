@@ -149,7 +149,7 @@ class AlarmPopover extends Component {
             >
               <tbody>
                 <tr>
-                  <td rowspan="2">{alist.READ_YN === 'N' ? '●' : '○'}</td>
+                  <td rowSpan="2">{alist.READ_YN === 'N' ? '●' : '○'}</td>
                   {/* <td>[<div className="ellipsis">{lang.get('TITLE', alist)}</div>]</td> */}
                   <td><a className="ellipsis" style={{ color: 'black' }} href={alist.URL} target="_blank" onClick={() => this.onRead(alist.MSG_ID)}>{lang.get('TITLE', alist)}</a></td>
                   <td>{alist.REG_DTTM}</td>{/* 형식: 2018-10-02 */}

@@ -57,9 +57,9 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/account" exact component={UserReg} />
           <Route path="/admin/adminmain/account/:USER_ID" component={UserReg} />
           <Route path="/admin/adminmain/appstore" component={AppStore} />
-          <Route path="/admin/adminmain/workBuilder" component={WorkBuilderListPage} exact />
-          <Route path="/admin/adminmain/workBuilder/manageApp" component={WorkBuilderToAppPage} exact />
-          <Route path="/admin/adminmain/workBuilder/:ID" component={WorkBuilderDetailPage} />
+          <Route path="/admin/adminmain/workbuilder" component={WorkBuilderListPage} exact />
+          <Route path="/admin/adminmain/workbuilder/manageapp" component={WorkBuilderToAppPage} exact />
+          <Route path="/admin/adminmain/workbuilder/:ID" component={WorkBuilderDetailPage} />
         </Switch>
       </div>
     );

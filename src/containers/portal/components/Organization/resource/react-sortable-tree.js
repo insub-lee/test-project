@@ -821,7 +821,7 @@ ReactSortableTree.propTypes = {
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 
   // Determine whether a node can be dropped based on its path and parents'.
-  canDrop: PropTypes.func,
+  canDrop: PropTypes.bool,
 
   // When true, or a callback returning true, dropping nodes to react-dnd
   // drop targets outside of this tree will not remove them from this tree
@@ -844,7 +844,7 @@ ReactSortableTree.propTypes = {
 
 ReactSortableTree.defaultProps = {
   canDrag: true,
-  canDrop: null,
+  canDrop: false,
   className: '',
   dndType: null,
   generateNodeProps: null,

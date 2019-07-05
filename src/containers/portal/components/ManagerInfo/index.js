@@ -59,10 +59,10 @@ class ManagerInfo extends React.Component {
       ));
 
       if (managers.length === 0) {
-        managers.push(<div>담당자가 선정되어 있지 않습니다.</div>);
+        managers.push(<div key="noManagers">담당자가 선정되어 있지 않습니다.</div>);
       }
     } else {
-      managers.push(<div>담당자가 선정되어 있지 않습니다.</div>);
+      managers.push(<div key="noManagers">담당자가 선정되어 있지 않습니다.</div>);
     }
 
     const managerInfoContent = (
