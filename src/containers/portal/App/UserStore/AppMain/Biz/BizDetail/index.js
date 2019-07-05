@@ -82,7 +82,7 @@ class BizDetail extends Component {
         window.scrollTo(0, 0);
       }
     };
-    console.debug('>>>>>>>>>>>여기로 와야하는데.....', preUrl);
+
     return (
       <div
         style={{
