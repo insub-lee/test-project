@@ -16,6 +16,7 @@ import VgroupAdmin from './VgroupAdmin';
 import OrgAdmin from './OrgAdmin';
 import Category from './Category';
 import Position from './Position';
+import Rank from './Rank';
 import Duty from './Duty';
 import Dept from './Dept';
 import UserReg from './User';
@@ -52,6 +53,7 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/notifyadmin" component={NotifyAdmin} />
           <Route path="/admin/adminmain/category" component={Category} />
           <Route path="/admin/adminmain/position" component={Position} />
+          <Route path="/admin/adminmain/rank" component={Rank} />
           <Route path="/admin/adminmain/duty" component={Duty} />
           <Route path="/admin/adminmain/dept" component={Dept} />
           <Route path="/admin/adminmain/account" exact component={UserReg} />

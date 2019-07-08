@@ -133,6 +133,10 @@ export default defineMessages({
     id: 'admin.AdminMain.UserAdmin.titleUserDuty',
     defaultMessage: '직책',
   },
+  titleUserRank: {
+    id: 'admin.AdminMain.UserAdmin.titleUserRank',
+    defaultMessage: '직급',
+  },
   titleUserOfficeTel: {
     id: 'admin.AdminMain.UserAdmin.titleUserOfficeTel',
     defaultMessage: '사내전화',
@@ -156,6 +160,10 @@ export default defineMessages({
   lblDutyPlaceholder: {
     id: 'admin.AdminMain.UserAdmin.lblDutyPlaceholder',
     defaultMessage: '직책을 선택해주세요',
+  },
+  lblRankPlaceholder: {
+    id: 'admin.AdminMain.UserAdmin.lblRankPlaceholder',
+    defaultMessage: '직급를 선택해주세요',
   },
   lblOfficeTelPlaceholder: {
     id: 'admin.AdminMain.UserAdmin.lblOfficeTelPlaceholder',

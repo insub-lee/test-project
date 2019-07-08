@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ScrollBar from 'react-custom-scrollbars';
 import { lang, intlObj } from 'utils/commonUtils';
 import messages from './messages';
+import { BtnDkGray } from '../uielements/buttons.style';
 
 class Profile extends PureComponent {
   constructor(props) {
@@ -12,27 +14,27 @@ class Profile extends PureComponent {
     };
   }
   onClick = (type) => {
-    const {
-      selectedUser,
-    } = this.state;
+    // const {
+    //   selectedUser,
+    // } = this.state;
 
-    const empNo = selectedUser ? selectedUser.EMP_NO : this.props.loadProfile.EMP_NO;
-    const eMail = selectedUser ? selectedUser.EMAIL : this.props.loadProfile.EMAIL;
-
+    // const empNo = selectedUser ? selectedUser.EMP_NO : this.props.loadProfile.EMP_NO;
+    // const eMail = selectedUser ? selectedUser.EMAIL : this.props.loadProfile.EMAIL;
     switch (type) {
-      case 'talk':
-        window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${empNo}`);
-        return;
-      case 'mail':
-        window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${eMail}`);
-        return;
-      case 'todo':
-        window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${empNo}`);
-        return;
-      case 'hithanks':
-        window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${empNo}`);
-        break;
+    // case 'talk':
+    //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${empNo}`);
+    //   return;
+    // case 'mail':
+    //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${eMail}`);
+    //   return;
+    // case 'todo':
+    //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${empNo}`);
+    //   return;
+    // case 'hithanks':
+    //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${empNo}`);
+    //   break;
       default:
+        alert('준비중입니다.');
     }
   }
 
@@ -50,6 +52,7 @@ class Profile extends PureComponent {
     const {
       officetel,
       loadProfile,
+      userSetting,
     } = this.props;
 
     const foottable = {
@@ -134,8 +137,8 @@ class Profile extends PureComponent {
             }
           </ul>
         </div>
-        <ul className="buttonWrapper">
-          <li>
+        <ul className="buttonWrapper" style={{ height: 'auto' }}>
+          {/* <li>
             <button className="icon talk" onClick={() => this.onClick('talk')} >{intlObj.get(messages.conversation)}</button>
           </li>
           <li>
@@ -143,10 +146,14 @@ class Profile extends PureComponent {
           </li>
           <li>
             <button className="icon todo" onClick={() => this.onClick('todo')}>{intlObj.get(messages.registerTodo)}</button>
-          </li>
+          </li> */}
+          {userSetting &&
           <li>
-            <button className="icon hithanks" onClick={() => this.onClick('hithanks')}>{intlObj.get(messages.HyThanks)}</button>
+            <button className="icon" style={{ paddingTop: '0px', height: '25px' }}>
+              <Link style={{ display: 'block', height: '100%' }} to={`/admin/adminmain/account/${loadProfile.USER_ID}`} className="icon" title="계정정보관리">계정정보관리</Link>
+            </button>
           </li>
+          }
         </ul>
         <div className="userInfoDetails">
           <table>
@@ -193,6 +200,13 @@ class Profile extends PureComponent {
                   }
                 </tr>
               }
+              {userSetting &&
+                <tr>
+                  <BtnDkGray className="icon" style={{ paddingTop: '0px', height: '30px', marginTop: '5px' }}>
+                    <Link style={{ display: 'block', height: '100%' }} to="/admin/adminmain/account" className="icon" title="계정생성">+계정생성</Link>
+                  </BtnDkGray>
+                </tr>
+              }
             </tbody>
           </table>
         </div>
@@ -204,11 +218,15 @@ class Profile extends PureComponent {
 Profile.propTypes = {
   loadProfile: PropTypes.object.isRequired,
   selectedProfileTree: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/no-unused-prop-types
+  history: PropTypes.object.isRequired,
   officetel: PropTypes.string,
+  userSetting: PropTypes.bool,
 };
 
 Profile.defaultProps = {
   officetel: undefined,
+  userSetting: false,
 };
 
 export default Profile;

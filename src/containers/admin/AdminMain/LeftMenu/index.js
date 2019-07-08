@@ -48,8 +48,8 @@ const MenuList = styled.ul`
         position: relative;
         left: -8px;
         display: inline-block;
-        width: 10px;
-        height: 10px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         background-color: #b3b3b3;
       }
@@ -68,8 +68,8 @@ const MenuList = styled.ul`
         position: relative;
         left: -8px;
         display: inline-block;
-        width: 10px;
-        height: 10px;
+        width: 7px;
+        height: 7px;
         border-radius: 50%;
         background-color: #f85023;
       }
@@ -156,6 +156,7 @@ class menuList extends React.Component {
           role="button"
           tabIndex="0"
           key={m.SCR_CD}
+          style={{ paddingLeft: `${m.SORT_SQ % 100 > 0 ? 15 : 0}px` }}
         >{lang.get('NAME', m)}
         </span>
       </li>

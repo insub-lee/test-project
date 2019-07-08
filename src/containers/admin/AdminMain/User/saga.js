@@ -168,6 +168,41 @@ export function* getChangePstnTreeData(payload) {
   });
 }
 
+export function* getRankComboData() {
+  yield put({
+    type: actionType.IS_LOADING,
+    isLoading: true,
+  });
+  const response = yield call(Axios.get, '/api/common/v1/account/organizationRankList', {});
+  let data = fromJS(response.list);
+  if (data === undefined || data.size === 0) {
+    data = fromJS([]);
+  }
+  const RANK_ID = fromJS(response.list[0].RANK_ID);
+  yield put({
+    type: actionType.SET_RANK_COMBO_LIST,
+    rankComboData: fromJS(response.list),
+  });
+  yield put({
+    type: actionType.GET_CHANGE_RANK_DATA,
+    RANK_ID,
+  });
+}
+
+export function* getChangeRankTreeData(payload) {
+  const response = yield call(Axios.get, `/api/common/v1/account/rankChangeTree/${payload.RANK_ID}`);
+  const list = JSON.parse(`[${response.result.join('')}]`);
+  yield put({
+    type: actionType.SET_CHANGE_RANK_DATA,
+    rankTreeData: fromJS(list),
+    selectedDept: payload.RANK_ID,
+  });
+  yield put({
+    type: actionType.IS_LOADING,
+    isLoading: false,
+  });
+}
+
 export default function* userRegSage() {
   yield takeLatest(actionType.GET_USER_DATA, getUserInfo);
   yield takeLatest(actionType.INSERT_USER_DATA, insertUserInfo);
@@ -179,4 +214,6 @@ export default function* userRegSage() {
   yield takeLatest(actionType.GET_CHANGE_DUTY_DATA, getChangeDutyTreeData);
   yield takeLatest(actionType.GET_PSTN_COMBO_LIST, getPstnComboData);
   yield takeLatest(actionType.GET_CHANGE_PSTN_DATA, getChangePstnTreeData);
+  yield takeLatest(actionType.GET_RANK_COMBO_LIST, getRankComboData);
+  yield takeLatest(actionType.GET_CHANGE_RANK_DATA, getChangeRankTreeData);
 }

@@ -50,6 +50,7 @@ class OrgAdmin extends React.Component {
             pstnTab={true}
             dutyTab={true}
             grpTab={true}
+            userSetting={true}
             userProfile={this.props.fullPath}
           />
         </StyleOrgAdmin>
