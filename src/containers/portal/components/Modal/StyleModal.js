@@ -408,9 +408,12 @@ const StyleModal = styled.div`
 
       > li {
         float: left;
-        width: calc(25% - 6px);
-        min-width: 71px;
-        max-width: 89px;
+        // width: calc(25% - 6px);
+        // min-width: 71px;
+        // max-width: 89px;
+        width: calc(33% - 6px);
+        min-width: 93px;
+        max-width: 125px;
 
         @media only screen and (max-width: 650px) {max-width: 142px; min-width: 59px;}
 

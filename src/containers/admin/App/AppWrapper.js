@@ -124,7 +124,7 @@ const AppWrapper = styled.div`
 
 .appListWrapper {
   display: flex;
-  padding-left: 300px;
+  padding-left: 10px;
 
   .listWrapper {
     display: flex;

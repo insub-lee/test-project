@@ -19,7 +19,7 @@ const initialState = fromJS({
 let totalUnreadCnt = 0;
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.AUTH_SUCCESS:
+    case actionTypes.AUTH_SUCCESS: {
       Object.keys(action.UNREAD_CNT).forEach((o) => {
         totalUnreadCnt += Number(JSON.parse(action.UNREAD_CNT[o]).UNREAD_CNT);
       });
@@ -41,7 +41,9 @@ const authReducer = (state = initialState, action) => {
         .set('UNREAD_CNT', action.UNREAD_CNT)
         .set('myHNotiCnt', totalUnreadCnt)
         .set('SMSESSION', action.SMSESSION);
+    }
     case actionTypes.AUTH_LOGOUT:
+      localStorage.removeItem('token');
       return initialState;
     case actionTypes.CHANGE_LANG:
       return state.set('language', action.language);

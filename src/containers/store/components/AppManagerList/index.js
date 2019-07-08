@@ -25,15 +25,18 @@ class AppManagerList extends React.Component {
   handleClickManagerInfo = (gubun, param1) => {
     if (gubun === 'org') {
       this.props.userProfile(param1, true);
-    } else if (gubun === 'talk') {
-      window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${param1}`);
-    } else if (gubun === 'mail') {
-      window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${param1}`);
-    } else if (gubun === 'todo') {
-      window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${param1}`);
-    } else if (gubun === 'hithanks') {
-      window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${param1}`);
+    }else {
+      alert('준비중입니다.');
     }
+    // } else if (gubun === 'talk') {
+    //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${param1}`);
+    // } else if (gubun === 'mail') {
+    //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${param1}`);
+    // } else if (gubun === 'todo') {
+    //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${param1}`);
+    // } else if (gubun === 'hithanks') {
+    //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${param1}`);
+    // }
   }
 
   render() {
@@ -64,7 +67,7 @@ class AppManagerList extends React.Component {
                                   <li><Button type="button" onClick={() => this.handleClickManagerInfo('talk', user.EMP_NO)} className="icon-talk"><FormattedMessage {...messages.sendToCube} /></Button></li>
                                   <li><Button type="button" onClick={() => this.handleClickManagerInfo('mail', user.EMAIL)} className="icon-mail"><FormattedMessage {...messages.sendToMail} /></Button></li>
                                   <li><Button type="button" onClick={() => this.handleClickManagerInfo('todo', user.EMP_NO)} className="icon-todo"><FormattedMessage {...messages.todoRegist} /></Button></li>
-                                  <li><Button type="button" onClick={() => this.handleClickManagerInfo('hithanks', user.EMP_NO)} className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li>
+                                  {/* <li><Button type="button" onClick={() => this.handleClickManagerInfo('hithanks', user.EMP_NO)} className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
                                 </ul>
                               )}
                               trigger={(this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ? "hover" : ""}
@@ -77,7 +80,7 @@ class AppManagerList extends React.Component {
                               >
                                 <img
                                   className="listImg"
-                                  src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
+                                  src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
                                   alt={lang.get('NAME', user)}
                                 />
                               </div>

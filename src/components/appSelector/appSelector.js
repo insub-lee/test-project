@@ -66,7 +66,7 @@ class AppTree extends Component {
 
   onClickNode(node) {
     const type = this.props.type;
-    pageNum = 10;
+    pageNum = 30;
     this.props.loadCategoryList(node.key, type, pageNum);
   }
 

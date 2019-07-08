@@ -19,7 +19,6 @@ class OrgAdmin extends React.Component {
     super(prop);
     this.state = {
       title: `${intlObj.get(messages.titleMain)}`,
-      show: false,
     };
     // this.props.handleGetFullPath(this.props.profile.USER_ID);
     this.props.handleGetFullPath(this.props.fullPath.USER_ID);
@@ -33,9 +32,6 @@ class OrgAdmin extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
       this.props.handleGetFullPath(this.props.fullPath.USER_ID);
-      this.setState({
-        show: true,
-      });
     }
   }
 
@@ -47,7 +43,7 @@ class OrgAdmin extends React.Component {
           <Organization
             isDeptSelectbox={true}
             isModal={false}
-            show={this.state.show}
+            show={true}
             // closeModal={this.allOrgClose}
             isProfile={true}
             userTab={true}

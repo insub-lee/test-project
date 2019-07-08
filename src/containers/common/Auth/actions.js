@@ -24,12 +24,13 @@ export const authSuccess = sKey => (
     },
   }
 );
-export const checkAuthorization = (url, pathname) => (
+export const checkAuthorization = (url, pathname, username) => (
   {
     type: AUTH_CHECK,
     payload: {
       url,
       pathname,
+      username,
     },
   }
 );

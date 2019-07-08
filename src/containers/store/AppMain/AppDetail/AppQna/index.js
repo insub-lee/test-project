@@ -115,7 +115,7 @@ class AppQna extends React.Component {
           <div className="itemAUserInfo">
             <div className="userPic">
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
                 alt={item.empnoRegist}
                 className="profilePic"
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
@@ -154,7 +154,7 @@ class AppQna extends React.Component {
           <div className="itemQUserInfo">
             <div className="userPic">
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
                 alt={item.empName}
                 className="profilePic"
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
@@ -206,7 +206,7 @@ class AppQna extends React.Component {
           <div className="itemQUserInfo">
             <div className="userPic">
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
                 alt={item.empName}
                 className="profilePic"
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}

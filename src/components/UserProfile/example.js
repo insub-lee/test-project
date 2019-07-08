@@ -91,7 +91,7 @@ class UserProfile extends React.Component {
                 left: '0',
                 width: '100%',
               }}
-              src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
+              src={`/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
               onError={(e) => { e.target.src = noImgPro; }}
               alt=""
             />
@@ -118,7 +118,7 @@ class UserProfile extends React.Component {
               left: '0',
               width: '100%',
             }}
-            src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
+            src={`/portalWeb/uploadfile/pictures/${userProfile.EMP_NO}.jpg`}
             onError={(e) => { e.target.src = noImgPro; }}
             alt=""
           />

@@ -22,7 +22,7 @@ export function* initPage(payload) {
   const response = yield call(Axios.get, '/api/bizstore/v1/store/bizTree', { data: 'temp' });
 
   const { result, rootId } = response;
-  if (result.length > 1) {
+  if (result.length > 0) {
     let categoryData = treeFunc.setFlatDataKey(result, 'BIZGRP_ID');
     categoryData = treeFunc.getTreeFromFlatTreeData(categoryData, rootId);
     const categoryFlatData = treeFunc.getFlatMapDataFromTreeData(categoryData);

@@ -61,7 +61,8 @@ class testModal extends Component {
 
       const c = Detail.replace(/\\/ig, '').replace(/"/ig, '');
       const a = c.indexOf("html:");
-      const b = c.lastIndexOf("addDiv");
+      //const b = c.lastIndexOf("addDiv");
+      const b = c.indexOf("addDiv");
 
       const result = c.substring(a + 5, b - 1);
 
@@ -122,7 +123,7 @@ class testModal extends Component {
                   <li>
                     <div className="empPicture">
                       <img
-                        src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${article.empnoRegist}.jpg`}
+                        src={`/portalWeb/uploadfile/pictures/${article.empnoRegist}.jpg`}
                         alt={article.empnoRegist}
                         onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
                       />

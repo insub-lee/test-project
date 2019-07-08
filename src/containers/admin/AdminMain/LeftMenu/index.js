@@ -20,7 +20,7 @@ const StyledAdminLeftMenu = styled.div`
   position: fixed;
   top: 45px;
   left: 0;
-  width: 300px;
+  width: 200px;
   height: calc(100vh - 45px);
   padding: 10px 15px;
   border-right: 1px solid #d1d2d3;
@@ -129,6 +129,8 @@ class menuList extends React.Component {
     }
 
     if (url === strCurUrl) {
+      clsStr = 'menu current';
+    } else if (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) {
       clsStr = 'menu current';
     // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin') {
     //   clsStr = 'menu current';

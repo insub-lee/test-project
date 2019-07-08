@@ -171,7 +171,7 @@ class ScheduleListChild extends PureComponent {
                                                         {
                                                             uploadFiles.map(f => (
                                                                 <img
-                                                                    src={`http://10.158.122.195/img/thumb/300x240/${f.seq}`}
+                                                                    src={`/img/thumb/300x240/${f.seq}`}
                                                                     alt={f.fileName}
                                                                 />
                                                             ))

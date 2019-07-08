@@ -15,6 +15,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
 import messages from '../UserSearch/messages';
+import { Cookies } from 'react-cookie';
 
 class UserProfile extends Component {
   constructor(props) {
@@ -43,19 +44,27 @@ class UserProfile extends Component {
       case 'org':
         this.onModal();
         break;
-      case 'talk':
-        window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${profile.EMP_NO}`);
+      case 'logout': {
+        const cookies = new Cookies();
+        cookies.remove('empNo', { path: '/' })
+        cookies.remove('access_token', { path: '/' })
+        window.location.href = `/signin`;
         break;
-      case 'mail':
-        window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${profile.EMAIL}`);
-        break;
-      case 'todo':
-        window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${profile.EMP_NO}`);
-        break;
-      case 'hithanks':
-        window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${profile.EMP_NO}`);
-        break;
+      }
+      // case 'talk':
+      //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${profile.EMP_NO}`);
+      //   break;
+      // case 'mail':
+      //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${profile.EMAIL}`);
+      //   break;
+      // case 'todo':
+      //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${profile.EMP_NO}`);
+      //   break;
+      // case 'hithanks':
+      //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${profile.EMP_NO}`);
+      //   break;
       default:
+        alert('준비중입니다.');
         return false;
     }
   }
@@ -75,7 +84,8 @@ class UserProfile extends Component {
           <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
           <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
           <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
+          <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-logout">{intlObj.get(messages.logout)}</Button></li>
+          {/* <li><Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
         </ul>
       </div>
     );
@@ -97,7 +107,7 @@ class UserProfile extends Component {
             >
               <div className="myPicture">
                 <img
-                  src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`}
+                  src={`/no_img_pro.jpg`}
                   alt={profile.EMP_NO}
                   onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
                 />

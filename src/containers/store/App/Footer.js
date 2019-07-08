@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import SKhynixLogo from 'images/bizstore/skhynix-logo.png';
 
 const FooterStyle = styled.div`
   position: relative;
@@ -26,8 +25,7 @@ const FooterStyle = styled.div`
 
 const Footer = () => (
   <FooterStyle>
-    <img src={SKhynixLogo} alt="SK 하이닉스" />
-    Copyright &copy; SK hynix. All Rights Reserved.
+    Copyright &copy;
   </FooterStyle>
 );
 

@@ -12,6 +12,9 @@ class Profile extends PureComponent {
     };
   }
   onClick = (type) => {
+    console.log(type);
+    alert('준비중입니다.');
+    /*
     const {
       selectedUser,
     } = this.state;
@@ -34,6 +37,7 @@ class Profile extends PureComponent {
         break;
       default:
     }
+    */
   }
 
   handleOnClick = (item) => {
@@ -88,13 +92,13 @@ class Profile extends PureComponent {
           <div className="picWrapper">
             {selectedUser.length ?
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${selectedUser.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${selectedUser.EMP_NO}.jpg`}
                 alt={selectedUser.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               /> :
 
               <img
-                src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${loadProfile.EMP_NO}.jpg`}
+                src={`/portalWeb/uploadfile/pictures/${loadProfile.EMP_NO}.jpg`}
                 alt={loadProfile.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               />
@@ -150,9 +154,9 @@ class Profile extends PureComponent {
           <li>
             <button className="icon todo" onClick={() => this.onClick('todo')}>{intlObj.get(messages.registerTodo)}</button>
           </li>
-          <li>
+          {/* <li>
             <button className="icon hithanks" onClick={() => this.onClick('hithanks')}>{intlObj.get(messages.HyThanks)}</button>
-          </li>
+          </li> */}
         </ul>
         <div className="userInfoDetails">
           <table>

@@ -67,3 +67,76 @@ export function timeDifference(givenTime) {
   };
   return getTime();
 }
+
+
+export function isEquivalent(a, b) {
+  // Create arrays of property names
+  const aProps = Object.getOwnPropertyNames(a);
+  const bProps = Object.getOwnPropertyNames(b);
+
+  // If number of properties is different,
+  // objects are not equivalent
+  if (aProps.length !== bProps.length) {
+    return false;
+  }
+
+  for (let i = 0; i < aProps.length; i += 1) {
+    const propName = aProps[i];
+
+    // If values of same property are not equal,
+    // objects are not equivalent
+    if (a[propName] !== b[propName]) {
+      return false;
+    }
+  }
+
+  // If we made it this far, objects
+  // are considered equivalent
+  return true;
+}
+
+export function getQueryObj(queryString) {
+  const query = queryString.substring(1);
+  const pairs = query.split('&');
+  const pairObj = {};
+  pairs.forEach(pair => {
+    const temp = pair.split('=');
+    pairObj[temp[0]] = decodeURIComponent(temp[1]);
+  });
+  return pairObj;
+}
+
+export function jsonToQueryString(json) {
+  const queryString = Object.keys(JSON.parse(JSON.stringify(json)))
+    .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(json[key])}`)
+    .join('&');
+  return `${queryString}`;
+}
+
+export function reorder(list, startIndex, endIndex) {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+  return result;
+}
+
+export function reorderMap(from, to, source, destination) {
+  const current = from;
+  const next = to;
+  const target = current[source.Styled];
+
+  current.splice(source.Styled, 1);
+  next.splice(destination.index, 0, target);
+  return {
+    from,
+    to,
+  };
+}
+
+export function makeUniqueTypes(types, prefix = '') {
+  const actionTypes = {};
+  types.forEach(type => {
+    actionTypes[type] = prefix + type;
+  });
+  return actionTypes;
+}

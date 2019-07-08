@@ -110,6 +110,7 @@ class Banner extends PureComponent {
 
 
   render() {
+    console.log('Banner Render ########', this);
     const { item } = this.state;
     const banners = item.data;
     const checkTitle = item.user.isTitle;
