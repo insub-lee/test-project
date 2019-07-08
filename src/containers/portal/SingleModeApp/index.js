@@ -7,15 +7,15 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { Layout } from 'antd';
-import Scrollbars from 'react-custom-scrollbars';
+// import { Layout } from 'antd';
+// import Scrollbars from 'react-custom-scrollbars';
 // import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import makeSelectApps from './selectors';
-import AppWrapper from '../App/AppWrapper';
+// import AppWrapper from '../App/AppWrapper';
 import SmAppsRouter from '../../../apps/smAppsRouter';
-import '../App/global.css';
+// import '../App/global.css';
 // import * as actions from './actions';
 import saga from './saga';
 import reducer from './reducer';
@@ -71,25 +71,10 @@ class SingleModeApp extends React.Component {
       // 홈
     } = this.props;
 
-    console.log(selectedApp, ' tesdsfasfsdafasdfdsafsdafasdf');
-
     return (
       <div>
         {selectedApp.length !== 0 ?
-          <Layout className="portalLayout">
-            <Scrollbars
-              className="singleMode-custom-scrollbar"
-              style={{ width: 'auto', minHeight: '100vh', height: 'auto' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              <AppWrapper style={{ width: '100%' }}>
-                {/* <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} /> */}
-                <SmAppsRouter selectedApp={selectedApp} />
-              </AppWrapper>
-            </Scrollbars>
-          </Layout>
+          <SmAppsRouter selectedApp={selectedApp} />
         :
           <div />
         }
@@ -99,7 +84,6 @@ class SingleModeApp extends React.Component {
 }
 SingleModeApp.propTypes = {
   selectedApp: PropTypes.array.isRequired,
-  // setIsSpinnerShow: PropTypes.func.isRequired,
 };
 const mapStateToProps = createStructuredSelector({
   selectedApp: makeSelectApps(),

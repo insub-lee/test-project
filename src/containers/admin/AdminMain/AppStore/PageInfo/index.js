@@ -15,7 +15,7 @@ import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
-import Page from '../../../../store/components/Page';
+import Page from '../Page';
 
 class PageInfo extends Component {
   constructor(props) {
@@ -87,7 +87,7 @@ class PageInfo extends Component {
       cWidgetList[i].deleteWidget = deleteWidget;
       cWidgetList[i].basic.functions.push('settings');
       cWidgetList[i].basic.functions.push('delete');
-      cWidgetList[i].basic.path = 'AppMain/MyPage/PageInfo/BasicWidget/index';
+      cWidgetList[i].basic.path = 'AdminMain/AppStore/PageInfo/BasicWidget/index';
       if (i === length - 1) {
         ord = cWidgetList[i].ord + 1;
       }
@@ -106,7 +106,8 @@ class PageInfo extends Component {
       basic: {
         isTitle: false,
         functions: [],
-        path: 'AppMain/MyPage/PageInfo/AddWidget/index',
+        path: 'AdminMain/AppStore/PageInfo/AddWidget/index',
+
       },
       user: {
         isTitle: false,

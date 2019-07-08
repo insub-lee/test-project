@@ -43,7 +43,9 @@ class Header extends React.Component {
 
     let appName = '';
     if (setMyMenuData === 'common' || setMyMenuData.HOME_YN === 'Y') {
-      appName = view !== 'Mobile' ? `: ${intlObj.get(messages.home)}` : intlObj.get(messages.home);
+      // appName = view !== 'Mobile' ? `: ${intlObj.get(messages.home)}` : intlObj.get(messages.home);
+      // home txt 삭제 0422
+      appName = '';
     } else if (lang.get('NAME', setMyMenuData)) {
       appName = view !== 'Mobile' ? `: ${lang.get('NAME', setMyMenuData)}` : lang.get('NAME', setMyMenuData);
     }
@@ -124,8 +126,12 @@ class Header extends React.Component {
                   {/* 풀스크린 버튼 */}
                 </li>
                 <li>
-                  <UserProfile />{/* 프로필 */}
+                  <UserProfile execPage={this.props.execPage} />{/* 프로필 */}
                 </li>
+                {/* { setMyMenuData.HOME_YN === 'Y' &&
+                <li>
+                  <Link to="/admin" className="icon-setting" target="_blank" />
+                </li> } */}
               </ul>
             </li>
           </ul>

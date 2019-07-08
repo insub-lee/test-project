@@ -38,9 +38,7 @@ function createComponents(item) {
       } else if (app.SVC_YN !== 'C' && app.SEC_YN === 'Y') {
         return (
           <WidgetsWrapper item={item}>
-            <COMP
-              item={item}
-            />
+            <COMP item={item} />
           </WidgetsWrapper>
         );
       }
@@ -53,16 +51,13 @@ function createComponents(item) {
 
     const COMP = Loadable(param);
 
-    return (
-      <div key={`${item.id}`}>
-        {RenderAppView(item)}
-      </div>
-    );
+    return <div key={`${item.id}`}>{RenderAppView(item)}</div>;
   }
   return <div />;
 }
 
 function createSingleComponents(item) {
+  console.log('@@@@@@@@@@@items: ', item);
   console.log(item, 'createSingleComponents');
   // Object.assign(item.basic, { path: item.legacyPath }); //eslint-disable-line
   const param = {
@@ -74,25 +69,23 @@ function createSingleComponents(item) {
   const COMP = Loadable(param);
   return (
     <div key={`${item.id}`}>
-      {item.SVC_YN === 'C' ?
+      {item.SVC_YN === 'C' ? (
         <SingleWidgetsWrapper item={item}>
           <ServiceStop item={item} type={type} />
         </SingleWidgetsWrapper>
-        :
+      ) : (
         <div>
-          {item.SEC_YN === 'Y' ?
+          {item.SEC_YN === 'Y' ? (
             <SingleWidgetsWrapper item={item}>
-              <COMP
-                item={item}
-              />
+              <COMP item={item} />
             </SingleWidgetsWrapper>
-            :
+          ) : (
             <SingleWidgetsWrapper item={item}>
               <ApplyWidget item={item} type={type} />
             </SingleWidgetsWrapper>
-          }
+          )}
         </div>
-      }
+      )}
     </div>
   );
 }
@@ -136,7 +129,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   const layout = [];
   const arrH = [];
 
-  items.sort((a, b) => (a.ord - b.ord));
+  items.sort((a, b) => a.ord - b.ord);
 
   for (let i = 0; i < Math.ceil(items.length / layoutConfig.col) + 10; i += 1) {
     arrH.push([]);
@@ -188,7 +181,6 @@ function createLayoutConfig(layoutConfig, view, items) {
   return layout;
 }
 
-
 class Page extends Component {
   componentWillReceiveProps(nextProps) {
     const { setMyMenuData, setIsSpinnerShow } = this.props;
@@ -197,12 +189,9 @@ class Page extends Component {
     }
   }
   shouldComponentUpdate(nextProps) {
-    const {
-      columns,
-      setMyMenuData,
-      isUnreadCnt,
-      currentView,
-    } = this.props;
+    /* eslint-disable */
+    const { columns, setMyMenuData, isUnreadCnt, currentView } = this.props;
+    /* eslint-disable */
     if (columns && JSON.stringify(columns) !== JSON.stringify(nextProps.columns)) {
       return true;
     }
@@ -221,16 +210,7 @@ class Page extends Component {
     this.props.setIsSpinnerShow();
   }
   render() {
-    const {
-      columns,
-      setMyMenuData,
-      currentView,
-      execMenu,
-      execPage,
-      show,
-      onReload,
-      isPreviewPage,
-    } = this.props;
+    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage } = this.props;
 
     for (let i = 0; i < columns.length; i += 1) {
       columns[i].onReload = onReload;
@@ -284,27 +264,21 @@ class Page extends Component {
     console.log('VIEW_NAMER:', columns);
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
     console.log('TESTETESTESTESTEST:', setMyMenuData);
+    console.log('isPreviewPage:', !setMyMenuData);
 
     return (
       <div>
-        {!setMyMenuData ?
-          <GridLayout
-            className="layout"
-            layout={layout}
-            cols={layoutConfig.col}
-            rowHeight={270}
-            width={layoutConfig.width}
-            compactType="horizontal"
-          >
+        {!setMyMenuData ? (
+          <GridLayout className="layout" layout={layout} cols={layoutConfig.col} rowHeight={270} width={layoutConfig.width} compactType="horizontal">
             {columns.map(createComponents)}
           </GridLayout>
-          :
+        ) : (
           <div>
-            {isPreviewPage === false ?
+            {isPreviewPage === false ? (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' && setMyMenuData.PAGE_ID === columns[0].PAGE_ID ?
+                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' && setMyMenuData.PAGE_ID === columns[0].PAGE_ID ? (
                   <div>
-                    {setMyMenuData.APP_YN === 'N' ?
+                    {setMyMenuData.APP_YN === 'N' ? (
                       <GridLayout
                         className="layout"
                         layout={layout}
@@ -315,21 +289,19 @@ class Page extends Component {
                       >
                         {columns.map(createComponents)}
                       </GridLayout>
-                      :
-                      <div>
-                        {columns.map(createSingleComponents)}
-                      </div>
-                    }
+                    ) : (
+                      <div>{columns.map(createSingleComponents)}</div>
+                    )}
                   </div>
-                  :
+                ) : (
                   <div />
-                }
+                )}
               </div>
-              :
+            ) : (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' ?
+                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' ? (
                   <div>
-                    {setMyMenuData.APP_YN === 'N' ?
+                    {setMyMenuData.APP_YN === 'N' ? (
                       <GridLayout
                         className="layout"
                         layout={layout}
@@ -340,19 +312,17 @@ class Page extends Component {
                       >
                         {columns.map(createComponents)}
                       </GridLayout>
-                      :
-                      <div>
-                        {columns.map(createSingleComponents)}
-                      </div>
-                    }
+                    ) : (
+                      <div>{columns.map(createSingleComponents)}</div>
+                    )}
                   </div>
-                  :
+                ) : (
                   <div />
-                }
+                )}
               </div>
-            }
+            )}
           </div>
-        }
+        )}
       </div>
     );
   }

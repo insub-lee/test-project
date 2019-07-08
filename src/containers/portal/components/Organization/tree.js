@@ -245,7 +245,6 @@ class Tree extends Component {
               searchQuery={searchString && searchString.length !== 0
                             ? searchString : selectedUserDeptName}
               searchFocusOffset={searchFocusIndex}
-              canDrag={false}
               style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
               isVirtualized={false}
               generateNodeProps={({ node }) => {

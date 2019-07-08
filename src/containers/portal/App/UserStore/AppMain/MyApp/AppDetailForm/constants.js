@@ -1,0 +1,9 @@
+export const GET_MY_APP_DETAIL = 'nrp/containers/MyApp/AppDetailForm/GET_MY_APP_DETAIL';
+export const SET_MY_APP_DETAIL = 'nrp/containers/MyApp/AppDetailForm/SET_MY_APP_DETAIL';
+export const TEST = 'nrp/containers/MyApp/AppDetailForm/TEST';
+export const APP_PROCESS = 'nrp/containers/MyApp/AppDetailForm/APP_PROCESS';
+export const APP_MANUAL = 'nrp/containers/MyApp/AppDetailForm/APP_MANUAL';
+export const SCREENSHOT_LIST = 'nrp/containers/MyApp/AppDetailForm/SCREENSHOT_LIST';
+export const RES_APP_LIST = 'nrp/containers/MyApp/AppDetailForm/RES_APP_LIST';
+export const RECOM_APP_LIST = 'nrp/containers/MyApp/AppDetailForm/RECOM_APP_LIST';
+export const SYSTEM_LINK = 'nrp/containers/MyApp/AppDetailForm/SYSTEM_LINK';

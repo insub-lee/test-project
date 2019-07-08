@@ -35,7 +35,7 @@ export function* execMenu(payload) {
 
             if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
               //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-              if (dockList[a].WIDGET_LIST !== undefined) {
+              if (dockList[a].WIDGET_LIST !== undefined && dockList[a].WIDGET_LIST !== null) {
                 const appIdArr = dockList[a].WIDGET_LIST.split(',');
                 let sum = 0;
                 notiVal.forEach((notiValue) => {
@@ -124,47 +124,50 @@ export function* resetPageApps(payload) {
 }
 
 export function* resetPageNotiApps(payload) {
-  const selectedAppThisData = yield select(stateParam => stateParam.get('app').get('selectedApp'));
-  const unreadCnt = payload.UNREAD_CNT;
+  const app = yield select(stateParam => stateParam.get('app'));
+  if (app) {
+    const selectedAppThisData = app.get('selectedApp');
+    const unreadCnt = payload.UNREAD_CNT;
 
-  if (selectedAppThisData.length > 0) {
-    // 캐쉬 업데이트
-    const myObject = payload.UNREAD_CNT; // eslint-disable-line
-    const myObjectVal = Object.values(myObject);
-    const notiVal = JSON.parse(`[${myObjectVal}]`);
-    if (notiVal !== null) {
-      for (let a = 0; a < selectedAppThisData.length; a += 1) {
-        for (let b = 0; b < notiVal.length; b += 1) {
-          if (selectedAppThisData[a].APP_ID === notiVal[b].APP_ID) {
-            Object.assign(selectedAppThisData[a], { UNREAD_CNT: notiVal[b].UNREAD_CNT }); // eslint-disable-line
+    if (selectedAppThisData.length > 0) {
+      // 캐쉬 업데이트
+      const myObject = payload.UNREAD_CNT; // eslint-disable-line
+      const myObjectVal = Object.values(myObject);
+      const notiVal = JSON.parse(`[${myObjectVal}]`);
+      if (notiVal !== null) {
+        for (let a = 0; a < selectedAppThisData.length; a += 1) {
+          for (let b = 0; b < notiVal.length; b += 1) {
+            if (selectedAppThisData[a].APP_ID === notiVal[b].APP_ID) {
+              Object.assign(selectedAppThisData[a], { UNREAD_CNT: notiVal[b].UNREAD_CNT }); // eslint-disable-line
+            }
           }
         }
+        yield put({
+          type: actionType.RESET_EXEC_APPS_UNREAD_UPDATE_SUCCESS,
+          resultValue: fromJS(selectedAppThisData),
+          isUnreadCnt: unreadCnt,
+        });
       }
-      yield put({
-        type: actionType.RESET_EXEC_APPS_UNREAD_UPDATE_SUCCESS,
-        resultValue: fromJS(selectedAppThisData),
-        isUnreadCnt: unreadCnt,
-      });
-    }
-  } else if (selectedAppThisData.size > 0) {
-    // 캐쉬 업데이트
-    const selectedAppThisData2 = selectedAppThisData.toJS();
-    const myObject = payload.UNREAD_CNT; // eslint-disable-line
-    const myObjectVal = Object.values(myObject);
-    const notiVal = JSON.parse(`[${myObjectVal}]`);
-    if (notiVal !== null) {
-      for (let a = 0; a < selectedAppThisData2.length; a += 1) {
-        for (let b = 0; b < notiVal.length; b += 1) {
-          if (selectedAppThisData2[a].APP_ID === notiVal[b].APP_ID) {
-            Object.assign(selectedAppThisData2[a], { UNREAD_CNT: notiVal[b].UNREAD_CNT }); // eslint-disable-line
+    } else if (selectedAppThisData.size > 0) {
+      // 캐쉬 업데이트
+      const selectedAppThisData2 = selectedAppThisData.toJS();
+      const myObject = payload.UNREAD_CNT; // eslint-disable-line
+      const myObjectVal = Object.values(myObject);
+      const notiVal = JSON.parse(`[${myObjectVal}]`);
+      if (notiVal !== null) {
+        for (let a = 0; a < selectedAppThisData2.length; a += 1) {
+          for (let b = 0; b < notiVal.length; b += 1) {
+            if (selectedAppThisData2[a].APP_ID === notiVal[b].APP_ID) {
+              Object.assign(selectedAppThisData2[a], { UNREAD_CNT: notiVal[b].UNREAD_CNT }); // eslint-disable-line
+            }
           }
         }
+        yield put({
+          type: actionType.RESET_EXEC_APPS_UNREAD_UPDATE_SUCCESS,
+          resultValue: fromJS(selectedAppThisData2),
+          isUnreadCnt: unreadCnt,
+        });
       }
-      yield put({
-        type: actionType.RESET_EXEC_APPS_UNREAD_UPDATE_SUCCESS,
-        resultValue: fromJS(selectedAppThisData2),
-        isUnreadCnt: unreadCnt,
-      });
     }
   }
 }
@@ -463,7 +466,7 @@ export function* getDockItemList(payload) {
 
           if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
             //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-            if (dockList[a].WIDGET_LIST !== undefined) {
+            if (dockList[a].WIDGET_LIST !== undefined && dockList[a].WIDGET_LIST !== null) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
               notiVal.forEach((notiValue) => {
@@ -584,7 +587,7 @@ export function* loadingDockItem() {
 
           if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
             //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-            if (dockList[a].WIDGET_LIST !== undefined) {
+            if (dockList[a].WIDGET_LIST !== undefined && dockList[a].WIDGET_LIST !== null) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
               notiVal.forEach((notiValue) => {
@@ -639,7 +642,7 @@ export function* getDockItemListUnreadCnt(payload) {
 
           if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
             //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-            if (dockList[a].WIDGET_LIST !== undefined) {
+            if (dockList[a].WIDGET_LIST !== undefined && dockList[a].WIDGET_LIST !== null) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
               notiVal.forEach((notiValue) => {

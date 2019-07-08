@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { lang, imgUrl, isExplorer, isDesktop, intlObj } from 'utils/commonUtils';
 import { DragSource, DropTarget } from 'react-dnd';
@@ -44,7 +44,7 @@ const DockItemDropSpec = {
 const collectDrag = connect => ({ connectDragSource: connect.dragSource(), connectDragPreview: connect.dragPreview() });
 const collectDrop = connect => ({ connectDropTarget: connect.dropTarget() });
 
-class DockItem extends Component {
+class DockItem extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -60,13 +60,15 @@ class DockItem extends Component {
       this.setPreviewIcon(this.props);
     }
   }
-  setPreviewIcon = (props) => {
+  /* eslint-disable */
+  setPreviewIcon = props => {
     const imgSize = props.dockIconType === 'MAX' ? '60x60' : '24x24';
     const previewPageIcon = props.dockIconType === 'MAX' ? pageIconDnD : pageIconDnDMin;
     const img = new Image();
-    img.onload = () => props.connectDragPreview && props.connectDragPreview(img) // eslint-disable-line
+    img.onload = () => props.connectDragPreview && props.connectDragPreview(img); // eslint-disable-line
     img.src = props.dockItem.ICON !== ' ' ? imgUrl.get(imgSize, props.dockItem.ICON) : previewPageIcon;
-  }
+  };
+  /* eslint-disable */
   makeIconArr = () => {
     const { isMouseOver } = this.state;
 
@@ -75,7 +77,7 @@ class DockItem extends Component {
         isMouseOver: true,
       });
     }
-  }
+  };
 
   // DockItem에 마우스 아웃 시 독 추가/제거, 실행 닫기 버튼을 제거해 주는 함수
   deleteIconArr = () => {
@@ -84,57 +86,45 @@ class DockItem extends Component {
     if (isMouseOver) {
       this.setState({ isMouseOver: false });
     }
-  }
+  };
 
   // DockItem 실행 이벤트 리스너
   execDockItem = () => {
-    const {
-      execPage,
-      dockItem,
-      // execApp,
-    } = this.props;
+    const { execPage, dockItem } = this.props;
+
+    console.debug('>>>>>>>>>dock event: ', dockItem);
 
     if (dockItem.TARGET === 'NEW') {
       window.open(dockItem.URL, dockItem.DOCK_ID, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
     } else {
       execPage(dockItem, 'execDock');
-      // execApp(dockItem);
     }
-  }
+  };
 
   // **************** 모바일/태블릿에서 독아이템 길게 누르고 있을 경우 수행될 함수 ****************
   handleButtonPress = () => {
     this.props.setIsCloseToFalse();
-    this.buttonPressTimer = setTimeout(() => { this.props.setIsCloseToTrue(this.props.dockItem.DOCK_ID); }, 750); //eslint-disable-line
-  }
+    this.buttonPressTimer = setTimeout(() => {
+      this.props.setIsCloseToTrue(this.props.dockItem.DOCK_ID);
+    }, 750); //eslint-disable-line
+  };
 
   // 모바일/태블릿에서 독아이템 길게 누르고 있다가 뗀 경우 수행될 함수
   handleButtonRelease = () => {
     clearTimeout(this.buttonPressTimer);
-  }
+  };
   // **************** 모바일/태블릿에서 독아이템 길게 누르고 있을 경우 수행될 함수 끝 ****************
 
   render() {
-    const {
-      connectDragSource, connectDropTarget,
-    } = this.props;
-    const {
-      dockItem,
-      dockIconType,
-      view,
-      isClose,
-    } = this.props;
-    const {
-      exitDockItem,
-      fixDockItem,
-      unfixDockItem,
-      dockItemStyleObject,
-    } = this.props;
+    const { connectDragSource, connectDropTarget } = this.props;
+    const { dockItem, dockIconType, view, isClose } = this.props;
+    const { exitDockItem, fixDockItem, unfixDockItem, dockItemStyleObject } = this.props;
+    /* eslint-disable  */
     const {
       isMouseOver,
       // isPressed,
     } = this.state;
-
+    /* eslint-disable  */
     const isDesktopValue = isDesktop(view);
 
     let dockItemClassName = '';
@@ -171,65 +161,125 @@ class DockItem extends Component {
           textAlign: 'center',
         }}
       >
-        {
-          dockItem.DOCK_YN === 'Y'
-            ?
-              <button
-                style={styleContextMenuContent}
-                onClick={() => { unfixDockItem(dockItem.DOCK_ID); }}
-                id={dockItem.DOCK_ID}
-                value="unfixDockItem"
-              >
-                {intlObj.get(messages.unfixDockItem)}
-              </button>
-            :
-              <button
-                style={styleContextMenuContent}
-                onClick={() => { fixDockItem(dockItem.DOCK_ID); }}
-                id={dockItem.DOCK_ID}
-                value="fixDockItem"
-              >
-                {intlObj.get(messages.fixDockItem)}
-              </button>
-        }
+        {dockItem.DOCK_YN === 'Y' ? (
+          <button
+            style={styleContextMenuContent}
+            onClick={() => {
+              unfixDockItem(dockItem.DOCK_ID);
+            }}
+            id={dockItem.DOCK_ID}
+            value="unfixDockItem"
+          >
+            {intlObj.get(messages.unfixDockItem)}
+          </button>
+        ) : (
+          <button
+            style={styleContextMenuContent}
+            onClick={() => {
+              fixDockItem(dockItem.DOCK_ID);
+            }}
+            id={dockItem.DOCK_ID}
+            value="fixDockItem"
+          >
+            {intlObj.get(messages.fixDockItem)}
+          </button>
+        )}
         <br />
-        {
-          dockItem.EXEC_YN === 'Y'
-            ?
-              <button
-                style={styleContextMenuContent}
-                onClick={() => { exitDockItem(dockItem.DOCK_ID); }}
-                id={dockItem.DOCK_ID}
-                value="exitDockItem"
-              >
-                {intlObj.get(messages.close)}
-              </button>
-            :
-              ''
-        }
+        {dockItem.EXEC_YN === 'Y' ? (
+          <button
+            style={styleContextMenuContent}
+            onClick={() => {
+              exitDockItem(dockItem.DOCK_ID);
+            }}
+            id={dockItem.DOCK_ID}
+            value="exitDockItem"
+          >
+            {intlObj.get(messages.close)}
+          </button>
+        ) : (
+          ''
+        )}
       </div>
     );
 
     /* eslint-disable */
-    const homeDockItem =
-      (<div style={dockItemStyleObject}>
-        <StyledDockItem
-          onMouseLeave={() => this.deleteIconArr()}
-          onMouseEnter={() => this.makeIconArr()}
-        >
+    const homeDockItem = (
+      <div style={dockItemStyleObject}>
+        <StyledDockItem onMouseLeave={() => this.deleteIconArr()} onMouseEnter={() => this.makeIconArr()}>
           <a onClick={() => this.execDockItem()}>
-            <div
-              className={dockItemClassName}
-              style={styleDockItemClass}
-            >
-              <img
-                src={homeIcon}
-                alt=""
-                style={styleDockImage}
-              />
-              {
-                dockIconType === 'MAX'
-                  ?
+            <div className={dockItemClassName} style={styleDockItemClass}>
+              <img src={homeIcon} alt="" style={styleDockImage} />
+              {dockIconType === 'MAX' ? (
+                <div
+                  className="dockItemName"
+                  style={{
+                    display: 'table',
+                    height: '18px',
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'table-cell',
+                      verticalAlign: 'middle',
+                    }}
+                  >
+                    {intlObj.get(messages.home)}
+                  </div>
+                </div>
+              ) : (
+                ''
+              )}
+            </div>
+          </a>
+        </StyledDockItem>
+      </div>
+    );
+    /* eslint-disable */
+
+    /* eslint-disable */
+    const commonDockItem = connectDropTarget(
+      connectDragSource(
+        <div
+          style={dockItemStyleObject}
+          onTouchStart={isDesktopValue ? undefined : this.handleButtonPress}
+          onTouchEnd={isDesktopValue ? undefined : this.handleButtonRelease}
+          onMouseDown={isDesktopValue ? undefined : this.handleButtonPress}
+          onMouseUp={isDesktopValue ? undefined : this.handleButtonRelease}
+        >
+          <Popover placement="topLeft" content={contextMenuContent} trigger="contextMenu" visible={isClose}>
+            <StyledDockItem onMouseLeave={() => this.deleteIconArr()} onMouseEnter={() => this.makeIconArr()}>
+              {dockIconType === 'MAX' && isDesktopValue ? (
+                <MouseOverIcons
+                  dockYn={dockItem.DOCK_YN}
+                  execYn={dockItem.EXEC_YN}
+                  isMouseOver={isMouseOver}
+                  exitDockItem={exitDockItem}
+                  fixDockItem={fixDockItem}
+                  unfixDockItem={unfixDockItem}
+                  dockId={dockItem.DOCK_ID}
+                  pageId={dockItem.PAGE_ID}
+                />
+              ) : (
+                ''
+              )}
+              <a onClick={() => this.execDockItem()}>
+                <div className={dockItemClassName} style={styleDockItemClass}>
+                  {/* <Badge count={100} overflowCount={99} className="dockNotiNum" /> */}
+                  {dockIconType === 'MAX' ? (
+                    <Badge count={dockItem.UNREAD_CNT !== undefined ? dockItem.UNREAD_CNT : ''} overflowCount={99} className="dockNotiNum" />
+                  ) : dockItem.UNREAD_CNT && Number(dockItem.UNREAD_CNT) > 0 ? (
+                    <BadgeDot
+                      dot
+                      style={{
+                        position: 'absolute',
+                        left: isExplorer() ? '24px' : '12px',
+                      }}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  <img src={dockItem.ICON !== ' ' ? imgUrl.get('160x160', dockItem.ICON) : pageIcon} alt="" style={styleDockImage} />
+                  {dockIconType === 'MAX' ? (
                     <div
                       className="dockItemName"
                       style={{
@@ -243,109 +293,19 @@ class DockItem extends Component {
                           verticalAlign: 'middle',
                         }}
                       >
-                        {intlObj.get(messages.home)}
+                        {lang.get('NAME', dockItem)}
                       </div>
                     </div>
-                  :
+                  ) : (
                     ''
-              }
-            </div>
-          </a>
-        </StyledDockItem>
-      </div>);
-    /* eslint-disable */
-
-    /* eslint-disable */
-    const commonDockItem =
-      connectDropTarget(connectDragSource(
-        <div
-          style={dockItemStyleObject}
-          onTouchStart={isDesktopValue ? undefined : this.handleButtonPress}
-          onTouchEnd={isDesktopValue ? undefined : this.handleButtonRelease}
-          onMouseDown={isDesktopValue ? undefined : this.handleButtonPress}
-          onMouseUp={isDesktopValue ? undefined : this.handleButtonRelease}
-        >
-          <Popover
-            placement="topLeft"
-            content={contextMenuContent}
-            trigger="contextMenu"
-            visible={isClose}
-          >
-            <StyledDockItem
-              onMouseLeave={() => this.deleteIconArr()}
-              onMouseEnter={() => this.makeIconArr()}
-            >
-            {
-              dockIconType === 'MAX' && isDesktopValue
-                ?
-                <MouseOverIcons
-                  dockYn={dockItem.DOCK_YN}
-                  execYn={dockItem.EXEC_YN}
-                  isMouseOver={isMouseOver}
-                  exitDockItem={exitDockItem}
-                  fixDockItem={fixDockItem}
-                  unfixDockItem={unfixDockItem}
-                  dockId={dockItem.DOCK_ID}
-                  pageId={dockItem.PAGE_ID} />
-                :
-                  ''
-            }
-              <a onClick={() => this.execDockItem()}>
-                <div
-                  className={dockItemClassName}
-                  style={styleDockItemClass}
-                >
-                  {/* <Badge count={100} overflowCount={99} className="dockNotiNum" /> */}
-                  {
-                    dockIconType === 'MAX'
-                      ?
-                        <Badge count={dockItem.UNREAD_CNT !== undefined ? dockItem.UNREAD_CNT : ''} overflowCount={99} className="dockNotiNum" />
-                      :
-                        dockItem.UNREAD_CNT && Number(dockItem.UNREAD_CNT) > 0
-                          ?
-                            <BadgeDot
-                              dot
-                              style={{
-                                position: 'absolute',
-                                left: isExplorer() ? '24px' : '12px',
-                              }}
-                            />
-                          :
-                            ''
-                  }
-                  <img
-                    src={dockItem.ICON !== ' ' ? imgUrl.get('160x160', dockItem.ICON) : pageIcon}
-                    alt=""
-                    style={styleDockImage}
-                  />
-                    {
-                      dockIconType === 'MAX'
-                        ?
-                          <div
-                            className="dockItemName"
-                            style={{
-                                  display: 'table',
-                                  height: '18px',
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: 'table-cell',
-                                verticalAlign: 'middle',
-                              }}
-                            >
-                              {lang.get('NAME', dockItem)}
-                            </div>
-                          </div>
-                        :
-                          ''
-                    }
+                  )}
                 </div>
               </a>
             </StyledDockItem>
           </Popover>
-        </div>
-      ));
+        </div>,
+      ),
+    );
     /* eslint-disable */
 
     // Home 앱인 경우
@@ -359,7 +319,7 @@ class DockItem extends Component {
       return (
         <Tooltip title={lang.get('NAME', dockItem)} placement="left">
           {homeDockItem}
-        </Tooltip>                                                                                                       
+        </Tooltip>
       );
     } else {
       if (dockIconType === 'MAX') {
@@ -380,7 +340,6 @@ DockItem.propTypes = {
   // ***내가 만든 속성들***
   connectDragSource: PropTypes.func.isRequired,
   connectDropTarget: PropTypes.func.isRequired,
-  execDockItem: PropTypes.func.isRequired,
   exitDockItem: PropTypes.func.isRequired,
   fixDockItem: PropTypes.func.isRequired,
   unfixDockItem: PropTypes.func.isRequired,

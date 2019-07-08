@@ -9,6 +9,7 @@ import { intlObj, lang } from 'utils/commonUtils';
 import { Form, Button, Radio, Col, Row, Input } from 'antd';
 import { Link } from 'react-router-dom';
 import * as orgAction from 'containers/portal/components/Organization/actions';
+import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import injectReducer from '../../utils/injectReducer';
 import injectSaga from '../../utils/injectSaga';
@@ -156,7 +157,8 @@ class appSetting extends Component {
   }
 
   closeModal() {
-    this.props.history.push(`/store/appMain/myPage/page/${this.state.PAGE_ID}`);
+    const preUrl = this.props.match.path.substr(0, this.props.match.path.indexOf('/widgetsetting'));
+    this.props.history.push(`${preUrl}/page/${this.state.PAGE_ID}`);
 
     // 차후 appselector, 조직도 사용하는 위젯 구분 필요
     // 서비스 바로가기의 액션
@@ -274,7 +276,7 @@ class appSetting extends Component {
                       {widgetList.map(w => (
                           <li key={w.id}>
                             <div className={Number(w.id) === WIDGET_ID? 'current' : null}>
-                              <Link to={`/store/appMain/myPage/widgetsetting/${w.PAGE_ID}/${w.id}`}>
+                              <Link to={`${commonjs.getPreUrl(this.props.match.path, '/widgetsetting')}/${w.PAGE_ID}/${w.id}`}>
                                 {lang.get('NAME', w)}
                               </Link>
                             </div>

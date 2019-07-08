@@ -69,7 +69,7 @@ function* afterLoginProcess(data, action) {
         let PAGE_ID = '';
         if (pathname[1] !== 'sm') {
           if (pathname[1] === 'portal') {
-            if (pathname[2] === 'apps' && pathname[3] !== '' && (!Number.isNaN(pathname[3]))) {
+            if (pathname[2] === 'apps' && pathname[3] !== '' && !Number.isNaN(pathname[3])) {
               const parameter = pathname[3]; // 2556, bookroom
               PAGE_ID = Number(parameter);
             } else if (pathname[2] === 'intlSVC' && pathname[3]) {
@@ -141,12 +141,12 @@ export function* loginReconnectUUID() {
 export function loginSuccess(action) {
   console.log('LOGIN SUCCESS SAGA:', action);
 }
-
+/* eslint-disable */
 export function* loadAuthorization(action) {
   let data = {};
   if (action.payload.url.split('?').length > 1) {
     const params = action.payload.url.split('?')[1].split(';');
-    params.forEach((p) => {
+    params.forEach(p => {
       const item = p.split('=');
       if (item[0] === 'uuid') {
         data = {
@@ -211,14 +211,16 @@ export function* checkSession(action) {
   const payload = { url: action.payload.url };
 
   if (authInfo.get('uuid') !== null) {
-    if (ctype === 1) { // session null일때
+    if (ctype === 1) {
+      // session null일때
       yield put({
         type: actionTypes.AUTH_LOADING,
         payload,
         pathname: action.payload.pathname,
       });
-    } else if (ctype === 2) { // 이전 session과 다를때
-      const response = yield call(Axios.get, '/api/common/v1/auth/ssoCheck', { });
+    } else if (ctype === 2) {
+      // 이전 session과 다를때
+      const response = yield call(Axios.get, '/api/common/v1/auth/ssoCheck', {});
       const data = response;
       console.log(authInfo);
       console.log(authInfo.get('uuid'));
@@ -322,8 +324,8 @@ export function* getDockItemListUnreadCnt(payload) {
             if (dockList[a].WIDGET_LIST !== undefined) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -385,8 +387,8 @@ export function* getNotiMCnt() {
             if (notiList[a].WIDGET_LIST !== undefined) {
               const appIdArr = notiList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -605,26 +607,34 @@ export function* exitDockItem(payload) {
       });
 
       if (lastDockItem.INTL_TYPE === 'Y') {
-        yield put(push({
-          pathname: `/apps/${lastDockItem.SRC_PATH}`,
-          execInfo: state,
-        }));
+        yield put(
+          push({
+            pathname: `/apps/${lastDockItem.SRC_PATH}`,
+            execInfo: state,
+          }),
+        );
       } else if (lastDockItem.SRC_PATH === 'legacySVC') {
-        yield put(push({
-          pathname: `/apps/${lastDockItem.PAGE_ID}`,
-          execInfo: state,
-        }));
+        yield put(
+          push({
+            pathname: `/apps/${lastDockItem.PAGE_ID}`,
+            execInfo: state,
+          }),
+        );
       } else {
-        yield put(push({
-          pathname: `/page/${lastDockItem.PAGE_ID}`,
-          execInfo: state,
-        }));
+        yield put(
+          push({
+            pathname: `/page/${lastDockItem.PAGE_ID}`,
+            execInfo: state,
+          }),
+        );
       }
     } else {
-      yield put(push({
-        pathname: '/',
-        execInfo: state,
-      }));
+      yield put(
+        push({
+          pathname: '/',
+          execInfo: state,
+        }),
+      );
     }
   }
 }
@@ -705,7 +715,7 @@ export function* reloadExecApps(payload) {
       }
       for (let c = 0; c < resultValue.length; c += 1) {
         if (resultValue[c].APP_ID === appId) {
-          Object.assign(resultValue[c], { loadingNum: Math.random()}); // eslint-disable-line
+          Object.assign(resultValue[c], { loadingNum: Math.random() }); // eslint-disable-line
         }
       }
 
@@ -841,8 +851,8 @@ export function* execMenu(payload) {
               if (dockList[a].WIDGET_LIST !== undefined) {
                 const appIdArr = dockList[a].WIDGET_LIST.split(',');
                 let sum = 0;
-                notiVal.forEach((notiValue) => {
-                  appIdArr.forEach((i) => {
+                notiVal.forEach(notiValue => {
+                  appIdArr.forEach(i => {
                     if (notiValue.APP_ID === Number(i)) {
                       sum += notiValue.UNREAD_CNT;
                     }
@@ -930,10 +940,7 @@ export function* getMyAppTree(payload) {
       const arr = [];
       if (myAppTreeDataToJs.length > 0) {
         for (let i = 0; i < myAppTreeDataToJs.length; i += 1) {
-          const result = searchTree(
-            myAppTreeDataToJs[i],
-            notiVal,
-          );
+          const result = searchTree(myAppTreeDataToJs[i], notiVal);
 
           headerCount += result.UNREAD_CNT ? result.UNREAD_CNT : 0;
 
@@ -1011,10 +1018,7 @@ export function* getMyAppTree(payload) {
       const arr = [];
       if (myAppTreeDataToJs.length > 0) {
         for (let i = 0; i < myAppTreeDataToJs.length; i += 1) {
-          const result = searchTree(
-            myAppTreeDataToJs[i],
-            notiVal,
-          );
+          const result = searchTree(myAppTreeDataToJs[i], notiVal);
 
           headerCount += result.UNREAD_CNT ? result.UNREAD_CNT : 0;
 
@@ -1114,7 +1118,6 @@ export function* updateMymenuDisp(payload) {
   yield call(Axios.post, '/api/bizstore/v1/mypage/updateMenudisp', { MENU_ID: Number(node.key), DISP_YN });
 }
 
-
 // 시스템 업무그룹 트리 리로드
 export function* resetSysTreeReload() {
   const response = yield call(Axios.get, '/api/portal/v1/page/portalSysMenuTreeReload', { data: 'temp' });
@@ -1135,10 +1138,7 @@ export function* resetSysTreeReload() {
     const arr = [];
     if (myAppTreeDataToJs.length > 0) {
       for (let i = 0; i < myAppTreeDataToJs.length; i += 1) {
-        const result = searchTree(
-          myAppTreeDataToJs[i],
-          notiVal,
-        );
+        const result = searchTree(myAppTreeDataToJs[i], notiVal);
 
         headerCount += result.UNREAD_CNT ? result.UNREAD_CNT : 0;
 
@@ -1240,10 +1240,7 @@ export function* resetTreeData(payload) {
     const arr = [];
     if (myAppTreeDataToJs.length > 0) {
       for (let i = 0; i < myAppTreeDataToJs.length; i += 1) {
-        const result = searchTree(
-          myAppTreeDataToJs[i],
-          notiVal,
-        );
+        const result = searchTree(myAppTreeDataToJs[i], notiVal);
 
         headerCount += result.UNREAD_CNT ? result.UNREAD_CNT : 0;
 
@@ -1331,17 +1328,10 @@ export function* resetTreeData(payload) {
 // 8. history.action === 'POP'일 때, 데이터 로딩 ******************
 // 8-1
 export function* getLoaddata(payload) {
-  const {
-    path,
-    param,
-    data,
-  } = payload;
+  const { path, param, data } = payload;
 
   if (data && data.node && Object.keys(data.node).length !== 0) {
-    const {
-      PAGE_ID,
-      TARGET,
-    } = data.node;
+    const { PAGE_ID, TARGET } = data.node;
     yield call(Axios.post, '/api/portal/v1/page/executeMenu/', { PAGE_ID, TARGET });
   }
   const nodeData = {};
@@ -1387,6 +1377,7 @@ export function* getLoaddata(payload) {
     const menuName = lang.get('NAME', setMyMenuData);
 
     console.log('### 1. 메뉴 데이터 목록', setMyMenuData, selectedIndex, managerInfo, menuName);
+    console.debug('>>>>>>>>>>>>>>>>>setMenuData: ', setMyMenuData);
 
     // dockAppList
     // PAGE_ID로 독아이템 호출
@@ -1412,8 +1403,8 @@ export function* getLoaddata(payload) {
                 if (dockAppListUpdate[a].WIDGET_LIST !== undefined) {
                   const appIdArr = dockAppListUpdate[a].WIDGET_LIST.split(',');
                   let sum = 0;
-                  notiVal.forEach((notiValue) => {
-                    appIdArr.forEach((i) => {
+                  notiVal.forEach(notiValue => {
+                    appIdArr.forEach(i => {
                       if (notiValue.APP_ID === Number(i)) {
                         sum += notiValue.UNREAD_CNT;
                       }
@@ -1523,7 +1514,7 @@ export function* getDataForApps(payload) {
   const myObjectVal = Object.values(myObject);
   const notiVal = JSON.parse(`[${myObjectVal}]`);
 
-  Object.keys(response).forEach((o) => {
+  Object.keys(response).forEach(o => {
     if (notiVal !== null) {
       for (let a = 0; a < response[o].selectedApp.length; a += 1) {
         for (let b = 0; b < notiVal.length; b += 1) {
@@ -1542,10 +1533,7 @@ export function* getDataForApps(payload) {
 }
 
 export function* getSingleModeLoaddata(payload) {
-  const {
-    path,
-    param,
-  } = payload;
+  const { path, param } = payload;
 
   const nodeData = {};
   let response = yield call(Axios.post, '/api/portal/v1/page/getLoadSingledata/', { path, param });

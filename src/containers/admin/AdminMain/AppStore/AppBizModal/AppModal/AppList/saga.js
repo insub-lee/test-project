@@ -5,7 +5,7 @@ import { lang } from 'utils/commonUtils';
 import { Axios } from 'utils/AxiosFunc';
 
 import * as treeFunc from 'containers/common/functions/treeFunc';
-import * as constantsMyPage from 'containers/store/AppMain/MyPage/constants';
+import * as constantsAppStore from 'containers/admin/AdminMain/AppStore/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as constants from './constants';
 
@@ -347,7 +347,7 @@ export function* registAppModal(payload) {
     treeFunc.mergeArray(newCategoryData, oldCategoryData);
 
     yield put({
-      type: constantsMyPage.SET_CATEGORY_DATA,
+      type: constantsAppStore.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
     });
 
@@ -388,7 +388,7 @@ export function* registCategoryModal(payload) {
     treeFunc.mergeArray(newCategoryData, oldCategoryData);
 
     yield put({
-      type: constantsMyPage.SET_CATEGORY_DATA,
+      type: constantsAppStore.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
     });
 
@@ -426,7 +426,7 @@ export function* registBizModal(payload) {
     treeFunc.mergeArray(newCategoryData, oldCategoryData);
 
     yield put({
-      type: constantsMyPage.SET_CATEGORY_DATA,
+      type: constantsAppStore.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
     });
     const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);

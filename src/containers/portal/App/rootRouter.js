@@ -62,13 +62,21 @@ RootRouter.propTypes = {
   setMyMenuData: PropTypes.object.isRequired,
   selectedApp: PropTypes.array.isRequired,
   isSpinnerShow: PropTypes.bool.isRequired,
-  execPage: PropTypes.func.isRequired,
-  execMenu: PropTypes.func.isRequired,
-  show: PropTypes.func.isRequired,
-  onReload: PropTypes.func.isRequired,
+  execPage: PropTypes.func,
+  execMenu: PropTypes.func,
+  onReload: PropTypes.func,
+  show: PropTypes.func,
   setIsSpinnerShow: PropTypes.func.isRequired,
-  view: PropTypes.string.isRequired,
+  view: PropTypes.string,
   isPreviewPage: PropTypes.bool.isRequired,
 };
+
+RootRouter.defaultProps = {
+  show: () => {},
+  execPage: () => {},
+  execMenu: () => {},
+  onReload: () => {},
+  view: '',
+}
 
 export default RootRouter
