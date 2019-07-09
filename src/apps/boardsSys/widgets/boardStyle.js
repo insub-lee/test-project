@@ -141,7 +141,8 @@ const boardStyle = styled.div`
             }
       
             .react-grid-Cell__value {
-              top: 4px;
+              //top: 4px;
+              top: 0;
               transform: none;
 
               .titleText {
