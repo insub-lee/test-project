@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
-import { Cookies } from 'react-cookie';
 import { compose } from 'redux';
 import { intlObj, lang } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
