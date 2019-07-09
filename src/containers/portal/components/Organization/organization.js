@@ -1577,6 +1577,7 @@ class Organization extends Component {
       profile,
       isDraggable,
       view,
+      userSetting,
     } = this.props;
     let modalWrapperClass = ''
     if (isModal) {
@@ -1674,6 +1675,7 @@ class Organization extends Component {
                         selectedUser={selectedUser}
                         loadProfile={profile}
                         selectedProfileTree={this.selectedProfileTree}
+                        userSetting={userSetting}
                       />
                       :
                       ''
@@ -1855,6 +1857,7 @@ Organization.propTypes = {
   siteIdParam: PropTypes.number,
   view: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
+  userSetting: PropTypes.bool,
 };
 Organization.defaultProps = {
   userTab: false,
@@ -1883,6 +1886,7 @@ Organization.defaultProps = {
   selectedUserDeptName: '',
   isDeptSelectbox: false,
   siteIdParam: undefined,
+  userSetting: false,
 };
 export function mapDispatchToProps(dispatch) {
   return {

@@ -3,7 +3,8 @@ import { fromJS } from 'immutable';
 import _ from 'lodash';
 import { lang } from 'utils/commonUtils';
 import { Axios } from 'utils/AxiosFunc';
-
+import message from 'components/Feedback/message';
+import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 import * as constantsAppStore from 'containers/admin/AdminMain/AppStore/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
@@ -60,10 +61,10 @@ export function* initPage(payload) {
   const { initType, param } = payload;
 
   // appList에 카테고리 데이터가 없는 경우
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const oldCategoryData = store.get('categoryData');
   if (oldCategoryData.size === 0) {
-    const response = yield call(Axios.get, '/api/bizstore/v1/store/appTree', { data: 'temp' });
+    const response = yield call(Axios.post, '/api/bizstore/v1/store/appTree', { SITE_ID: -1 });
     const { result, rootId } = response;
     let categoryData = treeFunc.setFlatDataKey(result, 'CATG_ID');
     categoryData = treeFunc.getTreeFromFlatTreeData(categoryData, rootId);
@@ -91,12 +92,13 @@ export function* getMapListOne(payload) {
   const { key } = payload;
   const CATG_ID = Number(key);
 
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const categoryFlatData = store.get('categoryFlatData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: 'ONE',
     CATG_ID,
+    SITE_ID: -1,
     LIMIT: appBlockSize,
   });
   const { result, total } = response;
@@ -123,7 +125,7 @@ export function* getMapListMore(payload) {
   const { key } = payload;
   const CATG_ID = Number(key);
 
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const initType = store.get('initType'); // ONE, SEARCH
   const searchword = store.get('searchword'); // 검색어
 
@@ -135,6 +137,7 @@ export function* getMapListMore(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: initType,
     CATG_ID,
+    SITE_ID: -1,
     LIMIT: limit,
     searchword,
   });
@@ -158,11 +161,12 @@ export function* getMapListMore(payload) {
 
 /* 앱리스트 ALL - 카테고리별 앱 8개씩 */
 export function* getMapListAll() {
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const categoryData = store.get('categoryData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: 'ALL',
+    SITE_ID: -1,
     LIMIT: appBlockSizeAll,
   });
 
@@ -192,13 +196,14 @@ export function* getMapListSearch(payload) {
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: 'SEARCH',
+    SITE_ID: -1,
     searchword: payload.searchword,
     LIMIT: appBlockSize,
   });
   const { result } = response;
 
   if (result) {
-    const store = yield select(state => state.get('mypageappList'));
+    const store = yield select(state => state.get('storeAppList'));
     const categoryFlatData = store.get('categoryFlatData');
 
     const appListMap = _.groupBy(result, 'CATG_ID');
@@ -259,8 +264,8 @@ function changeWGCount(mapList, CATG_ID, APP_ID, WG_COUNT) {
 export function* registApp(payload) {
   const { APP_ID, CATG_ID } = payload;
   const langGubun = lang.getLocale();
-  const store = yield select(state => state.get('mypageappList'));
-  const url = '/api/bizstore/v1/mypage/registApp';
+  const store = yield select(state => state.get('storeAppList'));
+  const url = '/api/bizstore/v1/appmanage/registApp';
 
   const response = yield call(Axios.post, url, { APP_ID, PRNT_ID: -1, langGubun });
   const { code } = response;
@@ -278,10 +283,11 @@ export function* registApp(payload) {
 }
 
 /* 카테고리 포함 앱 등록 */
+/*
 export function* registCategory(payload) {
   const { APP_ID, CATG_ID } = payload;
   const langGubun = lang.getLocale();
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const url = '/api/bizstore/v1/mypage/registCategory';
 
   const response = yield call(Axios.post, url, { APP_ID, PRNT_ID: -1, langGubun });
@@ -301,7 +307,7 @@ export function* registerBiz(payload) {
   const { APP_ID, CATG_ID } = payload;
   const langGubun = lang.getLocale();
 
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const url = '/api/bizstore/v1/mypage/registbiz';
 
   const response = yield call(Axios.post, url, { BIZGRP_ID: Number(APP_ID), langGubun });
@@ -318,30 +324,33 @@ export function* registerBiz(payload) {
     // feed.error(`${intlObj.get(messages.bizRegistErr)}`);
   }
 }
-
+*/
 /* 모달 앱 등록(마이페이지) */
 export function* registAppModal(payload) {
-  const { APP_ID, CATG_ID } = payload;
+  const { APP_ID } = payload;
 
   // set Url
-  const store = yield select(state => state.get('mypageappList'));
+  // const store = yield select(state => state.get('storeAppList'));
 
   // get PRNT_ID
-  const parentStore = yield select(state => state.get('mypage'));
+  const parentStore = yield select(state => state.get('appstore'));
   const { node } = parentStore.get('tempRowInfo');
-  const PRNT_ID = node && node.MENU_ID ? node.MENU_ID : -1;
-
-  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/registApp', {
+  const CATG_ID = node && node.CATG_ID !== -999 ? node.CATG_ID : -1;
+  if (CATG_ID < 1) {
+    feed.error('앱 카테고리를 선택해 주세요.');
+    return;
+  }
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/registApp', {
     APP_ID,
-    PRNT_ID,
-    langGubun: lang.getLocale(),
+    CATG_ID,
   });
-  const { code, resultCategoryData } = response;
+  const { code, resultCategoryData, msg } = response;
 
   if (code === 200) {
+    message.success('앱 등록에 성공 하였습니다.', 3);
     // update Tree
     const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
-    const newCategoryData = result[0].children;
+    const newCategoryData = result;
     const oldCategoryData = parentStore.get('categoryData').toJS();
 
     treeFunc.mergeArray(newCategoryData, oldCategoryData);
@@ -352,23 +361,27 @@ export function* registAppModal(payload) {
     });
 
     // 성공 시 사용중으로 상태 변경.
-    const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
-
-    yield put({ type: constants.SET_MAPLIST, mapList });
+    // const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
+    // yield put({ type: constants.SET_MAPLIST, mapList });
   } else if (code === 500) {
-    // feed.error(`${intlObj.get(messages.appInputError)}`);
+    if (msg && msg === 'dupicate') {
+      feed.error('이미 등록된 앱 입니다.');
+    } else {
+      feed.error('앱 등록에 실패 하였습니다.');
+    }
   }
 }
 
 /* 카테고리포함 모달 앱 등록(마이페이지) */
+/*
 export function* registCategoryModal(payload) {
   const { APP_ID, CATG_ID } = payload;
 
   // set Url
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
 
   // get PRNT_ID
-  const parentStore = yield select(state => state.get('mypage'));
+  const parentStore = yield select(state => state.get('appstore'));
   const { node } = parentStore.get('tempRowInfo');
   const PRNT_ID = node && node.MENU_ID ? node.MENU_ID : -1;
 
@@ -405,10 +418,10 @@ export function* registBizModal(payload) {
   const { APP_ID, CATG_ID } = payload;
   const langGubun = lang.getLocale();
 
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const url = '/api/bizstore/v1/mypage/registbizmodal';
 
-  const mypage = yield select(state => state.get('mypage'));
+  const mypage = yield select(state => state.get('appstore'));
   const rowInfo = mypage.get('tempRowInfo');
   const { node } = rowInfo;
   const PRNT_ID = node && node.MENU_ID ? node.MENU_ID : -1;
@@ -438,11 +451,11 @@ export function* registBizModal(payload) {
     // feed.error(`${intlObj.get(messages.bizRegistErr)}`);
   }
 }
-
+*/
 export function* updateChangeWGCount(payload) {
   const { CATG_ID, APP_ID, WG_COUNT } = payload;
   // 성공 시 사용중으로 상태 변경.
-  const store = yield select(state => state.get('mypageappList'));
+  const store = yield select(state => state.get('storeAppList'));
   const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, WG_COUNT);
 
   yield put({ type: constants.SET_MAPLIST, mapList });
@@ -455,12 +468,12 @@ export default function* rootSaga() {
   yield takeLatest(constants.GET_MAPLIST_SEARCH, getMapListSearch);
   yield takeLatest(constants.GET_MAPLIST_MORE, getMapListMore);
   yield takeLatest(constants.REGIST_APP, registApp);
-  yield takeLatest(constants.REGIST_CATEGORY, registCategory);
-  yield takeLatest(constants.REGISTER_BIZ, registerBiz);
+  // yield takeLatest(constants.REGIST_CATEGORY, registCategory);
+  // yield takeLatest(constants.REGISTER_BIZ, registerBiz);
 
   yield takeLatest(constants.REGIST_APP_MODAL, registAppModal);
-  yield takeLatest(constants.REGIST_CATEGORY_MODAL, registCategoryModal);
-  yield takeLatest(constants.REGIST_BIZ_MODAL, registBizModal);
+  // yield takeLatest(constants.REGIST_CATEGORY_MODAL, registCategoryModal);
+  // yield takeLatest(constants.REGIST_BIZ_MODAL, registBizModal);
 
   yield takeLatest(constants.UPDATE_CHANGE_WGCOUNT, updateChangeWGCount);
 }

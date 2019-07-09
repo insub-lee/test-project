@@ -7,10 +7,6 @@ export const GET_CATEGORY_DATA = 'admin/containers/admin/AdminMain/AppStore/GET_
 export const SET_CATEGORY_DATA = 'admin/containers/admin/AdminMain/AppStore/SET_CATEGORY_DATA';
 export const SET_SELECTED_INDEX = 'admin/containers/admin/AdminMain/AppStore/SET_SELECTED_INDEX';
 
-// 앱카테고리 등록/수정/삭제
-export const INSERT_CATEGORY = 'admin/containers/admin/AdminMain/AppStore/INSERT_CATEGORY';
-export const UPDATE_CATEGORY = 'admin/containers/admin/AdminMain/AppStore/UPDATE_CATEGORY';
-
 // 기타...
 export const SAVE_DATA = 'admin/containers/admin/AdminMain/AppStore/SAVE_DATA';
 

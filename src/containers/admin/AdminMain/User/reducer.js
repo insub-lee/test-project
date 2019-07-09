@@ -24,6 +24,10 @@ const UserRegReducer = (state = initialState, action) => {
       return state.set('comboData', action.pstnComboData);
     case constants.SET_CHANGE_PSTN_DATA:
       return state.set('treeData', action.pstnTreeData);
+    case constants.SET_RANK_COMBO_LIST:
+      return state.set('comboData', action.rankComboData);
+    case constants.SET_CHANGE_RANK_DATA:
+      return state.set('treeData', action.rankTreeData);
     case constants.SET_EMPNO:
       return state.set('empNoCheck', action.empNoCheck).set('empNoFlag', action.empNoFlag);
     case constants.SET_USER_DATA:

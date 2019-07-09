@@ -622,6 +622,7 @@ class App extends React.PureComponent {
       handleSetDockFixedYn,
       dockIconType,
       handleSetDockIconType,
+      hasRoleAdmin,
       // selectedApp,
       // history,
     } = this.props;
@@ -714,6 +715,7 @@ class App extends React.PureComponent {
                 myHNotiCnt={myHNotiCnt}
                 managerInfo={managerInfo}
                 view={view}
+                hasRoleAdmin={hasRoleAdmin}
               />
               {/* test layout */}
               <div className="testDiv">
@@ -898,6 +900,7 @@ App.propTypes = {
   apps: PropTypes.array.isRequired,
   deletedDockPageId: PropTypes.number,
   executedDockPageId: PropTypes.number,
+  hasRoleAdmin: PropTypes.bool,
 };
 App.defaultProps = {
   setMyMenuNodeData: undefined,
@@ -910,6 +913,7 @@ App.defaultProps = {
   executedDockPageId: undefined,
   dataForApps: undefined,
   isPreviewPage: false,
+  hasRoleAdmin: false,
 };
 const mapStateToProps = createStructuredSelector({
   // 1. selector
@@ -935,6 +939,7 @@ const mapStateToProps = createStructuredSelector({
   apps: selectors.makeSelectApps(),
   deletedDockPageId: selectors.makeSelectDeletedDockPageId(),
   executedDockPageId: selectors.makeSelectExecutedDockPageId(),
+  hasRoleAdmin: selectors.makeSelectRoleAdmin(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),

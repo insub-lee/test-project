@@ -21,4 +21,10 @@ export const SET_PSTN_COMBO_LIST = 'admin/containers/admin/AdminMain/User/SET_PS
 export const GET_CHANGE_PSTN_DATA = 'admin/containers/admin/AdminMain/User/GET_CHANGE_PSTN_DATA';
 export const SET_CHANGE_PSTN_DATA = 'admin/containers/admin/AdminMain/User/SET_CHANGE_PSTN_DATA';
 
+export const GET_RANK_COMBO_LIST = 'admin/containers/admin/AdminMain/User/GET_RANK_COMBO_LIST';
+export const SET_RANK_COMBO_LIST = 'admin/containers/admin/AdminMain/User/SET_RANK_COMBO_LIST';
+export const GET_CHANGE_RANK_DATA = 'admin/containers/admin/AdminMain/User/GET_CHANGE_RANK_DATA';
+export const SET_CHANGE_RANK_DATA = 'admin/containers/admin/AdminMain/User/SET_CHANGE_RANK_DATA';
+
+
 export const IS_LOADING = 'admin/containers/admin/AdminMain/User/IS_LOADING';

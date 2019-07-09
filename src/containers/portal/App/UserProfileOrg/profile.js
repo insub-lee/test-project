@@ -40,19 +40,20 @@ class singleView extends PureComponent {
     let eMail = selectedUser ? selectedUser.EMAIL : this.props.userProfile.EMAIL;
 
     switch (type) {
-      case "talk":
-        window.open("http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=" + empNo);
-        break;
-      case "mail":
-        window.open('https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=' + eMail);
-        break;
-      case "todo":
-        window.open('http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=' + empNo);
-        break;
-      case "hithanks":
-        window.open('http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=' + empNo);
-        break;
+      // case "talk":
+      //   window.open("http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=" + empNo);
+      //   break;
+      // case "mail":
+      //   window.open('https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=' + eMail);
+      //   break;
+      // case "todo":
+      //   window.open('http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=' + empNo);
+      //   break;
+      // case "hithanks":
+      //   window.open('http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=' + empNo);
+      //   break;
       default:
+        alert('준비중입니다.');
         return false;
     }
   }

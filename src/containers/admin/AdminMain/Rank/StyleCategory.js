@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
-const StyleAppStore = styled.div`
-  // max-width: 1200px;
-  max-width: 1450px;
+const StyleCategory = styled.div`
+  max-width: 1200px;
   min-width: 900px;
   width: 100%;
   margin: 12px auto 0;
@@ -19,7 +18,7 @@ const StyleAppStore = styled.div`
     }
   }
 
-  .appstoreTreeWrapper {
+  .categoryTreeWrapper {
     float: left;
     width: 312px;
     height: calc(100vh - 160px);
@@ -28,9 +27,8 @@ const StyleAppStore = styled.div`
     margin-top: 10px;
     background: #f5f5f5;
 
-    // > div > div:not(.ant-select) {max-height: 480px;}
-    > div > div:not(.ant-select) {max-height: calc(100vh - 170px)}
-
+    > div > div:not(.ant-select) {max-height: 480px;}
+    
     @media only screen and (max-width: 1280px) {
       > div > div:not(.ant-select) {
         height: calc(100vh - 45px) !important;
@@ -40,7 +38,7 @@ const StyleAppStore = styled.div`
     .ant-select {width: calc(100% - 10px);}
   }
 
-  .appstoreContents {
+  .categoryContents {
     float: right;
     width: calc(100% - 332px);
 
@@ -54,7 +52,7 @@ const StyleAppStore = styled.div`
     }
 
     .custom-scrollbar {
-      // max-height: 160px !important;
+      max-height: 160px !important;
       border-top: 1px solid #222222;
 
       @media only screen and (max-width: 1280px) {
@@ -62,29 +60,13 @@ const StyleAppStore = styled.div`
       }
 
       > div:first-child {
-        // max-height: 212px !important;
-      }
-    }
-
-    //새 위젯 추가
-    .addNew {
-      height: 100px !important;
-
-      .isoWidgetsWrapper {
-        border-color: transparent;
-        background: transparent;
-        text-align: center;
-
-        .widgetBody {
-          height: 100% !important;
-          cursor: default;
-        }
+        max-height: 212px !important;
       }
     }
   }
   .buttonWrapper {
     float: right;
-    // width: calc(100% - 332px);
+    width: calc(100% - 332px);
     text-align: right;
     padding: 20px 0 0;
 
@@ -94,4 +76,4 @@ const StyleAppStore = styled.div`
   }
 `;
 
-export default StyleAppStore;
+export default StyleCategory;

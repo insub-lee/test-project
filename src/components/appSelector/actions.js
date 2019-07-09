@@ -14,18 +14,20 @@ export const deleteAppList = list => (
   }
 );
 
-export const loadTree = () => (
+export const loadTree = siteId => (
   {
     type: LOAD_APP_TREE,
+    siteId,
   }
 );
 
-export const loadCategoryList = (node, type, num) => (
+export const loadCategoryList = (node, type, siteId, num) => (
   {
     type: LOAD_CATEGORY_LIST_SAGA,
     payload: {
       node,
       type,
+      siteId,
       num,
     },
   }
@@ -38,12 +40,13 @@ export const resetCheckbox = check => (
   }
 );
 
-export const searchCategory = (keyword, type, num) => (
+export const searchCategory = (keyword, type, siteId, num) => (
   {
     type: SEARCH_CATEGORY_LSIT_SAGA,
     payload: {
     keyword,
     type,
+    siteId,
     num,
     },
   }

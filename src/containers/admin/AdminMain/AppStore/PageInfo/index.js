@@ -134,6 +134,7 @@ class PageInfo extends Component {
         <ErrorBoundary>
           <AppSelector
             type="widget"
+            siteId={-1}
             show={this.state.show}
             closeModal={closeModal}
             addList={addList}
