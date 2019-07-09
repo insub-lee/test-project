@@ -126,7 +126,7 @@ const StyleUserSetting = styled.div`
 
             > span:not(.ant-checkbox) {
               display: inline-block;
-              width: calc(100% - 15px);
+              width: calc(100% - 1.125rem);
               color: #404040;
               font-size: 13px;
               text-overflow: ellipsis;

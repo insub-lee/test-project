@@ -11,19 +11,31 @@ const AntRadiobox = ComponentName => styled(ComponentName)`
         height: 8px;
         top: 3px;
         left: 3px;
-        background-color: #f85023;
+        background-color: #7a59ad;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
+        position: absolute;
+        display: block;
+        content: "";
+        background-repeat: no-repeat;
+        border: none;
+        -webkit-transform: none;
+        -ms-transform: none;
+        -webkit-transform: none;
+        -ms-transform: none;
+        transform: none;
       }
     }
 
     &:hover, &.ant-radio-focused {
       .ant-radio-inner {
-        border-color: #f85023;
+        border-color: #886ab5;
       }
     }
 
     .ant-radio-checked:after, 
     .ant-radio-checked .ant-radio-inner {
-      border: 1px solid #f85023;
+      border: 1px solid #6e4e9e;
+      background-color: #7a59ad;
     }
 
     .ant-radio-disabled .ant-radio-inner:after {

@@ -86,11 +86,11 @@ const SingleStyleWidget = styled.div`
               color: rgba(64,64,64,0.7);
               
               &.ant-tabs-tab-active {
-                color: #404040;
+                color: #886ab5;
               }
             }
             .ant-tabs-ink-bar {
-              background-color: #404040;
+              background-color: #886ab5;
             }
           }
         }

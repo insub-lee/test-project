@@ -13,8 +13,10 @@ const AppWrapper = styled.div`
   height: 42px;
   padding: 0 20px 0 10px;
   color: #ffffff;
-  background: #222222;
   z-index: 1000;
+  background-image: -webkit-gradient(linear,right top, left top,from(rgba(51,148,225,.18)),to(transparent));
+  background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
+  background-color: #584475;
 
   &.ant-layout-header {
     line-height: 1;

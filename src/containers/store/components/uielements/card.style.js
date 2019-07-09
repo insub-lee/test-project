@@ -21,7 +21,7 @@ const Card = styled(CardComp)`
 
     &:hover {
       border-radius: 0;
-      border-color: #d1d2d3 !important;
+      border-color: #886ab5 !important;
     }
 
     &.mark {

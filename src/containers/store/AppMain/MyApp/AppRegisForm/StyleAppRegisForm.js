@@ -56,7 +56,13 @@ const StyleAppRegisForm = styled.div`
       }
 
       .ant-input {
-        border-color: #f85023;
+        border-color: #fd3995;
+      }
+
+      .has-success {
+        .ant-input {
+          border-color: #1dc9b7;
+        }
       }
     }
   }
@@ -140,7 +146,7 @@ const StyleAppRegisForm = styled.div`
 
   //Input 스타일 (나중에 빼기)
   .ant-input {
-    height: 35px;
+    height: calc(1.47em + 1rem + 2px);
     border: 1px solid #cccccc;
     border-radius: 0;
     line-height: 35px;

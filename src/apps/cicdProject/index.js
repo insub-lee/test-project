@@ -39,7 +39,7 @@ class App extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={themes.themedefault}>
+      <ThemeProvider theme={themes.skin1}>
         <Layout
           className="storeLayout"
           style={{ minHeight: '100vh' }}

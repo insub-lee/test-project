@@ -6,7 +6,7 @@
 .sortableTreeWrapper .rst__lineHalfVerticalTop::after, 
 .sortableTreeWrapper .rst__lineHalfVerticalBottom::after {left: calc(50% - 1px); width: 2px; background-color: #f0f0f0;}
 .sortableTreeWrapper .rstcustom__expandButton {border: 1px solid #9c9c9c; background-image: url(../images/bizstore/tree-icon-expand-gray2.png);}
-.sortableTreeWrapper .rstcustom__collapseButton {border: 1px solid #f85023; background-image: url(../images/bizstore/tree-icon-collapsed2.png);}
+.sortableTreeWrapper .rstcustom__collapseButton {border: 1px solid #886ab5; background-image: url(../images/bizstore/tree-icon-collapsed2.png);}
 .sortableTreeWrapper .rstcustom__expandButton, .sortableTreeWrapper .rstcustom__collapseButton {background-color: #ffffff; background-repeat: no-repeat; background-position: 0 0 !important;}
 /* IE10+ specific styles go here */
   @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
@@ -15,10 +15,10 @@
 .sortableTreeWrapper .rstcustom__rowWrapper {padding: 10px 10px 10px 3px !important;}
 .sortableTreeWrapper .rstcustom__rowWrapperDragDisabled .rstcustom__row {color: #404040 !important;}
 .sortableTreeWrapper .rstcustom__rowTitle button {background: transparent; padding-right: 15px;} /* IE에서 custom scrollbar 가로 스크롤 시, 오른쪽 텍스트 잘림 방지 */
-.sortableTreeWrapper .rstcustom__rowTitle button.active {color: #f85023;}
+.sortableTreeWrapper .rstcustom__rowTitle button.active {color: #886ab5;}
 .sortableTreeWrapper button:focus, .sortableTreeWrapper button.active:focus {outline: 0;}
-.sortableTreeWrapper .rstcustom__ordinaryButton.active {background: #f85023;}
+.sortableTreeWrapper .rstcustom__ordinaryButton.active {background: #886ab5;}
 .sortableTreeWrapper .rst__placeholder::before {border: none;}
 
 .sortableTreeWrapper .rstcustom__rowTitle .bizIcon {margin-left: 3px; padding-left: 25px; background: url(../images/common/icon-biz-tree.png) no-repeat 0 50%;}
-.sortableTreeWrapper .rstcustom__rowTitle .bizIcon.active {background: url(../images/common/icon-biz-tree-active.png) no-repeat 0 50%; color: #f85023;}
+.sortableTreeWrapper .rstcustom__rowTitle .bizIcon.active {background: url(../images/common/icon-biz-tree-active.png) no-repeat 0 50%; color: #886ab5;}

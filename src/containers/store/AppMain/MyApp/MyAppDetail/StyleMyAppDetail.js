@@ -52,17 +52,17 @@ const StyleMyAppDetail = styled.div`
           text-align: center;
   
           &:hover {
-            color: #222222;
+            color: #886ab5;
           }
   
           &.ant-tabs-tab-active {
-            color: #222222;
+            color: #886ab5;
             cursor: default;
           }
         }
   
         .ant-tabs-ink-bar {
-          background-color: #222222;
+          background-color: #886ab5;
         }
       }
     }

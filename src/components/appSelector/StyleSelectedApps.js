@@ -24,7 +24,7 @@ const SelectedUser = styled.div`
       line-height: 30px;
 
       .ant-checkbox-inner:after {
-        left: 2.571429px;
+        left: 0px;
       }
     }
 

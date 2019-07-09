@@ -5,7 +5,9 @@ const theme = {};
 
 theme.header = {
   // backgroundColor: '#222222',
-  backgroundColor: '#4c4e4f',
+  // backgroundColor: '#4c4e4f',
+  backgroundColor: '#584475',
+  backgroundImage: 'linear-gradient(270deg,rgba(51,148,225,.18),transparent)',
   borderTop: 'none',
   iconMenuColor: '#ffffff', /* 사이드바 열기-닫기 아이콘 폰트 색상 */
   iconGoBizStoreColor: '#ffffff', /* 비즈스토어 가기 아이콘 폰트 색상 */

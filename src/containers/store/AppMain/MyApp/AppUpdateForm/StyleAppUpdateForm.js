@@ -61,7 +61,7 @@ const StyleAppUpdateForm = styled.div`
       }
 
       .ant-input {
-        border-color: #f85023;
+        border-color: #fd3995;
       }
     }
   }

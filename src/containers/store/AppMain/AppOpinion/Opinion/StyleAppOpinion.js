@@ -35,13 +35,13 @@ const StyleAppOpinion = styled.div`
 
       > input {
         position: relative;
-        height: 30px;
+        height: calc(1.47em + 1rem + 2px);
         padding-right: 30px;
       }
 
       > .searchBtn {
         position: absolute;
-        top: 0;
+        top: 4px;
         right: 0;
         width: 30px;
         height: 30px;
@@ -60,7 +60,7 @@ const StyleAppOpinion = styled.div`
       vertical-align: top;
 
       .ant-calendar-picker-input {
-        height: 30px;
+        height: calc(1.47em + 1rem + 2px);
       }
      
       .ant-calendar-picker-icon {
@@ -73,7 +73,7 @@ const StyleAppOpinion = styled.div`
 
       &:hover {
         .ant-calendar-picker-input:not(.ant-input-disabled) {
-          border-color: #c1c1c1;
+          border-color: #e5e5e5;
         }
       }
     }
