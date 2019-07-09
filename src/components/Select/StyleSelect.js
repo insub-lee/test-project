@@ -14,17 +14,21 @@ const AntSelect = ComponentName => styled(ComponentName)`
       background-color: #fff;
       border-radius: 4px;
       border: 1px solid #c1c1c1;
+      font-size: .8125rem;
+      font-weight: 400;
 
       &.ant-select-selection--single {
-        height: 30px;
+        height: calc(1.47em + 1rem + 2px);
         position: relative;
         cursor: pointer;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
       }
 
       .ant-select-selection__rendered {
         margin-left: 10px;
         margin-right: 10px;
-        line-height: 29px;
+        line-height: calc(1.47em + 1rem + 2px);
       }
 
       .ant-select-arrow {
@@ -46,7 +50,7 @@ const AntSelect = ComponentName => styled(ComponentName)`
     &.ant-select-focused {
       .ant-select-selection {
         &:focus, &:active {
-          border-color: #c1c1c1 !important;
+          border-color: #886ab5 !important;
           outline: 0;
         }
       }
@@ -54,7 +58,7 @@ const AntSelect = ComponentName => styled(ComponentName)`
 
     &.ant-select-open {
       .ant-select-selection {
-        border-color: #c1c1c1;
+        border-color: #886ab5;
         outline: 0;
       }
     }

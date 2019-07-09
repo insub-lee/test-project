@@ -85,7 +85,7 @@ const StyleAppExaForm = styled.div`
 
   //Input 스타일 (나중에 빼기)
   .ant-input {
-    height: 35px;
+    height: calc(1.47em + 1rem + 2px);
     line-height: 35px;
 
     &:read-only {
@@ -93,7 +93,7 @@ const StyleAppExaForm = styled.div`
       cursor: default;
 
       &:hover {
-        border-color: #cccccc;
+        border-color: #886ab5;
       }
     }
   }

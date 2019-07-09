@@ -39,7 +39,7 @@ const StyledTabList = styled.div`
 
           &.react-tabs__tab--selected a {
             color: #222222;
-            border-bottom: 3px solid #222222;
+            border-bottom: 1px solid #886ab5;
           }
         }
       }

@@ -75,7 +75,7 @@ const StyleMyPageTree = styled.div`
             
             span {
               &.active {
-                color: #f85023 !important;
+                color: #886ab5 !important;
               }
             }
           }

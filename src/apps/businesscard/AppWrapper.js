@@ -7,11 +7,13 @@ const AppWrapper = styled.div`
 .storeHeader {
   position: fixed;
   width: 100%;
-  background: #222222;
   padding: 0 20px 0 10px;
   height: 42px;
   color: #ffffff;
   z-index: 1000;
+  background-image: -webkit-gradient(linear,right top, left top,from(rgba(51,148,225,.18)),to(transparent));
+  background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
+  background-color: #584475;
 
   .onCenter {
       position: absolute;

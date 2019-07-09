@@ -28,14 +28,16 @@ const StyleMyAppList = styled.div`
 
       > input {
         position: relative;
+        border: 1px solid #e5e5e5;
+        padding: .5rem .875rem;
         padding-right: 30px;
-        border: 1px solid #c1c1c1;
-        font-size: 13px;
+        font-size: .8125rem;
+        height: calc(1.47em + 1rem + 2px);
       }
 
       > .searchBtn {
         position: absolute;
-        top: 0;
+        top: 4px;
         right: 0;
         width: 30px;
         height: 30px;

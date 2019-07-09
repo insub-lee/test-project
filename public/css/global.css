@@ -69,7 +69,7 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 
 /* Select Dropdown */
 .ant-select-dropdown {margin-top: -5px; z-index: 10000;}
-.ant-select-selection, .ant-select-selection:hover, .ant-select-selection:active {border-color:#c1c1c1 !important; box-shadow: none !important;}
+.ant-select-selection, .ant-select-selection:hover, .ant-select-selection:active {border-color:#e5e5e5 !important; box-shadow: none !important;}
 .ant-select.ant-select-focused .ant-select-selection:focus, 
 .ant-select.ant-select-focused .ant-select-selection:active {border-color: #c1c1c1 !important;}
 .ant-select-dropdown-menu-item-active,
@@ -81,10 +81,11 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 /* 탭(ant-tabs) */
 .ant-tabs.ant-tabs-card > .ant-tabs-bar {border-bottom-color: #d3d3d3 !important;}
 .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {background: transparent !important;}
-.ant-tabs, .ant-tabs-nav .ant-tabs-tab:hover {color: rgba(34,34,34,0.7) !important;}
+.ant-tabs, .ant-tabs-nav .ant-tabs-tab:hover {color: #886ab5 !important;}
 .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {color: #222222 !important;}
 .ant-tabs-bar .ant-tabs-nav .ant-tabs-tab {border-top: none !important; border-left: none !important; border-right: none !important;}
-.ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {bottom: 0; background-color: #222222; visibility: visible !important;}
+.ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {bottom: 0; background-color: #222222; visibility: visible !important; height:2px;}
+.widgetBody .ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {height:1px;}
 
 /* 뱃지(Badge) */
 .ant-badge-dot {-webkit-box-shadow: none; box-shadow: none !important;}
@@ -109,8 +110,8 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 .ant-modal-content  input:read-only, .ant-modal-content textarea:read-only, .ant-modal-content .ant-input:read-only {background: #f5f5f5; cursor: default;}
 
 /* Calendar(ant-calendar-picker) [비즈스토어 App 심사 > 날짜 선택] */
-.ant-calendar-picker .ant-calendar-picker-input.ant-input {border-color: #c1c1c1; border-radius: 4px;}
-.ant-calendar-picker:hover .ant-calendar-picker-input:not(.ant-input-disabled), .ant-input:hover {border-color: #c1c1c1 !important;}
+.ant-calendar-picker .ant-calendar-picker-input.ant-input {border-color: #e5e5e5; border-radius: 4px;}
+.ant-calendar-picker:hover .ant-calendar-picker-input:not(.ant-input-disabled), .ant-input:hover {border-color: #886ab5;}
 .ant-calendar-picker-container {font-family: 'Noto Sans Light', 'Malgun Gothic', 'Roboto', sans-serif;}
 .ant-calendar {border: 1px solid #c1c1c1 !important; font-size: 13px !important;}
 .ant-calendar-today .ant-calendar-date {border-color: #fd8c08 !important; color: #fd8c08 !important;}
@@ -119,6 +120,7 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 .ant-calendar-today-btn {color: #fd8c08 !important;}
 .ant-calendar-range .ant-calendar-in-range-cell:before {background: #f5f5f5 !important;}
 .ant-tag.ant-tag-blue {color: #fd8c08 !important; background: #f5f5f5 !important; border-color: #fd8c08 !important;}
+.has-success .ant-form-item.required .ant-input {border-color:#1dc9b7;}
 
 /***** 애니메이션(animation) *****/
 /* Widget Header 메뉴 애니메이션 */
@@ -128,7 +130,12 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 /* React Grid 애니메이션 */
 .react-grid-layout {position: relative; transition: height 200ms ease;}
 .react-grid-item {transition: all 200ms ease; transition-property: left, top;}
-.react-grid-item.cssTransforms {transition-property: transform;}
+.react-grid-item.cssTransforms {
+	transition-property: transform;     
+	-webkit-box-shadow: 0 2px 3px rgba(0,0,0,.02), 0 1px 2px rgba(0,0,0,.1);
+	box-shadow: 0 2px 3px rgba(0,0,0,.02), 0 1px 2px rgba(0,0,0,.1);
+	border-radius: 7px;
+}
 /* .react-grid-item.resizing {z-index: 1; will-change: width, height;} */
 .react-grid-item.react-draggable-dragging {transition: none; z-index: 3; will-change: transform;}
 .react-grid-item.react-grid-placeholder {background: red; opacity: 0.2; transition-duration: 100ms; z-index: 2; -webkit-user-select: none;	-moz-user-select: none;	-ms-user-select: none;-o-user-select: none;	user-select: none;}
