@@ -125,7 +125,7 @@ class AppBasicInfo extends React.Component {
         <div className="basicInfoWrapper">
           <div className="appImgWrapper">
             <img
-              src={imgUrl.get('160x160', this.props.resAppBasicInfo.ICON)}
+              src={imgUrl.get('160x160', this.props.resAppBasicInfo && this.props.resAppBasicInfo.ICON)}
               alt={lang.get('NAME', this.props.resAppBasicInfo)}
               onError={e => {
                 e.target.src = '/app_icon/icon_no_image.png';

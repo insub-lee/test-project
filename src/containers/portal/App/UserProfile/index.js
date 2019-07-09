@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Cookies } from 'react-cookie';
 import { connect } from 'react-redux';
+import { Cookies } from 'react-cookie';
 import { compose } from 'redux';
 import { intlObj, lang } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
@@ -85,7 +86,7 @@ class UserProfile extends Component {
               {intlObj.get(messages.userProfile)}
             </Button>
           </li>
-          <li>
+          {/* <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">
               {intlObj.get(messages.sendToCube)}
             </Button>
@@ -103,6 +104,11 @@ class UserProfile extends Component {
           <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">
               {intlObj.get(messages.hyThanks)}
+            </Button>
+          </li> */}
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-hithanks">
+              {intlObj.get(messages.logout)}
             </Button>
           </li>
           <li>
