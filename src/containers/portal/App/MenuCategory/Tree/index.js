@@ -1,21 +1,15 @@
 import React, { Component } from 'react';
-import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
-// import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { lang } from 'utils/commonUtils';
-// import Input from 'components/Input';
 import ScrollBar from 'react-custom-scrollbars';
-import CustomTheme from './theme';
 import { Badge } from 'antd';
-import './app.css';
+
+import { lang } from 'utils/commonUtils';
+
+import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 import StoreTree from '../StoreTree';
-// import icon_store from '../../../../../images/portal/icon-store.png';
-// import nextIcon from '../../../../../images/portal/icon-store.png';
-// import icon_unlock from '../../../../../images/portal/icon-unlock.png';
-// import icon_lock from '../../../../../images/portal/icon_lock.png';
-// import IconGo from '../../../../../images/portal/icon_go.png';
-// import nextIcon from 'images/bizstore/icon-reply.png';
+import CustomTheme from './theme';
+import './app.css';
 import TreeWrapper from './TreeWrapper';
 
 class Tree extends Component {
@@ -79,7 +73,7 @@ class Tree extends Component {
       editMenuMode,
     } = this.state;
 
-    const { treeData, execMenu, execPage, selectedIndex, saveData, showNoti, editMenu } = this.props;
+    const { treeData, execMenu, execPage, selectedIndex, saveData, showNoti, editMenu, myAppStoreTreeData, moveNode, updateMymenuDisp, onClick } = this.props;
 
     const customSearchMethod = ({ node, searchQuery }) =>
       searchQuery &&
@@ -102,12 +96,12 @@ class Tree extends Component {
           <div className="searchWrapper">
             <p>메뉴 카테고리</p>
           </div>
-          {this.state.editTree ? (
+          {editTree ? (
             <StoreTree
-              treeData={this.props.myAppStoreTreeData}
-              moveNode={this.props.moveNode}
-              updateMymenuDisp={this.props.updateMymenuDisp}
-              showNoti={this.props.showNoti}
+              treeData={myAppStoreTreeData}
+              moveNode={moveNode}
+              updateMymenuDisp={updateMymenuDisp}
+              showNoti={showNoti}
             />
           ) : (
             <div
@@ -134,7 +128,7 @@ class Tree extends Component {
                         window.open(node.URL, node.MENU_ID, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
                         execMenu(node.PAGE_ID, node.TARGET);
                       } else {
-                        this.props.onClick(node);
+                        onClick(node);
                         if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
                           execPage(node, 'execMenu');
                         }

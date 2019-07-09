@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -68,10 +68,10 @@ class MyPage extends Component {
     this.props.initCategoryData();
   }
 
-  componentWillReceiveProps(nextProps) {
-    console.debug('>>>>>>nextProps: ', nextProps);
-    if (homeUrl === nextProps.history.location.pathname) {
-      if (nextProps.categoryData.length > 0) {
+  componentDidUpdate() {
+    const { history, categoryData, changeSelectedIndex } = this.props;
+    if (homeUrl === history.location.pathname) {
+      if (categoryData.length > 0) {
         let url;
         const generateList = data => {
           for (let i = 0; i < data.length; i += 1) {
@@ -80,7 +80,7 @@ class MyPage extends Component {
             if (url === undefined) {
               if (node.NODE_TYPE !== 'F') {
                 url = getUrl(node);
-                this.props.changeSelectedIndex(node.key);
+                changeSelectedIndex(node.key);
               }
 
               if (node.children) {
@@ -90,45 +90,74 @@ class MyPage extends Component {
           }
         };
 
-        generateList(nextProps.categoryData);
+        generateList(categoryData);
 
         if (url) {
-          nextProps.history.push(url);
+          history.push(url);
         }
-      } else {
-        // 트리 데이터가 없는 경우. main화면
       }
     }
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   console.debug('>>>>>>nextProps: ', nextProps);
+  //   if (homeUrl === nextProps.history.location.pathname) {
+  //     if (nextProps.categoryData.length > 0) {
+  //       let url;
+  //       const generateList = data => {
+  //         for (let i = 0; i < data.length; i += 1) {
+  //           const node = data[i];
+  //
+  //           if (url === undefined) {
+  //             if (node.NODE_TYPE !== 'F') {
+  //               url = getUrl(node);
+  //               this.props.changeSelectedIndex(node.key);
+  //             }
+  //
+  //             if (node.children) {
+  //               generateList(node.children);
+  //             }
+  //           }
+  //         }
+  //       };
+  //
+  //       generateList(nextProps.categoryData);
+  //
+  //       if (url) {
+  //         nextProps.history.push(url);
+  //       }
+  //     } else {
+  //       // 트리 데이터가 없는 경우. main화면
+  //     }
+  //   }
+  // }
+
   render() {
     const {
-      // data
       history,
       categoryData,
       selectedIndex,
       changeSelectedIndex,
-
       insertNode,
       updateNode,
-
       saveData,
       moveNode,
       deleteNode,
       updateMymenuDisp,
+      handleTreeOnClick
     } = this.props;
 
-    console.debug('>>>>>>>>>>categoryData: ', this.props);
-
-    const handleTreeOnClick = node => {
-      changeSelectedIndex(node.key);
-
-      if (node.NODE_TYPE !== 'F') {
-        const url = getUrl(node);
-        history.push(url);
-        window.scrollTo(0, 0);
-      }
-    };
+    // console.debug('>>>>>>>>>>categoryData: ', this.props);
+    //
+    // const handleTreeOnClick = node => {
+    //   changeSelectedIndex(node.key);
+    //
+    //   if (node.NODE_TYPE !== 'F') {
+    //     const url = getUrl(node);
+    //     history.push(url);
+    //     window.scrollTo(0, 0);
+    //   }
+    // };
 
     return (
       <div className="appMyPageWrapper">
@@ -165,12 +194,14 @@ class MyPage extends Component {
         <ModalContainer />
         <div className="myPageContentWrapper">
           <ErrorBoundary>
-            <Route path="/store/appMain/myPage" component={Main} exact />
-            <Route path="/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
-            <Route path="/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
-            <Route path="/store/appMain/myPage/modal" component={AppBizModal} />
-            <Route path="/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
-            <Route path="/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+            <Switch>
+              <Route path="/store/appMain/myPage" component={Main} exact />
+              <Route path="/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
+              <Route path="/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
+              <Route path="/store/appMain/myPage/modal" component={AppBizModal} />
+              <Route path="/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
+              <Route path="/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
+            </Switch>
           </ErrorBoundary>
         </div>
         <Footer />
@@ -194,6 +225,7 @@ MyPage.propTypes = {
   moveNode: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired,
   updateMymenuDisp: PropTypes.func.isRequired,
+  handleTreeOnClick: PropTypes.func.isRequired,
 };
 
 MyPage.defaultProps = {};
@@ -202,6 +234,15 @@ export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
     initCategoryData: () => dispatch(actions.initCategoryData()),
+    handleTreeOnClick: (node, history) => {
+      changeSelectedIndex(node.key);
+
+      if (node.NODE_TYPE !== 'F') {
+        const url = getUrl(node);
+        history.push(url);
+        window.scrollTo(0, 0);
+      }
+    },
     changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 

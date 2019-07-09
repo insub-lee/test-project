@@ -114,25 +114,6 @@ class UserMenu extends React.Component {
 
     return (
       <div>
-        {/* <ExtraMenus>
-          <ul className="extraMenusList">
-            <li>
-              <Link to="/store" className="storeLink" title={intlObj.get(messages.linkToBizStore)} target="_blank">
-                <span className="icon-app" />
-              </Link>
-            </li>
-            <li>
-              <button className="homeLink" title="포털 메인페이지" onClick={this.gotoHome}>
-                <span className="icon-home" />
-              </button>
-            </li>
-            <li>
-              <button title="환경세팅" onClick={() => execPage('set')}>
-                <span className="icon-setting" />
-              </button>
-            </li>
-          </ul>
-        </ExtraMenus> */}
         <Notification
           myMNotiCnt={myMNotiCnt}
           myMNotiList={myMNotiList}
@@ -147,7 +128,7 @@ class UserMenu extends React.Component {
           view={view}
           onClickNotiButton={this.onClickNotiButton}
         />
-        {this.state.showNoti ? (
+        {this.state.showNoti && (
           <div className="unreadNotiContent">
             <Scrollbars className="custom-scrollbar" autoHide autoHideTimeout={1000} autoHideDuration={100} autoHeight autoHeightMin={0} autoHeightMax={290}>
               <ResultsTableWrapper>
@@ -170,8 +151,6 @@ class UserMenu extends React.Component {
               </ResultsTableWrapper>
             </Scrollbars>
           </div>
-        ) : (
-          <div />
         )}
         <Tree
           treeData={this.props.myAppTreeData}

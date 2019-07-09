@@ -26,7 +26,7 @@ src/containers/store/AppMain/AppOpinion/Opinion/index.js
 src/containers/admin/components/*
 src/containers/portal/App/UserProfile/*
 src/components/ApplyWidget/*
-src/containers/portal/App/rootRouter.js
+src/containers/portal/App/RootRouter.js
 src/containers/portal/Preview/*
 src/containers/guide/components/Article/ArticleComponents/prism.js
 src/components/Rodal/*

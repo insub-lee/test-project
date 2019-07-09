@@ -4,55 +4,39 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Route, Switch } from 'react-router-dom';
-// import { Button } from 'antd';
+
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-
 import { intlObj, lang } from 'utils/commonUtils';
 
 import messages from './messages';
-
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
-
 import BizInfo from './BizInfo';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
 import TopMenu from './TopMenu/index';
-
 import StyleBizDetail from './StyleBizDetail';
 import StyleBizDetailContent from './StyleBizDetailContent';
-
 import BizMenuTree from '../../../components/Tree';
 import Footer from '../../../Footer';
 
 class BizDetail extends Component {
-  constructor(props) {
-    super(props);
-    const { match, history } = props;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
-
-    this.state = {
-      BIZGRP_ID: Number(BIZGRP_ID),
-    };
-
-    props.handleGetBizMenu(Number(BIZGRP_ID), history);
-    this.props.appBizGubun(4);
+  componentDidMount() {
+    const {
+      handleGetBizMenu, appBizGubun, match: { params: { BIZGRP_ID } }, history,
+    } = this.props;
+    handleGetBizMenu(Number(BIZGRP_ID), history);
+    appBizGubun(4);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { match, history } = nextProps;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
-
-    if (BIZGRP_ID && this.state.BIZGRP_ID !== Number(BIZGRP_ID)) {
-      this.setState({
-        BIZGRP_ID: Number(BIZGRP_ID),
-      });
-      this.props.handleGetBizMenu(Number(BIZGRP_ID), history);
+  componentDidUpdate(prevProps) {
+    const { match: { params: { BIZGRP_ID: prevBizgrpId } } } = prevProps;
+    const { match: { params: { BIZGRP_ID: currentBizgrpId } }, history, handleGetBizMenu } = this.props;
+    if (currentBizgrpId && currentBizgrpId !== prevBizgrpId) {
+      handleGetBizMenu(Number(currentBizgrpId), history);
     }
   }
 
@@ -60,28 +44,15 @@ class BizDetail extends Component {
     const {
       bizMenuData,
       selectedIndex,
-      handleChangeSelectedIndex,
-
+      // handleChangeSelectedIndex,
       history,
       match,
+      handleTreeOnClick,
     } = this.props;
 
     // /store/appMain/myPage/biz/detail
     // /store/appMain/bizStore/biz/detail
     const preUrl = match.path.substr(0, match.path.indexOf('/:'));
-
-    // eslint-disable-next-line arrow-parens
-    const handleTreeOnClick = node => {
-      handleChangeSelectedIndex(node.MENU_ID);
-      if (node.TYPE === 'Y') {
-        history.push(`${preUrl}/app/${node.BIZGRP_ID}/${node.APP_ID}`);
-      } else if (node.TYPE === 'N') {
-        history.push(`${preUrl}/page/${node.BIZGRP_ID}/${node.PAGE_ID}`);
-      }
-      if (node.NODE_TYPE !== 'F') {
-        window.scrollTo(0, 0);
-      }
-    };
 
     return (
       <div
@@ -110,7 +81,7 @@ class BizDetail extends Component {
                 {bizMenuData.children ? '' : <p style={{ paddingLeft: 12 }}>{intlObj.get(messages.noMenu)}</p>}
                 <BizMenuTree
                   treeData={bizMenuData.children ? bizMenuData.children : []}
-                  onClick={handleTreeOnClick}
+                  onClick={node => handleTreeOnClick(node, history, preUrl)}
                   selectedIndex={history.location.pathname.indexOf('/info') > -1 ? -1 : selectedIndex}
                   // generateNodeProps={({ node: node2 }) => {
                   //   const node = node2;
@@ -121,7 +92,7 @@ class BizDetail extends Component {
               </li>
               <li className="rightContent">
                 <Switch>
-                  <Route path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} />
+                  <Route exact path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} />
                   <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} />
                   <Route path={`${preUrl}/page/:BIZGRP_ID/:pageId`} component={PageInfo} />
                 </Switch>
@@ -139,18 +110,28 @@ BizDetail.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
   selectedIndex: PropTypes.number.isRequired,
-
   // BIZGRP_ID: PropTypes.number.isRequired,
   bizMenuData: PropTypes.object.isRequired,
-
   handleGetBizMenu: PropTypes.func.isRequired,
-  handleChangeSelectedIndex: PropTypes.func.isRequired,
+  // handleChangeSelectedIndex: PropTypes.func.isRequired,
   appBizGubun: PropTypes.func.isRequired,
+  handleTreeOnClick: PropTypes.func.isRequired,
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
     // 테스트
+    handleTreeOnClick: (node, history, preUrl) => {
+      dispatch(actions.changeSelectedIndex(node.MENU_ID));
+      if (node.TYPE === 'Y') {
+        history.push(`${preUrl}/app/${node.BIZGRP_ID}/${node.APP_ID}`);
+      } else if (node.TYPE === 'N') {
+        history.push(`${preUrl}/page/${node.BIZGRP_ID}/${node.PAGE_ID}`);
+      }
+      if (node.NODE_TYPE !== 'F') {
+        window.scrollTo(0, 0);
+      }
+    },
     handleGetBizMenu: (key, history) => dispatch(actions.getBizMenu(key, history)),
     handleChangeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),
