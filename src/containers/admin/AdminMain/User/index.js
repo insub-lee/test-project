@@ -54,6 +54,8 @@ class UserReg extends React.Component {
       pstnName: '',
       dutyId: '',
       dutyName: '',
+      rabkId: '',
+      rabkName: '',
       officeTel: '',
       mobileTel: '',
       compCd: '',
@@ -88,6 +90,8 @@ class UserReg extends React.Component {
       pstnName: userInfo.PSTN_NAME_KOR,
       dutyId: userInfo.DUTY_ID,
       dutyName: userInfo.DUTY_NAME_KOR,
+      rankId: userInfo.RANK_ID,
+      rankName: userInfo.RANK_NAME_KOR,
       officeTel: userInfo.OFFICE_TEL_NO,
       mobileTel: userInfo.MOBILE_TEL_NO,
       compCd: userInfo.COMP_CD,
@@ -110,6 +114,9 @@ class UserReg extends React.Component {
         break;
       case 'pstn':
         this.props.getChangePSTNTreeData(id);
+        break;
+      case 'rank':
+        this.props.getChangeRANKTreeData(id);
         break;
       default:
         break;
@@ -217,6 +224,7 @@ class UserReg extends React.Component {
       deptId: this.state.deptId,
       pstnId: this.state.pstnId,
       dutyId: this.state.dutyId,
+      rankId: this.state.rankId,
       officeTel: this.state.officeTel,
       mobileTel: this.state.mobileTel,
       compCd: this.state.compCd,
@@ -237,6 +245,9 @@ class UserReg extends React.Component {
           break;
         case 'pstn':
           this.props.getPSTNComboData();
+          break;
+        case 'rank':
+          this.props.getRANKComboData();
           break;
         default:
           break;
@@ -296,7 +307,7 @@ class UserReg extends React.Component {
         return (
           <ErrorBoundary>
             <LinkBtnLgtGray>
-              <Link to="/admin/adminmain/account">{intlObj.get(messages.lblCancel)}</Link>
+              <Link to="/admin/adminmain/orgadmin">{intlObj.get(messages.lblCancel)}</Link>
             </LinkBtnLgtGray>
             <BtnDkGray onClick={() => this.setState({ mode: 'U' })}>{intlObj.get(messages.lblUdt)}</BtnDkGray>
           </ErrorBoundary>
@@ -319,7 +330,7 @@ class UserReg extends React.Component {
       return (
         <ErrorBoundary>
           <LinkBtnLgtGray>
-            <Link to="/admin/adminmain/account">{intlObj.get(messages.lblCancel)}</Link>
+            <Link to="/admin/adminmain/orgadmin">{intlObj.get(messages.lblCancel)}</Link>
           </LinkBtnLgtGray>
           <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblReg)}</BtnDkGray>
         </ErrorBoundary>
@@ -516,7 +527,7 @@ class UserReg extends React.Component {
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblPSTNPlaceholder)}
-                          name="deptName"
+                          name="pstnName"
                           value={this.state.pstnName}
                           onClick={() => this.showModal(intlObj.get(messages.titleUserPSTN), 'pstn')}
                           maxLength={380}
@@ -538,7 +549,7 @@ class UserReg extends React.Component {
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblDutyPlaceholder)}
-                          name="deptName"
+                          name="dutyName"
                           value={this.state.dutyName}
                           onClick={() => this.showModal(intlObj.get(messages.titleUserDuty), 'duty')}
                           maxLength={380}
@@ -553,7 +564,29 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s10">{intlObj.get(messages.titleUserOfficeTel)}</label>
+                    <label htmlFor="s10">{intlObj.get(messages.titleUserRank)}</label>
+                  </th>
+                  <td>
+                    <FormItem {...formItemLayout}>
+                      <ErrorBoundary>
+                        <Input
+                          placeholder={intlObj.get(messages.lblRankPlaceholder)}
+                          name="rankName"
+                          value={this.state.rankName}
+                          onClick={() => this.showModal(intlObj.get(messages.titleUserRank), 'rank')}
+                          maxLength={380}
+                          id="s10"
+                          style={{ width: 285, marginRight: 10 }}
+                          readOnly={this.state.mode === 'D'}
+                        />
+                      </ErrorBoundary>
+                      <span className="tipText" />
+                    </FormItem>
+                  </td>
+                </tr>       
+                <tr>
+                  <th>
+                    <label htmlFor="s11">{intlObj.get(messages.titleUserOfficeTel)}</label>
                   </th>
                   <td>
                     <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.officeTel, 'phone')}>
@@ -562,27 +595,6 @@ class UserReg extends React.Component {
                           placeholder={intlObj.get(messages.lblOfficeTelPlaceholder)}
                           name="officeTel"
                           value={this.state.officeTel}
-                          onChange={this.handleChange}
-                          maxLength={200}
-                          id="s10"
-                          readOnly={this.state.mode === 'D'}
-                        />
-                      </ErrorBoundary>
-                      <span className="tipText" />
-                    </FormItem>
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    <label htmlFor="s11">{intlObj.get(messages.titleUserMobileTel)}</label>
-                  </th>
-                  <td>
-                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.mobileTel, 'phone')}>
-                      <ErrorBoundary>
-                        <Input
-                          placeholder={intlObj.get(messages.lblMobileTelPlaceholder)}
-                          name="mobileTel"
-                          value={this.state.mobileTel}
                           onChange={this.handleChange}
                           maxLength={200}
                           id="s11"
@@ -595,7 +607,28 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s12">{intlObj.get(messages.titleUserCOMP)}</label>
+                    <label htmlFor="s12">{intlObj.get(messages.titleUserMobileTel)}</label>
+                  </th>
+                  <td>
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.mobileTel, 'phone')}>
+                      <ErrorBoundary>
+                        <Input
+                          placeholder={intlObj.get(messages.lblMobileTelPlaceholder)}
+                          name="mobileTel"
+                          value={this.state.mobileTel}
+                          onChange={this.handleChange}
+                          maxLength={200}
+                          id="s12"
+                          readOnly={this.state.mode === 'D'}
+                        />
+                      </ErrorBoundary>
+                      <span className="tipText" />
+                    </FormItem>
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <label htmlFor="s13">{intlObj.get(messages.titleUserCOMP)}</label>
                   </th>
                   <td>
                     <FormItem {...formItemLayout}>
@@ -605,7 +638,7 @@ class UserReg extends React.Component {
                           name="compCd"
                           value={this.state.compCd}
                           maxLength={200}
-                          id="s12"
+                          id="s13"
                           readOnly={this.state.mode === 'D'}
                         />
                       </ErrorBoundary>
@@ -637,6 +670,8 @@ UserReg.propTypes = {
   getDutyComboData: PropTypes.func, //eslint-disable-line
   getChangePSTNTreeData: PropTypes.func, //eslint-disable-line
   getPSTNComboData: PropTypes.func, //eslint-disable-line
+  getChangeRANKTreeData: PropTypes.func, //eslint-disable-line
+  getRANKComboData: PropTypes.func, //eslint-disable-line  
   getEmpCheck: PropTypes.func, //eslint-disable-line
   getUser: PropTypes.func, //eslint-disable-line
   empNo: PropTypes.string, //eslint-disable-line
@@ -652,6 +687,8 @@ const mapDispatchToProps = dispatch => ({
   getChangePSTNTreeData: PSTN_ID => dispatch(actions.getChangePSTNTreeData(PSTN_ID)),
   getPSTNComboData: () => dispatch(actions.getPSTNComboData()),
   registUser: userInfo => dispatch(actions.insertUser(userInfo)),
+  getChangeRANKTreeData: RANK_ID => dispatch(actions.getChangeRANKTreeData(RANK_ID)),
+  getRANKComboData: () => dispatch(actions.getRANKComboData()),
   updateUser: userId => dispatch(actions.updateUser(userId)),
   getUser: userId => dispatch(actions.getUser(userId)),
 });

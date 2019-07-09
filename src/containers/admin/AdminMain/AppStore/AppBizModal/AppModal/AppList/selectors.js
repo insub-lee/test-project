@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('mypageappList');
+const selectOrg = state => state.get('storeAppList');
 
 const makeInitType = () => createSelector(
   selectOrg,

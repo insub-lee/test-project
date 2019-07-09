@@ -45,8 +45,9 @@ export function* deleteAppList(payload) {
   }
 }
 
-export function* loadTree() {
-  const response = yield call(Axios.get, '/api/bizstore/v1/store/appTree', { data: 'temp' });
+export function* loadTree(payload) {
+  const SITE_ID = payload.siteId;
+  const response = yield call(Axios.post, '/api/bizstore/v1/store/appTree', { SITE_ID });
   const { result, rootId } = response;
   let categoryData = treeFunc.setFlatDataKey(result, 'CATG_ID');
   categoryData = fromJS(treeFunc.getTreeFromFlatTreeData(categoryData, rootId));
@@ -60,6 +61,7 @@ export function* loadCategoryList(payload) {
       CATEGORYID: payload.payload.node,
       TYPE: payload.payload.type,
       NUM: payload.payload.num,
+      SITE_ID: payload.payload.siteId,
     },
   };
 
@@ -74,6 +76,7 @@ export function* searchCategory(payload) {
     PARAM: {
       TYPE: payload.payload.type,
       NUM: payload.payload.num,
+      SITE_ID: payload.payload.siteId,
     },
   };
 

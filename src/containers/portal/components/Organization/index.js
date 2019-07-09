@@ -30,6 +30,7 @@ class OrganizationWrapper extends React.PureComponent {
       isDeptSelectbox,
       siteIdParam,
       closeModal,
+      userSetting,
     } = this.props;
 
     return (
@@ -63,6 +64,7 @@ class OrganizationWrapper extends React.PureComponent {
                 isDeptSelectbox={isDeptSelectbox}
                 siteIdParam={siteIdParam}
                 closeModal={closeModal}
+                userSetting={userSetting}
               />
             :
               ''
@@ -98,6 +100,7 @@ OrganizationWrapper.propTypes = {
   isDeptSelectbox: PropTypes.bool,
   siteIdParam: PropTypes.number,
   closeModal: PropTypes.func.isRequired,
+  userSetting: PropTypes.bool,
 };
 
 OrganizationWrapper.defaultProps = {
@@ -124,6 +127,7 @@ OrganizationWrapper.defaultProps = {
   checkedDuty: [],
   isDeptSelectbox: false,
   siteIdParam: undefined,
+  userSetting: false,
 };
 
 export default OrganizationWrapper;

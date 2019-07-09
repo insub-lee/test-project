@@ -43,6 +43,7 @@ class AppInfo extends Component {
             <AppBasicInfo
               targetUrl={window.location.href}
               appId={this.state.appId}
+              visibleInfo={false}
             />
           </ErrorBoundary>
           <ErrorBoundary>

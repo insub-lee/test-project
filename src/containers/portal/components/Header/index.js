@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { Tooltip } from 'antd';
 import { intlObj, lang } from 'utils/commonUtils';
 // import SKhynixLogo from 'images/portal/header-bg-logo.png';
 import Badge from '../../../../components/Badge/StyleBadge';
@@ -38,7 +39,12 @@ class Header extends React.Component {
     execPage('common');
   }
   render() {
-    const { myHNotiCnt, managerInfo, view } = this.props;
+    const {
+      myHNotiCnt,
+      managerInfo,
+      view,
+      hasRoleAdmin,
+    } = this.props;
     const { setMyMenuData } = this.state;
 
     let appName = '';
@@ -128,10 +134,12 @@ class Header extends React.Component {
                 <li>
                   <UserProfile execPage={this.props.execPage} />{/* 프로필 */}
                 </li>
-                {/* { setMyMenuData.HOME_YN === 'Y' &&
+                { hasRoleAdmin === true &&
                 <li>
-                  <Link to="/admin" className="icon-setting" target="_blank" />
-                </li> } */}
+                  <Tooltip placement="left" title="ADMIN">
+                    <Link to="/admin" className="icon-setting" target="_blank" />
+                  </Tooltip>
+                </li> }
               </ul>
             </li>
           </ul>
@@ -148,6 +156,7 @@ Header.propTypes = {
   setMyMenuData: PropTypes.object,
   managerInfo: PropTypes.array,
   view: PropTypes.string.isRequired,
+  hasRoleAdmin: PropTypes.bool.isRequired,
 };
 
 Header.defaultProps = {

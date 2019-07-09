@@ -47,3 +47,12 @@ export const getChangePSTNTreeData = PSTN_ID => ({
   type: constants.GET_CHANGE_PSTN_DATA,
   PSTN_ID,
 });
+
+export const getRANKComboData = () => ({
+  type: constants.GET_RANK_COMBO_LIST,
+});
+
+export const getChangeRANKTreeData = RANK_ID => ({
+  type: constants.GET_CHANGE_RANK_DATA,
+  RANK_ID,
+});

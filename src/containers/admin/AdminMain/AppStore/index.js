@@ -125,42 +125,6 @@ class AppStore extends Component {
     this.props.getCategoryData(siteId);
   }
 
-  insertAppNode = (rowInfo, treeData, data, history) => {
-    console.log('insertAppNode');
-    console.log(rowInfo);
-    console.log(treeData);
-    console.log(data);
-    console.log(history);
-    /*
-    if (data.NODE_TYPE === 'F') { // 앱 카테고리 수정
-      const {
-        SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN,
-      } = data;
-      this.props.insertCategory(SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN);
-    } else {
-      this.props.insertNode(rowInfo, treeData, data, history);
-    }
-    */
-  }
-
-  updateAppNode = (rowInfo, treeData, data, history) => {
-    console.log('updateAppNode');
-    console.log(rowInfo);
-    console.log(treeData);
-    console.log(data);
-    console.log(history);
-    /*
-    if (data.NODE_TYPE === 'F') { // 앱 카테고리 수정
-      const {
-        SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN,
-      } = data;
-      this.props.updateCategory(SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN)
-    } else {
-      this.props.updateNode(rowInfo, treeData, data, history);
-    }
-    */
-  }
-
   render() {
     const {
       // data
@@ -169,6 +133,8 @@ class AppStore extends Component {
       selectedIndex,
       changeSelectedIndex,
       saveData,
+      insertNode,
+      updateNode,
       moveNode,
       deleteNode,
       updateMymenuDisp,
@@ -203,8 +169,8 @@ class AppStore extends Component {
                     onClick={handleTreeOnClick}
                     canDrag={false}
                     canDrop={false}
-                    insertNode={this.insertAppNode}
-                    updateNode={this.updateAppNode}
+                    insertNode={insertNode}
+                    updateNode={updateNode}
                     saveData={saveData}
                     moveNode={moveNode}
                     deleteNode={deleteNode}
@@ -250,9 +216,6 @@ AppStore.propTypes = {
   selectedIndex: PropTypes.string.isRequired,
   categoryData: PropTypes.array.isRequired,
   getCategoryData: PropTypes.func.isRequired,
-  insertCategory: PropTypes.func.isRequired, //eslint-disable-line
-  updateCategory: PropTypes.func.isRequired, //eslint-disable-line
-  // 현재미사용
   changeSelectedIndex: PropTypes.func.isRequired,
   insertNode: PropTypes.func.isRequired, //eslint-disable-line
   updateNode: PropTypes.func.isRequired, //eslint-disable-line
@@ -271,13 +234,6 @@ export function mapDispatchToProps(dispatch) {
     // 카테고리
     getCategoryComboList: () => dispatch(actions.getCategoryComboList()),
     getCategoryData: siteId => dispatch(actions.getCategoryData(siteId)),
-    insertCategory: (SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
-      dispatch(actions.insertCategory(SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN));
-    },
-    updateCategory: (SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
-      dispatch(actions.updateCategory(SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN));
-    },
-    // 현재미사용
     changeSelectedIndex: selectedIndex =>
       dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
