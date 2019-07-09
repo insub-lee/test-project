@@ -11,7 +11,6 @@ import StoreTree from '../StoreTree';
 import CustomTheme from './theme';
 import './app.css';
 import TreeWrapper from './TreeWrapper';
-import WorkTimeLine from '../../WorkTimeLine';
 
 class Tree extends Component {
   constructor(props) {
@@ -112,7 +111,7 @@ class Tree extends Component {
                 padding: '10px 0 0 10px',
               }}
             >
-              <ScrollBar style={{ width: 350, height: 'calc(100% - 432px' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+              <ScrollBar style={{ width: 350, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <SortableTree
                   theme={CustomTheme}
                   treeData={treeData}
@@ -154,14 +153,6 @@ class Tree extends Component {
                   // onlyExpandSearchedNodes={true}
                 />
               </ScrollBar>
-            </div>
-          )}
-          {!editTree && (
-            <div>
-              <div className="searchWrapper">
-                <p>타임라인</p>
-              </div>
-              <WorkTimeLine />
             </div>
           )}
         </div>

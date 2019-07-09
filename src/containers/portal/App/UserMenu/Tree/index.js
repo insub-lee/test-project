@@ -18,6 +18,7 @@ import icon_lock from 'images/portal/icon_lock.png';
 import IconGo from 'images/portal/icon_go.png';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
+import WorkTimeLine from '../../WorkTimeLine';
 
 class Tree extends Component {
   constructor(props) {
@@ -144,22 +145,6 @@ class Tree extends Component {
           {this.state.editTree ? (
             <div style={{ padding: '10px' }}>
               <MyPage history={this.props.history} />
-              {/* <MyPageTree
-                treeData={this.props.myAppStoreTreeData}
-                moveNode={this.props.moveNode}
-                updateMymenuDisp={this.props.updateMymenuDisp}
-                showNoti={this.props.showNoti}
-                // selectedIndex={selectedIndex}
-                onClick={this.handleTreeOnClick}
-                canDrag={true}
-                canDrop={true}
-                // insertNode={insertNode}
-                // updateNode={updateNode}
-                // saveData={saveData}
-                // moveNode={moveNode}
-                // deleteNode={deleteNode}
-                // history={history}
-              /> */}
             </div>
           ) : (
             <div
@@ -208,9 +193,16 @@ class Tree extends Component {
                   ref={ref => {
                     this.tree = ref;
                   }}
-                  // onlyExpandSearchedNodes={true}
                 />
               </ScrollBar>
+            </div>
+          )}
+          {!editTree && (
+            <div>
+              <div className="searchWrapper">
+                <p>타임라인</p>
+              </div>
+              <WorkTimeLine />
             </div>
           )}
         </div>
