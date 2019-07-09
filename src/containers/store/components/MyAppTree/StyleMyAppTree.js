@@ -25,7 +25,7 @@ const StyleMyAppTree = styled.div`
               background: transparent;
               > .active {
                 > span {
-                  color: #f85023 !important;
+                  color: #886ab5 !important;
                 }
               }
             }

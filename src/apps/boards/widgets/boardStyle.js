@@ -11,7 +11,7 @@ const boardStyle = styled.div`
     // border-bottom: 1px solid #d1d2d3;  //위젯색상테마 포함됨
 
     .ant-tabs-nav-container {
-      height: 35px;
+      height: 45px;
       line-height: 0.5em;
 
       &.ant-tabs-nav-container-scrolling {
@@ -45,12 +45,12 @@ const boardStyle = styled.div`
 
       .ant-tabs-nav {
         .ant-tabs-tab {
-          height: 35px;
+          height: 45px;
           margin: 0;
           padding: 0 16px;
           font-size: 13px;
           // color: #707070;  //위젯색상테마 포함됨
-          line-height: 35px;
+          line-height: 45px;
 
           // &.ant-tabs-tab-active {
           //   color: #222222;  //위젯색상테마 포함됨

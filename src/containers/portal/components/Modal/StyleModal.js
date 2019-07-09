@@ -215,7 +215,7 @@ const StyleModal = styled.div`
     display: inline-block;
     width: 100%;
     padding: 0;
-    border-bottom: 1px solid #dadbdb;
+    border-bottom: 1px solid #e5e5e5;
   }
 
   .orgAcivityBody .leftActivity ul.nav-tabs > li {
@@ -234,8 +234,8 @@ const StyleModal = styled.div`
   }
 
   .orgAcivityBody .leftActivity ul.nav-tabs .nav-item .nav-link.active {
-    color: #333333;
-    border-bottom: 2px solid #333333;
+    color: #886ab5;
+    border-bottom: 1px solid #886ab5;
   }
 
   .orgAcivityBody .leftActivity .tab-content {
@@ -261,18 +261,18 @@ const StyleModal = styled.div`
       .inputWrapper {
         position: relative;
         width: 100% !important;
-        height: 30px;
+        height: calc(1.47em + 1rem + 2px);
         margin: auto;
 
         .ant-input {
-          height: 30px;
-          border-color: #c1c1c1;
+          height: calc(1.47em + 1rem + 2px);
+          border-color: #e5e5e5;
           border-radius: 4px;
         }
 
         .searchButton {
           position: absolute;
-          top: 0;
+          top: 4px;
           right: 0;
           width: 30px;
           height: 30px;

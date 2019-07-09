@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 // import { palette } from 'styled-theme';
 import TriangleIcon from 'images/bizstore/arrow-triangle.png';
 import ShareWhiteIcon from 'images/bizstore/icon-share-white.png';
@@ -19,23 +19,81 @@ import LinkBtnUpdateIcon from 'images/common/icon-update.png';
 import PreviewIcon from 'images/common/icon-preview.png';
 import SettingsIcon from 'images/common/icon-settings.png';
 
-// Gray Tone 버튼
-const BtnBlack = styled.button`
-  
+const defaultColorSet = {
+  borderColor: 'rgba(0,0,0,.15)',
+  color: '#212529',
+  backgroundColor: '#fff',
+};
+
+const skin = {
+  primary: {
+    borderColor: '#886ab5',
+    color: '#ffffff',
+    backgroundColor: '#886ab5',
+  },
+  secondary: {
+    borderColor: '#868e96',
+    color: '#ffffff',
+    backgroundColor: '#868e96',
+  },
+  success: {
+    borderColor: '#1dc9b7',
+    color: '#ffffff',
+    backgroundColor: '#1dc9b7',
+  },
+  info: {
+    borderColor: '#2196f3',
+    color: '#ffffff',
+    backgroundColor: '#2196f3',
+  },
+  warning: {
+    borderColor: '#ffc241',
+    color: '#212529',
+    backgroundColor: '#ffc241',
+  },
+  danger: {
+    borderColor: '#fd3995',
+    color: '#ffffff',
+    backgroundColor: '#fd3995',
+  },
+  dark: {
+    borderColor: '#505050',
+    color: '#ffffff',
+    backgroundColor: '#505050',
+  },
+  light: {
+    borderColor: 'rgba(0,0,0,.15)',
+    color: '#212529',
+    backgroundColor: '#fff',
+  },
+};
+
+const getThemeColor = (color, type) => {
+  if (color && skin[color]) {
+    return skin[color][type];
+  }
+  return defaultColorSet[type];
+};
+
+const defaultBorderRadius = css`
+  border-radius: 4px;
 `;
 
-//BtnDkGray = Dark Gray (검정색에 가까운 회색)
+const roundedBorderRadius = css`
+  border-radius: 15px;
+`;
+
 const BtnDkGray = styled.button`
   min-width:90px;
   height:30px;
   padding: 0 15px;
-  background-color:#333333;
-  border: 1px solid #333333;
-  border-radius: 3px;
+  background-color: ${({ color }) => getThemeColor(color, 'backgroundColor')};
+  border: 1px solid ${({ color }) => getThemeColor(color, 'borderColor')};
+  /* border-radius: 3px; */
   font-size:13px;
-  color:#ffffff;
+  color: ${({ color }) => getThemeColor(color, 'color')};
   line-height: 29px;
-  cursor: pointer;
+  ${({ rounded }) => (rounded ? roundedBorderRadius : defaultBorderRadius)}
 
   &:hover, &:focus {
     background-color:#333333;
@@ -44,13 +102,46 @@ const BtnDkGray = styled.button`
     border-color:#333333;
   }
 
-  &.disabled, &:disabled {
+  &.disabled {
     background-color:#909090;
     border:1px solid #909090;
     color:#dadada;
     cursor: default;
   }
 `;
+
+// Gray Tone 버튼
+const BtnBlack = styled.button`
+  
+`;
+
+//BtnDkGray = Dark Gray (검정색에 가까운 회색)
+// const BtnDkGray = styled.button`
+//   min-width:90px;
+//   height:30px;
+//   padding: 0 15px;
+//   background-color:#333333;
+//   border: 1px solid #333333;
+//   border-radius: 3px;
+//   font-size:13px;
+//   color:#ffffff;
+//   line-height: 29px;
+//   cursor: pointer;
+
+//   &:hover, &:focus {
+//     background-color:#333333;
+//     border:1px solid #333333;
+//     color:#ffffff;
+//     border-color:#333333;
+//   }
+
+//   &.disabled, &:disabled {
+//     background-color:#909090;
+//     border:1px solid #909090;
+//     color:#dadada;
+//     cursor: default;
+//   }
+// `;
 
 // 링크(link) 버튼 : Dark Gray (검정색에 가까운 회색)
 const LinkBtnDkGray = styled.span`

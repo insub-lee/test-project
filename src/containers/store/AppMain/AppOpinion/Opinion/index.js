@@ -575,9 +575,12 @@ class AppOpinion extends Component {
             <BtnLgtGray style={{ marginRight: 10 }} onClick={this.opposeConfirm} >
               {intlObj.get(messages.doOppo)}
             </BtnLgtGray>
-            <BtnDkGray onClick={this.applyConfirm}>
+            <BtnDkGray onClick={this.applyConfirm} color="primary">
               {intlObj.get(messages.confirm)}
             </BtnDkGray>
+            {/* <BtnDkGray onClick={this.applyConfirm} color="warning" rounded>
+              {intlObj.get(messages.confirm)}
+            </BtnDkGray> */}
           </div>
           <Modal
             isOpen={this.state.show}

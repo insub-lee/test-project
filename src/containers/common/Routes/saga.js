@@ -165,8 +165,9 @@ export function* loadAuthorization(action) {
   if (data.uuid === null || data.uuid === undefined) {
     console.log('loadAuthorization !!!!', action.payload);
     // const response = yield call(Axios.get, `/api/common/v1/auth/sso?URL=${action.payload.url}`, { });
-    const { username } = action.payload;
-    const response = yield call(Axios.get, `/api/common/v1/auth/login?empno=${username}`, {});
+    // const { username } = action.payload;
+    // const response = yield call(Axios.get, `/api/common/v1/auth/login?empno=${username}`, {});
+    const response = yield call(Axios.get, '/api/common/v1/auth/login?empno=X0101006', {});
     data = response;
   }
   console.log('LOAD AUTH:', data);

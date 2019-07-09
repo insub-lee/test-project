@@ -11,28 +11,45 @@ const StyleUserTree = styled.div`
 
     .selectWrapper {
       width: 100%;
-      height: 30px;
-      border: 1px solid #c1c1c1;
-      color: #404040;
-      font-size: 13px;
-      line-height: 30px;
-      background-color: #ffffff;
-      border-radius: 4px;
 
       > select {
+        display: block;
         width: 100%;
-        padding: 0 10px;
-        border: 0;
-
-        -webkit-appearance: none; /* 네이티브 외형 감추기 */
+        height: calc(1.47em + 1rem + 2px);
+        padding: .5rem .875rem;
+        font-size: .8125rem;
+        font-weight: 400;
+        line-height: 1.47;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+        
+        /*
+        -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
-        background: url(${iconSelectArrowDw}) no-repeat; /* 화살표 모양의 이미지 */ 
+        background: url(${iconSelectArrowDw}) no-repeat; 
         background-position: calc(100% - 10px) 50%;
-
-        /* IE 10, 11의 네이티브 화살표 숨기기 */ 
+        */
+        /* IE 10, 11의 네이티브 화살표 숨기기 
         &::-ms-expand { 
           display: none;
+        }
+        */ 
+
+        &:focus {
+          color: #495057;
+          background-color: #fff;
+          border-color: #886ab5;
+          outline: 0;
+          -webkit-box-shadow: 0 0 0 0.2rem transparent;
+          box-shadow: 0 0 0 0.2rem transparent;
         }
       }
       
@@ -42,15 +59,38 @@ const StyleUserTree = styled.div`
   .inputWrapper {
     position: relative;
     width: 260px;
-    height: 30px;
     margin: auto;
     .ant-input {
-      height: 30px;
-      border-color: #c1c1c1;
+      display: block;
+      width: 100%;
+      height: calc(1.47em + 1rem + 2px);
+      padding: .5rem .875rem;
+      font-size: .8125rem;
+      font-weight: 400;
+      line-height: 1.47;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #e5e5e5;
+      border-radius: 4px;
+      -webkit-transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+      transition: border-color .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+      transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+      transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+
+      &:focus,
+      &:hover {
+        color: #495057;
+        background-color: #fff;
+        border: 1px solid #886ab5;
+        outline: 0;
+        -webkit-box-shadow: 0 0 0 0.2rem transparent;
+        box-shadow: 0 0 0 0.2rem transparent;
+      }
     }
     .searchButton {
       position: absolute;
-      top: 0;
+      top: 3px;
       right: 0;
       width: 30px;
       height: 30px;
@@ -122,7 +162,7 @@ const StyleUserTree = styled.div`
 
   .orgTreeWrapper .rstcustom__rowTitle > button.active {
     color: #ffffff;
-    background-color: #f85023;
+    background-color: #886ab5;
   }
   
   .orgTreeWrapper button:focus,
@@ -173,7 +213,7 @@ const StyleUserTree = styled.div`
   /* 마지막 노드 표시 */
   .orgTreeWrapper .rstcustom__ordinaryButton,
   .orgTreeWrapper .rstcustom__ordinaryButton.active {
-    background: #f85023;
+    background: #886ab5;
   }
   
   .orgTreeWrapper .rstcustom__rowSearchFocus,
@@ -184,7 +224,7 @@ const StyleUserTree = styled.div`
   /* 임시 */
   .orgTreeWrapper .rstcustom__rowSearchFocus .rstcustom__rowTitle,
   .orgTreeWrapper .rstcustom__rowSearchMatch .rstcustom__rowTitle {
-    color: #f85023;
+    color: #886ab5;
   }
   
 `;

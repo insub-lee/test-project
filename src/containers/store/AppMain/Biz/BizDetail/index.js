@@ -107,7 +107,7 @@ class BizDetail extends Component {
                     onClick={() => history.push(`${preUrl}/info/${this.state.BIZGRP_ID}`)}
                     // className="currentTreeLevel ellipsis"
                     className="ellipsis"
-                    style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#f85023' : 'inherit'}`, paddingLeft: 10 }}
+                    style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
                   >
                     {lang.get('NAME', bizMenuData)}
                   </button>

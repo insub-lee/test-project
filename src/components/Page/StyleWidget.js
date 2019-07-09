@@ -76,21 +76,21 @@ const WidgetWrapper = styled.div`
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(34,34,34,0.2);
+          border-bottom: 1px solid rgba(0,0,0,.1);
 
           .ant-tabs-tab-prev-icon, 
           .ant-tabs-tab-next-icon {color: #898989;}
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(34,34,34,0.7);
+              color: #666;
               
               &.ant-tabs-tab-active {
-                color: #222222;
+                color: #333;
               }
             }
             .ant-tabs-ink-bar {
-              background-color: #222222;
+              background-color: #886ab5;
             }
           }
         }
@@ -264,11 +264,11 @@ const WidgetWrapper = styled.div`
               color: rgba(34,34,34,0.7);
               
               &.ant-tabs-tab-active {
-                color: #222222;
+                color: #886ab5;
               }
             }
             .ant-tabs-ink-bar {
-              background-color: #222222;
+              background-color: #886ab5;
             }
           }
         }
@@ -437,11 +437,11 @@ const WidgetWrapper = styled.div`
               color: rgba(34,34,34,0.7);
               
               &.ant-tabs-tab-active {
-                color: #222222;
+                color: #886ab5;
               }
             }
             .ant-tabs-ink-bar {
-              background-color: #222222;
+              background-color: #886ab5;
             }
           }
         }

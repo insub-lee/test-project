@@ -17,8 +17,8 @@
 .modeD .adminTbl td .ant-input, .adminTbl td .ant-input:read-only,
 .adminTbl td .ant-input.readonly {padding-left: 0; background: #ffffff; border-color: #ffffff !important; cursor: default; resize: none;}
 .modeD .adminTbl td .ant-input:hover, .adminTbl td .ant-input.readonly:hover {border-color: #ffffff;}
-
 .adminTbl .has-feedback .ant-form-item-children-icon {top: 20px;} /* 입력값 validation feedback 아이콘 위치 */
+.has-error.has-feedback .ant-form-item-children-icon {color: #fd3995;}
 .adminTbl .tipText {height: 19px; font-size: 12px;} /* 입력값 validation feedback 문구 */
 
 /* 목록 하단 버튼 감싸는 래퍼 */

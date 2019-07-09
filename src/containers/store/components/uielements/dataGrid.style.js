@@ -11,28 +11,29 @@ const StyleDataGrid = styled.div`
       
       // Header 영역
       .react-grid-Header {
-        height: 41px !important;
+        height: 47px !important;
         box-shadow: none;
         background: #ffffff;
-        border-bottom: 1px solid #222222;
+        border-bottom: 2px solid #e9e9e9;
 
         .react-grid-HeaderRow {
-          height: 41px !important;
+          height: 47px !important;
           overflow-y: hidden;
 
           > div {
-            height: 41px !important;
+            height: 45px !important;
 
             .react-grid-HeaderCell {
-              height: 40px !important;
+              height: 45px !important;
               padding: 0;
               border-right: none;
               border-bottom: none;
               background: #ffffff;
-              color: #707070;
-              font-weight: 400;
-              line-height: 40px;
+              color: #212529;
+              font-weight: 600;
+              line-height: 45px;
               text-align: center;
+              font-size: .8125rem;
 
               &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
                 text-align: left;
@@ -52,18 +53,18 @@ const StyleDataGrid = styled.div`
       .react-grid-Cell:focus{outline:0px solid #66afe9;outline-offset:-2px}
 
       .react-grid-Viewport {
-        top: 41px !important;
+        top: 47px !important;
         border-bottom: 1px solid #dadbdb;
 
         .react-grid-Row {
-          height: 38px !important;
+          height: 45px !important;
 
           .react-grid-Cell {
-            height: 38px !important;
+            height: 45px !important;
             padding-left: 0;
             padding-right: 0;
             border-right: none;
-            border-bottom-color: #dadbdb;
+            border-bottom-color: #e9e9e9;
             color: #404040;
             text-align: center;
 
