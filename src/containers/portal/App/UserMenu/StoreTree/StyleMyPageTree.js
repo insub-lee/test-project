@@ -132,6 +132,7 @@ const VisionBtn = styled.button`
   height: 25px;
   border-color: #4b4b4b;
   border-radius: 3px;
+  z-index: 9999;
 
   &.visible {
     background: #4b4b4b url(${iconVisible}) no-repeat 50% 50%;

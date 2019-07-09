@@ -20,7 +20,7 @@ const StyledAdminLeftMenu = styled.div`
   position: fixed;
   top: 45px;
   left: 0;
-  width: 300px;
+  width: 200px;
   height: calc(100vh - 45px);
   padding: 10px 15px;
   border-right: 1px solid #d1d2d3;

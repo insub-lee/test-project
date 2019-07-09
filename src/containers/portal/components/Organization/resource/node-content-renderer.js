@@ -174,8 +174,8 @@ class CustomThemeNodeContentRenderer extends Component {
 
 CustomThemeNodeContentRenderer.defaultProps = {
   buttons: [],
-  canDrag: false,
-  canDrop: false,
+  canDrag: () => false,
+  canDrop: () => false,
   className: '',
   draggedNode: null,
   icons: [],
@@ -195,7 +195,7 @@ CustomThemeNodeContentRenderer.defaultProps = {
 
 CustomThemeNodeContentRenderer.propTypes = {
   buttons: PropTypes.arrayOf(PropTypes.node),
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.func,
   className: PropTypes.string,
   icons: PropTypes.arrayOf(PropTypes.node),
   isSearchFocus: PropTypes.bool,
@@ -224,7 +224,7 @@ CustomThemeNodeContentRenderer.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   parentNode: PropTypes.shape({}), // Needed for dndManager
   // Drop target
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.func,
   isOver: PropTypes.bool.isRequired,
 };
 

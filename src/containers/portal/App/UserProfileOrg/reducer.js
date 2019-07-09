@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import * as actionType from './constants';
-import EmptyRowsView from '../../components/Organization/emptyRowsView';
+import EmptyViewTree from '../../components/Organization/emptyRowsViewTree';
 
 const initialState = fromJS({
   searchString: '',
@@ -17,7 +17,7 @@ const initialState = fromJS({
   checkboxInitialize: false,
 
   // EmptyRowsView
-  emptyRowsView: EmptyRowsView.EmptyViewTree,
+  emptyRowsView: EmptyViewTree,
 
   selectedIndex: '',
 

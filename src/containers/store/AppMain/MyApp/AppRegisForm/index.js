@@ -732,7 +732,7 @@ class AppRegisForm extends React.Component {
               {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
             </FormItem>
             {/* 5. App ID */}
-            <h4 className="required">App ID</h4>
+            <h4 className="required">App ID 에서 SRC_PATH로 용도변경([앱경로] / legacySVC / PAGE)</h4>
             <FormItem
               hasFeedback={true}
               validateStatus={this.state.ORIGIN_APP_ID_CHK ? 'success' : 'error'}

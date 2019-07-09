@@ -5,10 +5,13 @@ import { Axios } from '../../../utils/AxiosFunc';
 import { IflowApi } from 'utils/IflowFunc';
 
 export function* getIflBoardDataList(payload) {
+  /* eslint-disabled */
+  console.debug('>>>>>>>>payload: ', payload);
+  /* eslint-disabled */
   const grSeq = [];
   const ctSeq = [];
   const catePageList = [];
-  for (var i=0; i < payload.cateList.length; i++) {
+  for (var i = 0; i < payload.cateList.length; i++) {
     grSeq.push(payload.cateList[i].grSeq);
     ctSeq.push(payload.cateList[i].ctSeq);
     catePageList.push({
@@ -20,9 +23,12 @@ export function* getIflBoardDataList(payload) {
     });
   }
   const bArray = [];
-  for (var i=0; i < ctSeq.length; i++) {
+  for (var i = 0; i < ctSeq.length; i++) {
     const param = { grseq: grSeq[i], ctseq: ctSeq[i], page: payload.page, pagepernum: payload.pagepernum };
-    const bData = yield call(IflowApi.get,'articleList', param);
+    const bData = yield call(IflowApi.get, 'articleList', param);
+    /* eslint-disabled */
+    console.debug('>>>>>>>>bData: ', bData);
+    /* eslint-disabled */
 
     // // 답글이 아닌 글만 추려냄
     // const articles = [];
@@ -32,8 +38,13 @@ export function* getIflBoardDataList(payload) {
     // bArray.push(articles);
     bArray.push(bData.articles);
     catePageList[i].totalCount = bData.totalCount;
-    
   }
+
+  /* eslint-disabled */
+  console.debug('>>>>>>>>catePageList: ', catePageList);
+  console.debug('>>>>>>>>bArray: ', bArray);
+  /* eslint-disabled */
+
   yield put({ type: constants.CATE_PAGE_LIST, payload: fromJS(catePageList) });
   yield put({ type: constants.SET_IFBOARD_DATA_LIST, payload: fromJS(bArray) });
 }
@@ -54,7 +65,7 @@ export function* boardListPageing(payload) {
   const ctseq = payload.catePageList[payload.index].ctSeq;
 
   const param = { grseq, ctseq, page, pagepernum };
-  const bData = yield call(IflowApi.get,'articleList', param);
+  const bData = yield call(IflowApi.get, 'articleList', param);
 
   if ((page - 1) * pagepernum >= bArray[payload.index].length) {
     // 답글이 아닌 글만 추려냄
@@ -74,5 +85,4 @@ export default function* iFlowSaga() {
   yield takeEvery(constants.GET_IFBOARD_DATA_LIST, getIflBoardDataList);
   yield takeLatest(constants.GET_IFCOARD_DETAIL_DATA_LIST, getIfDetailBoardList);
   yield takeLatest(constants.BOARD_LIST_PAGEING, boardListPageing);
-
 }

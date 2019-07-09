@@ -2,7 +2,8 @@ import React from 'react';
 
 const Copyright = () => (
   <div className="portalCopyright">
-    Copyright &copy;
+    <span className="icon-logo" />
+    Copyright &copy; SK hynix. All Rights Reserved.
   </div>
 );
 

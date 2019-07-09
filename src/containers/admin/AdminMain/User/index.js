@@ -66,16 +66,10 @@ class UserReg extends React.Component {
     }
   }
 
-  componentDidMount() {
-
-  }
-
   // eslint-disable-next-line no-unused-vars
   componentWillReceiveProps(nextProps) {
-    console.log('PARENT::componentWillReceiveProps');
     if (this.state.mode === 'D' && nextProps.userInfo) {
       const { userInfo } = nextProps;
-      console.log(userInfo);
       this.setUserInfo(userInfo);
     }
   }
@@ -98,14 +92,13 @@ class UserReg extends React.Component {
       mobileTel: userInfo.MOBILE_TEL_NO,
       compCd: userInfo.COMP_CD,
     });
-  }
+  };
 
   getSelectNode = (node) => {
-    console.log(node);
     this.setState({
       selectedNode: node,
     });
-  }
+  };
 
   getSelectDept = (id) => {
     switch (this.state.modalType) {
@@ -121,13 +114,11 @@ class UserReg extends React.Component {
       default:
         break;
     }
-  }
+  };
 
-  getEmpCheck = (empNo) => {
-    if (empNo !== this.props.userInfo.EMP_NO) {
-      this.props.getEmpCheck(empNo);
-    }
-  }
+  getEmpCheck = (userId, empNo) => {
+    this.props.getEmpCheck(userId, empNo.toUpperCase());
+  };
 
   handleChange = (e) => {
     let { value } = e.target;
@@ -144,14 +135,13 @@ class UserReg extends React.Component {
     this.setState({
       [e.target.name]: value,
     });
-  }
-
+  };
 
   handleStatusChange = (val) => {
     this.setState({
       statusCd: val,
     });
-  }
+  };
 
   validStatus = (val, type) => {
     if (this.state.mode === 'D') return '';
@@ -161,19 +151,29 @@ class UserReg extends React.Component {
       case 'email':
         return val !== '' && emailValid(val) ? 'success' : 'error';
       case 'empNocheck':
-        return val !== '' && (this.props.empCheck === 1 || this.state.empNo === this.props.userInfo.EMP_NO) ? 'success' : 'error';
+        return val !== '' && this.props.empNoCheck.toUpperCase() === this.state.empNo.toUpperCase() && this.props.empNoFlag !== 0 ? 'success' : 'error';
       default:
         return val !== '' ? 'success' : 'error';
     }
-  }
+  };
+
   vaildChk = () => {
-    if (this.state.empNo.trim() !== '' && this.state.empNo !== null
-    && this.state.nameKor.trim() !== '' && this.state.nameKor !== null
-    && emailValid(this.state.email) && this.state.email !== null
-    && this.state.statusCd !== '' && this.state.statusCd !== null
-    && this.state.deptId !== '' && this.state.deptId !== null
-    && this.state.pstnId !== '' && this.state.pstnId !== null
-    && this.state.dutyId !== '' && this.state.dutyId !== null) {
+    if (
+      this.state.empNo.trim() !== '' &&
+      this.state.empNo !== null &&
+      this.state.nameKor.trim() !== '' &&
+      this.state.nameKor !== null &&
+      emailValid(this.state.email) &&
+      this.state.email !== null &&
+      this.state.statusCd !== '' &&
+      this.state.statusCd !== null &&
+      this.state.deptId !== '' &&
+      this.state.deptId !== null &&
+      this.state.pstnId !== '' &&
+      this.state.pstnId !== null &&
+      this.state.dutyId !== '' &&
+      this.state.dutyId !== null
+    ) {
       if (this.state.officeTel !== '' && this.state.officeTel !== null) {
         if (!phonelValid(this.state.officeTel)) {
           message.error(`${intlObj.get(messages.chkInput)}`, 2);
@@ -187,9 +187,7 @@ class UserReg extends React.Component {
           return false;
         }
       }
-      console.log(this.state);
-      console.log(this.props);
-      if (this.props.empCheck !== 1 && this.state.empNo !== this.props.userInfo.EMP_NO) {
+      if (this.props.empNoCheck.toUpperCase() !== this.state.empNo.toUpperCase()) {
         message.error(`${intlObj.get(messages.chkInput)}`, 2);
         return false;
       }
@@ -210,7 +208,7 @@ class UserReg extends React.Component {
   regUser = () => {
     const userInfo = {
       userId: Number(this.state.userId),
-      empNo: this.state.empNo,
+      empNo: this.state.empNo.toUpperCase(),
       nameKor: this.state.nameKor,
       nameEng: this.state.nameEng,
       nameChn: this.state.nameChn,
@@ -225,9 +223,10 @@ class UserReg extends React.Component {
     };
     if (this.state.mode === 'I') this.props.registUser(userInfo);
     else this.props.updateUser(userInfo);
-  }
+  };
 
   showModal = (title, type) => {
+    console.log('showModal');
     if (this.state.mode !== 'D') {
       switch (type) {
         case 'dept':
@@ -248,16 +247,20 @@ class UserReg extends React.Component {
         modalType: type,
       });
     }
-  }
+  };
 
   handleOk = () => {
     this.setState({
       visible: false,
       [`${this.state.modalType}Name`]: this.state.selectedNode.NAME_KOR,
       [`${this.state.modalType}Id`]: this.state.selectedNode.key,
-
     });
-  }
+    if (this.state.modalType === 'dept') {
+      this.setState({
+        compCd: this.state.selectedNode.COMP_CD,
+      });
+    }
+  };
 
   handleCancel = () => {
     this.setState({
@@ -267,11 +270,11 @@ class UserReg extends React.Component {
       // eslint-disable-next-line react/no-unused-state
       treeData: [],
     });
-  }
+  };
 
-  dupCheckEmpNo = (empCheck) => {
-    if (this.state.empNo !== '' && this.state.empNo !== this.props.userInfo.EMP_NO) {
-      if (empCheck === 0) return (<font color="RED">{intlObj.get(messages.dupEmpNo)}</font>);
+  dupCheckEmpNo = () => {
+    if (this.props.empNoFlag === 0 && this.state.empNo.toUpperCase() === this.props.empNoCheck.toUpperCase()) {
+      return <font color="RED">{intlObj.get(messages.dupEmpNo)}</font>;
     }
     return '';
   };
@@ -301,7 +304,12 @@ class UserReg extends React.Component {
       } else if (this.state.mode === 'U') {
         return (
           <ErrorBoundary>
-            <LinkBtnLgtGray onClick={() => { this.setUserInfo(this.props.userInfo); this.setState({ mode: 'D' }); }}>
+            <LinkBtnLgtGray
+              onClick={() => {
+                this.setUserInfo(this.props.userInfo);
+                this.setState({ mode: 'D' });
+              }}
+            >
               {intlObj.get(messages.lblCancel)}
             </LinkBtnLgtGray>
             <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblSave)}</BtnDkGray>
@@ -317,7 +325,6 @@ class UserReg extends React.Component {
         </ErrorBoundary>
       );
     };
-    console.log('PARENT::render');
     return (
       <div>
         <Modal
@@ -325,7 +332,6 @@ class UserReg extends React.Component {
           visible={this.state.visible}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
-          maskClosable={true}
           width={400}
           bodyStyle={{ maxHeight: 500 }}
         >
@@ -345,45 +351,34 @@ class UserReg extends React.Component {
               <tbody>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s1">
-                      {intlObj.get(messages.titleUserEmpNo)}
-                    </label>
+                    <label htmlFor="s1">{intlObj.get(messages.titleUserEmpNo)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.empNo, 'empNocheck')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.empNo, 'empNocheck')}>
                       <ErrorBoundary>
                         <Input
+                          className="upper"
                           placeholder={intlObj.get(messages.lblUserEmpNoPlaceholder)}
                           name="empNo"
                           value={this.state.empNo}
                           onChange={this.handleChange}
-                          onBlur={() => this.state.empNo !== '' && this.getEmpCheck(this.state.empNo)}
+                          onBlur={() => this.state.empNo !== '' && this.getEmpCheck(this.state.userId, this.state.empNo)}
                           maxLength={200}
                           id="s1"
                           readOnly={this.state.mode === 'D'}
                           autoFocus // Default로 포커스를 주는 법
                         />
                       </ErrorBoundary>
-                      <span className="tipText">{this.dupCheckEmpNo(this.props.empCheck)}</span>
+                      <span className="tipText">{this.dupCheckEmpNo()}</span>
                     </FormItem>
                   </td>
                 </tr>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s2">
-                      {intlObj.get(messages.titleUserNameKor)}
-                    </label>
+                    <label htmlFor="s2">{intlObj.get(messages.titleUserNameKor)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.nameKor, '')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.nameKor, '')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblUserNamePlaceholder)}
@@ -401,14 +396,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s3">
-                      {intlObj.get(messages.titleUserNameEng)}
-                    </label>
+                    <label htmlFor="s3">{intlObj.get(messages.titleUserNameEng)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                    >
+                    <FormItem {...formItemLayout}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblUserNamePlaceholder)}
@@ -427,14 +418,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s4">
-                      {intlObj.get(messages.titleUserNameChn)}
-                    </label>
+                    <label htmlFor="s4">{intlObj.get(messages.titleUserNameChn)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                    >
+                    <FormItem {...formItemLayout}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblUserNamePlaceholder)}
@@ -456,11 +443,7 @@ class UserReg extends React.Component {
                     <label htmlFor="s5">EMAIL</label>
                   </th>
                   <td className="emailForm">
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.email, 'email')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.email, 'email')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblEmailLPlaceholder)}
@@ -479,9 +462,7 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s6">
-                      {intlObj.get(messages.titleUserStatus)}
-                    </label>
+                    <label htmlFor="s6">{intlObj.get(messages.titleUserStatus)}</label>
                   </th>
                   <td>
                     <FormItem {...formItemLayout}>
@@ -506,16 +487,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s7">
-                      {intlObj.get(messages.titleUserDept)}
-                    </label>
+                    <label htmlFor="s7">{intlObj.get(messages.titleUserDept)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.deptId, '')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.deptId, '')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblDeptPlaceholder)}
@@ -534,16 +509,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s8">
-                      {intlObj.get(messages.titleUserPSTN)}
-                    </label>
+                    <label htmlFor="s8">{intlObj.get(messages.titleUserPSTN)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.pstnId, '')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.pstnId, '')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblPSTNPlaceholder)}
@@ -562,16 +531,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s9">
-                      {intlObj.get(messages.titleUserDuty)}
-                    </label>
+                    <label htmlFor="s9">{intlObj.get(messages.titleUserDuty)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.dutyId, '')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.dutyId, '')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblDutyPlaceholder)}
@@ -590,16 +553,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s10">
-                      {intlObj.get(messages.titleUserOfficeTel)}
-                    </label>
+                    <label htmlFor="s10">{intlObj.get(messages.titleUserOfficeTel)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.officeTel, 'phone')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.officeTel, 'phone')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblOfficeTelPlaceholder)}
@@ -617,16 +574,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s11">
-                      {intlObj.get(messages.titleUserMobileTel)}
-                    </label>
+                    <label htmlFor="s11">{intlObj.get(messages.titleUserMobileTel)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.validStatus(this.state.mobileTel, 'phone')}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.validStatus(this.state.mobileTel, 'phone')}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblMobileTelPlaceholder)}
@@ -644,14 +595,10 @@ class UserReg extends React.Component {
                 </tr>
                 <tr>
                   <th>
-                    <label htmlFor="s12">
-                      {intlObj.get(messages.titleUserCOMP)}
-                    </label>
+                    <label htmlFor="s12">{intlObj.get(messages.titleUserCOMP)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                    >
+                    <FormItem {...formItemLayout}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblCompPlaceholder)}
@@ -669,9 +616,7 @@ class UserReg extends React.Component {
               </tbody>
             </table>
           </StyleUserForm>
-          <div className="buttonWrapper">
-            {button()}
-          </div>
+          <div className="buttonWrapper">{button()}</div>
         </StyleUserDtl>
       </div>
     );
@@ -679,7 +624,8 @@ class UserReg extends React.Component {
 }
 
 UserReg.propTypes = {
-  empCheck: PropTypes.int, //eslint-disable-line
+  empNoCheck: PropTypes.string, //eslint-disable-line
+  empNoFlag: PropTypes.number, //eslint-disable-line
   treeData: PropTypes.array, //eslint-disable-line
   isLoading: PropTypes.bool, //eslint-disable-line
   registUser: PropTypes.func, //eslint-disable-line
@@ -693,12 +639,12 @@ UserReg.propTypes = {
   getPSTNComboData: PropTypes.func, //eslint-disable-line
   getEmpCheck: PropTypes.func, //eslint-disable-line
   getUser: PropTypes.func, //eslint-disable-line
-  empNo: PropTypes.String, //eslint-disable-line
+  empNo: PropTypes.string, //eslint-disable-line
   userInfo: PropTypes.object, //eslint-disable-line
 };
 
 const mapDispatchToProps = dispatch => ({
-  getEmpCheck: empNo => dispatch(actions.checkEmpNo(empNo)),
+  getEmpCheck: (userId, empNo) => dispatch(actions.checkEmpNo(userId, empNo)),
   getChangeDeptTreeData: DEPT_ID => dispatch(actions.getChangeDeptTreeData(DEPT_ID)),
   getDeptComboData: () => dispatch(actions.getDeptComboData()),
   getChangeDutyTreeData: DUTY_ID => dispatch(actions.getChangeDutyTreeData(DUTY_ID)),
@@ -711,7 +657,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  empCheck: selectors.makeEmpNoCheck(),
+  empNoCheck: selectors.makeEmpNoCheck(),
+  empNoFlag: selectors.makeEmpNoFlag(),
   comboData: selectors.makeSelectComboData(),
   treeData: selectors.makeTreeData(),
   isLoading: selectors.makeIsLoading(),
