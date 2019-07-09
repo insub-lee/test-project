@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Cookies } from 'react-cookie';
 import { compose } from 'redux';
 import { intlObj, lang } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
@@ -51,15 +52,15 @@ class UserProfile extends Component {
         cookies.remove('access_token', { path: '/' });
         window.location.href = `/signin`;
         break;
-      case 'mail':
-        window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${profile.EMAIL}`);
-        break;
-      case 'todo':
-        window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${profile.EMP_NO}`);
-        break;
-      case 'hithanks':
-        window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${profile.EMP_NO}`);
-        break;
+      // case 'mail':
+      //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${profile.EMAIL}`);
+      //   break;
+      // case 'todo':
+      //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${profile.EMP_NO}`);
+      //   break;
+      // case 'hithanks':
+      //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${profile.EMP_NO}`);
+      //   break;
       case 'set':
         execPage('set');
         break;
@@ -82,7 +83,7 @@ class UserProfile extends Component {
               {intlObj.get(messages.userProfile)}
             </Button>
           </li>
-          <li>
+          {/* <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">
               {intlObj.get(messages.sendToCube)}
             </Button>
@@ -100,6 +101,11 @@ class UserProfile extends Component {
           <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">
               {intlObj.get(messages.hyThanks)}
+            </Button>
+          </li> */}
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-hithanks">
+              {intlObj.get(messages.logout)}
             </Button>
           </li>
           <li>
