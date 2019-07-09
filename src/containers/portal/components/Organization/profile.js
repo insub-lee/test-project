@@ -148,7 +148,7 @@ class Profile extends PureComponent {
             <button className="icon todo" onClick={() => this.onClick('todo')}>{intlObj.get(messages.registerTodo)}</button>
           </li> */}
           {userSetting &&
-          <li>
+          <li style={{ width: '100%', maxWidth: '100%' }}>
             <button className="icon" style={{ paddingTop: '0px', height: '25px' }}>
               <Link style={{ display: 'block', height: '100%' }} to={`/admin/adminmain/account/${loadProfile.USER_ID}`} className="icon" title="계정정보관리">계정정보관리</Link>
             </button>
@@ -202,9 +202,11 @@ class Profile extends PureComponent {
               }
               {userSetting &&
                 <tr>
-                  <BtnDkGray className="icon" style={{ paddingTop: '0px', height: '30px', marginTop: '5px' }}>
-                    <Link style={{ display: 'block', height: '100%' }} to="/admin/adminmain/account" className="icon" title="계정생성">+계정생성</Link>
-                  </BtnDkGray>
+                  <td colSpan="2" style={{ float: 'right' }}>
+                    <BtnDkGray className="icon" style={{ paddingTop: '0px', height: '30px', marginTop: '5px' }}>
+                      <Link style={{ display: 'block', height: '100%' }} to="/admin/adminmain/account" className="icon" title="계정생성">+계정생성</Link>
+                    </BtnDkGray>
+                  </td>
                 </tr>
               }
             </tbody>

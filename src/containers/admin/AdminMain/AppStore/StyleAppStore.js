@@ -54,7 +54,7 @@ const StyleAppStore = styled.div`
     }
 
     .custom-scrollbar {
-      max-height: 160px !important;
+      // max-height: 160px !important;
       border-top: 1px solid #222222;
 
       @media only screen and (max-width: 1280px) {
@@ -62,7 +62,7 @@ const StyleAppStore = styled.div`
       }
 
       > div:first-child {
-        max-height: 212px !important;
+        // max-height: 212px !important;
       }
     }
 

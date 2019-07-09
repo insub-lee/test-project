@@ -44,7 +44,8 @@ class AppTree extends Component {
       catID: [],
     };
 
-    this.props.loadTree();
+    const { siteId } = this.props;
+    this.props.loadTree(siteId);
 
     this.onClickNode = this.onClickNode.bind(this);
     this.onLoadCategory = this.onLoadCategory.bind(this);
@@ -65,9 +66,9 @@ class AppTree extends Component {
   }
 
   onClickNode(node) {
-    const type = this.props.type;
+    const { type, siteId } = this.props;
     pageNum = 30;
-    this.props.loadCategoryList(node.key, type, pageNum);
+    this.props.loadCategoryList(node.key, type, siteId, pageNum);
   }
 
   onLoadCategory(selectedList) {
@@ -122,7 +123,8 @@ class AppTree extends Component {
     pageNum = 10;
 
     if (e.target.value.trim() !== '' && e.keyCode === 13) {
-      this.props.searchCategory(e.target.value, type, pageNum);
+      const { siteId } = this.props;
+      this.props.searchCategory(e.target.value, type, siteId, pageNum);
       // console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', e.target.value)
       // this.setState({
       //   loadingCountSearch: 1,
@@ -305,6 +307,11 @@ AppTree.propTypes = {
   appTree: PropTypes.array.isRequired,
   checkBoxStat: PropTypes.bool.isRequired,
   categoryList: PropTypes.object.isRequired,
+  siteId: PropTypes.number.isRequired,
+};
+
+AppTree.defaultProps = {
+  siteId: 0,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -316,10 +323,10 @@ const mapStateToProps = createStructuredSelector({
 export function mapDispatchToProps(dispatch) {
   return {
     resetCheckbox: check => dispatch(resetCheckbox(check)),
-    searchCategory: (keyword, type, num) => dispatch(searchCategory(keyword, type, num)),
+    searchCategory: (keyword, type, siteId, num) => dispatch(searchCategory(keyword, type, siteId, num)),
     resetCategory: () => dispatch(resetCategory()),
-    loadTree: () => dispatch(loadTree()),
-    loadCategoryList: (node, type, num) => dispatch(loadCategoryList(node, type, num)),
+    loadTree: siteId => dispatch(loadTree(siteId)),
+    loadCategoryList: (node, type, siteId, num) => dispatch(loadCategoryList(node, type, siteId, num)),
   };
 }
 

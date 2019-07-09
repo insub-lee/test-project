@@ -13,32 +13,6 @@ export const getCategoryData = siteId => ({
   siteId,
 });
 
-
-export const insertCategory = (SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => ({
-  type: constants.INSERT_CATEGORY,
-  payload: {
-    SITE_ID,
-    PRNT_ID,
-    NAME_KOR,
-    NAME_ENG,
-    NAME_CHN,
-  },
-});
-
-export const updateCategory = (SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN, DSCR_KOR, DSCR_ENG, DSCR_CHN) => ({
-  type: constants.UPDATE_CATEGORY,
-  payload: {
-    SITE_ID,
-    CATG_ID,
-    NAME_KOR,
-    NAME_ENG,
-    NAME_CHN,
-    DSCR_KOR,
-    DSCR_ENG,
-    DSCR_CHN,
-  },
-});
-
 export const saveData = (tempRowInfo, categoryData) => ({
   type: constants.SAVE_DATA,
   tempRowInfo,

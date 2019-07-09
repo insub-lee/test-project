@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Link } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import Button from 'components/Button';
 import { intlObj } from 'utils/commonUtils';
 import { Input } from 'antd';
@@ -31,7 +31,8 @@ class AppModal extends PureComponent {
     if (searchword === '') {
       this.props.history.push(`${preUrl}/app/list`);
     } else if (this.searchword !== searchword) {
-      this.props.history.push(`${preUrl}/app/search/${searchword}`);
+      this.props.history.push(`${preUrl}/app/list`);
+      // this.props.history.push(`${preUrl}/app/search/${searchword}`);
     }
 
     this.searchword = searchword;
@@ -61,17 +62,16 @@ class AppModal extends PureComponent {
 
     return (
       <StyleAppBizModal>
-        {/* <ErrorBoundary>
+        {/* 왼쪽 앱 카테고리 리스트: <사용X> <ErrorBoundary>
           <AppCategory
             handleOnClick={handleOnClick}
             selectedIndex={selectedCategoryId}
             preUrl={preUrl}
           />n
         </ErrorBoundary> */}
-        <div className="topPart">
-          <div className="searchInput">
-            <Link to={`${preUrl}/app/list`}>{intlObj.get(messages.category)}</Link>
-            <Input
+        {/* <div className="topPart">
+          <div className="searchInput"> */}
+        {/* <Input
               placeholder=""
               title={intlObj.get(messages.searchBizStore)}
               // onChange={this.onChange}
@@ -82,16 +82,16 @@ class AppModal extends PureComponent {
               type="button"
               onClick={() => this.search()}
               title={intlObj.get(messages.search)}
-            />
+            /> */}
 
-            {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
-          </div>
-        </div>
+        {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
+        {/* </div>
+        </div> */}
 
         <ErrorBoundary>
           <Route path={`${preUrl}/app/list`} component={AppList} exact />
           <Route path={`${preUrl}/app/list/:CATG_ID`} component={AppList} exact />
-          <Route path={`${preUrl}/app/search/:searchword`} component={AppList} exact />
+          <Route path={`${preUrl}/app/search/:searchword`} component={AppList} />
         </ErrorBoundary>
       </StyleAppBizModal>
     );

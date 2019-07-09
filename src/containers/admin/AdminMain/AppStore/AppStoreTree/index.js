@@ -118,8 +118,10 @@ class MyPageTree extends Component {
       data.NAME_KOR = NAME_KOR;
       data.NAME_ENG = NAME_ENG;
       data.NAME_CHN = NAME_CHN;
+      
+      console.log(data);
 
-      if (data.MENU_ID) {
+      if (data.CATG_ID) {
         this.props.updateNode(rowInfo, treeData, data, this.props.history);
       } else {
         this.props.insertNode(rowInfo, treeData, data, this.props.history);
@@ -366,7 +368,7 @@ class MyPageTree extends Component {
           const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.NODE_TYPE !== 'P' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
           const isCategoryRoot = node.NODE_TYPE === 'R'; // 앱카테고리 Root
           const isEmptyFolder = node.NODE_TYPE !== 'R' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
-          const canEditName = node.NODE_TYPE === 'F' || node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P'; // 페이지O 폴더O(업무X)
+          const canEditName = node.NODE_TYPE === 'F' || node.NODE_TYPE === 'P'; // 페이지O 폴더O(업무X) 앱X
 
           let title; // 트리 노드 제목
           let buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
@@ -404,14 +406,14 @@ class MyPageTree extends Component {
                 }}
               /> : '',
             // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
-            isFolder && !isCategoryRoot ?
-              <CopyBtn
-                key="copybtn"
-                title="페이지 추가"
-                onClick={() => {
-                  this.addNode(node, 'E');
-                }}
-              /> : '',
+            // isFolder && !isCategoryRoot ?
+            //   <CopyBtn
+            //     key="copybtn"
+            //     title="페이지 추가"
+            //     onClick={() => {
+            //       this.addNode(node, 'E');
+            //     }}
+            //   /> : '',
 
             // // [메뉴노출여부 버튼]
             // isRootBizGroup ?

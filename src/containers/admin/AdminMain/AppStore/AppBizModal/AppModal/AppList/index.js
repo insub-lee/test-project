@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-
+import * as feed from 'components/Feedback/functions';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
@@ -73,7 +73,7 @@ class AppList extends Component {
     };
 
     const registApp = (APP_ID, CATG_ID) => {
-      handleRegistApp(APP_ID, CATG_ID, history);
+      feed.showConfirm('등록 하시겠습니까?', '', () => handleRegistApp(APP_ID, CATG_ID, history));
     };
 
     const registCategory = (APP_ID, CATG_ID) => {
@@ -141,8 +141,8 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-const withReducer = injectReducer({ key: 'mypageappList', reducer });
-const withSaga = injectSaga({ key: 'mypageappList', saga });
+const withReducer = injectReducer({ key: 'storeAppList', reducer });
+const withSaga = injectSaga({ key: 'storeAppList', saga });
 
 export default compose(
   withReducer,
