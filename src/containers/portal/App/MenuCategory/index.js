@@ -146,9 +146,17 @@ class MenuCategory extends React.Component {
           view={view}
           onClickNotiButton={this.onClickNotiButton}
         />
-        {this.state.showNoti ? (
-          <div className="unreadNotiContent">
-            <Scrollbars className="custom-scrollbar" autoHide autoHideTimeout={1000} autoHideDuration={100} autoHeight autoHeightMin={0} autoHeightMax={290}>
+        {this.state.showNoti && (
+          <div className="unreadNotiContent" id="sidemenu-unread">
+            <Scrollbars
+              className="custom-scrollbar"
+              autoHide
+              autoHideTimeout={1000}
+              autoHideDuration={100}
+              autoHeight
+              autoHeightMin={0}
+              autoHeightMax={290}
+            >
               <ResultsTableWrapper>
                 <Table size="small" style={{ width: '100%' }}>
                   <Table.Body>
@@ -169,8 +177,6 @@ class MenuCategory extends React.Component {
               </ResultsTableWrapper>
             </Scrollbars>
           </div>
-        ) : (
-          <div />
         )}
         <Tree
           treeData={this.props.myAppTreeData}
