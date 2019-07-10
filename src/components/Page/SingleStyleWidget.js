@@ -1389,7 +1389,8 @@ const SingleStyleWidget = styled.div`
 
 const WidgetHeader = styled.div`
   position: relative;
-  height: 35px;
+  height: 50px;
+  border-bottom: 1px solid #d2d2d2;
   // background: $/*{props => props.theme.widget.header.bgColor};
   // color: $/*{props => props.theme.widget.header.color};
 

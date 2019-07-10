@@ -5,14 +5,14 @@ const boardStyle = styled.div`
 // 위젯 tab 스타일
 .ant-tabs {
   margin: 0 10px;
+  padding: 10px 0;
 
   .ant-tabs-bar {
     margin: 0;
     // border-bottom: 1px solid #d1d2d3;  //위젯색상테마 포함됨
 
     .ant-tabs-nav-container {
-      height: 45px;
-      line-height: 0.5em;
+      height: auto;
 
       &.ant-tabs-nav-container-scrolling {
         padding-left: 10px;
@@ -45,12 +45,12 @@ const boardStyle = styled.div`
 
       .ant-tabs-nav {
         .ant-tabs-tab {
-          height: 45px;
           margin: 0;
-          padding: 0 16px;
-          font-size: 13px;
-          // color: #707070;  //위젯색상테마 포함됨
-          line-height: 45px;
+          border: 1px solid transparent;
+          border-top-left-radius: 4px;
+          border-top-right-radius: 4px;
+          font-size: .8125rem;
+          padding: .5rem 1.125rem;
 
           // &.ant-tabs-tab-active {
           //   color: #222222;  //위젯색상테마 포함됨
