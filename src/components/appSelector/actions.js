@@ -14,20 +14,20 @@ export const deleteAppList = list => (
   }
 );
 
-export const loadTree = siteId => (
+export const loadTree = isAdmin => (
   {
     type: LOAD_APP_TREE,
-    siteId,
+    isAdmin,
   }
 );
 
-export const loadCategoryList = (node, type, siteId, num) => (
+export const loadCategoryList = (node, type, isAdmin, num) => (
   {
     type: LOAD_CATEGORY_LIST_SAGA,
     payload: {
       node,
       type,
-      siteId,
+      isAdmin,
       num,
     },
   }
@@ -40,13 +40,13 @@ export const resetCheckbox = check => (
   }
 );
 
-export const searchCategory = (keyword, type, siteId, num) => (
+export const searchCategory = (keyword, type, isAdmin, num) => (
   {
     type: SEARCH_CATEGORY_LSIT_SAGA,
     payload: {
     keyword,
     type,
-    siteId,
+    isAdmin,
     num,
     },
   }

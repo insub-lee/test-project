@@ -87,7 +87,6 @@ export function* insertNode(payload) {
     SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN,
   } = data;
 
-  // 앱 카테고리 수정
   if (data.NODE_TYPE === 'F') {
     const param = {
       SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN,
@@ -110,39 +109,36 @@ export function* insertNode(payload) {
       feed.error(`${intlObj.get(messages.cateInsertFail)}`);
     }
   } else if (data.NODE_TYPE === 'P') { // 페이지 추가
-    const response = yield call(Axios.post, '/api/bizstore/v1/mypage/insertMenu', { data });
-    const { code, resultNode } = response;
-
-    // resultNode에는 SNGL_APP_YN 값이 있음...
-    // 이를 APP_YN으로 고쳐줘야함
-    resultNode.APP_YN = resultNode.SNGL_APP_YN;
-    delete resultNode.SNGL_APP_YN;
+    const param = {
+      SITE_ID, NAME_KOR, NAME_ENG, NAME_CHN, CATG_ID: PRNT_ID,
+    };
+    const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/registPageApp', { param });
+    const {
+      code, resultCategoryData, pageId, appId,
+    } = response;
 
     if (code === 200) {
-      const isRoot = node.key === -1;
-      let newCategoryData = [];
-      let newNode = {};
+      message.success('앱 등록에 성공 하였습니다.', 3);
+      // update Tree
+      const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
+      const store = yield select(state => state.get('appstore'));
+      const newCategoryData = result;
+      const oldCategoryData = store.get('categoryData').toJS();
 
-      if (isRoot) {
-        const path = [resultNode.PRNT_ID, resultNode.key];
-        newNode = { ...resultNode, path };
-        newCategoryData = treeData.concat(newNode);
-      } else {
-        const path = [...node.path, resultNode.key];
-        newNode = { ...resultNode, path };
-        newCategoryData = treeFunc.addNode(rowInfo, newNode, treeData);
-      }
+      // eslint-disable-next-line no-unused-vars
+      const selectedIndex = `P-${appId}`;
 
-      if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-        history.push(`/admin/adminmain/appstore/page/${newNode.PAGE_ID}`);
-      }
-
+      treeFunc.mergeArray(newCategoryData, oldCategoryData);
       yield put({
         type: constants.SET_CATEGORY_DATA,
         categoryData: fromJS(newCategoryData),
-        selectedIndex: resultNode.key,
-        tempRowInfo: { node: newNode },
       });
+
+      if (pageId && pageId !== -1) {
+        history.push(`/admin/adminmain/appstore/page/${pageId}`);
+      }
+    } else if (code === 500) {
+      feed.error('앱 등록에 실패 하였습니다.');
     }
     // else {
     //   console.log('error?');
@@ -158,7 +154,7 @@ export function* updateNode(payload) {
   // const { node } = rowInfo;
 
   const {
-    SITE_ID, NAME_KOR, NAME_ENG, NAME_CHN, CATG_ID,
+    SITE_ID, NAME_KOR, NAME_ENG, NAME_CHN, CATG_ID, APP_ID,
   } = data;
 
   // 앱 카테고리 수정
@@ -166,8 +162,6 @@ export function* updateNode(payload) {
     const param = {
       SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN,
     };
-    const siteId = SITE_ID;
-    const catgId = CATG_ID;
     const response = yield call(Axios.post, '/api/admin/v1/common/updatecategory', param);
     const { code } = response;
     if (code === 200) {
@@ -179,36 +173,40 @@ export function* updateNode(payload) {
       );
       yield put({
         type: constants.GET_CATEGORY_DATA,
-        siteId,
-        selectedIndex: `F-${catgId}`,
+        siteId: SITE_ID,
+        selectedIndex: `F-${CATG_ID}`,
       });
     } else {
       feed.error(`${intlObj.get(messages.cateUpdateFail)}`);
     }
   } else if (data.NODE_TYPE === 'P') { // 페이지 (앱은 수정이 없음)
-    const langGubun = lang.getLocale();
+    // const { node } = rowInfo;
 
-    const { node } = rowInfo;
-
-    const response = yield call(Axios.post, '/api/bizstore/v1/mypage/updateMenu', { data, langGubun });
-    const { code, appInfo } = response;
+    const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatePageApp', { data });
+    const { code, resultCategoryData } = response;
 
     if (code === 200) {
-      const newNode = {
-        ...node, ...appInfo, title: lang.get('NAME', appInfo),
-      }; // 병합
-      const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
-      const newCategoryData = treeFunc.editNodeByKey(rowInfoN, treeData);
+      message.success('앱 정보를 수정 하였습니다.', 3);
+      // update Tree
+      const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
+      const store = yield select(state => state.get('appstore'));
+      const newCategoryData = result;
+      const oldCategoryData = store.get('categoryData').toJS();
 
+      treeFunc.mergeArray(newCategoryData, oldCategoryData);
       yield put({
         type: constants.SET_CATEGORY_DATA,
         categoryData: fromJS(newCategoryData),
-        selectedIndex: newNode.key,
       });
 
-      if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-        history.push(`/admin/adminmain/appstore/page/${newNode.PAGE_ID}`);
-      }
+      yield put({
+        type: constants.GET_CATEGORY_DATA,
+        siteId: SITE_ID,
+        selectedIndex: `P-${APP_ID}`,
+      });
+      
+    } else {
+      feed.error('앱 정보 수정에 실패 하였습니다.');
     }
     // else {
     //   console.log('error?');
@@ -248,7 +246,6 @@ export function* deleteNode(payload) {
     } else {
       feed.error(`${intlObj.get(messages.cateDeleteFail2)}`);
     }
-
   } else if (node.NODE_TYPE === 'A') {
     const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteApp', {
       SITE_ID: Number(node.SITE_ID),

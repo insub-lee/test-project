@@ -261,6 +261,7 @@ function changeWGCount(mapList, CATG_ID, APP_ID, WG_COUNT) {
 }
 
 /* 앱 등록 */
+/*
 export function* registApp(payload) {
   const { APP_ID, CATG_ID } = payload;
   const langGubun = lang.getLocale();
@@ -281,7 +282,7 @@ export function* registApp(payload) {
     // feed.error(`${intlObj.get(messages.appInputError)}`);
   }
 }
-
+*/
 /* 카테고리 포함 앱 등록 */
 /*
 export function* registCategory(payload) {
@@ -335,7 +336,7 @@ export function* registAppModal(payload) {
   // get PRNT_ID
   const parentStore = yield select(state => state.get('appstore'));
   const { node } = parentStore.get('tempRowInfo');
-  const CATG_ID = node && node.CATG_ID !== -999 ? node.CATG_ID : -1;
+  const CATG_ID = node && node.CATG_ID !== -999 && node.NODE_TYPE !== 'R' ? node.CATG_ID : -1;
   if (CATG_ID < 1) {
     feed.error('앱 카테고리를 선택해 주세요.');
     return;
@@ -467,7 +468,7 @@ export default function* rootSaga() {
   yield takeLatest(constants.GET_MAPLIST_ALL, getMapListAll);
   yield takeLatest(constants.GET_MAPLIST_SEARCH, getMapListSearch);
   yield takeLatest(constants.GET_MAPLIST_MORE, getMapListMore);
-  yield takeLatest(constants.REGIST_APP, registApp);
+  // yield takeLatest(constants.REGIST_APP, registApp);
   // yield takeLatest(constants.REGIST_CATEGORY, registCategory);
   // yield takeLatest(constants.REGISTER_BIZ, registerBiz);
 

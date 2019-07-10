@@ -38,7 +38,7 @@ class Category extends React.Component {
       APP_NAME: '',
       selectedIndex: -1,
       PRNT_ID: 0,
-      SITE_ID: 1,
+      SITE_ID: -1,
       NAME_KOR: '',
       NAME_ENG: '',
       NAME_CHN: '',
@@ -57,8 +57,8 @@ class Category extends React.Component {
       orgDscrEng: '',
       orgDscrChn: '',
     };
-    this.props.initCategoryData(1);
-    this.props.getCategoryComboList();
+    // this.props.initCategoryData(1);
+    // this.props.getCategoryComboList();
   }
 
   componentWillMount() {
@@ -297,15 +297,15 @@ class Category extends React.Component {
     return (
       <div>
         <StyleCategory>
-          <h3 className="pageTitle list">AppCategory 관리</h3>
+          <h3 className="pageTitle list">시스템앱 카테고리 관리</h3>
           {/* <div style={{ display: 'inline-block', width: '100%', minHeight: 'calc(100vh - 200px)' }}> */}
           {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
           <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
             <div className="categoryTreeWrapper">
               <div>
-                <Select defaultValue={1} onChange={this.onChangeSite}>
-                  {/* <Option value={0}>공통</Option> */}
-                  {comboOptions(this.props.setCategoryComboList)}
+                <Select defaultValue={-1} onChange={this.onChangeSite}>
+                  {<Option value={-1}>시스템</Option>}
+                  {/* {comboOptions(this.props.setCategoryComboList)} */}
                 </Select>
                 <MyAppTree
                   type={type}
