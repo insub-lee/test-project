@@ -9,7 +9,7 @@ class AppSelectorWrapper extends React.PureComponent {
       closeModal,
       show,
       type,
-      siteId,
+      isAdmin,
     } = this.props;
 
     return (
@@ -22,7 +22,7 @@ class AppSelectorWrapper extends React.PureComponent {
               closeModal={closeModal}
               show={show}
               type={type}
-              siteId={siteId}
+              isAdmin={isAdmin}
             />
           :
           ''
@@ -37,11 +37,11 @@ AppSelectorWrapper.propTypes = {
   closeModal: PropTypes.func.isRequired,
   show: PropTypes.bool.isRequired,
   type: PropTypes.string.isRequired,
-  siteId: PropTypes.number.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
 };
 
 AppSelectorWrapper.defaultProps = {
-  siteId: 0,
+  isAdmin: false,
 };
 
 export default AppSelectorWrapper;

@@ -118,10 +118,10 @@ class MyPageTree extends Component {
       data.NAME_KOR = NAME_KOR;
       data.NAME_ENG = NAME_ENG;
       data.NAME_CHN = NAME_CHN;
-      
+
       console.log(data);
 
-      if (data.CATG_ID) {
+      if (data.key) {
         this.props.updateNode(rowInfo, treeData, data, this.props.history);
       } else {
         this.props.insertNode(rowInfo, treeData, data, this.props.history);
@@ -367,7 +367,7 @@ class MyPageTree extends Component {
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.NODE_TYPE !== 'P' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
           const isCategoryRoot = node.NODE_TYPE === 'R'; // 앱카테고리 Root
-          const isEmptyFolder = node.NODE_TYPE !== 'R' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
+          const canDeleteNode = node.NODE_TYPE !== 'R' && (!node.children || node.children.length === 0) && node.NODE_TYPE !== 'P'; // 업무그룹X 하위노드존재X 페이지삭제불가
           const canEditName = node.NODE_TYPE === 'F' || node.NODE_TYPE === 'P'; // 페이지O 폴더O(업무X) 앱X
 
           let title; // 트리 노드 제목
@@ -406,14 +406,14 @@ class MyPageTree extends Component {
                 }}
               /> : '',
             // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
-            // isFolder && !isCategoryRoot ?
-            //   <CopyBtn
-            //     key="copybtn"
-            //     title="페이지 추가"
-            //     onClick={() => {
-            //       this.addNode(node, 'E');
-            //     }}
-            //   /> : '',
+            isFolder && !isCategoryRoot ?
+              <CopyBtn
+                key="copybtn"
+                title="페이지 추가"
+                onClick={() => {
+                  this.addNode(node, 'P');
+                }}
+              /> : '',
 
             // // [메뉴노출여부 버튼]
             // isRootBizGroup ?
@@ -437,7 +437,7 @@ class MyPageTree extends Component {
                 }}
               /> : '',
             // [메뉴삭제 버튼]
-            isEmptyFolder ?
+            canDeleteNode ?
               <RemoveBtn
                 key="removeBtn"
                 title="삭제"
@@ -445,7 +445,7 @@ class MyPageTree extends Component {
                   let message = '';
                   if (node.NODE_TYPE === 'F') { // 폴더
                     message = messages.deleteFolder;
-                  } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') { // 앱
+                  } else if (node.NODE_TYPE === 'A') { // 앱
                     message = messages.deleteApp;
                   }
                   const messageStr = `${node.title} ${intlObj.get(message)}`;

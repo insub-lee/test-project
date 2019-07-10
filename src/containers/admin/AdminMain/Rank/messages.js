@@ -27,31 +27,31 @@ export default defineMessages({
   },
   rankInsert: {
     id: 'admin.AdminMain.Rank.rankInsert',
-    defaultMessage: '직위 등록에 성공했습니다.',
+    defaultMessage: '직급 등록에 성공했습니다.',
   },
   rankInsertFail: {
     id: 'admin.AdminMain.Rank.rankInsertFail',
-    defaultMessage: '직위 등록에 실패했습니다.',
+    defaultMessage: '직급 등록에 실패했습니다.',
   },
   rankUpdate: {
     id: 'admin.AdminMain.Rank.rankUpdate',
-    defaultMessage: '직위 수정에 성공했습니다.',
+    defaultMessage: '직급 수정에 성공했습니다.',
   },
   rankUpdateFail: {
     id: 'admin.AdminMain.Rank.rankUpdateFail',
-    defaultMessage: '직위 수정에 실패했습니다.',
+    defaultMessage: '직급 수정에 실패했습니다.',
   },
   rankDelete: {
     id: 'admin.AdminMain.Rank.rankDelete',
-    defaultMessage: '직위 삭제에 성공했습니다.',
+    defaultMessage: '직급 삭제에 성공했습니다.',
   },
   rankDeleteFail1: {
     id: 'admin.AdminMain.Rank.rankDeleteFail1',
-    defaultMessage: '하위 직위가 있는 경우 삭제가 불가능 합니다.',
+    defaultMessage: '하위 직급가 있는 경우 삭제가 불가능 합니다.',
   },
   rankDeleteFail2: {
     id: 'admin.AdminMain.Rank.rankDeleteFail2',
-    defaultMessage: '직위 삭제에 실패했습니다.',
+    defaultMessage: '직급 삭제에 실패했습니다.',
   },
   chkInput: {
     id: 'admin.AdminMain.Rank.chkInput',
