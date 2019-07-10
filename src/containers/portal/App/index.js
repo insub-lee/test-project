@@ -18,7 +18,7 @@ import { basicPath } from 'containers/common/constants';
 import update from 'react-addons-update';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
-import { isEqual } from 'utils/helpers';
+// import { isEqual } from 'utils/helpers';
 import Fullscreen from 'components/Fullscreen';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
@@ -115,8 +115,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        /* eslint-disable  */
-        dockAppList.forEach(o => {
+        dockAppList.forEach((o) => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -125,7 +124,6 @@ class App extends React.PureComponent {
             EXEC_PAGE_IDS.push(o.PAGE_ID);
           }
         });
-        /* eslint-disable  */
         console.log('$$$ 2.EXEC_PAGE_IDS', EXEC_PAGE_IDS);
         handleGetDataForApps(EXEC_PAGE_IDS);
         this.isMakingApps = true;
@@ -153,7 +151,7 @@ class App extends React.PureComponent {
         return;
       }
 
-      if (!isEqual(dockAppList, prevProps.dockAppList)) {
+      if (dockAppList !== prevProps.dockAppList) {
         if (prevProps.dockAppList.length === dockAppList.length) {
           // 독 고정상태에서 독 삭제의 경우 apps에서도 지워줘야함
           if (deletedDockPageId && deletedDockPageId !== prevProps.deletedDockPageId) {
@@ -161,7 +159,8 @@ class App extends React.PureComponent {
             this.deleteApps();
             return;
           } else if (executedDockPageId && executedDockPageId !== prevProps.executedDockPageId) {
-            const index = Object.keys(apps).findIndex(o => apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
+            const index = Object.keys(apps).findIndex(o =>
+              apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
 
             if (index === -1) {
               console.log('$$$ 8-5 현재 독에 고정되어있으면서 미실행인 독아이템을 실행');
@@ -205,25 +204,11 @@ class App extends React.PureComponent {
         }
       }
 
-      if (Object.keys(setMyMenuData).length !== 0 && !isEqual(prevProps.setMyMenuData, setMyMenuData) && setMyMenuData.isCssTarget && apps.length !== 0) {
+      if (Object.keys(setMyMenuData).length !== 0
+        && prevProps.setMyMenuData !== setMyMenuData
+        && setMyMenuData.isCssTarget
+        && apps.length !== 0) {
         console.log('$$$ 11.setMyMenuData가 새로 들어옴');
-
-        // 실행되야하는 앱이 apps에 dom으로 생성되어있지 않을 경우 새로 생성
-        const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
-        if (index === -1) {
-          this.addNewApps(
-            setMyMenuData,
-            selectedApp,
-            isUnreadCnt,
-            this.execPage,
-            this.execMenu,
-            this.show,
-            this.onReload,
-            this.setIsSpinnerShow,
-            isPreviewPage,
-          );
-          return;
-        }
 
         const appsCopy = apps.slice();
         appsCopy.forEach((o, i) => {
@@ -253,6 +238,7 @@ class App extends React.PureComponent {
         const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
         setMyMenuDataCopy.isCssTarget = false;
 
+        const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
         const appsCopy2 = update(appsCopy, {
           [index]: {
             children: {

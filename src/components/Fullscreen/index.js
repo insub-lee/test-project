@@ -176,9 +176,9 @@ class FullScreen extends Component {
     let width = '100%';
     if (view !== 'Tablet' && view !== 'Mobile' && dockFixedYn === 'Y') {
       /*
-                현재 내부서비스의 경우 100%에서 독 넓이인 90px을 뺀 수치를 width값으로 두면 8px정도가 벌어짐..
-                임시 방편으로 아래와 같이 처리..
-            */
+        현재 내부서비스의 경우 100%에서 독 넓이인 90px을 뺀 수치를 width값으로 두면 8px정도가 벌어짐..
+        임시 방편으로 아래와 같이 처리..
+      */
       if (dockIconType === 'MAX') {
         // width = `calc(100% - ${setMyMenuData.INTL_TYPE === 'Y' ? '98px' : '90px'})`;
         width = `calc(100% - ${setMyMenuData.INTL_TYPE === 'Y' ? '98px' : '155px'})`;
@@ -190,7 +190,7 @@ class FullScreen extends Component {
       <div
         className={`FullScreen ${enabled ? 'Active' : ''}`}
         ref={this.setNode}
-        style={enabled ? { ...style.unActive, width } : { ...style.active }}
+        style={enabled ? { ...style.active } : { ...style.unActive, width }}
       >
         {this.props.children}
       </div>
