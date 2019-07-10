@@ -1,35 +1,24 @@
 import React, { Component } from 'react';
 import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 import { Link } from 'react-router-dom';
-import { Route } from 'react-router-dom';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { lang } from 'utils/commonUtils';
 import Input from 'components/Input';
-import Widget from 'components/appSetting';
 import ScrollBar from 'react-custom-scrollbars';
-import { ModalContainer, ModalRoute } from 'react-router-modal';
 
 import 'react-router-modal/css/react-router-modal.css';
 
 import CustomTheme from './theme';
-import { Badge, Button, Switch, Tooltip } from 'antd';
+import { Badge, Button } from 'antd';
 import './app.css';
-// import StoreTree from '../StoreTree';
-import icon_store from 'images/portal/icon-store.png';
-import nextIcon from 'images/portal/icon-store.png';
+
 import icon_unlock from 'images/portal/icon-unlock.png';
 import icon_lock from 'images/portal/icon_lock.png';
 import IconGo from 'images/portal/icon_go.png';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
-
-import Main from '../../UserStore/AppMain/MyPage/Main';
-import AppInfo from '../../UserStore/AppMain/MyPage/AppInfo';
-import PageInfo from '../../UserStore/AppMain/MyPage/PageInfo';
-import AppBizModal from '../../UserStore/AppMain/MyPage/AppBizModal';
-import BizDetail from '../../UserStore/AppMain/Biz/BizDetail';
-import BizMenuList from '../../UserStore/AppMain/Biz/BizMenuList';
+import WorkTimeLine from '../../WorkTimeLine';
 
 class Tree extends Component {
   constructor(props) {
@@ -156,22 +145,6 @@ class Tree extends Component {
           {this.state.editTree ? (
             <div style={{ padding: '10px' }}>
               <MyPage history={this.props.history} />
-              {/* <MyPageTree
-                treeData={this.props.myAppStoreTreeData}
-                moveNode={this.props.moveNode}
-                updateMymenuDisp={this.props.updateMymenuDisp}
-                showNoti={this.props.showNoti}
-                // selectedIndex={selectedIndex}
-                onClick={this.handleTreeOnClick}
-                canDrag={true}
-                canDrop={true}
-                // insertNode={insertNode}
-                // updateNode={updateNode}
-                // saveData={saveData}
-                // moveNode={moveNode}
-                // deleteNode={deleteNode}
-                // history={history}
-              /> */}
             </div>
           ) : (
             <div
@@ -220,9 +193,16 @@ class Tree extends Component {
                   ref={ref => {
                     this.tree = ref;
                   }}
-                  // onlyExpandSearchedNodes={true}
                 />
               </ScrollBar>
+            </div>
+          )}
+          {!editTree && (
+            <div>
+              <div className="searchWrapper">
+                <p>타임라인</p>
+              </div>
+              <WorkTimeLine />
             </div>
           )}
         </div>
@@ -242,7 +222,6 @@ Tree.propTypes = {
   saveData: PropTypes.func.isRequired,
   showNoti: PropTypes.bool.isRequired,
   // 수정모드일때 사용하는 func, type 정의
-  selectedIndex: PropTypes.number.isRequired,
 };
 
 Tree.defaultProps = {

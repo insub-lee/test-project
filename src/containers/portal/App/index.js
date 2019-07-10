@@ -18,10 +18,12 @@ import { basicPath } from 'containers/common/constants';
 import update from 'react-addons-update';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
+// import { isEqual } from 'utils/helpers';
+import Fullscreen from 'components/Fullscreen';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
 import * as selectors from './selectors';
-import Fullscreen from './fullscreen';
+// import Fullscreen from './fullscreen';
 import themes from '../../../config/themes/index';
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
@@ -37,6 +39,7 @@ import UserStore from './UserStore';
 import RodalPage from '../../../components/Rodal';
 import Page from '../../../components/Page';
 import MenuCategory from './MenuCategory';
+import AppsRouter from '../../../apps/appsRouter';
 
 const wrap = dragDropContext(HTML5Backend);
 const { Content } = Layout;
@@ -112,8 +115,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        /* eslint-disable  */
-        dockAppList.forEach(o => {
+        dockAppList.forEach((o) => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -122,7 +124,6 @@ class App extends React.PureComponent {
             EXEC_PAGE_IDS.push(o.PAGE_ID);
           }
         });
-        /* eslint-disable  */
         console.log('$$$ 2.EXEC_PAGE_IDS', EXEC_PAGE_IDS);
         handleGetDataForApps(EXEC_PAGE_IDS);
         this.isMakingApps = true;
@@ -158,7 +159,8 @@ class App extends React.PureComponent {
             this.deleteApps();
             return;
           } else if (executedDockPageId && executedDockPageId !== prevProps.executedDockPageId) {
-            const index = Object.keys(apps).findIndex(o => apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
+            const index = Object.keys(apps).findIndex(o =>
+              apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
 
             if (index === -1) {
               console.log('$$$ 8-5 현재 독에 고정되어있으면서 미실행인 독아이템을 실행');
@@ -202,25 +204,11 @@ class App extends React.PureComponent {
         }
       }
 
-      if (Object.keys(setMyMenuData).length !== 0 && prevProps.setMyMenuData !== setMyMenuData && setMyMenuData.isCssTarget && apps.length !== 0) {
+      if (Object.keys(setMyMenuData).length !== 0
+        && prevProps.setMyMenuData !== setMyMenuData
+        && setMyMenuData.isCssTarget
+        && apps.length !== 0) {
         console.log('$$$ 11.setMyMenuData가 새로 들어옴');
-
-        // 실행되야하는 앱이 apps에 dom으로 생성되어있지 않을 경우 새로 생성
-        const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
-        if (index === -1) {
-          this.addNewApps(
-            setMyMenuData,
-            selectedApp,
-            isUnreadCnt,
-            this.execPage,
-            this.execMenu,
-            this.show,
-            this.onReload,
-            this.setIsSpinnerShow,
-            isPreviewPage,
-          );
-          return;
-        }
 
         const appsCopy = apps.slice();
         appsCopy.forEach((o, i) => {
@@ -250,6 +238,7 @@ class App extends React.PureComponent {
         const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
         setMyMenuDataCopy.isCssTarget = false;
 
+        const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
         const appsCopy2 = update(appsCopy, {
           [index]: {
             children: {
@@ -291,7 +280,7 @@ class App extends React.PureComponent {
       }
     }
   }
-  /* eslint-disable */
+
   onReload = item => {
     const { handleReload } = this.props;
     handleReload(item);
@@ -306,21 +295,23 @@ class App extends React.PureComponent {
       isSpinnerShow: false,
     });
   };
+
   setOpen = () => {
-    const { open } = this.state;
-    this.setState({
-      open: !open,
-    });
+    this.setState(prevState => ({
+      open: !prevState.open,
+    }));
   };
+
   setMenuOpen = () => {
-    const { headerMenuOpen } = this.state;
-    this.setState({
-      headerMenuOpen: !headerMenuOpen,
-    });
+    this.setState(prevState => ({
+      headerMenuOpen: !prevState.headerMenuOpen,
+    }));
   };
+
   setClose = () => {
     this.setState({ visible: false });
   };
+
   setMenuClose = () => {
     this.setState({
       open: false,
@@ -491,6 +482,7 @@ class App extends React.PureComponent {
   hideMenuButtonClick = () => {
     this.onSetOpen(false);
   };
+
   execMenu = (PAGE_ID, TARGET, node) => {
     const { handleExecMenu } = this.props;
     handleExecMenu(PAGE_ID, TARGET, node);
@@ -506,6 +498,7 @@ class App extends React.PureComponent {
       });
     }
   };
+
   execPage = (node, type) => {
     const { dockAppList } = this.props;
     if (node === 'common') {
@@ -556,11 +549,11 @@ class App extends React.PureComponent {
       }
     }
   };
+
   closeSetting = () => {
-    const { set } = this.state;
-    this.setState({
-      set: !set,
-    });
+    this.setState(prevState => ({
+      set: !prevState.set,
+    }));
   };
 
   show = (boardList, tabNum) => {
@@ -575,19 +568,16 @@ class App extends React.PureComponent {
   goStore = () => {
     this.props.history.push(`/${basicPath.PORTAL}/store`);
     this.setState({ open: false });
-    return;
   };
 
   goSettings = () => {
     this.props.history.push(`/${basicPath.PORTAL}/settings`);
     this.setState({ open: false });
-    return;
   };
 
   goBusinessReg = () => {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
     this.setState({ open: false });
-    return;
   };
 
   render() {
@@ -757,7 +747,6 @@ class App extends React.PureComponent {
                 fixDockItem={handleFixDockItem}
                 unfixDockItem={handleUnfixDockItem}
                 // 모바일 Dock ContextMenu 플래그 설정
-
                 view={view}
                 setIsCloseToFalse={this.setIsCloseToFalse}
                 setMyMenuData={setMyMenuData}
@@ -800,7 +789,7 @@ class App extends React.PureComponent {
                   />
                 </div>
               </Fullscreen>
-              {setMyMenuData.APP_YN !== 'Y' ? (
+              {setMyMenuData.APP_YN !== 'Y' && (
                 <Footer
                   style={{
                     background: 'transparent',
@@ -809,8 +798,6 @@ class App extends React.PureComponent {
                   dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
                   view={view}
                 />
-              ) : (
-                <div />
               )}
               <UserDock
                 execPage={this.execPage}
@@ -845,7 +832,7 @@ class App extends React.PureComponent {
                 }}
                 // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
               >
-                {this.state.show === true ? <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} /> : <div />}
+                {this.state.show === true && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
               </Rodal>
             </AppWrapper>
           </Scrollbars>

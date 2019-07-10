@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-// import { Route } from 'react-router-dom';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -20,52 +19,25 @@ import { AppIntroduction } from '../../../AppDetail/AppScreenshot/StyleAppScreen
 import AppQna from '../../../AppDetail/AppQna/index';
 
 class BizInfo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      BIZGRP_ID: '',
-    };
+  componentDidMount() {
+    const { match: { params: { BIZGRP_ID } }, handleGetBizInfo, handleGetBizFeedBackList } = this.props;
+    handleGetBizInfo(BIZGRP_ID);
+    handleGetBizFeedBackList(BIZGRP_ID, 'F');
+    handleGetBizFeedBackList(BIZGRP_ID, 'Q');
   }
 
-  componentWillMount() {
-    const { match } = this.props;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
-
-    this.props.handleGetBizInfo(BIZGRP_ID);
-    this.props.handleGetBizFeedBackList(BIZGRP_ID, 'F');
-    this.props.handleGetBizFeedBackList(BIZGRP_ID, 'Q');
-
-    this.setState({
-      BIZGRP_ID,
-    });
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { match } = nextProps;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
-
-    if (BIZGRP_ID
-      && this.state.BIZGRP_ID !== BIZGRP_ID) {
-      this.props.handleGetBizInfo(BIZGRP_ID);
-      this.props.handleGetBizFeedBackList(BIZGRP_ID, 'F');
-      this.props.handleGetBizFeedBackList(BIZGRP_ID, 'Q');
-      this.setState({
-        BIZGRP_ID,
-      });
+  componentDidUpdate(prevProps) {
+    const { match: { params: { BIZGRP_ID: prevBizgrpId } } } = prevProps;
+    const { match: { params: { BIZGRP_ID: currentBizgrpId } }, handleGetBizInfo, handleGetBizFeedBackList } = this.props;
+    if (currentBizgrpId && currentBizgrpId !== prevBizgrpId) {
+      handleGetBizInfo(currentBizgrpId);
+      handleGetBizFeedBackList(currentBizgrpId, 'F');
+      handleGetBizFeedBackList(currentBizgrpId, 'Q');
     }
   }
 
   render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
-
-    const {
-      bizInfo,
-    } = this.props;
-
+    const { match: { params: { BIZGRP_ID } }, bizInfo } = this.props;
     return (
       <div>
         <AppIntroduction
@@ -84,7 +56,6 @@ class BizInfo extends Component {
           appId={BIZGRP_ID}
           gubun="b"
         />
-
       </div>
     );
   }
@@ -98,16 +69,13 @@ BizInfo.propTypes = {
   handleGetBizFeedBackList: PropTypes.func.isRequired,
 };
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    handleGetBizInfo: BIZGRP_ID => dispatch(actions.getBizInfo(BIZGRP_ID)),
-    handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) =>
-      dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
-  };
-}
+const mapDispatchToProps = dispatch => ({
+  handleGetBizInfo: BIZGRP_ID => dispatch(actions.getBizInfo(BIZGRP_ID)),
+  handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) =>
+    dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
+});
 
 const mapStateToProps = createStructuredSelector({
-  // 테스트
   bizInfo: selectors.makgeBizInfo(),
 });
 

@@ -187,3 +187,7 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 .ag-root ::-webkit-scrollbar-thumb:window-inactive {
 	background: rgba(241, 236, 236, 0.4); 
 }
+
+.rdg-selected {
+	border: none !important;
+}

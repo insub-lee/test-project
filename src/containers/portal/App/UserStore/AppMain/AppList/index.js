@@ -26,48 +26,34 @@ import ItemList from './ItemList';
 import AppCategory from '../../components/AppCategory';
 
 class AppList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   componentDidMount() {
     // param - ALL / ONE
-    const { match, loadingOn } = this.props;
-    const { params } = match;
-    const { CATG_ID, searchword, limit } = params;
-
+    const { match: { params: { CATG_ID, searchword, limit } }, loadingOn, handleInitPage } = this.props;
     loadingOn();
-
     if (CATG_ID) {
-      this.CATG_ID = Number(CATG_ID);
-      this.props.handleInitPage('ONE', this.CATG_ID, limit);
+      handleInitPage('ONE', Number(CATG_ID), limit);
     } else if (searchword) {
-      this.CATG_ID = -1;
-      this.props.handleInitPage('SEARCH', searchword);
+      handleInitPage('SEARCH', searchword);
     } else {
-      this.CATG_ID = -1;
-      this.props.handleInitPage('ALL');
+      handleInitPage('ALL');
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { match, loadingOn } = nextProps;
-    const { params } = match;
-    const { CATG_ID, searchword } = params;
-
-    if (searchword && nextProps.searchword && nextProps.searchword !== '' && nextProps.searchword !== searchword) {
+  componentDidUpdate(prevProps) {
+    const {
+      match: { params: { CATG_ID: currentCtagId, searchword: currentSearchWord } }, loadingOn, handleGetMapAppListSearch, handleGetMapListOne,
+    } = this.props;
+    const { match: { params: { CATG_ID: prevCtagId, searchword: prevSearchWord } } } = prevProps;
+    if (currentSearchWord && currentSearchWord !== '' && currentSearchWord !== prevSearchWord) {
       loadingOn();
-      this.props.handleGetMapAppListSearch(searchword);
-    } else if (CATG_ID && this.CATG_ID !== -1 && this.CATG_ID !== Number(CATG_ID)) {
-      this.CATG_ID = Number(CATG_ID);
+      handleGetMapAppListSearch(currentSearchWord);
+    } else if (currentCtagId && Number(prevCtagId) !== -1 && prevCtagId !== currentCtagId) {
       loadingOn();
-      this.props.handleGetMapListOne(this.CATG_ID);
+      handleGetMapListOne(Number(currentCtagId));
     }
   }
 
   render() {
-    console.debug('>>>>>>>>props: ', this.props);
     const {
       initType,
       mapList,
@@ -76,34 +62,21 @@ class AppList extends Component {
       handleRegistApp,
       handleRegistCategory,
       handleRegisterBiz,
-
       history,
-      changeSearchword,
       loadingOn,
       currentView,
+      handleOnClick,
+      handleGetMapListOneWithHistory,
+      handleGoBack,
+      match: { params: { CATG_ID } },
     } = this.props;
-    /* eslint-disable */
-    const handleOnClick = node => {
-      this.props.history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
-      changeSearchword('');
-      window.scrollTo(0, 0);
-    };
-    const handleGetMapListOne = key => {
-      this.props.history.push(`/portal/store/appMain/bizStore/app/list/${key}`);
-      changeSearchword('');
-      window.scrollTo(0, 0);
-    };
-    const handleGoBack = () => {
-      changeSearchword('');
-      history.goBack();
-    };
 
     return (
       <div className="appListWrapper">
         <BackTop />
         <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
         <ErrorBoundary>
-          <AppCategory handleOnClick={handleOnClick} selectedIndex={this.CATG_ID} preUrl="/portal/store/appMain/bizStore" />
+          <AppCategory handleOnClick={node => handleOnClick(node, history)} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
         </ErrorBoundary>
 
         <NavList className="navTabs">
@@ -124,15 +97,15 @@ class AppList extends Component {
             type={initType}
             mapList={mapList}
             searchword={searchword}
-            getMapListOne={handleGetMapListOne}
-            getMapListMore={key => {
+            getMapListOne={key => handleGetMapListOneWithHistory(key, history)}
+            getMapListMore={(key) => {
               loadingOn();
               handleGetMapAppListMore(key);
             }}
             registApp={handleRegistApp}
             registCategory={handleRegistCategory}
             registBiz={handleRegisterBiz}
-            goBack={handleGoBack}
+            goBack={() => handleGoBack(history)}
             currentView={currentView}
           />
         </ErrorBoundary>
@@ -156,34 +129,40 @@ AppList.propTypes = {
   handleRegistApp: PropTypes.func.isRequired,
   handleRegistCategory: PropTypes.func.isRequired,
   handleRegisterBiz: PropTypes.func.isRequired,
-  changeSearchword: PropTypes.func.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
-  appBizGubun: PropTypes.func.isRequired,
   currentView: PropTypes.string.isRequired,
+  handleOnClick: PropTypes.func.isRequired,
+  handleGetMapListOneWithHistory: PropTypes.func.isRequired,
+  handleGoBack: PropTypes.func.isRequired,
 };
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    handleInitPage: (initType, param) => dispatch(actions.initPage(initType, param)),
-
-    handleGetMapListOne: key => dispatch(actions.getMapListOne(key)),
-    handleGetMapAppListMore: key => dispatch(actions.getMapListMore(key)),
-
-    handleRegistApp: (APP_ID, CATG_ID) => dispatch(actions.registApp(APP_ID, CATG_ID)),
-    handleRegistCategory: (APP_ID, CATG_ID) => {
-      dispatch(actions.registCategory(APP_ID, CATG_ID));
-    },
-    handleRegisterBiz: (app, catg) => dispatch(actions.registerBiz(app, catg)),
-
-    handleGetMapAppListSearch: searchword => dispatch(actions.getMapListSearch(searchword)),
-
-    changeSearchword: searchword => dispatch(actionsApp.changeSearchword(searchword)),
-
-    loadingOn: () => dispatch(actionsLoading.loadingOn()),
-    appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),
-  };
-}
+const mapDispatchToProps = dispatch => ({
+  handleInitPage: (initType, param) => dispatch(actions.initPage(initType, param)),
+  handleGetMapListOne: key => dispatch(actions.getMapListOne(key)),
+  handleGetMapAppListMore: key => dispatch(actions.getMapListMore(key)),
+  handleRegistApp: (APP_ID, CATG_ID) => dispatch(actions.registApp(APP_ID, CATG_ID)),
+  handleRegistCategory: (APP_ID, CATG_ID) => dispatch(actions.registCategory(APP_ID, CATG_ID)),
+  handleRegisterBiz: (app, catg) => dispatch(actions.registerBiz(app, catg)),
+  handleGetMapAppListSearch: searchword => dispatch(actions.getMapListSearch(searchword)),
+  changeSearchword: searchword => dispatch(actionsApp.changeSearchword(searchword)),
+  loadingOn: () => dispatch(actionsLoading.loadingOn()),
+  appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),
+  handleOnClick: (node, history) => {
+    history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
+    dispatch(actionsApp.changeSearchword(''));
+    window.scrollTo(0, 0);
+  },
+  handleGetMapListOneWithHistory: (key, history) => {
+    history.push(`/portal/store/appMain/bizStore/app/list/${key}`);
+    dispatch(actionsApp.changeSearchword(''));
+    window.scrollTo(0, 0);
+  },
+  handleGoBack: (history) => {
+    dispatch(actionsApp.changeSearchword(''));
+    history.goBack();
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   // 앱리스트

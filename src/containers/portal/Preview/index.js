@@ -22,7 +22,7 @@ import * as actions from './actions';
 import { onLoadCheck } from '../App/UserSetting/actions';
 import saga from './saga';
 import reducer from './reducer';
-import RootRouter from '../App/rootRouter';
+import RootRouter from 'containers/portal/App/RootRouter';
 
 const wrap = dragDropContext(HTML5Backend);
 class App extends React.Component {

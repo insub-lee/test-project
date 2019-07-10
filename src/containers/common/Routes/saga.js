@@ -923,8 +923,8 @@ export function* setDockIconType(payload) {
 // 7-1 getMyAppTree
 export function* getMyAppTree(payload) {
   const response = yield call(Axios.get, '/api/portal/v1/page/portalMyMenuTree', { data: 'temp' });
-  const resultSet = fromJS(JSON.parse(`[${response.result}]`));
-  const myAppTreeData = resultSet.get(0).get('children');
+  const resultSet = Object.keys(response).length > 0 ? fromJS(JSON.parse(`[${response.result}]`)) : '';
+  const myAppTreeData = resultSet ? resultSet.get(0).get('children') : '';
 
   if (myAppTreeData && resultSet.size > 0) {
     if (payload.type === commonActionType.RESET_NOTIFY) {
@@ -1096,7 +1096,7 @@ export function* getMyAppTree(payload) {
 // 7-4 getMyAppStoreTree
 export function* getMyAppStoreTree() {
   const response = yield call(Axios.get, '/api/bizstore/v1/mypage/myTree', { data: 'temp' });
-  const result = fromJS(JSON.parse(`[${response.result}]`));
+  const result = Object.keys(response).length > 0 ? fromJS(JSON.parse(`[${response.result}]`)) : '';
   if (result.size > 0) {
     const categoryData = result.get(0).get('children');
 
@@ -1378,7 +1378,6 @@ export function* getLoaddata(payload) {
     const menuName = lang.get('NAME', setMyMenuData);
 
     console.log('### 1. 메뉴 데이터 목록', setMyMenuData, selectedIndex, managerInfo, menuName);
-    console.debug('>>>>>>>>>>>>>>>>>setMenuData: ', setMyMenuData);
 
     // dockAppList
     // PAGE_ID로 독아이템 호출

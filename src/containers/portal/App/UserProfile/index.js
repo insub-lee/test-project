@@ -85,7 +85,7 @@ class UserProfile extends Component {
               {intlObj.get(messages.userProfile)}
             </Button>
           </li>
-          <li>
+          {/* <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'talk')} type="button" className="icon-talk">
               {intlObj.get(messages.sendToCube)}
             </Button>
@@ -103,6 +103,11 @@ class UserProfile extends Component {
           <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'hithanks')} type="button" className="icon-hithanks">
               {intlObj.get(messages.hyThanks)}
+            </Button>
+          </li> */}
+          <li>
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-hithanks">
+              {intlObj.get(messages.logout)}
             </Button>
           </li>
           <li>
