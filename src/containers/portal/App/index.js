@@ -19,11 +19,11 @@ import update from 'react-addons-update';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 // import { isEqual } from 'utils/helpers';
-// import Fullscreen from 'components/Fullscreen';
+import Fullscreen from 'components/Fullscreen';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
 import * as selectors from './selectors';
-import Fullscreen from './fullscreen';
+// import Fullscreen from './fullscreen';
 import themes from '../../../config/themes/index';
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
