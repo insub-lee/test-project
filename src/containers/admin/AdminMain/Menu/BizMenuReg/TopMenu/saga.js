@@ -51,7 +51,8 @@ export function* confirmBizGroup(payload) {
         });
       }
 
-      history.push('/store/appMain/bizManage');
+      // history.push('/store/appMain/bizManage');
+      history.push('/admin/adminmain/menu');
     } else {
       yield put({
         type: constantsBizManage.UPDATE_TREENODE,

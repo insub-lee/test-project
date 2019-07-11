@@ -11,7 +11,8 @@ import * as constants from './constants';
 import messages from './messages';
 
 export function* getTreeData() {
-  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree', { data: 'temp' });
+  // const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree', { data: 'temp' });
+  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?BIZGRP_ID=41', { data: 'temp' });
   const result = fromJS(JSON.parse(`[${response.result}]`));
   const categoryData = result.get(0).get('children');
   const categoryFlatData = treeFunc.generateListBiz(categoryData);
@@ -60,7 +61,9 @@ export function* moveNode(payload) {
 }
 
 export function* addEmptyNode(payload) {
-  const { rowInfo, data, categoryData, history } = payload;
+  const {
+ rowInfo, data, categoryData, history 
+} = payload;
   const { node } = rowInfo;
 
   // data : {
@@ -96,7 +99,8 @@ export function* addEmptyNode(payload) {
       tempRowInfo: { node: newNode },
     });
 
-    history.push(`/store/appMain/bizManage/bizGroupReg/${resultNode.key}`);
+    // history.push(`/store/appMain/bizManage/bizGroupReg/${resultNode.key}`);
+    history.push(`admin/adminmain/menu/bizGroupReg/${resultNode.key}`);
   } else {
     // console.log('error?');
   }
