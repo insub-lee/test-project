@@ -8,18 +8,21 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
 import { Route } from 'react-router-dom';
-import { Layout, Spin, Icon, Button, Tooltip } from 'antd';
+import { Layout, Spin, Icon, Tooltip } from 'antd';
 import Scrollbars from 'react-custom-scrollbars';
 import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
-import * as routesAction from 'containers/common/Routes/actions';
-import { basicPath } from 'containers/common/constants';
+
 import update from 'react-addons-update';
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 // import { isEqual } from 'utils/helpers';
+
 import Fullscreen from 'components/Fullscreen';
+import * as routesAction from 'containers/common/Routes/actions';
+import { basicPath } from 'containers/common/constants';
+import SideMenu from 'components/SideMenu';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
 import * as selectors from './selectors';
@@ -27,7 +30,7 @@ import * as selectors from './selectors';
 import themes from '../../../config/themes/index';
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import './global.css';
 import * as actions from './actions';
 import saga from './saga';
@@ -40,9 +43,20 @@ import RodalPage from '../../../components/Rodal';
 import Page from '../../../components/Page';
 import MenuCategory from './MenuCategory';
 import AppsRouter from '../../../apps/appsRouter';
+import StyledContainer from './StyledContainer';
+import UserCategoryMenu from './UserCategoryMenu';
 
 const wrap = dragDropContext(HTML5Backend);
 const { Content } = Layout;
+
+const mobileDockCss = {
+  marginLeft: 45,
+};
+
+const desktopDockCss = {
+  marginLeft: 45,
+  marginRight: 90,
+};
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -66,6 +80,7 @@ class App extends React.PureComponent {
       isClose: {},
       // 스피너 상태
       isSpinnerShow: false,
+      isShowUserMenu: false,
       // isPreviewPage: false,
     };
 
@@ -335,6 +350,10 @@ class App extends React.PureComponent {
 
   setIsFullscreenEnabled = isFullscreenEnabled => this.setState({ isFullscreenEnabled });
 
+  setIsShowUserMenu = value => {
+    this.setState({ isShowUserMenu: value });
+  };
+
   deleteApps = () => {
     /* eslint-disable */
     const { apps, handleSaveApps, deletedDockPageId, setMyMenuData } = this.props;
@@ -581,7 +600,7 @@ class App extends React.PureComponent {
   };
 
   render() {
-    const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
+    const { open, isClose, isSpinnerShow, headerMenuOpen, isShowUserMenu } = this.state;
     const {
       mySkin,
       myHNotiCnt,
@@ -639,203 +658,255 @@ class App extends React.PureComponent {
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          <Scrollbars
-            className="custom-scrollbar"
-            style={{ width: 'auto', minHeight: '100vh', height: 'auto' }}
-            autoHide
-            autoHideTimeout={1000}
-            autoHideDuration={200}
-          >
-            <AppWrapper style={{ width: '100%' }}>
-              {/* rendering check count 초기화용 버튼 */}
-              {/* <button
-                onClick={() => {
-                  initializeCount(this);
-                }}
-                style={{
-                  position: 'absolute',
-                  zIndex: '1000000',
-                  left: '100',
-                }}
+          {/* Header */}
+          <Header
+            className="portalHeader"
+            setOpen={this.setMenuOpen}
+            execPage={this.execPage}
+            handleClick={this.handleClick}
+            setMyMenuData={setMyMenuData}
+            // UserSetting으로 전달될 콜백
+            myHNotiCnt={myHNotiCnt}
+            managerInfo={managerInfo}
+            view={view}
+            hasRoleAdmin={hasRoleAdmin}
+          />
+          {/* SideBar */}
+          <MenuCategory
+            open={headerMenuOpen}
+            execMenu={this.execMenu}
+            execPage={this.execPage}
+            myMNotiCnt={myMNotiCnt}
+            myHNotiCnt={myHNotiCnt}
+            myMNotiList={myMNotiList}
+            selectedIndex={selectedIndex}
+            menuName={menuName}
+            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+            setMyMenuData={setMyMenuData}
+            visible={this.state.visible}
+            setMenuClose={this.setMenuClose}
+            view={view}
+          />
+          {/* test layout */}
+          {/*<div className="testDiv">*/}
+          {/*  <div className="testDiv02">*/}
+          {/*    <div className="button">*/}
+          {/*      /!* <input type="button" value="Start App" /> *!/*/}
+          {/*      <section className="links">*/}
+          {/*        /!* <a class="link l1" href="#" value="Pure" /> *!/*/}
+          {/*        <Button className="link l1" icon="vertical-left" onClick={this.setOpen} />*/}
+          {/*      </section>*/}
+          {/*    </div>*/}
+          {/*    <div className="testClass">*/}
+          {/*      <div className="iconPositon" style={{ marginTop: '60px' }}>*/}
+          {/*        <Tooltip placement="right" title="home">*/}
+          {/*          <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />*/}
+          {/*        </Tooltip>*/}
+          {/*      </div>*/}
+          {/*      <div className="iconPositon" style={{ marginTop: '20px' }}>*/}
+          {/*        <Tooltip placement="right" title="app-store">*/}
+          {/*          <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />*/}
+          {/*        </Tooltip>*/}
+          {/*      </div>*/}
+          {/*      <div className="iconPositon" style={{ marginTop: '20px' }}>*/}
+          {/*        <Tooltip placement="right" title="환경설정">*/}
+          {/*          <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />*/}
+          {/*        </Tooltip>*/}
+          {/*      </div>*/}
+          {/*      <div className="iconPositon" style={{ marginTop: '20px' }}>*/}
+          {/*        <Tooltip placement="right" title="업무등록">*/}
+          {/*          <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />*/}
+          {/*        </Tooltip>*/}
+          {/*      </div>*/}
+          {/*    </div>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          {/* test layout */}
+          {/* Body */}
+          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: dockIconType === 'MAX' ? 90 : 42 } : mobileDockCss}>
+            <StyledContainer>
+              <Scrollbars
+                className="scrollable-container"
+                autoHide
+                autoHideTimeout={1000}
+                autoHideDuration={200}
               >
-                초기화버튼
-              </button> */}
-              <MenuCategory
-                open={headerMenuOpen}
-                execMenu={this.execMenu}
-                execPage={this.execPage}
-                myMNotiCnt={myMNotiCnt}
-                myHNotiCnt={myHNotiCnt}
-                myMNotiList={myMNotiList}
-                selectedIndex={selectedIndex}
-                menuName={menuName}
-                handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-                setMyMenuData={setMyMenuData}
-                visible={this.state.visible}
-                setMenuClose={this.setMenuClose}
-                view={view}
-              />
-              <UserMenu
-                open={open}
-                execMenu={this.execMenu}
-                execPage={this.execPage}
-                myMNotiCnt={myMNotiCnt}
-                myHNotiCnt={myHNotiCnt}
-                myMNotiList={myMNotiList}
-                selectedIndex={selectedIndex}
-                menuName={menuName}
-                handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-                setMyMenuData={setMyMenuData}
-                visible={this.state.visible}
-                setMenuClose={this.setMenuClose}
-                view={view}
-                history={this.props.history}
-              />
-              <Header
-                className="portalHeader"
-                setOpen={this.setMenuOpen}
-                execPage={this.execPage}
-                handleClick={this.handleClick}
-                setMyMenuData={setMyMenuData}
-                // UserSetting으로 전달될 콜백
-                myHNotiCnt={myHNotiCnt}
-                managerInfo={managerInfo}
-                view={view}
-                hasRoleAdmin={hasRoleAdmin}
-              />
-              {/* test layout */}
-              <div className="testDiv">
-                <div className="testDiv02">
-                  <div class="button">
-                    {/* <input type="button" value="Start App" /> */}
-                    <section class="links">
-                      {/* <a class="link l1" href="#" value="Pure" /> */}
-                      <Button class="link l1" icon="vertical-left" onClick={this.setOpen} />
-                    </section>
-                  </div>
-                  <div className="testClass">
-                    <div className="iconPositon" style={{ marginTop: '60px' }}>
-                      <Tooltip placement="right" title="home">
-                        <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
-                      </Tooltip>
-                    </div>
-                    <div className="iconPositon" style={{ marginTop: '20px' }}>
-                      <Tooltip placement="right" title="app-store">
-                        <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
-                      </Tooltip>
-                    </div>
-                    <div className="iconPositon" style={{ marginTop: '20px' }}>
-                      <Tooltip placement="right" title="환경설정">
-                        <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
-                      </Tooltip>
-                    </div>
-                    <div className="iconPositon" style={{ marginTop: '20px' }}>
-                      <Tooltip placement="right" title="업무등록">
-                        <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
-                      </Tooltip>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* test layout */}
-              <Fullscreen
-                enabled={this.state.isFullscreenEnabled}
-                onChange={this.setIsFullscreenEnabled}
-                dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                exitDockItem={handleExitDockItem}
-                fixDockItem={handleFixDockItem}
-                unfixDockItem={handleUnfixDockItem}
-                // 모바일 Dock ContextMenu 플래그 설정
-                view={view}
-                setIsCloseToFalse={this.setIsCloseToFalse}
-                setMyMenuData={setMyMenuData}
-              >
-                <div id="child" className={setMyMenuData.APP_YN === 'Y' || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
-                  <Content
-                    className="portalContent"
-                    style={{
-                      flexShrink: '0',
-                    }}
+                <AppWrapper style={{ width: '100%' }}>
+                  {/* rendering check count 초기화용 버튼 */}
+                  {/* <button
+              onClick={() => {
+                initializeCount(this);
+              }}
+              style={{
+                position: 'absolute',
+                zIndex: '1000000',
+                left: '100',
+              }}
+            >
+              초기화버튼
+            </button> */}
+                  {/*
+                  <UserMenu
+                    open={open}
+                    execMenu={this.execMenu}
+                    execPage={this.execPage}
+                    myMNotiCnt={myMNotiCnt}
+                    myHNotiCnt={myHNotiCnt}
+                    myMNotiList={myMNotiList}
+                    selectedIndex={selectedIndex}
+                    menuName={menuName}
+                    handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+                    setMyMenuData={setMyMenuData}
+                    visible={this.state.visible}
+                    setMenuClose={this.setMenuClose}
+                    view={view}
+                    history={this.props.history}
+                  />
+                  */}
+
+
+                  <Fullscreen
+                    enabled={this.state.isFullscreenEnabled}
+                    onChange={this.setIsFullscreenEnabled}
+                    dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                    dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                    exitDockItem={handleExitDockItem}
+                    fixDockItem={handleFixDockItem}
+                    unfixDockItem={handleUnfixDockItem}
+                    // 모바일 Dock ContextMenu 플래그 설정
+                    view={view}
+                    setIsCloseToFalse={this.setIsCloseToFalse}
+                    setMyMenuData={setMyMenuData}
                   >
-                    <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} />
-                    {this.props.apps}
-                  </Content>
-                  <Route
-                    path={`/${basicPath.PORTAL}/settings`}
-                    render={() => (
-                      <UserSetting //eslint-disable-line
-                        applySkin={this.applySkin}
+                    <div id="child" className={setMyMenuData.APP_YN === 'Y' || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
+                      <Content
+                        className="portalContent"
+                        style={{
+                          flexShrink: '0',
+                        }}
+                      >
+                        <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} />
+                        {this.props.apps}
+                      </Content>
+                      <Route
+                        path={`/${basicPath.PORTAL}/settings`}
+                        render={() => (
+                          <UserSetting //eslint-disable-line
+                            applySkin={this.applySkin}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                  <Route
-                    path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
-                    render={props => (
-                      <UserStore //eslint-disable-line
-                        {...props}
-                        applySkin={this.applySkin}
+                      <Route
+                        path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
+                        render={props => (
+                          <UserStore //eslint-disable-line
+                            {...props}
+                            applySkin={this.applySkin}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                  <Route
-                    path={`/${basicPath.PORTAL}/store`}
-                    render={props => (
-                      <UserStore //eslint-disable-line
-                        {...props}
-                        applySkin={this.applySkin}
+                      <Route
+                        path={`/${basicPath.PORTAL}/store`}
+                        render={props => (
+                          <UserStore //eslint-disable-line
+                            {...props}
+                            applySkin={this.applySkin}
+                          />
+                        )}
                       />
-                    )}
-                  />
-                </div>
-              </Fullscreen>
-              {setMyMenuData.APP_YN !== 'Y' && (
-                <Footer
-                  style={{
-                    background: 'transparent',
-                  }}
-                  dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                  dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                  view={view}
-                />
-              )}
-              <UserDock
-                execPage={this.execPage}
-                dockAppList={dockAppList}
-                isUnfixDockItem={isUnfixDockItem}
-                dockCallbacks={dockCallbacks}
-                setMyMenuNodeData={setMyMenuNodeData}
-                dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                handleSetDockFixedYn={handleSetDockFixedYn}
-                appYn={setMyMenuData.APP_YN}
-                dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                handleSetDockIconType={handleSetDockIconType}
-                // 모바일 Dock ContextMenu 플래그 설정
-                isClose={isClose}
-                setIsCloseToTrue={this.setIsCloseToTrue}
-                setIsCloseToFalse={this.setIsCloseToFalse}
-                history={this.props.history}
-              />
-              <Rodal
-                className="drillDownCon"
-                visible={this.state.show}
-                onClose={this.hide}
-                animation="slideRight"
-                showCloseButton={false}
-                // leaveAnimation="slideLeft"
-                duration={1000}
-                customStyles={{
-                  position: 'absolute',
-                  width: 1580,
-                  height: 'calc(100vh - 200px)',
-                  backgroundColor: '#646567',
-                }}
-                // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
-              >
-                {this.state.show === true && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
-              </Rodal>
-            </AppWrapper>
-          </Scrollbars>
+                    </div>
+                  </Fullscreen>
+                  {/*
+                  {setMyMenuData.APP_YN !== 'Y' && (
+                    <Footer
+                      style={{
+                        background: 'transparent',
+                      }}
+                      dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                      dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                      view={view}
+                    />
+                  )}
+                  */}
+
+                  <Rodal
+                    className="drillDownCon"
+                    visible={this.state.show}
+                    onClose={this.hide}
+                    animation="slideRight"
+                    showCloseButton={false}
+                    // leaveAnimation="slideLeft"
+                    duration={1000}
+                    customStyles={{
+                      position: 'absolute',
+                      width: 1580,
+                      height: 'calc(100vh - 200px)',
+                      backgroundColor: '#646567',
+                    }}
+                    // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
+                  >
+                    {this.state.show === true && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
+                  </Rodal>
+                </AppWrapper>
+              </Scrollbars>
+            </StyledContainer>
+          </Layout>
+          <UserCategoryMenu
+            isShow={open}
+            toggleMenu={open ? this.setMenuClose : this.setOpen}
+            execMenu={this.execMenu}
+            execPage={this.execPage}
+            myMNotiCnt={myMNotiCnt}
+            myHNotiCnt={myHNotiCnt}
+            myMNotiList={myMNotiList}
+            selectedIndex={selectedIndex}
+            menuName={menuName}
+            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+            setMyMenuData={setMyMenuData}
+            visible={this.state.visible}
+            setMenuClose={this.setMenuClose}
+            view={view}
+            history={this.props.history}
+          />
+          <SideMenu>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="home">
+                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="app-store">
+                <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="환경설정">
+                <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="업무등록">
+                <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
+              </Tooltip>
+            </div>
+          </SideMenu>
+          <UserDock
+            execPage={this.execPage}
+            dockAppList={dockAppList}
+            isUnfixDockItem={isUnfixDockItem}
+            dockCallbacks={dockCallbacks}
+            setMyMenuNodeData={setMyMenuNodeData}
+            dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+            handleSetDockFixedYn={handleSetDockFixedYn}
+            appYn={setMyMenuData.APP_YN}
+            dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+            handleSetDockIconType={handleSetDockIconType}
+            // 모바일 Dock ContextMenu 플래그 설정
+            isClose={isClose}
+            setIsCloseToTrue={this.setIsCloseToTrue}
+            setIsCloseToFalse={this.setIsCloseToFalse}
+            history={this.props.history}
+          />
         </Layout>
       </ThemeProvider>
     );

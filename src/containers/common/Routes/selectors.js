@@ -82,6 +82,11 @@ const makeMyAppTree = () => createSelector(
   portalState => portalState.get('myAppTreeData').toJS(),
 );
 
+const makeMyAppStoreTree = () => createSelector(
+  selectHynixCommon,
+  portalState => portalState.get('myAppStoreTreeData').toJS(),
+);
+
 export {
   makeSelectView,
 
@@ -109,4 +114,6 @@ export {
   // 7-1
   makeMyAppTree,
   makeUnreadCnt,
+
+  makeMyAppStoreTree,
 };
