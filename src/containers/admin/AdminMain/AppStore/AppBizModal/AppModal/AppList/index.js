@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
+import { Select } from 'antd';
 
 import * as feed from 'components/Feedback/functions';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import * as commonjs from 'containers/common/functions/common';
 
 // import reducer from 'containers/store/AppMain/AppList/reducer';
 // import saga from 'containers/store/AppMain/AppList/saga';
@@ -19,17 +21,15 @@ import * as actions from './actions';
 
 import ItemList from './ItemList';
 
+const { Option } = Select;
+
 function checkValue(v1, v2) {
   return v1 && v2 && v2 !== '' && v1 !== v2;
 }
 
 class AppList extends Component {
-  constructor(props) {
-    super(props);
-    const { match } = props;
-    const { params } = match;
-    const { CATG_ID, searchword } = params;
-
+  componentDidMount() {
+    const { match: { params: { CATG_ID, searchword } } } = this.props;
     if (CATG_ID) {
       this.CATG_ID = CATG_ID;
       this.props.handleInitPage('ONE', CATG_ID);
@@ -41,11 +41,12 @@ class AppList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
+
   componentWillReceiveProps(nextProps) {
     const { match } = nextProps;
     const { params } = match;
     const { CATG_ID, searchword } = params;
-
+    
     if (checkValue(searchword, nextProps.searchword)) {
       this.props.handleGetMapAppListSearch(searchword);
     } else if (checkValue(CATG_ID, this.CATG_ID)) {
@@ -80,19 +81,53 @@ class AppList extends Component {
       handleRegistCategory(APP_ID, CATG_ID, history);
     };
 
+    const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
+
+    const handleOnChange = (key) => {
+      // this.searchword = '';
+      // this.searchInput.input.value = '';
+      if (key === 0) {
+        history.push(`${preUrl}/app/list`);
+      } else {
+        history.push(`${preUrl}/app/list/${key}`);
+      }
+      window.scrollTo(0, 0);
+    };
+
+    let selectedCategoryId = 0;
+    const pn = history.location.pathname;
+    const str = 'list/';
+    if (pn.indexOf(str) > -1) {
+      selectedCategoryId = Number(pn.substring(pn.indexOf(str) + str.length, pn.length));
+    }
+
     return (
-      <ItemList
-        type={initType}
-        mapList={mapList}
-        getMapListOne={handleGetMapListOne}
-        getMapListMore={handleGetMapAppListMore}
-        registApp={registApp}
-        registCategory={registCategory}
-        registBiz={handleRegistBiz}
-        goBack={handleGoBack}
-        searchword={searchword}
-        // history={history}
-      />
+      <div>
+        <div className="topPart">
+          <Select
+            value={ selectedCategoryId }
+            style={{ width: 200, float: 'right' }}
+            onChange={handleOnChange}>
+            <Option value={0}>전체</Option>
+            <Option value={101}>공통</Option>
+            <Option value={102}>업무빌더</Option>
+            <Option value={103}>상담지원및메뉴얼</Option>
+            <Option value={104}>기타</Option>
+          </Select>
+        </div>
+        <ItemList
+          type={initType}
+          mapList={mapList}
+          getMapListOne={handleGetMapListOne}
+          getMapListMore={handleGetMapAppListMore}
+          registApp={registApp}
+          registCategory={registCategory}
+          registBiz={handleRegistBiz}
+          goBack={handleGoBack}
+          searchword={searchword}
+          history={history}
+        />
+      </div>
     );
   }
 }

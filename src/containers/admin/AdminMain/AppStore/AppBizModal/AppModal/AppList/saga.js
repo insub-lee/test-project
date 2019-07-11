@@ -172,7 +172,6 @@ export function* getMapListAll() {
 
   // 데이터형태: 리스트. CATG_ID 값으로 GROUP BY -> 각 map에 appList push
   const { result } = response;
-
   const newResult = _.groupBy(result, 'CATG_ID');
   let mapList = fromJS([]);
   categoryData.forEach((data) => {

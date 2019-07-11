@@ -12,7 +12,6 @@ import { Input } from 'antd';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as commonjs from 'containers/common/functions/common';
-// import AppCategory from '../../AppCategory';
 import messages from './messages';
 import AppList from './AppList';
 import StyleAppBizModal from '../StyleAppBizModal';
@@ -39,39 +38,26 @@ class AppModal extends PureComponent {
   }
 
   render() {
-    // const {
-    //   history,
+    const {
+      history,
     //   // isLoading,
-    // } = this.props;
+    } = this.props;
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
 
-    // const handleOnClick = (node) => {
-    //   this.searchword = '';
-    //   this.searchInput.input.value = '';
-    //   history.push(`${preUrl}/app/list/${node.key}`);
-    //   window.scrollTo(0, 0);
-    // };
 
-    // let selectedCategoryId = -1;
-    // const pn = history.location.pathname;
-    // const str = 'list/';
-    // if (pn.indexOf(str) > -1) {
-    //   selectedCategoryId = Number(pn.substring(pn.indexOf(str) + str.length, pn.length));
-    // }
+    let selectedCategoryId = 0;
+    const pn = history.location.pathname;
+    const str = 'list/';
+    if (pn.indexOf(str) > -1) {
+      selectedCategoryId = Number(pn.substring(pn.indexOf(str) + str.length, pn.length));
+    }
 
     return (
       <StyleAppBizModal>
-        {/* 왼쪽 앱 카테고리 리스트: <사용X> <ErrorBoundary>
-          <AppCategory
-            handleOnClick={handleOnClick}
-            selectedIndex={selectedCategoryId}
-            preUrl={preUrl}
-          />n
-        </ErrorBoundary> */}
-        {/* <div className="topPart">
-          <div className="searchInput"> */}
-        {/* <Input
+        {/* <div className="topPart"> */}
+        {/*  <div className="searchInput">
+            <Input
               placeholder=""
               title={intlObj.get(messages.searchBizStore)}
               // onChange={this.onChange}
@@ -82,10 +68,11 @@ class AppModal extends PureComponent {
               type="button"
               onClick={() => this.search()}
               title={intlObj.get(messages.search)}
-            /> */}
-
+            />
+          */}
         {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
-        {/* </div>
+        {/* </div> */}
+        {/*
         </div> */}
 
         <ErrorBoundary>

@@ -39,10 +39,11 @@ class ItemList extends Component {
       registBiz,
 
       // goBack,
-      // history,
+      history,
     } = this.props;
 
-    const handleGetMapListOne = () => getMapListOne(key);
+    // const handleGetMapListOne = () => getMapListOne(key);
+    const handleGetMapListOne = () => history.push(`/admin/adminmain/appstore/modal/app/list/${key}`);
     const handleReadMore = () => getMapListMore(key);
 
     const renderTitle = () => {
@@ -234,7 +235,7 @@ class ItemList extends Component {
 }
 
 ItemList.propTypes = {
-  // history: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   mapList: PropTypes.array.isRequired,
   type: PropTypes.string.isRequired,
   getMapListOne: PropTypes.func.isRequired,

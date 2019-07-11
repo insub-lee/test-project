@@ -8,7 +8,6 @@ import * as commonjs from 'containers/common/functions/common';
 // import { ModalRoute } from 'react-router-modal';
 // import Modal from 'react-modal';
 import AppModal from './AppModal';
-import BizModal from './BizModal';
 
 class AppBizModal extends PureComponent {
   render() {
@@ -23,7 +22,6 @@ class AppBizModal extends PureComponent {
     return (
       <div>
         <ErrorBoundary>
-          <Route path={`${preUrl}/biz`} component={BizModal} />
           <Route path={`${preUrl}/app`} component={AppModal} />
         </ErrorBoundary>
         {/* <Route path="/store/appMain/myPage/modal/widget" component={AppModal} /> */}
