@@ -29,7 +29,8 @@ import PageInfo from './PageInfo';
 // import Popup from './Popup';
 import AppModal from './AppBizModal/AppModal';
 import StyleAppStore from './StyleAppStore';
-
+// import MyAppDetail from '../../../store/AppMain/MyApp/MyAppDetail';
+// import MyAppUpdate from '../../../store/AppMain/MyApp/MyAppUpdate';
 const Option = Select.Option; // eslint-disable-line
 const homeUrl = '/admin/adminmain/appstore';
 
@@ -38,7 +39,7 @@ function getUrl(node) {
   console.log(node);
 
   const {
-    NODE_TYPE, APP_ID, PAGE_ID,
+    NODE_TYPE, APP_ID, PAGE_ID, CATG_ID,
   } = node;
 
   let url = homeUrl;
@@ -47,31 +48,13 @@ function getUrl(node) {
     url = `${homeUrl}/app/${APP_ID}`;
   } else if (NODE_TYPE === 'P' && PAGE_ID > 0) { // [페이지] 상세
     url = `${homeUrl}/page/${PAGE_ID}`;
+  // } else if (NODE_TYPE === 'R' && CATG_ID > 0) { // 현재사이트의 앱리스트
+  //   url = `${homeUrl}/modal/app/list`;
+  // } else if (NODE_TYPE === 'F' && CATG_ID > 0) { // 현재사이트의 카테고리 앱리스트
+  //   url = `${homeUrl}/modal/app/list/${CATG_ID}`;
   } else {
     url = '/admin/adminmain/appstore';
   }
-  /*
-  const {
-    NODE_TYPE, REF_TYPE, REF_ID, APP_ID, PAGE_ID, APP_YN,
-  } = node;
-
-  let url = homeUrl;
-
-  if (REF_TYPE === 'A' && APP_ID !== 0) { // [앱] 상세
-    url = `${homeUrl}/app/${APP_ID}`;
-  } else if (REF_TYPE !== 'B' && PAGE_ID !== 0) { // [페이지] 상세
-    url = `${homeUrl}/page/${PAGE_ID}`;
-  } else if (REF_TYPE === 'B') { // [업무그룹]
-    if (NODE_TYPE === 'R') { // 상세
-      url = `${homeUrl}/biz/detail/info/${REF_ID}`;
-    } else if (APP_YN === 'Y') { // 앱상세
-      // 임시
-      url = `${homeUrl}/biz/detail/app/${REF_ID}/${APP_ID === 0 ? '' : APP_ID}`;
-    } else { // 페이지 상세
-      url = `${homeUrl}/biz/detail/page/${REF_ID}/${PAGE_ID}`;
-    }
-  }
-  */
   return url;
 }
 
@@ -83,7 +66,7 @@ class AppStore extends Component {
 
   // eslint-disable-next-line no-unused-vars
   componentWillReceiveProps(nextProps) {
-    /* 첫(기본)페이지일 경우 우측에 띄와줄 화면 세팅
+    /* 첫(기본)페이지일 경우 우측에 띄워줄 화면 세팅
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
@@ -117,11 +100,6 @@ class AppStore extends Component {
   }
 
   onChangeSite = (siteId) => {
-    /*
-    this.setState({
-      siteId,
-    });
-    */
     this.props.getCategoryData(siteId);
   }
 
@@ -198,7 +176,11 @@ class AppStore extends Component {
                   <Route path="/admin/adminmain/appstore" component={Main} exact />
                   <Route path="/admin/adminmain/appstore/app/:APP_ID" component={AppInfo} exact />
                   <Route path="/admin/adminmain/appstore/page/:PAGE_ID" component={PageInfo} exact />
-                  <Route path="/admin/adminmain/appstore/modal/app/list" component={AppModal} />
+                  <Route path="/admin/adminmain/appstore/modal/app/list/" component={AppModal} />
+                  {/* 앱정보 수정 및 권한 변경 링크
+                  <Route path="/admin/adminmain/appstore/appdetail/:APP_ID/:VER" component={MyAppDetail} exact />
+                  <Route path="/store/appMain/MyApp/MyAppUpdate/:uv/:APP_ID/:VER/:tabNum/:svcyn" component={MyAppUpdate} /> 
+                  */}
                 </ErrorBoundary>
               </div>
             </div>

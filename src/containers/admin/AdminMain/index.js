@@ -21,6 +21,7 @@ import Duty from './Duty';
 import Dept from './Dept';
 import UserReg from './User';
 import AppStore from './AppStore';
+import Menu from './Menu';
 
 // const wrap = dragDropContext(HTML5Backend);
 
@@ -62,11 +63,11 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/workbuilder" component={WorkBuilderListPage} exact />
           <Route path="/admin/adminmain/workbuilder/manageapp" component={WorkBuilderToAppPage} exact />
           <Route path="/admin/adminmain/workbuilder/:ID" component={WorkBuilderDetailPage} />
+          <Route path="/admin/adminmain/menu/" component={Menu} />
         </Switch>
       </div>
     );
   }
 }
-
 
 export default dragDropContext(HTML5Backend)(wrap);
