@@ -3,16 +3,18 @@ import { SortableTreeWithoutDndContext as SortableTree } from '../../../componen
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { lang } from 'utils/commonUtils';
-import Input from 'components/Input';
 import ScrollBar from 'react-custom-scrollbars';
+import { AutoSizer } from 'react-virtualized';
 
-import { Badge, Button } from 'antd';
-import CustomTheme from './theme';
+import { Badge } from 'antd';
 
 import iconUnlock from 'images/portal/icon-unlock.png';
 import iconLock from 'images/portal/icon_lock.png';
 import IconGo from 'images/portal/icon_go.png';
+import { lang } from 'utils/commonUtils';
+import { InputSearch } from 'components/Input';
+
+import CustomTheme from './theme';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
 
@@ -107,8 +109,9 @@ class Tree extends Component {
         <div className={`tree-contents ${showNoti ? 'show-noti' : ''}`}>
           <div className="search-box">
             <div className="searchWrapper">
-              <Input
+              <InputSearch
                 type="text"
+                size="small"
                 value={searchString}
                 placeholder="메뉴에서 My App을 검색하세요."
                 onChange={(event) => {
@@ -117,7 +120,6 @@ class Tree extends Component {
                 readOnly={editTree}
                 autoComplete="off"
               />
-              <Button className="searchBtn" title="찾기" />
             </div>
             <div className="myMenuEdit">
               <button type="button" onClick={this.onSetEditClick}>
@@ -147,27 +149,31 @@ class Tree extends Component {
                 padding: '10px 0 0 10px',
               }}
             >
-              <ScrollBar style={{ width: 290, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
-                <SortableTree
-                  theme={CustomTheme}
-                  treeData={treeData}
-                  onChange={tree => this.updateTreeData(tree)}
-                  searchMethod={customSearchMethod}
-                  searchQuery={searchString}
-                  searchFocusOffset={searchFocusIndex}
-                  style={{
-                   display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
-                  }}
-                  isVirtualized={false}
-                  generateNodeProps={this.generateNodeProps}
-                  rowHeight={35}
-                  scaffoldBlockPxWidth={22}
-                  className="sortableTreeWrapper sidebar CustomSCRB"
-                  ref={(ref) => {
-                    this.tree = ref;
-                  }}
-                />
-              </ScrollBar>
+              <AutoSizer>
+                {({ width, height }) => (
+                  <ScrollBar style={{ width, height }} autoHide autoHideTimeout={1000} autoHideDuration={200} className="tree-scrollbar">
+                    <SortableTree
+                      theme={CustomTheme}
+                      treeData={treeData}
+                      onChange={tree => this.updateTreeData(tree)}
+                      searchMethod={customSearchMethod}
+                      searchQuery={searchString}
+                      searchFocusOffset={searchFocusIndex}
+                      // style={{
+                      //   display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
+                      // }}
+                      isVirtualized={false}
+                      generateNodeProps={this.generateNodeProps}
+                      rowHeight={35}
+                      scaffoldBlockPxWidth={22}
+                      className="sortableTreeWrapper sidebar CustomSCRB"
+                      ref={(ref) => {
+                        this.tree = ref;
+                      }}
+                    />
+                  </ScrollBar>
+                )}
+              </AutoSizer>
             </div>
           )}
         </div>

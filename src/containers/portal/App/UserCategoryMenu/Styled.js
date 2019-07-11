@@ -10,11 +10,9 @@ const Styled = styled.div`
   max-width: 290px;
   min-width: 290px;
   width: 290px;
-  width: 0;
   opacity: 1;
   background-color: rgb(255, 255, 255);
 
-  text-align: center;
   box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 4px;
   z-index: 2;  
   transition: left 0.1s ease-out 0s, ease-out 0s, ease-out 0s, ease-out 0s;
@@ -26,7 +24,30 @@ const Styled = styled.div`
     //width: 290px;
   }
   
+  .area-title {
+    padding: 10px 15px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #000;
+  }
   
+  .divider {
+    margin: 10px 15px;
+    height: 0;
+    border-bottom: 1px solid #d2d2d2;
+  }
+  
+  .profile-area {
+    height: 110px;
+  }
+  
+  .category-menu-area {
+    height: calc((100vh - 171px) / 2);
+  }
+  
+  .timeline-area {
+    height: calc((100vh - 171px) / 2);  
+  }
   
   .active-btn {    
     position: absolute;

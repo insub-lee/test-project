@@ -6,8 +6,8 @@ import { createStructuredSelector } from 'reselect';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import ReactDataGrid from 'components/ReactDataGrid/WithAutoSizer';
 
-import ReactDataGrid from '../../components/ReactDataGrid';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -39,7 +39,7 @@ class WorkTimeLine extends PureComponent {
   };
 
   render() {
-    const { list, iflowUrl } = this.props;
+    const { list, iflowUrl, height } = this.props;
     const columns = [
       {
         key: 'arTitle',
@@ -50,7 +50,7 @@ class WorkTimeLine extends PureComponent {
     ];
     const rowHeight = 90;
     return (
-      <Wrapper>
+      <Wrapper height={height}>
         <ReactDataGrid
           columns={columns}
           rowGetter={i => list[i]}
@@ -70,11 +70,16 @@ WorkTimeLine.propTypes = {
   getList: PropTypes.func,
   list: PropTypes.arrayOf(PropTypes.object),
   iflowUrl: PropTypes.string.isRequired,
+  height: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
 };
 
 WorkTimeLine.defaultProps = {
   getList: () => false,
   list: [],
+  height: 0,
 };
 
 const mapDispatchToProps = dispatch => ({

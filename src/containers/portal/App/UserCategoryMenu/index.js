@@ -9,6 +9,7 @@ import * as routeSelectors from 'containers/common/Routes/selectors';
 import * as routeActions from 'containers/common/Routes/actions';
 
 import Styled from './Styled';
+import UserProfileBox from './UserProfileBox';
 import Notification from './Notification';
 import Tree from './Tree';
 import WorkTimeLine from '../WorkTimeLine';
@@ -76,22 +77,13 @@ class UserCategoryMenu extends Component {
 
     return (
       <Styled className={isShow ? 'active' : ''}>
-        <div>
-          <Notification
-            myMNotiCnt={myMNotiCnt}
-            myMNotiList={myMNotiList}
-            myHNotiCnt={myHNotiCnt}
-            execPage={execPage}
-            execMenu={execMenu}
-            onClick={this.onClick}
-            onNoneClick={this.onNoneClick}
-            visible={this.state.visible}
-            onMouseEnter={this.onMouseEnter}
-            onMenuClick={this.onMenuClick}
-            view={view}
-            onClickNotiButton={this.onClickNotiButton}
-            showNoti={showNoti}
-          />
+        <div className="profile-area">
+          <UserProfileBox />
+        </div>
+        <div className="category-menu-area">
+          <div className="area-title">
+            상담 업무
+          </div>
           <Tree
             treeData={myAppTreeData}
             saveData={saveData}
@@ -111,7 +103,13 @@ class UserCategoryMenu extends Component {
             execApp={execApp}
             history={history}
           />
-          <WorkTimeLine />
+        </div>
+        <div className="divider" />
+        <div className="timeline-area">
+          <div className="area-title">
+             Timeline
+          </div>
+          <WorkTimeLine height="calc(100% - 47px)" />
         </div>
         <div className="active-btn">
           <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} />

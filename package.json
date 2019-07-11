@@ -108,6 +108,7 @@
     "react-tabs": "^2.2.1",
     "react-throttle": "^0.3.0",
     "react-view-slider": "^3.0.6",
+    "react-virtualized": "^9.21.1",
     "react-window-size-listener": "^1.0.10",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",

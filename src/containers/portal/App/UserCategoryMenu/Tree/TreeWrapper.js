@@ -2,6 +2,9 @@ import styled from 'styled-components';
 import iconSearch from 'images/common/icon-search2.png';
 
 const TreeWrapper = styled.div`
+  display: flex;
+  height: calc(100% - 47px);
+
   .tree-contents {
     display: flex;
     flex-direction: column;
@@ -56,7 +59,7 @@ const TreeWrapper = styled.div`
   .myMenuEdit {
     // position: absolute;
     display: inline-block;
-    width: 20%;
+    width: 10%;
     height: 32px;
     padding: 3px;
     text-align: right;
@@ -85,6 +88,12 @@ const TreeWrapper = styled.div`
   .sortableTreeWrapper.sidebar .rstcustom__rowSearchFocus .rstcustom__rowTitle,
   .sortableTreeWrapper.sidebar .rstcustom__rowSearchMatch .rstcustom__rowTitle {
     color: #249433;
+  }
+  
+  .tree-scrollbar {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden !important;
   }
 `;
 
