@@ -31,6 +31,7 @@ import TopMenu from './TopMenu/index';
 import StyleBizDetail from './StyleBizDetail';
 import StyleBizDetailContent from './StyleBizDetailContent';
 
+/* eslint-disable */
 class BizMenuReg extends Component {
   constructor(props) {
     super(props);
@@ -81,10 +82,8 @@ class BizMenuReg extends Component {
 
     const { BIZGRP_ID } = this.state;
 
-    const handleTreeOnClick = (node) => {
-      const {
- key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID 
-} = node;
+    const handleTreeOnClick = node => {
+      const { key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID } = node;
       changeSelectedIndex(key);
 
       let pageID = -1;
@@ -109,10 +108,18 @@ class BizMenuReg extends Component {
     };
 
     const preUrl = match.path.substr(0, match.path.indexOf('/:'));
+    let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' };
+    if (BIZGRP_ID !== 1) {
+      divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', float: 'right', marginRight: '20px' };
+    }
+
+    console.debug('BIZGRP_ID >> ', BIZGRP_ID);
+    console.debug('divStyle', divStyle);
 
     return (
-      <div style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
-        <StyleBizDetail>
+      // <div style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
+      <div style={divStyle}>
+        <StyleBizDetail pWidth={BIZGRP_ID !== 1 ? '1000' : '1190'}>
           <ErrorBoundary>
             <TopMenu
               BIZGRP_ID={BIZGRP_ID}
@@ -244,8 +251,10 @@ const withConnect = connect(
 const withReducer = injectReducer({ key: 'bizmenureg', reducer });
 const withSaga = injectSaga({ key: 'bizmenureg', saga });
 
-export default injectIntl(compose(
+export default injectIntl(
+  compose(
     withReducer,
     withConnect,
     withSaga,
-  )(BizMenuReg),);
+  )(BizMenuReg),
+);
