@@ -5,6 +5,7 @@ const boardStyle = styled.div`
 // 위젯 tab 스타일
 .ant-tabs {
   margin: 0 10px;
+  padding: 10px 0;
 
   .ant-tabs-bar {
     margin: 0;

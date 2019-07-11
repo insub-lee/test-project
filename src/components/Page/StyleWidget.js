@@ -86,7 +86,9 @@ const WidgetWrapper = styled.div`
               color: #666;
               
               &.ant-tabs-tab-active {
-                color: #333;
+                color: #495057;
+                background-color: #fff;
+                border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) #fff;
               }
             }
             .ant-tabs-ink-bar {
@@ -1412,14 +1414,16 @@ const WidgetWrapper = styled.div`
 
 const WidgetHeader = styled.div`
   position: relative;
-  height: 35px;
+  height: 50px;
+  border-bottom: 1px solid #d2d2d2;
 
   > h2 {
     position: relative;
     font-size: 14px;
-    font-weight: 400;
-    text-align: center;
-    line-height: 35px;
+    font-weight: 600;
+    text-align: left;
+    line-height: 50px;
+    padding: 0 20px;
 
     &:hover {
       .notifyStatus {

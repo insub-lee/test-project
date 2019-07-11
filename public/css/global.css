@@ -83,7 +83,7 @@ a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
 .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {background: transparent !important;}
 .ant-tabs, .ant-tabs-nav .ant-tabs-tab:hover {color: #886ab5 !important;}
 .ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {color: #222222 !important;}
-.ant-tabs-bar .ant-tabs-nav .ant-tabs-tab {border-top: none !important; border-left: none !important; border-right: none !important;}
+/*.ant-tabs-bar .ant-tabs-nav .ant-tabs-tab {border-top: none !important; border-left: none !important; border-right: none !important;}*/
 .ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {bottom: 0; background-color: #222222; visibility: visible !important; height:2px;}
 .widgetBody .ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {height:1px;}
 
