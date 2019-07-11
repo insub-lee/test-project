@@ -115,7 +115,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach((o) => {
+        dockAppList.forEach(o => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -159,8 +159,7 @@ class App extends React.PureComponent {
             this.deleteApps();
             return;
           } else if (executedDockPageId && executedDockPageId !== prevProps.executedDockPageId) {
-            const index = Object.keys(apps).findIndex(o =>
-              apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
+            const index = Object.keys(apps).findIndex(o => apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
 
             if (index === -1) {
               console.log('$$$ 8-5 현재 독에 고정되어있으면서 미실행인 독아이템을 실행');
@@ -204,10 +203,7 @@ class App extends React.PureComponent {
         }
       }
 
-      if (Object.keys(setMyMenuData).length !== 0
-        && prevProps.setMyMenuData !== setMyMenuData
-        && setMyMenuData.isCssTarget
-        && apps.length !== 0) {
+      if (Object.keys(setMyMenuData).length !== 0 && prevProps.setMyMenuData !== setMyMenuData && setMyMenuData.isCssTarget && apps.length !== 0) {
         console.log('$$$ 11.setMyMenuData가 새로 들어옴');
 
         const appsCopy = apps.slice();
@@ -566,7 +562,7 @@ class App extends React.PureComponent {
   };
 
   goStore = () => {
-    this.props.history.push(`/${basicPath.PORTAL}/store`);
+    this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizStore`);
     this.setState({ open: false });
   };
 
@@ -789,7 +785,7 @@ class App extends React.PureComponent {
                   />
                 </div>
               </Fullscreen>
-              {setMyMenuData.APP_YN !== 'Y' && (
+              {/* {setMyMenuData.APP_YN !== 'Y' && (
                 <Footer
                   style={{
                     background: 'transparent',
@@ -798,7 +794,7 @@ class App extends React.PureComponent {
                   dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
                   view={view}
                 />
-              )}
+              )} */}
               <UserDock
                 execPage={this.execPage}
                 dockAppList={dockAppList}
