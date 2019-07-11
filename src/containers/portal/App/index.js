@@ -789,7 +789,7 @@ class App extends React.PureComponent {
                   />
                 </div>
               </Fullscreen>
-              {setMyMenuData.APP_YN !== 'Y' && (
+              {/* {setMyMenuData.APP_YN !== 'Y' && (
                 <Footer
                   style={{
                     background: 'transparent',
@@ -798,7 +798,7 @@ class App extends React.PureComponent {
                   dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
                   view={view}
                 />
-              )}
+              )} */}
               <UserDock
                 execPage={this.execPage}
                 dockAppList={dockAppList}
