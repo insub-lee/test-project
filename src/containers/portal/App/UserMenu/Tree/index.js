@@ -67,6 +67,12 @@ class Tree extends Component {
       editTree: !this.state.editTree,
       editMenuMode: !this.state.editMenuMode,
     });
+
+    console.debug('>>>>>>>>>this.state.editMenuMode: ', this.state.editMenuMode);
+
+    if (this.state.editMenuMode) {
+      this.props.history.push('/');
+    }
   };
 
   handleTreeOnClick = node => {

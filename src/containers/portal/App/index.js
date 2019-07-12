@@ -27,7 +27,7 @@ import * as selectors from './selectors';
 import themes from '../../../config/themes/index';
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 import './global.css';
 import * as actions from './actions';
 import saga from './saga';
@@ -40,6 +40,8 @@ import RodalPage from '../../../components/Rodal';
 import Page from '../../../components/Page';
 import MenuCategory from './MenuCategory';
 import AppsRouter from '../../../apps/appsRouter';
+
+import logo from 'images/logo.png';
 
 const wrap = dragDropContext(HTML5Backend);
 const { Content } = Layout;
@@ -115,7 +117,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach(o => {
+        dockAppList.forEach((o) => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -277,12 +279,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = item => {
+  onReload = (item) => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = open => {
+  onSetOpen = (open) => {
     this.setState({ open: open }); //eslint-disable-line
   };
   /* eslint-disable */
@@ -568,12 +570,15 @@ class App extends React.PureComponent {
 
   goSettings = () => {
     this.props.history.push(`/${basicPath.PORTAL}/settings`);
-    this.setState({ open: false });
   };
 
   goBusinessReg = () => {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
     this.setState({ open: false });
+  };
+
+  goHomeWidget = homeId => {
+    this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
   render() {
@@ -713,6 +718,11 @@ class App extends React.PureComponent {
                     <div className="iconPositon" style={{ marginTop: '60px' }}>
                       <Tooltip placement="right" title="home">
                         <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+                      </Tooltip>
+                    </div>
+                    <div className="iconPositon" style={{ marginTop: '20px' }}>
+                      <Tooltip placement="right" title="home widget">
+                        <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(dockHomeItem.PAGE_ID)} />
                       </Tooltip>
                     </div>
                     <div className="iconPositon" style={{ marginTop: '20px' }}>
