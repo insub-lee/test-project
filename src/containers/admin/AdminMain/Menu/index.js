@@ -37,7 +37,7 @@ class BizManage extends Component {
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
-        const generateList = (data) => {
+        const generateList = data => {
           for (let i = 0; i < data.length; i += 1) {
             const node = data[i];
 
@@ -81,7 +81,7 @@ class BizManage extends Component {
       updateBizGroupDelYn,
     } = this.props;
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);
       if (node.MENU_EXIST_YN !== 'N') {
         history.push(`/admin/adminmain/menu/bizMenuReg/info/${node.key}`);
@@ -90,12 +90,18 @@ class BizManage extends Component {
       }
     };
 
-    console.debug('location.pathname >> ', location.pathname);
     let isTreeGroup = false;
-    if (location.pathname.indexOf('bizMenuReg/info') > -1) {
+    if (location.pathname.indexOf('bizMenuReg/') > -1) {
       const pathArr = location.pathname.split('/');
-      const bizgrpId = pathArr[pathArr.length - 1];
-      isTreeGroup = Number(bizgrpId) !== 1;
+      if (location.pathname.indexOf('info/') > -1) {
+        const bizgrpId = pathArr[pathArr.length - 1];
+        isTreeGroup = Number(bizgrpId) !== 1;
+      } else {
+        const bizgrpId = pathArr[pathArr.length - 2];
+        isTreeGroup = Number(bizgrpId) !== 1;
+      }
+    } else {
+      isTreeGroup = true;
     }
 
     return (
@@ -181,11 +187,13 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'bizmanage', reducer });
-const withSaga = injectSaga({ key: 'bizmanage', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu', saga });
 
-export default injectIntl(compose(
+export default injectIntl(
+  compose(
     withReducer,
     withConnect,
     withSaga,
-  )(BizManage),);
+  )(BizManage),
+);

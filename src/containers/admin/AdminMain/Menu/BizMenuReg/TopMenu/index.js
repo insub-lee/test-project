@@ -135,8 +135,8 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'bizmemuTopMenu', reducer });
-const withSaga = injectSaga({ key: 'bizmemuTopMenu', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/TopMenu', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/TopMenu', saga });
 
 export default compose(
   withReducer,

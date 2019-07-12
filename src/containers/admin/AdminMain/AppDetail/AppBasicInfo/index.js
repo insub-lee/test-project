@@ -126,7 +126,7 @@ class AppBasicInfo extends React.Component {
             <img
               src={imgUrl.get('160x160', this.props.resAppBasicInfo.ICON)}
               alt={lang.get('NAME', this.props.resAppBasicInfo)}
-              onError={(e) => {
+              onError={e => {
                 e.target.src = '/app_icon/icon_no_image.png';
               }}
             />
@@ -261,8 +261,8 @@ const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
-const withSaga = injectSaga({ key: 'appBasicInfo', saga });
-const withReducer = injectReducer({ key: 'appBasicInfo', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppBasicInfo', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppBasicInfo', reducer });
 
 export default compose(
   withReducer,

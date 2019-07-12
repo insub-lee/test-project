@@ -10,7 +10,7 @@ import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
 import userIcon from 'images/bizstore/icon-user.png';
 
 import messages from './messages';
-import Card from 'containers/store/components/uielements/card.style';
+import Card from 'containers/admin/components/uielements/card.style';
 
 class Item extends PureComponent {
   render() {
