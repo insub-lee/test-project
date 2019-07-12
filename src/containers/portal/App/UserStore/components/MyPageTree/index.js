@@ -390,7 +390,7 @@ class MyPageTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push('/store/appMain/myPage/modal/app/list');
+                    history.push('/portal/store/appMain/myPage/modal/app/list');
                   }}
                 />
               ) : (
