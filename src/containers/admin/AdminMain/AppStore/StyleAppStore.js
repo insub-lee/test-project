@@ -7,6 +7,13 @@ const StyleAppStore = styled.div`
   width: 100%;
   margin: 12px auto 0;
 
+  .pageContent {
+    // height: 100vh !important;
+    // height: 'calc(100vh - 170px)'      
+    display: inline-block
+    width: 100%
+  }
+
   @media only screen and (max-width: 1660px) {
     padding: 0 20px;
   }
@@ -16,6 +23,9 @@ const StyleAppStore = styled.div`
 
     .pageContent {
       height: 100vh !important;
+      // height: 'calc(100vh - 170px)'      
+      display: inline-block
+      width: 100%
     }
   }
 
