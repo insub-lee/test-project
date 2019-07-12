@@ -247,4 +247,3 @@ export default injectIntl(compose(
   withConnect,
   withSaga,
 )(AppStore));
-
