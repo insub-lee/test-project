@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { BackTop } from 'antd';
+import { BackTop, Input, Button } from 'antd';
 
+import * as commonjs from 'containers/common/functions/common';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
 import Footer from 'containers/store/App/Footer';
 import { intlObj } from 'utils/commonUtils';
-import messages from 'containers/store/App/messages';
+import messages from '../../../messages';
 import NavList from 'components/Header/NavList';
 import NavListItem from 'components/Header/NavListItem';
 import NavLink from 'components/Header/NavLink';
@@ -25,10 +26,18 @@ import * as actionsApp from '../../actions';
 import ItemList from './ItemList';
 import AppCategory from '../../components/AppCategory';
 
+import StyleAppList from './StyleAppList';
+
 class AppList extends Component {
   componentDidMount() {
     // param - ALL / ONE
-    const { match: { params: { CATG_ID, searchword, limit } }, loadingOn, handleInitPage } = this.props;
+    const {
+      match: {
+        params: { CATG_ID, searchword, limit },
+      },
+      loadingOn,
+      handleInitPage,
+    } = this.props;
     loadingOn();
     if (CATG_ID) {
       handleInitPage('ONE', Number(CATG_ID), limit);
@@ -41,9 +50,18 @@ class AppList extends Component {
 
   componentDidUpdate(prevProps) {
     const {
-      match: { params: { CATG_ID: currentCtagId, searchword: currentSearchWord } }, loadingOn, handleGetMapAppListSearch, handleGetMapListOne,
+      match: {
+        params: { CATG_ID: currentCtagId, searchword: currentSearchWord },
+      },
+      loadingOn,
+      handleGetMapAppListSearch,
+      handleGetMapListOne,
     } = this.props;
-    const { match: { params: { CATG_ID: prevCtagId, searchword: prevSearchWord } } } = prevProps;
+    const {
+      match: {
+        params: { CATG_ID: prevCtagId, searchword: prevSearchWord },
+      },
+    } = prevProps;
     if (currentSearchWord && currentSearchWord !== '' && currentSearchWord !== prevSearchWord) {
       loadingOn();
       handleGetMapAppListSearch(currentSearchWord);
@@ -52,6 +70,25 @@ class AppList extends Component {
       handleGetMapListOne(Number(currentCtagId));
     }
   }
+  /* eslint-disable */
+  search = () => {
+    const searchword = this.searchInput.input.value;
+    this.props.changeSearchword(searchword);
+
+    const type = this.props.history.location.pathname.indexOf('/bizStore/biz') > -1 ? 'biz' : 'app';
+
+    if (searchword.trim() === '') {
+      this.props.history.push(`/portal/store/appMain/bizStore/${type}/list`);
+    } else if (this.props.searchword !== searchword || (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet')) {
+      this.props.history.push(`/portal/store/appMain/bizStore/${type}/search/${searchword}`);
+    }
+  };
+
+  searchEnter = e => {
+    if (e.key === 'Enter') {
+      this.search();
+    }
+  };
 
   render() {
     const {
@@ -68,7 +105,9 @@ class AppList extends Component {
       handleOnClick,
       handleGetMapListOneWithHistory,
       handleGoBack,
-      match: { params: { CATG_ID } },
+      match: {
+        params: { CATG_ID },
+      },
     } = this.props;
 
     return (
@@ -78,7 +117,6 @@ class AppList extends Component {
         <ErrorBoundary>
           <AppCategory handleOnClick={node => handleOnClick(node, history)} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
         </ErrorBoundary>
-
         <NavList className="navTabs">
           <NavListItem>
             <NavLink to="/portal/store/appMain/bizStore/app/list" className="current">
@@ -93,12 +131,29 @@ class AppList extends Component {
         </NavList>
 
         <ErrorBoundary>
+          <StyleAppList>
+            <div className="topPart">
+              <div className="searchInput">
+                <Input
+                  placeholder=""
+                  title={intlObj.get(messages.searchBizStore)}
+                  onKeyPress={this.searchEnter}
+                  ref={ref => {
+                    this.searchInput = ref;
+                  }}
+                />
+                <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
+                {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
+              </div>
+            </div>
+          </StyleAppList>
+
           <ItemList
             type={initType}
             mapList={mapList}
             searchword={searchword}
             getMapListOne={key => handleGetMapListOneWithHistory(key, history)}
-            getMapListMore={(key) => {
+            getMapListMore={key => {
               loadingOn();
               handleGetMapAppListMore(key);
             }}
@@ -158,7 +213,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actionsApp.changeSearchword(''));
     window.scrollTo(0, 0);
   },
-  handleGoBack: (history) => {
+  handleGoBack: history => {
     dispatch(actionsApp.changeSearchword(''));
     history.goBack();
   },

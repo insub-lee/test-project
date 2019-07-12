@@ -46,12 +46,12 @@ class AppCategory extends Component {
         {showTabs && (currentView !== 'Mobile' && currentView !== 'Tablet') ? (
           <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
-              <Tab style={{ width: '100%' }}>
+              <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
-              {/* {!isBizManage ? (
+              {!isBizManage ? (
                 <Tab>
                   <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
                     <FormattedMessage {...messages.bizGroup} />
@@ -59,7 +59,7 @@ class AppCategory extends Component {
                 </Tab>
               ) : (
                 ''
-              )} */}
+              )}
             </TabList>
             <TabPanel />
             <TabPanel />
