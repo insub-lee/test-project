@@ -17,6 +17,11 @@ const makeSearchword = () => createSelector(
   org => org.get('searchword'),
 );
 
+const makeCategoryComboData = () => createSelector(
+  selectOrg,
+  org => org.get('categoryComboData').toJS(),
+);
+
 const selectView = state => state.get('hynix.common');
 
 const currentView = () => createSelector(
@@ -29,5 +34,6 @@ export {
   makeInitType,
   makeMapList,
   makeSearchword,
+  makeCategoryComboData,
   currentView,
 };

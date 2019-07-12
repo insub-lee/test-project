@@ -27,7 +27,7 @@ import AppStoreTree from './AppStoreTree';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
 // import Popup from './Popup';
-import AppModal from './AppBizModal/AppModal';
+import AppModal from './AppModal';
 import StyleAppStore from './StyleAppStore';
 // import MyAppDetail from '../../../store/AppMain/MyApp/MyAppDetail';
 // import MyAppUpdate from '../../../store/AppMain/MyApp/MyAppUpdate';
@@ -130,7 +130,7 @@ class AppStore extends Component {
         <StyleAppStore>
           <h3 className="pageTitle list">AppStore 관리</h3>
           {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
-          <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
+          <div className="pageContent">
             <div className="appstoreTreeWrapper">
               <div>
                 <ErrorBoundary>

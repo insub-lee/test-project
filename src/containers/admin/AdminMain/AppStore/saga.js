@@ -12,7 +12,7 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 
 import messages from './messages';
 // eslint-disable-next-line no-unused-vars
-import * as constantsAppList from './AppBizModal/AppModal/AppList/constants';
+import * as constantsAppList from './AppModal/AppList/constants';
 import * as constants from './constants';
 
 

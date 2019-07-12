@@ -47,6 +47,9 @@ class AppList extends Component {
     const { params } = match;
     const { CATG_ID, searchword } = params;
     
+    console.log('asdasdsadsadsa');
+    console.log(this.props.categoryData);
+
     if (checkValue(searchword, nextProps.searchword)) {
       this.props.handleGetMapAppListSearch(searchword);
     } else if (checkValue(CATG_ID, this.CATG_ID)) {
@@ -54,6 +57,8 @@ class AppList extends Component {
       this.props.handleGetMapListOne(CATG_ID);
     }
   }
+
+  
 
   render() {
     const {
@@ -107,12 +112,11 @@ class AppList extends Component {
           <Select
             value={ selectedCategoryId }
             style={{ width: 200, float: 'right' }}
-            onChange={handleOnChange}>
-            <Option value={0}>전체</Option>
-            <Option value={101}>공통</Option>
-            <Option value={102}>업무빌더</Option>
-            <Option value={103}>상담지원및메뉴얼</Option>
-            <Option value={104}>기타</Option>
+            onChange={handleOnChange}
+          >
+            {this.props.categoryComboData.map(item =>
+              <Option value={item.NODE_TYPE === 'R' ? 0 : item.CATG_ID}>{item.NAME_KOR}</Option>)
+            }
           </Select>
         </div>
         <ItemList
@@ -138,7 +142,7 @@ AppList.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   searchword: PropTypes.string.isRequired,
-
+  categoryComboData: PropTypes.array.isRequired,
   handleInitPage: PropTypes.func.isRequired,
   handleGetMapListOne: PropTypes.func.isRequired,
   handleGetMapAppListMore: PropTypes.func.isRequired,
@@ -172,6 +176,7 @@ const mapStateToProps = createStructuredSelector({
   initType: selectors.makeInitType(),
   mapList: selectors.makeMapList(),
   searchword: selectors.makeSearchword(),
+  categoryComboData: selectors.makeCategoryComboData(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

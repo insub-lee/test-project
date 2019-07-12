@@ -44,6 +44,7 @@ class ItemList extends Component {
 
     // const handleGetMapListOne = () => getMapListOne(key);
     const handleGetMapListOne = () => history.push(`/admin/adminmain/appstore/modal/app/list/${key}`);
+    const handleGetMapListChildOne = childKey => history.push(`/admin/adminmain/appstore/modal/app/list/${childKey}`);
     const handleReadMore = () => getMapListMore(key);
 
     const renderTitle = () => {
@@ -178,7 +179,7 @@ class ItemList extends Component {
               /* child category list */
               childList ? childList.map(child => (
                 <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
-                  <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
+                  <Button type="button" className="goSubmenuBtn" onClick={() => handleGetMapListChildOne(child.key)}>
                     {lang.get('NAME', child)}
                   </Button>
                 </Col>

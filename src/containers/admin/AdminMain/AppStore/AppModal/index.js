@@ -14,7 +14,7 @@ import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import AppList from './AppList';
-import StyleAppBizModal from '../StyleAppBizModal';
+import StyleAppModal from './StyleAppModal';
 
 class AppModal extends PureComponent {
   searchEnter = (e) => {
@@ -54,7 +54,7 @@ class AppModal extends PureComponent {
     }
 
     return (
-      <StyleAppBizModal>
+      <StyleAppModal>
         {/* <div className="topPart"> */}
         {/*  <div className="searchInput">
             <Input
@@ -80,7 +80,7 @@ class AppModal extends PureComponent {
           <Route path={`${preUrl}/app/list/:CATG_ID`} component={AppList} exact />
           <Route path={`${preUrl}/app/search/:searchword`} component={AppList} />
         </ErrorBoundary>
-      </StyleAppBizModal>
+      </StyleAppModal>
     );
   }
 }

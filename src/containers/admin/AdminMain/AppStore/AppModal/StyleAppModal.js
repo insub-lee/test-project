@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import iconSearch from 'images/common/icon-search2.png';
 
-const StyleAppBizModal = styled.div`
+const StyleAppModal = styled.div`
   position: relative;
   max-width: 1230px;
   width: 100%;
@@ -89,4 +89,4 @@ const StyleAppBizModal = styled.div`
 
 `;
 
-export default StyleAppBizModal;
+export default StyleAppModal;

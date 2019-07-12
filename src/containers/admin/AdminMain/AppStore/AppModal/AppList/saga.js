@@ -53,8 +53,8 @@ import * as constants from './constants';
 */
 
 // 앱리스트 사이즈
-const appBlockSize = 20;
-const appBlockSizeAll = 8;
+const appBlockSize = 21;
+const appBlockSizeAll = 9;
 
 /* 초기 페이지 세팅 */
 export function* initPage(payload) {
@@ -74,6 +74,7 @@ export function* initPage(payload) {
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(categoryData),
       categoryFlatData: fromJS(categoryFlatData),
+      categoryComboData: fromJS(result),
     });
   }
 

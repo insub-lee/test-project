@@ -7,13 +7,14 @@ const initialState = fromJS({
   mapList: [],
   categoryData: [],
   categoryFlatData: [],
+  categoryComboData: [],
   searchword: '',
 });
 
 const orgReducer = (state = initialState, action) => {
   switch (action.type) {
     case constants.SET_CATEGORY_DATA:
-      return state.set('categoryData', action.categoryData).set('categoryFlatData', action.categoryFlatData);
+      return state.set('categoryData', action.categoryData).set('categoryFlatData', action.categoryFlatData).set('categoryComboData', action.categoryComboData);
     case constants.SET_MENU_TYPE:
       return state.set('menuType', action.menuType);
     case constants.SET_MAPLIST:
