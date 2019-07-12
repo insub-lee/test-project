@@ -38,7 +38,7 @@ export function* getBizGroupInfo(payload) {
 export function* updateBizGroup(payload) {
   const { data, history } = payload;
 
-  const bizmanage = yield select(state => state.get('bizmanage'));
+  const bizmanage = yield select(state => state.get('admin/AdminMain/Menu'));
   const { node } = bizmanage.get('tempRowInfo');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/updateBizgroup', { data });

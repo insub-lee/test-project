@@ -359,8 +359,8 @@ const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
-const withSaga = injectSaga({ key: 'appRating', saga });
-const withReducer = injectReducer({ key: 'appRating', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppRating', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppRating', reducer });
 
 export default compose(
   withReducer,

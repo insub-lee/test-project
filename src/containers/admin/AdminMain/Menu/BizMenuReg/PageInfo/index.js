@@ -10,7 +10,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppSelector from 'components/appSelector/index';
-import Page from 'containers/store/components/BizGroupPage';
+import Page from 'containers/admin/components/BizGroupPage';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
@@ -37,8 +37,7 @@ class PageInfo extends Component {
     const { params } = match;
     const { PAGE_ID, BIZGRP_ID } = params;
 
-    if (PAGE_ID
-      && this.state.PAGE_ID !== Number(PAGE_ID)) {
+    if (PAGE_ID && this.state.PAGE_ID !== Number(PAGE_ID)) {
       this.setState({
         PAGE_ID: Number(PAGE_ID),
       });
@@ -47,9 +46,7 @@ class PageInfo extends Component {
   }
 
   render() {
-    const {
-      PAGE_ID,
-    } = this.state;
+    const { PAGE_ID } = this.state;
     const {
       widgetList,
       deleteWidget,
@@ -119,7 +116,7 @@ class PageInfo extends Component {
       };
     }
 
-    const addList = (app) => {
+    const addList = app => {
       const widgetArr = [];
       for (let i = 0; i < app.length; i += 1) {
         widgetArr.push(app[i].APP_ID);
@@ -138,15 +135,11 @@ class PageInfo extends Component {
 
         {bizGroupInfo.SEC_YN === 'Y' ? (
           <ErrorBoundary>
-            <AppSelector
-              type="widget"
-              show={this.state.show}
-              closeModal={closeModal}
-              addList={addList}
-              style={{ marginTop: 570 }}
-            />
+            <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>
-        ) : ''}
+        ) : (
+          ''
+        )}
       </div>
     );
   }
@@ -185,13 +178,18 @@ const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'bizmenuPageInfo', reducer });
 const withSaga = injectSaga({ key: 'bizmenuPageInfo', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withConnect,
-  withSaga,
-)(PageInfo));
+export default injectIntl(
+  compose(
+    withReducer,
+    withConnect,
+    withSaga,
+  )(PageInfo),
+);

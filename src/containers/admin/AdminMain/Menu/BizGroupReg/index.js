@@ -879,8 +879,8 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-const withReducer = injectReducer({ key: 'bizGroupReg', reducer });
-const withSaga = injectSaga({ key: 'bizGroupReg', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizGroupReg', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizGroupReg', saga });
 
 export default injectIntl(compose(
   withReducer,

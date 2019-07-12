@@ -12,8 +12,7 @@ import Footer from 'containers/admin/App/Footer';
 import { Input, Button, Select } from 'antd';
 import Organization from 'containers/portal/components/Organization';
 import MemberList from 'components/OrgReturnView';
-import { BtnDkGray } from 'containers/store/components/uielements/buttons.style';
-
+import { BtnDkGray } from 'containers/admin/components/uielements/buttons.style';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -40,8 +39,8 @@ class VgroupAdmin extends React.Component {
       selectedIndex: -1,
       // title: '',
       // GRP_CD: '',
-      GRP_ID: 0,  //eslint-disable-line
-      PRNT_ID: 0,  //eslint-disable-line
+      GRP_ID: 0, //eslint-disable-line
+      PRNT_ID: 0, //eslint-disable-line
       NAME_KOR: '',
       NAME_ENG: '',
       NAME_CHN: '',
@@ -62,10 +61,10 @@ class VgroupAdmin extends React.Component {
     }
   }
 
-  onChangeKeyword = (e) => {
+  onChangeKeyword = e => {
     this.setState({ searchKeyword: e.target.value });
-  }
-  onChangeSite = (val) => {
+  };
+  onChangeSite = val => {
     this.setState({
       SITE_ID: val,
       selectedIndex: -1,
@@ -80,7 +79,7 @@ class VgroupAdmin extends React.Component {
     });
     this.props.getVgroupTreeList(this.state.searchKeyword, val);
     this.props.getVgroupDtlInfo(-1, this.state.SITE_ID);
-  }
+  };
   mOrgOpen = () => {
     this.setState({
       mOrgShow: true,
@@ -115,17 +114,12 @@ class VgroupAdmin extends React.Component {
   //   );
   // };
   updateMember = () => {
-    this.props.vgroupMemberUpdate(
-      this.state.GRP_ID,
-      this.state.managerSetMembers,
-      this.state.userSetMembers,
-      this.state.deptSetMembers,
-    );
-  }
+    this.props.vgroupMemberUpdate(this.state.GRP_ID, this.state.managerSetMembers, this.state.userSetMembers, this.state.deptSetMembers);
+  };
 
   render() {
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrgMng = (resultObj) => {
+    const getDataFromOrgMng = resultObj => {
       const { managerSetMembers } = this.state;
       // const {
       //   handleSaveSettingMembers,
@@ -135,7 +129,7 @@ class VgroupAdmin extends React.Component {
       // const managerSetMembersCopy = [];
       const managerSetMembersFromOrganization = resultObj.selectedUsers;
 
-      managerSetMembersFromOrganization.map((obj) => {
+      managerSetMembersFromOrganization.map(obj => {
         if (managerSetMembers.findIndex(o => o.USER_ID === obj.USER_ID) === -1) {
           managerSetMembersCopy.push(obj);
         }
@@ -149,13 +143,13 @@ class VgroupAdmin extends React.Component {
       // put({ type: constants.SET_VGROUP_MANAGER_LIST, payload: managerSetMembersCopy });
     };
 
-    const returnManagerList = (resultObj) => {
+    const returnManagerList = resultObj => {
       this.setState({
         managerSetMembers: resultObj,
       });
     };
 
-    const getDataFromOrgMem = (resultObj) => {
+    const getDataFromOrgMem = resultObj => {
       const { userSetMembers } = this.state;
       // const {
       //   handleSaveSettingMembers,
@@ -164,7 +158,7 @@ class VgroupAdmin extends React.Component {
       const userSetMembersCopy = userSetMembers.slice();
       const userSetMembersFromOrganization = resultObj.selectedUsers;
 
-      userSetMembersFromOrganization.map((obj) => {
+      userSetMembersFromOrganization.map(obj => {
         if (userSetMembers.findIndex(o => o.USER_ID === obj.USER_ID) === -1) {
           userSetMembersCopy.push(obj);
         }
@@ -179,7 +173,7 @@ class VgroupAdmin extends React.Component {
       const deptSetMembersCopy = deptSetMembers.slice();
       const deptSetMembersFromOrganization = resultObj.checkedDept;
 
-      deptSetMembersFromOrganization.map((obj) => {
+      deptSetMembersFromOrganization.map(obj => {
         if (deptSetMembers.findIndex(o => o.id === obj.id) === -1) {
           deptSetMembersCopy.push(obj);
         }
@@ -191,29 +185,26 @@ class VgroupAdmin extends React.Component {
       });
     };
 
-    const returnUserList = (resultObj) => {
+    const returnUserList = resultObj => {
       this.setState({
         userSetMembers: resultObj,
       });
     };
-    const returnDeptList = (resultObj) => {
+    const returnDeptList = resultObj => {
       this.setState({
         deptSetMembers: resultObj,
       });
     };
 
-    const comboOptions = comboList => (
-      comboList.map(item =>
-        <Option value={item.SITE_ID}>{item.NAME_KOR}</Option>)
-    );
-    const handleTreeOnClick = (node) => {
+    const comboOptions = comboList => comboList.map(item => <Option value={item.SITE_ID}>{item.NAME_KOR}</Option>);
+    const handleTreeOnClick = node => {
       // 그룹 관리자/멤버 조회 및 출력
       this.props.getVgroupDtlInfo(node.GRP_ID, this.state.SITE_ID);
 
       this.setState({
         // title: node.title,
         // GRP_CD: node.GRP_CD,
-        GRP_ID: node.GRP_ID,  //eslint-disable-line
+        GRP_ID: node.GRP_ID, //eslint-disable-line
         selectedIndex: node.GRP_ID,
         PRNT_ID: node.PRNT_ID, //eslint-disable-line
         NAME_KOR: node.NAME_KOR,
@@ -241,10 +232,7 @@ class VgroupAdmin extends React.Component {
       });
       this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
     };
-    const saveButton = () => (
-      this.state.showAddMember ?
-        <BtnDkGray onClick={this.updateMember}>저장</BtnDkGray> : ''
-    );
+    const saveButton = () => (this.state.showAddMember ? <BtnDkGray onClick={this.updateMember}>저장</BtnDkGray> : '');
     return (
       <div>
         <StyleVGroup>
@@ -268,7 +256,7 @@ class VgroupAdmin extends React.Component {
               </div>
             </div>
             <div className="vgroupContents">
-              <h4>{ /* this.state.title */ }가상그룹 명칭</h4>
+              <h4>{/* this.state.title */}가상그룹 명칭</h4>
               <StyleVGroupForm>
                 <table className="adminTbl vGroupTbl">
                   <tbody>
@@ -317,16 +305,12 @@ class VgroupAdmin extends React.Component {
                 getDataFromOrganization={getDataFromOrgMng}
                 selectedUsers={this.state.managerSetMembers.slice()}
               />
-              <MemberList
-                managerList={this.state.managerSetMembers}
-                delFlag={true}
-                returnManagerList={returnManagerList}
-              />
+              <MemberList managerList={this.state.managerSetMembers} delFlag={true} returnManagerList={returnManagerList} />
               <div className="buttonWrapper">
                 <Button onClick={this.mOrgOpen} title="조직도열기" className="addRow" disabled={!this.state.showAddMember} />
               </div>
               <h4 style={{ marginTop: 40 }}>가상그룹 멤버</h4>
-              {this.state.uOrgShow ?
+              {this.state.uOrgShow ? (
                 <Organization
                   show={this.state.uOrgShow}
                   closeModal={this.uOrgClose}
@@ -334,9 +318,9 @@ class VgroupAdmin extends React.Component {
                   getDataFromOrganization={getDataFromOrgMem}
                   selectedUsers={this.state.userSetMembers.slice()}
                 />
-                :
+              ) : (
                 ''
-              }
+              )}
               <MemberList
                 userList={this.state.userSetMembers}
                 deptList={this.state.deptSetMembers}
@@ -377,20 +361,16 @@ VgroupAdmin.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getVgroupTreeList: (searchKeyword, SITE_ID) =>
-    dispatch(actions.getVgroupTreeList(searchKeyword, SITE_ID)),
-  getVgroupComboList: () =>
-    dispatch(actions.getVgroupComboList()),
-  getVgroupDtlInfo: (grpId, SITE_ID) =>
-    dispatch(actions.getVgroupDtlInfo(grpId, SITE_ID)),
+  getVgroupTreeList: (searchKeyword, SITE_ID) => dispatch(actions.getVgroupTreeList(searchKeyword, SITE_ID)),
+  getVgroupComboList: () => dispatch(actions.getVgroupComboList()),
+  getVgroupDtlInfo: (grpId, SITE_ID) => dispatch(actions.getVgroupDtlInfo(grpId, SITE_ID)),
   vgroupInfoInsert: (SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
     dispatch(actions.vgroupInfoInsert(SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN));
   },
   vgroupInfoUpdate: (SITE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
     dispatch(actions.vgroupInfoUpdate(SITE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN));
   },
-  vgroupInfoDelete: (SITE_ID, GRP_ID) =>
-    dispatch(actions.vgroupInfoDelete(SITE_ID, GRP_ID)),
+  vgroupInfoDelete: (SITE_ID, GRP_ID) => dispatch(actions.vgroupInfoDelete(SITE_ID, GRP_ID)),
   vgroupManagerUpdate: (GRP_ID, managerSetMembers) => {
     dispatch(actions.vgroupManagerUpdate(GRP_ID, managerSetMembers));
   },
@@ -407,7 +387,10 @@ const mapStateToProps = createStructuredSelector({
   setVgroupMemberDList: selectors.makeSelectVgroupMemberDList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'VgroupAdmin', saga });
 const withReducer = injectReducer({ key: 'VgroupAdmin', reducer });
 

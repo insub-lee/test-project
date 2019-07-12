@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
@@ -80,7 +79,7 @@ class AppList extends Component {
         type={initType}
         mapList={mapList}
         getMapListOne={handleGetMapListOne}
-        getMapListMore={(key) => {
+        getMapListMore={key => {
           loadingOn();
           handleGetMapAppListMore(key);
         }}
@@ -138,10 +137,13 @@ const mapStateToProps = createStructuredSelector({
   searchword: selectors.makeSearchword(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-const withReducer = injectReducer({ key: 'bizmenuAppList', reducer });
-const withSaga = injectSaga({ key: 'bizmenuAppList', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList', saga });
 
 export default compose(
   withReducer,

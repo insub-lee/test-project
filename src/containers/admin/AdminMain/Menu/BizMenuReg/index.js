@@ -110,7 +110,7 @@ class BizMenuReg extends Component {
     const preUrl = match.path.substr(0, match.path.indexOf('/:'));
     let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' };
     if (BIZGRP_ID !== 1) {
-      divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', float: 'right', marginRight: '20px' };
+      divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', marginLeft: '300px' };
     }
 
     console.debug('BIZGRP_ID >> ', BIZGRP_ID);
@@ -248,8 +248,8 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'bizmenureg', reducer });
-const withSaga = injectSaga({ key: 'bizmenureg', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg', saga });
 
 export default injectIntl(
   compose(

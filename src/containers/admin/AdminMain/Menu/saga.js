@@ -159,7 +159,8 @@ export function* deleteNode(payload) {
     // 현재 페이지가 삭제된 경우
     const BIZGRP_ID2 = getIdByUrl('bizGroupReg/', history);
     if (BIZGRP_ID === BIZGRP_ID2 && node.MENU_EXIST_YN === 'N') {
-      history.push('/store/appMain/bizManage');
+      // history.push('/store/appMain/bizManage');
+      history.push('/admin/adminmain/menu');
     }
 
     message.success(`${intlObj.get(messages.completeDelete)}`, 2);

@@ -12,17 +12,17 @@ import * as commonjs from 'containers/common/functions/common';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import { Input } from 'antd';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-import AppCategory from 'containers/store/components/AppCategory';
+import AppCategory from 'containers/admin/components/AppCategory';
 import messages from './messages';
 import AppList from './AppList';
 import StyleAppBizModal from '../StyleAppBizModal';
 
 class AppModal extends PureComponent {
-  searchEnter = (e) => {
+  searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
-  }
+  };
 
   search = () => {
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
@@ -35,7 +35,7 @@ class AppModal extends PureComponent {
     }
 
     this.searchword = searchword;
-  }
+  };
 
   render() {
     const {
@@ -57,25 +57,19 @@ class AppModal extends PureComponent {
     return (
       <StyleAppBizModal>
         <ErrorBoundary>
-          <AppCategory
-            handleOnClick={handleTreeOnClick}
-            selectedIndex={selectedCategoryId}
-            preUrl={preUrl}
-          />
+          <AppCategory handleOnClick={handleTreeOnClick} selectedIndex={selectedCategoryId} preUrl={preUrl} />
         </ErrorBoundary>
         <div className="topPart">
           <div className="searchInput">
             <Input
               placeholder=""
               title={intlObj.get(messages.searchBizStore)}
-              ref={(ref) => { this.searchInput = ref; }}
+              ref={ref => {
+                this.searchInput = ref;
+              }}
               onKeyPress={this.searchEnter}
             />
-            <Button
-              type="button"
-              onClick={this.search}
-              title={intlObj.get(messages.search)}
-            />
+            <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
 
             {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
           </div>

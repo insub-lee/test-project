@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { intlObj } from 'utils/commonUtils';
 import bizAppIcon from 'images/bizstore/biz-app-icon.png';
 import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
-import Card from 'containers/store/components/uielements/card.style';
+import Card from 'containers/admin/components/uielements/card.style';
 import messages from '../messages';
 
 class Item extends PureComponent {

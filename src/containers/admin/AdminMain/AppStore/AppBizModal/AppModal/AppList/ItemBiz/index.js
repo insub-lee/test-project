@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { intlObj, imgUrl } from 'utils/commonUtils';
 import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
 import moreMenu from 'images/bizstore/icon-more-menu.png';
-import Card from 'containers/store/components/uielements/card.style';
+import Card from 'containers/admin/components/uielements/card.style';
 
 import messages from './messages';
 

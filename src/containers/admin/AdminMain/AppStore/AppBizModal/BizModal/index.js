@@ -11,7 +11,7 @@ import { Input } from 'antd';
 // import * as selectorsApp from 'containers/store/App/selectors';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-import BizCategory from 'containers/store/components/BizCategory';
+import BizCategory from 'containers/admin/components/BizCategory';
 import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import BizList from './BizList';
@@ -28,13 +28,13 @@ class BizModal extends PureComponent {
       this.props.history.push(`${preUrl}/biz/search/${searchword}`);
     }
     this.searchword = searchword;
-  }
+  };
 
-  searchEnter = (e) => {
+  searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
-  }
+  };
 
   render() {
     const {
@@ -44,7 +44,7 @@ class BizModal extends PureComponent {
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       this.searchword = '';
       this.searchInput.input.value = '';
       history.push(`${preUrl}/biz/list/${node.key}`);
@@ -54,10 +54,7 @@ class BizModal extends PureComponent {
     return (
       <StyleAppBizModal>
         <ErrorBoundary>
-          <BizCategory
-            handleOnClick={handleTreeOnClick}
-            preUrl={preUrl}
-          />
+          <BizCategory handleOnClick={handleTreeOnClick} preUrl={preUrl} />
         </ErrorBoundary>
 
         <div className="topPart">
@@ -66,13 +63,11 @@ class BizModal extends PureComponent {
               placeholder=""
               title={intlObj.get(messages.searchBizStore)}
               onKeyPress={this.searchEnter}
-              ref={(ref) => { this.searchInput = ref; }}
+              ref={ref => {
+                this.searchInput = ref;
+              }}
             />
-            <Button
-              type="button"
-              onClick={this.search}
-              title={intlObj.get(messages.search)}
-            />
+            <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
 
             {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
           </div>
