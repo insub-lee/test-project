@@ -154,3 +154,8 @@ export const SET_SELECTEDAPP_APPS = 'containers/common/Routes/SET_SELECTEDAPP_AP
 
 export const GET_SINGLEMODE_LOADDATA_SAGA = 'container/common/Routes/GET_SINGLEMODE_LOADDATA_SAGA';
 
+// 9. 공통 메뉴 관련 상수 ******************
+// 9-1
+export const GET_COMMON_MENU_TREE_SAGA = 'containers/common/Routes/GET_COMMON_MENU_TREE_SAGA';
+export const SET_COMMON_MENU_TREE = 'containers/common/Routes/SET_COMMON_MENU_TREE';
+// 9. 마이 메뉴 관련 상수 끝 ******************

@@ -68,28 +68,6 @@ class MyPageTree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // if (!Object.is(this.state.treeData[0], nextProps.treeData[0])) {
-    //   if (nextProps.treeData && nextProps.treeData.length > 0) {
-    //     nextProps.treeData.map(e => {
-    //       this.setDefaultMenuIndex(e.NAME_KOR);
-    //       if (e.NAME_KOR === 'My Home') {
-    //         this.setState(
-    //           myHomeIndex: e.MENU_ID
-    //         );
-    //       }
-    //       else if(e.NAME_KOR === '개인 업무') {
-    //         this.setState(
-    //           myBizFoldIndex: e.MENU_ID
-    //         );
-    //       }else if(e.NAME_KOR === '개인 Biz') {
-    //         this.setState(
-    //           myAppFoldIndex: e.MENU_ID
-    //         );
-    //       }
-    //     });
-    //   }
-    // }
-
     if (nextProps.treeData && nextProps.treeData.length > 0) {
       if (nextProps.selectedIndex === -1) {
         this.setState({
@@ -398,6 +376,10 @@ class MyPageTree extends Component {
             onClick(node);
           };
 
+          const nodeDefaultYn = node.DEFAULT_YN;
+
+          console.debug('>>>>>>>>>>>sotrtable node: ', nodeDefaultYn, node);
+
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
           if (onHoverKey === node.key) {
             buttons = [
@@ -408,23 +390,7 @@ class MyPageTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    let tabName = '';
-
-                    if (findRootAppMenuID && findRootBizMenuID && (node.NAME_KOR !== '개인 App' && node.NAME_KOR !== '개인 업무')) {
-                      if (findRootBizMenuID === node.PRNT_ID) {
-                        tabName = 'biz';
-                      } else if (findRootAppMenuID === node.PRNT_ID) {
-                        tabName = 'app';
-                      }
-                    } else {
-                      if (node.NAME_KOR === '개인 App') {
-                        tabName = 'app';
-                      } else if (node.NAME_KOR === '개인 업무') {
-                        tabName = 'biz';
-                      }
-                    }
-
-                    history.push(`/portal/store/appMain/myPage/modal/${tabName}/list`);
+                    history.push('/store/appMain/myPage/modal/app/list');
                   }}
                 />
               ) : (

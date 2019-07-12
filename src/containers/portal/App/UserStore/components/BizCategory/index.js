@@ -50,13 +50,13 @@ class BizCategory extends Component {
         {currentView !== 'Mobile' && currentView !== 'Tablet' ? (
           <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
-              {/* <Tab>
+              <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
-              </Tab> */}
+              </Tab>
               {!isBizManage ? (
-                <Tab style={{ width: '100%' }}>
+                <Tab>
                   <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
                     <FormattedMessage {...messages.bizGroup} />
                   </Link>
