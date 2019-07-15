@@ -15,10 +15,4 @@ const makeMyAppStoreTree = () =>
     portalState => portalState.get('myAppStoreTreeData').toJS(),
   );
 
-const makeCommonMenuTree = () =>
-  createSelector(
-    selectHynixCommon,
-    portalState => portalState.get('commonMenuTreeData').toJS(),
-  );
-
-export { makeMyAppTree, makeMyAppStoreTree, makeCommonMenuTree };
+export { makeMyAppTree, makeMyAppStoreTree };
