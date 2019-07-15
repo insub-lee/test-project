@@ -117,7 +117,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach((o) => {
+        dockAppList.forEach(o => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -279,12 +279,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = (item) => {
+  onReload = item => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = (open) => {
+  onSetOpen = open => {
     this.setState({ open: open }); //eslint-disable-line
   };
   /* eslint-disable */
@@ -665,12 +665,6 @@ class App extends React.PureComponent {
                 open={headerMenuOpen}
                 execMenu={this.execMenu}
                 execPage={this.execPage}
-                myMNotiCnt={myMNotiCnt}
-                myHNotiCnt={myHNotiCnt}
-                myMNotiList={myMNotiList}
-                selectedIndex={selectedIndex}
-                menuName={menuName}
-                handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
                 setMyMenuData={setMyMenuData}
                 visible={this.state.visible}
                 setMenuClose={this.setMenuClose}
@@ -735,11 +729,11 @@ class App extends React.PureComponent {
                         <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
                       </Tooltip>
                     </div>
-                    <div className="iconPositon" style={{ marginTop: '20px' }}>
+                    {/* <div className="iconPositon" style={{ marginTop: '20px' }}>
                       <Tooltip placement="right" title="업무등록">
                         <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
                       </Tooltip>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>

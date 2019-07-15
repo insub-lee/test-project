@@ -9118,6 +9118,11 @@ react-sidebar@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/react-sidebar/-/react-sidebar-2.3.2.tgz#ec140bea8a6f5fa3d8ea7a56479665b44cf4f9cf"
 
+react-sidemenu@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/react-sidemenu/-/react-sidemenu-1.1.0.tgz#3c8c9ccd51e38eed99e127a5548a0643b5f82952"
+  integrity sha512-jELlbJ07iKRAcOMgcC4xw3f3wVbpC4XoIbs1cn/zK4ujPfC0ZJnL9oePrXibf+dHIcfeByfiETpjmepvfBz3uA==
+
 react-slick@~0.24.0:
   version "0.24.0"
   resolved "https://registry.yarnpkg.com/react-slick/-/react-slick-0.24.0.tgz#1a4e078a82de4e9458255d9ce26aa6f3b17b168b"

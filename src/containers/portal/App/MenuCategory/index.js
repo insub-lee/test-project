@@ -1,61 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { Link } from 'react-router-dom';
-// import { Table } from 'semantic-ui-react';
 import Sidebar from 'react-sidebar';
-// import { lang } from 'utils/commonUtils';
-// import Scrollbars from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
-// import Badge from 'components/Badge/StyleBadge';
-// import styled from 'styled-components';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import * as routeActions from 'containers/common/Routes/actions';
-// import makeMyAppTree from './selectors';
-import * as selectors from './selectors';
+import * as routesSelectors from '../../../common/Routes/selectors';
 import Tree from './Tree';
-// import Notification from './Notification';
-// import ExtraMenus from './ExtraMenus';
-// import messages from '../../components/Header/messages';
-
-// const ResultsTableWrapper = styled.div`
-//   width: 230px;
-//   padding-bottom: 20px;
-
-//   tr {
-//     cursor: pointer;
-
-//     td {
-//       height: 29px;
-//       color: #404040;
-//       font-size: 12px;
-
-//       &:first-child {
-//         width: 175px;
-//         padding-left: 16px;
-//       }
-
-//       &:last-child {
-//         width: calc(100% - 175px);
-
-//         .ant-badge {
-//           display: inline-block;
-//           float: right;
-
-//           .ant-badge-count {
-//             right: 0;
-//             min-width: 15px;
-//             height: 16px;
-//             font-size: 10px;
-//             line-height: 16px;
-//             background: #f85023;
-//             box-shadow: none;
-//           }
-//         }
-//       }
-//     }
-//   }
-// `;
 
 class MenuCategory extends React.Component {
   constructor(props) {
@@ -73,10 +23,6 @@ class MenuCategory extends React.Component {
     }
   }
 
-  onClick = () => {
-    this.setState({ visible: !this.state.visible });
-  };
-
   onNoneClick = () => {
     this.setState({ visible: false });
     this.props.setMenuClose();
@@ -85,8 +31,6 @@ class MenuCategory extends React.Component {
   onMenuClick = () => {
     this.setState({ visible: false });
   };
-
-  onClickNode = () => {};
 
   onMouseEnter = () => {
     this.setState({ visible: !this.state.visible });
@@ -97,29 +41,11 @@ class MenuCategory extends React.Component {
   };
 
   getNotiList = () => {
-    //eslint-disable-line
-    const {
- execMenu, execPage, myMNotiCnt, selectedIndex, menuName, handleSetMenuNameSelectedIndex, execApp 
-} = this.props;
-
-    console.debug('>>>>>>>>>commonMenuTreeData', this.props.commonMenuTreeData);
+    const { execMenu, execPage, execApp } = this.props;
 
     return (
       <div>
-        <Tree
-          treeData={this.props.commonMenuTreeData}
-          // saveData={this.props.saveData}
-          onClick={this.onClickNode}
-          execMenu={execMenu}
-          execPage={execPage}
-          selectedIndex={selectedIndex}
-          menuName={menuName}
-          handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-          setClose={this.props.setClose}
-          onMenuClick={this.onMenuClick}
-          showNoti={myMNotiCnt > 0}
-          execApp={execApp}
-        />
+        <Tree treeData={this.props.commonMenuTreeData} execMenu={execMenu} execPage={execPage} setClose={this.props.setClose} execApp={execApp} />
       </div>
     );
   };
@@ -145,9 +71,9 @@ class MenuCategory extends React.Component {
         willChange: 'transform',
         overflow: 'hidden',
         overflowY: 'hidden',
-        width: 360,
-        // paddingLeft: 50,
-        backgroundColor: '#FFFFFF',
+        width: 280,
+        backgroundImage: '-webkit-gradient(linear,right top, left top,from(rgba(51,148,225,.18)),to(transparent))',
+        backgroundColor: '#584475',
       },
       content: {
         position: 'absolute',
@@ -182,8 +108,6 @@ class MenuCategory extends React.Component {
     };
     const { open } = this.props;
 
-    console.debug('>>>>>>>sidebarContent: ', sidebarContent);
-    console.debug('>>>>>>>this.props >>>>>>>>>>>.: ', this.props);
     return (
       <div onMouseLeave={this.onNoneClick} onMouseEnter={this.onMenuClick}>
         <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch={true} shadow={true}>
@@ -198,17 +122,10 @@ MenuCategory.propTypes = {
   commonMenuTreeData: PropTypes.array.isRequired,
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
-  myMNotiCnt: PropTypes.number.isRequired,
-  myHNotiCnt: PropTypes.number.isRequired,
-  myMNotiList: PropTypes.array.isRequired,
-  selectedIndex: PropTypes.number.isRequired,
-  menuName: PropTypes.string.isRequired,
-  handleSetMenuNameSelectedIndex: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   setClose: PropTypes.func,
   setMenuClose: PropTypes.func.isRequired,
-  view: PropTypes.string.isRequired,
-
+  // view: PropTypes.string.isRequired,
   execApp: PropTypes.func,
 };
 
@@ -218,18 +135,9 @@ MenuCategory.defaultProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  commonMenuTreeData: selectors.makeCommonMenuTree(),
+  commonMenuTreeData: routesSelectors.makeCommonMenuTree(),
 });
 
-export function mapDispatchToProps(dispatch) {
-  return {
-    // RoutesAction의 디스패쳐
-    moveNode: treeData => dispatch(routeActions.moveNode(treeData)),
-    updateMymenuDisp: node => dispatch(routeActions.updateMymenuDisp(node)),
-  };
-}
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps);
+
 export default compose(withConnect)(MenuCategory);
