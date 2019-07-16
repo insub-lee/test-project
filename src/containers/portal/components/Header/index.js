@@ -96,7 +96,7 @@ class Header extends React.Component {
                 <span> {appName} </span>
                 {/* 담당자 popover */}
                 {
-                  setMyMenuData.APP_YN === 'Y' && view !== 'Mobile'
+                  ( setMyMenuData.APP_YN === 'Y'&& setMyMenuData.SRC_PATH !== 'PAGE' ) && view !== 'Mobile'
                     ?
                       <ManagerInfo
                         managerInfo={managerInfo}
