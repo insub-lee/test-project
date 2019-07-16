@@ -265,7 +265,7 @@ class Page extends Component {
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
     console.log('TESTETESTESTESTEST:', setMyMenuData);
     console.log('isPreviewPage:', !setMyMenuData);
-
+    
     return (
       <div>
         {!setMyMenuData ? (
@@ -276,9 +276,10 @@ class Page extends Component {
           <div>
             {isPreviewPage === false ? (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' && setMyMenuData.PAGE_ID === columns[0].PAGE_ID ? (
+                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' 
+                && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
                   <div>
-                    {setMyMenuData.APP_YN === 'N' ? (
+                    {setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE' ? (
                       <GridLayout
                         className="layout"
                         layout={layout}
@@ -301,7 +302,7 @@ class Page extends Component {
               <div>
                 {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' ? (
                   <div>
-                    {setMyMenuData.APP_YN === 'N' ? (
+                    {setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE' ? (
                       <GridLayout
                         className="layout"
                         layout={layout}

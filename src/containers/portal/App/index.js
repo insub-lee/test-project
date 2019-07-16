@@ -751,7 +751,7 @@ class App extends React.PureComponent {
                 setIsCloseToFalse={this.setIsCloseToFalse}
                 setMyMenuData={setMyMenuData}
               >
-                <div id="child" className={setMyMenuData.APP_YN === 'Y' || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
+                <div id="child" className={ ( setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE' ) || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
                   <Content
                     className="portalContent"
                     style={{
