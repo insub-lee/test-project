@@ -440,10 +440,13 @@ class MyAppTree extends Component {
               // [ 노드 드래그 가능 여부 ]
               return canDrag
             }}
-            canDrop={({ nextParent }) => {
+            canDrop={({ prevParent, nextParent }) => {
               // [ 노드 드롭 가능 여부 ]
               // 조건 : 최하위 노드 하위에 이동불가
-              return nextParent
+              if (nextParent && prevParent.key === nextParent.key) {
+                return nextParent;
+              }
+              return false;
             }}
             onMoveNode={({ treeData, node, nextParentNode }) => {
               if (node.LVL !== 0) {
@@ -471,7 +474,7 @@ class MyAppTree extends Component {
                 };
 
                 resortTreeData(treeData, 0);
-                moveMymenu(generateList(fromJS(treeData)));
+                moveMymenu(treeFunc.generateList(fromJS(treeData)));
               }
             }}
             generateNodeProps={(rowInfo) => {

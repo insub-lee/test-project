@@ -24,8 +24,9 @@ export const changeSelectedIndex = selectedIndex => ({
   selectedIndex,
 });
 
-export const moveNode = treeData => ({
-  type: constants.MOVE_MYMENU,
+export const moveNode = (siteId, treeData) => ({
+  type: constants.MOVE_NODE,
+  siteId,
   treeData,
 });
 
