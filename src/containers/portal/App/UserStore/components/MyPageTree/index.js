@@ -380,8 +380,8 @@ class MyPageTree extends Component {
 
           console.debug('>>>>>>>>>>>sotrtable node: ', nodeDefaultYn, node);
 
-          // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-          if (onHoverKey === node.key) {
+          // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때 , 개인화 홈 메뉴가 아닐 경우
+          if (onHoverKey === node.key && !(node.DEFAULT_YN === 'Y' && node.NODE_TYPE === 'E')) {
             buttons = [
               // [앱등록 버튼]
               isFolder ? (
@@ -426,19 +426,21 @@ class MyPageTree extends Component {
 
               // [메뉴노출여부 버튼]
               // btnCondition2 ?
-              <VisionBtn
-                key="visionBtn"
-                title="메뉴노출"
-                onClick={() => {
-                  saveData(rowInfo, treeData);
-                  updateMymenuDisp();
-                }}
-                className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
-              />,
+              node.DEFAULT_YN !== 'Y' && (
+                <VisionBtn
+                  key="visionBtn"
+                  title="메뉴노출"
+                  onClick={() => {
+                    saveData(rowInfo, treeData);
+                    updateMymenuDisp();
+                  }}
+                  className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
+                />
+              ),
               // : '',
 
               // [메뉴명수정]
-              canEditName ? (
+              canEditName && node.DEFAULT_YN !== 'Y' ? (
                 <EditBtn
                   key="editBtn"
                   title="편집"
@@ -451,7 +453,7 @@ class MyPageTree extends Component {
               ),
 
               // [메뉴삭제 버튼]
-              isRootBizGroup || isEmptyFolder ? (
+              (isRootBizGroup || isEmptyFolder) && node.DEFAULT_YN !== 'Y' ? (
                 <RemoveBtn
                   key="removeBtn"
                   title="삭제"
