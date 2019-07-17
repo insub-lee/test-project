@@ -71,7 +71,7 @@ class Grid extends Component {
     }
 
     const rowGetter = (i) => {
-      if (groupMemberData.length > 0) {
+      if (groupMemberData.length > 0 && groupMemberData[i]) {
         const content = {
           GRID_DATA: [
             <UserProfile
