@@ -338,8 +338,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-const withSaga = injectSaga({ key: 'appScreenshotList', saga });
-const withReducer = injectReducer({ key: 'appScreenshotList', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppScreenshot', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppScreenshot', reducer });
 
 export default compose(
   withReducer,

@@ -73,7 +73,8 @@ class MyPageTree extends Component {
         });
       } else {
         this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
-
+        console.log('this.treeFlatData');
+        console.log(this.treeFlatData);
         this.setState({
           treeData: toggleExpandedForSelected({
             treeData: nextProps.treeData,
@@ -313,24 +314,26 @@ class MyPageTree extends Component {
         canDrag={({ node }) =>
           // [ 노드 드래그 가능 여부 ]
           // 조건 : 드래그가능 && 업무그룹 하위를 제외한 모든경우 && 폴더/페이지명 수정중이지 않을때
-           canDrag && !(node.REF_TYPE === 'B' && node.NODE_TYPE !== 'R')
+           canDrag && node.NODE_TYPE === 'F'
         }
-        canDrop={({ nextParent }) =>
+        canDrop={({ prevParent, nextParent }) => {
           // [ 노드 드롭 가능 여부 ]
           // 조건 : 최하위 노드 하위에 이동불가 && 업무그룹폴더 하위에 이동불가
-          // eslint-disable-next-line no-mixed-operators
-           !nextParent || nextParent.NODE_TYPE !== 'E' && !(nextParent.NODE_TYPE === 'R' && nextParent.REF_TYPE === 'B')
-        }
+          if (nextParent && (nextParent.NODE_TYPE === 'R' || nextParent.NODE_TYPE === 'F') && prevParent.key === nextParent.key) {
+            return nextParent;
+          }
+          return false;
+        }}
         // eslint-disable-next-line no-shadow
         onMoveNode={({ treeData, node, nextParentNode }) => {
           // [ 노드 드래그 이동 후 실행됨 ]
           // 이동 후 변경된 treeData를 재귀함수돌며 sort, lvl값을 재정렬하고, 트리데이터를 파라미터로 전달
-          const { MENU_ID } = node;
+          const { CATG_ID, SITE_ID } = node;
           let PRNT_ID = -1; // 최상위 루트
           const ROOT_ID = node.path[0];
 
           if (nextParentNode) { // 부모가 있는 경우 PRNT_ID지정
-            PRNT_ID = nextParentNode.MENU_ID;
+            PRNT_ID = nextParentNode.CATG_ID;
           }
 
           // eslint-disable-next-line no-shadow
@@ -343,7 +346,7 @@ class MyPageTree extends Component {
               node.SORT_SQ = i + 1;
               node.LVL = lvl;
               node.path = path;
-              if (node.MENU_ID === MENU_ID) {
+              if (node.CATG_ID === CATG_ID) {
                 node.PRNT_ID = PRNT_ID;
               }
               if (node.children) {
@@ -354,8 +357,8 @@ class MyPageTree extends Component {
 
           resortTreeData(treeData, treeData[0].LVL, [ROOT_ID]);
 
-          saveData(null, treeData);
-          moveNode(treeFunc.generateList(fromJS(treeData)));
+          // saveData(null, treeData);
+          moveNode(SITE_ID, treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
         scaffoldBlockPxWidth={22}
@@ -377,7 +380,7 @@ class MyPageTree extends Component {
             this.setState({
               selectedIndex: node.key,
             });
-            saveData(rowInfo, treeData);
+            // saveData(rowInfo, treeData);
           onClick(node);
         };
 
@@ -401,7 +404,7 @@ class MyPageTree extends Component {
                 key="appListBtn"
                 title="앱등록"
                 onClick={() => {
-                  saveData(rowInfo, treeData);
+                  // saveData(rowInfo, treeData);
                   history.push('/admin/adminmain/appstore/modal/app/list');
                 }}
               /> : '',
@@ -550,7 +553,7 @@ MyPageTree.propTypes = {
   onClick: PropTypes.func,
   updateNode: PropTypes.func, //eslint-disable-line
   insertNode: PropTypes.func, //eslint-disable-line
-  saveData: PropTypes.func, //eslint-disable-line
+  // saveData: PropTypes.func, //eslint-disable-line
   moveNode: PropTypes.func, //eslint-disable-line
   deleteNode: PropTypes.func, //eslint-disable-line
   updateMymenuDisp: PropTypes.func, //eslint-disable-line

@@ -4,7 +4,7 @@ import seeMoreBtnUp from 'images/bizstore/arrow-up2.png';
 
 const StyleBizDetail = styled.div`
   display: inline-block;
-  width: 1190px;
+  width: ${({ pWidth }) => `${pWidth}px`};
   margin: 20px auto 0;
   padding: 0;
   border: 1px solid #d1d2d3;
@@ -33,7 +33,7 @@ const StyleBizDetail = styled.div`
   }
 
   @media only screen and (max-width: 1280px) {
-    width: calc(100vw - 345px);  // Tree너비 + 양옆 12px 씩 + 스크롤바 너비
+    width: calc(100vw - 345px); // Tree너비 + 양옆 12px 씩 + 스크롤바 너비
     margin: 20px auto 0;
   }
 
@@ -42,7 +42,6 @@ const StyleBizDetail = styled.div`
     max-width: 933px;
     margin-top: 100px;
   }
-
 `;
 
 export default StyleBizDetail;

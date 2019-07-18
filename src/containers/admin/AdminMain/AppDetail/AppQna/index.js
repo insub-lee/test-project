@@ -431,8 +431,8 @@ const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
-const withSaga = injectSaga({ key: 'appQna', saga });
-const withReducer = injectReducer({ key: 'appQna', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppQna', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppQna', reducer });
 
 export default compose(
   withReducer,

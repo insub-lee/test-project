@@ -33,6 +33,7 @@ class BizManage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.debug('nextProps.history.location.pathname >> ', nextProps.history.location.pathname);
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
@@ -68,6 +69,7 @@ class BizManage extends Component {
     const {
       // data
       history,
+      location,
       categoryData,
       selectedIndex,
       changeSelectedIndex,
@@ -88,26 +90,42 @@ class BizManage extends Component {
       }
     };
 
+    let isTreeGroup = false;
+    if (location.pathname.indexOf('bizMenuReg/') > -1) {
+      const pathArr = location.pathname.split('/');
+      if (location.pathname.indexOf('info/') > -1) {
+        const bizgrpId = pathArr[pathArr.length - 1];
+        isTreeGroup = Number(bizgrpId) !== 1;
+      } else {
+        const bizgrpId = pathArr[pathArr.length - 2];
+        isTreeGroup = Number(bizgrpId) !== 1;
+      }
+    } else {
+      isTreeGroup = true;
+    }
+
     return (
       <div className="appMyPageWrapper">
-        {/* <StyledTabList className="treeWrapper">
-          <ErrorBoundary>
-            <BizGroupTree
-              treeData={categoryData}
-              selectedIndex={selectedIndex}
-              onClick={handleTreeOnClick}
-              // canDrag={() => true}
-              // canDrop={() => true}
+        {isTreeGroup && (
+          <StyledTabList className="treeWrapper" style={{ left: '200px' }}>
+            <ErrorBoundary>
+              <BizGroupTree
+                treeData={categoryData}
+                selectedIndex={selectedIndex}
+                onClick={handleTreeOnClick}
+                // canDrag={() => true}
+                // canDrop={() => true}
 
-              saveData={saveData}
-              addEmptyNode={addEmptyNode}
-              // moveNode={moveNode}
-              deleteNode={deleteNode}
-              updateBizGroupDelYn={updateBizGroupDelYn}
-              history={history}
-            />
-          </ErrorBoundary>
-        </StyledTabList> */}
+                saveData={saveData}
+                addEmptyNode={addEmptyNode}
+                // moveNode={moveNode}
+                deleteNode={deleteNode}
+                updateBizGroupDelYn={updateBizGroupDelYn}
+                history={history}
+              />
+            </ErrorBoundary>
+          </StyledTabList>
+        )}
         <ErrorBoundary>
           <ModalRoute path="/admin/adminmain/menu/authSetting/:BIZGRP_ID" component={AuthSetting} />
           <ModalContainer />
@@ -130,6 +148,7 @@ class BizManage extends Component {
 
 BizManage.propTypes = {
   history: PropTypes.object.isRequired,
+  location: PropTypes.object.isRequired,
 
   categoryData: PropTypes.array.isRequired,
   initCategoryData: PropTypes.func.isRequired,
@@ -168,8 +187,8 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'bizmanage', reducer });
-const withSaga = injectSaga({ key: 'bizmanage', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu', saga });
 
 export default injectIntl(
   compose(

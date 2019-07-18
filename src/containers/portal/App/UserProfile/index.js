@@ -106,20 +106,15 @@ class UserProfile extends Component {
             </Button>
           </li> */}
           <li>
-            <Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-hithanks">
-              {intlObj.get(messages.logout)}
-            </Button>
-          </li>
-          <li>
             <Button onClick={() => this.handleClickToMoveToSite(profile, 'set')} type="button" className="icon-settings">
               환경설정
             </Button>
           </li>
           <li>
-            <Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button">
-            {intlObj.get(messages.logout)}
+            <Button onClick={() => this.handleClickToMoveToSite(profile, 'logout')} type="button" className="icon-hithanks">
+              {intlObj.get(messages.logout)}
             </Button>
-          </li>          
+          </li>
         </ul>
       </div>
     );

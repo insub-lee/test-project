@@ -324,7 +324,7 @@ class Position extends React.Component {
                   history={this.props.history}
                   selectedIndex={this.state.selectedIndex}
                   canDrag={true}
-                  canDropOut={true}
+                  canDropOut={false}
                   canDrop={true}
                   moveNode={movePosition}
                   onOk={onOk}

@@ -68,28 +68,6 @@ class MyPageTree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // if (!Object.is(this.state.treeData[0], nextProps.treeData[0])) {
-    //   if (nextProps.treeData && nextProps.treeData.length > 0) {
-    //     nextProps.treeData.map(e => {
-    //       this.setDefaultMenuIndex(e.NAME_KOR);
-    //       if (e.NAME_KOR === 'My Home') {
-    //         this.setState(
-    //           myHomeIndex: e.MENU_ID
-    //         );
-    //       }
-    //       else if(e.NAME_KOR === '개인 업무') {
-    //         this.setState(
-    //           myBizFoldIndex: e.MENU_ID
-    //         );
-    //       }else if(e.NAME_KOR === '개인 Biz') {
-    //         this.setState(
-    //           myAppFoldIndex: e.MENU_ID
-    //         );
-    //       }
-    //     });
-    //   }
-    // }
-
     if (nextProps.treeData && nextProps.treeData.length > 0) {
       if (nextProps.selectedIndex === -1) {
         this.setState({
@@ -398,8 +376,12 @@ class MyPageTree extends Component {
             onClick(node);
           };
 
-          // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-          if (onHoverKey === node.key) {
+          const nodeDefaultYn = node.DEFAULT_YN;
+
+          console.debug('>>>>>>>>>>>sotrtable node: ', nodeDefaultYn, node);
+
+          // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때 , 개인화 홈 메뉴가 아닐 경우
+          if (onHoverKey === node.key && !(node.DEFAULT_YN === 'Y' && node.NODE_TYPE === 'E')) {
             buttons = [
               // [앱등록 버튼]
               isFolder ? (
@@ -408,23 +390,7 @@ class MyPageTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    let tabName = '';
-
-                    if (findRootAppMenuID && findRootBizMenuID && (node.NAME_KOR !== '개인 App' && node.NAME_KOR !== '개인 업무')) {
-                      if (findRootBizMenuID === node.PRNT_ID) {
-                        tabName = 'biz';
-                      } else if (findRootAppMenuID === node.PRNT_ID) {
-                        tabName = 'app';
-                      }
-                    } else {
-                      if (node.NAME_KOR === '개인 App') {
-                        tabName = 'app';
-                      } else if (node.NAME_KOR === '개인 업무') {
-                        tabName = 'biz';
-                      }
-                    }
-
-                    history.push(`/portal/store/appMain/myPage/modal/${tabName}/list`);
+                    history.push('/portal/store/appMain/myPage/modal/app/list');
                   }}
                 />
               ) : (
@@ -460,19 +426,21 @@ class MyPageTree extends Component {
 
               // [메뉴노출여부 버튼]
               // btnCondition2 ?
-              <VisionBtn
-                key="visionBtn"
-                title="메뉴노출"
-                onClick={() => {
-                  saveData(rowInfo, treeData);
-                  updateMymenuDisp();
-                }}
-                className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
-              />,
+              node.DEFAULT_YN !== 'Y' && (
+                <VisionBtn
+                  key="visionBtn"
+                  title="메뉴노출"
+                  onClick={() => {
+                    saveData(rowInfo, treeData);
+                    updateMymenuDisp();
+                  }}
+                  className={node.DISP_YN === 'Y' ? 'visible' : 'invisible'}
+                />
+              ),
               // : '',
 
               // [메뉴명수정]
-              canEditName ? (
+              canEditName && node.DEFAULT_YN !== 'Y' ? (
                 <EditBtn
                   key="editBtn"
                   title="편집"
@@ -485,7 +453,7 @@ class MyPageTree extends Component {
               ),
 
               // [메뉴삭제 버튼]
-              isRootBizGroup || isEmptyFolder ? (
+              (isRootBizGroup || isEmptyFolder) && node.DEFAULT_YN !== 'Y' ? (
                 <RemoveBtn
                   key="removeBtn"
                   title="삭제"

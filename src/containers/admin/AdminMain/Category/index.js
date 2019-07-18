@@ -317,7 +317,7 @@ class Category extends React.Component {
                   history={this.props.history}
                   selectedIndex={this.state.selectedIndex}
                   canDrag={true}
-                  canDrop={true}
+                  canDrop={false}
                   moveMymenu={moveMymenu}
                   onOk={onOk}
                 />

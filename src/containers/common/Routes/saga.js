@@ -1,4 +1,5 @@
 import { call, put, take, takeLatest, select } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import { push } from 'react-router-redux';
 import update from 'react-addons-update';
 import { EB } from 'utils/SockjsFunc';
@@ -10,6 +11,7 @@ import notify from 'components/Notification';
 import * as authConstants from 'containers/common/Auth/constants';
 import * as commonActionType from 'containers/common/constants';
 import * as actionTypes from './constants';
+import * as actions from './actions';
 
 export function getToken() {
   try {
@@ -83,6 +85,9 @@ function* afterLoginProcess(data, action) {
             type: actionTypes.GET_INITIAL_PORTALPAGE,
             PAGE_ID,
           });
+
+          yield call(delay, 1000);
+
           // getNotify 호출
           yield put({
             type: actionTypes.GET_ISNOTIFY,
@@ -94,6 +99,10 @@ function* afterLoginProcess(data, action) {
           // getMyAppStoreTree 호출
           yield put({
             type: actionTypes.GET_MYAPP_STORE_TREE_SAGA,
+          });
+          // getCommonMenuTree 호출 추가 - 2019.07.10
+          yield put({
+            type: actionTypes.GET_COMMON_MENU_TREE_SAGA,
           });
         }
       }
@@ -1568,6 +1577,14 @@ export function* getSingleModeLoaddata(payload) {
   }
 }
 
+export function* getCommonMenuTree() {
+  const response = yield call(Axios.get, '/api/portal/v1/page/getCommonMenuTree');
+  const { result } = response;
+  if (Object.keys(result).length > 0) {
+    yield put(actions.setCommonMenuTree(result.children || []));
+  }
+}
+
 export default function* appSaga() {
   yield takeLatest(actionTypes.AUTH_REQUEST_UUID, loginRequestUUID);
   yield takeLatest(actionTypes.AUTH_RECONNECT_UUID, loginReconnectUUID);
@@ -1648,4 +1665,7 @@ export default function* appSaga() {
   yield takeLatest(actionTypes.GET_DATA_FOR_APPS_SAGA, getDataForApps);
 
   yield takeLatest(actionTypes.GET_SINGLEMODE_LOADDATA_SAGA, getSingleModeLoaddata);
+
+  // 9-1
+  yield takeLatest(actionTypes.GET_COMMON_MENU_TREE_SAGA, getCommonMenuTree);
 }

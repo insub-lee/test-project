@@ -26,15 +26,30 @@ import Footer from '../../../Footer';
 class BizDetail extends Component {
   componentDidMount() {
     const {
-      handleGetBizMenu, appBizGubun, match: { params: { BIZGRP_ID } }, history,
+      handleGetBizMenu,
+      appBizGubun,
+      match: {
+        params: { BIZGRP_ID },
+      },
+      history,
     } = this.props;
     handleGetBizMenu(Number(BIZGRP_ID), history);
     appBizGubun(4);
   }
 
   componentDidUpdate(prevProps) {
-    const { match: { params: { BIZGRP_ID: prevBizgrpId } } } = prevProps;
-    const { match: { params: { BIZGRP_ID: currentBizgrpId } }, history, handleGetBizMenu } = this.props;
+    const {
+      match: {
+        params: { BIZGRP_ID: prevBizgrpId },
+      },
+    } = prevProps;
+    const {
+      match: {
+        params: { BIZGRP_ID: currentBizgrpId },
+      },
+      history,
+      handleGetBizMenu,
+    } = this.props;
     if (currentBizgrpId && currentBizgrpId !== prevBizgrpId) {
       handleGetBizMenu(Number(currentBizgrpId), history);
     }
@@ -64,13 +79,13 @@ class BizDetail extends Component {
         }}
       >
         <StyleBizDetail>
-          <TopMenu history={history} match={match} BIZGRP_ID={this.state.BIZGRP_ID} />
+          <TopMenu history={history} match={match} BIZGRP_ID={match.params.BIZGRP_ID} />
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }}>
             <ul className="bizDetailContentWrapper">
               <li className="leftContent inPage">
                 <h2>
                   <button
-                    onClick={() => history.push(`${preUrl}/info/${this.state.BIZGRP_ID}`)}
+                    onClick={() => history.push(`${preUrl}/info/${match.params.BIZGRP_ID}`)}
                     // className="currentTreeLevel ellipsis"
                     className="ellipsis"
                     style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#f85023' : 'inherit'}`, paddingLeft: 10 }}

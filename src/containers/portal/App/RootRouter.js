@@ -26,7 +26,7 @@ const RootRouter = ({
   }
   return (
     <div>
-      <div className={setMyMenuData.APP_YN === 'Y' ? '' : 'gridWrapper'}>
+      <div className={setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE' ? '' : 'gridWrapper'}>
         <Content
           className="portalContent"
           style={{

@@ -67,6 +67,10 @@ class Tree extends Component {
       editTree: !this.state.editTree,
       editMenuMode: !this.state.editMenuMode,
     });
+
+    if (this.state.editMenuMode) {
+      this.props.history.push('/');
+    }
   };
 
   handleTreeOnClick = node => {
@@ -77,6 +81,14 @@ class Tree extends Component {
       history.push(url);
       window.scrollTo(0, 0);
     }
+  };
+
+  handleShowAllBizMenuClick = () => {
+    console.debug('>>>>>>>>>통합업무 메뉴 클릭');
+  };
+
+  handleClickMenuFolder = () => {
+    console.debug('>>>>>>>>>폴더 클릭 이벤트');
   };
 
   render() {
@@ -90,8 +102,6 @@ class Tree extends Component {
     } = this.state;
 
     const { treeData, execMenu, execPage, selectedIndex, saveData, showNoti, editMenu } = this.props;
-
-    console.debug('$$$my menu treeData: ', this.props);
 
     const customSearchMethod = ({ node, searchQuery }) =>
       searchQuery &&
@@ -154,6 +164,9 @@ class Tree extends Component {
                 padding: '10px 0 0 10px',
               }}
             >
+              <div>
+                <Button onClick={this.handleShowAllBizMenuClick}>전체업무</Button>
+              </div>
               <ScrollBar style={{ width: 350, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <SortableTree
                   theme={CustomTheme}
@@ -167,12 +180,16 @@ class Tree extends Component {
                   generateNodeProps={({ node }) => {
                     node.active = node.key === selectedIndex;
                     const handleOnClick = () => {
+                      console.debug('>>>>>>>>>>>click node: ', node);
                       if (node.TARGET === 'NEW') {
                         window.open(node.URL, node.MENU_ID, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
                         execMenu(node.PAGE_ID, node.TARGET);
                       } else {
                         this.props.onClick(node);
-                        if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
+                        if (node.NODE_TYPE === 'F' && node.APP_YN === 'F') {
+                          // 폴더 클릭 시 이벤트
+                          this.handleClickMenuFolder();
+                        } else if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
                           execPage(node, 'execMenu');
                         }
                       }
@@ -225,7 +242,7 @@ Tree.propTypes = {
 };
 
 Tree.defaultProps = {
-  onClick: [],
+  onClick: () => {},
   showSearchBox: false,
 };
 

@@ -20,7 +20,7 @@ export function* initPage(payload) {
   const { initType, param } = payload;
 
   // appList에 카테고리 데이터가 없는 경우
-  const appListStore = yield select(state => state.get('bizmenuAppList'));
+  const appListStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
   const oldCategoryData = appListStore.get('categoryData');
   if (oldCategoryData.size === 0) {
     const response = yield call(Axios.get, '/api/bizstore/v1/store/appTree', { data: 'temp' });
@@ -40,9 +40,11 @@ export function* initPage(payload) {
   // ONE. 단일 앱리스트
   if (initType.indexOf('ONE') > -1) {
     yield put({ type: constants.GET_MAPLIST_ONE, key: param });
-  } else if (initType.indexOf('SEARCH') > -1) { // SEARCH. 검색 결과 앱리스트
+  } else if (initType.indexOf('SEARCH') > -1) {
+    // SEARCH. 검색 결과 앱리스트
     yield put({ type: constants.GET_MAPLIST_SEARCH, searchword: param });
-  } else { // ALL. 전체 앱리스트
+  } else {
+    // ALL. 전체 앱리스트
     yield put({ type: constants.GET_MAPLIST_ALL });
   }
 }
@@ -54,14 +56,17 @@ export function* getMapListOne(payload) {
   let map = fromJS({ key: CATG_ID });
 
   // 업무그룹 ID
-  const bizmenureg = yield select(state => state.get('bizmenureg'));
+  const bizmenureg = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg'));
   const BIZGRP_ID = bizmenureg.get('BIZGRP_ID');
 
-  const appListStore = yield select(state => state.get('bizmenuAppList'));
+  const appListStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
   const categoryFlatData = appListStore.get('categoryFlatData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist/manage', {
-    TYPE: 'ONE', CATG_ID, LIMIT: appBlockSize, BIZGRP_ID,
+    TYPE: 'ONE',
+    CATG_ID,
+    LIMIT: appBlockSize,
+    BIZGRP_ID,
   });
   const { result, total } = response;
 
@@ -89,10 +94,10 @@ export function* getMapListMore(payload) {
   const CATG_ID = Number(key);
 
   // 업무그룹 ID
-  const bizmenureg = yield select(state => state.get('bizmenureg'));
+  const bizmenureg = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg'));
   const BIZGRP_ID = bizmenureg.get('BIZGRP_ID');
 
-  const appListStore = yield select(state => state.get('bizmenuAppList'));
+  const appListStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
   const initType = appListStore.get('initType'); // ONE, SEARCH
   const searchword = appListStore.get('searchword'); // 검색어
 
@@ -101,7 +106,11 @@ export function* getMapListMore(payload) {
   const limit = matchMap.get('appList').size + appBlockSize; // limit값 증가
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist/manage', {
-    TYPE: initType, CATG_ID, LIMIT: limit, searchword, BIZGRP_ID,
+    TYPE: initType,
+    CATG_ID,
+    LIMIT: limit,
+    searchword,
+    BIZGRP_ID,
   });
   const { result, total } = response;
 
@@ -124,15 +133,17 @@ export function* getMapListMore(payload) {
 
 /* 앱리스트 ALL - 카테고리별 앱 8개씩 */
 export function* getMapListAll() {
-  const appListStore = yield select(state => state.get('bizmenuAppList'));
+  const appListStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
   const categoryData = appListStore.get('categoryData');
 
   // 업무그룹 ID
-  const bizmenureg = yield select(state => state.get('bizmenureg'));
+  const bizmenureg = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg'));
   const BIZGRP_ID = bizmenureg.get('BIZGRP_ID');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist/manage', {
-    TYPE: 'ALL', LIMIT: appBlockSizeAll, BIZGRP_ID,
+    TYPE: 'ALL',
+    LIMIT: appBlockSizeAll,
+    BIZGRP_ID,
   });
   const { result } = response;
 
@@ -140,7 +151,7 @@ export function* getMapListAll() {
 
   let mapList = fromJS([]);
 
-  categoryData.forEach((data) => {
+  categoryData.forEach(data => {
     let newData = data;
     const categoryKey = data.get('key');
     newData = newData.set('showReadMoreBtn', false);
@@ -161,24 +172,27 @@ export function* getMapListSearch(payload) {
   const { searchword } = payload;
 
   // 업무그룹 ID
-  const bizmenureg = yield select(state => state.get('bizmenureg'));
+  const bizmenureg = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg'));
   const BIZGRP_ID = bizmenureg.get('BIZGRP_ID');
 
   const url = '/api/bizstore/v1/store/applist/manage';
 
   const response = yield call(Axios.post, url, {
-    TYPE: 'SEARCH', searchword: payload.searchword, LIMIT: appBlockSize, BIZGRP_ID,
+    TYPE: 'SEARCH',
+    searchword: payload.searchword,
+    LIMIT: appBlockSize,
+    BIZGRP_ID,
   });
   const { result } = response;
 
   if (result) {
-    const appListStore = yield select(state => state.get('bizmenuAppList'));
+    const appListStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
     const categoryFlatData = appListStore.get('categoryFlatData');
 
     const appListMap = _.groupBy(result, 'CATG_ID');
     let mapList = fromJS([]);
 
-    Object.keys(appListMap).map((CATG_ID) => {
+    Object.keys(appListMap).map(CATG_ID => {
       let newData = fromJS(categoryFlatData.get(Number(CATG_ID)));
       newData = newData.set('showReadMoreBtn', false);
       newData = newData.set('searchword', searchword);
@@ -235,7 +249,7 @@ export function* registAppModal(payload) {
   const { APP_ID, CATG_ID } = payload;
 
   // get PRNT_ID
-  const parentStore = yield select(state => state.get('bizmenureg'));
+  const parentStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg'));
   const { node } = parentStore.get('tempRowInfo');
   const PRNT_ID = node ? node.key : -1;
   const BIZGRP_ID = parentStore.get('BIZGRP_ID');
@@ -258,7 +272,7 @@ export function* registAppModal(payload) {
       });
 
       // 성공 시 사용중으로 상태 변경.
-      const store = yield select(state => state.get('bizmenuAppList'));
+      const store = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
       const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
 
       yield put({ type: constants.SET_MAPLIST, mapList });
@@ -282,7 +296,7 @@ export function* registCategoryModal(payload) {
   const { APP_ID, CATG_ID } = payload;
 
   // get PRNT_ID
-  const parentStore = yield select(state => state.get('bizmenureg'));
+  const parentStore = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg'));
   const { node } = parentStore.get('tempRowInfo');
   const PRNT_ID = node ? node.key : -1;
   const BIZGRP_ID = parentStore.get('BIZGRP_ID');
@@ -305,7 +319,7 @@ export function* registCategoryModal(payload) {
       });
 
       // 성공 시 사용중으로 상태 변경.
-      const store = yield select(state => state.get('bizmenuAppList'));
+      const store = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
       const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
 
       yield put({ type: constants.SET_MAPLIST, mapList });
@@ -327,7 +341,7 @@ export function* registCategoryModal(payload) {
 export function* updateChangeWGCount(payload) {
   const { CATG_ID, APP_ID, WG_COUNT } = payload;
   // 성공 시 사용중으로 상태 변경.
-  const store = yield select(state => state.get('bizmenuAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList'));
   const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, WG_COUNT);
 
   yield put({ type: constants.SET_MAPLIST, mapList });

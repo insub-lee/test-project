@@ -27,7 +27,7 @@ import AppStoreTree from './AppStoreTree';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
 // import Popup from './Popup';
-import AppModal from './AppBizModal/AppModal';
+import AppModal from './AppModal';
 import StyleAppStore from './StyleAppStore';
 // import MyAppDetail from '../../../store/AppMain/MyApp/MyAppDetail';
 // import MyAppUpdate from '../../../store/AppMain/MyApp/MyAppUpdate';
@@ -130,7 +130,7 @@ class AppStore extends Component {
         <StyleAppStore>
           <h3 className="pageTitle list">AppStore 관리</h3>
           {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
-          <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
+          <div className="pageContent">
             <div className="appstoreTreeWrapper">
               <div>
                 <ErrorBoundary>
@@ -145,11 +145,11 @@ class AppStore extends Component {
                     treeData={categoryData}
                     selectedIndex={selectedIndex}
                     onClick={handleTreeOnClick}
-                    canDrag={false}
+                    canDrag={true}
                     canDrop={false}
                     insertNode={insertNode}
                     updateNode={updateNode}
-                    saveData={saveData}
+                    // saveData={saveData}
                     moveNode={moveNode}
                     deleteNode={deleteNode}
                     updateMymenuDisp={updateMymenuDisp}
@@ -219,7 +219,7 @@ export function mapDispatchToProps(dispatch) {
     changeSelectedIndex: selectedIndex =>
       dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
-    moveNode: treeData => dispatch(actions.moveNode(treeData)),
+    moveNode: (siteId, treeData) => dispatch(actions.moveNode(siteId, treeData)),
     deleteNode: (rowInfo, categoryData, history) =>
       dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateMymenuDisp: () => dispatch(actions.updateMymenuDisp()),
@@ -239,12 +239,11 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-const withReducer = injectReducer({ key: 'appstore', reducer });
-const withSaga = injectSaga({ key: 'appstore', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppStore', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppStore', saga });
 
 export default injectIntl(compose(
   withReducer,
   withConnect,
   withSaga,
 )(AppStore));
-

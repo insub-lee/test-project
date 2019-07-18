@@ -12,7 +12,7 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 
 import messages from './messages';
 // eslint-disable-next-line no-unused-vars
-import * as constantsAppList from './AppBizModal/AppModal/AppList/constants';
+import * as constantsAppList from './AppModal/AppList/constants';
 import * as constants from './constants';
 
 
@@ -65,15 +65,25 @@ export function* resetTreeData(payload) {
 }
 
 export function* moveNode(payload) {
-  const { treeData } = payload;
+  const { siteId, treeData } = payload;
+  const response = yield call(Axios.post, '/api/admin/v1/common/movemyappcategory', { SITE_ID: siteId, treeData });
+  const { code } = response;
 
-  yield call(Axios.post, '/api/bizstore/v1/mypage/moveMymenu', { treeData });
-  // const response = yield call(Axios.post, '/api/bizstore/v1/mypage/moveMymenu', { treeData });
-  // const { code } = response;
-
-  // if (code !== 200) {
-  //   console.log('error?');
-  // }
+  if (code === 200) {
+    message.success(
+      <MessageContent>
+        {intlObj.get(messages.cateUpdate)}
+      </MessageContent>,
+      3,
+    );
+    yield put({
+      type: constants.GET_CATEGORY_DATA,
+      siteId,
+      // selectedIndex: `F-${CATG_ID}`,
+    });    
+  } else {
+    feed.error(`${intlObj.get(messages.cateInsertFail)}`);
+  }
 }
 
 
@@ -103,7 +113,7 @@ export function* insertNode(payload) {
       yield put({
         type: constants.GET_CATEGORY_DATA,
         siteId: SITE_ID,
-        selectedIndex: `F-${catgId}`,
+        selectedIndex: `${catgId}`,
       });
     } else {
       feed.error(`${intlObj.get(messages.cateInsertFail)}`);
@@ -174,7 +184,7 @@ export function* updateNode(payload) {
       yield put({
         type: constants.GET_CATEGORY_DATA,
         siteId: SITE_ID,
-        selectedIndex: `F-${CATG_ID}`,
+        selectedIndex: `${CATG_ID}`,
       });
     } else {
       feed.error(`${intlObj.get(messages.cateUpdateFail)}`);
@@ -372,7 +382,7 @@ export default function* rootSaga() {
   yield takeLatest(constants.INSERT_NODE, insertNode);
   yield takeLatest(constants.UPDATE_NODE, updateNode);
   yield takeLatest(constants.DELETE_NODE, deleteNode);
-  // yield takeLatest(constants.MOVE_MYMENU, moveNode);
+  yield takeLatest(constants.MOVE_NODE, moveNode);
   // yield takeLatest(constants.UPDATE_MYMENU_DISP, updateMymenuDisp);
   // yield takeLatest(constantsCommon.RESET_MYMENU_CATEGORY_DATA, resetTreeData);
 }

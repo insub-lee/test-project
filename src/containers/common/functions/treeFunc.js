@@ -98,7 +98,7 @@ const mergeArray = (newArray, oldArray) => {
 // treeData -> map형태로 바꾸는 함수.
 let tempData1 = fromJS({});
 let count1 = 0;
-const generateList = (data) => {
+const genList = (data) => {
   for (let i = 0; i < data.size; i += 1) {
     const node = data.get(i);
     const nodeObject = node.toJS();
@@ -110,11 +110,18 @@ const generateList = (data) => {
     });
     count1 += 1;
     if (node.get('children')) {
-      generateList(node.get('children'));
+      genList(node.get('children'));
     }
   }
   return tempData1;
 };
+
+const generateList = (data) => {
+  tempData1 = fromJS({});
+  count1 = 0;
+  return genList(data);
+};
+
 
 let tempData2 = fromJS({});
 let count2 = 0;
@@ -185,6 +192,7 @@ export {
   existNodeByKey,
   mergeArray,
   generateList,
+  initGenerateList,
   generateListBiz,
   generateListBizManage,
   getTreeFromFlatTreeData,
