@@ -54,7 +54,7 @@ export function* resetTreeData(payload) {
 
   const result = JSON.parse(`[${payload.storeTreeData}]`);
   if (payload.uuid !== uuid && result.length > 0) {
-    const mypage = yield select(state => state.get('appstore'));
+    const mypage = yield select(state => state.get('admin/AdminMain/AppStore'));
     const newCategoryData = result[0].children;
     const oldCategoryData = mypage.get('categoryData').toJS();
 
@@ -131,7 +131,7 @@ export function* insertNode(payload) {
       message.success('앱 등록에 성공 하였습니다.', 3);
       // update Tree
       const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
-      const store = yield select(state => state.get('appstore'));
+      const store = yield select(state => state.get('admin/AdminMain/AppStore'));
       const newCategoryData = result;
       const oldCategoryData = store.get('categoryData').toJS();
 
@@ -199,7 +199,7 @@ export function* updateNode(payload) {
       message.success('앱 정보를 수정 하였습니다.', 3);
       // update Tree
       const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
-      const store = yield select(state => state.get('appstore'));
+      const store = yield select(state => state.get('admin/AdminMain/AppStore'));
       const newCategoryData = result;
       const oldCategoryData = store.get('categoryData').toJS();
 
@@ -268,7 +268,7 @@ export function* deleteNode(payload) {
       message.success('앱 삭제 성공 하였습니다.', 3);
       // update Tree
       const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
-      const store = yield select(state => state.get('appstore'));
+      const store = yield select(state => state.get('admin/AdminMain/AppStore'));
       const newCategoryData = result;
       const oldCategoryData = store.get('categoryData').toJS();
 
@@ -351,7 +351,7 @@ export function* deleteNode(payload) {
 }
 
 export function* updateMymenuDisp() {
-  const mypage = yield select(state => state.get('appstore'));
+  const mypage = yield select(state => state.get('admin/AdminMain/AppStore'));
   const { node } = mypage.get('tempRowInfo');
   const categoryData = mypage.get('categoryData').toJS();
   const DISP_YN = node.DISP_YN === 'N' ? 'Y' : 'N';
