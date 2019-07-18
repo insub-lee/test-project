@@ -26,6 +26,12 @@ const makeSelectDockIconType = () =>
     portalState => portalState.dockIconType,
   );
 
+const makeSelectHeaderTitle = () =>
+  createSelector(
+    selectHynixCommon,
+    portalState => portalState.get('headerTitle'),
+  );
+
 const makeSelectSetBizHome = () =>
   createSelector(
     selectHynixCommon,
@@ -110,6 +116,7 @@ export {
   makeSelectDockAppList,
   makeSelectDockFixedYn,
   makeSelectDockIconType,
+  makeSelectHeaderTitle,
   makeSelectSetBizHome,
   makeSelectSetMyMenuNodeData,
   makeSelectSelectedIndex,

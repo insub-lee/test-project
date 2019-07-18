@@ -20,6 +20,8 @@ import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
 import WorkTimeLine from '../../WorkTimeLine';
 
+import { basicPath } from 'containers/common/constants';
+
 class Tree extends Component {
   constructor(props) {
     super(props);
@@ -87,8 +89,9 @@ class Tree extends Component {
     console.debug('>>>>>>>>>통합업무 메뉴 클릭');
   };
 
-  handleClickMenuFolder = () => {
-    console.debug('>>>>>>>>>폴더 클릭 이벤트');
+  handleClickMenuFolder = menuId => {
+    console.debug('>>>>>>>this.props: ', this.props);
+    this.props.history.push(`/${basicPath.PORTAL}/bizMenu/${menuId}`);
   };
 
   render() {
@@ -188,7 +191,7 @@ class Tree extends Component {
                         this.props.onClick(node);
                         if (node.NODE_TYPE === 'F' && node.APP_YN === 'F') {
                           // 폴더 클릭 시 이벤트
-                          this.handleClickMenuFolder();
+                          this.handleClickMenuFolder(node.MENU_ID);
                         } else if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
                           execPage(node, 'execMenu');
                         }

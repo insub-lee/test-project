@@ -260,13 +260,13 @@ export function* getInitialPortalPage(payload) {
   const { PAGE_ID } = payload;
 
   const response = yield call(Axios.post, '/api/portal/v1/page/getInitialPortalPage/', { language, PAGE_ID });
-
   // 로딩 DockAppList
   yield put({
     type: actionTypes.COMMON_DOCK_LOADING_UNREADCNT, // to Saga (getDockItemListUnreadCnt)
     dockAppList: response.result,
     dockFixedYn: response.dockFixedYn,
     dockIconType: response.dockIconType,
+    headerTitle: response.headerTitle,
   });
 }
 

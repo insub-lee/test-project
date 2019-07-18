@@ -112,6 +112,8 @@ class UserMenu extends React.Component {
       execApp,
     } = this.props;
 
+    console.debug('>>>>>>>userMenu this.props: ', this.props);
+
     return (
       <div>
         <Notification

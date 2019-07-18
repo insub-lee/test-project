@@ -22,6 +22,7 @@ import 'rodal/lib/rodal.css';
 import Fullscreen from 'components/Fullscreen';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
+import * as routesSelector from 'containers/common/Routes/selectors';
 import * as selectors from './selectors';
 // import Fullscreen from './fullscreen';
 import themes from '../../../config/themes/index';
@@ -34,6 +35,7 @@ import saga from './saga';
 import reducer from './reducer';
 import UserDock from './UserDock';
 import UserMenu from './UserMenu';
+import UserBizMenu from './UserBizMenu';
 import UserSetting from './UserSetting';
 import UserStore from './UserStore';
 import RodalPage from '../../../components/Rodal';
@@ -41,7 +43,7 @@ import Page from '../../../components/Page';
 import MenuCategory from './MenuCategory';
 import AppsRouter from '../../../apps/appsRouter';
 
-import logo from 'images/logo.png';
+// import logo from 'images/logo.png';
 
 const wrap = dragDropContext(HTML5Backend);
 const { Content } = Layout;
@@ -117,7 +119,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach(o => {
+        dockAppList.forEach((o) => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -279,12 +281,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = item => {
+  onReload = (item) => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = open => {
+  onSetOpen = (open) => {
     this.setState({ open: open }); //eslint-disable-line
   };
   /* eslint-disable */
@@ -507,12 +509,11 @@ class App extends React.PureComponent {
 
     if (node === 'set') {
       // this.props.deleteDock();
-      if (this.props.view !== 'Mobile') {
-        this.props.history.push(`/${basicPath.PORTAL}/settings`);
-      } else {
-        this.props.history.push(`/${basicPath.PORTAL}/settings`);
+      this.props.history.push(`/${basicPath.PORTAL}/settings`);
+      if (this.props.view === 'Mobile') {
         this.setState({ open: false });
       }
+
       return;
     }
 
@@ -610,6 +611,7 @@ class App extends React.PureComponent {
       dockIconType,
       handleSetDockIconType,
       hasRoleAdmin,
+      headerTitle,
       // selectedApp,
       // history,
     } = this.props;
@@ -697,6 +699,8 @@ class App extends React.PureComponent {
                 managerInfo={managerInfo}
                 view={view}
                 hasRoleAdmin={hasRoleAdmin}
+                location={this.props.location}
+                headerTitle={headerTitle}
               />
               {/* test layout */}
               <div className="testDiv">
@@ -751,7 +755,10 @@ class App extends React.PureComponent {
                 setIsCloseToFalse={this.setIsCloseToFalse}
                 setMyMenuData={setMyMenuData}
               >
-                <div id="child" className={ ( setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE' ) || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
+                <div
+                  id="child"
+                  className={(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}
+                >
                   <Content
                     className="portalContent"
                     style={{
@@ -782,6 +789,15 @@ class App extends React.PureComponent {
                     path={`/${basicPath.PORTAL}/store`}
                     render={props => (
                       <UserStore //eslint-disable-line
+                        {...props}
+                        applySkin={this.applySkin}
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`/${basicPath.PORTAL}/bizMenu/:ID`}
+                    render={props => (
+                      <UserBizMenu //eslint-disable-line
                         {...props}
                         applySkin={this.applySkin}
                       />
@@ -887,6 +903,7 @@ App.propTypes = {
   deletedDockPageId: PropTypes.number,
   executedDockPageId: PropTypes.number,
   hasRoleAdmin: PropTypes.bool,
+  headerTitle: PropTypes.string,
 };
 App.defaultProps = {
   setMyMenuNodeData: undefined,
@@ -900,6 +917,7 @@ App.defaultProps = {
   dataForApps: undefined,
   isPreviewPage: false,
   hasRoleAdmin: false,
+  headerTitle: '',
 };
 const mapStateToProps = createStructuredSelector({
   // 1. selector
@@ -926,6 +944,7 @@ const mapStateToProps = createStructuredSelector({
   deletedDockPageId: selectors.makeSelectDeletedDockPageId(),
   executedDockPageId: selectors.makeSelectExecutedDockPageId(),
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
+  headerTitle: routesSelector.makeSelectHeaderTitle(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),

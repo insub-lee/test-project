@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'antd';
-import { intlObj, lang } from 'utils/commonUtils';
+import { lang } from 'utils/commonUtils';
 // import SKhynixLogo from 'images/portal/header-bg-logo.png';
 import Badge from '../../../../components/Badge/StyleBadge';
 import UserSearch from '../../App/UserSearch';
 import UserProfile from '../../App/UserProfile';
 import AlarmPopover from '../../App/UserNotice';
 import ManagerInfo from '../ManagerInfo';
-import messages from './messages';
+// import messages from './messages';
 import StyledHeader from './StyledHeader';
 import Trigger from '../../App/Trigger';
 import Button from '../../../../components/Button';
@@ -29,26 +29,26 @@ class Header extends React.Component {
   showMenu = () => {
     const { setOpen } = this.props;
     setOpen();
-  }
+  };
   showFullScreen = () => {
     const { handleClick } = this.props;
     handleClick();
-  }
+  };
   gotoHome = () => {
     const { execPage } = this.props;
     execPage('common');
-  }
+  };
+  /* eslint-disable */
   render() {
-    const {
-      myHNotiCnt,
-      managerInfo,
-      view,
-      hasRoleAdmin,
-    } = this.props;
+    console.debug('>>>>>>>>>this.props: ', this.props);
+    const { myHNotiCnt, managerInfo, view, hasRoleAdmin, headerTitle } = this.props;
     const { setMyMenuData } = this.state;
 
+    const pathName = this.props.location.pathname;
+    const startPathName = _.split(pathName, '/', 2);
+
     let appName = '';
-    if (setMyMenuData === 'common' || setMyMenuData.HOME_YN === 'Y') {
+    if (startPathName[1] === 'portal' || setMyMenuData === 'common' || setMyMenuData.HOME_YN === 'Y') {
       // appName = view !== 'Mobile' ? `: ${intlObj.get(messages.home)}` : intlObj.get(messages.home);
       // home txt 삭제 0422
       appName = '';
@@ -67,43 +67,19 @@ class Header extends React.Component {
           <ul>
             <li className="leftBottom">
               <Trigger>
-                <span
-                  className="trigger icon icon-menu"
-                  onClick={this.showMenu}
-                  onKeyDown={this.showMenu}
-                  role="button"
-                  tabIndex="0"
-                />
+                <span className="trigger icon icon-menu" onClick={this.showMenu} onKeyDown={this.showMenu} role="button" tabIndex="0" />
                 <Badge count={myHNotiCnt} overflowCount={99}>
                   <Link to="/" className="badgeLink" />
                 </Badge>
               </Trigger>
               <h1 className="siteHeader">
-                <span
-                  className="gotoHome"
-                  onClick={this.gotoHome}
-                  onKeyDown={this.gotoHome}
-                  role="button"
-                  tabIndex="0"
-                // style={{ background: 'transparent', cursor: 'pointer' }}
-                >
-                  {view !== 'Mobile' ?
-                  intlObj.get(messages.skPortalTitle)
-                  :
-                  ' '
-                  }
+                <span className="gotoHome" onClick={this.gotoHome} onKeyDown={this.gotoHome} role="button" tabIndex="0">
+                  {/* {view !== 'Mobile' ? intlObj.get(messages.skPortalTitle) : ' '} */}
+                  {view !== 'Mobile' ? headerTitle : ' '}
                 </span>
                 <span> {appName} </span>
                 {/* 담당자 popover */}
-                {
-                  ( setMyMenuData.APP_YN === 'Y'&& setMyMenuData.SRC_PATH !== 'PAGE' ) && view !== 'Mobile'
-                    ?
-                      <ManagerInfo
-                        managerInfo={managerInfo}
-                      />
-                    :
-                    ''
-                }
+                {setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE' && view !== 'Mobile' ? <ManagerInfo managerInfo={managerInfo} /> : ''}
               </h1>
             </li>
           </ul>
@@ -113,10 +89,12 @@ class Header extends React.Component {
             <li className="rightBottom">
               <ul className="iconMenuWrapper">
                 <li>
-                  <UserSearch />{/* 구성원검색 */}
+                  <UserSearch />
+                  {/* 구성원검색 */}
                 </li>
                 <li>
-                  <AlarmPopover />{/* 알림 */}
+                  <AlarmPopover />
+                  {/* 알림 */}
                 </li>
                 {/* <li>
                   <SettingsPopover />
@@ -132,14 +110,16 @@ class Header extends React.Component {
                   {/* 풀스크린 버튼 */}
                 </li>
                 <li>
-                  <UserProfile execPage={this.props.execPage} />{/* 프로필 */}
+                  <UserProfile execPage={this.props.execPage} />
+                  {/* 프로필 */}
                 </li>
-                { hasRoleAdmin === true &&
-                <li>
-                  <Tooltip placement="left" title="ADMIN">
-                    <Link to="/admin" className="icon-setting" target="_blank" />
-                  </Tooltip>
-                </li> }
+                {hasRoleAdmin === true && (
+                  <li>
+                    <Tooltip placement="left" title="ADMIN">
+                      <Link to="/admin" className="icon-setting" target="_blank" />
+                    </Tooltip>
+                  </li>
+                )}
               </ul>
             </li>
           </ul>
@@ -157,6 +137,7 @@ Header.propTypes = {
   managerInfo: PropTypes.array,
   view: PropTypes.string.isRequired,
   hasRoleAdmin: PropTypes.bool.isRequired,
+  headerTitle: PropTypes.string,
 };
 
 Header.defaultProps = {
