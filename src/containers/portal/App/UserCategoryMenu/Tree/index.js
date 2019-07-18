@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 import { Link } from 'react-router-dom';
-import _ from 'lodash';
+import { debounce } from 'lodash';
 import PropTypes from 'prop-types';
 import ScrollBar from 'react-custom-scrollbars';
 import { AutoSizer } from 'react-virtualized';
 
 import { Badge } from 'antd';
 
-import iconUnlock from 'images/portal/icon-unlock.png';
-import iconLock from 'images/portal/icon_lock.png';
 import IconGo from 'images/portal/icon_go.png';
 import { lang } from 'utils/commonUtils';
 import { InputSearch } from 'components/Input';
@@ -17,6 +14,7 @@ import { InputSearch } from 'components/Input';
 import CustomTheme from './theme';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
+import { SortableTreeWithoutDndContext as SortableTree } from './SortableMenuTree/react-sortable-tree';
 
 const features = 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes';
 
@@ -32,18 +30,14 @@ class Tree extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchFoundCount: 1,
+      // searchFoundCount: 1,
       searchFocusIndex: 0,
       searchString: '',
       editTree: false,
       editMenuMode: false,
     };
 
-    this.updateTreeData = _.debounce(this.updateTreeData.bind(this), 300);
-  }
-
-  shouldComponentUpdate(nextProps) {
-    return !(nextProps.treeData.length === 0);
+    this.updateTreeData = debounce(this.updateTreeData.bind(this), 300);
   }
 
   onSetEditClick = () => {
@@ -122,8 +116,8 @@ class Tree extends Component {
               />
             </div>
             <div className="myMenuEdit">
-              <button type="button" onClick={this.onSetEditClick}>
-                <img src={editMenuMode ? iconUnlock : iconLock} alt="메뉴수정" title="메뉴수정" />
+              <button type="button" onClick={this.onSetEditClick} title="메뉴수정">
+                <i className={`${editMenuMode ? 'fa fa-unlock' : 'fa fa-lock'}`} />
               </button>
             </div>
           </div>
@@ -137,21 +131,20 @@ class Tree extends Component {
               </div>
             )}
           </div>
-          {editTree ? (
-            <div style={{ padding: '10px' }}>
-              <MyPage history={history} />
-            </div>
-          ) : (
-            <div
-              className="treeBox"
-              style={{
-                flex: '1 0 50%',
-                padding: '10px 0 0 10px',
+          <div
+            className="treeBox"
+            style={{
+                width: '100%',
+                height: 'calc(100% - 50px)',
+                padding: '0 10px',
               }}
-            >
-              <AutoSizer>
-                {({ width, height }) => (
-                  <ScrollBar style={{ width, height }} autoHide autoHideTimeout={1000} autoHideDuration={200} className="tree-scrollbar">
+          >
+            <AutoSizer>
+              {({ width, height }) => (
+                <ScrollBar style={{ width, height, overflowX: 'hidden' }} autoHide autoHideTimeout={1000} autoHideDuration={200} className="tree-scrollbar">
+                  {editTree ? (
+                    <MyPage history={history} height={height} />
+                  ) : (
                     <SortableTree
                       theme={CustomTheme}
                       treeData={treeData}
@@ -159,6 +152,9 @@ class Tree extends Component {
                       searchMethod={customSearchMethod}
                       searchQuery={searchString}
                       searchFocusOffset={searchFocusIndex}
+                      style={{
+                        overflow: 'hidden',
+                      }}
                       // style={{
                       //   display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
                       // }}
@@ -171,11 +167,11 @@ class Tree extends Component {
                         this.tree = ref;
                       }}
                     />
-                  </ScrollBar>
-                )}
-              </AutoSizer>
-            </div>
-          )}
+                  )}
+                </ScrollBar>
+              )}
+            </AutoSizer>
+          </div>
         </div>
       </TreeWrapper>
     );

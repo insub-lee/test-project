@@ -5,7 +5,6 @@ const Styled = styled.div`
   height: 100%;
   position: fixed;
   left: -245px;
-  //left: 45px;
   flex: 0 0 290px;
   max-width: 290px;
   min-width: 290px;
@@ -15,13 +14,11 @@ const Styled = styled.div`
 
   box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 4px;
   z-index: 2;  
-  transition: left 0.1s ease-out 0s, ease-out 0s, ease-out 0s, ease-out 0s;
+  transition: left 0.3s ease-out 0s;
   
   &.active {
     left: 45px;
-    //max-width: 290px;
-    //min-width: 290px;
-    //width: 290px;
+    transition: left 0.3s ease-out 0s;
   }
   
   .area-title {
@@ -54,6 +51,7 @@ const Styled = styled.div`
     top: 50%;
     right: -40px;
     border: 1px solid #e5e5e5;
+    border-radius: 4px;
   }
 `;
 

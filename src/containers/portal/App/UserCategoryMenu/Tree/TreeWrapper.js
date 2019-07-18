@@ -59,10 +59,12 @@ const TreeWrapper = styled.div`
   .myMenuEdit {
     // position: absolute;
     display: inline-block;
-    width: 10%;
-    height: 32px;
+    //width: 10%;
+    //height: 32px;
     padding: 3px;
     text-align: right;
+    vertical-align: middle;
+    margin: 0 15px;
   }
 
   .ant-switch-checked {
