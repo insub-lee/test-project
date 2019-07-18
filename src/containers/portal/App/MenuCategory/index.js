@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import * as routesSelectors from '../../../common/Routes/selectors';
-import Tree from './Tree';
+import Menu from './Menu';
 
 class MenuCategory extends React.Component {
   constructor(props) {
@@ -33,21 +33,34 @@ class MenuCategory extends React.Component {
   };
 
   onMouseEnter = () => {
-    this.setState({ visible: !this.state.visible });
+    this.setState(prevState => ({ visible: !prevState.visible }));
   };
 
   onClickNotiButton = () => {
-    this.setState({ showNoti: !this.state.showNoti });
+    this.setState(prevState => ({ showNoti: !prevState.showNoti }));
   };
 
   getNotiList = () => {
-    const { execMenu, execPage, execApp } = this.props;
-
+    const { commonMenuTreeData } = this.props;
+    const treeData = commonMenuTreeData.map(data => ({
+      ...data,
+      icon: 'fa-briefcase',
+    }));
     return (
       <div>
-        <Tree treeData={this.props.commonMenuTreeData} execMenu={execMenu} execPage={execPage} setClose={this.props.setClose} execApp={execApp} />
+        <Menu treeData={treeData} handleClick={this.handleClick} />
       </div>
     );
+  };
+
+  handleClick = (node) => {
+    const { execMenu, execPage } = this.props;
+    if (node.TARGET === 'NEW') {
+      window.open(node.URL, node.MENU_ID, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
+      execMenu(node.PAGE_ID, node.TARGET);
+    } else if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
+      execPage(node, 'execMenu');
+    }
   };
 
   render() {
@@ -117,21 +130,14 @@ class MenuCategory extends React.Component {
     );
   }
 }
+
 MenuCategory.propTypes = {
   open: PropTypes.bool.isRequired,
   commonMenuTreeData: PropTypes.array.isRequired,
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
-  setClose: PropTypes.func,
   setMenuClose: PropTypes.func.isRequired,
-  // view: PropTypes.string.isRequired,
-  execApp: PropTypes.func,
-};
-
-MenuCategory.defaultProps = {
-  setClose: undefined,
-  execApp: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({
