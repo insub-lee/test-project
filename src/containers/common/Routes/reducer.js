@@ -50,6 +50,8 @@ const windowResizeReducer = (state = initialState, action) => {
 
     // . 포탈로 접속시 로딩에 필요한 액션 ******************
     // 1-1 getInitialPortalPage
+    case actionTypes.COMMON_DOCK_LOADING_UNREADCNT:
+      return state.set('headerTitle', action.headerTitle);
     case actionTypes.SET_BIZHOME_SUCCESS:
       return state.set('setBizHome', action.resultValue);
     case actionTypes.SET_BIZHOME_FAIL:
@@ -253,8 +255,6 @@ const windowResizeReducer = (state = initialState, action) => {
       return state.set('selectedApp', fromJS(action.selectedApp)).set('apps', action.apps);
     case actionTypes.SET_COMMON_MENU_TREE: {
       const { commonMenuTreeData } = action;
-      console.debug('>>>>>>>>action: ', action);
-      console.debug('>>>>>>>>commonMenuTreeData: ', fromJS(commonMenuTreeData));
       return state.set('commonMenuTreeData', fromJS(commonMenuTreeData));
     }
     default:

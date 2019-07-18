@@ -53,9 +53,8 @@ export function* moveNode(payload) {
 }
 
 export function* insertNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  /* eslint-disable */
+  const { rowInfo, treeData, data, history } = payload;
   const { node } = rowInfo;
 
   const response = yield call(Axios.post, '/api/bizstore/v1/mypage/insertMenu', { data });
@@ -82,7 +81,7 @@ export function* insertNode(payload) {
     }
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/store/appMain/myPage/page/${newNode.PAGE_ID}`);
+      history.push(`/portal/store/appMain/myPage/page/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -98,9 +97,7 @@ export function* insertNode(payload) {
 }
 
 export function* updateNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
   const langGubun = lang.getLocale();
 
   const { node } = rowInfo;
@@ -110,7 +107,9 @@ export function* updateNode(payload) {
 
   if (code === 200) {
     const newNode = {
-      ...node, ...appInfo, title: lang.get('NAME', appInfo),
+      ...node,
+      ...appInfo,
+      title: lang.get('NAME', appInfo),
     }; // 병합
     const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
     const newCategoryData = treeFunc.editNodeByKey(rowInfoN, treeData);
@@ -146,9 +145,11 @@ export function* deleteNode(payload) {
   let menuType = 'mymenu'; // 일반앱
   let isPageOrSnglApp = false; // 해당 앱이 페이지나 싱글앱일 경우 독아이템 목록에서 제거 해줘야 함
 
-  if (node.REF_TYPE === 'B') { // 업무그룹
+  if (node.REF_TYPE === 'B') {
+    // 업무그룹
     menuType = 'bizgroup';
-  } else if (node.NODE_TYPE === 'F') { // 폴더
+  } else if (node.NODE_TYPE === 'F') {
+    // 폴더
     menuType = 'folder';
   } else if ((node.APP_YN === 'N' && node.REF_TYPE === 'M') || node.APP_YN === 'Y') {
     isPageOrSnglApp = true;
@@ -181,7 +182,7 @@ export function* deleteNode(payload) {
       const { pathname } = location;
 
       if (node.CATG_ID !== 0) {
-        if (pathname.indexOf('/biz/menulist') > -1 && (node.APP_ID !== 0)) {
+        if (pathname.indexOf('/biz/menulist') > -1 && node.APP_ID !== 0) {
           yield put({
             type: constantsBizMenuList.UPDATE_CHANGE_WGCOUNT,
             CATG_ID: node.CATG_ID,
@@ -190,21 +191,24 @@ export function* deleteNode(payload) {
           });
         } else if (pathname.indexOf('/modal/app') > -1) {
           if (node.REF_TYPE === 'B' && node.REF_ID !== -1) {
-            yield put({ // 앱
+            yield put({
+              // 앱
               type: constantsAppList.UPDATE_CHANGE_WGCOUNT,
               CATG_ID: node.CATG_ID,
               APP_ID: node.REF_ID,
               WG_COUNT: 0,
             });
           } else if (node.REF_TYPE !== 'B' && node.APP_ID !== 0) {
-            yield put({ // 앱
+            yield put({
+              // 앱
               type: constantsAppList.UPDATE_CHANGE_WGCOUNT,
               CATG_ID: node.CATG_ID,
               APP_ID: node.APP_ID,
               WG_COUNT: 0,
             });
           }
-        } else if (node.REF_TYPE === 'B' && pathname.indexOf('/modal/biz') > -1) { // 업무그룹
+        } else if (node.REF_TYPE === 'B' && pathname.indexOf('/modal/biz') > -1) {
+          // 업무그룹
           yield put({
             type: constantsBizList.UPDATE_CHANGE_WGCOUNT,
             CATG_ID: node.CATG_ID,

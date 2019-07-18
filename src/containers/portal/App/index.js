@@ -25,6 +25,7 @@ import { basicPath } from 'containers/common/constants';
 import SideMenu from 'components/SideMenu';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
+import * as routesSelector from 'containers/common/Routes/selectors';
 import * as selectors from './selectors';
 // import Fullscreen from './fullscreen';
 import themes from '../../../config/themes/index';
@@ -37,6 +38,7 @@ import saga from './saga';
 import reducer from './reducer';
 import UserDock from './UserDock';
 import UserMenu from './UserMenu';
+import UserBizMenu from './UserBizMenu';
 import UserSetting from './UserSetting';
 import UserStore from './UserStore';
 import RodalPage from '../../../components/Rodal';
@@ -46,7 +48,7 @@ import AppsRouter from '../../../apps/appsRouter';
 import StyledContainer from './StyledContainer';
 import UserCategoryMenu from './UserCategoryMenu';
 
-import logo from 'images/logo.png';
+// import logo from 'images/logo.png';
 
 const wrap = dragDropContext(HTML5Backend);
 const { Content } = Layout;
@@ -82,7 +84,6 @@ class App extends React.PureComponent {
       isClose: {},
       // 스피너 상태
       isSpinnerShow: false,
-      isShowUserMenu: false,
       // isPreviewPage: false,
     };
 
@@ -132,7 +133,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach(o => {
+        dockAppList.forEach((o) => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -294,12 +295,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = item => {
+  onReload = (item) => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = open => {
+  onSetOpen = (open) => {
     this.setState({ open: open }); //eslint-disable-line
   };
   /* eslint-disable */
@@ -526,12 +527,11 @@ class App extends React.PureComponent {
 
     if (node === 'set') {
       // this.props.deleteDock();
-      if (this.props.view !== 'Mobile') {
-        this.props.history.push(`/${basicPath.PORTAL}/settings`);
-      } else {
-        this.props.history.push(`/${basicPath.PORTAL}/settings`);
+      this.props.history.push(`/${basicPath.PORTAL}/settings`);
+      if (this.props.view === 'Mobile') {
         this.setState({ open: false });
       }
+
       return;
     }
 
@@ -601,7 +601,7 @@ class App extends React.PureComponent {
   };
 
   render() {
-    const { open, isClose, isSpinnerShow, headerMenuOpen, isShowUserMenu } = this.state;
+    const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
     const {
       mySkin,
       myHNotiCnt,
@@ -815,6 +815,15 @@ class App extends React.PureComponent {
                           />
                         )}
                       />
+                      <Route
+                        path={`/${basicPath.PORTAL}/bizMenu/:ID`}
+                        render={props => (
+                          <UserBizMenu //eslint-disable-line
+                            {...props}
+                            applySkin={this.applySkin}
+                          />
+                        )}
+                      />
                     </div>
                   </Fullscreen>
                   {/*
@@ -959,6 +968,7 @@ App.propTypes = {
   deletedDockPageId: PropTypes.number,
   executedDockPageId: PropTypes.number,
   hasRoleAdmin: PropTypes.bool,
+  headerTitle: PropTypes.string,
 };
 App.defaultProps = {
   setMyMenuNodeData: undefined,
@@ -972,6 +982,7 @@ App.defaultProps = {
   dataForApps: undefined,
   isPreviewPage: false,
   hasRoleAdmin: false,
+  headerTitle: '',
 };
 const mapStateToProps = createStructuredSelector({
   // 1. selector
@@ -998,6 +1009,7 @@ const mapStateToProps = createStructuredSelector({
   deletedDockPageId: selectors.makeSelectDeletedDockPageId(),
   executedDockPageId: selectors.makeSelectExecutedDockPageId(),
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
+  headerTitle: routesSelector.makeSelectHeaderTitle(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),
