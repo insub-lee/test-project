@@ -631,6 +631,7 @@ class App extends React.PureComponent {
       hasRoleAdmin,
       // selectedApp,
       history,
+      headerTitle
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -672,6 +673,7 @@ class App extends React.PureComponent {
             managerInfo={managerInfo}
             view={view}
             hasRoleAdmin={hasRoleAdmin}
+            headerTitle={headerTitle}
           />
           {/* SideBar */}
           <MenuCategory
