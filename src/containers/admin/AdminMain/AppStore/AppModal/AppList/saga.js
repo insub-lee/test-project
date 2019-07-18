@@ -334,7 +334,7 @@ export function* registAppModal(payload) {
   // const store = yield select(state => state.get('storeAppList'));
 
   // get PRNT_ID
-  const parentStore = yield select(state => state.get('appstore'));
+  const parentStore = yield select(state => state.get('admin/AdminMain/AppStore'));
   const { node } = parentStore.get('tempRowInfo');
   const CATG_ID = node && node.CATG_ID !== -999 && node.NODE_TYPE !== 'R' ? node.CATG_ID : -1;
   if (CATG_ID < 1) {
@@ -382,7 +382,7 @@ export function* registCategoryModal(payload) {
   const store = yield select(state => state.get('storeAppList'));
 
   // get PRNT_ID
-  const parentStore = yield select(state => state.get('appstore'));
+  const parentStore = yield select(state => state.get('admin/AdminMain/AppStore'));
   const { node } = parentStore.get('tempRowInfo');
   const PRNT_ID = node && node.MENU_ID ? node.MENU_ID : -1;
 
@@ -422,7 +422,7 @@ export function* registBizModal(payload) {
   const store = yield select(state => state.get('storeAppList'));
   const url = '/api/bizstore/v1/mypage/registbizmodal';
 
-  const mypage = yield select(state => state.get('appstore'));
+  const mypage = yield select(state => state.get('admin/AdminMain/AppStore'));
   const rowInfo = mypage.get('tempRowInfo');
   const { node } = rowInfo;
   const PRNT_ID = node && node.MENU_ID ? node.MENU_ID : -1;

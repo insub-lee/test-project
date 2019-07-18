@@ -357,7 +357,7 @@ class MyPageTree extends Component {
 
           resortTreeData(treeData, treeData[0].LVL, [ROOT_ID]);
 
-          // saveData(null, treeData);
+          saveData(null, treeData);
           moveNode(SITE_ID, treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
@@ -380,7 +380,7 @@ class MyPageTree extends Component {
             this.setState({
               selectedIndex: node.key,
             });
-            // saveData(rowInfo, treeData);
+            saveData(rowInfo, treeData);
           onClick(node);
         };
 
@@ -404,7 +404,7 @@ class MyPageTree extends Component {
                 key="appListBtn"
                 title="앱등록"
                 onClick={() => {
-                  // saveData(rowInfo, treeData);
+                  saveData(rowInfo, treeData);
                   history.push('/admin/adminmain/appstore/modal/app/list');
                 }}
               /> : '',
@@ -553,7 +553,7 @@ MyPageTree.propTypes = {
   onClick: PropTypes.func,
   updateNode: PropTypes.func, //eslint-disable-line
   insertNode: PropTypes.func, //eslint-disable-line
-  // saveData: PropTypes.func, //eslint-disable-line
+  saveData: PropTypes.func, //eslint-disable-line
   moveNode: PropTypes.func, //eslint-disable-line
   deleteNode: PropTypes.func, //eslint-disable-line
   updateMymenuDisp: PropTypes.func, //eslint-disable-line
