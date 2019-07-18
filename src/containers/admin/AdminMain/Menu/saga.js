@@ -6,13 +6,14 @@ import { intlObj } from 'utils/commonUtils';
 import message from 'components/Feedback/message';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as treeFunc from 'containers/common/functions/treeFunc';
+import * as commonjs from 'containers/common/functions/common';
 import * as constantsTopMenu from './BizMenuReg/TopMenu/constants';
 import * as constants from './constants';
 import messages from './messages';
 
 export function* getTreeData() {
   // const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree', { data: 'temp' });
-  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?BIZGRP_ID=41', { data: 'temp' });
+  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', { data: 'temp' });
   const result = fromJS(JSON.parse(`[${response.result}]`));
   const categoryData = result.get(0).get('children');
   const categoryFlatData = treeFunc.generateListBiz(categoryData);
@@ -26,6 +27,22 @@ export function* getTreeData() {
   yield put({
     type: constantsLoading.LOADING_OFF,
   });
+}
+
+export function* getMenuBizGrpID(payload) {
+  const { history } = payload;
+  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', { data: 'temp' });
+  // const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/getMenuBizGrpId', { data: 'temp' });
+  // const bizGrpId = response.result;
+
+  history.push('/admin/adminmain/menu/bizMenuReg/info/1');
+  /*
+  if (response.code === 200 && bizGrpId) {
+    history.push(`/admin/adminmain/menu/bizMenuReg/${bizGrpId}`);
+  } else {
+    history.push('/error');
+  }
+  */
 }
 
 export function* updateTreeNode(payload) {
@@ -62,8 +79,8 @@ export function* moveNode(payload) {
 
 export function* addEmptyNode(payload) {
   const {
- rowInfo, data, categoryData, history 
-} = payload;
+    rowInfo, data, categoryData, history,
+  } = payload;
   const { node } = rowInfo;
 
   // data : {
@@ -100,7 +117,7 @@ export function* addEmptyNode(payload) {
     });
 
     // history.push(`/store/appMain/bizManage/bizGroupReg/${resultNode.key}`);
-    history.push(`admin/adminmain/menu/bizGroupReg/${resultNode.key}`);
+    history.push(`/admin/adminmain/work/bizGroupReg/${resultNode.key}`);
   } else {
     // console.log('error?');
   }
@@ -166,7 +183,8 @@ export function* deleteNode(payload) {
     message.success(`${intlObj.get(messages.completeDelete)}`, 2);
 
     if (node.MENU_EXIST_YN === 'Y') {
-      history.push(`/admin/adminmain/menu/bizMenuReg/info/${BIZGRP_ID}`);
+      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
+      history.push(`${preUrl}/info/${BIZGRP_ID}`);
     }
   } else {
     // console.log('error?');
@@ -211,6 +229,7 @@ export function* updateBizGroupDelYn(payload) {
 
 export default function* rootSaga() {
   yield takeLatest(constants.INIT_CATEGORY_DATA, getTreeData);
+  yield takeLatest(constants.INIT_MENUGRP_ID, getMenuBizGrpID);
   yield takeLatest(constants.ADD_EMPTY_NODE, addEmptyNode);
   yield takeLatest(constants.MOVE_MYMENU, moveNode);
   yield takeLatest(constants.DELETE_NODE, deleteNode);

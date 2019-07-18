@@ -7,6 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+import * as commonjs from 'containers/common/functions/common';
 
 import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
@@ -25,25 +26,33 @@ import AuthSetting from './BizMenuReg/AuthSetting';
 // import Footer from '../../App/Footer';
 
 // const homeUrl = '/store/appMain/bizManage';
-const homeUrl = '/admin/adminmain/menu';
+const workHomeUrl = '/admin/adminmain/work';
 
 class BizManage extends Component {
-  componentWillMount() {
-    this.props.initCategoryData();
+  componentDidMount() {
+    const { match: { params: { MENU } } } = this.props;
+    if (MENU === 'menu') {
+      this.props.getMenuBizGrpID(this.props.history);
+    } else if (MENU === 'work') {
+      this.props.initCategoryData();
+    }
+    this.MENU = MENU;
   }
 
   componentWillReceiveProps(nextProps) {
-    console.debug('nextProps.history.location.pathname >> ', nextProps.history.location.pathname);
-    if (homeUrl === nextProps.history.location.pathname) {
+    const { match: { params: { MENU } } } = nextProps;
+    this.MENU = MENU;
+
+    if (workHomeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
-        const generateList = data => {
+        const generateList = (data) => {
           for (let i = 0; i < data.length; i += 1) {
             const node = data[i];
 
             if (url === undefined) {
               if (node.MENU_EXIST_YN !== 'N') {
-                url = `/admin/adminmain/menu/bizMenuReg/info/${node.key}`;
+                url = `/admin/adminmain/work/bizMenuReg/info/${node.key}`;
                 this.props.changeSelectedIndex(node.key);
               }
 
@@ -65,6 +74,23 @@ class BizManage extends Component {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    const { match: { params: { MENU: PREVMENU } } } = prevProps;
+    const { match: { params: { MENU } } } = this.props;
+    console.log('componentDidUpdate');
+    console.log(PREVMENU);
+    console.log(MENU);
+    if (PREVMENU !== MENU) {
+      console.log('PREVMENU !== MENU');
+      if (MENU === 'menu') {
+        this.props.getMenuBizGrpID(this.props.history);
+      } else if (MENU === 'work') {
+        this.props.initCategoryData();
+      }
+      this.MENU = MENU;
+    }
+  }
+
   render() {
     const {
       // data
@@ -81,15 +107,19 @@ class BizManage extends Component {
       updateBizGroupDelYn,
     } = this.props;
 
-    const handleTreeOnClick = node => {
+    const preUrl = this.props.match.url;
+
+    const handleTreeOnClick = (node) => {
       changeSelectedIndex(node.key);
       if (node.MENU_EXIST_YN !== 'N') {
-        history.push(`/admin/adminmain/menu/bizMenuReg/info/${node.key}`);
+        history.push(`/admin/adminmain/work/bizMenuReg/info/${node.key}`);
       } else {
-        history.push(`/admin/adminmain/menu/bizGroupReg/${node.key}`);
+        history.push(`/admin/adminmain/work/bizGroupReg/${node.key}`);
       }
     };
 
+    const isTreeGroup = this.MENU === 'work';
+    /*
     let isTreeGroup = false;
     if (location.pathname.indexOf('bizMenuReg/') > -1) {
       const pathArr = location.pathname.split('/');
@@ -103,7 +133,7 @@ class BizManage extends Component {
     } else {
       isTreeGroup = true;
     }
-
+    */
     return (
       <div className="appMyPageWrapper">
         {isTreeGroup && (
@@ -127,13 +157,13 @@ class BizManage extends Component {
           </StyledTabList>
         )}
         <ErrorBoundary>
-          <ModalRoute path="/admin/adminmain/menu/authSetting/:BIZGRP_ID" component={AuthSetting} />
+          <ModalRoute path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} />
           <ModalContainer />
         </ErrorBoundary>
         <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
           <ErrorBoundary>
-            <Route path="/admin/adminmain/menu/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
-            <Route path="/admin/adminmain/menu/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
+            <Route path="/admin/adminmain/work/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
+            <Route path="/admin/adminmain/:MENU/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
             <Route path="/appPreview" component={AppPreview} exact />
           </ErrorBoundary>
 
@@ -149,9 +179,10 @@ class BizManage extends Component {
 BizManage.propTypes = {
   history: PropTypes.object.isRequired,
   location: PropTypes.object.isRequired,
-
+  match: PropTypes.object.isRequired,
   categoryData: PropTypes.array.isRequired,
   initCategoryData: PropTypes.func.isRequired,
+  getMenuBizGrpID: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   changeSelectedIndex: PropTypes.func.isRequired,
 
@@ -166,6 +197,8 @@ export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
     initCategoryData: () => dispatch(actions.initCategoryData()),
+    getMenuBizGrpID: history => dispatch(actions.getMenuBizGrpID(history)),
+
     changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
@@ -190,10 +223,8 @@ const withConnect = connect(
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu', saga });
 
-export default injectIntl(
-  compose(
-    withReducer,
-    withConnect,
-    withSaga,
-  )(BizManage),
-);
+export default injectIntl(compose(
+  withReducer,
+  withConnect,
+  withSaga,
+)(BizManage));

@@ -9,6 +9,7 @@ import { ModalRoute } from 'react-router-modal';
 import Widget from 'components/appSettingBizgroup';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
+import * as commonjs from 'containers/common/functions/common';
 
 import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
@@ -42,7 +43,6 @@ class BizMenuReg extends Component {
     this.state = {
       BIZGRP_ID: Number(BIZGRP_ID),
     };
-
     loadingOn();
     initCategoryData(Number(BIZGRP_ID));
   }
@@ -81,7 +81,7 @@ class BizMenuReg extends Component {
     } = this.props;
 
     const { BIZGRP_ID } = this.state;
-
+    const preUrl = commonjs.getPreUrl(this.props.match.url, '/bizMenuReg');
     const handleTreeOnClick = node => {
       const { key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID } = node;
       changeSelectedIndex(key);
@@ -90,8 +90,6 @@ class BizMenuReg extends Component {
 
       if (NODE_TYPE !== 'F') {
         // 폴더 X
-        const preUrl = '/admin/adminmain/menu/bizMenuReg';
-
         if (REF_TYPE === 'A' && APP_ID !== -1) {
           // [앱] 상세
           history.push(`${preUrl}/app/${BIZGRP_ID}/${APP_ID}`);
@@ -107,12 +105,12 @@ class BizMenuReg extends Component {
       this.setState({ pageID });
     };
 
-    const preUrl = match.path.substr(0, match.path.indexOf('/:'));
     let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' };
     if (BIZGRP_ID !== 1) {
       divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', marginLeft: '300px' };
     }
 
+    console.debug('preUrl >> ', preUrl);
     console.debug('BIZGRP_ID >> ', BIZGRP_ID);
     console.debug('divStyle', divStyle);
 

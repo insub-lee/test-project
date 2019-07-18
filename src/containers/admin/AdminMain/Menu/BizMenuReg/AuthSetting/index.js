@@ -15,6 +15,7 @@ import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import Organization from 'containers/portal/components/Organization';
+import * as commonjs from 'containers/common/functions/common';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -375,6 +376,8 @@ class AuthSetting extends Component {
     const oldDutys = data.V.dutys;
     const oldGrps = data.V.grps;
 
+    const preUrl = this.props.match.url.substr(0, this.props.match.url.indexOf('/authSetting'));
+
     return (
       <div
         className="settingsPage"
@@ -412,7 +415,7 @@ class AuthSetting extends Component {
               <Button
                 className="modalClose"
                 onClick={() => {
-                  history.push(`/admin/adminmain/menu/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
+                  history.push(`${preUrl}/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
                 }}
                 title=""
               />

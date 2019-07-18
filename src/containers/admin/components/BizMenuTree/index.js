@@ -8,6 +8,8 @@ import ScrollBar from 'react-custom-scrollbars';
 import { lang, intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
+import * as commonjs from 'containers/common/functions/common';
+
 // import 'style/sortable-tree-biz.css';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
@@ -201,6 +203,7 @@ class BizMenuTree extends Component {
       bizGroupInfo,
     } = this.props;
 
+    const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
     const BIZGRP_ID = bizGroupInfo.BIZGRP_ID;
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1, BIZGRP_ID };
@@ -373,7 +376,7 @@ class BizMenuTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push(`/admin/adminmain/menu/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                    history.push(`${preUrl}/appSelect/${BIZGRP_ID}/modal/app/list`);
                   }}
                 />
               ) : (
@@ -500,7 +503,7 @@ class BizMenuTree extends Component {
           <button
             onClick={() => {
               onClick({ key: -1 });
-              history.push(`/admin/adminmain/menu/bizMenuReg/info/${BIZGRP_ID}`);
+              history.push(`${preUrl}/info/${BIZGRP_ID}`);
             }}
             className="ellipsis"
             style={{ color: `${selectedIndex === -1 ? '#f85023' : 'inherit'}`, paddingLeft: 6 }}
@@ -534,7 +537,7 @@ class BizMenuTree extends Component {
               title="앱등록"
               onClick={() => {
                 saveData(rootRowInfo, this.state.treeData);
-                history.push(`/admin/adminmain/menu/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                history.push(`${preUrl}/appSelect/${BIZGRP_ID}/modal/app/list`);
               }}
             />
             <FolderBtn

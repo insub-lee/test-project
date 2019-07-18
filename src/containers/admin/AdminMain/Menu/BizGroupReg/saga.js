@@ -7,6 +7,7 @@ import { fromJS } from 'immutable';
 import message from 'components/Feedback/message';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 import * as constantsLoading from 'containers/common/Loading/constants';
+import * as commonjs from 'containers/common/functions/common';
 
 import messages from '../messages';
 import * as constants from './constants';
@@ -65,7 +66,8 @@ export function* updateBizGroup(payload) {
     message.success(`${intlObj.get(messages.successSave)}`);
 
     if (data.MENU_EXIST_YN === 'Y') {
-      history.push(`/admin/adminmain/menu/bizMenuReg/info/${data.BIZGRP_ID}`);
+      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
+      history.push(`${preUrl}/info/${data.BIZGRP_ID}`);
     }
   }
 }

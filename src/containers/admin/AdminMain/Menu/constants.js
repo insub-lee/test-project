@@ -1,5 +1,6 @@
 const base = 'admin/AdminMain/Menu';
 export const INIT_CATEGORY_DATA = `${base}/INIT_CATEGORY_DATA`;
+export const INIT_MENUGRP_ID = `${base}/INIT_MENUGRP_ID`;
 export const SET_CATEGORY_DATA = `${base}/SET_CATEGORY_DATA`;
 export const SET_SELECTED_INDEX = `${base}/SET_SELECTED_INDEX`;
 export const SAVE_DATA = `${base}/SAVE_DATA`;

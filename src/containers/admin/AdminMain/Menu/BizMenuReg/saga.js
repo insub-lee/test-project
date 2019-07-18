@@ -7,6 +7,7 @@ import message from 'components/Feedback/message';
 // import * as constantsCommon from 'containers/common/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as treeFunc from 'containers/common/functions/treeFunc';
+import * as commonjs from 'containers/common/functions/common';
 import * as constants from './constants';
 import * as constantsBizManage from '../constants';
 import * as constantsTopMenu from './TopMenu/constants';
@@ -85,7 +86,8 @@ export function* insertNode(payload) {
     }
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/admin/adminmain/menu/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
+      history.push(`${preUrl}/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -136,7 +138,8 @@ export function* updateNode(payload) {
     });
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/admin/adminmain/menu/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
+      history.push(`${preUrl}/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -209,7 +212,8 @@ export function* deleteNode(payload) {
     const PAGE_ID = getIdByUrl(`page/${BIZGRP_ID}/`, history);
 
     if (node.REF_ID === APP_ID || node.PAGE_ID === PAGE_ID) {
-      history.push(`/admin/adminmain/menu/bizMenuReg/info/${BIZGRP_ID}`);
+      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
+      history.push(`${preUrl}/info/${BIZGRP_ID}`);
     }
 
     message.success(`${intlObj.get(messages.completeDelete)}`, 2);
