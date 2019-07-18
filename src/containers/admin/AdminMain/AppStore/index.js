@@ -149,7 +149,7 @@ class AppStore extends Component {
                     canDrop={false}
                     insertNode={insertNode}
                     updateNode={updateNode}
-                    // saveData={saveData}
+                    saveData={saveData}
                     moveNode={moveNode}
                     deleteNode={deleteNode}
                     updateMymenuDisp={updateMymenuDisp}
@@ -239,8 +239,8 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppStore', reducer });
-const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppStore', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppStore', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore', saga });
 
 export default injectIntl(compose(
   withReducer,

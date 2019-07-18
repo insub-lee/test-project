@@ -47,9 +47,6 @@ class AppList extends Component {
     const { params } = match;
     const { CATG_ID, searchword } = params;
     
-    console.log('asdasdsadsadsa');
-    console.log(this.props.categoryData);
-
     if (checkValue(searchword, nextProps.searchword)) {
       this.props.handleGetMapAppListSearch(searchword);
     } else if (checkValue(CATG_ID, this.CATG_ID)) {

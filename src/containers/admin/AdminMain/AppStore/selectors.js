@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectAppStore = state => state.get('admin/AdminMain/AppDetail/AppStore');
+const selectAppStore = state => state.get('admin/AdminMain/AppStore');
 
 const makeCategoryComboList = () => createSelector(
   selectAppStore,
