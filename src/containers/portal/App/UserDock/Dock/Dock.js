@@ -30,7 +30,8 @@ const styles = autoprefixes({
     top: 0,
     bottom: 0,
     zIndex: 0,
-    background: 'rgba(0, 0, 0, 0.2)',
+    // background: 'rgba(0, 0, 0, 0.2)',
+    background: '#505050',
     opacity: 1
   },
 
@@ -227,7 +228,6 @@ function getResizerStyles(position, isOpen, dockFixedYn, appYn) {
       height: '10px',
       left: fullWidth/2 - 32.5 + 'px',
       width: '65px',
-      cursor: 'row-resize',
       opacity: 1,
       backgroundColor: 'rgba(0, 0, 0, 0.2)',
       backgroundImage: `url(${mobileDockOpenIcon})`,

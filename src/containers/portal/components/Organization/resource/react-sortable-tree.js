@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 /* eslint-disable */
 import { AutoSizer, List } from 'react-virtualized';
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash';
 import withScrolling, {
   createVerticalStrength,
   createHorizontalStrength,

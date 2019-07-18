@@ -10,7 +10,8 @@ const theme = clone(basic);
 theme.header.backgroundColor = '#406687';
 
 // theme.portalContentBackground = `#85b0d3 url(${BackgroundImage}) repeat 0 0`;
-theme.portalContentBackground = '#8db0cd';
+// theme.portalContentBackground = '#8db0cd';
+theme.portalContentBackground = '#faf8fb';
 
 theme.footer = {
   borderTop: '1px solid rgba(255,255,255,0.3)',

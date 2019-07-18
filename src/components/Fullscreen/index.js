@@ -44,6 +44,12 @@ const style = {
   },
 };
 
+const defaultStyle = {
+  minHeight: '100%',
+  overflowY: 'auto',
+  position: 'relative',
+};
+
 
 let isEvent = false;
 
@@ -190,7 +196,8 @@ class FullScreen extends Component {
       <div
         className={`FullScreen ${enabled ? 'Active' : ''}`}
         ref={this.setNode}
-        style={enabled ? { ...style.active } : { ...style.unActive, width }}
+        // style={enabled ? { ...style.active } : { ...style.unActive, width }}
+        style={defaultStyle}
       >
         {this.props.children}
       </div>

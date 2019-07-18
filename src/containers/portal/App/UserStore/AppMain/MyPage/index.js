@@ -100,6 +100,17 @@ class MyPage extends Component {
     }
   }
 
+  handleTreeOnClick = node => {
+    const { changeSelectedIndex, history } = this.props;
+    changeSelectedIndex(node.key);
+
+    if (node.NODE_TYPE !== 'F') {
+      const url = getUrl(node);
+      history.push(url);
+      window.scrollTo(0, 0);
+    }
+  };
+
   render() {
     const {
       // data
@@ -117,24 +128,14 @@ class MyPage extends Component {
       updateMymenuDisp,
     } = this.props;
 
-    const handleTreeOnClick = node => {
-      changeSelectedIndex(node.key);
-
-      if (node.NODE_TYPE !== 'F') {
-        const url = getUrl(node);
-        history.push(url);
-        window.scrollTo(0, 0);
-      }
-    };
-
     return (
-      <div className="appMyPageWrapper">
+      <div className="appMyPageWrapper" style={{ height: '100%' }}>
         <MyStoreTreeStyledTabList className="treeWrapper">
           <ErrorBoundary>
             <MyPageTree
               treeData={categoryData}
               selectedIndex={selectedIndex}
-              onClick={handleTreeOnClick}
+              onClick={this.handleTreeOnClick}
               // canDrag={true}
               canDrop={true}
               insertNode={insertNode}
@@ -171,7 +172,7 @@ class MyPage extends Component {
           <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
         </ErrorBoundary> */}
         {/* </div> */}
-        <Footer />
+        {/*<Footer />*/}
       </div>
     );
   }

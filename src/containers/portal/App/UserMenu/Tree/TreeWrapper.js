@@ -4,36 +4,36 @@ import iconSearch from 'images/common/icon-search2.png';
 import iconEdit from 'images/common/icon-edit.png';
 
 const TreeWrapper = styled.div`
-.searchWrapper {
-  position: relative;
-  display: inline-block;
-  width: 280px;
-  margin-top: 9px;
-  margin-bottom: 9px;
-  margin-left: 9px;
-  height: 32px;
-
-  > Input {
+  .searchWrapper {
     position: relative;
-    float: left;
-    padding-right: 30px;
-    border: 1px solid #c1c1c1;
-    border-radius: 4px;
-    font-size: 13px;
+    display: inline-block;
+    width: 280px;
+    margin-top: 9px;
+    margin-bottom: 9px;
+    margin-left: 9px;
+    height: 32px;
+  
+    > Input {
+      position: relative;
+      float: left;
+      padding-right: 30px;
+      border: 1px solid #c1c1c1;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  
+    > .searchBtn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 30px;
+      height: 30px;
+      border: 0;
+      background: url(${iconSearch}) no-repeat 50% 50%;
+      background-size: 50% 50%;
+      cursor: pointer;
+    }
   }
-
-  > .searchBtn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-    border: 0;
-    background: url(${iconSearch}) no-repeat 50% 50%;
-    background-size: 50% 50%;
-    cursor: pointer;
-  }
-}
 
   .searchResult {
     color: #ea002c;

@@ -210,7 +210,7 @@ class UserDock extends React.Component {
     this.setState({
       dockItemList,
     });
-  }
+  };
 
   setStyleObj = () => {
     const {

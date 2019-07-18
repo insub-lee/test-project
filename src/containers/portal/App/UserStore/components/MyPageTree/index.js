@@ -531,18 +531,9 @@ class MyPageTree extends Component {
     );
 
     return (
-      <StyleMyPageTree
-        style={{
-          display: 'flex',
-          flex: '1 0 50%',
-          padding: 0,
-          flexDirection: 'column',
-          height: 'calc(100vh - 65px)',
-          width: '100%',
-        }}
-      >
+      <StyleMyPageTree>
         {treeData.length > 0 ? (
-          <ScrollBar style={{ width: 280, height: '90%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+          <ScrollBar autoHide autoHideTimeout={1000} autoHideDuration={200}>
             {tree}
           </ScrollBar>
         ) : (

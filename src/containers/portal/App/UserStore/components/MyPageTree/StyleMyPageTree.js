@@ -8,6 +8,13 @@ import iconRemove from 'images/common/icon-delete-white.png';
 import iconEdit from 'images/common/icon-edit-white2.png';
 
 const StyleMyPageTree = styled.div`
+  display: flex;
+  flex: 1 0 50%;
+  padding: 0;
+  flexDirection: column;
+  height: 100%;
+  width: 100%;
+
   .mypageTree {
     position: absolute;
     bottom: 47px;

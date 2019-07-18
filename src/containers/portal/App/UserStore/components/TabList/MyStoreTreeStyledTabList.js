@@ -2,12 +2,20 @@ import styled from 'styled-components';
 
 const MyStoreTreeStyledTabList = styled.div`
   &.treeWrapper {
-    position: fixed;
-    top: 50px;
-    left: 10px;
-    width: 399px;
-    height: calc(100vh - 99px);
-    padding: 10px;
+    //position: fixed;
+    //top: 50px;
+    //left: 10px;
+    //width: 399px;
+    //height: calc(100vh - 99px);
+    //position: absolute;
+    //top: 0;
+    //left: 0;
+    //width: 290px;
+    //height: 100vh;
+    width: 100%;
+    height: 100%;
+    
+    //padding: 10px;
     background-color: #ffffff;
     z-index: 100;
 

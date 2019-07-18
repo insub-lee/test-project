@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 const WorkTimeListWrapper = styled.div`
   padding: 10px;
+  display: flex;
+  height: ${({ height }) => height};
 
   .react-grid-Container {
     width: 100% !important;
