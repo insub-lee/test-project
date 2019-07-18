@@ -17,7 +17,7 @@ const AppWrapper = styled.div`
   //커스텀 스크롤로 오른쪽에 치우친 화면 중앙으로 이동
   .FullScreen {
     position: relative;
-    left: -9px;
+    //left: -9px;
     z-index: 1;
     min-height: calc(100vh - 50px); //위젯 개수가 적을 때 footer가 하단에 위치하도록
   

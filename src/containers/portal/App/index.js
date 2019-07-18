@@ -630,7 +630,7 @@ class App extends React.PureComponent {
       handleSetDockIconType,
       hasRoleAdmin,
       // selectedApp,
-      // history,
+      history,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -667,6 +667,7 @@ class App extends React.PureComponent {
             handleClick={this.handleClick}
             setMyMenuData={setMyMenuData}
             // UserSetting으로 전달될 콜백
+            location={history.location}
             myHNotiCnt={myHNotiCnt}
             managerInfo={managerInfo}
             view={view}
@@ -885,6 +886,11 @@ class App extends React.PureComponent {
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="home widget">
+                <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(dockHomeItem.PAGE_ID)} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="app-store">
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
@@ -894,11 +900,13 @@ class App extends React.PureComponent {
                 <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
               </Tooltip>
             </div>
+            {/*
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="업무등록">
                 <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
               </Tooltip>
             </div>
+            */}
           </SideMenu>
           <UserDock
             execPage={this.execPage}
