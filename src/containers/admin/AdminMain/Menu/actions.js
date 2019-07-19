@@ -6,9 +6,8 @@ export const initCategoryData = () => ({
   type: constants.INIT_CATEGORY_DATA,
 });
 
-export const getMenuBizGrpID = (history) => ({
-  type: constants.INIT_MENUGRP_ID,
-  history,
+export const getMenuBizGrpID = () => ({
+  type: constants.GET_MENUBIZGRP_ID,
 });
 
 export const saveData = (tempRowInfo, categoryData) => ({

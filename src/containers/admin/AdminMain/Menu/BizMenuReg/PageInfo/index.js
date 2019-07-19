@@ -183,8 +183,8 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'bizmenuPageInfo', reducer });
-const withSaga = injectSaga({ key: 'bizmenuPageInfo', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/PageInfo', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/PageInfo', saga });
 
 export default injectIntl(
   compose(

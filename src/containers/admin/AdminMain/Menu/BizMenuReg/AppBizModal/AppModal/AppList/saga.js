@@ -7,7 +7,8 @@ import { Axios } from 'utils/AxiosFunc';
 
 // import * as constantsApp from 'containers/store/App/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
-import * as constantsBizMenu from 'containers/store/AppMain/BizManage/BizMenuReg/constants';
+import * as constantsBizMenu from '../../../constants';
+
 import * as constants from './constants';
 import * as constantsTopMenu from '../../../TopMenu/constants';
 import * as constantsBizManage from '../../../../constants';

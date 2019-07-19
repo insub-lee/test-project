@@ -7,7 +7,6 @@ import message from 'components/Feedback/message';
 // import * as constantsCommon from 'containers/common/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as treeFunc from 'containers/common/functions/treeFunc';
-import * as commonjs from 'containers/common/functions/common';
 import * as constants from './constants';
 import * as constantsBizManage from '../constants';
 import * as constantsTopMenu from './TopMenu/constants';
@@ -86,8 +85,9 @@ export function* insertNode(payload) {
     }
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
-      history.push(`${preUrl}/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+      const pathArr = history.location.pathname.split('/');
+      const type = pathArr[3];
+      history.push(`/admin/adminmain/${type}/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -138,8 +138,9 @@ export function* updateNode(payload) {
     });
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
-      history.push(`${preUrl}/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+      const pathArr = history.location.pathname.split('/');
+      const type = pathArr[3];
+      history.push(`/admin/adminmain/${type}/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -181,10 +182,12 @@ export function* deleteNode(payload) {
 
   if (code === 200) {
     const newCategoryData = treeFunc.deleteNode(rowInfo, categoryData);
+    const selectedIndex = node.LVL === 1 ? -1 : node.PRNT_ID;
 
     yield put({
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
+      selectedIndex,
     });
 
     // 삭제 시 사용중 -> 사용안함 상태로 변경
@@ -212,8 +215,9 @@ export function* deleteNode(payload) {
     const PAGE_ID = getIdByUrl(`page/${BIZGRP_ID}/`, history);
 
     if (node.REF_ID === APP_ID || node.PAGE_ID === PAGE_ID) {
-      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
-      history.push(`${preUrl}/info/${BIZGRP_ID}`);
+      const pathArr = history.location.pathname.split('/');
+      const type = pathArr[3];
+      history.push(`/admin/adminmain/${type}/bizMenuReg/info/${BIZGRP_ID}`);
     }
 
     message.success(`${intlObj.get(messages.completeDelete)}`, 2);

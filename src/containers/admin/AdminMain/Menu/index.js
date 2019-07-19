@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -7,7 +7,6 @@ import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-import * as commonjs from 'containers/common/functions/common';
 
 import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
@@ -26,20 +25,26 @@ import AuthSetting from './BizMenuReg/AuthSetting';
 // import Footer from '../../App/Footer';
 
 // const homeUrl = '/store/appMain/bizManage';
+const menuHomeUrl = '/admin/adminmain/menu';
 const workHomeUrl = '/admin/adminmain/work';
 
 class BizManage extends Component {
   componentDidMount() {
+    console.log('componentDidMount');
     const { match: { params: { MENU } } } = this.props;
     if (MENU === 'menu') {
-      this.props.getMenuBizGrpID(this.props.history);
+      console.log('getMenuBizGrpID');
+      this.props.getMenuBizGrpID();
     } else if (MENU === 'work') {
+      console.log('getMenuBizGrpID');
       this.props.initCategoryData();
     }
     this.MENU = MENU;
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('componentWillReceiveProps');
+    console.log(nextProps.history.location.pathname);
     const { match: { params: { MENU } } } = nextProps;
     this.MENU = MENU;
 
@@ -66,24 +71,31 @@ class BizManage extends Component {
         generateList(nextProps.categoryData);
 
         if (url) {
+          console.log('workHomeUrl');
+          console.log(url);
           nextProps.history.push(url);
         }
       } else {
         // 트리 데이터가 없는 경우. main화면
       }
+    } else if (menuHomeUrl === nextProps.history.location.pathname) {
+      console.log('menuHomeUrl');
+      console.log(nextProps.menuBizGrpId);
+      if (nextProps.menuBizGrpId > 0) {
+        nextProps.history.push(`/admin/adminmain/menu/bizMenuReg/info/${nextProps.menuBizGrpId}`);
+      }
     }
   }
 
   componentDidUpdate(prevProps) {
+    console.log('componentDidUpdate');
     const { match: { params: { MENU: PREVMENU } } } = prevProps;
     const { match: { params: { MENU } } } = this.props;
-    console.log('componentDidUpdate');
-    console.log(PREVMENU);
-    console.log(MENU);
+
     if (PREVMENU !== MENU) {
       console.log('PREVMENU !== MENU');
       if (MENU === 'menu') {
-        this.props.getMenuBizGrpID(this.props.history);
+        this.props.getMenuBizGrpID();
       } else if (MENU === 'work') {
         this.props.initCategoryData();
       }
@@ -162,9 +174,11 @@ class BizManage extends Component {
         </ErrorBoundary>
         <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
           <ErrorBoundary>
-            <Route path="/admin/adminmain/work/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
-            <Route path="/admin/adminmain/:MENU/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
-            <Route path="/appPreview" component={AppPreview} exact />
+            <Switch>
+              <Route path="/admin/adminmain/work/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
+              <Route path="/admin/adminmain/:MENU/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
+              <Route path="/appPreview" component={AppPreview} exact />
+            </Switch>
           </ErrorBoundary>
 
           {/* <Route path="/store/appMain/bizManage/aut
@@ -185,6 +199,7 @@ BizManage.propTypes = {
   getMenuBizGrpID: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   changeSelectedIndex: PropTypes.func.isRequired,
+  menuBizGrpId: PropTypes.number.isRequired,
 
   saveData: PropTypes.func.isRequired,
   addEmptyNode: PropTypes.func.isRequired,
@@ -193,11 +208,12 @@ BizManage.propTypes = {
   updateBizGroupDelYn: PropTypes.func.isRequired,
 };
 
+
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
     initCategoryData: () => dispatch(actions.initCategoryData()),
-    getMenuBizGrpID: history => dispatch(actions.getMenuBizGrpID(history)),
+    getMenuBizGrpID: () => dispatch(actions.getMenuBizGrpID()),
 
     changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
@@ -213,6 +229,7 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
+  menuBizGrpId: selectors.makeMenuBizGrpId(),
 });
 
 const withConnect = connect(

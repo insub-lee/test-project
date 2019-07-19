@@ -497,8 +497,8 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 
-const withReducer = injectReducer({ key: 'bizmenuAuthsetting', reducer });
-const withSaga = injectSaga({ key: 'bizmenuAuthsetting', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/AuthSetting', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AuthSetting', saga });
 
 export default injectIntl(
   compose(

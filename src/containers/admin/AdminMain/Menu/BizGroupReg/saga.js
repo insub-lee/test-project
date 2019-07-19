@@ -66,8 +66,9 @@ export function* updateBizGroup(payload) {
     message.success(`${intlObj.get(messages.successSave)}`);
 
     if (data.MENU_EXIST_YN === 'Y') {
-      const preUrl = commonjs.getPreUrl(history.location.pathname, '/bizMenuReg');
-      history.push(`${preUrl}/info/${data.BIZGRP_ID}`);
+      const pathArr = history.location.pathname.split('/');
+      const type = pathArr[3];
+      history.push(`/admin/adminmain/${type}/bizMenuReg/info/${data.BIZGRP_ID}`);
     }
   }
 }

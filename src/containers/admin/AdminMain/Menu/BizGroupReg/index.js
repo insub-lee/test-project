@@ -16,7 +16,6 @@ import { fromJS } from 'immutable';
 import { injectIntl } from 'react-intl';
 import Upload from 'components/Upload';
 import MyAppCategoryModal from 'containers/store/AppMain/MyApp/MyAppCategoryModal';
-import * as commonjs from 'containers/common/functions/common';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -69,7 +68,8 @@ function getOrgData(data, ACNT_TYPE) {
 }
 
 function replaceSpecialCharacter(str) {
-  const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //eslint-disable-line
+  // const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //eslint-disable-line
+  const regExp = /[\{\}?.,;:|\)*~`!^\+<>\#$%&\\\=\(\'\"]/gi; //eslint-disable-line
   return str.replace(regExp, '');
 }
 
@@ -246,7 +246,8 @@ class BizGroupReg extends Component {
     const oldDutys = data[SEC_TYPE].dutys.length > 0 ? data[SEC_TYPE].dutys : [];
     const oldGrps = data[SEC_TYPE].grps.length > 0 ? data[SEC_TYPE].grps : [];
 
-    const preUrl = commonjs.getPreUrl(this.props.match.url, '/bizMenuReg');
+    const pathArr = this.props.match.url.split('/');
+    const type = pathArr[3];
 
     const imgClick = (e) => {
       e.stopPropagation();
@@ -555,7 +556,7 @@ class BizGroupReg extends Component {
                       </section>
                     </td>
                   </tr>
-                  <tr>
+                  {/* <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.category)}</span>
                     </th>
@@ -581,11 +582,11 @@ class BizGroupReg extends Component {
                           onClick={this.myAppCategoryModalOpen}
                         >
                           {intlObj.get(messages.edit)}
-                        </Button>
+                        </Button> */}
                         {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
-                      </FormItem>
+                      {/* </FormItem>
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
@@ -795,7 +796,7 @@ class BizGroupReg extends Component {
                 <div className="buttonWrapper">
                   {
                     data.MENU_EXIST_YN === 'Y' ? (
-                      <Link to={`${preUrl}/info/${data.BIZGRP_ID}`}>
+                      <Link to={`/admin/adminmain/${type}/bizMenuReg/info/${data.BIZGRP_ID}`}>
                         <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
                       </Link>
                     ) : ''
