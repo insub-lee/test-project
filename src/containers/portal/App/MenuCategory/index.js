@@ -41,26 +41,16 @@ class MenuCategory extends React.Component {
   };
 
   getNotiList = () => {
-    const { commonMenuTreeData } = this.props;
+    const { commonMenuTreeData, execMenu, execPage } = this.props;
     const treeData = commonMenuTreeData.map(data => ({
       ...data,
       icon: 'fa-briefcase',
     }));
     return (
       <div>
-        <Menu treeData={treeData} handleClick={this.handleClick} />
+        <Menu treeData={treeData} execMenu={execMenu} execPage={execPage} />
       </div>
     );
-  };
-
-  handleClick = (node) => {
-    const { execMenu, execPage } = this.props;
-    if (node.TARGET === 'NEW') {
-      window.open(node.URL, node.MENU_ID, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
-      execMenu(node.PAGE_ID, node.TARGET);
-    } else if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
-      execPage(node, 'execMenu');
-    }
   };
 
   render() {

@@ -35,32 +35,39 @@ class Tree extends Component {
       searchString: '',
       editTree: false,
       editMenuMode: false,
+      prevUrl: props.history.location.pathname,
     };
 
     this.updateTreeData = debounce(this.updateTreeData.bind(this), 300);
   }
 
   onSetEditClick = () => {
+    if (this.state.editMenuMode && this.state.prevUrl !== this.props.history.location.pathname) {
+      this.setState({
+        prevUrl: this.props.history.location.pathname,
+      });
+
+      this.props.history.push('/');
+    }
+
     this.setState(prevState => ({
       editTree: !prevState.editTree,
       editMenuMode: !prevState.editMenuMode,
     }));
   };
 
-  setSearchString = (value) => {
+  setSearchString = value => {
     this.setState({
       searchString: value,
     });
   };
 
-  updateTreeData = (treeData) => {
+  updateTreeData = treeData => {
     this.props.saveData(null, treeData);
   };
 
-  clickEvent = (node) => {
-    const {
-      treeData, execPage, execMenu, onClick, saveData,
-    } = this.props;
+  clickEvent = node => {
+    const { treeData, execPage, execMenu, onClick, saveData } = this.props;
     if (node.TARGET === 'NEW') {
       window.open(node.URL, node.MENU_ID, features);
       execMenu(node.PAGE_ID, node.TARGET);
@@ -87,16 +94,9 @@ class Tree extends Component {
   };
 
   render() {
-    const {
-      searchFocusIndex,
-      searchString,
-      editTree,
-      editMenuMode,
-    } = this.state;
+    const { searchFocusIndex, searchString, editTree, editMenuMode } = this.state;
 
-    const {
-      treeData, showNoti, history,
-    } = this.props;
+    const { treeData, showNoti, history } = this.props;
 
     return (
       <TreeWrapper>
@@ -108,7 +108,7 @@ class Tree extends Component {
                 size="small"
                 value={searchString}
                 placeholder="메뉴에서 My App을 검색하세요."
-                onChange={(event) => {
+                onChange={event => {
                   this.setSearchString(event.target.value);
                 }}
                 readOnly={editTree}
@@ -134,10 +134,10 @@ class Tree extends Component {
           <div
             className="treeBox"
             style={{
-                width: '100%',
-                height: 'calc(100% - 50px)',
-                padding: '0 10px',
-              }}
+              width: '100%',
+              height: 'calc(100% - 50px)',
+              padding: '0 10px',
+            }}
           >
             <AutoSizer>
               {({ width, height }) => (
@@ -163,7 +163,7 @@ class Tree extends Component {
                       rowHeight={35}
                       scaffoldBlockPxWidth={22}
                       className="sortableTreeWrapper sidebar CustomSCRB"
-                      ref={(ref) => {
+                      ref={ref => {
                         this.tree = ref;
                       }}
                     />
