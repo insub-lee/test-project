@@ -8,6 +8,7 @@ import ScrollBar from 'react-custom-scrollbars';
 import { lang, intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
+
 // import 'style/sortable-tree-biz.css';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
@@ -15,7 +16,8 @@ import CustomTheme from './theme';
 import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
 
 const replaceSpecialCharacter = str => {
-  var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  //var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  var regExp = /[\{\}\/?,;*~`^$%&\\\=\'\"]/gi;
   return str.replace(regExp, '');
 };
 
@@ -160,12 +162,12 @@ class BizMenuTree extends Component {
     this.inputEng.input.value = NAME_ENG;
     this.inputChn.input.value = NAME_CHN;
 
-    if (NAME_KOR === '' || NAME_ENG === '' || NAME_CHN === '') {
+    if (NAME_KOR === '') {
       // 빈 값 처리
     } else {
       data.NAME_KOR = NAME_KOR;
-      data.NAME_ENG = NAME_ENG;
-      data.NAME_CHN = NAME_CHN;
+      data.NAME_ENG = NAME_ENG === '' ? NAME_KOR : NAME_ENG;
+      data.NAME_CHN = NAME_CHN === '' ? NAME_KOR : NAME_CHN;
 
       if (data.MENU_ID) {
         this.props.updateNode(rowInfo, treeData, data, this.props.history);
@@ -201,6 +203,8 @@ class BizMenuTree extends Component {
       bizGroupInfo,
     } = this.props;
 
+    const pathArr = history.location.pathname.split('/');
+    const type = pathArr[3];    
     const BIZGRP_ID = bizGroupInfo.BIZGRP_ID;
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1, BIZGRP_ID };
@@ -373,7 +377,7 @@ class BizMenuTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push(`/admin/adminmain/menu/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                    history.push(`/admin/adminmain/${type}/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
                   }}
                 />
               ) : (
@@ -500,7 +504,7 @@ class BizMenuTree extends Component {
           <button
             onClick={() => {
               onClick({ key: -1 });
-              history.push(`/admin/adminmain/menu/bizMenuReg/info/${BIZGRP_ID}`);
+              history.push(`/admin/adminmain/${type}/bizMenuReg/info/${BIZGRP_ID}`);
             }}
             className="ellipsis"
             style={{ color: `${selectedIndex === -1 ? '#f85023' : 'inherit'}`, paddingLeft: 6 }}
@@ -534,7 +538,7 @@ class BizMenuTree extends Component {
               title="앱등록"
               onClick={() => {
                 saveData(rootRowInfo, this.state.treeData);
-                history.push(`/admin/adminmain/menu/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                history.push(`/admin/adminmain/${type}/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
               }}
             />
             <FolderBtn

@@ -37,6 +37,7 @@ class AppCategory extends Component {
       currentView,
     } = this.props;
     const isBizManage = preUrl.indexOf('bizManage') > -1;
+    const isbizMenuReg = preUrl.indexOf('bizMenuReg') > -1;
 
     return (
       <StyledTabList className="treeWrapper">
@@ -52,7 +53,7 @@ class AppCategory extends Component {
                 </Link>
               </Tab>
               {
-                !isBizManage ? (
+                !isBizManage && !isbizMenuReg ? (
                   <Tab>
                     <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
                       <FormattedMessage {...messages.bizGroup} />

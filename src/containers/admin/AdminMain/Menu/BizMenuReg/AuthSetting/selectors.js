@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('bizmenuAuthsetting');
+const selectOrg = state => state.get('admin/AdminMain/Menu/BizMenuReg/AuthSetting');
 
 const makeCategoryData = () => createSelector(
   selectOrg,

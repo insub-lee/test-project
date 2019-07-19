@@ -35,7 +35,7 @@ export function* confirmBizGroup(payload) {
     });
 
     if (result.DEL_YN === 'Y') {
-      const bizmanage = yield select(state => state.get('bizmanage'));
+      const bizmanage = yield select(state => state.get('admin/AdminMain/Menu'));
       const rowInfo = bizmanage.get('tempRowInfo');
 
       if (rowInfo) {
@@ -52,7 +52,9 @@ export function* confirmBizGroup(payload) {
       }
 
       // history.push('/store/appMain/bizManage');
-      history.push('/admin/adminmain/menu');
+      const pathArr = history.location.pathname.split('/');
+      const type = pathArr[3];
+      history.push(`/admin/adminmain/${type}`);
     } else {
       yield put({
         type: constantsBizManage.UPDATE_TREENODE,

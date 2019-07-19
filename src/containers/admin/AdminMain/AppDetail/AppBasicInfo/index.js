@@ -174,7 +174,7 @@ class AppBasicInfo extends React.Component {
               </ul>
 
               {this.props.resAppBasicInfo.SVC_YN === 'Y' ? (
-                <div className="btnsWrapperBottom">
+                <div className="btnsWrapperBottom" style={{ visibility: this.props.visibleInfo ? 'visible' : 'hidden' }}>
                   <CopyToClipboard text={this.props.targetUrl} onCopy={() => feed.success(intlObj.get(messages.urlCopyMassage))}>
                     <BtnRedShare>{intlObj.get(messages.urlCopy)}</BtnRedShare>
                   </CopyToClipboard>
@@ -207,7 +207,7 @@ class AppBasicInfo extends React.Component {
                   </div>
                 </div>
               ) : (
-                <div className="btnsWrapperBottom">
+                <div className="btnsWrapperBottom" style={{ visibility: this.props.visibleInfo ? 'visible' : 'hidden' }}>
                   <div
                     className="regstBtns registered"
                     style={{
@@ -240,6 +240,11 @@ AppBasicInfo.propTypes = {
   appManagerList: PropTypes.array, //eslint-disable-line
   appBizGubun: PropTypes.func, //eslint-disable-line
   currentView: PropTypes.string.isRequired, //eslint-disable-line
+  visibleInfo: PropTypes.bool,
+};
+
+AppBasicInfo.defaultProps = {
+  visibleInfo: false,
 };
 
 const mapDispatchToProps = dispatch => ({

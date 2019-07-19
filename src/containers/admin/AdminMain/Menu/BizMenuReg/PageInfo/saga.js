@@ -46,7 +46,7 @@ export function* getWidgetList(payload) {
 export function* deleteWidget(payload) {
   const { WIDGET_ID } = payload;
 
-  const pageInfo = yield select(state => state.get('bizmenuPageInfo'));
+  const pageInfo = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/PageInfo'));
   const widgetList = pageInfo.get('widgetList');
   const BIZGRP_ID = pageInfo.get('BIZGRP_ID');
 
@@ -83,7 +83,7 @@ export function* deleteWidget(payload) {
 export function* addWidgets(payload) {
   const { PAGE_ID, APP_IDS } = payload;
   if (APP_IDS.length > 0) {
-    const pageInfo = yield select(state => state.get('bizmenuPageInfo'));
+    const pageInfo = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/PageInfo'));
     const BIZGRP_ID = pageInfo.get('BIZGRP_ID');
 
     const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/insertWidget', { BIZGRP_ID, PAGE_ID, APP_IDS });
@@ -112,7 +112,7 @@ export function* addWidgets(payload) {
 export function* moveMyWidget(payload) {
   const { PAGE_ID, layout } = payload;
 
-  const pageInfo = yield select(state => state.get('bizmenuPageInfo'));
+  const pageInfo = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/PageInfo'));
   const BIZGRP_ID = pageInfo.get('BIZGRP_ID');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/moveWidget', { BIZGRP_ID, PAGE_ID, layout });
@@ -140,7 +140,7 @@ export function* moveMyWidget(payload) {
 export function* updateWidget(payload) {
   const { WIDGET_ID, data } = payload;
 
-  const pageInfo = yield select(state => state.get('bizmenuPageInfo'));
+  const pageInfo = yield select(state => state.get('admin/AdminMain/Menu/BizMenuReg/PageInfo'));
   const BIZGRP_ID = pageInfo.get('BIZGRP_ID');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/updateWidget', { BIZGRP_ID, WIDGET_ID, data });

@@ -14,6 +14,13 @@ const makeSelectedIndex = () =>
     org => org.get('selectedIndex'),
   );
 
+const makeMenuBizGrpId = () =>
+  createSelector(
+    selectOrg,
+    org => org.get('menuBizGrpId'),
+  );
+
+
 // const makeModalVisible = () => createSelector(
 //   selectOrg,
 //   org => org.get('titleModalVisible'),
@@ -23,5 +30,6 @@ export {
   selectOrg,
   makeCategoryData,
   makeSelectedIndex,
+  makeMenuBizGrpId,
   // makeModalVisible,
 };

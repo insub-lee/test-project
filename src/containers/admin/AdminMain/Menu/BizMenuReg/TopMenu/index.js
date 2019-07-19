@@ -55,7 +55,8 @@ class TopMenu extends React.Component {
       history,
       pageID,
     } = this.props;
-
+    const pathArr = history.location.pathname.split('/');
+    const type = pathArr[3];
     const linkto = `/preview/page/${pageID}`;
     return (
       <div>
@@ -77,7 +78,7 @@ class TopMenu extends React.Component {
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
-                    history.push(`/admin/adminmain/menu/authSetting/${BIZGRP_ID}`);
+                    history.push(`/admin/adminmain/${type}/authSetting/${BIZGRP_ID}`);
                   }}
                 />
               ) : (

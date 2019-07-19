@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('bizmenuBizInfo');
+const selectOrg = state => state.get('admin/AdminMain/Menu/BizMenuReg/BizInfo');
 
 const makgeBizInfo = () => createSelector(
   selectOrg,

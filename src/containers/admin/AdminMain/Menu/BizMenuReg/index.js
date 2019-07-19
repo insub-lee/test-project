@@ -42,7 +42,6 @@ class BizMenuReg extends Component {
     this.state = {
       BIZGRP_ID: Number(BIZGRP_ID),
     };
-
     loadingOn();
     initCategoryData(Number(BIZGRP_ID));
   }
@@ -81,8 +80,9 @@ class BizMenuReg extends Component {
     } = this.props;
 
     const { BIZGRP_ID } = this.state;
-
-    const handleTreeOnClick = node => {
+    const pathArr = history.location.pathname.split('/');
+    const type = pathArr[3];
+        const handleTreeOnClick = node => {
       const { key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID } = node;
       changeSelectedIndex(key);
 
@@ -90,14 +90,12 @@ class BizMenuReg extends Component {
 
       if (NODE_TYPE !== 'F') {
         // 폴더 X
-        const preUrl = '/admin/adminmain/menu/bizMenuReg';
-
         if (REF_TYPE === 'A' && APP_ID !== -1) {
           // [앱] 상세
-          history.push(`${preUrl}/app/${BIZGRP_ID}/${APP_ID}`);
+          history.push(`/admin/adminmain/${type}/bizMenuReg/app/${BIZGRP_ID}/${APP_ID}`);
         } else if (REF_TYPE !== 'B' && PAGE_ID !== -1) {
           // [페이지] 상세
-          history.push(`${preUrl}/page/${BIZGRP_ID}/${PAGE_ID}`);
+          history.push(`/admin/adminmain/${type}/bizMenuReg/page/${BIZGRP_ID}/${PAGE_ID}`);
           pageID = PAGE_ID;
         }
 
@@ -107,14 +105,10 @@ class BizMenuReg extends Component {
       this.setState({ pageID });
     };
 
-    const preUrl = match.path.substr(0, match.path.indexOf('/:'));
     let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' };
     if (BIZGRP_ID !== 1) {
       divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', marginLeft: '300px' };
     }
-
-    console.debug('BIZGRP_ID >> ', BIZGRP_ID);
-    console.debug('divStyle', divStyle);
 
     return (
       // <div style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
@@ -160,7 +154,7 @@ class BizMenuReg extends Component {
               </li>
               <ErrorBoundary>
                 <ModalRoute
-                  path={`${preUrl}/widgetsetting/:BIZGRP_ID/:PAGE_ID/:WIDGET_ID`}
+                  path={`/admin/adminmain/${type}/bizMenuReg/widgetsetting/:BIZGRP_ID/:PAGE_ID/:WIDGET_ID`}
                   component={Widget}
                   className="widgetsetting-modal"
                   inClassName="widgetsetting-modal-in"
@@ -173,16 +167,16 @@ class BizMenuReg extends Component {
 
               <li className="rightContent">
                 <ErrorBoundary>
-                  <Route path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} exact />
-                  <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
-                  <Route path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
+                  <Route path={`/admin/adminmain/${type}/bizMenuReg/info/:BIZGRP_ID`} component={BizInfo} exact />
+                  <Route path={`/admin/adminmain/${type}/bizMenuReg/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
+                  <Route path={`/admin/adminmain/${type}/bizMenuReg/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
                   {/* <Route
                     path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`}
                     component={props => (<PageInfo {...props} bizGroupInfo={bizGroupInfo} />)}
                     exact
                   /> */}
 
-                  <Route path={`${preUrl}/appSelect/${BIZGRP_ID}/modal`} component={AppBizModal} />
+                  <Route path={`/admin/adminmain/${type}/bizMenuReg/appSelect/${BIZGRP_ID}/modal`} component={AppBizModal} />
 
                   {/* <Route path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} /> */}
                 </ErrorBoundary>
