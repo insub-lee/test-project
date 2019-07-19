@@ -13,7 +13,7 @@ const Styled = styled.div`
   height: 40px;
 
   width: 85%;
-  left: 0;
+  left: 15%;
   top: 0;
   //box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   border: 1px solid ${primaryColor};

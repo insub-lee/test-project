@@ -10,11 +10,11 @@ import ViewsPanel from './ViewsPanel';
 
 const Panels = ({ property, action: { viewsContainerPanelAction, viewsPanelAction, optionsPanelAction } }) => (
   <Styled className="panels">
+    <ViewsContainerPanel property={property} action={viewsContainerPanelAction} />
     <CommandsPanel />
     <OptionsPanel action={optionsPanelAction} />
     <ViewsPanel {...property} action={viewsPanelAction} />
     <DevicesPanel />
-    <ViewsContainerPanel property={property} action={viewsContainerPanelAction} />
   </Styled>
 );
 

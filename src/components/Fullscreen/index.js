@@ -45,7 +45,7 @@ const style = {
 };
 
 const defaultStyle = {
-  minHeight: 'min-height: calc(100vh)',
+  minHeight: 'calc(100vh)',
   overflowY: 'auto',
   position: 'relative',
 };
@@ -97,10 +97,6 @@ class fscreen {
 }
 
 class FullScreen extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     fscreen.addEventListener('fullscreenchange', this.detectFullScreen, {});
     if (this.props.view === 'Mobile' || (this.props.view === 'Tablet' && !isEvent)) {

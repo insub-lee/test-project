@@ -8,7 +8,7 @@ const Styled = styled.div`
   box-sizing: border-box;
   text-align: center;
 
-  right: 0;
+  left: 0;
   width: 15%;
   z-index: 4;
 
