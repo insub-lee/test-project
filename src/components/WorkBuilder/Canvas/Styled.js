@@ -9,7 +9,7 @@ const Styled = styled.div`
   overflow: auto;
   z-index: 1;
   position: absolute;
-  left: 0;
+  right: 0;
   top: 40px;
   padding: 3rem;
   //min-height: 800px;

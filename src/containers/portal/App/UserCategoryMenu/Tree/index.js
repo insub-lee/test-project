@@ -78,7 +78,7 @@ class Tree extends Component {
     const nodeData = { ...node, active: node.key === selectedIndex };
     return {
       title: (
-        <button className={`${nodeData.active ? 'active' : ''}`} onClick={this.clickEvent} style={{ cursor: 'pointer' }}>
+        <button className={`${nodeData.active ? 'active' : ''}`} onClick={() => this.clickEvent(node)} style={{ cursor: 'pointer' }}>
           {lang.get('NAME', nodeData)}
           <Badge count={nodeData.UNREAD_CNT !== undefined ? nodeData.UNREAD_CNT : ''} overflowCount={99} className="inTree" />
         </button>

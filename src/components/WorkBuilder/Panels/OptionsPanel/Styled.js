@@ -8,7 +8,7 @@ const Styled = styled.div`
   padding: 5px;
   z-index: 3;
 
-  right: 15%;
+  right: 0;
   top: 0;
 
   .pn-buttons {

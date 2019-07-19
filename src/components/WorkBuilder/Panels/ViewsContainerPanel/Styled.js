@@ -12,7 +12,7 @@ const Styled = styled.div`
 
   //height: 100%;
   padding: 39px 0 0;
-  right: 0;
+  left: 0;
   width: 15%;
   overflow: auto;
 
