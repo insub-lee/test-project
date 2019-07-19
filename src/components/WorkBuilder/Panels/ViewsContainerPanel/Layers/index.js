@@ -26,7 +26,7 @@ const Layers = ({ boxes, formStuffs, viewTargetId, action: { activeLayer, disabl
           <i className="layer-vis fa fa-eye" />
           <div className="layer-title">
             <div className="layer-title-inn">
-              <span className="layer-name layer-name--no-edit">{`#${box.id}`}</span>
+              <span className="layer-name layer-name--no-edit">{box.property.label}</span>
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@ const Layers = ({ boxes, formStuffs, viewTargetId, action: { activeLayer, disabl
               <i className="layer-vis fa fa-eye" />
               <div className="layer-title">
                 <div className="layer-title-inn">
-                  <span className="layer-name layer-name--no-edit">{`> #${formStuff.id}`}</span>
+                  <span className="layer-name layer-name--no-edit layer-form-stuff">{`${formStuff.property.label}`}</span>
                 </div>
               </div>
             </div>

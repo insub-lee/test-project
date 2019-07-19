@@ -9,7 +9,7 @@ import SettingTab from './SettingTab';
 // const settingsWith = ['Group', 'text', 'checkbox', 'radio', 'textarea'];
 
 const StyleManager = ({ property, action }) => (
-  <Styled>
+  <Styled id="style-manager">
     <div>
       {property.viewTargetType === 'SignLine' && <SignLineOptions signLine={property.signLine} action={action} />}
       {settingsWith.includes(property.viewTargetType) && <SettingTab property={property} action={action} />}

@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Styled from './Styled';
-import StyleManager from './StyleManager';
-import Layers from './Layers';
+// import StyleManager from './StyleManager';
+// import Layers from './Layers';
 import Blocks from './Blocks';
 
+/*
 const ViewsContainerPanel = ({ property, action: { styleManagerAction, layersAction, blocksAction } }) => {
   switch (property.tabId) {
     case 'StyleManager':
@@ -30,6 +31,13 @@ const ViewsContainerPanel = ({ property, action: { styleManagerAction, layersAct
       return <Styled />;
   }
 };
+ */
+
+const ViewsContainerPanel = ({ property, action: { styleManagerAction, layersAction, blocksAction } }) => (
+  <Styled>
+    <Blocks action={blocksAction} property={property} />
+  </Styled>
+);
 
 ViewsContainerPanel.propTypes = {
   action: PropTypes.object,

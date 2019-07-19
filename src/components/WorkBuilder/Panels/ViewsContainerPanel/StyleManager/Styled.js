@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
+  border-top: 2px solid rgba(0, 0, 0, 0.2);
+
   #sign-line-options {
     font-size: 0.75rem;
     padding: 10px 5px;

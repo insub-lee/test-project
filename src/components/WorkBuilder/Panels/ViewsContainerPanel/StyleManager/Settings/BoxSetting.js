@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 
-const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeUseLabel, changeBoxType, changeBoxColumnCount } }) => (
+const BoxSettings = ({
+  type, target, targetIndex, action: {
+    changeTitle, changeUseLabel, changeBoxType, changeBoxColumnCount,
+  },
+}) => (
   <div className="sm-sector">
     <div className="sm-title">
       <span className="icon-settings fa fa-cog" /> Settings
@@ -17,7 +21,8 @@ const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeU
             <div className="input-holder">
               <input
                 type="text"
-                value={target.property.label}
+                key={`${type}-${target}-${targetIndex}-label`}
+                defaultValue={target.property.label}
                 placeholder="eg. Text here"
                 onChange={e => changeTitle(type, targetIndex, e.target.value)}
               />
@@ -30,7 +35,7 @@ const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeU
           </div>
           <div className="field field-text">
             <div className="input-holder">
-              <select className="field-select" value={target.property.type} onChange={e => changeBoxType(targetIndex, e.target.value)}>
+              <select key={`${type}-${target}-${targetIndex}-type`} className="field-select" defaultValue={target.property.type} onChange={e => changeBoxType(targetIndex, e.target.value)}>
                 <option value="normal">normal</option>
                 <option value="table">table</option>
               </select>
@@ -47,7 +52,7 @@ const BoxSettings = ({ type, target, targetIndex, action: { changeTitle, changeU
             </div>
             <div className="field field-text">
               <div className="input-holder">
-                <select className="field-select" value={target.property.column} onChange={e => changeBoxColumnCount(targetIndex, e.target.value)}>
+                <select key={`${type}-${target}-${targetIndex}-column`} className="field-select" defaultValue={target.property.column} onChange={e => changeBoxColumnCount(targetIndex, e.target.value)}>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
                   <option value={3}>3</option>

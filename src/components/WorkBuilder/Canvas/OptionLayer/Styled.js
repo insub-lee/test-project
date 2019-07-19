@@ -32,8 +32,8 @@ const Styled = styled.div`
       //padding: 0.3rem;
       top: 0;
       right: -2.5px;
-      background-color: #3b97e3;
-      color: #ffffff;
+      //background-color: #3b97e3;
+      //color: #ffffff;
 
       .toolbar-item {
         padding: 5px 7px;
@@ -42,6 +42,12 @@ const Styled = styled.div`
         width: 26px;
         vertical-align: middle;
         display: inline-block;
+        background-color: #3b97e3;
+        color: #ffffff;
+        
+        &:last-child {
+          margin: 0;
+        }
       }
     }
 
