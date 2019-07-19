@@ -27,7 +27,8 @@ const Styled = styled.div`
       margin: 0;
       height: 40px;
       padding: 10px;
-      width: calc(100% / 3);
+      //width: calc(100% / 3);
+      width: 100%;
       //border-bottom: 2px solid ${primaryColor};
       background-color: transparent;
       cursor: pointer;

@@ -8,6 +8,7 @@ const commonClassName = 'panel-btn style-tab';
 const tabIds = ['StyleManager', 'Layers', 'Blocks'];
 const titles = ['Style Manager', 'Layers', 'Blocks'];
 
+/*
 const ViewsPanel = ({ tabId, action }) => (
   <Styled>
     <div className="buttons">
@@ -43,6 +44,25 @@ const ViewsPanel = ({ tabId, action }) => (
           role="button"
           onKeyPress={() => false}
           tabIndex="0"
+        >
+          <i className="fa fa-th-large" />
+        </span>
+      </Tooltip>
+    </div>
+  </Styled>
+);
+ */
+const ViewsPanel = ({ tabId, action }) => (
+  <Styled>
+    <div className="buttons">
+      <Tooltip title={titles[2]} placement="bottom">
+        <span
+          className={commonClassName}
+          title={titles[2]}
+          // onClick={() => action.activeTab(tabIds[2], true)}
+          // role="button"
+          // onKeyPress={() => false}
+          // tabIndex="0"
         >
           <i className="fa fa-th-large" />
         </span>

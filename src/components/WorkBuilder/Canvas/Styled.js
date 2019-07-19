@@ -3,13 +3,13 @@ import styled from 'styled-components';
 const Styled = styled.div`
   background-color: rgba(0, 0, 0, 0.15);
   box-sizing: border-box;
-  width: 85%;
+  width: 70%;
   height: calc(100% - 40px);
   bottom: 0;
   overflow: auto;
   z-index: 1;
   position: absolute;
-  right: 0;
+  left: 15%;
   top: 40px;
   padding: 3rem;
   //min-height: 800px;

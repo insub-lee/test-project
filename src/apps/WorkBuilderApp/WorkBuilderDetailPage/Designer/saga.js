@@ -375,6 +375,7 @@ function* changeId({ payload: { type, index, value } }) {
   }
 }
 function* changeTitle({ payload: { type, index, value } }) {
+  yield delay(500);
   const { boxes, formStuffs } = yield select(selectors.makeSelectCanvasProperty());
   switch (type) {
     case 'boxes': {
