@@ -114,7 +114,7 @@ class BizManage extends Component {
 
       saveData,
       addEmptyNode,
-      // moveNode,
+      moveNode,
       deleteNode,
       updateBizGroupDelYn,
     } = this.props;
@@ -155,12 +155,12 @@ class BizManage extends Component {
                 treeData={categoryData}
                 selectedIndex={selectedIndex}
                 onClick={handleTreeOnClick}
-                // canDrag={() => true}
-                // canDrop={() => true}
+                canDrag={() => true}
+                canDrop={() => true}
 
                 saveData={saveData}
                 addEmptyNode={addEmptyNode}
-                // moveNode={moveNode}
+                moveNode={moveNode}
                 deleteNode={deleteNode}
                 updateBizGroupDelYn={updateBizGroupDelYn}
                 history={history}
@@ -203,7 +203,7 @@ BizManage.propTypes = {
 
   saveData: PropTypes.func.isRequired,
   addEmptyNode: PropTypes.func.isRequired,
-  // moveNode: PropTypes.func.isRequired,
+  moveNode: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired,
   updateBizGroupDelYn: PropTypes.func.isRequired,
 };
@@ -219,7 +219,7 @@ export function mapDispatchToProps(dispatch) {
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
     addEmptyNode: (rowInfo, data, categoryData, history) => dispatch(actions.addEmptyNode(rowInfo, data, categoryData, history)),
-    // moveNode: treeData => dispatch(actions.moveNode(treeData)),
+    moveNode: treeData => dispatch(actions.moveNode(treeData)),
     deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateBizGroupDelYn: (rowInfo, categoryData, data, history) => dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
   };
