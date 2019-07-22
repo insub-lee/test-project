@@ -59,6 +59,9 @@ class PageInfo extends Component {
 
     const handleMoveMyWidget = layout => moveMyWidget(PAGE_ID, layout);
 
+    const pathArr = this.props.match.url.split('/');
+    const type = pathArr[3];
+
     const openModal = () => {
       this.setState({
         show: true,
@@ -87,7 +90,7 @@ class PageInfo extends Component {
         cWidgetList[i].basic.functions.push('delete');
       }
       cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN;
-      cWidgetList[i].basic.path = 'AppMain/BizManage/BizMenuReg/PageInfo/BasicWidget/index';
+      cWidgetList[i].basic.path = 'AdminMain/Menu/BizMenuReg/PageInfo/BasicWidget/index';
 
       if (i === length - 1) {
         ord = cWidgetList[i].ord + 1;
@@ -108,7 +111,7 @@ class PageInfo extends Component {
         basic: {
           isTitle: false,
           functions: [],
-          path: 'AppMain/BizManage/BizMenuReg/PageInfo/AddWidget/index',
+          path: 'AdminMain/Menu/BizMenuReg/PageInfo/AddWidget/index',
         },
         user: {
           isTitle: false,
@@ -130,7 +133,7 @@ class PageInfo extends Component {
     return (
       <div>
         <ErrorBoundary>
-          <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} />
+          <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} type={type} />
         </ErrorBoundary>
 
         {bizGroupInfo.SEC_YN === 'Y' ? (

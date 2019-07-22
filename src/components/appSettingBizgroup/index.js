@@ -161,7 +161,9 @@ class appSetting extends Component {
   closeModal() {
     this.props.resetCategory();
     this.props.getWidgetListBizManage(Number(this.state.PAGE_ID));
-    this.props.history.push(`/store/appMain/bizManage/bizMenuReg/page/${this.state.BIZGRP_ID}/${this.state.PAGE_ID}`);   
+    //this.props.history.push(`/store/appMain/bizManage/bizMenuReg/page/${this.state.BIZGRP_ID}/${this.state.PAGE_ID}`);
+    const preUrl = this.props.match.url.substr(0, this.props.match.url.indexOf('/widgetsetting'));
+    this.props.history.push(`${preUrl}/page/${this.state.BIZGRP_ID}/${this.state.PAGE_ID}`);
   }
 
   folding() {

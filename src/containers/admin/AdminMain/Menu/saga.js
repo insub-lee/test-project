@@ -29,26 +29,20 @@ export function* getTreeData() {
 }
 
 export function* getMenuBizGrpID() {
-
   yield put({
     type: constants.SET_MENUBIZGRP_ID,
     menuBizGrpId: -1,
   });
 
-  /*
   const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/getMenuBizGrpId', { data: 'temp' });
   const bizGrpId = response.result;
   if (response.code === 200 && bizGrpId) {
-    history.push(`/admin/adminmain/menu/bizMenuReg/${bizGrpId}`);
-  } else {
-    history.push('/error');
+    // history.push(`/admin/adminmain/menu/bizMenuReg/${bizGrpId}`);
+    yield put({
+      type: constants.SET_MENUBIZGRP_ID,
+      menuBizGrpId: bizGrpId,
+    });
   }
-  */
-
-  yield put({
-    type: constants.SET_MENUBIZGRP_ID,
-    menuBizGrpId: 1,
-  });
 }
 
 export function* updateTreeNode(payload) {

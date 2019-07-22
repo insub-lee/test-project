@@ -12,15 +12,15 @@ import * as selectors from './selectors';
 
 const ReactGridLayout = WidthProvider(RGL);
 
-function createComponents(item) {
+function createComponents(item, type) {
   const param = {
-    loader: () => import(`containers/store/${item.basic.path}`),
+    loader: () => import(`containers/admin/${item.basic.path}`),
     loading: Loading,
   };
   const COMP = Loadable(param);
   return (
     <div key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
-      <WidgetsWrapper item={item}>
+      <WidgetsWrapper item={item} type={type}>
         <COMP
           item={item}
         />
@@ -287,6 +287,7 @@ class Page extends PureComponent {
     const {
       moveMyWidget,
       bizGroupInfo,
+      type,
     } = this.props;
 
     return (
@@ -330,7 +331,7 @@ class Page extends PureComponent {
             }
           }}
         >
-          {columns.map(createComponents)}
+          {columns.map(item => createComponents(item, type))}
         </ReactGridLayout>
       </WidgetGridWrapper>
     );
@@ -340,6 +341,7 @@ class Page extends PureComponent {
 Page.propTypes = {
   columns: PropTypes.array.isRequired,
   currentView: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 Page.defaultProps = {
