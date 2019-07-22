@@ -17,7 +17,7 @@ import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn } f
 
 const replaceSpecialCharacter = str => {
   //var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-  var regExp = /[\{\}\/?,;*~`^$%&\\\=\'\"]/gi;
+  var regExp = /[\{\}?,;*~`^$%&\\\=\'\"]/gi;
   return str.replace(regExp, '');
 };
 
