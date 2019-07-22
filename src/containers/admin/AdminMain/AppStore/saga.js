@@ -142,6 +142,7 @@ export function* insertNode(payload) {
       yield put({
         type: constants.SET_CATEGORY_DATA,
         categoryData: fromJS(newCategoryData),
+        selectedIndex,
       });
 
       if (pageId && pageId !== -1) {
@@ -249,7 +250,7 @@ export function* deleteNode(payload) {
       yield put({
         type: constants.GET_CATEGORY_DATA,
         siteId: SITE_ID,
-        selectedIndex: `${LVL === 1 ? 'R' : 'F'}-${PRNT_ID}`,
+        selectedIndex: `${PRNT_ID}`,
       });
     } else if (code === 210) {
       feed.error(`${intlObj.get(messages.cateDeleteFail1)}`);
@@ -276,6 +277,7 @@ export function* deleteNode(payload) {
       yield put({
         type: constants.SET_CATEGORY_DATA,
         categoryData: fromJS(newCategoryData),
+        selectedIndex: node.PRNT_ID.toString(),
       });
       // 성공 시 사용중으로 상태 변경.
       // const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
@@ -309,6 +311,7 @@ export function* deleteNode(payload) {
       yield put({
         type: constants.SET_CATEGORY_DATA,
         categoryData: fromJS(newCategoryData),
+        selectedIndex: node.PRNT_ID.toString(),
       });
 
       const APP_ID = getIdByUrl('app/', history); // /store/appMain/myPage/app/14

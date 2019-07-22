@@ -359,6 +359,7 @@ export function* registAppModal(payload) {
     yield put({
       type: constantsAppStore.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
+      selectedIndex: `A-${APP_ID}`,
     });
 
     // 성공 시 사용중으로 상태 변경.
