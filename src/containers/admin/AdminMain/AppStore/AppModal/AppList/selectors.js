@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('storeAppList');
+const selectOrg = state => state.get('admin/AdminMain/AppStore/AppModal/AppList');
 
 const makeInitType = () => createSelector(
   selectOrg,
