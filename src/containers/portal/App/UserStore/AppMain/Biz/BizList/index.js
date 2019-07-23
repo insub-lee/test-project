@@ -72,7 +72,7 @@ class BizList extends Component {
 
     const handleGetMapListOne = key => {
       changeSearchword('');
-      history.push(`/store/appMain/bizStore/biz/list/${key}`);
+      history.push(`/portal/store/appMain/bizStore/biz/list/${key}`);
     };
     const handleGoBack = () => {
       changeSearchword('');

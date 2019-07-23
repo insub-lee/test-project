@@ -161,24 +161,21 @@ class ItemList extends Component {
         <Row>{renderAppList()}</Row>
 
         {/* appList more */
-        type === 'ONE' && appList.length > 0 ? (
+        type === 'ONE' && appList.length > 0 && (
           <div className="showReadMore">{showReadMoreBtn ? <Button type="button" className="showMoreBtn" onClick={handleReadMore} /> : ''}</div>
-        ) : (
-          ''
         )}
 
         <Row key={key}>
           <ContentHolder style={{ overflow: 'hidden' }}>
             {/* child category list */
-            childList
-              ? childList.map(child => (
-                  <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
-                    <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
-                      {lang.get('NAME', child)}
-                    </Button>
-                  </Col>
-                ))
-              : ''}
+            childList &&
+              childList.map(child => (
+                <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
+                  <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
+                    {lang.get('NAME', child)}
+                  </Button>
+                </Col>
+              ))}
           </ContentHolder>
         </Row>
       </Box>
@@ -194,15 +191,14 @@ class ItemList extends Component {
       <LayoutWrapper>
         <Row style={rowStyle} gutter={gutter} justify="start">
           <Col span={24} style={colStyle}>
-            {mapList.length > 0
-              ? mapList.map(map => {
-                  if (map.appList) {
-                    return this.renderMap(map);
-                  }
-                  return '';
-                })
-              : ''}
-            {mapList.length === 0 && type === 'SEARCH' ? (
+            {mapList.length > 0 &&
+              mapList.map(map => {
+                if (map.appList) {
+                  return this.renderMap(map);
+                }
+                return '';
+              })}
+            {mapList.length === 0 && type === 'SEARCH' && (
               <Box key="searchBox">
                 <div className="storeListTitle" style={{ textAlign: 'center' }}>
                   <Button type="button" className="arrowGoBack" onClick={goBack} />
@@ -213,8 +209,6 @@ class ItemList extends Component {
                   </Col>
                 </Row>
               </Box>
-            ) : (
-              ''
             )}
           </Col>
         </Row>

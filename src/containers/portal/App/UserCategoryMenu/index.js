@@ -7,6 +7,7 @@ import { createStructuredSelector } from 'reselect';
 
 import * as routeSelectors from 'containers/common/Routes/selectors';
 import * as routeActions from 'containers/common/Routes/actions';
+import * as authSelectors from 'containers/common/Auth/selectors';
 
 import Styled from './Styled';
 import UserProfileBox from './UserProfileBox';
@@ -73,6 +74,7 @@ class UserCategoryMenu extends Component {
       updateMymenuDisp,
       myAppTreeData,
       saveData,
+      profile,
     } = this.props;
 
     return (
@@ -81,9 +83,7 @@ class UserCategoryMenu extends Component {
           <UserProfileBox />
         </div>
         <div className="category-menu-area">
-          <div className="area-title">
-            상담 업무
-          </div>
+          <div className="area-title">{profile.DEPT_NAME_KOR}</div>
           <Tree
             treeData={myAppTreeData}
             saveData={saveData}
@@ -106,9 +106,7 @@ class UserCategoryMenu extends Component {
         </div>
         <div className="divider" />
         <div className="timeline-area">
-          <div className="area-title">
-             Timeline
-          </div>
+          <div className="area-title">Timeline</div>
           <WorkTimeLine height="calc(100% - 47px)" />
         </div>
         <div className="active-btn">
@@ -122,7 +120,7 @@ class UserCategoryMenu extends Component {
 UserCategoryMenu.propTypes = {
   isShow: PropTypes.bool,
   toggleMenu: PropTypes.func,
-  open: PropTypes.bool.isRequired,
+  // open: PropTypes.bool.isRequired,
   myAppTreeData: PropTypes.array.isRequired,
   myAppStoreTreeData: PropTypes.array.isRequired,
   // myAppTreeDataCashe: PropTypes.array.isRequired,
@@ -143,6 +141,7 @@ UserCategoryMenu.propTypes = {
   view: PropTypes.string.isRequired,
   execApp: PropTypes.func,
   history: PropTypes.object.isRequired,
+  profile: PropTypes.object,
 };
 
 UserCategoryMenu.defaultProps = {
@@ -150,11 +149,13 @@ UserCategoryMenu.defaultProps = {
   toggleMenu: () => false,
   setClose: undefined,
   execApp: () => {},
+  profile: {},
 };
 
 const mapStateToProps = createStructuredSelector({
   myAppTreeData: routeSelectors.makeMyAppTree(),
   myAppStoreTreeData: routeSelectors.makeMyAppStoreTree(),
+  profile: authSelectors.makeSelectProfile(),
 });
 const mapDispatchToProps = dispatch => ({
   saveData: (node, treeData) => dispatch(routeActions.saveData(node, treeData)),
