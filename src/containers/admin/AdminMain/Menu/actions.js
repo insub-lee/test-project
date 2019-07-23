@@ -59,3 +59,7 @@ export const updateBizGroupDelYn = (rowInfo, categoryData, data) => ({
   categoryData,
   data,
 });
+
+export const getUserRole = () => ({
+  type: constants.GET_USER_ROLE,
+});
