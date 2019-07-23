@@ -148,14 +148,13 @@ class menuList extends React.Component {
 
   makeMenu = mnuList => (
     mnuList.map(m => (
-      <li>
+      <li key={m.SCR_CD}>
         <span
           className={this.classString(m.URL)}
           onClick={() => this.classChange(m.URL)}
           onKeyPress={() => this.classChange(m.URL)}
           role="button"
           tabIndex="0"
-          key={m.SCR_CD}
           style={{ paddingLeft: `${m.SORT_SQ % 100 > 0 ? 15 : 0}px` }}
         >{lang.get('NAME', m)}
         </span>
@@ -184,7 +183,10 @@ class menuList extends React.Component {
 
 
 menuList.propTypes = {
-  leftMenuList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  leftMenuList: PropTypes.oneOfType([
+    PropTypes.array,
+    PropTypes.object,
+  ]).isRequired,
   history: PropTypes.object, //eslint-disable-line
   // .isRequired,
   location: PropTypes.object, // eslint-disable-line

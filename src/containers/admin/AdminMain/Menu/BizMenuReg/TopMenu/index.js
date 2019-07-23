@@ -54,6 +54,7 @@ class TopMenu extends React.Component {
 
       history,
       pageID,
+      userRole,
     } = this.props;
     const pathArr = history.location.pathname.split('/');
     const type = pathArr[3];
@@ -74,7 +75,7 @@ class TopMenu extends React.Component {
               ) : (
                 ''
               )}
-              {bizInfo.SEC_YN === 'Y' ? (
+              {bizInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
@@ -84,7 +85,7 @@ class TopMenu extends React.Component {
               ) : (
                 ''
               )}
-              {bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' ? (
+              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') ? (
                 <BtnDkGray
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {
@@ -111,6 +112,7 @@ TopMenu.propTypes = {
   BIZGRP_ID: PropTypes.number.isRequired,
   bizInfo: PropTypes.object.isRequired,
   pageID: PropTypes.number,
+  userRole: PropTypes.string.isRequired,
 };
 
 TopMenu.defaultProps = {

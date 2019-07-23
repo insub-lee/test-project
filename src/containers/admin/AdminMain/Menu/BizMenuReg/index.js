@@ -14,6 +14,7 @@ import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as selectors from './selectors';
+import * as menuSelectors from '../selectors';
 import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
@@ -77,6 +78,7 @@ class BizMenuReg extends Component {
       insertNode,
       updateNode,
       updateMymenuDisp,
+      userRole,
     } = this.props;
 
     const { BIZGRP_ID } = this.state;
@@ -129,11 +131,12 @@ class BizMenuReg extends Component {
               updateMymenuDisp={updateMymenuDisp}
               pageID={this.state.pageID}
               bizGroupInfo={bizGroupInfo}
+              userRole={userRole}
             />
           </ErrorBoundary>
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 200px)' }}>
             <ul className="bizDetailContentWrapper">
-              <li className="leftContent">
+              <li className="leftContent" key="leftContent">
                 <ErrorBoundary>
                   <BizMenuTree
                     treeData={categoryData}
@@ -149,6 +152,7 @@ class BizMenuReg extends Component {
                     updateMymenuDisp={updateMymenuDisp}
                     bizGroupInfo={bizGroupInfo}
                     history={history}
+                    userRole={userRole}
                   />
                 </ErrorBoundary>
               </li>
@@ -165,7 +169,7 @@ class BizMenuReg extends Component {
               </ErrorBoundary>
               {/* <ModalContainer /> */}
 
-              <li className="rightContent">
+              <li className="rightContent" key="rightContent">
                 <ErrorBoundary>
                   <Route path={`/admin/adminmain/${type}/bizMenuReg/info/:BIZGRP_ID`} component={BizInfo} exact />
                   <Route path={`/admin/adminmain/${type}/bizMenuReg/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
@@ -209,6 +213,7 @@ BizMenuReg.propTypes = {
   updateMymenuDisp: PropTypes.func.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 BizMenuReg.defaultProps = {};
@@ -235,6 +240,7 @@ const mapStateToProps = createStructuredSelector({
   categoryData: selectors.makeCategoryData(),
   bizGroupInfo: selectors.makeBizGroupInfo(),
   selectedIndex: selectors.makeSelectedIndex(),
+  userRole: menuSelectors.makeUserRole(),
 });
 
 const withConnect = connect(

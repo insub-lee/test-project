@@ -10,6 +10,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppSelector from 'components/appSelector/index';
+import * as menuSelectors from '../../selectors';
 import Page from 'containers/admin/components/BizGroupPage';
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -54,6 +55,7 @@ class PageInfo extends Component {
       moveMyWidget,
       updateWidget,
       bizGroupInfo,
+      userRole,
       // history,
     } = this.props;
 
@@ -85,7 +87,7 @@ class PageInfo extends Component {
       cWidgetList[i].fixed = false;
       cWidgetList[i].updateWidget = updateWidget;
       cWidgetList[i].deleteWidget = deleteWidget;
-      if (bizGroupInfo.SEC_YN === 'Y') {
+      if (bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA') {
         cWidgetList[i].basic.functions.push('settings');
         cWidgetList[i].basic.functions.push('delete');
       }
@@ -97,7 +99,7 @@ class PageInfo extends Component {
       }
     }
     // 2. 마지막 순서에 addWidgets Component 추가
-    if (bizGroupInfo.SEC_YN === 'Y') {
+    if (bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA') {
       cWidgetList[length] = {
         PAGE_ID,
         title: '',
@@ -136,7 +138,7 @@ class PageInfo extends Component {
           <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} type={type} />
         </ErrorBoundary>
 
-        {bizGroupInfo.SEC_YN === 'Y' ? (
+        {bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
           <ErrorBoundary>
             <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>
@@ -158,6 +160,7 @@ PageInfo.propTypes = {
   moveMyWidget: PropTypes.func.isRequired,
   updateWidget: PropTypes.func.isRequired,
   handleGetBizInfo: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 PageInfo.defaultProps = {
@@ -179,6 +182,8 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   bizGroupInfo: selectors.makeBizGroupInfo(),
   widgetList: selectors.makeWidgetList(),
+  userRole: menuSelectors.makeUserRole(),
+
 });
 
 const withConnect = connect(

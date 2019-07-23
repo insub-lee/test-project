@@ -178,8 +178,8 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-const withReducer = injectReducer({ key: 'storeAppList', reducer });
-const withSaga = injectSaga({ key: 'storeAppList', saga });
+const withReducer = injectReducer({ key: 'admin/AdminMain/AppStore/AppModal/AppList', reducer });
+const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore/AppModal/AppList', saga });
 
 export default compose(
   withReducer,

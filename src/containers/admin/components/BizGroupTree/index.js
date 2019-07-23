@@ -198,6 +198,7 @@ class BizGroupTree extends Component {
 
       canDrag,
       canDrop,
+      userRole,
     } = this.props;
 
     const rootRowInfo = {};
@@ -298,7 +299,7 @@ class BizGroupTree extends Component {
           titleInner = node.title;
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-          if (this.state.onHoverKey === node.key && node.SEC_YN === 'Y') {
+          if (this.state.onHoverKey === node.key && (node.SEC_YN === 'Y' || userRole === 'SA')) {
             if (node.DEL_YN !== 'Y') {
               // 메뉴가 삭제되지않은 경우
               if (node.SYS_YN === 'Y' && node.LVL === 1) {
@@ -402,6 +403,7 @@ BizGroupTree.propTypes = {
   canDrag: PropTypes.func,
   canDrop: PropTypes.func,
   onClick: PropTypes.func,
+  userRole: PropTypes.string,
 };
 
 BizGroupTree.defaultProps = {

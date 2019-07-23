@@ -147,9 +147,9 @@ class SiteDetail extends React.Component {
     this.setState({ URL: e.target.value });
     let strURL = '';
     if (e.target.value.charAt(e.target.value.length - 1) !== '/') {
-      strURL = `http://${e.target.value.replace('http://', '').replace('.skhynix.com', '')}.skhynix.com/`;
+      strURL = `http://${e.target.value.replace('http://', '')}/`;
     } else {
-      strURL = `http://${e.target.value.replace('http://', '').replace('.skhynix.com/', '')}.skhynix.com/`;
+      strURL = `http://${e.target.value.replace('http://', '')}`;
     }
     if (e.target.value !== '') this.setState({ urlValid: true });
     else this.setState({ urlValid: false });
@@ -161,9 +161,9 @@ class SiteDetail extends React.Component {
     if (e.charCode === 13) {
       let strURL = '';
       if (this.state.URL.charAt(this.state.URL.length - 1) !== '/') {
-        strURL = `http://${this.state.URL.replace('http://', '').replace('.skhynix.com', '')}.skhynix.com/`;
+        strURL = `http://${e.target.value.replace('http://', '')}/`;
       } else {
-        strURL = `http://${this.state.URL.replace('http://', '').replace('.skhynix.com/', '')}.skhynix.com/`;
+        strURL = `http://${e.target.value.replace('http://', '')}`;
       }
       this.props.chkUrl('URL_CHK', strURL);
     }
@@ -172,9 +172,9 @@ class SiteDetail extends React.Component {
   onBlurURL() {
     let strURL = '';
     if (this.state.URL.charAt(this.state.URL.length - 1) !== '/') {
-      strURL = `http://${this.state.URL.replace('http://', '').replace('.skhynix.com', '')}.skhynix.com/`;
+      strURL = `http://${e.target.value.replace('http://', '')}/`;
     } else {
-      strURL = `http://${this.state.URL.replace('http://', '').replace('.skhynix.com/', '')}.skhynix.com/`;
+      strURL = `http://${e.target.value.replace('http://', '')}`;
     }
     this.props.chkUrl('URL', strURL);
   }
@@ -290,9 +290,9 @@ class SiteDetail extends React.Component {
 
   updateRow = () => {
     if (this.state.URL.charAt(this.state.URL.length - 1) !== '/') {
-      this.setState({ URL: `${this.state.URL.replace('http://', '').replace('.skhynix.com', '')}.skhynix.com/` });
+      this.setState({ URL: `${this.state.URL.replace('http://', '')}/` });
     } else {
-      this.setState({ URL: `${this.state.URL.replace('http://', '').replace('.skhynix.com/', '')}.skhynix.com/` });
+      this.setState({ URL: `${this.state.URL.replace('http://', '')}` });
     }
     this.setState({ readOnly: 'true' });
 
@@ -303,7 +303,7 @@ class SiteDetail extends React.Component {
       this.state.NAME_KOR,
       this.state.NAME_ENG,
       this.state.NAME_CHN,
-      (this.state.URL.charAt(this.state.URL.length - 1) !== '/') ? `${this.state.URL.replace('http://', '').replace('.skhynix.com', '')}.skhynix.com/` : `${this.target.value.replace('http://', '').replace('.skhynix.com/', '')}.skhynix.com/`,
+      (this.state.URL.charAt(this.state.URL.length - 1) !== '/') ? `${this.state.URL}/` : `${this.state.URL}`,
       this.state.BIZGRP_ID,
       this.state.THEME_CD,
       this.state.managerSetMembers,
@@ -484,7 +484,7 @@ class SiteDetail extends React.Component {
                 this.setState({
                   readOnly: 'false',
                   orgVal: tempVal,
-                  URL: this.state.URL.replace('http://', '').replace('.skhynix.com/', ''),
+                  URL: this.state.URL.replace('http://', ''),
                   // nameValid: true,
                   urlValid: true,
                 });
@@ -675,7 +675,7 @@ class SiteDetail extends React.Component {
                 style={{ width: 285, marginRight: 10 }}
               />
             </ErrorBoundary>
-            <span className="mainUrlTxt">skhynix.com/</span>
+            <span className="mainUrlTxt">/</span>
           </div>
         );
       }
@@ -725,7 +725,7 @@ class SiteDetail extends React.Component {
     const dupUrlChk = (stat) => {
       if (this.state.readOnly === 'true') return '';
 
-      if (this.state.URL !== '' && `http://${this.state.URL}.skhynix.com/` !== this.state.orgVal.tmpUrl && `http://${this.state.URL}.skhynix.com` !== this.state.orgVal.tmpUrl) {
+      if (this.state.URL !== '' && `http://${this.state.URL}/` !== this.state.orgVal.tmpUrl && `http://${this.state.URL}` !== this.state.orgVal.tmpUrl) {
         if (stat) return (<font color="RED">{intlObj.get(messages.dupUrl)}</font>);
         return (<font color="GREEN">{intlObj.get(messages.dupUrlX)}</font>);
       }
