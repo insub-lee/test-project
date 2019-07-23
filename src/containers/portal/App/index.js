@@ -37,8 +37,8 @@ import * as actions from './actions';
 import saga from './saga';
 import reducer from './reducer';
 import UserDock from './UserDock';
-import UserMenu from './UserMenu';
-import UserBizMenu from './UserBizMenu';
+// import UserMenu from './UserMenu';
+import UserMenuCard from './UserMenuCard';
 import UserSetting from './UserSetting';
 import UserStore from './UserStore';
 import RodalPage from '../../../components/Rodal';
@@ -133,7 +133,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach((o) => {
+        dockAppList.forEach(o => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -295,12 +295,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = (item) => {
+  onReload = item => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = (open) => {
+  onSetOpen = open => {
     this.setState({ open: open }); //eslint-disable-line
   };
   /* eslint-disable */
@@ -631,7 +631,7 @@ class App extends React.PureComponent {
       hasRoleAdmin,
       // selectedApp,
       history,
-      headerTitle
+      headerTitle,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -729,12 +729,7 @@ class App extends React.PureComponent {
           {/* Body */}
           <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: dockIconType === 'MAX' ? 90 : 42 } : mobileDockCss}>
             <StyledContainer>
-              <Scrollbars
-                className="scrollable-container"
-                autoHide
-                autoHideTimeout={1000}
-                autoHideDuration={200}
-              >
+              <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <AppWrapper style={{ width: '100%' }}>
                   {/* rendering check count 초기화용 버튼 */}
                   {/* <button
@@ -768,7 +763,6 @@ class App extends React.PureComponent {
                   />
                   */}
 
-
                   <Fullscreen
                     enabled={this.state.isFullscreenEnabled}
                     onChange={this.setIsFullscreenEnabled}
@@ -782,8 +776,10 @@ class App extends React.PureComponent {
                     setIsCloseToFalse={this.setIsCloseToFalse}
                     setMyMenuData={setMyMenuData}
                   >
-                    <div id="child" className={ (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') 
-                    || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}>
+                    <div
+                      id="child"
+                      className={(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}
+                    >
                       <Content
                         className="portalContent"
                         style={{
@@ -802,6 +798,7 @@ class App extends React.PureComponent {
                         )}
                       />
                       <Route
+                        exact
                         path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
                         render={props => (
                           <UserStore //eslint-disable-line
@@ -820,9 +817,10 @@ class App extends React.PureComponent {
                         )}
                       />
                       <Route
-                        path={`/${basicPath.PORTAL}/bizMenu/:ID`}
+                        exact
+                        path={`/${basicPath.PORTAL}/:TYPE/:ID`}
                         render={props => (
-                          <UserBizMenu //eslint-disable-line
+                          <UserMenuCard //eslint-disable-line
                             {...props}
                             applySkin={this.applySkin}
                           />

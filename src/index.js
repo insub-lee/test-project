@@ -6,7 +6,8 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
-import createHistory from 'history/createBrowserHistory';
+// import createHistory from 'history/createBrowserHistory';
+import { createBrowserHistory as createHistory } from 'history';
 import 'antd/dist/antd.css';
 import 'xeicon/xeicon.min.css';
 import 'font-awesome/css/font-awesome.min.css';
@@ -16,7 +17,6 @@ import LanguageProvider from './containers/common/LanguageProvider';
 
 import configureStore from './configureStore';
 import { translationMessages } from './i18n';
-
 
 const initialState = {};
 const history = createHistory();
@@ -42,14 +42,10 @@ const render = (messages) => {
 };
 
 if (!window.Intl) {
-  (new Promise((resolve) => {
+  new Promise((resolve) => {
     resolve(import('intl'));
-  }))
-    .then(() => Promise.all([
-      import('intl/locale-data/jsonp/en.js'),
-      import('intl/locale-data/jsonp/ko.js'),
-      import('intl/locale-data/jsonp/zh.js'),
-    ]))
+  })
+    .then(() => Promise.all([import('intl/locale-data/jsonp/en.js'), import('intl/locale-data/jsonp/ko.js'), import('intl/locale-data/jsonp/zh.js')]))
     .then(() => render(translationMessages))
     .catch((err) => {
       throw err;

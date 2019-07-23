@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { BackTop, Input, Button } from 'antd';
 
-import * as commonjs from 'containers/common/functions/common';
+// import * as commonjs from 'containers/common/functions/common';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
-import Footer from 'containers/store/App/Footer';
+import Footer from '../../Footer';
 import { intlObj } from 'utils/commonUtils';
 import messages from '../../../messages';
 import NavList from 'components/Header/NavList';
@@ -125,9 +125,9 @@ class AppList extends Component {
               {intlObj.get(messages.category)}
             </NavLink>
           </NavListItem>
-          <NavListItem>
+          {/* <NavListItem>
             <NavLink to="/portal/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
-          </NavListItem>
+          </NavListItem> */}
         </NavList>
 
         <ErrorBoundary>
