@@ -105,7 +105,7 @@ class WidgetSetting extends PureComponent {
         isWidgetDragged: false,
       });
     }
-  }
+  };
 
   dndChangePosition = (seqNo, afterSeqNo) => {
     const {
@@ -126,25 +126,23 @@ class WidgetSetting extends PureComponent {
     this.setState({
       bannerList: bannerListCopy,
     });
-  }
+  };
 
   getBannerSettingList = () => {
     const { bannerList } = this.state;
-    const result = bannerList.map((bannerList, index) => {
-      if (bannerList.isShow !== false) {
-        return (
-          <BannerListChild
-            index={index}
-            bannerList={bannerList}
-            setDeletedBannerIndex={this.setDeletedBannerIndex}
-            changeIsWidgetDragged={this.changeIsWidgetDragged}
-            dndChangePosition={this.dndChangePosition}
-          />
-        )
-      }
-    });
+    const result = bannerList.map((bannerList, index) => (
+      bannerList.isShow !== false ? (
+        <BannerListChild
+          index={index}
+          bannerList={bannerList}
+          setDeletedBannerIndex={this.setDeletedBannerIndex}
+          changeIsWidgetDragged={this.changeIsWidgetDragged}
+          dndChangePosition={this.dndChangePosition}
+        />
+      ) : null
+    ));
     return result;
-  }
+  };
 
   setDeletedBannerIndex = (SEQNO) => {
     const {
@@ -161,9 +159,9 @@ class WidgetSetting extends PureComponent {
     });
     this.setState({
       bannerList: bannerListCopy,
-    })
+    });
     deletedBannerIndex.push(SEQNO);
-  }
+  };
 
   deleteBanner = () => {
     const {
@@ -173,6 +171,7 @@ class WidgetSetting extends PureComponent {
       widgetId,
       pageId,
     } = this.state;
+
     const {
       handleSaveSettingBanners,
       handleSaveSettingBizBanners,
@@ -180,20 +179,28 @@ class WidgetSetting extends PureComponent {
       type,
     } = this.props;
 
-    const bannerListCopy = bannerList.filter(bannerList => bannerList.isShow !== false);
+    const bannerListCopy = bannerList
+      .filter(bannerList => bannerList.isShow !== false)
+      .map(bannerList => ({
+        ...bannerList,
+        SEQNO: undefined,
+      }));
 
-    for (let i = 0; i < bannerListCopy.length; i += 1) {
-      delete bannerListCopy[i].SEQNO;
-    }
-    const result = {};
-    result.size = itemList.size;
-    result.sizeArr = itemList.sizeArr;
-    result.user = {};
-    result.user.isTitle = itemList.user.isTitle;
-    result.user.skin = itemList.user.skin;
-    result.user.viewType = viewType;
-    result.data = bannerListCopy;
+    // for (let i = 0; i < bannerListCopy.length; i += 1) {
+    //   delete bannerListCopy[i].SEQNO;
+    // }
 
+    const { size, sizeArr, user } = itemList;
+    const result = {
+      size,
+      sizeArr,
+      user: {
+        isTitle: user.isTitle,
+        skin: user.skin,
+        viewType,
+      },
+      data: bannerListCopy,
+    };
     const item = JSON.stringify(result);
 
     if (type === "mypage") {
@@ -208,30 +215,49 @@ class WidgetSetting extends PureComponent {
     this.setState({
       deletedBannerIndex: [],
     });
-  }
+  };
 
   handleAppendBanner = () => {
-    const content = this.state.bannerList.slice();
-    const { bannerList, numChildren } = this.state;
-    for (let i = bannerList.length; i < this.state.numChildren + 1; i += 1) {
-      let emptyContent = new Object();
-      //emptyContent.SEQNO = `${i}`;
-      emptyContent.SEQNO = `${i}`;
-      emptyContent.TITLE = "";
-      emptyContent.URL = "";
-      emptyContent.IMAGE = "";
-      emptyContent.METHOD = "get";
-      emptyContent.param = "";
-      content.push(emptyContent)
-    }
+    // const content = this.state.bannerList.slice();
+    // const { bannerList, numChildren } = this.state;
+    // for (let i = bannerList.length; i < this.state.numChildren + 1; i += 1) {
+    //   let emptyContent = new Object();
+    //   //emptyContent.SEQNO = `${i}`;
+    //   emptyContent.SEQNO = `${i}`;
+    //   emptyContent.TITLE = "";
+    //   emptyContent.URL = "";
+    //   emptyContent.IMAGE = "";
+    //   emptyContent.METHOD = "get";
+    //   emptyContent.param = "";
+    //   content.push(emptyContent)
+    // }
+    this.setState(prevState => {
+      const defaultObj = {
+        TITLE: '',
+        URL: '',
+        IMAGE: '',
+        METHOD: 'get',
+        param: '',
+      };
+      const { bannerList, numChildren } = prevState;
+      let i = bannerList.length;
+      while (i < numChildren + 1) {
+        bannerList.push({
+          ...defaultObj,
+          SEQNO: `${i}`,
+        });
+        i += 1;
+      }
+      return { bannerList, numChildren: numChildren + 1 };
+    });
 
-    this.setState({
-      bannerList: content,
-      numChildren: numChildren + 1,
-    })
+    // this.setState({
+    //   bannerList: content,
+    //   numChildren: numChildren + 1,
+    // })
 
     // debouncedOnChange(() => this.scrollbarBottom(), 500);
-  }
+  };
 
   // scrollbarBottom() {
   //   this.scrollComponent.scrollToBottom();

@@ -4,8 +4,8 @@ import Dropzone from 'react-dropzone';
 import { message, Progress } from 'antd';
 
 class Upload extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       dropzoneActive: false,
       // isSpinnerShow: false,
@@ -26,19 +26,19 @@ class Upload extends React.Component {
     })
   );
 
-  onDragEnter() {
+  onDragEnter = () => {
     this.setState({
       dropzoneActive: true,
     });
-  }
+  };
 
-  onDragLeave() {
+  onDragLeave = () => {
     this.setState({
       dropzoneActive: false,
     });
-  }
+  };
 
-  sendFileDirect(fileObj) {
+  sendFileDirect = (fileObj) => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
 
@@ -83,7 +83,7 @@ class Upload extends React.Component {
     }
     // xhr.open('POST', 'http://cdn.skhynix.com/upload/');
     xhr.send(formData);
-  }
+  };
 
   increase = () => {
     const percent = this.state.percent + 1;
@@ -96,7 +96,7 @@ class Upload extends React.Component {
     if (percent === 100) {
       this.setState({ status: 'success' });
     }
-  }
+  };
 
   handleCallback = (obj) => {
     this.props.onFileUploaded(obj);
@@ -110,22 +110,30 @@ class Upload extends React.Component {
         });
       }
     });
-  }
+  };
 
   render() {
     const {
       children,
       accept,
       multiple,
+      width,
+      height,
+      borderWidth,
+      borderColor,
+      borderRadius,
+      borderStyle,
     } = this.props;
-    const { dropzoneActive, progressBarShow, status } = this.state;
+    const {
+      dropzoneActive, progressBarShow, status, percent,
+    } = this.state;
     const style = {
-      width: this.props.width || '100%',
-      height: this.props.height || '100%',
-      borderWidth: this.props.borderWidth || 2,
-      borderColor: this.props.borderColor || 'rgb(102, 102, 102)',
-      borderStyle: this.props.borderStyle || 'dashed',
-      borderRadius: this.props.borderRadius || 5,
+      width,
+      height,
+      borderWidth,
+      borderColor,
+      borderStyle,
+      borderRadius,
     };
     const overlayStyle = {
       position: 'absolute',
@@ -164,7 +172,7 @@ class Upload extends React.Component {
           </Dropzone>
           <Progress
             type="line"
-            percent={this.state.percent}
+            percent={percent}
             status={status}
             size="small"
             showInfo={false}
@@ -176,12 +184,18 @@ class Upload extends React.Component {
   }
 }
 Upload.propTypes = {
-  borderColor: PropTypes.string, // eslint-disable-line
-  borderWidth: PropTypes.string, // eslint-disable-line
-  borderStyle: PropTypes.string, // eslint-disable-line
-  borderRadius: PropTypes.string, // eslint-disable-line
-  width: PropTypes.number, // eslint-disable-line
-  height: PropTypes.number, // eslint-disable-line
+  borderColor: PropTypes.string,
+  borderWidth: PropTypes.number,
+  borderStyle: PropTypes.string,
+  borderRadius: PropTypes.number,
+  width: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
+  height: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   children: PropTypes.object.isRequired,
   multiple: PropTypes.bool, // eslint-disable-line
   accept: PropTypes.string, // eslint-disable-line
@@ -189,4 +203,14 @@ Upload.propTypes = {
   serviceEnv: PropTypes.string, // eslint-disable-line
   serviceKey: PropTypes.string, // eslint-disable-line
 };
+
+Upload.defaultProps = {
+  width: '100%',
+  height: '100%',
+  borderWidth: 2,
+  borderColor: 'rgb(102, 102, 102)',
+  borderStyle: 'dashed',
+  borderRadius: 5,
+};
+
 export default Upload;
