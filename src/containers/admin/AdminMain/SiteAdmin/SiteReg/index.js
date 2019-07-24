@@ -160,7 +160,7 @@ class SiteReg extends React.Component {
   onChangeURL(e) {
     // console.log(e.target.value);
     this.setState({ URL: e.target.value });
-    const strURL = `${e.target.value}.skhynix.com/`;
+    const strURL = `${e.target.value}/`;
     if (e.target.value !== '') this.setState({ urlValid: true });
     else this.setState({ urlValid: false });
     this.props.chkUrl('URL_CHK', strURL);
@@ -175,7 +175,7 @@ class SiteReg extends React.Component {
   // }
 
   onBlurURL() {
-    const strURL = `${this.target.value}.skhynix.com/`;
+    const strURL = `${this.target.value}/`;
     return this.props.chkUrl('URL_CHK', strURL);
   }
 
@@ -271,7 +271,7 @@ class SiteReg extends React.Component {
       this.state.NAME_KOR,
       this.state.NAME_CHN,
       this.state.NAME_ENG,
-      `${this.state.URL}.skhynix.com/`,
+      `${this.state.URL}/`,
       this.state.BIZGRP_ID,
       this.state.THEME_CD,
       this.state.managerSetMembers,
@@ -609,7 +609,7 @@ class SiteReg extends React.Component {
                           style={{ width: 285, marginRight: 10 }}
                         />
                       </ErrorBoundary>
-                      <span className="mainUrlTxt">.skhynix.com/</span>
+                      <span className="mainUrlTxt">/</span>
                       <span className="tipText">{dupUrlChk(this.props.getUrlChk)}</span>
                     </FormItem>
                   </td>

@@ -13,15 +13,15 @@ import * as selectors from './selectors';
 
 const ReactGridLayout = WidthProvider(RGL);
 
-function createComponents(item) {
+function createComponents(item, type) {
   const param = {
-    loader: () => import(`containers/store/${item.basic.path}`),
+    loader: () => import(`containers/admin/${item.basic.path}`),
     loading: Loading,
   };
   const COMP = Loadable(param);
   return (
     <div key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
-      <WidgetsWrapper item={item}>
+      <WidgetsWrapper item={item} type={type}>
         <COMP
           item={item}
         />
@@ -279,7 +279,7 @@ class BizStorePage extends PureComponent {
       layout,
       layoutConfig,
       columns,
-      currentView,
+      type,
     } = this.state;
 
     return (
@@ -306,7 +306,7 @@ class BizStorePage extends PureComponent {
           draggableCancel=".draggableCancel"
           isDraggable={false}
         >
-          {columns.map(createComponents)}
+          {columns.map(item => createComponents(item, type))}
         </ReactGridLayout>
       </WidgetGridWrapper>
     );
@@ -316,6 +316,7 @@ class BizStorePage extends PureComponent {
 BizStorePage.propTypes = {
   columns: PropTypes.array.isRequired,
   currentView: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

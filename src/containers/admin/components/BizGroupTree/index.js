@@ -184,7 +184,9 @@ class BizGroupTree extends Component {
   );
 
   render() {
-    const { treeData, searchString, searchFocusIndex, selectedIndex } = this.state;
+    const {
+      treeData, searchString, searchFocusIndex, selectedIndex,
+    } = this.state;
 
     const {
       history,
@@ -196,6 +198,7 @@ class BizGroupTree extends Component {
 
       canDrag,
       canDrop,
+      userRole,
     } = this.props;
 
     const rootRowInfo = {};
@@ -209,8 +212,28 @@ class BizGroupTree extends Component {
         searchQuery={searchString}
         searchFocusOffset={searchFocusIndex}
         canDrag={canDrag}
-        canDrop={canDrop}
-        style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
+        canDrop={({ node, prevParent, nextParent }) => {
+          // [ 노드 드롭 가능 여부 ]
+          // 조건 : 최하위 노드 하위에 이동불가 && 업무그룹폴더 하위에 이동불가
+          if ((node.LVL === 1 && !nextParent)
+          || (node.LVL !== 1 && nextParent && prevParent.key === nextParent.key)) {
+            this.state = { moveNodeFlag: 1 };
+            return true;
+          }
+          this.state = { moveNodeFlag: 2 };
+          return false;
+        }}
+
+        onDragStateChanged={({ isDragging }) => {
+          if (isDragging) {
+            this.state = { moveNodeFlag: 0 };
+          } else if (!isDragging && this.state.moveNodeFlag === 2) {
+            feed.error('상위노드 혹은 하위노드로 이동할 수 없습니다.');
+          }
+        }}
+        style={{
+          display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
+        }}
         isVirtualized={false}
         onMoveNode={({ treeData, node, nextParentNode }) => {
           // [ 노드 드래그 이동 후 실행됨 ]
@@ -229,14 +252,14 @@ class BizGroupTree extends Component {
               const node = data[i];
               const path = [...pathArr, node.key];
 
-              node['SORT_SQ'] = i + 1;
-              node['LVL'] = lvl;
-              node['path'] = path;
-              if (node['BIZGRP_ID'] === BIZGRP_ID) {
-                node['PRNT_ID'] = PRNT_ID;
+              node.SORT_SQ = i + 1;
+              node.LVL = lvl;
+              node.path = path;
+              if (node.BIZGRP_ID === BIZGRP_ID) {
+                node.PRNT_ID = PRNT_ID;
               }
-              if (node['children']) {
-                resortTreeData(node['children'], lvl + 1, path);
+              if (node.children) {
+                resortTreeData(node.children, lvl + 1, path);
               }
             }
           };
@@ -248,7 +271,7 @@ class BizGroupTree extends Component {
         }}
         rowHeight={35}
         scaffoldBlockPxWidth={22}
-        generateNodeProps={rowInfo => {
+        generateNodeProps={(rowInfo) => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
@@ -276,7 +299,7 @@ class BizGroupTree extends Component {
           titleInner = node.title;
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-          if (this.state.onHoverKey === node.key && node.SEC_YN === 'Y') {
+          if (this.state.onHoverKey === node.key && (node.SEC_YN === 'Y' || userRole === 'SA')) {
             if (node.DEL_YN !== 'Y') {
               // 메뉴가 삭제되지않은 경우
               if (node.SYS_YN === 'Y' && node.LVL === 1) {
@@ -380,6 +403,7 @@ BizGroupTree.propTypes = {
   canDrag: PropTypes.func,
   canDrop: PropTypes.func,
   onClick: PropTypes.func,
+  userRole: PropTypes.string,
 };
 
 BizGroupTree.defaultProps = {

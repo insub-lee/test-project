@@ -17,6 +17,7 @@ export default class WidgetsWrapper extends PureComponent {
       padding,
       children,
       item,
+      type,
     } = this.props;
 
     const wrapperStyle = {
@@ -36,7 +37,7 @@ export default class WidgetsWrapper extends PureComponent {
           className="isoWidgetsWrapper"
           style={wrapperStyle}
         >
-          <WidgetHeader item={item} />
+          <WidgetHeader item={item} type={type} />
           <WidgetBox
             item={item}
           >
@@ -58,4 +59,5 @@ WidgetsWrapper.propTypes = {
   gutterLeft: PropTypes.string, // eslint-disable-line
   padding: PropTypes.string, // eslint-disable-line
   children: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
 };

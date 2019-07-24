@@ -31,6 +31,7 @@ export default class WidgetsHeader extends PureComponent {
   render() {
     const {
       item,
+      type,
     } = this.props;
 
     const headerStyle = {
@@ -62,7 +63,7 @@ export default class WidgetsHeader extends PureComponent {
             >
               <Link
                 className="setupWidget"
-                to={`/store/appMain/myPage/widgetsetting/${item.PAGE_ID}/${item.id}`}
+                to={`/admin/adminmain/${type}/bizMenuReg/widgetsetting/${item.BIZGRP_ID}/${item.PAGE_ID}/${item.id}`}
                 title="위젯 설정"
               />
             </li>
@@ -85,4 +86,5 @@ export default class WidgetsHeader extends PureComponent {
 
 WidgetsHeader.propTypes = {
   item: PropTypes.object.isRequired,
+  type: PropTypes.string.isRequired,
 };

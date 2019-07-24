@@ -17,7 +17,7 @@ import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn } f
 
 const replaceSpecialCharacter = str => {
   //var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-  var regExp = /[\{\}\/?,;*~`^$%&\\\=\'\"]/gi;
+  var regExp = /[\{\}?,;*~`^$%&\\\=\'\"]/gi;
   return str.replace(regExp, '');
 };
 
@@ -201,6 +201,7 @@ class BizMenuTree extends Component {
       deleteNode, // 메뉴 삭제 func(rowInfo, treeData)
 
       bizGroupInfo,
+      userRole,
     } = this.props;
 
     const pathArr = history.location.pathname.split('/');
@@ -209,7 +210,7 @@ class BizMenuTree extends Component {
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1, BIZGRP_ID };
 
-    const SEC_YN = bizGroupInfo.SEC_YN === 'Y';
+    const SEC_YN = bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA';
 
     const getModalJsx = (rowInfo, treeData) => {
       const { data } = this.state;
@@ -571,6 +572,7 @@ BizMenuTree.propTypes = {
   canDrop: PropTypes.bool,
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
+  userRole: PropTypes.string.isRequired,
 };
 
 BizMenuTree.defaultProps = {

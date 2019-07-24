@@ -61,7 +61,7 @@ export function* initPage(payload) {
   const { initType, param } = payload;
 
   // appList에 카테고리 데이터가 없는 경우
-  const store = yield select(state => state.get('storeAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
   const oldCategoryData = store.get('categoryData');
   if (oldCategoryData.size === 0) {
     const response = yield call(Axios.post, '/api/bizstore/v1/store/appTree', { SITE_ID: -1 });
@@ -93,7 +93,7 @@ export function* getMapListOne(payload) {
   const { key } = payload;
   const CATG_ID = Number(key);
 
-  const store = yield select(state => state.get('storeAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
   const categoryFlatData = store.get('categoryFlatData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
@@ -126,7 +126,7 @@ export function* getMapListMore(payload) {
   const { key } = payload;
   const CATG_ID = Number(key);
 
-  const store = yield select(state => state.get('storeAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
   const initType = store.get('initType'); // ONE, SEARCH
   const searchword = store.get('searchword'); // 검색어
 
@@ -162,7 +162,7 @@ export function* getMapListMore(payload) {
 
 /* 앱리스트 ALL - 카테고리별 앱 8개씩 */
 export function* getMapListAll() {
-  const store = yield select(state => state.get('storeAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
   const categoryData = store.get('categoryData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
@@ -203,7 +203,7 @@ export function* getMapListSearch(payload) {
   const { result } = response;
 
   if (result) {
-    const store = yield select(state => state.get('storeAppList'));
+    const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
     const categoryFlatData = store.get('categoryFlatData');
 
     const appListMap = _.groupBy(result, 'CATG_ID');
@@ -359,6 +359,7 @@ export function* registAppModal(payload) {
     yield put({
       type: constantsAppStore.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
+      selectedIndex: `A-${APP_ID}`,
     });
 
     // 성공 시 사용중으로 상태 변경.
@@ -456,7 +457,7 @@ export function* registBizModal(payload) {
 export function* updateChangeWGCount(payload) {
   const { CATG_ID, APP_ID, WG_COUNT } = payload;
   // 성공 시 사용중으로 상태 변경.
-  const store = yield select(state => state.get('storeAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
   const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, WG_COUNT);
 
   yield put({ type: constants.SET_MAPLIST, mapList });

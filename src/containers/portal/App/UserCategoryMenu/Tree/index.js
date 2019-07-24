@@ -15,6 +15,7 @@ import CustomTheme from './theme';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
 import { SortableTreeWithoutDndContext as SortableTree } from './SortableMenuTree/react-sortable-tree';
+import { basicPath } from 'containers/common/constants';
 
 const features = 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes';
 
@@ -40,7 +41,7 @@ class Tree extends Component {
 
     this.updateTreeData = debounce(this.updateTreeData.bind(this), 300);
   }
-
+  /* eslint-disable */
   onSetEditClick = () => {
     if (this.state.editMenuMode && this.state.prevUrl !== this.props.history.location.pathname) {
       this.setState({
@@ -66,13 +67,27 @@ class Tree extends Component {
     this.props.saveData(null, treeData);
   };
 
+  handleShowAllBizMenuClick = () => {
+    console.debug('>>>>>>>>>통합업무 메뉴 클릭');
+  };
+
+  handleClickMenuFolder = node => {
+    console.debug('>>>>>>>this.node: ', node);
+    const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
+    this.props.history.push(`/${basicPath.PORTAL}/${menuType}/${node.MENU_ID}`);
+  };
+
   clickEvent = node => {
     const { treeData, execPage, execMenu, onClick, saveData } = this.props;
+    console.debug('@@@2 Node', node);
     if (node.TARGET === 'NEW') {
       window.open(node.URL, node.MENU_ID, features);
       execMenu(node.PAGE_ID, node.TARGET);
+    } else if (node.NODE_TYPE === 'F' && node.APP_YN === 'F') {
+      // 폴더 클릭 이벤트
+      this.handleClickMenuFolder(node);
     } else {
-      onClick(node);
+      // onClick(node);
       if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
         execPage(node, 'execMenu');
       }
@@ -85,7 +100,15 @@ class Tree extends Component {
     const nodeData = { ...node, active: node.key === selectedIndex };
     return {
       title: (
-        <button className={`${nodeData.active ? 'active' : ''}`} onClick={() => this.clickEvent(node)} style={{ cursor: 'pointer' }}>
+        <button
+          type="button"
+          className={`${nodeData.active ? 'active' : ''}`}
+          onClick={e => {
+            e.stopPropagation();
+            this.clickEvent(node);
+          }}
+          style={{ cursor: 'pointer' }}
+        >
           {lang.get('NAME', nodeData)}
           <Badge count={nodeData.UNREAD_CNT !== undefined ? nodeData.UNREAD_CNT : ''} overflowCount={99} className="inTree" />
         </button>
@@ -97,7 +120,7 @@ class Tree extends Component {
     const { searchFocusIndex, searchString, editTree, editMenuMode } = this.state;
 
     const { treeData, showNoti, history } = this.props;
-
+    console.debug();
     return (
       <TreeWrapper>
         <div className={`tree-contents ${showNoti ? 'show-noti' : ''}`}>

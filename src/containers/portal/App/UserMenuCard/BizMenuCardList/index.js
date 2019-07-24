@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import StyleBizMenuList from './StyleBizMenuList';
 
-class BizMenuList extends Component {
+class BizMenuCardList extends Component {
   componentDidMount() {
     console.debug('>>>>>>>>>biz menu props: ', this.props);
   }
@@ -15,4 +15,4 @@ class BizMenuList extends Component {
   }
 }
 
-export default BizMenuList;
+export default BizMenuCardList;

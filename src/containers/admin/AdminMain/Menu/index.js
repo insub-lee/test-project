@@ -30,21 +30,17 @@ const workHomeUrl = '/admin/adminmain/work';
 
 class BizManage extends Component {
   componentDidMount() {
-    console.log('componentDidMount');
+    this.props.getUserRole();
     const { match: { params: { MENU } } } = this.props;
     if (MENU === 'menu') {
-      console.log('getMenuBizGrpID');
       this.props.getMenuBizGrpID();
     } else if (MENU === 'work') {
-      console.log('getMenuBizGrpID');
       this.props.initCategoryData();
     }
     this.MENU = MENU;
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentWillReceiveProps');
-    console.log(nextProps.history.location.pathname);
     const { match: { params: { MENU } } } = nextProps;
     this.MENU = MENU;
 
@@ -71,16 +67,12 @@ class BizManage extends Component {
         generateList(nextProps.categoryData);
 
         if (url) {
-          console.log('workHomeUrl');
-          console.log(url);
           nextProps.history.push(url);
         }
       } else {
         // 트리 데이터가 없는 경우. main화면
       }
     } else if (menuHomeUrl === nextProps.history.location.pathname) {
-      console.log('menuHomeUrl');
-      console.log(nextProps.menuBizGrpId);
       if (nextProps.menuBizGrpId > 0) {
         nextProps.history.push(`/admin/adminmain/menu/bizMenuReg/info/${nextProps.menuBizGrpId}`);
       }
@@ -88,12 +80,11 @@ class BizManage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log('componentDidUpdate');
     const { match: { params: { MENU: PREVMENU } } } = prevProps;
     const { match: { params: { MENU } } } = this.props;
 
     if (PREVMENU !== MENU) {
-      console.log('PREVMENU !== MENU');
+      this.props.getUserRole();
       if (MENU === 'menu') {
         this.props.getMenuBizGrpID();
       } else if (MENU === 'work') {
@@ -114,9 +105,10 @@ class BizManage extends Component {
 
       saveData,
       addEmptyNode,
-      // moveNode,
+      moveNode,
       deleteNode,
       updateBizGroupDelYn,
+      userRole,
     } = this.props;
 
     const preUrl = this.props.match.url;
@@ -155,15 +147,16 @@ class BizManage extends Component {
                 treeData={categoryData}
                 selectedIndex={selectedIndex}
                 onClick={handleTreeOnClick}
-                // canDrag={() => true}
-                // canDrop={() => true}
+                canDrag={() => true}
+                canDrop={() => true}
 
                 saveData={saveData}
                 addEmptyNode={addEmptyNode}
-                // moveNode={moveNode}
+                moveNode={moveNode}
                 deleteNode={deleteNode}
                 updateBizGroupDelYn={updateBizGroupDelYn}
                 history={history}
+                userRole={userRole}
               />
             </ErrorBoundary>
           </StyledTabList>
@@ -203,9 +196,12 @@ BizManage.propTypes = {
 
   saveData: PropTypes.func.isRequired,
   addEmptyNode: PropTypes.func.isRequired,
-  // moveNode: PropTypes.func.isRequired,
+  moveNode: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired,
   updateBizGroupDelYn: PropTypes.func.isRequired,
+
+  getUserRole: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 
@@ -219,9 +215,11 @@ export function mapDispatchToProps(dispatch) {
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
     addEmptyNode: (rowInfo, data, categoryData, history) => dispatch(actions.addEmptyNode(rowInfo, data, categoryData, history)),
-    // moveNode: treeData => dispatch(actions.moveNode(treeData)),
+    moveNode: treeData => dispatch(actions.moveNode(treeData)),
     deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateBizGroupDelYn: (rowInfo, categoryData, data, history) => dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
+
+    getUserRole: () => dispatch(actions.getUserRole()),
   };
 }
 
@@ -230,6 +228,7 @@ const mapStateToProps = createStructuredSelector({
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
   menuBizGrpId: selectors.makeMenuBizGrpId(),
+  userRole: selectors.makeUserRole(),
 });
 
 const withConnect = connect(

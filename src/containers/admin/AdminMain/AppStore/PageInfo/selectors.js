@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('pageInfo');
+const selectOrg = state => state.get('admin/AdminMain/AppStore/PageInfo');
 
 const makeWidgetList = () => createSelector(
   selectOrg,

@@ -73,7 +73,7 @@ const Header = ({
               </span>
               <span> {appName} </span>
               {/* 담당자 popover */}
-              {menuData.APP_YN === 'Y' && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
+              {(menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE') && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
             </h1>
           </li>
         </ul>

@@ -10,6 +10,20 @@ import * as constantsTopMenu from './BizMenuReg/TopMenu/constants';
 import * as constants from './constants';
 import messages from './messages';
 
+// SA권한 확인 - (SA 권한일 경우 모든 업무그룹 수정 권한 부여)
+export function* getUserRole() {
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizGrpSARoleCheck', { data: 'temp' });
+  const { code } = response;
+  const userRole = response.userRole ? response.userRole : '';
+  if (code === 200 && userRole) {
+    yield put({
+      type: constants.SET_USER_ROLE,
+      userRole,
+    });
+  }
+}
+
+// 업무카드관리의 좌측 트리 - (시스템[SYS_YN],홈[HOME_YN] 설정이 외의 업무그룹 리스트)
 export function* getTreeData() {
   // const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree', { data: 'temp' });
   const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', { data: 'temp' });
@@ -28,27 +42,22 @@ export function* getTreeData() {
   });
 }
 
+// 메뉴관리의 그룹ID (시스템[SYS_YN],홈[HOME_YN] 설정된 메뉴의 그룹ID)
 export function* getMenuBizGrpID() {
-
   yield put({
     type: constants.SET_MENUBIZGRP_ID,
     menuBizGrpId: -1,
   });
 
-  /*
   const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/getMenuBizGrpId', { data: 'temp' });
   const bizGrpId = response.result;
   if (response.code === 200 && bizGrpId) {
-    history.push(`/admin/adminmain/menu/bizMenuReg/${bizGrpId}`);
-  } else {
-    history.push('/error');
+    // history.push(`/admin/adminmain/menu/bizMenuReg/${bizGrpId}`);
+    yield put({
+      type: constants.SET_MENUBIZGRP_ID,
+      menuBizGrpId: bizGrpId,
+    });
   }
-  */
-
-  yield put({
-    type: constants.SET_MENUBIZGRP_ID,
-    menuBizGrpId: 1,
-  });
 }
 
 export function* updateTreeNode(payload) {
@@ -243,6 +252,7 @@ export function* updateBizGroupDelYn(payload) {
 }
 
 export default function* rootSaga() {
+  yield takeLatest(constants.GET_USER_ROLE, getUserRole);
   yield takeLatest(constants.INIT_CATEGORY_DATA, getTreeData);
   yield takeLatest(constants.GET_MENUBIZGRP_ID, getMenuBizGrpID);
   yield takeLatest(constants.ADD_EMPTY_NODE, addEmptyNode);

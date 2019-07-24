@@ -21,6 +21,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import Footer from 'containers/store/App/Footer';
 import * as selectors from './selectors';
+import * as menuSelectors from '../selectors';
 import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
@@ -238,7 +239,12 @@ class BizGroupReg extends Component {
   render() {
     const { data, SEC_TYPE } = this.state;
 
-    const { dataP, updateBizGroup, history } = this.props;
+    const {
+      dataP,
+      updateBizGroup,
+      history,
+      userRole,
+    } = this.props;
 
     const oldUsers = data[SEC_TYPE].users.length > 0 ? data[SEC_TYPE].users : [];
     const oldDepts = data[SEC_TYPE].depts.length > 0 ? data[SEC_TYPE].depts : [];
@@ -792,7 +798,7 @@ class BizGroupReg extends Component {
               </table>
             </div>
             {
-              data.SEC_YN === 'Y' ? (
+              data.SEC_YN === 'Y' || userRole === 'SA' ? (
                 <div className="buttonWrapper">
                   {
                     data.MENU_EXIST_YN === 'Y' ? (
@@ -861,6 +867,7 @@ BizGroupReg.propTypes = {
   history: PropTypes.object.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 BizGroupReg.defaultProps = {
@@ -879,6 +886,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   // 카테고리
   dataP: selectors.makeData(),
+  userRole: menuSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

@@ -65,6 +65,8 @@ class MyPageTree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('nextProps.selectedIndex');
+    console.log(nextProps.selectedIndex);
     if (nextProps.treeData && nextProps.treeData.length > 0) {
       if (nextProps.selectedIndex === -1) {
         this.setState({
@@ -73,8 +75,8 @@ class MyPageTree extends Component {
         });
       } else {
         this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
-        console.log('this.treeFlatData');
-        console.log(this.treeFlatData);
+        console.log(this.treeFlatData.get(nextProps.selectedIndex).path);
+        console.log(nextProps.treeData);
         this.setState({
           treeData: toggleExpandedForSelected({
             treeData: nextProps.treeData,
@@ -113,14 +115,12 @@ class MyPageTree extends Component {
     this.inputEng.input.value = NAME_ENG;
     this.inputChn.input.value = NAME_CHN;
 
-    if (NAME_KOR === '' || NAME_ENG === '' || NAME_CHN === '') {
+    if (NAME_KOR === '') {
       // 빈 값 처리
     } else {
       data.NAME_KOR = NAME_KOR;
-      data.NAME_ENG = NAME_ENG;
-      data.NAME_CHN = NAME_CHN;
-
-      console.log(data);
+      data.NAME_ENG = NAME_ENG || NAME_KOR;
+      data.NAME_CHN = NAME_CHN || NAME_KOR;
 
       if (data.key) {
         this.props.updateNode(rowInfo, treeData, data, this.props.history);
@@ -198,7 +198,7 @@ class MyPageTree extends Component {
       history,
       onClick, // 트리 클릭 func
       canDrag, // 드래그 가능 bool
-
+      canDrop,
       saveData, // 임시데이터 저장 func(treeData, rowInfo)
       moveNode, // 메뉴 드래그 이동 func(treeData)
       deleteNode, // 메뉴 삭제 func(rowInfo, treeData)
@@ -320,9 +320,19 @@ class MyPageTree extends Component {
           // [ 노드 드롭 가능 여부 ]
           // 조건 : 최하위 노드 하위에 이동불가 && 업무그룹폴더 하위에 이동불가
           if (nextParent && (nextParent.NODE_TYPE === 'R' || nextParent.NODE_TYPE === 'F') && prevParent.key === nextParent.key) {
-            return nextParent;
+            this.state = { moveNodeFlag: 1 };
+            return true;
           }
+          this.state = { moveNodeFlag: 2 };
           return false;
+        }}
+        
+        onDragStateChanged={({ isDragging }) => {
+          if (isDragging) {
+            this.state = { moveNodeFlag: 0 };
+          } else if (!isDragging && this.state.moveNodeFlag === 2) {
+            feed.error('상위노드 혹은 하위노드로 이동할 수 없습니다.');
+          }
         }}
         // eslint-disable-next-line no-shadow
         onMoveNode={({ treeData, node, nextParentNode }) => {

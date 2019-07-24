@@ -6,7 +6,7 @@ import menuIcon02on from 'images/portal/settings-menu02-on.png';
 import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
-const StyleUserBiz = styled.div`
+const StyleUserMenuCard = styled.div`
   position: fixed;
   top: 42px;
   left: 46px;
@@ -568,4 +568,4 @@ const StyleUserBiz = styled.div`
     }
   }
 `;
-export default StyleUserBiz;
+export default StyleUserMenuCard;

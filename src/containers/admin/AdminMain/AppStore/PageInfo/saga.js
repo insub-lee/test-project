@@ -20,7 +20,7 @@ export function* resetWidgetList(payload) {
   const { widgetList } = payload;
   if (widgetList) {
     const newWidgetList = JSON.parse(widgetList);
-    const pageInfo = yield select(state => state.get('pageInfo'));
+    const pageInfo = yield select(state => state.get('admin/AdminMain/AppStore/PageInfo'));
     const oldWidgetList = pageInfo.get('widgetList').toJS();
     if (oldWidgetList.length > 0) {
       const oldPageId = oldWidgetList[0].PAGE_ID;
@@ -40,7 +40,7 @@ export function* deleteWidget(payload) {
   const { code } = response;
 
   if (code === 200) {
-    const pageInfo = yield select(state => state.get('pageInfo'));
+    const pageInfo = yield select(state => state.get('admin/AdminMain/AppStore/PageInfo'));
     const widgetList = pageInfo.get('widgetList');
     const nWidgetList = widgetList.filter((o) => {
       if (Number(o.get('id')) === WIDGET_ID) {
