@@ -2,15 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Block from '../Block';
+import { customFormStuffs } from '../../../../config';
 
 const CustomBlock = ({ onClick }) => (
   <React.Fragment>
-    <Block label="User Select" icon="xi-users-plus xi-3x" onClick={() => onClick('user-search-select')} />
-    <Block label="Process Info" icon="fa fa-cube fa-3x" onClick={() => onClick('process-info')} />
-    <Block label="Custom Component" icon="fa fa-cube fa-3x" onClick={() => console.debug('## custom block')} />
-    <Block label="Custom Component" icon="fa fa-cube fa-3x" onClick={() => console.debug('## custom block')} />
-    <Block label="Custom Component" icon="fa fa-cube fa-3x" onClick={() => console.debug('## custom block')} />
-    <Block label="Custom Component" icon="fa fa-cube fa-3x" onClick={() => console.debug('## custom block')} />
+    {Object.keys(customFormStuffs).map(key => (
+      <Block key={key} label={customFormStuffs[key].label} icon={customFormStuffs[key].icon} onClick={() => onClick(key)} />
+    ))}
   </React.Fragment>
 );
 
@@ -18,8 +16,8 @@ CustomBlock.propTypes = {
   onClick: PropTypes.func,
 };
 
-CustomBlock.propTypes = {
-  onClick: () => false,
+CustomBlock.defaultProps = {
+  onClick: () => {},
 };
 
 export default CustomBlock;

@@ -6,49 +6,198 @@ import { CheckboxGroup } from 'components/FormStuff/Checkbox';
 import { RadioGroup } from 'components/FormStuff/Radio';
 import Select from 'components/FormStuff/Select';
 import TimePicker from 'components/FormStuff/TimePicker';
-import Uploader from 'components/FormStuff/Uploader';
 import AgGrid from 'components/FormStuff/Grid/AgGrid';
 import DatePicker, { DateMonthPicker, DateRangePicker, DateWeekPicker } from 'components/FormStuff/DatePicker';
+import DropZone from 'components/FormStuff/Upload/DropZone';
+import FroalaEditor from 'components/FormStuff/RichTextEditor/FroalaEditor';
+import MaskDiv from 'components/FormStuff/MaskDiv';
+import { froalaEditorConfig } from 'components/FormStuff/config';
 
 // Custom
-import UserSearchSelect from 'components/FormStuff/Custom/UserSearchSelect';
+import UserSelector from 'components/FormStuff/UserSearchSelector';
 import ProcessInfoSelector from 'components/FormStuff/Custom/ProcessInfoSelector';
 
-export const formStuffRenderer = {
-  text: formStuff => <Input {...formStuff.property} />,
-  number: formStuff => <InputNumber {...formStuff.property} />,
-  textarea: formStuff => <Textarea {...formStuff.property} />,
-  checkbox: formStuff => <CheckboxGroup {...formStuff.property} />,
-  radio: formStuff => <RadioGroup {...formStuff.property} />,
-  select: formStuff => <Select {...formStuff.property} />,
-  grid: formStuff => <AgGrid {...formStuff.property} />,
-  'time-picker': formStuff => <TimePicker {...formStuff.property} />,
-  uploader: formStuff => <Uploader {...formStuff.property} />,
-  'date-picker': formStuff => <DatePicker {...formStuff.property} />,
-  'month-picker': formStuff => <DateMonthPicker {...formStuff.property} />,
-  'range-picker': formStuff => <DateRangePicker {...formStuff.property} />,
-  'week-picker': formStuff => <DateWeekPicker {...formStuff.property} />,
-  'user-search-select': formStuff => <UserSearchSelect {...formStuff.property} />,
-  'process-info': formStuff => <ProcessInfoSelector {...formStuff.property} />,
+export const defaultFormStuffs = {
+  text: {
+    label: 'Input',
+    icon: 'fa fa-edit fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <Input {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <Input {...formStuff.property} />,
+  },
+  number: {
+    label: 'Number',
+    icon: 'fa fa-edit fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <InputNumber {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <InputNumber {...formStuff.property} />,
+  },
+  textarea: {
+    label: 'Textarea',
+    icon: 'fa fa-edit fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <Textarea {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <Textarea {...formStuff.property} />,
+  },
+  checkbox: {
+    label: 'Checkbox',
+    icon: 'fa fa-edit fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <CheckboxGroup {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <CheckboxGroup {...formStuff.property} />,
+  },
+  radio: {
+    label: 'Radio',
+    icon: 'fa fa-edit fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <RadioGroup {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <RadioGroup {...formStuff.property} />,
+  },
+  select: {
+    label: 'Select',
+    icon: 'fa fa-list fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <Select {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <Select {...formStuff.property} />,
+  },
+  grid: {
+    label: 'Grid',
+    icon: 'fa fa-edit fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <AgGrid {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <AgGrid {...formStuff.property} />,
+  },
+  'rich-text-editor': {
+    label: 'Rich Text Editor',
+    icon: 'fa fa-file-text-o fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <FroalaEditor {...formStuff.property} config={froalaEditorConfig} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <FroalaEditor {...formStuff.property} config={froalaEditorConfig} />,
+  },
+  'file-upload': {
+    label: 'File',
+    icon: 'fa fa-upload fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <DropZone {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <DropZone {...formStuff.property} />,
+  },
+  'image-upload': {
+    label: 'Image Upload',
+    icon: 'fa fa-file-image-o fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <DropZone {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <DropZone {...formStuff.property} />,
+  },
+  'time-picker': {
+    label: 'Time Picker',
+    icon: 'fa fa-clock-o fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <TimePicker {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <TimePicker {...formStuff.property} />,
+  },
+  'date-picker': {
+    label: 'Date Picker',
+    icon: 'fa fa-calendar fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <DatePicker {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <DatePicker {...formStuff.property} />,
+  },
+  'week-picker': {
+    label: 'Week Picker',
+    icon: 'fa fa-calendar fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <DateWeekPicker {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <DateWeekPicker {...formStuff.property} />,
+  },
+  'month-picker': {
+    label: 'Month Picker',
+    icon: 'fa fa-calendar fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <DateMonthPicker {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <DateMonthPicker {...formStuff.property} />,
+  },
+  'range-picker': {
+    label: 'Range Picker',
+    icon: 'fa fa-calendar fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <DateRangePicker {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <DateRangePicker {...formStuff.property} />,
+  },
 };
 
-const includedOptions = [
-  'text',
-  'number',
-  'textarea',
-  'checkbox',
-  'checkboxGroup',
-  'radio',
-  'radioGroup',
-  'select',
-  'grid',
-  'time-picker',
-  'uploader',
-  'date-picker',
-  'month-picker',
-  'range-picker',
-  'week-picker',
-  'user-search-select',
-  'process-info',
-];
+export const customFormStuffs = {
+  user: {
+    label: 'User',
+    icon: 'fa fa-user fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <UserSelector {...formStuff.property} mode="multiple" />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <UserSelector {...formStuff.property} mode="multiple" />,
+  },
+  'process-info': {
+    label: 'Process Info',
+    icon: 'fa fa-cube fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <ProcessInfoSelector {...formStuff.property} />
+      </MaskDiv>
+    ),
+    renderer: formStuff => <ProcessInfoSelector {...formStuff.property} />,
+  },
+};
+
+export const allFormStuffs = {
+  ...defaultFormStuffs,
+  ...customFormStuffs,
+};
+
+const includedOptions = Object.keys(defaultFormStuffs).concat(Object.keys(customFormStuffs));
+
 export const settingsWith = ['Box', ...includedOptions];

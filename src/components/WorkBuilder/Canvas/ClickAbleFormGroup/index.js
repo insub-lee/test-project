@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form } from 'antd';
 
 import OptionLayer from 'components/WorkBuilder/Canvas/OptionLayer';
-import { formStuffRenderer } from 'components/WorkBuilder/config';
+import { allFormStuffs } from 'components/WorkBuilder/config';
 
 import Styled from './Styled';
 
@@ -51,7 +51,7 @@ class ClickAbleFormGroup extends Component {
           setHover(false);
         }}
       >
-        <Form.Item label={formStuff.property.label}>{formStuffRenderer[formStuff.type](formStuff)}</Form.Item>
+        <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].previewRenderer(formStuff)}</Form.Item>
         {(viewTargetId === formStuff.id || isHover) && (
           <OptionLayer object={formStuff} action={{ activeLayer, removePanel }} isActive={viewTargetId === formStuff.id} />
         )}
