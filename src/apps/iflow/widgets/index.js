@@ -24,7 +24,7 @@ class Iflow extends PureComponent {
 
     this.state = {
       visible: false,
-    }
+    };
 
     this.columns = [
       {
@@ -37,14 +37,14 @@ class Iflow extends PureComponent {
     this.props.getIflowDataList(pageSnum, pageIndex, this.props.setIflowDataList);
   }
 
-  rowGetter = (i) => {
+  rowGetter = i => {
     // if (i === pageEnum - 1) {
     //   pageSnum += 1;
     //   pageEnum += pageIndex;
     //   this.props.getIflowDataList(pageSnum, pageIndex, this.props.setIflowDataList);
     // }
     return this.props.setIflowDataList[i];
-  }
+  };
 
   readMore = () => {
     if (pageEnum - this.props.setIflowDataList.length < pageIndex) {
@@ -52,21 +52,21 @@ class Iflow extends PureComponent {
       pageEnum += pageIndex;
       this.props.getIflowDataList(pageSnum, pageIndex, this.props.setIflowDataList);
     }
-  }
+  };
 
-  onClickOpen = (url) => {
+  onClickOpen = url => {
     window.open(url);
-  }
+  };
 
-  HyperlinkFormatter = (val) => {
+  HyperlinkFormatter = val => {
     const dtArr = val.dependentValues.modDt.split(' ')[0].split('-');
-    const dtObj = new Date(dtArr[0], Number(dtArr[1])-1, dtArr[2]);
-    const diff = (curDate.getTime() - dtObj.getTime())/1000/60/60/24;
+    const dtObj = new Date(dtArr[0], Number(dtArr[1]) - 1, dtArr[2]);
+    const diff = (curDate.getTime() - dtObj.getTime()) / 1000 / 60 / 60 / 24;
     let diffRes = '';
-    if(diff >= 1) {
+    if (diff >= 1) {
       diffRes = `${parseInt(diff)} 일전`;
     } else {
-      const hour = val.dependentValues.modDt.split(' ')[1].split(':')
+      const hour = val.dependentValues.modDt.split(' ')[1].split(':');
       diffRes = `${curDate.getHours() - hour[0]} 시간전`;
     }
 
@@ -74,11 +74,7 @@ class Iflow extends PureComponent {
     return (
       <div className="contentWrapper">
         <small>{val.dependentValues.arCtname}</small>
-        <a href={url}
-          className="titleText ellipsis"
-          target="_blank"
-          title={val.dependentValues.arTitle}
-        >
+        <a href={url} className="titleText ellipsis" target="_blank" title={val.dependentValues.arTitle}>
           {val.dependentValues.arTitle}
         </a>
         <div className="empInfo">
@@ -86,13 +82,17 @@ class Iflow extends PureComponent {
             <img
               src={`/portalWeb/uploadfile/pictures/${val.dependentValues.empNo}.jpg`}
               alt={val.dependentValues.empNo}
-              onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+              onError={e => {
+                e.target.src = '/no_img_pro.jpg';
+              }}
               // style={{ height: 20, width: 15 }}
             />
           </div>
           <p className="subInfo ellipsis">
             {val.dependentValues.empName}({val.dependentValues.empNo})/{val.dependentValues.deptName} {val.dependentValues.positionName}
-            <span className="br">{val.dependentValues.modDt}  {diffRes}</span>
+            <span className="br">
+              {val.dependentValues.modDt} {diffRes}
+            </span>
             {/* <span style={{ display: 'inline-block', padding: '0 5px 0 10px' }}>{val.dependentValues.modDt} {diffRes}</span> */}
           </p>
         </div>
@@ -106,9 +106,7 @@ class Iflow extends PureComponent {
         <p className="noWCIcon">게시된 글이 없습니다.</p>
       </div>
     );
-    const {
-      setIflowDataList,
-    } = this.props;
+    const { setIflowDataList } = this.props;
 
     const wgHeight = Number(this.props.item.size.split('X')[1]);
     const wgTitleHeight = this.props.item.user.isTitle ? 35 : 0;
@@ -139,18 +137,23 @@ Iflow.propTypes = {
   iflowUrl: PropTypes.string, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getIflowDataList: (pageSnum, pageEnum, dataList) => dispatch(actions.getIflowDataList(pageSnum, pageEnum, dataList)),
-  }
-);
+Iflow.defaultProps = {
+  setIflowDataList: [],
+};
+
+const mapDispatchToProps = dispatch => ({
+  getIflowDataList: (pageSnum, pageEnum, dataList) => dispatch(actions.getIflowDataList(pageSnum, pageEnum, dataList)),
+});
 
 const mapStateToProps = createStructuredSelector({
   setIflowDataList: selectors.makeIflowDataList(),
   iflowUrl: selectors.makeSelectIflowUrl(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'Iflow', saga });
 const withReducer = injectReducer({ key: 'Iflow', reducer });
 

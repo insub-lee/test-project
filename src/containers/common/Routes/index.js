@@ -168,8 +168,7 @@ class PublicRoutes extends Component {
           <Route path="/signin" component={SignIn} />
           <RestrictedRoute path="/store" component={StoreApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/portal/store" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/portal/bizMenu" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/portal/myMenu" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path="/portal/card" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/admin" component={AdminApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/guide" component={GuideApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path="/popup/organization/:lang/:deptId/:userId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />

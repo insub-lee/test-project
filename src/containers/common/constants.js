@@ -12,15 +12,7 @@ export const RESET_MENU_CATEGORY_DATA = 'COMMON/RESET_MENU_CATEGORY_DATA';
 export const RELOAD_DOCKITEM = 'COMMON/RELOAD_DOCKITEM';
 
 // 초기 getInitialPortalPage 액션을 생략하는 경로
-export const exceptPath = [
-  'preview',
-  'signin',
-  'iflow',
-  'store',
-  'admin',
-  'guide',
-  'pmmodel',
-];
+export const exceptPath = ['preview', 'signin', 'iflow', 'store', 'admin', 'guide', 'pmmodel'];
 
 export const basicPath = {
   PAGE: 'page',
@@ -33,3 +25,6 @@ export const pageLoading = {
   loading: 'loading...',
 };
 
+export const userProfileImgUrl = {
+  URL: 'http://192.168.0.35:12080/portalWeb/uploadfile/pictures',
+};

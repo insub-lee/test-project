@@ -78,9 +78,7 @@ const StlyedDefaultTheme = styled.div`
     .item {
       .item-title {
         height: 40px;
-        padding-top: 14px;
-        padding-left: 18px;
-        padding-right: 18px;
+        padding: 10px 18px 10px 43px;
         font-size: 14px;
         cursor: pointer !important;
 
@@ -107,11 +105,12 @@ const StlyedDefaultTheme = styled.div`
       &.item-level-1 {
         > .item-title {
           height: 45px;
+          padding: 14px 18px;
         }
       }
 
       .children {
-        padding-left: 25px;
+        padding-left: 0px;
       }
     }
   }

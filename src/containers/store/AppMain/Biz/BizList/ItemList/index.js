@@ -50,6 +50,7 @@ class ItemList extends Component {
   type - ONE : 8개의 앱리스트 + 더보기버튼 + 하위 카테고리 (카테고리 선택 시)
   */
   renderMap(map) {
+    console.debug('@@@@@@@ map: ', map);
     // map - 한 카테고리에 대한 정보가 담김.
     const {
       key, // 카테고리 키정보
@@ -82,24 +83,14 @@ class ItemList extends Component {
         jsx = (
           <div className="storeListTitle" style={{ textAlign: 'center' }}>
             <Button type="button" className="arrowGoBack" onClick={goBack} />
-            <h3>
-              {searchword !== undefined && bizList.length > 0 ?
-                `'${searchword}' ${intlObj.get(messages.searchResult)}`
-                : ''
-              }
-            </h3>
+            <h3>{searchword !== undefined && bizList.length > 0 ? `'${searchword}' ${intlObj.get(messages.searchResult)}` : ''}</h3>
           </div>
         );
       } else if (bizList.length > 0) {
         jsx = (
           <div className="storeListTitle">
-            <h3>
-              {lang.get('NAME', map)}
-            </h3>
-            {type === 'ALL' && map.children ?
-              <Button type="button" className="arrowGoToPage" onClick={handleGetMapListOne} />
-              : ''
-            }
+            <h3>{lang.get('NAME', map)}</h3>
+            {type === 'ALL' && map.children ? <Button type="button" className="arrowGoToPage" onClick={handleGetMapListOne} /> : ''}
           </div>
         );
       }
@@ -130,7 +121,7 @@ class ItemList extends Component {
       let result = '';
 
       if (bizList.length > 0) {
-        result = bizList.map((app) => {
+        result = bizList.map(app => {
           const handleRegistApp = () => registerBiz(app.BIZGRP_ID, app.CATG_ID);
           const registed = app.EXISTYN === 'Y' ? 'true' : 'false';
           const appColkey = `appCol${app.BIZGRP_ID}`;
@@ -164,36 +155,26 @@ class ItemList extends Component {
       <Box key={boxkey}>
         {renderTitle()}
 
-        <Row>
-          {renderBizList()}
-        </Row>
+        <Row>{renderBizList()}</Row>
 
-        {
-          /* bizList more */
-          type !== 'ALL' && bizList.length > 0 ? (
-            <div className="showReadMore">
-              {showReadMoreBtn ?
-                <Button type="button" className="showMoreBtn" onClick={handleReadMore} />
-                : ''}
-            </div>
-          ) : ''
-        }
+        {/* bizList more */
+        type !== 'ALL' && bizList.length > 0 ? (
+          <div className="showReadMore">{showReadMoreBtn ? <Button type="button" className="showMoreBtn" onClick={handleReadMore} /> : ''}</div>
+        ) : (
+          ''
+        )}
 
-        {
-          /* child category list */
-          childBlocks.map((childBlock, i) => {
-            const ckey = `childrow${i}`;
-            return renderChildCategoryList(ckey, childBlock, getMapListOne);
-          })
-        }
+        {/* child category list */
+        childBlocks.map((childBlock, i) => {
+          const ckey = `childrow${i}`;
+          return renderChildCategoryList(ckey, childBlock, getMapListOne);
+        })}
       </Box>
     );
   }
 
   render() {
-    const {
-      mapList,
-    } = this.props;
+    const { mapList } = this.props;
 
     const { rowStyle, colStyle, gutter } = basicStyle;
 
@@ -201,16 +182,14 @@ class ItemList extends Component {
       <LayoutWrapper>
         <Row style={rowStyle} gutter={gutter} justify="start">
           <Col span={24} style={colStyle}>
-            {mapList.length > 0 ? (
-              mapList.map((map) => {
-                if (map.bizList) {
-                  return this.renderMap(map);
-                }
-                return '';
-              })
-            ) : (
-                ''
-              )}
+            {mapList.length > 0
+              ? mapList.map(map => {
+                  if (map.bizList) {
+                    return this.renderMap(map);
+                  }
+                  return '';
+                })
+              : ''}
           </Col>
         </Row>
       </LayoutWrapper>
