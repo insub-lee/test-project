@@ -8,8 +8,14 @@ import Designer from './Designer';
 import TableDesigner from './TableDesigner';
 import Option from './Option';
 import Wrapper from './Wrapper';
+import ProcessDesigner from './ProcessDesigner';
 
-const bodyStyle = { padding: '1rem', width: '100%', height: 'calc(100vh - 130px)', overflowY: 'auto' };
+const bodyStyle = {
+  padding: '1rem',
+  width: '100%',
+  height: 'calc(100vh - 130px)',
+  overflowY: 'auto',
+};
 
 const WorkBuilderDetailPage = ({
   match: {
@@ -50,6 +56,15 @@ const WorkBuilderDetailPage = ({
       TabPanelComponent: (
         <div style={bodyStyle}>
           <Option id={ID} />
+        </div>
+      ),
+    },
+    {
+      id: 4,
+      TabComponent: '결재선관리',
+      TabPanelComponent: (
+        <div style={bodyStyle}>
+          <ProcessDesigner id={ID} />
         </div>
       ),
     },
