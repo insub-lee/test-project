@@ -81,7 +81,7 @@ class Process extends Component {
     this.props.initProcessData();
   }
 
-  onDragEnd = (dropResult) => {
+  onDragEnd = dropResult => {
     if (!dropResult.destination) {
       return;
     }
@@ -89,25 +89,22 @@ class Process extends Component {
     const { source, destination } = dropResult;
     const { processStep, setProcessStep } = this.props;
     setProcessStep(reorder(processStep, source.index, destination.index).map((item, index) => ({ ...item, STEP: index + 1 })));
+    this.initStepData();
   };
 
-  removeItem = (itemIdx) => {
+  removeItem = itemIdx => {
     const { processStep, setProcessStep } = this.props;
     processStep.splice(itemIdx, 1);
     setProcessStep(processStep.map((item, index) => ({ ...item, STEP: index + 1 })));
-
-    this.setState({
-      activeStep: -1,
-      stepInfo: {},
-    });
+    this.initStepData();
   };
 
-  changeGubun = (val) => {
+  changeGubun = val => {
     const isAgree = val === '2' || val === '3';
     this.setState({ isAgree });
   };
 
-  onAdd = (e) => {
+  onAdd = e => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (err) {
@@ -150,6 +147,30 @@ class Process extends Component {
     });
   };
 
+  // 적용
+  applyStepInfo = () => {
+    this.props.form.validateFields((err, values) => {
+      if (err) {
+        return;
+      }
+
+      const { changeStepInfo } = this.props;
+      const { stepInfo } = this.state;
+      // if (processStep.filter(item => item.STEP === Number(values.step)).length === 0) {
+      const info = {
+        ...stepInfo,
+        STEP_TYPE: values.stepType,
+        GUBUN: Number(values.gubun),
+        STEP_USERS: this.state.stepUsers,
+        stepUsersName: this.state.stepUsersName,
+        APPV_AUTH: values.appvAuth,
+        AGREE_TYPE: values.agreeType === undefined ? '' : values.agreeType,
+      };
+      changeStepInfo(info);
+      this.initStepData();
+    });
+  };
+
   // 조직도 관련
   openOrganizationPopup = () => {
     this.setState({ allOrgShow: true });
@@ -160,27 +181,27 @@ class Process extends Component {
   };
 
   // 조직도로부터 데이터 가져오는 함수
-  getDataFromOrganizationAll = (resultObj) => {
+  getDataFromOrganizationAll = resultObj => {
     const stepUsers = [];
 
     let stepUsersName = '';
-    resultObj.selectedUsers.forEach((item) => {
+    resultObj.selectedUsers.forEach(item => {
       stepUsersName += createStepUsersName(item, 'U');
       stepUsers.push({ ...item, ID: item.USER_ID });
     });
-    resultObj.checkedPstn.forEach((item) => {
+    resultObj.checkedPstn.forEach(item => {
       stepUsersName += createStepUsersName(item, 'P');
       stepUsers.push({ ...item, ID: item.id });
     });
-    resultObj.checkedDept.forEach((item) => {
+    resultObj.checkedDept.forEach(item => {
       stepUsersName += createStepUsersName(item, 'D');
       stepUsers.push({ ...item, ID: item.id });
     });
-    resultObj.checkedDuty.forEach((item) => {
+    resultObj.checkedDuty.forEach(item => {
       stepUsersName += createStepUsersName(item, 'T');
       stepUsers.push({ ...item, ID: item.id });
     });
-    resultObj.checkedGrp.forEach((item) => {
+    resultObj.checkedGrp.forEach(item => {
       stepUsersName += createStepUsersName(item, 'V');
       stepUsers.push({ ...item, ID: item.id });
     });
@@ -196,7 +217,7 @@ class Process extends Component {
     });
   };
 
-  onSaveProcess = (e) => {
+  onSaveProcess = e => {
     e.preventDefault();
     const { processStep, saveProcessInfo } = this.props;
 
@@ -217,7 +238,7 @@ class Process extends Component {
     saveProcessInfo(prcData);
   };
 
-  onUpdateProcess = (e) => {
+  onUpdateProcess = e => {
     e.preventDefault();
     const { processInfo, processStep, updateProcessInfo } = this.props;
     const prcName = this.props.form.getFieldValue('prcName');
@@ -232,24 +253,23 @@ class Process extends Component {
     updateProcessInfo(prcData);
   };
 
-  onActiveStep = (stepInfo) => {
-    this.setState((prevState) => {
+  onActiveStep = stepInfo => {
+    this.setState(prevState => {
       const { activeStep } = prevState;
       const isDupStep = activeStep === stepInfo.STEP;
       return {
         activeStep: isDupStep ? -1 : stepInfo.STEP,
         stepInfo: isDupStep ? {} : stepInfo,
-        isAgree: isDupStep ? false : stepInfo.STEP === 2 || stepInfo.STEP === 3,
+        isAgree: isDupStep ? false : stepInfo.STEP_TYPE === 2 || stepInfo.STEP_TYPE === 3,
+        stepUsersName: stepInfo.stepUsersName,
       };
     });
   };
 
   render() {
-    const {
- stepInfo, isAgree, stepUsersName, activeStep 
-} = this.state;
+    const { stepInfo, isAgree, stepUsersName, activeStep } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const { processInfo, processStep, processCallbackFunc } = this.props;
+    const { prcId, processInfo, processStep, processCallbackFunc } = this.props;
     const formItemLayout = {
       labelCol: {
         xs: { span: 28 },
@@ -298,31 +318,35 @@ class Process extends Component {
                     <Form.Item label="단계">
                       {getFieldDecorator('step', {
                         initialValue: isStepInfo ? stepInfo.STEP : processStep.length + 1,
-                      })(<Input style={{ width: 100 }} />)}
+                      })(<Input style={{ width: 100 }} readOnly={isStepInfo} />)}
                     </Form.Item>
                     <Form.Item label="유형">
                       {getFieldDecorator('stepType', {
                         initialValue: stepInfo.STEP_TYPE,
-                      })(<Select style={{ width: 120 }}>
+                      })(
+                        <Select style={{ width: 120 }}>
                           <Option value="U">사용자</Option>
                           <Option value="D">부서</Option>
                           <Option value="V">그룹</Option>
-                        </Select>,)}
+                        </Select>,
+                      )}
                     </Form.Item>
                     <Form.Item label="결재구분">
                       {getFieldDecorator('gubun', {
                         initialValue: isStepInfo ? stepInfo.GUBUN.toString() : '',
-                      })(<Select style={{ width: 120 }} onChange={val => this.changeGubun(val)}>
+                      })(
+                        <Select style={{ width: 120 }} onChange={val => this.changeGubun(val)}>
                           <Option value="1">결재</Option>
                           <Option value="2">합의(개인)</Option>
                           <Option value="3">합의(부서)</Option>
                           <Option value="4">전결</Option>
-                        </Select>,)}
+                        </Select>,
+                      )}
                     </Form.Item>
                     <Form.Item label="승인자">
                       <React.Fragment>
                         {getFieldDecorator('stepUsers', {
-                          initialValue: isStepInfo ? stepInfo.stepUsersName : stepUsersName,
+                          initialValue: stepUsersName,
                         })(<Input style={{ width: '70%' }} readOnly />)}
                         <Button size="small" type="primary" style={{ right: '-8px' }} onClick={this.openOrganizationPopup}>
                           선택
@@ -337,10 +361,12 @@ class Process extends Component {
                     <Form.Item label="합의구분">
                       {getFieldDecorator('agreeType', {
                         initialValue: stepInfo.AGREE_TYPE,
-                      })(<Radio.Group disabled={!isAgree}>
+                      })(
+                        <Radio.Group disabled={!isAgree}>
                           <Radio value="SE">순차합의</Radio>
                           <Radio value="PA">병렬합의</Radio>
-                        </Radio.Group>,)}
+                        </Radio.Group>,
+                      )}
                     </Form.Item>
                     <Form.Item
                       wrapperCol={{
@@ -348,12 +374,20 @@ class Process extends Component {
                         sm: { span: 16, offset: 8 },
                       }}
                     >
-                      <Button type="default" htmlType="button" onClick={this.initStepData}>
-                        초기화
-                      </Button>
-                      <Button type="primary" htmlType="submit" style={{ marginLeft: 8 }}>
-                        추가
-                      </Button>
+                      {isStepInfo ? (
+                        <Button type="primary" htmlType="button" onClick={this.applyStepInfo}>
+                          적용
+                        </Button>
+                      ) : (
+                        <React.Fragment>
+                          <Button type="default" htmlType="button" onClick={this.initStepData}>
+                            초기화
+                          </Button>
+                          <Button type="primary" htmlType="submit" style={{ marginLeft: 8 }}>
+                            추가
+                          </Button>
+                        </React.Fragment>
+                      )}
                     </Form.Item>
                   </div>
                 </Col>
@@ -385,9 +419,11 @@ class Process extends Component {
                 <Button type="primary" onClick={e => this.onUpdateProcess(e)}>
                   수정
                 </Button>
-                <Button type="primary" htmlType="button" onClick={() => processCallbackFunc(processInfo.PRC_ID)} style={{ marginLeft: '8px' }}>
-                  빌더적용
-                </Button>
+                {prcId === -1 && (
+                  <Button type="primary" htmlType="button" onClick={() => processCallbackFunc(processInfo.PRC_ID)} style={{ marginLeft: '8px' }}>
+                    빌더적용
+                  </Button>
+                )}
               </React.Fragment>
             )}
           </Col>
@@ -408,6 +444,7 @@ Process.propTypes = {
   getProcessData: PropTypes.func.isRequired,
   processCallbackFunc: PropTypes.func.isRequired,
   initProcessData: PropTypes.func.isRequired,
+  changeStepInfo: PropTypes.func.isRequired,
 };
 
 Process.defaultProps = {
@@ -425,6 +462,7 @@ const mapDispatchToProps = dispatch => ({
   updateProcessInfo: processInfo => dispatch(actions.updateProcessInfo(processInfo)),
   getProcessData: payload => dispatch(actions.getProcessData(payload)),
   initProcessData: () => dispatch(actions.initProcessData()),
+  changeStepInfo: stepInfo => dispatch(actions.changeStepInfo(stepInfo)),
 });
 
 const withReducer = injectReducer({ key: 'apps.WorkFlow.Admin.Process', reducer });

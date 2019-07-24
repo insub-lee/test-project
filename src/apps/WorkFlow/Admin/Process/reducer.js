@@ -30,6 +30,11 @@ const appReducer = (state = initialState, action) => {
     case constantTypes.INIT_PROCESS_DATA: {
       return initialState;
     }
+    case constantTypes.CHANGE_STEP_INFO: {
+      const { stepInfo } = action;
+      const index = state.get('processStep').findIndex(step => step.get('STEP') === stepInfo.STEP);
+      return state.setIn(['processStep', index], fromJS(stepInfo));
+    }
     default:
       return state;
   }
