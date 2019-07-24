@@ -18,6 +18,8 @@ import * as actions from './actions';
 import reducer from './reducer';
 import messages from '../UserSearch/messages';
 
+import { userProfileImgUrl } from 'containers/common/constants';
+
 class UserProfile extends Component {
   constructor(props) {
     super(props);
@@ -131,7 +133,7 @@ class UserProfile extends Component {
             <Popover placement="left" content={contents} trigger="hover" overlayClassName="userProfileMenu">
               <div className="myPicture">
                 <img
-                  src={`http://skynet.skhynix.com/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`}
+                  src={`${userProfileImgUrl.URL}/${profile.EMP_NO}.jpg`}
                   alt={profile.EMP_NO}
                   onError={e => {
                     e.target.src = '/no_img_pro.jpg';

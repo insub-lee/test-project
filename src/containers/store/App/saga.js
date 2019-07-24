@@ -6,7 +6,7 @@ import * as constants from './constants';
 export function* getMenu(payload) {
   const { SCRGRP_CD } = payload;
 
-  const response = yield call(Axios.post, '/api/bizstore/v1/store/getMenu', { SCRGRP_CD });
+  const response = yield call(Axios.post, 'api/bizstore/v1/store/getMenuCardTree', { SCRGRP_CD });
   const { menuList } = response;
 
   if (menuList) {

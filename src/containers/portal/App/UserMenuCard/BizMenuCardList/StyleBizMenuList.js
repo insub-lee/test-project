@@ -6,7 +6,6 @@ const StyleBizMenuList = styled.div`
   max-width: 1230px;
   width: 100%;
   margin: 20px auto 0;
-  padding-left: 300px;
   border: 1px solid #d1d2d3;
   background-color: #ffffff;
 
@@ -85,6 +84,16 @@ const StyleBizMenuList = styled.div`
       padding: 0;
       padding-top: 0 !important;
     }
+  }
+
+  .bizCardListDiv {
+    height: calc(100vh - 121px);
+  }
+
+  .tree-scrollbar {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden !important;
   }
 `;
 

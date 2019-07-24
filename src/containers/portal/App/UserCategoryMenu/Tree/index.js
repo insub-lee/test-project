@@ -74,7 +74,11 @@ class Tree extends Component {
   handleClickMenuFolder = node => {
     console.debug('>>>>>>>this.node: ', node);
     const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
-    this.props.history.push(`/${basicPath.PORTAL}/${menuType}/${node.MENU_ID}`);
+    if (node.LVL === 1) {
+      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
+    } else {
+      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.MENU_ID}`);
+    }
   };
 
   clickEvent = node => {

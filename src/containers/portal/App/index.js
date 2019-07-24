@@ -817,8 +817,7 @@ class App extends React.PureComponent {
                         )}
                       />
                       <Route
-                        exact
-                        path={`/${basicPath.PORTAL}/:TYPE/:ID`}
+                        path={`/${basicPath.PORTAL}/card`}
                         render={props => (
                           <UserMenuCard //eslint-disable-line
                             {...props}
