@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { formStuffRenderer } from 'components/WorkBuilder/config';
+import { allFormStuffs } from 'components/WorkBuilder/config';
 import OptionLayer from 'components/WorkBuilder/Canvas/OptionLayer';
 
 import Styled from './Styled';
@@ -50,7 +50,7 @@ class ClickAbleFormStuff extends Component {
           setHover(false);
         }}
       >
-        {formStuffRenderer[formStuff.type](formStuff)}
+        {allFormStuffs[formStuff.type].previewRenderer(formStuff)}
         {(formStuff.id === viewTargetId || isHover) && <OptionLayer object={formStuff} action={{ removePanel }} isActive={formStuff.id === viewTargetId} />}
       </Styled>
     );

@@ -5,7 +5,7 @@ import { Button, Card, Descriptions, Form } from 'antd';
 import Container from 'components/FormLayer/Container';
 import Content from 'components/FormLayer/Content';
 import StyledFormLayer from 'components/FormLayer/Styled';
-import { formStuffRenderer } from 'components/WorkBuilder/config';
+import { allFormStuffs } from 'components/WorkBuilder/config';
 import StyledFormStuff from 'components/WorkBuilder/View/StyledFormStuff';
 
 import Styled from './Styled';
@@ -27,7 +27,7 @@ const View = ({
                         .filter(formStuff => formStuff.parentId === box.id)
                         .map(formStuff => (
                           <StyledFormStuff key={formStuff.id} className="form-group">
-                            <Form.Item label={formStuff.property.label}>{formStuffRenderer[formStuff.type](formStuff)}</Form.Item>
+                            <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].renderer(formStuff)}</Form.Item>
                           </StyledFormStuff>
                         ))}
                     {box.property.type === 'table' && (
@@ -36,7 +36,7 @@ const View = ({
                           .filter(formStuff => formStuff.parentId === box.id)
                           .map(formStuff => (
                             <Descriptions.Item key={formStuff.id} label={formStuff.property.label} span={formStuff.property.span || 1}>
-                              <Styled classNam="form-group">{formStuffRenderer[formStuff.type](formStuff)}</Styled>
+                              <Styled classNam="form-group">{allFormStuffs[formStuff.type].renderer(formStuff)}</Styled>
                             </Descriptions.Item>
                           ))}
                       </Descriptions>

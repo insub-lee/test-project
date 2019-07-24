@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Descriptions } from 'antd';
 
 import OptionLayer from 'components/WorkBuilder/Canvas/OptionLayer';
-import { formStuffRenderer } from 'components/WorkBuilder/config';
+import { allFormStuffs } from 'components/WorkBuilder/config';
 
 import Styled from './Styled';
 
@@ -59,7 +59,7 @@ class ClickAbleDescriptions extends Component {
                 setHover(index, false);
               }}
             >
-              {formStuffRenderer[formStuff.type](formStuff)}
+              {allFormStuffs[formStuff.type].previewRenderer(formStuff)}
               {(viewTargetId === formStuff.id || isHover[index]) && (
                 <OptionLayer object={formStuff} action={{ activeLayer, removePanel }} isActive={viewTargetId === formStuff.id} tableMode />
               )}
