@@ -39,3 +39,8 @@ export const setProcessData = (processInfo, processStep) => ({
 export const initProcessData = () => ({
   type: actionTypes.INIT_PROCESS_DATA,
 });
+
+export const changeStepInfo = stepInfo => ({
+  type: actionTypes.CHANGE_STEP_INFO,
+  stepInfo,
+});
