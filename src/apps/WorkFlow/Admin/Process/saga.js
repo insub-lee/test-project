@@ -8,6 +8,8 @@ function* saveProcessInfo({ processInfo }) {
   const { code, prcInfo } = response;
   if (code === 0) {
     yield put(actions.getProcessData({ prcId: prcInfo.PRC_ID }));
+    yield put(actions.setModalVisible(false));
+    yield put(actions.setSpinning(false));
   }
 }
 
@@ -16,6 +18,8 @@ function* updateProcessInfo({ processInfo }) {
   const { code } = response;
   if (code === 0) {
     yield put(actions.getProcessData({ prcId: processInfo.PRC_ID }));
+    yield put(actions.setModalVisible(false));
+    yield put(actions.setSpinning(false));
   }
 }
 

@@ -63,7 +63,7 @@ const WorkBuilderDetailPage = ({
       id: 4,
       TabComponent: '결재선관리',
       TabPanelComponent: (
-        <div style={bodyStyle}>
+        <div style={{ ...bodyStyle, height: 'auto' }}>
           <ProcessDesigner id={ID} />
         </div>
       ),
