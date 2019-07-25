@@ -727,6 +727,52 @@ class App extends React.PureComponent {
           {/*</div>*/}
           {/* test layout */}
           {/* Body */}
+          <UserCategoryMenu
+            isShow={open}
+            toggleMenu={open ? this.setMenuClose : this.setOpen}
+            execMenu={this.execMenu}
+            execPage={this.execPage}
+            myMNotiCnt={myMNotiCnt}
+            myHNotiCnt={myHNotiCnt}
+            myMNotiList={myMNotiList}
+            selectedIndex={selectedIndex}
+            menuName={menuName}
+            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+            setMyMenuData={setMyMenuData}
+            visible={this.state.visible}
+            setMenuClose={this.setMenuClose}
+            view={view}
+            history={this.props.history}
+          />
+          <SideMenu>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="home">
+                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="home widget">
+                <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(dockHomeItem.PAGE_ID)} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="app-store">
+                <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="환경설정">
+                <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
+              </Tooltip>
+            </div>
+            {/*
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="업무등록">
+                <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
+              </Tooltip>
+            </div>
+            */}
+          </SideMenu>
           <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: dockIconType === 'MAX' ? 90 : 42 } : mobileDockCss}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
@@ -862,52 +908,7 @@ class App extends React.PureComponent {
               </Scrollbars>
             </StyledContainer>
           </Layout>
-          <UserCategoryMenu
-            isShow={open}
-            toggleMenu={open ? this.setMenuClose : this.setOpen}
-            execMenu={this.execMenu}
-            execPage={this.execPage}
-            myMNotiCnt={myMNotiCnt}
-            myHNotiCnt={myHNotiCnt}
-            myMNotiList={myMNotiList}
-            selectedIndex={selectedIndex}
-            menuName={menuName}
-            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-            setMyMenuData={setMyMenuData}
-            visible={this.state.visible}
-            setMenuClose={this.setMenuClose}
-            view={view}
-            history={this.props.history}
-          />
-          <SideMenu>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="home">
-                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
-              </Tooltip>
-            </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="home widget">
-                <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(dockHomeItem.PAGE_ID)} />
-              </Tooltip>
-            </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="app-store">
-                <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
-              </Tooltip>
-            </div>
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="환경설정">
-                <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
-              </Tooltip>
-            </div>
-            {/*
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="업무등록">
-                <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
-              </Tooltip>
-            </div>
-            */}
-          </SideMenu>
+
           <UserDock
             execPage={this.execPage}
             dockAppList={dockAppList}
