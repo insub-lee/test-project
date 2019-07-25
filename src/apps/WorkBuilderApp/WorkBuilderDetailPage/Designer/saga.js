@@ -5,46 +5,8 @@ import { Axios } from 'utils/AxiosFunc';
 
 import * as actionTypes from './constants';
 import * as selectors from './selectors';
-import { makeInfo } from './util';
+import { makeInfo, getDefaultFormProperty } from './util';
 import * as actions from './actions';
-
-const getDefaultFormProperty = (type, id) => {
-  const defaultFormProperty = {
-    className: '',
-    style: {},
-    name: id,
-    defaultValue: '',
-  };
-  switch (type) {
-    case 'checkbox':
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
-        defaultValue: [],
-      };
-    case 'radio':
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
-      };
-    default:
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-      };
-  }
-};
-
-
-function* boot({ payload }) {}
 
 function* fetchData({ id }) {
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${id}`);

@@ -51,6 +51,13 @@ const reducer = (state = initialState, action) => {
       const { value } = action;
       return state.set('isOpenFormModal', value);
     }
+    case actionTypes.SUCCESS_SAVE_TASK_CONTENTS: {
+      const { data: { taskSeq, fieldNm, contSeq } } = action;
+      console.debug('@@@ ~', taskSeq, fieldNm, contSeq);
+      console.debug('@@@@ ~', state.get('formStuffs').toJS());
+      const targetIndex = state.get('formStuffs').findIndex(formStuff => formStuff.get('FIELD_NM') === fieldNm);
+      return state.setIn(['formStuffs', targetIndex, 'CONT_SEQ'], contSeq);
+    }
     case actionTypes.ACTION_TYPES:
     default:
       return state;

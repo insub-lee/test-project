@@ -11,7 +11,7 @@ import StyledFormStuff from 'components/WorkBuilder/View/StyledFormStuff';
 import Styled from './Styled';
 
 const View = ({
-  boxes, formStuffs, submitData, preview,
+  boxes, formStuffs, submitData, preview, saveTempContents,
 }) => (
   <Styled className="canvas" onSubmit={submitData}>
     <Form layout="vertical">
@@ -27,7 +27,7 @@ const View = ({
                         .filter(formStuff => formStuff.parentId === box.id)
                         .map(formStuff => (
                           <StyledFormStuff key={formStuff.id} className="form-group">
-                            <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].renderer(formStuff)}</Form.Item>
+                            <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].renderer({ formStuff, saveTempContents })}</Form.Item>
                           </StyledFormStuff>
                         ))}
                     {box.property.type === 'table' && (
@@ -36,7 +36,7 @@ const View = ({
                           .filter(formStuff => formStuff.parentId === box.id)
                           .map(formStuff => (
                             <Descriptions.Item key={formStuff.id} label={formStuff.property.label} span={formStuff.property.span || 1}>
-                              <Styled classNam="form-group">{allFormStuffs[formStuff.type].renderer(formStuff)}</Styled>
+                              <Styled classNam="form-group">{allFormStuffs[formStuff.type].renderer({ formStuff, saveTempContents })}</Styled>
                             </Descriptions.Item>
                           ))}
                       </Descriptions>
@@ -63,6 +63,7 @@ View.propTypes = {
   boxes: PropTypes.arrayOf(PropTypes.object),
   formStuffs: PropTypes.arrayOf(PropTypes.object),
   submitData: PropTypes.func,
+  saveTempContents: PropTypes.func,
   preview: PropTypes.bool,
 };
 
@@ -70,6 +71,7 @@ View.defaultProps = {
   boxes: [],
   formStuffs: [],
   submitData: () => console.debug('no bind events'),
+  saveTempContents: () => console.debug('no bind events'),
   preview: false,
 };
 

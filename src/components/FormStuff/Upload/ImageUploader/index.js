@@ -39,7 +39,7 @@ class ImageUploader extends Component {
 
   render() {
     const { previewVisible, previewImage } = this.state;
-    const { handleChange, fileList, customRequest, action } = this.props;
+    const { handleChange, fileList, customRequest, action, accept } = this.props;
     return (
       <div className="clearfix">
         <Upload

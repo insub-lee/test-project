@@ -33,3 +33,4 @@ export const OFF_PREVIEW = `${prefix}OFF_PREVIEW`;
 export const SAVE_TEMPORARY = `${prefix}SAVE_TEMPORARY`;
 export const SUCCESS_ADD_BOX = `${prefix}SUCCESS_ADD_BOX`;
 export const SUCCESS_ADD_FORM_STUFF = `${prefix}SUCCESS_ADD_FORM_STUFF`;
+export const SAVE_TASK_CONTENTS = `${prefix}SAVE_TASK_CONTENTS`;
