@@ -7,6 +7,8 @@ const initialState = fromJS({
   },
   processStep: [],
   stepInfo: {},
+  modalVisible: false,
+  spinning: false,
 });
 
 const appReducer = (state = initialState, action) => {
@@ -34,6 +36,14 @@ const appReducer = (state = initialState, action) => {
       const { stepInfo } = action;
       const index = state.get('processStep').findIndex(step => step.get('STEP') === stepInfo.STEP);
       return state.setIn(['processStep', index], fromJS(stepInfo));
+    }
+    case constantTypes.SET_MODAL_VISIBLE: {
+      const { visible } = action;
+      return state.set('modalVisible', visible);
+    }
+    case constantTypes.SET_SPINNING: {
+      const { spin } = action;
+      return state.set('spinning', spin);
     }
     default:
       return state;

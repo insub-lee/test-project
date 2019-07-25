@@ -20,4 +20,16 @@ const makeStepInfo = () =>
     state => state.get('stepInfo').toJS(),
   );
 
-export { makeProcessInfo, makeProcessStep, makeStepInfo };
+const makeModalVisible = () =>
+  createSelector(
+    selectProcess,
+    state => state.get('modalVisible'),
+  );
+
+const makeSpinning = () =>
+  createSelector(
+    selectProcess,
+    state => state.get('spinning'),
+  );
+
+export { makeProcessInfo, makeProcessStep, makeStepInfo, makeModalVisible, makeSpinning };

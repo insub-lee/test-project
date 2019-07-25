@@ -44,3 +44,12 @@ export const changeStepInfo = stepInfo => ({
   type: actionTypes.CHANGE_STEP_INFO,
   stepInfo,
 });
+
+export const setModalVisible = visible => ({
+  type: actionTypes.SET_MODAL_VISIBLE,
+  visible,
+});
+export const setSpinning = spin => ({
+  type: actionTypes.SET_SPINNING,
+  spin,
+});

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { Row, Col, Divider, Form, Input, Button, Select, Checkbox, Radio } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
@@ -16,7 +15,8 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import Wrapper from './Wrapper';
-import ItemBody from './ItemBody';
+import SignLine from './SignLine';
+import SignLineConfirmModal from './SignLineConfirmModal';
 
 const { Option } = Select;
 const CheckboxGroup = Checkbox.Group;
@@ -104,30 +104,47 @@ class Process extends Component {
     this.setState({ isAgree });
   };
 
-  onAdd = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
+  // onAdd = e => {
+  //   e.preventDefault();
+  //   this.props.form.validateFields((err, values) => {
+  //     if (err) {
+  //       return;
+  //     }
 
-      const { processInfo, processStep, setProcessStep } = this.props;
-      if (processStep.filter(item => item.STEP === Number(values.step)).length === 0) {
-        const info = {
-          PRC_ID: processInfo.PRC_ID,
-          STEP: Number(values.step),
-          STEP_TYPE: values.stepType,
-          GUBUN: Number(values.gubun),
-          STEP_USERS: this.state.stepUsers,
-          stepUsersName: this.state.stepUsersName,
-          APPV_AUTH: values.appvAuth,
-          AGREE_TYPE: values.agreeType === undefined ? '' : values.agreeType,
-        };
-        processStep.push(info);
-        setProcessStep(processStep);
-        this.initStepData();
-      }
-    });
+  //     const { processInfo, processStep, setProcessStep } = this.props;
+  //     if (processStep.filter(item => item.STEP === Number(values.step)).length === 0) {
+  //       const info = {
+  //         PRC_ID: processInfo.PRC_ID,
+  //         STEP: Number(values.step),
+  //         STEP_TYPE: values.stepType,
+  //         GUBUN: Number(values.gubun),
+  //         STEP_USERS: this.state.stepUsers,
+  //         stepUsersName: this.state.stepUsersName,
+  //         APPV_AUTH: values.appvAuth,
+  //         AGREE_TYPE: values.agreeType === undefined ? '' : values.agreeType,
+  //       };
+  //       processStep.push(info);
+  //       setProcessStep(processStep);
+  //       this.initStepData();
+  //     }
+  //   });
+  // };
+
+  onAddStep = e => {
+    e.preventDefault();
+    const { processInfo, processStep, setProcessStep } = this.props;
+    const info = {
+      PRC_ID: processInfo.PRC_ID,
+      STEP: processStep.length + 1,
+      STEP_TYPE: 'U',
+      GUBUN: 1,
+      STEP_USERS: [],
+      stepUsersName: '',
+      APPV_AUTH: [],
+      AGREE_TYPE: '',
+    };
+    processStep.push(info);
+    setProcessStep(processStep);
   };
 
   // 초기화
@@ -147,7 +164,6 @@ class Process extends Component {
     });
   };
 
-  // 적용
   applyStepInfo = () => {
     this.props.form.validateFields((err, values) => {
       if (err) {
@@ -156,7 +172,6 @@ class Process extends Component {
 
       const { changeStepInfo } = this.props;
       const { stepInfo } = this.state;
-      // if (processStep.filter(item => item.STEP === Number(values.step)).length === 0) {
       const info = {
         ...stepInfo,
         STEP_TYPE: values.stepType,
@@ -217,16 +232,29 @@ class Process extends Component {
     });
   };
 
-  onSaveProcess = e => {
+  onConfirm = e => {
     e.preventDefault();
-    const { processStep, saveProcessInfo } = this.props;
-
+    const { processInfo, setProcessInfo, setModalVisible } = this.props;
     const prcName = this.props.form.getFieldValue('prcName');
 
     if (prcName === undefined || prcName === '') {
       window.alert('결재선명을 입력해주세요');
       return;
     }
+    setProcessInfo({ ...processInfo, NAME_KOR: prcName });
+    setModalVisible(true);
+  };
+
+  onSaveProcess = e => {
+    e.preventDefault();
+    const { processStep, saveProcessInfo, setSpinning } = this.props;
+
+    const prcName = this.props.form.getFieldValue('prcName');
+
+    // if (prcName === undefined || prcName === '') {
+    //   window.alert('결재선명을 입력해주세요');
+    //   return;
+    // }
 
     const prcData = {
       NAME_KOR: prcName,
@@ -235,12 +263,13 @@ class Process extends Component {
         STEP_USERS: item.STEP_USERS.map(step => step.ID),
       })),
     };
+    setSpinning(true);
     saveProcessInfo(prcData);
   };
 
   onUpdateProcess = e => {
     e.preventDefault();
-    const { processInfo, processStep, updateProcessInfo } = this.props;
+    const { processInfo, processStep, updateProcessInfo, setSpinning } = this.props;
     const prcName = this.props.form.getFieldValue('prcName');
     const prcData = {
       PRC_ID: processInfo.PRC_ID,
@@ -250,6 +279,7 @@ class Process extends Component {
         STEP_USERS: item.STEP_USERS.map(step => step.ID),
       })),
     };
+    setSpinning(true);
     updateProcessInfo(prcData);
   };
 
@@ -266,10 +296,14 @@ class Process extends Component {
     });
   };
 
+  modalCloseHandler = () => {
+    this.props.setModalVisible(false);
+  };
+
   render() {
     const { stepInfo, isAgree, stepUsersName, activeStep } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const { prcId, processInfo, processStep, processCallbackFunc } = this.props;
+    const { prcId, processInfo, processStep, processCallbackFunc, modalVisible, spinning, setSpinning } = this.props;
     const formItemLayout = {
       labelCol: {
         xs: { span: 28 },
@@ -299,26 +333,48 @@ class Process extends Component {
           checkedDuty={this.state.dutySetMembers.slice()}
           checkedGrp={this.state.grpSetMembers.slice()}
         />
-        <Row gutter={16}>
+        <SignLineConfirmModal
+          visible={modalVisible}
+          processInfo={processInfo}
+          processStep={processStep}
+          saveProcessInfo={this.onSaveProcess}
+          updateProcessInfo={this.onUpdateProcess}
+          closeHandler={this.modalCloseHandler}
+          spinning={spinning}
+          setSpinning={spinning}
+        />
+        <Row>
           <Col span={24}>
             <Form {...formItemLayout} onSubmit={this.onAdd}>
-              <Row gutter={16}>
+              <Row>
                 <Col span={14}>
                   <Form.Item>
                     {getFieldDecorator('prcName', {
                       initialValue: processInfo.NAME_KOR,
-                    })(<Input placeholder="결재선명을 입력해 주세요." />)}
+                    })(<Input placeholder="결재선명을 입력해 주세요" />)}
                   </Form.Item>
                 </Col>
               </Row>
-              <Row gutter={16} style={{ marginTop: '10px' }}>
+              <Row gutter={15}>
+                <Col span={10}>
+                  <SignLine
+                    processStep={processStep}
+                    activeStep={activeStep}
+                    action={{
+                      removeItem: this.removeItem,
+                      onActiveStep: this.onActiveStep,
+                      onAddStep: this.onAddStep,
+                      onDragEnd: this.onDragEnd,
+                    }}
+                  />
+                </Col>
                 <Col span={14}>
                   <div className="content-body">
-                    <Divider orientation="left">단계정보</Divider>
+                    <Divider orientation="left">단계정보 설정</Divider>
                     <Form.Item label="단계">
                       {getFieldDecorator('step', {
-                        initialValue: isStepInfo ? stepInfo.STEP : processStep.length + 1,
-                      })(<Input style={{ width: 100 }} readOnly={isStepInfo} />)}
+                        initialValue: stepInfo.STEP,
+                      })(<Input style={{ width: 100 }} readOnly />)}
                     </Form.Item>
                     <Form.Item label="유형">
                       {getFieldDecorator('stepType', {
@@ -333,7 +389,7 @@ class Process extends Component {
                     </Form.Item>
                     <Form.Item label="결재구분">
                       {getFieldDecorator('gubun', {
-                        initialValue: isStepInfo ? stepInfo.GUBUN.toString() : '',
+                        initialValue: stepInfo.GUBUN !== undefined ? stepInfo.GUBUN.toString() : '',
                       })(
                         <Select style={{ width: 120 }} onChange={val => this.changeGubun(val)}>
                           <Option value="1">결재</Option>
@@ -374,7 +430,10 @@ class Process extends Component {
                         sm: { span: 16, offset: 8 },
                       }}
                     >
-                      {isStepInfo ? (
+                      <Button type="primary" htmlType="button" onClick={this.applyStepInfo} disabled={!isStepInfo}>
+                        적용
+                      </Button>
+                      {/* {isStepInfo ? (
                         <Button type="primary" htmlType="button" onClick={this.applyStepInfo}>
                           적용
                         </Button>
@@ -387,21 +446,8 @@ class Process extends Component {
                             추가
                           </Button>
                         </React.Fragment>
-                      )}
+                      )} */}
                     </Form.Item>
-                  </div>
-                </Col>
-                <Col span={10}>
-                  <div className="content-body" style={{ minHeight: '514px' }}>
-                    <Divider orientation="left">결재선</Divider>
-                    <DragDropContext onDragEnd={this.onDragEnd}>
-                      <ItemBody
-                        items={processStep}
-                        dropId="process"
-                        activeStep={activeStep}
-                        action={{ removeItem: this.removeItem, onActiveStep: this.onActiveStep }}
-                      />
-                    </DragDropContext>
                   </div>
                 </Col>
               </Row>
@@ -411,12 +457,12 @@ class Process extends Component {
         <Row gutter={16} style={{ marginTop: '15px', marginBottom: '15px' }}>
           <Col span={24} style={{ textAlign: 'right' }}>
             {processInfo.PRC_ID === -1 ? (
-              <Button type="primary" onClick={e => this.onSaveProcess(e)}>
+              <Button type="primary" onClick={e => this.onConfirm(e, 'I')}>
                 저장
               </Button>
             ) : (
               <React.Fragment>
-                <Button type="primary" onClick={e => this.onUpdateProcess(e)}>
+                <Button type="primary" onClick={e => this.onConfirm(e, 'U')}>
                   수정
                 </Button>
                 {prcId === -1 && (
@@ -438,31 +484,42 @@ Process.propTypes = {
   prcId: PropTypes.number,
   processInfo: PropTypes.object.isRequired,
   processStep: PropTypes.array.isRequired,
+  modalVisible: PropTypes.bool.isRequired,
+  spinning: PropTypes.bool.isRequired,
+  setProcessInfo: PropTypes.func.isRequired,
   setProcessStep: PropTypes.func.isRequired,
   saveProcessInfo: PropTypes.func.isRequired,
   updateProcessInfo: PropTypes.func.isRequired,
   getProcessData: PropTypes.func.isRequired,
-  processCallbackFunc: PropTypes.func.isRequired,
+  processCallbackFunc: PropTypes.func,
   initProcessData: PropTypes.func.isRequired,
   changeStepInfo: PropTypes.func.isRequired,
+  setModalVisible: PropTypes.func.isRequired,
+  setSpinning: PropTypes.func.isRequired,
 };
 
 Process.defaultProps = {
   prcId: -1,
+  processCallbackFunc: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({
   processInfo: selectors.makeProcessInfo(),
   processStep: selectors.makeProcessStep(),
+  modalVisible: selectors.makeModalVisible(),
+  spinning: selectors.makeSpinning(),
 });
 
 const mapDispatchToProps = dispatch => ({
+  setProcessInfo: processInfo => dispatch(actions.setProcessInfo(processInfo)),
   setProcessStep: processStep => dispatch(actions.setProcessStep(processStep)),
   saveProcessInfo: processInfo => dispatch(actions.saveProcessInfo(processInfo)),
   updateProcessInfo: processInfo => dispatch(actions.updateProcessInfo(processInfo)),
   getProcessData: payload => dispatch(actions.getProcessData(payload)),
   initProcessData: () => dispatch(actions.initProcessData()),
   changeStepInfo: stepInfo => dispatch(actions.changeStepInfo(stepInfo)),
+  setModalVisible: visible => dispatch(actions.setModalVisible(visible)),
+  setSpinning: spin => dispatch(actions.setSpinning(spin)),
 });
 
 const withReducer = injectReducer({ key: 'apps.WorkFlow.Admin.Process', reducer });
