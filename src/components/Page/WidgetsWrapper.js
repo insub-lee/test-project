@@ -39,6 +39,9 @@ export default class WidgetsWrapper extends Component {
     const skinInfo = item.user.skin;
     const selectSkin = `isoWidgetsWrapper wSkin${skinInfo}`;
 
+    // TODO [임시] 5X4 (풀사이즈) 사이즈 처리
+    const isFullSize = item.position[2] === 5 && item.position[3] === 4;
+
     // 차후 wrapper, header, box 별 bgColor, color이 생기면 if의 조건을 해당 색상으로 변경해줘야함
     if (item.bgColor) {
       wrapperStyle.backgroundColor = item.bgColor;
@@ -48,12 +51,16 @@ export default class WidgetsWrapper extends Component {
       wrapperStyle.color = item.color;
     }
 
+    // TODO [임시] 5X4 (풀사이즈) 사이즈 처리
+    if (isFullSize) {
+      wrapperStyle.height = 'auto';
+    }
     return (
       <div
         style={{
           position: 'relative',
           height: '100%',
-          overflow: 'hidden',
+          overflow: isFullSize ? 'auto' : 'hidden', // TODO [임시] 5X4 (풀사이즈) 사이즈 처리
           borderRadius: '7px',
         }}
       >
