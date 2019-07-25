@@ -126,8 +126,26 @@ function findStartPosition(h, col, arrH) {
 }
 
 function createLayoutConfig(layoutConfig, view, items) {
+
   const layout = [];
   const arrH = [];
+
+  // TODO [임시] 5X4 (풀사이즈) 사이즈 처리 
+  if (items.length === 1) {
+    const item = items[0];
+    if (item.position[2] === 5 && item.position[3] === 4) {
+      layout.push({
+        i: item.id,
+        x: 0,
+        y: 0,
+        w: item.position[2],
+        h: 1,
+        static: item.fixed,
+        isFullSize: true,
+      });
+      return layout;
+    }
+  }
 
   items.sort((a, b) => a.ord - b.ord);
 
@@ -263,9 +281,12 @@ class Page extends Component {
     // const columns2 = Object.values(this.props.columns);
     console.log('VIEW_NAMER:', columns);
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
-    console.log('TESTETESTESTESTEST:', setMyMenuData);
-    console.log('isPreviewPage:', !setMyMenuData);
+    console.log('setMyMenuData:', setMyMenuData);
+    console.log('isPreviewPage:', isPreviewPage);
+    console.log('layout:', layout);
     
+    // TODO [임시] 5X4 (풀사이즈) 사이즈 처리
+    const rowHeight = layout.length === 1 && layout[0].isFullSize ? (window.innerHeight - 70) : 270
     return (
       <div>
         {!setMyMenuData ? (
@@ -284,7 +305,7 @@ class Page extends Component {
                         className="layout"
                         layout={layout}
                         cols={layoutConfig.col}
-                        rowHeight={270}
+                        rowHeight={rowHeight}
                         width={layoutConfig.width}
                         compactType="horizontal"
                       >
