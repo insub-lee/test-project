@@ -48,12 +48,16 @@ export default class WidgetsWrapper extends Component {
       wrapperStyle.color = item.color;
     }
 
+    if (item.size === 'FullSize') {
+      wrapperStyle.height = 'auto';
+    }
+
     return (
       <div
         style={{
           position: 'relative',
           height: '100%',
-          overflow: 'hidden',
+          overflow: item.size === 'FullSize' ? 'auto' : 'hidden',
           borderRadius: '7px',
         }}
       >

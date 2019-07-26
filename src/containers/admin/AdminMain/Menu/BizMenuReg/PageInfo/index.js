@@ -91,7 +91,7 @@ class PageInfo extends Component {
         cWidgetList[i].basic.functions.push('settings');
         cWidgetList[i].basic.functions.push('delete');
       }
-      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN;
+      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? 'Y' : 'N';
       cWidgetList[i].basic.path = 'AdminMain/Menu/BizMenuReg/PageInfo/BasicWidget/index';
 
       if (i === length - 1) {

@@ -268,7 +268,7 @@ class Page extends Component {
     console.log('setMyMenuData:', setMyMenuData);
     console.log('isPreviewPage:', isPreviewPage);
     console.log('layout:', layout);
-    const isFullSize = columns.length === 1 && columns[0].size === '5X4';
+    const isFullSize = columns.length === 1 && columns[0].size === 'FullSize';
     return (
       <div>
         {!setMyMenuData ? (
