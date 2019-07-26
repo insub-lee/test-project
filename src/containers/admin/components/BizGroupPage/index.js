@@ -288,11 +288,12 @@ class Page extends PureComponent {
       moveMyWidget,
       bizGroupInfo,
       type,
+      userRole,
     } = this.props;
 
     return (
       <WidgetGridWrapper>
-        {bizGroupInfo.SEC_YN === 'Y' ? (
+        {bizGroupInfo.SEC_YN === 'Y'|| userRole === 'SA' ? (
           <div className="stickyTop">
             <button
               disabled={changedLayout ? "" : "disabled"}
@@ -316,7 +317,7 @@ class Page extends PureComponent {
           width={layoutConfig.width}
           compactType="vertical"
           draggableCancel=".draggableCancel"
-          isDraggable={bizGroupInfo.SEC_YN === 'Y'}
+          isDraggable={bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA'}
           onDragStop={(currentLayout, item) => {
             const currentLayoutMap = _.keyBy(currentLayout, 'i');
             const oldItem = currentLayoutMap[item.i];
@@ -342,6 +343,7 @@ Page.propTypes = {
   columns: PropTypes.array.isRequired,
   currentView: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 Page.defaultProps = {
