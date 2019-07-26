@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Upload from './Upload';
+// import Upload from './Upload';
+import Upload from './FIleUploader';
 
 class DefaultUploader extends Component {
   state = {
@@ -12,17 +13,29 @@ class DefaultUploader extends Component {
     ...fileObj, uid: undefined, thumbUrl: undefined, status: undefined,
   }));
 
-  getCurrentValue = fileList =>
-    JSON.stringify(fileList.filter(fileObj => fileObj.status === 'done').map(fileObj => ({
-      ...fileObj, uid: undefined, thumbUrl: undefined, status: undefined,
-    })));
+  getCurrentValue = () => {
+    const { fileList } = this.state;
+    const { name, workSeq, taskSeq, contSeq } = this.props;
+    return JSON.stringify({
+      WORK_SEQ: workSeq,
+      TASK_SEQ: taskSeq,
+      CONT_SEQ: contSeq,
+      FIELD_NM: name,
+      ORD: 0,
+      TYPE: 'rich-text-editor',
+      DETAIL: fileList.filter(fileObj => fileObj.status === 'done').map(fileObj => ({
+        ...fileObj, uid: undefined, thumbUrl: undefined, status: undefined,
+      })),
+    });
+  };
 
   handleChange = ({ file, fileList }) => {
     const { uid, response, thumbUrl } = file;
-    const { contSeq } = this.props;
+    const { saveTempContents, name, contSeq } = this.props;
     if (response && response.code === 300) {
       const uploadedFile = {
         ...response,
+        name: response.fileName,
         code: undefined,
       };
       const fileIndex = fileList.findIndex(fileObj => fileObj.uid === uid);
@@ -40,12 +53,8 @@ class DefaultUploader extends Component {
         };
       });
       this.setState({ fileList: nextFileList }, () => {
-        console.debug('@@@@ files', this.state);
-        console.debug('@@@ current values', this.getCurrentValue(this.state.fileList));
-        const fileList = this.getCurrentValueJson(this.state.fileList);
-        const { saveTempContents, name, contSeq } = this.props;
-        console.debug('@@ save temp', fileList, name, 'file-upload', contSeq);
-        saveTempContents(fileList, name, 'file-upload', contSeq);
+        // Get Files what is done
+        saveTempContents(this.getCurrentValueJson(this.state.fileList), name, 'file-upload', contSeq);
       });
     } else {
       this.setState({ fileList });
@@ -85,9 +94,14 @@ class DefaultUploader extends Component {
 
   render() {
     const { fileList } = this.state;
+    const { name } = this.props;
     return (
-      <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" />
+      <div>
+        <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" />
+        <input type="hidden" name={name} value={this.getCurrentValue(fileList.filter(file => file.status === 'done'))} data-type="json" />
+      </div>
     );
   }
 }
+
 export default DefaultUploader;

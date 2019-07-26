@@ -13,11 +13,29 @@ class RichTextEditor extends Component {
     this.setState({ model }, () => saveTempContents(model, name, 'rich-text-editor', contSeq));
   };
 
-  render() {
-    const { config } = this.props;
-    console.debug('@@', this.props);
+  getCurrentValue = () => {
     const { model } = this.state;
-    return <FroalaEditor model={model} onModelChange={this.onModelChange} config={config} />;
+    const { name, workSeq, taskSeq, contSeq } = this.props;
+    return JSON.stringify([{
+      WORK_SEQ: workSeq,
+      TASK_SEQ: taskSeq,
+      CONT_SEQ: contSeq,
+      FIELD_NM: name,
+      ORD: 0,
+      TYPE: 'rich-text-editor',
+      DETAIL: model,
+    }]);
+  };
+
+  render() {
+    const { config, name } = this.props;
+    const { model } = this.state;
+    return (
+      <div>
+        <FroalaEditor model={model} onModelChange={this.onModelChange} config={config} />
+        <input type="hidden" name={name} value={this.getCurrentValue()} data-type="json" />
+      </div>
+    );
   }
 }
 

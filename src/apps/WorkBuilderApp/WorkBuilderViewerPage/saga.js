@@ -34,6 +34,7 @@ function* getView({ id }) {
 function* postData({ payload }) {
   const workSeq = yield select(selectors.makeSelectWorkSeq());
   const taskSeq = yield select(selectors.makeSelectTaskSeq());
+  console.debug('@@ PARAM', JSON.stringify(payload));
   const response = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: payload });
   console.debug('@Temp', response);
   const nextResponse = yield call(Axios.post, '/api/builder/v1/work/taskComplete', { PARAM: { TASK_SEQ: taskSeq, WORK_SEQ: workSeq } });
@@ -55,7 +56,6 @@ function* getEditData({ workSeq, taskSeq }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`);
   const { data } = response;
   yield put(actions.successGetEditData(data));
-  console.debug(data);
 }
 
 function* saveTaskContents({ data }) {
@@ -78,11 +78,9 @@ function* saveTaskContents({ data }) {
     TYPE: type,
     DETAIL: detail,
   };
-  console.debug(workSeq, taskSeq, payload);
   const response = yield call(Axios.post, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, { PARAM: payload });
   const { data: { CONT_SEQ, FIELD_NM } } = response;
   yield put(actions.successSaveTaskContents({ taskSeq, fieldNm: FIELD_NM, contSeq: CONT_SEQ }));
-  console.debug('@@@ ', response);
 }
 
 export default function* watcher() {

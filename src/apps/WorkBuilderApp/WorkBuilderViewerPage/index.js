@@ -30,18 +30,18 @@ class WorkBuilderViewerPage extends Component {
   }
 
   render() {
-    const { columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents } = this.props;
+    const { columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq } = this.props;
     return (
       <Wrapper className="ag-theme-balham" style={{ height: 300, width: '100%' }}>
         <div style={{ textAlign: 'right' }}>
           <Button htmlType="button" size="small" type="default" onClick={() => { toggleFormModal(true); getTaskSeq(); }}>등록</Button>
         </div>
-        <AgGridReact columnDefs={columns} rowData={list} onRowClicked={({ data: { WORK_SEQ, TASK_SEQ } }) => openEditModal(WORK_SEQ, TASK_SEQ) } />
+        <AgGridReact columnDefs={columns} rowData={list} onRowClicked={({ data: { WORK_SEQ, TASK_SEQ } }) => openEditModal(WORK_SEQ, TASK_SEQ)} />
         <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose>
-          <View boxes={boxes} formStuffs={formStuffs} submitData={submitData} saveTempContents={saveTempContents} />
+          <View boxes={boxes} formStuffs={formStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
         <Modal title="Edit" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose>
-          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} />
+          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
       </Wrapper>
     );
@@ -89,6 +89,8 @@ const mapStateToProps = createStructuredSelector({
   isOpenFormModal: selectors.makeSelectIsOpenFormModal(),
   isOpenEditModal: selectors.makeSelectIsOpenEditModal(),
   resultFormStuffs: selectors.makeSelectResultFormStuffs(),
+  workSeq: selectors.makeSelectWorkSeq(),
+  taskSeq: selectors.makeSelectTaskSeq(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,9 +99,18 @@ const mapDispatchToProps = dispatch => ({
     const data = new FormData(target);
     const payload = {};
     data.forEach((value, key) => {
-      payload[key] = data.getAll(key).join(',');
+      const node = document.querySelector(`[name="${key}"]`);
+      const dataType = node.getAttribute('data-type') || 'string';
+      switch (dataType) {
+        case 'json':
+          console.debug('@ value', value);
+          payload[key] = JSON.parse(value);
+          break;
+        default:
+          payload[key] = value;
+          break;
+      }
     });
-    console.debug(payload);
     dispatch(actions.postData(payload));
   },
   toggleFormModal: value => dispatch(actions.toggleFormModal(value)),

@@ -29,17 +29,18 @@ class Info extends Component {
   }
 
   render() {
-    const { info } = this.props;
+    const { info: { WORK_ID, NAME_KOR, DSCR } } = this.props;
     return (
       <Wrapper>
         <Form>
           <Descriptions bordered border size="small" column={2}>
-            <Descriptions.Item label="업무 빌더명">{info.title}</Descriptions.Item>
-            <Descriptions.Item label="물리 테이블명">{info.tableName}</Descriptions.Item>
+            <Descriptions.Item label="업무 빌더명">{NAME_KOR}</Descriptions.Item>
+            <Descriptions.Item label="물리 테이블명">{WORK_ID}</Descriptions.Item>
             <Descriptions.Item label="설명">
-              <p>{info.desc}</p>
+              <p>{DSCR}</p>
             </Descriptions.Item>
           </Descriptions>
+          {/*
           <Divider orientation="left">Event Options</Divider>
           <List
             size="small"
@@ -87,6 +88,7 @@ class Info extends Component {
               </List.Item>
             )}
           />
+          */}
         </Form>
       </Wrapper>
     );

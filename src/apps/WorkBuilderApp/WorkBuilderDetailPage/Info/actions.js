@@ -5,7 +5,7 @@ export const fetchData = id => ({
   id,
 });
 
-export const successFetchData = data => ({
+export const successFetchData = info => ({
   type: actionTypes.SUCCESS_FETCH_DATA,
-  data,
+  info,
 });

@@ -97,7 +97,7 @@ export const defaultFormStuffs = {
         <RichTextEditor {...formStuff.property} config={froalaEditorConfig} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents }) => <RichTextEditor {...formStuff.property} contSeq={formStuff.CONT_SEQ} config={froalaEditorConfig} saveTempContents={saveTempContents} />,
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <RichTextEditor {...formStuff.property} contSeq={formStuff.CONT_SEQ} config={froalaEditorConfig} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />,
   },
   'file-upload': {
     label: 'File',
@@ -107,18 +107,18 @@ export const defaultFormStuffs = {
         <Upload {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} />,
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />,
   },
-  'image-upload': {
-    label: 'Image Upload',
-    icon: 'fa fa-file-image-o fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <Upload {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} />,
-  },
+  // 'image-upload': {
+  //   label: 'Image Upload',
+  //   icon: 'fa fa-file-image-o fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <Upload {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} />,
+  // },
   'time-picker': {
     label: 'Time Picker',
     icon: 'fa fa-clock-o fa-3x',
@@ -139,26 +139,26 @@ export const defaultFormStuffs = {
     ),
     renderer: ({ formStuff, saveTempContents }) => <DatePicker {...formStuff.property} />,
   },
-  'week-picker': {
-    label: 'Week Picker',
-    icon: 'fa fa-calendar fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <DateWeekPicker {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <DateWeekPicker {...formStuff.property} />,
-  },
-  'month-picker': {
-    label: 'Month Picker',
-    icon: 'fa fa-calendar fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <DateMonthPicker {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <DateMonthPicker {...formStuff.property} />,
-  },
+  // 'week-picker': {
+  //   label: 'Week Picker',
+  //   icon: 'fa fa-calendar fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <DateWeekPicker {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <DateWeekPicker {...formStuff.property} />,
+  // },
+  // 'month-picker': {
+  //   label: 'Month Picker',
+  //   icon: 'fa fa-calendar fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <DateMonthPicker {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <DateMonthPicker {...formStuff.property} />,
+  // },
   'range-picker': {
     label: 'Range Picker',
     icon: 'fa fa-calendar fa-3x',

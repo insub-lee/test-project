@@ -1,16 +1,41 @@
+import PropTypes from 'prop-types';
 import React from 'react';
-import { Upload, Icon } from 'antd';
+import { Upload as AntdUpload, Icon, Button } from 'antd';
 
-const { Dragger } = Upload;
-
-const DropZone = props => (
-  <Dragger {...props}>
-    <p className="ant-upload-drag-icon">
-      <Icon type="inbox" />
-    </p>
-    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-    <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
-  </Dragger>
+const UploadButton = () => (
+  <Button htmlType="button">
+    <Icon type="upload" /> Upload
+  </Button>
 );
 
-export default DropZone;
+const Upload = ({
+  handleChange, fileList, customRequest, action, limit,
+}) => (
+  <div className="clearfix">
+    <AntdUpload
+      action={action}
+      fileList={fileList}
+      onChange={handleChange}
+      customRequest={customRequest}
+    >
+      {fileList.length >= limit ? null : <UploadButton />}
+    </AntdUpload>
+  </div>
+);
+
+Upload.propTypes = {
+  action: PropTypes.string.isRequired,
+  handleChange: PropTypes.func,
+  customRequest: PropTypes.func,
+  fileList: PropTypes.arrayOf(PropTypes.object),
+  limit: PropTypes.number,
+};
+
+Upload.defaultProps = {
+  fileList: [],
+  handleChange: () => {},
+  customRequest: () => {},
+  limit: 3,
+};
+
+export default Upload;
