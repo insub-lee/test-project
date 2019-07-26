@@ -135,7 +135,7 @@ class PageInfo extends Component {
     return (
       <div>
         <ErrorBoundary>
-          <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} type={type} />
+          <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} type={type} userRole={userRole} />
         </ErrorBoundary>
 
         {bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
