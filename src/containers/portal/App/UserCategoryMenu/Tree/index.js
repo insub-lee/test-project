@@ -76,8 +76,10 @@ class Tree extends Component {
     const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
-    } else {
-      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.MENU_ID}`);
+    } else if (node.MENU_EXIST_YN === 'Y') {
+      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.REF_ID}`);
+    } else if (node.MENU_EXIST_YN === 'N') {
+      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.PRNT_ID}`);
     }
   };
 

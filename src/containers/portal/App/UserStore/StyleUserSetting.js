@@ -10,7 +10,7 @@ const StyleUserSetting = styled.div`
   position: fixed;
   top: 42px;
   left: 46px;
-  width: 93vw;
+  width: calc(100% - 46px);
   height: 100vh;
   padding: 0;
   background-color: #ffffff;
