@@ -56,12 +56,13 @@ function createComponents(item) {
   return <div />;
 }
 
-function createSingleComponents(item) {
+function createSingleComponents(item, isFullSize) {
   console.log('@@@@@@@@@@@items: ', item);
   console.log(item, 'createSingleComponents');
   // Object.assign(item.basic, { path: item.legacyPath }); //eslint-disable-line
+
   const param = {
-    loader: () => import(`apps/${item.legacyPath}`),
+    loader: () => import(`apps/${isFullSize ? item.basic.path : item.legacyPath}`),
     // loader: () => import('apps/legacySVC/index'),
     loading: Loading,
   };
@@ -129,23 +130,6 @@ function createLayoutConfig(layoutConfig, view, items) {
 
   const layout = [];
   const arrH = [];
-
-  // TODO [임시] 5X4 (풀사이즈) 사이즈 처리 
-  if (items.length === 1) {
-    const item = items[0];
-    if (item.position[2] === 5 && item.position[3] === 4) {
-      layout.push({
-        i: item.id,
-        x: 0,
-        y: 0,
-        w: item.position[2],
-        h: 1,
-        static: item.fixed,
-        isFullSize: true,
-      });
-      return layout;
-    }
-  }
 
   items.sort((a, b) => a.ord - b.ord);
 
@@ -284,9 +268,7 @@ class Page extends Component {
     console.log('setMyMenuData:', setMyMenuData);
     console.log('isPreviewPage:', isPreviewPage);
     console.log('layout:', layout);
-    
-    // TODO [임시] 5X4 (풀사이즈) 사이즈 처리
-    const rowHeight = layout.length === 1 && layout[0].isFullSize ? (window.innerHeight - 70) : 270
+    const isFullSize = columns.length === 1 && columns[0].size === '5X4';
     return (
       <div>
         {!setMyMenuData ? (
@@ -300,19 +282,19 @@ class Page extends Component {
                 {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' 
                 && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
                   <div>
-                    {setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE' ? (
+                    { (setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( //TODO 임시 풀사이즈 위젯 처리
                       <GridLayout
                         className="layout"
                         layout={layout}
                         cols={layoutConfig.col}
-                        rowHeight={rowHeight}
+                        rowHeight={270}
                         width={layoutConfig.width}
                         compactType="horizontal"
                       >
                         {columns.map(createComponents)}
                       </GridLayout>
                     ) : (
-                      <div>{columns.map(createSingleComponents)}</div>
+                      <div>{columns.map(item => createSingleComponents(item, isFullSize))}</div>
                     )}
                   </div>
                 ) : (
@@ -335,7 +317,7 @@ class Page extends Component {
                         {columns.map(createComponents)}
                       </GridLayout>
                     ) : (
-                      <div>{columns.map(createSingleComponents)}</div>
+                      <div>{columns.map(item => createSingleComponents(item, isFullSize))}</div>
                     )}
                   </div>
                 ) : (
