@@ -75,27 +75,23 @@ class UserDock extends React.Component {
 
   componentDidUpdate(prevProps) {
     const {
-      view,
-      dockFixedYn,
-      dockIconType,
-      dockCallbacks,
-      dockAppList,
-    } = this.props;
+ view, dockFixedYn, dockIconType, dockCallbacks, dockAppList 
+} = this.props;
 
-    if (prevProps.view !== view ||
-      prevProps.dockFixedYn !== dockFixedYn ||
-      prevProps.dockIconType !== dockIconType) {
+    if (prevProps.view !== view || prevProps.dockFixedYn !== dockFixedYn || prevProps.dockIconType !== dockIconType) {
       this.setStyleObj();
     }
 
     // DockItem을 추가했을 경우, 독의 스크롤을 내려주는 기능
     if (this.props.dockAppList.length > prevProps.dockAppList.length && this.ReactScrollbar && this.ReactScrollbar.scrollArea.children[1]) {
-      this.ReactScrollbar.updateSizeForAddDockItem((this.ReactScrollbar.state.scrollAreaHeight - this.ReactScrollbar.state.scrollWrapperHeight) + 70);
+      this.ReactScrollbar.updateSizeForAddDockItem(this.ReactScrollbar.state.scrollAreaHeight - this.ReactScrollbar.state.scrollWrapperHeight + 70);
     }
 
-    if ((this.props.dockAppList !== prevProps.dockAppList && this.props.dockAppList.length > 0)
-      || this.props.dockIconType !== prevProps.dockIconType
-      || this.props.view !== prevProps.view) {
+    if (
+      (this.props.dockAppList !== prevProps.dockAppList && this.props.dockAppList.length > 0) ||
+      this.props.dockIconType !== prevProps.dockIconType ||
+      this.props.view !== prevProps.view
+    ) {
       /*
         dockAppList에 변화가 있을 때마다 dockItemList는 새로 생성된다 (새로운 객체)
         그런데 dockItemList 내부에 들어가는 <DockItem> 컴포넌트의 경우, 코드상에는 새로 생성되는 것 처럼 보이지만,
@@ -122,13 +118,12 @@ class UserDock extends React.Component {
                 changeIsDockItemDragged={this.changeIsDockItemDragged}
                 dockIconType={dockIconType}
                 view={view}
-                isClose={
-                  this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false
-                }
+                isClose={this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false}
                 setIsCloseToTrue={this.props.setIsCloseToTrue}
                 setIsCloseToFalse={this.props.setIsCloseToFalse}
                 history={this.props.history}
-              />);
+              />
+            );
           });
           this.setDockItemList(dockItemList);
           break;
@@ -140,7 +135,7 @@ class UserDock extends React.Component {
           const dockDivArray = [];
           // 하나의 dockDiv에 들어갈 dockItem의 개수
           let dockItemNumberInDockDiv = Math.floor(window.innerWidth / dockItemWidth);
-          if (dockItemNumberInDockDiv * 10 > window.innerWidth - (dockItemWidth * dockItemNumberInDockDiv)) {
+          if (dockItemNumberInDockDiv * 10 > window.innerWidth - dockItemWidth * dockItemNumberInDockDiv) {
             dockItemNumberInDockDiv -= 1;
           }
           if (dockAppList.length < dockItemNumberInDockDiv) {
@@ -151,34 +146,26 @@ class UserDock extends React.Component {
           this.props.dockAppList.forEach((o, i, arr) => {
             const dockItemStyleObject = this.makeDockItemStyleObject(o, i, arr, dockItemNumberInDockDiv);
             content.push(<DockItem
-              key={o.DOCK_ID}
-              dockItem={o}
-              dockItemStyleObject={dockItemStyleObject}
-              dndChangePosition={dockCallbacks.handleDndChangePosition}
-              dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
-              exitDockItem={dockCallbacks.handleExitDockItem}
-              fixDockItem={dockCallbacks.handleFixDockItem}
-              unfixDockItem={dockCallbacks.handleUnfixDockItem}
-              dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
-              execPage={this.props.execPage}
-              changeIsDockItemDragged={this.changeIsDockItemDragged}
-              dockIconType={dockIconType}
-              view={view}
-              isClose={
-                this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false
-              }
-              setIsCloseToTrue={this.props.setIsCloseToTrue}
-              setIsCloseToFalse={this.props.setIsCloseToFalse}
-              history={this.props.history}
-            />);
+                key={o.DOCK_ID}
+                dockItem={o}
+                dockItemStyleObject={dockItemStyleObject}
+                dndChangePosition={dockCallbacks.handleDndChangePosition}
+                dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
+                exitDockItem={dockCallbacks.handleExitDockItem}
+                fixDockItem={dockCallbacks.handleFixDockItem}
+                unfixDockItem={dockCallbacks.handleUnfixDockItem}
+                dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
+                execPage={this.props.execPage}
+                changeIsDockItemDragged={this.changeIsDockItemDragged}
+                dockIconType={dockIconType}
+                view={view}
+                isClose={this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false}
+                setIsCloseToTrue={this.props.setIsCloseToTrue}
+                setIsCloseToFalse={this.props.setIsCloseToFalse}
+                history={this.props.history}
+              />,);
             if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
-              const dockDiv = (
-                <div
-                  className="dockDiv positionBottom"
-                >
-                  {content}
-                </div>
-              );
+              const dockDiv = <div className="dockDiv positionBottom">{content}</div>;
               dockDivArray.push(dockDiv);
               content = [];
             }
@@ -198,13 +185,13 @@ class UserDock extends React.Component {
     this.setState({
       pos: top,
     });
-  }
+  };
 
   setDockDivArray = (dockDivArray) => {
     this.setState({
       dockDivArray,
     });
-  }
+  };
 
   setDockItemList = (dockItemList) => {
     this.setState({
@@ -213,17 +200,13 @@ class UserDock extends React.Component {
   };
 
   setStyleObj = () => {
-    const {
-      view,
-      dockFixedYn,
-      dockIconType,
-    } = this.props;
+    const { view, dockFixedYn, dockIconType } = this.props;
 
-    const {
-      styleObj,
-    } = this.state;
+    const { styleObj } = this.state;
 
-    const styleObjCopy = Object.assign({}, styleObj);
+    const styleObjCopy = {
+      ...styleObj,
+    };
 
     if (dockIconType === 'MIN') {
       styleObjCopy.floattingSettingAreaBottom = '40px';
@@ -280,12 +263,10 @@ class UserDock extends React.Component {
     this.setState({
       styleObj: styleObjCopy,
     });
-  }
+  };
 
   setFloattingClassHidden = () => {
-    const {
-      dockIconType,
-    } = this.props;
+    const { dockIconType } = this.props;
 
     this.setState({
       floattingClass: {
@@ -296,12 +277,10 @@ class UserDock extends React.Component {
         transitionDuration: '0.2s',
       },
     });
-  }
+  };
 
   setFloattingClassShow = () => {
-    const {
-      dockIconType,
-    } = this.props;
+    const { dockIconType } = this.props;
 
     this.setState({
       floattingClass: {
@@ -313,34 +292,23 @@ class UserDock extends React.Component {
         zIndex: 12,
       },
     });
-  }
+  };
 
   // 독 설정 영역 표시 이벤트
   setIsSettingArea = () => {
     this.setState({
       isSettingArea: !this.state.isSettingArea,
     });
-  }
+  };
 
   getDock = () => {
     const {
-      isUnfixDockItem,
-      view,
-      dockCallbacks,
-      dockFixedYn,
-      handleSetDockFixedYn,
-      appYn,
-      dockIconType,
-      handleSetDockIconType,
-    } = this.props;
+ isUnfixDockItem, view, dockCallbacks, dockFixedYn, handleSetDockFixedYn, appYn, dockIconType, handleSetDockIconType 
+} = this.props;
 
     const dockItemHeightWithoutPx = dockIconType === 'MAX' ? 70 : 34;
 
-    const {
-      floattingClass,
-      isSettingArea,
-      styleObj,
-    } = this.state;
+    const { floattingClass, isSettingArea, styleObj } = this.state;
 
     if (isUnfixDockItem) {
       this.ReactScrollbar.setTop(dockItemHeightWithoutPx);
@@ -352,15 +320,12 @@ class UserDock extends React.Component {
     const position = 'right';
 
     return (
-      <AppWrapper
-        styleObj={styleObj}
-      >
+      <AppWrapper styleObj={styleObj}>
         <Dock
           position="right"
           isVisible={true}
           dimMode="none"
           size={dockIconType === 'MAX' ? 90 : 42}
-
           dockFixedYn={dockFixedYn}
           dockIconType={dockIconType}
           appYn={appYn}
@@ -375,205 +340,127 @@ class UserDock extends React.Component {
               position: 'relative',
             };
 
-            const {
-              pagingUpClass,
-              pagingDownClass,
-              isDockItemDragged,
-            } = this.state;
+            const { pagingUpClass, pagingDownClass, isDockItemDragged } = this.state;
 
             return (
               <ReactScrollbar
                 style={myScrollbar}
-                ref={(c) => { this.ReactScrollbar = c; }}
+                ref={(c) => {
+                  this.ReactScrollbar = c;
+                }}
                 onDragDockVerticalScrollbar={this.onDragDockVerticalScrollbar}
                 makeDisabledPaging={this.makeDisabledPaging}
                 isDesktop={isDesktopValue}
               >
-                <div
-                  className={`dockDiv ${dockDivClass}`}
-                >
-                  { this.state.dockItemList }
-                  {
-                    position === 'right' ?
-                      <div
-                        className="pagingBtns"
-                      >
-                        <button
-                          className={`pagingUp ${pagingUpClass}`}
-                          onClick={this.scrollUp}
-                        />{/* 비활성화 class: disabled */}
-                        <button
-                          className={`pagingDown ${pagingDownClass}`}
-                          onClick={this.scrollDown}
-                        />{/* 비활성화 class: disabled */}
-                      </div>
-                      :
-                      ''
-                  }
-                  <DragTopArea
-                    isDockItemDragged={isDockItemDragged}
-                    scrollDownForDnD={this.scrollDownForDnD}
-                    position={position}
-                  />
-                  <DragBottomArea
-                    isDockItemDragged={isDockItemDragged}
-                    scrollTopForDnD={this.scrollTopForDnD}
-                    position={position}
-                  />
-                  {
-                    isDesktop(view)
-                      ?
-                        <div style={floattingClass}>
-                          <button
-                            onClick={() => { this.setIsSettingArea(); }}
-                            className={isSettingArea ? 'floattingBtn' : 'floattingBtnShow'}
-                          />
-                        </div>
-                      :
-                        ''
-                  }
-                  {
-                    isDesktop(view)
-                      ?
+                <div className={`dockDiv ${dockDivClass}`}>
+                  {this.state.dockItemList}
+                  {position === 'right' ? (
+                    <div className="pagingBtns">
+                      <button className={`pagingUp ${pagingUpClass}`} onClick={this.scrollUp} />
+                      {/* 비활성화 class: disabled */}
+                      <button className={`pagingDown ${pagingDownClass}`} onClick={this.scrollDown} />
+                      {/* 비활성화 class: disabled */}
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  <DragTopArea isDockItemDragged={isDockItemDragged} scrollDownForDnD={this.scrollDownForDnD} position={position} />
+                  <DragBottomArea isDockItemDragged={isDockItemDragged} scrollTopForDnD={this.scrollTopForDnD} position={position} />
+                  {isDesktop(view) ? (
+                    <div style={floattingClass}>
+                      <button
+                        onClick={() => {
+                          this.setIsSettingArea();
+                        }}
+                        className={isSettingArea ? 'floattingBtn' : 'floattingBtnShow'}
+                      />
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                  {isDesktop(view) ? (
+                    <div
+                      className={isSettingArea ? 'floattingSettingAreaShow' : 'floattingSettingArea'}
+                      onMouseLeave={() => {
+                        this.setIsSettingArea();
+                      }}
+                    >
+                      <div className="floattingSettingAreaTop">
                         <div
-                          className={isSettingArea ? 'floattingSettingAreaShow' : 'floattingSettingArea'}
-                          onMouseLeave={() => { this.setIsSettingArea(); }}
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockIconType('MAX');
+                          }}
+                          onKeyPress={() => {}}
+                          role="button"
+                          tabIndex="0"
                         >
-                          <div
-                            className="floattingSettingAreaTop"
-                          >
-                            <div
-                              className="settingMenuList"
-                              onClick={() => { handleSetDockIconType('MAX'); }}
-                              onKeyPress={() => {}}
-                              role="button"
-                              tabIndex="0"
-                            >
-                              <img
-                                src={dockIconType === 'MAX' ? dockBigIconActive : dockBigIcon}
-                                alt="큰 아이콘"
-                              />
-                              {
-                                dockIconType === 'MAX'
-                                  ?
-                                    <span
-                                      className="settingMenuName"
-                                    >
-                                      큰 아이콘
-                                    </span>
-                                  :
-                                    ''
-                              }
-                            </div>
-                            <div
-                              className="settingMenuList"
-                              onClick={() => { handleSetDockIconType('MIN'); }}
-                              onKeyPress={() => {}}
-                              role="button"
-                              tabIndex="0"
-                            >
-                              <img
-                                src={dockIconType === 'MIN' ? dockSmallIconActive : dockSmallIcon}
-                                alt="작은 아이콘"
-                              />
-                              {
-                                dockIconType === 'MAX'
-                                  ?
-                                    <span
-                                      className="settingMenuNameSmallIcon"
-                                    >
-                                      작은 아이콘
-                                    </span>
-                                  :
-                                    ''
-                              }
-                            </div>
-                          </div>
-
-                          <div
-                            className="myHorizontal"
-                            style={{
-                              width: dockIconType === 'MAX' ? ' 76px' : '28px',
-                            }}
-                          />
-
-                          <div
-                            className="floattingSettingAreaTop"
-                          >
-                            <div
-                              className="settingMenuList"
-                              onClick={() => { handleSetDockFixedYn('Y'); }}
-                              onKeyPress={() => {}}
-                              role="button"
-                              tabIndex="0"
-                            >
-                              <img
-                                src={dockFixedYn === 'Y' ? dockLockActive : dockLock}
-                                alt="고정"
-                              />
-                              {
-                                dockIconType === 'MAX'
-                                  ?
-                                    <span
-                                      className="settingMenuNameFixed"
-                                    >
-                                      고정
-                                    </span>
-                                  :
-                                    ''
-                              }
-                            </div>
-                            <div
-                              className="settingMenuList"
-                              onClick={() => { handleSetDockFixedYn('N'); }}
-                              onKeyPress={() => {}}
-                              role="button"
-                              tabIndex="0"
-                            >
-                              <img
-                                src={dockFixedYn === 'N' ? dockUnlockActive : dockUnlock}
-                                alt="고정 해제"
-                              />
-                              {
-                                dockIconType === 'MAX'
-                                  ?
-                                    <span
-                                      className="settingMenuNameUnfixed"
-                                    >
-                                      고정 해제
-                                    </span>
-                                  :
-                                    ''
-                              }
-                            </div>
-                            <div
-                              className="settingMenuList"
-                              onClick={() => { handleSetDockFixedYn('A'); }}
-                              onKeyPress={() => {}}
-                              role="button"
-                              tabIndex="0"
-                            >
-                              <img
-                                src={dockFixedYn === 'A' ? dockAutoActive : dockAutoHidden}
-                                alt="자동 숨김"
-                              />
-                              {
-                                dockIconType === 'MAX'
-                                  ?
-                                    <span
-                                      className="settingMenuNameAuto"
-                                    >
-                                      자동 숨김
-                                    </span>
-                                  :
-                                    ''
-                              }
-                            </div>
-                          </div>
+                          <img src={dockIconType === 'MAX' ? dockBigIconActive : dockBigIcon} alt="큰 아이콘" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuName">큰 아이콘</span> : ''}
                         </div>
-                      :
-                        ''
-                  }
+                        <div
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockIconType('MIN');
+                          }}
+                          onKeyPress={() => {}}
+                          role="button"
+                          tabIndex="0"
+                        >
+                          <img src={dockIconType === 'MIN' ? dockSmallIconActive : dockSmallIcon} alt="작은 아이콘" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameSmallIcon">작은 아이콘</span> : ''}
+                        </div>
+                      </div>
+
+                      <div
+                        className="myHorizontal"
+                        style={{
+                          width: dockIconType === 'MAX' ? ' 76px' : '28px',
+                        }}
+                      />
+
+                      <div className="floattingSettingAreaTop">
+                        <div
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockFixedYn('Y');
+                          }}
+                          onKeyPress={() => {}}
+                          role="button"
+                          tabIndex="0"
+                        >
+                          <img src={dockFixedYn === 'Y' ? dockLockActive : dockLock} alt="고정" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameFixed">고정</span> : ''}
+                        </div>
+                        <div
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockFixedYn('N');
+                          }}
+                          onKeyPress={() => {}}
+                          role="button"
+                          tabIndex="0"
+                        >
+                          <img src={dockFixedYn === 'N' ? dockUnlockActive : dockUnlock} alt="고정 해제" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameUnfixed">고정 해제</span> : ''}
+                        </div>
+                        <div
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockFixedYn('A');
+                          }}
+                          onKeyPress={() => {}}
+                          role="button"
+                          tabIndex="0"
+                        >
+                          <img src={dockFixedYn === 'A' ? dockAutoActive : dockAutoHidden} alt="자동 숨김" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameAuto">자동 숨김</span> : ''}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </div>
               </ReactScrollbar>
             );
@@ -589,22 +476,15 @@ class UserDock extends React.Component {
   getMobileDock = () => {
     const { styleObj } = this.state;
 
-    const {
-      dockFixedYn,
-      appYn,
-      dockIconType,
-    } = this.props;
+    const { dockFixedYn, appYn, dockIconType } = this.props;
 
     return (
-      <AppWrapper
-        styleObj={styleObj}
-      >
+      <AppWrapper styleObj={styleObj}>
         <Dock
           position="bottom"
           isVisible={true}
           dimMode="none"
           size={dockIconType === 'MAX' ? 90 : 42}
-
           dockFixedYn={dockFixedYn}
           dockIconType={dockIconType}
           appYn={appYn}
@@ -612,18 +492,14 @@ class UserDock extends React.Component {
           setFloattingClassShow={this.setFloattingClassShow}
           setFloattingClassHidden={this.setFloattingClassHidden}
         >
-          {() => (
-            <Carousel>
-              {this.state.dockDivArray}
-            </Carousel>
-          )}
+          {() => <Carousel>{this.state.dockDivArray}</Carousel>}
         </Dock>
         <Switch>
           <Route exact path="/cube" />
         </Switch>
       </AppWrapper>
     );
-  }
+  };
 
   // dockItemStyleObject 생성 작업
   makeDockItemStyleObject = (dockItem, i, arr, dockItemNumberInDockDiv) => {
@@ -658,16 +534,16 @@ class UserDock extends React.Component {
         half = true;
       }
 
-      const dockItemMargin = (dockDivWidth - (dockItemWidth * dockItemNumberInDockDiv)) / (dockItemNumberInDockDiv + 1);
+      const dockItemMargin = (dockDivWidth - dockItemWidth * dockItemNumberInDockDiv) / (dockItemNumberInDockDiv + 1);
 
       // 처음 앱
       if (i % dockItemNumberInDockDiv === 0) {
-        dockItemStyleObject.marginLeft = half ? `${dockItemMargin + (dockDivWidth / 2)}px` : `${dockItemMargin}px`;
+        dockItemStyleObject.marginLeft = half ? `${dockItemMargin + dockDivWidth / 2}px` : `${dockItemMargin}px`;
         dockItemStyleObject.marginRight = `${dockItemMargin / 2}px`;
       } else if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
         // 마지막 앱
         dockItemStyleObject.marginLeft = `${dockItemMargin / 2}px`;
-        dockItemStyleObject.marginRight = half ? `${dockItemMargin + (dockDivWidth / 2)}px` : `${dockItemMargin}px`;
+        dockItemStyleObject.marginRight = half ? `${dockItemMargin + dockDivWidth / 2}px` : `${dockItemMargin}px`;
       } else {
         dockItemStyleObject.marginLeft = `${dockItemMargin / 2}px`;
         dockItemStyleObject.marginRight = `${dockItemMargin / 2}px`;
@@ -675,7 +551,7 @@ class UserDock extends React.Component {
     }
 
     return dockItemStyleObject;
-  }
+  };
 
   scrollUp = () => {
     const pos = this.ReactScrollbar.state.top - (window.innerHeight - 90 - 32);
@@ -698,7 +574,7 @@ class UserDock extends React.Component {
       return;
     }
     this.ReactScrollbar.scrollToY(pos);
-  }
+  };
 
   scrollTopForDnD = () => {
     const pos = this.ReactScrollbar.state.top + 3;
@@ -707,7 +583,7 @@ class UserDock extends React.Component {
       return;
     }
     this.ReactScrollbar.scrollToY(pos);
-  }
+  };
 
   makeDisabledPaging = (direction, param, pagingBtn = false) => {
     if (this.state.prevPaging !== param || pagingBtn) {
@@ -741,7 +617,7 @@ class UserDock extends React.Component {
         default:
       }
     }
-  }
+  };
 
   changeIsDockItemDragged = () => {
     const { isDockItemDragged } = this.state;
@@ -754,17 +630,15 @@ class UserDock extends React.Component {
         isDockItemDragged: false,
       });
     }
-  }
+  };
 
   windowResizeScrollbar = () => {
-    const {
-      view,
-    } = this.props;
+    const { view } = this.props;
 
     if (isDesktop(view)) {
       this.ReactScrollbar.scrollToY(this.state.pos);
     }
-  }
+  };
 
   render() {
     const { view } = this.props;
@@ -810,8 +684,10 @@ UserDock.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   view: makeSelectView(),
 });
-const mapDispatchToProps = () => ({
-});
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const mapDispatchToProps = () => ({});
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 export default compose(withConnect)(UserDock);

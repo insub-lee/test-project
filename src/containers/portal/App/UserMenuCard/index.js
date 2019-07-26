@@ -8,6 +8,7 @@ import AppWrapper from './AppWrapper';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import BizMenuCardList from './BizMenuCardList';
+import BizMenuCardDetail from './BizMenuCardDetail';
 
 import './global-userMenuCard.css';
 
@@ -25,7 +26,9 @@ const UserMenuCard = () => (
                 <ErrorBoundary>
                   <Switch>
                     <Route path="/portal/card/:TYPE/list/:ID" component={BizMenuCardList} />
-                    <Route path="/portal/card/:TYPE/detail/info/:ID" component={BizMenuCardList} />
+                    <Route path="/portal/card/:TYPE/detail/info/:ID" component={BizMenuCardDetail} />
+                    <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
+                    <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
                   </Switch>
                 </ErrorBoundary>
               </div>

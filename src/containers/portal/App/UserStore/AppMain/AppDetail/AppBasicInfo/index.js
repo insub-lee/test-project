@@ -202,9 +202,9 @@ class AppBasicInfo extends React.Component {
                       display: this.props.resAppBasicInfo.WG_COUNT > 0 ? 'block' : 'none',
                     }}
                   >
-                    <div className="regstBtnsGroup">
+                    {/* <div className="regstBtnsGroup">
                       <BtnLgtGrayRegisted title={intlObj.get(messages.apping)}>{intlObj.get(messages.apping)}</BtnLgtGrayRegisted>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               ) : (

@@ -3,9 +3,7 @@ import iconSearch from 'images/common/icon-search2.png';
 
 const StyleBizMenuList = styled.div`
   position: relative;
-  max-width: 1230px;
-  width: 100%;
-  margin: 20px auto 0;
+  margin: 10px auto 0;
   border: 1px solid #d1d2d3;
   background-color: #ffffff;
 

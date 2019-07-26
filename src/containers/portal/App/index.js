@@ -133,7 +133,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach(o => {
+        dockAppList.forEach((o) => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -295,12 +295,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = item => {
+  onReload = (item) => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = open => {
+  onSetOpen = (open) => {
     this.setState({ open: open }); //eslint-disable-line
   };
   /* eslint-disable */
@@ -600,6 +600,11 @@ class App extends React.PureComponent {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
+  getLayoutMarginRight = () => {
+    const { dockFixedYn } = this.props;
+    return dockFixedYn === 'Y' ? 90 : 0;
+  };
+
   render() {
     const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
     const {
@@ -773,7 +778,7 @@ class App extends React.PureComponent {
             </div>
             */}
           </SideMenu>
-          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: dockIconType === 'MAX' ? 90 : 42 } : mobileDockCss}>
+          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <AppWrapper style={{ width: '100%' }}>

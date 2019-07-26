@@ -9,6 +9,7 @@ const ChartWrapper = styled.div`
 
   .isoChartControl {
     display: flex;
+    margin-top: 5px;
     align-items: center;
     margin-left: ${props => (props['data-rtl'] === 'rtl' ? 'inherit' : 'auto')};
     margin-right: ${props => (props['data-rtl'] === 'rtl' ? 'auto' : 'inherit')};
