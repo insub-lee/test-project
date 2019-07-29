@@ -8,6 +8,15 @@ class RichTextEditor extends Component {
     model: '',
   };
 
+  componentDidMount() {
+    const { defaultValue, contSeq, name } = this.props;
+    console.debug('Rich Text Editor ', defaultValue, this.props, name);
+    if (defaultValue && defaultValue.length > 0) {
+      const { DETAIL: model } = defaultValue[0];
+      this.setState({ model });
+    }
+  }
+
   onModelChange = model => {
     const { saveTempContents, name, contSeq } = this.props;
     this.setState({ model }, () => saveTempContents(model, name, 'rich-text-editor', contSeq));

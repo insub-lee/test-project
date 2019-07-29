@@ -25,7 +25,13 @@ export const successAddFormStuff = formStuff => ({
 });
 
 export const removeLayer = (id, layerType) => ({
-  type: actionTypes.REMOVE_PANEL,
+  type: actionTypes.REMOVE_LAYER,
+  id,
+  layerType,
+});
+
+export const successRemoveLayer = (id, layerType) => ({
+  type: actionTypes.SUCCESS_REMOVE_LAYER,
   id,
   layerType,
 });

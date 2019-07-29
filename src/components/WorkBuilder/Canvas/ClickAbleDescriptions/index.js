@@ -30,7 +30,7 @@ class ClickAbleDescriptions extends Component {
       box,
       formStuffs,
       viewTargetId,
-      action: { activeLayer, removePanel },
+      action: { activeLayer, removeLayer },
     } = this.props;
     return formStuffs.length > 0 ? (
       <Descriptions bordered border size="small" column={box.property.column || 1}>
@@ -61,7 +61,7 @@ class ClickAbleDescriptions extends Component {
             >
               {allFormStuffs[formStuff.type].previewRenderer(formStuff)}
               {(viewTargetId === formStuff.id || isHover[index]) && (
-                <OptionLayer object={formStuff} action={{ activeLayer, removePanel }} isActive={viewTargetId === formStuff.id} tableMode />
+                <OptionLayer object={formStuff} action={{ activeLayer, removeLayer }} isActive={viewTargetId === formStuff.id} tableMode />
               )}
             </Styled>
           </Descriptions.Item>
@@ -84,7 +84,7 @@ ClickAbleDescriptions.propTypes = {
 ClickAbleDescriptions.defaultProps = {
   action: {
     activeLayer: () => false,
-    removePanel: () => false,
+    removeLayer: () => false,
   },
 };
 

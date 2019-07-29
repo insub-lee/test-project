@@ -9,7 +9,7 @@ import Styled from 'components/FormLayer/Styled';
 import ClickAbleFormGroup from '../ClickAbleFormGroup';
 import ClickAbleDescriptions from '../ClickAbleDescriptions';
 
-const CanvasFormLayer = ({ property: { formStuffs, box }, viewTargetId, action: { activeLayer, removePanel } }) => (
+const CanvasFormLayer = ({ property: { formStuffs, box }, viewTargetId, action: { activeLayer, removeLayer } }) => (
   <Styled className="form-layer">
     <Card size="small" title={box.property.useLabel ? box.property.label : null} bordered={false}>
       <Container>
@@ -22,11 +22,11 @@ const CanvasFormLayer = ({ property: { formStuffs, box }, viewTargetId, action: 
                 id={formStuff.id}
                 viewTargetId={viewTargetId}
                 formStuff={formStuff}
-                action={{ activeLayer, removePanel }}
+                action={{ activeLayer, removeLayer }}
               />
             ))}
           {box.property.type === 'table' && (
-            <ClickAbleDescriptions box={box} viewTargetId={viewTargetId} formStuffs={formStuffs} action={{ activeLayer, removePanel }} />
+            <ClickAbleDescriptions box={box} viewTargetId={viewTargetId} formStuffs={formStuffs} action={{ activeLayer, removeLayer }} />
           )}
         </Content>
       </Container>
@@ -46,7 +46,7 @@ CanvasFormLayer.propTypes = {
 CanvasFormLayer.defaultProps = {
   action: {
     activeLayer: () => false,
-    removePanel: () => false,
+    removeLayer: () => false,
   },
   viewTargetId: '',
   property: {

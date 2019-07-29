@@ -75,7 +75,7 @@ DraggableItem.defaultProps = {
   viewTargetId: '',
   action: {
     activeLayer: () => false,
-    removePanel: () => false,
+    removeLayer: () => false,
   },
 };
 

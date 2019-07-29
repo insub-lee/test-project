@@ -3,7 +3,8 @@ import * as actionTypes from './constants';
 
 const getContSeq = (data, key) => {
   if (Array.isArray(data)) {
-    return data.map((item => item[key]));
+    return data[0] ? data[0][key] : undefined;
+    // return data.map((item => item[key]));
   }
   return data[key];
 };
@@ -51,8 +52,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SUCCESS_GET_EDIT_DATA: {
       const { data } = action;
       const formStuffs = state.get('formStuffs').toJS();
-      console.debug('# formStuffs', formStuffs);
-      console.debug('# data', data);
       const resultFormStuffs = formStuffs.map(formStuff => {
         const value = data[formStuff.property.name.toUpperCase()];
         return ({
@@ -64,7 +63,6 @@ const reducer = (state = initialState, action) => {
           },
         });
       });
-      console.debug('@@@@@@ ', resultFormStuffs);
       return state.set('resultFormStuffs', fromJS(resultFormStuffs)).set('isOpenEditModal', true);
     }
     case actionTypes.CLOSE_EDIT_MODAL: {

@@ -8,6 +8,7 @@ const Styled = styled.div`
     //top: 0;
     outline: transparent;
     line-height: 1.5;
+    z-index: 3;
 
     &.layout-option-table-layer {
       top: 0;
@@ -30,7 +31,7 @@ const Styled = styled.div`
       position: absolute;
       display: none;
       //padding: 0.3rem;
-      top: 0;
+      top: -3px;
       right: -2.5px;
       //background-color: #3b97e3;
       //color: #ffffff;

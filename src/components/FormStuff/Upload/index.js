@@ -2,11 +2,30 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 // import Upload from './Upload';
-import Upload from './FIleUploader';
+import Upload from './FileUploader';
 
 class DefaultUploader extends Component {
   state = {
     fileList: [],
+  };
+
+  componentDidMount() {
+    const { defaultValue: { DETAIL: fileList } } = this.props;
+    if (fileList) {
+      console.debug('# File List', fileList);
+      this.setState({
+        fileList: fileList.map(file => ({
+          ...file,
+          uid: file.seq,
+          url: file.link,
+          status: 'done',
+        })),
+      });
+    }
+  }
+
+  onRemove = (file) => {
+    console.debug('Removed, file', file);
   };
 
   getCurrentValueJson = fileList => fileList.filter(fileObj => fileObj.status === 'done').map(fileObj => ({
@@ -15,7 +34,9 @@ class DefaultUploader extends Component {
 
   getCurrentValue = () => {
     const { fileList } = this.state;
-    const { name, workSeq, taskSeq, contSeq } = this.props;
+    const {
+      name, workSeq, taskSeq, contSeq,
+    } = this.props;
     return JSON.stringify({
       WORK_SEQ: workSeq,
       TASK_SEQ: taskSeq,
@@ -30,6 +51,7 @@ class DefaultUploader extends Component {
   };
 
   handleChange = ({ file, fileList }) => {
+    console.debug('# change~~~~~', file, fileList);
     const { uid, response, thumbUrl } = file;
     const { saveTempContents, name, contSeq } = this.props;
     if (response && response.code === 300) {
@@ -57,8 +79,14 @@ class DefaultUploader extends Component {
         saveTempContents(this.getCurrentValueJson(this.state.fileList), name, 'file-upload', contSeq);
       });
     } else {
-      this.setState({ fileList });
+      this.setState({ fileList }, () => {
+        if (file.status === 'removed') {
+          saveTempContents(this.getCurrentValueJson(this.state.fileList), name, 'file-upload', contSeq);
+        }
+      });
     }
+
+
   };
 
   customRequest = ({
@@ -97,7 +125,7 @@ class DefaultUploader extends Component {
     const { name } = this.props;
     return (
       <div>
-        <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" />
+        <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" onRemove={this.onRemove} />
         <input type="hidden" name={name} value={this.getCurrentValue(fileList.filter(file => file.status === 'done'))} data-type="json" />
       </div>
     );

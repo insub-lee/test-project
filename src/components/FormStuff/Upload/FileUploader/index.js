@@ -9,16 +9,17 @@ const UploadButton = () => (
 );
 
 const Upload = ({
-  handleChange, fileList, customRequest, action, limit,
+  handleChange, fileList, customRequest, action, limit, disabled, onRemove,
 }) => (
   <div className="clearfix">
     <AntdUpload
       action={action}
       fileList={fileList}
       onChange={handleChange}
+      onRemove={onRemove}
       customRequest={customRequest}
     >
-      {fileList.length >= limit ? null : <UploadButton />}
+      {disabled || fileList.length >= limit ? null : <UploadButton />}
     </AntdUpload>
   </div>
 );
@@ -29,12 +30,14 @@ Upload.propTypes = {
   customRequest: PropTypes.func,
   fileList: PropTypes.arrayOf(PropTypes.object),
   limit: PropTypes.number,
+  onRemove: PropTypes.func,
 };
 
 Upload.defaultProps = {
   fileList: [],
   handleChange: () => {},
   customRequest: () => {},
+  onRemove: () => {},
   limit: 3,
 };
 
