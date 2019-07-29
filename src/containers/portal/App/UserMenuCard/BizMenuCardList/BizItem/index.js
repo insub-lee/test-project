@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import Card from 'containers/store/components/uielements/card.style';
+import Card from '../../../UserStore/components/uielements/card.style';
 import bizAppIcon from 'images/bizstore/biz-app-icon.png';
 
 const BizItem = ({ BIZGRP_ID, title, subTitle }) => (

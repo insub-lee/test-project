@@ -26,7 +26,7 @@ const UserMenuCard = () => (
                 <ErrorBoundary>
                   <Switch>
                     <Route path="/portal/card/:TYPE/list/:ID" component={BizMenuCardList} />
-                    <Route path="/portal/card/:TYPE/detail/info/:ID" component={BizMenuCardDetail} />
+                    <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" component={BizMenuCardDetail} />
                     <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
                     <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
                   </Switch>

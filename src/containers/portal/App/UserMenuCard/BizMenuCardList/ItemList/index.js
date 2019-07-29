@@ -6,6 +6,7 @@ import Box from 'containers/store/components/utility/box';
 import LayoutWrapper from '../../../UserStore/components/utility/layoutWrapper';
 
 import BizItem from '../BizItem';
+import PageItem from '../PageItem';
 import AppItem from '../AppItem';
 import basicStyle from './basicStyle';
 import NoResult from '../NoResult';
@@ -15,6 +16,7 @@ class ItemList extends Component {
   renderBizList = mapList => {
     if (mapList.length > 0) {
       return mapList.map(app => {
+        console.debug('>>>>>>>>.app: ', app);
         const appColkey = `appCol${app.RNUM}`;
         const nodeType = app.NODE_TYPE;
         const appYn = app.APP_YN;
@@ -36,13 +38,13 @@ class ItemList extends Component {
           );
         } else if (nodeType === 'E' && appYn === 'N') {
           // 페이지일 경우
-          item = <BizItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = <PageItem PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y') {
           // 업무폴더일 경우
           item = <BizItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'N') {
           // 폴더일 경우
-          item = <BizItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = <BizItem BIZGRP_ID={app.PRNT_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         }
 
         return (
@@ -51,21 +53,17 @@ class ItemList extends Component {
           </Col>
         );
       });
+    } else {
+      return (
+        <Col key="noResult" xl={6} md={8} sm={24} className="appBox">
+          <NoResult />
+        </Col>
+      );
     }
-
-    // else {
-    //   return (
-    //     <Col xl={24} md={24} sm={24} style={{ width: '100%', marginTop: '6px' }}>
-    //       <NoResult />
-    //     </Col>
-    //   );
-    // }
   };
 
   render() {
     const { mapList, parentInfo } = this.props;
-
-    console.debug('>>>>>>mapList: ', mapList);
 
     const { rowStyle, colStyle, gutter } = basicStyle;
 

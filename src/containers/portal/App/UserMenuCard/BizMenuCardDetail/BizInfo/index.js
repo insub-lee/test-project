@@ -104,6 +104,6 @@ const withSaga = injectSaga({ key: 'bizCardDetailInfo', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizInfo);
