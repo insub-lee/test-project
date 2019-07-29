@@ -14,4 +14,10 @@ const makeParentInfo = () =>
     parentInfo => parentInfo.get('parentInfo'),
   );
 
-export { selectMenu, makeMenuList, makeParentInfo };
+const makeIsLoading = () =>
+  createSelector(
+    selectMenu,
+    isLoading => isLoading.get('isLoading'),
+  );
+
+export { selectMenu, makeMenuList, makeParentInfo, makeIsLoading };

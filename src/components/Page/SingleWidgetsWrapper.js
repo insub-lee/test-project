@@ -18,7 +18,7 @@ export default class SingleWidgetsWrapper extends PureComponent {
       marginLeft: gutterLeft,
       padding,
       // color: item.color,
-      // backgroundColor: item.bgColor ? item.bgColor : 테마,
+      backgroundColor: item.bgColor ? item.bgColor : 'white',
       width,
     };
 
