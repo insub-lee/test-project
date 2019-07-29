@@ -11,3 +11,11 @@ export const setMenuList = (menuList, parentInfo) => ({
   menuList,
   parentInfo,
 });
+
+export const loadingOn = () => ({
+  type: constants.LOADING_ON,
+});
+
+export const loadingOff = () => ({
+  type: constants.LOADING_OFF,
+});

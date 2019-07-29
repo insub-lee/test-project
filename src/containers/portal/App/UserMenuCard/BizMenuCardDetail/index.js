@@ -4,9 +4,9 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Route, Switch } from 'react-router-dom';
+
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-
 import { intlObj, lang } from 'utils/commonUtils';
 
 import messages from './messages';
@@ -35,10 +35,10 @@ class BizMenuCardDetail extends Component {
       handleGetBizMenu,
       appBizGubun,
       match: {
-        params: { ID },
+        params: { BIZGRP_ID },
       },
     } = this.props;
-    handleGetBizMenu(Number(ID), history);
+    handleGetBizMenu(Number(BIZGRP_ID), history);
     appBizGubun(4);
   }
 
@@ -50,21 +50,24 @@ class BizMenuCardDetail extends Component {
       history,
       handleGetBizMenu,
       match: {
-        params: { ID },
+        params: { BIZGRP_ID },
       },
     } = this.props;
 
     const {
       match: {
-        params: { ID: prevID },
+        params: { BIZGRP_ID: prevID },
       },
     } = prevProps;
-    if (ID !== prevID) {
-      handleGetBizMenu(Number(ID), history);
+    if (BIZGRP_ID !== prevID) {
+      console.debug('>>>>>>ID: ', Number(BIZGRP_ID));
+      console.debug('>>>>>>history: ', history);
+      handleGetBizMenu(Number(BIZGRP_ID), history);
     }
   }
 
-  handleTreeOnClick = (node) => {
+  /* eslint-disable */
+  handleTreeOnClick = node => {
     console.debug('>>>>>>>>here node: ', node);
     const { handleChangeSelectedIndex, history, match } = this.props;
     const preUrl = match.path.substr(0, match.path.indexOf('/:'));
@@ -81,7 +84,6 @@ class BizMenuCardDetail extends Component {
     }
   };
 
-  /* eslint-disable */
   render() {
     const { bizMenuData, selectedIndex, history, match } = this.props;
 
@@ -89,7 +91,7 @@ class BizMenuCardDetail extends Component {
 
     const {
       match: {
-        params: { ID: BIZGRP_ID },
+        params: { BIZGRP_ID },
       },
     } = this.props;
 
@@ -172,6 +174,6 @@ const withSaga = injectSaga({ key: 'bizMenuCardDetail', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizMenuCardDetail);

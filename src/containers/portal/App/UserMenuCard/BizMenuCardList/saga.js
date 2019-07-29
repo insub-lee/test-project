@@ -13,6 +13,7 @@ const appBlockSizeAll = 8;
 
 /* 초기 페이지 데이터 세팅 */
 function* initPage({ id, pageType }) {
+  yield put(actions.loadingOn());
   let response = {};
   if (pageType === 'myMenu') {
   } else {
@@ -20,6 +21,7 @@ function* initPage({ id, pageType }) {
   }
 
   yield put(actions.setMenuList(response.menuList, response.parentMenu));
+  yield put(actions.loadingOff());
 }
 
 export default function* rootSaga() {
