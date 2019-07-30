@@ -3,13 +3,13 @@ import styled from 'styled-components';
 const Styled = styled.div`
   & a {
     display: block;
-    color: #fff !important;
+    color: #666 !important;
     font-size: 13px;
     &:before {
       content: '·';
       display: inline-block;
       font-size: 12px;
-      color: #fff;
+      color: #666;
       margin-right: 5px;
     }
   }

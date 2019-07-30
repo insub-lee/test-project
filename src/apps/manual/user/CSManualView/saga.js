@@ -9,6 +9,7 @@ import selectors from './selectors';
 
 function* getManualView() {
   const mualIdx = yield select(selectors.makeSelectedMualIdx());
+  // const { mualIdx } = action;
   if (mualIdx && mualIdx > 0) {
     yield put(actions.resetManualViewByReducr());
     const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}`);

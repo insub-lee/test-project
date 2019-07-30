@@ -13,7 +13,14 @@ const makeSelectIsViewContents = () =>
     state => state.get('isViewContents'),
   );
 
+const makeSelectedMualIdx = () =>
+  createSelector(
+    makeSelectStateCSManualList,
+    state => state.get('selectedMualIdx'),
+  );
+
 export default {
   makeSelectCSManualList,
   makeSelectIsViewContents,
+  makeSelectedMualIdx,
 };
