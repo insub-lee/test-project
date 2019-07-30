@@ -85,6 +85,8 @@ class BizMenuCardDetail extends Component {
   };
 
   render() {
+    console.debug('@@@@ this.props: ', this.props);
+
     const { bizMenuData, selectedIndex, history, match } = this.props;
 
     const preUrl = match.path.substr(0, match.path.indexOf('/:'));

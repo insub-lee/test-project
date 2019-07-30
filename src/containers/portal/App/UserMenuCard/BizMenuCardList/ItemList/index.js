@@ -8,6 +8,7 @@ import LayoutWrapper from '../../../UserStore/components/utility/layoutWrapper';
 import BizItem from '../BizItem';
 import PageItem from '../PageItem';
 import AppItem from '../AppItem';
+import FolderItem from '../FolderItem';
 import basicStyle from './basicStyle';
 import NoResult from '../NoResult';
 
@@ -44,7 +45,7 @@ class ItemList extends Component {
           item = <BizItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'N') {
           // 폴더일 경우
-          item = <BizItem BIZGRP_ID={app.PRNT_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = <FolderItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         }
 
         return (

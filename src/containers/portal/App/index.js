@@ -329,9 +329,15 @@ class App extends React.PureComponent {
   setMenuClose = () => {
     this.setState({
       open: false,
+    });
+  };
+
+  setHeaderMenuClose = () => {
+    this.setState({
       headerMenuOpen: false,
     });
   };
+
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 ******************
   setIsCloseToTrue = DOCK_ID => {
     const { isClose } = this.state;
@@ -693,7 +699,7 @@ class App extends React.PureComponent {
             handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
             setMyMenuData={setMyMenuData}
             visible={this.state.visible}
-            setMenuClose={this.setMenuClose}
+            setMenuClose={this.setHeaderMenuClose}
             view={view}
           />
           {/* test layout */}
