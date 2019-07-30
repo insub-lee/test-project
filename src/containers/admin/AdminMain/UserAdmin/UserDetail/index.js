@@ -18,9 +18,9 @@ import saga from './saga';
 import * as selectors from './selectors';
 import StyleUserForm from './StyleUserForm';
 import StyleUserDtl from './StyleUserDtl';
-import { LinkBtnLgtGray, BtnDkGray } from '../../../store/components/uielements/buttons.style';
-import messages from './messages';
-import UserRegTree from '../../components/UserRegTree';
+import { LinkBtnLgtGray, BtnDkGray } from '../../../../store/components/uielements/buttons.style';
+import messages from '../messages';
+import UserRegTree from '../../../components/UserRegTree';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
@@ -37,6 +37,7 @@ class UserReg extends React.Component {
   constructor(prop) {
     super(prop);
     const userId = prop.match.params.USER_ID ? prop.match.params.USER_ID : 0;
+    const location = this.props.history.location.state;
     this.state = {
       // eslint-disable-next-line react/no-unused-state
       userId,
@@ -62,6 +63,12 @@ class UserReg extends React.Component {
       selectedNode: {},
       visible: false,
       mode: prop.match.params.USER_ID ? 'D' : 'I',
+      listSortColumn: location === undefined ? '' : location.sortColumnParam,
+      listSortDirection: location === undefined ? '' : location.sortDirectionParam,
+      listKeywordType: location === undefined ? 'userNameKor' : location.keywordType,
+      listKeyword: location === undefined ? '' : location.keyword,
+      listDeptId: location === undefined ? 0 : location.deptId,
+      listPstnId: location === undefined ? 0 : location.pstnId,
     };
     if (userId && this.state.mode === 'D') {
       this.props.getUser(Number(userId));
@@ -122,6 +129,21 @@ class UserReg extends React.Component {
         break;
     }
   };
+
+  onClickToList = () => {
+    const data = {
+      sortColumn: this.state.listSortColumn,
+      sortDirection: this.state.listSortDirection,
+      keywordType: this.state.listKeywordType,
+      keyword: this.state.listKeyword,
+      deptId: this.state.listDeptId,
+      pstnId: this.state.listPstnId,
+    };
+    // console.log('!!!!!!', data);
+    this.props.history.push({
+      pathname: '/admin/adminmain/account', state: data,
+    });
+  }  
 
   getEmpCheck = (userId, empNo) => {
     this.props.getEmpCheck(userId, empNo.toUpperCase());
@@ -306,8 +328,8 @@ class UserReg extends React.Component {
       if (this.state.mode === 'D') {
         return (
           <ErrorBoundary>
-            <LinkBtnLgtGray>
-              <Link to="/admin/adminmain/orgadmin">{intlObj.get(messages.lblCancel)}</Link>
+            <LinkBtnLgtGray onClick={this.onClickToList}>
+              {intlObj.get(messages.lblCancel)}
             </LinkBtnLgtGray>
             <BtnDkGray onClick={() => this.setState({ mode: 'U' })}>{intlObj.get(messages.lblUdt)}</BtnDkGray>
           </ErrorBoundary>
@@ -329,8 +351,8 @@ class UserReg extends React.Component {
       }
       return (
         <ErrorBoundary>
-          <LinkBtnLgtGray>
-            <Link to="/admin/adminmain/orgadmin">{intlObj.get(messages.lblCancel)}</Link>
+          <LinkBtnLgtGray onClick={this.onClickToList}>
+            {intlObj.get(messages.lblCancel)}
           </LinkBtnLgtGray>
           <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblReg)}</BtnDkGray>
         </ErrorBoundary>
@@ -676,6 +698,7 @@ UserReg.propTypes = {
   getUser: PropTypes.func, //eslint-disable-line
   empNo: PropTypes.string, //eslint-disable-line
   userInfo: PropTypes.object, //eslint-disable-line
+  history: PropTypes.object, //eslint-disable-line
 };
 
 const mapDispatchToProps = dispatch => ({

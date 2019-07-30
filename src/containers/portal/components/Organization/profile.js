@@ -147,13 +147,13 @@ class Profile extends PureComponent {
           <li>
             <button className="icon todo" onClick={() => this.onClick('todo')}>{intlObj.get(messages.registerTodo)}</button>
           </li> */}
-          {userSetting &&
+          {/* {userSetting &&
           <li style={{ width: '100%', maxWidth: '100%' }}>
             <button className="icon" style={{ paddingTop: '0px', height: '25px' }}>
-              <Link style={{ display: 'block', height: '100%' }} to={`/admin/adminmain/account/${loadProfile.USER_ID}`} className="icon" title="계정정보관리">계정정보관리</Link>
+              <Link style={{ display: 'block', height: '100%' }} to={`/admin/adminmain/user/${loadProfile.USER_ID}`} className="icon" title="계정정보관리">계정정보관리</Link>
             </button>
           </li>
-          }
+          } */}
         </ul>
         <div className="userInfoDetails">
           <table>
@@ -200,15 +200,15 @@ class Profile extends PureComponent {
                   }
                 </tr>
               }
-              {userSetting &&
+              {/* {userSetting &&
                 <tr>
                   <td colSpan="2" style={{ float: 'right' }}>
                     <BtnDkGray className="icon" style={{ paddingTop: '0px', height: '30px', marginTop: '5px' }}>
-                      <Link style={{ display: 'block', height: '100%' }} to="/admin/adminmain/account" className="icon" title="계정생성">+계정생성</Link>
+                      <Link style={{ display: 'block', height: '100%' }} to="/admin/adminmain/user" className="icon" title="계정생성">+계정생성</Link>
                     </BtnDkGray>
                   </td>
                 </tr>
-              }
+              } */}
             </tbody>
           </table>
         </div>

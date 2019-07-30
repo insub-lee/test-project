@@ -213,4 +213,16 @@ export default defineMessages({
     id: 'admin.AdminMain.UserAdmin.statusCdRetired',
     defaultMessage: '퇴직',
   },
+  noSearch: {
+    id: 'admin.AdminMain.UserAdmin.noSearch',
+    defaultMessage: '검색결과 없음',
+  },
+  inputSearch: {
+    id: 'admin.AdminMain.UserAdmin.inputSearch',
+    defaultMessage: '검색어를 입력해 주십시오.',
+  },
+  search: {
+    id: 'admin.AdminMain.UserAdmin.search',
+    defaultMessage: '검색',
+  },
 });

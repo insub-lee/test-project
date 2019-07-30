@@ -19,7 +19,7 @@ import Position from './Position';
 import Rank from './Rank';
 import Duty from './Duty';
 import Dept from './Dept';
-import UserReg from './User';
+import UserAdmin from './UserAdmin';
 import AppStore from './AppStore';
 import Menu from './Menu';
 
@@ -57,13 +57,13 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/rank" component={Rank} />
           <Route path="/admin/adminmain/duty" component={Duty} />
           <Route path="/admin/adminmain/dept" component={Dept} />
-          <Route path="/admin/adminmain/account" exact component={UserReg} />
-          <Route path="/admin/adminmain/account/:USER_ID" component={UserReg} />
           <Route path="/admin/adminmain/appstore" component={AppStore} />
           <Route path="/admin/adminmain/workbuilder" component={WorkBuilderListPage} exact />
           <Route path="/admin/adminmain/workbuilder/manageapp" component={WorkBuilderToAppPage} exact />
           <Route path="/admin/adminmain/workbuilder/:ID" component={WorkBuilderDetailPage} />
+          <Route path="/admin/adminmain/account" component={UserAdmin} />
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
+
         </Switch>
       </div>
     );
