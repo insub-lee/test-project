@@ -1,15 +1,5 @@
 import * as actionTypes from './constants';
 
-export const toggleUseWorkFlow = checked => ({
-  type: actionTypes.TOGGLE_USE_WORK_FLOW,
-  checked,
-});
-
-export const toggleUseDynamicWorkFlow = checked => ({
-  type: actionTypes.TOGGLE_USE_DYNAMIC_WORK_FLOW,
-  checked,
-});
-
 export const fetchData = id => ({
   type: actionTypes.FETCH_DATA,
   id,
@@ -32,11 +22,12 @@ export const resetData = () => ({
   type: actionTypes.RESET_DATA,
 });
 
-export const successEnableUseWorkFlow = data => ({
-  type: actionTypes.SUCCESS_ENABLE_USE_WORK_FLOW,
-  data,
+export const setProcessId = prcId => ({
+  type: actionTypes.SET_PROCESS_ID,
+  prcId,
 });
 
-export const successDisableUseWorkFlow = () => ({
-  type: actionTypes.SUCCESS_DISABLE_USE_WORK_FLOW,
+export const successUpdatePrcId = data => ({
+  type: actionTypes.SUCCESS_UPDATE_PRC_ID,
+  data,
 });

@@ -5,52 +5,13 @@ import { Axios } from 'utils/AxiosFunc';
 
 import * as actionTypes from './constants';
 import * as selectors from './selectors';
-import { makeInfo } from './util';
+import { makeInfo, getDefaultFormProperty } from './util';
 import * as actions from './actions';
-
-const getDefaultFormProperty = (type, id) => {
-  const defaultFormProperty = {
-    className: '',
-    style: {},
-    name: id,
-    defaultValue: '',
-  };
-  switch (type) {
-    case 'checkbox':
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
-        defaultValue: [],
-      };
-    case 'radio':
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
-      };
-    default:
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-      };
-  }
-};
-
-
-function* boot({ payload }) {}
 
 function* fetchData({ id }) {
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${id}`);
   const { list } = response;
   yield put(actions.successFetchData(list));
-  console.debug('@@ FETCH DATA', list);
 }
 
 function* saveLayers() {
@@ -61,7 +22,6 @@ function* saveLayers() {
     },
   };
   const response = yield call(Axios.post, '/api/builder/v1/work/create', payload);
-  console.debug('@ create table', response);
   // const { boxes, formStuffs } = yield select(selectors.makeSelectLayers());
   // const metas = boxes.map((box, boxIndex) => ({
   //   ORD: boxIndex,
@@ -143,15 +103,18 @@ function* saveTemporary() {
     PARAM: metas,
   };
   // const response = yield call(Axios.post)
-
-  console.debug(payload);
 }
 
 function* addBox() {
-  console.debug('@@@@ Add Box');
   const { boxes } = yield select(selectors.makeSelectLayers());
   const workSeq = yield select(selectors.makeSelectWorkSeq());
-  const defaultBox = { type: 'Box', id: `box_${new Date().getTime()}`, property: { label: 'Box Title', useLabel: true, type: 'normal', column: 1 } };
+  const defaultBox = {
+    type: 'Box',
+    id: `box_${new Date().getTime()}`,
+    property: {
+      label: 'Box Title', useLabel: true, type: 'normal', column: 1,
+    },
+  };
   const param = {
     WORK_SEQ: workSeq,
     PRNT_SEQ: workSeq,
@@ -171,7 +134,9 @@ function* addBox() {
   };
   const response = yield call(Axios.put, '/api/builder/v1/work/meta', { PARAM: param });
   const { PARAM } = response;
-  const { WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG } = PARAM;
+  const {
+    WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG,
+  } = PARAM;
   const box = JSON.parse(CONFIG).property;
   box.WORK_SEQ = WORK_SEQ;
   box.PRNT_SEQ = PRNT_SEQ;
@@ -182,7 +147,6 @@ function* addBox() {
   box.COMP_TAG = COMP_TAG;
   box.META_SEQ = META_SEQ;
   box.COMP_FIELD = COMP_FIELD;
-  console.debug('@@ add box', box);
   yield put(actions.successAddBox(box));
 }
 
@@ -219,7 +183,9 @@ function* addFormStuff({ formStuffType }) {
     };
     const response = yield call(Axios.put, '/api/builder/v1/work/meta', { PARAM: param });
     const { PARAM } = response;
-    const { WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG } = PARAM;
+    const {
+      WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG,
+    } = PARAM;
     const formStuff = JSON.parse(CONFIG).property;
     formStuff.WORK_SEQ = WORK_SEQ;
     formStuff.PRNT_SEQ = PRNT_SEQ;
@@ -230,7 +196,6 @@ function* addFormStuff({ formStuffType }) {
     formStuff.COMP_TAG = COMP_TAG;
     formStuff.META_SEQ = META_SEQ;
     formStuff.COMP_FIELD = COMP_FIELD;
-    console.debug('@@ add formStuff', formStuff);
     yield put(actions.successAddFormStuff(formStuff));
   }
 }
@@ -258,7 +223,6 @@ function* changeBoxType({ index, value }) {
     }),
   };
   const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-  console.debug('Change box type ', response);
   yield put(actions.successChangeBoxType(index, box));
 }
 function* changeFormStuffSpan({ index, value }) {
@@ -284,7 +248,6 @@ function* changeFormStuffSpan({ index, value }) {
     }),
   };
   const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-  console.debug('Change formStuff span ', response);
   yield put(actions.successChangeFormStuffSpan(index, formStuff));
 }
 function* changeBoxColumnCount({ index, value }) {
@@ -310,7 +273,6 @@ function* changeBoxColumnCount({ index, value }) {
     }),
   };
   const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-  console.debug('Change box column ', response);
   yield put(actions.successChangeBoxColumnCount(index, box));
 }
 function* changeId({ payload: { type, index, value } }) {
@@ -339,8 +301,9 @@ function* changeId({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Id ', response);
-      yield put(actions.successChangeId({ type, index, value: box, id: value }));
+      yield put(actions.successChangeId({
+        type, index, value: box, id: value,
+      }));
       break;
     }
     case 'formStuffs': {
@@ -366,8 +329,9 @@ function* changeId({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Id ', response);
-      yield put(actions.successChangeId({ type, index, value: formStuff, id: value }));
+      yield put(actions.successChangeId({
+        type, index, value: formStuff, id: value,
+      }));
       break;
     }
     default:
@@ -401,7 +365,6 @@ function* changeTitle({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Title(Label) ', response);
       yield put(actions.successChangeTitle({ type, index, value: box }));
       break;
     }
@@ -428,7 +391,6 @@ function* changeTitle({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Title(Label) ', response);
       yield put(actions.successChangeTitle({ type, index, value: formStuff }));
       break;
     }
@@ -462,7 +424,6 @@ function* changeName({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Name ', response);
       yield put(actions.successChangeName({ type, index, value: box }));
       break;
     }
@@ -489,7 +450,6 @@ function* changeName({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Name ', response);
       yield put(actions.successChangeName({ type, index, value: formStuff }));
       break;
     }
@@ -502,7 +462,6 @@ function* changeUseLabel({ payload: { type, index, value } }) {
   switch (type) {
     case 'boxes': {
       const box = boxes[index];
-      console.debug('@@@@@ wawawa', boxes, boxes[index]);
       box.property.useLabel = value;
       const param = {
         WORK_SEQ: box.WORK_SEQ,
@@ -523,7 +482,6 @@ function* changeUseLabel({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Id ', response);
       yield put(actions.successChangeUseLabel({ type, index, value: box }));
       break;
     }
@@ -549,12 +507,31 @@ function* changeUseLabel({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      console.debug('Change Id ', response);
       yield put(actions.successChangeUseLabel({ type, index, value: formStuff }));
       break;
     }
     default:
       break;
+  }
+}
+
+function* removeLayer({ id, layerType }) {
+  console.debug('@ removeLayer', id, layerType);
+  const { boxes, formStuffs } = yield select(selectors.makeSelectCanvasProperty());
+  let target;
+  if (layerType === 'Box') {
+    console.debug('Boxes', boxes);
+    target = boxes.find(box => box.id === id);
+  } else {
+    console.debug('FormStuffs', formStuffs);
+    target = formStuffs.find(formStuff => formStuff.id === id);
+  }
+  if (target) {
+    console.debug('target', target);
+    const { META_SEQ, WORK_SEQ } = target;
+    const response = yield call(Axios.delete, `/api/builder/v1/work/${WORK_SEQ}/meta/${META_SEQ}`);
+    console.debug(response);
+    yield put(actions.successRemoveLayer(id, layerType));
   }
 }
 
@@ -571,4 +548,5 @@ export default function* watcher() {
   yield takeLatest(actionTypes.CHANGE_TITLE, changeTitle);
   yield takeLatest(actionTypes.CHANGE_NAME, changeName);
   yield takeLatest(actionTypes.CHANGE_USE_LABEL, changeUseLabel);
+  yield takeLatest(actionTypes.REMOVE_LAYER, removeLayer);
 }

@@ -1,6 +1,24 @@
 import { fromJS } from 'immutable';
 import * as actionTypes from './constants';
 
+const getContSeq = (data, key) => {
+  if (Array.isArray(data)) {
+    return data[0] ? data[0][key] : undefined;
+    // return data.map((item => item[key]));
+  }
+  return data[key];
+};
+
+const getValue = (data, key) => {
+  if (data === 'object') {
+    if (Array.isArray(data)) {
+      return data.map(item => item[key]);
+    }
+    return data[key];
+  }
+  return data;
+};
+
 const initialState = fromJS({
   workSeq: -1,
   taskSeq: -1,
@@ -21,7 +39,6 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.SUCCESS_GET_VIEW: {
       const { columns, list } = action;
-      console.debug(columns, list);
       return state.set('columns', fromJS(columns)).set('list', fromJS(list));
     }
     case actionTypes.SUCCESS_GET_FORM_DATA: {
@@ -35,13 +52,17 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SUCCESS_GET_EDIT_DATA: {
       const { data } = action;
       const formStuffs = state.get('formStuffs').toJS();
-      const resultFormStuffs = formStuffs.map(formStuff => ({
-        ...formStuff,
-        property: {
-          ...formStuff.property,
-          defaultValue: data[formStuff.property.name.toUpperCase()],
-        },
-      }));
+      const resultFormStuffs = formStuffs.map(formStuff => {
+        const value = data[formStuff.property.name.toUpperCase()];
+        return ({
+          ...formStuff,
+          CONT_SEQ: getContSeq(value, 'CONT_SEQ'),
+          property: {
+            ...formStuff.property,
+            defaultValue: getValue(value, 'DETAIL'),
+          },
+        });
+      });
       return state.set('resultFormStuffs', fromJS(resultFormStuffs)).set('isOpenEditModal', true);
     }
     case actionTypes.CLOSE_EDIT_MODAL: {
@@ -50,6 +71,11 @@ const reducer = (state = initialState, action) => {
     case actionTypes.TOGGLE_FORM_MODAL: {
       const { value } = action;
       return state.set('isOpenFormModal', value);
+    }
+    case actionTypes.SUCCESS_SAVE_TASK_CONTENTS: {
+      const { data: { taskSeq, fieldNm, contSeq } } = action;
+      const targetIndex = state.get('formStuffs').findIndex(formStuff => formStuff.get('COMP_FIELD') === fieldNm);
+      return state.setIn(['formStuffs', targetIndex, 'CONT_SEQ'], contSeq);
     }
     case actionTypes.ACTION_TYPES:
     default:

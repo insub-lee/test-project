@@ -7,10 +7,10 @@ import { intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import messages from './messages';
+import messages from '../messages';
 
 import * as actionType from './constants';
-import { Axios } from '../../../../utils/AxiosFunc';
+import { Axios } from 'utils/AxiosFunc';
 
 export function* getUserInfo(payload) {
   const { userId } = payload;
@@ -30,7 +30,7 @@ export function* insertUserInfo(payload) {
   if (data.code === 200 && data.userId !== 0) {
     message.success(<MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>, 3);
     const { userId } = data;
-    yield put(push(`/admin/adminmain/account/${userId}`));
+    yield put(push(`/admin/adminmain/account/user/${userId}`));
   } else {
     feed.error(`${intlObj.get(messages.regFail)}`);
   }
@@ -42,7 +42,7 @@ export function* updatetUserInfo(payload) {
   if (data.code === 200) {
     message.success(<MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>, 3);
     const { userId } = data;
-    yield put(push(`/admin/adminmain/account/${userId}`));
+    yield put(push(`/admin/adminmain/account/user/${userId}`));
   } else {
     feed.error(`${intlObj.get(messages.udtFail)}`);
   }

@@ -25,7 +25,7 @@ class ClickAbleFormGroup extends Component {
     const {
       formStuff,
       viewTargetId,
-      action: { activeLayer, removePanel },
+      action: { activeLayer, removeLayer },
     } = this.props;
     return (
       <Styled
@@ -53,7 +53,7 @@ class ClickAbleFormGroup extends Component {
       >
         <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].previewRenderer(formStuff)}</Form.Item>
         {(viewTargetId === formStuff.id || isHover) && (
-          <OptionLayer object={formStuff} action={{ activeLayer, removePanel }} isActive={viewTargetId === formStuff.id} />
+          <OptionLayer object={formStuff} action={{ activeLayer, removeLayer }} isActive={viewTargetId === formStuff.id} />
         )}
       </Styled>
     );
@@ -71,7 +71,7 @@ ClickAbleFormGroup.propTypes = {
 ClickAbleFormGroup.defaultProps = {
   action: {
     activeLayer: () => false,
-    removePanel: () => false,
+    removeLayer: () => false,
   },
 };
 

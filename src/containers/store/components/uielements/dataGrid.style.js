@@ -51,16 +51,17 @@ const StyleDataGrid = styled.div`
       }
 
       .react-grid-Cell:focus{outline:0px solid #66afe9;outline-offset:-2px}
-
       .react-grid-Viewport {
         top: 47px !important;
         border-bottom: 1px solid #dadbdb;
 
         .react-grid-Row {
-          height: 45px !important;
+          // 스크롤 버그 확인용 주석
+          // height: 45px !important;
 
           .react-grid-Cell {
-            height: 45px !important;
+            // 스크롤 버그 확인용 주석
+            // height: 45px !important;
             padding-left: 0;
             padding-right: 0;
             border-right: none;

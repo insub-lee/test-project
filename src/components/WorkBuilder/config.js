@@ -9,7 +9,8 @@ import TimePicker from 'components/FormStuff/TimePicker';
 import AgGrid from 'components/FormStuff/Grid/AgGrid';
 import DatePicker, { DateMonthPicker, DateRangePicker, DateWeekPicker } from 'components/FormStuff/DatePicker';
 import DropZone from 'components/FormStuff/Upload/DropZone';
-import FroalaEditor from 'components/FormStuff/RichTextEditor/FroalaEditor';
+import RichTextEditor from 'components/FormStuff/RichTextEditor';
+import Upload from 'components/FormStuff/Upload';
 import MaskDiv from 'components/FormStuff/MaskDiv';
 import { froalaEditorConfig } from 'components/FormStuff/config';
 
@@ -26,7 +27,7 @@ export const defaultFormStuffs = {
         <Input {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <Input {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <Input {...formStuff.property} />,
   },
   number: {
     label: 'Number',
@@ -36,7 +37,7 @@ export const defaultFormStuffs = {
         <InputNumber {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <InputNumber {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <InputNumber {...formStuff.property} />,
   },
   textarea: {
     label: 'Textarea',
@@ -46,7 +47,7 @@ export const defaultFormStuffs = {
         <Textarea {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <Textarea {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <Textarea {...formStuff.property} />,
   },
   checkbox: {
     label: 'Checkbox',
@@ -56,7 +57,7 @@ export const defaultFormStuffs = {
         <CheckboxGroup {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <CheckboxGroup {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <CheckboxGroup {...formStuff.property} />,
   },
   radio: {
     label: 'Radio',
@@ -66,7 +67,7 @@ export const defaultFormStuffs = {
         <RadioGroup {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <RadioGroup {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <RadioGroup {...formStuff.property} />,
   },
   select: {
     label: 'Select',
@@ -76,7 +77,7 @@ export const defaultFormStuffs = {
         <Select {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <Select {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <Select {...formStuff.property} />,
   },
   grid: {
     label: 'Grid',
@@ -86,38 +87,38 @@ export const defaultFormStuffs = {
         <AgGrid {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <AgGrid {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <AgGrid {...formStuff.property} />,
   },
   'rich-text-editor': {
     label: 'Rich Text Editor',
     icon: 'fa fa-file-text-o fa-3x',
     previewRenderer: formStuff => (
       <MaskDiv>
-        <FroalaEditor {...formStuff.property} config={froalaEditorConfig} />
+        <RichTextEditor {...formStuff.property} config={froalaEditorConfig} />
       </MaskDiv>
     ),
-    renderer: formStuff => <FroalaEditor {...formStuff.property} config={froalaEditorConfig} />,
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <RichTextEditor {...formStuff.property} contSeq={formStuff.CONT_SEQ} config={froalaEditorConfig} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />,
   },
   'file-upload': {
     label: 'File',
     icon: 'fa fa-upload fa-3x',
     previewRenderer: formStuff => (
       <MaskDiv>
-        <DropZone {...formStuff.property} />
+        <Upload {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <DropZone {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />,
   },
-  'image-upload': {
-    label: 'Image Upload',
-    icon: 'fa fa-file-image-o fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <DropZone {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: formStuff => <DropZone {...formStuff.property} />,
-  },
+  // 'image-upload': {
+  //   label: 'Image Upload',
+  //   icon: 'fa fa-file-image-o fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <Upload {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} />,
+  // },
   'time-picker': {
     label: 'Time Picker',
     icon: 'fa fa-clock-o fa-3x',
@@ -126,7 +127,7 @@ export const defaultFormStuffs = {
         <TimePicker {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <TimePicker {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <TimePicker {...formStuff.property} />,
   },
   'date-picker': {
     label: 'Date Picker',
@@ -136,28 +137,28 @@ export const defaultFormStuffs = {
         <DatePicker {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <DatePicker {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <DatePicker {...formStuff.property} />,
   },
-  'week-picker': {
-    label: 'Week Picker',
-    icon: 'fa fa-calendar fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <DateWeekPicker {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: formStuff => <DateWeekPicker {...formStuff.property} />,
-  },
-  'month-picker': {
-    label: 'Month Picker',
-    icon: 'fa fa-calendar fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <DateMonthPicker {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: formStuff => <DateMonthPicker {...formStuff.property} />,
-  },
+  // 'week-picker': {
+  //   label: 'Week Picker',
+  //   icon: 'fa fa-calendar fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <DateWeekPicker {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <DateWeekPicker {...formStuff.property} />,
+  // },
+  // 'month-picker': {
+  //   label: 'Month Picker',
+  //   icon: 'fa fa-calendar fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <DateMonthPicker {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <DateMonthPicker {...formStuff.property} />,
+  // },
   'range-picker': {
     label: 'Range Picker',
     icon: 'fa fa-calendar fa-3x',
@@ -166,7 +167,7 @@ export const defaultFormStuffs = {
         <DateRangePicker {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <DateRangePicker {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <DateRangePicker {...formStuff.property} />,
   },
 };
 
@@ -179,7 +180,7 @@ export const customFormStuffs = {
         <UserSelector {...formStuff.property} mode="multiple" />
       </MaskDiv>
     ),
-    renderer: formStuff => <UserSelector {...formStuff.property} mode="multiple" />,
+    renderer: ({ formStuff, saveTempContents }) => <UserSelector {...formStuff.property} mode="multiple" contSeq={formStuff.CONT_SEQ} />,
   },
   'process-info': {
     label: 'Process Info',
@@ -189,7 +190,7 @@ export const customFormStuffs = {
         <ProcessInfoSelector {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: formStuff => <ProcessInfoSelector {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => <ProcessInfoSelector {...formStuff.property} contSeq={formStuff.CONT_SEQ} />,
   },
 };
 
