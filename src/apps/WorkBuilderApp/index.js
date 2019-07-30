@@ -1,10 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import WorkBuilderListPage from './WorkBuilderListPage';
-import WorkBuilderDetailPage from './WorkBuilderDetailPage';
-import WorkBuilderToAppPage from './WorkBuilderToAppPage';
-import WorkBuilderViewer from './WorkBuilderViewerPage';
+import WorkBuilderListPage from './Admin/WorkBuilderListPage';
+import WorkBuilderDetailPage from './Admin/WorkBuilderDetailPage';
+import WorkBuilderToAppPage from './Admin/WorkBuilderToAppPage';
+import WorkBuilderViewer from './User/WorkBuilderViewerPage';
 
 export const WorkBuilderApp = () => (
   <div>

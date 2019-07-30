@@ -15,7 +15,7 @@ import InformNote from './hypm_informNote';
 import CicdProject from './cicdProject';
 import CicdService from './cicdService';
 
-import WorkBuilderViewer from './WorkBuilderApp/WorkBuilderViewerPage';
+import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
