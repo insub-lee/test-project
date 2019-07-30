@@ -5,8 +5,9 @@ const initialState = fromJS({
   selectedMualTabIdx: 0,
   selectedMualIdx: 0,
   selectedTabIdx: 0,
-  selectedCompIdx: [],
+  selectedCompIdx: 0,
   manualTabList: [],
+  scrollComp: {},
 });
 
 const appReducer = (state = initialState, action) => {
@@ -25,9 +26,10 @@ const appReducer = (state = initialState, action) => {
     }
     case constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR: {
       const { idx } = action;
-      const compList = state.getIn(['manualTabList', state.get('selectedTabIdx'), 'MUAL_TABVIEWINFO']);
-      const selectedCompIdx = getCompIdx(compList.toJS(), idx);
-      return state.set('selectedCompIdx', fromJS(selectedCompIdx));
+      // const compList = state.getIn(['manualTabList', state.get('selectedTabIdx'), 'MUAL_TABVIEWINFO']);
+      // const selectedCompIdx = getCompIdx(compList.toJS(), idx);
+      // return state.set('selectedCompIdx', fromJS(selectedCompIdx));
+      return state.set('selectedCompIdx', idx);
     }
     case constantTypes.RESET_MANUAL_VIEW_REDUCR: {
       return state
@@ -35,6 +37,10 @@ const appReducer = (state = initialState, action) => {
         .set('selectedTabIdx', 0)
         .set('selectedCompIdx', fromJS([]))
         .set('manualTabList', fromJS([]));
+    }
+    case constantTypes.SET_SCROLL_COMPONENT_REDUCR: {
+      const { item } = action;
+      return state.set('scrollComp', fromJS(item));
     }
     default:
       return state;

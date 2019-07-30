@@ -12,11 +12,11 @@ import TopTitle from './TopTitle';
 import MenuList from './MenuList';
 import Styled from './Styled';
 
-const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx }) => (
+const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp }) => (
   <Styled>
     <TopTitle />
     <Scrollbars style={{ height: 'calc(100% - 50px)' }}>
-      <MenuList componentList={maulCompList} setSelectedCompIdx={setSelectedCompIdx} selectedCompIdx={selectedCompIdx} />
+      <MenuList componentList={maulCompList} setSelectedCompIdx={setSelectedCompIdx} selectedCompIdx={selectedCompIdx} scrollComp={scrollComp} />
     </Scrollbars>
   </Styled>
 );
@@ -36,6 +36,7 @@ SideMenu.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   maulCompList: selectors.makeSelectMaulCompList(),
   selectedCompIdx: selectors.makeSelectedCompIdx(),
+  scrollComp: selectors.makeSelectScrollComp(),
 });
 
 const mapDispatchToProps = dispatch => ({

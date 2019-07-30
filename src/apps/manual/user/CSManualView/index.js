@@ -33,7 +33,7 @@ class ManualView extends Component {
     }
   }
 
-  getTabData = maulTabList =>
+  getTabData = (maulTabList, setScrollComponent) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -41,17 +41,22 @@ class ManualView extends Component {
       TabComponent: item.MUAL_TABNAME,
       TabPanelComponent: (
         <StyledTabPanel>
-          <ContentBody componentList={item.MUAL_TABVIEWINFO} />
+          <ContentBody componentList={item.MUAL_TABVIEWINFO} setScrollComponent={setScrollComponent} />
         </StyledTabPanel>
       ),
       disabled: false,
     }));
 
   render() {
-    const { maulTabList, selectedTabIdx, setSelectedTabIdx } = this.props;
+    const { maulTabList, selectedTabIdx, setSelectedTabIdx, setScrollComponent } = this.props;
     return (
       <Styled>
-        <Tab tabs={this.getTabData(maulTabList.toJS())} keyName="MUAL_TAB_IDX" selectedTabIdx={selectedTabIdx} setSelectedTabIdx={setSelectedTabIdx} />
+        <Tab
+          tabs={this.getTabData(maulTabList.toJS(), setScrollComponent)}
+          keyName="MUAL_TAB_IDX"
+          selectedTabIdx={selectedTabIdx}
+          setSelectedTabIdx={setSelectedTabIdx}
+        />
       </Styled>
     );
   }
@@ -81,6 +86,7 @@ const mapDispatchToProps = dispatch => ({
   getManualView: () => dispatch(actions.getManualViewBySaga()),
   setSelectedTabIdx: idx => dispatch(actions.setSelectedTabIdxByReducr(idx)),
   setSelectedMualIdx: idx => dispatch(actions.setSelectedMualIdxByReducr(idx)),
+  setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

@@ -7,10 +7,15 @@ import Panel from './Panel';
 import InfoConWrap from './InfoConWrap';
 import Styled from './Styled';
 
-const ExplainInfo = ({ componentList }) => (
+const ExplainInfo = ({ componentList, setScrollComponent }) => (
   <Styled>
     <Panel>
-      <Scrollbars style={{ height: 'calc(100vh - 260px)' }}>
+      <Scrollbars
+        style={{ height: 'calc(100vh - 260px)' }}
+        ref={c => {
+          setScrollComponent(c);
+        }}
+      >
         <InfoConWrap componentList={componentList} />
       </Scrollbars>
     </Panel>
