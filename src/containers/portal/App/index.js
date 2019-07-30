@@ -253,34 +253,36 @@ class App extends React.PureComponent {
         setMyMenuDataCopy.isCssTarget = false;
 
         const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
-        const appsCopy2 = update(appsCopy, {
-          [index]: {
-            children: {
-              props: {
-                children: {
-                  props: {
-                    columns: {
-                      $set: selectedApp,
-                    },
-                    /*
-                      포탈에 처음 들어왔을때 만들어진 apps의 경우
-                      dataForApps의 selectedApp과 setMyMenuData를 바라보고 있어
-                      새로 앱을 실행했어도 여전히 dataForApps를 바라본다.
-                      그래서 this.props와 nextProps의 데이터가 같아 scu에서 render를 막는다.
-                      이를 해결하기 위해 새로운 setMyMenuData를 넣어준다. (데이터는 동일)
-                    */
-                    setMyMenuData: {
-                      $set: setMyMenuDataCopy,
+        if (index > -1) {
+          const appsCopy2 = update(appsCopy, {
+            [index]: {
+              children: {
+                props: {
+                  children: {
+                    props: {
+                      columns: {
+                        $set: selectedApp,
+                      },
+                      /*
+                        포탈에 처음 들어왔을때 만들어진 apps의 경우
+                        dataForApps의 selectedApp과 setMyMenuData를 바라보고 있어
+                        새로 앱을 실행했어도 여전히 dataForApps를 바라본다.
+                        그래서 this.props와 nextProps의 데이터가 같아 scu에서 render를 막는다.
+                        이를 해결하기 위해 새로운 setMyMenuData를 넣어준다. (데이터는 동일)
+                      */
+                      setMyMenuData: {
+                        $set: setMyMenuDataCopy,
+                      },
                     },
                   },
                 },
               },
             },
-          },
-        });
+          });
 
-        // 생성된 apps를 스토어에 저장
-        handleSaveApps(appsCopy2, setMyMenuData);
+          // 생성된 apps를 스토어에 저장
+          handleSaveApps(appsCopy2, setMyMenuData);
+        }
       }
 
       if (view !== prevProps.view) {

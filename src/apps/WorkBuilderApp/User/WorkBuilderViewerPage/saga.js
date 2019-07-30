@@ -21,14 +21,15 @@ function* getView({ id }) {
   const boxes = metaList.filter(meta => meta.COMP_TYPE === 'BOX').map(box => ({
     ...JSON.parse(box.CONFIG).property,
   }));
-  const formStuffs = metaList.filter(meta => meta.COMP_TYPE !== 'BOX').map(formStuff => ({
+  const formStuffs = metaList.filter(meta => meta.COMP_TYPE === 'FIELD').map(formStuff => ({
     ...JSON.parse(formStuff.CONFIG).property,
   }));
+  const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   // yield put(actions.successGetView(boxes, formStuffs));
 
   console.debug(list, columns);
   yield put(actions.successGetView(columns, list));
-  yield put(actions.successGetFormData(boxes, formStuffs));
+  yield put(actions.successGetFormData(boxes, formStuffs, workFlow));
 }
 
 function* postData({ payload }) {

@@ -21,10 +21,11 @@ export const closeEditModal = () => ({
   type: actionTypes.CLOSE_EDIT_MODAL,
 });
 
-export const successGetFormData = (boxes, formStuffs) => ({
+export const successGetFormData = (boxes, formStuffs, workFlow) => ({
   type: actionTypes.SUCCESS_GET_FORM_DATA,
   boxes,
   formStuffs,
+  workFlow,
 });
 
 export const toggleFormModal = value => ({
