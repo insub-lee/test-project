@@ -26,6 +26,21 @@ const makeSelectFormStuffs = () =>
     state => state.get('formStuffs').toJS(),
   );
 
+const makeSelectWorkFlow = () =>
+  createSelector(
+    selectWorkBuilderDetailPage,
+    state => state.get('workFlow').toJS(),
+  );
+
+const makeSelectWorkFlowConfig = () =>
+  createSelector(
+    selectWorkBuilderDetailPage,
+    state => {
+      const config = state.getIn(['workFlow', 'CONFIG']);
+      return config ? JSON.parse(config) : { info: {} };
+    },
+  );
+
 const makeSelectIsOpenFormModal = () =>
   createSelector(
     selectWorkBuilderDetailPage,
@@ -56,4 +71,4 @@ const makeSelectResultFormStuffs = () =>
     state => state.get('resultFormStuffs').toJS(),
   );
 
-export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs };
+export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs, makeSelectWorkFlow, makeSelectWorkFlowConfig };

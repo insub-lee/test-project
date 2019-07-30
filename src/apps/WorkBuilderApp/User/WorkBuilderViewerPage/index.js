@@ -11,6 +11,7 @@ import View from 'components/WorkBuilder/View';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+import SignLine from 'apps/WorkFlow/Admin/SignLine';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -30,18 +31,25 @@ class WorkBuilderViewerPage extends Component {
   }
 
   render() {
-    const { columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq } = this.props;
+    const { columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } } } = this.props;
+    console.debug('@ PRC_ID', resultFormStuffs);
     return (
       <Wrapper className="ag-theme-balham" style={{ height: 300, width: '100%' }}>
         <div style={{ textAlign: 'right' }}>
           <Button htmlType="button" size="small" type="default" onClick={() => { toggleFormModal(true); getTaskSeq(); }}>등록</Button>
         </div>
         <AgGridReact columnDefs={columns} rowData={list} onRowClicked={({ data: { WORK_SEQ, TASK_SEQ } }) => openEditModal(WORK_SEQ, TASK_SEQ)} />
-        <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose>
+        <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848}>
+          {PRC_ID && (
+            <React.Fragment>
+              <SignLine prcId={PRC_ID} />
+              <br />
+            </React.Fragment>
+          )}
           <View boxes={boxes} formStuffs={formStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
         <Modal title="Edit" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose>
-          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
+          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} width={848} />
         </Modal>
       </Wrapper>
     );
@@ -63,6 +71,8 @@ WorkBuilderViewerPage.propTypes = {
   openEditModal: PropTypes.func,
   closeEditModal: PropTypes.func,
   saveTempContents: PropTypes.func,
+  workFLow: PropTypes.object,
+  workFlowConfig: PropTypes.object,
 };
 
 WorkBuilderViewerPage.defaultProps = {
@@ -79,6 +89,8 @@ WorkBuilderViewerPage.defaultProps = {
   openEditModal: () => console.debug('no bind events'),
   closeEditModal: () => console.debug('no bind events'),
   saveTempContents: () => console.debug('no bind events'),
+  workFLow: {},
+  workFlowConfig: { info: {} },
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -91,6 +103,8 @@ const mapStateToProps = createStructuredSelector({
   resultFormStuffs: selectors.makeSelectResultFormStuffs(),
   workSeq: selectors.makeSelectWorkSeq(),
   taskSeq: selectors.makeSelectTaskSeq(),
+  workFLow: selectors.makeSelectWorkFlow(),
+  workFlowConfig: selectors.makeSelectWorkFlowConfig(),
 });
 
 const mapDispatchToProps = dispatch => ({

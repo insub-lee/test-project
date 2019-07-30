@@ -4,9 +4,9 @@ import { Route, Switch } from 'react-router-dom';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import WorkBuilderDetailPage from 'apps/WorkBuilderApp/WorkBuilderDetailPage';
-import WorkBuilderListPage from 'apps/WorkBuilderApp/WorkBuilderListPage';
-import WorkBuilderToAppPage from 'apps/WorkBuilderApp/WorkBuilderToAppPage';
+import WorkBuilderDetailPage from 'apps/WorkBuilderApp/Admin/WorkBuilderDetailPage';
+import WorkBuilderListPage from 'apps/WorkBuilderApp/Admin/WorkBuilderListPage';
+import WorkBuilderToAppPage from 'apps/WorkBuilderApp/Admin/WorkBuilderToAppPage';
 
 import CodeAdmin from './CodeAdmin';
 import SiteAdmin from './SiteAdmin';

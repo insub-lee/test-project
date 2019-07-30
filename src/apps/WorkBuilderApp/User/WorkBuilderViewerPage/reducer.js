@@ -29,6 +29,7 @@ const initialState = fromJS({
   resultFormStuffs: [],
   isOpenFormModal: false,
   isOpenEditModal: false,
+  workFlow: {},
 });
 
 const reducer = (state = initialState, action) => {
@@ -42,8 +43,9 @@ const reducer = (state = initialState, action) => {
       return state.set('columns', fromJS(columns)).set('list', fromJS(list));
     }
     case actionTypes.SUCCESS_GET_FORM_DATA: {
-      const { boxes, formStuffs } = action;
-      return state.set('boxes', fromJS(boxes)).set('formStuffs', fromJS(formStuffs));
+      const { boxes, formStuffs, workFlow } = action;
+      console.debug('@@@ success get', boxes, formStuffs, workFlow);
+      return state.set('boxes', fromJS(boxes)).set('formStuffs', fromJS(formStuffs)).set('workFlow', fromJS(workFlow));
     }
     case actionTypes.SUCCESS_GET_TASK_SEQ: {
       const { taskSeq } = action;
@@ -52,6 +54,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SUCCESS_GET_EDIT_DATA: {
       const { data } = action;
       const formStuffs = state.get('formStuffs').toJS();
+      console.debug('@@@', formStuffs);
       const resultFormStuffs = formStuffs.map(formStuff => {
         const value = data[formStuff.property.name.toUpperCase()];
         return ({
@@ -63,6 +66,7 @@ const reducer = (state = initialState, action) => {
           },
         });
       });
+      console.debug('@@@ success', formStuffs, resultFormStuffs);
       return state.set('resultFormStuffs', fromJS(resultFormStuffs)).set('isOpenEditModal', true);
     }
     case actionTypes.CLOSE_EDIT_MODAL: {
