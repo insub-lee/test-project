@@ -6,7 +6,6 @@ import { createStructuredSelector } from 'reselect';
 import { Popover, Row, Col } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import * as feed from 'components/Feedback/functions';
-import * as commonjs from 'containers/common/functions/common';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -112,6 +111,6 @@ const withSaga = injectSaga({ key: 'bizCardTopMenu', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(TopMenu);
