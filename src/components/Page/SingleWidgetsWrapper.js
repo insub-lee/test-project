@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { SingleStyleWidget } from './SingleStyleWidget';
-// import WidgetHeader from './WidgetsHeader';
+import WidgetHeader from './WidgetsHeader';
 import WidgetBox from './WidgetsBox';
 
 export default class SingleWidgetsWrapper extends PureComponent {
@@ -22,6 +22,8 @@ export default class SingleWidgetsWrapper extends PureComponent {
       width,
     };
 
+    const skinInfo = item.user && item.user.skin ? `wSkin${item.user.skin}` : '' ;
+    const isFullSize = item.size === 'FullSize';
     // 차후 wrapper, header, box 별 bgColor, color이 생기면 if의 조건을 해당 색상으로 변경해줘야함
     if (item.bgColor) {
       wrapperStyle.backgroundColor = item.bgColor;
@@ -40,7 +42,8 @@ export default class SingleWidgetsWrapper extends PureComponent {
           width: 'calc(100% - 8px)',
         }}
       >
-        <SingleStyleWidget className="isoSingleWidgetsWrapper" style={wrapperStyle}>
+        <SingleStyleWidget className={`isoSingleWidgetsWrapper ${skinInfo !== '' && isFullSize ? skinInfo : ''}`} style={wrapperStyle}>
+          {isFullSize && <WidgetHeader item={item} />}
           <WidgetBox item={item}>{children}</WidgetBox>
         </SingleStyleWidget>
       </div>
