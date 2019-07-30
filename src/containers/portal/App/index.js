@@ -634,7 +634,7 @@ class App extends React.PureComponent {
       dockIconType,
       handleSetDockIconType,
       hasRoleAdmin,
-      // selectedApp,
+      selectedApp,
       history,
       headerTitle,
     } = this.props;
@@ -662,6 +662,8 @@ class App extends React.PureComponent {
 
     const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
     const dockHomeItem = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
+
+    const isFullSize = selectedApp.length === 1 && selectedApp[0].size === 'FullSize';
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
@@ -829,7 +831,7 @@ class App extends React.PureComponent {
                   >
                     <div
                       id="child"
-                      className={(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' ? '' : 'gridWrapper'}
+                      className={ (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'}
                     >
                       <Content
                         className="portalContent"
