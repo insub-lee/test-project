@@ -1,0 +1,12 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Styled from './Styled';
+
+const Container = ({ children }) => <Styled>{children}</Styled>;
+
+Container.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
+};
+
+export default Container;

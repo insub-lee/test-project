@@ -1,0 +1,16 @@
+export const CHANGE_TEXT = 'apps/manual/admin/CategoryManage/CHANGE_TEXT';
+export const CHANGE_TEXT_WITH_DELAY = 'apps/manual/admin/CategoryManage/CHANGE_TEXT_WITH_DELAY';
+export const CHANGE_VIEW_MODE = 'apps/manual/admin/CategoryManage/CHANGE_VIEW_MODE';
+export const CHANGE_CATEGORY_INFO = 'apps/manual/admin/CategoryManage/CHANGE_CATEGORY_INFO';
+export const SAVE_CATEGORY_INFO = 'apps/manual/admin/CategoryManage/SAVE_CATEGORY_INFO';
+export const CHANGE_CATEGORY_TREE_DATA = 'apps/manual/admin/CategoryManage/CHANGE_CATEGORY_TREE_DATA';
+export const GET_CATEGORY_TREE_DATA = 'apps/manual/admin/CategoryManage/GET_CATEGORY_TREE_DATA';
+export const REMOVE_CATEGORY_INFO = 'apps/manual/admin/CategoryManage/REMOVE_CATEGORY_INFO';
+export const MOVE_CATEGORY = 'apps/manual/admin/CategoryManage/MOVE_CATEGORY';
+export const CHANGE_SELECTED_INDEX = 'apps/manual/admin/CategoryManage/CHANGE_SELECTED_INDEX';
+export const SET_ON_HOVER_KEY = 'apps/manual/admin/CategoryManage/SET_ON_HOVER_KEY';
+export const SET_IS_WAIT_MODAL = 'apps/manual/admin/CategoryManage/SET_IS_WAIT_MODAL';
+export const GET_MANUALLIST_SAGA = 'apps/manual/admin/CategoryManage/WaitManualList/GET_MANUALLIST_SAGA';
+export const SET_MANUALLIST_REDUCR = 'apps/manual/admin/CategoryManage/WaitManualList/SET_MANUALLIST_REDUCR';
+export const SET_LIST_LODING_REDUCR = 'apps/manual/admin/CategoryManage/WaitManualList/SET_LIST_LODING_REDUCR';
+export const SET_PAGINATION_IDX_REDUCR = 'apps/manual/admin/CategoryManage/WaitManualList/SET_PAGINATION_IDX_REDUCR';
