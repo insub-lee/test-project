@@ -67,6 +67,8 @@ class UserReg extends React.Component {
       listSortDirection: location === undefined ? '' : location.sortDirectionParam,
       listKeywordType: location === undefined ? 'userNameKor' : location.keywordType,
       listKeyword: location === undefined ? '' : location.keyword,
+      listDeptId: location === undefined ? 0 : location.deptId,
+      listPstnId: location === undefined ? 0 : location.pstnId,
     };
     if (userId && this.state.mode === 'D') {
       this.props.getUser(Number(userId));
@@ -134,6 +136,8 @@ class UserReg extends React.Component {
       sortDirection: this.state.listSortDirection,
       keywordType: this.state.listKeywordType,
       keyword: this.state.listKeyword,
+      deptId: this.state.listDeptId,
+      pstnId: this.state.listPstnId,
     };
     // console.log('!!!!!!', data);
     this.props.history.push({

@@ -144,6 +144,10 @@ const StyleUserList = styled.div`
 
       .react-grid-Grid {
         height: 100%;
+
+        .react-grid-Row {
+          cursor: pointer;
+        }
       }
     }
   }
