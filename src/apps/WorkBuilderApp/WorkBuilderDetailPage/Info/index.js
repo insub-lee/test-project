@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Form, Descriptions, List, Row, Col, Select, Divider } from 'antd';
+import { Spin, Descriptions } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -14,16 +14,8 @@ import reducer from './reducer';
 import saga from './saga';
 import Wrapper from './Wrapper';
 
-const fixedList = [
-  { title: '저장', type: 'save' },
-  { title: '새버전', type: 'revision' },
-  { title: '수정', type: 'modify' },
-  { title: '삭제', type: 'delete' },
-];
-
 class Info extends Component {
   componentDidMount() {
-    console.debug('Boot......두두두두두두 기본정보', this.props.id);
     const { fetchData, id } = this.props;
     fetchData(id);
   }
@@ -32,7 +24,7 @@ class Info extends Component {
     const { info: { WORK_ID, NAME_KOR, DSCR } } = this.props;
     return (
       <Wrapper>
-        <Form>
+        <Spin spinning={false}>
           <Descriptions bordered border size="small" column={2}>
             <Descriptions.Item label="업무 빌더명">{NAME_KOR}</Descriptions.Item>
             <Descriptions.Item label="물리 테이블명">{WORK_ID}</Descriptions.Item>
@@ -40,56 +32,7 @@ class Info extends Component {
               <p>{DSCR}</p>
             </Descriptions.Item>
           </Descriptions>
-          {/*
-          <Divider orientation="left">Event Options</Divider>
-          <List
-            size="small"
-            bordered
-            dataSource={fixedList}
-            renderItem={item => (
-              <List.Item>
-                {item.title}
-                <Row gutter={16}>
-                  <Col span={24}>
-                    Data Handler (sql)
-                    <div className="handler-options">
-                      <Row gutter={16}>
-                        <Col span={12}>
-                          <Form.Item>
-                            <Select placeholder="조회 전" />
-                          </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                          <Form.Item>
-                            <Select placeholder="조회 후" />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                  <Col span={24}>
-                    Process Handler (sql)
-                    <div className="handler-options">
-                      <Row gutter={16}>
-                        <Col span={12}>
-                          <Form.Item>
-                            <Select placeholder="조회 전" />
-                          </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                          <Form.Item>
-                            <Select placeholder="조회 후" />
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    </div>
-                  </Col>
-                </Row>
-              </List.Item>
-            )}
-          />
-          */}
-        </Form>
+        </Spin>
       </Wrapper>
     );
   }
