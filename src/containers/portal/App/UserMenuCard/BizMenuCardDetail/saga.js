@@ -25,8 +25,9 @@ export function* getBizMenu(payload) {
 
     console.debug('>>>>>>>>>>bizMenuData: ', bizMenuData);
 
-    const { location } = history;
-    const { pathname } = location; // /store/appMain/bizStore/biz/detail/app(page)/1421/3
+    const {
+      location: { pathname },
+    } = history;
     const paths = pathname.split('/');
     const id = Number(paths[paths.length - 1]);
     const type = history.location.pathname.indexOf('/app/') > -1 ? 'app' : 'page';
