@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const Styled = styled.div`
   padding: 15px;
-  background: #434d54;
+  background: #ececec;
+  border-bottom: 1px solid #d9d9d9;
   & ul {
     margin: 0;
     padding: 0;

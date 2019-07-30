@@ -10,7 +10,7 @@ import Styled from './Styled';
 const ExplainInfo = ({ componentList }) => (
   <Styled>
     <Panel>
-      <Scrollbars style={{ height: 'calc(100vh - 259px)' }}>
+      <Scrollbars style={{ height: 'calc(100vh - 260px)' }}>
         <InfoConWrap componentList={componentList} />
       </Scrollbars>
     </Panel>

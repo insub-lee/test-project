@@ -20,12 +20,14 @@ import Styled from './Styled';
 
 class ManualView extends Component {
   componentDidMount() {
-    const { getManualView } = this.props;
+    const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx } = this.props;
+    if (selectedMualIdx !== mualIdx) setSelectedMualIdx(mualIdx);
     getManualView();
   }
 
   componentDidUpdate(prevProps) {
-    const { selectedMualIdx, getManualView } = this.props;
+    const { selectedMualIdx, getManualView, mualIdx, setSelectedMualIdx } = this.props;
+    if (selectedMualIdx !== mualIdx) setSelectedMualIdx(mualIdx);
     if (selectedMualIdx > 0 && prevProps.selectedMualIdx != selectedMualIdx) {
       getManualView();
     }
@@ -78,6 +80,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   getManualView: () => dispatch(actions.getManualViewBySaga()),
   setSelectedTabIdx: idx => dispatch(actions.setSelectedTabIdxByReducr(idx)),
+  setSelectedMualIdx: idx => dispatch(actions.setSelectedMualIdxByReducr(idx)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

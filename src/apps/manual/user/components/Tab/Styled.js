@@ -33,14 +33,16 @@ const Styled = styled.div`
       font-size: 15px;
       cursor: pointer;
       color: #fff;
-      border-left: 1px solid #ddd;
+      border-left: 1px solid #777;
+      border-top: 1px solid #939393;
       &:last-child {
-        border-right: 1px solid #ddd;
+        border-right: 1px solid #777;
       }
       &.react-tabs__tab--selected {
         background-color: #fff;
         color: #000000;
-        border: 0;
+        border-left: 0;
+        border-right: 0;
 
         &:not(:hover) {
           color: #333;
@@ -57,7 +59,7 @@ const Styled = styled.div`
   }
 
   div.react-tabs__tab-panel.react-tabs__tab-panel--selected {
-    // padding: 1rem !important;
+    /* padding: 1rem !important; */
   }
 `;
 

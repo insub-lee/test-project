@@ -8,7 +8,7 @@ import btnNextOn from '../../images/btn-next-on.png';
 const Styled = styled.div`
   width: 100%;
   border-top: 1px solid #e5e5e5;
-  padding: 30px 190px;
+  padding: 10px 190px;
   position: absolute;
   bottom: 0;
   left: 0;

@@ -27,14 +27,15 @@ class CSManualList extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx } = this.props;
+    const { resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx } = this.props;
     setIsViewContents(false);
     resetManualView();
     setSelectedMualIdx(0);
+    setViewSelectedMualIdx(0);
   };
 
   render() {
-    const { totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx } = this.props;
+    const { totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx, selectedMualIdx } = this.props;
     // let ListItemData = fromJS({});
     let ListItemData = fromJS([]);
     if (totalManualList.size > 0) {
@@ -67,16 +68,16 @@ class CSManualList extends Component {
           </Row>,
         ])}
         <Modal
-          width={1200}
-          bodyStyle={{ height: 'calc(100vh - 24px)', padding: '4px' }}
+          width={1142}
+          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
           // maskStyle={{ backgroundColor: '#ffffff' }}
-          style={{ top: 0 }}
-          visible={isViewContents}
+          style={{ top: 42 }}
+          visible={isViewContents && selectedMualIdx > 0}
           footer={null}
           onCancel={() => this.handleCloseModal()}
           closable={false}
         >
-          <CSManualView />
+          <CSManualView mualIdx={selectedMualIdx} />
         </Modal>
       </div>
     );
@@ -100,12 +101,14 @@ CSManualList.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   totalManualList: selectors.makeSelectCSManualList(),
   isViewContents: selectors.makeSelectIsViewContents(),
+  selectedMualIdx: selectors.makeSelectedMualIdx(),
 });
 
 const mapDispatchToProps = dispatch => ({
   GetTotalManualList: categoryIdx => dispatch(actions.getTotalManualList(categoryIdx)),
   setIsViewContents: flag => dispatch(actions.setIsViewContentsByReducr(flag)),
-  setSelectedMualIdx: idx => dispatch(viewActions.setSelectedMualIdxByReducr(idx)),
+  setSelectedMualIdx: idx => dispatch(actions.setSelectedMualIdxByReducr(idx)),
+  setViewSelectedMualIdx: idx => dispatch(viewActions.setSelectedMualIdxByReducr(idx)),
   resetManualView: () => dispatch(viewActions.resetManualViewByReducr()),
 });
 
