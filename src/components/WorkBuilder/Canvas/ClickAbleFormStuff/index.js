@@ -24,7 +24,7 @@ class ClickAbleFormStuff extends Component {
     const {
       formStuff,
       viewTargetId,
-      action: { activeLayer, removePanel },
+      action: { activeLayer, removeLayer },
     } = this.props;
     return (
       <Styled
@@ -51,7 +51,7 @@ class ClickAbleFormStuff extends Component {
         }}
       >
         {allFormStuffs[formStuff.type].previewRenderer(formStuff)}
-        {(formStuff.id === viewTargetId || isHover) && <OptionLayer object={formStuff} action={{ removePanel }} isActive={formStuff.id === viewTargetId} />}
+        {(formStuff.id === viewTargetId || isHover) && <OptionLayer object={formStuff} action={{ removeLayer }} isActive={formStuff.id === viewTargetId} />}
       </Styled>
     );
   }
@@ -66,7 +66,7 @@ ClickAbleFormStuff.propTypes = {
 ClickAbleFormStuff.defaultProps = {
   action: {
     activeLayer: () => false,
-    removePanel: () => false,
+    removeLayer: () => false,
   },
   viewTargetId: '',
 };

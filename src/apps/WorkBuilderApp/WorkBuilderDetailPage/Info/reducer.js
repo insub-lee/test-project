@@ -8,9 +8,8 @@ const initialState = fromJS({
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SUCCESS_FETCH_DATA: {
-      const { data } = action;
-      console.debug('@@ success', data);
-      return state;
+      const { info } = action;
+      return state.set('info', fromJS(info));
     }
     case actionTypes.ACTION_TYPES:
     default:

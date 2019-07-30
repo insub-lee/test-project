@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Styled from './Styled';
 
-const OptionLayer = ({ object, action: { removePanel }, isActive, tableMode }) => (
+const OptionLayer = ({ object, action: { removeLayer }, isActive, tableMode }) => (
   <Styled className={`layout-option-layer ${tableMode ? 'layout-option-table-layer' : ''}`}>
     <div className="layout-option-title">{object.type}</div>
     {isActive && (
@@ -12,7 +12,7 @@ const OptionLayer = ({ object, action: { removePanel }, isActive, tableMode }) =
           className="toolbar-item fa fa-trash-o"
           onClick={e => {
             e.stopPropagation();
-            removePanel(object.id, object.type);
+            removeLayer(object.id, object.type);
           }}
           role="button"
           onKeyPress={() => false}
@@ -32,7 +32,7 @@ OptionLayer.propTypes = {
 
 OptionLayer.defaultProps = {
   action: {
-    removePanel: () => false,
+    removeLayer: () => false,
   },
   isActive: false,
   tableMode: false,

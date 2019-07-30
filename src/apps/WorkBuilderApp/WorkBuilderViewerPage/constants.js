@@ -12,3 +12,5 @@ export const SUCCESS_GET_TASK_SEQ = `${prefix}SUCCESS_GET_TASK_SEQ`;
 export const OPEN_EDIT_MODAL = `${prefix}OPEN_EDIT_MODAL`;
 export const CLOSE_EDIT_MODAL = `${prefix}CLOSE_EDIT_MODAL`;
 export const SUCCESS_GET_EDIT_DATA = `${prefix}SUCCESS_GET_EDIT_DATA`;
+export const SAVE_TASK_CONTENTS = `${prefix}SAVE_TASK_CONTENTS`;
+export const SUCCESS_SAVE_TASK_CONTENTS = `${prefix}SUCCESS_SAVE_TASK_CONTENTS`;

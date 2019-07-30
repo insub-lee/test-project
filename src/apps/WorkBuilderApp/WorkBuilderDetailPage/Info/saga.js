@@ -1,17 +1,15 @@
 import { takeLatest, put, call, select } from 'redux-saga/effects';
-import { fromJS } from 'immutable';
-import * as actionTypes from './constants';
+
 import { Axios } from 'utils/AxiosFunc';
 
-function* boot({ payload }) {
-
-}
+import * as actionTypes from './constants';
+import * as actions from './actions';
 
 function* fetchData({ id }) {
-  const payload = {
-    WORK_SEQ: id,
-  };
-  console.debug('@@ FETCH DATA', payload);
+  const response = yield call(Axios.get, `/api/builder/v1/work/info/${id}`);
+  const { object } = response;
+  const info = JSON.parse(object) || {};
+  yield put(actions.successFetchData(info));
 }
 
 export default function* watcher() {

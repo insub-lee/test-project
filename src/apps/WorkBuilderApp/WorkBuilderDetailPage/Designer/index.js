@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Modal } from 'antd';
+import { Modal, Spin } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -17,7 +17,6 @@ import saga from './saga';
 
 class Designer extends Component {
   componentDidMount() {
-    console.debug('Boot......두두두두두두 업무 디자이너', this.props.id);
     const { fetchData, id } = this.props;
     fetchData(id);
   }

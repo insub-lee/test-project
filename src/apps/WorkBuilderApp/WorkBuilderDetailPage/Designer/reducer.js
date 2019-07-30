@@ -104,7 +104,7 @@ const reducer = (state = initialState, action) => {
       const { formStuff } = action;
       return state.update('formStuffs', arr => arr.push(fromJS(formStuff)));
     }
-    case actionTypes.REMOVE_PANEL: {
+    case actionTypes.SUCCESS_REMOVE_LAYER: {
       const { id, layerType } = action;
 
       if (id === state.get('viewTargetId')) {

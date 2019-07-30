@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Icon, Modal } from 'antd';
+import { Upload as AntdUpload, Icon, Modal } from 'antd';
 
 function getBase64(file) {
   return new Promise((resolve, reject) => {
@@ -18,13 +18,13 @@ const UploadButton = () => (
   </div>
 );
 
-class ImageUpload extends Component {
+class Upload extends Component {
   state = {
     previewVisible: false,
     previewImage: '',
   };
 
-  handlePreview = async file => {
+  handlePreview = async (file) => {
     console.debug('@@@@ hanlePreview', file);
     let previewImage = file.preview;
     if (!file.url && !file.preview) {
@@ -37,16 +37,23 @@ class ImageUpload extends Component {
     });
   };
 
-  handleCancel = () => this.setState({ previewVisible: false });
-
   render() {
-    const { uploadProps, fileList, limit } = this.props;
+    const {
+      handleChange, fileList, customRequest, action, limit,
+    } = this.props;
     const { previewVisible, previewImage } = this.state;
     return (
       <div className="clearfix">
-        <Upload {...uploadProps} fileList={fileList} listType="picture-card" onPreview={this.handlePreview}>
+        <AntdUpload
+          action={action}
+          listType="picture-card"
+          fileList={fileList}
+          onPreview={this.handlePreview}
+          onChange={handleChange}
+          customRequest={customRequest}
+        >
           {fileList.length >= limit ? null : <UploadButton />}
-        </Upload>
+        </AntdUpload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
         </Modal>
@@ -55,16 +62,18 @@ class ImageUpload extends Component {
   }
 }
 
-ImageUpload.propTypes = {
+Upload.propTypes = {
+  action: PropTypes.string.isRequired,
+  handleChange: PropTypes.func,
+  customRequest: PropTypes.func,
   fileList: PropTypes.arrayOf(PropTypes.object),
-  uploadProps: PropTypes.object,
-  limit: PropTypes.number,
 };
 
-ImageUpload.defaultProps = {
+Upload.defaultProps = {
   fileList: [],
-  uploadProps: {},
+  handleChange: () => {},
+  customRequest: () => {},
   limit: 3,
 };
 
-export default ImageUpload;
+export default Upload;
