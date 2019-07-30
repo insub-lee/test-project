@@ -5,7 +5,9 @@ import Styled from './Styled';
 
 const Title = ({ contents, idx }) => (
   <Styled>
-    <p id={`manualViewIndexComp_${idx}`}>{contents}</p>
+    <p id={`manualViewIndexComp_${idx}`} name={`manualViewIndexComp_${idx}`}>
+      {contents}
+    </p>
   </Styled>
 );
 

@@ -4,22 +4,30 @@ import PropTypes from 'prop-types';
 
 import Styled from './Styled';
 
-const renderListItem = (componentList, pIdx, level, setSelectedCompIdx, selectedCompIdx) => {
+const setScroll = (compIdx, setSelectedCompIdx, scrollComp) => {
+  const selectedComp = document.querySelector(`#manualViewIndexComp_${compIdx}`);
+  const topPosition = selectedComp.getBoundingClientRect().top;
+  const scrollTop = scrollComp.getScrollTop();
+  scrollComp.scrollTop(scrollTop + topPosition - 161);
+  setSelectedCompIdx(compIdx);
+};
+
+const renderListItem = (componentList, pIdx, level, setSelectedCompIdx, selectedCompIdx, scrollComp) => {
   const filterList = componentList.filter(item => item.MUAL_TABCOMP_PIDX === pIdx && item.TYPE.indexOf('index') > -1);
   let childNode = [];
   let resultList = filterList.map(item => {
     const childrenList = componentList.filter(node => node.MUAL_TABCOMP_PIDX === item.MUAL_TABCOMP_IDX && node.TYPE.indexOf('index') > -1);
     if (childrenList.length > 0 && level > 2) {
-      childNode = renderListItem(componentList, item.MUAL_TABCOMP_IDX, level + 1, setSelectedCompIdx, selectedCompIdx);
+      childNode = renderListItem(componentList, item.MUAL_TABCOMP_IDX, level + 1, setSelectedCompIdx, selectedCompIdx, scrollComp);
     }
     return (
       <li className="active" key={`MenuList_${item.MUAL_TABCOMP_IDX}`}>
-        <a href={`#manualViewIndexComp_${item.MUAL_TABCOMP_IDX}`} onClick={() => setSelectedCompIdx(item.MUAL_TABCOMP_IDX)}>
+        <a onClick={() => setScroll(item.MUAL_TABCOMP_IDX, setSelectedCompIdx, scrollComp)}>
           {item.MUAL_COMPVIEWINFO}
           <i className="icon-plus"></i>
         </a>
         {childrenList.length > 0 && level < 3 && (
-          <ul>{renderListItem(componentList, item.MUAL_TABCOMP_IDX, level + 1, setSelectedCompIdx, selectedCompIdx)}</ul>
+          <ul>{renderListItem(componentList, item.MUAL_TABCOMP_IDX, level + 1, setSelectedCompIdx, selectedCompIdx, scrollComp)}</ul>
         )}
       </li>
     );
@@ -30,9 +38,9 @@ const renderListItem = (componentList, pIdx, level, setSelectedCompIdx, selected
   return resultList;
 };
 
-const MenuList = ({ componentList, setSelectedCompIdx, selectedCompIdx }) => (
+const MenuList = ({ componentList, setSelectedCompIdx, selectedCompIdx, scrollComp }) => (
   <Styled>
-    <ul>{renderListItem(componentList ? componentList.toJS() : [], 0, 1, setSelectedCompIdx, selectedCompIdx)}</ul>
+    <ul>{renderListItem(componentList ? componentList.toJS() : [], 0, 1, setSelectedCompIdx, selectedCompIdx, scrollComp)}</ul>
   </Styled>
 );
 

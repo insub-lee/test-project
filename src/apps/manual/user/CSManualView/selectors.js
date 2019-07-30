@@ -32,10 +32,17 @@ const makeSelectedMualIdx = () =>
     state => state.get('selectedMualIdx'),
   );
 
+const makeSelectScrollComp = () =>
+  createSelector(
+    makeSelectManualViewState,
+    state => state.get('scrollComp'),
+  );
+
 export default {
   makeSelectMaulTabList,
   makeSelectedTabIdx,
   makeSelectMaulCompList,
   makeSelectedCompIdx,
   makeSelectedMualIdx,
+  makeSelectScrollComp,
 };

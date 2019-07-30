@@ -10,6 +10,7 @@ export const setManualViewByReducr = maulTabList => ({ type: constantTypes.SET_M
 export const setSelectedMualIdxByReducr = mualIdx => ({ type: constantTypes.SET_SELECTED_MUAL_IDX_REDUCR, mualIdx });
 export const setSelectedTabIdxByReducr = idx => ({ type: constantTypes.SET_SELECTED_TAB_IDX_REDUCR, idx });
 export const setSelectedCompIdxByReducr = idx => ({ type: constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR, idx });
+export const setScrollComponentByReducr = item => ({ type: constantTypes.SET_SCROLL_COMPONENT_REDUCR, item });
 
 // remove
 
