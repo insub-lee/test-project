@@ -1,5 +1,5 @@
 import React from 'react';
-import SortableTree, { getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
+import { SortableTreeWithoutDndContext as SortableTree, getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import { Popover } from 'antd';
@@ -20,7 +20,12 @@ import messages from './messages';
 import './tree-node.css';
 
 const getTreeData = flatData =>
-  getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 0 });
+  getTreeFromFlatData({
+    flatData,
+    getKey: node => node.CATEGORY_IDX,
+    getParentKey: node => node.CATEGORY_PARENT_IDX,
+    rootKey: 0,
+  });
 
 const setTreeData = (treeData, setCategoryTreeData) => {
   const categoryList = getFlatDataFromTree({
@@ -57,7 +62,7 @@ const handleMoveNode = (treeData, moveCategory) => {
   moveCategory(generateList(treeData));
 };
 
-const generateList = data => {
+const generateList = (data) => {
   let tempData1 = fromJS({});
   for (let i = 0; i < data.size; i++) {
     const node = data.get(i);
@@ -161,7 +166,12 @@ const Tree = ({
         onChange={setData => setTreeData(setData, setCategoryTreeData)}
         rowHeight={35}
         scaffoldBlockPxWidth={22}
-        style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
+        style={{
+          display: 'inline-block',
+          width: '100%',
+          height: '100%',
+          overflow: 'visible',
+        }}
         isVirtualized={false}
         generateNodeProps={rowInfo =>
           renderNode(rowInfo, setViewMode, removeCategoryInfo, selectedIndex, onHoverKey, setOnHoverKey, setManualManage, setSelectedIndex)
@@ -171,7 +181,19 @@ const Tree = ({
       />
     </ScrollBar>
     <div className="fixedMenu">
-      <FolderBtn onClick={() => setViewMode({ CATEGORY_IDX: 0, SORT_SQ: 9999, LVL: 0, CATEGORY_NAME: '' }, 'I')} />
+      <FolderBtn
+        onClick={() =>
+          setViewMode(
+            {
+              CATEGORY_IDX: 0,
+              SORT_SQ: 9999,
+              LVL: 0,
+              CATEGORY_NAME: '',
+            },
+            'I',
+          )
+        }
+      />
     </div>
   </StyleMyAppTree>
 );

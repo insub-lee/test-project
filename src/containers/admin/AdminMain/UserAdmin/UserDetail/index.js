@@ -69,6 +69,8 @@ class UserReg extends React.Component {
       listKeyword: location === undefined ? '' : location.keyword,
       listDeptId: location === undefined ? 0 : location.deptId,
       listPstnId: location === undefined ? 0 : location.pstnId,
+      listDeptName: location === undefined ? '' : location.deptName,
+      listPstnName: location === undefined ? '' : location.pstnName,
     };
     if (userId && this.state.mode === 'D') {
       this.props.getUser(Number(userId));
@@ -138,6 +140,8 @@ class UserReg extends React.Component {
       keyword: this.state.listKeyword,
       deptId: this.state.listDeptId,
       pstnId: this.state.listPstnId,
+      deptName: this.state.listDeptName,
+      pstnName: this.state.listPstnName,
     };
     // console.log('!!!!!!', data);
     this.props.history.push({

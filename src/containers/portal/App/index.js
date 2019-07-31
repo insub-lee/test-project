@@ -671,7 +671,7 @@ class App extends React.PureComponent {
     const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
     const dockHomeItem = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
 
-    const isFullSize = selectedApp.length === 1 && selectedApp[0].size === 'FullSize';
+    const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size === 'FullSize';
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
