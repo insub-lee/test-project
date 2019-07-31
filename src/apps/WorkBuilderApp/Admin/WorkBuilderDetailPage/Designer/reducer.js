@@ -19,6 +19,7 @@ const initialState = fromJS({
     custom: false,
   },
   onPreview: false,
+  isLoading: true,
 });
 
 const getDefaultFormProperty = (type, id) => {
@@ -192,6 +193,12 @@ const reducer = (state = initialState, action) => {
     case actionTypes.OFF_PREVIEW: {
       return state.set('onPreview', false);
     }
+    case actionTypes.LOADING_ON:
+      return state.set('isLoading', true);
+    case actionTypes.LOADING_OFF:
+      return state.set('isLoading', false);
+    case actionTypes.RESET_DATA:
+      return initialState;
     case actionTypes.ACTION_TYPES:
     default:
       return state;

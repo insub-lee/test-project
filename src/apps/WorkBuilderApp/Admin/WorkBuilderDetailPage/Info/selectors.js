@@ -8,4 +8,11 @@ const makeSelectInfo = () =>
     state => state.get('info').toJS(),
   );
 
-export { makeSelectInfo };
+
+const makeSelectIsLoading = () =>
+  createSelector(
+    selectWorkBuilderDetailInfo,
+    state => state.get('isLoading'),
+  );
+
+export { makeSelectInfo, makeSelectIsLoading };

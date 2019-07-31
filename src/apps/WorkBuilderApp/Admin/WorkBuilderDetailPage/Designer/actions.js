@@ -200,3 +200,15 @@ export const openPreview = () => ({
 export const closePreview = () => ({
   type: actionTypes.OFF_PREVIEW,
 });
+
+export const enableLoading = () => ({
+  type: actionTypes.LOADING_ON,
+});
+
+export const disableLoading = () => ({
+  type: actionTypes.LOADING_OFF,
+});
+
+export const resetData = () => ({
+  type: actionTypes.RESET_DATA,
+});

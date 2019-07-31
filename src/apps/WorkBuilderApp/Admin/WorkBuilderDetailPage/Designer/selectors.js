@@ -87,4 +87,10 @@ const makeSelectWorkSeq = () =>
     state => state.get('workSeq'),
   );
 
-export { makeSelectCanvasProperty, makeSelectPanelsProperty, makeSelectProperty, makeSelectLayers, makeSelectOnPreview, makeSelectWorkSeq };
+const makeSelectIsLoading = () =>
+  createSelector(
+    selectWorkBuilderDetailDesigner,
+    state => state.get('isLoading'),
+  );
+
+export { makeSelectCanvasProperty, makeSelectPanelsProperty, makeSelectProperty, makeSelectLayers, makeSelectOnPreview, makeSelectWorkSeq, makeSelectIsLoading };
