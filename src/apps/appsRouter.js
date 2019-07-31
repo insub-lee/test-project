@@ -16,6 +16,7 @@ import CicdProject from './cicdProject';
 import CicdService from './cicdService';
 
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
+import manualCategoryManage from './manual/admin/CategoryManage';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -28,7 +29,7 @@ class AppsRouter extends React.PureComponent {
     this.forceUpdate();
   }
 
-  getAppsRouter = (selectedApp) => {
+  getAppsRouter = selectedApp => {
     const type = 'swidget';
     const item = selectedApp[0];
     console.log('$$$ appsRouter item', item);
@@ -54,27 +55,26 @@ class AppsRouter extends React.PureComponent {
               <Route path={`/${basicPath.APPS}/cicdProject`} component={CicdProject} />
               <Route path={`/${basicPath.APPS}/cicdService`} component={CicdService} />
               <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
+              <Route path={`/${basicPath.APPS}/manualCategoryManage`} component={manualCategoryManage} />
             </Switch>
           </div>
-        )
+        );
       } else {
         return (
           // 해당 앱에 권한이 없는 경우
           <WidgetsWrapper item={item}>
             <ApplyWidget item={item} type={type} />
           </WidgetsWrapper>
-        )
+        );
       }
     } else {
-      <div />
+      <div />;
     }
-  }
+  };
 
   render() {
     console.log('$$$ appsRouter의 render()');
-    return (
-      <div className="appsRoute">{this.contents}</div>
-    );
+    return <div className="appsRoute">{this.contents}</div>;
   }
 }
 
