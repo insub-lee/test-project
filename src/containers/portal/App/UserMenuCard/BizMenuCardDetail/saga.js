@@ -8,10 +8,15 @@ import * as constantsTree from 'containers/store/components/BizCategory/constant
 import * as constants from './constants';
 
 export function* getBizMenu(payload) {
-  console.debug('>>>>>>>>>payload: ', payload);
-  const { key, history } = payload;
+  const {
+    key,
+    history: {
+      location: { pathname },
+    },
+    pageType,
+  } = payload;
 
-  const { result, rootId } = yield call(Axios.post, '/api/bizstore/v1/store/bizmenu', { BIZGRP_ID: Number(key) });
+  const { result, rootId } = yield call(Axios.post, '/api/bizstore/v1/store/bizmenu', { BIZGRP_ID: Number(key), pageType });
   // get menuId by appId or pageId
   let selectedIndex = -1;
 
@@ -25,12 +30,9 @@ export function* getBizMenu(payload) {
 
     console.debug('>>>>>>>>>>bizMenuData: ', bizMenuData);
 
-    const {
-      location: { pathname },
-    } = history;
     const paths = pathname.split('/');
     const id = Number(paths[paths.length - 1]);
-    const type = history.location.pathname.indexOf('/app/') > -1 ? 'app' : 'page';
+    const type = pathname.indexOf('/app/') > -1 ? 'app' : 'page';
 
     const bizmenuFlatData = treeFunc.getFlatMapDataFromTreeData(children);
     bizmenuFlatData.map((obj) => {

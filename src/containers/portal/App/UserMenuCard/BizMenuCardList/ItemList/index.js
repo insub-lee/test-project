@@ -14,7 +14,7 @@ import NoResult from '../NoResult';
 
 class ItemList extends Component {
   /* eslint-disable */
-  renderBizList = mapList => {
+  renderBizList = (mapList, paramType) => {
     if (mapList.length > 0) {
       return mapList.map(app => {
         console.debug('>>>>>>>>.app: ', app);
@@ -28,6 +28,7 @@ class ItemList extends Component {
           // 앱일경우
           item = (
             <AppItem
+              paramType={paramType}
               appId={app.APP_ID}
               categoryId={app.CATG_ID}
               title={lang.get('NAME', app)}
@@ -39,13 +40,15 @@ class ItemList extends Component {
           );
         } else if (nodeType === 'E' && appYn === 'N') {
           // 페이지일 경우
-          item = <PageItem PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = (
+            <PageItem paramType={paramType} PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />
+          );
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y') {
           // 업무폴더일 경우
-          item = <BizItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = <BizItem paramType={paramType} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'N') {
           // 폴더일 경우
-          item = <FolderItem BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = <FolderItem paramType={paramType} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         }
 
         return (
@@ -64,7 +67,7 @@ class ItemList extends Component {
   };
 
   render() {
-    const { mapList, parentInfo } = this.props;
+    const { mapList, parentInfo, paramType } = this.props;
 
     const { rowStyle, colStyle, gutter } = basicStyle;
 
@@ -77,7 +80,7 @@ class ItemList extends Component {
                 <h3>{parentInfo.NAME_KOR}</h3>
               </div>
 
-              <Row>{this.renderBizList(mapList)}</Row>
+              <Row>{this.renderBizList(mapList, paramType)}</Row>
             </Box>
           </Col>
         </Row>

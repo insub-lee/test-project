@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Scrollbars from 'react-custom-scrollbars';
 import { Table } from 'semantic-ui-react';
@@ -8,47 +8,26 @@ import { lang } from 'utils/commonUtils';
 import messages from './messages';
 import UserSearchWrapper from './userSearch.style';
 
-class AppManagerList extends React.Component {
-  constructor(prop) {
-    super(prop);
-    this.state = {
-      managerList: prop.managerList,
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      managerList: nextProps.managerList, //eslint-disable-line
-    });
-  }
-
+class AppManagerList extends Component {
   handleClickManagerInfo = (gubun, param1) => {
     if (gubun === 'org') {
       this.props.userProfile(param1, true);
     } else {
       alert('준비중입니다.');
     }
-    // } else if (gubun === 'talk') {
-    //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${param1}`);
-    // } else if (gubun === 'mail') {
-    //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${param1}`);
-    // } else if (gubun === 'todo') {
-    //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${param1}`);
-    // } else if (gubun === 'hithanks') {
-    //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${param1}`);
-    // }
   };
   /* eslint-disable */
   render() {
-    const RenderSearchView = props => {
-      if (props.managerList.length > 0) {
+    const { managerList } = this.props;
+    const RenderSearchView = managerList => {
+      if (managerList.length > 0) {
         return (
           <div className="message">
             <Scrollbars className="custom-scrollbar" autoHeight autoHeightMin={40} autoHeightMax={175}>
               <div className="resultsTableWrapper">
                 <Table size="small" style={{ width: '100%' }}>
                   <Table.Body>
-                    {props.managerList.map(user => (
+                    {managerList.map(user => (
                       <Table.Row key={user.EMP_NO} style={{ cursor: 'pointer' }}>
                         <Table.Cell style={{ width: 25 }}>
                           <Popover
@@ -112,7 +91,7 @@ class AppManagerList extends React.Component {
       <div align="left">
         <UserSearchWrapper>
           <div className="mSearchWrapper" style={{ position: 'relative', padding: 0, margin: 0 }}>
-            <div>{RenderSearchView(this.state)}</div>
+            <div>{RenderSearchView(managerList)}</div>
           </div>
         </UserSearchWrapper>
       </div>
