@@ -95,7 +95,7 @@ class UserList extends React.Component {
       },
       {
         key: 'OFFICE_TEL_NO',
-        name: '전화번호',
+        name: '사무실전화',
         visible: true,
         sortable: true,
         resizable: true,
@@ -108,6 +108,8 @@ class UserList extends React.Component {
     let dtSortDirection = '';
     let dtDeptId = 0;
     let dtPstnId = 0;
+    let dtDeptName = '';
+    let dtPstnName = '';
 
     // 상세에서 넘어온 Data
     console.log('this.props.history.location.state', this.props.history.location.state);
@@ -121,6 +123,8 @@ class UserList extends React.Component {
       dtSortDirection = location.sortDirection;
       dtDeptId = location.deptId;
       dtPstnId = location.pstnId;
+      dtDeptName = location.deptName;
+      dtPstnName = location.pstnName;
     }
 
     this.state = {
@@ -130,6 +134,8 @@ class UserList extends React.Component {
       sortDirectionParam: dtSortDirection,
       deptId: dtDeptId,
       pstnId: dtPstnId,
+      deptName: dtDeptName,
+      pstnName: dtPstnName,
     };
 
     this.props.getUserList(
@@ -154,6 +160,8 @@ class UserList extends React.Component {
       keyword: this.state.keyword,
       deptId: this.state.deptId,
       pstnId: this.state.pstnId,
+      deptName: this.state.deptName,
+      pstnName: this.state.pstnName,
     };
     this.props.history.push({
       pathname: `/admin/adminmain/account/user/${this.props.userList[i].USER_ID}`, state: data,
@@ -354,6 +362,8 @@ class UserList extends React.Component {
       keyword: this.state.keyword,
       deptId: this.state.deptId,
       pstnId: this.state.pstnId,
+      deptName: this.state.deptName,
+      pstnName: this.state.pstnName,
     };
     return (
       <div>
@@ -408,6 +418,10 @@ class UserList extends React.Component {
             >
               <Option value="userNameKor">이름</Option>
               <Option value="userEmpNo">사번</Option>
+              <Option value="deptName">부서</Option>
+              <Option value="pstnName">직위</Option>
+              <Option value="officeTel">사무실전화</Option>
+
             </Select>
             {/* 오른쪽 */}
             <div className="searchWrapper">
