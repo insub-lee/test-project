@@ -27,7 +27,9 @@ class CSManualList extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx } = this.props;
+    const {
+ resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx 
+} = this.props;
     setIsViewContents(false);
     resetManualView();
     setSelectedMualIdx(0);
@@ -35,7 +37,9 @@ class CSManualList extends Component {
   };
 
   render() {
-    const { totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx, selectedMualIdx } = this.props;
+    const {
+ totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx, selectedMualIdx 
+} = this.props;
     // let ListItemData = fromJS({});
     let ListItemData = fromJS([]);
     if (totalManualList.size > 0) {
@@ -44,18 +48,21 @@ class CSManualList extends Component {
       //   getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 24240 }),
       // );
 
-      const tempItemData = getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 24240 });
+      const tempItemData = getTreeFromFlatData({
+        flatData,
+        getKey: node => node.CATEGORY_IDX,
+        getParentKey: node => node.CATEGORY_PARENT_IDX,
+        rootKey: 24240,
+      });
 
-      ListItemData = fromJS(
-        tempItemData.map(item => {
+      ListItemData = fromJS(tempItemData.map((item) => {
           const tempNode = { ...item, childrenNode: item.children };
           delete tempNode.children;
           return tempNode;
-        }),
-      );
+        }),);
     }
     return (
-      <div style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
+      <div id="csManualList" style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
         <Topbar />
         {ListItemData.map(category => [
           <TitleBar key={`TitleBar_${category.get('CATEGORY_IDX')}`} categoryName={category.get('CATEGORY_NAME')} />,
@@ -76,6 +83,7 @@ class CSManualList extends Component {
           footer={null}
           onCancel={() => this.handleCloseModal()}
           closable={false}
+          getContainer={() => document.querySelector('#csManualList')}
         >
           <CSManualView mualIdx={selectedMualIdx} />
         </Modal>
