@@ -21,7 +21,7 @@ class Info extends Component {
   }
 
   render() {
-    const { info: { WORK_ID, NAME_KOR, DSCR } } = this.props;
+    const { info: { WORK_ID, NAME_KOR, DSCR }, isLoading } = this.props;
     return (
       <Wrapper>
         <Spin spinning={false}>
@@ -42,14 +42,17 @@ Info.propTypes = {
   info: PropTypes.object.isRequired,
   id: PropTypes.string.isRequired,
   fetchData: PropTypes.func,
+  isLoading: PropTypes.bool,
 };
 
 Info.defaultProps = {
   fetchData: () => console.debug('no bind events'),
+  isLoading: true,
 };
 
 const mapStateToProps = createStructuredSelector({
   info: selectors.makeSelectInfo(),
+  isLoading: selectors.makeSelectIsLoading(),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Modal, Spin } from 'antd';
+import { Modal } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import WorkBuilder from 'components/WorkBuilder';
+import Preloader from 'components/Preloader';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -21,12 +22,17 @@ class Designer extends Component {
     fetchData(id);
   }
 
+  componentWillUnmount() {
+    const { resetData } = this.props;
+    resetData();
+  }
+
   render() {
-    const { property, action, onDragEnd, onPreview, layers, closePreview } = this.props;
+    const { property, action, onDragEnd, onPreview, layers, closePreview, isLoading } = this.props;
     const { boxes, formStuffs } = layers;
     return (
       <React.Fragment>
-        <WorkBuilder property={property} action={action} onDragEnd={onDragEnd} />
+        <WorkBuilder property={property} action={action} onDragEnd={onDragEnd} isLoading={isLoading} />
         <Modal title="Preview" visible={onPreview} footer={null} onCancel={closePreview}>
           <View boxes={boxes} formStuffs={formStuffs} preview />
         </Modal>
@@ -53,6 +59,7 @@ Designer.propTypes = {
   }),
   onPreview: PropTypes.bool,
   closePreview: PropTypes.func,
+  isLoading: PropTypes.bool,
 };
 
 Designer.defaultProps = {
@@ -63,12 +70,14 @@ Designer.defaultProps = {
   },
   onPreview: false,
   closePreview: () => console.debug('no bind events'),
+  isLoading: true,
 };
 
 const mapStateToProps = createStructuredSelector({
   property: selectors.makeSelectProperty(),
   layers: selectors.makeSelectLayers(),
   onPreview: selectors.makeSelectOnPreview(),
+  isLoading: selectors.makeSelectIsLoading(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -157,6 +166,7 @@ const mapDispatchToProps = dispatch => ({
   onDragEnd: dropResult => dispatch(actions.onDragEnd(dropResult)),
   fetchData: id => dispatch(actions.fetchData(id)),
   closePreview: () => dispatch(actions.closePreview()),
+  resetData: () => dispatch(actions.resetData()),
 });
 
 const withReducer = injectReducer({ key: 'work-builder-detail-designer', reducer });

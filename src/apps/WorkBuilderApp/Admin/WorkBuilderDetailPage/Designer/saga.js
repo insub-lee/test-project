@@ -9,12 +9,15 @@ import { makeInfo, getDefaultFormProperty } from './util';
 import * as actions from './actions';
 
 function* fetchData({ id }) {
+  yield put(actions.enableLoading());
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${id}`);
   const { list } = response;
   yield put(actions.successFetchData(list));
+  yield put(actions.disableLoading());
 }
 
 function* saveLayers() {
+  yield put(actions.enableLoading());
   const workSeq = yield select(selectors.makeSelectWorkSeq());
   const payload = {
     PARAM: {
@@ -61,6 +64,7 @@ function* saveLayers() {
   // };
   //
   // console.debug(payload);
+  yield put(actions.disableLoading());
 }
 
 function* saveTemporary() {
