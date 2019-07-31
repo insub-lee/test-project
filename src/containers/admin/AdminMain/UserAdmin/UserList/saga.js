@@ -4,8 +4,14 @@ import * as actionTypes from './constants';
 import { Axios } from 'utils/AxiosFunc';
 
 export function* getUserList(payload) {
-  const response = yield call(Axios.post, '/api/admin/v1/common/getUserList', payload.payload);
-  const oldUserList = payload.payload.userList;
+  const {
+    userList: oldUserList, sNum, eNum, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId,
+  } = payload.payload;
+
+  const response = yield call(Axios.post, '/api/admin/v1/common/getUserList', {
+    sNum, eNum, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId,
+  });
+
   const userList = oldUserList.length > 0 ? oldUserList.concat(response.userList) : response.userList;
   yield put({ type: actionTypes.SET_USER_LIST, payload: userList });
 }
@@ -161,5 +167,4 @@ export default function* UserListSaga() {
   yield takeLatest(actionTypes.GET_CHANGE_PSTN_DATA, getChangePstnTreeData);
   yield takeLatest(actionTypes.GET_RANK_COMBO_LIST, getRankComboData);
   yield takeLatest(actionTypes.GET_CHANGE_RANK_DATA, getChangeRankTreeData);
-
 }
