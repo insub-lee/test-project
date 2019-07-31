@@ -1,5 +1,5 @@
 import React from 'react';
-import SortableTree, { getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
+import { SortableTreeWithoutDndContext as SortableTree, getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
 import { fromJS } from 'immutable';
 import { Button, Anchor, Icon } from 'antd';
@@ -16,8 +16,20 @@ const { Link } = Anchor;
 
 const getTreeData = (list, selectedTabName) => {
   const flatData = list.filter(item => item.IS_REMOVE !== 'Y');
-  flatData.push({ MUAL_TABCOMP_IDX: 0, MUAL_TABCOMP_PIDX: -1, MUAL_COMPVIEWINFO: selectedTabName, TYPE: 'index', SORT_SQ: 0, expanded: true });
-  return getTreeFromFlatData({ flatData, getKey: node => node.MUAL_TABCOMP_IDX, getParentKey: node => node.MUAL_TABCOMP_PIDX, rootKey: -1 });
+  flatData.push({
+    MUAL_TABCOMP_IDX: 0,
+    MUAL_TABCOMP_PIDX: -1,
+    MUAL_COMPVIEWINFO: selectedTabName,
+    TYPE: 'index',
+    SORT_SQ: 0,
+    expanded: true,
+  });
+  return getTreeFromFlatData({
+    flatData,
+    getKey: node => node.MUAL_TABCOMP_IDX,
+    getParentKey: node => node.MUAL_TABCOMP_PIDX,
+    rootKey: -1,
+  });
 };
 
 const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
@@ -36,7 +48,7 @@ const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
     };
   });
   const resultList = tabComponentList
-    .map(item => {
+    .map((item) => {
       const idx = compList.findIndex(node => node.MUAL_TABCOMP_IDX === item.MUAL_TABCOMP_IDX);
       if (idx > -1) return compList[idx];
       return item;
@@ -82,7 +94,9 @@ const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveCo
   ),
 });
 
-const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName }) => (
+const EditorIndex = ({
+ tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName 
+}) => (
   <StyleEditorIndex>
     <Anchor offsetTop={70}>
       <div className="editorIndexTreeWrapper">
