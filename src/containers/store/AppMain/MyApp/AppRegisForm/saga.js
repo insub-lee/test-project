@@ -10,9 +10,11 @@ import messages from '../messages';
 import * as constants from './constants';
 import { Axios } from '../../../../../utils/AxiosFunc';
 
+// 시스템 앱 (SITE_ID -1) 고정
 export function* insertAppInfo(payload) {
   const { history } = payload.payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/regismyapp/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/regismyapp/', params);
 
   const { code, appId, ver } = response;
   if (code === 200) {

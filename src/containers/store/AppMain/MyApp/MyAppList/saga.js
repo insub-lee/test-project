@@ -6,7 +6,8 @@ import * as constants from './constants';
 
 export function* getMyAppList(payload) {
   const { setMyAppList } = payload.payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myapplist/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myapplist/', params);
 
   if (response.myappList.length > 0) {
     response.myappList.map(item => (
