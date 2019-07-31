@@ -43,24 +43,29 @@ const Settings = ({
           </div>
         </div>
         {boxType === 'table' && (
-        <div className="trt-trait">
-          <div className="label" title="Box Type">
-                Span
-          </div>
-          <div className="field field-text">
-            <div className="input-holder">
-              <select key={`${type}-${target}-${targetIndex}-span`} className="field-select" defaultValue={target.property.span || 1} onChange={e => changeFormStuffSpan(targetIndex, e.target.value)}>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-              </select>
+          <div className="trt-trait">
+            <div className="label" title="Box Type">
+                  Span
             </div>
-            <div className="sel-arrow">
-              <div className="d-s-arrow" />
+            <div className="field field-text">
+              <div className="input-holder">
+                <select
+                  key={`${type}-${target}-${targetIndex}-span`}
+                  className="field-select"
+                  defaultValue={target.property.span || 1}
+                  onChange={e => changeFormStuffSpan(targetIndex, e.target.value)}
+                >
+                  <option value={1}>1</option>
+                  <option value={2}>2</option>
+                  <option value={3}>3</option>
+                </select>
+              </div>
+              <div className="sel-arrow">
+                <div className="d-s-arrow" />
+              </div>
             </div>
           </div>
-        </div>
-          )}
+        )}
       </div>
     </div>
   </div>
