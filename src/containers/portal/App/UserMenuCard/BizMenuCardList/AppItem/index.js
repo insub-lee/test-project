@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 import { Rate } from 'antd';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
@@ -9,7 +9,7 @@ import messages from './messages';
 import Card from '../../../UserStore/components/uielements/card.style';
 
 /* eslint-disable */
-const Item = ({ appId, categoryId, title, subTitle, starPoint, starTotal, appIcon }) => {
+const Item = ({ paramType, appId, categoryId, title, subTitle, starPoint, starTotal, appIcon }) => {
   const subTit = subTitle.length > 40 ? `${subTitle.substring(0, 40)}...` : subTitle.substring(0, 40);
 
   return (
@@ -24,7 +24,7 @@ const Item = ({ appId, categoryId, title, subTitle, starPoint, starTotal, appIco
           }}
         />
       </div>
-      <Link to={`/portal/card/bizMenu/detail/app/${categoryId}/${appId}`} title={subTit}>
+      <Link to={`/portal/card/${paramType}/detail/app/${categoryId}/${appId}`} title={subTit}>
         <h4 className="appTitle">{title}</h4>
         <p className="appDesc">{subTit}</p>
         <span className="ratingAvgInfo">

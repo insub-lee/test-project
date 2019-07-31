@@ -27,10 +27,11 @@ export const registerBiz = app => ({
   app,
 });
 
-export const getBizMenu = (key, history) => ({
+export const getBizMenu = (key, history, pageType) => ({
   type: constants.GET_BIZMENU,
   key,
   history,
+  pageType,
 });
 
 export const changeSelectedIndex = selectedIndex => ({

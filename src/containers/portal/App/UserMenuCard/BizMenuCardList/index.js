@@ -46,7 +46,15 @@ class BizMenuCardList extends Component {
   }
   /* eslint-disable */
   render() {
-    const { menuList, parentInfo, handleGoBack, isLoading } = this.props;
+    const {
+      menuList,
+      parentInfo,
+      handleGoBack,
+      isLoading,
+      match: {
+        params: { TYPE },
+      },
+    } = this.props;
 
     console.debug('@@@@@ menuList, parentInfo', { menuList, parentInfo });
     console.debug('@@@@@ this.props', this.props);
@@ -61,6 +69,7 @@ class BizMenuCardList extends Component {
                 <Spin indicator={<Icon type="loading" style={{ fontSize: 24 }} spin />} spinning={isLoading}>
                   <ItemList
                     type="ONE"
+                    paramType={TYPE}
                     parentInfo={parentInfo}
                     mapList={menuList}
                     searchword={() => {}}
