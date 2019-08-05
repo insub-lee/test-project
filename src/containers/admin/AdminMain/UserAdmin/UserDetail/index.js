@@ -255,7 +255,20 @@ class UserReg extends React.Component {
       mobileTel: this.state.mobileTel,
       compCd: this.state.compCd,
     };
-    if (this.state.mode === 'I') this.props.registUser(userInfo);
+    if (this.state.mode === 'I') {
+      const { history } = this.props;
+      const data = {
+        sortColumn: this.state.listSortColumn,
+        sortDirection: this.state.listSortDirection,
+        keywordType: this.state.listKeywordType,
+        keyword: this.state.listKeyword,
+        deptId: this.state.listDeptId,
+        pstnId: this.state.listPstnId,
+        deptName: this.state.listDeptName,
+        pstnName: this.state.listPstnName,
+      };
+      this.props.registUser(userInfo, data, history);
+    }
     else this.props.updateUser(userInfo);
   };
 
@@ -713,7 +726,7 @@ const mapDispatchToProps = dispatch => ({
   getDutyComboData: () => dispatch(actions.getDutyComboData()),
   getChangePSTNTreeData: PSTN_ID => dispatch(actions.getChangePSTNTreeData(PSTN_ID)),
   getPSTNComboData: () => dispatch(actions.getPSTNComboData()),
-  registUser: userInfo => dispatch(actions.insertUser(userInfo)),
+  registUser: (userInfo, data, history) => dispatch(actions.insertUser(userInfo, data, history)),
   getChangeRANKTreeData: RANK_ID => dispatch(actions.getChangeRANKTreeData(RANK_ID)),
   getRANKComboData: () => dispatch(actions.getRANKComboData()),
   updateUser: userId => dispatch(actions.updateUser(userId)),
