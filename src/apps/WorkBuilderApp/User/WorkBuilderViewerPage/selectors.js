@@ -35,7 +35,7 @@ const makeSelectWorkFlow = () =>
 const makeSelectWorkFlowConfig = () =>
   createSelector(
     selectWorkBuilderDetailPage,
-    state => {
+    (state) => {
       const config = state.getIn(['workFlow', 'CONFIG']);
       return config ? JSON.parse(config) : { info: {} };
     },

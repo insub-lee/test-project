@@ -45,7 +45,7 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SUCCESS_GET_FORM_DATA: {
       const { boxes, formStuffs, workFlow } = action;
       console.debug('@@@ success get', boxes, formStuffs, workFlow);
-      return state.set('boxes', fromJS(boxes)).set('formStuffs', fromJS(formStuffs)).set('workFlow', fromJS(workFlow));
+      return state.set('boxes', fromJS(boxes)).set('formStuffs', fromJS(formStuffs)).set('workFlow', fromJS(workFlow || {}));
     }
     case actionTypes.SUCCESS_GET_TASK_SEQ: {
       const { taskSeq } = action;

@@ -20,6 +20,10 @@ import saga from './saga';
 import Wrapper from './Wrapper';
 
 class WorkBuilderViewerPage extends Component {
+  constructor(props) {
+    super(props);
+    this.signLineRef = React.createRef();
+  }
   componentDidMount() {
     console.debug('Boot......두두두두두두');
     const {
@@ -42,11 +46,11 @@ class WorkBuilderViewerPage extends Component {
         <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848}>
           {PRC_ID && (
             <React.Fragment>
-              <SignLine prcId={PRC_ID} />
+              <SignLine prcId={PRC_ID} ref={this.signLineRef} />
               <br />
             </React.Fragment>
           )}
-          <View boxes={boxes} formStuffs={formStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
+          <View boxes={boxes} formStuffs={formStuffs} submitData={e => submitData(e, this.signLineRef)} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
         <Modal title="Edit" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose>
           <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} width={848} />
@@ -109,7 +113,10 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getView: id => dispatch(actions.getView(id)),
-  submitData: ({ target }) => {
+  submitData: ({ target }, signLineRef) => {
+    if (signLineRef) {
+      console.debug('SignLine Data', signLineRef.current);
+    }
     const data = new FormData(target);
     const payload = {};
     data.forEach((value, key) => {
@@ -125,7 +132,7 @@ const mapDispatchToProps = dispatch => ({
           break;
       }
     });
-    dispatch(actions.postData(payload));
+    // dispatch(actions.postData(payload));
   },
   toggleFormModal: value => dispatch(actions.toggleFormModal(value)),
   getTaskSeq: () => dispatch(actions.getTaskSeq()),
