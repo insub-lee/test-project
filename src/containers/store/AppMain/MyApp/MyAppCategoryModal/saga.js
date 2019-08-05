@@ -11,8 +11,10 @@ import messages from '../messages';
 import { Axios } from '../../../../../utils/AxiosFunc';
 import * as constants from './constants';
 
+// 시스템 앱 (SITE_ID -1) 고정
 export function* getTreeData() {
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myappcategory/', { data: 'temp' });
+  const params = { SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myappcategory/', params);
   const result = fromJS(JSON.parse(`[${response.result.join('')}]`));
   const { rootSelectedIndex } = response;
   if (result.size > 0) {
@@ -25,7 +27,8 @@ export function* getTreeData() {
 }
 
 export function* cateinsert(payload) {
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/regiscategory/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/regiscategory/', params);
   const { code } = response;
   if (code === 200) {
     message.success(
@@ -43,7 +46,8 @@ export function* cateinsert(payload) {
 }
 
 export function* cateUpdate(payload) {
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatecategory/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatecategory/', params);
   const { code } = response;
   if (code === 200) {
     message.success(
@@ -61,7 +65,8 @@ export function* cateUpdate(payload) {
 }
 
 export function* cateDelete(payload) {
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deletecategory/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deletecategory/', params);
   const { code } = response;
   if (code === 200) {
     message.success(
@@ -83,8 +88,8 @@ export function* cateDelete(payload) {
 
 export function* moveMymenu(payload) {
   const { treeData } = payload;
-
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/movemyappcategory', { treeData });
+  const params = { treeData, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/movemyappcategory', params);
   const { code } = response;
 
   if (code === 200) {

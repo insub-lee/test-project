@@ -169,6 +169,13 @@ const StlyedDefaultTheme = styled.div`
         &.active {
           background-color: rgba(255, 255, 255, 0.04);
           box-shadow: inset 3px 0 0 #886ab5;
+          > .item-title {
+            color: white;
+            background-color: rgba(0, 0, 0, 0.1);
+            a {
+              color: white;
+            }
+          }
         }
       }
     }

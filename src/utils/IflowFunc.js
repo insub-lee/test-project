@@ -12,7 +12,7 @@ function* getIflowUrl() {
   const uInfo = yield select(state => state.get('auth').get('profile'));
   let getIflowUrlArr = {};
 
-  if (uInfo.iflowUrl === 'http://125.141.68.18:12081') {
+  if (uInfo.iflowUrl === 'http://218.147.96.143:12081') {
     getIflowUrlArr = {
       iflowUrl: uInfo.iflowUrl,
       IFLOW_TOKEN: uInfo.IFLOW_TOKEN,

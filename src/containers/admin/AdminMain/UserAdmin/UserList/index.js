@@ -153,6 +153,7 @@ class UserList extends React.Component {
 
   // 리스트 클릭 링크
   onRowClick = (i) => {
+    if (i === -1) return;
     const data = {
       sortColumnParam: this.state.sortColumnParam,
       sortDirectionParam: this.state.sortDirectionParam,
@@ -234,8 +235,8 @@ class UserList extends React.Component {
   // Grid sort
   handleGridSort = (sortColumn, sortDirection) => {
     this.setState({
-      sortColumnParam: sortColumn,
-      sortDirectionParam: sortDirection,
+      sortColumnParam: sortDirection === 'NONE' ? '' : sortColumn,
+      sortDirectionParam: sortDirection === 'NONE' ? '' : sortDirection,
       userList: [],
     });
     pageSNum = 1;
@@ -247,8 +248,8 @@ class UserList extends React.Component {
       [],
       sortColumn,
       sortDirection,
-      this.state.searchText,
       this.state.keywordType,
+      this.state.keyword,
       this.state.deptId,
       this.state.pstnId,
     );

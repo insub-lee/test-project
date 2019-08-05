@@ -8,19 +8,22 @@ import messages from '../messages';
 import * as constants from './constants';
 
 export function* getBizInfo(payload) {
-  const { BIZGRP_ID } = payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/store/bizgroupinfo', { BIZGRP_ID: Number(BIZGRP_ID) });
+  console.debug('@@@@@@ payload: ', payload);
+  const { BIZGRP_ID, TYPE } = payload;
+  if (TYPE) {
+    const response = yield call(Axios.post, '/api/bizstore/v1/store/bizgroupinfo', { BIZGRP_ID: Number(BIZGRP_ID), pageType: TYPE });
 
-  if (response.result) {
-    yield put({
-      type: constants.SET_BIZ_INFO,
-      bizInfo: response.result,
-    });
+    if (response.result) {
+      yield put({
+        type: constants.SET_BIZ_INFO,
+        bizInfo: response.result,
+      });
+    }
+
+    const bizManagerList = response.bizManagerList ? response.bizManagerList : [];
+
+    yield put({ type: constants.BIZ_MANAGER_LIST, bizManagerList: fromJS(bizManagerList) });
   }
-
-  const bizManagerList = response.bizManagerList ? response.bizManagerList : [];
-
-  yield put({ type: constants.BIZ_MANAGER_LIST, bizManagerList: fromJS(bizManagerList) });
 }
 
 export function* registBiz(payload) {

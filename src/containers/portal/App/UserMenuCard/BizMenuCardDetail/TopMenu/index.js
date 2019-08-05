@@ -23,16 +23,30 @@ import AppMaNagerList from '../../../UserStore/components/AppManagerList';
 
 class TopMenu extends React.Component {
   componentDidMount() {
-    const { BIZGRP_ID, handleGetBizInfo } = this.props;
-    handleGetBizInfo(BIZGRP_ID);
+    const {
+      BIZGRP_ID,
+      handleGetBizInfo,
+      match: {
+        params: { TYPE },
+      },
+    } = this.props;
+    if (TYPE) {
+      handleGetBizInfo(BIZGRP_ID, TYPE);
+    }
   }
 
   componentDidUpdate(prevProps) {
-    const { BIZGRP_ID, handleGetBizInfo } = this.props;
+    const {
+      BIZGRP_ID,
+      handleGetBizInfo,
+      match: {
+        params: { TYPE },
+      },
+    } = this.props;
     const { BIZGRP_ID: prevBizgrpId } = prevProps;
 
-    if (prevBizgrpId !== BIZGRP_ID) {
-      handleGetBizInfo(BIZGRP_ID);
+    if (prevBizgrpId !== BIZGRP_ID && TYPE) {
+      handleGetBizInfo(BIZGRP_ID, TYPE);
     }
   }
 
@@ -90,7 +104,7 @@ TopMenu.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    handleGetBizInfo: BIZGRP_ID => dispatch(actions.getBizInfo(BIZGRP_ID)),
+    handleGetBizInfo: (BIZGRP_ID, TYPE) => dispatch(actions.getBizInfo(BIZGRP_ID, TYPE)),
     registBiz: BIZGRP_ID => dispatch(actions.registBiz(BIZGRP_ID)),
   };
 }

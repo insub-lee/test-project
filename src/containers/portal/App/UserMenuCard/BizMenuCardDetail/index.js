@@ -29,28 +29,24 @@ import Footer from '../../UserStore/Footer';
 
 class BizMenuCardDetail extends Component {
   componentDidMount() {
-    console.debug('>>>>>>>>card detail did mount: ', this.props);
     const {
       history,
       handleGetBizMenu,
       appBizGubun,
       match: {
-        params: { BIZGRP_ID },
+        params: { BIZGRP_ID, TYPE },
       },
     } = this.props;
-    handleGetBizMenu(Number(BIZGRP_ID), history);
+    handleGetBizMenu(Number(BIZGRP_ID), history, TYPE);
     appBizGubun(4);
   }
 
   componentDidUpdate(prevProps) {
-    console.debug('>>>>>>>>prevProps: ', prevProps);
-    console.debug('>>>>>>>>this.props: ', this.props);
-
     const {
       history,
       handleGetBizMenu,
       match: {
-        params: { BIZGRP_ID },
+        params: { BIZGRP_ID, TYPE },
       },
     } = this.props;
 
@@ -60,24 +56,31 @@ class BizMenuCardDetail extends Component {
       },
     } = prevProps;
     if (BIZGRP_ID !== prevID) {
-      console.debug('>>>>>>ID: ', Number(BIZGRP_ID));
-      console.debug('>>>>>>history: ', history);
-      handleGetBizMenu(Number(BIZGRP_ID), history);
+      handleGetBizMenu(Number(BIZGRP_ID), history, TYPE);
     }
   }
 
   /* eslint-disable */
   handleTreeOnClick = node => {
     console.debug('>>>>>>>>here node: ', node);
-    const { handleChangeSelectedIndex, history, match } = this.props;
-    const preUrl = match.path.substr(0, match.path.indexOf('/:'));
+    const {
+      handleChangeSelectedIndex,
+      history,
+      match,
+      match: {
+        params: { TYPE },
+      },
+    } = this.props;
+    const preUrl = match.path.substr(0, match.path.indexOf('/:TYPE'));
+
+    console.debug('>>>>>>preUrl: ', preUrl);
 
     handleChangeSelectedIndex(node.MENU_ID);
 
     if (node.TYPE === 'Y') {
-      history.push(`/portal/card/bizMenu/detail/app/${node.BIZGRP_ID}/${node.APP_ID}`);
+      history.push(`${preUrl}/${TYPE}/detail/app/${node.BIZGRP_ID}/${node.APP_ID}`);
     } else if (node.TYPE === 'N') {
-      history.push(`/portal/card/bizMenu/detail/page/${node.BIZGRP_ID}/${node.PAGE_ID}`);
+      history.push(`${preUrl}/${TYPE}/detail/page/${node.BIZGRP_ID}/${node.PAGE_ID}`);
     }
     if (node.NODE_TYPE !== 'F') {
       window.scrollTo(0, 0);
@@ -89,7 +92,7 @@ class BizMenuCardDetail extends Component {
 
     const { bizMenuData, selectedIndex, history, match } = this.props;
 
-    const preUrl = match.path.substr(0, match.path.indexOf('/:'));
+    const preUrl = match.path.substr(0, match.path.indexOf('/:BIZGRP_ID'));
 
     const {
       match: {
@@ -112,7 +115,7 @@ class BizMenuCardDetail extends Component {
               <li className="leftContent inPage">
                 <h2>
                   <button
-                    onClick={() => history.push(`${preUrl}/bizMenu/detail/info/${BIZGRP_ID}`)}
+                    onClick={() => history.push(`${preUrl}/${BIZGRP_ID}`)}
                     className="ellipsis"
                     style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
                   >
@@ -129,9 +132,9 @@ class BizMenuCardDetail extends Component {
               </li>
               <li className="rightContent">
                 <Switch>
-                  <Route path={`${preUrl}/bizMenu/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
-                  <Route path={`/portal/card/bizMenu/detail/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
-                  <Route path={`/portal/card/bizMenu/detail/page/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
+                  <Route path={`${preUrl}/:BIZGRP_ID`} component={BizInfo} exact />
+                  <Route path={`${preUrl}/:BIZGRP_ID/:appId`} component={AppInfo} exact />
+                  <Route path={`${preUrl}/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
                 </Switch>
               </li>
             </ul>
@@ -155,7 +158,7 @@ BizMenuCardDetail.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    handleGetBizMenu: (key, history) => dispatch(actions.getBizMenu(key, history)),
+    handleGetBizMenu: (key, history, pageType) => dispatch(actions.getBizMenu(key, history, pageType)),
     handleChangeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),
   };

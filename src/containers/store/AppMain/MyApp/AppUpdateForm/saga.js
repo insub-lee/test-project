@@ -12,7 +12,8 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 
 export function* insertAppInfo(payload) {
   const { history } = payload.payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatemyapp/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatemyapp/', params);
   const {
     code,
     appId,
@@ -62,7 +63,8 @@ export function* getInitInfo() {
 
 export function* getMyAppDetail(payload) {
   const { history } = payload.payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/appDetail/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/appDetail/', params);
 
   if (response.managerChk === 0) {
     feed.error(`${intlObj.get(messages.authChk)}`);
