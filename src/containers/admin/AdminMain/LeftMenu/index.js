@@ -26,6 +26,7 @@ const StyledAdminLeftMenu = styled.div`
   border-right: 1px solid #d1d2d3;
   background-color: #ffffff;
   z-index: 100;
+  overflow-y: auto;
 `;
 
 const MenuList = styled.ul`
