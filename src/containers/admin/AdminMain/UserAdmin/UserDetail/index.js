@@ -33,6 +33,17 @@ const phonelValid = (str) => {
   return re.test(String(str).toLowerCase());
 };
 
+const setListState = state => ({
+  sortColumn: state.listSortColumn,
+  sortDirection: state.listSortDirection,
+  keywordType: state.listKeywordType,
+  keyword: state.listKeyword,
+  deptId: state.listDeptId,
+  pstnId: state.listPstnId,
+  deptName: state.listDeptName,
+  pstnName: state.listPstnName,
+});
+
 class UserReg extends React.Component {
   constructor(prop) {
     super(prop);
@@ -85,6 +96,13 @@ class UserReg extends React.Component {
     }
   }
 
+  onClickToList = () => {
+    // console.log('!!!!!!', data);
+    this.props.history.push({
+      pathname: '/admin/adminmain/account', state: setListState(this.state),
+    });
+  }
+
   setUserInfo = (userInfo) => {
     this.setState({
       empNo: userInfo.EMP_NO,
@@ -131,23 +149,6 @@ class UserReg extends React.Component {
         break;
     }
   };
-
-  onClickToList = () => {
-    const data = {
-      sortColumn: this.state.listSortColumn,
-      sortDirection: this.state.listSortDirection,
-      keywordType: this.state.listKeywordType,
-      keyword: this.state.listKeyword,
-      deptId: this.state.listDeptId,
-      pstnId: this.state.listPstnId,
-      deptName: this.state.listDeptName,
-      pstnName: this.state.listPstnName,
-    };
-    // console.log('!!!!!!', data);
-    this.props.history.push({
-      pathname: '/admin/adminmain/account', state: data,
-    });
-  }  
 
   getEmpCheck = (userId, empNo) => {
     this.props.getEmpCheck(userId, empNo.toUpperCase());
@@ -255,8 +256,11 @@ class UserReg extends React.Component {
       mobileTel: this.state.mobileTel,
       compCd: this.state.compCd,
     };
-    if (this.state.mode === 'I') this.props.registUser(userInfo);
-    else this.props.updateUser(userInfo);
+    const { history } = this.props;
+    const data = setListState(this.state);
+
+    if (this.state.mode === 'I') this.props.registUser(userInfo, data, history);
+    else this.props.updateUser(userInfo, data, history);
   };
 
   showModal = (title, type) => {
@@ -609,7 +613,7 @@ class UserReg extends React.Component {
                       <span className="tipText" />
                     </FormItem>
                   </td>
-                </tr>       
+                </tr>
                 <tr>
                   <th>
                     <label htmlFor="s11">{intlObj.get(messages.titleUserOfficeTel)}</label>
@@ -713,10 +717,10 @@ const mapDispatchToProps = dispatch => ({
   getDutyComboData: () => dispatch(actions.getDutyComboData()),
   getChangePSTNTreeData: PSTN_ID => dispatch(actions.getChangePSTNTreeData(PSTN_ID)),
   getPSTNComboData: () => dispatch(actions.getPSTNComboData()),
-  registUser: userInfo => dispatch(actions.insertUser(userInfo)),
+  registUser: (userInfo, data, history) => dispatch(actions.insertUser(userInfo, data, history)),
   getChangeRANKTreeData: RANK_ID => dispatch(actions.getChangeRANKTreeData(RANK_ID)),
   getRANKComboData: () => dispatch(actions.getRANKComboData()),
-  updateUser: userId => dispatch(actions.updateUser(userId)),
+  updateUser: (userId, data, history) => dispatch(actions.updateUser(userId, data, history)),
   getUser: userId => dispatch(actions.getUser(userId)),
 });
 
