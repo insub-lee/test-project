@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectWorkBuilderDetailPage = state => state.get('work-builder-viewer');
+const selectWorkBuilderDetailPage = state => state.get('work-builder-viewer-page');
 
 const makeSelectColumns = () =>
   createSelector(
@@ -71,10 +71,4 @@ const makeSelectResultFormStuffs = () =>
     state => state.get('resultFormStuffs').toJS(),
   );
 
-const makeSelectSignLineInfo = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('signLineInfo').toJS(),
-  );
-
-export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs, makeSelectWorkFlow, makeSelectWorkFlowConfig, makeSelectSignLineInfo };
+export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs, makeSelectWorkFlow, makeSelectWorkFlowConfig };

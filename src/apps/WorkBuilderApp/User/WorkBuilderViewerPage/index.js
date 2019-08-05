@@ -4,13 +4,13 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Button, Modal } from 'antd';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import View from 'components/WorkBuilder/View';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import SignLine from 'apps/WorkFlow/Admin/SignLine';
 
 import * as selectors from './selectors';
@@ -20,12 +20,7 @@ import saga from './saga';
 import Wrapper from './Wrapper';
 
 class WorkBuilderViewerPage extends Component {
-  constructor(props) {
-    super(props);
-    this.signLineRef = React.createRef();
-  }
   componentDidMount() {
-    console.debug('Boot......두두두두두두');
     const {
       getView,
       match: { params },
@@ -34,8 +29,16 @@ class WorkBuilderViewerPage extends Component {
     getView(ID);
   }
 
+  getSignLineInfo = (info) => {
+    const { updateSignInfo } = this.props;
+    console.debug('callback info', info);
+    updateSignInfo(info);
+  };
+
   render() {
-    const { columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } } } = this.props;
+    const {
+      columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo,
+    } = this.props;
     console.debug('@ PRC_ID', resultFormStuffs);
     return (
       <Wrapper className="ag-theme-balham" style={{ height: 300, width: '100%' }}>
@@ -43,17 +46,17 @@ class WorkBuilderViewerPage extends Component {
           <Button htmlType="button" size="small" type="default" onClick={() => { toggleFormModal(true); getTaskSeq(); }}>등록</Button>
         </div>
         <AgGridReact columnDefs={columns} rowData={list} onRowClicked={({ data: { WORK_SEQ, TASK_SEQ } }) => openEditModal(WORK_SEQ, TASK_SEQ)} />
-        <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848}>
+        <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848} maskClosable={false}>
           {PRC_ID && (
             <React.Fragment>
-              <SignLine prcId={PRC_ID} ref={this.signLineRef} />
+              <SignLine prcId={PRC_ID} onChangeCallback={this.getSignLineInfo} />
               <br />
             </React.Fragment>
           )}
-          <View boxes={boxes} formStuffs={formStuffs} submitData={e => submitData(e, this.signLineRef)} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
+          <View boxes={boxes} formStuffs={formStuffs} submitData={e => submitData(e, PRC_ID, signLineInfo)} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
-        <Modal title="Edit" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose>
-          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} width={848} />
+        <Modal title="Edit" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose width={848} maskClosable={false}>
+          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
       </Wrapper>
     );
@@ -77,6 +80,8 @@ WorkBuilderViewerPage.propTypes = {
   saveTempContents: PropTypes.func,
   workFLow: PropTypes.object,
   workFlowConfig: PropTypes.object,
+  updateSignInfo: PropTypes.func,
+  signLineInfo: PropTypes.arrayOf(PropTypes.object),
 };
 
 WorkBuilderViewerPage.defaultProps = {
@@ -95,6 +100,8 @@ WorkBuilderViewerPage.defaultProps = {
   saveTempContents: () => console.debug('no bind events'),
   workFLow: {},
   workFlowConfig: { info: {} },
+  updateSignInfo: () => console.debug('no bind events'),
+  signLineInfo: [],
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -109,14 +116,12 @@ const mapStateToProps = createStructuredSelector({
   taskSeq: selectors.makeSelectTaskSeq(),
   workFLow: selectors.makeSelectWorkFlow(),
   workFlowConfig: selectors.makeSelectWorkFlowConfig(),
+  signLineInfo: selectors.makeSelectSignLineInfo(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getView: id => dispatch(actions.getView(id)),
-  submitData: ({ target }, signLineRef) => {
-    if (signLineRef) {
-      console.debug('SignLine Data', signLineRef.current);
-    }
+  submitData: ({ target }, prcId, signLineInfo) => {
     const data = new FormData(target);
     const payload = {};
     data.forEach((value, key) => {
@@ -132,17 +137,20 @@ const mapDispatchToProps = dispatch => ({
           break;
       }
     });
-    // dispatch(actions.postData(payload));
+    dispatch(actions.postData(payload, prcId, signLineInfo));
   },
   toggleFormModal: value => dispatch(actions.toggleFormModal(value)),
   getTaskSeq: () => dispatch(actions.getTaskSeq()),
   openEditModal: (workSeq, taskSeq) => dispatch(actions.openEditModal(workSeq, taskSeq)),
   closeEditModal: () => dispatch(actions.closeEditModal()),
-  saveTempContents: (detail, fieldNm, type, contSeq) => dispatch(actions.saveTaskContents({ detail, fieldNm, type, contSeq })),
+  saveTempContents: (detail, fieldNm, type, contSeq) => dispatch(actions.saveTaskContents({
+    detail, fieldNm, type, contSeq,
+  })),
+  updateSignInfo: info => dispatch(actions.updateSignInfo(info)),
 });
 
-const withReducer = injectReducer({ key: 'work-builder-viewer-page', reducer });
-const withSaga = injectSaga({ key: 'work-builder-viewer-page', saga });
+const withReducer = injectReducer({ key: 'work-builder-viewer', reducer });
+const withSaga = injectSaga({ key: 'work-builder-viewer', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,

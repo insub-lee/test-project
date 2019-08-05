@@ -33,11 +33,9 @@ export const toggleFormModal = value => ({
   value,
 });
 
-export const postData = (payload, prcId, processStep) => ({
+export const postData = payload => ({
   type: actionTypes.POST_DATA,
   payload,
-  prcId,
-  processStep,
 });
 
 export const successPostData = () => ({
@@ -77,9 +75,4 @@ export const successSaveTaskContents = ({ taskSeq, fieldNm, contSeq }) => ({
     fieldNm,
     contSeq,
   },
-});
-
-export const updateSignInfo = info => ({
-  type: actionTypes.UPDATE_SIGN_INFO,
-  info,
 });
