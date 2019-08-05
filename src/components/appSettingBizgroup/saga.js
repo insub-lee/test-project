@@ -2,6 +2,7 @@ import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 import * as constantsTopMenu from 'containers/store/AppMain/BizManage/BizMenuReg/TopMenu/constants';
 import * as constantsBizManage from 'containers/store/AppMain/BizManage/constants';
+import * as adminBizManageActionTypes from 'containers/admin/AdminMain/Menu/BizMenuReg/TopMenu/constants'
 import * as constants from './constants';
 import { Axios } from '../../utils/AxiosFunc';
 
@@ -55,11 +56,17 @@ export function* updateWidget(payload) {
   if (code === 200) {
     yield put({ type: constants.GET_WIDGET_LIST, PAGE_ID: widget.PAGE_ID });
 
+    // yield put({
+    //   type: constantsTopMenu.GET_BIZ_INFO,
+    //   BIZGRP_ID,
+    // });
+
     yield put({
-      type: constantsTopMenu.GET_BIZ_INFO,
+      type: adminBizManageActionTypes.GET_BIZ_INFO,
       BIZGRP_ID,
     });
 
+    
     yield put({
       type: constantsBizManage.UPDATE_TREENODE,
       key: BIZGRP_ID,
