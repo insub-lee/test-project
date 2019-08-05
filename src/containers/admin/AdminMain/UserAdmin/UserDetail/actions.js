@@ -12,9 +12,11 @@ export const insertUser = (userInfo, data, history) => ({
   history,
 });
 
-export const updateUser = userInfo => ({
+export const updateUser = (userInfo, data, history) => ({
   type: constants.UPDATE_USER_DATA,
   userInfo,
+  data,
+  history,
 });
 
 export const checkEmpNo = (userId, empNo) => ({

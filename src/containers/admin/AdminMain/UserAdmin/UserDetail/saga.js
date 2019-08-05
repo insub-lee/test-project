@@ -34,19 +34,21 @@ export function* insertUserInfo(payload) {
     history.push({
       pathname: '/admin/adminmain/account', state: listParam,
     });
-
   } else {
     feed.error(`${intlObj.get(messages.regFail)}`);
   }
 }
 
 export function* updatetUserInfo(payload) {
-  const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', payload.userInfo);
+  const { history, userInfo } = payload;
+  const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', userInfo);
   const data = response;
   if (data.code === 200) {
     message.success(<MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>, 3);
-    // const { userId } = data;
-    // yield put(push(`/admin/adminmain/account/user/${userId}`));
+    const listParam = payload.data;
+    history.push({
+      pathname: '/admin/adminmain/account', state: listParam,
+    });
   } else {
     feed.error(`${intlObj.get(messages.udtFail)}`);
   }
