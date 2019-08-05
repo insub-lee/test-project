@@ -22,14 +22,19 @@ const Panels = ({ property, action: { viewsContainerPanelAction, viewsPanelActio
 
 Panels.propTypes = {
   property: PropTypes.object,
-  action: PropTypes.object,
+  action: PropTypes.shape({
+    viewsPanelAction: PropTypes.object,
+    viewsContainerPanelAction: PropTypes.object,
+    optionsPanelAction: PropTypes.object,
+  }),
 };
 
-Panels.defaulProps = {
+Panels.defaultProps = {
   property: {},
   action: {
     viewsPanelAction: {},
     viewsContainerPanelAction: {},
+    optionsPanelAction: {},
   },
 };
 

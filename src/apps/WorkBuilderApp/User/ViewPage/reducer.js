@@ -30,7 +30,6 @@ const initialState = fromJS({
   isOpenFormModal: false,
   isOpenEditModal: false,
   workFlow: {},
-  signLineInfo: [],
 });
 
 const reducer = (state = initialState, action) => {
@@ -81,10 +80,6 @@ const reducer = (state = initialState, action) => {
       const { data: { taskSeq, fieldNm, contSeq } } = action;
       const targetIndex = state.get('formStuffs').findIndex(formStuff => formStuff.get('COMP_FIELD') === fieldNm);
       return state.setIn(['formStuffs', targetIndex, 'CONT_SEQ'], contSeq);
-    }
-    case actionTypes.UPDATE_SIGN_INFO: {
-      const { info } = action;
-      return state.set('signLineInfo', fromJS(info));
     }
     case actionTypes.ACTION_TYPES:
     default:

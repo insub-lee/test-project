@@ -60,6 +60,11 @@ class SignLine extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const { onChangeCallback, processStep } = this.props;
+    onChangeCallback(processStep);
+  }
+
   componentWillUnmount() {
     this.props.initProcessData();
   }
@@ -203,11 +208,13 @@ SignLine.propTypes = {
   getProcessData: PropTypes.func.isRequired,
   initProcessData: PropTypes.func.isRequired,
   changeStepInfo: PropTypes.func.isRequired,
+  onChangeCallback: PropTypes.func,
 };
 
 SignLine.defaultProps = {
   prcId: 44,
   processStep: [],
+  onChangeCallback: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({

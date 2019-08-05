@@ -32,25 +32,17 @@ function* getView({ id }) {
   yield put(actions.successGetFormData(boxes, formStuffs, workFlow));
 }
 
-function* postData({ payload, prcId, processStep }) {
+function* postData({ payload }) {
   const workSeq = yield select(selectors.makeSelectWorkSeq());
   const taskSeq = yield select(selectors.makeSelectTaskSeq());
   console.debug('@@ PARAM', JSON.stringify(payload));
   const response = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: payload });
   console.debug('@Temp', response);
-  if (prcId && processStep && processStep.some(process => !process.STEP_USERS || process.STEP_USERS.length === 0)) {
-    window.alert('결재선의 각 단계는 필수값입니다.');
-  } else {
-    const nextResponse = yield call(Axios.post, '/api/builder/v1/work/taskComplete', {
-      PARAM: {
-        TASK_SEQ: taskSeq, WORK_SEQ: workSeq, prcId, processStep,
-      },
-    });
-    console.debug('@Complete', nextResponse);
-    yield put(actions.toggleFormModal(false));
-    yield put(actions.closeEditModal());
-    yield put(actions.getView(workSeq));
-  }
+  const nextResponse = yield call(Axios.post, '/api/builder/v1/work/taskComplete', { PARAM: { TASK_SEQ: taskSeq, WORK_SEQ: workSeq } });
+  console.debug('@Complete', nextResponse);
+  yield put(actions.toggleFormModal(false));
+  yield put(actions.closeEditModal());
+  yield put(actions.getView(workSeq));
 }
 
 function* getTaskSeq() {

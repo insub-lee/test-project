@@ -1,4 +1,4 @@
-const prefix = 'apps/WorkBuilderApp/WorkBuilderViewerPage/';
+const prefix = 'apps/WorkBuilderApp/User/ViewPage/';
 
 export const ACTION_TYPES = `${prefix}ACTION_TYPES`;
 export const GET_VIEW = `${prefix}GET_VIEW`;
@@ -14,4 +14,3 @@ export const CLOSE_EDIT_MODAL = `${prefix}CLOSE_EDIT_MODAL`;
 export const SUCCESS_GET_EDIT_DATA = `${prefix}SUCCESS_GET_EDIT_DATA`;
 export const SAVE_TASK_CONTENTS = `${prefix}SAVE_TASK_CONTENTS`;
 export const SUCCESS_SAVE_TASK_CONTENTS = `${prefix}SUCCESS_SAVE_TASK_CONTENTS`;
-export const UPDATE_SIGN_INFO = `${prefix}UPDATE_SIGN_INFO`;
