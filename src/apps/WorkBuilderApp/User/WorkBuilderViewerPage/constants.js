@@ -15,3 +15,4 @@ export const SUCCESS_GET_EDIT_DATA = `${prefix}SUCCESS_GET_EDIT_DATA`;
 export const SAVE_TASK_CONTENTS = `${prefix}SAVE_TASK_CONTENTS`;
 export const SUCCESS_SAVE_TASK_CONTENTS = `${prefix}SUCCESS_SAVE_TASK_CONTENTS`;
 export const UPDATE_SIGN_INFO = `${prefix}UPDATE_SIGN_INFO`;
+export const RESET_DATA = `${prefix}RESET_DATA`;

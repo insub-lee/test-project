@@ -31,17 +31,18 @@ const initialState = fromJS({
   isOpenEditModal: false,
   workFlow: {},
   signLineInfo: [],
+  isLoading: true,
 });
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.GET_VIEW: {
       const { id } = action;
-      return state.set('workSeq', id);
+      return initialState.set('workSeq', id);
     }
     case actionTypes.SUCCESS_GET_VIEW: {
       const { columns, list } = action;
-      return state.set('columns', fromJS(columns)).set('list', fromJS(list));
+      return state.set('columns', fromJS(columns)).set('list', fromJS(list)).set('isLoading', false);
     }
     case actionTypes.SUCCESS_GET_FORM_DATA: {
       const { boxes, formStuffs, workFlow } = action;
@@ -86,6 +87,8 @@ const reducer = (state = initialState, action) => {
       const { info } = action;
       return state.set('signLineInfo', fromJS(info));
     }
+    case actionTypes.RESET_DATA:
+      return initialState;
     case actionTypes.ACTION_TYPES:
     default:
       return state;

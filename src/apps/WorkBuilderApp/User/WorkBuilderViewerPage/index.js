@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Button, Modal } from 'antd';
+import { Button, Modal, Table } from 'antd';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import View from 'components/WorkBuilder/View';
@@ -19,6 +20,8 @@ import reducer from './reducer';
 import saga from './saga';
 import Wrapper from './Wrapper';
 
+const AntdTable = StyledAntdTable(Table);
+
 class WorkBuilderViewerPage extends Component {
   componentDidMount() {
     const {
@@ -29,9 +32,23 @@ class WorkBuilderViewerPage extends Component {
     getView(ID);
   }
 
+  componentDidUpdate(prevProps) {
+    const { match: { params: { ID: prevId } } } = prevProps;
+    const { match: { params: { ID: id } }, getView } = this.props;
+
+    if (prevId !== id) {
+      getView(id);
+    }
+  }
+
+  componentWillUnmount() {
+    const { resetData } = this.props;
+    resetData();
+  }
+
   getSignLineInfo = (info) => {
     const { updateSignInfo } = this.props;
-    console.debug('callback info', info);
+    // console.debug('callback info', info);
     updateSignInfo(info);
   };
 
@@ -39,7 +56,7 @@ class WorkBuilderViewerPage extends Component {
     const {
       columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo,
     } = this.props;
-    console.debug('@ PRC_ID', resultFormStuffs);
+    console.debug('@@@ Data Check', columns, list);
     return (
       <Wrapper className="ag-theme-balham" style={{ height: 300, width: '100%' }}>
         <div style={{ textAlign: 'right' }}>
@@ -82,6 +99,7 @@ WorkBuilderViewerPage.propTypes = {
   workFlowConfig: PropTypes.object,
   updateSignInfo: PropTypes.func,
   signLineInfo: PropTypes.arrayOf(PropTypes.object),
+  resetData: PropTypes.func,
 };
 
 WorkBuilderViewerPage.defaultProps = {
@@ -102,6 +120,7 @@ WorkBuilderViewerPage.defaultProps = {
   workFlowConfig: { info: {} },
   updateSignInfo: () => console.debug('no bind events'),
   signLineInfo: [],
+  resetData: () => console.debug('no bind events'),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -121,6 +140,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getView: id => dispatch(actions.getView(id)),
+  resetData: () => dispatch(actions.resetData()),
   submitData: ({ target }, prcId, signLineInfo) => {
     const data = new FormData(target);
     const payload = {};

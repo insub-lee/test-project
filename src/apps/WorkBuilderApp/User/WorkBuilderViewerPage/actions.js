@@ -83,3 +83,7 @@ export const updateSignInfo = info => ({
   type: actionTypes.UPDATE_SIGN_INFO,
   info,
 });
+
+export const resetData = () => ({
+  type: actionTypes.RESET_DATA,
+});
