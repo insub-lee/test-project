@@ -32,6 +32,11 @@ const initialState = fromJS({
   workFlow: {},
   signLineInfo: [],
   isLoading: true,
+  isModalLoading: {
+    create: true,
+    modify: true,
+    read: true,
+  },
 });
 
 const reducer = (state = initialState, action) => {
@@ -57,7 +62,7 @@ const reducer = (state = initialState, action) => {
       const { data } = action;
       const formStuffs = state.get('formStuffs').toJS();
       console.debug('@@@', formStuffs);
-      const resultFormStuffs = formStuffs.map(formStuff => {
+      const resultFormStuffs = formStuffs.map((formStuff) => {
         const value = data[formStuff.property.name.toUpperCase()];
         return ({
           ...formStuff,
@@ -89,6 +94,18 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.RESET_DATA:
       return initialState;
+    case actionTypes.LOADING_ON:
+      return state.set('isLoading', true);
+    case actionTypes.LOADING_OFF:
+      return state.set('isLoading', false);
+    case actionTypes.MODAL_LOADING_ON: {
+      const { key } = action;
+      return state.setIn(['isLoading', key], true);
+    }
+    case actionTypes.MODAL_LOADING_OFF: {
+      const { key } = action;
+      return state.setIn(['isLoading', key], false);
+    }
     case actionTypes.ACTION_TYPES:
     default:
       return state;

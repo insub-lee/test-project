@@ -3,17 +3,17 @@
 
 @font-face{
 	font-family:'Noto Sans Light';
-	src: url(/css/fonts/NotoSansKR-Light.woff2) format('woff2'),
-	url(/css/fonts/NotoSansKR-Light.woff) format('woff'),
-	url(/css/fonts/NotoSansKR-Light.otf) format('opentype');
+	src: url(./fonts/NotoSansKR-Light.woff2) format('woff2'),
+	url(./fonts/NotoSansKR-Light.woff) format('woff'),
+	url(./fonts/NotoSansKR-Light.otf) format('opentype');
 	font-style:normal;
 	font-weight:400;
 }
 @font-face{
 	font-family:'Noto Sans Regular';
-	src: url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2) format('woff2'),
-	url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff) format('woff'),
-	url(//fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf) format('opentype');
+	src: url(./fonts/NotoSansKR-Regular.woff2) format('woff2'),
+	url(./fonts/NotoSansKR-Regular.woff) format('woff'),
+	url(./fonts/NotoSansKR-Regular.otf) format('opentype');
 	font-style:normal;
 	font-weight:400;
 }
@@ -46,9 +46,10 @@
 html h1, html h2, html h3, html h4, html h5, html h6,
 html a, html p, html li, input, textarea, span, div, html, body, html a {
   margin-bottom: 0;
-  font-family: 'Noto Sans Light', 'Malgun Gothic', 'Roboto', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /*font-family: 'Noto Sans Light', 'Malgun Gothic', 'Roboto', sans-serif;*/
+  font-family: 'Noto Sans Regular', 'Malgun Gothic', 'Roboto', sans-serif;
+  /*-webkit-font-smoothing: antialiased;*/
+  /*-moz-osx-font-smoothing: grayscale;*/
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
 }
 
@@ -57,7 +58,7 @@ html ul {-webkit-padding-start: 0px;list-style: none;margin-bottom: 0;}
 body {padding: 0; margin: 0;}
 ul { padding: 0; }
 button { padding: 0; cursor: pointer; }
-a, a:hover, a:active {color: unset !important;} /* antd color 비(非)적용 */
+/* a, a:hover, a:active {color: unset !important;} !* antd color 비(非)적용 *!*/
 
 ::-webkit-input-placeholder {color: #bababa; font-weight: 400;} /* Chrome ≤56, Safari 5-10.0, iOS Safari 4.2-10.2, Opera 15-43, Opera Mobile >12, Android Browser 2.1-4.4.4, Samsung Internet, UC Browser for Android, QQ Browser */
 :-moz-placeholder {color: #bababa; font-weight: 400;} /* Firefox 4-18 */
