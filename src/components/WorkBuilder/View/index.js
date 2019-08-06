@@ -11,7 +11,7 @@ import StyledFormStuff from 'components/WorkBuilder/View/StyledFormStuff';
 import Styled from './Styled';
 
 const View = ({
-  boxes, formStuffs, submitData, preview, saveTempContents, workSeq, taskSeq,
+  boxes, formStuffs, submitData, preview, saveTempContents, workSeq, taskSeq, readOnly,
 }) => (
   <Styled className="canvas" onSubmit={submitData}>
     <Form layout="vertical">
@@ -27,7 +27,11 @@ const View = ({
                         .filter(formStuff => formStuff.parentId === box.id)
                         .map(formStuff => (
                           <StyledFormStuff key={formStuff.id} className="form-group">
-                            <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].renderer({ formStuff, saveTempContents, workSeq, taskSeq })}</Form.Item>
+                            <Form.Item label={formStuff.property.label}>
+                              {allFormStuffs[formStuff.type].renderer({
+                               formStuff, saveTempContents, workSeq, taskSeq,
+                              })}
+                            </Form.Item>
                           </StyledFormStuff>
                         ))}
                     {box.property.type === 'table' && (
@@ -36,7 +40,11 @@ const View = ({
                           .filter(formStuff => formStuff.parentId === box.id)
                           .map(formStuff => (
                             <Descriptions.Item key={formStuff.id} label={formStuff.property.label} span={formStuff.property.span || 1}>
-                              <Styled classNam="form-group">{allFormStuffs[formStuff.type].renderer({ formStuff, saveTempContents, workSeq, taskSeq })}</Styled>
+                              <Styled classNam="form-group">
+                                {allFormStuffs[formStuff.type].renderer({
+                                 formStuff, saveTempContents, workSeq, taskSeq,
+                                })}
+                              </Styled>
                             </Descriptions.Item>
                           ))}
                       </Descriptions>
@@ -46,8 +54,8 @@ const View = ({
               </Card>
             </StyledFormLayer>
           ))}
-          {!preview && (
-            <Form.Item style={{ textAlign: 'right' }}>
+          {(!preview || !readOnly) && (
+            <Form.Item style={{ textAlign: 'right', marginBottom: 0 }}>
               <Button type="primary" htmlType="submit">
                 등록
               </Button>
@@ -65,6 +73,7 @@ View.propTypes = {
   submitData: PropTypes.func,
   saveTempContents: PropTypes.func,
   preview: PropTypes.bool,
+  readOnly: PropTypes.bool,
 };
 
 View.defaultProps = {
@@ -73,6 +82,7 @@ View.defaultProps = {
   submitData: () => console.debug('no bind events'),
   saveTempContents: () => console.debug('no bind events'),
   preview: false,
+  readOnly: false,
 };
 
 export default View;

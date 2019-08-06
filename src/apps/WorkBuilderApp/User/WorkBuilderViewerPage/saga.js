@@ -14,10 +14,6 @@ function* getView({ id }) {
     headerName: NAME_KOR,
     field: COMP_FIELD.toUpperCase(),
   }));
-  // console.debug('...dummyReponse', dummyResponse);
-  // const { metas } = dummyResponse;
-  // This Part is Temporary
-  // let formStuffs = [];
   const boxes = metaList.filter(meta => meta.COMP_TYPE === 'BOX').map(box => ({
     ...JSON.parse(box.CONFIG).property,
   }));
@@ -26,8 +22,6 @@ function* getView({ id }) {
   }));
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   // yield put(actions.successGetView(boxes, formStuffs));
-
-  console.debug(list, columns);
   yield put(actions.successGetView(columns, list));
   yield put(actions.successGetFormData(boxes, formStuffs, workFlow));
 }
@@ -35,7 +29,6 @@ function* getView({ id }) {
 function* postData({ payload, prcId, processStep }) {
   const workSeq = yield select(selectors.makeSelectWorkSeq());
   const taskSeq = yield select(selectors.makeSelectTaskSeq());
-  console.debug('@@ PARAM', JSON.stringify(payload));
   const response = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: payload });
   console.debug('@Temp', response);
   if (prcId && processStep && processStep.some(process => !process.STEP_USERS || process.STEP_USERS.length === 0)) {

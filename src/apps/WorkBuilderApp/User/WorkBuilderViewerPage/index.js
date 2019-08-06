@@ -79,7 +79,7 @@ class WorkBuilderViewerPage extends Component {
           rowKey="TASK_SEQ"
           loading={isLoading}
         />
-        <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848} maskClosable={false}>
+        <Modal title="등록" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848} maskClosable={false}>
           {PRC_ID && (
             <React.Fragment>
               <SignLine prcId={PRC_ID} onChangeCallback={this.getSignLineInfo} />
@@ -88,7 +88,7 @@ class WorkBuilderViewerPage extends Component {
           )}
           <View boxes={boxes} formStuffs={formStuffs} submitData={e => submitData(e, PRC_ID, signLineInfo)} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
-        <Modal title="Edit" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose width={848} maskClosable={false}>
+        <Modal title="조회 및 수정" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose width={848} maskClosable={false}>
           <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
       </Wrapper>
@@ -116,8 +116,8 @@ WorkBuilderViewerPage.propTypes = {
   updateSignInfo: PropTypes.func,
   signLineInfo: PropTypes.arrayOf(PropTypes.object),
   resetData: PropTypes.func,
-  workSeq: PropTypes.number,
-  taskSeq: PropTypes.number,
+  workSeq: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  taskSeq: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isLoading: PropTypes.bool,
 };
 
