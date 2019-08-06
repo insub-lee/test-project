@@ -61,10 +61,12 @@ function* getTaskSeq() {
 }
 
 function* getEditData({ workSeq, taskSeq }) {
+  yield put(actions.enableModalLoading('modify'));
   yield put(actions.successGetTaskSeq(taskSeq));
   const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`);
   const { data } = response;
   yield put(actions.successGetEditData(data));
+  yield put(actions.disableModalLoading('modify'));
 }
 
 function* saveTaskContents({ data }) {

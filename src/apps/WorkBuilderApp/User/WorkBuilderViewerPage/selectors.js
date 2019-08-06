@@ -77,4 +77,10 @@ const makeSelectSignLineInfo = () =>
     state => state.get('signLineInfo').toJS(),
   );
 
-export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs, makeSelectWorkFlow, makeSelectWorkFlowConfig, makeSelectSignLineInfo };
+const makeSelectIsLoading = () =>
+  createSelector(
+    selectWorkBuilderDetailPage,
+    state => state.get('isLoading'),
+  );
+
+export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs, makeSelectWorkFlow, makeSelectWorkFlowConfig, makeSelectSignLineInfo, makeSelectIsLoading };

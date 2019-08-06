@@ -87,3 +87,21 @@ export const updateSignInfo = info => ({
 export const resetData = () => ({
   type: actionTypes.RESET_DATA,
 });
+
+export const enableLoading = () => ({
+  type: actionTypes.LOADING_ON,
+});
+
+export const disableLoading = () => ({
+  type: actionTypes.LOADING_OFF,
+});
+
+export const enableModalLoading = key => ({
+  type: actionTypes.MODAL_LOADING_ON,
+  key,
+});
+
+export const disableModalLoading = key => ({
+  type: actionTypes.MODAL_LOADING_OFF,
+  key,
+});

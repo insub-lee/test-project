@@ -4,9 +4,9 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import { Button, Modal, Table } from 'antd';
-import { AgGridReact } from 'ag-grid-react';
-import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+// import { AgGridReact } from 'ag-grid-react';
+// import 'ag-grid-community/dist/styles/ag-grid.css';
+// import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import injectReducer from 'utils/injectReducer';
@@ -48,21 +48,37 @@ class WorkBuilderViewerPage extends Component {
 
   getSignLineInfo = (info) => {
     const { updateSignInfo } = this.props;
-    // console.debug('callback info', info);
     updateSignInfo(info);
   };
 
   render() {
     const {
-      columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo,
+      columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo, isLoading,
     } = this.props;
-    console.debug('@@@ Data Check', columns, list);
     return (
-      <Wrapper className="ag-theme-balham" style={{ height: 300, width: '100%' }}>
+      <Wrapper style={{ width: '100%', height: 'calc(100vh - 42px)' }}>
         <div style={{ textAlign: 'right' }}>
           <Button htmlType="button" size="small" type="default" onClick={() => { toggleFormModal(true); getTaskSeq(); }}>등록</Button>
         </div>
-        <AgGridReact columnDefs={columns} rowData={list} onRowClicked={({ data: { WORK_SEQ, TASK_SEQ } }) => openEditModal(WORK_SEQ, TASK_SEQ)} />
+        {/*
+        <div className="ag-theme-balham">
+          <AgGridReact columnDefs={columns} rowData={list} onRowClicked={({ data: { WORK_SEQ, TASK_SEQ } }) => openEditModal(WORK_SEQ, TASK_SEQ)} />
+        </div>
+        */}
+        <AntdTable
+          columns={columns.map(({ headerName, field }) => ({
+            title: headerName || field,
+            dataIndex: field,
+            key: field,
+            align: 'center',
+          }))}
+          dataSource={list}
+          onRow={({ WORK_SEQ, TASK_SEQ }) => ({
+            onClick: () => openEditModal(WORK_SEQ, TASK_SEQ),
+          })}
+          rowKey="TASK_SEQ"
+          loading={isLoading}
+        />
         <Modal title="New" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848} maskClosable={false}>
           {PRC_ID && (
             <React.Fragment>
@@ -85,6 +101,7 @@ WorkBuilderViewerPage.propTypes = {
   list: PropTypes.arrayOf(PropTypes.object),
   boxes: PropTypes.arrayOf(PropTypes.object),
   formStuffs: PropTypes.arrayOf(PropTypes.object),
+  resultFormStuffs: PropTypes.arrayOf(PropTypes.object),
   match: PropTypes.object.isRequired,
   getView: PropTypes.func,
   submitData: PropTypes.func,
@@ -95,11 +112,13 @@ WorkBuilderViewerPage.propTypes = {
   openEditModal: PropTypes.func,
   closeEditModal: PropTypes.func,
   saveTempContents: PropTypes.func,
-  workFLow: PropTypes.object,
   workFlowConfig: PropTypes.object,
   updateSignInfo: PropTypes.func,
   signLineInfo: PropTypes.arrayOf(PropTypes.object),
   resetData: PropTypes.func,
+  workSeq: PropTypes.number,
+  taskSeq: PropTypes.number,
+  isLoading: PropTypes.bool,
 };
 
 WorkBuilderViewerPage.defaultProps = {
@@ -107,6 +126,7 @@ WorkBuilderViewerPage.defaultProps = {
   list: [],
   boxes: [],
   formStuffs: [],
+  resultFormStuffs: [],
   getView: () => console.debug('no bind events'),
   submitData: () => console.debug('no bind events'),
   isOpenFormModal: false,
@@ -116,11 +136,13 @@ WorkBuilderViewerPage.defaultProps = {
   openEditModal: () => console.debug('no bind events'),
   closeEditModal: () => console.debug('no bind events'),
   saveTempContents: () => console.debug('no bind events'),
-  workFLow: {},
   workFlowConfig: { info: {} },
   updateSignInfo: () => console.debug('no bind events'),
   signLineInfo: [],
   resetData: () => console.debug('no bind events'),
+  workSeq: -1,
+  taskSeq: -1,
+  isLoading: true,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -136,6 +158,7 @@ const mapStateToProps = createStructuredSelector({
   workFLow: selectors.makeSelectWorkFlow(),
   workFlowConfig: selectors.makeSelectWorkFlowConfig(),
   signLineInfo: selectors.makeSelectSignLineInfo(),
+  isLoading: selectors.makeSelectIsLoading(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -149,7 +172,6 @@ const mapDispatchToProps = dispatch => ({
       const dataType = node.getAttribute('data-type') || 'string';
       switch (dataType) {
         case 'json':
-          console.debug('@ value', value);
           payload[key] = JSON.parse(value);
           break;
         default:
