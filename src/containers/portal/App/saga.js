@@ -205,7 +205,7 @@ export function* getDockItemList(payload) {
 
           if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
             //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-            if (dockList[a].WIDGET_LIST !== undefined && dockList[a].WIDGET_LIST !== null) {
+            if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
               notiVal.forEach((notiValue) => {
@@ -294,7 +294,7 @@ export function* loadingDockItem(payload) {
 
           if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
             //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-            if (dockList[a].WIDGET_LIST !== undefined && dockList[a].WIDGET_LIST !== null) {
+            if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
               notiVal.forEach((notiValue) => {

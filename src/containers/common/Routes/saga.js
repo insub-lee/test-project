@@ -394,7 +394,7 @@ export function* getNotiMCnt() {
 
           if (notiList[a].APP_ID === -1 && notiList[a].NODE_TYPE === 'E') {
             //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-            if (notiList[a].WIDGET_LIST !== undefined) {
+            if (notiList[a].WIDGET_LIST) {
               const appIdArr = notiList[a].WIDGET_LIST.split(',');
               let sum = 0;
               notiVal.forEach(notiValue => {
@@ -858,7 +858,7 @@ export function* execMenu(payload) {
 
             if (dockList[a].APP_ID === -1 && dockList[a].NODE_TYPE === 'E') {
               //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-              if (dockList[a].WIDGET_LIST !== undefined) {
+              if (dockList[a].WIDGET_LIST ) {
                 const appIdArr = dockList[a].WIDGET_LIST.split(',');
                 let sum = 0;
                 notiVal.forEach(notiValue => {
@@ -1409,7 +1409,7 @@ export function* getLoaddata(payload) {
 
               if (dockAppListUpdate[a].APP_ID === -1 && dockAppListUpdate[a].NODE_TYPE === 'E') {
                 //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-                if (dockAppListUpdate[a].WIDGET_LIST !== undefined) {
+                if (dockAppListUpdate[a].WIDGET_LIST) {
                   const appIdArr = dockAppListUpdate[a].WIDGET_LIST.split(',');
                   let sum = 0;
                   notiVal.forEach(notiValue => {
