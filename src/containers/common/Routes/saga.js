@@ -1409,7 +1409,7 @@ export function* getLoaddata(payload) {
 
               if (dockAppListUpdate[a].APP_ID === -1 && dockAppListUpdate[a].NODE_TYPE === 'E') {
                 //  업무 그룹용 예외처리 추후 확인 바람(10/11);
-                if (dockAppListUpdate[a].WIDGET_LIST !== undefined) {
+                if (dockAppListUpdate[a].WIDGET_LIST) {
                   const appIdArr = dockAppListUpdate[a].WIDGET_LIST.split(',');
                   let sum = 0;
                   notiVal.forEach(notiValue => {
