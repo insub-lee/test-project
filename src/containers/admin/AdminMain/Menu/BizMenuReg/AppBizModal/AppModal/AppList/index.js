@@ -21,37 +21,30 @@ function checkValue(v1, v2) {
 }
 
 class AppList extends Component {
-  constructor(props) {
-    super(props);
-    const { match, loadingOn } = props;
-    const { params } = match;
-    const { CATG_ID, searchword } = params;
-
+  componentDidMount() {
+    console.debug('@@@ AppList DaDaDaDa');
+    const { match: { params: { CATG_ID, searchword } }, loadingOn, handleInitPage } = this.props;
     loadingOn();
-
     if (CATG_ID) {
-      this.CATG_ID = CATG_ID;
-      this.props.handleInitPage('ONE', CATG_ID);
+      handleInitPage('ONE', CATG_ID);
     } else if (searchword) {
-      this.CATG_ID = '';
-      this.props.handleInitPage('SEARCH', searchword);
+      handleInitPage('SEARCH', searchword);
     } else {
-      this.CATG_ID = '';
-      this.props.handleInitPage('ALL');
+      handleInitPage('ALL');
     }
   }
-  componentWillReceiveProps(nextProps) {
-    const { match, loadingOn } = nextProps;
-    const { params } = match;
-    const { CATG_ID, searchword } = params;
 
-    if (checkValue(searchword, nextProps.searchword)) {
+  componentDidUpdate(prevProps) {
+    const { match: { params: { prevCatgId, prevSearchword } } } = prevProps;
+    const {
+      match: { params: { CATG_ID, searchword } }, loadingOn, handleGetMapAppListSearch, handleGetMapListOne,
+    } = this.props;
+    if (checkValue(prevSearchword, searchword)) {
       loadingOn();
-      this.props.handleGetMapAppListSearch(searchword);
-    } else if (checkValue(CATG_ID, this.CATG_ID)) {
-      this.CATG_ID = CATG_ID;
+      handleGetMapAppListSearch(CATG_ID);
+    } else if (checkValue(prevCatgId, CATG_ID)) {
       loadingOn();
-      this.props.handleGetMapListOne(CATG_ID);
+      handleGetMapListOne(CATG_ID);
     }
   }
 
@@ -65,27 +58,21 @@ class AppList extends Component {
       handleRegistCategory,
       handleGetMapListOne,
       searchword,
-
       loadingOn,
     } = this.props;
-
-    const handleGoBack = () => {
-      history.goBack();
-    };
-
     return (
       <ItemList
         history={history}
         type={initType}
         mapList={mapList}
         getMapListOne={handleGetMapListOne}
-        getMapListMore={key => {
+        getMapListMore={(key) => {
           loadingOn();
           handleGetMapAppListMore(key);
         }}
         registApp={handleRegistApp}
         registCategory={handleRegistCategory}
-        goBack={handleGoBack}
+        goBack={() => history.goBack()}
         searchword={searchword}
         // history={history}
       />
@@ -147,6 +134,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AppBizModal/
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppList);

@@ -16,6 +16,8 @@ import * as constantsBizManage from '../../../../constants';
 const appBlockSize = 20;
 const appBlockSizeAll = 8;
 
+console.debug('@@@ You Call Me Super Saga');
+
 /* 초기 페이지 세팅 */
 export function* initPage(payload) {
   const { initType, param } = payload;
@@ -348,15 +350,13 @@ export function* updateChangeWGCount(payload) {
   yield put({ type: constants.SET_MAPLIST, mapList });
 }
 
-export default function* rootSaga() {
+export default function* watcher() {
   yield takeLatest(constants.INIT_PAGE, initPage);
   yield takeLatest(constants.GET_MAPLIST_ONE, getMapListOne);
   yield takeLatest(constants.GET_MAPLIST_ALL, getMapListAll);
   yield takeLatest(constants.GET_MAPLIST_SEARCH, getMapListSearch);
   yield takeLatest(constants.GET_MAPLIST_MORE, getMapListMore);
-
   yield takeLatest(constants.REGIST_APP_MODAL, registAppModal);
   yield takeLatest(constants.REGIST_CATEGORY_MODAL, registCategoryModal);
-
   yield takeLatest(constants.UPDATE_CHANGE_WGCOUNT, updateChangeWGCount);
 }
