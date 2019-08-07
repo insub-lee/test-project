@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('appcategory');
+const selectOrg = state => state.get('admin/components/AppCategory');
 
 const makeCategoryData = () => createSelector(
   selectOrg,
