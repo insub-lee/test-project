@@ -159,6 +159,10 @@ const reducer = (state = initialState, action) => {
       const { type, index, value } = action.payload;
       return state.setIn([type, index], fromJS(value));
     }
+    case actionTypes.SUCCESS_CHANGE_MAX_LENGTH: {
+      const { type, index, value } = action.payload;
+      return state.setIn([type, index], fromJS(value));
+    }
     case actionTypes.SUCCESS_CHANGE_USE_LABEL: {
       const { type, index, value } = action.payload;
       return state.setIn([type, index], fromJS(value));

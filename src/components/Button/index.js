@@ -1,5 +1,10 @@
 import { Button } from 'antd';
+import Styled from './Styled';
 // import { Buttons, ButtonsGroup } from './styles/button.style';
+
+const AntButton = Styled(Button);
+
+export default AntButton;
 
 // const AntButton = Buttons(Button);
 // const isoButton = WithDirection(AntButton);
@@ -8,4 +13,4 @@ import { Button } from 'antd';
 
 // export default isoButton;
 // export { ButtonGroup };
-export default Button;
+// export default Button;

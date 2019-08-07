@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Settings = ({
-  type, target, targetIndex, boxType, action: { changeTitle, changeName, changeFormStuffSpan },
+  type, target, targetIndex, boxType, action: { changeTitle, changeName, changeMaxLength, changeFormStuffSpan },
 }) => (
   <div className="sm-sector">
     <div className="sm-title">
@@ -21,14 +21,14 @@ const Settings = ({
                 key={`${type}-${target}-${targetIndex}-label`}
                 defaultValue={target.property.label}
                 placeholder="eg. Text here"
-                onChange={e => changeTitle(type, targetIndex, e.target.value)}
+                onChange={e => changeTitle(type, targetIndex, e)}
               />
             </div>
           </div>
         </div>
         <div className="trt-trait">
           <div className="label" title="Title">
-              Name
+            Name
           </div>
           <div className="field field-text">
             <div className="input-holder">
@@ -37,11 +37,30 @@ const Settings = ({
                 key={`${type}-${target}-${targetIndex}-name`}
                 defaultValue={target.property.name}
                 placeholder="eg. Text here"
-                onChange={e => changeName(type, targetIndex, e.target.value)}
+                onChange={e => changeName(type, targetIndex, e)}
               />
             </div>
           </div>
         </div>
+        {(target.type === 'text' || target.type === 'textarea') && (
+          <div className="trt-trait">
+            <div className="label" title="Title">
+              Length
+            </div>
+            <div className="field field-text">
+              <div className="input-holder">
+                <input
+                  type="number"
+                  key={`${type}-${target}-${targetIndex}-max--length`}
+                  defaultValue={target.property.maxLength || 0}
+                  placeholder="eg. insert number"
+                  min={0}
+                  onChange={e => changeMaxLength(type, targetIndex, e)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
         {boxType === 'table' && (
           <div className="trt-trait">
             <div className="label" title="Box Type">
@@ -79,6 +98,7 @@ Settings.propTypes = {
   action: PropTypes.shape({
     changeTitle: PropTypes.func,
     changeName: PropTypes.func,
+    changeMaxLength: PropTypes.func,
     changeSpan: PropTypes.func,
   }),
 };
@@ -88,6 +108,7 @@ Settings.defaultProps = {
   action: {
     changeTitle: () => false,
     changeName: () => false,
+    changeMaxLength: () => false,
     changeSpan: () => false,
   },
 };

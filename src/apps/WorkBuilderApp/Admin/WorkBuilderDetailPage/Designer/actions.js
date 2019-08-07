@@ -143,6 +143,25 @@ export const successChangeName = ({ type, index, value }) => ({
   },
 });
 
+export const changeMaxLength = ({ type, index, value }) => ({
+  type: actionTypes.CHANGE_MAX_LENGTH,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
+
+export const successChangeMaxLength = ({ type, index, value }) => ({
+  type: actionTypes.SUCCESS_CHANGE_MAX_LENGTH,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
 export const changeUseLabel = ({ type, index, value }) => ({
   type: actionTypes.CHANGE_USE_LABEL,
   payload: {

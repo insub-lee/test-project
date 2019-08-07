@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Upload as AntdUpload, Icon, Button } from 'antd';
+import { Upload as AntdUpload, Icon } from 'antd';
+
+import Button from 'components/Button';
 
 const UploadButton = () => (
   <Button htmlType="button">

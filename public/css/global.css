@@ -58,7 +58,7 @@ html ul {-webkit-padding-start: 0px;list-style: none;margin-bottom: 0;}
 body {padding: 0; margin: 0;}
 ul { padding: 0; }
 button { padding: 0; cursor: pointer; }
-/* a, a:hover, a:active {color: unset !important;} !* antd color 비(非)적용 *!*/
+html a, html a:hover, html a:active {color: unset;} /* antd color 비(非)적용 */
 
 ::-webkit-input-placeholder {color: #bababa; font-weight: 400;} /* Chrome ≤56, Safari 5-10.0, iOS Safari 4.2-10.2, Opera 15-43, Opera Mobile >12, Android Browser 2.1-4.4.4, Samsung Internet, UC Browser for Android, QQ Browser */
 :-moz-placeholder {color: #bababa; font-weight: 400;} /* Firefox 4-18 */

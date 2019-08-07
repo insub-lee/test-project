@@ -45,22 +45,8 @@ class ItemList extends Component {
     const handleReadMore = () => getMapListMore(key);
 
     const renderTitle = () => {
-      let jsx = '';
-      // if (type === 'SEARCH') {
-      //   jsx = (
-      //     <div className="storeListTitle" style={{ textAlign: 'center' }}>
-      //       <Button type="button" className="arrowGoBack" onClick={goBack} />
-      //       <h3>
-      //         {searchword !== undefined && appList.length > 0 ?
-      //           `'${searchword}' ${intlObj.get(messages.searchResult)}`
-      //           : ''
-      //         }
-      //       </h3>
-      //     </div>
-      //   );
-      // } else
       if (appList.length > 0) {
-        jsx = (
+        return (
           <div className="storeListTitle">
             <h3>
               {lang.get('NAME', map)}
@@ -73,7 +59,7 @@ class ItemList extends Component {
         );
       } else if (appList.length === 0 && type === 'ONE') {
         // 빈화면
-        jsx = (
+        return (
           <div className="storeListTitle" style={{ height: 'auto', borderBottom: 'none' }}>
             <h3>
               {lang.get('NAME', map)}
@@ -91,14 +77,12 @@ class ItemList extends Component {
           </div>
         );
       }
-      return jsx;
+      return null;
     };
 
     const renderAppList = () => {
-      let result = '';
-
       if (appList.length > 0) {
-        result = appList.map((app) => {
+        return appList.map((app) => {
           const handleRegistApp = () => registApp(app.APP_ID, app.CATG_ID, history);
           const handleRegistCategory = () => registCategory(app.APP_ID, app.CATG_ID, history);
           // const itemOnclick = () =>
@@ -131,7 +115,7 @@ class ItemList extends Component {
       //     </Col>
       //   );
       // }
-      return result;
+      return null;
     };
 
     const boxkey = `box${key}`;
@@ -146,26 +130,26 @@ class ItemList extends Component {
 
         {
           /* appList more */
-          type === 'ONE' && appList.length > 0 ? (
+          type === 'ONE' && appList.length > 0 && (
             <div className="showReadMore">
               {showReadMoreBtn ?
                 <Button type="button" className="showMoreBtn" onClick={handleReadMore} />
                 : ''}
             </div>
-          ) : ''
+          )
         }
 
         <Row key={key}>
           <ContentHolder style={{ overflow: 'hidden' }}>
             {
               /* child category list */
-              childList ? childList.map(child => (
+              childList && childList.map(child => (
                 <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
                   <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
                     {lang.get('NAME', child)}
                   </Button>
                 </Col>
-              )) : ''
+              ))
             }
           </ContentHolder>
         </Row>
@@ -187,17 +171,8 @@ class ItemList extends Component {
       <LayoutWrapper>
         <Row style={rowStyle} gutter={gutter} justify="start">
           <Col span={24} style={colStyle}>
-            {mapList.length > 0 ? (
-              mapList.map((map) => {
-                if (map.appList) {
-                  return this.renderMap(map);
-                }
-                return '';
-              })
-            ) : (
-                ''
-              )}
-            {mapList.length === 0 && type === 'SEARCH' ? (
+            {mapList.length > 0 && (mapList.map(map => (map.appList ? this.renderMap(map) : '')))}
+            {mapList.length === 0 && type === 'SEARCH' && (
               <Box key="searchBox">
                 <div className="storeListTitle" style={{ textAlign: 'center' }}>
                   <Button type="button" className="arrowGoBack" onClick={goBack} />
@@ -208,7 +183,7 @@ class ItemList extends Component {
                   </Col>
                 </Row>
               </Box>
-            ) : ''}
+            )}
           </Col>
         </Row>
       </LayoutWrapper>
