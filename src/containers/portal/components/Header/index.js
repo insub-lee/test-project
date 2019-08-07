@@ -85,11 +85,9 @@ const Header = ({
               <li>
                 <UserSearch />{/* 구성원검색 */}
               </li>
-              {hasRoleAdmin === true && (
               <li>
                 <AlarmPopover />{/* 알림 */}
               </li>
-              )}
               {/*
                 <li>
                   <SettingsPopover />
