@@ -38,3 +38,5 @@ export const SAVE_TASK_CONTENTS = `${prefix}SAVE_TASK_CONTENTS`;
 export const LOADING_ON = `${prefix}LOADING_ON`;
 export const LOADING_OFF = `${prefix}LOADING_OFF`;
 export const RESET_DATA = `${prefix}RESET_DATA`;
+export const CHANGE_MAX_LENGTH = `${prefix}CHANGE_MAX_LENGTH`;
+export const SUCCESS_CHANGE_MAX_LENGTH = `${prefix}SUCCESS_CHANGE_MAX_LENGTH`;

@@ -24,7 +24,7 @@ const BoxSettings = ({
                 key={`${type}-${target}-${targetIndex}-label`}
                 defaultValue={target.property.label}
                 placeholder="eg. Text here"
-                onChange={e => changeTitle(type, targetIndex, e.target.value)}
+                onChange={e => changeTitle(type, targetIndex, e)}
               />
             </div>
           </div>

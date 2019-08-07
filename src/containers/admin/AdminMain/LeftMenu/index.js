@@ -22,7 +22,8 @@ const StyledAdminLeftMenu = styled.div`
   left: 0;
   width: 200px;
   height: calc(100vh - 45px);
-  padding: 10px 15px;
+  //padding: 10px 15px;
+  padding: 10px 15px 10px 30px;
   border-right: 1px solid #d1d2d3;
   background-color: #ffffff;
   z-index: 100;

@@ -17,9 +17,16 @@ function* getView({ id }) {
   const boxes = metaList.filter(meta => meta.COMP_TYPE === 'BOX').map(box => ({
     ...JSON.parse(box.CONFIG).property,
   }));
-  const formStuffs = metaList.filter(meta => meta.COMP_TYPE === 'FIELD').map(formStuff => ({
-    ...JSON.parse(formStuff.CONFIG).property,
-  }));
+  const formStuffs = metaList.filter(meta => meta.COMP_TYPE === 'FIELD').map(formStuff => {
+    const { property: configProperty } = JSON.parse(formStuff.CONFIG);
+    return {
+      ...configProperty,
+      property: {
+        ...configProperty.property,
+        maxLength: configProperty.property.maxLength === 0 ? undefined : configProperty.property.maxLength,
+      },
+    };
+  });
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   // yield put(actions.successGetView(boxes, formStuffs));
   yield put(actions.successGetView(columns, list));

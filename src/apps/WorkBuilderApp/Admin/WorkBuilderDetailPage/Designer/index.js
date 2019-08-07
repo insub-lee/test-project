@@ -9,7 +9,6 @@ import { Modal } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import WorkBuilder from 'components/WorkBuilder';
-import Preloader from 'components/Preloader';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -137,11 +136,23 @@ const mapDispatchToProps = dispatch => ({
           changeId: (type, index, value) => {
             dispatch(actions.changeId({ type, index, value }));
           },
-          changeTitle: (type, index, value) => {
+          changeTitle: (type, index, { target }) => {
+            const { value } = target;
             dispatch(actions.changeTitle({ type, index, value }));
           },
-          changeName: (type, index, value) => {
+          changeName: (type, index, { target }) => {
+            const { value } = target;
             dispatch(actions.changeName({ type, index, value }));
+          },
+          changeMaxLength: (type, index, e) => {
+            let { value } = e.target;
+            const number = parseInt(value, 10) || 0;
+            e.target.value = number;
+            if (number < 0) {
+              e.target.value = 0;
+              value = 0;
+            }
+            dispatch(actions.changeMaxLength({ type, index, value: Number(value) }));
           },
           changeUseLabel: (type, index, value) => {
             dispatch(actions.changeUseLabel({ type, index, value }));
