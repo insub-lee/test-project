@@ -16,10 +16,43 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import TitleRenderer from './TitleRenderer';
-// import DraftList from './DraftList';
 import DraftView from './DraftView';
 
 const AntdTable = StyledAntdTable(Table);
+
+const getColumns = (columns, CATE) => {
+  if (CATE === 'draft') {
+    columns.push({
+      title: '기안일',
+      dataIndex: 'DRAFT_DTTM',
+      key: 'draftDttm',
+      width: '15%',
+    });
+  } else {
+    columns.push(
+      {
+        title: '결재자',
+        dataIndex: 'APPV_NAME_KOR',
+        key: 'appvNameKor',
+        width: '10%',
+      },
+      {
+        title: '상태',
+        dataIndex: 'APPV_STATUS_NM',
+        key: 'appvStatsNm',
+        width: '5%',
+      },
+      {
+        title: '결재일시',
+        dataIndex: 'APPV_DTTM',
+        key: 'appvDttm',
+        width: '10%',
+      },
+    );
+  }
+
+  return columns;
+};
 
 class Draft extends Component {
   constructor(props) {
@@ -52,7 +85,7 @@ class Draft extends Component {
       visibleViewModal,
     } = this.props;
     const { CATE } = match.params;
-    const columns = [
+    let columns = [
       {
         title: 'No',
         dataIndex: 'RNUM',
@@ -71,19 +104,8 @@ class Draft extends Component {
         key: 'nameKor',
         width: '10%',
       },
-      {
-        title: '결재자',
-        dataIndex: 'APPV_NAME_KOR',
-        key: 'appvNameKor',
-        width: '10%',
-      },
-      {
-        title: '기안일',
-        dataIndex: 'DRAFT_DTTM',
-        key: 'draftDttm',
-        width: '15%',
-      },
     ];
+    columns = getColumns(columns, CATE);
 
     return (
       <div style={{ width: '100%', height: '600px', padding: '48px' }}>

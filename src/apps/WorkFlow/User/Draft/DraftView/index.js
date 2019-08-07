@@ -22,7 +22,6 @@ import StyleDraftView from './StyleDraftView';
 
 class DraftView extends Component {
   componentDidMount() {
-    // const { DRAFT_ID, QUE_ID } = this.props.match.params;
     const { selectedDraft, getDraftDetail } = this.props;
     const payload = {
       DRAFT_ID: selectedDraft.DRAFT_ID,
@@ -64,9 +63,17 @@ class DraftView extends Component {
       CATE, visible, draftDetail, signline, draftHistory, visibleOpinionModal, setVisibleOpinionModal,
     } = this.props;
 
-    // if (isRedirect) {
-    //   return <Redirect to={`/apps/WorkFlow/User/Draft/${CATE}`} />;
-    // }
+    const btnArr = [
+      <Button key="close" onClick={this.handleCloselModal}>
+        닫기
+      </Button>,
+    ];
+
+    if (CATE === 'unApproval' && draftDetail.STATUS === 1) {
+      btnArr.push(<Button type="primary" onClick={this.openOpinionModal}>
+          결재
+        </Button>,);
+    }
 
     return (
       <Modal
@@ -76,14 +83,7 @@ class DraftView extends Component {
         onCancel={this.handleCloselModal}
         width="1200PX"
         style={{ top: 50 }}
-        footer={[
-          <Button key="close" onClick={this.handleCloselModal}>
-            닫기
-          </Button>,
-          <Button type="primary" onClick={this.openOpinionModal}>
-            결재
-          </Button>,
-        ]}
+        footer={btnArr}
       >
         <StyleDraftView>
           <div>
@@ -91,24 +91,10 @@ class DraftView extends Component {
               <h1>{draftDetail.TITLE}</h1>
             </div>
             <div className="line_component">
-              {/* <SignLine signline={signline} /> */}
               <SignStep signline={signline} />
               <SignLine signline={signline} />
             </div>
             <div className="content" style={{ minHeight: '400px' }} />
-            {CATE === 'unApproval' && draftDetail.STATUS === 1 && (
-              <div className="buttonWrapper">
-                {/* <Button type="default" onClick={e => this.approvalRequest(e, 9)}>
-                  반려
-                </Button>
-                <Button type="primary" onClick={e => this.approvalRequest(e, 1)}>
-                  승인
-                </Button> */}
-                {/* <Button type="primary" onClick={this.openOpinionModal}>
-                  결재
-                </Button> */}
-              </div>
-            )}
             {/* <div className="history">
               <HistoryGridData draftHistory={draftHistory} />
             </div> */}
