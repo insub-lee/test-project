@@ -147,6 +147,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AppBizModal/
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppList);
