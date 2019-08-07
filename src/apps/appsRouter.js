@@ -17,6 +17,7 @@ import CicdProject from './cicdProject';
 import CicdService from './cicdService';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
 import ManualCategoryManage from './manual/admin/CategoryManage';
+import Draft from './WorkFlow/User/Draft';
 
 const getAppsRouter = selectedApp => {
   const type = 'swidget';
@@ -45,6 +46,7 @@ const getAppsRouter = selectedApp => {
             <Route path={`/${basicPath.APPS}/cicdService`} component={CicdService} />
             <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
             <Route path={`/${basicPath.APPS}/manualCategoryManage`} component={ManualCategoryManage} />
+            <Route path={`/${basicPath.APPS}/draft/:CATE`} component={Draft} />
           </Switch>
         </div>
       );

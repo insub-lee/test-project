@@ -20,6 +20,11 @@ export const updateProcessInfo = processInfo => ({
   processInfo,
 });
 
+export const deleteProcessInfo = processInfo => ({
+  type: actionTypes.DELETE_PROCESS_INFO,
+  processInfo,
+});
+
 export const setProcessInfo = prcInfo => ({
   type: actionTypes.SET_PROCESS_INFO,
   prcInfo,
