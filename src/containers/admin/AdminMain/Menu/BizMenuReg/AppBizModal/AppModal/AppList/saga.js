@@ -16,8 +16,6 @@ import * as constantsBizManage from '../../../../constants';
 const appBlockSize = 20;
 const appBlockSizeAll = 8;
 
-console.debug('@@@ You Call Me Super Saga');
-
 /* 초기 페이지 세팅 */
 export function* initPage(payload) {
   const { initType, param } = payload;

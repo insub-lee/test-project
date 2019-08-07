@@ -22,7 +22,6 @@ function checkValue(v1, v2) {
 
 class AppList extends Component {
   componentDidMount() {
-    console.debug('@@@ AppList DaDaDaDa');
     const { match: { params: { CATG_ID, searchword } }, loadingOn, handleInitPage } = this.props;
     loadingOn();
     if (CATG_ID) {
