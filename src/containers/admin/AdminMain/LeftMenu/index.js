@@ -109,9 +109,6 @@ class menuList extends React.Component {
 
     if (!url || url.length < 1) {
       return;
-    } else if (url === '/store/appMain/MyApp') {
-      window.open(url, '_blank');
-      return;
     } else if (this.state.strUrl === url) {
       // return;
     }

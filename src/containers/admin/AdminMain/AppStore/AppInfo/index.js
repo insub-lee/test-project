@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
-import AppDetailStyle from 'containers/store/AppMain/AppDetail/appDetailStyle';
-import AppBasicInfo from '../../../../store/AppMain/AppDetail/AppBasicInfo';
-import AppScreenshot from '../../../../store/AppMain/AppDetail/AppScreenshot';
-import AppQna from '../../../../store/AppMain/AppDetail/AppQna/index';
-import AppRating from '../../../../store/AppMain/AppDetail/AppRating/index';
+import AppDetailStyle from 'containers/admin/AdminMain/AppDetail/appDetailStyle';
+import AppBasicInfo from 'containers/admin/AdminMain/AppDetail/AppBasicInfo';
+import AppScreenshot from 'containers/admin/AdminMain/AppDetail/AppScreenshot';
+import AppQna from 'containers/admin/AdminMain/AppDetail/AppQna/index';
+import AppRating from 'containers/admin/AdminMain/AppDetail/AppRating/index';
 
 class AppInfo extends Component {
   constructor(props) {

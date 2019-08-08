@@ -22,6 +22,7 @@ import Dept from './Dept';
 import UserAdmin from './UserAdmin';
 import AppStore from './AppStore';
 import Menu from './Menu';
+import App from './App';
 
 // const wrap = dragDropContext(HTML5Backend);
 
@@ -46,6 +47,7 @@ class wrap extends PureComponent {
       <div>
         {/* 어드민 메인 콘텐츠 */}
         <Switch>
+          <Route path="/admin/adminmain/app" component={App} />
           <Route path="/admin/adminmain/codeadmin" component={CodeAdmin} />
           <Route path="/admin/adminmain/siteadmin" component={SiteAdmin} />
           <Route path="/admin/adminmain/globaladmin" component={GlobalAdmin} />
@@ -63,7 +65,6 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/workbuilder/:ID" component={WorkBuilderDetailPage} />
           <Route path="/admin/adminmain/account" component={UserAdmin} />
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
-
         </Switch>
       </div>
     );
