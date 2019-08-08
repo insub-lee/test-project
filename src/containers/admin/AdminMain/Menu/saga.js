@@ -27,8 +27,9 @@ export function* getUserRole() {
 export function* getTreeData() {
   // const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree', { data: 'temp' });
   const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', { data: 'temp' });
-  const result = fromJS(JSON.parse(`[${response.result}]`));
-  const categoryData = result.get(0).get('children');
+  const result = JSON.parse(`[${response.result}]`);
+  if (!result[0].children) result[0].children = [];
+  const categoryData = fromJS(result).getIn([0, 'children']);
   const categoryFlatData = treeFunc.generateListBiz(categoryData);
 
   yield put({

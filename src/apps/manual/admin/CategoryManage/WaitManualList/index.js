@@ -5,13 +5,17 @@ import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
 
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import * as manageActions from '../../ManualManager/actions';
 
 import reducer from '../reducer';
 import saga from '../saga';
+
 import * as actions from '../actions';
 import selectors from '../selectors';
 import StyleManualList from './StyleManualList';
+
+const AntdTable = StyledAntdTable(Table);
 
 const columns = (setManualManage, setIsWaitModal) => [
   {
@@ -52,7 +56,7 @@ const columns = (setManualManage, setIsWaitModal) => [
   },
 ];
 
-class ManualList extends Component {
+class WaitManualList extends Component {
   componentDidMount() {
     const { getManualList } = this.props;
     getManualList();
@@ -75,7 +79,7 @@ class ManualList extends Component {
     return (
       <StyleManualList>
         <Spin tip="Loading..." spinning={isLoading}>
-          <Table
+          <AntdTable
             dataSource={dataSource}
             columns={columns(setManualManage, setIsWaitModal)}
             pagination={{ current: paginationIdx }}
@@ -87,10 +91,10 @@ class ManualList extends Component {
   }
 }
 
-ManualList.propTypes = {
+WaitManualList.propTypes = {
   setManualManage: PropTypes.func,
   manualList: PropTypes.object,
-  categoryIndex: PropTypes.number,
+  isWaitModal: PropTypes.bool,
   isLoading: PropTypes.bool,
   paginationIdx: PropTypes.number,
   setPaginationIdx: PropTypes.func,
@@ -98,10 +102,10 @@ ManualList.propTypes = {
   setIsWaitModal: PropTypes.func,
 };
 
-ManualList.defaultProps = {
+WaitManualList.defaultProps = {
   setManualManage: () => false,
   manualList: fromJS([]),
-  categoryIndex: 0,
+  isWaitModal: false,
   isLoading: false,
   paginationIdx: 1,
   setPaginationIdx: () => false,
@@ -113,6 +117,7 @@ const mapStateToProps = createStructuredSelector({
   manualList: selectors.makeSelectManualist(),
   isLoading: selectors.makeSelectIsLoading(),
   paginationIdx: selectors.makeSelectPaginationIdx(),
+  isWaitModal: selectors.makeSelectIsWaitModal(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -125,4 +130,4 @@ const mapDispatchToProps = dispatch => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ManualList);
+)(WaitManualList);

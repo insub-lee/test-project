@@ -128,3 +128,9 @@ export const ResetDefaultMgrBySaga = () => ({ type: constantTypes.RESET_DEFAULT_
 export const RemoveManualBySaga = () => ({ type: constantTypes.REMOVE_MANUAL_SAGA });
 
 export const GetDefaultMgrByVersionBySaga = version => ({ type: constantTypes.GET_DEFAULTMGR_BY_VERSION_SAGA, version });
+
+export const setScrollComponentByReducr = item => ({ type: constantTypes.SET_SCROLL_COMPONENT_REDUCR, item });
+
+export const getOptionMgrBySaga = () => ({ type: constantTypes.GET_OPTIONMGR_SAGA });
+
+export const setIsRelationMualModalByReduc = flag => ({ type: constantTypes.SET_IS_RELATION_MUAL_MODAL_REDUCR, flag });

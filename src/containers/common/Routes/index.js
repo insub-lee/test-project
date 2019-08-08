@@ -87,7 +87,7 @@ class PublicRoutes extends Component {
         const param1 = pathArray[1];
         let param2 = pathArray[2];
         if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
-        else if (pathArray[2] === 'workBuilder') param2 = `${pathArray[2]}/${pathArray[3]}`;
+        else if (pathArray[2] === 'workBuilder' || pathArray[2] === 'draft') param2 = `${pathArray[2]}/${pathArray[3]}`;
         const param3 = {
           isCssTarget: true,
         };

@@ -403,7 +403,9 @@ BizGroupTree.propTypes = {
   canDrag: PropTypes.func,
   canDrop: PropTypes.func,
   onClick: PropTypes.func,
-  userRole: PropTypes.string,
+  userRole: PropTypes.string.isRequired,
+  addEmptyNode: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 BizGroupTree.defaultProps = {

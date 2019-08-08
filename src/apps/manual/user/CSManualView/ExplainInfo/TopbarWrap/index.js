@@ -1,13 +1,13 @@
 import React from 'react';
 
 import TopbarTitle from '../TopbarTitle';
-import TopbarBtnWrap from '../../../components/TopbarBtnWrap';
+import Nav from '../../Header/Nav';
 import Styled from './Styled';
 
 const TopbarWrap = () => (
   <Styled>
     <TopbarTitle />
-    <TopbarBtnWrap />
+    <Nav />
   </Styled>
 );
 

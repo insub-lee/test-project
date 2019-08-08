@@ -15,6 +15,7 @@ import saga from './saga';
 import * as actions from './actions';
 import selectors from './selectors';
 import EditorMgr from './EditorMgr';
+import OptionMgr from './OptionMgr';
 
 class ManualMaster extends Component {
   componentDidMount() {
@@ -68,11 +69,19 @@ class ManualMaster extends Component {
   }
 
   render() {
-    const { isEditorMgr } = this.props;
+    const { isEditorMgr, pageMoveType } = this.props;
+    let viewContents = <DefaultMgr />;
+    switch (pageMoveType.get('pageType')) {
+      case 'OptionMgr':
+        viewContents = <OptionMgr />;
+        break;
+      default:
+        break;
+    }
     return (
       <div>
         <MenuMenu />
-        <DefaultMgr />
+        {viewContents}
         {isEditorMgr && <EditorMgr />}
       </div>
     );
@@ -84,6 +93,7 @@ ManualMaster.propTypes = {
   isEditorMgr: PropTypes.bool,
   manualIndex: PropTypes.number,
   categoryIndex: PropTypes.number,
+  pageMoveType: PropTypes.object,
 };
 
 ManualMaster.defaultProps = {
@@ -91,10 +101,12 @@ ManualMaster.defaultProps = {
   isEditorMgr: false,
   manualIndex: 0,
   categoryIndex: 0,
+  pageMoveType: fromJS({}),
 };
 
 const mapStateToProps = createStructuredSelector({
   isEditorMgr: selectors.makeSelectIsEditorMgr(),
+  pageMoveType: selectors.makeSelectMovePageType(),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,9 +1,11 @@
 import React from 'react';
 import Styled from './Styled';
 
-const TopbarBtn = () => (
+const TopbarBtn = ({ data }) => (
   <Styled>
-    <span>오류신고</span>
+    <button type="button" onClick={() => data.event()}>
+      {data.title}
+    </button>
   </Styled>
 );
 

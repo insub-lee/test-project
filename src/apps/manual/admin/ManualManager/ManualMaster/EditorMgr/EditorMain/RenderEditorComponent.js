@@ -4,6 +4,7 @@ import FroalaEditor from '../../../../../components/RichTextEditor/FroalaEditor'
 import FroalaEditorView from '../../../../../components/RichTextEditor/FroalaEditorView';
 
 import { froalaEditorConfig } from './FroalaEditorConfig';
+import QnA from './QnA';
 
 const onClickComponent = (e, selectItem, selectedComponentIdx, handleChangeCompIdx) => {
   e.stopPropagation();
@@ -94,8 +95,8 @@ const RenderEditorComponent = (item, handleChangeCompValue, handleChangeCompIdx,
                     onChange={e => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.ACTION_TYPE', e.target.value)}
                     value={item.COMP_OPTION.ACTION_TYPE}
                   >
-                    <Radio value="menu">목차메뉴</Radio>
-                    <Radio value="title">목차메뉴 & 목차명</Radio>
+                    <Radio value="title">목차명</Radio>
+                    <Radio value="menu">목차메뉴 & 목차명</Radio>
                   </Radio.Group>
                 </div>
               </div>
@@ -153,6 +154,9 @@ const RenderEditorComponent = (item, handleChangeCompValue, handleChangeCompIdx,
           </div>
         </div>
       );
+      break;
+    case 'qna':
+      innerContent = <QnA item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
       break;
     default:
       innerContent = '';

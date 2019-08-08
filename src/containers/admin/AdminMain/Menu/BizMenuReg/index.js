@@ -108,14 +108,14 @@ class BizMenuReg extends Component {
     };
 
     let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' };
-    if (BIZGRP_ID !== 1) {
+    if (type === 'work') {
       divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', marginLeft: '300px' };
     }
 
     return (
       // <div style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
       <div style={divStyle}>
-        <StyleBizDetail pWidth={BIZGRP_ID !== 1 ? '1000' : '1190'}>
+        <StyleBizDetail pWidth={type === 'work' ? '1000' : '1190'}>
           <ErrorBoundary>
             <TopMenu
               BIZGRP_ID={BIZGRP_ID}
@@ -254,7 +254,7 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg', saga });
 export default injectIntl(
   compose(
     withReducer,
-    withConnect,
     withSaga,
+    withConnect,
   )(BizMenuReg),
 );

@@ -2,13 +2,12 @@ import styled from 'styled-components';
 
 const Styled = styled.div`
   position: relative;
-  padding-bottom: 74px;
+  padding: 6px 10px 53px;
   & .contentBody-wrap {
     width: 100%;
     display: flex;
     flex-grow: 1;
-    height: calc(100vh - 182px);
-    margin-top: 2px;
+    height: calc(100vh - 172px);
   }
 `;
 

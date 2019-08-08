@@ -884,6 +884,6 @@ const withSaga = injectSaga({ key: 'bizGroupReg', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizGroupReg));
