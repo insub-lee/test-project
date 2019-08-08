@@ -37,7 +37,7 @@ const getColumns = (columns, CATE) => {
         width: '10%',
       },
       {
-        title: '상태',
+        title: '결재여부',
         dataIndex: 'APPV_STATUS_NM',
         key: 'appvStatsNm',
         width: '5%',
