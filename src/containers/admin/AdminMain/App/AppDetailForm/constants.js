@@ -1,0 +1,9 @@
+export const GET_MY_APP_DETAIL = 'admin/AdminMain/App/AppDetailForm/GET_MY_APP_DETAIL';
+export const SET_MY_APP_DETAIL = 'admin/AdminMain/App/AppDetailForm/SET_MY_APP_DETAIL';
+export const TEST = 'admin/AdminMain/App/AppDetailForm/TEST';
+export const APP_PROCESS = 'admin/AdminMain/App/AppDetailForm/APP_PROCESS';
+export const APP_MANUAL = 'admin/AdminMain/App/AppDetailForm/APP_MANUAL';
+export const SCREENSHOT_LIST = 'admin/AdminMain/App/AppDetailForm/SCREENSHOT_LIST';
+export const RES_APP_LIST = 'admin/AdminMain/App/AppDetailForm/RES_APP_LIST';
+export const RECOM_APP_LIST = 'admin/AdminMain/App/AppDetailForm/RECOM_APP_LIST';
+export const SYSTEM_LINK = 'admin/AdminMain/App/AppDetailForm/SYSTEM_LINK';
