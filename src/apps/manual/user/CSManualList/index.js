@@ -41,8 +41,9 @@ class CSManualList extends Component {
     const { totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx, selectedMualIdx, setCheckManual, checkedManualList, item } = this.props;
     // let ListItemData = fromJS({});
     let ListItemData = fromJS([]);
+    const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
+    const widgetId = item && item.id ? item.id : categoryIdx;
     if (totalManualList.size > 0) {
-      const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
       const flatData = totalManualList.toJS();
       // ListItemData = fromJS(
       //   getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 24240 }),
@@ -73,7 +74,7 @@ class CSManualList extends Component {
     ];
 
     return (
-      <div id="csManualList" style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
+      <div id={`csManualList_${widgetId}`} style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
         <Topbar data={topBarButton} />
         {ListItemData.map(category => [
           <TitleBar key={`TitleBar_${category.get('CATEGORY_IDX')}`} categoryName={category.get('CATEGORY_NAME')} />,
@@ -94,7 +95,7 @@ class CSManualList extends Component {
           footer={null}
           onCancel={() => this.handleCloseModal()}
           closable={false}
-          getContainer={() => document.querySelector('#csManualList')}
+          getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
         >
           <CSManualView mualIdx={selectedMualIdx} />
         </Modal>

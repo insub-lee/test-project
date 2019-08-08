@@ -1,6 +1,9 @@
 import React from 'react';
+
+// 포탈에 배포시 변경 필요함
 // import SortableTree, { getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
 import { SortableTreeWithoutDndContext as SortableTree, getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
+
 import PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
 import { Popover } from 'antd';
