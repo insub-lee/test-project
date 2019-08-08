@@ -140,7 +140,6 @@ export const defaultFormStuffs = {
     ),
     renderer: ({ formStuff, saveTempContents }) => {
       const { property } = formStuff;
-      console.debug(property);
       return (
         <DatePicker
           {...property}

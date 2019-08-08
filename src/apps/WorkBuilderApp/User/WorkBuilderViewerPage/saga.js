@@ -13,7 +13,7 @@ function* getView({ id }) {
   const columns = fieldList.map(({ NAME_KOR, COMP_FIELD }) => ({
     headerName: NAME_KOR,
     field: COMP_FIELD.toUpperCase(),
-  }));
+  })).concat([{ headerName: '등록날짜', field: 'REG_DTTM' }, { headerName: '수정날짜', field: 'UPD_DTTM' }]);
   const boxes = metaList.filter(meta => meta.COMP_TYPE === 'BOX').map(box => ({
     ...JSON.parse(box.CONFIG).property,
   }));
