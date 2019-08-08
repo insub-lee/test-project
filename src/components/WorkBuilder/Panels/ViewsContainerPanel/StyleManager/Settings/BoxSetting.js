@@ -68,7 +68,7 @@ const BoxSettings = ({
           <div className="label-for-check" title="Use Label">
             Use Label
           </div>
-          <div className="" style={{ width: '100%' }}>
+          <div className="" style={{ margin: 'auto' }}>
             <Checkbox defaultChecked={target.property.useLabel} onChange={e => changeUseLabel(type, targetIndex, e.target.checked)} />
           </div>
         </div>

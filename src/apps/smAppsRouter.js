@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
@@ -35,11 +35,13 @@ class SmAppsRouter extends Component {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
           <div>
-            <Route path={`/${basicPath.SINGLE}/pmSheetModeling`} component={PMSheetModeling} />
-            <Route path={`/${basicPath.SINGLE}/pmSheetList`} component={PMSheetList} />
-            <Route path={`/${basicPath.SINGLE}/informNote`} component={InformNote} />
-            <Route path={`/${basicPath.SINGLE}/pmSheetTablet`} component={PmSheetTablet} />
-            <Route path={`/${basicPath.SINGLE}/bookroom`} component={Bookroom} />
+            <Switch>
+              <Route path={`/${basicPath.SINGLE}/pmSheetModeling`} component={PMSheetModeling} />
+              <Route path={`/${basicPath.SINGLE}/pmSheetList`} component={PMSheetList} />
+              <Route path={`/${basicPath.SINGLE}/informNote`} component={InformNote} />
+              <Route path={`/${basicPath.SINGLE}/pmSheetTablet`} component={PmSheetTablet} />
+              <Route path={`/${basicPath.SINGLE}/bookroom`} component={Bookroom} />
+            </Switch>
           </div>
         );
       } else if (item.SEC_YN === 'N') {

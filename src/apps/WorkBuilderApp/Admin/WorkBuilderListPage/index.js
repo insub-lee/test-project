@@ -18,10 +18,44 @@ import saga from './saga';
 import Wrapper from './Wrapper';
 import FormModal from './FormModal';
 
+const columns = [
+  {
+    name: '업무빌더ID',
+    key: 'WORK_ID',
+  },
+  {
+    name: '업무빌더명',
+    key: 'NAME_KOR',
+  },
+  {
+    name: '설명',
+    key: 'DSCR',
+  },
+  {
+    name: '등록일',
+    key: 'REG_DTTM',
+    formatter: ({ value }) => moment(value).format('YYYY-MM-DD'),
+  },
+  {
+    name: '상태',
+    key: 'STATUS',
+    formatter: ({ value }) => {
+      switch (value) {
+        case 0:
+          return '디자인중';
+        case 1:
+          return '생성됨';
+        default:
+          return '';
+      }
+    },
+  },
+];
+
 class WorkBuilderListPage extends Component {
   componentDidMount() {
-    console.debug('Boot......두두두두두두');
-    this.props.getList();
+    const { getList } = this.props;
+    getList();
   }
 
   registerFormRef = formRef => {
@@ -37,29 +71,6 @@ class WorkBuilderListPage extends Component {
       postWorkBuilder,
       history,
     } = this.props;
-    const columns = [
-      {
-        name: '업무빌더ID',
-        key: 'WORK_ID',
-      },
-      {
-        name: '업무빌더명',
-        key: 'NAME_KOR',
-      },
-      {
-        name: '설명',
-        key: 'DSCR',
-      },
-      {
-        name: '등록일',
-        key: 'REG_DTTM',
-        formatter: ({ value }) => moment(value).format('YYYY-MM-DD'),
-      },
-      {
-        name: '상태',
-        key: 'STATUS',
-      },
-    ];
     return (
       <Wrapper>
         <div className="title">
@@ -92,17 +103,19 @@ class WorkBuilderListPage extends Component {
 }
 
 WorkBuilderListPage.propTypes = {
-  columns: PropTypes.arrayOf(PropTypes.object),
+  history: PropTypes.object.isRequired,
   list: PropTypes.arrayOf(PropTypes.object),
   modalStatus: PropTypes.object.isRequired,
   toggleModalVisible: PropTypes.func,
   postWorkBuilder: PropTypes.func,
+  getList: PropTypes.func,
 };
 
 WorkBuilderListPage.defaultProps = {
   list: [],
   toggleModalVisible: () => console.debug('no bind events'),
   postWorkBuilder: () => console.debug('no bind events'),
+  getList: () => console.debug('no bind events'),
 };
 
 const mapStateToProps = createStructuredSelector({

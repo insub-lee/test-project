@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { intlObj } from 'utils/commonUtils';
 import { ThemeProvider } from 'styled-components';
@@ -57,19 +57,21 @@ class BcMain extends PureComponent {
           <LeftMenu history={this.props.history} />
 
         <div style={{ width: '100%' }}>
-              <Route exact path={`/${basicPath.APPS}/businesscard`} component={Bcask} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/GuideSub`} component={BcGuid} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskSub`} component={Bcask} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskinfoSub`} component={Bcaskinfo} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcadminSub`} component={Bcadmin} />              
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin00Sub`} component={BcAdmin00} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin01Sub`} component={BcAdmin01} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin02Sub`} component={BcAdmin02} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin03Sub`} component={BcAdmin03} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin04Sub`} component={BcAdmin04} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin05Sub`} component={BcAdmin05} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin06Sub`} component={BcAdmin06} />
-              <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskorgSub`} component={Bcaskorg} />
+          <Switch>
+            <Route exact path={`/${basicPath.APPS}/businesscard`} component={Bcask} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/GuideSub`} component={BcGuid} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskSub`} component={Bcask} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskinfoSub`} component={Bcaskinfo} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcadminSub`} component={Bcadmin} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin00Sub`} component={BcAdmin00} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin01Sub`} component={BcAdmin01} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin02Sub`} component={BcAdmin02} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin03Sub`} component={BcAdmin03} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin04Sub`} component={BcAdmin04} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin05Sub`} component={BcAdmin05} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin06Sub`} component={BcAdmin06} />
+            <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskorgSub`} component={Bcaskorg} />
+          </Switch>
         </div>
         </div>
       </Content>

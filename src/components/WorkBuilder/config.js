@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 import Input, { Textarea } from 'components/FormStuff/Input';
 import InputNumber from 'components/FormStuff/InputNumber';
@@ -49,36 +50,36 @@ export const defaultFormStuffs = {
     ),
     renderer: ({ formStuff, saveTempContents }) => <Textarea {...formStuff.property} />,
   },
-  checkbox: {
-    label: 'Checkbox',
-    icon: 'fa fa-edit fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <CheckboxGroup {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <CheckboxGroup {...formStuff.property} />,
-  },
-  radio: {
-    label: 'Radio',
-    icon: 'fa fa-edit fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <RadioGroup {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <RadioGroup {...formStuff.property} />,
-  },
-  select: {
-    label: 'Select',
-    icon: 'fa fa-list fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <Select {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <Select {...formStuff.property} />,
-  },
+  // checkbox: {
+  //   label: 'Checkbox',
+  //   icon: 'fa fa-edit fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <CheckboxGroup {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <CheckboxGroup {...formStuff.property} />,
+  // },
+  // radio: {
+  //   label: 'Radio',
+  //   icon: 'fa fa-edit fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <RadioGroup {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <RadioGroup {...formStuff.property} />,
+  // },
+  // select: {
+  //   label: 'Select',
+  //   icon: 'fa fa-list fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <Select {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <Select {...formStuff.property} />,
+  // },
   grid: {
     label: 'Grid',
     icon: 'fa fa-edit fa-3x',
@@ -137,7 +138,15 @@ export const defaultFormStuffs = {
         <DatePicker {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents }) => <DatePicker {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => {
+      const { property } = formStuff;
+      return (
+        <DatePicker
+          {...property}
+          defaultValue={property.format ? moment(property.defaultValue, property.format) : moment(property.defaultValue)}
+        />
+      );
+    },
   },
   // 'week-picker': {
   //   label: 'Week Picker',

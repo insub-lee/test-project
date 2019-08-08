@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 
 import BcList from './BcList';
@@ -18,9 +18,11 @@ class BcAdmin01 extends PureComponent {
     return (
       <div>
           <div className="storeLayoutContentWrapper">
+            <Switch>
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin02Sub/`} component={BcList} exact />
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin02Sub/BcDetail`} component={BcDetail} exact />
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcAdmin02Sub/BcinfoEdt`} component={BcEdt} exact />
+            </Switch>
           </div>
       </div>    
 
