@@ -22,19 +22,26 @@ class WidgetConfig extends Component {
   };
 
   btn_Apply = () => {
-    const { setManualWidgetSettingBySaga, item, size, sizeArr, user, manualWidgetSettingInfo } = this.props;
+    const { setManualWidgetSettingBySaga, item, size, sizeArr, user, manualWidgetSettingInfo, type, updateBizGroupChgYn } = this.props;
     const result = {
       WIDGETID: item.id,
-      ITEM_VALUE: {
+      ITEM_VALUE: JSON.stringify({
         size,
         sizeArr,
         user,
         data: {
           categoryIdx: manualWidgetSettingInfo.get('categoryIdx'),
         },
-      },
+      }),
+      type,
     };
+
     setManualWidgetSettingBySaga(result);
+
+    if (type !== 'mypage') {
+      // 업무 그룹 변화 감지 함수
+      updateBizGroupChgYn();
+    }
   };
 
   componentDidMount() {
@@ -43,10 +50,8 @@ class WidgetConfig extends Component {
   }
 
   render() {
-    const { TreeNode } = TreeSelect;
     const { categoryList } = this.props;
     let flatData = fromJS([]);
-    console.debug(categoryList.size);
     if (categoryList.size > 0) {
       flatData = categoryList
         .map(item => {
