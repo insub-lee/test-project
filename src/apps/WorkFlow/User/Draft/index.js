@@ -99,6 +99,12 @@ class Draft extends Component {
         render: (text, record) => <TitleRenderer data={record} value={text} category={CATE} setSelectedDraft={this.props.setSelectedDraft} />,
       },
       {
+        title: '상태',
+        dataIndex: 'STATUS_NM',
+        key: 'statusNm',
+        width: '10%',
+      },
+      {
         title: '기안자',
         dataIndex: 'NAME_KOR',
         key: 'nameKor',
@@ -110,7 +116,7 @@ class Draft extends Component {
     return (
       <div style={{ width: '100%', height: '600px', padding: '48px' }}>
         <div style={{ width: '100%', height: '100%' }}>
-          <AntdTable columns={columns} dataSource={draftList} bordered pagination />
+          <AntdTable columns={columns} dataSource={draftList.map((item, idx) => ({ ...item, key: idx }))} bordered pagination />
         </div>
         {Object.keys(selectedDraft).length !== 0 && (
           <DraftView selectedDraft={selectedDraft} visible={visibleViewModal} CATE={CATE} setSelectedDraft={this.props.setSelectedDraft} />
