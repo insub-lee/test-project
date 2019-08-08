@@ -325,7 +325,7 @@ class MyAppDetail extends React.Component {
                 mod={1}
               />
             </TabPane>
-            <TabPane
+            {/* <TabPane
               tab={intlObj.get(messages.tab3)}
               key="3"
             >
@@ -335,7 +335,7 @@ class MyAppDetail extends React.Component {
                 EXA_MODE="D"
                 history={this.props.history}
               />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
           {/* 반려 */}
           <div

@@ -36,7 +36,7 @@ class MyAppRegis extends React.Component {
               />
             </TabPane>
             <TabPane tab={intlObj.get(messages.tab2)} key="2" disabled >{intlObj.get(messages.tab2)}</TabPane>
-            <TabPane tab={intlObj.get(messages.tab3)} key="3" disabled >{intlObj.get(messages.tab3)}</TabPane>
+            {/* <TabPane tab={intlObj.get(messages.tab3)} key="3" disabled >{intlObj.get(messages.tab3)}</TabPane> */}
           </Tabs>
         </StyleMyAppRegis>
         <Footer />

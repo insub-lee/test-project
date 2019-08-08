@@ -14,7 +14,8 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 
 
 export function* getMyAppDetail(payload) {
-  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myappdetail/', payload.payload);
+  const params = { ...payload.payload, SITE_ID: -1 };
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myappdetail/', params);
 
   if (response.managerChk !== 0) {
     if (response.appinfo != null) {

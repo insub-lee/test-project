@@ -86,7 +86,7 @@ class MyAppUpdate extends React.Component {
                 history={this.props.history}
               />
             </TabPane>
-            <TabPane
+            {/* <TabPane
               tab={intlObj.get(messages.tab3)}
               key="3"
               disabled={(this.state.svcyn === 'S' || this.state.svcyn === 'C') || this.state.uv === 'V'}
@@ -97,7 +97,7 @@ class MyAppUpdate extends React.Component {
                 EXA_MODE="U"
                 history={this.props.history}
               />
-            </TabPane>
+            </TabPane> */}
           </Tabs>
         </StyleMyAppUpdate>
         <Footer />
