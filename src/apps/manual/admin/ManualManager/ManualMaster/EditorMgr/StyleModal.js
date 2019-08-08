@@ -24,6 +24,7 @@ const StyleModal = styled.div`
   margin-top: 0;
   margin-left: 0;
   background-color: #ffffff;
+  display: table;
   z-index: 9;
   > div {
     position: relative;
@@ -31,22 +32,21 @@ const StyleModal = styled.div`
     height: 100%;
     .ui.menu.WriteHeader {
       width: 100%;
-      /* height: 55px; */
       height: 70px;
       margin: 0;
       padding: 0;
       border-bottom: 1px solid rgba(34, 36, 38, 0.15);
-      position: fixed;
+      position: absolute;
       top: 0;
       z-index: 11;
-      background-color: #222;
+      background-color: #525085;
       display: flex;
       .WriteHeaderMenu {
         padding-right: 30px;
         margin: 0;
         display: flex;
         margin-left: auto;
-        background-color: #222;
+        background-color: #525085;
         &.ui.secondary.right.menu .item {
           padding: 0;
           margin: 0 5px;
@@ -86,10 +86,10 @@ const StyleModal = styled.div`
       border-right: 1px solid rgba(34, 36, 38, 0.15);
       box-shadow: none;
       transition: 0.5s;
-      position: fixed;
+      position: absolute;
       transform: translateZ(0);
-      height: 100%;
-      max-height: 100%;
+      height: calc(100% - 70px);
+      max-height: calc(100% - 70px);
       margin: 0;
       .itemtoolbaritem .title {
         margin: 20px 25px 10px;
@@ -239,9 +239,9 @@ const StyleModal = styled.div`
       display: inline-block;
       top: 70px;
       left: 270px;
-      position: relative;
+      position: absolute;
       width: calc(100% - 270px);
-      height: 100%;
+      height: calc(100% - 70px);
       .manualMainMenuWrapper {
         margin: 0;
       }
@@ -249,14 +249,14 @@ const StyleModal = styled.div`
         margin: 0;
         margin: 0;
         display: inline-block;
-        width: 260px;
-        height: 100%;
+        width: 380px;
+        height: calc(100% - 37px);
         vertical-align: top;
       }
       .manualMainContentWrapper {
         margin: 0;
         display: inline-block;
-        width: calc(100% - 260px);
+        width: calc(100% - 380px);
       }
     }
   }

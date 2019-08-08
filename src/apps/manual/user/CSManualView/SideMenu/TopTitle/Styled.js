@@ -1,7 +1,5 @@
 import styled from 'styled-components';
 
-import iconList from '../../../images/icon-list.png';
-
 const Styled = styled.div`
   position: relative;
   display: flex;
@@ -12,15 +10,6 @@ const Styled = styled.div`
   height: 50px;
   background-color: #076dac;
   text-align: center;
-  & i {
-    background: url(${iconList}) no-repeat center;
-    display: inline-block;
-    width: 15px;
-    height: 25px;
-    vertical-align: middle;
-    margin-right: 8px;
-    background-size: 15px;
-  }
   & p {
     display: inline-block;
     vertical-align: middle;

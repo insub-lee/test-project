@@ -1,13 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import IconCollection from '../../../components/IconCollection';
+
 import Styled from './Styled';
 
-const Title = ({ contents, idx }) => (
+const handleOpenPopup = url => window.open(url);
+
+const Title = ({ contents, idx, compData }) => (
   <Styled>
-    <p id={`manualViewIndexComp_${idx}`} name={`manualViewIndexComp_${idx}`}>
-      {contents}
-    </p>
+    {compData.TYPE === 'indexLink' ? (
+      <p
+        className="manualCompIndexLink"
+        id={`manualViewIndexComp_${idx}`}
+        name={`manualViewIndexComp_${idx}`}
+        onClick={() => handleOpenPopup(compData.COMP_OPTION.URL)}
+      >
+        {contents}
+      </p>
+    ) : (
+      <p id={`manualViewIndexComp_${idx}`} name={`manualViewIndexComp_${idx}`}>
+        {contents}
+      </p>
+    )}
   </Styled>
 );
 

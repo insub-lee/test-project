@@ -10,6 +10,8 @@ import moment from 'moment';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+
 import * as manageActions from '../actions';
 
 import reducer from './reducer';
@@ -17,6 +19,8 @@ import saga from './saga';
 import * as actions from './actions';
 import selectors from './selectors';
 import StyleManualList from './StyleManualList';
+
+const AntdTable = StyledAntdTable(Table);
 
 const columns = setManualManage => [
   {
@@ -89,7 +93,7 @@ class ManualList extends Component {
     return (
       <StyleManualList>
         <Spin tip="Loading..." spinning={isLoading}>
-          <Table
+          <AntdTable
             dataSource={dataSource}
             columns={columns(setManualManage)}
             pagination={{ current: paginationIdx }}

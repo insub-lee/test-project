@@ -11,9 +11,15 @@ const InfoConWrap = ({ componentList }) => (
       componentList.map(item => {
         switch (item.TYPE) {
           case 'index':
-            return <Title key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} contents={item.MUAL_COMPVIEWINFO} idx={item.MUAL_TABCOMP_IDX} />;
+            return (
+              <Title key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} contents={item.MUAL_COMPVIEWINFO} idx={item.MUAL_TABCOMP_IDX} compData={item} />
+            );
           case 'editor':
             return <InfoCon key={`manualViewIndexComp_infoCon_${item.MUAL_TABCOMP_IDX}`} contents={item.MUAL_COMPVIEWINFO} />;
+          case 'indexLink':
+            return (
+              <Title key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} contents={item.MUAL_COMPVIEWINFO} idx={item.MUAL_TABCOMP_IDX} compData={item} />
+            );
           default:
             return '';
         }

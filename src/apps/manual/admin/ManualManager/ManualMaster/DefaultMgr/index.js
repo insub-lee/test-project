@@ -45,14 +45,15 @@ class DefaultMgr extends Component {
       // saga를 통해 기존에 매뉴얼 정보를 읽어온다.
       GetDefaultMgrBySaga();
       GetSelectedUserInfoSaga();
-    } else if (pageMoveType.get('selectedMualIdx') === 0 && pageMoveType.get('selectedCategoryIdx') !== prevProps.pageMoveType.get('selectedCategoryIdx')) {
-      InitDefaultMgr();
     }
+    // else if (pageMoveType.get('selectedMualIdx') === 0 && pageMoveType.get('selectedCategoryIdx') !== prevProps.pageMoveType.get('selectedCategoryIdx')) {
+    //   InitDefaultMgr();
+    // }
   }
 
   componentWillUnmount() {
-    const { InitDefaultMgr } = this.props;
-    InitDefaultMgr();
+    // const { InitDefaultMgr } = this.props;
+    // InitDefaultMgr();
   }
 
   render() {

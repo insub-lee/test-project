@@ -53,17 +53,9 @@ const Styled = styled.div`
     line-height: 26px;
     padding: 0 10px;
     font-size: 12px;
-    &:before {
-      content: '';
-      background: url(${iconPen}) no-repeat center;
-      width: 15px;
-      height: 15px;
-      display: inline-block;
-      vertical-align: middle;
-      background-size: 100%;
-      margin-right: 5px;
-      margin-top: -5px;
-    }
+  }
+  p.manualCompIndexLink {
+    cursor: pointer;
   }
 `;
 

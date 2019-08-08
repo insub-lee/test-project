@@ -33,6 +33,11 @@ const initialState = fromJS({
       addComponentId: '',
       editorTabList: [],
       selectedAddIdx: 0,
+      scrollComp: {},
+    },
+    manualOptionMgr: {
+      relationManualList: [],
+      isRelationMualModal: false,
     },
     isEditorMgr: false,
   },
@@ -131,7 +136,7 @@ const appReducer = (state = initialState, action) => {
     }
     case constantTypes.SET_PAGE_TYPE_REDUCR: {
       const { pageType } = action;
-      return state.setIn(['manualMasterState', 'pageMoveType', 'PAGETYPE'], pageType);
+      return state.setIn(['manualMasterState', 'pageMoveType', 'pageType'], pageType);
     }
     case constantTypes.SET_EDITORMGR_REDUCR: {
       const { tabList } = action;
@@ -271,6 +276,14 @@ const appReducer = (state = initialState, action) => {
       const idx = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList']).findIndex(item => item.get('MUAL_TAB_IDX') === selectedTabIdx);
       return state.setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(compList));
     }
+    case constantTypes.SET_SCROLL_COMPONENT_REDUCR: {
+      const { item } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'scrollComp'], fromJS(item));
+    }
+    case constantTypes.SET_IS_RELATION_MUAL_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.setIn(['manualMasterState', 'manualOptionMgr', 'isRelationMualModal'], flag);
+    }
     default:
       return state;
   }
@@ -304,7 +317,7 @@ const addTabInfo = state => {
 };
 
 const addComponentInfo = (state, compType) => {
-  const addType = ['editor', 'index', 'indexLink', 'indexFile'];
+  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna'];
   if (addType.findIndex(item => item === compType) === -1) {
     console.debug('type error');
     return state;
@@ -342,6 +355,9 @@ const addComponentInfo = (state, compType) => {
   if (compType === 'indexFile') {
     newComp.COMP_OPTION = { VIEW_TYPE: 'link' };
   }
+  if (compType === 'qna') {
+    newComp.COMP_OPTION = { ANSWER: '' };
+  }
   editorComponentList = editorComponentList.push(fromJS(newComp));
   if (compType === 'index') {
     const indexComp = {
@@ -372,7 +388,7 @@ const addComponentInfo = (state, compType) => {
     compList = compList.map((comp, index) => ({ ...comp, SORT_SQ: index + 1 }));
   }
 
-  if (compType.indexOf('index') > -1) {
+  if (compType.indexOf('index') > -1 || compType === 'qna') {
     return state
       .setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(compList))
       .setIn(['manualMasterState', 'manualEditorEntity', 'addComponentId'], `editorCompID_${selectedTabIdx}_${maulCompIdx}`)

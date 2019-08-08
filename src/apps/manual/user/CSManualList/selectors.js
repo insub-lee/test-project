@@ -19,8 +19,15 @@ const makeSelectedMualIdx = () =>
     state => state.get('selectedMualIdx'),
   );
 
+const makeCheckedManualList = () =>
+  createSelector(
+    makeSelectStateCSManualList,
+    state => state.get('checkedMualList'),
+  );
+
 export default {
   makeSelectCSManualList,
   makeSelectIsViewContents,
   makeSelectedMualIdx,
+  makeCheckedManualList,
 };

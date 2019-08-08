@@ -7,6 +7,8 @@ import iconDown from '../../../images/icon-arr-down.png';
 
 const Styled = styled.div`
   width: 220px;
+  border-right: 1px solid #e5e5e5;
+  border-left: 1px solid #e5e5e5;
   ul,
   li {
     list-style: none;

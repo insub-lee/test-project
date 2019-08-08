@@ -7,6 +7,7 @@ export const writingTool = {
     { menuId: 3, menuName: '링크 목차', menuIcon: 'toolIcon tiIndex', menuType: 'indexLink' },
     // { menuId: 4, menuName: '외부URL', menuIcon: 'toolIcon tiIndex', menuType: 'outerIndex' },
     { menuId: 5, menuName: '파일링크', menuIcon: 'toolIcon tiIndex', menuType: 'indexFile' },
+    { menuId: 6, menuName: 'QnA', menuIcon: 'toolIcon tiIndex', menuType: 'qna' },
 
     // { menuId: 6, menuName: 'Image slide', menuIcon: 'toolIcon tiIslide' },
     // { menuId: 7, menuName: 'Video', menuIcon: 'toolIcon tiVideo' },

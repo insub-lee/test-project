@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Nav from '../Header/Nav';
 import Styled from './Styled';
 
 const Pagination = () => (
@@ -12,7 +11,6 @@ const Pagination = () => (
         </button>
       </div>
       <div className="present-tit">
-        <Nav />
         <span>주문대리인 등록 및 해지</span>
       </div>
       <div className="btn-wrap btn-next">
