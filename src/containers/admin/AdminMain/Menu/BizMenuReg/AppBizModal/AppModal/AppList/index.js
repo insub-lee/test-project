@@ -17,39 +17,52 @@ import * as actions from './actions';
 import ItemList from './ItemList';
 
 function checkValue(v1, v2) {
-  return v1 && v2 && v2 !== '' && v1 !== v2;
+  return v1 && v1 !== v2;
 }
 
 class AppList extends Component {
-  componentDidMount() {
-    const { match: { params: { CATG_ID, searchword } }, loadingOn, handleInitPage } = this.props;
+  constructor(props) {
+    super(props);
+    const { match, loadingOn } = props;
+    const { params } = match;
+    const { CATG_ID, searchword } = params;
+
     loadingOn();
+
     if (CATG_ID) {
-      handleInitPage('ONE', CATG_ID);
+      this.CATG_ID = CATG_ID;
+      this.props.handleInitPage('ONE', CATG_ID);
     } else if (searchword) {
-      handleInitPage('SEARCH', searchword);
+      this.CATG_ID = '';
+      this.props.handleInitPage('SEARCH', searchword);
     } else {
-      handleInitPage('ALL');
+      this.CATG_ID = '';
+      this.props.handleInitPage('ALL');
     }
   }
-
-  componentDidUpdate(prevProps) {
-    const { match: { params: { prevCatgId, prevSearchword } } } = prevProps;
-    const {
-      match: { params: { CATG_ID, searchword } }, loadingOn, handleGetMapAppListSearch, handleGetMapListOne,
-    } = this.props;
-    if (checkValue(prevSearchword, searchword)) {
+  componentWillReceiveProps(nextProps) {
+    const { match, loadingOn, initType } = nextProps;
+    const { params } = match;
+    const { CATG_ID, searchword } = params;
+    if (checkValue(searchword, nextProps.searchword)) {
+      this.CATG_ID = '';
       loadingOn();
-      handleGetMapAppListSearch(CATG_ID);
-    } else if (checkValue(prevCatgId, CATG_ID)) {
+      this.props.handleGetMapAppListSearch(searchword);
+    } else if (checkValue(CATG_ID, this.CATG_ID)) {
+      this.CATG_ID = CATG_ID;
       loadingOn();
-      handleGetMapListOne(CATG_ID);
+      this.props.handleGetMapListOne(CATG_ID);
+    } else if (!CATG_ID && !searchword && initType !== 'ALL') {
+      this.CATG_ID = '';
+      loadingOn();
+      this.props.handleInitPage('ALL');
     }
   }
 
   render() {
     const {
       history,
+      match,
       initType,
       mapList,
       handleGetMapAppListMore,
@@ -62,6 +75,7 @@ class AppList extends Component {
     return (
       <ItemList
         history={history}
+        match={match}
         type={initType}
         mapList={mapList}
         getMapListOne={handleGetMapListOne}
