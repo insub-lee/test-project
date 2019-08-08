@@ -8,6 +8,7 @@ import noResultImageSm from 'images/bizstore/no-result_sm.png';
 import Box from 'containers/store/components/utility/box';
 import LayoutWrapper from 'containers/store/components/utility/layoutWrapper';
 import ContentHolder from 'containers/store/components/utility/contentHolder';
+import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import Item from '../Item';
 import basicStyle from './basicStyle';
@@ -30,6 +31,7 @@ class ItemList extends Component {
 
     const {
       history,
+      match,
       type, // 화면에 보여질 유형. ALL / ONE / SEARCH
       getMapListOne, // 다른 카테고리 선택 시 새로운 앱리스트 랜더 요청
       getMapListMore, // 앱리스트 더보기 요청
@@ -41,7 +43,10 @@ class ItemList extends Component {
       // history,
     } = this.props;
 
-    const handleGetMapListOne = () => getMapListOne(key);
+    // const handleGetMapListOne = () => getMapListOne(key);
+    const preUrl = commonjs.getPreUrl(match.path, '/modal');
+    const handleGetMapListOne = () => history.push(`${preUrl}/app/list/${key}`);
+    const handleGetMapListChildOne = childKey => history.push(`${preUrl}/app/list/${childKey}`);    
     const handleReadMore = () => getMapListMore(key);
 
     const renderTitle = () => {
@@ -161,7 +166,7 @@ class ItemList extends Component {
               /* child category list */
               childList ? childList.map(child => (
                 <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
-                  <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
+                  <Button type="button" className="goSubmenuBtn" onClick={() => handleGetMapListChildOne(child.key)}>
                     {lang.get('NAME', child)}
                   </Button>
                 </Col>
@@ -218,15 +223,14 @@ class ItemList extends Component {
 
 ItemList.propTypes = {
   history: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   mapList: PropTypes.array.isRequired,
   type: PropTypes.string.isRequired,
   getMapListOne: PropTypes.func.isRequired,
   getMapListMore: PropTypes.func.isRequired,
   registApp: PropTypes.func.isRequired,
   registCategory: PropTypes.func.isRequired,
-
   searchword: PropTypes.string.isRequired,
-
   goBack: PropTypes.func.isRequired,
 };
 

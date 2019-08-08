@@ -18,7 +18,7 @@ import * as actions from './actions';
 import ItemList from './ItemList';
 
 function checkValue(v1, v2) {
-  return v1 && v2 && v2 !== '' && v1 !== v2;
+  return v1 && v1 !== v2;
 }
 
 class AppList extends Component {
@@ -42,17 +42,21 @@ class AppList extends Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    const { match, loadingOn } = nextProps;
+    const { match, loadingOn, initType } = nextProps;
     const { params } = match;
     const { CATG_ID, searchword } = params;
-
     if (checkValue(searchword, nextProps.searchword)) {
+      this.CATG_ID = '';
       loadingOn();
       this.props.handleGetMapAppListSearch(searchword);
     } else if (checkValue(CATG_ID, this.CATG_ID)) {
       this.CATG_ID = CATG_ID;
       loadingOn();
       this.props.handleGetMapListOne(CATG_ID);
+    } else if (!CATG_ID && !searchword && initType !== 'ALL') {
+      this.CATG_ID = '';
+      loadingOn();
+      this.props.handleInitPage('ALL');
     }
   }
 

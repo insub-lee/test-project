@@ -39,10 +39,12 @@ class ItemList extends Component {
       registBiz,
 
       // goBack,
-      // history,
+      history,
     } = this.props;
 
-    const handleGetMapListOne = () => getMapListOne(key);
+    // const handleGetMapListOne = () => getMapListOne(key);
+    const handleGetMapListOne = () => history.push(`/portal/store/appMain/myPage/modal/app/list/${key}`);
+    const handleGetMapListChildOne = childKey => history.push(`/portal/store/appMain/myPage/modal/app/list/${childKey}`);
     const handleReadMore = () => getMapListMore(key);
 
     const renderTitle = () => {
@@ -177,7 +179,7 @@ class ItemList extends Component {
               /* child category list */
               childList ? childList.map(child => (
                 <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
-                  <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
+                  <Button type="button" className="goSubmenuBtn" onClick={() => handleGetMapListChildOne(child.key)}>
                     {lang.get('NAME', child)}
                   </Button>
                 </Col>
@@ -234,7 +236,7 @@ class ItemList extends Component {
 }
 
 ItemList.propTypes = {
-  // history: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
   mapList: PropTypes.array.isRequired,
   type: PropTypes.string.isRequired,
   getMapListOne: PropTypes.func.isRequired,
