@@ -4,6 +4,7 @@ const initialState = fromJS({
   isViewContents: false,
   selectedMualIdx: 0,
   totalManualList: [],
+  checkedMualList: [],
 });
 
 const appCSMualListReducer = (state = initialState, action) => {
@@ -19,6 +20,15 @@ const appCSMualListReducer = (state = initialState, action) => {
     case constantTypes.SET_SELECTED_MUAL_IDX_REDUCR: {
       const { mualIdx } = action;
       return state.set('selectedMualIdx', mualIdx);
+    }
+    case constantTypes.SET_CHECK_MANUAL_REDUCR: {
+      const { mualIdx } = action;
+      const checkedMualList = state.get('checkedMualList');
+      const findIdx = checkedMualList.findIndex(item => item === mualIdx);
+      if (findIdx > -1) {
+        return state.set('checkedMualList', checkedMualList.splice(findIdx, 1));
+      }
+      return state.set('checkedMualList', checkedMualList.push(mualIdx));
     }
     default:
       return state;

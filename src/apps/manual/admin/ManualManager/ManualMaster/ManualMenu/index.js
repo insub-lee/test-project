@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import selectors from '../selectors';
 import * as actions from '../actions';
 
-const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType }) => (
+const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType, handleSelectOptionMgr }) => (
   <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]}>
     <Menu.Item key="DefaultMgr" onClick={() => handleChangePageType('DefaultMgr')}>
       <Icon type="setting" />
@@ -18,7 +18,7 @@ const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageTyp
       <Icon type="setting" />
       매뉴얼작성
     </Menu.Item>
-    <Menu.Item key="ManualOption" onClick={() => handleChangePageType('ManualOption')}>
+    <Menu.Item key="OptionMgr" onClick={() => handleSelectOptionMgr()}>
       <Icon type="setting" />
       옵션
     </Menu.Item>
@@ -41,12 +41,14 @@ ManualMenu.propTypes = {
   handleChangeIsEditorMgr: PropTypes.func,
   handleChangePageType: PropTypes.func,
   movePageType: PropTypes.object,
+  handleSelectOptionMgr: PropTypes.func,
 };
 
 ManualMenu.defaultProps = {
   handleChangeIsEditorMgr: () => false,
   handleChangePageType: () => false,
   movePageType: fromJS({}),
+  handleSelectOptionMgr: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -56,6 +58,10 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   handleChangeIsEditorMgr: () => dispatch(actions.setIsEditorMgrByReduc(true)),
   handleChangePageType: pageType => dispatch(actions.setPageTypeByReduc(pageType)),
+  handleSelectOptionMgr: () => {
+    dispatch(actions.getOptionMgrBySaga());
+    dispatch(actions.setPageTypeByReduc('OptionMgr'));
+  },
 });
 
 export default connect(

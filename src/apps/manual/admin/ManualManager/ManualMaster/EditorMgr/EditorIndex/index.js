@@ -1,4 +1,5 @@
 import React from 'react';
+// import SortableTree, { getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
 import { SortableTreeWithoutDndContext as SortableTree, getTreeFromFlatData, getFlatDataFromTree } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
 import { fromJS } from 'immutable';
@@ -10,26 +11,15 @@ import PropTypes from 'prop-types';
 import selectors from '../../selectors';
 import * as actions from '../../actions';
 
+import IconCollection from '../../../../../user/components/IconCollection';
 import StyleEditorIndex from './StyleEditorIndex';
 
 const { Link } = Anchor;
 
 const getTreeData = (list, selectedTabName) => {
   const flatData = list.filter(item => item.IS_REMOVE !== 'Y');
-  flatData.push({
-    MUAL_TABCOMP_IDX: 0,
-    MUAL_TABCOMP_PIDX: -1,
-    MUAL_COMPVIEWINFO: selectedTabName,
-    TYPE: 'index',
-    SORT_SQ: 0,
-    expanded: true,
-  });
-  return getTreeFromFlatData({
-    flatData,
-    getKey: node => node.MUAL_TABCOMP_IDX,
-    getParentKey: node => node.MUAL_TABCOMP_PIDX,
-    rootKey: -1,
-  });
+  flatData.push({ MUAL_TABCOMP_IDX: 0, MUAL_TABCOMP_PIDX: -1, MUAL_COMPVIEWINFO: selectedTabName, TYPE: 'index', SORT_SQ: 0, expanded: true });
+  return getTreeFromFlatData({ flatData, getKey: node => node.MUAL_TABCOMP_IDX, getParentKey: node => node.MUAL_TABCOMP_PIDX, rootKey: -1 });
 };
 
 const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
@@ -48,7 +38,7 @@ const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
     };
   });
   const resultList = tabComponentList
-    .map((item) => {
+    .map(item => {
       const idx = compList.findIndex(node => node.MUAL_TABCOMP_IDX === item.MUAL_TABCOMP_IDX);
       if (idx > -1) return compList[idx];
       return item;
@@ -57,22 +47,28 @@ const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
   handleChangeCompList(resultList);
 };
 
-const onClickIndex = (e, node, addAreaIdx, handleChangeAddAreaIdx) => {
+const onClickIndex = (e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) => {
   e.preventDefault();
   e.stopPropagation();
   if (node.TYPE === 'index' && node.MUAL_TABCOMP_IDX !== addAreaIdx) handleChangeAddAreaIdx(node.MUAL_TABCOMP_IDX);
   else if (node.MUAL_TABCOMP_IDX === addAreaIdx) handleChangeAddAreaIdx(0);
+
+  if (node.MUAL_TABCOMP_IDX === 0) return;
+  const selectedComp = document.querySelector(`#editorCompID_${node.MUAL_TAB_IDX}_${node.MUAL_TABCOMP_IDX}`);
+  const topPosition = selectedComp.getBoundingClientRect().top;
+  const scrollTop = scrollComp.getScrollTop();
+  scrollComp.scrollTop(scrollTop + topPosition - 121);
 };
 
-const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp) => ({
+const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, scrollComp) => ({
   title: (
     <div className="editorIndexTreeTitle">
       <Button
         className={`${node.MUAL_TABCOMP_IDX === addAreaIdx ? 'active' : ''}`}
-        onClick={e => (node.TYPE === 'index' ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx) : false)}
+        onClick={e => (node.TYPE === 'index' ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) : false)}
         block
       >
-        <Link
+        {/* <Link
           href={`#editorCompID_${node.MUAL_TAB_IDX}_${node.MUAL_TABCOMP_IDX}`}
           title={
             node.TYPE.indexOf('index') > -1 ? (
@@ -87,28 +83,35 @@ const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveCo
               </div>
             )
           }
-        />
+        /> */}
+        {node.TYPE.indexOf('index') > -1 ? (
+          <div className="editorIndexTreeInnerTitle">{node.MUAL_COMPVIEWINFO || 'New Index'}</div>
+        ) : (
+          <div className="editorIndexTreeInnerTitle">{node.TYPE}</div>
+        )}
       </Button>
-      <Button onClick={() => handleRemoveComp(node.MUAL_TAB_IDX, node.MUAL_TABCOMP_IDX)}>삭제</Button>
+      <Button onClick={() => handleRemoveComp(node.MUAL_TAB_IDX, node.MUAL_TABCOMP_IDX)} className="btn-close">
+        <IconCollection className="icon-close-soft" />
+      </Button>
     </div>
   ),
 });
 
-const EditorIndex = ({
- tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName 
-}) => (
+const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName, scrollComp }) => (
   <StyleEditorIndex>
-    <Anchor offsetTop={70}>
-      <div className="editorIndexTreeWrapper">
-        <div className="editorIndexTitle">컴포넌트 목록</div>
+    {/* <Anchor> */}
+    <div className="editorIndexTreeWrapper">
+      <div className="editorIndexTitle">컴포넌트 목록</div>
+      <div className="editorIndexContents">
         <SortableTree
           treeData={getTreeData(tabComponentList.toJS(), selectedTabName)}
           onChange={treeData => setTreeData(treeData, handleChangeCompList, tabComponentList.toJS())}
           canDrop={({ nextParent }) => nextParent !== null && nextParent.TYPE === 'index'}
-          generateNodeProps={rowInfo => renderNode(rowInfo, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp)}
+          generateNodeProps={rowInfo => renderNode(rowInfo, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, scrollComp)}
         />
       </div>
-    </Anchor>
+    </div>
+    {/* </Anchor> */}
   </StyleEditorIndex>
 );
 
@@ -134,6 +137,7 @@ const mapStateToProps = createStructuredSelector({
   tabComponentList: selectors.makeSelectTabComponentList(),
   addAreaIdx: selectors.makeSelectAddEditorComponentIndex(),
   selectedTabName: selectors.makeSelectedTabName(),
+  scrollComp: selectors.makeSelectScrollComp(),
 });
 
 const mapDispatchToProps = dispatch => ({

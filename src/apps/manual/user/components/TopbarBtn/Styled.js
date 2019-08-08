@@ -7,14 +7,14 @@ const Styled = styled.button`
   outline: 0;
   border: 1px solid #868e96;
   background-color: #fff;
-  padding: 0px 8px;
   border-radius: 3px;
-  height: 24px;
-  line-height: 24px;
   & span {
     color: #868e96;
-    font-size: 12px;
+    font-size: 11px;
     display: block;
+    height: 22px;
+    line-height: 20px;
+    padding: 0px 6px;
   }
 `;
 

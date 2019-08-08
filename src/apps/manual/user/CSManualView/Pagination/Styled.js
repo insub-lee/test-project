@@ -42,20 +42,22 @@ const Styled = styled.div`
               content: '';
               background: url(${btnPrevOff}) no-repeat center;
               display: inline-block;
-              width: 30px;
-              height: 40px;
+              width: 20px;
+              height: 30px;
               vertical-align: middle;
+              background-size: 100%;
               margin-right: 15px;
             }
           }
           &.next-btn {
-            &.prev-btn:after {
+            &:after {
               content: '';
               background: url(${btnNextOff}) no-repeat center;
               display: inline-block;
-              width: 30px;
-              height: 40px;
+              width: 20px;
+              height: 30px;
               vertical-align: middle;
+              background-size: 100%;
               margin-left: 15px;
             }
           }
@@ -63,9 +65,15 @@ const Styled = styled.div`
             color: #7b57b3;
             &:before {
               background: url(${btnPrevOn}) no-repeat center;
+              width: 20px;
+              height: 30px;
+              background-size: 100%;
             }
             &.next-btn:after {
               background: url(${btnNextOn}) no-repeat center;
+              width: 20px;
+              height: 30px;
+              background-size: 100%;
             }
           }
         }

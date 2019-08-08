@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 
 import Styled from './Styled';
 
+const handleOpenPopup = url => window.open(url);
+
 const setScroll = (compIdx, setSelectedCompIdx, scrollComp) => {
   const selectedComp = document.querySelector(`#manualViewIndexComp_${compIdx}`);
   const topPosition = selectedComp.getBoundingClientRect().top;
@@ -20,12 +22,35 @@ const renderListItem = (componentList, pIdx, level, setSelectedCompIdx, selected
     if (childrenList.length > 0 && level > 2) {
       childNode = renderListItem(componentList, item.MUAL_TABCOMP_IDX, level + 1, setSelectedCompIdx, selectedCompIdx, scrollComp);
     }
+    let currentNode = '';
+    switch (item.TYPE) {
+      case 'index':
+        currentNode = (
+          <a onClick={() => setScroll(item.MUAL_TABCOMP_IDX, setSelectedCompIdx, scrollComp)}>
+            {item.MUAL_COMPVIEWINFO}
+            <i className="icon-plus"></i>
+          </a>
+        );
+        break;
+      case 'indexLink':
+        currentNode =
+          item.COMP_OPTION.ACTION_TYPE === 'menu' ? (
+            <a onClick={() => handleOpenPopup(item.COMP_OPTION.URL)}>
+              {item.MUAL_COMPVIEWINFO}
+              <i className="icon-plus"></i>
+            </a>
+          ) : (
+            <a onClick={() => setScroll(item.MUAL_TABCOMP_IDX, setSelectedCompIdx, scrollComp)}>
+              {item.MUAL_COMPVIEWINFO}
+              <i className="icon-plus"></i>
+            </a>
+          );
+        break;
+      default:
+    }
     return (
       <li className="active" key={`MenuList_${item.MUAL_TABCOMP_IDX}`}>
-        <a onClick={() => setScroll(item.MUAL_TABCOMP_IDX, setSelectedCompIdx, scrollComp)}>
-          {item.MUAL_COMPVIEWINFO}
-          <i className="icon-plus"></i>
-        </a>
+        {currentNode}
         {childrenList.length > 0 && level < 3 && (
           <ul>{renderListItem(componentList, item.MUAL_TABCOMP_IDX, level + 1, setSelectedCompIdx, selectedCompIdx, scrollComp)}</ul>
         )}

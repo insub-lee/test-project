@@ -42,8 +42,8 @@ class CategoryManage extends Component {
         break;
     }
     return (
-      <div>
-        <StyleCategoryManage>
+      <StyleCategoryManage>
+        <div className="categoryWrapper">
           <div className="categoryTitleWrapper">
             <h3 className="pageTitle list">카테고리 관리</h3>
             <Button onClick={() => setIsWaitModal(true)}>미확정 리스트 보기</Button>
@@ -61,11 +61,11 @@ class CategoryManage extends Component {
               </div>
             )} */}
           </div>
-        </StyleCategoryManage>
-        <Modal width={800} visible={isWaitModal} footer={null} onCancel={() => setIsWaitModal(false)}>
+        </div>
+        <Modal width={800} visible={isWaitModal} footer={null} onCancel={() => setIsWaitModal(false)} destroyOnClose>
           <WaitManualList />
         </Modal>
-      </div>
+      </StyleCategoryManage>
     );
   }
 }

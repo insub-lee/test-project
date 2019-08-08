@@ -58,10 +58,19 @@ const StyleMyAppTree = styled.div`
 
   .fixedMenu {
     width: 100%;
-    height: 35px;
+    height: 25px;
     padding: 5px;
-    background: #d3d5d7;
+    background: #d6c7de;
     text-align: right;
+    margin: 10px 0 10px;
+    border-radius: 3px;
+
+    button {
+      width: 16px;
+      height: 16px;
+      border: 0px solid #d3d5d7;
+      background-size: 11px;
+    }
 
     button + button {
       margin-right: 5px;

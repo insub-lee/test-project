@@ -263,6 +263,12 @@ function* getDefaultMgrByVersion(action) {
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
 }
 
+function* getOptionMgr() {
+  const param = yield select(selectors.makeSelectMovePageType());
+  const response = yield call(Axios.get, `/api/manual/v1/ManualOptionHandler/${param.get('selectedMualIdx')}`);
+  console.debug(response);
+}
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.GET_DEFAULTMGR_SAGA, getDefaultMgrSaga);
   yield takeLatest(constantTypes.ADD_DEFAULTMGR_SAGA, insertDefaultMgrSaga);
@@ -276,4 +282,5 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.RESET_DEFAULT_MGR_SAGA, resetDefaultMgr);
   yield takeLatest(constantTypes.REMOVE_MANUAL_SAGA, removeManual);
   yield takeLatest(constantTypes.GET_DEFAULTMGR_BY_VERSION_SAGA, getDefaultMgrByVersion);
+  yield takeLatest(constantTypes.GET_OPTIONMGR_SAGA, getOptionMgr);
 }

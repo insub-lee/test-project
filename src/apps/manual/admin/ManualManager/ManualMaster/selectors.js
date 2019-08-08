@@ -102,6 +102,24 @@ const makeSelectedTabName = () =>
     },
   );
 
+const makeSelectScrollComp = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'scrollComp']),
+  );
+
+const makeSelectRelationManualList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualOptionMgr', 'relationManualList']),
+  );
+
+const makeSelectIsRelationMualModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualOptionMgr', 'isRelationMualModal']),
+  );
+
 export default {
   makeSelectManualMaster,
   makeSelectDefaultMgr,
@@ -118,4 +136,7 @@ export default {
   makeSelectedUserInfo,
   makeSelectAddEditorComponentIndex,
   makeSelectedTabName,
+  makeSelectScrollComp,
+  makeSelectRelationManualList,
+  makeSelectIsRelationMualModal,
 };

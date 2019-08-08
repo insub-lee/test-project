@@ -4,7 +4,7 @@ const StyleEditorMain = styled.div`
   width: 100%;
   height: auto;
   min-height: 100%;
-  padding: 0px 20px 70px 20px;
+  padding: 0px 20px;
   .dropWrapper {
     padding: 0px;
     width: 686px;

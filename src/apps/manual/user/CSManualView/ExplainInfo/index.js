@@ -11,7 +11,7 @@ const ExplainInfo = ({ componentList, setScrollComponent }) => (
   <Styled>
     <Panel>
       <Scrollbars
-        style={{ height: 'calc(100vh - 260px)' }}
+        style={{ height: 'calc(100vh - 208px)' }}
         ref={c => {
           setScrollComponent(c);
         }}

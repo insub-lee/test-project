@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
 import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
@@ -13,16 +13,16 @@ import RenderEditorComponent from './RenderEditorComponent';
 
 class EditorMain extends Component {
   componentDidUpdate() {
-    const { addComponetId, handleChangeCompId } = this.props;
-    if (addComponetId.length > 0) {
-      const addComp = document.querySelector(`#${addComponetId}`);
-      const topPosition = addComp.getBoundingClientRect().top - 70;
-      const mainDiv = document.querySelector(`.editorMainWrapper`);
-      const bottomPosition = mainDiv.scrollHeight;
-      if (addComp.getBoundingClientRect().bottom + 21 > mainDiv.getBoundingClientRect().bottom) window.scrollTo(0, bottomPosition);
-      else window.scrollBy(0, topPosition);
-      handleChangeCompId('');
-    }
+    // const { addComponetId, handleChangeCompId } = this.props;
+    // if (addComponetId.length > 0) {
+    //   const addComp = document.querySelector(`#${addComponetId}`);
+    //   const topPosition = addComp.getBoundingClientRect().top - 70;
+    //   const mainDiv = document.querySelector(`.editorMainWrapper`);
+    //   const bottomPosition = mainDiv.scrollHeight;
+    //   if (addComp.getBoundingClientRect().bottom + 21 > mainDiv.getBoundingClientRect().bottom) window.scrollTo(0, bottomPosition);
+    //   else window.scrollBy(0, topPosition);
+    //   handleChangeCompId('');
+    // }
   }
 
   render() {
@@ -34,11 +34,21 @@ class EditorMain extends Component {
       handleChangeFocusIdx,
       focusComponetIdx,
       addAreaIdx,
+      setScrollComponent,
     } = this.props;
     return (
-      <StyleEditorMain className="editorMainWrapper" onMouseOver={() => (focusComponetIdx === 0 ? false : handleChangeFocusIdx(0))}>
-        <div className="dropWrapper editorMainDrop">
-          <div className="innerDropWrapper">
+      <StyleEditorMain
+        className="editorMainWrapper"
+        onMouseOver={() => (focusComponetIdx === 0 ? false : handleChangeFocusIdx(0))}
+        onClick={() => handleChangeCompIdx(0)}
+      >
+        <Scrollbars
+          style={{ height: 'calc(100vh - 111px)' }}
+          ref={c => {
+            setScrollComponent(c);
+          }}
+        >
+          <div className="dropWrapper editorMainDrop">
             {tabComponentList &&
               tabComponentList.size > 0 &&
               tabComponentList
@@ -48,40 +58,36 @@ class EditorMain extends Component {
                   RenderEditorComponent(item, handleChangeCompValue, handleChangeCompIdx, selectedComponentIdx, focusComponetIdx, addAreaIdx),
                 )}
           </div>
-        </div>
+        </Scrollbars>
       </StyleEditorMain>
     );
   }
 }
 
 EditorMain.propTypes = {
-  handleChangeTabComp: PropTypes.func,
   handleChangeCompValue: PropTypes.func,
   handleChangeCompIdx: PropTypes.func,
-  handleRemoveComp: PropTypes.func,
   handleChangeCompId: PropTypes.func,
   handleChangeFocusIdx: PropTypes.func,
-  handleChangeAddAreaIdx: PropTypes.func,
   tabComponentList: PropTypes.object,
   selectedComponentIdx: PropTypes.number,
   addComponetId: PropTypes.string,
   focusComponetIdx: PropTypes.number,
   addAreaIdx: PropTypes.number,
+  setScrollComponent: PropTypes.func,
 };
 
 EditorMain.defaultProps = {
-  handleChangeTabComp: () => false,
   handleChangeCompValue: () => false,
   handleChangeCompIdx: () => false,
-  handleRemoveComp: () => false,
   handleChangeCompId: () => false,
   handleChangeFocusIdx: () => false,
-  handleChangeAddAreaIdx: () => false,
   tabComponentList: fromJS([]),
   selectedComponentIdx: 0,
   addComponetId: '',
   focusComponetIdx: 0,
   addAreaIdx: 0,
+  setScrollComponent: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -93,13 +99,11 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  handleChangeTabComp: node => dispatch(actions.moveTabComponentByReduc(node)),
   handleChangeCompValue: (tabIdx, compIdx, key, value) => dispatch(actions.setEditorComponentValueByReduc(tabIdx, compIdx, key, value)),
   handleChangeCompIdx: idx => dispatch(actions.setEditorComponentIndexByReduc(idx)),
-  handleRemoveComp: (tabIdx, compIdx) => dispatch(actions.removeEditorComponentByReduc(tabIdx, compIdx)),
   handleChangeCompId: id => dispatch(actions.setAddEditorComponentIdByReduc(id)),
   handleChangeFocusIdx: idx => dispatch(actions.setFocusEditorComponentIdxByReduc(idx)),
-  handleChangeAddAreaIdx: idx => dispatch(actions.setAddEditorComponentIdxByReduc(idx)),
+  setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
 });
 
 export default connect(
