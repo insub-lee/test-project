@@ -11,17 +11,21 @@ class SignStep extends Component {
     const { Step } = Steps;
 
     let currStep = 0;
-    signline.forEach(item => {
+    const stepArr = [];
+    signline.forEach((item) => {
       if (item.APPV_STATUS === 1) {
         currStep = item.STEP;
+      }
+      if (!stepArr.includes(item.STEP)) {
+        stepArr.push(item.STEP);
       }
     });
 
     return (
       <div>
         <Steps current={currStep}>
-          {signline.map((item, index) => (
-            <Step key={index} />
+          {stepArr.map(item => (
+            <Step key={item} />
           ))}
         </Steps>
       </div>
