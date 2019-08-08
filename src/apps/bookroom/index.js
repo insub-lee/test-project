@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import TimeTable from './TimeTable/index';
 import FavoriteLocation from './FavoriteLocation/index';
@@ -102,13 +102,15 @@ class App extends React.Component {
                 <Route  path="/portal/intlSVC/bookroom/ReservationDetail" component={ReservationDetail} exact /> 
                 <Route  path="/portal/intlSVC/bookroom/ApprovalBook" component={ApprovalBook} exact /> 
                 */ }
-                <Route path="/apps/bookroom" component={TimeTable} exact />
-                <Route path="/apps/bookroom/TimeTable" component={TimeTable} exact />
-                <Route path="/apps/bookroom/FavoriteLocation" component={FavoriteLocation} exact />
-                <Route path="/sm/bookroom" component={TimeTable} exact />
-                <Route path="/sm/bookroom/TimeTable" component={TimeTable} exact />
-                <Route path="/sm/bookroom/FavoriteLocation" component={FavoriteLocation} exact />
-                <Route path="/sm/bookroom/HTML" component={HTML} exact />
+                <Switch>
+                  <Route path="/apps/bookroom" component={TimeTable} exact />
+                  <Route path="/apps/bookroom/TimeTable" component={TimeTable} exact />
+                  <Route path="/apps/bookroom/FavoriteLocation" component={FavoriteLocation} exact />
+                  <Route path="/sm/bookroom" component={TimeTable} exact />
+                  <Route path="/sm/bookroom/TimeTable" component={TimeTable} exact />
+                  <Route path="/sm/bookroom/FavoriteLocation" component={FavoriteLocation} exact />
+                  <Route path="/sm/bookroom/HTML" component={HTML} exact />
+                </Switch>
               </div>
             </Content>
           </Layout>

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 
 import BcinfoList from './BcinfoList';
@@ -19,10 +19,12 @@ class Bcaskinfo extends PureComponent {
     return (
       <div>
           <div className="storeLayoutContentWrapper">
+            <Switch>
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskinfoSub`} component={BcinfoList} exact />
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskinfoSub/BcinfoReg`} component={BcinfoReg} exact />
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskinfoSub/BcinfoDetail`} component={BcinfoDetail} exact />
               <Route path={`/${basicPath.APPS}/businesscard/BcMain/BcaskinfoSub/BcinfoEdt`} component={BcinfoEdt} exact />
+            </Switch>
           </div>
       </div>    
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Layout } from 'antd';
 
 import { ThemeProvider } from 'styled-components';
@@ -48,10 +48,12 @@ class App extends Component {
             <Content className="storeContent">
               {/* 비즈앱 메인 콘텐츠 */}
               <div style={{ width: '100%' }}>
-                <Route exact path="/apps/cicdProject" component={projectList} />
-                <Route exact path="/apps/cicdProject/projectList" component={projectList} />
-                <Route exact path="/apps/cicdProject/projectReg" component={projectReg} />
-                <Route exact path="/apps/cicdProject/projectDtl" component={projectDtl} />
+                <Switch>
+                  <Route exact path="/apps/cicdProject" component={projectList} />
+                  <Route exact path="/apps/cicdProject/projectList" component={projectList} />
+                  <Route exact path="/apps/cicdProject/projectReg" component={projectReg} />
+                  <Route exact path="/apps/cicdProject/projectDtl" component={projectDtl} />
+                </Switch>
               </div>
             </Content>
           </AppWrapper>

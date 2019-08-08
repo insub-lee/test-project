@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Checkbox } from 'antd';
 
 const Settings = ({
-  type, target, targetIndex, boxType, action: { changeTitle, changeName, changeMaxLength, changeFormStuffSpan },
+  type, target, targetIndex, boxType, action: {
+    changeTitle, changeName, changeMaxLength, changeFormStuffSpan, changeRequired,
+  },
 }) => (
   <div className="sm-sector">
     <div className="sm-title">
@@ -40,6 +43,14 @@ const Settings = ({
                 onChange={e => changeName(type, targetIndex, e)}
               />
             </div>
+          </div>
+        </div>
+        <div className="trt-trait">
+          <div className="label-for-check" title="Use Label">
+            Required
+          </div>
+          <div className="" style={{ margin: 'auto' }}>
+            <Checkbox defaultChecked={target.property.required} onChange={e => changeRequired(type, targetIndex, e.target.checked)} />
           </div>
         </div>
         {(target.type === 'text' || target.type === 'textarea') && (
@@ -109,6 +120,7 @@ Settings.defaultProps = {
     changeTitle: () => false,
     changeName: () => false,
     changeMaxLength: () => false,
+    changeRequired: () => false,
     changeSpan: () => false,
   },
 };

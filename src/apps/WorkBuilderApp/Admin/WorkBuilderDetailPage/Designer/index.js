@@ -144,6 +144,9 @@ const mapDispatchToProps = dispatch => ({
             const { value } = target;
             dispatch(actions.changeName({ type, index, value }));
           },
+          changeRequired: (type, index, value) => {
+            dispatch(actions.changeRequired(type, index, value));
+          },
           changeMaxLength: (type, index, e) => {
             let { value } = e.target;
             const number = parseInt(value, 10) || 0;

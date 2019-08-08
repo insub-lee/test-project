@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 // import { Layout, Input, Menu, Icon } from 'antd';
 import { Layout } from 'antd';
 
@@ -49,10 +49,12 @@ class App extends Component {
             <Content className="storeContent">
               {/* 비즈앱 메인 콘텐츠 */}
               <div style={{ width: '100%' }}>
-                <Route exact path="/apps/cicdService" component={serviceList} />
-                <Route exact path="/apps/cicdService/serviceList" component={serviceList} />
-                <Route exact path="/apps/cicdService/serviceReg" component={serviceReg} />
-                <Route exact path="/apps/cicdService/serviceDetail" component={serviceDetail} />
+                <Switch>
+                  <Route exact path="/apps/cicdService" component={serviceList} />
+                  <Route exact path="/apps/cicdService/serviceList" component={serviceList} />
+                  <Route exact path="/apps/cicdService/serviceReg" component={serviceReg} />
+                  <Route exact path="/apps/cicdService/serviceDetail" component={serviceDetail} />
+                </Switch>
               </div>
             </Content>
           </AppWrapper>

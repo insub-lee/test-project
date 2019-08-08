@@ -162,6 +162,24 @@ export const successChangeMaxLength = ({ type, index, value }) => ({
   },
 });
 
+export const changeRequired = ({ type, index, value }) => ({
+  type: actionTypes.CHANGE_REQUIRED,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
+export const successChangeRequired = ({ type, index, value }) => ({
+  type: actionTypes.SUCCESS_CHANGE_REQUIRED,
+  payload: {
+    type,
+    index,
+    value,
+  },
+});
+
 export const changeUseLabel = ({ type, index, value }) => ({
   type: actionTypes.CHANGE_USE_LABEL,
   payload: {

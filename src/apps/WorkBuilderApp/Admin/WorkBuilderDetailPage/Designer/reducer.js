@@ -167,6 +167,10 @@ const reducer = (state = initialState, action) => {
       const { type, index, value } = action.payload;
       return state.setIn([type, index], fromJS(value));
     }
+    case actionTypes.SUCCESS_CHANGE_REQUIRED: {
+      const { type, index, value } = action.payload;
+      return state.setIn([type, index], fromJS(value));
+    }
     case actionTypes.TOGGLE_BLOCK_OPEN_STATUS: {
       const { blockType } = action;
       return state.setIn(['blockOpenStatus', blockType], !state.getIn(['blockOpenStatus', blockType]));

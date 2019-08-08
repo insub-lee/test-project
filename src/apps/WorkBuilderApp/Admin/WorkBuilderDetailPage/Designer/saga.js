@@ -557,6 +557,39 @@ function* changeUseLabel({ payload: { type, index, value } }) {
   }
 }
 
+function* changeRequired({ payload: { type, index, value } }) {
+  const { formStuffs } = yield select(selectors.makeSelectCanvasProperty());
+  switch (type) {
+    case 'formStuffs': {
+      const formStuff = formStuffs[index];
+      formStuff.property.required = value;
+      const param = {
+        WORK_SEQ: formStuff.WORK_SEQ,
+        META_SEQ: formStuff.META_SEQ,
+        PRNT_SEQ: formStuff.PRNT_SEQ,
+        ORD: formStuff.ORD,
+        DCSR: formStuff.DCSR,
+        COMP_TYPE: formStuff.COMP_TYPE,
+        COMP_TAG: formStuff.COMP_TAG,
+        NAME_KOR: formStuff.NAME_KOR,
+        COMP_FIELD: formStuff.COMP_FIELD,
+        CONFIG: JSON.stringify({
+          info: makeInfo(formStuff),
+          property: {
+            ...formStuff,
+          },
+          option: {},
+        }),
+      };
+      const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
+      yield put(actions.successChangeRequired({ type, index, value: formStuff }));
+      break;
+    }
+    default:
+      break;
+  }
+}
+
 function* removeLayer({ id, layerType }) {
   console.debug('@ removeLayer', id, layerType);
   const { boxes, formStuffs } = yield select(selectors.makeSelectCanvasProperty());
@@ -590,6 +623,7 @@ export default function* watcher() {
   yield takeLatest(actionTypes.CHANGE_TITLE, changeTitle);
   yield takeLatest(actionTypes.CHANGE_NAME, changeName);
   yield takeLatest(actionTypes.CHANGE_USE_LABEL, changeUseLabel);
+  yield takeLatest(actionTypes.CHANGE_REQUIRED, changeRequired);
   yield takeLatest(actionTypes.REMOVE_LAYER, removeLayer);
   yield takeLatest(actionTypes.CHANGE_MAX_LENGTH, changeMaxLength);
 }
