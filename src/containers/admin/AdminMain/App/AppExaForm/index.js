@@ -318,7 +318,7 @@ class AppExaForm extends React.Component {
             style={{ display: this.props.appinfo.APV_STATUS_CODE === 'N' || this.props.appinfo.APV_STATUS_CODE === 'R' ? 'block' : 'none', paddingBottom: 15 }}
           >
             <Link
-              to="/store/appMain/MyApp"
+              to="/admin/adminmain/app"
               style={{
                 float: 'left',
                 display: this.state.EXA_MODE === 'U' ? 'block' : 'none',
