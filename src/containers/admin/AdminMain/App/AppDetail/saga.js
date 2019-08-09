@@ -36,7 +36,7 @@ export function* serviceStop(payload) {
       </MessageContent>,
       3,
     );
-    history.push('/store/appMain/MyApp');
+    history.push('/admin/adminmain/app');
     // yield put({ type: constants.SERVICE_STOP_OK, payload: true });
   } else if (code === 201) {
     feed.error(`${intlObj.get(messages.serviceStopOverlap)}`);
@@ -59,7 +59,7 @@ export function* serviceRestart(payload) {
       </MessageContent>,
       3,
     );
-    history.push('/store/appMain/MyApp');
+    history.push('/admin/adminmain/app');
   } else if (code === 201) {
     feed.error(`${intlObj.get(messages.serviceRestartOverlap)}`);
   } else {
