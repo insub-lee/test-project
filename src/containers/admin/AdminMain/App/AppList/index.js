@@ -48,13 +48,13 @@ class MyAppList extends React.Component {
         getRowMetaData: data => data,
       },
       {
-        key: `${intlObj.get(messages.cateGlobal)}`,
-        name: `${intlObj.get(messages.cateKor)}`,
+        key: 'CATE_KOR',
+        name: `${intlObj.get(messages.category)}`,
         width: 110,
         sortable: true,
       },
       {
-        key: 'NAME_CHN',
+        key: 'NAME_KOR',
         name: `${intlObj.get(messages.appName)}`,
         sortable: true,
         formatter: this.HyperlinkFomatter,

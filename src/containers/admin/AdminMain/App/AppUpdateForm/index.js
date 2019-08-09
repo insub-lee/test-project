@@ -799,8 +799,9 @@ class AppUpdateForm extends React.Component {
               {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
             </FormItem>
             {/* 5. App ID */}
-            <h4 className="required">App ID</h4>
-            <p style={{ paddingLeft: 10 }}>{this.state.ORIGIN_APP_ID}</p>
+            {/* <h4 className="required">App ID</h4> */}
+            <h4 className="required">SRC PATH [앱경로]</h4>
+            <p style={{ paddingLeft: 10 }}>{this.state.SRC_PATH}</p>
             <h3 className="sectionTitle">{intlObj.get(messages.verInfo)}</h3>
             {/* 6. 아이콘 */}
             <h4>{intlObj.get(messages.icon)}</h4>

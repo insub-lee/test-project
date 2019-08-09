@@ -129,6 +129,7 @@ class MyAppCategoryModal extends React.Component {
               canDrag={true}
               canDrop={true}
               moveMymenu={this.props.moveMymenu}
+              shape="modal"
             />
           </div>
         </Modal>

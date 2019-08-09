@@ -104,6 +104,7 @@ class ItemList extends Component {
         result = appList.map((app) => {
           const registed = app.WG_COUNT > 0 ? 'true' : 'false';
           const appColkey = `appCol${app.APP_ID}`;
+          const serviceType = `${app.MENU_SVC_YN === 'Y' ? 'A' : ''}${app.MENU_SVC_YN === 'Y' && app.MENU_SVC_YN === app.WIDGET_SVC_YN ? '/' : ''}${app.WIDGET_SVC_YN === 'Y' ? 'W' : ''}`;
 
           if (app.APP_TYPE === 'A') { // A - 앱
             const handleRegistApp = () => registApp(app.APP_ID, app.CATG_ID);
@@ -114,7 +115,7 @@ class ItemList extends Component {
                 <Item
                   appId={app.APP_ID}
                   categoryId={app.CATG_ID}
-                  title={lang.get('NAME', app)}
+                  title={`[${serviceType}]${lang.get('NAME', app)}`}
                   subTitle={lang.get('DSCR', app)}
                   starPoint={app.STARPOINT}
                   starTotal={app.TOTCNT}
