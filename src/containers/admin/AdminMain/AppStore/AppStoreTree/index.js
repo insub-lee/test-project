@@ -375,7 +375,8 @@ class MyPageTree extends Component {
         generateNodeProps={(rowInfo) => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
-          node.title = lang.get('NAME', node);
+          const serviceType = `${node.MENU_SVC_YN === 'Y' ? node.NODE_TYPE : ''}${node.MENU_SVC_YN === 'Y' && node.MENU_SVC_YN === node.WIDGET_SVC_YN ? '/' : ''}${node.WIDGET_SVC_YN === 'Y' ? 'W' : ''}`;
+          node.title = node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P' ? `[${serviceType}]${lang.get('NAME', node)}` : lang.get('NAME', node);
 
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.NODE_TYPE !== 'P' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X

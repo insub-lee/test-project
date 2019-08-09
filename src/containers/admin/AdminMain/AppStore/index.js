@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -173,14 +173,16 @@ class AppStore extends Component {
               <ModalContainer />
               <div>
                 <ErrorBoundary>
-                  <Route path="/admin/adminmain/appstore" component={Main} exact />
-                  <Route path="/admin/adminmain/appstore/app/:APP_ID" component={AppInfo} exact />
-                  <Route path="/admin/adminmain/appstore/page/:PAGE_ID" component={PageInfo} exact />
-                  <Route path="/admin/adminmain/appstore/modal/app/list/" component={AppModal} />
+                  <Switch>
+                    <Route path="/admin/adminmain/appstore" component={Main} exact />
+                    <Route path="/admin/adminmain/appstore/app/:APP_ID" component={AppInfo} exact />
+                    <Route path="/admin/adminmain/appstore/page/:PAGE_ID" component={PageInfo} exact />
+                    <Route path="/admin/adminmain/appstore/modal/app/list/" component={AppModal} />
                   {/* 앱정보 수정 및 권한 변경 링크
                   <Route path="/admin/adminmain/appstore/appdetail/:APP_ID/:VER" component={MyAppDetail} exact />
                   <Route path="/store/appMain/MyApp/MyAppUpdate/:uv/:APP_ID/:VER/:tabNum/:svcyn" component={MyAppUpdate} /> 
                   */}
+                  </Switch>
                 </ErrorBoundary>
               </div>
             </div>

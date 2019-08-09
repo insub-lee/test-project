@@ -101,6 +101,7 @@ export function* getMapListOne(payload) {
     CATG_ID,
     SITE_ID: -1,
     LIMIT: appBlockSize,
+    isAdminStore: 'Y',
   });
   const { result, total } = response;
 
@@ -141,6 +142,7 @@ export function* getMapListMore(payload) {
     SITE_ID: -1,
     LIMIT: limit,
     searchword,
+    isAdminStore: 'Y',
   });
   const { result, total } = response;
 
@@ -169,6 +171,7 @@ export function* getMapListAll() {
     TYPE: 'ALL',
     SITE_ID: -1,
     LIMIT: appBlockSizeAll,
+    isAdminStore: 'Y',
   });
 
   // 데이터형태: 리스트. CATG_ID 값으로 GROUP BY -> 각 map에 appList push
@@ -199,6 +202,7 @@ export function* getMapListSearch(payload) {
     SITE_ID: -1,
     searchword: payload.searchword,
     LIMIT: appBlockSize,
+    isAdminStore: 'Y',
   });
   const { result } = response;
 
