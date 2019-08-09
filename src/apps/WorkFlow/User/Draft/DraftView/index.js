@@ -69,7 +69,7 @@ class DraftView extends Component {
       </Button>,
     ];
 
-    if (CATE === 'unApproval') {
+    if (CATE === 'unApproval' && draftDetail.STATUS !== 9) {
       btnArr.push(<Button type="primary" onClick={this.openOpinionModal}>결재</Button>);
     }
 
