@@ -320,6 +320,7 @@ class Category extends React.Component {
                   canDrop={false}
                   moveMymenu={moveMymenu}
                   onOk={onOk}
+                  shape="page"
                 />
               </div>
             </div>

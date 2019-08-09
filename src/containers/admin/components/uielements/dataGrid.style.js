@@ -110,7 +110,7 @@ const StyleDataGrid = styled.div`
             &::-webkit-scrollbar {width: 0 !important;}
 
             .react-grid-Row {
-              height: 38px !important;
+              // height: 38px !important;
 
               .react-grid-Cell {
                 height: 38px !important;

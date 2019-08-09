@@ -125,6 +125,7 @@ class MyAppTree extends Component {
       deleteMymenu, // 메뉴 삭제 func
       canDrag, // 드래그 가능 bool
       moveMymenu, // 메뉴 드래그 이동 func(treeData)
+      shape, // 페이지, 모달 스타일 구분
     } = this.props;
 
     const rootRowInfo = {};
@@ -421,11 +422,22 @@ class MyAppTree extends Component {
       //   }}
       // >
       <StyleMyAppTree
-        style={{
-          display: 'flex', flex: '1 0 50%', padding: '0',
-          flexDirection: 'column', height: 'calc(100vh - 200px)',
-          maxHeight: 'calc(100vh - 200px)', width: '100%',
-        }}
+        style={
+          shape === 'modal' ? (
+            {
+              display: 'flex', flex: '1 0 50%', padding: '0',
+              flexDirection: 'column', height: 'calc(100vh - 167px)',
+              maxHeight: 500, width: '100%',
+              }
+          ) : (
+            {
+              display: 'flex', flex: '1 0 50%', padding: '0',
+              flexDirection: 'column', height: 'calc(100vh - 200px)',
+              maxHeight: 'calc(100vh - 200px)', width: '100%',
+            }
+          )
+      
+      }
       >
         <ScrollBar>
           <SortableTree
@@ -607,11 +619,13 @@ MyAppTree.propTypes = {
   returnGateUpdate: PropTypes.func.isRequired, //eslint-disable-line  
   returnGateDelete: PropTypes.func.isRequired, //eslint-disable-line  
   moveMymenu: PropTypes.func.isRequired, //eslint-disable-line
+  shape: PropTypes.string,
 };
 
-// MyAppTree.defaultProps = {
+MyAppTree.defaultProps = {
 //   onClick: [],
 //   selectedIndex: -1,
-// };
+  shape: 'page',
+};
 
 export default MyAppTree;
