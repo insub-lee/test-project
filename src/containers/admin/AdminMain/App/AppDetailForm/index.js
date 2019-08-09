@@ -188,9 +188,10 @@ class AppDetailForm extends React.Component {
           <h4>{intlObj.get(messages.category)}</h4>
           <p className="textValue">{setMyAppDetail.CATG_PATH}</p>
           {/* APP ID */}
-          <h4>App Id</h4>
-          <p className="textValue">{setMyAppDetail.ORIGIN_APP_ID}</p>
-
+          {/* <h4>App Id</h4>
+          <p className="textValue">{setMyAppDetail.ORIGIN_APP_ID}</p> */}
+          <h4>SRC PATH [앱경로]</h4>
+          <p className="textValue">{setMyAppDetail.SRC_PATH}</p>
           <h3 className="appInfo">{intlObj.get(messages.verInfo)}</h3>
           <h4>{intlObj.get(messages.icon)}</h4>
           <div
