@@ -148,6 +148,6 @@ const withSaga = injectSaga({ key: 'mypageappList', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppList);

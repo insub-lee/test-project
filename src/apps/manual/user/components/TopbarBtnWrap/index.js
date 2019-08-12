@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import TopbarBtn from '../TopbarBtn';
 import Styled from './Styled';
 
-const TopbarBtnWrap = ({ className, data }) => <Styled className={className}>{data && data.length > 0 && data.map(item => <TopbarBtn data={item} />)}</Styled>;
+const TopbarBtnWrap = ({ className, data }) => <Styled className={className}>{data && data.map(item => <TopbarBtn key={item.key} data={item} />)}</Styled>;
 
 TopbarBtnWrap.propTypes = {
   className: PropTypes.string,

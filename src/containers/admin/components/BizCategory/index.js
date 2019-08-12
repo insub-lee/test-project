@@ -123,6 +123,6 @@ const withSaga = injectSaga({ key: 'bizcategory', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizCategory));

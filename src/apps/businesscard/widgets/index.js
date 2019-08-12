@@ -502,7 +502,7 @@ const withSaga = injectSaga({ key: 'BcList', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BcMain);
 

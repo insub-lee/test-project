@@ -124,6 +124,6 @@ const withSaga = injectSaga({ key: 'bizmenuList', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizMenuList);

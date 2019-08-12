@@ -176,7 +176,7 @@ const withSaga = injectSaga({ key: 'topMenu', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(TopMenu);
 

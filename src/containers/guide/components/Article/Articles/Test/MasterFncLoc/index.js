@@ -71,6 +71,6 @@ const withSaga = injectSaga({ key: 'masterFncloc', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(MasterFncLoc));

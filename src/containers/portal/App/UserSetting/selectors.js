@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 const selectMessages = state => state.get('messagetab');
 const selectLanguage = state => state.get('language');
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const makeCheckList = () => createSelector(
   selectMessages,

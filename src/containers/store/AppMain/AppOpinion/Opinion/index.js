@@ -631,6 +631,6 @@ const withSaga = injectSaga({ key: 'opinionList', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppOpinion);

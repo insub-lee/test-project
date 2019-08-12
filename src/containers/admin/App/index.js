@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Switch } from 'react-router-dom';
 // import { Layout, Input, Menu, Icon } from 'antd';
 import { Layout, Icon } from 'antd';
 import { createStructuredSelector } from 'reselect';
@@ -125,11 +125,13 @@ class App extends Component {
                 <LeftMenu />
                 {/* 비즈앱 메인 콘텐츠 */}
                 <div style={{ width: '100%' }}>
-                  <Route exact path="/" />
-                  <Route exact path="/admin" component={AdminMain} />
-                  <Route path="/admin/adminMain" component={AdminList} />
-                  <Route path="/admin/upload" component={AdminUpload} />
-                  <Route path="/admin/study" component={Study} />
+                  <Switch>
+                    <Route exact path="/" />
+                    <Route exact path="/admin" component={AdminMain} />
+                    <Route path="/admin/adminMain" component={AdminList} />
+                    <Route path="/admin/upload" component={AdminUpload} />
+                    <Route path="/admin/study" component={Study} />
+                  </Switch>
                 </div>
               </div>
             </Content>

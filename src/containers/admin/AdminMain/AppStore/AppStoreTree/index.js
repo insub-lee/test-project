@@ -558,7 +558,7 @@ class MyPageTree extends Component {
 MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.string,
-  canDrag: PropTypes.bool, //eslint-disable-line
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]), //eslint-disable-line
   canDrop: PropTypes.bool, //eslint-disable-line
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,

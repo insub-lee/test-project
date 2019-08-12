@@ -765,7 +765,7 @@ const withSaga = injectSaga({ key: 'SiteList04', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BcinfoList);
 

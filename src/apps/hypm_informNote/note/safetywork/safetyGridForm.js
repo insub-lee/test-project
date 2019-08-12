@@ -170,7 +170,7 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(safetyGridForm);
 // export default safetyGridForm;

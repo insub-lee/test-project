@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import PmSheetList from './PmSheetList';
 import PmSheetList2 from './PmSheetList/index2.js';
@@ -74,25 +74,26 @@ class PMSheetList extends Component {
   render() {
     return (
       <div>
-        {/* 기입바람 */}
-		    <Route path="/apps/pmSheetTablet" component={PmSheetList} exact />
-		    <Route path="/sm/pmSheetTablet" component={PmSheetList} exact />
-		    <Route path="/sm/pmSheetTablet2" component={PmSheetList2} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/pmSheetTablet/pmList" component={PmSheetList} exact />
-        <Route path="/sm/pmSheetTablet/pmList" component={PmSheetList} exact />
-        <Route path="/sm/pmSheetTablet/pmList2" component={PmSheetList2} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/pmSheetTablet/pmSheet" component={SheetView} exact />
-        <Route path="/sm/pmSheetTablet/pmSheet" component={SheetView} exact />
-        <Route path="/sm/pmSheetTablet/pmSheet2" component={SheetView2} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/pmSheetTablet/Popup/InformNoteDetailPopup/:PARAM" component={InformNoteDetailPopup} exact />
-        <Route path="/sm/pmSheetTablet/Popup/InformNoteDetailPopup/:PARAM" component={InformNoteDetailPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/pmSheetTablet/Popup/Workorder/:PARAM" component={Workorder} exact />
-        <Route path="/sm/pmSheetTablet/Popup/Workorder/:PARAM" component={Workorder} exact />
-
+        <Switch>
+          {/* 기입바람 */}
+          <Route path="/apps/pmSheetTablet" component={PmSheetList} exact />
+          <Route path="/sm/pmSheetTablet" component={PmSheetList} exact />
+          <Route path="/sm/pmSheetTablet2" component={PmSheetList2} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/pmSheetTablet/pmList" component={PmSheetList} exact />
+          <Route path="/sm/pmSheetTablet/pmList" component={PmSheetList} exact />
+          <Route path="/sm/pmSheetTablet/pmList2" component={PmSheetList2} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/pmSheetTablet/pmSheet" component={SheetView} exact />
+          <Route path="/sm/pmSheetTablet/pmSheet" component={SheetView} exact />
+          <Route path="/sm/pmSheetTablet/pmSheet2" component={SheetView2} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/pmSheetTablet/Popup/InformNoteDetailPopup/:PARAM" component={InformNoteDetailPopup} exact />
+          <Route path="/sm/pmSheetTablet/Popup/InformNoteDetailPopup/:PARAM" component={InformNoteDetailPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/pmSheetTablet/Popup/Workorder/:PARAM" component={Workorder} exact />
+          <Route path="/sm/pmSheetTablet/Popup/Workorder/:PARAM" component={Workorder} exact />
+        </Switch>
       </div>
     );
   }

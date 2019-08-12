@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Button from 'components/Button';
 import { intlObj } from 'utils/commonUtils';
 import { Input } from 'antd';
@@ -75,9 +75,11 @@ class BizModal extends PureComponent {
         </div>
 
         <ErrorBoundary>
-          <Route path={`${preUrl}/biz/list`} component={BizList} exact />
-          <Route path={`${preUrl}/biz/list/:BIZGRP_ID`} component={BizList} exact />
-          <Route path={`${preUrl}/biz/search/:searchword`} component={BizList} exact />
+          <Switch>
+            <Route path={`${preUrl}/biz/list`} component={BizList} exact />
+            <Route path={`${preUrl}/biz/list/:BIZGRP_ID`} component={BizList} exact />
+            <Route path={`${preUrl}/biz/search/:searchword`} component={BizList} exact />
+          </Switch>
         </ErrorBoundary>
       </StyleAppBizModal>
     );

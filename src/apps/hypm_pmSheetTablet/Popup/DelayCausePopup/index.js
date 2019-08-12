@@ -147,7 +147,7 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(DelayCausePopup);
 

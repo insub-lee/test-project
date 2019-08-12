@@ -26,7 +26,7 @@ const makeSelectAppManagerList = () =>
     appBasicInfoState => appBasicInfoState.get('appManagerList').toJS(),
   );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () =>
   createSelector(

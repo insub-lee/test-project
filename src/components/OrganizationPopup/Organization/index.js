@@ -2177,6 +2177,6 @@ const withSaga = injectSaga({ key: 'organizationPopup', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Organization);

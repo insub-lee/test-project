@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectApps = state => state.get('quickmenu');
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const makeAppList = () => createSelector(
   selectApps,

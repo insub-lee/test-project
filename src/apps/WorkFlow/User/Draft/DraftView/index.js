@@ -8,6 +8,7 @@ import { Redirect } from 'react-router-dom';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import WorkerBuilderView from 'apps/WorkBuilderApp/User/ViewPage';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -34,6 +35,16 @@ class DraftView extends Component {
     this.props.initDraftDetail();
   }
 
+  getButtons = (condition = false) => {
+    const btnArr = [
+      <Button key="close" onClick={this.handleCloseModal}>
+        닫기
+      </Button>,
+    ];
+    if (condition) btnArr.push(<Button type="primary" onClick={this.openOpinionModal}>결재</Button>);
+    return btnArr;
+  };
+
   approvalRequest = (e, status, opinion) => {
     e.preventDefault();
     const { draftDetail, requestApproval } = this.props;
@@ -54,7 +65,7 @@ class DraftView extends Component {
     setVisibleOpinionModal(true);
   };
 
-  handleCloselModal = () => {
+  handleCloseModal = () => {
     this.props.setSelectedDraft({}, false);
   };
 
@@ -63,25 +74,15 @@ class DraftView extends Component {
       CATE, visible, draftDetail, signline, draftHistory, visibleOpinionModal, setVisibleOpinionModal,
     } = this.props;
 
-    const btnArr = [
-      <Button key="close" onClick={this.handleCloselModal}>
-        닫기
-      </Button>,
-    ];
-
-    if (CATE === 'unApproval' && draftDetail.STATUS !== 9) {
-      btnArr.push(<Button type="primary" onClick={this.openOpinionModal}>결재</Button>);
-    }
-
     return (
       <Modal
         title={draftDetail.TITLE}
         visible={visible}
         onOk={this.handleOkModal}
-        onCancel={this.handleCloselModal}
-        width="1200PX"
+        onCancel={this.handleCloseModal}
+        width="1200px"
         style={{ top: 50 }}
-        footer={btnArr}
+        footer={this.getButtons(CATE === 'unApproval' && draftDetail.STATUS !== 9)}
       >
         <StyleDraftView>
           <div>
@@ -92,7 +93,11 @@ class DraftView extends Component {
               <SignStep signline={signline} />
               <SignLine signline={signline} />
             </div>
-            <div className="content" style={{ minHeight: '400px' }} />
+            <div className="content" style={{ minHeight: '400px' }}>
+              {draftDetail && draftDetail.VIEW_API && (
+                <WorkerBuilderView apiUrl={draftDetail.VIEW_API} />
+              )}
+            </div>
             {/* <div className="history">
               <HistoryGridData draftHistory={draftHistory} />
             </div> */}

@@ -534,7 +534,7 @@ const withReducer = injectReducer({ key: 'SiteInfo', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BcinfoDetail);
 

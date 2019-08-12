@@ -178,6 +178,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore/PageInfo', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(PageInfo));

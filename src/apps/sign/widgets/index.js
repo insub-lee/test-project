@@ -202,6 +202,6 @@ const withReducer = injectReducer({ key: 'Sign', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Sign);

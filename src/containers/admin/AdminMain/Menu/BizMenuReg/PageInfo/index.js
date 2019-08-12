@@ -197,7 +197,7 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/PageInfo', s
 export default injectIntl(
   compose(
     withReducer,
-    withConnect,
-    withSaga,
+  withSaga,
+  withConnect,
   )(PageInfo),
 );

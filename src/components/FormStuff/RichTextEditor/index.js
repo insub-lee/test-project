@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import FroalaEditor from './FroalaEditor';
+import FroalaEditorView from './FroalaEditorView';
 
 class RichTextEditor extends Component {
   state = {
@@ -17,14 +18,16 @@ class RichTextEditor extends Component {
     }
   }
 
-  onModelChange = model => {
+  onModelChange = (model) => {
     const { saveTempContents, name, contSeq } = this.props;
     this.setState({ model }, () => saveTempContents(model, name, 'rich-text-editor', contSeq));
   };
 
   getCurrentValue = () => {
     const { model } = this.state;
-    const { name, workSeq, taskSeq, contSeq } = this.props;
+    const {
+      name, workSeq, taskSeq, contSeq,
+    } = this.props;
     return JSON.stringify([{
       WORK_SEQ: workSeq,
       TASK_SEQ: taskSeq,
@@ -37,12 +40,18 @@ class RichTextEditor extends Component {
   };
 
   render() {
-    const { config, name } = this.props;
+    const { config, name, readOnly } = this.props;
     const { model } = this.state;
     return (
       <div>
-        <FroalaEditor model={model} onModelChange={this.onModelChange} config={config} />
-        <input type="hidden" name={name} value={this.getCurrentValue()} data-type="json" />
+        {readOnly ? (
+          <FroalaEditorView model={model} />
+        ) : (
+          <React.Fragment>
+            <FroalaEditor model={model} onModelChange={this.onModelChange} config={config} />
+            <input type="hidden" name={name} value={this.getCurrentValue()} data-type="json" />
+          </React.Fragment>
+        )}
       </div>
     );
   }
@@ -50,14 +59,24 @@ class RichTextEditor extends Component {
 
 RichTextEditor.propTypes = {
   config: PropTypes.object,
-  formStuff: PropTypes.object,
   saveTempContents: PropTypes.func,
+  readOnly: PropTypes.bool,
+  name: PropTypes.string,
+  defaultValue: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
+  contSeq: PropTypes.number,
+  workSeq: PropTypes.number,
+  taskSeq: PropTypes.number,
 };
 
 RichTextEditor.defaultProps = {
   config: {},
-  formStuff: {},
   saveTempContents: () => {},
+  readOnly: false,
+  name: '',
+  defaultValue: [],
+  contSeq: -1,
+  workSeq: -1,
+  taskSeq: -1,
 };
 
 export default RichTextEditor;

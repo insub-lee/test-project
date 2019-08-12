@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import BizList from './BizList';
 import BizDetail from './BizDetail';
 import BizMenuList from './BizMenuList';
@@ -22,12 +22,13 @@ class Biz extends PureComponent {
     return (
       <div className="appBizWrapper">
         <BizCategory handleOnClick={handleTreeOnClick} preUrl="/portal/store/appMain/bizStore" />
-
-        <Route path={`${match.path}/list/:BIZGRP_ID`} component={BizList} exact />
-        <Route path={`${match.path}/list`} component={BizList} exact />
-        <Route path={`${match.path}/search/:searchword`} component={BizList} exact />
-        <Route path={`${match.path}/menulist/:BIZGRP_ID`} component={BizMenuList} />
-        <Route path={`${match.path}/detail/:type/:BIZGRP_ID`} component={BizDetail} />
+        <Switch>
+          <Route path={`${match.path}/list/:BIZGRP_ID`} component={BizList} exact />
+          <Route path={`${match.path}/list`} component={BizList} exact />
+          <Route path={`${match.path}/search/:searchword`} component={BizList} exact />
+          <Route path={`${match.path}/menulist/:BIZGRP_ID`} component={BizMenuList} />
+          <Route path={`${match.path}/detail/:type/:BIZGRP_ID`} component={BizDetail} />
+        </Switch>
       </div>
     );
   }

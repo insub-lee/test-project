@@ -366,7 +366,7 @@ const withSaga = injectSaga({ key: 'bizmenuAuthsetting', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AuthSetting));
 

@@ -44,7 +44,7 @@ const makeAppBizGubun = () =>
     appState => appState.get('appBizGubun'),
   );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () =>
   createSelector(

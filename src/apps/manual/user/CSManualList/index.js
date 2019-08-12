@@ -66,11 +66,11 @@ class CSManualList extends Component {
     }
 
     const topBarButton = [
-      { title: '모아보기', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
+      { key: 0, title: '모아보기', event: onClickTest },
+      { key: 1, title: '오류신고', event: onClickTest },
+      { key: 2, title: '오류신고', event: onClickTest },
+      { key: 3, title: '오류신고', event: onClickTest },
+      { key: 4, title: '오류신고', event: onClickTest },
     ];
 
     return (
@@ -108,7 +108,7 @@ class CSManualList extends Component {
 
 CSManualList.propTypes = {
   GetTotalManualList: PropTypes.func,
-  totalManualList: PropTypes.object,
+  totalManualList: PropTypes.arrayOf(PropTypes.object),
   isViewContents: PropTypes.bool,
   item: PropTypes.object,
   setIsViewContents: PropTypes.func,

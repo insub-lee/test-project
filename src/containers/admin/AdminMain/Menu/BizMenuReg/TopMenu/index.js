@@ -143,6 +143,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/TopMenu', sa
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(TopMenu);

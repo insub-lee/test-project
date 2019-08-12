@@ -20,7 +20,7 @@ const makeSelectRecomAppList = () => createSelector(
   appScreenshotListState => appScreenshotListState.get('resRecomAppList').toJS(),
 );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () => createSelector(
   selectView,

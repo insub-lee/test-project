@@ -115,7 +115,7 @@ const withSaga = injectSaga({ key: 'appcategory', saga });
 export default injectIntl(
   compose(
     withReducer,
-    withConnect,
-    withSaga,
+  withSaga,
+  withConnect,
   )(AppCategory),
 );

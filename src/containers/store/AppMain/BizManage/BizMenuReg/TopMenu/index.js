@@ -138,7 +138,7 @@ const withSaga = injectSaga({ key: 'bizmemuTopMenu', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(TopMenu);
 

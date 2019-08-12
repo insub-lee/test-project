@@ -214,7 +214,7 @@ const mapDispatchToProps = dispatch => ({
   checkSession: (ctype, payload) => dispatch(actions.checkSession(ctype, payload)),
 });
 
-const withReducer = injectReducer({ key: 'hynix.common', reducer });
+const withReducer = injectReducer({ key: 'common', reducer });
 const withSaga = injectSaga({ key: 'auth', saga });
 const withConnect = connect(
   mapStateToProps,

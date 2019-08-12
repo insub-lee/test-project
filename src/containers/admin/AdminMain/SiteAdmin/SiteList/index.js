@@ -392,6 +392,6 @@ const withReducer = injectReducer({ key: 'SiteList', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(SiteList);

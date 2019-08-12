@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectNotice = state => state.get('notice');
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const makeNotice = () => createSelector(
   selectNotice,
