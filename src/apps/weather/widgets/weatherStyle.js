@@ -141,7 +141,7 @@ const WeatherStyle = styled.div`
   // Table (bottom)
   .otherDaysWeather {
     width: 100%;
-    margin-top: 30px;
+    margin-top: 15px;
 
     td {
       height: 26px;

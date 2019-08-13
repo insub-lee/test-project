@@ -1,5 +1,5 @@
 const width = 300;
-const height = 210;
+const height = 200;
 const colors = ['#BAA6CA', '#B7DCFA', '#FFE69A', '#788195'];
 const datas = [
   {

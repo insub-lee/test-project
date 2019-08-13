@@ -158,10 +158,9 @@ class selecteduser extends React.Component {
                   {
                     deptList.map(dept => (
                       <Table.Row key={dept.title}>
-                        <Table.Cell textAlign="left" title={`${dept.title}`} className="SUTableCell">
+                        <Table.Cell textAlign="left" title={`${lang.get('NAME', dept)}`} className="SUTableCell">
                           <NotDraggable dept={dept} deleteCallback={deleteCallback} type="dept">
-                            {lang.get('NAME', dept)}<br />
-                            {dept.deptName}
+                            {lang.get('NAME', dept)}
                           </NotDraggable>
                         </Table.Cell>
                       </Table.Row>
@@ -177,7 +176,7 @@ class selecteduser extends React.Component {
                   {
                     grpList.map(grp => (
                       <Table.Row key={grp.title}>
-                        <Table.Cell textAlign="left" title={`${grp.title}`} className="SUTableCell grpItem">
+                        <Table.Cell textAlign="left" title={`${lang.get('NAME', grp)}`} className="SUTableCell grpItem">
                           <NotDraggable grp={grp} deleteCallback={deleteCallback} type="grp">
                             {lang.get('NAME', grp)}
                           </NotDraggable>
@@ -195,10 +194,9 @@ class selecteduser extends React.Component {
                   {
                     pstnList.map(pstn => (
                       <Table.Row key={pstn.title}>
-                        <Table.Cell textAlign="left" title={`${pstn.deptName} /${pstn.title}`} className="SUTableCell">
+                        <Table.Cell textAlign="left" title={`${lang.get('NAME', pstn)}`} className="SUTableCell">
                           <NotDraggable pstn={pstn} deleteCallback={deleteCallback} type="pstn">
-                            {lang.get('NAME', pstn)}<br />
-                            {pstn.deptName}
+                            {lang.get('NAME', pstn)}
                           </NotDraggable>
                         </Table.Cell>
                       </Table.Row>
@@ -214,10 +212,9 @@ class selecteduser extends React.Component {
                   {
                     dutyList.map(duty => (
                       <Table.Row key={duty.title}>
-                        <Table.Cell textAlign="left" title={`${duty.deptName} /${duty.title}`} className="SUTableCell">
+                        <Table.Cell textAlign="left" title={`${lang.get('NAME', duty)}`} className="SUTableCell">
                           <NotDraggable duty={duty} deleteCallback={deleteCallback} type="duty">
-                            {lang.get('NAME', duty)}<br />
-                            {duty.deptName}
+                            {lang.get('NAME', duty)}
                           </NotDraggable>
                         </Table.Cell>
                       </Table.Row>
