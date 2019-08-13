@@ -303,10 +303,9 @@ class Category extends React.Component {
           <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
             <div className="categoryTreeWrapper">
               <div>
-                <Select defaultValue={-1} onChange={this.onChangeSite}>
+                {/* <Select defaultValue={-1} onChange={this.onChangeSite}>
                   {<Option value={-1}>시스템</Option>}
-                  {/* {comboOptions(this.props.setCategoryComboList)} */}
-                </Select>
+                </Select> */}
                 <MyAppTree
                   type={type}
                   treeData={this.props.categoryData}
