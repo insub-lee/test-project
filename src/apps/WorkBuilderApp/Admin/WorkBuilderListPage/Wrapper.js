@@ -71,7 +71,7 @@ const Wrapper = styled.div`
             height: 41px !important;
 
             .react-grid-HeaderCell {
-              height: 40px !important;
+              //height: 40px !important;
               padding: 0;
               border-right: none;
               border-bottom: none;

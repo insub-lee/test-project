@@ -7,6 +7,10 @@ const boardStyle = styled.div`
     padding: 0px;
     height: 100%;
 
+    .ant-tabs-top-content {
+      height: calc(100% - 37px);
+    }
+
     .ant-tabs-bar {
       margin: 0;
       // border-bottom: 1px solid #d1d2d3;  //위젯색상테마 포함됨
@@ -155,6 +159,8 @@ const boardStyle = styled.div`
                 }
 
                 .empInfo {
+                  // 임시로 Display: 
+                  display: none;
                   margin-top: -2px;
                   line-height: 12px;
 

@@ -1455,8 +1455,10 @@ const WidgetHeader = styled.div`
 const WidgetBox = styled.div`
   display: inline-block;
   width: 100%;
-  height: calc(100% - 35px) !important;
-  padding: 0;
+  //height: calc(100% - 35px) !important;
+  height: calc(100% - 50px);
+  //padding: 0;
+  padding: 10px 0;
   // background: $/*{props => props.theme.widget.box.bgColor};
   // color: $/*{props => props.theme.widget.box.color};
 

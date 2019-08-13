@@ -19,7 +19,7 @@ const StyleGrid = styled.div`
     }
   
     .react-grid-HeaderCell {
-      left: 40px !important;
+      //left: 40px !important;
       border-right: 0;
       border-bottom: 1px solid #333333;
       color: #707070;
@@ -103,7 +103,7 @@ const StyleGrid = styled.div`
   }
   
   .react-grid-Cell {
-    left: 40px !important;
+    //left: 40px !important;
     padding: 0;
     border-right: 0;
     border-bottom: 0;

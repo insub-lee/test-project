@@ -6,9 +6,11 @@ import newWidget from 'images/bizstore/icon-plus.png';
 
 const StyleAddWidget = styled.div`  
   .addNewWidget {
+    display: block;
     width: 70px;
     height: 70px;
-    margin-top: 10px;
+    //margin-top: 10px;
+    margin: 20px auto;
     border: none;
     background: #949595;
     border-radius: 35px;

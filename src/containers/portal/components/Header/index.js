@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { Tooltip } from 'antd';
-import { lang } from 'utils/commonUtils';
 import { split } from 'lodash';
-// import SKhynixLogo from 'images/portal/header-bg-logo.png';
+
+import { lang } from 'utils/commonUtils';
+import HyundaiLogo from 'images/Hyundai-Logo.png';
+
 import Badge from '../../../../components/Badge/StyleBadge';
 import UserSearch from '../../App/UserSearch';
 import UserProfile from '../../App/UserProfile';
@@ -27,6 +29,7 @@ const Header = ({
   execPage,
   headerTitle,
   location: { pathname },
+  siteId,
 }) => {
   const startPathName = split(pathname, '/', 2);
 
@@ -62,15 +65,19 @@ const Header = ({
               </Badge>
             </Trigger>
             <h1 className="siteHeader">
-              <span
-                className="gotoHome"
-                onClick={() => gotoHome('common')}
-                onKeyDown={() => gotoHome('common')}
-                role="button"
-                tabIndex="0"
-              >
-                {view !== 'Mobile' && headerTitle}
-              </span>
+              {siteId === 1183 ? (
+                <img src={HyundaiLogo} alt="Hyundai Moto" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0" />
+              ) : (
+                <span
+                  className="gotoHome"
+                  onClick={() => gotoHome('common')}
+                  onKeyDown={() => gotoHome('common')}
+                  role="button"
+                  tabIndex="0"
+                >
+                  {view !== 'Mobile' && headerTitle}
+                </span>
+              )}
               <span> {appName} </span>
               {/* 담당자 popover */}
               {(menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE') && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
