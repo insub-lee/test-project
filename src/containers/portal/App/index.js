@@ -924,7 +924,9 @@ App.propTypes = {
   executedDockPageId: PropTypes.number,
   hasRoleAdmin: PropTypes.bool,
   headerTitle: PropTypes.string,
+  profile: PropTypes.object.isRequired,
 };
+
 App.defaultProps = {
   setMyMenuNodeData: undefined,
   setMyMenuData: {},
@@ -939,6 +941,7 @@ App.defaultProps = {
   hasRoleAdmin: false,
   headerTitle: '',
 };
+
 const mapStateToProps = createStructuredSelector({
   // 1. selector
   myHNotiCnt: selectors.makeSelectHNotiCnt(),

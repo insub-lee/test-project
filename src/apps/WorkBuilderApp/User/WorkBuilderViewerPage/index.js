@@ -53,7 +53,7 @@ class WorkBuilderViewerPage extends Component {
 
   render() {
     const {
-      columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo, isLoading,
+      columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo, isLoading, isModalLoading,
     } = this.props;
     return (
       <Wrapper style={{ height: 'calc(100vh - 42px)' }}>
@@ -149,6 +149,11 @@ WorkBuilderViewerPage.propTypes = {
   workSeq: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   taskSeq: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   isLoading: PropTypes.bool,
+  isModalLoading: PropTypes.shape({
+    create: PropTypes.bool,
+    modify: PropTypes.bool,
+    read: PropTypes.bool,
+  }),
 };
 
 WorkBuilderViewerPage.defaultProps = {
@@ -173,6 +178,11 @@ WorkBuilderViewerPage.defaultProps = {
   workSeq: -1,
   taskSeq: -1,
   isLoading: true,
+  isModalLoading: {
+    create: true,
+    modify: true,
+    read: true,
+  },
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -189,6 +199,7 @@ const mapStateToProps = createStructuredSelector({
   workFlowConfig: selectors.makeSelectWorkFlowConfig(),
   signLineInfo: selectors.makeSelectSignLineInfo(),
   isLoading: selectors.makeSelectIsLoading(),
+  isModalLoading: selectors.makeSelectIsModalLoading(),
 });
 
 const mapDispatchToProps = dispatch => ({

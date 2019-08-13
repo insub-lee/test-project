@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import IconCollection from '../IconCollection';
 import userImg from 'images/portal/img-user-sample.png';
 import Styled from './Styled';
 
-const User = () => (
+const User = ({ profile }) => (
   <Styled>
     <div>
       <button type="button" className="btn-pin">
@@ -20,5 +21,9 @@ const User = () => (
     </div>
   </Styled>
 );
+
+User.propTypes = {
+  profile: PropTypes.object.isRequired,
+};
 
 export default User;

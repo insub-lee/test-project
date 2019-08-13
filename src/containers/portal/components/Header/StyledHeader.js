@@ -56,6 +56,7 @@ const StyledHeader = styled.header`
 
         .siteHeader {
           display: inline-block;
+          height: 33px;
           line-height: 33px;
           color: #ffffff;
           font-size: 16px;
