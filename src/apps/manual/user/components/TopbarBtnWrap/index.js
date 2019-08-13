@@ -5,7 +5,7 @@ import TopbarBtn from '../TopbarBtn';
 import Styled from './Styled';
 
 const TopbarBtnWrap = ({ className, data }) => (
-  <Styled className={className}>{data && data.length > 0 && data.map((item, idx) => <TopbarBtn key={`${item.key}_${idx}`} data={item} />)}</Styled>
+  <Styled className={className}>{data && data.map((item, idx) => <TopbarBtn key={`${item.key}_${idx}`} data={item} />)}</Styled>
 );
 
 TopbarBtnWrap.propTypes = {

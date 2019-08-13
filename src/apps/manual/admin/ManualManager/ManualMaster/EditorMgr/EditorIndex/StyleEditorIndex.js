@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import iconPlus from '../../../../../user/images/icon-plus.png';
 import iconMinus from '../../../../../user/images/icon-minus.png';
 
 const StyleEditorIndex = styled.div`
@@ -14,8 +15,22 @@ const StyleEditorIndex = styled.div`
     }
     .rst__nodeContent {
       .rst__collapseButton {
-        background-color: #fff;
-        background-image: url(${iconMinus});
+        border-radius: 0;
+        border: 1px solid #666;
+        background: #fff url(${iconMinus}) no-repeat center;
+        background-size: 7px;
+        width: 14px;
+        height: 14px;
+        box-shadow: none;
+      }
+      .rst__expandButton {
+        border-radius: 0;
+        border: 1px solid #666;
+        background: #fff url(${iconPlus}) no-repeat center;
+        background-size: 7px;
+        width: 14px;
+        height: 14px;
+        box-shadow: none;
       }
       .rst__rowWrapper {
         .rst__moveHandle {
@@ -23,12 +38,16 @@ const StyleEditorIndex = styled.div`
           border-radius: 2px 0 0 2px;
           background-color: #ddd;
           box-shadow: none;
+          width: 35px;
         }
         .rst__rowContents {
           border: 1px solid #ddd;
           border-radius: 0 2px 2px 0;
           box-shadow: none;
           padding: 0;
+          width: auto;
+          min-width: inherit;
+          max-width: 200px;
         }
       }
     }
@@ -42,6 +61,7 @@ const StyleEditorIndex = styled.div`
       text-align: center;
       padding: 10px;
       background-color: #e2e2cc;
+      display: none;
     }
     .editorIndexTreeTitle {
       button {
@@ -49,6 +69,10 @@ const StyleEditorIndex = styled.div`
         border: 0;
         color: #000;
         font-weight: 600;
+        font-size: 12px;
+        white-space: normal;
+        text-align: left;
+        height: auto;
         .ant-anchor-link {
           padding: 0px;
           .ant-anchor-link-title {
@@ -60,12 +84,12 @@ const StyleEditorIndex = styled.div`
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          right: 15px;
+          right: 10px;
           padding: 0;
           > i {
-            width: 12px;
-            height: 12px;
-            background-size: 12px;
+            width: 10px;
+            height: 10px;
+            background-size: 10px;
           }
         }
       }

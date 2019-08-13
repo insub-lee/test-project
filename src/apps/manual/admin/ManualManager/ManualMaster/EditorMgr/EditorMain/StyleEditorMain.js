@@ -7,7 +7,7 @@ const StyleEditorMain = styled.div`
   padding: 0px 20px;
   .dropWrapper {
     padding: 0px;
-    width: 686px;
+    width: 100%;
     height: auto;
     &.editorMainDrop {
       min-height: 100%;
@@ -37,9 +37,33 @@ const StyleEditorMain = styled.div`
       } */
       .manualIndexWrapper {
         .manualIndexTitle {
-          background-color: #cdfae4;
-          border-top: solid 1px #4db080;
-          padding: 10px;
+          position: relative;
+          background-color: #eef8fe;
+          border-top: solid 1px #076dac;
+          border-bottom: 1px solid #dcdcdc;
+          height: 45px;
+          line-height: 45px;
+          width: 100%;
+          padding: 0 15px 0 30px;
+          display: inline-block;
+          color: #076dac;
+          font-size: 14px;
+          font-weight: 600;
+          &:before {
+            content: '';
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #076dac;
+            position: absolute;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+            left: 15px;
+          }
           input[type='text'] {
             /* width: calc(100% - 120px); */
           }

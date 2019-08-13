@@ -41,6 +41,10 @@ const appReducer = (state = initialState, action) => {
       const { item, widgetId } = action;
       return state.setIn(['manualViewMap', widgetId, 'scrollComp'], fromJS(item));
     }
+    case constantTypes.SET_MANUAL_VIEW_HISTORY_REDUCR: {
+      const { historyList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'historyList'], historyList);
+    }
     default:
       return state;
   }

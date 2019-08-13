@@ -23,13 +23,13 @@ const appCSMualListReducer = (state = initialState, action) => {
       return state.setIn(['manualListMap', widgetId, 'selectedMualIdx'], mualIdx);
     }
     case constantTypes.SET_CHECK_MANUAL_REDUCR: {
-      const { mualIdx, widgetId } = action;
+      const { mualIdx, mualOrgIdx, widgetId } = action;
       const checkedMualList = state.getIn(['manualListMap', widgetId, 'checkedMualList']) || fromJS([]);
-      const findIdx = checkedMualList.findIndex(item => item === mualIdx);
+      const findIdx = checkedMualList.findIndex(item => item.mualIdx === mualIdx);
       if (findIdx > -1) {
         return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.splice(findIdx, 1));
       }
-      return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.push(mualIdx));
+      return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.push({ mualIdx, mualOrgIdx }));
     }
     default:
       return state;

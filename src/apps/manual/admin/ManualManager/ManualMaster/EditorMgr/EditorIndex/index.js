@@ -94,6 +94,16 @@ const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAr
           onChange={treeData => setTreeData(treeData, handleChangeCompList, tabComponentList.toJS())}
           canDrop={({ nextParent }) => nextParent !== null && nextParent.TYPE === 'index'}
           generateNodeProps={rowInfo => renderNode(rowInfo, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, scrollComp)}
+          // rowHeight={({ node: { TYPE, MUAL_COMPVIEWINFO } }) => {
+          //   const title = TYPE.includes('index') ? MUAL_COMPVIEWINFO : TYPE;
+          //   console.debug('Title', title, title.length);
+          //   let rowCount = 1;
+          //   if (title && title.length > 13) {
+          //     rowCount += title.length / 13;
+          //   }
+          //   console.debug(rowCount);
+          //   return 62 * rowCount;
+          // }}
         />
       </div>
     </div>

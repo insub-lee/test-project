@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-
+import { fromJS } from 'immutable';
 const makeSelectManualViewState = state => state.get('apps-manual-user-ManualView-reducer');
 
 const makeSelectMaulTabList = () =>
@@ -51,6 +51,13 @@ const makeSelectedMualIdxByWidgetId = widgetId =>
     state => state.getIn(['manualViewMap', widgetId, 'selectedMualIdx']),
   );
 
+const makeSelectHistoryList = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'historyList']),
+  );
+
 export default {
   makeSelectMaulTabList,
   makeSelectedTabIdx,
@@ -59,4 +66,5 @@ export default {
   makeSelectedMualIdx,
   makeSelectScrollComp,
   makeSelectedMualIdxByWidgetId,
+  makeSelectHistoryList,
 };

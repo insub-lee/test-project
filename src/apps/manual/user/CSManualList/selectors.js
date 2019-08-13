@@ -29,9 +29,16 @@ const makeCheckedManualList = () =>
     (state, widgetId) => state.getIn(['manualListMap', widgetId, 'checkedMualList']),
   );
 
+const makeCheckedManualListByWidgetId = widgetId =>
+  createSelector(
+    makeSelectStateCSManualList,
+    state => state.getIn(['manualListMap', widgetId, 'checkedMualList']),
+  );
+
 export default {
   makeSelectCSManualList,
   makeSelectIsViewContents,
   makeSelectedMualIdx,
   makeCheckedManualList,
+  makeCheckedManualListByWidgetId,
 };

@@ -51,7 +51,7 @@ class ManualView extends Component {
     setListSelectedMualIdx(0, widgetId);
   };
 
-  getTabData = (maulTabList, setScrollComponent, widgetId) =>
+  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -59,14 +59,24 @@ class ManualView extends Component {
       TabComponent: <TabTitle title={item.MUAL_TABNAME} />,
       TabPanelComponent: (
         <StyledTabPanel>
-          <ContentBody componentList={item.MUAL_TABVIEWINFO} setScrollComponent={setScrollComponent} widgetId={widgetId} />
+          <ContentBody componentList={item.MUAL_TABVIEWINFO} setScrollComponent={setScrollComponent} widgetId={widgetId} pagerProps={pagerProps} />
         </StyledTabPanel>
       ),
       disabled: false,
     }));
 
   render() {
-    const { maulTabList, selectedTabIdx, setSelectedTabIdx, setScrollComponent, widgetId } = this.props;
+    const {
+      maulTabList,
+      selectedTabIdx,
+      setSelectedTabIdx,
+      setScrollComponent,
+      widgetId,
+      mualHistoryList,
+      selectedMualIdx,
+      setSelectedMualIdx,
+      setListSelectedMualIdx,
+    } = this.props;
     const topBarButton = [
       { key: 'viewTopbar', title: '오류신고', event: undefined },
       { key: 'viewTopbar', title: '오류신고', event: undefined },
@@ -78,7 +88,12 @@ class ManualView extends Component {
       <Styled>
         <div className="tab-wrap">
           <Tab
-            tabs={this.getTabData(maulTabList.toJS(), setScrollComponent, widgetId)}
+            tabs={this.getTabData(maulTabList.toJS(), setScrollComponent, widgetId, {
+              mualHistoryList,
+              selectedMualIdx,
+              setSelectedMualIdx,
+              setListSelectedMualIdx,
+            })}
             keyName="MUAL_TAB_IDX"
             selectedTabIdx={selectedTabIdx}
             setSelectedTabIdx={setSelectedTabIdx}
@@ -100,6 +115,7 @@ ManualView.propTypes = {
   selectedTabIdx: PropTypes.number,
   setSelectedTabIdx: PropTypes.func,
   setScrollComponent: PropTypes.object,
+  mualHistoryList: PropTypes.object,
 };
 
 ManualView.defaultProps = {
@@ -108,12 +124,14 @@ ManualView.defaultProps = {
   selectedTabIdx: 0,
   setSelectedTabIdx: () => false,
   setScrollComponent: {},
+  mualHistoryList: fromJS([]),
 };
 
 const mapStateToProps = createStructuredSelector({
   selectedMualIdx: selectors.makeSelectedMualIdx(),
   maulTabList: selectors.makeSelectMaulTabList(),
   selectedTabIdx: selectors.makeSelectedTabIdx(),
+  mualHistoryList: selectors.makeSelectHistoryList(),
 });
 
 const mapDispatchToProps = dispatch => ({

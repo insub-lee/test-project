@@ -11,6 +11,7 @@ export const setSelectedMualIdxByReducr = (mualIdx, widgetId) => ({ type: consta
 export const setSelectedTabIdxByReducr = (idx, widgetId) => ({ type: constantTypes.SET_SELECTED_TAB_IDX_REDUCR, idx, widgetId });
 export const setSelectedCompIdxByReducr = (idx, widgetId) => ({ type: constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR, idx, widgetId });
 export const setScrollComponentByReducr = (item, widgetId) => ({ type: constantTypes.SET_SCROLL_COMPONENT_REDUCR, item, widgetId });
+export const setManualViewHistoryByReducr = (historyList, widgetId) => ({ type: constantTypes.SET_MANUAL_VIEW_HISTORY_REDUCR, historyList, widgetId });
 
 // remove
 
