@@ -289,9 +289,9 @@ class AuthSetting extends Component {
     let topArr = [];
 
     topArr = topArr.concat(this.convertOrgData(checkedDept, 'id', SEC_TYPE, DEPT));
-    topArr = topArr.concat(this.convertOrgData(checkedDuty, 'id', SEC_TYPE, DUTY));
     topArr = topArr.concat(this.convertOrgData(checkedGrp, 'id', SEC_TYPE, GRP));
     topArr = topArr.concat(this.convertOrgData(checkedPstn, 'id', SEC_TYPE, PSTN));
+    topArr = topArr.concat(this.convertOrgData(checkedDuty, 'id', SEC_TYPE, DUTY));
     topArr = topArr.concat(this.convertOrgData(selectedUsers, 'USER_ID', SEC_TYPE, USER));
 
     this.initMapList(topArr);

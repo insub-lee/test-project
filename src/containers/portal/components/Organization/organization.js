@@ -827,6 +827,7 @@ class Organization extends Component {
     } = this.props;
     let deletedData = '';
     if (type === 'user') {
+      const idx = selectedusers.findIndex(user => (user.USER_ID === id));
       deletedData = selectedusers.splice(selectedusers.findIndex(user => (
         user.USER_ID === id
       )), 1);
@@ -843,7 +844,7 @@ class Organization extends Component {
       });
     } else if (type === 'dept') {
       deletedData = checkedDept.splice(checkedDept.findIndex(dept => (
-        dept.id === id
+        dept.ID === id.dept.ID
       )), 1);
       this.setState({
         checkedDept
@@ -858,7 +859,7 @@ class Organization extends Component {
       });
     } else if (type === 'pstn') {
       deletedData = checkedPstn.splice(checkedPstn.findIndex(pstn => (
-        pstn.id === id
+        pstn.ID === id.pstn.ID
       )), 1);
       this.setState({
         checkedPstn
@@ -873,7 +874,7 @@ class Organization extends Component {
       });
     } else if (type === 'duty') {
       deletedData = checkedDuty.splice(checkedDuty.findIndex(duty => (
-        duty.id === id
+        duty.ID === id.duty.ID
       )), 1);
       this.setState({
         checkedDuty
@@ -888,7 +889,7 @@ class Organization extends Component {
       });
     } else if (type === 'grp') {
       deletedData = selectedGrp.splice(selectedGrp.findIndex(grp => (
-        grp.id === id
+        grp.ID === id.grp.ID
       )), 1);
       this.setState({
         selectedGrp
@@ -1321,6 +1322,7 @@ class Organization extends Component {
         if (idx === -1) {
           let obj = {
             id: dept.id,
+            ID: dept.id,
             NAME_KOR: dept.node.NAME_KOR,
             NAME_ENG: dept.node.NAME_ENG,
             NAME_CHN: dept.node.NAME_CHN,
@@ -1355,6 +1357,7 @@ class Organization extends Component {
         if (idx === -1) {
           const obj = {
             id: grp.id,
+            ID: grp.id,
             NAME_KOR: grp.node.NAME_KOR,
             NAME_ENG: grp.node.NAME_ENG,
             NAME_CHN: grp.node.NAME_CHN,
@@ -1386,6 +1389,7 @@ class Organization extends Component {
         if (idx === -1) {
           let obj = {
             id: pstn.id,
+            ID: pstn.id,
             NAME_KOR: pstn.node.NAME_KOR,
             NAME_ENG: pstn.node.NAME_ENG,
             NAME_CHN: pstn.node.NAME_CHN,
@@ -1420,6 +1424,7 @@ class Organization extends Component {
         if (idx === -1) {
           let obj = {
             id: duty.id,
+            ID: duty.id,
             NAME_KOR: duty.node.NAME_KOR,
             NAME_ENG: duty.node.NAME_ENG,
             NAME_CHN: duty.node.NAME_CHN,
