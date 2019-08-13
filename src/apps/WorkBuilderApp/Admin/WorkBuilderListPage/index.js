@@ -148,6 +148,6 @@ const withConnect = connect(
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(WorkBuilderListPage);

@@ -185,6 +185,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore/AppModal/AppList', 
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppList);

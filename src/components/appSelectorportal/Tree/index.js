@@ -97,7 +97,7 @@ Tree.propTypes = {
   selectedIndex: PropTypes.string, //eslint-disable-line
   onClick: PropTypes.func,
   showSearchBox: PropTypes.bool,
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   canDrop: PropTypes.bool,
   getCustomNodeProps: PropTypes.func,
 };

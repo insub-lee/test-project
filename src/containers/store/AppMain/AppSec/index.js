@@ -839,6 +839,6 @@ const withSaga = injectSaga({ key: 'appSec', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppSec);

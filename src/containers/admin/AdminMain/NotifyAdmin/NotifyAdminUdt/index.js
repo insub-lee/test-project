@@ -962,6 +962,6 @@ const withReducer = injectReducer({ key: 'NotifyAdminUdt', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(NotifyAdminUdt);

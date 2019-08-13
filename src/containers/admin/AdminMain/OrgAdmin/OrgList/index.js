@@ -83,6 +83,6 @@ const withSaga = injectSaga({ key: 'OrgAdmin', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(OrgAdmin);

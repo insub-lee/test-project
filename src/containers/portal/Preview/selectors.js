@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectPortalAuth = state => state.get('auth').toJS();
-const selectView = state => state.get('hynix.common').toJS();
+const selectView = state => state.get('common').toJS();
 const selectPortal = state => state.get('preview').toJS();
 
 const makeSelectView = () => createSelector(

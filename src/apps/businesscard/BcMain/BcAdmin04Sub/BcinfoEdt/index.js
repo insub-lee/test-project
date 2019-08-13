@@ -714,7 +714,7 @@ const withReducer = injectReducer({ key: 'BcEditUp', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BcinfoEdit);
 

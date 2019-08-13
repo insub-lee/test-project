@@ -186,6 +186,6 @@ const withSaga = injectSaga({ key: 'userProfile', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(UserProfile);

@@ -1926,6 +1926,6 @@ const withReducer = injectReducer({ key: 'bookroomOrg', reducer });
 const withSaga = injectSaga({ key: 'bookroomOrg', saga });
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Organization);

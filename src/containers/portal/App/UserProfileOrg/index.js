@@ -496,6 +496,6 @@ const withSaga = injectSaga({ key: 'prof', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Organization);

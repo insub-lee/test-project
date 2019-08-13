@@ -22,7 +22,7 @@ const makeCategoryComboData = () => createSelector(
   org => org.get('categoryComboData').toJS(),
 );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () => createSelector(
   selectView,

@@ -54,7 +54,7 @@ const View = ({
               </Card>
             </StyledFormLayer>
           ))}
-          {(!preview || !readOnly) && (
+          {(!preview && !readOnly) && (
             <Form.Item style={{ textAlign: 'right', marginBottom: 0 }}>
               <Button type="primary" htmlType="submit">
                 등록

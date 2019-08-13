@@ -62,7 +62,7 @@ const getAppsRouter = selectedApp => {
   return <div />;
 };
 
-const AppsRouter = ({ selectedApp }) => (
+const AppsRouter = ({ selectedApp, id }) => (
   <div className="appsRoute">{getAppsRouter(selectedApp)}</div>
 );
 

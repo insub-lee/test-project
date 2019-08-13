@@ -1,78 +1,24 @@
 import * as actionTypes from './constants';
 
-export const getView = id => ({
+export const getView = apiUrl => ({
   type: actionTypes.GET_VIEW,
-  id,
+  apiUrl,
 });
 
-export const successGetView = (columns, list) => ({
+export const successGetView = (metaList, data) => ({
   type: actionTypes.SUCCESS_GET_VIEW,
-  columns,
-  list,
-});
-
-export const openEditModal = (workSeq, taskSeq) => ({
-  type: actionTypes.OPEN_EDIT_MODAL,
-  workSeq,
-  taskSeq,
-});
-
-export const closeEditModal = () => ({
-  type: actionTypes.CLOSE_EDIT_MODAL,
-});
-
-export const successGetFormData = (boxes, formStuffs, workFlow) => ({
-  type: actionTypes.SUCCESS_GET_FORM_DATA,
-  boxes,
-  formStuffs,
-  workFlow,
-});
-
-export const toggleFormModal = value => ({
-  type: actionTypes.TOGGLE_FORM_MODAL,
-  value,
-});
-
-export const postData = payload => ({
-  type: actionTypes.POST_DATA,
-  payload,
-});
-
-export const successPostData = () => ({
-  type: actionTypes.SUCCESS_POST_DATA,
-});
-
-export const getTaskSeq = () => ({
-  type: actionTypes.GET_TASK_SEQ,
-});
-
-export const successGetTaskSeq = taskSeq => ({
-  type: actionTypes.SUCCESS_GET_TASK_SEQ,
-  taskSeq,
-});
-
-export const successGetEditData = data => ({
-  type: actionTypes.SUCCESS_GET_EDIT_DATA,
+  metaList,
   data,
 });
 
-export const saveTaskContents = ({
-  detail, fieldNm, type, contSeq,
-}) => ({
-  type: actionTypes.SAVE_TASK_CONTENTS,
-  data: {
-    detail,
-    fieldNm,
-    type,
-    contSeq,
-  },
+export const enableLoading = () => ({
+  type: actionTypes.LOADING_ON,
 });
 
-export const successSaveTaskContents = ({ taskSeq, fieldNm, contSeq }) => ({
-  type: actionTypes.SUCCESS_SAVE_TASK_CONTENTS,
-  data: {
-    taskSeq,
-    fieldNm,
-    contSeq,
-  },
+export const disableLoading = () => ({
+  type: actionTypes.LOADING_OFF,
+});
+
+export const resetData = () => ({
+  type: actionTypes.RESET_DATA,
 });

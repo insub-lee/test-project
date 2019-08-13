@@ -376,6 +376,6 @@ const withSaga = injectSaga({ key: 'AppExaForm', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppExaForm));

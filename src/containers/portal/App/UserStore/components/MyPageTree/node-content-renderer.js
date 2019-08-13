@@ -202,7 +202,7 @@ CustomThemeNodeContentRenderer.defaultProps = {
 
 CustomThemeNodeContentRenderer.propTypes = {
   buttons: PropTypes.arrayOf(PropTypes.node),
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   className: PropTypes.string,
   icons: PropTypes.arrayOf(PropTypes.node),
   isSearchFocus: PropTypes.bool,

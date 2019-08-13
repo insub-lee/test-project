@@ -13,9 +13,9 @@ import * as actionType from './constants';
 */
 export function* resetPageApps(payload) {
   const resultValue = JSON.parse(payload.widgetList);
-  const setMyMenuThisData = yield select(stateParam => stateParam.get('hynix.common').get('setMyMenuData'));
+  const setMyMenuThisData = yield select(stateParam => stateParam.get('common').get('setMyMenuData'));
 
-  const apps = yield select(stateParam => stateParam.get('hynix.common').get('apps'));
+  const apps = yield select(stateParam => stateParam.get('common').get('apps'));
   const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === payload.PAGE_ID);
   // 현재 실행중인 페이지가 변경된 경우
   if (resultValue.length > 0 && payload.PAGE_ID === setMyMenuThisData.PAGE_ID) {
@@ -87,9 +87,9 @@ export function* resetPageForSysApps(payload) {
   const { PAGE_ID } = payload;
   const response = yield call(Axios.post, '/api/portal/v1/page/executeRelaodApps/', { PAGE_ID });
   const resultValue = JSON.parse(response.list);
-  const setMyMenuThisData = yield select(stateParam => stateParam.get('hynix.common').get('setMyMenuData'));
+  const setMyMenuThisData = yield select(stateParam => stateParam.get('common').get('setMyMenuData'));
 
-  const apps = yield select(stateParam => stateParam.get('hynix.common').get('apps'));
+  const apps = yield select(stateParam => stateParam.get('common').get('apps'));
   const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === PAGE_ID);
 
   if (PAGE_ID === setMyMenuThisData.PAGE_ID) {
@@ -136,15 +136,15 @@ export function* resetPageForSysApps(payload) {
 }
 
 export function* resetPageNotiApps(payload) {
-  let selectedAppThisData = yield select(portalState => portalState.get('hynix.common').get('selectedApp'));
+  let selectedAppThisData = yield select(portalState => portalState.get('common').get('selectedApp'));
   if (!selectedAppThisData.length) {
     selectedAppThisData = selectedAppThisData.toJS();
   }
 
-  const setMyMenuData = yield select(portalState => portalState.get('hynix.common').get('setMyMenuData'));
+  const setMyMenuData = yield select(portalState => portalState.get('common').get('setMyMenuData'));
   const unreadCnt = payload.UNREAD_CNT;
 
-  const apps = yield select(stateParam => stateParam.get('hynix.common').get('apps'));
+  const apps = yield select(stateParam => stateParam.get('common').get('apps'));
   const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
 
   if (selectedAppThisData.length > 0) {
@@ -372,7 +372,7 @@ export function* resetSite(payload) {
 
 export function* resetHomepageSec(payload) {
   const { PAGE_ID } = payload;
-  const dockAppList = yield select(portalState => portalState.get('hynix.common').get('dockAppList'));
+  const dockAppList = yield select(portalState => portalState.get('common').get('dockAppList'));
 
   const CUR_HOME_APP_PAGE_ID = dockAppList[dockAppList.findIndex(o => o.HOME_YN === 'Y')].PAGE_ID;
 

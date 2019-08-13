@@ -178,7 +178,7 @@ const withSaga = injectSaga({ key: 'bizmanage', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizManage));
 

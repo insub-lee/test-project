@@ -433,7 +433,7 @@ const withReducer = injectReducer({ key: 'Today', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Today);
 

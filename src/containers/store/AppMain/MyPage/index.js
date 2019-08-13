@@ -272,7 +272,7 @@ const withSaga = injectSaga({ key: 'mypage', saga });
 export default injectIntl(
   compose(
     withReducer,
-    withConnect,
-    withSaga,
+  withSaga,
+  withConnect,
   )(MyPage),
 );

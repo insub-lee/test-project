@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import axios from 'axios';
 
 // import Upload from './Upload';
@@ -122,14 +123,24 @@ class DefaultUploader extends Component {
 
   render() {
     const { fileList } = this.state;
-    const { name } = this.props;
+    const { name, readOnly } = this.props;
     return (
       <div>
-        <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" onRemove={this.onRemove} />
+        <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" onRemove={this.onRemove} disabled={readOnly} />
         <input type="hidden" name={name} value={this.getCurrentValue(fileList.filter(file => file.status === 'done'))} data-type="json" />
       </div>
     );
   }
 }
+
+DefaultUploader.propTypes = {
+  name: PropTypes.string,
+  readOnly: PropTypes.bool,
+};
+
+DefaultUploader.defaultProps = {
+  name: '',
+  readOnly: false,
+};
 
 export default DefaultUploader;

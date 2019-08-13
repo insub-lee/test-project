@@ -361,7 +361,7 @@ const withSaga = injectSaga({ key: 'app', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
   // )(App);
 )(DragDropContext(HTML5Backend)(App));

@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Layout, Spin, Icon, Tooltip } from 'antd';
 import Scrollbars from 'react-custom-scrollbars';
 import { ThemeProvider } from 'styled-components';
@@ -456,6 +456,7 @@ class App extends React.PureComponent {
       <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
         {setMyMenuData.INTL_TYPE === 'Y' ? (
           <AppsRouter
+            id={setMyMenuData.PAGE_ID}
             selectedApp={selectedApp}
             setMyMenuData={setMyMenuData}
             setIsSpinnerShow={setIsSpinnerShow}
@@ -706,42 +707,6 @@ class App extends React.PureComponent {
             setMenuClose={this.setHeaderMenuClose}
             view={view}
           />
-          {/* test layout */}
-          {/*<div className="testDiv">*/}
-          {/*  <div className="testDiv02">*/}
-          {/*    <div className="button">*/}
-          {/*      /!* <input type="button" value="Start App" /> *!/*/}
-          {/*      <section className="links">*/}
-          {/*        /!* <a class="link l1" href="#" value="Pure" /> *!/*/}
-          {/*        <Button className="link l1" icon="vertical-left" onClick={this.setOpen} />*/}
-          {/*      </section>*/}
-          {/*    </div>*/}
-          {/*    <div className="testClass">*/}
-          {/*      <div className="iconPositon" style={{ marginTop: '60px' }}>*/}
-          {/*        <Tooltip placement="right" title="home">*/}
-          {/*          <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />*/}
-          {/*        </Tooltip>*/}
-          {/*      </div>*/}
-          {/*      <div className="iconPositon" style={{ marginTop: '20px' }}>*/}
-          {/*        <Tooltip placement="right" title="app-store">*/}
-          {/*          <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />*/}
-          {/*        </Tooltip>*/}
-          {/*      </div>*/}
-          {/*      <div className="iconPositon" style={{ marginTop: '20px' }}>*/}
-          {/*        <Tooltip placement="right" title="환경설정">*/}
-          {/*          <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />*/}
-          {/*        </Tooltip>*/}
-          {/*      </div>*/}
-          {/*      <div className="iconPositon" style={{ marginTop: '20px' }}>*/}
-          {/*        <Tooltip placement="right" title="업무등록">*/}
-          {/*          <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />*/}
-          {/*        </Tooltip>*/}
-          {/*      </div>*/}
-          {/*    </div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {/* test layout */}
-          {/* Body */}
           <UserCategoryMenu
             isShow={open}
             toggleMenu={open ? this.setMenuClose : this.setOpen}
@@ -780,50 +745,11 @@ class App extends React.PureComponent {
                 <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
               </Tooltip>
             </div>
-            {/*
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="업무등록">
-                <Icon type="container" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
-              </Tooltip>
-            </div>
-            */}
           </SideMenu>
           <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <AppWrapper style={{ width: '100%' }}>
-                  {/* rendering check count 초기화용 버튼 */}
-                  {/* <button
-              onClick={() => {
-                initializeCount(this);
-              }}
-              style={{
-                position: 'absolute',
-                zIndex: '1000000',
-                left: '100',
-              }}
-            >
-              초기화버튼
-            </button> */}
-                  {/*
-                  <UserMenu
-                    open={open}
-                    execMenu={this.execMenu}
-                    execPage={this.execPage}
-                    myMNotiCnt={myMNotiCnt}
-                    myHNotiCnt={myHNotiCnt}
-                    myMNotiList={myMNotiList}
-                    selectedIndex={selectedIndex}
-                    menuName={menuName}
-                    handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-                    setMyMenuData={setMyMenuData}
-                    visible={this.state.visible}
-                    setMenuClose={this.setMenuClose}
-                    view={view}
-                    history={this.props.history}
-                  />
-                  */}
-
                   <Fullscreen
                     enabled={this.state.isFullscreenEnabled}
                     onChange={this.setIsFullscreenEnabled}
@@ -850,42 +776,44 @@ class App extends React.PureComponent {
                         <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} />
                         {this.props.apps}
                       </Content>
-                      <Route
-                        path={`/${basicPath.PORTAL}/settings`}
-                        render={() => (
-                          <UserSetting //eslint-disable-line
-                            applySkin={this.applySkin}
-                          />
-                        )}
-                      />
-                      <Route
-                        exact
-                        path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
-                        render={props => (
-                          <UserStore //eslint-disable-line
-                            {...props}
-                            applySkin={this.applySkin}
-                          />
-                        )}
-                      />
-                      <Route
-                        path={`/${basicPath.PORTAL}/store`}
-                        render={props => (
-                          <UserStore //eslint-disable-line
-                            {...props}
-                            applySkin={this.applySkin}
-                          />
-                        )}
-                      />
-                      <Route
-                        path={`/${basicPath.PORTAL}/card`}
-                        render={props => (
-                          <UserMenuCard //eslint-disable-line
-                            {...props}
-                            applySkin={this.applySkin}
-                          />
-                        )}
-                      />
+                      <Switch>
+                        <Route
+                          path={`/${basicPath.PORTAL}/settings`}
+                          render={() => (
+                            <UserSetting //eslint-disable-line
+                              applySkin={this.applySkin}
+                            />
+                          )}
+                        />
+                        <Route
+                          exact
+                          path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
+                          render={props => (
+                            <UserStore //eslint-disable-line
+                              {...props}
+                              applySkin={this.applySkin}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={`/${basicPath.PORTAL}/store`}
+                          render={props => (
+                            <UserStore //eslint-disable-line
+                              {...props}
+                              applySkin={this.applySkin}
+                            />
+                          )}
+                        />
+                        <Route
+                          path={`/${basicPath.PORTAL}/card`}
+                          render={props => (
+                            <UserMenuCard //eslint-disable-line
+                              {...props}
+                              applySkin={this.applySkin}
+                            />
+                          )}
+                        />
+                      </Switch>
                     </div>
                   </Fullscreen>
                   {/*
@@ -917,7 +845,7 @@ class App extends React.PureComponent {
                     }}
                     // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
                   >
-                    {this.state.show === true && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
+                    {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
                   </Rodal>
                 </AppWrapper>
               </Scrollbars>

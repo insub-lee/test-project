@@ -578,7 +578,7 @@ MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   // eslint-disable-next-line react/require-default-props
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   // eslint-disable-next-line react/no-unused-prop-types
   canDrop: PropTypes.bool,
   history: PropTypes.object.isRequired,

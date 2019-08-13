@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { PureComponent, Fragment } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -60,45 +60,47 @@ class InformNote extends PureComponent {
     console.log('render', this.props);
     return (       
       <div>
-        {/* 기입바람 */}
-        <PropsRouter path="/apps/informNote" component={informNote} userCompanyDefine={this.props.userCompanyDefine} exact/>
-        <PropsRouter path="/sm/informNote" component={informNote} userCompanyDefine={this.props.userCompanyDefine} exact/>
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/CommonInformnoteGridColumSetPopup/:PARAM" component={informnoteGridColumSetPopup} exact />
-        <Route path="/sm/informNote/pop/CommonInformnoteGridColumSetPopup/:PARAM" component={informnoteGridColumSetPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/HotPopup/:PARAM" component={informNoteHotPopup} exact />
-        <Route path="/sm/informNote/pop/HotPopup/:PARAM" component={informNoteHotPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/InformNoteListAlarmListPopup/:PARAM" component={informNoteListAlarmListPopup} exact />
-        <Route path="/sm/informNote/pop/InformNoteListAlarmListPopup/:PARAM" component={informNoteListAlarmListPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/InformNoteListAlarmPopup/:PARAM" component={informNoteListAlarmPopup} exact />
-        <Route path="/sm/informNote/pop/InformNoteListAlarmPopup/:PARAM" component={informNoteListAlarmPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/InformNoteListCBMSelectListPopup/:PARAM" component={informNoteListCBMSelectListPopup} exact />
-        <Route path="/sm/informNote/pop/InformNoteListCBMSelectListPopup/:PARAM" component={informNoteListCBMSelectListPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/InformNoteListCreatePopup/:PARAM" component={informNoteListCreatePopup} exact />
-        <Route path="/sm/informNote/pop/InformNoteListCreatePopup/:PARAM" component={informNoteListCreatePopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/InformNotice" component={informNotice} exact />
-        <Route path="/sm/informNote/pop/InformNotice" component={informNotice} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/pop/InformNoticeDetailPopup/:uid" component={InformNoticeDetailPopup} exact />
-        <Route path="/sm/informNote/pop/InformNoticeDetailPopup/:uid" component={InformNoticeDetailPopup} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/Plan/:PARAM" component={plan} exact />
-        <Route path="/sm/informNote/Plan/:PARAM" component={plan} exact />
-        {/* 기입바람 */}
-        <Route path="/apps/informNote/EqIdSearch" component={informNoteEqid} exact />
-        <Route path="/sm/informNote/EqIdSearch" component={informNoteEqid} exact />
-        
-        <Route path="/sm/informNote/pop/InformNoteSafetyWorkConnect" component={InformNoteSafetyWorkConnect} exact />
-		    <Route path="/sm/informNote/pop/InformNoteTechSafeDetail/:PARAM" component={InformNoteTechSafeDetail} exact />
-        <Route path="/sm/informNote/pop/InformNoteDetailAttachFile/:PARAM" component={InformNoteDetailAttachFile} exact />
+        <Switch>
+          {/* 기입바람 */}
+          <PropsRouter path="/apps/informNote" component={informNote} userCompanyDefine={this.props.userCompanyDefine} exact/>
+          <PropsRouter path="/sm/informNote" component={informNote} userCompanyDefine={this.props.userCompanyDefine} exact/>
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/CommonInformnoteGridColumSetPopup/:PARAM" component={informnoteGridColumSetPopup} exact />
+          <Route path="/sm/informNote/pop/CommonInformnoteGridColumSetPopup/:PARAM" component={informnoteGridColumSetPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/HotPopup/:PARAM" component={informNoteHotPopup} exact />
+          <Route path="/sm/informNote/pop/HotPopup/:PARAM" component={informNoteHotPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/InformNoteListAlarmListPopup/:PARAM" component={informNoteListAlarmListPopup} exact />
+          <Route path="/sm/informNote/pop/InformNoteListAlarmListPopup/:PARAM" component={informNoteListAlarmListPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/InformNoteListAlarmPopup/:PARAM" component={informNoteListAlarmPopup} exact />
+          <Route path="/sm/informNote/pop/InformNoteListAlarmPopup/:PARAM" component={informNoteListAlarmPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/InformNoteListCBMSelectListPopup/:PARAM" component={informNoteListCBMSelectListPopup} exact />
+          <Route path="/sm/informNote/pop/InformNoteListCBMSelectListPopup/:PARAM" component={informNoteListCBMSelectListPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/InformNoteListCreatePopup/:PARAM" component={informNoteListCreatePopup} exact />
+          <Route path="/sm/informNote/pop/InformNoteListCreatePopup/:PARAM" component={informNoteListCreatePopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/InformNotice" component={informNotice} exact />
+          <Route path="/sm/informNote/pop/InformNotice" component={informNotice} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/pop/InformNoticeDetailPopup/:uid" component={InformNoticeDetailPopup} exact />
+          <Route path="/sm/informNote/pop/InformNoticeDetailPopup/:uid" component={InformNoticeDetailPopup} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/Plan/:PARAM" component={plan} exact />
+          <Route path="/sm/informNote/Plan/:PARAM" component={plan} exact />
+          {/* 기입바람 */}
+          <Route path="/apps/informNote/EqIdSearch" component={informNoteEqid} exact />
+          <Route path="/sm/informNote/EqIdSearch" component={informNoteEqid} exact />
 
-        <Route path="/sm/informNote/DatabaseSession" component={DatabaseSession} exact />
+          <Route path="/sm/informNote/pop/InformNoteSafetyWorkConnect" component={InformNoteSafetyWorkConnect} exact />
+          <Route path="/sm/informNote/pop/InformNoteTechSafeDetail/:PARAM" component={InformNoteTechSafeDetail} exact />
+          <Route path="/sm/informNote/pop/InformNoteDetailAttachFile/:PARAM" component={InformNoteDetailAttachFile} exact />
+
+          <Route path="/sm/informNote/DatabaseSession" component={DatabaseSession} exact />
+        </Switch>
       </div>
     );
   }
@@ -129,6 +131,6 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(InformNote);

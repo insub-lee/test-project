@@ -123,6 +123,6 @@ const withReducer = injectReducer({ key: 'bizList', reducer });
 const withSaga = injectSaga({ key: 'bizList', saga });
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizList);

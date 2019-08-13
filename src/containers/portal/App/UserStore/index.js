@@ -125,6 +125,6 @@ const withSaga = injectSaga({ key: 'userStore-app', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(UserStore);

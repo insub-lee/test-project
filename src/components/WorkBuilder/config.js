@@ -28,7 +28,10 @@ export const defaultFormStuffs = {
         <Input {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents }) => <Input {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => {
+      const { property } = formStuff;
+      return property.readOnly ? <p>{property.defaultValue}</p> : <Input {...property} />;
+    },
   },
   number: {
     label: 'Number',
@@ -38,7 +41,10 @@ export const defaultFormStuffs = {
         <InputNumber {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents }) => <InputNumber {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => {
+      const { property } = formStuff;
+      return property.readOnly ? <p>{property.defaultValue}</p> : <InputNumber {...property} />;
+    },
   },
   textarea: {
     label: 'Textarea',
@@ -48,7 +54,10 @@ export const defaultFormStuffs = {
         <Textarea {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents }) => <Textarea {...formStuff.property} />,
+    renderer: ({ formStuff, saveTempContents }) => {
+      const { property } = formStuff;
+      return property.readOnly ? <p>{property.defaultValue}</p> : <Textarea {...property} />;
+    },
   },
   // checkbox: {
   //   label: 'Checkbox',
@@ -140,12 +149,24 @@ export const defaultFormStuffs = {
     ),
     renderer: ({ formStuff, saveTempContents }) => {
       const { property } = formStuff;
-      return (
+      return property.readOnly ? (
+        <p>{property.defaultValue}</p>
+      ) : (
         <DatePicker
           {...property}
           defaultValue={property.format ? moment(property.defaultValue, property.format) : moment(property.defaultValue)}
+          disabled={property.readOnly}
         />
       );
+      // return property.readOnly ? (
+      //   <p>{property.format ? moment(property.defaultValue, property.format) : moment(property.defaultValue)}</p>
+      // ) : (
+      //   <DatePicker
+      //     {...property}
+      //     defaultValue={property.format ? moment(property.defaultValue, property.format) : moment(property.defaultValue)}
+      //     disabled={property.readOnly}
+      //   />
+      // );
     },
   },
   // 'week-picker': {

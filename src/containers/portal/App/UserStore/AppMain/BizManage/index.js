@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -113,9 +113,11 @@ class BizManage extends Component {
         </ErrorBoundary>
         <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
           <ErrorBoundary>
-            <Route path="/portal/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
-            <Route path="/portal/store/appMain/bizManage/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
-            <Route path="/appPreview" component={AppPreview} exact />
+            <Switch>
+              <Route path="/portal/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
+              <Route path="/portal/store/appMain/bizManage/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
+              <Route path="/appPreview" component={AppPreview} exact />
+            </Switch>
           </ErrorBoundary>
 
           {/* <Route path="/store/appMain/bizManage/aut
@@ -174,7 +176,7 @@ const withSaga = injectSaga({ key: 'bizmanage', saga });
 export default injectIntl(
   compose(
     withReducer,
-    withConnect,
-    withSaga,
+  withSaga,
+  withConnect,
   )(BizManage),
 );

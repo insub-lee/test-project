@@ -241,6 +241,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizManage));

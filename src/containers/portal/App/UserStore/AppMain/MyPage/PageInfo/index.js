@@ -176,6 +176,6 @@ const withSaga = injectSaga({ key: 'pageInfo', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(PageInfo));

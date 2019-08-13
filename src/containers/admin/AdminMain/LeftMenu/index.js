@@ -216,6 +216,6 @@ const withReducer = injectReducer({ key: 'menuList', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(menuList);

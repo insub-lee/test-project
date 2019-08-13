@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Layout, Icon, Menu } from 'antd';
 import { createStructuredSelector } from 'reselect';
 import { ThemeProvider } from 'styled-components';
@@ -90,18 +90,20 @@ const App = props => (
             minHeight: 280,
           }}
         >
-          <Route exact path="/" />
-          <Route path="/admin/account/divisionManage" component={Division} />
-          <Route path="/admin/account/adminManage" component={Admin} />
-          <Route path="/admin/account/syncManage" component={Sync} />
-          {/* <Route path="/admin/test/test01" component={Test01} />
-          <Route path="/admin/test/test02" component={Test02} />
-          <Route path="/admin/test/test03" component={Test03} />
-          <Route path="/admin/codeadmin" component={CodeAdmin} />
-          <Route path="/admin/siteadmin" component={SiteAdmin} />
-          <Route path="/admin/globaladmin" component={GlobalAdmin} /> */}
-
-
+          <Switch>
+            <Route exact path="/" />
+            <Route path="/admin/account/divisionManage" component={Division} />
+            <Route path="/admin/account/adminManage" component={Admin} />
+            <Route path="/admin/account/syncManage" component={Sync} />
+            {/*
+            <Route path="/admin/test/test01" component={Test01} />
+            <Route path="/admin/test/test02" component={Test02} />
+            <Route path="/admin/test/test03" component={Test03} />
+            <Route path="/admin/codeadmin" component={CodeAdmin} />
+            <Route path="/admin/siteadmin" component={SiteAdmin} />
+            <Route path="/admin/globaladmin" component={GlobalAdmin} />
+            */}
+          </Switch>
         </Content>
         <Footer
           style={{

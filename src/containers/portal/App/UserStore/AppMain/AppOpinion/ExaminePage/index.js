@@ -274,6 +274,6 @@ const withSaga = injectSaga({ key: 'examinePage', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(ExaminePage);

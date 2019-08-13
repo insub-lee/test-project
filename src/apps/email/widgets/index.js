@@ -213,6 +213,6 @@ const withReducer = injectReducer({ key: 'Email', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Email);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 
 import MyAppList from './MyAppList';
 import MyAppRegis from './MyAppRegis';
@@ -17,10 +17,12 @@ class MyApp extends React.Component {
   render() {
     return (
       <div>
-        <Route path="/store/appMain/MyApp" component={MyAppList} exact />
-        <Route path="/store/appMain/MyApp/MyAppRegis" component={MyAppRegis} />
-        <Route path="/store/appMain/MyApp/MyAppDetail/:APP_ID/:VER" component={MyAppDetail} exact />
-        <Route path="/store/appMain/MyApp/MyAppUpdate/:uv/:APP_ID/:VER/:tabNum/:svcyn" component={MyAppUpdate} />
+        <Switch>
+          <Route path="/store/appMain/MyApp" component={MyAppList} exact />
+          <Route path="/store/appMain/MyApp/MyAppRegis" component={MyAppRegis} />
+          <Route path="/store/appMain/MyApp/MyAppDetail/:APP_ID/:VER" component={MyAppDetail} exact />
+          <Route path="/store/appMain/MyApp/MyAppUpdate/:uv/:APP_ID/:VER/:tabNum/:svcyn" component={MyAppUpdate} />
+        </Switch>
       </div>
     );
   }

@@ -169,6 +169,6 @@ const withSaga = injectSaga({ key: 'bizDetail', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizDetail);

@@ -503,7 +503,7 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AuthSetting'
 export default injectIntl(
   compose(
     withReducer,
-    withConnect,
-    withSaga,
+  withSaga,
+  withConnect,
   )(AuthSetting),
 );

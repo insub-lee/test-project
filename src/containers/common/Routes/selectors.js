@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectHynixCommon = state => state.get('hynix.common');
+const selectHynixCommon = state => state.get('common');
 
 const makeSelectView = () =>
   createSelector(

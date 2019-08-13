@@ -5,7 +5,7 @@ const StyleApprovalView = styled.div`
 
   .content {
     margin-top: 20px;
-    border: 1px solid rgb(211, 211, 211);
+    //border: 1px solid rgb(211, 211, 211);
   }
 
   .buttonWrapper {

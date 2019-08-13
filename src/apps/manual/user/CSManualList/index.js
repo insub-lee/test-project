@@ -31,7 +31,9 @@ class CSManualList extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx, item } = this.props;
+    const {
+ resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx, item 
+} = this.props;
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
     const widgetId = item && item.id ? item.id : categoryIdx;
     setIsViewContents(false, widgetId);
@@ -41,7 +43,9 @@ class CSManualList extends Component {
   };
 
   render() {
-    const { totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx, selectedMualIdx, setCheckManual, checkedManualList, item } = this.props;
+    const {
+ totalManualList, isViewContents, setIsViewContents, setSelectedMualIdx, selectedMualIdx, setCheckManual, checkedManualList, item 
+} = this.props;
     // let ListItemData = fromJS({});
     let ListItemData = fromJS([]);
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
@@ -59,13 +63,11 @@ class CSManualList extends Component {
         rootKey: categoryIdx,
       });
 
-      ListItemData = fromJS(
-        tempItemData.map(node => {
+      ListItemData = fromJS(tempItemData.map((node) => {
           const tempNode = { ...node, childrenNode: node.children };
           delete tempNode.children;
           return tempNode;
-        }),
-      );
+        }),);
     }
 
     const topBarButton = [
@@ -84,7 +86,9 @@ class CSManualList extends Component {
           <Row key={`Row_${category.get('CATEGORY_IDX')}`} gutter={12}>
             {category.get('childrenNode').map(manualitem => (
               <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
-                <ListItem data={manualitem.toJS()} linkItemAction={{ setIsViewContents, setSelectedMualIdx, setCheckManual, checkedManualList, widgetId }} />
+                <ListItem data={manualitem.toJS()} linkItemAction={{
+ setIsViewContents, setSelectedMualIdx, setCheckManual, checkedManualList, widgetId 
+}} />
               </Col>
             ))}
           </Row>,
@@ -111,7 +115,7 @@ class CSManualList extends Component {
 
 CSManualList.propTypes = {
   GetTotalManualList: PropTypes.func,
-  totalManualList: PropTypes.object,
+  totalManualList: PropTypes.arrayOf(PropTypes.object),
   isViewContents: PropTypes.bool,
   item: PropTypes.object,
   setIsViewContents: PropTypes.func,

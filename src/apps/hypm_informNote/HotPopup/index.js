@@ -378,6 +378,6 @@ const withSaga = injectSaga({ key: 'hotPop', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(HotPopup);

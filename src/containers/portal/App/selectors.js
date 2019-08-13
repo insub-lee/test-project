@@ -29,7 +29,7 @@ const makeSelectLocale = () => createSelector(
 // const selectPortal = state => state.get('app').toJS();
 
 // ****************** 초기 로그인 성공시 라우터의 스토어에서 가져오는 state ******************
-const selectRoute = state => state.get('hynix.common').toJS();
+const selectRoute = state => state.get('common').toJS();
 const makeSelectView = () => createSelector(
   selectRoute,
   viewState => viewState.view,

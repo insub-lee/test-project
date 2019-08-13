@@ -56,7 +56,7 @@ class WorkBuilderViewerPage extends Component {
       columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo, isLoading,
     } = this.props;
     return (
-      <Wrapper style={{ width: '100%', height: 'calc(100vh - 42px)' }}>
+      <Wrapper style={{ height: 'calc(100vh - 42px)' }}>
         <div style={{ textAlign: 'right' }}>
           <Button htmlType="button" size="small" type="default" onClick={() => { toggleFormModal(true); getTaskSeq(); }}>등록</Button>
         </div>
@@ -79,17 +79,47 @@ class WorkBuilderViewerPage extends Component {
           rowKey="TASK_SEQ"
           loading={isLoading}
         />
-        <Modal title="등록" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width={848} maskClosable={false}>
+        <Modal
+          title="등록"
+          visible={isOpenFormModal}
+          footer={null}
+          onCancel={() => toggleFormModal(false)}
+          destroyOnClose
+          width="100%"
+          maskClosable={false}
+        >
           {PRC_ID && (
             <React.Fragment>
               <SignLine prcId={PRC_ID} onChangeCallback={this.getSignLineInfo} />
               <br />
             </React.Fragment>
           )}
-          <View boxes={boxes} formStuffs={formStuffs} submitData={e => submitData(e, PRC_ID, signLineInfo)} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
+          <View
+            boxes={boxes}
+            formStuffs={formStuffs}
+            submitData={e => submitData(e, PRC_ID, signLineInfo)}
+            saveTempContents={saveTempContents}
+            workSeq={workSeq}
+            taskSeq={taskSeq}
+          />
         </Modal>
-        <Modal title="조회 및 수정" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose width={848} maskClosable={false}>
-          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
+        <Modal
+          title="조회 및 수정"
+          visible={isOpenEditModal}
+          footer={null}
+          onCancel={() => closeEditModal()}
+          destroyOnClose
+          width="100%"
+          maskClosable={false}
+        >
+          <View
+            boxes={boxes}
+            formStuffs={resultFormStuffs}
+            submitData={submitData}
+            saveTempContents={saveTempContents}
+            workSeq={workSeq}
+            taskSeq={taskSeq}
+          />
         </Modal>
       </Wrapper>
     );
@@ -200,6 +230,6 @@ const withConnect = connect(
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(WorkBuilderViewerPage);

@@ -439,6 +439,6 @@ const withSaga = injectSaga({ key: 'userSearch', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(UserSearch);
