@@ -140,8 +140,10 @@ const mapDispatchToProps = dispatch => ({
             const { value } = target;
             dispatch(actions.changeTitle({ type, index, value }));
           },
-          changeName: (type, index, { target }) => {
-            const { value } = target;
+          changeName: (type, index, e) => {
+            let { value } = e.target;
+            value = value.replace(/[^A-Z_]/gi, '').toUpperCase();
+            e.target.value = value;
             dispatch(actions.changeName({ type, index, value }));
           },
           changeRequired: (type, index, value) => {
