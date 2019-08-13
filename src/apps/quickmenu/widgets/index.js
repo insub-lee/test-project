@@ -120,246 +120,253 @@ class QuickMenu extends Component {
   }
 
   getMenu = (quickMenu, widgetWidth, widgetHeight, widgetView) => {
-    const noImagePath = '/app_icon/icon_no_image.png';
-    const tableCellArr = quickMenu.map(menu => (
-      <Table.Cell key={menu.app_ID}>
-        <div className='quickmenu' id={menu.app_ID} onClick={() => this.onClickMenu(menu)}>
-          {menu.app_ID === "" ? (
-            <a href={menu.url} target="_blank">
-              <span className="appWrapper">
-                <img
-                  alt={menu.title}
-                  src={menu.image ? imgUrl.get('160x160', menu.image) : noImagePath}
-                  style={{ width: 50, height: 50 }}
-                />
-              </span>
-            </a>
-          ) : (
-            <a>
-              <span className="appWrapper">
-                <img
-                  alt={menu.title}
-                  src={menu.image !== undefined ? imgUrl.get('160x160', menu.image) : noImagePath}
-                  style={{ width: 50, height: 50 }}
-                  id={menu.app_ID}
-                />
-              </span>
-            </a>
-          )}
-          <p className="titleText">{menu.title}</p>
-        </div>
-      </Table.Cell>
-    ));
-    if (widgetView !== "Mobile") {
-    // 위젯 넓이가 1인 경우
-    if (widgetWidth === 1) {
-      // 위젯 높이가 1인 경우
-      if (widgetHeight === 1) {
-      // tableRow에 들어갈 tableCell의 개수
-      const num = 3;
-      // tableRow의 총 개수
-      const lineNum = Math.ceil(quickMenu.length / num);
-      // table의 총 개수
-      const pageNum = Math.ceil(quickMenu.length / 6);
-
-      let tableRowArr = [];
-      let tableArr = [];
-      let index = 0;
-
-      let tableRowArrBefore = [];
-      for (var i = 0; i < lineNum; i++) {
-        for (var j = 0; j < num; j++) {
-          if (index < quickMenu.length) {
-            tableRowArrBefore.push(tableCellArr[index++]);
-            if (j === num - 1 || index === quickMenu.length) {
-              tableRowArr.push(
-                React.createElement(Table.Row, { key: i },
-                  tableRowArrBefore
-                )
-              );
-              tableRowArrBefore = [];
-            }
-          }
-        }
+    let tableCellArr = [];
+    let noImagePath = '/app_icon/icon_no_image.png';
+    {
+      for (var i = 0; i < quickMenu.length; i++) {
+        const appID = quickMenu[i];
+        tableCellArr.push(
+          <Table.Cell key={quickMenu[i].app_ID}>
+            <div className='quickmenu' id={quickMenu[i].app_ID} onClick={() => this.onClickMenu(appID)}>
+              {quickMenu[i].app_ID === "" ?
+                <a href={quickMenu[i].url} target="_blank">
+                  <span className="appWrapper">
+                    <img
+                      alt={quickMenu[i].title}
+                      src={quickMenu[i].image !== undefined ? imgUrl.get('160x160', quickMenu[i].image) : noImagePath}
+                      style={{ width: 50, height: 50 }}
+                    />
+                  </span>
+                </a>
+                :
+                <a>
+                  <span className="appWrapper">
+                    <img
+                      alt={quickMenu[i].title}
+                      src={quickMenu[i].image !== undefined ? imgUrl.get('160x160', quickMenu[i].image) : noImagePath}
+                      style={{ width: 50, height: 50 }}
+                      id={quickMenu[i].app_ID}
+                    />
+                  </span>
+                </a>
+              }
+              <p className="titleText">{quickMenu[i].title}</p>
+            </div>
+          </Table.Cell>
+        );
       }
-
-      index = 0;
-      let tableArrBefore = [];
-      for (var i = 0; i < pageNum; i++) {
-        for (var j = 0; j < 2; j++) {
-          if (index < tableRowArr.length) {
-            tableArrBefore.push(tableRowArr[index++]);
-            if (j === 1 || index === tableRowArr.length) {
-              tableArr.push(
-                React.createElement('div', { className: 'tableDivOneByOne', key: i },
-                  React.createElement(Table, { style: style2 },
-                    React.createElement(Table.Body, { key: i },
-                      tableArrBefore
-                    )
-                  )
-                )
-              );
-              tableArrBefore = [];
-            }
-          }
-        }
-      }
-      return tableArr;
-      // 위젯 높이가 2인 경우
-      } else if (widgetHeight === 2) {
-      // tableRow에 들어갈 tableCell의 개수
-      const num2 = 15;
-      // table의 총 개수
-      const pageNum = Math.ceil(quickMenu.length / num2);
-
-      let tableRowArr = [];
-      let index = 0;
-
-      let tableRowArrBefore = [];
-      for (var i = 0; i < pageNum; i++) {
-        for (var j = 0; j < num2; j++) {
-          if (index < quickMenu.length) {
-            tableRowArrBefore.push(tableCellArr[index++]);
-            if (j === num2 - 1 || index === quickMenu.length) {
-              tableRowArr.push(
-                React.createElement('div', { className: 'tableDivOneByTwo', key: i },
-                  React.createElement(Table, { style: style3 },
-                    React.createElement(Table.Body, {},
-                      React.createElement(Table.Row, { key: i },
-                        tableRowArrBefore
-                      )
-                    )
-                  )
-                )
-              );
-              tableRowArrBefore = [];
-            }
-          }
-        }
-      }
-      return tableRowArr;
-      }
-    } else if (widgetWidth === 2) {
-      // tableRow에 들어갈 tableCell의 개수
-      const num = 12;
-      // table의 총 개수
-      const pageNum = Math.ceil(quickMenu.length / num);
-
-      let tableRowArr = [];
-      let index = 0;
-
-      let tableRowArrBefore = [];
-      for (var i = 0; i < pageNum; i++) {
-        for (var j = 0; j < num; j++) {
-          if (index < quickMenu.length) {
-            tableRowArrBefore.push(tableCellArr[index++]);
-            if (j === num - 1 || index === quickMenu.length) {
-              tableRowArr.push(
-                React.createElement('div', { className: 'tableDivTwoByOne', key: i },
-                  React.createElement(Table, { style: style3 },
-                    React.createElement(Table.Body, {},
-                      React.createElement(Table.Row, { key: i },
-                        tableRowArrBefore
-                      )
-                    )
-                  )
-                )
-              );
-              tableRowArrBefore = [];
-            }
-          }
-        }
-      }
-      return tableRowArr;
     }
-  } else {
-    // 위젯 높이가 1인 경우
-    if(widgetHeight === 1) {
-      // tableRow에 들어갈 tableCell의 개수
-      const num = 3;
-      // tableRow의 총 개수
-      const lineNum = Math.ceil(quickMenu.length / num);
-      // table의 총 개수
-      const pageNum = Math.ceil(quickMenu.length / 6);
 
-      let tableRowArr = [];
-      let tableArr = [];
-      let index = 0;
+    if (widgetView !== "Mobile") {
+      // 위젯 넓이가 1인 경우
+      if (widgetWidth === 1) {
+        // 위젯 높이가 1인 경우
+        if(widgetHeight === 1) {
+          // tableRow에 들어갈 tableCell의 개수
+          const num = 3;
+          // tableRow의 총 개수
+          const lineNum = Math.ceil(quickMenu.length / num);
+          // table의 총 개수
+          const pageNum = Math.ceil(quickMenu.length / 6);
 
-      let tableRowArrBefore = [];
-      for (var i = 0; i < lineNum; i++) {
-        for (var j = 0; j < num; j++) {
-          if (index < quickMenu.length) {
-            tableRowArrBefore.push(tableCellArr[index++]);
-            if (j === num - 1 || index === quickMenu.length) {
-              tableRowArr.push(
-                React.createElement(Table.Row, { key: i },
-                  tableRowArrBefore
-                )
-              );
-              tableRowArrBefore = [];
-            }
-          }
-        }
-      }
+          let tableRowArr = [];
+          let tableArr = [];
+          let index = 0;
 
-      index = 0;
-      let tableArrBefore = [];
-      for (var i = 0; i < pageNum; i++) {
-        for (var j = 0; j < 2; j++) {
-          if (index < tableRowArr.length) {
-            tableArrBefore.push(tableRowArr[index++]);
-            if (j === 1 || index === tableRowArr.length) {
-              tableArr.push(
-                React.createElement('div', { className: 'tableDivOneByOne', key: i },
-                  React.createElement(Table, { style: style2 },
-                    React.createElement(Table.Body, { key: i },
-                      tableArrBefore
+          let tableRowArrBefore = [];
+          for (var i = 0; i < lineNum; i++) {
+            for (var j = 0; j < num; j++) {
+              if (index < quickMenu.length) {
+                tableRowArrBefore.push(tableCellArr[index++]);
+                if (j === num - 1 || index === quickMenu.length) {
+                  tableRowArr.push(
+                    React.createElement(Table.Row, { key: i },
+                      tableRowArrBefore
                     )
-                  )
-                )
-              );
-              tableArrBefore = [];
+                  );
+                  tableRowArrBefore = [];
+                }
+              }
             }
           }
+
+          index = 0;
+          let tableArrBefore = [];
+          for (var i = 0; i < pageNum; i++) {
+            for (var j = 0; j < 2; j++) {
+              if (index < tableRowArr.length) {
+                tableArrBefore.push(tableRowArr[index++]);
+                if (j === 1 || index === tableRowArr.length) {
+                  tableArr.push(
+                    React.createElement('div', { className: 'tableDivOneByOne', key: i },
+                      React.createElement(Table, { style: style2 },
+                        React.createElement(Table.Body, { key: i },
+                          tableArrBefore
+                        )
+                      )
+                    )
+                  );
+                  tableArrBefore = [];
+                }
+              }
+            }
+          }
+          return tableArr;
+          // 위젯 높이가 2인 경우
+        } else if (widgetHeight === 2) {
+          // tableRow에 들어갈 tableCell의 개수
+          const num2 = 15;
+          // table의 총 개수
+          const pageNum = Math.ceil(quickMenu.length / num2);
+
+          let tableRowArr = [];
+          let index = 0;
+
+          let tableRowArrBefore = [];
+          for (var i = 0; i < pageNum; i++) {
+            for (var j = 0; j < num2; j++) {
+              if (index < quickMenu.length) {
+                tableRowArrBefore.push(tableCellArr[index++]);
+                if (j === num2 - 1 || index === quickMenu.length) {
+                  tableRowArr.push(
+                    React.createElement('div', { className: 'tableDivOneByTwo', key: i },
+                      React.createElement(Table, { style: style3 },
+                        React.createElement(Table.Body, {},
+                          React.createElement(Table.Row, { key: i },
+                            tableRowArrBefore
+                          )
+                        )
+                      )
+                    )
+                  );
+                  tableRowArrBefore = [];
+                }
+              }
+            }
+          }
+          return tableRowArr;
         }
-      }
-      return tableArr;
-      // 위젯 높이가 2인 경우
-      } else if (widgetHeight === 2) {
-      // tableRow에 들어갈 tableCell의 개수
-      const num2 = 15;
-      // table의 총 개수
-      const pageNum = Math.ceil(quickMenu.length / num2);
+      } else if (widgetWidth === 2) {
+        // tableRow에 들어갈 tableCell의 개수
+        const num = 12;
+        // table의 총 개수
+        const pageNum = Math.ceil(quickMenu.length / num);
 
-      let tableRowArr = [];
-      let index = 0;
+        let tableRowArr = [];
+        let index = 0;
 
-      let tableRowArrBefore = [];
-      for (var i = 0; i < pageNum; i++) {
-        for (var j = 0; j < num2; j++) {
-          if (index < quickMenu.length) {
-            tableRowArrBefore.push(tableCellArr[index++]);
-            if (j === num2 - 1 || index === quickMenu.length) {
-              tableRowArr.push(
-                React.createElement('div', { className: 'tableDivOneByTwo', key: i },
-                  React.createElement(Table, { style: style3 },
-                    React.createElement(Table.Body, {},
-                      React.createElement(Table.Row, { key: i },
-                        tableRowArrBefore
+        let tableRowArrBefore = [];
+        for (var i = 0; i < pageNum; i++) {
+          for (var j = 0; j < num; j++) {
+            if (index < quickMenu.length) {
+              tableRowArrBefore.push(tableCellArr[index++]);
+              if (j === num - 1 || index === quickMenu.length) {
+                tableRowArr.push(
+                  React.createElement('div', { className: 'tableDivTwoByOne', key: i },
+                    React.createElement(Table, { style: style3 },
+                      React.createElement(Table.Body, {},
+                        React.createElement(Table.Row, { key: i },
+                          tableRowArrBefore
+                        )
                       )
                     )
                   )
-                )
-              );
-              tableRowArrBefore = [];
+                );
+                tableRowArrBefore = [];
+              }
             }
           }
         }
+        return tableRowArr;
       }
-      return tableRowArr;
+    } else {
+      // 위젯 높이가 1인 경우
+      if(widgetHeight === 1) {
+        // tableRow에 들어갈 tableCell의 개수
+        const num = 3;
+        // tableRow의 총 개수
+        const lineNum = Math.ceil(quickMenu.length / num);
+        // table의 총 개수
+        const pageNum = Math.ceil(quickMenu.length / 6);
+
+        let tableRowArr = [];
+        let tableArr = [];
+        let index = 0;
+
+        let tableRowArrBefore = [];
+        for (var i = 0; i < lineNum; i++) {
+          for (var j = 0; j < num; j++) {
+            if (index < quickMenu.length) {
+              tableRowArrBefore.push(tableCellArr[index++]);
+              if (j === num - 1 || index === quickMenu.length) {
+                tableRowArr.push(
+                  React.createElement(Table.Row, { key: i },
+                    tableRowArrBefore
+                  )
+                );
+                tableRowArrBefore = [];
+              }
+            }
+          }
+        }
+
+        index = 0;
+        let tableArrBefore = [];
+        for (var i = 0; i < pageNum; i++) {
+          for (var j = 0; j < 2; j++) {
+            if (index < tableRowArr.length) {
+              tableArrBefore.push(tableRowArr[index++]);
+              if (j === 1 || index === tableRowArr.length) {
+                tableArr.push(
+                  React.createElement('div', { className: 'tableDivOneByOne', key: i },
+                    React.createElement(Table, { style: style2 },
+                      React.createElement(Table.Body, { key: i },
+                        tableArrBefore
+                      )
+                    )
+                  )
+                );
+                tableArrBefore = [];
+              }
+            }
+          }
+        }
+        return tableArr;
+        // 위젯 높이가 2인 경우
+      } else if (widgetHeight === 2) {
+        // tableRow에 들어갈 tableCell의 개수
+        const num2 = 15;
+        // table의 총 개수
+        const pageNum = Math.ceil(quickMenu.length / num2);
+
+        let tableRowArr = [];
+        let index = 0;
+
+        let tableRowArrBefore = [];
+        for (var i = 0; i < pageNum; i++) {
+          for (var j = 0; j < num2; j++) {
+            if (index < quickMenu.length) {
+              tableRowArrBefore.push(tableCellArr[index++]);
+              if (j === num2 - 1 || index === quickMenu.length) {
+                tableRowArr.push(
+                  React.createElement('div', { className: 'tableDivOneByTwo', key: i },
+                    React.createElement(Table, { style: style3 },
+                      React.createElement(Table.Body, {},
+                        React.createElement(Table.Row, { key: i },
+                          tableRowArrBefore
+                        )
+                      )
+                    )
+                  )
+                );
+                tableRowArrBefore = [];
+              }
+            }
+          }
+        }
+        return tableRowArr;
       }
-  }
+    }
   }
 
   render() {
