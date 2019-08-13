@@ -23,28 +23,35 @@ import Styled from './Styled';
 
 class ManualView extends Component {
   componentDidMount() {
-    const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx } = this.props;
-    if (selectedMualIdx !== mualIdx) setSelectedMualIdx(mualIdx);
-    getManualView();
+    const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx, match, widgetId } = this.props;
+    if (match && match.params && match.params.mualIdx) {
+      setSelectedMualIdx(match.params.mualIdx, widgetId);
+      getManualView(widgetId, match.params.lastVersionYN || 'Y');
+    } else if (selectedMualIdx !== mualIdx) {
+      setSelectedMualIdx(mualIdx, widgetId);
+      // getManualView(widgetId);
+    }
   }
 
   componentDidUpdate(prevProps) {
-    const { selectedMualIdx, getManualView, mualIdx, setSelectedMualIdx } = this.props;
-    if (selectedMualIdx !== mualIdx) setSelectedMualIdx(mualIdx);
-    if (selectedMualIdx > 0 && prevProps.selectedMualIdx != selectedMualIdx) {
-      getManualView();
+    const { selectedMualIdx, getManualView, mualIdx, setSelectedMualIdx, widgetId } = this.props;
+    if (mualIdx) {
+      if (selectedMualIdx !== mualIdx) setSelectedMualIdx(mualIdx, widgetId);
+      if (selectedMualIdx > 0 && prevProps.selectedMualIdx !== selectedMualIdx) {
+        getManualView(widgetId);
+      }
     }
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx } = this.props;
-    setIsViewContents(false);
-    resetManualView();
-    setSelectedMualIdx(0);
-    setListSelectedMualIdx(0);
+    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
+    setIsViewContents(false, widgetId);
+    resetManualView(widgetId);
+    setSelectedMualIdx(0, widgetId);
+    setListSelectedMualIdx(0, widgetId);
   };
 
-  getTabData = (maulTabList, setScrollComponent) =>
+  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -52,24 +59,47 @@ class ManualView extends Component {
       TabComponent: <TabTitle title={item.MUAL_TABNAME} />,
       TabPanelComponent: (
         <StyledTabPanel>
-          <ContentBody componentList={item.MUAL_TABVIEWINFO} setScrollComponent={setScrollComponent} />
+          <ContentBody componentList={item.MUAL_TABVIEWINFO} setScrollComponent={setScrollComponent} widgetId={widgetId} pagerProps={pagerProps} />
         </StyledTabPanel>
       ),
       disabled: false,
     }));
 
   render() {
-    const { maulTabList, selectedTabIdx, setSelectedTabIdx, setScrollComponent } = this.props;
+    const {
+      maulTabList,
+      selectedTabIdx,
+      setSelectedTabIdx,
+      setScrollComponent,
+      widgetId,
+      mualHistoryList,
+      selectedMualIdx,
+      setSelectedMualIdx,
+      setListSelectedMualIdx,
+    } = this.props;
+    const topBarButton = [
+      { key: 'viewTopbar', title: '오류신고', event: undefined },
+      { key: 'viewTopbar', title: '오류신고', event: undefined },
+      { key: 'viewTopbar', title: '오류신고', event: undefined },
+      { key: 'viewTopbar', title: '오류신고', event: undefined },
+      { key: 'viewTopbar', title: '오류신고', event: undefined },
+    ];
     return (
       <Styled>
         <div className="tab-wrap">
           <Tab
-            tabs={this.getTabData(maulTabList.toJS(), setScrollComponent)}
+            tabs={this.getTabData(maulTabList.toJS(), setScrollComponent, widgetId, {
+              mualHistoryList,
+              selectedMualIdx,
+              setSelectedMualIdx,
+              setListSelectedMualIdx,
+            })}
             keyName="MUAL_TAB_IDX"
             selectedTabIdx={selectedTabIdx}
             setSelectedTabIdx={setSelectedTabIdx}
+            widgetId={widgetId}
           />
-          <TopbarBtnWrap className="tab-btn-wrap" />
+          <TopbarBtnWrap className="tab-btn-wrap" data={topBarButton} />
           <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
             <IconCollection className="icon-close" />
           </button>
@@ -84,6 +114,8 @@ ManualView.propTypes = {
   maulTabList: PropTypes.object,
   selectedTabIdx: PropTypes.number,
   setSelectedTabIdx: PropTypes.func,
+  setScrollComponent: PropTypes.object,
+  mualHistoryList: PropTypes.object,
 };
 
 ManualView.defaultProps = {
@@ -91,22 +123,25 @@ ManualView.defaultProps = {
   maulTabList: fromJS([]),
   selectedTabIdx: 0,
   setSelectedTabIdx: () => false,
+  setScrollComponent: {},
+  mualHistoryList: fromJS([]),
 };
 
 const mapStateToProps = createStructuredSelector({
   selectedMualIdx: selectors.makeSelectedMualIdx(),
   maulTabList: selectors.makeSelectMaulTabList(),
   selectedTabIdx: selectors.makeSelectedTabIdx(),
+  mualHistoryList: selectors.makeSelectHistoryList(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getManualView: () => dispatch(actions.getManualViewBySaga()),
-  setSelectedTabIdx: idx => dispatch(actions.setSelectedTabIdxByReducr(idx)),
-  setSelectedMualIdx: idx => dispatch(actions.setSelectedMualIdxByReducr(idx)),
-  setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
-  setIsViewContents: flag => dispatch(listActions.setIsViewContentsByReducr(flag)),
-  setListSelectedMualIdx: idx => dispatch(listActions.setSelectedMualIdxByReducr(idx)),
-  resetManualView: () => dispatch(actions.resetManualViewByReducr()),
+  getManualView: (widgetId, flag) => dispatch(actions.getManualViewBySaga(widgetId, flag)),
+  setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
+  setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
+  setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),
+  setIsViewContents: (flag, widgetId) => dispatch(listActions.setIsViewContentsByReducr(flag, widgetId)),
+  setListSelectedMualIdx: (idx, widgetId) => dispatch(listActions.setSelectedMualIdxByReducr(idx, widgetId)),
+  resetManualView: widgetId => dispatch(actions.resetManualViewByReducr(widgetId)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

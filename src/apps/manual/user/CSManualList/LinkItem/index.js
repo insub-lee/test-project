@@ -7,16 +7,16 @@ import Checkbox from 'components/FormStuff/Checkbox';
 import Styled from './Styled';
 
 const handleListItemClick = (item, linkItemAction) => {
-  linkItemAction.setSelectedMualIdx(item.MUAL_IDX);
-  linkItemAction.setIsViewContents(true);
+  linkItemAction.setSelectedMualOrgIdx(item.MUAL_IDX, linkItemAction.widgetId, item.MUAL_ORG_IDX);
+  linkItemAction.setIsViewContents(true, linkItemAction.widgetId);
   // , setCheckManual, checkedManualList
 };
 
 const LinkItem = ({ item, linkItemAction }) => (
   <Styled>
     <Checkbox
-      checked={linkItemAction.checkedManualList.findIndex(find => find === item.MUAL_IDX) > -1}
-      onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX)}
+      checked={linkItemAction.checkedManualList.findIndex(find => find.mualIdx === item.MUAL_IDX) > -1}
+      onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX, item.MUAL_ORG_IDX, linkItemAction.widgetId)}
     />
     <Button type="link" onClick={() => handleListItemClick(item, linkItemAction)}>
       {item.MUAL_NAME}
@@ -29,6 +29,7 @@ LinkItem.propTypes = {
     link: PropTypes.string,
     title: PropTypes.string,
   }),
+  linkItemAction: PropTypes.object,
 };
 
 LinkItem.defaultProps = {
@@ -36,6 +37,7 @@ LinkItem.defaultProps = {
     link: '',
     title: '',
   },
+  linkItemAction: {},
 };
 
 export default LinkItem;

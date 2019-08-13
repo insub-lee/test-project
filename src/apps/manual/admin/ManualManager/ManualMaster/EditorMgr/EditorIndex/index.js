@@ -71,22 +71,6 @@ const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveCo
         onClick={e => (node.TYPE === 'index' ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) : false)}
         block
       >
-        {/* <Link
-          href={`#editorCompID_${node.MUAL_TAB_IDX}_${node.MUAL_TABCOMP_IDX}`}
-          title={
-            node.TYPE.indexOf('index') > -1 ? (
-              <div className="editorIndexTreeInnerTitle">
-                <Icon type="bars" />
-                {node.MUAL_COMPVIEWINFO || 'New Index'}
-              </div>
-            ) : (
-              <div className="editorIndexTreeInnerTitle">
-                <Icon type="edit" />
-                {node.TYPE}
-              </div>
-            )
-          }
-        /> */}
         {node.TYPE.indexOf('index') > -1 ? (
           <div className="editorIndexTreeInnerTitle">{node.MUAL_COMPVIEWINFO || 'New Index'}</div>
         ) : (
@@ -102,7 +86,6 @@ const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveCo
 
 const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName, scrollComp }) => (
   <StyleEditorIndex>
-    {/* <Anchor> */}
     <div className="editorIndexTreeWrapper">
       <div className="editorIndexTitle">컴포넌트 목록</div>
       <div className="editorIndexContents">
@@ -111,10 +94,19 @@ const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAr
           onChange={treeData => setTreeData(treeData, handleChangeCompList, tabComponentList.toJS())}
           canDrop={({ nextParent }) => nextParent !== null && nextParent.TYPE === 'index'}
           generateNodeProps={rowInfo => renderNode(rowInfo, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, scrollComp)}
+          // rowHeight={({ node: { TYPE, MUAL_COMPVIEWINFO } }) => {
+          //   const title = TYPE.includes('index') ? MUAL_COMPVIEWINFO : TYPE;
+          //   console.debug('Title', title, title.length);
+          //   let rowCount = 1;
+          //   if (title && title.length > 13) {
+          //     rowCount += title.length / 13;
+          //   }
+          //   console.debug(rowCount);
+          //   return 62 * rowCount;
+          // }}
         />
       </div>
     </div>
-    {/* </Anchor> */}
   </StyleEditorIndex>
 );
 
