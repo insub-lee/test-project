@@ -6,9 +6,9 @@ import IconCollection from '../IconCollection';
 
 import Styled from './Styled';
 
-const Tabs = ({ tabs, keyName, selectedTabIdx, setSelectedTabIdx }) => (
+const Tabs = ({ tabs, keyName, selectedTabIdx, setSelectedTabIdx, widgetId }) => (
   <Styled>
-    <ReactTabs selectedIndex={selectedTabIdx} onSelect={tabIndex => setSelectedTabIdx(tabIndex)}>
+    <ReactTabs selectedIndex={selectedTabIdx} onSelect={tabIndex => setSelectedTabIdx(tabIndex, widgetId)}>
       <div className="tabList-wrap">
         <TabList>
           <IconCollection className="icon-tabs" />

@@ -12,11 +12,17 @@ import TopTitle from './TopTitle';
 import MenuList from './MenuList';
 import Styled from './Styled';
 
-const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp }) => (
+const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp, widgetId }) => (
   <Styled>
     <TopTitle />
     <Scrollbars style={{ height: 'calc(100% - 50px)' }}>
-      <MenuList componentList={maulCompList} setSelectedCompIdx={setSelectedCompIdx} selectedCompIdx={selectedCompIdx} scrollComp={scrollComp} />
+      <MenuList
+        componentList={maulCompList}
+        setSelectedCompIdx={setSelectedCompIdx}
+        selectedCompIdx={selectedCompIdx}
+        scrollComp={scrollComp}
+        widgetId={widgetId}
+      />
     </Scrollbars>
   </Styled>
 );
@@ -25,12 +31,14 @@ SideMenu.propTypes = {
   maulCompList: PropTypes.object,
   setSelectedCompIdx: PropTypes.func,
   selectedCompIdx: PropTypes.object,
+  scrollComp: PropTypes.object,
 };
 
 SideMenu.defaultProps = {
   maulCompList: fromJS([]),
   setSelectedCompIdx: () => false,
   selectedCompIdx: fromJS([]),
+  scrollComp: {},
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -40,7 +48,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setSelectedCompIdx: idx => dispatch(actions.setSelectedCompIdxByReducr(idx)),
+  setSelectedCompIdx: (idx, widgetId) => dispatch(actions.setSelectedCompIdxByReducr(idx, widgetId)),
 });
 
 export default connect(

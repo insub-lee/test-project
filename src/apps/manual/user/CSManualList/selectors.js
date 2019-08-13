@@ -4,25 +4,29 @@ const makeSelectStateCSManualList = state => state.get('apps-manual-user-CSManua
 const makeSelectCSManualList = () =>
   createSelector(
     makeSelectStateCSManualList,
-    state => state.get('totalManualList'),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.data && props.item.data.categoryIdx) || 24240),
+    (state, widgetId) => state.getIn(['manualListMap', widgetId, 'totalManualList']),
   );
 
 const makeSelectIsViewContents = () =>
   createSelector(
     makeSelectStateCSManualList,
-    state => state.get('isViewContents'),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.data && props.item.data.categoryIdx) || 24240),
+    (state, widgetId) => state.getIn(['manualListMap', widgetId, 'isViewContents']),
   );
 
 const makeSelectedMualIdx = () =>
   createSelector(
     makeSelectStateCSManualList,
-    state => state.get('selectedMualIdx'),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.data && props.item.data.categoryIdx) || 24240),
+    (state, widgetId) => state.getIn(['manualListMap', widgetId, 'selectedMualIdx']),
   );
 
 const makeCheckedManualList = () =>
   createSelector(
     makeSelectStateCSManualList,
-    state => state.get('checkedMualList'),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.data && props.item.data.categoryIdx) || 24240),
+    (state, widgetId) => state.getIn(['manualListMap', widgetId, 'checkedMualList']),
   );
 
 export default {

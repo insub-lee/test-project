@@ -26,15 +26,18 @@ class CSManualList extends Component {
   componentDidMount() {
     const { GetTotalManualList, item } = this.props;
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
-    GetTotalManualList(categoryIdx);
+    const widgetId = item && item.id ? item.id : categoryIdx;
+    GetTotalManualList(categoryIdx, widgetId);
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx } = this.props;
-    setIsViewContents(false);
-    resetManualView();
-    setSelectedMualIdx(0);
-    setViewSelectedMualIdx(0);
+    const { resetManualView, setIsViewContents, setSelectedMualIdx, setViewSelectedMualIdx, item } = this.props;
+    const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
+    const widgetId = item && item.id ? item.id : categoryIdx;
+    setIsViewContents(false, widgetId);
+    resetManualView(widgetId);
+    setSelectedMualIdx(0, widgetId);
+    setViewSelectedMualIdx(0, widgetId);
   };
 
   render() {
@@ -66,11 +69,11 @@ class CSManualList extends Component {
     }
 
     const topBarButton = [
-      { title: '모아보기', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
-      { title: '오류신고', event: onClickTest },
+      { key: 'listTopbar', title: '모아보기', event: onClickTest },
+      { key: 'listTopbar', title: '오류신고', event: onClickTest },
+      { key: 'listTopbar', title: '오류신고', event: onClickTest },
+      { key: 'listTopbar', title: '오류신고', event: onClickTest },
+      { key: 'listTopbar', title: '오류신고', event: onClickTest },
     ];
 
     return (
@@ -81,13 +84,13 @@ class CSManualList extends Component {
           <Row key={`Row_${category.get('CATEGORY_IDX')}`} gutter={12}>
             {category.get('childrenNode').map(manualitem => (
               <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
-                <ListItem data={manualitem.toJS()} linkItemAction={{ setIsViewContents, setSelectedMualIdx, setCheckManual, checkedManualList }} />
+                <ListItem data={manualitem.toJS()} linkItemAction={{ setIsViewContents, setSelectedMualIdx, setCheckManual, checkedManualList, widgetId }} />
               </Col>
             ))}
           </Row>,
         ])}
         <Modal
-          width={1154}
+          width={1158}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
           // maskStyle={{ backgroundColor: '#ffffff' }}
           style={{ top: 42 }}
@@ -97,7 +100,7 @@ class CSManualList extends Component {
           closable={false}
           getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
         >
-          <CSManualView mualIdx={selectedMualIdx} />
+          <CSManualView mualIdx={selectedMualIdx} widgetId={widgetId} />
         </Modal>
       </div>
     );
@@ -122,7 +125,7 @@ CSManualList.propTypes = {
 
 CSManualList.defaultProps = {
   GetTotalManualList: false,
-  totalManualList: [],
+  totalManualList: fromJS([]),
   isViewContents: false,
   item: {},
   setIsViewContents: () => false,
@@ -142,12 +145,12 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  GetTotalManualList: categoryIdx => dispatch(actions.getTotalManualList(categoryIdx)),
-  setIsViewContents: flag => dispatch(actions.setIsViewContentsByReducr(flag)),
-  setSelectedMualIdx: idx => dispatch(actions.setSelectedMualIdxByReducr(idx)),
-  setViewSelectedMualIdx: idx => dispatch(viewActions.setSelectedMualIdxByReducr(idx)),
-  resetManualView: () => dispatch(viewActions.resetManualViewByReducr()),
-  setCheckManual: mualIdx => dispatch(actions.setCheckManualByReducr(mualIdx)),
+  GetTotalManualList: (categoryIdx, widgetId) => dispatch(actions.getTotalManualList(categoryIdx, widgetId)),
+  setIsViewContents: (flag, widgetId) => dispatch(actions.setIsViewContentsByReducr(flag, widgetId)),
+  setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
+  setViewSelectedMualIdx: (idx, widgetId) => dispatch(viewActions.setSelectedMualIdxByReducr(idx, widgetId)),
+  resetManualView: widgetId => dispatch(viewActions.resetManualViewByReducr(widgetId)),
+  setCheckManual: (mualIdx, widgetId) => dispatch(actions.setCheckManualByReducr(mualIdx, widgetId)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-CSManualList-reducer', reducer });

@@ -4,9 +4,9 @@ import { Tab, Tabs as ReactTabs, TabList, TabPanel } from 'react-tabs';
 
 import Styled from './Styled';
 
-const Tabs = ({ tabs, keyName, selectedTabIdx, setSelectedTabIdx }) => (
+const Tabs = ({ tabs, keyName, selectedTabIdx, setSelectedTabIdx, widgetId }) => (
   <Styled>
-    <ReactTabs selectedIndex={selectedTabIdx} onSelect={tabIndex => setSelectedTabIdx(tabIndex)}>
+    <ReactTabs selectedIndex={selectedTabIdx} onSelect={tabIndex => setSelectedTabIdx(tabIndex, widgetId)}>
       <TabList>
         {tabs.map(tab => (
           <Tab key={tab[keyName]} disabled={tab.disabled}>

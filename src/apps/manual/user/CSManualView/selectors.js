@@ -5,37 +5,50 @@ const makeSelectManualViewState = state => state.get('apps-manual-user-ManualVie
 const makeSelectMaulTabList = () =>
   createSelector(
     makeSelectManualViewState,
-    state => state.get('manualTabList'),
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'manualTabList']),
   );
 
 const makeSelectedTabIdx = () =>
   createSelector(
     makeSelectManualViewState,
-    state => state.get('selectedTabIdx'),
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'selectedTabIdx']),
   );
 
 const makeSelectMaulCompList = () =>
   createSelector(
     makeSelectManualViewState,
-    state => state.getIn(['manualTabList', state.get('selectedTabIdx'), 'MUAL_TABVIEWINFO']),
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) =>
+      state.getIn(['manualViewMap', widgetId, 'manualTabList', state.getIn(['manualViewMap', widgetId, 'selectedTabIdx']), 'MUAL_TABVIEWINFO']),
   );
 
 const makeSelectedCompIdx = () =>
   createSelector(
     makeSelectManualViewState,
-    state => state.get('selectedCompIdx'),
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'selectedCompIdx']),
   );
 
 const makeSelectedMualIdx = () =>
   createSelector(
     makeSelectManualViewState,
-    state => state.get('selectedMualIdx'),
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'selectedMualIdx']),
   );
 
 const makeSelectScrollComp = () =>
   createSelector(
     makeSelectManualViewState,
-    state => state.get('scrollComp'),
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'scrollComp']),
+  );
+
+const makeSelectedMualIdxByWidgetId = widgetId =>
+  createSelector(
+    makeSelectManualViewState,
+    state => state.getIn(['manualViewMap', widgetId, 'selectedMualIdx']),
   );
 
 export default {
@@ -45,4 +58,5 @@ export default {
   makeSelectedCompIdx,
   makeSelectedMualIdx,
   makeSelectScrollComp,
+  makeSelectedMualIdxByWidgetId,
 };

@@ -6,11 +6,11 @@ import QuickLink from '../QuickLink';
 import Pagination from '../Pagination';
 import Styled from './Styled';
 
-const ContentBody = ({ componentList, setScrollComponent }) => (
+const ContentBody = ({ componentList, setScrollComponent, widgetId }) => (
   <Styled>
     <div className="contentBody-wrap">
-      <SideMenu />
-      <ExplainInfo componentList={componentList} setScrollComponent={setScrollComponent} />
+      <SideMenu widgetId={widgetId} />
+      <ExplainInfo componentList={componentList} setScrollComponent={setScrollComponent} widgetId={widgetId} />
       <QuickLink />
     </div>
     <Pagination />
