@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import IconCollection from '../IconCollection';
-import userImg from 'images/portal/img-user-sample.png';
 import Styled from './Styled';
 
 const User = ({ profile }) => (
@@ -12,11 +11,11 @@ const User = ({ profile }) => (
         <IconCollection className="icon-pin" />
       </button>
       <div className="user-img">
-        <img src={userImg} alt="profile-img" />
+        <img src={`/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`} onError={(e) => { e.target.src = '/img-user-sample.png'; }} alt="profile-img" />
       </div>
       <div className="user-info">
-        <span className="user-info-name">홍길동 상무</span>
-        <span className="user-info-belong">kbsys / IT개발 운영</span>
+        <span className="user-info-name">{profile.NAME_KOR} {profile.PSTN_NAME_KOR}</span>
+        <span className="user-info-belong">{profile.DEPT_NAME_KOR}</span>
       </div>
     </div>
   </Styled>
