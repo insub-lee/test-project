@@ -254,6 +254,6 @@ const withReducer = injectReducer({ key: 'Schedule', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Schedule);

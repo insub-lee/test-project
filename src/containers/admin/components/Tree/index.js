@@ -160,7 +160,7 @@ Tree.propTypes = {
   selectedIndex: PropTypes.number.isRequired,
   generateNodeProps: PropTypes.func.isRequired,
   onClick: PropTypes.func,
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   canDrop: PropTypes.bool,
 };
 

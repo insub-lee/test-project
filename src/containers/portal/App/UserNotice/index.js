@@ -218,6 +218,6 @@ const withSaga = injectSaga({ key: 'notice', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AlarmPopover);

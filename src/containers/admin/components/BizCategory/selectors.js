@@ -12,7 +12,7 @@ const makeSelectedIndex = () => createSelector(
   org => org.get('selectedIndex'),
 );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () => createSelector(
   selectView,

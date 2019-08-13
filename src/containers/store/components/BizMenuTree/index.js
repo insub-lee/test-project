@@ -569,7 +569,7 @@ class BizMenuTree extends Component {
 BizMenuTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.number.isRequired,
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   canDrop: PropTypes.bool,
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,

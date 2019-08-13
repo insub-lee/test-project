@@ -976,6 +976,6 @@ const withReducer = injectReducer({ key: 'orgRole', reducer });
 const withSaga = injectSaga({ key: 'orgRole', saga });
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Organization);

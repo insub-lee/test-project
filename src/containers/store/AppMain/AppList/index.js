@@ -206,6 +206,6 @@ const withSaga = injectSaga({ key: 'appList', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppList);

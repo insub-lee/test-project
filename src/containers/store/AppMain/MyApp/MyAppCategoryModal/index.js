@@ -182,6 +182,6 @@ const withSaga = injectSaga({ key: 'myapp', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(MyAppCategoryModal));

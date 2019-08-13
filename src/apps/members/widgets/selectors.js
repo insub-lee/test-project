@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 
 const selectMembers = state => state.get('members');
 const selectSettingMembers = state => state.get('membersSetting');
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const makeMembers = () => createSelector(
   selectMembers,

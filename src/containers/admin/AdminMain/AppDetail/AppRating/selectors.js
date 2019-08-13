@@ -32,7 +32,7 @@ const makeSelectAppRatingListSize = () =>
     appRatingState => appRatingState.get('appRatingListSize'),
   );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () =>
   createSelector(

@@ -597,7 +597,7 @@ const withSaga = injectSaga({ key: 'appsettingbizgroup', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(appSetting);
 

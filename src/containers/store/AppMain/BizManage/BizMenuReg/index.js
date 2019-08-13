@@ -253,7 +253,7 @@ const withSaga = injectSaga({ key: 'bizmenureg', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizMenuReg));
 

@@ -52,6 +52,6 @@ const withSaga = injectSaga({ key: 'loading', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(Loading);

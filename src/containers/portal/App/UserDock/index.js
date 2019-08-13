@@ -75,8 +75,8 @@ class UserDock extends React.Component {
 
   componentDidUpdate(prevProps) {
     const {
- view, dockFixedYn, dockIconType, dockCallbacks, dockAppList 
-} = this.props;
+      view, dockFixedYn, dockIconType, dockCallbacks, dockAppList,
+    } = this.props;
 
     if (prevProps.view !== view || prevProps.dockFixedYn !== dockFixedYn || prevProps.dockIconType !== dockIconType) {
       this.setStyleObj();
@@ -146,24 +146,24 @@ class UserDock extends React.Component {
           this.props.dockAppList.forEach((o, i, arr) => {
             const dockItemStyleObject = this.makeDockItemStyleObject(o, i, arr, dockItemNumberInDockDiv);
             content.push(<DockItem
-                key={o.DOCK_ID}
-                dockItem={o}
-                dockItemStyleObject={dockItemStyleObject}
-                dndChangePosition={dockCallbacks.handleDndChangePosition}
-                dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
-                exitDockItem={dockCallbacks.handleExitDockItem}
-                fixDockItem={dockCallbacks.handleFixDockItem}
-                unfixDockItem={dockCallbacks.handleUnfixDockItem}
-                dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
-                execPage={this.props.execPage}
-                changeIsDockItemDragged={this.changeIsDockItemDragged}
-                dockIconType={dockIconType}
-                view={view}
-                isClose={this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false}
-                setIsCloseToTrue={this.props.setIsCloseToTrue}
-                setIsCloseToFalse={this.props.setIsCloseToFalse}
-                history={this.props.history}
-              />,);
+              key={o.DOCK_ID}
+              dockItem={o}
+              dockItemStyleObject={dockItemStyleObject}
+              dndChangePosition={dockCallbacks.handleDndChangePosition}
+              dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
+              exitDockItem={dockCallbacks.handleExitDockItem}
+              fixDockItem={dockCallbacks.handleFixDockItem}
+              unfixDockItem={dockCallbacks.handleUnfixDockItem}
+              dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
+              execPage={this.props.execPage}
+              changeIsDockItemDragged={this.changeIsDockItemDragged}
+              dockIconType={dockIconType}
+              view={view}
+              isClose={this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false}
+              setIsCloseToTrue={this.props.setIsCloseToTrue}
+              setIsCloseToFalse={this.props.setIsCloseToFalse}
+              history={this.props.history}
+            />);
             if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
               const dockDiv = <div className="dockDiv positionBottom">{content}</div>;
               dockDivArray.push(dockDiv);
@@ -303,8 +303,8 @@ class UserDock extends React.Component {
 
   getDock = () => {
     const {
- isUnfixDockItem, view, dockCallbacks, dockFixedYn, handleSetDockFixedYn, appYn, dockIconType, handleSetDockIconType 
-} = this.props;
+      isUnfixDockItem, view, dockCallbacks, dockFixedYn, handleSetDockFixedYn, appYn, dockIconType, handleSetDockIconType,
+    } = this.props;
 
     const dockItemHeightWithoutPx = dockIconType === 'MAX' ? 70 : 34;
 

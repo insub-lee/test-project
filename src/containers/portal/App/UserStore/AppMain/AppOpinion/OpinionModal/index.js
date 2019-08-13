@@ -187,6 +187,6 @@ const withSaga = injectSaga({ key: 'oppoList', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(OpposePage);

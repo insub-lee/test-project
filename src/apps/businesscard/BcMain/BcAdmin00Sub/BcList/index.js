@@ -633,6 +633,6 @@ const withSaga = injectSaga({ key: 'SiteListAll', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BcinfoList);

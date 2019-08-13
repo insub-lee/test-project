@@ -36,7 +36,7 @@ const style = {
   fontSize: 13,
   // marginTop: 10,
   // paddingBottom: 5,
-}
+};
 
 const style2 = {
   // textAlign: 'center',
@@ -45,7 +45,7 @@ const style2 = {
   color: '#404040',
   // background: '#CFE7F1',
   // maxHeight: '200px',
-}
+};
 
 const style3 = {
   // textAlign: 'center',
@@ -54,14 +54,14 @@ const style3 = {
   color: '#404040',
   // background: '#CFE7F1',
   // maxHeight: '200px',
-}
+};
 
 const style4 = {
   width: 500,
   height: 500,
   backgroundColor: 'white',
   textAlign: 'center'
-}
+};
 
 class QuickMenu extends Component {
   constructor(props) {
@@ -76,7 +76,7 @@ class QuickMenu extends Component {
       apply: false,
       visible: false,
       item: this.props.item,
-    }
+    };
 
     this.onApply = this.onApply.bind(this);
     this.onNoneApply = this.onNoneApply.bind(this);
@@ -120,48 +120,41 @@ class QuickMenu extends Component {
   }
 
   getMenu = (quickMenu, widgetWidth, widgetHeight, widgetView) => {
-    let tableCellArr = [];
-    let noImagePath = '/app_icon/icon_no_image.png';
-    {
-      for (var i = 0; i < quickMenu.length; i++) {
-        const appID = quickMenu[i];
-        tableCellArr.push(
-          <Table.Cell key={quickMenu[i].app_ID}>
-            <div className='quickmenu' id={quickMenu[i].app_ID} onClick={() => this.onClickMenu(appID)}>
-              {quickMenu[i].app_ID === "" ?
-                <a href={quickMenu[i].url} target="_blank">
-                  <span className="appWrapper">
-                    <img
-                      alt={quickMenu[i].title}
-                      src={quickMenu[i].image !== undefined ? imgUrl.get('160x160', quickMenu[i].image) : noImagePath}
-                      style={{ width: 50, height: 50 }}
-                    />
-                  </span>
-                </a>
-                :
-                <a>
-                  <span className="appWrapper">
-                    <img
-                      alt={quickMenu[i].title}
-                      src={quickMenu[i].image !== undefined ? imgUrl.get('160x160', quickMenu[i].image) : noImagePath}
-                      style={{ width: 50, height: 50 }}
-                      id={quickMenu[i].app_ID}
-                    />
-                  </span>
-                </a>
-              }
-              <p className="titleText">{quickMenu[i].title}</p>
-            </div>
-          </Table.Cell>
-        );
-      }
-    }
-
+    const noImagePath = '/app_icon/icon_no_image.png';
+    const tableCellArr = quickMenu.map(menu => (
+      <Table.Cell key={menu.app_ID}>
+        <div className='quickmenu' id={menu.app_ID} onClick={() => this.onClickMenu(menu)}>
+          {menu.app_ID === "" ? (
+            <a href={menu.url} target="_blank">
+              <span className="appWrapper">
+                <img
+                  alt={menu.title}
+                  src={menu.image ? imgUrl.get('160x160', menu.image) : noImagePath}
+                  style={{ width: 50, height: 50 }}
+                />
+              </span>
+            </a>
+          ) : (
+            <a>
+              <span className="appWrapper">
+                <img
+                  alt={menu.title}
+                  src={menu.image !== undefined ? imgUrl.get('160x160', menu.image) : noImagePath}
+                  style={{ width: 50, height: 50 }}
+                  id={menu.app_ID}
+                />
+              </span>
+            </a>
+          )}
+          <p className="titleText">{menu.title}</p>
+        </div>
+      </Table.Cell>
+    ));
     if (widgetView !== "Mobile") {
     // 위젯 넓이가 1인 경우
     if (widgetWidth === 1) {
       // 위젯 높이가 1인 경우
-      if(widgetHeight === 1) {
+      if (widgetHeight === 1) {
       // tableRow에 들어갈 tableCell의 개수
       const num = 3;
       // tableRow의 총 개수
@@ -442,6 +435,6 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(QuickMenu);

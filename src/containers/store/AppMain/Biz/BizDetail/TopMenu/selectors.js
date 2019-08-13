@@ -12,7 +12,7 @@ const makgeBizManagerList = () => createSelector(
   org => org.get('bizManagerList').toJS(),
 );
 
-const selectView = state => state.get('hynix.common');
+const selectView = state => state.get('common');
 
 const currentView = () => createSelector(
   selectView,

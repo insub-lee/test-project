@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 // import { Button } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -128,9 +128,11 @@ class BizDetail extends Component {
                 />
               </li>
               <li className="rightContent">
-                <Route path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} exact />
-                <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
-                <Route path={`${preUrl}/page/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
+                <Switch>
+                  <Route path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} exact />
+                  <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
+                  <Route path={`${preUrl}/page/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
+                </Switch>
               </li>
             </ul>
           </StyleBizDetailContent>
@@ -179,6 +181,6 @@ const withSaga = injectSaga({ key: 'bizDetail', saga });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(BizDetail);

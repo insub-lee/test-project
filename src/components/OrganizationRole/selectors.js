@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import { fromJS } from 'immutable';
 
 const selectOrgRole = state => state.get('orgRole');
-const selectHynixCommon = state => state.get('hynix.common').toJS();
+const selectHynixCommon = state => state.get('common').toJS();
 
 const makeTreeData = () => createSelector(
   selectOrgRole,

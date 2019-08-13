@@ -79,7 +79,6 @@ safeWorkPopupGrid.propTypes = {
   connectSearchList: PropTypes.array,
   handleSafeWorkConnectSearch: PropTypes.func,
   clickRowData: PropTypes.func,
-  connectSearchList: '',
 };
 
 // const mapStateToProps = createStructuredSelector({

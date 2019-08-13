@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 // import { Tabs, Tab } from 'react-bootstrap-tabs';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as commonjs from 'containers/common/functions/common';
 // import Button from 'components/Button';
@@ -23,10 +23,12 @@ class AppBizModal extends PureComponent {
     return (
       <div>
         <ErrorBoundary>
-          <Route path={`${preUrl}/biz`} component={BizModal} />
-          <Route path={`${preUrl}/app`} component={AppModal} />
+          <Switch>
+            <Route path={`${preUrl}/biz`} component={BizModal} />
+            <Route path={`${preUrl}/app`} component={AppModal} />
+            {/* <Route path="/store/appMain/myPage/modal/widget" component={AppModal} /> */}
+          </Switch>
         </ErrorBoundary>
-        {/* <Route path="/store/appMain/myPage/modal/widget" component={AppModal} /> */}
       </div>
     );
   }

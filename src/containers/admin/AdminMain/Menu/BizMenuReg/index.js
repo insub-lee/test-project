@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { ModalRoute } from 'react-router-modal';
 import Widget from 'components/appSettingBizgroup';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
@@ -171,18 +171,20 @@ class BizMenuReg extends Component {
 
               <li className="rightContent" key="rightContent">
                 <ErrorBoundary>
-                  <Route path={`/admin/adminmain/${type}/bizMenuReg/info/:BIZGRP_ID`} component={BizInfo} exact />
-                  <Route path={`/admin/adminmain/${type}/bizMenuReg/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
-                  <Route path={`/admin/adminmain/${type}/bizMenuReg/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
-                  {/* <Route
+                  <Switch>
+                    <Route path={`/admin/adminmain/${type}/bizMenuReg/info/:BIZGRP_ID`} component={BizInfo} exact />
+                    <Route path={`/admin/adminmain/${type}/bizMenuReg/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
+                    <Route path={`/admin/adminmain/${type}/bizMenuReg/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
+                    {/* <Route
                     path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`}
                     component={props => (<PageInfo {...props} bizGroupInfo={bizGroupInfo} />)}
                     exact
                   /> */}
 
-                  <Route path={`/admin/adminmain/${type}/bizMenuReg/appSelect/${BIZGRP_ID}/modal`} component={AppBizModal} />
+                    <Route path={`/admin/adminmain/${type}/bizMenuReg/appSelect/${BIZGRP_ID}/modal`} component={AppBizModal} />
 
-                  {/* <Route path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} /> */}
+                    {/* <Route path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} /> */}
+                  </Switch>
                 </ErrorBoundary>
               </li>
             </ul>

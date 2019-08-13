@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import Footer from 'containers/admin/App/Footer';
 
 import SiteList from './SiteList';
@@ -16,11 +16,13 @@ class SiteAdmin extends React.Component {
     return (
       <div>
         <div className="storeLayoutContentWrapper">
-          <Route path="/admin/adminmain/siteadmin" component={SiteList} exact />
-          <Route path="/admin/adminmain/siteadmin/SiteReg" component={SiteReg} exact />
-          {/* <Route path="/admin/adminmain/siteadmin/SiteDetail/:SITE_ID"
+          <Switch>
+            <Route path="/admin/adminmain/siteadmin" component={SiteList} exact />
+            <Route path="/admin/adminmain/siteadmin/SiteReg" component={SiteReg} exact />
+            {/* <Route path="/admin/adminmain/siteadmin/SiteDetail/:SITE_ID"
         component={SiteDetail} exact /> */}
-          <Route path="/admin/adminmain/siteadmin/SiteDetail" component={SiteDetail} exact />
+            <Route path="/admin/adminmain/siteadmin/SiteDetail" component={SiteDetail} exact />
+          </Switch>
         </div>
         <Footer />
       </div>

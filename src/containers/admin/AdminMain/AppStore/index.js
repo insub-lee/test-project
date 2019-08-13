@@ -178,9 +178,9 @@ class AppStore extends Component {
                     <Route path="/admin/adminmain/appstore/app/:APP_ID" component={AppInfo} exact />
                     <Route path="/admin/adminmain/appstore/page/:PAGE_ID" component={PageInfo} exact />
                     <Route path="/admin/adminmain/appstore/modal/app/list/" component={AppModal} />
-                  {/* 앱정보 수정 및 권한 변경 링크
+                    {/* 앱정보 수정 및 권한 변경 링크
                   <Route path="/admin/adminmain/appstore/appdetail/:APP_ID/:VER" component={MyAppDetail} exact />
-                  <Route path="/store/appMain/MyApp/MyAppUpdate/:uv/:APP_ID/:VER/:tabNum/:svcyn" component={MyAppUpdate} /> 
+                  <Route path="/store/appMain/MyApp/MyAppUpdate/:uv/:APP_ID/:VER/:tabNum/:svcyn" component={MyAppUpdate} />
                   */}
                   </Switch>
                 </ErrorBoundary>
@@ -246,6 +246,6 @@ const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore', saga });
 
 export default injectIntl(compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(AppStore));

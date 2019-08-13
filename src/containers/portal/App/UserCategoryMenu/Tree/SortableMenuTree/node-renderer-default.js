@@ -194,7 +194,7 @@ NodeRendererDefault.propTypes = {
   treeId: PropTypes.string.isRequired,
   isSearchMatch: PropTypes.bool,
   isSearchFocus: PropTypes.bool,
-  canDrag: PropTypes.bool,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   scaffoldBlockPxWidth: PropTypes.number.isRequired,
   toggleChildrenVisibility: PropTypes.func,
   buttons: PropTypes.arrayOf(PropTypes.node),

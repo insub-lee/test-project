@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 
 const selectRooms = state => state.get('bookroom');
-const selectHynixCommon = state => state.get('hynix.common');
+const selectHynixCommon = state => state.get('common');
 
 const makeAllBookedRoomList = () => createSelector(
   selectRooms,

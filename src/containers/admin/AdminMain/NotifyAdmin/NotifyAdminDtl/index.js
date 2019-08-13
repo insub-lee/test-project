@@ -671,6 +671,6 @@ const withReducer = injectReducer({ key: 'NotifyAdminDtl', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(NotifyAdminDtl);

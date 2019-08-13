@@ -353,6 +353,6 @@ const withReducer = injectReducer({ key: 'GlobalAdminDtl', reducer });
 
 export default compose(
   withReducer,
-  withConnect,
   withSaga,
+  withConnect,
 )(GlobalAdminDtl);

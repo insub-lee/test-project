@@ -347,7 +347,7 @@ class ScrollWrapper extends React.Component {
 
   // DRAG EVENT JUST FOR TOUCH DEVICE~
   startDrag(event) {
-    event.preventDefault();
+    // event.preventDefault();
     event.stopPropagation();
 
     const e = event.changedTouches ? event.changedTouches[0] : event;
@@ -364,7 +364,8 @@ class ScrollWrapper extends React.Component {
 
   // 스크롤 리스너
   scroll(e) {
-    e.preventDefault();
+    // e.preventDefault();
+    e.stopPropagation();
 
     // 휠 이동 후 윈도우 리사이즈 했을 때 독 위치 유지시키기
     if (this.props.isDesktop) {
@@ -439,7 +440,6 @@ class ScrollWrapper extends React.Component {
         ref={(c) => { this.scrollWrapper = c; }}
         style={{ ...this.props.style, overflow: 'hidden', position: 'relative' }}
       >
-
         <div
           className={
             className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling)
@@ -452,11 +452,8 @@ class ScrollWrapper extends React.Component {
           onChange={this.updateSize}
           style={{ marginTop: `${this.state.top * -1}px`, marginLeft: `${this.state.left * -1}px`, width: '100%' }}
         >
-
-          { this.props.children }
-
-          { this.state.ready ?
-
+          {this.props.children}
+          {this.state.ready &&
             <VerticalScrollbar
               area={{ height: this.state.scrollAreaHeight }}
               wrapper={{ height: this.state.scrollWrapperHeight }}
@@ -469,12 +466,8 @@ class ScrollWrapper extends React.Component {
               top={this.state.top}
               onCheckVerticalScrollbarHalf={this.checkVerticalScrollbarHalf}
             />
-
-          : null }
-
-
-          { this.state.ready ?
-
+          }
+          {this.state.ready &&
             <HorizontalScrollbar
               area={{ width: this.state.scrollAreaWidth }}
               wrapper={{ width: this.state.scrollWrapperWidth }}
@@ -484,15 +477,11 @@ class ScrollWrapper extends React.Component {
               onDragging={this.handleScrollbarDragging}
               onStopDrag={this.handleScrollbarStopDrag}
             />
-
-          : null }
-
+          }
         </div>
       </div>
-
     );
   }
-
 }
 
 // The Props

@@ -460,7 +460,7 @@ function NotiCheck(element, notiVal) {
 export function* getNotiMList() {
   const myObject = yield select(state => state.get('auth').get('UNREAD_CNT'));
 
-  const myAppTreeData = yield select(stateParam => stateParam.get('hynix.common').get('myAppTreeData'));
+  const myAppTreeData = yield select(stateParam => stateParam.get('common').get('myAppTreeData'));
 
   const myAppTree = myAppTreeData.toJS();
   const UNREADSUM = [];
@@ -518,7 +518,7 @@ export function* getNotify() {
 // 2. 독 실행/고정/이동 관련 액션 ******************
 // 2-1 execDockItem
 export function* execDockItem(payload) {
-  const dockAppList = yield select(stateParam => stateParam.get('hynix.common').get('dockAppList'));
+  const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
   const response = yield call(Axios.put, `/api/portal/v1/dock/executeDockItem/${payload.dockId}`);
   const data = response.result;
 
@@ -549,7 +549,7 @@ export function* execDockItem(payload) {
 
 // 2-3 exitDockItem
 export function* exitDockItem(payload) {
-  const dockAppList = yield select(stateParam => stateParam.get('hynix.common').get('dockAppList'));
+  const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
   const index = dockAppList.findIndex(dockApp => dockApp.DOCK_ID === payload.dockId);
   const isDockYn = dockAppList[index].DOCK_YN === 'Y';
   const { PAGE_ID } = dockAppList[index];
@@ -709,7 +709,7 @@ export function* reloadExecApps(payload) {
   } else {
     const resultValue = JSON.parse(response.list);
 
-    const apps = yield select(stateParam => stateParam.get('hynix.common').get('apps'));
+    const apps = yield select(stateParam => stateParam.get('common').get('apps'));
     const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === PAGE_ID);
 
     const myObject = yield select(state => state.get('auth').get('UNREAD_CNT'));
@@ -757,7 +757,7 @@ export function* reloadExecApps(payload) {
 
 // 2-4 fixDockItem
 export function* fixDockItem(payload) {
-  const dockAppList = yield select(stateParam => stateParam.get('hynix.common').get('dockAppList'));
+  const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
   const response = yield call(Axios.put, `/api/portal/v1/dock/fixDockItem/${payload.dockId}`);
   const data = response.result;
 
@@ -774,7 +774,7 @@ export function* fixDockItem(payload) {
 
 // 2-5 unfixDockItem
 export function* unfixDockItem(payload) {
-  const dockAppList = yield select(stateParam => stateParam.get('hynix.common').get('dockAppList'));
+  const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
   const index = dockAppList.findIndex(dockApp => dockApp.DOCK_ID === payload.dockId);
   const isExecYn = dockAppList[index].EXEC_YN === 'Y';
   let data = '';
@@ -812,7 +812,7 @@ export function* unfixDockItem(payload) {
 
 // 2-7 dndChangePosition
 export function* dndChangePosition() {
-  const dockAppList = yield select(stateParam => stateParam.get('hynix.common').get('dockAppList'));
+  const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
 
   const updateArr = [];
   dockAppList.forEach((dockApp, index) => {
@@ -933,8 +933,9 @@ export function* setDockIconType(payload) {
 export function* getMyAppTree(payload) {
   const response = yield call(Axios.get, '/api/portal/v1/page/portalMyMenuTree', { data: 'temp' });
   const resultSet = Object.keys(response).length > 0 ? fromJS(JSON.parse(`[${response.result}]`)) : '';
-  const myAppTreeData = resultSet ? resultSet.get(0).get('children') : '';
-
+  console.debug('@@@ resultSet', resultSet);
+  const myAppTreeData = resultSet ? resultSet.getIn([0, 'children']) : '';
+  console.debug('@@ myAppTreeData', myAppTreeData);
   if (myAppTreeData && resultSet.size > 0) {
     if (payload.type === commonActionType.RESET_NOTIFY) {
       const myObject = payload.UNREAD_CNT;
@@ -959,7 +960,7 @@ export function* getMyAppTree(payload) {
         }
       }
       const newCategoryData = arr;
-      const myAppTreeDataForMerge = yield select(state => state.get('hynix.common'));
+      const myAppTreeDataForMerge = yield select(state => state.get('common'));
       const oldCategoryData = myAppTreeDataForMerge.get('myAppTreeData').toJS();
 
       treeFunc.mergeArray(newCategoryData, oldCategoryData);
@@ -1037,7 +1038,7 @@ export function* getMyAppTree(payload) {
         }
       }
       const newCategoryData = arr;
-      const myAppTreeDataForMerge = yield select(state => state.get('hynix.common'));
+      const myAppTreeDataForMerge = yield select(state => state.get('common'));
       const oldCategoryData = myAppTreeDataForMerge.get('myAppTreeData').toJS();
 
       treeFunc.mergeArray(newCategoryData, oldCategoryData);
@@ -1157,7 +1158,7 @@ export function* resetSysTreeReload() {
       }
     }
     const newCategoryData = arr;
-    const myAppTreeDataForMerge = yield select(state => state.get('hynix.common'));
+    const myAppTreeDataForMerge = yield select(state => state.get('common'));
     const oldCategoryData = myAppTreeDataForMerge.get('myAppTreeData').toJS();
 
     treeFunc.mergeArray(newCategoryData, oldCategoryData);
@@ -1229,7 +1230,7 @@ export function* resetTreeData(payload) {
   // storeTree
   const storeTreeData = fromJS(JSON.parse(`[${payload.storeTreeData}]`));
   const myAppStoreTreeData = storeTreeData.get(0).get('children');
-  const myAppStoreTreeDataForMerge = yield select(state => state.get('hynix.common'));
+  const myAppStoreTreeDataForMerge = yield select(state => state.get('common'));
   const oldMyAppStoreTreeData = myAppStoreTreeDataForMerge.get('myAppStoreTreeData').toJS();
   treeFunc.mergeArray(myAppStoreTreeData, oldMyAppStoreTreeData);
 
@@ -1259,7 +1260,7 @@ export function* resetTreeData(payload) {
       }
     }
     const newCategoryData = arr;
-    const myAppTreeDataForMerge = yield select(state => state.get('hynix.common'));
+    const myAppTreeDataForMerge = yield select(state => state.get('common'));
     const oldCategoryData = myAppTreeDataForMerge.get('myAppTreeData').toJS();
 
     treeFunc.mergeArray(newCategoryData, oldCategoryData);
@@ -1430,7 +1431,7 @@ export function* getLoaddata(payload) {
         }
       }
     } else {
-      const dockAppList = yield select(stateParam => stateParam.get('hynix.common').get('dockAppList'));
+      const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
 
       if (dockAppList.length > 0) {
         const index = dockAppList.findIndex(dockApp => dockApp.PAGE_ID === NEW_PAGE_ID);
