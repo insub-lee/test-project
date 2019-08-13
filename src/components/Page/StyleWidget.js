@@ -114,11 +114,14 @@ const WidgetWrapper = styled.div`
         .react-grid-Cell {
           &:first-child {
             // background-image: url(${bulletIcon});
-            content: '·';
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            left: 0;
+            
+            &:before {
+              content: '·';
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              left: 0;
+            }
           }
 
           .titleText {

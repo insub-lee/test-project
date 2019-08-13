@@ -81,7 +81,7 @@ class UserCategoryMenu extends Component {
     return (
       <Styled className={isShow ? 'active' : ''}>
         <div className="profile-area">
-          <Profile />
+          <Profile profile={profile} />
         </div>
         <div className="category-menu-area">
           <div className="area-title">{profile.DEPT_NAME_KOR}</div>
