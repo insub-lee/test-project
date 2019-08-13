@@ -11,7 +11,8 @@ const Styled = styled.div`
   position: absolute;
   left: 15%;
   top: 40px;
-  padding: 3rem;
+  //padding: 3rem;
+  padding: 0;
   //min-height: 800px;
 
   .canvas__frame {
