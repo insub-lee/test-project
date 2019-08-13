@@ -100,11 +100,11 @@ const reducer = (state = initialState, action) => {
       return state.set('isLoading', false);
     case actionTypes.MODAL_LOADING_ON: {
       const { key } = action;
-      return state.setIn(['isLoading', key], true);
+      return state.setIn(['isModalLoading', key], true);
     }
     case actionTypes.MODAL_LOADING_OFF: {
       const { key } = action;
-      return state.setIn(['isLoading', key], false);
+      return state.setIn(['isModalLoading', key], false);
     }
     case actionTypes.ACTION_TYPES:
     default:
