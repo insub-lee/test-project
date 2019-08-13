@@ -12,8 +12,8 @@ import iconSearch from 'images/portal/icon-search.png';
 import iconIn from 'images/portal/icon-in.png';
 import iconIn2 from 'images/portal/icon-in2.png';
 import iconOut from 'images/portal/icon-out.png';
-import toolIcons from './toolicons.png';
-import toolIconsOn from './toolicons_on.png';
+import toolIcons from '../../../../user/images/toolIcons.png';
+import toolIconsOn from '../../../../user/images/toolIcons_on.png';
 
 const StyleModal = styled.div`
   width: 100%;
@@ -80,10 +80,10 @@ const StyleModal = styled.div`
     }
 
     .itemtoolbar {
-      width: 270px;
+      width: 200px;
       top: 70px;
       left: 0;
-      border-right: 1px solid rgba(34, 36, 38, 0.15);
+      border-right: 1px solid rgb(222, 225, 230);
       box-shadow: none;
       transition: 0.5s;
       position: absolute;
@@ -91,19 +91,29 @@ const StyleModal = styled.div`
       height: calc(100% - 70px);
       max-height: calc(100% - 70px);
       margin: 0;
+      .item {
+        border-bottom: 1px solid rgb(222, 225, 230);
+        padding-bottom: 10px;
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
       .itemtoolbaritem .title {
-        margin: 20px 25px 10px;
+        padding: 15px 20px 15px 10px;
         position: relative;
         font-family: Noto Sans Light, Malgun Gothic, Arial, Dotum, 돋움, sans-serif !important;
         font-size: 1em;
-        color: rgba(0, 0, 0, 0.87);
+        color: #000;
+        font-weight: 600;
         .icon {
           position: absolute;
           top: 50%;
-          right: 0;
+          right: 15px;
+          width: 12px;
+          cursor: pointer;
         }
         &.active .icon {
-          transform: rotate(180deg);
+          transform: rotate(180deg) translateY(5px);
         }
       }
       .tempTools a {
@@ -144,11 +154,11 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.tiTodo {
-        background-position: -70px -72px;
+        background-position: 0 -144px;
       }
 
       .tempTools .toolIcon.tiSchedule {
-        background-position: -140px -72px;
+        background-position: -70px -144px;
       }
 
       .tempTools .toolIcon.tiHashTag {
@@ -164,7 +174,7 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.tiLocation {
-        background-position: 0 -216px;
+        background-position: -140px -140px;
       }
 
       .tempTools .toolIcon.tiIslide {
@@ -172,7 +182,7 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.tiVideo {
-        background-position: -140px -216px;
+        background-position: -140px -72px;
       }
 
       .tempTools .toolIcon.tiCoding {
@@ -188,7 +198,7 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.tiFile {
-        background-position: 0 -360px;
+        background-position: -72px -72px;
       }
 
       .tempTools .toolIcon.tiTable {
@@ -196,11 +206,11 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.tiEditoolLeft {
-        background-position: -140px -360px;
+        background-position: 0px 0px;
       }
 
       .tempTools .toolIcon.tiEditoolRight {
-        background-position: 0 -432px;
+        background-position: -70px 0px;
       }
 
       .tempTools .toolIcon.tiLinker {
@@ -208,15 +218,15 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.ti2dan {
-        background-position: -70px -432px;
+        background-position: -140px 0;
       }
 
       .tempTools .toolIcon.ti3dan {
-        background-position: 0 -576px;
+        background-position: 0 -288px;
       }
 
       .tempTools .toolIcon.ti4dan {
-        background-position: -70px -576px;
+        background-position: -70px -288px;
       }
 
       .tempTools .toolIcon.ti2danLeft {
@@ -232,31 +242,33 @@ const StyleModal = styled.div`
       }
 
       .tempTools .toolIcon.tiBigFirstWord {
-        background-position: -140px -504px;
+        background-position: -140px -288px;
       }
     }
     .manualContentWrapper {
       display: inline-block;
       top: 70px;
-      left: 270px;
+      left: 200px;
       position: absolute;
-      width: calc(100% - 270px);
+      width: calc(100% - 200px);
       height: calc(100% - 70px);
       .manualMainMenuWrapper {
         margin: 0;
+        height: 43px;
       }
       .manualMainIndexWrapper {
         margin: 0;
         margin: 0;
         display: inline-block;
-        width: 380px;
+        width: 400px;
         height: calc(100% - 37px);
         vertical-align: top;
+        border-right: 1px solid #dee1e6;
       }
       .manualMainContentWrapper {
         margin: 0;
         display: inline-block;
-        width: calc(100% - 380px);
+        width: calc(100% - 400px);
       }
     }
   }

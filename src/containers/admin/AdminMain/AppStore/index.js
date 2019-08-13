@@ -60,8 +60,8 @@ function getUrl(node) {
 
 class AppStore extends Component {
   componentWillMount() {
-    this.props.getCategoryComboList();
-    this.props.getCategoryData(1);
+    // this.props.getCategoryComboList();
+    this.props.getCategoryData(0);
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -100,7 +100,8 @@ class AppStore extends Component {
   }
 
   onChangeSite = (siteId) => {
-    this.props.getCategoryData(siteId);
+    // this.props.getCategoryData(siteId);
+    this.props.getCategoryData(0);
   }
 
   render() {
@@ -134,13 +135,13 @@ class AppStore extends Component {
             <div className="appstoreTreeWrapper">
               <div>
                 <ErrorBoundary>
-                  <Select defaultValue={1} onChange={this.onChangeSite}>
+                  {/* <Select defaultValue={1} onChange={this.onChangeSite}>
                     {this.props.categoryComboList.map(item => (
                       <Option value={item.SITE_ID} key={item.SITE_ID}>
                         {item.NAME_KOR}
                       </Option>
                     ))}
-                  </Select>
+                  </Select> */}
                   <AppStoreTree
                     treeData={categoryData}
                     selectedIndex={selectedIndex}
@@ -195,8 +196,8 @@ class AppStore extends Component {
 }
 
 AppStore.propTypes = {
-  categoryComboList: PropTypes.array.isRequired,
-  getCategoryComboList: PropTypes.func.isRequired,
+  // categoryComboList: PropTypes.array.isRequired,
+  // getCategoryComboList: PropTypes.func.isRequired,
   selectedIndex: PropTypes.string.isRequired,
   categoryData: PropTypes.array.isRequired,
   getCategoryData: PropTypes.func.isRequired,

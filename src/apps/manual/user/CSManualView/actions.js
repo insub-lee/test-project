@@ -1,18 +1,19 @@
 import * as constantTypes from './constants';
 
 // get
-export const getManualViewBySaga = () => ({ type: constantTypes.GET_MANUAL_VIEW_SAGA });
+export const getManualViewBySaga = (widgetId, flag) => ({ type: constantTypes.GET_MANUAL_VIEW_SAGA, flag, widgetId });
 
 // add
 
 // set
-export const setManualViewByReducr = maulTabList => ({ type: constantTypes.SET_MANUAL_VIEW_REDUCR, maulTabList });
-export const setSelectedMualIdxByReducr = mualIdx => ({ type: constantTypes.SET_SELECTED_MUAL_IDX_REDUCR, mualIdx });
-export const setSelectedTabIdxByReducr = idx => ({ type: constantTypes.SET_SELECTED_TAB_IDX_REDUCR, idx });
-export const setSelectedCompIdxByReducr = idx => ({ type: constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR, idx });
-export const setScrollComponentByReducr = item => ({ type: constantTypes.SET_SCROLL_COMPONENT_REDUCR, item });
+export const setManualViewByReducr = (maulTabList, widgetId) => ({ type: constantTypes.SET_MANUAL_VIEW_REDUCR, maulTabList, widgetId });
+export const setSelectedMualIdxByReducr = (mualIdx, widgetId) => ({ type: constantTypes.SET_SELECTED_MUAL_IDX_REDUCR, mualIdx, widgetId });
+export const setSelectedTabIdxByReducr = (idx, widgetId) => ({ type: constantTypes.SET_SELECTED_TAB_IDX_REDUCR, idx, widgetId });
+export const setSelectedCompIdxByReducr = (idx, widgetId) => ({ type: constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR, idx, widgetId });
+export const setScrollComponentByReducr = (item, widgetId) => ({ type: constantTypes.SET_SCROLL_COMPONENT_REDUCR, item, widgetId });
+export const setManualViewHistoryByReducr = (historyList, widgetId) => ({ type: constantTypes.SET_MANUAL_VIEW_HISTORY_REDUCR, historyList, widgetId });
 
 // remove
 
 // etc
-export const resetManualViewByReducr = () => ({ type: constantTypes.RESET_MANUAL_VIEW_REDUCR });
+export const resetManualViewByReducr = widgetId => ({ type: constantTypes.RESET_MANUAL_VIEW_REDUCR, widgetId });

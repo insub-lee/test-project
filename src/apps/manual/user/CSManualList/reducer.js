@@ -1,34 +1,35 @@
 import { fromJS } from 'immutable';
 import * as constantTypes from './constants';
 const initialState = fromJS({
-  isViewContents: false,
-  selectedMualIdx: 0,
-  totalManualList: [],
-  checkedMualList: [],
+  manualListMap: {},
+  // isViewContents: false,
+  // selectedMualIdx: 0,
+  // totalManualList: [],
+  // checkedMualList: [],
 });
 
 const appCSMualListReducer = (state = initialState, action) => {
   switch (action.type) {
     case constantTypes.SET_TOTALMANUALIST: {
-      const { totalManualList } = action;
-      return state.set('totalManualList', totalManualList);
+      const { totalManualList, widgetId } = action;
+      return state.setIn(['manualListMap', widgetId, 'totalManualList'], totalManualList);
     }
     case constantTypes.SET_IS_VIEW_CONTENTS_REDUCR: {
-      const { flag } = action;
-      return state.set('isViewContents', flag);
+      const { flag, widgetId } = action;
+      return state.setIn(['manualListMap', widgetId, 'isViewContents'], flag);
     }
     case constantTypes.SET_SELECTED_MUAL_IDX_REDUCR: {
-      const { mualIdx } = action;
-      return state.set('selectedMualIdx', mualIdx);
+      const { mualIdx, widgetId } = action;
+      return state.setIn(['manualListMap', widgetId, 'selectedMualIdx'], mualIdx);
     }
     case constantTypes.SET_CHECK_MANUAL_REDUCR: {
-      const { mualIdx } = action;
-      const checkedMualList = state.get('checkedMualList');
-      const findIdx = checkedMualList.findIndex(item => item === mualIdx);
+      const { mualIdx, mualOrgIdx, widgetId } = action;
+      const checkedMualList = state.getIn(['manualListMap', widgetId, 'checkedMualList']) || fromJS([]);
+      const findIdx = checkedMualList.findIndex(item => item.mualIdx === mualIdx);
       if (findIdx > -1) {
-        return state.set('checkedMualList', checkedMualList.splice(findIdx, 1));
+        return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.splice(findIdx, 1));
       }
-      return state.set('checkedMualList', checkedMualList.push(mualIdx));
+      return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.push({ mualIdx, mualOrgIdx }));
     }
     default:
       return state;

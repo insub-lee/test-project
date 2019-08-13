@@ -2,60 +2,52 @@ import { fromJS } from 'immutable';
 import * as constantTypes from './constants';
 
 const initialState = fromJS({
-  selectedMualTabIdx: 0,
-  selectedMualIdx: 0,
-  selectedTabIdx: 0,
-  selectedCompIdx: 0,
-  manualTabList: [],
-  scrollComp: {},
+  manualViewMap: {},
+  // selectedMualTabIdx: 0,
+  // selectedMualIdx: 0,
+  // selectedTabIdx: 0,
+  // selectedCompIdx: 0,
+  // manualTabList: [],
+  // scrollComp: {},
 });
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case constantTypes.SET_MANUAL_VIEW_REDUCR: {
-      const { maulTabList } = action;
-      return state.set('manualTabList', maulTabList);
+      const { maulTabList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'manualTabList'], maulTabList);
     }
     case constantTypes.SET_SELECTED_MUAL_IDX_REDUCR: {
-      const { mualIdx } = action;
-      return state.set('selectedMualIdx', mualIdx);
+      const { mualIdx, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'selectedMualIdx'], mualIdx);
     }
     case constantTypes.SET_SELECTED_TAB_IDX_REDUCR: {
-      const { idx } = action;
-      return state.set('selectedTabIdx', idx);
+      const { idx, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'selectedTabIdx'], idx);
     }
     case constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR: {
-      const { idx } = action;
-      // const compList = state.getIn(['manualTabList', state.get('selectedTabIdx'), 'MUAL_TABVIEWINFO']);
-      // const selectedCompIdx = getCompIdx(compList.toJS(), idx);
-      // return state.set('selectedCompIdx', fromJS(selectedCompIdx));
-      return state.set('selectedCompIdx', idx);
+      const { idx, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'selectedCompIdx'], idx);
     }
     case constantTypes.RESET_MANUAL_VIEW_REDUCR: {
+      const { widgetId } = action;
       return state
-        .set('selectedMualTabIdx', 0)
-        .set('selectedTabIdx', 0)
-        .set('selectedCompIdx', fromJS([]))
-        .set('manualTabList', fromJS([]));
+        .setIn(['manualViewMap', widgetId, 'selectedMualTabIdx'], 0)
+        .setIn(['manualViewMap', widgetId, 'selectedTabIdx'], 0)
+        .setIn(['manualViewMap', widgetId, 'selectedCompIdx'], fromJS([]))
+        .setIn(['manualViewMap', widgetId, 'manualTabList'], fromJS([]));
     }
     case constantTypes.SET_SCROLL_COMPONENT_REDUCR: {
-      const { item } = action;
-      return state.set('scrollComp', fromJS(item));
+      const { item, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'scrollComp'], fromJS(item));
+    }
+    case constantTypes.SET_MANUAL_VIEW_HISTORY_REDUCR: {
+      const { historyList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'historyList'], historyList);
     }
     default:
       return state;
   }
-};
-
-const getCompIdx = (compList, idx) => {
-  let resultList = [];
-  resultList.push(idx);
-  const node = compList.filter(item => item.MUAL_TABCOMP_IDX === idx)[0];
-  if (node.MUAL_TABCOMP_PIDX > 0) {
-    const tempList = getCompIdx(compList, node.MUAL_TABCOMP_PIDX);
-    resultList = resultList.concat(tempList);
-  }
-  return resultList;
 };
 
 export default appReducer;
