@@ -341,12 +341,14 @@ export function* registAppModal(payload) {
   const parentStore = yield select(state => state.get('admin/AdminMain/AppStore'));
   const { node } = parentStore.get('tempRowInfo');
   const CATG_ID = node && node.CATG_ID !== -999 && node.NODE_TYPE !== 'R' ? node.CATG_ID : -1;
+  const SITE_ID = node && node.SITE_ID ? node.SITE_ID : 0;
   if (CATG_ID < 1) {
     feed.error('앱 카테고리를 선택해 주세요.');
     return;
   }
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/registApp', {
     APP_ID,
+    SITE_ID,
     CATG_ID,
   });
   const { code, resultCategoryData, msg } = response;
