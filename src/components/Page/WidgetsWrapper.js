@@ -58,7 +58,7 @@ export default class WidgetsWrapper extends Component {
           position: 'relative',
           height: '100%',
           overflow: item.size === 'FullSize' ? 'auto' : 'hidden',
-          borderRadius: '7px',
+          borderRadius: 2,
         }}
       >
         <WidgetWrapper

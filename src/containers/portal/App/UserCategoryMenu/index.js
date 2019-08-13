@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 
+import Profile from 'components/Profile';
 import * as routeSelectors from 'containers/common/Routes/selectors';
 import * as routeActions from 'containers/common/Routes/actions';
 import * as authSelectors from 'containers/common/Auth/selectors';
@@ -80,7 +81,7 @@ class UserCategoryMenu extends Component {
     return (
       <Styled className={isShow ? 'active' : ''}>
         <div className="profile-area">
-          <UserProfileBox />
+          <Profile />
         </div>
         <div className="category-menu-area">
           <div className="area-title">{profile.DEPT_NAME_KOR}</div>

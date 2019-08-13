@@ -24,7 +24,7 @@ const StyleDataGrid = styled.div`
             height: 45px !important;
 
             .react-grid-HeaderCell {
-              height: 45px !important;
+              //height: 45px !important;
               padding: 0;
               border-right: none;
               border-bottom: none;

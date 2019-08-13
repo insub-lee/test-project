@@ -71,7 +71,11 @@ const StyleProjecList = styled.div`
   }
 
   .react-grid-Cell__value {
-    padding-left: 5px;
+    //padding-left: 5px;
+    
+    &:not(:first-child) {
+      padding-left: 5px;
+    }
   }
 
   // sortable icon

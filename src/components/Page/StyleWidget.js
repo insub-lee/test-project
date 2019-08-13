@@ -15,7 +15,7 @@ import iconLocationGray from 'images/common/icon-wlocation-gray.png';
 import iconLocationWhite from 'images/common/icon-wlocation-white.png';
 
 const WidgetWrapper = styled.div`
-  margin: 0 0px;
+  margin: 0;
   height: 100%;
 
   //스킨세트
@@ -83,16 +83,26 @@ const WidgetWrapper = styled.div`
 
           .ant-tabs-nav {
             .ant-tabs-tab {
+              padding: 0.35rem 1.125rem;
+              background: #eff0f2;
+              border: 1px solid #d9d9d9;
+              border-right: 0;
               color: #666;
               
+              &:last-child {
+                border-right: 1px solid #d9d9d9;
+              }
+              
               &.ant-tabs-tab-active {
-                color: #495057;
+                color: #000;
                 background-color: #fff;
                 border-color: rgba(0,0,0,.1) rgba(0,0,0,.1) #fff;
               }
+              
             }
             .ant-tabs-ink-bar {
-              background-color: #886ab5;
+              //background-color: #886ab5;
+              background-color: #ffffff;
             }
           }
         }
@@ -263,7 +273,7 @@ const WidgetWrapper = styled.div`
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(34,34,34,0.7);
+               color: #333;
               
               &.ant-tabs-tab-active {
                 color: #886ab5;
@@ -271,6 +281,7 @@ const WidgetWrapper = styled.div`
             }
             .ant-tabs-ink-bar {
               background-color: #886ab5;
+              //background-color: #ffffff;
             }
           }
         }
@@ -443,7 +454,8 @@ const WidgetWrapper = styled.div`
               }
             }
             .ant-tabs-ink-bar {
-              background-color: #886ab5;
+              //background-color: #886ab5;
+              background-color: #ffffff;
             }
           }
         }
@@ -1489,8 +1501,9 @@ const WidgetHeader = styled.div`
 const WidgetBox = styled.div`
   display: inline-block;
   width: 100%;
-  height: calc(100% - 35px) !important;
-  padding: 0;
+  // height: calc(100% - 35px) !important;
+  height: calc(100% - 50px);
+  padding: 10px 0;
 
   // '내용 없음' 공통 스타일
   .react-grid-Empty, .noWidgetWrapper {
