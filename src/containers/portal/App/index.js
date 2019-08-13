@@ -23,9 +23,10 @@ import Fullscreen from 'components/Fullscreen';
 import * as routesAction from 'containers/common/Routes/actions';
 import { basicPath } from 'containers/common/constants';
 import SideMenu from 'components/SideMenu';
+import * as routesSelector from 'containers/common/Routes/selectors';
+import * as authSelector from 'containers/common/Auth/selectors';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
-import * as routesSelector from 'containers/common/Routes/selectors';
 import * as selectors from './selectors';
 // import Fullscreen from './fullscreen';
 import themes from '../../../config/themes/index';
@@ -646,6 +647,7 @@ class App extends React.PureComponent {
       selectedApp,
       history,
       headerTitle,
+      profile,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -690,6 +692,7 @@ class App extends React.PureComponent {
             view={view}
             hasRoleAdmin={hasRoleAdmin}
             headerTitle={headerTitle}
+            siteId={profile.SITE_ID}
           />
           {/* SideBar */}
           <MenuCategory
@@ -749,7 +752,7 @@ class App extends React.PureComponent {
           <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
-                <AppWrapper style={{ width: '100%' }}>
+                <AppWrapper style={{ width: '100%', backgroundColor: '#faf8fb' }}>
                   <Fullscreen
                     enabled={this.state.isFullscreenEnabled}
                     onChange={this.setIsFullscreenEnabled}
@@ -962,6 +965,7 @@ const mapStateToProps = createStructuredSelector({
   executedDockPageId: selectors.makeSelectExecutedDockPageId(),
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
   headerTitle: routesSelector.makeSelectHeaderTitle(),
+  profile: authSelector.makeSelectProfile(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),

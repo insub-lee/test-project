@@ -50,7 +50,7 @@ const SelectedUser = styled.div`
                 border-bottom: none;
 
                 &:first-child {
-                  left: 20px !important;
+                  //left: 20px !important;
                   width: calc(100% - 20px) !important;
                 }
 

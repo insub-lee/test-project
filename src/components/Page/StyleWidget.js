@@ -82,6 +82,11 @@ const WidgetWrapper = styled.div`
           .ant-tabs-tab-next-icon {color: #898989;}
 
           .ant-tabs-nav {
+          
+            .ant-tabs-nav-wrap {
+              margin-bottom: 0;
+            }
+            
             .ant-tabs-tab {
               padding: 0.35rem 1.125rem;
               background: #eff0f2;
@@ -108,7 +113,12 @@ const WidgetWrapper = styled.div`
         }
         .react-grid-Cell {
           &:first-child {
-            background-image: url(${bulletIcon});
+            // background-image: url(${bulletIcon});
+            content: '·';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 0;
           }
 
           .titleText {

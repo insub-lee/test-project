@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const Styled = styled.div`
   position: relative;
   width: 290px;
-  height: 119px;
+  height: 107px;
   background-color: #e7e1f0;
   padding: 20px;
   & > div {
