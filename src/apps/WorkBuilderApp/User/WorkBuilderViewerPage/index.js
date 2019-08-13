@@ -86,8 +86,6 @@ class WorkBuilderViewerPage extends Component {
           onCancel={() => toggleFormModal(false)}
           destroyOnClose
           width="100%"
-          style={{ top: 0 }}
-          bodyStyle={{ height: 'calc(100vh - 55px' }}
           maskClosable={false}
         >
           {PRC_ID && (
@@ -112,8 +110,6 @@ class WorkBuilderViewerPage extends Component {
           onCancel={() => closeEditModal()}
           destroyOnClose
           width="100%"
-          style={{ top: 0 }}
-          bodyStyle={{ height: 'calc(100vh - 55px' }}
           maskClosable={false}
         >
           <View
