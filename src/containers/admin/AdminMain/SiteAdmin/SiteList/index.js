@@ -149,7 +149,8 @@ class SiteList extends React.Component {
   }
 
   openClick = (url) => {
-    window.open(url);
+    const linkUrl = url.startsWith('http') ? url : `http://${url}`;
+    window.open(linkUrl);
   };
 
   HyperlinkFomatter1 = (val) => {

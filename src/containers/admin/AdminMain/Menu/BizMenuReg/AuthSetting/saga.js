@@ -26,13 +26,18 @@ export function* insertAuth(payload) {
   const { dataList } = payload;
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/insertBizmenuAuth', { dataList });
-  const { code } = response;
+  const { code, bizMenuSecKeyList } = response;
 
   if (code === 200) {
     const { BIZGRP_ID } = dataList[0];
     yield put({
       type: constantsTopMenu.GET_BIZ_INFO,
       BIZGRP_ID,
+    });
+
+    yield put({
+      type: constants.SET_MENUSEC_LIST,
+      bizMenuSecKeyList: fromJS(bizMenuSecKeyList),
     });
 
     yield put({
@@ -47,13 +52,18 @@ export function* deleteAuth(payload) {
   const { dataList } = payload;
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/deleteBizmenuAuth', { dataList });
-  const { code } = response;
+  const { code, bizMenuSecKeyList } = response;
 
   if (code === 200) {
     const { BIZGRP_ID } = dataList[0];
     yield put({
       type: constantsTopMenu.GET_BIZ_INFO,
       BIZGRP_ID,
+    });
+
+    yield put({
+      type: constants.SET_MENUSEC_LIST,
+      bizMenuSecKeyList: fromJS(bizMenuSecKeyList),
     });
 
     yield put({
