@@ -34,7 +34,6 @@ node_modules/*
 public/*
 scripts/*
 src/apps/attendGroup/*
-src/apps/banner/*
 src/apps/boards/*
 src/apps/boardsSys/*
 src/apps/bookroom/*

@@ -18,39 +18,41 @@ const pageIndex = 10;
 let pageSnum = 1;
 let pageEnum = 10;
 
+const EmptyData = () => (
+  <div className="noWidgetContent">
+    <p className="noWCIcon">게시된 글이 없습니다.</p>
+  </div>
+);
+
 class Iflow extends PureComponent {
   constructor(props) {
     super(props);
-
-    this.state = {
-      visible: false,
-    };
-
     this.columns = [
       {
         key: 'arTitle',
         name: 'TITLE',
-        formatter: this.HyperlinkFormatter,
+        formatter: this.hyperlinkFormatter,
         getRowMetaData: data => data,
       },
     ];
-    this.props.getIflowDataList(pageSnum, pageIndex, this.props.setIflowDataList);
+  }
+
+  componentDidMount() {
+    const { getIflowDataList, dataList } = this.props;
+    getIflowDataList(pageSnum, pageIndex, dataList);
   }
 
   rowGetter = i => {
-    // if (i === pageEnum - 1) {
-    //   pageSnum += 1;
-    //   pageEnum += pageIndex;
-    //   this.props.getIflowDataList(pageSnum, pageIndex, this.props.setIflowDataList);
-    // }
-    return this.props.setIflowDataList[i];
+    const { dataList } = this.props;
+    return dataList[i];
   };
 
   readMore = () => {
-    if (pageEnum - this.props.setIflowDataList.length < pageIndex) {
+    const { dataList, getIflowDataList } = this.props;
+    if (pageEnum - dataList.length < pageIndex) {
       pageSnum += 1;
       pageEnum += pageIndex;
-      this.props.getIflowDataList(pageSnum, pageIndex, this.props.setIflowDataList);
+      getIflowDataList(pageSnum, pageIndex, dataList);
     }
   };
 
@@ -58,7 +60,7 @@ class Iflow extends PureComponent {
     window.open(url);
   };
 
-  HyperlinkFormatter = val => {
+  hyperlinkFormatter = val => {
     const dtArr = val.dependentValues.modDt.split(' ')[0].split('-');
     const dtObj = new Date(dtArr[0], Number(dtArr[1]) - 1, dtArr[2]);
     const diff = (curDate.getTime() - dtObj.getTime()) / 1000 / 60 / 60 / 24;
@@ -101,12 +103,7 @@ class Iflow extends PureComponent {
   };
 
   render() {
-    const EmptyData = () => (
-      <div className="noWidgetContent">
-        <p className="noWCIcon">게시된 글이 없습니다.</p>
-      </div>
-    );
-    const { setIflowDataList } = this.props;
+    const { dataList } = this.props;
 
     const wgHeight = Number(this.props.item.size.split('X')[1]);
     const wgTitleHeight = this.props.item.user.isTitle ? 35 : 0;
@@ -117,28 +114,28 @@ class Iflow extends PureComponent {
         <ReactDataGrid
           columns={this.columns}
           rowGetter={this.rowGetter}
-          rowsCount={setIflowDataList.length}
+          rowsCount={dataList.length}
           rowHeight={rowHeight}
           scrollHeight={wgHeight * 270 - wgTitleHeight} // 슬림스크롤 높이
-          minHeight={rowHeight * setIflowDataList.length} // 위젯 row 전체 높이
+          minHeight={rowHeight * dataList.length} // 위젯 row 전체 높이
           emptyRowsView={EmptyData}
           readMore={this.readMore}
         />
-
-        {/* <button onClick={this.props.item.show} style={{position: 'relative', bottom: '25px', left: '5px'}} >더보기</button> */}
       </IflowStyle>
     );
   }
 }
 
 Iflow.propTypes = {
-  getIflowDataList: PropTypes.func, //eslint-disable-line
-  setIflowDataList: PropTypes.Array, //eslint-disable-line
-  iflowUrl: PropTypes.string, //eslint-disable-line
+  getIflowDataList: PropTypes.func,
+  dataList: PropTypes.arrayOf(PropTypes.object),
+  iflowUrl: PropTypes.string,
 };
 
 Iflow.defaultProps = {
-  setIflowDataList: [],
+  getIflowDataList: () => {},
+  dataList: [],
+  iflowUrl: '',
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -146,7 +143,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = createStructuredSelector({
-  setIflowDataList: selectors.makeIflowDataList(),
+  dataList: selectors.makeIflowDataList(),
   iflowUrl: selectors.makeSelectIflowUrl(),
 });
 

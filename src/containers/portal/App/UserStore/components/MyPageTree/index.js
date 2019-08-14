@@ -580,7 +580,7 @@ MyPageTree.propTypes = {
   // eslint-disable-next-line react/require-default-props
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   // eslint-disable-next-line react/no-unused-prop-types
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
 };

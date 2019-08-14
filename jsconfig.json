@@ -6,7 +6,8 @@
       "utils/*": ["utils/*"],
       "containers/*": ["containers/*"],
       "images/*": ["images/*"],
-      "apps/*": ["apps/*"]
+      "apps/*": ["apps/*"],
+      "style/*": ["style/*"]
     },
     "target": "ES6",
     "jsx": "preserve",

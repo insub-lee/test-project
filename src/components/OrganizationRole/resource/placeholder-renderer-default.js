@@ -20,7 +20,7 @@ PlaceholderRendererDefault.defaultProps = {
 
 PlaceholderRendererDefault.propTypes = {
   isOver: PropTypes.bool,
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 };
 
 export default PlaceholderRendererDefault;

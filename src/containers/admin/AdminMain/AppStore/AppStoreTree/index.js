@@ -559,7 +559,7 @@ MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.string,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]), //eslint-disable-line
-  canDrop: PropTypes.bool, //eslint-disable-line
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]), //eslint-disable-line
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   updateNode: PropTypes.func, //eslint-disable-line
