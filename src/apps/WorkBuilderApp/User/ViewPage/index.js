@@ -29,9 +29,7 @@ class WorkBuilderViewerPage extends Component {
   }
 
   render() {
-    const {
-      boxes, resultFormStuffs, isLoading,
-    } = this.props;
+    const { boxes, resultFormStuffs, isLoading } = this.props;
     return (
       <Wrapper>
         <Preloader spinning={isLoading}>

@@ -15,7 +15,9 @@ class Builder extends Component {
 
   render() {
     return (
-      <div>빌더ID: {this.state.id} 빌더ID: {this.state.id} 빌더ID: {this.state.id} 빌더ID: {this.state.id} 빌더ID: {this.state.id}</div>
+      <div>
+        빌더ID: {this.state.id} 빌더ID: {this.state.id} 빌더ID: {this.state.id} 빌더ID: {this.state.id} 빌더ID: {this.state.id}
+      </div>
     );
   }
 }

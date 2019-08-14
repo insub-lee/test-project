@@ -8,7 +8,6 @@ const makeSelectInfo = () =>
     state => state.get('info').toJS(),
   );
 
-
 const makeSelectIsLoading = () =>
   createSelector(
     selectWorkBuilderDetailInfo,

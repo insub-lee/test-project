@@ -16,7 +16,7 @@ class SignIn extends Component {
     const search = loc.state ? loc.state.from.search : '';
     const { pathname } = loc;
     console.log('LOCQ!!!!!!!!!!!!!!:', loc);
-    this.props.boot(url + search : '', pathname);
+    this.props.boot(url + search, pathname);
   }
 
   render() {
@@ -32,14 +32,15 @@ SignIn.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    boot: (url, pathname, username) => dispatch(authActions.checkAuthorization(url, pathname, username)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  boot: (url, pathname, username) => dispatch(authActions.checkAuthorization(url, pathname, username)),
+});
 
 const mapStateToProps = createStructuredSelector({
   isLoggedIn: selectors.makeSelectIdToken(),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SignIn);

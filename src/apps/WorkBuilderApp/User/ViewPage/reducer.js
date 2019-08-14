@@ -30,15 +30,19 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SUCCESS_GET_VIEW: {
       const { metaList, data } = action;
-      const boxes = metaList.filter(meta => meta.COMP_TYPE === 'BOX').map(box => ({
-        ...JSON.parse(box.CONFIG).property,
-      }));
-      const formStuffs = metaList.filter(meta => meta.COMP_TYPE === 'FIELD').map(formStuff => ({
-        ...JSON.parse(formStuff.CONFIG).property,
-      }));
+      const boxes = metaList
+        .filter(meta => meta.COMP_TYPE === 'BOX')
+        .map(box => ({
+          ...JSON.parse(box.CONFIG).property,
+        }));
+      const formStuffs = metaList
+        .filter(meta => meta.COMP_TYPE === 'FIELD')
+        .map(formStuff => ({
+          ...JSON.parse(formStuff.CONFIG).property,
+        }));
       const resultFormStuffs = formStuffs.map(formStuff => {
         const value = data[formStuff.property.name.toUpperCase()];
-        return ({
+        return {
           ...formStuff,
           CONT_SEQ: getContSeq(value, 'CONT_SEQ'),
           property: {
@@ -46,9 +50,10 @@ const reducer = (state = initialState, action) => {
             defaultValue: getValue(value, 'DETAIL'),
             readOnly: true,
           },
-        });
+        };
       });
-      return state.set('boxes', fromJS(boxes))
+      return state
+        .set('boxes', fromJS(boxes))
         .set('formStuffs', fromJS(formStuffs))
         .set('resultFormStuffs', fromJS(resultFormStuffs));
     }

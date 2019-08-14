@@ -45,7 +45,7 @@ const Styled = styled.div`
         display: inline-block;
         background-color: #3b97e3;
         color: #ffffff;
-        
+
         &:last-child {
           margin: 0;
         }

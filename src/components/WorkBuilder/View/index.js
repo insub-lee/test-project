@@ -10,9 +10,7 @@ import StyledFormStuff from 'components/WorkBuilder/View/StyledFormStuff';
 
 import Styled from './Styled';
 
-const View = ({
-  boxes, formStuffs, submitData, preview, saveTempContents, workSeq, taskSeq, readOnly,
-}) => (
+const View = ({ boxes, formStuffs, submitData, preview, saveTempContents, workSeq, taskSeq, readOnly }) => (
   <Styled className="canvas" onSubmit={submitData}>
     <Form layout="vertical">
       <div className="canvas__frame" id="canvas">
@@ -28,9 +26,13 @@ const View = ({
                         .map(formStuff => (
                           <StyledFormStuff key={formStuff.id} className="form-group">
                             <Form.Item label={formStuff.property.label}>
-                              {allFormStuffs[formStuff.type].renderer({
-                               formStuff, saveTempContents, workSeq, taskSeq,
-                              })}
+                              {allFormStuffs[formStuff.type] &&
+                                allFormStuffs[formStuff.type].renderer({
+                                  formStuff,
+                                  saveTempContents,
+                                  workSeq,
+                                  taskSeq,
+                                })}
                             </Form.Item>
                           </StyledFormStuff>
                         ))}
@@ -41,9 +43,13 @@ const View = ({
                           .map(formStuff => (
                             <Descriptions.Item key={formStuff.id} label={formStuff.property.label} span={formStuff.property.span || 1}>
                               <Styled classNam="form-group">
-                                {allFormStuffs[formStuff.type].renderer({
-                                 formStuff, saveTempContents, workSeq, taskSeq,
-                                })}
+                                {allFormStuffs[formStuff.type] &&
+                                  allFormStuffs[formStuff.type].renderer({
+                                    formStuff,
+                                    saveTempContents,
+                                    workSeq,
+                                    taskSeq,
+                                  })}
                               </Styled>
                             </Descriptions.Item>
                           ))}
@@ -54,7 +60,7 @@ const View = ({
               </Card>
             </StyledFormLayer>
           ))}
-          {(!preview && !readOnly) && (
+          {!preview && !readOnly && (
             <Form.Item style={{ textAlign: 'right', marginBottom: 0 }}>
               <Button type="primary" htmlType="submit">
                 등록

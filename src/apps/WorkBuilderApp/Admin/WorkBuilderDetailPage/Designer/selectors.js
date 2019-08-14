@@ -93,4 +93,12 @@ const makeSelectIsLoading = () =>
     state => state.get('isLoading'),
   );
 
-export { makeSelectCanvasProperty, makeSelectPanelsProperty, makeSelectProperty, makeSelectLayers, makeSelectOnPreview, makeSelectWorkSeq, makeSelectIsLoading };
+export {
+  makeSelectCanvasProperty,
+  makeSelectPanelsProperty,
+  makeSelectProperty,
+  makeSelectLayers,
+  makeSelectOnPreview,
+  makeSelectWorkSeq,
+  makeSelectIsLoading,
+};

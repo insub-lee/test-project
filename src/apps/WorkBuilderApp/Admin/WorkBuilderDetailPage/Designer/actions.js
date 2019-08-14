@@ -152,7 +152,6 @@ export const changeMaxLength = ({ type, index, value }) => ({
   },
 });
 
-
 export const successChangeMaxLength = ({ type, index, value }) => ({
   type: actionTypes.SUCCESS_CHANGE_MAX_LENGTH,
   payload: {

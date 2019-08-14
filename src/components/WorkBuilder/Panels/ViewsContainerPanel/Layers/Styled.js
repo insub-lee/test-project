@@ -60,7 +60,7 @@ const Styled = styled.div`
         &.layer-name--no-edit {
           text-overflow: ellipsis;
         }
-        
+
         &.layer-form-stuff {
           margin-left: 20px;
         }

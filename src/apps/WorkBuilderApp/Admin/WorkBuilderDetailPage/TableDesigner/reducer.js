@@ -52,6 +52,12 @@ const reducer = (state = initialState, action) => {
       console.debug('@@ success', data);
       return state;
     }
+    case actionTypes.LOADING_ON:
+      return state.set('isLoading', true);
+    case actionTypes.LOADING_OFF:
+      return state.set('isLoading', false);
+    case actionTypes.RESET_DATA:
+      return initialState;
     case actionTypes.ACTION_TYPES:
     default:
       return state;
