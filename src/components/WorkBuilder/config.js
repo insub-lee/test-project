@@ -89,16 +89,16 @@ export const defaultFormStuffs = {
   //   ),
   //   renderer: ({ formStuff, saveTempContents }) => <Select {...formStuff.property} />,
   // },
-  grid: {
-    label: 'Grid',
-    icon: 'fa fa-edit fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <AgGrid {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <AgGrid {...formStuff.property} />,
-  },
+  // grid: {
+  //   label: 'Grid',
+  //   icon: 'fa fa-edit fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <AgGrid {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <AgGrid {...formStuff.property} />,
+  // },
   'rich-text-editor': {
     label: 'Rich Text Editor',
     icon: 'fa fa-file-text-o fa-3x',
@@ -129,16 +129,16 @@ export const defaultFormStuffs = {
   //   ),
   //   renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} />,
   // },
-  'time-picker': {
-    label: 'Time Picker',
-    icon: 'fa fa-clock-o fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <TimePicker {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <TimePicker {...formStuff.property} />,
-  },
+  // 'time-picker': {
+  //   label: 'Time Picker',
+  //   icon: 'fa fa-clock-o fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <TimePicker {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <TimePicker {...formStuff.property} />,
+  // },
   'date-picker': {
     label: 'Date Picker',
     icon: 'fa fa-calendar fa-3x',
@@ -189,39 +189,39 @@ export const defaultFormStuffs = {
   //   ),
   //   renderer: ({ formStuff, saveTempContents }) => <DateMonthPicker {...formStuff.property} />,
   // },
-  'range-picker': {
-    label: 'Range Picker',
-    icon: 'fa fa-calendar fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <DateRangePicker {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <DateRangePicker {...formStuff.property} />,
-  },
+  // 'range-picker': {
+  //   label: 'Range Picker',
+  //   icon: 'fa fa-calendar fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <DateRangePicker {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <DateRangePicker {...formStuff.property} />,
+  // },
 };
 
 export const customFormStuffs = {
-  user: {
-    label: 'User',
-    icon: 'fa fa-user fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <UserSelector {...formStuff.property} mode="multiple" />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <UserSelector {...formStuff.property} mode="multiple" contSeq={formStuff.CONT_SEQ} />,
-  },
-  'process-info': {
-    label: 'Process Info',
-    icon: 'fa fa-cube fa-3x',
-    previewRenderer: formStuff => (
-      <MaskDiv>
-        <ProcessInfoSelector {...formStuff.property} />
-      </MaskDiv>
-    ),
-    renderer: ({ formStuff, saveTempContents }) => <ProcessInfoSelector {...formStuff.property} contSeq={formStuff.CONT_SEQ} />,
-  },
+  // user: {
+  //   label: 'User',
+  //   icon: 'fa fa-user fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <UserSelector {...formStuff.property} mode="multiple" />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <UserSelector {...formStuff.property} mode="multiple" contSeq={formStuff.CONT_SEQ} />,
+  // },
+  // 'process-info': {
+  //   label: 'Process Info',
+  //   icon: 'fa fa-cube fa-3x',
+  //   previewRenderer: formStuff => (
+  //     <MaskDiv>
+  //       <ProcessInfoSelector {...formStuff.property} />
+  //     </MaskDiv>
+  //   ),
+  //   renderer: ({ formStuff, saveTempContents }) => <ProcessInfoSelector {...formStuff.property} contSeq={formStuff.CONT_SEQ} />,
+  // },
 };
 
 export const allFormStuffs = {

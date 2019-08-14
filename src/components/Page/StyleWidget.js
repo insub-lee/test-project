@@ -25,6 +25,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #222222;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -228,6 +229,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #222222;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -402,6 +404,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #222222;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -576,6 +579,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #ffffff;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -749,6 +753,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #ffffff;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -922,6 +927,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #ffffff;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -1094,6 +1100,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #ffffff;
+        font-size: 18px;
       }
     }
     .widgetBody {
@@ -1266,6 +1273,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #ffffff;
+        font-size: 18px;
       }
     }
     .widgetBody {
