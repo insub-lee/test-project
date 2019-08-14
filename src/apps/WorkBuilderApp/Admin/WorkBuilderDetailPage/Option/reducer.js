@@ -31,7 +31,9 @@ const reducer = (state = initialState, action) => {
       return state.set('workSeq', id);
     }
     case actionTypes.SUCCESS_FETCH_DATA: {
-      const { data: { workFlow } } = action;
+      const {
+        data: { workFlow },
+      } = action;
       // Work Flow Data가 있으면 useWorkFlow
       return state.set('useWorkFlow', !!workFlow).set('workFlowInfo', fromJS(workFlow || {}));
     }

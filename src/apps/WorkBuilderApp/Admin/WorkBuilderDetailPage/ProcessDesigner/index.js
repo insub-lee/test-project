@@ -14,7 +14,6 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-
 class ProcessDesigner extends Component {
   componentDidMount() {
     const { fetchData, id } = this.props;
@@ -26,20 +25,22 @@ class ProcessDesigner extends Component {
     resetData();
   }
 
-  processCallbackFunc = (prcId) => {
+  processCallbackFunc = prcId => {
     const { setProcessId } = this.props;
     setProcessId(prcId);
   };
 
   render() {
-    const { isLoading, useWorkFlow, config: { info: { PRC_ID } } } = this.props;
+    const {
+      isLoading,
+      useWorkFlow,
+      config: {
+        info: { PRC_ID },
+      },
+    } = this.props;
     return (
       <Preloader spinning={isLoading}>
-        {useWorkFlow ? (
-          <Process processCallbackFunc={this.processCallbackFunc} prcId={PRC_ID} />
-        ) : (
-          '현재 Work Flow 사용을 하고 있지 않습니다.'
-        )}
+        {useWorkFlow ? <Process processCallbackFunc={this.processCallbackFunc} prcId={PRC_ID} /> : '현재 Work Flow 사용을 하고 있지 않습니다.'}
       </Preloader>
     );
   }

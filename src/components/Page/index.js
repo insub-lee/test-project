@@ -4,7 +4,7 @@ import Loadable from 'react-loadable';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
-// import _ from 'lodash';
+
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
 
@@ -28,14 +28,15 @@ function createComponents(item) {
   // 만약 setMyMenuData는 페이지 앱인데 selectedApp은 페이지 앱이 아니라면,
   // selectedApp에 위젯 설정값들이 없기때문에 렌더링 하지 말아야 한다.
   if (item.user) {
-    const RenderAppView = (app) => {
+    const RenderAppView = app => {
       if (app.SVC_YN === 'C') {
         return (
           <WidgetsWrapper item={item}>
             <ServiceStop item={item} type={type} />
           </WidgetsWrapper>
         );
-      } else if (app.SVC_YN !== 'C' && app.SEC_YN === 'Y') {
+      }
+      if (app.SVC_YN !== 'C' && app.SEC_YN === 'Y') {
         return (
           <WidgetsWrapper item={item}>
             <COMP item={item} />
@@ -127,7 +128,6 @@ function findStartPosition(h, col, arrH) {
 }
 
 function createLayoutConfig(layoutConfig, view, items) {
-
   const layout = [];
   const arrH = [];
 
@@ -141,7 +141,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   let cH = 0;
   let cHH = 0;
   let cH2 = 0;
-  items.forEach((item) => {
+  items.forEach(item => {
     let w = item.position[2];
     if (w > layoutConfig.col) {
       w = layoutConfig.col;
@@ -190,6 +190,7 @@ class Page extends Component {
       setIsSpinnerShow();
     }
   }
+
   shouldComponentUpdate(nextProps) {
     /* eslint-disable */
     const { columns, setMyMenuData, isUnreadCnt, currentView } = this.props;
@@ -332,8 +333,10 @@ class Page extends Component {
   }
 }
 Page.defaultProps = {
+  columns: [],
   setMyMenuData: undefined,
 };
+
 Page.propTypes = {
   columns: PropTypes.array.isRequired,
   currentView: PropTypes.string.isRequired,

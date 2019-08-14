@@ -31,7 +31,8 @@ class SmAppsRouter extends Component {
             <ServiceStop item={item} type={type} />
           </WidgetsWrapper>
         );
-      } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y') {
+      }
+      if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
           <div>
@@ -44,7 +45,8 @@ class SmAppsRouter extends Component {
             </Switch>
           </div>
         );
-      } else if (item.SEC_YN === 'N') {
+      }
+      if (item.SEC_YN === 'N') {
         return (
           // 해당 앱에 권한이 없는 경우
           <WidgetsWrapper item={item}>
@@ -53,11 +55,9 @@ class SmAppsRouter extends Component {
         );
       }
     } else {
-      return (
-        <div />
-      );
+      return <div />;
     }
-  }
+  };
 
   // componentDidUpdate() {
   //   const { selectedApp } = this.state;
@@ -69,9 +69,7 @@ class SmAppsRouter extends Component {
   render() {
     console.log('$$$ singleappsRouter의 render()');
 
-    return (
-      <div className="appsRoute">{this.contents}</div>
-    );
+    return <div className="appsRoute">{this.contents}</div>;
   }
 }
 

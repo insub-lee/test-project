@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import debounce from 'lodash.debounce';
+import { debounce } from 'lodash';
 import autoprefix from './autoprefix';
 import dockCloseIcon from '../../../../../images/portal/dock-close.png'
 import dockOpenIcon from '../../../../../images/portal/dock-open.png';

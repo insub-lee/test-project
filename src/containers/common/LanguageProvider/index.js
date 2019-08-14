@@ -10,10 +10,7 @@ import { makeSelectLocale } from './selectors';
 class LanguageProvider extends PureComponent {
   render() {
     return (
-      <IntlProvider
-        locale={this.props.locale}
-        messages={this.props.messages[this.props.locale]}
-      >
+      <IntlProvider locale={this.props.locale} messages={this.props.messages[this.props.locale]}>
         {Children.only(this.props.children)}
       </IntlProvider>
     );
@@ -35,10 +32,11 @@ const mapStateToProps = createStructuredSelector({
   locale: makeSelectLocale(),
 });
 
-const mapDispatchToProps = dispatch => (
-  {
-    changeLocale: languageLocale => dispatch(changeLocale(languageLocale)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  changeLocale: languageLocale => dispatch(changeLocale(languageLocale)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(LanguageProvider);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LanguageProvider);

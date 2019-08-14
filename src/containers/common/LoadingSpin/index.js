@@ -6,9 +6,7 @@ const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 class LoadingSpin extends PureComponent {
   render() {
-    const {
-      isLoading,
-    } = this.props;
+    const { isLoading } = this.props;
 
     const result = isLoading ? (
       <div
@@ -23,7 +21,9 @@ class LoadingSpin extends PureComponent {
       >
         <Spin indicator={antIcon} />
       </div>
-    ) : '';
+    ) : (
+      ''
+    );
 
     return result;
   }

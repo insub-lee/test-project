@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   @media only screen and (max-width: 1280px) {
     width: 900px;
   }
-  
+
   //padding: 48px;
   //width: 100%;
   //height: 100%;

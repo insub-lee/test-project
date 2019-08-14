@@ -107,7 +107,16 @@ export const defaultFormStuffs = {
         <RichTextEditor {...formStuff.property} config={froalaEditorConfig} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <RichTextEditor {...formStuff.property} contSeq={formStuff.CONT_SEQ} config={froalaEditorConfig} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />,
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => (
+      <RichTextEditor
+        {...formStuff.property}
+        contSeq={formStuff.CONT_SEQ}
+        config={froalaEditorConfig}
+        saveTempContents={saveTempContents}
+        workSeq={workSeq}
+        taskSeq={taskSeq}
+      />
+    ),
   },
   'file-upload': {
     label: 'File',
@@ -117,7 +126,9 @@ export const defaultFormStuffs = {
         <Upload {...formStuff.property} />
       </MaskDiv>
     ),
-    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />,
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => (
+      <Upload {...formStuff.property} contSeq={formStuff.CONT_SEQ} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
+    ),
   },
   // 'image-upload': {
   //   label: 'Image Upload',

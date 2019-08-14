@@ -33,8 +33,17 @@ class WorkBuilderViewerPage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { match: { params: { ID: prevId } } } = prevProps;
-    const { match: { params: { ID: id } }, getView } = this.props;
+    const {
+      match: {
+        params: { ID: prevId },
+      },
+    } = prevProps;
+    const {
+      match: {
+        params: { ID: id },
+      },
+      getView,
+    } = this.props;
 
     if (prevId !== id) {
       getView(id);
@@ -46,19 +55,49 @@ class WorkBuilderViewerPage extends Component {
     resetData();
   }
 
-  getSignLineInfo = (info) => {
+  getSignLineInfo = info => {
     const { updateSignInfo } = this.props;
     updateSignInfo(info);
   };
 
   render() {
     const {
-      columns, list, submitData, boxes, formStuffs, isOpenFormModal, isOpenEditModal, toggleFormModal, getTaskSeq, openEditModal, closeEditModal, resultFormStuffs, saveTempContents, workSeq, taskSeq, workFlowConfig: { info: { PRC_ID } }, signLineInfo, isLoading, isModalLoading,
+      columns,
+      list,
+      submitData,
+      boxes,
+      formStuffs,
+      isOpenFormModal,
+      isOpenEditModal,
+      toggleFormModal,
+      getTaskSeq,
+      openEditModal,
+      closeEditModal,
+      resultFormStuffs,
+      saveTempContents,
+      workSeq,
+      taskSeq,
+      workFlowConfig: {
+        info: { PRC_ID },
+      },
+      signLineInfo,
+      isLoading,
+      isModalLoading,
     } = this.props;
     return (
       <Wrapper style={{ height: 'calc(100vh - 42px)' }}>
         <div style={{ textAlign: 'right' }}>
-          <Button htmlType="button" size="small" type="default" onClick={() => { toggleFormModal(true); getTaskSeq(); }}>등록</Button>
+          <Button
+            htmlType="button"
+            size="small"
+            type="default"
+            onClick={() => {
+              toggleFormModal(true);
+              getTaskSeq();
+            }}
+          >
+            등록
+          </Button>
         </div>
         {/*
         <div className="ag-theme-balham">
@@ -79,15 +118,7 @@ class WorkBuilderViewerPage extends Component {
           rowKey="TASK_SEQ"
           loading={isLoading}
         />
-        <Modal
-          title="등록"
-          visible={isOpenFormModal}
-          footer={null}
-          onCancel={() => toggleFormModal(false)}
-          destroyOnClose
-          width="100%"
-          maskClosable={false}
-        >
+        <Modal title="등록" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width="100%" maskClosable={false}>
           {PRC_ID && (
             <React.Fragment>
               <SignLine prcId={PRC_ID} onChangeCallback={this.getSignLineInfo} />
@@ -103,23 +134,8 @@ class WorkBuilderViewerPage extends Component {
             taskSeq={taskSeq}
           />
         </Modal>
-        <Modal
-          title="조회 및 수정"
-          visible={isOpenEditModal}
-          footer={null}
-          onCancel={() => closeEditModal()}
-          destroyOnClose
-          width="100%"
-          maskClosable={false}
-        >
-          <View
-            boxes={boxes}
-            formStuffs={resultFormStuffs}
-            submitData={submitData}
-            saveTempContents={saveTempContents}
-            workSeq={workSeq}
-            taskSeq={taskSeq}
-          />
+        <Modal title="조회 및 수정" visible={isOpenEditModal} footer={null} onCancel={() => closeEditModal()} destroyOnClose width="100%" maskClosable={false}>
+          <View boxes={boxes} formStuffs={resultFormStuffs} submitData={submitData} saveTempContents={saveTempContents} workSeq={workSeq} taskSeq={taskSeq} />
         </Modal>
       </Wrapper>
     );
@@ -226,9 +242,15 @@ const mapDispatchToProps = dispatch => ({
   getTaskSeq: () => dispatch(actions.getTaskSeq()),
   openEditModal: (workSeq, taskSeq) => dispatch(actions.openEditModal(workSeq, taskSeq)),
   closeEditModal: () => dispatch(actions.closeEditModal()),
-  saveTempContents: (detail, fieldNm, type, contSeq) => dispatch(actions.saveTaskContents({
-    detail, fieldNm, type, contSeq,
-  })),
+  saveTempContents: (detail, fieldNm, type, contSeq) =>
+    dispatch(
+      actions.saveTaskContents({
+        detail,
+        fieldNm,
+        type,
+        contSeq,
+      }),
+    ),
   updateSignInfo: info => dispatch(actions.updateSignInfo(info)),
 });
 

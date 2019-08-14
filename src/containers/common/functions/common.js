@@ -5,7 +5,4 @@ const getPreUrl = (path, str) => path.substr(0, path.indexOf(str) + str.length);
 
 const test = () => {};
 
-export {
-  getPreUrl,
-  test,
-};
+export { getPreUrl, test };

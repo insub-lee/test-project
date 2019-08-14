@@ -100,8 +100,8 @@ const SignInStyleWrapper = styled.div`
         font-weight: 400;
         line-height: 1.2;
         color: ${palette('grayscale', 1)};
-        padding-left: 'inherit';
-        padding-right: 'inherit';
+        padding-left: inherit;
+        padding-right: inherit;
         margin: 15px 0;
         position: relative;
         display: flex;
@@ -115,8 +115,8 @@ const SignInStyleWrapper = styled.div`
           line-height: 1;
           position: absolute;
           top: 2px;
-          left: 'inherit';
-          right: 'inherit';
+          left: inherit;
+          right: inherit;
         }
       }
 

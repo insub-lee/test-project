@@ -11,8 +11,6 @@ import * as routeActions from 'containers/common/Routes/actions';
 import * as authSelectors from 'containers/common/Auth/selectors';
 
 import Styled from './Styled';
-import UserProfileBox from './UserProfileBox';
-import Notification from './Notification';
 import Tree from './Tree';
 import WorkTimeLine from '../WorkTimeLine';
 

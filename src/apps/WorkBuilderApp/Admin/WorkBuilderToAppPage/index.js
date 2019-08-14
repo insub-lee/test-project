@@ -40,7 +40,17 @@ class WorkBuilderViewer extends Component {
                     itemLayout="horizontal"
                     dataSource={workBuilderList}
                     renderItem={item => (
-                      <List.Item actions={[<Button htmlType="button" disabled={item.STATUS > 0 && item.APP_ID && item.APP_ID > 0} onClick={() => postRegistWBApp(item.NAME_KOR, item.WORK_SEQ)}>등록</Button>]}>
+                      <List.Item
+                        actions={[
+                          <Button
+                            htmlType="button"
+                            disabled={item.STATUS > 0 && item.APP_ID && item.APP_ID > 0}
+                            onClick={() => postRegistWBApp(item.NAME_KOR, item.WORK_SEQ)}
+                          >
+                            등록
+                          </Button>,
+                        ]}
+                      >
                         <List.Item.Meta title={item.NAME_KOR} description={item.DSCR} />
                         {item.APP_ID && item.APP_ID > 0 ? <div>등록된 앱</div> : <div>앱등록 가능</div>}
                       </List.Item>

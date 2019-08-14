@@ -15,7 +15,9 @@ const reducer = (state = initialState, action) => {
       return state.set('workSeq', id);
     }
     case actionTypes.SUCCESS_FETCH_DATA: {
-      const { data: { workFlow } } = action;
+      const {
+        data: { workFlow },
+      } = action;
       return state.set('useWorkFlow', !!workFlow).set('workFlowInfo', fromJS(workFlow || {}));
     }
     case actionTypes.SUCCESS_UPDATE_PRC_ID: {

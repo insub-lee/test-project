@@ -104,10 +104,11 @@ const makeMyAppTree = () =>
     portalState => portalState.get('myAppTreeData').toJS(),
   );
 
-const makeMyAppStoreTree = () => createSelector(
-  selectHynixCommon,
-  portalState => portalState.get('myAppStoreTreeData').toJS(),
-);
+const makeMyAppStoreTree = () =>
+  createSelector(
+    selectHynixCommon,
+    portalState => portalState.get('myAppStoreTreeData').toJS(),
+  );
 
 const makeCommonMenuTree = () =>
   createSelector(
@@ -117,7 +118,6 @@ const makeCommonMenuTree = () =>
 
 export {
   makeSelectView,
-
   // 1-1
   makeSelectDockAppList,
   makeSelectDockFixedYn,
@@ -128,22 +128,17 @@ export {
   makeSelectSelectedIndex,
   makeSelectMenuName,
   makeSelectManagerInfo,
-
   // 1-2
   makeSelectSkin,
-
   // 1-3
   makeSelectMNotiCnt,
-
   // 2-3
   makeSelectIsUnfixDockItem,
   makeSelectApps,
   makeSelectMyMenuData,
-
   // 7-1
   makeMyAppTree,
   makeUnreadCnt,
-
   makeMyAppStoreTree,
   // 9-1
   makeCommonMenuTree,

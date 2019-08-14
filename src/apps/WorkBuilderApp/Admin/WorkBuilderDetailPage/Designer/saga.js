@@ -116,7 +116,10 @@ function* addBox() {
     type: 'Box',
     id: `box_${new Date().getTime()}`,
     property: {
-      label: 'Box Title', useLabel: true, type: 'normal', column: 1,
+      label: 'Box Title',
+      useLabel: true,
+      type: 'normal',
+      column: 1,
     },
   };
   const param = {
@@ -138,9 +141,7 @@ function* addBox() {
   };
   const response = yield call(Axios.put, '/api/builder/v1/work/meta', { PARAM: param });
   const { PARAM } = response;
-  const {
-    WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG,
-  } = PARAM;
+  const { WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG } = PARAM;
   const box = JSON.parse(CONFIG).property;
   box.WORK_SEQ = WORK_SEQ;
   box.PRNT_SEQ = PRNT_SEQ;
@@ -187,9 +188,7 @@ function* addFormStuff({ formStuffType }) {
     };
     const response = yield call(Axios.put, '/api/builder/v1/work/meta', { PARAM: param });
     const { PARAM } = response;
-    const {
-      WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG,
-    } = PARAM;
+    const { WORK_SEQ, PRNT_SEQ, ORD, NAME_KOR, DCSR, COMP_TYPE, COMP_TAG, META_SEQ, COMP_FIELD, CONFIG } = PARAM;
     const formStuff = JSON.parse(CONFIG).property;
     formStuff.WORK_SEQ = WORK_SEQ;
     formStuff.PRNT_SEQ = PRNT_SEQ;
@@ -305,9 +304,14 @@ function* changeId({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      yield put(actions.successChangeId({
-        type, index, value: box, id: value,
-      }));
+      yield put(
+        actions.successChangeId({
+          type,
+          index,
+          value: box,
+          id: value,
+        }),
+      );
       break;
     }
     case 'formStuffs': {
@@ -333,9 +337,14 @@ function* changeId({ payload: { type, index, value } }) {
         }),
       };
       const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
-      yield put(actions.successChangeId({
-        type, index, value: formStuff, id: value,
-      }));
+      yield put(
+        actions.successChangeId({
+          type,
+          index,
+          value: formStuff,
+          id: value,
+        }),
+      );
       break;
     }
     default:
