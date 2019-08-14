@@ -60,9 +60,9 @@ const Header = ({
                 role="button"
                 tabIndex="0"
               />
-              <Badge count={myHNotiCnt} overflowCount={99}>
+              {/* <Badge count={myHNotiCnt} overflowCount={99}>
                 <Link to="/" className="badgeLink" />
-              </Badge>
+              </Badge> */}
             </Trigger>
             <h1 className="siteHeader">
               {siteId === 1183 ? (

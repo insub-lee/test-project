@@ -8,7 +8,7 @@ import deleteWidget from 'images/common/icon-delete-11x11.png';
 const WidgetWrapper = styled.div`
   margin: 0 0px;
   height: 100%;
-  border: 1px solid #d8d8d8;
+  // border: 1px solid #d8d8d8;
   color: #333333;
   background: #ffffff;
 
