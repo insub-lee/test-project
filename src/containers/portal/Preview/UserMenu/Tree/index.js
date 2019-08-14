@@ -140,11 +140,11 @@ class Tree extends Component {
 }
 Tree.propTypes = {
   treeData: PropTypes.array, //eslint-disable-line
-  selectedIndex: PropTypes.number, //eslint-disable-line
+  // selectedIndex: PropTypes.number, //eslint-disable-line
   onClick: PropTypes.func,
   showSearchBox: PropTypes.bool,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   selectedIndex: PropTypes.string.isRequired,

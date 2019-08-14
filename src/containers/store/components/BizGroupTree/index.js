@@ -381,8 +381,8 @@ class BizGroupTree extends Component {
 BizGroupTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.number,
-  canDrag: PropTypes.func,
-  canDrop: PropTypes.func,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   onClick: PropTypes.func,
 };
 

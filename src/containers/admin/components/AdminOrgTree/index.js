@@ -277,7 +277,7 @@ AdminOrgTree.propTypes = {
   selectedIndex: PropTypes.number, //eslint-disable-line
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   canDropOut: PropTypes.bool,
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object, //eslint-disable-line
   onClick: PropTypes.func,
   returnGateInfo: PropTypes.func.isRequired, //eslint-disable-line

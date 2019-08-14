@@ -571,7 +571,7 @@ MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
 };

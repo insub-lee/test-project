@@ -33,7 +33,7 @@ TreePlaceholder.propTypes = {
   // Drop target
   connectDropTarget: PropTypes.func.isRequired,
   isOver: PropTypes.bool.isRequired,
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   draggedNode: PropTypes.shape({}),
   treeId: PropTypes.string.isRequired,
   drop: PropTypes.func.isRequired,

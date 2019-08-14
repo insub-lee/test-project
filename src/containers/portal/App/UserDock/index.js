@@ -74,9 +74,7 @@ class UserDock extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      view, dockFixedYn, dockIconType, dockCallbacks, dockAppList,
-    } = this.props;
+    const { view, dockFixedYn, dockIconType, dockCallbacks, dockAppList } = this.props;
 
     if (prevProps.view !== view || prevProps.dockFixedYn !== dockFixedYn || prevProps.dockIconType !== dockIconType) {
       this.setStyleObj();
@@ -101,7 +99,7 @@ class UserDock extends React.Component {
       switch (isDesktop(view)) {
         case true: {
           // 데스크탑일 경우
-          const dockItemList = this.props.dockAppList.map((o) => {
+          const dockItemList = this.props.dockAppList.map(o => {
             const dockItemStyleObject = this.makeDockItemStyleObject(o);
             return (
               <DockItem
@@ -145,25 +143,27 @@ class UserDock extends React.Component {
           let content = [];
           this.props.dockAppList.forEach((o, i, arr) => {
             const dockItemStyleObject = this.makeDockItemStyleObject(o, i, arr, dockItemNumberInDockDiv);
-            content.push(<DockItem
-              key={o.DOCK_ID}
-              dockItem={o}
-              dockItemStyleObject={dockItemStyleObject}
-              dndChangePosition={dockCallbacks.handleDndChangePosition}
-              dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
-              exitDockItem={dockCallbacks.handleExitDockItem}
-              fixDockItem={dockCallbacks.handleFixDockItem}
-              unfixDockItem={dockCallbacks.handleUnfixDockItem}
-              dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
-              execPage={this.props.execPage}
-              changeIsDockItemDragged={this.changeIsDockItemDragged}
-              dockIconType={dockIconType}
-              view={view}
-              isClose={this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false}
-              setIsCloseToTrue={this.props.setIsCloseToTrue}
-              setIsCloseToFalse={this.props.setIsCloseToFalse}
-              history={this.props.history}
-            />);
+            content.push(
+              <DockItem
+                key={o.DOCK_ID}
+                dockItem={o}
+                dockItemStyleObject={dockItemStyleObject}
+                dndChangePosition={dockCallbacks.handleDndChangePosition}
+                dndChangePositionSaga={dockCallbacks.handleDndChangePositionSaga}
+                exitDockItem={dockCallbacks.handleExitDockItem}
+                fixDockItem={dockCallbacks.handleFixDockItem}
+                unfixDockItem={dockCallbacks.handleUnfixDockItem}
+                dockSetMyMenuData={dockCallbacks.handleDockSetMyMenuData}
+                execPage={this.props.execPage}
+                changeIsDockItemDragged={this.changeIsDockItemDragged}
+                dockIconType={dockIconType}
+                view={view}
+                isClose={this.props.isClose[o.DOCK_ID] ? this.props.isClose[o.DOCK_ID] : false}
+                setIsCloseToTrue={this.props.setIsCloseToTrue}
+                setIsCloseToFalse={this.props.setIsCloseToFalse}
+                history={this.props.history}
+              />,
+            );
             if ((i + 1) % dockItemNumberInDockDiv === 0 || i === dockAppList.length - 1) {
               const dockDiv = <div className="dockDiv positionBottom">{content}</div>;
               dockDivArray.push(dockDiv);
@@ -181,19 +181,19 @@ class UserDock extends React.Component {
     window.removeEventListener('resize', this.windowResizeScrollbar);
   }
 
-  onDragDockVerticalScrollbar = (top) => {
+  onDragDockVerticalScrollbar = top => {
     this.setState({
       pos: top,
     });
   };
 
-  setDockDivArray = (dockDivArray) => {
+  setDockDivArray = dockDivArray => {
     this.setState({
       dockDivArray,
     });
   };
 
-  setDockItemList = (dockItemList) => {
+  setDockItemList = dockItemList => {
     this.setState({
       dockItemList,
     });
@@ -296,15 +296,13 @@ class UserDock extends React.Component {
 
   // 독 설정 영역 표시 이벤트
   setIsSettingArea = () => {
-    this.setState({
-      isSettingArea: !this.state.isSettingArea,
-    });
+    this.setState(prevState => ({
+      isSettingArea: !prevState.isSettingArea,
+    }));
   };
 
   getDock = () => {
-    const {
-      isUnfixDockItem, view, dockCallbacks, dockFixedYn, handleSetDockFixedYn, appYn, dockIconType, handleSetDockIconType,
-    } = this.props;
+    const { isUnfixDockItem, view, dockCallbacks, dockFixedYn, handleSetDockFixedYn, appYn, dockIconType, handleSetDockIconType } = this.props;
 
     const dockItemHeightWithoutPx = dockIconType === 'MAX' ? 70 : 34;
 
@@ -323,7 +321,7 @@ class UserDock extends React.Component {
       <AppWrapper styleObj={styleObj}>
         <Dock
           position="right"
-          isVisible={true}
+          isVisible
           dimMode="none"
           size={dockIconType === 'MAX' ? 90 : 42}
           dockFixedYn={dockFixedYn}
@@ -345,7 +343,7 @@ class UserDock extends React.Component {
             return (
               <ReactScrollbar
                 style={myScrollbar}
-                ref={(c) => {
+                ref={c => {
                   this.ReactScrollbar = c;
                 }}
                 onDragDockVerticalScrollbar={this.onDragDockVerticalScrollbar}
@@ -354,31 +352,28 @@ class UserDock extends React.Component {
               >
                 <div className={`dockDiv ${dockDivClass}`}>
                   {this.state.dockItemList}
-                  {position === 'right' ? (
+                  {position === 'right' && (
                     <div className="pagingBtns">
-                      <button className={`pagingUp ${pagingUpClass}`} onClick={this.scrollUp} />
+                      <button type="button" className={`pagingUp ${pagingUpClass}`} onClick={this.scrollUp} />
                       {/* 비활성화 class: disabled */}
-                      <button className={`pagingDown ${pagingDownClass}`} onClick={this.scrollDown} />
+                      <button type="button" className={`pagingDown ${pagingDownClass}`} onClick={this.scrollDown} />
                       {/* 비활성화 class: disabled */}
                     </div>
-                  ) : (
-                    ''
                   )}
                   <DragTopArea isDockItemDragged={isDockItemDragged} scrollDownForDnD={this.scrollDownForDnD} position={position} />
                   <DragBottomArea isDockItemDragged={isDockItemDragged} scrollTopForDnD={this.scrollTopForDnD} position={position} />
-                  {isDesktop(view) ? (
+                  {isDesktop(view) && (
                     <div style={floattingClass}>
                       <button
+                        type="button"
                         onClick={() => {
                           this.setIsSettingArea();
                         }}
                         className={isSettingArea ? 'floattingBtn' : 'floattingBtnShow'}
                       />
                     </div>
-                  ) : (
-                    ''
                   )}
-                  {isDesktop(view) ? (
+                  {isDesktop(view) && (
                     <div
                       className={isSettingArea ? 'floattingSettingAreaShow' : 'floattingSettingArea'}
                       onMouseLeave={() => {
@@ -458,8 +453,6 @@ class UserDock extends React.Component {
                         </div>
                       </div>
                     </div>
-                  ) : (
-                    ''
                   )}
                 </div>
               </ReactScrollbar>
@@ -482,7 +475,7 @@ class UserDock extends React.Component {
       <AppWrapper styleObj={styleObj}>
         <Dock
           position="bottom"
-          isVisible={true}
+          isVisible
           dimMode="none"
           size={dockIconType === 'MAX' ? 90 : 42}
           dockFixedYn={dockFixedYn}

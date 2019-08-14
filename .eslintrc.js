@@ -24,6 +24,7 @@ module.exports = {
           ["containers","./src/containers/"],
           ["images","./src/images/"],
           ["apps","./src/apps/"],
+          ["style","./src/style/"],
         ],
         "extensions": [".js"]
       }

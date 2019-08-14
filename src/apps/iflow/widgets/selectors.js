@@ -4,7 +4,7 @@ const selectIflowData = state => state.get('Iflow');
 
 const makeIflowDataList = () => createSelector(
   selectIflowData,
-  iFlowState => iFlowState.get('getIflowDataList').toJS(),
+  iFlowState => iFlowState.get('dataList').toJS(),
 );
 
 const selectUserProfile = state => state.get('auth').toJS();
