@@ -8,11 +8,11 @@ import menuIcon03on from 'images/portal/settings-menu03-on.png';
 
 const StyleUserSetting = styled.div`
   position: fixed;
-  top: 42px;
+  top: 0;
   left: 0; // 커스텀 스크롤바 숨기기
   width: 100vw;
   height: 100vh;
-  padding: 0;
+  padding: 45px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 

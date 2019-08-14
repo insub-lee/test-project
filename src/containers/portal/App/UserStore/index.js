@@ -23,6 +23,7 @@ import StyleUserSetting from './StyleUserSetting';
 import AppList from './AppMain/AppList';
 import AppMain from './AppMain';
 
+import MyPage from './AppMain/MyPage';
 import Main from './AppMain/MyPage/Main';
 import AppInfo from './AppMain/MyPage/AppInfo';
 import PageInfo from './AppMain/MyPage/PageInfo';
@@ -61,6 +62,7 @@ class UserStore extends Component {
                       <Route exact path="/portal/store" component={AppList} />
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
+                      <Route path="/portal/store/appMain/myPage/widgetsetting" component={MyPage} />
                       <Route exact path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} />
                       <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
                       <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />

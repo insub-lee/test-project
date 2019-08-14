@@ -8,11 +8,11 @@ import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserSetting = styled.div`
   position: fixed;
-  top: 42px;
-  left: 46px;
-  width: calc(100% - 46px);
+  top: 0px;
+  left: 0px;
+  width: 100%;
   height: 100vh;
-  padding: 0;
+  padding: 45px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
