@@ -28,7 +28,7 @@ const View = ({
                         .map(formStuff => (
                           <StyledFormStuff key={formStuff.id} className="form-group">
                             <Form.Item label={formStuff.property.label}>
-                              {allFormStuffs[formStuff.type].renderer({
+                              {allFormStuffs[formStuff.type] && allFormStuffs[formStuff.type].renderer({
                                formStuff, saveTempContents, workSeq, taskSeq,
                               })}
                             </Form.Item>
@@ -41,7 +41,7 @@ const View = ({
                           .map(formStuff => (
                             <Descriptions.Item key={formStuff.id} label={formStuff.property.label} span={formStuff.property.span || 1}>
                               <Styled classNam="form-group">
-                                {allFormStuffs[formStuff.type].renderer({
+                                {allFormStuffs[formStuff.type] && allFormStuffs[formStuff.type].renderer({
                                  formStuff, saveTempContents, workSeq, taskSeq,
                                 })}
                               </Styled>

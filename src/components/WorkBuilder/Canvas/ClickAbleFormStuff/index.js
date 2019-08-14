@@ -50,7 +50,7 @@ class ClickAbleFormStuff extends Component {
           setHover(false);
         }}
       >
-        {allFormStuffs[formStuff.type].previewRenderer(formStuff)}
+        {allFormStuffs[formStuff.type] && allFormStuffs[formStuff.type].previewRenderer(formStuff)}
         {(formStuff.id === viewTargetId || isHover) && <OptionLayer object={formStuff} action={{ removeLayer }} isActive={formStuff.id === viewTargetId} />}
       </Styled>
     );
