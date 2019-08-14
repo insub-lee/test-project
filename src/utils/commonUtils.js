@@ -163,7 +163,6 @@ export {
   isExplorer,
   isDesktop,
   getStoreName,
-  ifUrl,
   checkPath,
   checkMode,
 };

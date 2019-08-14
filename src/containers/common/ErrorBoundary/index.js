@@ -1,62 +1,46 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { intlObj } from 'utils/commonUtils';
 import { Icon } from 'antd';
+
+import { intlObj } from 'utils/commonUtils';
+
 import messages from './messages';
+
+const errorWrapStyle = {
+  height: '100%',
+  justifyContent: 'center',
+  alignItems: 'center',
+  display: 'block',
+  textAlign: 'center',
+};
 
 class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    // this.state = { error: null, errorInfo: null };
     this.state = { errorInfo: null };
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({
-      // error,
-      errorInfo,
-    });
-
-    console.log('error : ', error);
-    console.log('errorInfo : ', errorInfo);
+    this.setState({ errorInfo }, () => console.log('errorInfo : ', errorInfo));
   }
 
   render() {
-    const {
-      // error,
-      errorInfo,
-    } = this.state;
-
+    const { errorInfo } = this.state;
+    const { children } = this.props;
     if (errorInfo) {
       return (
-        <div
-          style={{
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'block',
-            textAlign: 'center',
-          }}
-        >
+        <div style={errorWrapStyle}>
           <Icon type="frown" theme="outlined" />
-          <h4>
-            {intlObj.get(messages.error)}
-          </h4>
-          {/* <details style={{ whiteSpace: 'pre-wrap' }}>
-            {this.state.error && this.state.error.toString()}
-            <br />
-            {this.state.errorInfo.componentStack}
-          </details> */}
+          <h4>{intlObj.get(messages.error)}</h4>
         </div>
       );
     }
-
-    return this.props.children;
+    return children;
   }
 }
 
 ErrorBoundary.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]).isRequired,
 };
 
 export default ErrorBoundary;
