@@ -64,17 +64,22 @@ export function* insertPstn(payload) {
         type: actionType.GET_PSTN_COMBO_LIST,
         PSTN_ID,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_PSTN_DATA,
+        PSTN_ID,
+      });
     }
-    yield put({
-      type: actionType.GET_CHANGE_PSTN_DATA,
-      PSTN_ID,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       PSTN_ID: pstnId,
     });
   } else {
     feed.error(`${intlObj.get(messages.pstnInsertFail)}`);
+    yield put({
+      type: actionType.GET_PSTN_COMBO_LIST,
+      PSTN_ID: selectedDept,
+    });
   }
 }
 
@@ -94,17 +99,22 @@ export function* updatePstn(payload) {
         type: actionType.GET_PSTN_COMBO_LIST,
         PSTN_ID: selectedDept,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_PSTN_DATA,
+        PSTN_ID: selectedDept,
+      });
     }
-    yield put({
-      type: actionType.GET_CHANGE_PSTN_DATA,
-      PSTN_ID: selectedDept,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       PSTN_ID,
     });
   } else {
     feed.error(`${intlObj.get(messages.pstnUpdateFail)}`);
+    yield put({
+      type: actionType.GET_PSTN_COMBO_LIST,
+      PSTN_ID: selectedDept,
+    });
   }
 }
 
@@ -123,9 +133,6 @@ export function* deletePstn(payload) {
       yield put({
         type: actionType.GET_PSTN_COMBO_LIST,
         PSTN_ID: 0,
-      });
-      yield put({
-        type: actionType.GET_PSTN_DATA,
       });
     } else {
       yield put({

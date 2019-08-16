@@ -758,5 +758,8 @@
   "admin.AdminMain.UserAdmin.statusCdWork": "@@재직",
   "admin.AdminMain.UserAdmin.statusCdDispatch": "@@파견",
   "admin.AdminMain.UserAdmin.statusCdLeave": "@@휴직",
-  "admin.AdminMain.UserAdmin.statusCdRetired": "@@퇴직"
+  "admin.AdminMain.UserAdmin.statusCdRetired": "@@퇴직",
+  "admin.AdminMain.UserAdmin.nameKor": "@@이름(KOR)",
+  "admin.AdminMain.UserAdmin.initSearch": "@@검색조건초기화",
+  "admin.AdminMain.UserAdmin.userManage": "@@사용자관리"
 }

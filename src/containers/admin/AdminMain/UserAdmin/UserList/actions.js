@@ -1,6 +1,6 @@
 import * as actionTypes from './constants';
 
-export const getUserList = (sNum, eNum, userList, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId) => (
+export const getUserList = (sNum, eNum, userList, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId) => (
   {
     type: actionTypes.GET_USER_LIST,
     payload: {
@@ -9,6 +9,7 @@ export const getUserList = (sNum, eNum, userList, sortColumn, sortDirection, key
       userList,
       sortColumn,
       sortDirection,
+      statusCode,
       keywordType,
       keyword,
       deptId,

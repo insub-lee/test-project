@@ -64,22 +64,27 @@ export function* insertDuty(payload) {
         type: actionType.GET_DUTY_COMBO_LIST,
         DUTY_ID,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_DUTY_DATA,
+        DUTY_ID,
+      });
     }
-    yield put({
-      type: actionType.GET_CHANGE_DUTY_DATA,
-      DUTY_ID,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       DUTY_ID: dutyId,
     });
   } else {
     feed.error(`${intlObj.get(messages.dutyInsertFail)}`);
+    yield put({
+      type: actionType.GET_DUTY_COMBO_LIST,
+      DUTY_ID: selectedDept,
+    });
   }
 }
 
 export function* updateDuty(payload) {
-  const { selectedDept, PRNT_ID, DEPT_ID } = payload.payload;
+  const { selectedDept, PRNT_ID, DUTY_ID } = payload.payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/updateDuty', payload.payload);
   const { code } = response;
   if (code === 200) {
@@ -94,17 +99,22 @@ export function* updateDuty(payload) {
         type: actionType.GET_DUTY_COMBO_LIST,
         DUTY_ID: selectedDept,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_DUTY_DATA,
+        DUTY_ID: selectedDept,
+      });
     }
     yield put({
-      type: actionType.GET_CHANGE_DUTY_DATA,
-      DUTY_ID: selectedDept,
-    });
-    yield put({
       type: actionType.ROOT_SELECTED_INDEX,
-      DEPT_ID,
+      DUTY_ID,
     });
   } else {
     feed.error(`${intlObj.get(messages.dutyUpdateFail)}`);
+    yield put({
+      type: actionType.GET_DUTY_COMBO_LIST,
+      DUTY_ID: selectedDept,
+    });    
   }
 }
 
@@ -123,9 +133,6 @@ export function* deleteDuty(payload) {
       yield put({
         type: actionType.GET_DUTY_COMBO_LIST,
         DUTY_ID: 0,
-      });
-      yield put({
-        type: actionType.GET_DUTY_DATA,
       });
     } else {
       yield put({

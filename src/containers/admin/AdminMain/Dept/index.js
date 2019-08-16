@@ -49,7 +49,7 @@ class Dept extends React.Component {
           DEPT_ID: nextProps.deptTreeData[0].DEPT_ID,
           NAME_KOR: nextProps.deptTreeData[0].NAME_KOR,
           NAME_ENG: nextProps.deptTreeData[0].NAME_ENG,
-          NAME_CHN: nextProps.deptTreeData[0].NAME_ENG,
+          NAME_CHN: nextProps.deptTreeData[0].NAME_CHN,
           NAME_JPN: nextProps.deptTreeData[0].NAME_JPN,
           NAME_ETC: nextProps.deptTreeData[0].NAME_ETC,
           DEPT_CD: nextProps.deptTreeData[0].DEPT_CD,
@@ -236,7 +236,7 @@ class Dept extends React.Component {
 
     const returnGateDelete = (DEPT_ID, PRNT_ID, SORT_SQ) => {
       // alert(resultObj1 + resultObj2);
-      this.props.deleteDept(DEPT_ID, PRNT_ID, SORT_SQ);
+      this.props.deleteDept(DEPT_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
     };
 
     const moveDept = (treeData) => {
@@ -346,6 +346,7 @@ class Dept extends React.Component {
                           value={this.state.NAME_KOR}
                           onChange={this.onChangeNameKOR}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                           ref={(ref) => {
                             if (ref) {
                               this.textKor = ref;
@@ -364,6 +365,7 @@ class Dept extends React.Component {
                           value={this.state.NAME_ENG}
                           onChange={this.onChangeNameENG}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -377,6 +379,7 @@ class Dept extends React.Component {
                           value={this.state.NAME_CHN}
                           onChange={this.onChangeNameCHN}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -390,6 +393,7 @@ class Dept extends React.Component {
                           value={this.state.NAME_JPN}
                           onChange={this.onChangeNameJPN}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -403,6 +407,7 @@ class Dept extends React.Component {
                           value={this.state.NAME_ETC}
                           onChange={this.onChangeNameETC}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -416,6 +421,7 @@ class Dept extends React.Component {
                           value={this.state.DEPT_CD}
                           onChange={this.onChangeDEPTCD}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={10}
                         />
                       </td>
                     </tr>

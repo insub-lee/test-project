@@ -36,6 +36,7 @@ const phonelValid = (str) => {
 const setListState = state => ({
   sortColumn: state.listSortColumn,
   sortDirection: state.listSortDirection,
+  statusCode: state.listStatusCode,
   keywordType: state.listKeywordType,
   keyword: state.listKeyword,
   deptId: state.listDeptId,
@@ -76,6 +77,7 @@ class UserReg extends React.Component {
       mode: prop.match.params.USER_ID ? 'D' : 'I',
       listSortColumn: location === undefined ? '' : location.sortColumnParam,
       listSortDirection: location === undefined ? '' : location.sortDirectionParam,
+      listStatusCode: location === undefined ? 'C' : location.statusCode,
       listKeywordType: location === undefined ? 'userNameKor' : location.keywordType,
       listKeyword: location === undefined ? '' : location.keyword,
       listDeptId: location === undefined ? 0 : location.deptId,

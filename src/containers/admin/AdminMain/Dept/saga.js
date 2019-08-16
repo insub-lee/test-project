@@ -40,10 +40,11 @@ export function* getDeptTreeData() {
 export function* getChangeDeptTreeData(payload) {
   const response = yield call(Axios.get, `/api/common/v1/account/deptChangeTree/${payload.DEPT_ID}`);
   const list = JSON.parse(`[${response.result.join('')}]`);
+  const selectedDept = payload.selectedDept ? payload.selectedDept : payload.DEPT_ID;
   yield put({
     type: actionType.SET_CHANGE_DEPT_DATA,
     deptTreeData: fromJS(list),
-    selectedDept: payload.DEPT_ID,
+    selectedDept,
   });
 }
 
@@ -64,17 +65,22 @@ export function* insertDept(payload) {
         type: actionType.GET_DEPT_COMBO_LIST,
         DEPT_ID,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_DEPT_DATA,
+        DEPT_ID,
+      });
     }
-    yield put({
-      type: actionType.GET_CHANGE_DEPT_DATA,
-      DEPT_ID,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       DEPT_ID: deptId,
     });
   } else {
     feed.error(`${intlObj.get(messages.deptInsertFail)}`);
+    yield put({
+      type: actionType.GET_DEPT_COMBO_LIST,
+      DEPT_ID: selectedDept,
+    });
   }
 }
 
@@ -94,17 +100,22 @@ export function* updateDept(payload) {
         type: actionType.GET_DEPT_COMBO_LIST,
         DEPT_ID: selectedDept,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_DEPT_DATA,
+        DEPT_ID,
+      });      
     }
-    yield put({
-      type: actionType.GET_CHANGE_DEPT_DATA,
-      DEPT_ID: selectedDept,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       DEPT_ID,
     });
   } else {
     feed.error(`${intlObj.get(messages.deptUpdateFail)}`);
+    yield put({
+      type: actionType.GET_DEPT_COMBO_LIST,
+      DEPT_ID: selectedDept,
+    });
   }
 }
 
@@ -123,9 +134,6 @@ export function* deleteDept(payload) {
       yield put({
         type: actionType.GET_DEPT_COMBO_LIST,
         DEPT_ID: 0,
-      });
-      yield put({
-        type: actionType.GET_DEPT_DATA,
       });
     } else {
       yield put({

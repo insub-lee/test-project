@@ -47,7 +47,7 @@ export default defineMessages({
   },
   deptDeleteFail1: {
     id: 'admin.AdminMain.Dept.deptDeleteFail1',
-    defaultMessage: '하위 부서 있는 경우 삭제가 불가능 합니다.',
+    defaultMessage: '사용중이거나 하위 부서 있는 경우 삭제가 불가능 합니다.',
   },
   deptDeleteFail2: {
     id: 'admin.AdminMain.Dept.deptDeleteFail2',
