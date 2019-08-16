@@ -43,6 +43,7 @@ class Tree extends Component {
   }
   /* eslint-disable */
   onSetEditClick = () => {
+    event.stopPropagation();
     if (this.state.editMenuMode && this.state.prevUrl !== this.props.history.location.pathname) {
       this.setState({
         prevUrl: this.props.history.location.pathname,
@@ -72,6 +73,7 @@ class Tree extends Component {
   };
 
   handleClickMenuFolder = node => {
+    event.stopPropagation();
     console.debug('>>>>>>>this.node: ', node);
     const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
@@ -84,6 +86,7 @@ class Tree extends Component {
   };
 
   clickEvent = node => {
+    event.stopPropagation();
     const { treeData, execPage, execMenu, onClick, saveData } = this.props;
     if (node.TARGET === 'NEW') {
       window.open(node.URL, node.MENU_ID, features);
@@ -150,8 +153,8 @@ class Tree extends Component {
             </div>
           </div>
           <div className="searchResult" style={{ display: searchString.trim().length === 0 ? 'none' : 'block' }}>
-            {this.tree && !editTree && this.tree.state.searchMatches.length > 0 && (
-              <div className="searchResultMessage">
+            {this.tree && !editTree && (
+              <div className="searchResultMessage" style={{ display: this.tree && this.tree.state.searchMatches.length !== 0 ? 'none' : 'block' }}>
                 <span>해당 내용 검색결과가 없습니다. Biz Store로 이동하시겠습니까?</span>
                 <Link to={`/portal/store/appMain/bizStore/app/search/${searchString}`} className="storeLink" title="스토어 홈 바로가기" target="_blank">
                   <img src={IconGo} style={{ paddingLeft: '7px', marginTop: '-2px' }} className="nextIcon" alt="스토어 홈 바로가기" />
