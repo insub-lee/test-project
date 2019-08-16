@@ -5,11 +5,11 @@ import { Axios } from 'utils/AxiosFunc';
 
 export function* getUserList(payload) {
   const {
-    userList: oldUserList, sNum, eNum, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId,
+    userList: oldUserList, sNum, eNum, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId,
   } = payload.payload;
 
   const response = yield call(Axios.post, '/api/admin/v1/common/getUserList', {
-    sNum, eNum, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId,
+    sNum, eNum, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId,
   });
 
   const userList = oldUserList.length > 0 ? oldUserList.concat(response.userList) : response.userList;

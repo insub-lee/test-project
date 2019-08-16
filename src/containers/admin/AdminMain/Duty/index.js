@@ -49,7 +49,7 @@ class Duty extends React.Component {
           DUTY_ID: nextProps.dutyTreeData[0].DUTY_ID,
           NAME_KOR: nextProps.dutyTreeData[0].NAME_KOR,
           NAME_ENG: nextProps.dutyTreeData[0].NAME_ENG,
-          NAME_CHN: nextProps.dutyTreeData[0].NAME_ENG,
+          NAME_CHN: nextProps.dutyTreeData[0].NAME_CHN,
           NAME_JPN: nextProps.dutyTreeData[0].NAME_JPN,
           NAME_ETC: nextProps.dutyTreeData[0].NAME_ETC,
           DUTY_CD: nextProps.dutyTreeData[0].DUTY_CD,
@@ -236,7 +236,7 @@ class Duty extends React.Component {
 
     const returnGateDelete = (DUTY_ID, PRNT_ID, SORT_SQ) => {
       // alert(resultObj1 + resultObj2);
-      this.props.deleteDuty(DUTY_ID, PRNT_ID, SORT_SQ);
+      this.props.deleteDuty(DUTY_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
     };
 
     const moveDuty = (treeData) => {
@@ -346,6 +346,7 @@ class Duty extends React.Component {
                           value={this.state.NAME_KOR}
                           onChange={this.onChangeNameKOR}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                           ref={(ref) => {
                             if (ref) {
                               this.textKor = ref;
@@ -364,6 +365,7 @@ class Duty extends React.Component {
                           value={this.state.NAME_ENG}
                           onChange={this.onChangeNameENG}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -377,6 +379,7 @@ class Duty extends React.Component {
                           value={this.state.NAME_CHN}
                           onChange={this.onChangeNameCHN}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -390,6 +393,7 @@ class Duty extends React.Component {
                           value={this.state.NAME_JPN}
                           onChange={this.onChangeNameJPN}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -403,6 +407,7 @@ class Duty extends React.Component {
                           value={this.state.NAME_ETC}
                           onChange={this.onChangeNameETC}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={200}
                         />
                       </td>
                     </tr>
@@ -416,6 +421,7 @@ class Duty extends React.Component {
                           value={this.state.DUTY_CD}
                           onChange={this.onChangeDUTYCD}
                           readOnly={this.state.mode === 'D'}
+                          maxLength={10}
                         />
                       </td>
                     </tr>
