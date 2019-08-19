@@ -257,7 +257,7 @@ export function* deleteNode(payload) {
     } else {
       feed.error(`${intlObj.get(messages.cateDeleteFail2)}`);
     }
-  } else if (node.NODE_TYPE === 'A') {
+  } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') {
     const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteApp', {
       SITE_ID: Number(node.SITE_ID),
       APP_ID: Number(node.APP_ID),
@@ -284,71 +284,6 @@ export function* deleteNode(payload) {
       // yield put({ type: constants.SET_MAPLIST, mapList });
     } else if (code === 500) {
       feed.error('앱 삭제에 실패 하였습니다.');
-    }
-  } else if (node.NODE_TYPE === 'P') {
-    // make url, param
-    let menuType = 'mymenu'; // 일반앱
-    let isPageOrSnglApp = false; // 해당 앱이 페이지나 싱글앱일 경우 독아이템 목록에서 제거 해줘야 함
-
-    if (node.REF_TYPE === 'B') { // 업무그룹
-      menuType = 'bizgroup';
-    } else if (node.NODE_TYPE === 'F') { // 폴더
-      menuType = 'folder';
-    } else if ((node.APP_YN === 'N' && node.REF_TYPE === 'M') || node.APP_YN === 'Y') {
-      isPageOrSnglApp = true;
-    }
-    const response = yield call(Axios.post, `/api/bizstore/v1/mypage/delete/${menuType}`, {
-      MENU_ID: Number(node.MENU_ID),
-      PAGE_ID: Number(node.PAGE_ID),
-      isPageOrSnglApp,
-    });
-    const { code } = response;
-
-    if (code === 200) {
-      // delete tree node
-      const newCategoryData = treeFunc.deleteNode(rowInfo, categoryData);
-
-      yield put({
-        type: constants.SET_CATEGORY_DATA,
-        categoryData: fromJS(newCategoryData),
-        selectedIndex: node.PRNT_ID.toString(),
-      });
-
-      const APP_ID = getIdByUrl('app/', history); // /store/appMain/myPage/app/14
-      const PAGE_ID = getIdByUrl('page/', history); // /store/appMain/myPage/page/1
-
-      // main으로 화면 전환(현재 열려있는 메뉴가 삭제된 경우)
-      if (node.APP_ID === APP_ID || node.PAGE_ID === PAGE_ID) {
-        history.push('/admin/adminmain/appstore');
-      } else {
-        // 메뉴 사용중 -> 사용안함 상태로 변경(앱, 업무그룹, 업무메뉴 리스트 화면인 경우)
-        const { location } = history;
-        const { pathname } = location;
-
-        if (node.CATG_ID !== 0) {
-          if (pathname.indexOf('/modal/app') > -1) {
-            if (node.REF_TYPE === 'B' && node.REF_ID !== -1) {
-              yield put({ // 앱
-                type: constantsAppList.UPDATE_CHANGE_WGCOUNT,
-                CATG_ID: node.CATG_ID,
-                APP_ID: node.REF_ID,
-                WG_COUNT: 0,
-              });
-            } else if (node.REF_TYPE !== 'B' && node.APP_ID !== 0) {
-              yield put({ // 앱
-                type: constantsAppList.UPDATE_CHANGE_WGCOUNT,
-                CATG_ID: node.CATG_ID,
-                APP_ID: node.APP_ID,
-                WG_COUNT: 0,
-              });
-            }
-          }
-        }
-      }
-
-      message.success(`${intlObj.get(messages.completeDelete)}`, 2);
-    } else {
-      console.log('error?');
     }
   }
 }
