@@ -1,0 +1,10 @@
+export const SAVE_WIDGET_INFO = '/app/manual/widgets/SAVE_WIDGET_INFO';
+export const GET_WIDGET_INFO = '/app/manual/widgets/GET_WIDGET_INFO';
+export const SAVE_DETAIL = '/app/manual/widgets/SAVE_DETAIL';
+export const GET_DETAIL = '/app/manual/widgets/GET_DETAIL';
+export const SAVE_MENU_INFO = '/app/manual/widgets/SAVE_MENU_INFO';
+export const GET_SEARCH = '/app/manual/widgets/GET_SEARCH';
+export const SAVE_SEARCH = '/app/manual/widgets/SAVE_SEARCH';
+export const REMOVE_DETAIL = '/app/manual/widgets/REMOVE_DETAIL';
+export const SAVE_WIDGETSIZE = '/app/manual/widgets/SAVE_WIDGETSIZE';
+export const SAVE_SEARCH_WORD = '/app/manual/widgets/SAVE_SEARCH_WORD';
