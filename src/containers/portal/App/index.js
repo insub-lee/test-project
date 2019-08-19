@@ -615,6 +615,10 @@ class App extends React.PureComponent {
     return dockFixedYn === 'Y' ? 90 : 0;
   };
 
+  getLayoutMarginLeft = () => {
+    return this.state.open ? 335 : 45;
+  };
+
   render() {
     const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
     const {
@@ -749,7 +753,7 @@ class App extends React.PureComponent {
               </Tooltip>
             </div>
           </SideMenu>
-          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
+          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginLeft:this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <AppWrapper style={{ width: '100%', backgroundColor: '#faf8fb' }}>
