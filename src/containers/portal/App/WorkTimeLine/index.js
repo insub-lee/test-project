@@ -17,7 +17,7 @@ import HyperLink from './HyperLink';
 import EmptyData from './EmptyData';
 
 // const curDate = new Date();
-const pageIndex = 10;
+const pageIndex = 1;
 let pageSnum = 1;
 let pageEnum = 10;
 
@@ -59,7 +59,7 @@ class WorkTimeLine extends PureComponent {
           scrollHeight={300} // 슬림스크롤 높이
           minHeight={rowHeight * list.length} // 위젯 row 전체 높이
           emptyRowsView={EmptyData}
-          readMore={this.readMore}
+          // readMore={this.readMore}
         />
       </Wrapper>
     );
