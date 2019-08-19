@@ -7,10 +7,10 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 
 const StyleUserSetting = styled.div`
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0; // 커스텀 스크롤바 숨기기
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   padding: 45px;
   background-color: #ffffff;
@@ -19,7 +19,7 @@ const StyleUserSetting = styled.div`
   @media only screen and (max-width: 1024px) {padding: 0 20px;}
 
   .userSettingWrapper {
-    width: 1000px;
+    width: 100%;
     margin: 0 auto;  //커스텀 스크롤바로 이동된 만큼 중앙에 맞추기
 
     @media only screen and (max-width: 1024px) {width: 100% !important;}
