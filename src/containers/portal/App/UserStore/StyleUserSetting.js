@@ -31,11 +31,12 @@ const StyleUserSetting = styled.div`
     .pageHeader {
       width: 100%;
       height: 55px;
-      border-bottom: 1px solid #222222;
+      border-bottom: 1px solid #e5e5e5;
       color: #222222;
-      font-size: 18px;
+      font-size: 24px;
       line-height: 55px;
-      text-align: center;
+      text-align: left;
+      font-weight: 600;
     }
 
     .navigation {

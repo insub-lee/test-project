@@ -3,12 +3,12 @@ import styled from 'styled-components';
 const StyledTabList = styled.div`
   &.treeWrapper {
     position: fixed;
-    top: 98px;
+    top: 100px;
     left: 134px;
     width: 300px;
     height: calc(100vh - 99px);
     padding: 10px;
-    border-right: 1px solid #d1d2d3;
+    border-right: 1px solid #e5e5e5;
     background-color: #ffffff;
     z-index: 100;
 
