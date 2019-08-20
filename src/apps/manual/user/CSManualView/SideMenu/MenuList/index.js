@@ -72,7 +72,7 @@ const MenuList = ({ componentList, setSelectedCompIdx, selectedCompIdx, scrollCo
 MenuList.propTypes = {
   componentList: PropTypes.object,
   setSelectedCompIdx: PropTypes.func,
-  selectedCompIdx: PropTypes.object,
+  selectedCompIdx: PropTypes.number,
 };
 
 MenuList.defaultProps = {

@@ -11,7 +11,7 @@ function* getManualList(action) {
   const { categoryIdx } = action;
   const response = yield call(Axios.get, `/api/manual/v1/ManualListHandler/${categoryIdx}`);
   const manualList = fromJS(response).get('manualList');
-
+  console.debug(categoryIdx);
   yield put(actions.setManualListByReducr(manualList));
 }
 export default function* initManualListSaga() {

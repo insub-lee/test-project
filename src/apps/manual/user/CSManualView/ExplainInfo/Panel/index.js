@@ -5,9 +5,9 @@ import Header from './Header';
 import Container from './Container';
 import Styled from './Styled';
 
-const Panel = ({ children }) => (
+const Panel = ({ children, mualMaster, navList }) => (
   <Styled>
-    <Header />
+    <Header mualMaster={mualMaster} navList={navList} />
     <Container>{children}</Container>
   </Styled>
 );

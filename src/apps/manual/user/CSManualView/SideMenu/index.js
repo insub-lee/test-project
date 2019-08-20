@@ -30,7 +30,7 @@ const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollCom
 SideMenu.propTypes = {
   maulCompList: PropTypes.object,
   setSelectedCompIdx: PropTypes.func,
-  selectedCompIdx: PropTypes.object,
+  selectedCompIdx: PropTypes.number,
   scrollComp: PropTypes.object,
 };
 
