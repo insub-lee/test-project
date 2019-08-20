@@ -269,7 +269,97 @@ function* getOptionMgr() {
   console.debug(response);
 }
 
+function* getCompareTempletList() {
+  const response = yield call(Axios.get, `/api/manual/v1/ManualCompareTempletHandler`);
+  if (response) {
+    let { list } = response;
+    list = list.map(node => ({
+      ...node,
+      TEMPLET_CONTENT: node.TEMPLET_CONTENT && node.TEMPLET_CONTENT.length > 0 ? JSON.parse(node.TEMPLET_CONTENT) : [],
+    }));
+    yield put(actions.setCompareTempletListByReducr(fromJS(list)));
+  }
+}
+
+function* saveCompareTemplet() {
+  const selectedNode = yield select(selectors.makeSelectedCompareTempletNode());
+  const compareList = yield select(selectors.makeSelectCompareTemplet());
+  const viewMode = yield select(selectors.makeSelectedCompareTempletViewMode());
+  if (selectedNode.TEMPLET_NAME && selectedNode.TEMPLET_NAME.length > 0) {
+    if (viewMode === 'I') {
+      const sortSQ = compareList.length + 1;
+      selectedNode.SORT_SQ = sortSQ;
+    }
+    const response = yield call(Axios.post, `/api/manual/v1/ManualCompareTempletHandler`, selectedNode);
+    if (response) {
+      const { list } = response;
+      let resultList = [];
+      if (compareList.length > 0) {
+        resultList = list.map(item => {
+          const oldIdx = compareList.findIndex(findItem => findItem.TEMPLET_IDX === item.TEMPLET_IDX);
+          const oldItem = compareList[oldIdx];
+          return {
+            ...item,
+            expanded: oldItem ? oldItem.expanded : false,
+            TEMPLET_CONTENT: item.TEMPLET_CONTENT && item.TEMPLET_CONTENT.length > 0 ? JSON.parse(item.TEMPLET_CONTENT) : [],
+          };
+        });
+      }
+      yield put(actions.setCompareTempletListByReducr(fromJS(resultList)));
+    }
+  } else {
+    console.debug('name!');
+  }
+}
+
+function* getCategoryListBySaga() {
+  const response = yield call(Axios.get, '/api/manual/v1/categoryhandler');
+  const { list } = response;
+  yield put(actions.setCategoryListByReducr(fromJS(list)));
+}
+
+function* getRelationManualListBySaga(action) {
+  const { categoryIdx, chooesItem } = action;
+  const response = yield call(Axios.get, `/api/manual/v1/ManualListHandler/${categoryIdx}`);
+  const manualList = fromJS(response).get('manualList');
+  const convertMualList = [];
+  manualList.forEach(item => {
+    const fobj = chooesItem.find(x => x.key === item.get('MUAL_IDX'));
+    if (fobj === undefined && chooesItem.length > 0) {
+      convertMualList.push({ ...item.toJS(), disabled: true, checked: false });
+    } else {
+      convertMualList.push({ ...item.toJS(), disabled: false, checked: false });
+    }
+  });
+  yield put(actions.setRelationManualListByRecur(convertMualList));
+}
+
+function* setRelationManualListBySaga(payload) {
+  const { manualList } = payload;
+  const defaultMgrMap = yield select(selectors.makeSelectDefaultMgr());
+
+  const chooseMual = [];
+  manualList.forEach(item => {
+    chooseMual.push({
+      SOURCE_MUAL_IDX: defaultMgrMap.get('MUAL_IDX'),
+      SOURCE_MUAL_ORG_IDX: defaultMgrMap.get('MUAL_IDX'),
+      TARGET_MUAL_IDX: item.MUAL_IDX,
+      TARGET_MUAL_ORG_IDX: item.MUAL_ORG_IDX,
+    });
+  });
+
+  const param = {
+    param: {
+      mualIdx: defaultMgrMap.get('MUAL_IDX'),
+      mualList: chooseMual,
+    },
+  };
+  const response = yield call(Axios.post, '/api/manual/v1/ManualRelationHandler', param);
+}
+
 export default function* initManualMangerSaga() {
+  yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
+  yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_DEFAULTMGR_SAGA, getDefaultMgrSaga);
   yield takeLatest(constantTypes.ADD_DEFAULTMGR_SAGA, insertDefaultMgrSaga);
   yield takeLatest(constantTypes.MODIFY_DEFUALTMGR_SAGA, updateDefaultMgrSaga);
@@ -283,4 +373,7 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.REMOVE_MANUAL_SAGA, removeManual);
   yield takeLatest(constantTypes.GET_DEFAULTMGR_BY_VERSION_SAGA, getDefaultMgrByVersion);
   yield takeLatest(constantTypes.GET_OPTIONMGR_SAGA, getOptionMgr);
+  yield takeLatest(constantTypes.GET_COMPARE_TEMPLET_SAGA, getCompareTempletList);
+  yield takeLatest(constantTypes.SAVE_COMPARE_TEMPLET, saveCompareTemplet);
+  yield takeLatest(constantTypes.GET_CATEGORYLIST, getCategoryListBySaga);
 }

@@ -1,24 +1,80 @@
-.sortableTreeWrapper  {color: #404040;}
+.sortableTreeWrapper {
+  color: #404040;
+}
 
 /* Organization Tree Customization */
 .sortableTreeWrapper .rst__lineHalfHorizontalRight::before,
-.sortableTreeWrapper .rst__lineFullVertical::after, 
-.sortableTreeWrapper .rst__lineHalfVerticalTop::after, 
-.sortableTreeWrapper .rst__lineHalfVerticalBottom::after {left: calc(50% - 1px); width: 2px; background-color: #f0f0f0;}
-.sortableTreeWrapper .rstcustom__expandButton {border: 1px solid #9c9c9c; background-image: url(../images/bizstore/tree-icon-expand-gray2.png);}
-.sortableTreeWrapper .rstcustom__collapseButton {border: 1px solid #886ab5; background-image: url(../images/bizstore/tree-icon-collapsed2.png);}
-.sortableTreeWrapper .rstcustom__expandButton, .sortableTreeWrapper .rstcustom__collapseButton {background-color: #ffffff; background-repeat: no-repeat; background-position: 0 0 !important;}
+.sortableTreeWrapper .rst__lineFullVertical::after,
+.sortableTreeWrapper .rst__lineHalfVerticalTop::after,
+.sortableTreeWrapper .rst__lineHalfVerticalBottom::after {
+  left: calc(50% - 1px);
+  width: 1px;
+  background-color: #666;
+}
+.sortableTreeWrapper .rstcustom__expandButton {
+  border-radius: 0;
+  border: 1px solid #666;
+  background-image: url(../images/bizstore/tree-icon-expand-gray2.png);
+  background-size: 7px;
+  width: 14px;
+  height: 14px;
+}
+.sortableTreeWrapper .rstcustom__collapseButton {
+  border-radius: 0;
+  border: 1px solid #666;
+  background-image: url(../images/bizstore/tree-icon-collapsed2.png);
+  background-size: 7px;
+  width: 14px;
+  height: 14px;
+}
+.sortableTreeWrapper .rstcustom__expandButton,
+.sortableTreeWrapper .rstcustom__collapseButton {
+  background-color: #ffffff;
+  background-repeat: no-repeat;
+  background-position: center;
+}
 /* IE10+ specific styles go here */
+/* 
   @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
-    .sortableTreeWrapper .rstcustom__expandButton, .sortableTreeWrapper .rstcustom__collapseButton {background-position: 0.25px 0.25px !important;}
+    .sortableTreeWrapper .rstcustom__expandButton, .sortableTreeWrapper .rstcustom__collapseButton {
+      background-position: 0.25px 0.25px !important;
+    }
   }
-.sortableTreeWrapper .rstcustom__rowWrapper {padding: 10px 10px 10px 3px !important;}
-.sortableTreeWrapper .rstcustom__rowWrapperDragDisabled .rstcustom__row {color: #404040 !important;}
-.sortableTreeWrapper .rstcustom__rowTitle button {background: transparent; padding-right: 15px;} /* IE에서 custom scrollbar 가로 스크롤 시, 오른쪽 텍스트 잘림 방지 */
-.sortableTreeWrapper .rstcustom__rowTitle button.active {color: #886ab5;}
-.sortableTreeWrapper button:focus, .sortableTreeWrapper button.active:focus {outline: 0;}
-.sortableTreeWrapper .rstcustom__ordinaryButton.active {background: #886ab5;}
-.sortableTreeWrapper .rst__placeholder::before {border: none;}
+ */
+.sortableTreeWrapper .rstcustom__rowWrapper {
+  padding: 10px 10px 10px 3px !important;
+}
+.sortableTreeWrapper .rstcustom__rowWrapperDragDisabled .rstcustom__row {
+  color: #404040 !important;
+}
+.sortableTreeWrapper .rstcustom__rowTitle button {
+  background: transparent;
+  padding-right: 15px;
+  color: #000;
+  font-size: 13px;
+  font-weight: 600;
+  padding-left: 5px;
+} /* IE에서 custom scrollbar 가로 스크롤 시, 오른쪽 텍스트 잘림 방지 */
+.sortableTreeWrapper .rstcustom__rowTitle button.active {
+  color: #7535d8;
+}
+.sortableTreeWrapper button:focus,
+.sortableTreeWrapper button.active:focus {
+  outline: 0;
+}
+.sortableTreeWrapper .rstcustom__ordinaryButton.active {
+  background: #7535d8;
+}
+.sortableTreeWrapper .rst__placeholder::before {
+  border: none;
+}
 
-.sortableTreeWrapper .rstcustom__rowTitle .bizIcon {margin-left: 3px; padding-left: 25px; background: url(../images/common/icon-biz-tree.png) no-repeat 0 50%;}
-.sortableTreeWrapper .rstcustom__rowTitle .bizIcon.active {background: url(../images/common/icon-biz-tree-active.png) no-repeat 0 50%; color: #886ab5;}
+.sortableTreeWrapper .rstcustom__rowTitle .bizIcon {
+  margin-left: 3px;
+  padding-left: 25px;
+  background: url(../images/common/icon-biz-tree.png) no-repeat 0 50%;
+}
+.sortableTreeWrapper .rstcustom__rowTitle .bizIcon.active {
+  background: url(../images/common/icon-biz-tree-active.png) no-repeat 0 50%;
+  color: #f85023;
+}

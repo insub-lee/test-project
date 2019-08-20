@@ -1,4 +1,46 @@
 import * as constantTypes from './constants';
+// 카테고리 리스트
+export const getCategoryListBySaga = () => ({
+  type: constantTypes.GET_CATEGORYLIST,
+});
+
+export const setRelationManualListByMualIdxByRecur = (mualIdx, selected, target) => ({
+  type: constantTypes.SET_RELATIONMANUALLISTBYMUALIDX_REDUCR,
+  mualIdx,
+  selected,
+  target,
+});
+
+export const setRelationManualListBySaga = manualList => ({
+  type: constantTypes.SET_RELATIONMANUALLIST_SAGA,
+  manualList,
+});
+
+export const setSelectedRelationManual = items => ({
+  type: constantTypes.SET_SELECTEDRELATIONMANUAL_REDUCR,
+  items,
+});
+
+export const getRelationManualListBySaga = (categoryIdx, chooesItem) => ({
+  type: constantTypes.GET_RELATIONMANUALLIST_SAGA,
+  categoryIdx,
+  chooesItem,
+});
+
+export const setRelationManualListByRecur = manualList => ({
+  type: constantTypes.SET_RELATIONMANUALLIST_REDUCR,
+  manualList,
+});
+
+export const setCategoryListByReducr = categoryList => ({
+  type: constantTypes.SET_CATEGORYLIST_REDUCR,
+  categoryList,
+});
+
+export const setRelationCategoryIdx = categoryIdx => ({
+  type: constantTypes.SET_RELATIONCATEGORYIDX,
+  categoryIdx,
+});
 
 // 사용자
 export const getUserInfoBySaga = userName => ({
@@ -134,3 +176,25 @@ export const setScrollComponentByReducr = item => ({ type: constantTypes.SET_SCR
 export const getOptionMgrBySaga = () => ({ type: constantTypes.GET_OPTIONMGR_SAGA });
 
 export const setIsRelationMualModalByReduc = flag => ({ type: constantTypes.SET_IS_RELATION_MUAL_MODAL_REDUCR, flag });
+
+export const setIsAddMualTypeModalByReducr = flag => ({ type: constantTypes.SET_IS_ADD_MUAL_TYPE_MODAL_REDUCR, flag });
+
+export const getCompareTempletListBySaga = () => ({ type: constantTypes.GET_COMPARE_TEMPLET_SAGA });
+
+export const setCompareTempletListByReducr = list => ({ type: constantTypes.SET_COMPARE_TEMPLET_REDUCR, list });
+
+export const setCompareTempletViewModeByReducr = (node, flag) => ({ type: constantTypes.SET_COMPARE_TEMPLET_VIEW_MODE_REDUCR, node, flag });
+
+export const saveCompareTempletBySaga = () => ({ type: constantTypes.SAVE_COMPARE_TEMPLET });
+
+export const setCompareTempletChangeValueByReducr = (key, value) => ({ type: constantTypes.SET_COMPARE_TEMPLET_CHANGE_VALUE_REDUCR, key, value });
+
+export const setCompareTampletOnHoverKey = idx => ({ type: constantTypes.SET_COMPARE_TEMPLET_HOVER_KEY_REDUCR, idx });
+
+export const setCompareTempletContentNameByReducr = (id, value) => ({ type: constantTypes.SET_COMPARE_TEMPLET_CONTENT_NAME_REDUCR, id, value });
+
+export const removeCompareTempletContentItemByReducr = id => ({ type: constantTypes.REMOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR, id });
+
+export const addCompareTempletContentItemByReducr = () => ({ type: constantTypes.ADD_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR });
+
+export const moveCompareTempletContentItemByReducr = dropResult => ({ type: constantTypes.MOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR, dropResult });

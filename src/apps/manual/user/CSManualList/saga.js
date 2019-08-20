@@ -11,7 +11,8 @@ import selectors from './selectors';
 function* getTotalManualList(action) {
   const { categoryIdx, widgetId } = action;
   const response = yield call(Axios.get, `/api/manual/v1/CSManualListHandler/${categoryIdx}`);
-  yield put(actions.setTotalManualList(fromJS(response).get('totalManualList'), widgetId));
+  const { totalManualList } = response;
+  yield put(actions.setTotalManualList(fromJS(totalManualList), widgetId));
 }
 
 function* setSelectedMualOrgIdx(action) {
@@ -23,7 +24,6 @@ function* setSelectedMualOrgIdx(action) {
       MUAL_ORG_LIST: [{ MUAL_ORG_IDX: orgIdxList }],
       USER_ID: userId,
       SORTINFO: '',
-      ISBOOKMARK: 'N',
     };
     yield call(Axios.post, '/api/manual/v1/CSManualViewHistoryHandler', { param });
     yield put(actions.setSelectedMualIdxByReducr(mualIdx, widgetId));
@@ -34,7 +34,7 @@ function* setMultiView(action) {
   const { widgetId } = action;
   const checkedMualList = yield select(selectors.makeCheckedManualListByWidgetId(widgetId));
   if (checkedMualList && checkedMualList.size > 0) {
-    const tempItem = checkedMualList.get(0);
+    const mualIdx = checkedMualList.getIn([0, 'mualIdx']);
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const param = {
@@ -44,10 +44,9 @@ function* setMultiView(action) {
         .map(item => ({ MUAL_ORG_IDX: item.mualOrgIdx })),
       USER_ID: userId,
       SORTINFO: '',
-      ISBOOKMARK: 'N',
     };
     yield call(Axios.post, '/api/manual/v1/CSManualViewHistoryHandler', { param });
-    yield put(actions.setSelectedMualIdxByReducr(tempItem.mualIdx, widgetId));
+    yield put(actions.setSelectedMualIdxByReducr(mualIdx, widgetId));
     yield put(actions.setIsViewContentsByReducr(true, widgetId));
   }
 }

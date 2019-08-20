@@ -16,7 +16,7 @@ const Styled = styled.i`
     width: 40px;
     height: 34px;
   }
-  &.icon-list {
+  &.icon-manualViewlist {
     background: url(${iconList}) no-repeat center;
     width: 15px;
     height: 25px;

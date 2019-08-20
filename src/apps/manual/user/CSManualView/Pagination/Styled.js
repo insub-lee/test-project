@@ -8,13 +8,20 @@ import btnNextOn from '../../images/btn-next-on.png';
 const Styled = styled.div`
   width: 100%;
   border-top: 1px solid #e5e5e5;
-  padding: 10px 190px;
+  padding: 10px 10px;
   position: absolute;
   bottom: 0;
   left: 0;
   background: #fff;
   & > div {
     position: relative;
+    display: inline-block;
+    &.mualView-btn-wrapper {
+      width: 900px;
+    }
+    &.mualView-select-wrapper {
+      margin-left: 10px;
+    }
     & > div {
       &.btn-wrap {
         position: absolute;

@@ -7,9 +7,9 @@ import Panel from './Panel';
 import InfoConWrap from './InfoConWrap';
 import Styled from './Styled';
 
-const ExplainInfo = ({ componentList, setScrollComponent, widgetId }) => (
+const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, navList }) => (
   <Styled>
-    <Panel>
+    <Panel mualMaster={mualMaster} navList={navList}>
       <Scrollbars
         style={{ height: 'calc(100vh - 208px)' }}
         ref={c => {

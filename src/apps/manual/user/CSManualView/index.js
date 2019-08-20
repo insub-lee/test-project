@@ -22,6 +22,11 @@ import ContentBody from './ContentBody';
 import Styled from './Styled';
 
 class ManualView extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClickTopBarButton = this.handleClickTopBarButton.bind(this);
+  }
+
   componentDidMount() {
     const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx, match, widgetId } = this.props;
     if (match && match.params && match.params.mualIdx) {
@@ -51,7 +56,21 @@ class ManualView extends Component {
     setListSelectedMualIdx(0, widgetId);
   };
 
-  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps) =>
+  handleClickTopBarButton = key => {
+    const { widgetId, setMualBookmark } = this.props;
+    switch (key) {
+      case 'mualViewNookmarkN':
+        setMualBookmark('N', widgetId);
+        break;
+      case 'mualViewNookmarkY':
+        setMualBookmark('Y', widgetId);
+        break;
+      default:
+        console.debug(key);
+    }
+  };
+
+  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps, mualMaster, navList) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -59,7 +78,14 @@ class ManualView extends Component {
       TabComponent: <TabTitle title={item.MUAL_TABNAME} />,
       TabPanelComponent: (
         <StyledTabPanel>
-          <ContentBody componentList={item.MUAL_TABVIEWINFO} setScrollComponent={setScrollComponent} widgetId={widgetId} pagerProps={pagerProps} />
+          <ContentBody
+            componentList={item.MUAL_TABVIEWINFO}
+            setScrollComponent={setScrollComponent}
+            widgetId={widgetId}
+            pagerProps={pagerProps}
+            mualMaster={mualMaster}
+            navList={navList}
+          />
         </StyledTabPanel>
       ),
       disabled: false,
@@ -76,24 +102,43 @@ class ManualView extends Component {
       selectedMualIdx,
       setSelectedMualIdx,
       setListSelectedMualIdx,
+      mualBookmarkList,
+      mualMaster,
+      navList,
     } = this.props;
+
+    const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
+
     const topBarButton = [
-      { key: 'viewTopbar', title: '오류신고', event: undefined },
-      { key: 'viewTopbar', title: '오류신고', event: undefined },
-      { key: 'viewTopbar', title: '오류신고', event: undefined },
-      { key: 'viewTopbar', title: '오류신고', event: undefined },
-      { key: 'viewTopbar', title: '오류신고', event: undefined },
+      {
+        key: isBookmark ? 'mualViewNookmarkN' : 'mualViewNookmarkY',
+        title: isBookmark ? '북마크해제' : '북마크',
+        event: isBookmark ? this.handleClickTopBarButton : this.handleClickTopBarButton,
+        widgetId,
+      },
+      { key: 'viewTopbar1', title: '오류신고', event: undefined },
+      { key: 'viewTopbar2', title: '오류신고', event: undefined },
+      { key: 'viewTopbar3', title: '오류신고', event: undefined },
+      { key: 'viewTopbar4', title: '오류신고', event: undefined },
     ];
     return (
       <Styled>
         <div className="tab-wrap">
           <Tab
-            tabs={this.getTabData(maulTabList.toJS(), setScrollComponent, widgetId, {
-              mualHistoryList,
-              selectedMualIdx,
-              setSelectedMualIdx,
-              setListSelectedMualIdx,
-            })}
+            tabs={this.getTabData(
+              maulTabList.toJS(),
+              setScrollComponent,
+              widgetId,
+              {
+                mualHistoryList,
+                selectedMualIdx,
+                setSelectedMualIdx,
+                setListSelectedMualIdx,
+                mualBookmarkList,
+              },
+              mualMaster.toJS(),
+              navList.toJS(),
+            )}
             keyName="MUAL_TAB_IDX"
             selectedTabIdx={selectedTabIdx}
             setSelectedTabIdx={setSelectedTabIdx}
@@ -114,8 +159,12 @@ ManualView.propTypes = {
   maulTabList: PropTypes.object,
   selectedTabIdx: PropTypes.number,
   setSelectedTabIdx: PropTypes.func,
-  setScrollComponent: PropTypes.object,
+  setScrollComponent: PropTypes.func,
   mualHistoryList: PropTypes.object,
+  setMualBookmark: PropTypes.func,
+  mualBookmarkList: PropTypes.object,
+  mualMaster: PropTypes.object,
+  navList: PropTypes.object,
 };
 
 ManualView.defaultProps = {
@@ -125,6 +174,10 @@ ManualView.defaultProps = {
   setSelectedTabIdx: () => false,
   setScrollComponent: {},
   mualHistoryList: fromJS([]),
+  setMualBookmark: () => false,
+  mualBookmarkList: fromJS([]),
+  mualMaster: fromJS({}),
+  navList: fromJS([]),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -132,6 +185,9 @@ const mapStateToProps = createStructuredSelector({
   maulTabList: selectors.makeSelectMaulTabList(),
   selectedTabIdx: selectors.makeSelectedTabIdx(),
   mualHistoryList: selectors.makeSelectHistoryList(),
+  mualBookmarkList: selectors.makeSelectBookmarkList(),
+  mualMaster: selectors.makeSelectManualMaster(),
+  navList: selectors.makeSelectManualViewNavList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -142,6 +198,7 @@ const mapDispatchToProps = dispatch => ({
   setIsViewContents: (flag, widgetId) => dispatch(listActions.setIsViewContentsByReducr(flag, widgetId)),
   setListSelectedMualIdx: (idx, widgetId) => dispatch(listActions.setSelectedMualIdxByReducr(idx, widgetId)),
   resetManualView: widgetId => dispatch(actions.resetManualViewByReducr(widgetId)),
+  setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });
