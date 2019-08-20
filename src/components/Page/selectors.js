@@ -7,7 +7,15 @@ const currentView = () => createSelector(
   viewState => viewState.get('view'),
 );
 
+const selectApp = state => state.get('app');
+
+const makeSelectMenuShow = () => createSelector(
+    selectApp,
+    appState => appState.get('menuShow'),
+);
+
 export {
   selectView,
   currentView,
+  makeSelectMenuShow,
 };
