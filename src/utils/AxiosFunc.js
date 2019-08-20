@@ -74,11 +74,12 @@ function* putAxios(fullUrl, payload) {
   }
   return {};
 }
-function* deleteAxios(fullUrl) {
+function* deleteAxios(fullUrl, payload) {
   try {
     const response = yield Promise.resolve(axios({
       method: 'delete',
       url: fullUrl,
+      data: { ...payload },
       headers: { META: yield makeRequestHeader() },
     }));
     if (response.statusText !== 'OK') {
@@ -95,7 +96,7 @@ export const Axios = {
   get: (fullUrl, payload) => getAxios(fullUrl, payload),
   post: (fullUrl, payload) => postAxios(fullUrl, payload),
   put: (fullUrl, payload) => putAxios(fullUrl, payload),
-  delete: (fullUrl) => deleteAxios(fullUrl),
+  delete: (fullUrl, payload) => deleteAxios(fullUrl, payload),
 };
 
 export default Axios;
