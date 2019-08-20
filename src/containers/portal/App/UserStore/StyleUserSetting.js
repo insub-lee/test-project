@@ -7,7 +7,7 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserSetting = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0px;
   left: 0px;
   width: 100%;

@@ -7,7 +7,7 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 
 const StyleUserSetting = styled.div`
-  position: relative;
+  position: absolute;
   top: 0;
   left: 0; // 커스텀 스크롤바 숨기기
   width: 100%;

@@ -305,6 +305,7 @@ class App extends React.PureComponent {
   // ****************** 메뉴 관련 함수 ******************
   onSetOpen = (open) => {
     this.setState({ open: open }); //eslint-disable-line
+    event.preventDefault();
   };
   /* eslint-disable */
   setIsSpinnerShow = () => {
@@ -316,29 +317,34 @@ class App extends React.PureComponent {
   setOpen = () => {
     this.setState(prevState => ({
       open: !prevState.open,
-    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250))
+    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    event.preventDefault();
   };
   
   setMenuOpen = () => {
     this.setState(prevState => ({
       headerMenuOpen: !prevState.headerMenuOpen,
     }));
+    event.preventDefault();
   };
 
   setClose = () => {
     this.setState({ visible: false });
+    event.preventDefault();
   };
 
   setMenuClose = () => {
     this.setState({
       open: false,
-    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250))
+    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    event.preventDefault();
   };
 
   setHeaderMenuClose = () => {
     this.setState({
       headerMenuOpen: false,
     });
+    event.preventDefault();
   };
 
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 ******************

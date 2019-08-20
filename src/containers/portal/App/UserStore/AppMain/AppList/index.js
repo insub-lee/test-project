@@ -82,12 +82,14 @@ class AppList extends Component {
     } else if (this.props.searchword !== searchword || (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet')) {
       this.props.history.push(`/portal/store/appMain/bizStore/${type}/search/${searchword}`);
     }
+    event.stopPropagation();
   };
 
   searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
+    event.stopPropagation();
   };
 
   render() {
