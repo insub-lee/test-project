@@ -39,7 +39,7 @@ const Styled = styled.div`
   }
   
   .category-menu-area {
-    height: calc((100vh + 300px) / 2);
+    height: calc(100vh - 350px);
   }
   
   .timeline-area {

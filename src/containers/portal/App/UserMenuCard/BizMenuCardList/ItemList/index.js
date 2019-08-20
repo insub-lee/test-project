@@ -69,6 +69,8 @@ class ItemList extends Component {
   render() {
     const { mapList, parentInfo, paramType } = this.props;
 
+    console.debug('@@@@@@@param type: ', paramType);
+
     const { rowStyle, colStyle, gutter } = basicStyle;
 
     return (
