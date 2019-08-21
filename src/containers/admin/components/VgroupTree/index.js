@@ -482,7 +482,7 @@ VgroupTree.propTypes = {
   selectedIndex: PropTypes.number, //eslint-disable-line
   SITE_ID: PropTypes.number, //eslint-disable-line
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object, //eslint-disable-line
   onClick: PropTypes.func,
   returnVgroupInsert: PropTypes.func.isRequired, //eslint-disable-line

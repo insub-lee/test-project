@@ -381,8 +381,8 @@ class MyPageTree extends Component {
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE !== 'E' && node.NODE_TYPE !== 'A' && node.NODE_TYPE !== 'P' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
           const isCategoryRoot = node.NODE_TYPE === 'R'; // 앱카테고리 Root
-          const canDeleteNode = node.NODE_TYPE !== 'R' && (!node.children || node.children.length === 0) && node.NODE_TYPE !== 'P'; // 업무그룹X 하위노드존재X 페이지삭제불가
-          const canEditName = node.NODE_TYPE === 'F' || node.NODE_TYPE === 'P'; // 페이지O 폴더O(업무X) 앱X
+          const canDeleteNode = node.NODE_TYPE !== 'R' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
+          const canEditName = node.NODE_TYPE === 'F' // 페이지X 폴더O(업무X) 앱X  페이지X
 
           let title; // 트리 노드 제목
           let buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
@@ -459,7 +459,7 @@ class MyPageTree extends Component {
                   let message = '';
                   if (node.NODE_TYPE === 'F') { // 폴더
                     message = messages.deleteFolder;
-                  } else if (node.NODE_TYPE === 'A') { // 앱
+                  } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') { // 앱
                     message = messages.deleteApp;
                   }
                   const messageStr = `${node.title} ${intlObj.get(message)}`;
@@ -559,7 +559,7 @@ MyPageTree.propTypes = {
   treeData: PropTypes.array.isRequired,
   selectedIndex: PropTypes.string,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]), //eslint-disable-line
-  canDrop: PropTypes.bool, //eslint-disable-line
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]), //eslint-disable-line
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
   updateNode: PropTypes.func, //eslint-disable-line

@@ -231,7 +231,7 @@ CustomThemeNodeContentRenderer.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   parentNode: PropTypes.shape({}), // Needed for dndManager
   // Drop target
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   isOver: PropTypes.bool.isRequired,
 };
 

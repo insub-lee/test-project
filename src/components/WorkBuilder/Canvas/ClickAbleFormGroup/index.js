@@ -51,7 +51,9 @@ class ClickAbleFormGroup extends Component {
           setHover(false);
         }}
       >
-        <Form.Item label={formStuff.property.label}>{allFormStuffs[formStuff.type].previewRenderer(formStuff)}</Form.Item>
+        <Form.Item label={formStuff.property.label}>
+          {allFormStuffs[formStuff.type] && allFormStuffs[formStuff.type] && allFormStuffs[formStuff.type].previewRenderer(formStuff)}
+        </Form.Item>
         {(viewTargetId === formStuff.id || isHover) && (
           <OptionLayer object={formStuff} action={{ activeLayer, removeLayer }} isActive={viewTargetId === formStuff.id} />
         )}

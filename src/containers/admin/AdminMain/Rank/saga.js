@@ -64,17 +64,22 @@ export function* insertRank(payload) {
         type: actionType.GET_RANK_COMBO_LIST,
         RANK_ID,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_RANK_DATA,
+        RANK_ID,
+      });
     }
-    yield put({
-      type: actionType.GET_CHANGE_RANK_DATA,
-      RANK_ID,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       RANK_ID: rankId,
     });
   } else {
     feed.error(`${intlObj.get(messages.rankInsertFail)}`);
+    yield put({
+      type: actionType.GET_RANK_COMBO_LIST,
+      RANK_ID: selectedDept,
+    });
   }
 }
 
@@ -94,17 +99,22 @@ export function* updateRank(payload) {
         type: actionType.GET_RANK_COMBO_LIST,
         RANK_ID: selectedDept,
       });
+    } else {
+      yield put({
+        type: actionType.GET_CHANGE_RANK_DATA,
+        RANK_ID: selectedDept,
+      });
     }
-    yield put({
-      type: actionType.GET_CHANGE_RANK_DATA,
-      RANK_ID: selectedDept,
-    });
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
       RANK_ID,
     });
   } else {
     feed.error(`${intlObj.get(messages.rankUpdateFail)}`);
+    yield put({
+      type: actionType.GET_RANK_COMBO_LIST,
+      RANK_ID: selectedDept,
+    });
   }
 }
 
@@ -123,9 +133,6 @@ export function* deleteRank(payload) {
       yield put({
         type: actionType.GET_RANK_COMBO_LIST,
         RANK_ID: 0,
-      });
-      yield put({
-        type: actionType.GET_RANK_DATA,
       });
     } else {
       yield put({

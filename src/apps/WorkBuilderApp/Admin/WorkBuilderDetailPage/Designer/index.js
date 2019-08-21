@@ -1,4 +1,3 @@
-import View from 'components/WorkBuilder/View';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -9,6 +8,7 @@ import { Modal } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import WorkBuilder from 'components/WorkBuilder';
+import View from 'components/WorkBuilder/View';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -59,6 +59,7 @@ Designer.propTypes = {
   onPreview: PropTypes.bool,
   closePreview: PropTypes.func,
   isLoading: PropTypes.bool,
+  resetData: PropTypes.func,
 };
 
 Designer.defaultProps = {
@@ -70,6 +71,7 @@ Designer.defaultProps = {
   onPreview: false,
   closePreview: () => console.debug('no bind events'),
   isLoading: true,
+  resetData: () => console.debug('no bind events'),
 };
 
 const mapStateToProps = createStructuredSelector({

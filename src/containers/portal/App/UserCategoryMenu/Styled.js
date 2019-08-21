@@ -39,7 +39,7 @@ const Styled = styled.div`
   }
   
   .category-menu-area {
-    height: calc((100vh - 171px) / 2);
+    height: calc(100vh - 350px);
   }
   
   .timeline-area {
@@ -48,10 +48,26 @@ const Styled = styled.div`
   
   .active-btn {    
     position: absolute;
-    top: 50%;
-    right: -40px;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
+    top: 4.35%;
+    right: -19px;
+  }
+
+  .active-btn .ant-btn:not(.ant-btn-circle):not(.ant-btn-circle-outline).ant-btn-icon-only {
+    padding-right: 0px;
+    padding-left: 0px;
+  }
+
+  .active-btn .ant-btn {
+    padding: 0px;
+    opacity: 1;
+    height: 65px;
+    cursor: pointer;
+    width: 20px;
+    color: white;
+    background-color: rgba(87, 71, 120, 1);
+    background-repeat: no-repeat;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
   }
 `;
 

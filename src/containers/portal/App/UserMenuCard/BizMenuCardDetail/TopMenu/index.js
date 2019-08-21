@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Popover, Row, Col } from 'antd';
+import { Popover, Row, Col, Button } from 'antd';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import * as feed from 'components/Feedback/functions';
 
@@ -50,6 +50,10 @@ class TopMenu extends React.Component {
     }
   }
 
+  handleExecApp = () => {
+    alert('app exec click event');
+  }
+
   render() {
     /* eslint-disable */
     const { bizInfo, bizManagerList } = this.props;
@@ -79,6 +83,9 @@ class TopMenu extends React.Component {
             </Col>
             <Col sm={24} xl={8}>
               <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
+            </Col>
+            <Col sm={24} xl={7} style={{ textAlign: 'right' }}>
+              <Button onClick={this.handleExecApp}>앱실행</Button>
             </Col>
             <Col sm={24} xl={7} style={{ textAlign: 'right' }}>
               <CopyToClipboard text={window.location.href} onCopy={() => feed.success(`${intlObj.get(messages.urlCopyMassage)}`)}>

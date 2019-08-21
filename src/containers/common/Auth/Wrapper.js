@@ -93,7 +93,7 @@ const Wrapper = styled.div`
           }
         }
       }
-      
+
       .leftRightWrapper {
         display: -webkit-box;
         display: -webkit-flex;
@@ -152,7 +152,7 @@ const Wrapper = styled.div`
           color: ${palette('primary', 0)};
         }
       }
-      
+
       .signUp {
         display: block;
         font-size: 12px;

@@ -76,6 +76,7 @@ class Tree extends Component {
   };
 
   handleTreeOnClick = node => {
+    event.stopPropagation();
     changeSelectedIndex(node.key);
 
     if (node.NODE_TYPE !== 'F') {
@@ -90,6 +91,7 @@ class Tree extends Component {
   };
 
   handleClickMenuFolder = menuId => {
+    event.stopPropagation();
     console.debug('>>>>>>>this.props: ', this.props);
     this.props.history.push(`/${basicPath.PORTAL}/bizMenu/${menuId}`);
   };

@@ -53,7 +53,7 @@ export default class WidgetsHeader extends PureComponent {
           <span>{item.title}</span>
           <ul className="iconsWrapper">
             <li style={functions.includes('settings') ? { display: 'block' } : { display: 'none' }}>
-              <Link className="setupWidget" to={`/store/appMain/myPage/widgetsetting/${item.PAGE_ID}/${item.id}`} title="위젯 설정" />
+              <Link className="setupWidget" to={`/portal/store/appMain/myPage/widgetsetting/${item.PAGE_ID}/${item.id}`} title="위젯 설정" />
             </li>
             <li style={functions.includes('delete') ? { display: 'block' } : { display: 'none' }}>
               <button className="deleteWidget" title="위젯 삭제" onClick={handleDeleteWidget} />

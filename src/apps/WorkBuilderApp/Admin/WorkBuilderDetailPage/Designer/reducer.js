@@ -22,41 +22,6 @@ const initialState = fromJS({
   isLoading: true,
 });
 
-const getDefaultFormProperty = (type, id) => {
-  const defaultFormProperty = {
-    className: '',
-    style: {},
-    name: id,
-    defaultValue: '',
-  };
-  switch (type) {
-    case 'checkbox':
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
-        defaultValue: [],
-      };
-    case 'radio':
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
-      };
-    default:
-      return {
-        ...defaultFormProperty,
-        style: { ...defaultFormProperty.style },
-        label: 'Label',
-        id,
-      };
-  }
-};
-
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_DATA: {
@@ -133,7 +98,6 @@ const reducer = (state = initialState, action) => {
     case actionTypes.DISABLE_LAYERS: {
       return state.set('viewTargetId', '').set('viewTargetType', '');
     }
-
 
     case actionTypes.SUCCESS_CHANGE_BOX_TYPE: {
       const { index, value } = action;

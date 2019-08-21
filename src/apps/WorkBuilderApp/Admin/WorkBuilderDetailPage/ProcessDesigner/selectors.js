@@ -29,7 +29,7 @@ const makeSelectWorkFlowInfo = () =>
 const makeSelectWorkFlowInfoConfig = () =>
   createSelector(
     selectWorkBuilderDetailProcessDesigner,
-    (viewState) => {
+    viewState => {
       const config = viewState.getIn(['workFlowInfo', 'CONFIG']);
       return config ? JSON.parse(config) : { info: {} };
     },

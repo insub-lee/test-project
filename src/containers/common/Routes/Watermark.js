@@ -30,7 +30,9 @@ const Watermark = props => (
     <svg id="svgpattern" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <pattern id="empNum" patternUnits="userSpaceOnUse" width="100" height="45">
-          <text x="30" y="30" fontSize="16" id="name" style={{ textAlign: 'center' }}>{props.profile.EMP_NO}</text>
+          <text x="30" y="30" fontSize="16" id="name" style={{ textAlign: 'center' }}>
+            {props.profile.EMP_NO}
+          </text>
         </pattern>
         <pattern id="empNumPttn" xlinkHref="#empNum" patternTransform="rotate(-45)" />
       </defs>

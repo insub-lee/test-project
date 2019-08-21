@@ -59,7 +59,7 @@ class ClickAbleDescriptions extends Component {
                 setHover(index, false);
               }}
             >
-              {allFormStuffs[formStuff.type].previewRenderer(formStuff)}
+              {allFormStuffs[formStuff.type] && allFormStuffs[formStuff.type].previewRenderer(formStuff)}
               {(viewTargetId === formStuff.id || isHover[index]) && (
                 <OptionLayer object={formStuff} action={{ activeLayer, removeLayer }} isActive={viewTargetId === formStuff.id} tableMode />
               )}

@@ -98,7 +98,7 @@ Tree.propTypes = {
   onClick: PropTypes.func,
   showSearchBox: PropTypes.bool,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   getCustomNodeProps: PropTypes.func,
 };
 

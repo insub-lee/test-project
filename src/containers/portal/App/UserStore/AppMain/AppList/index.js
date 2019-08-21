@@ -8,7 +8,6 @@ import { BackTop, Input, Button } from 'antd';
 // import * as commonjs from 'containers/common/functions/common';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
-import Footer from '../../Footer';
 import { intlObj } from 'utils/commonUtils';
 import messages from '../../../messages';
 import NavList from 'components/Header/NavList';
@@ -16,6 +15,7 @@ import NavListItem from 'components/Header/NavListItem';
 import NavLink from 'components/Header/NavLink';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import Footer from '../../Footer';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -82,12 +82,14 @@ class AppList extends Component {
     } else if (this.props.searchword !== searchword || (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet')) {
       this.props.history.push(`/portal/store/appMain/bizStore/${type}/search/${searchword}`);
     }
+    event.stopPropagation();
   };
 
   searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
+    event.stopPropagation();
   };
 
   render() {

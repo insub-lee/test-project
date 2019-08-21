@@ -431,7 +431,8 @@ class ScrollWrapper extends React.Component {
       isScr ? `${base + name}:scrolling` : '',
       isScr ? `${base + name + pos}:scrolling` : '',
     ].join(' ');
-    this.monitorDockScrollbar();
+    // Todo - dont do use setState handler in render() function
+    // this.monitorDockScrollbar();
 
     return (
       <div

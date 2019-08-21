@@ -7,22 +7,26 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 
 const StyleUserSetting = styled.div`
-  position: fixed;
-  top: 42px;
+  position: absolute;
+  top: 0;
   left: 0; // 커스텀 스크롤바 숨기기
-  width: 100vw;
+  width: 100%;
   height: 100vh;
-  padding: 0;
+  padding: 45px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
-  @media only screen and (max-width: 1024px) {padding: 0 20px;}
+  @media only screen and (max-width: 1024px) {
+    padding: 0 20px;
+  }
 
   .userSettingWrapper {
-    width: 1000px;
-    margin: 0 auto;  //커스텀 스크롤바로 이동된 만큼 중앙에 맞추기
+    width: 100%;
+    margin: 0 auto; //커스텀 스크롤바로 이동된 만큼 중앙에 맞추기
 
-    @media only screen and (max-width: 1024px) {width: 100% !important;}
+    @media only screen and (max-width: 1024px) {
+      width: 100% !important;
+    }
 
     .pageHeader {
       width: 100%;
@@ -33,12 +37,14 @@ const StyleUserSetting = styled.div`
       line-height: 55px;
       text-align: center;
     }
-    
+
     .navigation {
       width: 240px;
       padding-top: 15px;
 
-      @media only screen and (max-width: 1024px) {width: 100%;}
+      @media only screen and (max-width: 1024px) {
+        width: 100%;
+      }
 
       ul {
         display: inline-block;
@@ -48,7 +54,10 @@ const StyleUserSetting = styled.div`
           height: 40px;
           padding-right: 20px;
 
-          @media only screen and (max-width: 1024px) {float: left; padding-right: 0;}
+          @media only screen and (max-width: 1024px) {
+            float: left;
+            padding-right: 0;
+          }
 
           > button {
             width: 100%;
@@ -62,25 +71,44 @@ const StyleUserSetting = styled.div`
             background-repeat: no-repeat;
             background-position: 16px 50%;
 
-            &:hover {background-color: #f1f1f2;}
-            &.current {background-color: #8e8f91; color: #ffffff; cursor: default;}
+            &:hover {
+              background-color: #f1f1f2;
+            }
+            &.current {
+              background-color: #8e8f91;
+              color: #ffffff;
+              cursor: default;
+            }
 
-            @media only screen and (max-width: 650px) {padding-left: 34px; font-size: 14px; background-position: 10px 50%;}
+            @media only screen and (max-width: 650px) {
+              padding-left: 34px;
+              font-size: 14px;
+              background-position: 10px 50%;
+            }
           }
 
-          &:first-child > button {background-image: url(${menuIcon01});
+          &:first-child > button {
+            background-image: url(${menuIcon01});
 
-            &.current {background-image: url(${menuIcon01on});}
+            &.current {
+              background-image: url(${menuIcon01on});
+            }
           }
 
-          &:nth-child(2) > button {background-image: url(${menuIcon02});
+          &:nth-child(2) > button {
+            background-image: url(${menuIcon02});
 
-            &.current {background-image: url(${menuIcon02on});}
+            &.current {
+              background-image: url(${menuIcon02on});
+            }
           }
 
-          &:last-child > button {background-image: url(${menuIcon03});
+          &:last-child > button {
+            background-image: url(${menuIcon03});
 
-            &.current {background-image: url(${menuIcon03on});}
+            &.current {
+              background-image: url(${menuIcon03on});
+            }
           }
         }
       }
@@ -92,7 +120,10 @@ const StyleUserSetting = styled.div`
       margin-top: 15px;
       border: 1px solid #d8d8d8;
 
-      @media only screen and (max-width: 1024px) {float: none; width: 100%;}
+      @media only screen and (max-width: 1024px) {
+        float: none;
+        width: 100%;
+      }
 
       // 토스트 메시지 수신
       .msgBoxWrapper {
@@ -114,7 +145,9 @@ const StyleUserSetting = styled.div`
         }
 
         .eachCheckbox {
-          &.ant-checkbox-group {width: 100%;}
+          &.ant-checkbox-group {
+            width: 100%;
+          }
 
           > label {
             margin-right: 0;
@@ -122,7 +155,9 @@ const StyleUserSetting = styled.div`
             height: 35px;
             line-height: 35px;
 
-            > .ant-checkbox {top: -13px;}
+            > .ant-checkbox {
+              top: -13px;
+            }
 
             > span:not(.ant-checkbox) {
               display: inline-block;
@@ -156,7 +191,9 @@ const StyleUserSetting = styled.div`
           }
         }
         .eachCheckbox {
-          &.ant-checkbox-group {width: 100%;}
+          &.ant-checkbox-group {
+            width: 100%;
+          }
 
           > label {
             margin-right: 0;
@@ -288,7 +325,7 @@ const StyleUserSetting = styled.div`
           }
         }
       }
-      
+
       .languageWrapper .languageList > li .langIcon {
         display: block;
         margin: 0 auto;
@@ -327,7 +364,9 @@ const StyleUserSetting = styled.div`
         > div > div {
           padding: 27px 2px 23px 10px;
 
-          @media only screen and (max-width: 1024px) {padding: 0;}
+          @media only screen and (max-width: 1024px) {
+            padding: 0;
+          }
         }
         .totalCheckbox {
           height: 35px;
@@ -339,7 +378,9 @@ const StyleUserSetting = styled.div`
           }
         }
         .eachCheckbox {
-          &.ant-checkbox-group {width: 100%;}
+          &.ant-checkbox-group {
+            width: 100%;
+          }
 
           > label {
             margin-right: 0;
@@ -354,13 +395,15 @@ const StyleUserSetting = styled.div`
             @media only screen and (max-width: 1440px) {
               width: 33.33%; // 3 COLS 해당
             }
-            
+
             @media only screen and (max-width: 1280px) {
               width: 50%; // 2 COLS 해당
             }
 
-            > .ant-checkbox {top: -13px;}
-            
+            > .ant-checkbox {
+              top: -13px;
+            }
+
             > span:not(.ant-checkbox) {
               display: inline-block;
               width: calc(100% - 15px);
@@ -496,7 +539,7 @@ const StyleUserSetting = styled.div`
           }
         }
       }
-      
+
       .languageWrapper .languageList > li .langIcon {
         display: block;
         margin: 0 auto;
@@ -518,7 +561,9 @@ const StyleUserSetting = styled.div`
         font-size: 16px;
         text-align: center;
 
-        @media only screen and (max-width: 1024px) {line-height: 1.5em;}
+        @media only screen and (max-width: 1024px) {
+          line-height: 1.5em;
+        }
       }
     }
   }

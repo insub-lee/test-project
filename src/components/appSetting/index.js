@@ -262,7 +262,7 @@ class appSetting extends Component {
     } = this.state;
 
     return (
-      <div className="settingsPage" style={{ width: '100vw', height: '100vh', top: 0, left: 0 }}>
+      <div className="settingsPage" style={{ width: '100vw', height: '100vh', top: 0, left: 0, padding: '45px 96px 0px 96px' }}>
           <StyleWidgetSetting>
             <div className="userSettingWrapper">
               <h2 className="pageHeader">
@@ -288,7 +288,7 @@ class appSetting extends Component {
                 </Col>
                 <Col xl={16} className="navContent" ><Scrollbars
                   className="custom-scrollbar"
-                  style={{ width: 'calc(100% + 20px)', height: 'calc(100vh - 105px)' }}
+                  style={{ width: 'calc(100% + 20px)', height: 'calc(100vh - 126px)' }}
                   autoHide
                   autoHideTimeout={1000}
                   autoHideDuration={200}

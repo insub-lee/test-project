@@ -76,8 +76,7 @@ const existNodeByKey = (rowInfo, treeData) => {
 const mergeArray = (newArray, oldArray) => {
   for (let i = 0; i < newArray.length; i += 1) {
     let expanded = false;
-    if (oldArray[i] && oldArray[i].expanded
-    ) {
+    if (oldArray[i] && oldArray[i].expanded) {
       expanded = true;
     }
     newArray[i] = { ...newArray[i], expanded }; // eslint-disable-line
@@ -98,7 +97,7 @@ const mergeArray = (newArray, oldArray) => {
 // treeData -> map형태로 바꾸는 함수.
 let tempData1 = fromJS({});
 let count1 = 0;
-const genList = (data) => {
+const genList = data => {
   for (let i = 0; i < data.size; i += 1) {
     const node = data.get(i);
     const nodeObject = node.toJS();
@@ -116,16 +115,15 @@ const genList = (data) => {
   return tempData1;
 };
 
-const generateList = (data) => {
+const generateList = data => {
   tempData1 = fromJS({});
   count1 = 0;
   return genList(data);
 };
 
-
 let tempData2 = fromJS({});
 let count2 = 0;
-const generateListBiz = (data) => {
+const generateListBiz = data => {
   for (let i = 0; i < data.size; i += 1) {
     const node = data.get(i);
     const nodeObject = node.toJS();
@@ -150,7 +148,7 @@ const generateListBiz = (data) => {
 
 let tempData3 = fromJS({});
 let count3 = 0;
-const generateListBizManage = (data) => {
+const generateListBizManage = data => {
   for (let i = 0; i < data.size; i += 1) {
     const node = data.get(i);
     const nodeObject = node.toJS();
@@ -167,22 +165,25 @@ const generateListBizManage = (data) => {
   return tempData3;
 };
 
-const setFlatDataKey = (dataList, keyName) => dataList.map((d) => {
-  const d2 = d;
-  d2.key = d[keyName];
-  return d2;
-});
+const setFlatDataKey = (dataList, keyName) =>
+  dataList.map(d => {
+    const d2 = d;
+    d2.key = d[keyName];
+    return d2;
+  });
 
-const getFlatMapDataFromTreeData = treeData => getFlatMapDataFromTree({
-  treeData,
-  getNodeKey: ({ node }) => node.key,
-  ignoreCollapsed: false,
-});
+const getFlatMapDataFromTreeData = treeData =>
+  getFlatMapDataFromTree({
+    treeData,
+    getNodeKey: ({ node }) => node.key,
+    ignoreCollapsed: false,
+  });
 
-const getTreeFromFlatTreeData = (flatData, rootKey) => getTreeFromFlatData({
-  flatData,
-  rootKey,
-});
+const getTreeFromFlatTreeData = (flatData, rootKey) =>
+  getTreeFromFlatData({
+    flatData,
+    rootKey,
+  });
 
 export {
   addNode,

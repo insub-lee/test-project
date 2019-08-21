@@ -17,7 +17,8 @@ import toolIconsOn from '../../../../user/images/toolIcons_on.png';
 
 const StyleModal = styled.div`
   width: 100%;
-  height: 100%;
+  height: calc(100vh - 42px);
+  overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;

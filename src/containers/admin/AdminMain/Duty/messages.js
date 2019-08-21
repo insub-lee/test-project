@@ -47,7 +47,7 @@ export default defineMessages({
   },
   dutyDeleteFail1: {
     id: 'admin.AdminMain.Duty.dutyDeleteFail1',
-    defaultMessage: '하위 직책 있는 경우 삭제가 불가능 합니다.',
+    defaultMessage: '사용중이거나 하위 직책 있는 경우 삭제가 불가능 합니다.',
   },
   dutyDeleteFail2: {
     id: 'admin.AdminMain.Duty.dutyDeleteFail2',

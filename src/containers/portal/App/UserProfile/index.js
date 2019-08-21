@@ -7,14 +7,11 @@ import { compose } from 'redux';
 import { intlObj, lang } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
 import { createStructuredSelector } from 'reselect';
-import NewWindow from 'react-new-window';
-import { Link } from 'react-router-dom';
 import Organization from 'containers/portal/components/Organization';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 import * as selectors from './selectors';
-import * as actions from './actions';
 import reducer from './reducer';
 import messages from '../UserSearch/messages';
 

@@ -305,6 +305,7 @@ class App extends React.PureComponent {
   // ****************** 메뉴 관련 함수 ******************
   onSetOpen = (open) => {
     this.setState({ open: open }); //eslint-disable-line
+    event.preventDefault();
   };
   /* eslint-disable */
   setIsSpinnerShow = () => {
@@ -316,29 +317,34 @@ class App extends React.PureComponent {
   setOpen = () => {
     this.setState(prevState => ({
       open: !prevState.open,
-    }));
+    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    event.preventDefault();
   };
-
+  
   setMenuOpen = () => {
     this.setState(prevState => ({
       headerMenuOpen: !prevState.headerMenuOpen,
     }));
+    event.preventDefault();
   };
 
   setClose = () => {
     this.setState({ visible: false });
+    event.preventDefault();
   };
 
   setMenuClose = () => {
     this.setState({
       open: false,
-    });
+    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    event.preventDefault();
   };
 
   setHeaderMenuClose = () => {
     this.setState({
       headerMenuOpen: false,
     });
+    event.preventDefault();
   };
 
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 ******************
@@ -615,6 +621,10 @@ class App extends React.PureComponent {
     return dockFixedYn === 'Y' ? 90 : 0;
   };
 
+  getLayoutMarginLeft = () => {
+    return this.state.open ? 335 : 45;
+  };
+
   render() {
     const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
     const {
@@ -648,6 +658,7 @@ class App extends React.PureComponent {
       history,
       headerTitle,
       profile,
+      menuShow,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -749,7 +760,7 @@ class App extends React.PureComponent {
               </Tooltip>
             </div>
           </SideMenu>
-          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
+          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginLeft:this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <AppWrapper style={{ width: '100%', backgroundColor: '#faf8fb' }}>
@@ -768,7 +779,7 @@ class App extends React.PureComponent {
                   >
                     <div
                       id="child"
-                      className={ (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'}
+                      className={ `${(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'}${menuShow ? ' menuShow' : ''}`}
                     >
                       <Content
                         className="portalContent"
@@ -925,6 +936,8 @@ App.propTypes = {
   hasRoleAdmin: PropTypes.bool,
   headerTitle: PropTypes.string,
   profile: PropTypes.object.isRequired,
+  handleMenuShow: PropTypes.func.isRequired,
+  menuShow: PropTypes.bool,
 };
 
 App.defaultProps = {
@@ -969,6 +982,7 @@ const mapStateToProps = createStructuredSelector({
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
+  menuShow: selectors.makeSelectMenuShow(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),
@@ -991,6 +1005,7 @@ const mapDispatchToProps = dispatch => ({
   handleLoadBoard: num => dispatch(boardAction.getIfDetailBoardList(num)),
   handleGetDataForApps: EXEC_PAGE_IDS => dispatch(routesAction.getDataForApps(EXEC_PAGE_IDS)),
   handleSaveApps: (apps, setMyMenuData) => dispatch(routesAction.saveApps(apps, setMyMenuData)),
+  handleMenuShow: open => dispatch(actions.setMenuShow(open)),
 });
 const withConnect = connect(
   mapStateToProps,

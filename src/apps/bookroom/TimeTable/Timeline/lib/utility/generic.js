@@ -1,4 +1,4 @@
-import isEqual from 'lodash.isequal'
+import { iisequal as isEqual } from 'lodash';
 
 // so we could use both immutable.js objects and regular objects
 

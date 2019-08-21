@@ -19,10 +19,10 @@ import * as actions from '../actions';
 import * as manageActions from '../../ManualManager/actions';
 import * as masterActions from '../../ManualManager/ManualMaster/actions';
 
-import CustomTheme from './theme';
-import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn, FolderBtn } from './StyleMyAppTree';
+import CustomTheme from '../../../components/Tree/theme';
+import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn, FolderBtn } from '../../../components/Tree/StyleMyAppTree';
 import messages from './messages';
-import './tree-node.css';
+import '../../../components/Tree/tree-node.css';
 
 const getTreeData = flatData =>
   getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 0 });

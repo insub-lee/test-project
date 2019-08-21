@@ -47,12 +47,18 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.SUCCESS_GET_VIEW: {
       const { columns, list } = action;
-      return state.set('columns', fromJS(columns)).set('list', fromJS(list)).set('isLoading', false);
+      return state
+        .set('columns', fromJS(columns))
+        .set('list', fromJS(list))
+        .set('isLoading', false);
     }
     case actionTypes.SUCCESS_GET_FORM_DATA: {
       const { boxes, formStuffs, workFlow } = action;
       console.debug('@@@ success get', boxes, formStuffs, workFlow);
-      return state.set('boxes', fromJS(boxes)).set('formStuffs', fromJS(formStuffs)).set('workFlow', fromJS(workFlow || {}));
+      return state
+        .set('boxes', fromJS(boxes))
+        .set('formStuffs', fromJS(formStuffs))
+        .set('workFlow', fromJS(workFlow || {}));
     }
     case actionTypes.SUCCESS_GET_TASK_SEQ: {
       const { taskSeq } = action;
@@ -62,16 +68,16 @@ const reducer = (state = initialState, action) => {
       const { data } = action;
       const formStuffs = state.get('formStuffs').toJS();
       console.debug('@@@', formStuffs);
-      const resultFormStuffs = formStuffs.map((formStuff) => {
+      const resultFormStuffs = formStuffs.map(formStuff => {
         const value = data[formStuff.property.name.toUpperCase()];
-        return ({
+        return {
           ...formStuff,
           CONT_SEQ: getContSeq(value, 'CONT_SEQ'),
           property: {
             ...formStuff.property,
             defaultValue: getValue(value, 'DETAIL'),
           },
-        });
+        };
       });
       console.debug('@@@ success', formStuffs, resultFormStuffs);
       return state.set('resultFormStuffs', fromJS(resultFormStuffs)).set('isOpenEditModal', true);
@@ -84,7 +90,9 @@ const reducer = (state = initialState, action) => {
       return state.set('isOpenFormModal', value);
     }
     case actionTypes.SUCCESS_SAVE_TASK_CONTENTS: {
-      const { data: { taskSeq, fieldNm, contSeq } } = action;
+      const {
+        data: { taskSeq, fieldNm, contSeq },
+      } = action;
       const targetIndex = state.get('formStuffs').findIndex(formStuff => formStuff.get('COMP_FIELD') === fieldNm);
       return state.setIn(['formStuffs', targetIndex, 'CONT_SEQ'], contSeq);
     }

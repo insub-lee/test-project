@@ -20,9 +20,12 @@ import selectors from './selectors';
 import Topbar from './Topbar';
 import TitleBar from './TitleBar';
 
-const onClickTest = () => console.debug('listtopclick!!!');
-
 class CSManualList extends Component {
+  constructor(props) {
+    super(props);
+    this.handleClickTopBarButton = this.handleClickTopBarButton.bind(this);
+  }
+
   componentDidMount() {
     const { GetTotalManualList, item } = this.props;
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
@@ -40,18 +43,24 @@ class CSManualList extends Component {
     setViewSelectedMualIdx(0, widgetId);
   };
 
+  handleClickTopBarButton = key => {
+    const { item, setMultiView, resetCheckManual } = this.props;
+    const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
+    const widgetId = item && item.id ? item.id : categoryIdx;
+    switch (key) {
+      case 'mualListSetMultiView':
+        setMultiView(widgetId);
+        break;
+      case 'mualListCancelCheck':
+        resetCheckManual(widgetId);
+        break;
+      default:
+        console.debug(key);
+    }
+  };
+
   render() {
-    const {
-      totalManualList,
-      isViewContents,
-      setIsViewContents,
-      setSelectedMualOrgIdx,
-      selectedMualIdx,
-      setCheckManual,
-      checkedManualList,
-      item,
-      setMultiView,
-    } = this.props;
+    const { totalManualList, isViewContents, setIsViewContents, setSelectedMualOrgIdx, selectedMualIdx, setCheckManual, checkedManualList, item } = this.props;
     // let ListItemData = fromJS({});
     let ListItemData = fromJS([]);
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
@@ -79,11 +88,11 @@ class CSManualList extends Component {
     }
 
     const topBarButton = [
-      { key: 'listTopbar', title: '모아보기', event: setMultiView, widgetId },
-      { key: 'listTopbar', title: '오류신고', event: onClickTest, widgetId },
-      { key: 'listTopbar', title: '오류신고', event: onClickTest, widgetId },
-      { key: 'listTopbar', title: '오류신고', event: onClickTest, widgetId },
-      { key: 'listTopbar', title: '오류신고', event: onClickTest, widgetId },
+      { key: 'mualListSetMultiView', title: '모아보기', event: this.handleClickTopBarButton },
+      { key: 'mualListCancelCheck', title: '전체취소', event: this.handleClickTopBarButton },
+      { key: 'listTopbar2', title: '오류신고', event: this.handleClickTopBarButton },
+      { key: 'listTopbar3', title: '오류신고', event: this.handleClickTopBarButton },
+      { key: 'listTopbar4', title: '오류신고', event: this.handleClickTopBarButton },
     ];
 
     return (
@@ -92,11 +101,16 @@ class CSManualList extends Component {
         {ListItemData.map(category => [
           <TitleBar key={`TitleBar_${category.get('CATEGORY_IDX')}`} categoryName={category.get('CATEGORY_NAME')} />,
           <Row key={`Row_${category.get('CATEGORY_IDX')}`} gutter={12}>
-            {category.get('childrenNode').map(manualitem => (
-              <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
-                <ListItem data={manualitem.toJS()} linkItemAction={{ setIsViewContents, setSelectedMualOrgIdx, setCheckManual, checkedManualList, widgetId }} />
-              </Col>
-            ))}
+            {category &&
+              category.get('childrenNode') &&
+              category.get('childrenNode').map(manualitem => (
+                <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
+                  <ListItem
+                    data={manualitem.toJS()}
+                    linkItemAction={{ setIsViewContents, setSelectedMualOrgIdx, setCheckManual, checkedManualList, widgetId }}
+                  />
+                </Col>
+              ))}
           </Row>,
         ])}
         <Modal
@@ -121,7 +135,7 @@ class CSManualList extends Component {
 
 CSManualList.propTypes = {
   GetTotalManualList: PropTypes.func,
-  totalManualList: PropTypes.arrayOf(PropTypes.object),
+  totalManualList: PropTypes.object,
   isViewContents: PropTypes.bool,
   item: PropTypes.object,
   setIsViewContents: PropTypes.func,
@@ -132,6 +146,8 @@ CSManualList.propTypes = {
   setCheckManual: PropTypes.func,
   checkedManualList: PropTypes.object,
   setMultiView: PropTypes.func,
+  setSelectedMualOrgIdx: PropTypes.func,
+  resetCheckManual: PropTypes.func,
 };
 
 CSManualList.defaultProps = {
@@ -147,6 +163,8 @@ CSManualList.defaultProps = {
   setCheckManual: () => false,
   checkedManualList: fromJS([]),
   setMultiView: () => false,
+  setSelectedMualOrgIdx: () => false,
+  resetCheckManual: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -165,6 +183,7 @@ const mapDispatchToProps = dispatch => ({
   resetManualView: widgetId => dispatch(viewActions.resetManualViewByReducr(widgetId)),
   setCheckManual: (mualIdx, mualOrgIdx, widgetId) => dispatch(actions.setCheckManualByReducr(mualIdx, mualOrgIdx, widgetId)),
   setMultiView: widgetId => dispatch(actions.setMultiViewBySaga(widgetId)),
+  resetCheckManual: widgetId => dispatch(actions.resetCheckManualByReducr(widgetId)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-CSManualList-reducer', reducer });

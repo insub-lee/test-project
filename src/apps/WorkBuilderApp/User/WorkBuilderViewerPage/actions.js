@@ -58,9 +58,7 @@ export const successGetEditData = data => ({
   data,
 });
 
-export const saveTaskContents = ({
-  detail, fieldNm, type, contSeq,
-}) => ({
+export const saveTaskContents = ({ detail, fieldNm, type, contSeq }) => ({
   type: actionTypes.SAVE_TASK_CONTENTS,
   data: {
     detail,

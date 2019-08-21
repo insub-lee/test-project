@@ -20,19 +20,18 @@ let totalUnreadCnt = 0;
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.AUTH_SUCCESS: {
-      Object.keys(action.UNREAD_CNT).forEach((o) => {
+      Object.keys(action.UNREAD_CNT).forEach(o => {
         totalUnreadCnt += Number(JSON.parse(action.UNREAD_CNT[o]).UNREAD_CNT);
       });
       document.querySelector('#uuid-portal').innerHTML = action.token;
-      if (action.profile.client !== undefined &&
-          (action.profile.client === 1 ||
-            action.profile.client === 2 ||
-            action.profile.client === '1' ||
-            action.profile.client === '2')
+      if (
+        action.profile.client !== undefined &&
+        (action.profile.client === 1 || action.profile.client === 2 || action.profile.client === '1' || action.profile.client === '2')
       ) {
         document.location.href = `callNative://function/saveToken?token=${action.token}`;
       }
-      return state.set('profile', action.profile)
+      return state
+        .set('profile', action.profile)
         .set('meta', {
           uuid: action.token,
           client: action.profile.client !== undefined ? action.profile.client : 0,

@@ -14,16 +14,16 @@ const Styled = styled.div`
 
   //height: 100%;
   padding: 39px 0 0;
-  
+
   ${({ direction = 'left' }) => selectDirection(direction)};
-  
+
   width: 15%;
   overflow: auto;
 
   border: 1px solid ${primaryColor};
   height: 100%;
   background-color: ${primaryColor};
-  
+
   &.combine {
     #style-manager {
       height: 60%;

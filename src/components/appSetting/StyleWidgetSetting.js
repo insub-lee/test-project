@@ -13,9 +13,9 @@ import w2x3 from '../../images/common/w2x3.png';
 
 const StyleWidgetSetting = styled.div`
   position: absolute;
-  width: 100vw;
+  width: 90vw;
   height: 100vh;
-  padding: 0 30px;
+  // padding: 0 30px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
@@ -33,7 +33,7 @@ const StyleWidgetSetting = styled.div`
 
       .modalClose {
         position: absolute;
-        right: 30px;
+        right: -10px;
         width: 41px;
         height: 55px;
         border-color: transparent;

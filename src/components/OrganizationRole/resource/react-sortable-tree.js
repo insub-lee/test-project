@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 /* eslint-disable */
 import { AutoSizer, List } from 'react-virtualized';
-import isEqual from 'lodash.isequal';
+import { isEqual } from 'lodash';
 import withScrolling, {
   createVerticalStrength,
   createHorizontalStrength,
@@ -821,7 +821,7 @@ ReactSortableTree.propTypes = {
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 
   // Determine whether a node can be dropped based on its path and parents'.
-  canDrop: PropTypes.func,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 
   // When true, or a callback returning true, dropping nodes to react-dnd
   // drop targets outside of this tree will not remove them from this tree

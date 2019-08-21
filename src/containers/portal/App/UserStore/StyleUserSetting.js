@@ -7,12 +7,12 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserSetting = styled.div`
-  position: fixed;
-  top: 42px;
-  left: 46px;
-  width: calc(100% - 46px);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
   height: 100vh;
-  padding: 0;
+  padding: 45px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
@@ -31,11 +31,12 @@ const StyleUserSetting = styled.div`
     .pageHeader {
       width: 100%;
       height: 55px;
-      border-bottom: 1px solid #222222;
+      border-bottom: 1px solid #e5e5e5;
       color: #222222;
-      font-size: 18px;
+      font-size: 24px;
       line-height: 55px;
-      text-align: center;
+      text-align: left;
+      font-weight: 600;
     }
 
     .navigation {

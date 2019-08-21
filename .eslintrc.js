@@ -1,27 +1,101 @@
 module.exports = {
-  extends: 'airbnb',
   parser: 'babel-eslint',
+  extends: ['airbnb', 'prettier', 'prettier/react'],
+  plugins: ['prettier', 'redux-saga', 'react', 'jsx-a11y'],
   env: {
+    jest: true,
     browser: true,
+    node: true,
+    es6: true,
   },
-  plugins: ['react'],
+  parserOptions: {
+    ecmaVersion: 6,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  settings: {
+    "import/resolver" : {
+      "alias" : {
+        "map" : [
+          ["components","./src/components/"],
+          ["utils","./src/utils/"],
+          ["containers","./src/containers/"],
+          ["images","./src/images/"],
+          ["apps","./src/apps/"],
+          ["style","./src/style/"],
+        ],
+        "extensions": [".js"]
+      }
+    }
+  },
   rules: {
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
-    'react/jsx-boolean-value': 'off',
-    'import/no-unresolved': 'off',
-    'import/extensions': 'off',
-    'import/first': ['error', 'DISABLE-absolute-first'],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
-    'jsx-a11y/anchor-is-valid': [
+    'prettier/prettier': [
       'error',
       {
-        components: ['Link'],
-        specialLink: ['to', 'hrefLeft', 'hrefRight'],
-        aspects: ['noHref', 'invalidHref', 'preferButton'],
+        printWidth: 160,
+        tabWidth: 2,
+        useTabs: false,
+        semi: true,
+        singleQuote: true,
+        trailingComma: 'all',
       },
     ],
+    'arrow-body-style': [2, 'as-needed'],
+    'class-methods-use-this': 0,
+    'comma-dangle': [2, 'always-multiline'],
+    'import/imports-first': 0,
+    'import/newline-after-import': 0,
+    'import/no-dynamic-require': 0,
+    'import/no-extraneous-dependencies': 0,
+    'import/no-named-as-default': 0,
+    'import/no-unresolved': 2,
+    'import/no-webpack-loader-syntax': 0,
+    'import/prefer-default-export': 0,
+    'indent': [
+      'error',
+      2,
+      {
+        SwitchCase: 1,
+      },
+    ],
+    'jsx-a11y/aria-props': 2,
+    'jsx-a11y/heading-has-content': 0,
+    'jsx-a11y/label-has-associated-control': [
+      2,
+      {
+        // NOTE: If this error triggers, either disable it or add
+        // your custom components, labels and attributes via these options
+        // See https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/label-has-associated-control.md
+        controlComponents: ['Input'],
+      },
+    ],
+    'jsx-a11y/label-has-for': 0,
+    'jsx-a11y/mouse-events-have-key-events': 2,
+    'jsx-a11y/role-has-required-aria-props': 2,
+    'jsx-a11y/role-supports-aria-props': 2,
+    'max-len': 0,
+    'newline-per-chained-call': 0,
+    'no-confusing-arrow': 0,
+    'no-console': 1,
+    'no-unused-vars': 2,
+    'no-use-before-define': 0,
+    'prefer-template': 2,
+    'react/destructuring-assignment': 0,
+    'react/jsx-closing-tag-location': 0,
+    'react/forbid-prop-types': 0,
+    'react/jsx-first-prop-new-line': [2, 'multiline'],
+    'react/jsx-filename-extension': 0,
+    'react/jsx-no-target-blank': 0,
+    'react/jsx-uses-vars': 2,
+    'react/require-default-props': 0,
+    'react/require-extension': 0,
+    'react/self-closing-comp': 0,
+    'react/sort-comp': 0,
+    'redux-saga/no-yield-in-race': 2,
+    'redux-saga/yield-effects': 2,
+    'require-yield': 0,
     'linebreak-style': 0,
-    'react/forbid-prop-types': [1, { forbid: ['any'], checkContextTypes: true, checkChildContextTypes: true }],
-    'max-len': ['warn', { code: 150 }],
   },
 };

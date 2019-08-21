@@ -18,3 +18,5 @@ export const setSelectedMualOrgIdxBySaga = (mualIdx, widgetId, orgIdxList) => ({
 });
 
 export const setMultiViewBySaga = widgetId => ({ type: constantTypes.SET_MULTI_VIEW_SAGA, widgetId });
+
+export const resetCheckManualByReducr = widgetId => ({ type: constantTypes.RESET_CHECK_MANUAL_REDUCR, widgetId });

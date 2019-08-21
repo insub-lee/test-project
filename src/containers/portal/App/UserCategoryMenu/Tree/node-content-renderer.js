@@ -215,7 +215,7 @@ CustomThemeNodeContentRenderer.defaultProps = {
 
 CustomThemeNodeContentRenderer.propTypes = {
   buttons: PropTypes.arrayOf(PropTypes.node),
-  canDrag: PropTypes.func,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   className: PropTypes.string,
   icons: PropTypes.arrayOf(PropTypes.node),
   isSearchFocus: PropTypes.bool,
@@ -244,7 +244,7 @@ CustomThemeNodeContentRenderer.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   parentNode: PropTypes.shape({}), // Needed for dndManager
   // Drop target
-  canDrop: PropTypes.func,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   isOver: PropTypes.bool.isRequired,
 };
 

@@ -3,129 +3,220 @@ import { createSelector } from 'reselect';
 // ****************** auth 스토어에서 가져오는 state ******************
 const selectPortalAuth = state => state.get('auth').toJS();
 
-const makeSelectProfile = () => createSelector(
-  selectPortalAuth,
-  portalState => portalState.profile,
-);
+const makeSelectProfile = () =>
+  createSelector(
+    selectPortalAuth,
+    portalState => portalState.profile,
+  );
 
-const makeSelectHNotiCnt = () => createSelector(
-  selectPortalAuth,
-  portalState => portalState.myHNotiCnt,
-);
+const makeSelectHNotiCnt = () =>
+  createSelector(
+    selectPortalAuth,
+    portalState => portalState.myHNotiCnt,
+  );
 
-const makeSelectRoleAdmin = () => createSelector(
-  selectPortalAuth,
-  portalState => portalState.profile.SA,
-);
+const makeSelectRoleAdmin = () =>
+  createSelector(
+    selectPortalAuth,
+    portalState => portalState.profile.SA,
+  );
 
 // ****************** language 스토어에서 가져오는 state ******************
 const selectPortalLanguage = state => state.get('language').toJS();
-const makeSelectLocale = () => createSelector(
-  selectPortalLanguage,
-  portalState => portalState.locale,
-);
+const makeSelectLocale = () =>
+  createSelector(
+    selectPortalLanguage,
+    portalState => portalState.locale,
+  );
 
 // ****************** app 스토어에서 가져오는 state ******************
 // const selectPortal = state => state.get('app').toJS();
 
 // ****************** 초기 로그인 성공시 라우터의 스토어에서 가져오는 state ******************
 const selectRoute = state => state.get('common').toJS();
-const makeSelectView = () => createSelector(
-  selectRoute,
-  viewState => viewState.view,
-);
 
-const makeSelectDockAppList = () => createSelector(
-  selectRoute,
-  portalState => portalState.dockAppList,
-);
+const makeSelectView = () =>
+  createSelector(
+    selectRoute,
+    viewState => viewState.view,
+  );
 
-const makeSelectDockFixedYn = () => createSelector(
-  selectRoute,
-  portalState => portalState.dockFixedYn,
-);
+const makeSelectDockAppList = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.dockAppList,
+  );
 
-const makeSelectDockIconType = () => createSelector(
-  selectRoute,
-  portalState => portalState.dockIconType,
-);
+const makeSelectDockFixedYn = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.dockFixedYn,
+  );
 
-const makeSelectSetMyMenuNodeData = () => createSelector(
-  selectRoute,
-  portalState => portalState.setMyMenuNodeData,
-);
+const makeSelectDockIconType = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.dockIconType,
+  );
 
-const makeSelectSelectedIndex = () => createSelector(
-  selectRoute,
-  portalState => portalState.selectedIndex,
-);
+const makeSelectSetMyMenuNodeData = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.setMyMenuNodeData,
+  );
 
-const makeSelectMenuName = () => createSelector(
-  selectRoute,
-  portalState => portalState.menuName,
-);
+const makeSelectSelectedIndex = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.selectedIndex,
+  );
 
-const makeSelectManagerInfo = () => createSelector(
-  selectRoute,
-  portalState => portalState.managerInfo,
-);
+const makeSelectMenuName = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.menuName,
+  );
 
-const makeSelectSkin = () => createSelector(
-  selectRoute,
-  portalState => portalState.mySkin,
-);
+const makeSelectManagerInfo = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.managerInfo,
+  );
 
-const makeSelectMNotiCnt = () => createSelector(
-  selectRoute,
-  portalState => portalState.myMNotiCnt,
-);
+const makeSelectSkin = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.mySkin,
+  );
 
-const makeSelectMNotiList = () => createSelector(
-  selectRoute,
-  portalState => portalState.myMNotiList,
-);
+const makeSelectMNotiCnt = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.myMNotiCnt,
+  );
 
-const makeSelectIsUnfixDockItem = () => createSelector(
-  selectRoute,
-  portalState => portalState.isUnfixDockItem,
-);
+const makeSelectMNotiList = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.myMNotiList,
+  );
 
-const makeSelectSelectedApp = () => createSelector(
-  selectRoute,
-  portalState => portalState.selectedApp,
-);
+const makeSelectIsUnfixDockItem = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.isUnfixDockItem,
+  );
 
-const makeUnreadCnt = () => createSelector(
-  selectRoute,
-  portalState => portalState.isUnreadCnt,
-);
+const makeSelectSelectedApp = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.selectedApp,
+  );
 
+const makeUnreadCnt = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.isUnreadCnt,
+  );
 
-const makeSelectMyMenuData = () => createSelector(
-  selectRoute,
-  portalState => portalState.setMyMenuData,
-);
+const makeSelectMyMenuData = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.setMyMenuData,
+  );
 
-const makeSelectDeletedDockPageId = () => createSelector(
-  selectRoute,
-  portalState => portalState.deletedDockPageId,
-);
+const makeSelectDeletedDockPageId = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.deletedDockPageId,
+  );
 
-const makeSelectExecutedDockPageId = () => createSelector(
-  selectRoute,
-  portalState => portalState.executedDockPageId,
-);
+const makeSelectExecutedDockPageId = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.executedDockPageId,
+  );
 
-const makeSelectDataForApps = () => createSelector(
-  selectRoute,
-  portalState => portalState.dataForApps,
-);
+const makeSelectDataForApps = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.dataForApps,
+  );
 
-const makeSelectApps = () => createSelector(
-  selectRoute,
-  portalState => portalState.apps,
-);
+const makeSelectApps = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.apps,
+  );
 
+// ****************** app 스토어에서 가져오는 state ******************
+const selectApp = state => state.get('app');
+
+const makeSelectOpen = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('open'),
+  );
+
+const makeSelectHeaderMenuOpen = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('headerMenuOpen'),
+  );
+
+const makeSelectIsFullscreenEnabled = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('isFullscreenEnabled'),
+  );
+
+const makeSelectSet = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('set'),
+  );
+
+const makeSelectVisible = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('visible'),
+  );
+
+const makeSelectShow = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('show'),
+  );
+
+const makeSelectIsClose = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('isClose').toJS(),
+  );
+
+const makeSelectIsSpinnerShow = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('isSpinnerShow'),
+  );
+
+const makeSelectCount = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('count'),
+  );
+
+const makeSelectIsMakingApps = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('isMakingApps'),
+  );
+  
+const makeSelectMenuShow = () =>
+  createSelector(
+    selectApp,
+    appState => appState.get('menuShow'),
+  );  
 
 export {
   makeSelectProfile,
@@ -137,7 +228,6 @@ export {
   makeSelectIsUnfixDockItem,
   makeUnreadCnt,
   makeSelectRoleAdmin,
-
   makeSelectView,
   makeSelectDockAppList,
   makeSelectDockFixedYn,
@@ -152,4 +242,16 @@ export {
   makeSelectExecutedDockPageId,
   makeSelectDataForApps,
   makeSelectApps,
+
+  makeSelectOpen,
+  makeSelectHeaderMenuOpen,
+  makeSelectIsFullscreenEnabled,
+  makeSelectSet,
+  makeSelectVisible,
+  makeSelectShow,
+  makeSelectIsClose,
+  makeSelectIsSpinnerShow,
+  makeSelectCount,
+  makeSelectIsMakingApps,
+  makeSelectMenuShow,
 };

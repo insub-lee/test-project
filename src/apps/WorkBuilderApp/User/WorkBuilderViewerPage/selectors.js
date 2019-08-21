@@ -35,7 +35,7 @@ const makeSelectWorkFlow = () =>
 const makeSelectWorkFlowConfig = () =>
   createSelector(
     selectWorkBuilderDetailPage,
-    (state) => {
+    state => {
       const config = state.getIn(['workFlow', 'CONFIG']);
       return config ? JSON.parse(config) : { info: {} };
     },
@@ -89,4 +89,19 @@ const makeSelectIsModalLoading = () =>
     state => state.get('isModalLoading').toJS(),
   );
 
-export { makeSelectColumns, makeSelectList, makeSelectBoxes, makeSelectFormStuffs, makeSelectIsOpenFormModal, makeSelectWorkSeq, makeSelectTaskSeq, makeSelectIsOpenEditModal, makeSelectResultFormStuffs, makeSelectWorkFlow, makeSelectWorkFlowConfig, makeSelectSignLineInfo, makeSelectIsLoading, makeSelectIsModalLoading };
+export {
+  makeSelectColumns,
+  makeSelectList,
+  makeSelectBoxes,
+  makeSelectFormStuffs,
+  makeSelectIsOpenFormModal,
+  makeSelectWorkSeq,
+  makeSelectTaskSeq,
+  makeSelectIsOpenEditModal,
+  makeSelectResultFormStuffs,
+  makeSelectWorkFlow,
+  makeSelectWorkFlowConfig,
+  makeSelectSignLineInfo,
+  makeSelectIsLoading,
+  makeSelectIsModalLoading,
+};

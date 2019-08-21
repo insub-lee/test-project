@@ -95,7 +95,7 @@ const StyleEditorIndex = styled.div`
       }
     }
     .editorIndexContents {
-      height: calc(100% - 41px);
+      height: 100%;
     }
   }
   .ant-anchor-wrapper {

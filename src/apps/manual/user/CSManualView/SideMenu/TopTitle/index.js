@@ -6,7 +6,7 @@ import Styled from './Styled';
 
 const TopTitle = () => (
   <Styled>
-    <IconCollection className="icon-list" />
+    <IconCollection className="icon-manualViewlist" />
     <p>목차</p>
   </Styled>
 );

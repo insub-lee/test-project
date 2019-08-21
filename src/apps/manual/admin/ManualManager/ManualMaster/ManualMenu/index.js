@@ -11,11 +11,11 @@ import * as actions from '../actions';
 const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType, handleSelectOptionMgr }) => (
   <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]}>
     <Menu.Item key="DefaultMgr" onClick={() => handleChangePageType('DefaultMgr')}>
-      <Icon type="setting" />
+      <Icon type="form" />
       기본정보
     </Menu.Item>
     <Menu.Item key="ManualWrite" onClick={handleChangeIsEditorMgr}>
-      <Icon type="setting" />
+      <Icon type="edit" />
       매뉴얼작성
     </Menu.Item>
     <Menu.Item key="OptionMgr" onClick={() => handleSelectOptionMgr()}>
@@ -23,15 +23,15 @@ const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageTyp
       옵션
     </Menu.Item>
     <Menu.Item key="Compare" disabled>
-      <Icon type="setting" />
+      <Icon type="diff" />
       상품비교정보
     </Menu.Item>
     <Menu.Item key="DisplayDefine" onClick={() => handleChangePageType('DisplayDefine')}>
-      <Icon type="setting" />
+      <Icon type="layout" />
       화면정의
     </Menu.Item>
     <Menu.Item key="Draft" onClick={() => handleChangePageType('Draft')}>
-      <Icon type="setting" />
+      <Icon type="audit" />
       심의요청
     </Menu.Item>
   </Menu>

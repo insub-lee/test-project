@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const StyleCategoryManage = styled.div`
   padding-top: 12px;
-  background: #ffd3d3;
 
   .categoryWrapper {
     max-width: 1200px;
@@ -14,18 +13,25 @@ const StyleCategoryManage = styled.div`
     padding: 15px;
 
     > .categoryTitleWrapper {
-      height: 36px;
       position: relative;
+      height: 50px;
+      line-height: 50px;
       > h3 {
         display: inline-block;
         font-weight: 600;
+        height: auto;
+        line-height: normal;
+        border-bottom: 0;
       }
       button {
         position: absolute;
         right: 0px;
-        height: 30px;
         padding: 0 10px;
         font-size: 12px;
+        height: auto;
+        box-shadow: none;
+        top: 50%;
+        transform: translateY(-50%);
       }
     }
 

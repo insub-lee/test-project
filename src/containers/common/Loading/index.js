@@ -13,9 +13,7 @@ import saga from './saga';
 
 class Loading extends Component {
   render() {
-    const {
-      isLoading,
-    } = this.props;
+    const { isLoading } = this.props;
 
     const result = isLoading ? (
       <div
@@ -31,7 +29,9 @@ class Loading extends Component {
       >
         <Spin size="large" style={{ margin: 'auto', width: '100%', padding: '20%' }} />
       </div>
-    ) : '';
+    ) : (
+      ''
+    );
 
     return result;
   }

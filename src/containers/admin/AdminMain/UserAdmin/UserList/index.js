@@ -52,14 +52,14 @@ class UserList extends React.Component {
     this.columns = [
       {
         key: 'EMP_NO',
-        name: '사번',
+        name: `${intlObj.get(messages.titleUserEmpNo)}`,
         visible: true,
         sortable: true,
         resizable: true,
       },
       {
         key: 'NAME_KOR',
-        name: '이름(KOR)',
+        name: `${intlObj.get(messages.nameKor)}`,
         visible: true,
         sortable: true,
         resizable: true,
@@ -73,7 +73,7 @@ class UserList extends React.Component {
       },
       {
         key: 'STATUS_CD',
-        name: '상태',
+        name: `${intlObj.get(messages.titleUserStatus)}`,
         visible: true,
         sortable: true,
         formatter: this.StatusFormatter,
@@ -81,21 +81,21 @@ class UserList extends React.Component {
       },
       {
         key: 'DEPT_NAME',
-        name: '부서',
+        name: `${intlObj.get(messages.titleUserDept)}`,
         visible: true,
         sortable: true,
         resizable: true,
       },
       {
         key: 'PSTN_NAME',
-        name: '직위',
+        name: `${intlObj.get(messages.titleUserPSTN)}`,
         visible: true,
         sortable: true,
         resizable: true,
       },
       {
         key: 'OFFICE_TEL_NO',
-        name: '사무실전화',
+        name: `${intlObj.get(messages.titleUserOfficeTel)}`,
         visible: true,
         sortable: true,
         resizable: true,
@@ -110,13 +110,14 @@ class UserList extends React.Component {
     let dtPstnId = 0;
     let dtDeptName = '';
     let dtPstnName = '';
-
+    let dtStatusCode = 'C';
     // 상세에서 넘어온 Data
     console.log('this.props.history.location.state', this.props.history.location.state);
     if (this.props.history.location.state !== null &&
       this.props.history.location.state !== undefined) {
       const location = this.props.history.location.state;
 
+      dtStatusCode =  location.statusCode,
       dtKeyword = location.keyword;
       dtKeywordType = location.keywordType;
       dtSortColumn = location.sortColumn;
@@ -128,6 +129,7 @@ class UserList extends React.Component {
     }
 
     this.state = {
+      statusCode: dtStatusCode,
       keywordType: dtKeywordType,
       keyword: dtKeyword,
       sortColumnParam: dtSortColumn,
@@ -144,6 +146,7 @@ class UserList extends React.Component {
       [],
       this.state.sortColumnParam,
       this.state.sortDirectionParam,
+      this.state.statusCode,
       this.state.keywordType,
       this.state.keyword,
       this.state.deptId,
@@ -157,6 +160,7 @@ class UserList extends React.Component {
     const data = {
       sortColumnParam: this.state.sortColumnParam,
       sortDirectionParam: this.state.sortDirectionParam,
+      statusCode: this.state.statusCode,
       keywordType: this.state.keywordType,
       keyword: this.state.keyword,
       deptId: this.state.deptId,
@@ -193,6 +197,7 @@ class UserList extends React.Component {
         userList,
         this.state.sortColumnParam,
         this.state.sortDirectionParam,
+        this.state.statusCode,
         this.state.keywordType,
         this.state.keyword,
         this.state.deptId,
@@ -215,6 +220,23 @@ class UserList extends React.Component {
     this.setState({ keywordType: e });
   }
 
+  handleStatusSelect = (e) => {
+    this.setState({ statusCode: e }, () => {
+      this.props.getUserList(
+        pageSNum,
+        pageENum,
+        [],
+        this.state.sortColumnParam,
+        this.state.sortDirectionParam,
+        this.state.statusCode,
+        this.state.keywordType,
+        this.state.keyword,
+        this.state.deptId,
+        this.state.pstnId,
+      );
+    });
+  }
+
   // 검색아이콘 클릭 시(조회)
   handleClick = () => {
     pageSNum = 1;
@@ -225,6 +247,7 @@ class UserList extends React.Component {
       [],
       this.state.sortColumnParam,
       this.state.sortDirectionParam,
+      this.state.statusCode,
       this.state.keywordType,
       this.state.keyword,
       this.state.deptId,
@@ -248,6 +271,7 @@ class UserList extends React.Component {
       [],
       sortColumn,
       sortDirection,
+      this.state.statusCode,
       this.state.keywordType,
       this.state.keyword,
       this.state.deptId,
@@ -319,6 +343,7 @@ class UserList extends React.Component {
         [],
         this.state.sortColumnParam,
         this.state.sortDirectionParam,
+        this.state.statusCode,
         this.state.keywordType,
         this.state.keyword,
         this.state.deptId,
@@ -339,6 +364,7 @@ class UserList extends React.Component {
 
   initSearch = () => {
     this.setState({
+      statusCode: 'C',
       keyword: '',
       keywordType: 'userNameKor',
       sortColumnParam: '',
@@ -359,6 +385,7 @@ class UserList extends React.Component {
       USER_ID: null,
       sortColumnParam: this.state.sortColumnParam,
       sortDirectionParam: this.state.sortDirectionParam,
+      statusCode: this.state.statusCode,
       keywordType: this.state.keywordType,
       keyword: this.state.keyword,
       deptId: this.state.deptId,
@@ -386,7 +413,7 @@ class UserList extends React.Component {
           />
         </Modal>
         <StyleUserList>
-          <h3 className="pageTitle">계정관리</h3>
+          <h3 className="pageTitle">{intlObj.get(messages.userManage)}</h3>
           <div className="searchBox">
             <Input
               placeholder={intlObj.get(messages.lblDeptPlaceholder)}
@@ -408,8 +435,22 @@ class UserList extends React.Component {
               style={{ width: 200, marginRight: 10, float: 'left' }}
               readOnly={true}
             />
+            <Select
+              value={this.state.statusCode}
+              onChange={this.handleStatusSelect}
+              style={{ width: 120, marginRight: 10, float: 'left'  }}
+              dropdownStyle={{ fontSize: 13 }}
+            >
+              <Option value="C">{intlObj.get(messages.statusCdWork)}</Option>
+              <Option value="D">{intlObj.get(messages.statusCdDispatch)}</Option>
+              <Option value="H">{intlObj.get(messages.statusCdLeave)}</Option>
+              <Option value="T">{intlObj.get(messages.statusCdRetired)}</Option>
+              <Option value="">{intlObj.get(messages.lblAll)}</Option>
+            </Select>
+
+            {/* 오른쪽 */}            
             <LinkBtnLgtGray onClick={this.initSearch} style={{ marginRight: '10px' }}>
-              검색조건초기화
+              {intlObj.get(messages.initSearch)}
             </LinkBtnLgtGray>
             <Select
               value={this.state.keywordType}
@@ -417,14 +458,12 @@ class UserList extends React.Component {
               style={{ width: 120, marginRight: 10 }}
               dropdownStyle={{ fontSize: 13 }}
             >
-              <Option value="userNameKor">이름</Option>
-              <Option value="userEmpNo">사번</Option>
-              <Option value="deptName">부서</Option>
-              <Option value="pstnName">직위</Option>
-              <Option value="officeTel">사무실전화</Option>
-
-            </Select>
-            {/* 오른쪽 */}
+              <Option value="userNameKor">{intlObj.get(messages.nameKor)}</Option>
+              <Option value="userEmpNo">{intlObj.get(messages.titleUserEmpNo)}</Option>
+              <Option value="deptName">{intlObj.get(messages.titleUserDept)}</Option>
+              <Option value="pstnName">{intlObj.get(messages.titleUserPSTN)}</Option>
+              <Option value="officeTel">{intlObj.get(messages.titleUserOfficeTel)}</Option>
+            </Select>            
             <div className="searchWrapper">
               <Input
                 value={this.state.keyword}
@@ -480,8 +519,8 @@ UserList.propTypes = {
 
 const mapDispatchToProps = dispatch => (
   {
-    getUserList: (sNum, eNum, userList, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId) =>
-      dispatch(actionTypes.getUserList(sNum, eNum, userList, sortColumn, sortDirection, keywordType, keyword, deptId, pstnId)),
+    getUserList: (sNum, eNum, userList, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId) =>
+      dispatch(actionTypes.getUserList(sNum, eNum, userList, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId)),
 
     getChangeDeptTreeData: DEPT_ID => dispatch(actionTypes.getChangeDeptTreeData(DEPT_ID)),
     getDeptComboData: () => dispatch(actionTypes.getDeptComboData()),

@@ -2,11 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 
-const Settings = ({
-  type, target, targetIndex, boxType, action: {
-    changeTitle, changeName, changeMaxLength, changeFormStuffSpan, changeRequired,
-  },
-}) => (
+const Settings = ({ type, target, targetIndex, boxType, action: { changeTitle, changeName, changeMaxLength, changeFormStuffSpan, changeRequired } }) => (
   <div className="sm-sector">
     <div className="sm-title">
       <span className="icon-settings fa fa-cog" /> Settings
@@ -15,7 +11,7 @@ const Settings = ({
       <div className="trt-traits gjs-one-bg gjs-two-color">
         <div className="trt-trait">
           <div className="label" title="Title">
-              Label
+            Label
           </div>
           <div className="field field-text">
             <div className="input-holder">
@@ -75,7 +71,7 @@ const Settings = ({
         {boxType === 'table' && (
           <div className="trt-trait">
             <div className="label" title="Box Type">
-                  Span
+              Span
             </div>
             <div className="field field-text">
               <div className="input-holder">

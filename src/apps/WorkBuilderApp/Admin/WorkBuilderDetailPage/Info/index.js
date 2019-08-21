@@ -21,7 +21,10 @@ class Info extends Component {
   }
 
   render() {
-    const { info: { WORK_ID, NAME_KOR, DSCR }, isLoading } = this.props;
+    const {
+      info: { WORK_ID, NAME_KOR, DSCR },
+      isLoading,
+    } = this.props;
     return (
       <Wrapper>
         <Spin spinning={false}>

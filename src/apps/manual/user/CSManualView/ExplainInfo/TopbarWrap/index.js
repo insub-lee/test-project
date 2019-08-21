@@ -4,10 +4,10 @@ import TopbarTitle from '../TopbarTitle';
 import Nav from '../../Header/Nav';
 import Styled from './Styled';
 
-const TopbarWrap = () => (
+const TopbarWrap = ({ mualMaster, navList }) => (
   <Styled>
-    <TopbarTitle />
-    <Nav />
+    <TopbarTitle mualMaster={mualMaster} />
+    <Nav navList={navList} />
   </Styled>
 );
 

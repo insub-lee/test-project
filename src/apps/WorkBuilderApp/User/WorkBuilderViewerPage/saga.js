@@ -10,23 +10,29 @@ import * as selectors from './selectors';
 function* getView({ id }) {
   const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${id}`);
   const { list, fieldList, metaList } = response;
-  const columns = fieldList.map(({ NAME_KOR, COMP_FIELD }) => ({
-    headerName: NAME_KOR,
-    field: COMP_FIELD.toUpperCase(),
-  })).concat([{ headerName: '등록날짜', field: 'REG_DTTM' }, { headerName: '수정날짜', field: 'UPD_DTTM' }]);
-  const boxes = metaList.filter(meta => meta.COMP_TYPE === 'BOX').map(box => ({
-    ...JSON.parse(box.CONFIG).property,
-  }));
-  const formStuffs = metaList.filter(meta => meta.COMP_TYPE === 'FIELD').map(formStuff => {
-    const { property: configProperty } = JSON.parse(formStuff.CONFIG);
-    return {
-      ...configProperty,
-      property: {
-        ...configProperty.property,
-        maxLength: configProperty.property.maxLength === 0 ? undefined : configProperty.property.maxLength,
-      },
-    };
-  });
+  const columns = fieldList
+    .map(({ NAME_KOR, COMP_FIELD }) => ({
+      headerName: NAME_KOR,
+      field: COMP_FIELD.toUpperCase(),
+    }))
+    .concat([{ headerName: '등록날짜', field: 'REG_DTTM' }, { headerName: '수정날짜', field: 'UPD_DTTM' }]);
+  const boxes = metaList
+    .filter(meta => meta.COMP_TYPE === 'BOX')
+    .map(box => ({
+      ...JSON.parse(box.CONFIG).property,
+    }));
+  const formStuffs = metaList
+    .filter(meta => meta.COMP_TYPE === 'FIELD')
+    .map(formStuff => {
+      const { property: configProperty } = JSON.parse(formStuff.CONFIG);
+      return {
+        ...configProperty,
+        property: {
+          ...configProperty.property,
+          maxLength: configProperty.property.maxLength === 0 ? undefined : configProperty.property.maxLength,
+        },
+      };
+    });
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   // yield put(actions.successGetView(boxes, formStuffs));
   yield put(actions.successGetView(columns, list));
@@ -43,7 +49,10 @@ function* postData({ payload, prcId, processStep }) {
   } else {
     const nextResponse = yield call(Axios.post, '/api/builder/v1/work/taskComplete', {
       PARAM: {
-        TASK_SEQ: taskSeq, WORK_SEQ: workSeq, prcId, processStep,
+        TASK_SEQ: taskSeq,
+        WORK_SEQ: workSeq,
+        prcId,
+        processStep,
       },
     });
     console.debug('@Complete', nextResponse);
@@ -55,8 +64,10 @@ function* postData({ payload, prcId, processStep }) {
 
 function* getTaskSeq() {
   const workSeq = yield select(selectors.makeSelectWorkSeq());
-  const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, { });
-  const { data: { TASK_SEQ } } = response;
+  const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {});
+  const {
+    data: { TASK_SEQ },
+  } = response;
   yield put(actions.successGetTaskSeq(TASK_SEQ));
 }
 
@@ -70,12 +81,7 @@ function* getEditData({ workSeq, taskSeq }) {
 }
 
 function* saveTaskContents({ data }) {
-  const {
-    detail,
-    fieldNm,
-    type,
-    contSeq,
-  } = data;
+  const { detail, fieldNm, type, contSeq } = data;
   yield delay(800);
   const workSeq = yield select(selectors.makeSelectWorkSeq());
   const taskSeq = yield select(selectors.makeSelectTaskSeq());
@@ -90,7 +96,9 @@ function* saveTaskContents({ data }) {
     DETAIL: detail,
   };
   const response = yield call(Axios.post, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, { PARAM: payload });
-  const { data: { CONT_SEQ, FIELD_NM } } = response;
+  const {
+    data: { CONT_SEQ, FIELD_NM },
+  } = response;
   yield put(actions.successSaveTaskContents({ taskSeq, fieldNm: FIELD_NM, contSeq: CONT_SEQ }));
 }
 

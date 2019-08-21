@@ -165,8 +165,8 @@ class IfBoardList extends Component {
 IfBoardList.propTypes = {
   treeData: PropTypes.array.isRequired,
   rowHeight: PropTypes.number,
-  canDrag: PropTypes.func,
-  canDrop: PropTypes.func,
+  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   style: PropTypes.object,
   innerStyle: PropTypes.object,
   wrapperStyle: PropTypes.object,

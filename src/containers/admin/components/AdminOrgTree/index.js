@@ -88,6 +88,15 @@ class AdminOrgTree extends Component {
     });
   }
 
+  nodeDelete(rowInfo) {
+    const { node } = rowInfo;
+    this.setState({
+      selectedIndex: node.key,
+    });
+    this.props.returnGateDelete(node.key, node.PRNT_ID, node.SORT_SQ);
+  }
+
+
   render() {
     const {
       treeData,
@@ -105,13 +114,7 @@ class AdminOrgTree extends Component {
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
 
-    const nodeDelete = (rowInfo) => {
-      const { node } = rowInfo;
-      this.setState({
-        selectedIndex: node.key,
-      });
-      this.props.returnGateDelete(node.key, node.SORT_SQ);
-    };
+
     return (
       // <StyleAdminOrgTree
       //   style={{
@@ -204,8 +207,8 @@ class AdminOrgTree extends Component {
 
               // 버튼 노출 조건(아이콘 별)
               const btnCondition1 = true; // 마지막노드X 업무그룹X
-              // 삭제는 자신 것만, 사용하는 앱이 없고, 하위가 없는 것만 삭제 가능 , 최상위는 제외
-              const btnCondition3 = node.APPCNT === '0' && node.CATGCNT === '0' && node.LVL !== 0;
+              // 삭제는 자신 것만, 하위가 없는 것만 삭제 가능 , 최상위는 제외
+              const btnCondition3 = node.SUBCNT === 0 && node.GRPCNT === 0 && node.CATGCNT === 0 && node.LVL !== 0;
 
               // 노드에 마우스 오버했을 때
               if (this.state.onHoverKey === node.key) {
@@ -221,7 +224,7 @@ class AdminOrgTree extends Component {
                     <li>
                       <DeleteCtgBtn
                         onClick={() => {
-                          feed.showConfirm(`${lang.get('NAME', rowInfo.node)} ${intlObj.get(messages.del)}`, '', () => nodeDelete(rowInfo));
+                          feed.showConfirm(`${lang.get('NAME', rowInfo.node)} ${intlObj.get(messages.del)}`, '', () => this.nodeDelete(rowInfo));
                         }}
                       />
                     </li> : '',
@@ -277,7 +280,7 @@ AdminOrgTree.propTypes = {
   selectedIndex: PropTypes.number, //eslint-disable-line
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   canDropOut: PropTypes.bool,
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object, //eslint-disable-line
   onClick: PropTypes.func,
   returnGateInfo: PropTypes.func.isRequired, //eslint-disable-line

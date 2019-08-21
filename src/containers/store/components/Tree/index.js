@@ -161,7 +161,7 @@ Tree.propTypes = {
   generateNodeProps: PropTypes.func.isRequired,
   onClick: PropTypes.func,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  canDrop: PropTypes.bool,
+  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
 };
 
 Tree.defaultProps = {

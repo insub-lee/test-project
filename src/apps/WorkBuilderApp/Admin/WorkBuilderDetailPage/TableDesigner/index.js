@@ -15,7 +15,7 @@ import saga from './saga';
 
 class TableDesigner extends Component {
   componentDidMount() {
-    console.debug('Boot......두두두두두두 List 뷰 관리', this.props.id);
+    // Todo - Read Meta Data
     const { fetchData, id } = this.props;
     fetchData(id);
   }

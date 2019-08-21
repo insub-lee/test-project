@@ -47,7 +47,7 @@ export default defineMessages({
   },
   rankDeleteFail1: {
     id: 'admin.AdminMain.Rank.rankDeleteFail1',
-    defaultMessage: '하위 직급가 있는 경우 삭제가 불가능 합니다.',
+    defaultMessage: '사용중이거나 하위 직급가 있는 경우 삭제가 불가능 합니다.',
   },
   rankDeleteFail2: {
     id: 'admin.AdminMain.Rank.rankDeleteFail2',
