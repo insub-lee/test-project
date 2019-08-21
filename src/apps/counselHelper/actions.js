@@ -1,13 +1,13 @@
 import * as action from './constants';
 
-export const saveWidgetInfo = title => ({
+export const saveWidgetInfo = categorie => ({
   type: action.SAVE_WIDGET_INFO,
-  title,
+  categorie,
 });
 
-export const getWidgetInfo = title => ({
+export const getWidgetInfo = categorie => ({
   type: action.GET_WIDGET_INFO,
-  title,
+  categorie,
 });
 
 export const saveDetail = detail => ({

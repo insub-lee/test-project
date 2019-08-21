@@ -28,6 +28,4 @@ const makeSearchWord = () =>
     selectAppsWidgetState,
     widgetstate => widgetstate.get('searchWord'),
   );
-export default {
- selectAppsWidgetState, makeSelectWidget, makeSelectDetail, makeSelectMenu, makeSelectwidgetSize, makeSearchWord 
-};
+export default { selectAppsWidgetState, makeSelectWidget, makeSelectDetail, makeSelectMenu, makeSelectwidgetSize, makeSearchWord };

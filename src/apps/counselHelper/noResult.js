@@ -12,7 +12,7 @@ export default class noResult extends PureComponent {
         </Row>
         <Row style={{ textAlign: 'center' }}>
           {searchWord === '' ? (
-            <span>결과가 없습니다.</span>
+            <span>카테고리를 선택해 주세요.</span>
           ) : (
             <div>
               <span style={{ color: 'red' }}>`{searchWord}`</span>

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Input } from 'antd';
+import { InputSearch } from 'components/FormStuff/Input';
 
+const { Search } = Input;
 class searchWidget extends Component {
   state = {
     text: '',
   };
 
-  handlerChange = e => {
+  handlerChange = (e) => {
     this.setState({
       text: e.target.value,
     });
@@ -15,26 +18,20 @@ class searchWidget extends Component {
   render() {
     const { onClick } = this.props;
     return (
-      <div className="searchDiv">
-        <input
-          type="text"
+      <div className="searchInput">
+        <InputSearch
           placeholder="검색어를 입력해주세요"
+          style={{ width: '100%' }}
           onChange={this.handlerChange}
-          onKeyPress={e => {
+          onKeyPress={(e) => {
             if (e.key === 'Enter') {
               onClick(this.state.text);
             }
           }}
-          value={this.state.text}
-        ></input>
-        <button
-          type="button"
-          onClick={() => {
+          onSearch={() => {
             onClick(this.state.text);
           }}
-        >
-          검색
-        </button>
+        />
       </div>
     );
   }

@@ -10,10 +10,16 @@ import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
 import * as actions from './actions';
+import Config from './config';
 import HelperWidget from './helperWidget';
 import StyleWidget from './StyleWidget';
 
 class Widget extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.props.getWidgetInfo();
+  }
+
   state = {
     toggle: true,
   };
@@ -39,42 +45,61 @@ class Widget extends PureComponent {
 
   searchClick = (text) => {
     if (this.state.toggle) {
-      this.props.getSearch({ KEYWORD: text, type: 'group' });
+      this.props.getSearch({ KEYWORD: text });
     } else {
-      this.props.getSearch({ KEYWORD: text, type: 'menu' });
+      this.props.getSearch({ KEYWORD: text });
     }
     this.props.saveSearchWord(text);
   };
 
+  changeSize = (param) => {
+    const size = param;
+    let width = 5;
+    let height = '220px';
+    switch (size) {
+      case '1x1':
+        break;
+      case '1x2':
+        height = '440px';
+        break;
+      case '2x1':
+        width = 10;
+        break;
+      default:
+        break;
+    }
+    this.props.saveWidgetSize({ width, height });
+  };
+
   render() {
-    const { detail, widgetSize, searchWord } = this.props;
+    const { detail, searchWord } = this.props;
 
     return (
       <StyleWidget>
-        <HelperWidget widgetSize={widgetSize} detail={detail} toggle={this.state.toggle} searchClick={this.searchClick} searchWord={searchWord} />
+        <HelperWidget detail={detail} searchClick={this.searchClick} searchWord={searchWord} />
       </StyleWidget>
     );
   }
 }
 Widget.propTypes = {
+  getWidgetInfo: PropTypes.func,
   getDetail: PropTypes.func,
   getSearch: PropTypes.func,
   removeDetail: PropTypes.func,
   saveWidgetSize: PropTypes.func,
   saveSearchWord: PropTypes.func,
-  title: PropTypes.object,
+  categorie: PropTypes.array,
   detail: PropTypes.array,
-  menu: PropTypes.object,
-  widgetSize: PropTypes.object,
+
   searchWord: PropTypes.string,
 };
 
 Widget.defaultProps = {
   detail: [],
-  widgetSize: { width: '5', height: '220px' },
 };
 
 const mapStateToProps = createStructuredSelector({
+  categorie: selectors.makeSelectWidget(),
   menu: selectors.makeSelectMenu(),
   detail: selectors.makeSelectDetail(),
   widgetSize: selectors.makeSelectwidgetSize(),
@@ -82,6 +107,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
+  getWidgetInfo: () => dispatch(actions.getWidgetInfo()),
   getDetail: PRNT_ID => dispatch(actions.getDetail(PRNT_ID)),
   getSearch: payload => dispatch(actions.getSearch(payload)),
   removeDetail: () => dispatch(actions.removeDetail()),

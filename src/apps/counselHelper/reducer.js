@@ -11,7 +11,7 @@ const initialState = fromJS({
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionConst.SAVE_WIDGET_INFO: {
-      return state.set('categorie', fromJS(action.title));
+      return state.set('categorie', fromJS(action.categorie));
     }
     case actionConst.SAVE_DETAIL: {
       return state.set('detail', fromJS(action.detail));

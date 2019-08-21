@@ -1,5 +1,5 @@
 import { Axios } from 'utils/AxiosFunc';
-import { takeEvery, call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import * as action from './constants';
 
 function* getWidget() {
@@ -16,16 +16,7 @@ function* getDetail(PRNT_ID) {
   yield put({ type: action.SAVE_DETAIL, detail });
 }
 
-function* getSearch(payload) {
-  const { KEYWORD } = payload.detail;
-
-  const response = yield call(Axios.get, `/api/bizgroup/v1/widget/ASearchHandler?keyword=${KEYWORD}`);
-  const { detail } = response;
-  yield put({ type: action.SAVE_DETAIL, detail });
-}
-
 export default function* watcher() {
   yield takeLatest(action.GET_WIDGET_INFO, getWidget);
   yield takeLatest(action.GET_DETAIL, getDetail);
-  yield takeLatest(action.GET_SEARCH, getSearch);
 }
