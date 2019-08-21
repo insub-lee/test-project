@@ -317,7 +317,7 @@ class App extends React.PureComponent {
   setOpen = () => {
     this.setState(prevState => ({
       open: !prevState.open,
-    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300));
     event.preventDefault();
   };
   
@@ -336,7 +336,7 @@ class App extends React.PureComponent {
   setMenuClose = () => {
     this.setState({
       open: false,
-    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300));
     event.preventDefault();
   };
 
