@@ -124,7 +124,7 @@ const AppWrapper = styled.div`
   .gridWrapper {
     padding: 0;
     position: relative;
-    width: 1660px;
+    /* width: 1660px;
     margin: 0 auto;
   
     @media only screen and (max-width: 1760px) {
@@ -133,7 +133,7 @@ const AppWrapper = styled.div`
   
     @media only screen and (max-width: 1460px) {
       width: 1000px;
-    }
+    } */
   
     // TabletView와 MobileView일 때
     @media only screen and (max-width: 1160px) {
@@ -145,20 +145,7 @@ const AppWrapper = styled.div`
       width: 100% !important;
       min-height: calc(100vh - 190px);
     }
-    
-    // 좌측 사이드 메뉴 활성화시
-    // &.menuShow {
-    //   width: 1330px;
-    
-    //   @media only screen and (max-width: 1760px) {
-    //     width: 1000px;
-    //   }
-    
-    //   @media only screen and (max-width: 1460px) {
-    //     width: 670px;
-    //   }
 
-    // }
   }
 `;
 
