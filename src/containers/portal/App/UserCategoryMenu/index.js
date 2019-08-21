@@ -53,7 +53,7 @@ class UserCategoryMenu extends Component {
   };
 
   render() {
-    const { isShow, toggleMenu } = this.props;
+    const { isShow, toggleMenu, setMenuClose } = this.props;
     const { showNoti } = this.state;
     const {
       execMenu,
@@ -79,7 +79,7 @@ class UserCategoryMenu extends Component {
     return (
       <Styled className={isShow ? 'active' : ''}>
         <div className="profile-area">
-          <Profile profile={profile} />
+          <Profile profile={profile} setMenuClose={setMenuClose} isShow={isShow}/>
         </div>
         <div className="category-menu-area">
           <div className="area-title">{profile.DEPT_NAME_KOR}</div>

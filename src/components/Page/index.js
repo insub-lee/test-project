@@ -193,7 +193,7 @@ class Page extends Component {
 
   shouldComponentUpdate(nextProps) {
     /* eslint-disable */
-    const { columns, setMyMenuData, isUnreadCnt, currentView, isMenuShow } = this.props;
+    const { columns, setMyMenuData, isUnreadCnt, currentView, isUserMenuOpen } = this.props;
     /* eslint-disable */
     if (columns && JSON.stringify(columns) !== JSON.stringify(nextProps.columns)) {
       return true;
@@ -207,7 +207,7 @@ class Page extends Component {
     if (currentView !== nextProps.currentView) {
       return true;
     }
-    if (isMenuShow !== nextProps.isMenuShow) {
+    if (isUserMenuOpen !== nextProps.isUserMenuOpen) {
       return true;
     }    
     return false;
@@ -216,7 +216,7 @@ class Page extends Component {
     this.props.setIsSpinnerShow();
   }
   render() {
-    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, isMenuShow} = this.props;
+    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, isUserMenuOpen} = this.props;
 
     for (let i = 0; i < columns.length; i += 1) {
       columns[i].onReload = onReload;
@@ -243,16 +243,16 @@ class Page extends Component {
     };
     switch (currentView) {
       case 'DesktopWide':
-        layoutConfig.col = isMenuShow ? 4 : 5;
-        layoutConfig.width = isMenuShow ? 1330 : 1660;
+        layoutConfig.col = isUserMenuOpen ? 4 : 5;
+        layoutConfig.width = isUserMenuOpen ? 1330 : 1660;
         break;
       case 'Desktop':
-        layoutConfig.col = isMenuShow ? 3 : 4;
-        layoutConfig.width = isMenuShow ? 1000 : 1330;
+        layoutConfig.col = isUserMenuOpen ? 3 : 4;
+        layoutConfig.width = isUserMenuOpen ? 1000 : 1330;
         break;
       case 'DesktopNarrow':
-        layoutConfig.col = isMenuShow ? 2 : 3;
-        layoutConfig.width = isMenuShow ? 670 : 1000;
+        layoutConfig.col = isUserMenuOpen ? 2 : 3;
+        layoutConfig.width = isUserMenuOpen ? 670 : 1000;
         break;
       case 'Tablet':
         // 태블릿 디자인 적용하면서 값 조정
@@ -268,7 +268,6 @@ class Page extends Component {
     // const columns2 = Object.values(this.props.columns);
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
     const isFullSize = columns.length === 1 && columns[0].size === 'FullSize';
-    console.log(`isMenuShow=${isMenuShow} layoutConfig.col=${layoutConfig.col} layoutConfig.width=${layoutConfig.width}`);
     return (
       <div style={!isFullSize ? { width: `${layoutConfig.width}px`, margin: '0 auto' } : {}}>
         {!setMyMenuData ? (
@@ -334,7 +333,6 @@ class Page extends Component {
 Page.defaultProps = {
   columns: [],
   setMyMenuData: undefined,
-  isMenuShow: false,
 };
 
 Page.propTypes = {
@@ -348,12 +346,12 @@ Page.propTypes = {
   isUnreadCnt: PropTypes.array.isRequired,
   setIsSpinnerShow: PropTypes.func.isRequired,
   isPreviewPage: PropTypes.bool.isRequired,
-  isMenuShow: PropTypes.bool.isRequired,
+  isUserMenuOpen: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
-  isMenuShow: selectors.makeSelectMenuShow(),
+  isUserMenuOpen: selectors.makeSelectUserMenuOpen(),
 });
 
 export default connect(mapStateToProps)(Page);

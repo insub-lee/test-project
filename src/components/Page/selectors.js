@@ -9,13 +9,13 @@ const currentView = () => createSelector(
 
 const selectApp = state => state.get('app');
 
-const makeSelectMenuShow = () => createSelector(
+const makeSelectUserMenuOpen = () => createSelector(
     selectApp,
-    appState => appState.get('menuShow'),
+    appState => appState.get('open'),
 );
 
 export {
   selectView,
   currentView,
-  makeSelectMenuShow,
+  makeSelectUserMenuOpen,
 };
