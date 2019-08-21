@@ -12,7 +12,7 @@ const StyleUserSetting = styled.div`
   left: 0px;
   width: 100%;
   height: 100vh;
-  padding: 45px;
+  padding: 42px 0 45px 0;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
@@ -21,22 +21,32 @@ const StyleUserSetting = styled.div`
   }
 
   .userSettingWrapper {
-    width: 90%;
+    width: 100%;
     margin: 0 auto; //커스텀 스크롤바로 이동된 만큼 중앙에 맞추기
 
     @media only screen and (max-width: 1024px) {
       width: 100% !important;
     }
+    .pageHeaderWrapper {
+      position: relative;
+      & > div {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+      }
+    }
 
     .pageHeader {
       width: 100%;
-      height: 55px;
+      height: 75px;
       border-bottom: 1px solid #e5e5e5;
       color: #222222;
       font-size: 24px;
-      line-height: 55px;
+      line-height: 75px;
       text-align: left;
       font-weight: 600;
+      padding-left: 45px;
     }
 
     .navigation {

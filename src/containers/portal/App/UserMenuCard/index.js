@@ -3,9 +3,9 @@ import { Switch, Route } from 'react-router-dom';
 import { Layout } from 'antd';
 import { ThemeProvider } from 'styled-components';
 import themes from 'config/themes/index';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import StyleUserMenuCard from './StyleUserMenuCard';
 import AppWrapper from './AppWrapper';
-import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import BizMenuCardList from './BizMenuCardList';
 import BizMenuCardDetail from './BizMenuCardDetail';

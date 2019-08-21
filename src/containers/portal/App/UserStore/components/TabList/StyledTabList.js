@@ -2,12 +2,12 @@ import styled from 'styled-components';
 
 const StyledTabList = styled.div`
   &.treeWrapper {
-    position: fixed;
-    top: 100px;
-    left: 134px;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 300px;
     height: calc(100vh - 99px);
-    padding: 10px;
+    padding: 10px 20px;
     border-right: 1px solid #e5e5e5;
     background-color: #ffffff;
     z-index: 100;
@@ -15,7 +15,6 @@ const StyledTabList = styled.div`
     .react-tabs {
       display: inline-block;
       width: 100%;
-      height: 46px;
       padding: 0;
 
       .react-tabs__tab-list {
@@ -39,7 +38,12 @@ const StyledTabList = styled.div`
 
         &.react-tabs__tab--selected a {
           color: #222222;
-          border-bottom: 3px solid #222222;
+          border-bottom: 1px solid #e5e5e5;
+          font-size: 16px;
+          padding: 5px 0 15px;
+          height: auto;
+          line-height: normal;
+          font-weight: 600;
         }
       }
     }
