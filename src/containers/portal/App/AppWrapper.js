@@ -124,8 +124,8 @@ const AppWrapper = styled.div`
   .gridWrapper {
     padding: 0;
     position: relative;
-    /* width: 1660px;
     margin: 0 auto;
+    /* width: 1660px;
   
     @media only screen and (max-width: 1760px) {
       width: 1330px;
