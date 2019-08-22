@@ -600,7 +600,6 @@ class App extends React.PureComponent {
 
   goStore = () => {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizStore`);
-    this.setState({ open: false });
   };
 
   goSettings = () => {
@@ -609,7 +608,6 @@ class App extends React.PureComponent {
 
   goBusinessReg = () => {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
-    this.setState({ open: false });
   };
 
   goHomeWidget = homeId => {
