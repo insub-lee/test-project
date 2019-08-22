@@ -3,12 +3,6 @@ import PropTypes from 'prop-types';
 import { TreeSelect, Row, Col } from 'antd';
 
 class items extends PureComponent {
-  HandleCategorieChange = PRNT_ID => {
-    this.props.getDetail(PRNT_ID);
-
-    this.resetKeyword();
-  };
-
   render() {
     const { SHOW_PARENT } = TreeSelect;
     const result = [];

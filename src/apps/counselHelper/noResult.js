@@ -4,14 +4,14 @@ import noResultImage from 'images/bizstore/no-result.png';
 import PropTypes from 'prop-types';
 export default class noResult extends PureComponent {
   render() {
-    const { searchWord } = this.props;
+    const { searchWord, treeData } = this.props;
     return (
       <div>
         <Row style={{ textAlign: 'center' }}>
           <img src={noResultImage} alt="알림" />
         </Row>
         <Row style={{ textAlign: 'center' }}>
-          {searchWord === '' ? (
+          {treeData.length === 0 ? (
             <span>카테고리를 선택해 주세요.</span>
           ) : (
             <div>

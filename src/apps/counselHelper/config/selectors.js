@@ -8,10 +8,4 @@ const makeSelectWidget = () =>
     widgetstate => widgetstate.get('categorie'),
   );
 
-const makeSelectDetail = () =>
-  createSelector(
-    selectAppsWidgetState,
-    widgetstate => widgetstate.get('detail'),
-  );
-
-export default { selectAppsWidgetState, makeSelectWidget, makeSelectDetail };
+export default { selectAppsWidgetState, makeSelectWidget };

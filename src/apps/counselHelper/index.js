@@ -17,60 +17,13 @@ import StyleWidget from './StyleWidget';
 class Widget extends PureComponent {
   constructor(props) {
     super(props);
-    this.props.getWidgetInfo();
+    this.props.getDetail([2874]);
   }
 
-  state = {
-    toggle: true,
-  };
-
-  HandleCategorieChange = (PRNT_ID) => {
-    this.props.getDetail(PRNT_ID);
-
-    this.resetKeyword();
-  };
-
-  handleToggle = () => {
-    const { toggle } = this.state;
-    this.setState({
-      toggle: !toggle,
-    });
-    this.props.removeDetail();
-    this.resetKeyword();
-  };
-
-  resetKeyword = () => {
-    this.props.saveSearchWord('');
-  };
-
-  searchClick = (text) => {
-    if (this.state.toggle) {
-      this.props.getSearch({ KEYWORD: text });
-    } else {
-      this.props.getSearch({ KEYWORD: text });
-    }
+  searchClick = text => {
     this.props.saveSearchWord(text);
+    console.log(this.props.item);
   };
-
-  changeSize = (param) => {
-    const size = param;
-    let width = 5;
-    let height = '220px';
-    switch (size) {
-      case '1x1':
-        break;
-      case '1x2':
-        height = '440px';
-        break;
-      case '2x1':
-        width = 10;
-        break;
-      default:
-        break;
-    }
-    this.props.saveWidgetSize({ width, height });
-  };
-
   render() {
     const { detail, searchWord } = this.props;
 
@@ -82,15 +35,9 @@ class Widget extends PureComponent {
   }
 }
 Widget.propTypes = {
-  getWidgetInfo: PropTypes.func,
   getDetail: PropTypes.func,
-  getSearch: PropTypes.func,
-  removeDetail: PropTypes.func,
-  saveWidgetSize: PropTypes.func,
   saveSearchWord: PropTypes.func,
-  categorie: PropTypes.array,
   detail: PropTypes.array,
-
   searchWord: PropTypes.string,
 };
 
@@ -99,19 +46,12 @@ Widget.defaultProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  categorie: selectors.makeSelectWidget(),
-  menu: selectors.makeSelectMenu(),
   detail: selectors.makeSelectDetail(),
-  widgetSize: selectors.makeSelectwidgetSize(),
   searchWord: selectors.makeSearchWord(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getWidgetInfo: () => dispatch(actions.getWidgetInfo()),
   getDetail: PRNT_ID => dispatch(actions.getDetail(PRNT_ID)),
-  getSearch: payload => dispatch(actions.getSearch(payload)),
-  removeDetail: () => dispatch(actions.removeDetail()),
-  saveWidgetSize: widgetSize => dispatch(actions.saveWidgetSize(widgetSize)),
   saveSearchWord: text => dispatch(actions.saveSearchWord(text)),
 });
 

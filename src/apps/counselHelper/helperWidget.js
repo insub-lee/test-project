@@ -2,14 +2,15 @@ import React, { PureComponent } from 'react';
 import { Row, Col } from 'antd';
 import Detail from './detail';
 import SearchWidget from './searchWidget';
-
+import ScrollBar from 'react-custom-scrollbars';
 export default class helperWidget extends PureComponent {
   render() {
+    const { item, type } = this.props;
     const { detail, searchClick, searchWord } = this.props;
     const result = [];
     let first = -1;
     /* 트리데이터생성 */
-    detail.map((query) => {
+    detail.map(query => {
       let tempData = {};
       const LVL = query.get('LVL');
       const BIZGRP_ID = query.get('BIZGRP_ID');
@@ -39,11 +40,13 @@ export default class helperWidget extends PureComponent {
     });
 
     return (
-      <div>
+      <div class="wrapper">
         <SearchWidget onClick={searchClick} />
-        <div className="widget">
-          <Detail item={detail} treeData={result} searchWord={searchWord} />
-        </div>
+        <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+          <div className="widget">
+            <Detail item={detail} treeData={result} searchWord={searchWord} />
+          </div>
+        </ScrollBar>
       </div>
     );
   }

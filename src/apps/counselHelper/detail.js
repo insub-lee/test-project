@@ -6,23 +6,35 @@ import NoResult from './noResult';
 class detail extends PureComponent {
   render() {
     const { item, searchWord, treeData } = this.props;
-    let noMap;
-    if (item.size === 0) {
-      noMap = <NoResult searchWord={searchWord} />;
-      return noMap;
+    const noMap = <NoResult treeData={treeData} searchWord={searchWord} />;
+
+    /*필터 용 함수 */
+    let newArray = treeData.filter(function(item, index, array) {
+      return !!~item.title.search(searchWord);
+    });
+    if (newArray.length === 0) {
+      const result = [];
+      newArray = treeData.filter(function(item, index, array) {
+        const parent = item;
+        const temp = item.children.filter(function(item, index, array) {
+          return !!~item.title.search(searchWord);
+        });
+        if (temp.length === 0) {
+        } else {
+          result.push(parent);
+        }
+      });
+      newArray = result;
     }
-    const appCardList = treeData.map((query) => {
+    /*필터 용 함수 */
+
+    const appCardList = newArray.map(query => {
       const { title } = query;
       const { children } = query;
       return <AppCardList title={title} childNode={children} />;
     });
 
-    return (
-      <div className="groupWrap">
-        {noMap}
-        {appCardList}
-      </div>
-    );
+    return <div className="groupWrap">{newArray.length === 0 ? <div>{noMap}</div> : <div>{appCardList}</div>}</div>;
   }
 }
 detail.propTypes = {

@@ -16,26 +16,27 @@ class testConfig extends PureComponent {
   }
 
   HandleCategorieChange = PRNT_ID => {
-    this.props.getDetail(PRNT_ID);
+    console.log(PRNT_ID);
   };
 
   render() {
     const { categorie } = this.props;
+    const { item, type } = this.props;
+    console.log(item);
+    console.log(type);
     return (
       <div>
-        <Config item={categorie} onCategorieChange={this.HandleCategorieChange}></Config>
+        <Config item={categorie} onCategorieChange={this.HandleCategorieChange} />
       </div>
     );
   }
 }
 const mapStateToProps = createStructuredSelector({
   categorie: selectors.makeSelectWidget(),
-  detail: selectors.makeSelectDetail(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getWidgetInfo: () => dispatch(actions.getWidgetInfo()),
-  getDetail: PRNT_ID => dispatch(actions.getDetail(PRNT_ID)),
 });
 
 const withReducer = injectReducer({ key: 'test-Widget', reducer });
