@@ -317,7 +317,7 @@ class App extends React.PureComponent {
   setOpen = () => {
     this.setState(prevState => ({
       open: !prevState.open,
-    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300));
     event.preventDefault();
   };
   
@@ -336,7 +336,7 @@ class App extends React.PureComponent {
   setMenuClose = () => {
     this.setState({
       open: false,
-    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 250));
+    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300));
     event.preventDefault();
   };
 
@@ -658,7 +658,6 @@ class App extends React.PureComponent {
       history,
       headerTitle,
       profile,
-      menuShow,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -779,7 +778,7 @@ class App extends React.PureComponent {
                   >
                     <div
                       id="child"
-                      className={ `${(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'}${menuShow ? ' menuShow' : ''}`}
+                      className={ `${(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'}`}
                     >
                       <Content
                         className="portalContent"
@@ -937,7 +936,6 @@ App.propTypes = {
   headerTitle: PropTypes.string,
   profile: PropTypes.object.isRequired,
   handleMenuShow: PropTypes.func.isRequired,
-  menuShow: PropTypes.bool,
 };
 
 App.defaultProps = {
@@ -982,7 +980,6 @@ const mapStateToProps = createStructuredSelector({
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
-  menuShow: selectors.makeSelectMenuShow(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),

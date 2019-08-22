@@ -131,6 +131,7 @@ const AppWrapper = styled.div`
     width: 100%;
     //width: 1660px;
     margin: 0 auto;
+  
 
     @media only screen and (max-width: 1760px) {
       //width: 1330px;
@@ -139,7 +140,8 @@ const AppWrapper = styled.div`
     @media only screen and (max-width: 1460px) {
       //width: 1000px;
     }
-
+  
+>>>>>>> src/containers/portal/App/AppWrapper.js
     // TabletView와 MobileView일 때
     @media only screen and (max-width: 1160px) {
       //width: 670px;
@@ -163,7 +165,6 @@ const AppWrapper = styled.div`
     //     width: 670px;
     //   }
 
-    // }
   }
 `;
 

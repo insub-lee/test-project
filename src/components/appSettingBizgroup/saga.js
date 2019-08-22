@@ -1,8 +1,9 @@
 import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import * as constantsTopMenu from 'containers/store/AppMain/BizManage/BizMenuReg/TopMenu/constants';
-import * as constantsBizManage from 'containers/store/AppMain/BizManage/constants';
-import * as adminBizManageActionTypes from 'containers/admin/AdminMain/Menu/BizMenuReg/TopMenu/constants'
+// import * as constantsTopMenu from 'containers/store/AppMain/BizManage/BizMenuReg/TopMenu/constants';
+// import * as constantsBizManage from 'containers/store/AppMain/BizManage/constants';
+import * as adminBizManageTopMenuActionTypes from 'containers/admin/AdminMain/Menu/BizMenuReg/TopMenu/constants'
+import * as adminBizManageActionTypes from 'containers/admin/AdminMain/Menu/constants'
 import * as constants from './constants';
 import { Axios } from '../../utils/AxiosFunc';
 
@@ -62,13 +63,13 @@ export function* updateWidget(payload) {
     // });
 
     yield put({
-      type: adminBizManageActionTypes.GET_BIZ_INFO,
+      type: adminBizManageTopMenuActionTypes.GET_BIZ_INFO,
       BIZGRP_ID,
     });
 
     
     yield put({
-      type: constantsBizManage.UPDATE_TREENODE,
+      type: adminBizManageActionTypes.UPDATE_TREENODE,
       key: BIZGRP_ID,
       newNode: { CHG_YN: 'Y' },
     });
@@ -83,12 +84,12 @@ export function* updateBizGroupChgYn() {
   const { code } = response;
   if (code === 200) {
     yield put({
-      type: constantsTopMenu.GET_BIZ_INFO,
+      type: adminBizManageTopMenuActionTypes.GET_BIZ_INFO,
       BIZGRP_ID,
     });
 
     yield put({
-      type: constantsBizManage.UPDATE_TREENODE,
+      type: adminBizManageActionTypes.UPDATE_TREENODE,
       key: BIZGRP_ID,
       newNode: { CHG_YN: 'Y' },
     });
