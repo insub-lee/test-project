@@ -65,6 +65,13 @@ const StyleAppRegisForm = styled.div`
         }
       }
     }
+
+    &.ta_feedback {
+      .ant-form-item-children-icon {
+        top: 10% !important;
+        right: 12px !important;
+      }
+    } 
   }
 
   // 업로드할 파일 선택버튼

@@ -269,7 +269,7 @@ class Page extends Component {
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
     const isFullSize = columns.length === 1 && columns[0].size === 'FullSize';
     return (
-      <div style={!isFullSize ? { width: `${layoutConfig.width}px`, margin: '0 auto' } : {}}>
+      <div style={!isFullSize && setMyMenuData.SRC_PATH !== 'legacySVC' ? { width: `${layoutConfig.width}px`, margin: '0 auto' } : {}}>
         {!setMyMenuData ? (
           <GridLayout className="layout" layout={layout} cols={layoutConfig.col} rowHeight={270} width={layoutConfig.width} compactType="horizontal">
             {columns.map(createComponents)}

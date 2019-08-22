@@ -13,7 +13,8 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 // 시스템 앱 (SITE_ID -1) 고정
 export function* insertAppInfo(payload) {
   const { history } = payload.payload;
-  const params = { ...payload.payload, SITE_ID: -1 };
+  const { ITEM_VALUE } = payload.payload;
+  const params = { ...payload.payload, SITE_ID: -1};
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/regismyapp/', params);
 
   const { code, appId, ver } = response;
