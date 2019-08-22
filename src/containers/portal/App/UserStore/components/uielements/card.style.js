@@ -1,9 +1,8 @@
-
 import React from 'react';
 import styled from 'styled-components';
-import Cards from './card';
 import Mark from 'images/bizstore/mark.png';
 import CheckedIcon from 'images/bizstore/icon-using.png';
+import Cards from './card';
 
 const CardComp = props => <Cards {...props} />;
 
@@ -16,12 +15,13 @@ const Card = styled(CardComp)`
   }
 
   &.ant-card-bordered {
-    border-color: #f5f5f5 !important;
-    background: #f5f5f5;
+    border-color: #d8dfdf !important;
+    background: #FFF;
+    border-radius: 3px;
+    border-left: 3px solid #a08ac3 !important;
 
     &:hover {
-      border-radius: 0;
-      border-color: #d1d2d3 !important;
+      border-color: #a08ac3 !important;
     }
 
     &.mark {
@@ -149,7 +149,7 @@ const Card = styled(CardComp)`
     min-width: 48px;
     height: 20px;
     padding-left: 14px;
-    background: url(${CheckedIcon}) no-repeat 0 50%;
+    //background: url(${CheckedIcon}) no-repeat 0 50%;
 
     @media only screen and (max-width: 1024px) {
       right: 10px;
@@ -157,7 +157,7 @@ const Card = styled(CardComp)`
 
     .infoRgt {
       float: right;
-      color: #656565;
+      color: #544b7f;
       font-size: 12px;
       letter-spacing: -0.5px;
     }

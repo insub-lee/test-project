@@ -14,7 +14,6 @@ const BoxWrapper = styled.div`
     height: 32px;
     margin: 24px 5px 0 5px;
     padding-bottom: 10px;
-    border-bottom: 1px solid #d1d2d3;
 
     h3 {
       display: inline-block;
@@ -79,7 +78,7 @@ const BoxWrapper = styled.div`
   .appBox {
     width: 290px;
     height: 110px;
-    margin: 10px 5px 0 5px;
+    margin: 0 5px 10px 5px;
 
     &.gridMode {width: 287px !important;}
   }

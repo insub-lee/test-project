@@ -9,12 +9,12 @@ import { BackTop, Input, Button } from 'antd';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
 import { intlObj } from 'utils/commonUtils';
-import messages from '../../../messages';
 import NavList from 'components/Header/NavList';
 import NavListItem from 'components/Header/NavListItem';
 import NavLink from 'components/Header/NavLink';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import messages from '../../../messages';
 import Footer from '../../Footer';
 
 import reducer from './reducer';
@@ -25,8 +25,6 @@ import * as actionsApp from '../../actions';
 
 import ItemList from './ItemList';
 import AppCategory from '../../components/AppCategory';
-
-import StyleAppList from './StyleAppList';
 
 class AppList extends Component {
   componentDidMount() {
@@ -133,23 +131,6 @@ class AppList extends Component {
         </NavList>
 
         <ErrorBoundary>
-          <StyleAppList>
-            <div className="topPart">
-              <div className="searchInput">
-                <Input
-                  placeholder=""
-                  title={intlObj.get(messages.searchBizStore)}
-                  onKeyPress={this.searchEnter}
-                  ref={ref => {
-                    this.searchInput = ref;
-                  }}
-                />
-                <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
-                {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
-              </div>
-            </div>
-          </StyleAppList>
-
           <ItemList
             type={initType}
             mapList={mapList}

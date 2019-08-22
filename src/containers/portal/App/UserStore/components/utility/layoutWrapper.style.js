@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const LayoutContentWrapper = styled.div`
   padding: 0;
   display: block;
-  width: 1200px;
+  width: 100%;
   margin: 0 auto;
 
   .ant-row {
@@ -16,22 +16,22 @@ const LayoutContentWrapper = styled.div`
     아래 값에 +300 해주어야 함.
   */
   @media only screen and (max-width: 1520px) {
-    width: 900px;
+    //max-width: 900px;
   }
 
   // DesktopView
   @media only screen and (max-width: 1220px) {
-    width: 600px;
+    //max-width: 600px;
   }
 
   // TabletView
   @media only screen and (max-width: 1024px) {
-    width: 100%;
+    //max-width: 100%;
   }
 
   // MobileView
   @media only screen and (max-width: 768px) {
-    width: 100%;
+    //max-width: 100%;
   }
 `;
 
