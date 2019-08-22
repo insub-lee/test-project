@@ -45,6 +45,7 @@ export const insertAppInfo = (
   appList2,
   // DFLT_SKIN,
   SERVICE_FORM,
+  ITEM_VALUE,
 ) => ({
   type: constants.INSERT_APP_INFO,
   payload: {
@@ -86,5 +87,6 @@ export const insertAppInfo = (
     appList2,
     // DFLT_SKIN,
     SERVICE_FORM,
+    ITEM_VALUE,
   },
 });

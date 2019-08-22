@@ -192,6 +192,60 @@ class AppDetailForm extends React.Component {
           <p className="textValue">{setMyAppDetail.ORIGIN_APP_ID}</p> */}
           <h4>SRC PATH [앱경로]</h4>
           <p className="textValue">{setMyAppDetail.SRC_PATH}</p>
+
+          <h3 className="appInfo">{intlObj.get(messages.serviceGubun)}</h3>
+          <div style={{ display: setMyAppDetail.INTL_TYPE === 'N' ? 'block' : 'none' }}>
+            <h4>{intlObj.get(messages.serviceGubun)}</h4>
+            <p className="textValue">
+              {setMyAppDetail.INTL_TYPE === 'Y' ? intlObj.get(messages.insideService) : ''}
+              {setMyAppDetail.INTL_TYPE === 'N' ? intlObj.get(messages.outService) : ''}
+            </p>
+
+            <h4>{intlObj.get(messages.serviceForm)}</h4>
+            <p className="textValue">
+              {setMyAppDetail.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
+              {setMyAppDetail.WIDGET_SVC_YN === 'Y' && setMyAppDetail.MENU_SVC_YN === 'Y' ? '/' : ''}
+              {setMyAppDetail.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
+            </p>
+
+            <h4>{intlObj.get(messages.display)}</h4>
+            <p className="textValue">
+              {lang.get('TARGET', this.props.systemLink)}
+            </p>
+
+            <h4>URL</h4>
+            <p className="textValue">
+              <a href={this.props.systemLink.URL} target="_blank" rel="noopener noreferrer">
+                {this.props.systemLink.URL}
+              </a>
+            </p>
+
+            <h4>{intlObj.get(messages.protocol)}</h4>
+            <p className="textValue">
+              {this.props.systemLink.METHOD}
+            </p>
+
+            <h4>{intlObj.get(messages.variable)}</h4>
+            <p className="textValue">
+              {this.props.systemLink.PARAM}
+            </p>
+          </div>
+
+          <div style={{ display: setMyAppDetail.INTL_TYPE === 'Y' ? 'block' : 'none' }}>
+            <h4>{intlObj.get(messages.serviceGubun)}</h4>
+            <p className="textValue">
+              {setMyAppDetail.INTL_TYPE === 'Y' ? intlObj.get(messages.insideService) : ''}
+              {setMyAppDetail.INTL_TYPE === 'N' ? intlObj.get(messages.outService) : ''}
+            </p>
+
+            <h4>{intlObj.get(messages.serviceForm)}</h4>
+            <p className="textValue">
+              {setMyAppDetail.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
+              {setMyAppDetail.WIDGET_SVC_YN === 'Y' && setMyAppDetail.MENU_SVC_YN === 'Y' ? '/' : ''}
+              {setMyAppDetail.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
+            </p>
+          </div>
+
           <h3 className="appInfo">{intlObj.get(messages.verInfo)}</h3>
           <h4>{intlObj.get(messages.icon)}</h4>
           <div
@@ -270,59 +324,6 @@ class AppDetailForm extends React.Component {
           <h4>{intlObj.get(messages.recommApp)}</h4>
           <div className="appColWrapper">
             {loopApp(this.props.recomAppList)}
-          </div>
-
-          <h3 className="appInfo">{intlObj.get(messages.serviceGubun)}</h3>
-          <div style={{ display: setMyAppDetail.INTL_TYPE === 'N' ? 'block' : 'none' }}>
-            <h4>{intlObj.get(messages.serviceGubun)}</h4>
-            <p className="textValue">
-              {setMyAppDetail.INTL_TYPE === 'Y' ? intlObj.get(messages.insideService) : ''}
-              {setMyAppDetail.INTL_TYPE === 'N' ? intlObj.get(messages.outService) : ''}
-            </p>
-
-            <h4>{intlObj.get(messages.serviceForm)}</h4>
-            <p className="textValue">
-              {setMyAppDetail.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
-              {setMyAppDetail.WIDGET_SVC_YN === 'Y' && setMyAppDetail.MENU_SVC_YN === 'Y' ? '/' : ''}
-              {setMyAppDetail.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
-            </p>
-
-            <h4>{intlObj.get(messages.display)}</h4>
-            <p className="textValue">
-              {lang.get('TARGET', this.props.systemLink)}
-            </p>
-
-            <h4>URL</h4>
-            <p className="textValue">
-              <a href={this.props.systemLink.URL} target="_blank" rel="noopener noreferrer">
-                {this.props.systemLink.URL}
-              </a>
-            </p>
-
-            <h4>{intlObj.get(messages.protocol)}</h4>
-            <p className="textValue">
-              {this.props.systemLink.METHOD}
-            </p>
-
-            <h4>{intlObj.get(messages.variable)}</h4>
-            <p className="textValue">
-              {this.props.systemLink.PARAM}
-            </p>
-          </div>
-
-          <div style={{ display: setMyAppDetail.INTL_TYPE === 'Y' ? 'block' : 'none' }}>
-            <h4>{intlObj.get(messages.serviceGubun)}</h4>
-            <p className="textValue">
-              {setMyAppDetail.INTL_TYPE === 'Y' ? intlObj.get(messages.insideService) : ''}
-              {setMyAppDetail.INTL_TYPE === 'N' ? intlObj.get(messages.outService) : ''}
-            </p>
-
-            <h4>{intlObj.get(messages.serviceForm)}</h4>
-            <p className="textValue">
-              {setMyAppDetail.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
-              {setMyAppDetail.WIDGET_SVC_YN === 'Y' && setMyAppDetail.MENU_SVC_YN === 'Y' ? '/' : ''}
-              {setMyAppDetail.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
-            </p>
           </div>
 
           <h3 className="appInfo">{intlObj.get(messages.permissions)}</h3>

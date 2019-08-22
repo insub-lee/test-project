@@ -88,6 +88,34 @@ class AppRegisForm extends React.Component {
       APP_ABBR_CHN_CHK: false,
       ORIGIN_APP_ID_CHK: false,
       CATG_ID_CHK: false,
+      ITEM_VALUE: '',
+      ITEM_VALUE_EXAMPLE: `{
+        "appKey": "[Empty]",
+        "appInfo": {
+            "path": "/example/index",
+            "default":"1X1",
+            "data":{}
+        },
+        "widgets": [
+            {
+                "size":"1X1",
+                "sizeArr":["1X1"],
+                "basic" : {
+                     "path": "example/widgets/index",
+                     "settingPath": "example/widgets/widgetSetting",
+                     "drilldownPath":"example/widgets/drillDown" ,
+                     "morePath":"example/widgets/more" ,
+                     "type": "M",
+                     "functions": ["reload", "drilldown", "more"]
+                  },
+                  "user":{
+                      "isTitle": true,
+                      "skin": "1"
+                  },
+                  "data": {}
+            }
+        ]
+    }`,
     };
     this.onFileUploadedIcon = this.onFileUploadedIcon.bind(this);
     this.onFileUploadedWork = this.onFileUploadedWork.bind(this);
@@ -322,6 +350,7 @@ class AppRegisForm extends React.Component {
         this.state.appList2,
         // this.state.DFLT_SKIN,
         this.state.SERVICE_FORM,
+        this.state.ITEM_VALUE,
 
       );
     };
@@ -331,12 +360,20 @@ class AppRegisForm extends React.Component {
     };
 
     const appInfoSave = () => {
+
       if (this.state.NAME_KOR_CHK && this.state.APP_ABBR_KOR_CHK
-        && this.state.NAME_ENG_CHK && this.state.APP_ABBR_ENG_CHK
-        && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
+        // && this.state.NAME_ENG_CHK && this.state.APP_ABBR_ENG_CHK
+        // && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
         && this.state.ORIGIN_APP_ID_CHK && this.state.CATG_ID_CHK
         && this.state.LANG_LIST.length > 0 && this.state.CLIENT_TYPE.length > 0
+        && this.state.INTL_YN === 'Y' && this.state.SERVICE_FORM.indexOf('WY') > -1 ? (this.state.ITEM_VALUE ? true : false) : true
       ) {
+        this.setState({
+            NAME_ENG: this.state.NAME_ENG ? this.state.NAME_ENG : this.state.NAME_KOR,
+            APP_ABBR_ENG: this.state.APP_ABBR_ENG ? this.state.APP_ABBR_ENG : this.state.APP_ABBR_KOR,
+            NAME_CHN: this.state.NAME_CHN ? this.state.NAME_CHN : this.state.NAME_KOR,
+            APP_ABBR_CHN: this.state.APP_ABBR_CHN ? this.state.APP_ABBR_CHN : this.state.APP_ABBR_KOR,
+          });
         appInfoSaveChk();
       } else {
         message.error(
@@ -453,6 +490,9 @@ class AppRegisForm extends React.Component {
     const imgClick = (e) => {
       e.stopPropagation();
     };
+    const onChangeItemValue = (val) => {
+      this.setState({ ITEM_VALUE: val.target.value });
+    };    
     // const appExamodal = () => {
     //   feed.error(`${intlObj.get(messages.appExaNo)}`);
     // };
@@ -597,9 +637,9 @@ class AppRegisForm extends React.Component {
                   label={intlObj.get(messages.appNameEng)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.NAME_ENG_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.NAME_ENG_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -616,9 +656,9 @@ class AppRegisForm extends React.Component {
                   label={intlObj.get(messages.appAbbrEng)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.APP_ABBR_ENG_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.APP_ABBR_ENG_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -655,9 +695,9 @@ class AppRegisForm extends React.Component {
                   label={intlObj.get(messages.appNameChn)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.NAME_CHN_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.NAME_CHN_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -674,9 +714,9 @@ class AppRegisForm extends React.Component {
                   label={intlObj.get(messages.appAbbrChn)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.APP_ABBR_CHN_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.APP_ABBR_CHN_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -745,6 +785,168 @@ class AppRegisForm extends React.Component {
               />
             </FormItem>
 
+            <h3
+              className="sectionTitle"
+              style={{ padding: '33px 0 20px' }}
+            >
+              {intlObj.get(messages.serviceGubun)}
+            </h3>
+            {/* 14. 서비스 구분 */}
+            <FormItem>
+              <div>
+                <RadioGroup
+                  className="typeOptions"
+                  onChange={onChangeIntlYn}
+                  value={this.state.INTL_YN}
+                >
+                  <Radio value="Y">
+                    {intlObj.get(messages.insideService)}
+                  </Radio>
+                  <Radio value="N">
+                    {intlObj.get(messages.outService)}
+                  </Radio>
+                </RadioGroup>
+              </div>
+            </FormItem>
+            {/* 선택한 서비스에 따른 서브옵션 박스 */}
+            <div
+              className="subFormArea"
+              style={{ display: this.state.INTL_YN === 'Y' ? 'none' : 'block' }}
+            >
+              <FormItem
+                label={intlObj.get(messages.display)}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <RadioGroup
+                  className="typeOptions"
+                  onChange={onChangeLinkType}
+                  value={this.state.linkType}
+                >
+                  {loopLinkType(this.props.linkTypeList)}
+                </RadioGroup>
+              </FormItem>
+              <FormItem
+                label="URL"
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Input
+                  placeholder=""
+                  title="URL"
+                  maxLength="500"
+                  onChange={onChangeLinkurl}
+                  defaultValue={this.state.LINK_URL}
+                />
+              </FormItem>
+              {/* <FormItem
+                label="창 크기 (pixel)"
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Row>
+                  {loopWindowSizeList(this.props.windowSizeList)}
+                </Row>
+              </FormItem> */}
+              {/* <FormItem
+                label="표시위치 (pixel)"
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <RadioGroup
+                  className="typeOptions"
+                  onChange={onChangePopupPos}
+                  value={this.state.DisLoc}
+                >
+                  {loopPopupPos(this.props.popupPosList)}
+
+                  <Radio value="d1">좌상단</Radio>
+                  <Radio value="d2">중앙</Radio>
+                  <Radio value="d3">우상단</Radio>
+                </RadioGroup>
+              </FormItem> */}
+              <FormItem
+                label={intlObj.get(messages.protocol)}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <RadioGroup
+                  className="typeOptions"
+                  onChange={onChangeMethod}
+                  value={this.state.METHOD}
+                >
+                  {loopMethod(this.props.methodList)}
+                </RadioGroup>
+              </FormItem>
+              <FormItem
+                label={intlObj.get(messages.variable)}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Input
+                  placeholder=""
+                  title={intlObj.get(messages.variable)}
+                  maxLength="500"
+                  onChange={onChangeParam}
+                  defaultValue={this.state.PARAM}
+                />
+                <div className="infoVarList">
+                  * 전달변수 중, 자동 채번 변수방식
+                  <ul>
+                    <li>#EMPNO = 사번</li>
+                    <li>#EMPNAME = 구성원 이름</li>
+                    <li>#DEPTCD =</li>
+                  </ul>
+                </div>
+              </FormItem>
+            </div>
+            <div
+              className="subFormArea"
+              style={{ display: this.state.INTL_YN === 'N' ? 'none' : 'block' }}
+            >
+              <FormItem
+                label={intlObj.get(messages.serviceForm)}
+                labelCol={{ span: 6 }}
+                wrapperCol={{ span: 16 }}
+              >
+                <Checkbox.Group
+                  style={{ width: 340 }}
+                  onChange={onChangeServiceForm}
+                  value={this.state.SERVICE_FORM}
+                // defaultValue={}
+                >
+                  <Row>
+                    <Col span={8}>
+                      <Checkbox value="WY">{intlObj.get(messages.wedgetYn)}</Checkbox>
+                    </Col>
+                    <Col span={8}>
+                      <Checkbox value="MY">{intlObj.get(messages.menuYn)}</Checkbox>
+                    </Col>
+                  </Row>
+                </Checkbox.Group>
+              </FormItem>
+              <Row style={{ marginTop: 10, display: this.state.SERVICE_FORM.indexOf('WY') > -1 ? 'block' : 'none' }}>
+              <Col sm={24}>
+                <FormItem
+                  label="위젯설정"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                  hasFeedback={true}
+                  validateStatus={this.state.ITEM_VALUE ? 'success' : 'error'}
+                  className="ta_feedback"
+                >
+                  <textarea
+                    row="10"
+                    placeholder="위젯설정 (ITEM_VALUE)"
+                    title="위젯설정 (ITEM_VALUE)"
+                    onChange={onChangeItemValue}
+                    style={{ minHeight: 250 }}
+                    defaultValue={this.state.ITEM_VALUE_EXAMPLE}
+                  />
+                </FormItem>
+              </Col>
+            </Row>
+            </div>
             <h3 className="sectionTitle">{intlObj.get(messages.verInfo)}</h3>
             {/* 6. 아이콘 */}
             <h4>{intlObj.get(messages.icon)}</h4>
@@ -1090,149 +1292,6 @@ class AppRegisForm extends React.Component {
                 </Col>
               </Row>
             </section>
-
-            <h3
-              className="sectionTitle"
-              style={{ padding: '33px 0 20px' }}
-            >
-              {intlObj.get(messages.serviceGubun)}
-            </h3>
-            {/* 14. 서비스 구분 */}
-            <FormItem>
-              <div>
-                <RadioGroup
-                  className="typeOptions"
-                  onChange={onChangeIntlYn}
-                  value={this.state.INTL_YN}
-                >
-                  <Radio value="Y">
-                    {intlObj.get(messages.insideService)}
-                  </Radio>
-                  <Radio value="N">
-                    {intlObj.get(messages.outService)}
-                  </Radio>
-                </RadioGroup>
-              </div>
-            </FormItem>
-            {/* 선택한 서비스에 따른 서브옵션 박스 */}
-            <div
-              className="subFormArea"
-              style={{ display: this.state.INTL_YN === 'Y' ? 'none' : 'block' }}
-            >
-              <FormItem
-                label={intlObj.get(messages.display)}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <RadioGroup
-                  className="typeOptions"
-                  onChange={onChangeLinkType}
-                  value={this.state.linkType}
-                >
-                  {loopLinkType(this.props.linkTypeList)}
-                </RadioGroup>
-              </FormItem>
-              <FormItem
-                label="URL"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <Input
-                  placeholder=""
-                  title="URL"
-                  maxLength="500"
-                  onChange={onChangeLinkurl}
-                  defaultValue={this.state.LINK_URL}
-                />
-              </FormItem>
-              {/* <FormItem
-                label="창 크기 (pixel)"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <Row>
-                  {loopWindowSizeList(this.props.windowSizeList)}
-                </Row>
-              </FormItem> */}
-              {/* <FormItem
-                label="표시위치 (pixel)"
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <RadioGroup
-                  className="typeOptions"
-                  onChange={onChangePopupPos}
-                  value={this.state.DisLoc}
-                >
-                  {loopPopupPos(this.props.popupPosList)}
-
-                  <Radio value="d1">좌상단</Radio>
-                  <Radio value="d2">중앙</Radio>
-                  <Radio value="d3">우상단</Radio>
-                </RadioGroup>
-              </FormItem> */}
-              <FormItem
-                label={intlObj.get(messages.protocol)}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <RadioGroup
-                  className="typeOptions"
-                  onChange={onChangeMethod}
-                  value={this.state.METHOD}
-                >
-                  {loopMethod(this.props.methodList)}
-                </RadioGroup>
-              </FormItem>
-              <FormItem
-                label={intlObj.get(messages.variable)}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <Input
-                  placeholder=""
-                  title={intlObj.get(messages.variable)}
-                  maxLength="500"
-                  onChange={onChangeParam}
-                  defaultValue={this.state.PARAM}
-                />
-                <div className="infoVarList">
-                  * 전달변수 중, 자동 채번 변수방식
-                  <ul>
-                    <li>#EMPNO = 사번</li>
-                    <li>#EMPNAME = 구성원 이름</li>
-                    <li>#DEPTCD =</li>
-                  </ul>
-                </div>
-              </FormItem>
-            </div>
-            <div
-              className="subFormArea"
-              style={{ display: this.state.INTL_YN === 'N' ? 'none' : 'block' }}
-            >
-              <FormItem
-                label={intlObj.get(messages.serviceForm)}
-                labelCol={{ span: 6 }}
-                wrapperCol={{ span: 16 }}
-              >
-                <Checkbox.Group
-                  style={{ width: 290 }}
-                  onChange={onChangeServiceForm}
-                  value={this.state.SERVICE_FORM}
-                // defaultValue={}
-                >
-                  <Row>
-                    <Col span={8}>
-                      <Checkbox value="WY">{intlObj.get(messages.wedgetYn)}</Checkbox>
-                    </Col>
-                    <Col span={8}>
-                      <Checkbox value="MY">{intlObj.get(messages.menuYn)}</Checkbox>
-                    </Col>
-                  </Row>
-                </Checkbox.Group>
-              </FormItem>
-            </div>
-
             <h3 className="sectionTitle">{intlObj.get(messages.permissions)}</h3>
             {/* 15. 추천 App */}
             <h4>{intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}</h4>
@@ -1330,6 +1389,7 @@ const mapDispatchToProps = dispatch => (
       appList2,
       // DFLT_SKIN,
       SERVICE_FORM,
+      ITEM_VALUE,
     ) => {
       dispatch(actions.insertAppInfo(
         CLIENT_TYPE,
@@ -1370,6 +1430,7 @@ const mapDispatchToProps = dispatch => (
         appList2,
         // DFLT_SKIN,
         SERVICE_FORM,
+        ITEM_VALUE,
       ));
     },
   }
