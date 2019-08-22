@@ -16,7 +16,6 @@ const initialState = fromJS({
   isSpinnerShow: false, // 스피너 상태
   count: 0, // 일단 카운트
   isMakingApps: false, // 메이킹 앱
-  menuShow: false, //좌측 메뉴 활성화
 });
 
 const portalReducer = (state = initialState, action) => {
@@ -62,7 +61,7 @@ const portalReducer = (state = initialState, action) => {
     case actionTypes.RESET_DATA:
       return initialState;
     case actionTypes.SET_MENU_SHOW:
-      return state.set('menuShow', action.open);
+      return state.set('open', action.open);
     default:
       return state;
   }

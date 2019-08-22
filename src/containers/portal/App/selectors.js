@@ -211,12 +211,6 @@ const makeSelectIsMakingApps = () =>
     selectApp,
     appState => appState.get('isMakingApps'),
   );
-  
-const makeSelectMenuShow = () =>
-  createSelector(
-    selectApp,
-    appState => appState.get('menuShow'),
-  );  
 
 export {
   makeSelectProfile,
@@ -253,5 +247,4 @@ export {
   makeSelectIsSpinnerShow,
   makeSelectCount,
   makeSelectIsMakingApps,
-  makeSelectMenuShow,
 };

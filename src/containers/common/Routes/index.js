@@ -176,7 +176,8 @@ class PublicRoutes extends Component {
           <RestrictedRoute component={ErrorPage} isLoggedIn={isLoggedIn} profile={profile} />
         </Switch>
         <Loading />
-        {profile !== null ? <Watermark profile={profile} /> : <div />}
+        {/* {profile !== null ? <Watermark profile={profile} /> : <div />} */}
+        <div />
       </div>
     );
   }
