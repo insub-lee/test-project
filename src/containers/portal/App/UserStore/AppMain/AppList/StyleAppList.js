@@ -5,6 +5,7 @@ const StyleAppList = styled.div`
   .topPart {
     .searchInput {
       width: 200px;
+      float: right;
       > .ant-input {
         display: block;
         width: 100%;
