@@ -35,6 +35,14 @@ const appCSMualListReducer = (state = initialState, action) => {
       const { widgetId } = action;
       return state.setIn(['manualListMap', widgetId, 'checkedMualList'], fromJS([]));
     }
+    case constantTypes.SET_COMPARE_VIEW_REDUCR: {
+      const { widgetId, list, data } = action;
+      return state.setIn(['manualListMap', widgetId, 'compareViewList'], fromJS(list)).setIn(['manualListMap', widgetId, 'compareViewTemplet'], fromJS(data));
+    }
+    case constantTypes.SET_IS_COMPARE_VIEW_REDUCR: {
+      const { widgetId, flag } = action;
+      return state.setIn(['manualListMap', widgetId, 'isCompareView'], flag);
+    }
     default:
       return state;
   }

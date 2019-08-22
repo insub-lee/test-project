@@ -45,6 +45,12 @@ export const SET_COMPARE_TEMPLET_CONTENT_NAME_REDUCR = 'apps/manual/admin/Manual
 export const REMOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/REMOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR';
 export const ADD_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/ADD_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR';
 export const MOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/MOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR';
+export const GET_COMPARE_MGR_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_COMPARE_MGR_SAGA';
+export const SET_COMPARE_MANAGE_TEMPLET_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_TEMPLET_REDUCR';
+export const SET_COMPARE_MANAGE_DATA_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_DATA_REDUCR';
+export const SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR';
+export const SAVE_COMPARE_DATA_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/SAVE_COMPARE_DATA_SAGA';
+export const SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR';
 
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
 export const GET_USERINFO_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_USERINFO_SAGA';

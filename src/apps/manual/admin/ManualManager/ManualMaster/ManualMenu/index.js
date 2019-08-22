@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import selectors from '../selectors';
 import * as actions from '../actions';
 
-const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType, handleSelectOptionMgr }) => (
+const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType, handleSelectOptionMgr, defaultMgrMap, handleSelectCompareMgr }) => (
   <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]}>
     <Menu.Item key="DefaultMgr" onClick={() => handleChangePageType('DefaultMgr')}>
       <Icon type="form" />
@@ -22,18 +22,18 @@ const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageTyp
       <Icon type="setting" />
       옵션
     </Menu.Item>
-    <Menu.Item key="Compare" disabled>
+    <Menu.Item key="Compare" disabled={defaultMgrMap.get('MUAL_TYPE') === 1} onClick={() => handleSelectCompareMgr()}>
       <Icon type="diff" />
       상품비교정보
     </Menu.Item>
-    <Menu.Item key="DisplayDefine" onClick={() => handleChangePageType('DisplayDefine')}>
+    {/* <Menu.Item key="DisplayDefine" onClick={() => handleChangePageType('DisplayDefine')}>
       <Icon type="layout" />
       화면정의
     </Menu.Item>
     <Menu.Item key="Draft" onClick={() => handleChangePageType('Draft')}>
       <Icon type="audit" />
       심의요청
-    </Menu.Item>
+    </Menu.Item> */}
   </Menu>
 );
 
@@ -42,6 +42,8 @@ ManualMenu.propTypes = {
   handleChangePageType: PropTypes.func,
   movePageType: PropTypes.object,
   handleSelectOptionMgr: PropTypes.func,
+  defaultMgrMap: PropTypes.object,
+  handleSelectCompareMgr: PropTypes.func,
 };
 
 ManualMenu.defaultProps = {
@@ -49,10 +51,13 @@ ManualMenu.defaultProps = {
   handleChangePageType: () => false,
   movePageType: fromJS({}),
   handleSelectOptionMgr: () => false,
+  defaultMgrMap: fromJS({}),
+  handleSelectCompareMgr: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
   movePageType: selectors.makeSelectMovePageType(),
+  defaultMgrMap: selectors.makeSelectDefaultMgr(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -61,6 +66,10 @@ const mapDispatchToProps = dispatch => ({
   handleSelectOptionMgr: () => {
     dispatch(actions.getOptionMgrBySaga());
     dispatch(actions.setPageTypeByReduc('OptionMgr'));
+  },
+  handleSelectCompareMgr: () => {
+    dispatch(actions.getCompareMgrBySaga());
+    dispatch(actions.setPageTypeByReduc('Compare'));
   },
 });
 

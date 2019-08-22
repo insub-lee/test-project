@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import AsyncSelect from 'react-select/async';
 
-import PropTypes from 'prop-types';
+import PropTypes, { object } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -17,7 +17,7 @@ import * as manageActions from '../../actions';
 import StyleDefaultMgr from './StyleDefaultMgr';
 import AddManualType from './AddManualType';
 
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 const { Search } = Input;
 
 class DefaultMgr extends Component {
@@ -57,6 +57,25 @@ class DefaultMgr extends Component {
     // InitDefaultMgr();
   }
 
+  renderSelectOption(compareList, idx) {
+    if (compareList) {
+      return compareList
+        .filter(filter => filter.TEMPLET_PIDX === idx)
+        .map(node =>
+          node.IS_FOLDER === 'Y' ? (
+            <OptGroup key={`compareSelectOptGroup_${node.TEMPLET_IDX}`} label={node.TEMPLET_NAME}>
+              {this.renderSelectOption(compareList, node.TEMPLET_IDX)}
+            </OptGroup>
+          ) : (
+            <Option key={`compareSelectOption_${node.TEMPLET_IDX}`} value={node.TEMPLET_IDX}>
+              {node.TEMPLET_NAME}
+            </Option>
+          ),
+        );
+    }
+    return '';
+  }
+
   render() {
     const {
       pageMoveType,
@@ -74,12 +93,14 @@ class DefaultMgr extends Component {
       GetDefaultMgrByVersionBySaga,
       isAddMualTypeModal,
       setIsAddMualTypeModal,
+      compareList,
     } = this.props;
     let IsMaxVersion = false;
     if (defaultMgrMap && defaultMgrMap.get('VERSION') > 0) {
       const maxVersion = defaultMgrMap.get('VERSIONLIST').maxBy(item => item.VERSION);
       IsMaxVersion = maxVersion.get('VERSION') === defaultMgrMap.get('VERSION');
     }
+
     return (
       <StyleDefaultMgr id="defaultMgrWrapper">
         <table cellPadding="5">
@@ -174,11 +195,11 @@ class DefaultMgr extends Component {
                 <Select
                   id="MUAL_TYPE"
                   style={{ width: 200 }}
-                  value={defaultMgrMap.get('MUAL_TYPE').toString()}
+                  value={defaultMgrMap.get('MUAL_TYPE')}
                   onChange={value => setDefaultMgrChangeValue('MUAL_TYPE', value)}
                 >
-                  <Option value="1">일반매뉴얼</Option>
-                  <Option value="2">상품매뉴얼</Option>
+                  <Option value={1}>일반매뉴얼</Option>
+                  {this.renderSelectOption(compareList, 0)}
                 </Select>
                 <Button type="primary" onClick={() => setIsAddMualTypeModal(true)}>
                   추가
@@ -249,6 +270,7 @@ DefaultMgr.propTypes = {
   selectedUserInfo: PropTypes.array,
   isAddMualTypeModal: PropTypes.bool,
   setIsAddMualTypeModal: PropTypes.func,
+  compareList: PropTypes.arrayOf(PropTypes.object),
 };
 
 DefaultMgr.defaultProps = {
@@ -261,6 +283,7 @@ DefaultMgr.defaultProps = {
   selectedUserInfo: [],
   isAddMualTypeModal: false,
   setIsAddMualTypeModal: () => false,
+  compareList: [],
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -270,6 +293,7 @@ const mapStateToProps = createStructuredSelector({
   userInfoList: selectors.makeSelectUserInfoList(),
   selectedUserInfo: selectors.makeSelectedUserInfo(),
   isAddMualTypeModal: selectors.makeSelectIsAddMualTypeModal(),
+  compareList: selectors.makeSelectCompareTemplet(),
 });
 
 const mapDispatchToProps = dispatch => ({

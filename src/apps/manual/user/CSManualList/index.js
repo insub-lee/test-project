@@ -19,6 +19,7 @@ import saga from './saga';
 import selectors from './selectors';
 import Topbar from './Topbar';
 import TitleBar from './TitleBar';
+import CompareView from './CompareView';
 
 class CSManualList extends Component {
   constructor(props) {
@@ -44,23 +45,45 @@ class CSManualList extends Component {
   };
 
   handleClickTopBarButton = key => {
-    const { item, setMultiView, resetCheckManual } = this.props;
+    const { item, setMultiView, getCompareView } = this.props;
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
     const widgetId = item && item.id ? item.id : categoryIdx;
     switch (key) {
       case 'mualListSetMultiView':
         setMultiView(widgetId);
         break;
-      case 'mualListCancelCheck':
-        resetCheckManual(widgetId);
+      case 'mualListCompare':
+        getCompareView(widgetId);
         break;
+      // case 'mualListCancelCheck':
+      //   resetCheckManual(widgetId);
+      //   break;
       default:
         console.debug(key);
     }
   };
 
+  handleCompareViewClose = () => {
+    const { setIsCompareView, item } = this.props;
+    const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
+    const widgetId = item && item.id ? item.id : categoryIdx;
+    setIsCompareView(widgetId, false);
+  };
+
   render() {
-    const { totalManualList, isViewContents, setIsViewContents, setSelectedMualOrgIdx, selectedMualIdx, setCheckManual, checkedManualList, item } = this.props;
+    const {
+      totalManualList,
+      isViewContents,
+      setIsViewContents,
+      setSelectedMualOrgIdx,
+      selectedMualIdx,
+      setCheckManual,
+      checkedManualList,
+      item,
+      compareList,
+      templetData,
+      isCompareView,
+    } = this.props;
     // let ListItemData = fromJS({});
     let ListItemData = fromJS([]);
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
@@ -89,7 +112,7 @@ class CSManualList extends Component {
 
     const topBarButton = [
       { key: 'mualListSetMultiView', title: '모아보기', event: this.handleClickTopBarButton },
-      { key: 'mualListCancelCheck', title: '전체취소', event: this.handleClickTopBarButton },
+      { key: 'mualListCompare', title: '상품비교', event: this.handleClickTopBarButton },
       { key: 'listTopbar2', title: '오류신고', event: this.handleClickTopBarButton },
       { key: 'listTopbar3', title: '오류신고', event: this.handleClickTopBarButton },
       { key: 'listTopbar4', title: '오류신고', event: this.handleClickTopBarButton },
@@ -116,7 +139,6 @@ class CSManualList extends Component {
         <Modal
           width={1158}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          // maskStyle={{ backgroundColor: '#ffffff' }}
           style={{ top: 42 }}
           visible={isViewContents && selectedMualIdx > 0}
           footer={null}
@@ -125,6 +147,18 @@ class CSManualList extends Component {
           getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
         >
           <CSManualView mualIdx={selectedMualIdx} widgetId={widgetId} />
+        </Modal>
+        <Modal
+          width={1158}
+          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+          style={{ top: 42 }}
+          visible={isCompareView}
+          footer={null}
+          onCancel={() => this.handleCompareViewClose()}
+          closable={false}
+          getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
+        >
+          <CompareView compareList={compareList.toJS()} templetData={templetData.toJS()} />
         </Modal>
       </div>
     );
@@ -147,7 +181,12 @@ CSManualList.propTypes = {
   checkedManualList: PropTypes.object,
   setMultiView: PropTypes.func,
   setSelectedMualOrgIdx: PropTypes.func,
-  resetCheckManual: PropTypes.func,
+  getCompareView: PropTypes.func,
+  compareList: PropTypes.object,
+  templetData: PropTypes.object,
+  isCompareView: PropTypes.bool,
+  setIsCompareView: PropTypes.func,
+  // resetCheckManual: PropTypes.func,
 };
 
 CSManualList.defaultProps = {
@@ -164,7 +203,12 @@ CSManualList.defaultProps = {
   checkedManualList: fromJS([]),
   setMultiView: () => false,
   setSelectedMualOrgIdx: () => false,
-  resetCheckManual: () => false,
+  getCompareView: () => false,
+  compareList: fromJS([]),
+  templetData: fromJS({}),
+  isCompareView: false,
+  setIsCompareView: () => false,
+  // resetCheckManual: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -172,6 +216,9 @@ const mapStateToProps = createStructuredSelector({
   isViewContents: selectors.makeSelectIsViewContents(),
   selectedMualIdx: selectors.makeSelectedMualIdx(),
   checkedManualList: selectors.makeCheckedManualList(),
+  compareList: selectors.makeSelectCompareViewList(),
+  templetData: selectors.makeSelectCompareViewTemplet(),
+  isCompareView: selectors.makeSelectIsCompareView(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -183,7 +230,9 @@ const mapDispatchToProps = dispatch => ({
   resetManualView: widgetId => dispatch(viewActions.resetManualViewByReducr(widgetId)),
   setCheckManual: (mualIdx, mualOrgIdx, widgetId) => dispatch(actions.setCheckManualByReducr(mualIdx, mualOrgIdx, widgetId)),
   setMultiView: widgetId => dispatch(actions.setMultiViewBySaga(widgetId)),
-  resetCheckManual: widgetId => dispatch(actions.resetCheckManualByReducr(widgetId)),
+  getCompareView: widgetId => dispatch(actions.getCompareViewBySaga(widgetId)),
+  setIsCompareView: (widgetId, flag) => dispatch(actions.setIsCompareViewByReducr(widgetId, flag)),
+  // resetCheckManual: widgetId => dispatch(actions.resetCheckManualByReducr(widgetId)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-CSManualList-reducer', reducer });
