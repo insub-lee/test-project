@@ -5,7 +5,7 @@ import { Input } from 'antd';
 import FroalaEditor from '../../../../../../components/RichTextEditor/FroalaEditor';
 import FroalaEditorView from '../../../../../../components/RichTextEditor/FroalaEditorView';
 
-import { froalaEditorConfig } from '../FroalaEditorConfig';
+import { froalaEditorConfig } from '../../../../../../components/RichTextEditor/FroalaEditorConfig';
 
 class QnA extends Component {
   componentDidMount() {}

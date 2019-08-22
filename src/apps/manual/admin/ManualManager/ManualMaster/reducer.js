@@ -53,6 +53,11 @@ const initialState = fromJS({
       },
       viewMode: 'I',
       hoverKey: 0,
+      manage: {
+        templet: {},
+        data: {},
+        selectedIdx: 0,
+      },
     },
   },
 });
@@ -80,13 +85,13 @@ const appReducer = (state = initialState, action) => {
     case constantTypes.SET_MOVEPAGETYPEBYREDUCR: {
       const { pageMoveType } = action;
       return state
+        .setIn(['manualMasterState', 'defaultMgrMap'], initDefaultMgrMapValue.set('CATEGORY_IDX', pageMoveType.get('selectedCategoryIdx')))
         .setIn(['manualMasterState', 'pageMoveType'], pageMoveType)
         .setIn(['manualMasterState', 'defaultMgrMap', 'SELECTED_MUAL_IDX'], pageMoveType.get('selectedMualIdx'));
     }
     case constantTypes.SET_RELATIONMANUALLISTBYMUALIDX_REDUCR: {
       const { mualIdx, selected, target } = action;
       if (target === 'left') {
-        console.debug(mualIdx, selected);
         const relationList = state.getIn(['manualMasterState', 'optionMgr', 'relationManualList']);
         const fidx = relationList.findIndex(x => x.MUAL_IDX === mualIdx);
         relationList[fidx].checked = selected;
@@ -302,6 +307,7 @@ const appReducer = (state = initialState, action) => {
       );
       editorComponentList = editorComponentList.toJS().sort((a, b) => (a.SORT_SQ > b.SORT_SQ ? 1 : -1));
       editorComponentList = editorComponentList.map((item, sortIdx) => ({ ...item, SORT_SQ: item.IS_REMOVE === 'Y' ? 9999 : sortIdx + 1 }));
+      console.debug(editorComponentList);
       return state.setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(editorComponentList));
     }
     case constantTypes.SET_ADD_EDITOR_COMPONENT_ID_REDUCR: {
@@ -384,6 +390,22 @@ const appReducer = (state = initialState, action) => {
       const [removed] = result.splice(source.index, 1);
       result.splice(destination.index, 0, removed);
       return state.setIn(['manualMasterState', 'compareTempletMgr', 'selectedNode', 'TEMPLET_CONTENT'], fromJS(result));
+    }
+    case constantTypes.SET_COMPARE_MANAGE_TEMPLET_REDUCR: {
+      const { data } = action;
+      return state.setIn(['manualMasterState', 'compareTempletMgr', 'manage', 'templet'], fromJS(data));
+    }
+    case constantTypes.SET_COMPARE_MANAGE_DATA_REDUCR: {
+      const { data } = action;
+      return state.setIn(['manualMasterState', 'compareTempletMgr', 'manage', 'data'], fromJS(data));
+    }
+    case constantTypes.SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR: {
+      const { idx, value } = action;
+      return state.setIn(['manualMasterState', 'compareTempletMgr', 'manage', 'templet', 'TEMPLET_CONTENT', idx, 'ITEM_DATA'], value);
+    }
+    case constantTypes.SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR: {
+      const { idx } = action;
+      return state.setIn(['manualMasterState', 'compareTempletMgr', 'manage', 'selectedIdx'], idx);
     }
     default:
       return state;

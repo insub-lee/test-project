@@ -3,7 +3,7 @@ import { Button, Input, Radio } from 'antd';
 import FroalaEditor from '../../../../../components/RichTextEditor/FroalaEditor';
 import FroalaEditorView from '../../../../../components/RichTextEditor/FroalaEditorView';
 
-import { froalaEditorConfig } from './FroalaEditorConfig';
+import { froalaEditorConfig } from '../../../../../components/RichTextEditor/FroalaEditorConfig';
 import QnA from './QnA';
 
 const onClickComponent = (e, selectItem, selectedComponentIdx, handleChangeCompIdx) => {
