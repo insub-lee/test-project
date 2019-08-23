@@ -65,7 +65,7 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/workbuilder/manageapp" component={WorkBuilderToAppPage} exact />
           <Route path="/admin/adminmain/workbuilder/:ID" component={WorkBuilderDetailPage} />
           <Route path="/admin/adminmain/account" component={UserAdmin} />
-          <Route path="/admin/adminmain/classify/:GUBUN" component={Classify} />
+          <Route path="/admin/adminmain/classify" component={Classify} />
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
         </Switch>
       </div>
