@@ -64,6 +64,13 @@ const StyleAppUpdateForm = styled.div`
         border-color: #fd3995;
       }
     }
+
+    &.ta_feedback {
+      .ant-form-item-children-icon {
+        top: 10% !important;
+        right: 12px !important;
+      }
+    }     
   }
 
   // Form.Item 스타일

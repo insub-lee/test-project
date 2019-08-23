@@ -42,7 +42,7 @@ class AppUpdateForm extends React.Component {
       INTL_YN: 'Y',
       linkType: 'POPUP',
       // DisLoc: 'd1',
-      METHOD: 'GET',
+      LINK_METHOD: 'GET',
       SEC_REQ_YN: 'Y',
       appPlus1: false,
       appList1: [],
@@ -68,7 +68,7 @@ class AppUpdateForm extends React.Component {
       DSCR_CHN: '',
       CATG_ID: 0,
       CATG_NAME: '',
-      ORIGIN_APP_ID: '',
+      // ORIGIN_APP_ID: '',
       VER_1: '',
       VER_2: '',
       VER_3: '',
@@ -78,7 +78,7 @@ class AppUpdateForm extends React.Component {
       LINK_URL: '',
       // WIDTH: '',
       // HEIGHT: '',
-      PARAM: '',
+      LINK_PARAM: '',
       SERVICE_FORM: [],
       NAME_KOR_CHK: false,
       APP_ABBR_KOR_CHK: false,
@@ -91,6 +91,7 @@ class AppUpdateForm extends React.Component {
       WIDGET_SVC_YN: '',
       MENU_SVC_YN: '',
       SRC_PATH: '',
+      ITEM_VALUE: '',
     };
     this.onFileUploadedIcon = this.onFileUploadedIcon.bind(this);
     this.onFileUploadedWork = this.onFileUploadedWork.bind(this);
@@ -115,7 +116,7 @@ class AppUpdateForm extends React.Component {
       DSCR_CHN: nextProps.setMyAppDetail.DSCR_CHN,
       CATG_ID: nextProps.setMyAppDetail.CATG_ID,
       CATG_NAME: nextProps.setMyAppDetail.CATG_PATH,
-      ORIGIN_APP_ID: nextProps.setMyAppDetail.ORIGIN_APP_ID,
+      // ORIGIN_APP_ID: nextProps.setMyAppDetail.ORIGIN_APP_ID,
       // DFLT_SKIN: nextProps.setMyAppDetail.DFLT_SKIN,
       VER_1: nextProps.setMyAppDetail.VER_1,
       VER_2: nextProps.setMyAppDetail.VER_2,
@@ -126,8 +127,8 @@ class AppUpdateForm extends React.Component {
       INTL_YN: nextProps.setMyAppDetail.INTL_TYPE,
       linkType: nextProps.systemLink.TARGET,
       LINK_URL: nextProps.systemLink.URL,
-      METHOD: nextProps.systemLink.METHOD,
-      PARAM: nextProps.systemLink.PARAM,
+      LINK_METHOD: nextProps.systemLink.LINK_METHOD,
+      LINK_PARAM: nextProps.systemLink.PARAM,
       SEC_REQ_YN: nextProps.setMyAppDetail.SEC_REQ_YN,
       UploadFilesScreenshot: nextProps.screenshotList,
       UploadFilesIcon: nextProps.appIconArr,
@@ -142,6 +143,7 @@ class AppUpdateForm extends React.Component {
       WIDGET_SVC_YN: nextProps.setMyAppDetail.WIDGET_SVC_YN,
       MENU_SVC_YN: nextProps.setMyAppDetail.MENU_SVC_YN,
       SRC_PATH: nextProps.setMyAppDetail.SRC_PATH,
+      ITEM_VALUE: nextProps.setMyAppDetail.APPCFG,
     });
     if (nextProps.setMyAppDetail.NAME_KOR !== undefined) {
       if (nextProps.setMyAppDetail.NAME_KOR.length > 0) {
@@ -279,7 +281,7 @@ class AppUpdateForm extends React.Component {
       this.setState({ linkType: val.target.value });
     };
     const onChangeMethod = (val) => {
-      this.setState({ METHOD: val.target.value });
+      this.setState({ LINK_METHOD: val.target.value });
     };
     const onChangeSecReqYn = (val) => {
       this.setState({ SEC_REQ_YN: val.target.value });
@@ -384,7 +386,7 @@ class AppUpdateForm extends React.Component {
         this.state.APP_ABBR_CHN,
         this.state.DSCR_CHN,
         this.state.CATG_ID,
-        this.state.ORIGIN_APP_ID,
+        // this.state.ORIGIN_APP_ID,
         history,
         this.state.UploadFilesIcon,
         this.state.VER_1,
@@ -403,14 +405,15 @@ class AppUpdateForm extends React.Component {
         this.state.LINK_URL,
         // this.state.WIDTH,
         // this.state.HEIGHT,
-        this.state.METHOD,
-        this.state.PARAM,
+        this.state.LINK_METHOD,
+        this.state.LINK_PARAM,
         this.state.SEC_REQ_YN,
         this.state.appList1,
         this.state.appList2,
         // this.state.DFLT_SKIN,
         this.state.SERVICE_FORM,
         this.state.uv,
+        this.state.ITEM_VALUE,
       );
     };
     const appInfoSaveChk = () => {
@@ -422,6 +425,7 @@ class AppUpdateForm extends React.Component {
         // && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
         && this.state.CATG_ID_CHK
         && this.state.LANG_LIST.length > 0 && this.state.CLIENT_TYPE.length > 0
+        && this.state.INTL_YN === 'Y' && this.state.SERVICE_FORM.indexOf('WY') > -1 ? (this.state.ITEM_VALUE ? true : false) : true
       ) {
         this.setState({
           NAME_ENG: this.state.NAME_ENG ? this.state.NAME_ENG : this.state.NAME_KOR,
@@ -527,7 +531,7 @@ class AppUpdateForm extends React.Component {
       this.setState({ LINK_URL: val.target.value });
     };
     const onChangeParam = (val) => {
-      this.setState({ PARAM: val.target.value });
+      this.setState({ LINK_PARAM: val.target.value });
     };
     const imgClick = (e) => {
       e.stopPropagation();
@@ -535,6 +539,9 @@ class AppUpdateForm extends React.Component {
     const onChangeServiceForm = (val) => {
       this.setState({ SERVICE_FORM: val });
     };
+    const onChangeItemValue = (val) => {
+      this.setState({ ITEM_VALUE: val.target.value });
+    };    
     return (
       <div>
         <MyAppCategoryModal
@@ -901,7 +908,7 @@ class AppUpdateForm extends React.Component {
                   <RadioGroup
                     className="typeOptions"
                     onChange={onChangeMethod}
-                    value={this.state.METHOD}
+                    value={this.state.LINK_METHOD}
                   >
                     {loopMethod(this.props.methodList)}
                   </RadioGroup>
@@ -917,7 +924,7 @@ class AppUpdateForm extends React.Component {
                     style={{ width: 350 }}
                     maxLength="500"
                     onChange={onChangeParam}
-                    value={this.state.PARAM}
+                    value={this.state.LINK_PARAM}
                   />
                   <div className="infoVarList">
                     * 전달변수 중, 자동 채번 변수방식(표시 내용 변경 후 다국어 작업 예정))
@@ -954,6 +961,27 @@ class AppUpdateForm extends React.Component {
                     </Row>
                   </Checkbox.Group>
                 </FormItem>
+                <Row style={{ marginTop: 10, display: this.state.uv === 'V' && this.state.SERVICE_FORM && this.state.SERVICE_FORM.indexOf('WY') > -1 ? 'block' : 'none' }}>
+                  <Col sm={24}>
+                    <FormItem
+                      label="위젯설정"
+                      labelCol={{ span: 6 }}
+                      wrapperCol={{ span: 16 }}
+                      hasFeedback={true}
+                      validateStatus={this.state.ITEM_VALUE ? 'success' : 'error'}
+                      className="ta_feedback"
+                    >
+                      <textarea
+                        row="10"
+                        placeholder="위젯설정 (ITEM_VALUE)"
+                        title="위젯설정 (ITEM_VALUE)"
+                        onChange={onChangeItemValue}
+                        style={{ minHeight: 250 }}
+                        value={this.state.ITEM_VALUE}
+                      />
+                    </FormItem>
+                  </Col>
+                </Row>                
               </div>
             </div>
             <div
@@ -1435,7 +1463,7 @@ const mapDispatchToProps = dispatch => (
       APP_ABBR_CHN,
       DSCR_CHN,
       CATG_ID,
-      ORIGIN_APP_ID,
+      // ORIGIN_APP_ID,
       history,
       UploadFilesIcon,
       VER_1,
@@ -1454,14 +1482,15 @@ const mapDispatchToProps = dispatch => (
       LINK_URL,
       // WIDTH,
       // HEIGHT,
-      METHOD,
-      PARAM,
+      LINK_METHOD,
+      LINK_PARAM,
       SEC_REQ_YN,
       appList1,
       appList2,
       // DFLT_SKIN,
       SERVICE_FORM,
       uv,
+      ITEM_VALUE,
     ) => {
       dispatch(actions.insertAppInfo(
         APP_ID,
@@ -1478,7 +1507,7 @@ const mapDispatchToProps = dispatch => (
         APP_ABBR_CHN,
         DSCR_CHN,
         CATG_ID,
-        ORIGIN_APP_ID,
+        // ORIGIN_APP_ID,
         history,
         UploadFilesIcon,
         VER_1,
@@ -1497,14 +1526,15 @@ const mapDispatchToProps = dispatch => (
         LINK_URL,
         // WIDTH,
         // HEIGHT,
-        METHOD,
-        PARAM,
+        LINK_METHOD,
+        LINK_PARAM,
         SEC_REQ_YN,
         appList1,
         appList2,
         // DFLT_SKIN,
         SERVICE_FORM,
         uv,
+        ITEM_VALUE,
       ));
     },
   }
