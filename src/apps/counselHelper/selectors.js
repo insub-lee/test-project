@@ -8,9 +8,4 @@ const makeSelectDetail = () =>
     widgetstate => widgetstate.get('detail'),
   );
 
-const makeSearchWord = () =>
-  createSelector(
-    selectAppsWidgetState,
-    widgetstate => widgetstate.get('searchWord'),
-  );
-export default { selectAppsWidgetState, makeSelectDetail, makeSearchWord };
+export default { selectAppsWidgetState, makeSelectDetail };

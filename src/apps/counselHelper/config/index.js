@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import { Button } from 'antd';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -22,11 +23,13 @@ class testConfig extends PureComponent {
   render() {
     const { categorie } = this.props;
     const { item, type } = this.props;
+
     console.log(item);
     console.log(type);
     return (
       <div>
         <Config item={categorie} onCategorieChange={this.HandleCategorieChange} />
+        <Button className="modalClose" onClick={this.props.onClose} />
       </div>
     );
   }

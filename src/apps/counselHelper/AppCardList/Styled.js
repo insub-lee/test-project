@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  padding: 25px 0 0;
+  padding: 10px 0px 50px;
   & .app-card-list {
     width: 100%;
     overflow: hidden;

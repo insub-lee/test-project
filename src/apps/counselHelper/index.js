@@ -4,41 +4,49 @@ import injectSaga from 'utils/injectSaga';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
 import * as actions from './actions';
-import Config from './config';
 import HelperWidget from './helperWidget';
 import StyleWidget from './StyleWidget';
 
 class Widget extends PureComponent {
   constructor(props) {
     super(props);
-    this.props.getDetail([2874]);
+    const initData = this.props.item.data;
+    if (Object.keys(initData).length === 0) {
+      console.log('객체빈값');
+    } else {
+      this.props.getDetail(initData.categorie);
+    }
+    this.state = {
+      detail: [],
+    };
   }
 
-  searchClick = text => {
-    this.props.saveSearchWord(text);
-    console.log(this.props.item);
-  };
-  render() {
-    const { detail, searchWord } = this.props;
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps.detail);
+    this.setState({
+      detail: nextProps.detail,
+    });
+  }
 
+  render() {
+    const { item } = this.props;
+    console.log('아이템값');
+    console.log(item);
     return (
       <StyleWidget>
-        <HelperWidget detail={detail} searchClick={this.searchClick} searchWord={searchWord} />
+        <HelperWidget detail={this.state.detail} />
       </StyleWidget>
     );
   }
 }
 Widget.propTypes = {
   getDetail: PropTypes.func,
-  saveSearchWord: PropTypes.func,
-  detail: PropTypes.array,
-  searchWord: PropTypes.string,
+  detail: PropTypes.object,
 };
 
 Widget.defaultProps = {
@@ -47,12 +55,10 @@ Widget.defaultProps = {
 
 const mapStateToProps = createStructuredSelector({
   detail: selectors.makeSelectDetail(),
-  searchWord: selectors.makeSearchWord(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getDetail: PRNT_ID => dispatch(actions.getDetail(PRNT_ID)),
-  saveSearchWord: text => dispatch(actions.saveSearchWord(text)),
 });
 
 const withReducer = injectReducer({ key: 'apps-Widget', reducer });

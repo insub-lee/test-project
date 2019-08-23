@@ -1,12 +1,20 @@
 import React, { PureComponent } from 'react';
-import { Row, Col } from 'antd';
+import ScrollBar from 'react-custom-scrollbars';
 import Detail from './detail';
 import SearchWidget from './searchWidget';
-import ScrollBar from 'react-custom-scrollbars';
 export default class helperWidget extends PureComponent {
+  state = {
+    searchWord: '',
+  };
+
+  handlerSearch = searchWord => {
+    this.setState({
+      searchWord,
+    });
+  };
+
   render() {
-    const { item, type } = this.props;
-    const { detail, searchClick, searchWord } = this.props;
+    const { detail } = this.props;
     const result = [];
     let first = -1;
     /* 트리데이터생성 */
@@ -40,11 +48,11 @@ export default class helperWidget extends PureComponent {
     });
 
     return (
-      <div class="wrapper">
-        <SearchWidget onClick={searchClick} />
+      <div className="wrapper">
+        <SearchWidget searchWord={this.state.searchWord} onSearch={this.handlerSearch} />
         <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
           <div className="widget">
-            <Detail item={detail} treeData={result} searchWord={searchWord} />
+            <Detail item={detail} treeData={result} searchWord={this.state.searchWord} />
           </div>
         </ScrollBar>
       </div>
