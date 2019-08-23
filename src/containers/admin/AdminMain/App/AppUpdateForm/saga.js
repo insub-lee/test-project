@@ -96,6 +96,10 @@ export function* getMyAppDetail(payload) {
     appinfo.VER_2 = verArr[1].toString();
     appinfo.VER_3 = verArr[2].toString();
 
+    const { appCfg } = response;
+    if (appCfg) {
+      appinfo.APPCFG = appCfg.ITEM_VALUE
+    }
     yield put({ type: constants.SET_MY_APP_DETAIL, payload: appinfo });
 
     const appIconArr = [];

@@ -42,7 +42,7 @@ class AppRegisForm extends React.Component {
       INTL_YN: 'Y',
       linkType: 'NEW',
       // DisLoc: 'd1',
-      METHOD: 'GET',
+      LINK_METHOD: 'GET',
       SEC_REQ_YN: 'Y',
       appPlus1: false,
       appList1: [],
@@ -68,7 +68,7 @@ class AppRegisForm extends React.Component {
       DSCR_CHN: '',
       CATG_ID: 0,
       CATG_NAME: '',
-      ORIGIN_APP_ID: '',
+      SRC_PATH: '',
       VER_1: '',
       VER_2: '',
       VER_3: '',
@@ -78,7 +78,7 @@ class AppRegisForm extends React.Component {
       LINK_URL: '',
       // WIDTH: '',
       // HEIGHT: '',
-      PARAM: '',
+      LINK_PARAM: '',
       SERVICE_FORM: ['WY', 'MY'],
       NAME_KOR_CHK: false,
       APP_ABBR_KOR_CHK: false,
@@ -86,36 +86,38 @@ class AppRegisForm extends React.Component {
       APP_ABBR_ENG_CHK: false,
       NAME_CHN_CHK: false,
       APP_ABBR_CHN_CHK: false,
-      ORIGIN_APP_ID_CHK: false,
+      SRC_PATH_CHK: false,
       CATG_ID_CHK: false,
       ITEM_VALUE: '',
       ITEM_VALUE_EXAMPLE: `{
-        "appKey": "[Empty]",
-        "appInfo": {
-            "path": "/example/index",
-            "default":"1X1",
-            "data":{}
+        "appKey" : "appKey",
+        "appInfo" : {
+          "path" : "/example/index",
+          "default" : "1X1",
+          "data" : { }
         },
-        "widgets": [
-            {
-                "size":"1X1",
-                "sizeArr":["1X1"],
-                "basic" : {
-                     "path": "example/widgets/index",
-                     "settingPath": "example/widgets/widgetSetting",
-                     "drilldownPath":"example/widgets/drillDown" ,
-                     "morePath":"example/widgets/more" ,
-                     "type": "M",
-                     "functions": ["reload", "drilldown", "more"]
-                  },
-                  "user":{
-                      "isTitle": true,
-                      "skin": "1"
-                  },
-                  "data": {}
-            }
-        ]
-    }`,
+        "widgets" : [ {
+          "size" : "1X1",
+          "sizeArr" : [ "1X1" ],
+          "basic" : {
+            "path" : "example/widgets/index",
+            "settingPath":"example/widgets/widgetSetting",
+            "drilldownPath":"example/widgets/drillDown",
+            "morePath":"example/widgets/more",
+            "type" : "L",
+            "functions":[
+                          "reload",
+                          "drilldown",
+                          "more"
+            ]
+          },
+          "user" : {
+            "isTitle" : true,
+            "skin" : "1"
+          },
+          "data" : { }
+        }]
+      }`,
     };
     this.onFileUploadedIcon = this.onFileUploadedIcon.bind(this);
     this.onFileUploadedWork = this.onFileUploadedWork.bind(this);
@@ -213,7 +215,7 @@ class AppRegisForm extends React.Component {
       this.setState({ linkType: val.target.value });
     };
     const onChangeMethod = (val) => {
-      this.setState({ METHOD: val.target.value });
+      this.setState({ LINK_METHOD: val.target.value });
     };
     const onChangeSecReqYn = (val) => {
       this.setState({ SEC_REQ_YN: val.target.value });
@@ -324,7 +326,7 @@ class AppRegisForm extends React.Component {
         this.state.APP_ABBR_CHN,
         this.state.DSCR_CHN,
         this.state.CATG_ID,
-        this.state.ORIGIN_APP_ID,
+        this.state.SRC_PATH,
         history,
         this.state.UploadFilesIcon,
         this.state.VER_1,
@@ -343,8 +345,8 @@ class AppRegisForm extends React.Component {
         this.state.LINK_URL,
         // this.state.WIDTH,
         // this.state.HEIGHT,
-        this.state.METHOD,
-        this.state.PARAM,
+        this.state.LINK_METHOD,
+        this.state.LINK_PARAM,
         this.state.SEC_REQ_YN,
         this.state.appList1,
         this.state.appList2,
@@ -364,7 +366,7 @@ class AppRegisForm extends React.Component {
       if (this.state.NAME_KOR_CHK && this.state.APP_ABBR_KOR_CHK
         // && this.state.NAME_ENG_CHK && this.state.APP_ABBR_ENG_CHK
         // && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
-        && this.state.ORIGIN_APP_ID_CHK && this.state.CATG_ID_CHK
+        && this.state.SRC_PATH_CHK && this.state.CATG_ID_CHK
         && this.state.LANG_LIST.length > 0 && this.state.CLIENT_TYPE.length > 0
         && this.state.INTL_YN === 'Y' && this.state.SERVICE_FORM.indexOf('WY') > -1 ? (this.state.ITEM_VALUE ? true : false) : true
       ) {
@@ -454,13 +456,13 @@ class AppRegisForm extends React.Component {
     const onChangeDscrChn = (val) => {
       this.setState({ DSCR_CHN: val.target.value });
     };
-    const onChangeOriginAppId = (val) => {
-      this.setState({ ORIGIN_APP_ID: val.target.value });
+    const onChangeSrcPath = (val) => {
+      this.setState({ SRC_PATH: val.target.value });
 
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
-        this.setState({ ORIGIN_APP_ID_CHK: true });
+        this.setState({ SRC_PATH_CHK: true });
       } else {
-        this.setState({ ORIGIN_APP_ID_CHK: false });
+        this.setState({ SRC_PATH_CHK: false });
       }
     };
     const onChangeVer1 = (val) => {
@@ -485,7 +487,7 @@ class AppRegisForm extends React.Component {
       this.setState({ LINK_URL: val.target.value });
     };
     const onChangeParam = (val) => {
-      this.setState({ PARAM: val.target.value });
+      this.setState({ LINK_PARAM: val.target.value });
     };
     const imgClick = (e) => {
       e.stopPropagation();
@@ -776,12 +778,12 @@ class AppRegisForm extends React.Component {
             <h4 className="required">SRC PATH [앱경로]</h4>
             <FormItem
               hasFeedback={true}
-              validateStatus={this.state.ORIGIN_APP_ID_CHK ? 'success' : 'error'}
+              validateStatus={this.state.SRC_PATH_CHK ? 'success' : 'error'}
             >
               <Input
                 maxLength="50"
-                onChange={onChangeOriginAppId}
-                defaultValue={this.state.ORIGIN_APP_ID}
+                onChange={onChangeSrcPath}
+                defaultValue={this.state.SRC_PATH}
               />
             </FormItem>
 
@@ -873,7 +875,7 @@ class AppRegisForm extends React.Component {
                 <RadioGroup
                   className="typeOptions"
                   onChange={onChangeMethod}
-                  value={this.state.METHOD}
+                  value={this.state.LINK_METHOD}
                 >
                   {loopMethod(this.props.methodList)}
                 </RadioGroup>
@@ -888,7 +890,7 @@ class AppRegisForm extends React.Component {
                   title={intlObj.get(messages.variable)}
                   maxLength="500"
                   onChange={onChangeParam}
-                  defaultValue={this.state.PARAM}
+                  defaultValue={this.state.LINK_PARAM}
                 />
                 <div className="infoVarList">
                   * 전달변수 중, 자동 채번 변수방식
@@ -1363,7 +1365,7 @@ const mapDispatchToProps = dispatch => (
       APP_ABBR_CHN,
       DSCR_CHN,
       CATG_ID,
-      ORIGIN_APP_ID,
+      SRC_PATH,
       history,
       UploadFilesIcon,
       VER_1,
@@ -1382,8 +1384,8 @@ const mapDispatchToProps = dispatch => (
       LINK_URL,
       // WIDTH,
       // HEIGHT,
-      METHOD,
-      PARAM,
+      LINK_METHOD,
+      LINK_PARAM,
       SEC_REQ_YN,
       appList1,
       appList2,
@@ -1404,7 +1406,7 @@ const mapDispatchToProps = dispatch => (
         APP_ABBR_CHN,
         DSCR_CHN,
         CATG_ID,
-        ORIGIN_APP_ID,
+        SRC_PATH,
         history,
         UploadFilesIcon,
         VER_1,
@@ -1423,8 +1425,8 @@ const mapDispatchToProps = dispatch => (
         LINK_URL,
         // WIDTH,
         // HEIGHT,
-        METHOD,
-        PARAM,
+        LINK_METHOD,
+        LINK_PARAM,
         SEC_REQ_YN,
         appList1,
         appList2,
