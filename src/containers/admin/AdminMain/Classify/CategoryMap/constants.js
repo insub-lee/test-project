@@ -1,0 +1,12 @@
+const base = 'containers/admin/AdminMain/Classify/CategoryMap';
+export const GET_ROOTMAP_LIST = `${base}/GET_ROOTMAP_LIST`;
+export const SET_ROOTMAP_LIST = `${base}/SET_ROOTMAP_LIST`;
+export const GET_CATEGORYMAP_LIST = `${base}/GET_CATEGORYMAP_LIST`;
+export const SET_CATEGORYMAP_LIST = `${base}/SET_CATEGORYMAP_LIST`;
+export const SET_SELECTED_NODE = `${base}/SET_SELECTED_NODE`;
+export const ADD_CATEGORY_MAP = `${base}/ADD_CATEGORY_MAP`;
+export const UPDATE_CATEGORY_MAP = `${base}/UPDATE_CATEGORY_MAP`;
+export const DELETE_CATEGORY_MAP = `${base}/DELETE_CATEGORY_MAP`;
+export const SET_ADDNODE_INFO = `${base}/SET_ADDNODE_INFO`;
+export const SET_IS_ADD = `${base}/SET_IS_ADD`;
+export const INIT_ADDNODE_INFO = `${base}/INIT_ADDNODE_INFO`;
