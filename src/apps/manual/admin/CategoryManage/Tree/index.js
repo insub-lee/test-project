@@ -54,8 +54,8 @@ const handleOnClick = (node, setViewMode, setManualManage, setSelectedIndex) => 
 
 const handleAddOnClick = (node, setViewMode, setManualManage, setSelectedIndex) => {
   setViewMode(node, 'V');
-  setManualManage('view', node.CATEGORY_IDX, 0);
   setSelectedIndex(node.CATEGORY_IDX);
+  setManualManage('view', node.CATEGORY_IDX, 0);
 };
 
 const handleMoveNode = (treeData, moveCategory) => {
@@ -220,10 +220,7 @@ const mapDispatchToProps = dispatch => ({
   setCategoryTreeData: categoryList => dispatch(actions.changeCategoryTreeData(categoryList)),
   setOnHoverKey: key => dispatch(actions.setOnHoverKey(key)),
   setSelectedIndex: idx => dispatch(actions.changeSelectedIndex(idx)),
-  setManualManage: (pageType, categoryIdx, manualIdx) => {
-    dispatch(masterActions.initDefaultMgrByReduc());
-    dispatch(manageActions.setPageModeByReducr(pageType, categoryIdx, manualIdx));
-  },
+  setManualManage: (pageType, categoryIdx, manualIdx) => dispatch(manageActions.setPageModeByReducr(pageType, categoryIdx, manualIdx)),
 });
 
 export default connect(

@@ -9,12 +9,12 @@ import { BackTop, Input, Button } from 'antd';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
 import { intlObj } from 'utils/commonUtils';
-import messages from '../../../messages';
 import NavList from 'components/Header/NavList';
 import NavListItem from 'components/Header/NavListItem';
 import NavLink from 'components/Header/NavLink';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import messages from '../../../messages';
 import Footer from '../../Footer';
 
 import reducer from './reducer';
@@ -121,7 +121,7 @@ class AppList extends Component {
         </ErrorBoundary>
         <NavList className="navTabs">
           <NavListItem>
-            <NavLink to="/portal/store/appMain/bizStore/app/list" className="current">
+            <NavLink to="/portal/store/appMain/bizStore" className="current">
               {' '}
               {/* 현재 활성화된 상태에 current 클래스 적용 */}
               {intlObj.get(messages.category)}
@@ -131,9 +131,8 @@ class AppList extends Component {
             <NavLink to="/portal/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
           </NavListItem> */}
         </NavList>
-
-        <ErrorBoundary>
-          <StyleAppList>
+        
+        <StyleAppList>
             <div className="topPart">
               <div className="searchInput">
                 <Input
@@ -150,6 +149,7 @@ class AppList extends Component {
             </div>
           </StyleAppList>
 
+        <ErrorBoundary>
           <ItemList
             type={initType}
             mapList={mapList}

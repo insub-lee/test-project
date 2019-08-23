@@ -57,6 +57,7 @@ function* getDefaultMgrSaga() {
       selectedCategoryIdx: pageMoveType.get('selectedCategoryIdx'),
       selectedMualIdx: 0,
     });
+    yield put(actions.initDefaultMgrByReduc());
     yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   }
 }
@@ -167,7 +168,6 @@ const setEditorTabViewInfo = (compList, compIdx) => {
   //     resultList.push(tempObj);
   //   });
   // }
-  console.debug(resultList);
   return resultList;
 };
 
@@ -357,6 +357,54 @@ function* setRelationManualListBySaga(payload) {
   const response = yield call(Axios.post, '/api/manual/v1/ManualRelationHandler', param);
 }
 
+function* getCompareMgr() {
+  const defaultMgrMap = yield select(selectors.makeSelectDefaultMgr());
+  if (defaultMgrMap.get('MUAL_TYPE') > 1) {
+    const response = yield call(Axios.get, `/api/manual/v1/ManualCompareManageHandler/${defaultMgrMap.get('MUAL_IDX')}/${defaultMgrMap.get('MUAL_TYPE')}`);
+    if (response) {
+      let { compareTemplet, compareData } = response;
+      compareTemplet = {
+        ...compareTemplet,
+        TEMPLET_CONTENT: compareTemplet.TEMPLET_CONTENT && compareTemplet.TEMPLET_CONTENT.length > 0 ? JSON.parse(compareTemplet.TEMPLET_CONTENT) : [],
+      };
+      if (compareData && compareData.COMPARE_DATA) {
+        compareData = {
+          ...compareData,
+          COMPARE_DATA: compareData.COMPARE_DATA && compareData.COMPARE_DATA.length > 0 ? JSON.parse(compareData.COMPARE_DATA) : [],
+        };
+      }
+      if (compareTemplet.TEMPLET_CONTENT) {
+        compareTemplet = {
+          ...compareTemplet,
+          TEMPLET_CONTENT: compareTemplet.TEMPLET_CONTENT.map(node => {
+            if (compareData && compareData.COMPARE_DATA) {
+              const idx = compareData.COMPARE_DATA.findIndex(find => find.ITEM_IDX === node.ITEM_IDX);
+              return { ...node, ITEM_DATA: idx === -1 ? '' : compareData.COMPARE_DATA[idx].ITEM_DATA };
+            }
+            return { ...node, ITEM_DATA: '' };
+          }),
+        };
+      }
+      yield put(actions.setCompareManageTemplet(compareTemplet));
+      yield put(actions.setCompareManageData(compareData || {}));
+    }
+  }
+}
+
+function* saveCompareData() {
+  const compareData = yield select(selectors.makeSelectCompareManageTemplet());
+  const defaultMgrMap = yield select(selectors.makeSelectDefaultMgr());
+  if (defaultMgrMap.get('MUAL_TYPE') > 1) {
+    const param = { MUAL_IDX: defaultMgrMap.get('MUAL_IDX'), TEMPLET_IDX: compareData.TEMPLET_IDX, COMPARE_DATA: JSON.stringify(compareData.TEMPLET_CONTENT) };
+    const response = yield call(
+      Axios.post,
+      `/api/manual/v1/ManualCompareManageHandler/${defaultMgrMap.get('MUAL_IDX')}/${defaultMgrMap.get('MUAL_TYPE')}`,
+      param,
+    );
+    console.debug(response);
+  }
+}
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
@@ -376,4 +424,6 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.GET_COMPARE_TEMPLET_SAGA, getCompareTempletList);
   yield takeLatest(constantTypes.SAVE_COMPARE_TEMPLET, saveCompareTemplet);
   yield takeLatest(constantTypes.GET_CATEGORYLIST, getCategoryListBySaga);
+  yield takeLatest(constantTypes.GET_COMPARE_MGR_SAGA, getCompareMgr);
+  yield takeLatest(constantTypes.SAVE_COMPARE_DATA_SAGA, saveCompareData);
 }

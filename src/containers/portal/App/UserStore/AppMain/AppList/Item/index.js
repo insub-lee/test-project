@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Button, Rate, Popover } from 'antd';
+import { Button, Rate, Popover, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { intlObj, imgUrl } from 'utils/commonUtils';
@@ -63,11 +63,21 @@ class Item extends PureComponent {
           </div>
         ) : (
           <div className="displayCtgIcons">
+            <Icon type="check-circle" theme="filled" />
             <div className="infoRgt" title={intlObj.get(messages.using)}>
               {intlObj.get(messages.using)}{' '}
             </div>
           </div>
         )}
+        <Link to={`/portal/store/appMain/bizStore/app/detail/${categoryId}/${appId}`} title={subTit}>
+          <h4 className="appTitle">{title}</h4>
+          <p className="appDesc">{subTit}</p>
+          <span className="ratingAvgInfo">
+            <Rate allowHalf disabled value={parseFloat(starPoint)} />
+            <span className="rateNumber">{starTotal}</span>
+            <img src={userIcon} alt={intlObj.get(messages.memberNum)} className="userIcon" />
+          </span>
+        </Link>
         <div className="CtgDivIcons">
           <img /* eslint-disable */
             src={imgUrl.get('120x120', appIcon)}
@@ -78,15 +88,6 @@ class Item extends PureComponent {
             }}
           />
         </div>
-        <Link to={`/portal/store/appMain/bizStore/app/detail/${categoryId}/${appId}`} title={subTit}>
-          <h4 className="appTitle">{title}</h4>
-          <p className="appDesc">{subTit}</p>
-          <span className="ratingAvgInfo">
-            <Rate allowHalf disabled value={parseFloat(starPoint)} />
-            <span className="rateNumber">{starTotal}</span>
-            <img src={userIcon} alt={intlObj.get(messages.memberNum)} className="userIcon" />
-          </span>
-        </Link>
       </Card>
     );
   }

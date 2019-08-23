@@ -85,10 +85,10 @@ class BizList extends Component {
         <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
         <NavList className="navTabs">
           <NavListItem>
-            <NavLink to="/portal/store/appMain/bizStore/app/list">{intlObj.get(messages.category)}</NavLink>
+            <NavLink to="/portal/store/appMain/bizStore">{intlObj.get(messages.category)}</NavLink>
           </NavListItem>
           <NavListItem>
-            <NavLink to="/portal/store/appMain/bizStore/biz/list" className="current">
+            <NavLink to="/portal/store/appMain/bizStore" className="current">
               {' '}
               {/* 현재 활성화된 상태에 current 클래스 적용 */}
               {intlObj.get(messages.bizGroup)}

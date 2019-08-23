@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyleEditorMain = styled.div`
-  width: 100%;
+  width: 732px;
   height: auto;
   min-height: 100%;
   padding: 0px 20px;

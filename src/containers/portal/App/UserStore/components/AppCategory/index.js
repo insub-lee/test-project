@@ -40,7 +40,7 @@ class AppCategory extends Component {
     const preUrlSplitArr = preUrl.split('/');
     const preUrlLast = preUrlSplitArr[preUrlSplitArr.length - 1];
     // const isAppStore = preUrlLast === 'bizStore';
-    const appStyleModify = preUrlLast !== 'bizStore' ? `0px` : '134px';
+    const appStyleModify = preUrlLast !== 'bizStore' ? `0px` : '0px';
 
     return (
       <StyledTabList className="treeWrapper" style={{ left: appStyleModify }}>
@@ -48,7 +48,7 @@ class AppCategory extends Component {
           <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
               <Tab style={{ width: '100%' }}>
-                <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
+                <Link to={'/portal/store'} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
@@ -115,7 +115,7 @@ const withSaga = injectSaga({ key: 'appcategory', saga });
 export default injectIntl(
   compose(
     withReducer,
-  withSaga,
-  withConnect,
+    withSaga,
+    withConnect,
   )(AppCategory),
 );

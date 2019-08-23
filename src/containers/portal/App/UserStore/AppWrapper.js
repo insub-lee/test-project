@@ -175,7 +175,7 @@ const AppWrapper = styled.div`
 }
 
 .storeContent {
-  height: calc(100vh - 99.5px);
+  height: calc(100vh - 120px);
   overflow-y: auto;
   // min-height: 100vh;
   // padding: 45px 0 0 300px;
@@ -350,7 +350,7 @@ const AppWrapper = styled.div`
 
 // Route path => {AppList}인 경우
 .appListWrapper {
-  padding-left: 300px;
+  padding-left: 320px;
 
   @media only screen and (max-width: 1024px) {
     padding-left: 0;

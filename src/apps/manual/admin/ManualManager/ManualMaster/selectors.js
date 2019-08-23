@@ -162,6 +162,24 @@ const makeSelectCompareTempletHoverKey = () =>
     state => state.getIn(['manualMasterState', 'compareTempletMgr', 'hoverKey']),
   );
 
+const makeSelectCompareManageTemplet = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'templet']).toJS(),
+  );
+
+const makeSelectCompareManageData = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'data']).toJS(),
+  );
+
+const makeSelectedCompareManageIdx = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'selectedIdx']),
+  );
+
 export default {
   makeSelectChooseRelMual,
   makeSelectManualMaster,
@@ -188,4 +206,7 @@ export default {
   makeSelectedCompareTempletViewMode,
   makeSelectCompareTempletHoverKey,
   makeSelectCategoryList,
+  makeSelectCompareManageTemplet,
+  makeSelectCompareManageData,
+  makeSelectedCompareManageIdx,
 };

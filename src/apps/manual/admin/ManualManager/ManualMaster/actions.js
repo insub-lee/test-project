@@ -198,3 +198,15 @@ export const removeCompareTempletContentItemByReducr = id => ({ type: constantTy
 export const addCompareTempletContentItemByReducr = () => ({ type: constantTypes.ADD_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR });
 
 export const moveCompareTempletContentItemByReducr = dropResult => ({ type: constantTypes.MOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR, dropResult });
+
+export const getCompareMgrBySaga = () => ({ type: constantTypes.GET_COMPARE_MGR_SAGA });
+
+export const setCompareManageTemplet = data => ({ type: constantTypes.SET_COMPARE_MANAGE_TEMPLET_REDUCR, data });
+
+export const setCompareManageData = data => ({ type: constantTypes.SET_COMPARE_MANAGE_DATA_REDUCR, data });
+
+export const setCompareManageChangeValueByReducr = (idx, value) => ({ type: constantTypes.SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR, idx, value });
+
+export const saveCompareDataBySaga = () => ({ type: constantTypes.SAVE_COMPARE_DATA_SAGA });
+
+export const setSelectedCompareManageIdx = idx => ({ type: constantTypes.SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR, idx });
