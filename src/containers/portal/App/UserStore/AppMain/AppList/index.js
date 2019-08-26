@@ -26,6 +26,8 @@ import * as actionsApp from '../../actions';
 import ItemList from './ItemList';
 import AppCategory from '../../components/AppCategory';
 
+import StyleAppList from './StyleAppList';
+
 class AppList extends Component {
   componentDidMount() {
     // param - ALL / ONE
@@ -119,7 +121,7 @@ class AppList extends Component {
         </ErrorBoundary>
         <NavList className="navTabs">
           <NavListItem>
-            <NavLink to="/portal/store/appMain/bizStore/app/list" className="current">
+            <NavLink to="/portal/store/appMain/bizStore" className="current">
               {' '}
               {/* 현재 활성화된 상태에 current 클래스 적용 */}
               {intlObj.get(messages.category)}
@@ -129,6 +131,23 @@ class AppList extends Component {
             <NavLink to="/portal/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
           </NavListItem> */}
         </NavList>
+        
+        <StyleAppList>
+            <div className="topPart">
+              <div className="searchInput">
+                <Input
+                  placeholder=""
+                  title={intlObj.get(messages.searchBizStore)}
+                  onKeyPress={this.searchEnter}
+                  ref={ref => {
+                    this.searchInput = ref;
+                  }}
+                />
+                <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
+                {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
+              </div>
+            </div>
+          </StyleAppList>
 
         <ErrorBoundary>
           <ItemList

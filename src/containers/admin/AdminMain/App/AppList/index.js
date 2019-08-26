@@ -61,6 +61,18 @@ class MyAppList extends React.Component {
         getRowMetaData: data => data,
       },
       {
+        key: 'MENU_SVC_YN',
+        name: '앱 제공',
+        width: 70,
+        sortable: true,
+      }, 
+      {
+        key: 'WIDGET_SVC_YN',
+        name: '위젯 제공',
+        width: 70,
+        sortable: true,
+      },           
+      {
         key: 'VER',
         name: `${intlObj.get(messages.appVer)}`,
         width: 80,

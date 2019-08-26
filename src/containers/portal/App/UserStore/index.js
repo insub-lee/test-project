@@ -35,7 +35,7 @@ import BizMenuList from './AppMain/Biz/BizMenuList';
 import BizStore from './AppMain/BizStore';
 import BizManage from './AppMain/BizManage';
 
-import StyleAppList from './AppMain/AppList/StyleAppList';
+
 
 import './global-store.css';
 
@@ -57,22 +57,6 @@ class UserStore extends Component {
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
             <h2 className="pageHeader">App Store</h2>
-            <StyleAppList>
-              <div className="topPart">
-                <div className="searchInput">
-                  <Input
-                    placeholder=""
-                    title={intlObj.get(messages.searchBizStore)}
-                    onKeyPress={this.searchEnter}
-                    ref={ref => {
-                      this.searchInput = ref;
-                    }}
-                  />
-                  <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
-                  {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
-                </div>
-              </div>
-            </StyleAppList>
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ minHeight: '100%' }}>
