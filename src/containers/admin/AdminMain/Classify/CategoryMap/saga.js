@@ -14,7 +14,7 @@ function* getRootMapList({ payload }) {
 }
 
 function* getCategoryMapList({ payload }) {
-  const response = yield call(Axios.get, `/api/admin/v1/common/categoryMap?MAP_ID=${payload.MAP_ID}`);
+  const response = yield call(Axios.get, `/api/admin/v1/common/categoryMapList?MAP_ID=${payload.MAP_ID}`);
   const { categoryMapList } = response;
   yield put(actions.setCategoryMapList(categoryMapList.map(item => ({ ...item, expanded: item.LVL <= 1, key: item.NODE_ID }))));
 }
@@ -53,10 +53,22 @@ function* deleteCategoryMap({ categoryMap }) {
   }
 }
 
+function* updateCategoryMapList({ updateData }) {
+  const response = yield call(Axios.put, `/api/admin/v1/common/categoryMapList`, updateData);
+  const { code } = response;
+  if (code === 200) {
+    message.success(<MessageContent>카테고리 순서 수정에 성공했습니다.</MessageContent>, 3);
+    yield put(actions.getCategoryMapList({ MAP_ID: updateData.parentNode.MAP_ID }));
+  } else {
+    feed.error(`카테고리 순서 수정에 실패하였습니다.`);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(constantTypes.GET_ROOTMAP_LIST, getRootMapList);
   yield takeLatest(constantTypes.GET_CATEGORYMAP_LIST, getCategoryMapList);
   yield takeLatest(constantTypes.ADD_CATEGORY_MAP, addCategoryMap);
   yield takeLatest(constantTypes.UPDATE_CATEGORY_MAP, updateCategoryMap);
   yield takeLatest(constantTypes.DELETE_CATEGORY_MAP, deleteCategoryMap);
+  yield takeLatest(constantTypes.UPDATE_CATEGORYMAP_LIST, updateCategoryMapList);
 }

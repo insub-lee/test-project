@@ -53,3 +53,8 @@ export const setAddNodeInfo = nodeInfo => ({
   type: constantTypes.SET_ADDNODE_INFO,
   nodeInfo,
 });
+
+export const updateCategoryMapList = updateData => ({
+  type: constantTypes.UPDATE_CATEGORYMAP_LIST,
+  updateData,
+});

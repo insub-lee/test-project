@@ -10,3 +10,4 @@ export const DELETE_CATEGORY_MAP = `${base}/DELETE_CATEGORY_MAP`;
 export const SET_ADDNODE_INFO = `${base}/SET_ADDNODE_INFO`;
 export const SET_IS_ADD = `${base}/SET_IS_ADD`;
 export const INIT_ADDNODE_INFO = `${base}/INIT_ADDNODE_INFO`;
+export const UPDATE_CATEGORYMAP_LIST = `${base}/UPDATE_CATEGORYMAP_LIST`;

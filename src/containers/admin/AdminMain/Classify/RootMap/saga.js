@@ -42,6 +42,7 @@ function* deleteRootMap({ payload }) {
   if (code === 200) {
     message.success(<MessageContent>카테고리 삭제에 성공했습니다.</MessageContent>, 3);
     yield put(actions.getRootMapList());
+    yield put(actions.setSelectedRowKeys([]));
   } else {
     feed.error(`카테고리 삭제에 실패하였습니다.`);
   }
