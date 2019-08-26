@@ -19,6 +19,7 @@ class Widget extends PureComponent {
     if (Object.keys(initData).length === 0) {
       console.log('객체빈값');
     } else {
+      console.log(initData.categorie);
       this.props.getDetail(initData.categorie);
     }
     this.state = {
