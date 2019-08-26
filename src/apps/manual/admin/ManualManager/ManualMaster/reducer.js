@@ -307,7 +307,6 @@ const appReducer = (state = initialState, action) => {
       );
       editorComponentList = editorComponentList.toJS().sort((a, b) => (a.SORT_SQ > b.SORT_SQ ? 1 : -1));
       editorComponentList = editorComponentList.map((item, sortIdx) => ({ ...item, SORT_SQ: item.IS_REMOVE === 'Y' ? 9999 : sortIdx + 1 }));
-      console.debug(editorComponentList);
       return state.setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(editorComponentList));
     }
     case constantTypes.SET_ADD_EDITOR_COMPONENT_ID_REDUCR: {
@@ -520,7 +519,7 @@ const addComponentInfo = (state, compType) => {
   return state
     .setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(compList))
     .setIn(['manualMasterState', 'manualEditorEntity', 'addComponentId'], `editorCompID_${selectedTabIdx}_${maulCompIdx}`)
-    .setIn(['manualMasterState', 'manualEditorEntity', 'selectedComponentIdx'], selectedAddIdx);
+    .setIn(['manualMasterState', 'manualEditorEntity', 'selectedComponentIdx'], maulCompIdx);
 };
 
 const hierarhySort = (hashArr, key, result) => {

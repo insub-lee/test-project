@@ -8,9 +8,6 @@ import { createStructuredSelector } from 'reselect';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import * as manageActions from '../../ManualManager/actions';
 
-import reducer from '../reducer';
-import saga from '../saga';
-
 import * as actions from '../actions';
 import selectors from '../selectors';
 import StyleManualList from './StyleManualList';

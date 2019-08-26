@@ -14,6 +14,9 @@ export const SET_MANUAL_BOOKMARK_SAGA = 'apps/manual/user/ManualView/SET_MANUAL_
 export const SET_MANUAL_BOOKMARK_REDUCR = 'apps/manual/user/ManualView/SET_MANUAL_BOOKMARK_REDUCR';
 export const SET_MANUAL_MASTER_REDUCR = 'apps/manual/user/ManualView/SET_MANUAL_MASTER_REDUCR';
 export const SET_MANUAL_VIEW_NAV_LIST_REDUCR = 'apps/manual/user/ManualView/SET_MANUAL_VIEW_NAV_LIST_REDUCR';
+export const SET_MANUAL_VIEW_RELATION_LIST_REDUCR = 'apps/manual/user/ManualView/SET_MANUAL_VIEW_RELATION_LIST_REDUCR';
+export const SET_MANUAL_VIEW_INFO_REDUCR = 'apps/manual/user/ManualView/SET_MANUAL_VIEW_INFO_REDUCR';
+export const ADD_HISTORY_HISTORY_SAGA = 'apps/manual/user/ManualView/ADD_HISTORY_HISTORY_SAGA';
 
 // remove
 

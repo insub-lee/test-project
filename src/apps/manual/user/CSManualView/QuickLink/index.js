@@ -5,13 +5,13 @@ import ItemUl from './ItemUl';
 import Title from './Title';
 import Styled from './Styled';
 
-const QuickLink = () => (
+const QuickLink = ({ quickProps }) => (
   <Styled>
     <TopTitle />
     <Title />
-    <ItemUl />
-    <Title />
-    <ItemUl />
+    <ItemUl quickProps={quickProps} />
+    {/* <Title />
+    <ItemUl /> */}
   </Styled>
 );
 
