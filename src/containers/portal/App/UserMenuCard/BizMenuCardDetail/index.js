@@ -73,8 +73,6 @@ class BizMenuCardDetail extends Component {
     } = this.props;
     const preUrl = match.path.substr(0, match.path.indexOf('/:TYPE'));
 
-    console.debug('>>>>>>preUrl: ', preUrl);
-
     handleChangeSelectedIndex(node.MENU_ID);
 
     if (node.TYPE === 'Y') {
@@ -92,7 +90,7 @@ class BizMenuCardDetail extends Component {
 
     const { bizMenuData, selectedIndex, history, match } = this.props;
 
-    const preUrl = match.path.substr(0, match.path.indexOf('/:BIZGRP_ID'));
+    const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
 
     const {
       match: {
@@ -132,9 +130,9 @@ class BizMenuCardDetail extends Component {
               </li>
               <li className="rightContent">
                 <Switch>
-                  <Route path={`${preUrl}/:BIZGRP_ID`} component={BizInfo} exact />
-                  <Route path={`${preUrl}/:BIZGRP_ID/:appId`} component={AppInfo} exact />
-                  <Route path={`${preUrl}/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
+                  <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
+                  <Route path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
+                  <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
                 </Switch>
               </li>
             </ul>
