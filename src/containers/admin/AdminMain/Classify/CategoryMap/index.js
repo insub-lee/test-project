@@ -104,6 +104,7 @@ class CategoryMap extends Component {
       setIsAdd,
       initAddNodeInfo,
       addNodeInfo,
+      updateCategoryMapList,
     } = this.props;
     const { MAP_ID } = this.props.match.params;
 
@@ -138,6 +139,7 @@ class CategoryMap extends Component {
                 deleteCategoryMap={deleteCategoryMap}
                 setIsAdd={setIsAdd}
                 initAddNodeInfo={initAddNodeInfo}
+                updateCategoryMapList={updateCategoryMapList}
               />
             </div>
           </div>
@@ -216,6 +218,7 @@ CategoryMap.propTypes = {
   initAddNodeInfo: PropTypes.func.isRequired,
   addNodeInfo: PropTypes.object.isRequired,
   setAddNodeInfo: PropTypes.func.isRequired,
+  updateCategoryMapList: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -237,6 +240,7 @@ const mapDispatchToProps = dispatch => ({
   setIsAdd: isAdd => dispatch(actions.setIsAdd(isAdd)),
   initAddNodeInfo: () => dispatch(actions.initAddNodeInfo()),
   setAddNodeInfo: nodeInfo => dispatch(actions.setAddNodeInfo(nodeInfo)),
+  updateCategoryMapList: updateData => dispatch(actions.updateCategoryMapList(updateData)),
 });
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Classify.CategoryMap', reducer });

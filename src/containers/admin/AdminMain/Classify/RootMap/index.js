@@ -33,6 +33,8 @@ class RootMap extends Component {
     this.props.setSelectedRowKeys(selectedRowKeys);
   };
 
+  const;
+
   handleDeleteRootMap = () => {
     const { rootMapList, selectedRowKeys } = this.props;
     if (selectedRowKeys.length === 0) {
@@ -46,12 +48,12 @@ class RootMap extends Component {
         }
       });
       this.props.setSelectedRowKeys(selectedRowKeys);
-      feed.showConfirm('하위 카테고리가 없는 행만 삭제됩니다.', '삭제하시겠습니까?', '', () => {
-        const payload = {
-          mapIds: selectedRowKeys.join(),
-        };
-        this.props.deleteRootMap(payload);
-      });
+
+      const payload = {
+        mapIds: selectedRowKeys.join(),
+      };
+
+      feed.showConfirm('하위 카테고리가 없는 행만 삭제됩니다. 삭제하시겠습니까?', '', () => this.props.deleteRootMap(payload));
     }
   };
 
@@ -98,7 +100,9 @@ class RootMap extends Component {
         render: text => (
           <span>
             <Link to={`/admin/adminmain/classify/categorymap/${text}`}>
-              <Button size="small">설정</Button>
+              <Button size="small" type="primary">
+                설정
+              </Button>
             </Link>
           </span>
         ),
@@ -110,7 +114,7 @@ class RootMap extends Component {
         <h3 className="pageTitle">분류체계 관리</h3>
         <div className="searchBox">
           <div className="searchWrapper">
-            <Input type="text" name="" placeholder="분류명" />
+            <Input type="text" name="searchText" placeholder="분류명" />
             <button type="button" title="검색" className="searchBtn" />
           </div>
         </div>

@@ -120,13 +120,7 @@ class Tree extends Component {
     return {
       title: (
         <div>
-          <Popover
-            placement="right"
-            content={buttons}
-            trigger="hover"
-            overlayClassName="myappTreePopupMenu"
-            // onMouseLeave={this.popoverClose}
-          >
+          <Popover placement="right" content={buttons} trigger="hover" overlayClassName="myappTreePopupMenu">
             <button
               type="button"
               className={`${node.NODE_ID === this.props.selectedNode.NODE_ID ? 'active' : ''}`}
@@ -161,7 +155,7 @@ class Tree extends Component {
       parentNode: nextParentNode,
       modifyList,
     };
-    this.props.updateCategoryMap(updateData);
+    this.props.updateCategoryMapList(updateData);
   };
 
   render() {
@@ -206,11 +200,10 @@ Tree.propTypes = {
   setCategoryMapList: PropTypes.func.isRequired,
   selectedNode: PropTypes.object.isRequired,
   setSelectedNode: PropTypes.func.isRequired,
-  updateCategoryMap: PropTypes.func.isRequired,
   deleteCategoryMap: PropTypes.func.isRequired,
   setIsAdd: PropTypes.func.isRequired,
   initAddNodeInfo: PropTypes.func.isRequired,
-  selectedIndex: PropTypes.number, //eslint-disable-line
+  updateCategoryMapList: PropTypes.func.isRequired,
 };
 
 export default Tree;
