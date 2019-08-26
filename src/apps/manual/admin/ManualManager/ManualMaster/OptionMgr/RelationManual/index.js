@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
+
 import { createStructuredSelector } from 'reselect';
 import { Table, TreeSelect, Button, Icon } from 'antd';
 import { fromJS } from 'immutable';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
 import difference from 'lodash/difference';
-
 import selectors from '../../selectors';
 import * as actions from '../../actions';
-import reducer from '../../reducer';
-import saga from '../../saga';
 
 class RelationManual extends Component {
   leftTableColumns = [
@@ -227,7 +222,6 @@ RelationManual.propTypes = {
   relationManualList: PropTypes.array,
   setSelectedRelationManual: PropTypes.func,
   chooseRelMual: PropTypes.array,
-  mergeDataSource: PropTypes.func,
   setRelationManualListByRecur: PropTypes.func,
   setRelationManualListByMualIdxByRecur: PropTypes.func,
   setRelationManualListBySaga: PropTypes.func,
@@ -240,7 +234,6 @@ RelationManual.defaultProps = {
   relationManualList: [],
   setSelectedRelationManual: () => false,
   chooseRelMual: [],
-  mergeDataSource: () => false,
   setRelationManualListByRecur: () => false,
   setRelationManualListByMualIdxByRecur: () => false,
   setRelationManualListBySaga: () => false,

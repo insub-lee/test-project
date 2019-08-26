@@ -16,8 +16,14 @@ const RenderEditorComponent = (item, handleChangeCompValue, handleChangeCompIdx,
   switch (item.TYPE) {
     case 'editor':
       innerContent = (
-        <div className="manualEditorComponent">
-          {selectedComponentIdx === item.MUAL_TABCOMP_PIDX || selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
+        <div
+          className={`manualEditorComponent${
+            (selectedComponentIdx === item.MUAL_TABCOMP_PIDX && selectedComponentIdx > 0) || selectedComponentIdx === item.MUAL_TABCOMP_IDX
+              ? ' manualEditorActive'
+              : ''
+          }`}
+        >
+          {(selectedComponentIdx === item.MUAL_TABCOMP_PIDX && selectedComponentIdx > 0) || selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
             <FroalaEditor
               config={froalaEditorConfig}
               model={item.MUAL_COMPVIEWINFO}

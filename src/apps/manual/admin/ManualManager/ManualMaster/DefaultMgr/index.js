@@ -5,8 +5,7 @@ import PropTypes, { object } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Input, DatePicker, Checkbox, Button, Select, Tag, Icon, Spin, version, Modal } from 'antd';
-import { fromJS } from 'immutable';
+import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal } from 'antd';
 import locale from 'antd/lib/date-picker/locale/ko_KR';
 import moment from 'moment';
 
@@ -39,7 +38,7 @@ class DefaultMgr extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { pageMoveType, GetDefaultMgrBySaga, userInfoList, GetSelectedUserInfoSaga, InitDefaultMgr, defaultMgrMap } = this.props;
+    const { pageMoveType, GetDefaultMgrBySaga, GetSelectedUserInfoSaga } = this.props;
     const { pageMoveType: prevPageMoveType } = prevProps;
 
     if (Number(pageMoveType.get('selectedMualIdx')) !== 0 && Number(pageMoveType.get('selectedMualIdx')) !== Number(prevPageMoveType.get('selectedMualIdx'))) {
@@ -50,11 +49,6 @@ class DefaultMgr extends Component {
     // else if (pageMoveType.get('selectedMualIdx') === 0 && pageMoveType.get('selectedCategoryIdx') !== prevProps.pageMoveType.get('selectedCategoryIdx')) {
     //   InitDefaultMgr();
     // }
-  }
-
-  componentWillUnmount() {
-    // const { InitDefaultMgr } = this.props;
-    // InitDefaultMgr();
   }
 
   renderSelectOption(compareList, idx) {
@@ -224,13 +218,13 @@ class DefaultMgr extends Component {
                 )}
                 {pageMoveType.get('selectedMualIdx') !== 0 &&
                   defaultMgrMap.get('MUAL_STATE') === 'WAIT' && [
-                  <Button type="primary" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
+                    <Button type="primary" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
                       확정
-                  </Button>,
-                  <Button type="primary" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
+                    </Button>,
+                    <Button type="primary" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
                       삭제
-                  </Button>,
-                ]}
+                    </Button>,
+                  ]}
                 {IsMaxVersion && defaultMgrMap.get('VERSIONLIST').size > 1 && defaultMgrMap.get('MUAL_STATE') === 'PUBS' && (
                   <Button type="primary" onClick={ResetDefaultMgrBySaga}>
                     초기화

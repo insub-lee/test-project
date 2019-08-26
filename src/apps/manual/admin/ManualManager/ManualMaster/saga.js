@@ -1,6 +1,11 @@
+import React from 'react';
 import { fromJS } from 'immutable';
 import { takeLatest, put, call, select } from 'redux-saga/effects';
+
 import { Axios } from 'utils/AxiosFunc';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
+import { success, warning, error, showConfirm } from 'components/Feedback/functions';
 
 import * as constantTypes from './constants';
 import * as actions from './actions';
@@ -91,6 +96,16 @@ function* updateDefaultMgrSaga() {
     defaultMgrMap,
     selectedUserInfo,
   };
+
+  if (defaultMgrMap.get('MUAL_NAME').length === 0) {
+    error('매뉴얼명을 입력해주세요.');
+    return;
+  }
+  if (selectedUserInfo.length === 0) {
+    error('담당자 선택해주세요.');
+    return;
+  }
+
   const response = yield call(Axios.put, `/api/manual/v1/ManualMasterHandler/${pageMoveType.get('selectedMualIdx')}`, { param });
 }
 
@@ -135,6 +150,9 @@ function* saveEditorInfoSaga() {
   if (response && response.tabList) {
     const tabList = makeEditorTabList(response.tabList, response.componentList);
     yield put(actions.setEditorMgrByReduc(fromJS(tabList)));
+    message.success(<MessageContent>Save</MessageContent>, 3);
+  } else {
+    message.success(<MessageContent>Fail</MessageContent>, 3);
   }
 }
 

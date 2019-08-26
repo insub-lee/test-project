@@ -149,7 +149,7 @@ class CSManualList extends Component {
           <CSManualView mualIdx={selectedMualIdx} widgetId={widgetId} />
         </Modal>
         <Modal
-          width={1158}
+          width={1248}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
           style={{ top: 42 }}
           visible={isCompareView}

@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 const StyleEditorMain = styled.div`
-  width: 732px;
-  height: auto;
-  min-height: 100%;
+  width: 772px;
+  height: 100%;
   padding: 0px 20px;
   .dropWrapper {
     padding: 0px;
@@ -11,6 +10,7 @@ const StyleEditorMain = styled.div`
     height: auto;
     &.editorMainDrop {
       min-height: 100%;
+      padding-bottom: 40px;
     }
 
     /* .editorComponent:hover, */
@@ -209,6 +209,16 @@ const StyleEditorMain = styled.div`
     .editorComponent.focus.buttonOn > .extraBtnBox {
       display: block;
     }
+  }
+
+  .manualEditorComponent {
+    min-height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+  }
+
+  .manualEditorActive {
+    padding: 0px;
   }
 `;
 
