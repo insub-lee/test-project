@@ -13,6 +13,7 @@ import StyledTabPanel from '../components/Tab/StyledTabPanel';
 import TopbarBtnWrap from '../components/TopbarBtnWrap';
 import IconCollection from '../components/IconCollection';
 import * as listActions from '../CSManualList/actions';
+import * as newsfeedAction from 'apps/newsFeed/widgets/action';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -49,8 +50,9 @@ class ManualView extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
+    const { resetManualView, setIsViewContents, setNewsfeedModalView, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
     setIsViewContents(false, widgetId);
+    setNewsfeedModalView(false);
     resetManualView(widgetId);
     setSelectedMualIdx(0, widgetId);
     setListSelectedMualIdx(0, widgetId);
@@ -70,7 +72,7 @@ class ManualView extends Component {
     }
   };
 
-  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps, mualMaster, navList) =>
+  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps, mualMaster, navList, quickProps) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -85,6 +87,7 @@ class ManualView extends Component {
             pagerProps={pagerProps}
             mualMaster={mualMaster}
             navList={navList}
+            quickProps={quickProps}
           />
         </StyledTabPanel>
       ),
@@ -105,6 +108,8 @@ class ManualView extends Component {
       mualBookmarkList,
       mualMaster,
       navList,
+      relationList,
+      addManualHistory,
     } = this.props;
 
     const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
@@ -138,6 +143,7 @@ class ManualView extends Component {
               },
               mualMaster.toJS(),
               navList.toJS(),
+              { relationList: relationList.toJS(), widgetId, addManualHistory, setListSelectedMualIdx },
             )}
             keyName="MUAL_TAB_IDX"
             selectedTabIdx={selectedTabIdx}
@@ -156,6 +162,7 @@ class ManualView extends Component {
 
 ManualView.propTypes = {
   getManualView: PropTypes.func,
+  setNewsfeedModalView: PropTypes.func,
   maulTabList: PropTypes.object,
   selectedTabIdx: PropTypes.number,
   setSelectedTabIdx: PropTypes.func,
@@ -165,10 +172,13 @@ ManualView.propTypes = {
   mualBookmarkList: PropTypes.object,
   mualMaster: PropTypes.object,
   navList: PropTypes.object,
+  relationList: PropTypes.object,
+  addManualHistory: PropTypes.func,
 };
 
 ManualView.defaultProps = {
   getManualView: () => false,
+  setNewsfeedModalView: () => false,
   maulTabList: fromJS([]),
   selectedTabIdx: 0,
   setSelectedTabIdx: () => false,
@@ -178,6 +188,8 @@ ManualView.defaultProps = {
   mualBookmarkList: fromJS([]),
   mualMaster: fromJS({}),
   navList: fromJS([]),
+  relationList: fromJS([]),
+  addManualHistory: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -188,10 +200,12 @@ const mapStateToProps = createStructuredSelector({
   mualBookmarkList: selectors.makeSelectBookmarkList(),
   mualMaster: selectors.makeSelectManualMaster(),
   navList: selectors.makeSelectManualViewNavList(),
+  relationList: selectors.makeSelectManualViewRelationList(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getManualView: (widgetId, flag) => dispatch(actions.getManualViewBySaga(widgetId, flag)),
+  setNewsfeedModalView: modalView => dispatch(newsfeedAction.setModalView(modalView)),
   setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
   setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
   setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),
@@ -199,6 +213,7 @@ const mapDispatchToProps = dispatch => ({
   setListSelectedMualIdx: (idx, widgetId) => dispatch(listActions.setSelectedMualIdxByReducr(idx, widgetId)),
   resetManualView: widgetId => dispatch(actions.resetManualViewByReducr(widgetId)),
   setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
+  addManualHistory: (widgetId, mualIdx, mualOrgIdx) => dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

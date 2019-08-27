@@ -8,6 +8,8 @@ import 'froala-editor/js/plugins/char_counter.min';
 import 'froala-editor/js/plugins/image.min';
 import 'froala-editor/js/plugins/table.min';
 import 'froala-editor/js/plugins/colors.min';
+import 'froala-editor/js/plugins/font_size.min';
+
 import ReactFroalaEditor from 'react-froala-wysiwyg';
 
 const FroalaEditor = ({ config, model, onModelChange }) => <ReactFroalaEditor tag="textarea" config={config} model={model} onModelChange={onModelChange} />;

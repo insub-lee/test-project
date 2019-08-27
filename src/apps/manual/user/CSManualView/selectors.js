@@ -91,6 +91,13 @@ const makeSelectManualViewNavList = () =>
     (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'navList']),
   );
 
+const makeSelectManualViewRelationList = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'relationList']),
+  );
+
 export default {
   makeSelectMaulTabList,
   makeSelectedTabIdx,
@@ -105,4 +112,5 @@ export default {
   makeSelectBookmarkListByWidgetId,
   makeSelectManualMaster,
   makeSelectManualViewNavList,
+  makeSelectManualViewRelationList,
 };

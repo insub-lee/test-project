@@ -1,7 +1,5 @@
-import { get } from 'https';
-
 import React from 'react';
-import { Input, Radio, Button, Row, Col } from 'antd';
+import { Button, Row, Col } from 'antd';
 import { fromJS } from 'immutable';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

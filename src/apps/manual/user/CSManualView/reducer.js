@@ -39,7 +39,8 @@ const appReducer = (state = initialState, action) => {
         .setIn(['manualViewMap', widgetId, 'historyList'], fromJS([]))
         .setIn(['manualViewMap', widgetId, 'bookmarkList'], fromJS([]))
         .setIn(['manualViewMap', widgetId, 'manualMaster'], fromJS({}))
-        .setIn(['manualViewMap', widgetId, 'navList'], fromJS([]));
+        .setIn(['manualViewMap', widgetId, 'navList'], fromJS([]))
+        .setIn(['manualViewMap', widgetId, 'relationList'], fromJS([]));
     }
     case constantTypes.SET_SCROLL_COMPONENT_REDUCR: {
       const { item, widgetId } = action;
@@ -60,6 +61,19 @@ const appReducer = (state = initialState, action) => {
     case constantTypes.SET_MANUAL_VIEW_NAV_LIST_REDUCR: {
       const { navList, widgetId } = action;
       return state.setIn(['manualViewMap', widgetId, 'navList'], navList);
+    }
+    case constantTypes.SET_MANUAL_VIEW_RELATION_LIST_REDUCR: {
+      const { relationList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'relationList'], relationList);
+    }
+    case constantTypes.SET_MANUAL_VIEW_INFO_REDUCR: {
+      const { maulTabList, historyList, bookmarkList, manualMaster, navList, widgetId } = action;
+      return state
+        .setIn(['manualViewMap', widgetId, 'manualTabList'], maulTabList)
+        .setIn(['manualViewMap', widgetId, 'historyList'], historyList)
+        .setIn(['manualViewMap', widgetId, 'bookmarkList'], bookmarkList)
+        .setIn(['manualViewMap', widgetId, 'manualMaster'], manualMaster)
+        .setIn(['manualViewMap', widgetId, 'navList'], navList);
     }
     default:
       return state;

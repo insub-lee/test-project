@@ -8,16 +8,20 @@ const Nav = ({ navList }) => (
     {navList.map((node, idx) => {
       if (idx === 0) {
         return (
-          <li className="home">
+          <li className="home" key={`mualViewNav_${node.CATEGORY_IDX}`}>
             <i className="fa fa-home"></i>
             {node.CATEGORY_NAME}
           </li>
         );
       }
       if (idx + 1 === navList.length) {
-        return <li className="here">{node.CATEGORY_NAME}</li>;
+        return (
+          <li className="here" key={`mualViewNav_${node.CATEGORY_IDX}`}>
+            {node.CATEGORY_NAME}
+          </li>
+        );
       }
-      return <li>{node.CATEGORY_NAME}</li>;
+      return <li key={`mualViewNav_${node.CATEGORY_IDX}`}>{node.CATEGORY_NAME}</li>;
     })}
   </Styled>
 );

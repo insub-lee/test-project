@@ -9,11 +9,25 @@ import Styled from './Styled';
 
 const AntdTable = StyledAntdTable(Table);
 
-const setColumns = columnData =>
-  columnData.map(node => (node.dataIndex !== 'ITEM_NAME' ? { ...node, render: (text, record) => <FroalaEditorView model={record[node.dataIndex]} /> } : node));
+const setColumns = columnData => {
+  if (columnData.length < 4) {
+    for (let i = 0; 4 - columnData.length; i++) {
+      columnData.push({ dataIndex: 'noCompareData', title: '비교대상 없음', width: 380 });
+    }
+  }
+  return columnData.map(node =>
+    node.dataIndex !== 'ITEM_NAME' ? { ...node, render: (text, record) => <FroalaEditorView model={record[node.dataIndex]} /> } : node,
+  );
+};
+
 const CompareView = ({ compareList, templetData }) => (
-  <Styled compareCount={compareList.length}>
-    <AntdTable columns={setColumns(templetData)} dataSource={compareList} scroll={{ x: compareList.length * 380 + 100 }} pagination={false} />
+  <Styled>
+    <AntdTable
+      columns={setColumns(templetData)}
+      dataSource={compareList}
+      scroll={templetData.length > 4 ? { x: (templetData.length - 1) * 380 + 100 } : false}
+      pagination={false}
+    />
   </Styled>
 );
 

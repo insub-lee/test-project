@@ -57,7 +57,7 @@ function* getCompareView(action) {
   const checkedMualList = yield select(selectors.makeCheckedManualListByWidgetId(widgetId));
   if (checkedMualList && checkedMualList.size > 0) {
     const response = yield call(Axios.post, '/api/manual/v1/CSManualCompareViewHandler', { checkedMualList: checkedMualList.toJS() });
-    if (response) {
+    if (response && response.compareList.length > 0) {
       let { compareList, templetData } = response;
       compareList = compareList.map(node => ({
         ...node,
