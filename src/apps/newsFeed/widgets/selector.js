@@ -2,26 +2,32 @@ import { createSelector } from 'reselect';
 
 const selectNewsFeedData = state => state.get('NewsFeed');
 
-// 게시물 - 전체(array)
-const selectTotalList = () =>
+const selectWidgetDataList = () =>
   createSelector(
     selectNewsFeedData,
-    NewsFeedState => NewsFeedState.get('totalList'),
+    NewsFeedState => NewsFeedState.get('widgetDataList'),
   );
 
-// 게시물 - 변경(array)
-const selectUpdateList = () =>
-  createSelector(
-    selectNewsFeedData,
-    NewsFeedState => NewsFeedState.get('updateList'),
-  );
+// // 게시물 - 전체(array)
+// const selectTotalList = () =>
+//   createSelector(
+//     selectNewsFeedData,
+//     NewsFeedState => NewsFeedState.get('totalList'),
+//   );
 
-// 게시물 - 신규(array)
-const selectNewList = () =>
-  createSelector(
-    selectNewsFeedData,
-    NewsFeedState => NewsFeedState.get('newList'),
-  );
+// // 게시물 - 변경(array)
+// const selectUpdateList = () =>
+//   createSelector(
+//     selectNewsFeedData,
+//     NewsFeedState => NewsFeedState.get('updateList'),
+//   );
+
+// // 게시물 - 신규(array)
+// const selectNewList = () =>
+//   createSelector(
+//     selectNewsFeedData,
+//     NewsFeedState => NewsFeedState.get('newList'),
+//   );
 
 // 세팅 - 위젯명
 const selectWidgetTitle = () =>
@@ -72,16 +78,23 @@ const selectModalView = () =>
     NewsFeedState => NewsFeedState.get('modalView'),
   );
 
+  // 모달 - IDX
+const selectModalIdx = () =>
+createSelector(
+  selectNewsFeedData,
+  NewsFeedState => NewsFeedState.get('modalIdx'),
+);
+
+
 export {
   selectNewsFeedData,
-  selectTotalList,
-  selectUpdateList,
-  selectNewList,
+  selectWidgetDataList,
   selectUseTitle,
   selectWidgetSize,
   selectWidgetcolor,
   selectWidgetCategory,
   selectWidgetTotalCategory,
   selectModalView,
+  selectModalIdx,
   selectWidgetTitle,
 };

@@ -16,69 +16,99 @@ import CSManualView from 'apps/manual/user/CSManualView';
 
 const TabPane  = Tabs.TabPane;
 
-
 class NewsFeed extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      widge_id: this.props.item.WIDGET_ID,
       selectedMualIdx: undefined,
-    };
+      selectedCategory: this.props.item.data.selectedCategory,
+      totalList: [],
+      updateList: [],
+      newList: [],
+    }
   }
 
-  handleClick = data => {
-    this.showModal(data);
+  modalID = undefined;
+
+  handleClick = mualIdx => {
+    const { setModalIdx } = this.props;
+    this.setState({
+      selectedMualIdx: mualIdx,
+    }, () => this.showModal()  )
+    //setModalIdx(mualIdx);
   };
 
-  showModal = data => {
+  showModal = () => {
     const { setModalView } = this.props;
-    this.setState({
-      selectedMualIdx: data.MUAL_IDX,
-    });
     setModalView(true);
   };
-
+  
   handleCloseModal = () => {
-    const { setModalView } = this.props;
-    this.setState({
-      selectedMualIdx: undefined,
-    });
+    const { setModalView, setModalIdx } = this.props;
+    setModalIdx(undefined);
     setModalView(false);
   };
 
+  
+  
   handlePageReload = () => {
     const { widgetSize, selectedCategory, getNewsFeed } = this.props;
     getNewsFeed(widgetSize, selectedCategory);
   };
-
+  
   componentDidMount() {
-    const { widgetSize, selectedCategory, getNewsFeed } = this.props;
-    getNewsFeed(widgetSize, selectedCategory);
+    const { getNewsFeed, item, setWidgetConfig, widgetDataList } = this.props;
+    let app_id = item.APP_ID;
+    let widget_id = item.WIDGET_ID;
+    let selectedCategory =  item.data.selectedCategory;
+
+    if (selectedCategory == '' || selectedCategory === undefined || selectedCategory === null ){
+      selectedCategory = [];
+    }
+
+    setWidgetConfig(app_id, widget_id, selectedCategory);
+    getNewsFeed(widget_id, selectedCategory);
+
+    
   }
 
   render() {
     const { handleCloseModal, handleClick, handlePageReload } = this;
-    const { selectedMualIdx } = this.state;
+    const { selectedMualIdx, totalList, updateList, newList } = this.state
+    const { widgetDataList } = this.props;
+    console.log('데이터리스트 확인', widgetDataList);
+
+    let widget_id = Number(this.props.item.WIDGET_ID);
+    //const widgetDataFilter = widgetDataList.filter(data => Number(data.widget_id) === widget_id);
+    const widgetDataFind = widgetDataList.find( item => Number(item.widget_id) === widget_id);
+    console.log('파인드 데이터',widgetDataFind)
+
+    if(widgetDataFind !== undefined){
+      if(totalList !== widgetDataFind.totalList){
+        this.setState({
+        totalList: widgetDataFind.totalList,
+        updateList: widgetDataFind.updateList,
+        newList: widgetDataFind.newList,
+      })
+      }
+    }
+
     return (
-      <Fragment>
+      <div>
         <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
               <Tabs defaultActiveKey="total">
-
                 <TabPane tab="전체" key="total">
-                  <News dataList={this.props.totalList} handleClick={handleClick}/>
+                  <News dataList={totalList} handleClick={handleClick}/>
                 </TabPane>
-
                 <TabPane tab="변경" key="update">
-                  <News dataList={this.props.updateList} handleClick={handleClick}/>
+                  <News dataList={updateList} handleClick={handleClick}/>
                 </TabPane>
-
                 <TabPane tab="신규" key="new">
-                  <News dataList={this.props.newList} handleClick={handleClick}/>
+                  <News dataList={newList} handleClick={handleClick}/>
                 </TabPane>
-
               </Tabs>
         </StyleWiget>
-
-
         <Modal
           width={1154}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
@@ -90,56 +120,42 @@ class NewsFeed extends Component {
         >
           <CSManualView mualIdx={selectedMualIdx} />
         </Modal>
-
-      </Fragment>
+        </div>
     );
   }
 }
 
 NewsFeed.propTypes = {
-  widgetTitle: PropTypes.string,
+  widgetDataList: PropTypes.array,
   selectedCategory: PropTypes.array,
-  totalList: PropTypes.array,
-  updateList: PropTypes.array,
-  newList: PropTypes.array,
   getNewsFeed: PropTypes.func,
-  isTitle: PropTypes.bool,
-  widgetSize: PropTypes.string,
-  widgetColor: PropTypes.string,
   modalView: PropTypes.bool,
+  modalIdx: PropTypes.any,
   setModalView: PropTypes.func,
 };
 
 NewsFeed.defaultProps = {
-  widgetTitle: '',
+  widgetDataList: [],
   selectedCategory: [],
-  totalList: [],
-  updateList: [],
-  newList: [],
-  isTitle: true,
-  widgetSize: '1X1',
-  widgetColor: 'white',
   modalView: false,
+  modalIdx: undefined,
   getNewsFeed: () => false,
   setModalView: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
-  widgetTitle: selectors.selectWidgetTitle(),
-  isTitle: selectors.selectUseTitle(),
-  widgetSize: selectors.selectWidgetSize(),
-  widgetColor: selectors.selectWidgetcolor(),
-  totalList: selectors.selectTotalList(),
-  updateList: selectors.selectUpdateList(),
-  newList: selectors.selectNewList(),
+  widgetDataList: selectors.selectWidgetDataList(),
   selectedCategory: selectors.selectWidgetCategory(),
   totalCategory: selectors.selectWidgetTotalCategory(),
   modalView: selectors.selectModalView(),
+  modalIdx: selectors.selectModalIdx(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getNewsFeed: (widgetSize, selectedCategory) => dispatch(actions.getNewsfeedDataList(widgetSize, selectedCategory)),
-  setModalView: modalView => dispatch(actions.setModalView(modalView)),
+  getNewsFeed: (widget_id, selectedCategory) => dispatch(actions.getNewsfeedDataList(widget_id, selectedCategory)),
+  setModalIdx: (modalIdx) => dispatch(actions.setModalIdx(modalIdx)),
+  setModalView:( modalView) => dispatch(actions.setModalView(modalView)),
+  setWidgetConfig: (app_id, widget_id, selectedCategory) => dispatch(actions.setWidgetConfig(app_id, widget_id, selectedCategory)),
 });
 
 const withConnect = connect(

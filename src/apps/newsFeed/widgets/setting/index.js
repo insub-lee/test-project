@@ -30,9 +30,9 @@ class NewsfeedSetting extends PureComponent {
   };
 
   applyWidgetConfig = () => {
-    const { selectCategoryList } = this.props;
+    const { selectCategoryList, item } = this.props;
     const { items } = this.state;
-    selectCategoryList(items);
+    selectCategoryList(items, item);
   };
 
   render() {
@@ -53,7 +53,7 @@ class NewsfeedSetting extends PureComponent {
     }
 
     const treeData = getTreeFromFlatData({ flatData, getKey: node => node.key, getParentKey: node => node.parentValue, rootKey: 0 });
-    console.log(treeData);
+
     return (
       <table>
         <tr>
@@ -61,7 +61,7 @@ class NewsfeedSetting extends PureComponent {
             <TreeSelect
               showSearch
               treeData={treeData}
-              style={{ width: auto }}
+              style={{ width: 500 }}
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               placeholder="카테고리 선택"
               autoClearSearchValue
@@ -104,7 +104,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getInitCategoryList: () => dispatch(actions.getInitCategoryList()),
-  selectCategoryList: selectedCategoryList => dispatch(actions.selectCategoryList(selectedCategoryList)),
+  selectCategoryList: (selectedCategoryList, item) => dispatch(actions.selectCategoryList(selectedCategoryList, item)),
   getNewsFeed: (widgetSize, selectedCategory) => dispatch(actions.getNewsfeedDataList(widgetSize, selectedCategory)),
 });
 

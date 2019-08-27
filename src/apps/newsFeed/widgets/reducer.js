@@ -2,27 +2,28 @@ import { fromJS } from 'immutable';
 import * as constants from './constants';
 
 const initState = fromJS({
-  WIDGET_ID: undefined,
-  title: '신규지식테스트',
-  isTitle: true,
-  skin: undefined,
-  widgetSize: '1X1',
-  modalView: false,
-  totalCategory: [],
+  app_id: undefined,
+  widget_id: undefined,
   selectedCategory: [],
-  totalList: [],
-  updateList: [],
-  newList: [],
+  modalView: false,
+  modalIdx: undefined,
+  totalCategory: [],
+  widgetDataList: [],
 });
 
 const NewsFeedReducer = (state = initState, action) => {
   switch (action.type) {
-    case constants.SET_NEWSFEED_DATA_LIST: {
-      const { newList, totalList, updateList } = action;
+    case constants.SET_NEWSFEED_CONFIG: {
+      const { app_id,  widget_id, selectedCategory} = action;
       return state
-        .set('newList', newList)
-        .set('totalList', totalList)
-        .set('updateList', updateList);
+        .set('app_id', app_id)
+        .set('widget_id', widget_id)
+        .set('selectedCategory', selectedCategory);
+    }
+
+    case constants.SET_NEWSFEED_DATA_LIST: {
+      const { newDataList } = action;
+      return state.set('widgetDataList', newDataList);
     }
 
     case constants.SET_INIT_CATEGORY: {
@@ -32,6 +33,9 @@ const NewsFeedReducer = (state = initState, action) => {
 
     case constants.SET_SELECTED_CATEGORY:
       return state.set('selectedCategory', fromJS(action.selectedCategoryList));
+
+    case constants.SET_MODAL_IDX:
+      return state.set('modalIdx',action.modalIdx);  
 
     case constants.SET_MODAL_VIEW:
       return state.set('modalView', action.modalView);

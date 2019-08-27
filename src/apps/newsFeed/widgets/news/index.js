@@ -3,32 +3,64 @@ import PropTypes from 'prop-types';
 import ReactDataGrid from 'containers/portal/components/ReactDataGrid';
 
 export default class News extends PureComponent {
+  constructor(props){
+    super(props);
+    this.columns = [
+      {
+        key: 'MUAL_NAME',
+        name: 'MUAL_NAME',
+        formatter: this.Formatter,
+      }
+    ]
+  }
 
-  render() {
-    const { dataList, handleClick } = this.props;
-
-    const Low = ({ data, onClick }) => (
-      <li>
-        <p onClick={() => onClick(data)}>
-          [{data.REGDATE}]&nbsp;{data.MUAL_NAME}
-        </p>
-      </li>
-    );
-
-    const LowList = dataList.map(data => <Low data={data} onClick={handleClick} key={data.NUM} />);
-
-    if (dataList === undefined || dataList == null || dataList.length === 0) {
-      return (
-        <div className="emptyBox">
-          <p>등록된 글이 없습니다.</p>
-        </div>
-      );
-    }
-
+  Formatter = (val) => {
     return (
       <div>
-        <ol>{LowList}</ol>
+      <a
+        onClick={() => this.props.handleClick(val.row.MUAL_IDX)}
+        title={val.row.MUAL_NAME}
+        target="_blank"
+        className="titleText ellipsis"
+      >
+        [{val.row.REGDATE}]&nbsp;{val.row.MUAL_NAME}
+      </a>
+      <div className="empInfo">
+        <span className="subInfo"></span>
+        <button className="more" onClick={() => false} id={val.row.MUAL_IDX}>
+        <span>더보기</span>
+        </button>
       </div>
+      </div>
+    );
+  }
+
+
+  render() {
+    const { dataList } = this.props;
+
+    const EmptyData = () => (
+      <div className="noWidgetContent">
+        <p className="noWCIcon">등록된 글이 없습니다.</p>
+      </div>
+    );
+
+    const wgHeight = Number(this.props.widgetSize.split('X')[1]);
+    const wgTitleHeight = 35;
+    const rowHeight = 44;
+    const item = dataList;
+
+    return(
+      <ReactDataGrid
+      columns={this.columns}
+      rowGetter={(i) => item[i]}
+      rowsCount={item.length}
+      rowHeight={rowHeight}
+      scrollHeight={wgHeight * 270 - wgTitleHeight} // 슬림스크롤 높이
+      minHeight={rowHeight * item.length} // 위젯 row 전체 높이
+      headerRowHeight={-1}
+      emptyRowsView={EmptyData}
+    />
     );
   }
 }
@@ -40,6 +72,7 @@ News.propTypes = {
 };
 
 News.defaultProps = {
+  widgetSize: '1X1',
   dataList: [],
   handleClick: () => false,
 };
