@@ -8,3 +8,8 @@ export const getWidgetInfo = categorie => ({
   type: action.GET_WIDGET_INFO,
   categorie,
 });
+
+export const deleteConfig = item => ({
+  type: action.DELETE_CONFIG,
+  item,
+});
