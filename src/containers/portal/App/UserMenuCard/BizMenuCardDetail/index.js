@@ -62,7 +62,6 @@ class BizMenuCardDetail extends Component {
 
   /* eslint-disable */
   handleTreeOnClick = node => {
-    console.debug('>>>>>>>>here node: ', node);
     const {
       handleChangeSelectedIndex,
       history,
@@ -91,6 +90,7 @@ class BizMenuCardDetail extends Component {
     const { bizMenuData, selectedIndex, history, match } = this.props;
 
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
+    const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
 
     const {
       match: {
@@ -113,7 +113,7 @@ class BizMenuCardDetail extends Component {
               <li className="leftContent inPage">
                 <h2>
                   <button
-                    onClick={() => history.push(`${preUrl}/${BIZGRP_ID}`)}
+                    onClick={() => history.push(`${buttonPreUrl}/detail/info/${BIZGRP_ID}`)}
                     className="ellipsis"
                     style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
                   >
