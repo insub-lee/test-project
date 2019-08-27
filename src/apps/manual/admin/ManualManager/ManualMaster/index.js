@@ -16,10 +16,11 @@ import * as actions from './actions';
 import selectors from './selectors';
 import EditorMgr from './EditorMgr';
 import OptionMgr from './OptionMgr';
+import CompareMgr from './CompareMgr';
 
 class ManualMaster extends Component {
   componentDidMount() {
-    const { SetMovePageTypeReducr, SetDefaultMgrChangeValueByReducd, match, manualIndex, categoryIndex } = this.props;
+    const { SetMovePageTypeReducr, match, manualIndex, categoryIndex } = this.props;
     if (match && match.params && match.params.selectedMualIdx) {
       const { selectedMualIdx, selectedCategoryIdx } = match.params;
       const defaultMovePageType = fromJS({
@@ -39,7 +40,7 @@ class ManualMaster extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { SetMovePageTypeReducr, SetDefaultMgrChangeValueByReducd, match, manualIndex, categoryIndex } = this.props;
+    const { SetMovePageTypeReducr, match, manualIndex, categoryIndex } = this.props;
     if (match && match.params && match.params.selectedMualIdx) {
       const { selectedMualIdx, selectedCategoryIdx } = match.params;
       const defaultMovePageType = fromJS({
@@ -74,6 +75,9 @@ class ManualMaster extends Component {
     switch (pageMoveType.get('pageType')) {
       case 'OptionMgr':
         viewContents = <OptionMgr />;
+        break;
+      case 'Compare':
+        viewContents = <CompareMgr />;
         break;
       default:
         break;

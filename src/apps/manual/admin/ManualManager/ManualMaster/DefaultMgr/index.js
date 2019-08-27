@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 // import AsyncSelect from 'react-select/async';
 
-import PropTypes from 'prop-types';
+import PropTypes, { object } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Input, DatePicker, Checkbox, Button, Select, Tag, Icon, Spin, version } from 'antd';
-import { fromJS } from 'immutable';
+import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal } from 'antd';
 import locale from 'antd/lib/date-picker/locale/ko_KR';
 import moment from 'moment';
 
@@ -15,8 +14,9 @@ import * as actions from '../actions';
 import * as manageActions from '../../actions';
 
 import StyleDefaultMgr from './StyleDefaultMgr';
+import AddManualType from './AddManualType';
 
-const { Option } = Select;
+const { Option, OptGroup } = Select;
 const { Search } = Input;
 
 class DefaultMgr extends Component {
@@ -38,7 +38,7 @@ class DefaultMgr extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { pageMoveType, GetDefaultMgrBySaga, userInfoList, GetSelectedUserInfoSaga, InitDefaultMgr, defaultMgrMap } = this.props;
+    const { pageMoveType, GetDefaultMgrBySaga, GetSelectedUserInfoSaga } = this.props;
     const { pageMoveType: prevPageMoveType } = prevProps;
 
     if (Number(pageMoveType.get('selectedMualIdx')) !== 0 && Number(pageMoveType.get('selectedMualIdx')) !== Number(prevPageMoveType.get('selectedMualIdx'))) {
@@ -51,15 +51,29 @@ class DefaultMgr extends Component {
     // }
   }
 
-  componentWillUnmount() {
-    // const { InitDefaultMgr } = this.props;
-    // InitDefaultMgr();
+  renderSelectOption(compareList, idx) {
+    if (compareList) {
+      return compareList
+        .filter(filter => filter.TEMPLET_PIDX === idx)
+        .map(node =>
+          node.IS_FOLDER === 'Y' ? (
+            <OptGroup key={`compareSelectOptGroup_${node.TEMPLET_IDX}`} label={node.TEMPLET_NAME}>
+              {this.renderSelectOption(compareList, node.TEMPLET_IDX)}
+            </OptGroup>
+          ) : (
+            <Option key={`compareSelectOption_${node.TEMPLET_IDX}`} value={node.TEMPLET_IDX}>
+              {node.TEMPLET_NAME}
+            </Option>
+          ),
+        );
+    }
+    return '';
   }
 
   render() {
     const {
       pageMoveType,
-      SetDefaultMgrChangeValueByReducd,
+      setDefaultMgrChangeValue,
       defaultMgrMap,
       InsertDefaultMgrBySaga,
       UpdateDefaultMgrBySaga,
@@ -71,20 +85,24 @@ class DefaultMgr extends Component {
       ResetDefaultMgrBySaga,
       RemoveManualBySaga,
       GetDefaultMgrByVersionBySaga,
+      isAddMualTypeModal,
+      setIsAddMualTypeModal,
+      compareList,
     } = this.props;
     let IsMaxVersion = false;
     if (defaultMgrMap && defaultMgrMap.get('VERSION') > 0) {
       const maxVersion = defaultMgrMap.get('VERSIONLIST').maxBy(item => item.VERSION);
       IsMaxVersion = maxVersion.get('VERSION') === defaultMgrMap.get('VERSION');
     }
+
     return (
-      <StyleDefaultMgr>
+      <StyleDefaultMgr id="defaultMgrWrapper">
         <table cellPadding="5">
           <tbody>
             <tr>
               <td>매뉴얼명</td>
               <td colSpan="3">
-                <Input id="MUAL_NAME" onChange={e => SetDefaultMgrChangeValueByReducd('MUAL_NAME', e.target.value)} value={defaultMgrMap.get('MUAL_NAME')} />
+                <Input id="MUAL_NAME" onChange={e => setDefaultMgrChangeValue('MUAL_NAME', e.target.value)} value={defaultMgrMap.get('MUAL_NAME')} />
               </td>
             </tr>
             <tr>
@@ -128,7 +146,7 @@ class DefaultMgr extends Component {
                   locale={locale}
                   value={moment(defaultMgrMap.get('PUBDATE'))}
                   onChange={(date, dateSTring) => {
-                    SetDefaultMgrChangeValueByReducd('PUBDATE', dateSTring);
+                    setDefaultMgrChangeValue('PUBDATE', dateSTring);
                   }}
                 />
               </td>
@@ -139,7 +157,7 @@ class DefaultMgr extends Component {
                   locale={locale}
                   value={moment(defaultMgrMap.get('ENDDATE'))}
                   onChange={(date, dateSTring) => {
-                    SetDefaultMgrChangeValueByReducd('ENDDATE', dateSTring);
+                    setDefaultMgrChangeValue('ENDDATE', dateSTring);
                   }}
                 />
               </td>
@@ -147,11 +165,7 @@ class DefaultMgr extends Component {
             <tr>
               <td>화면표시</td>
               <td>
-                <Checkbox
-                  id="ISDISPLAY"
-                  checked={defaultMgrMap.get('ISDISPLAY')}
-                  onChange={e => SetDefaultMgrChangeValueByReducd('ISDISPLAY', e.target.checked)}
-                >
+                <Checkbox id="ISDISPLAY" checked={defaultMgrMap.get('ISDISPLAY')} onChange={e => setDefaultMgrChangeValue('ISDISPLAY', e.target.checked)}>
                   화면표시여부
                 </Checkbox>
               </td>
@@ -175,12 +189,15 @@ class DefaultMgr extends Component {
                 <Select
                   id="MUAL_TYPE"
                   style={{ width: 200 }}
-                  value={defaultMgrMap.get('MUAL_TYPE').toString()}
-                  onChange={value => SetDefaultMgrChangeValueByReducd('MUAL_TYPE', value)}
+                  value={defaultMgrMap.get('MUAL_TYPE')}
+                  onChange={value => setDefaultMgrChangeValue('MUAL_TYPE', value)}
                 >
-                  <Option value="1">일반매뉴얼</Option>
-                  <Option value="2">상품매뉴얼</Option>
+                  <Option value={1}>일반매뉴얼</Option>
+                  {this.renderSelectOption(compareList, 0)}
                 </Select>
+                <Button type="primary" onClick={() => setIsAddMualTypeModal(true)}>
+                  추가
+                </Button>
               </td>
             </tr>
             <tr>
@@ -201,13 +218,13 @@ class DefaultMgr extends Component {
                 )}
                 {pageMoveType.get('selectedMualIdx') !== 0 &&
                   defaultMgrMap.get('MUAL_STATE') === 'WAIT' && [
-                  <Button type="primary" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
+                    <Button type="primary" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
                       확정
-                  </Button>,
-                  <Button type="primary" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
+                    </Button>,
+                    <Button type="primary" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
                       삭제
-                  </Button>,
-                ]}
+                    </Button>,
+                  ]}
                 {IsMaxVersion && defaultMgrMap.get('VERSIONLIST').size > 1 && defaultMgrMap.get('MUAL_STATE') === 'PUBS' && (
                   <Button type="primary" onClick={ResetDefaultMgrBySaga}>
                     초기화
@@ -220,6 +237,18 @@ class DefaultMgr extends Component {
             </tr>
           </tbody>
         </table>
+        <Modal
+          width={1158}
+          bodyStyle={{ height: 'calc(100vh - 152px)', padding: '4px' }}
+          style={{ top: 42 }}
+          visible={isAddMualTypeModal}
+          footer={null}
+          onCancel={() => setIsAddMualTypeModal(false)}
+          getContainer={() => document.querySelector('#defaultMgrWrapper')}
+          title="매뉴얼유형 추가"
+        >
+          <AddManualType />
+        </Modal>
       </StyleDefaultMgr>
     );
   }
@@ -233,6 +262,9 @@ DefaultMgr.propTypes = {
   RemoveManualBySaga: PropTypes.func,
   GetDefaultMgrByVersionBySaga: PropTypes.func,
   selectedUserInfo: PropTypes.array,
+  isAddMualTypeModal: PropTypes.bool,
+  setIsAddMualTypeModal: PropTypes.func,
+  compareList: PropTypes.arrayOf(PropTypes.object),
 };
 
 DefaultMgr.defaultProps = {
@@ -243,6 +275,9 @@ DefaultMgr.defaultProps = {
   RemoveManualBySaga: () => false,
   GetDefaultMgrByVersionBySaga: () => false,
   selectedUserInfo: [],
+  isAddMualTypeModal: false,
+  setIsAddMualTypeModal: () => false,
+  compareList: [],
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -251,11 +286,16 @@ const mapStateToProps = createStructuredSelector({
   pageMoveType: selectors.makeSelectMovePageType(),
   userInfoList: selectors.makeSelectUserInfoList(),
   selectedUserInfo: selectors.makeSelectedUserInfo(),
+  isAddMualTypeModal: selectors.makeSelectIsAddMualTypeModal(),
+  compareList: selectors.makeSelectCompareTemplet(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  SetDefaultMgrChangeValueByReducd: (key, value) => dispatch(actions.setDefaultMgrChangeValueByReduc(key, value)),
-  GetDefaultMgrBySaga: () => dispatch(actions.getDefaultMgrBySaga()),
+  setDefaultMgrChangeValue: (key, value) => dispatch(actions.setDefaultMgrChangeValueByReduc(key, value)),
+  GetDefaultMgrBySaga: () => {
+    dispatch(actions.getDefaultMgrBySaga());
+    dispatch(actions.getCompareTempletListBySaga());
+  },
   InsertDefaultMgrBySaga: () => dispatch(actions.insertDefaultMgr()),
   UpdateDefaultMgrBySaga: () => dispatch(actions.updateDefaultMgr()),
   GetUserInfoBySaga: userName => dispatch(actions.getUserInfoBySaga(userName)),
@@ -268,9 +308,9 @@ const mapDispatchToProps = dispatch => ({
   ResetDefaultMgrBySaga: () => dispatch(actions.ResetDefaultMgrBySaga()),
   RemoveManualBySaga: () => dispatch(actions.RemoveManualBySaga()),
   GetDefaultMgrByVersionBySaga: selectedVersion => dispatch(actions.GetDefaultMgrByVersionBySaga(selectedVersion)),
+  setIsAddMualTypeModal: flag => dispatch(actions.setIsAddMualTypeModalByReducr(flag)),
 });
 
-// export default DefaultMgr;
 export default connect(
   mapStateToProps,
   mapDispatchToProps,

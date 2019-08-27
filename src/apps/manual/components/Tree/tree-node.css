@@ -202,7 +202,7 @@
   display: none;
 }
 .myappTreePopupMenu .ant-popover-inner {
-  height: 35px;
+  height: auto;
   line-height: 1;
   padding: 0;
   background: transparent;
@@ -216,7 +216,7 @@
   display: inline-block;
   padding: 5px 0 5px 5px;
   border-radius: 3px;
-  background: #d6c7de;
+  background: #886ab5;
 }
 .myappTreePopupMenu .ant-popover-inner-content .btnsWrapper > li {
   float: left;

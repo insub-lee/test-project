@@ -1,4 +1,3 @@
-
 import React from 'react';
 import styled from 'styled-components';
 import Cards from './card';
@@ -16,12 +15,13 @@ const Card = styled(CardComp)`
   }
 
   &.ant-card-bordered {
-    border-color: #f5f5f5 !important;
-    background: #f5f5f5;
+    border-color: #d8dfdf !important;
+    background: #FFF;
+    border-radius: 3px;
+    border-left: 3px solid #a08ac3 !important;
 
     &:hover {
-      border-radius: 0;
-      border-color: #886ab5 !important;
+      border-color: #a08ac3 !important;
     }
 
     &.mark {

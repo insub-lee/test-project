@@ -2,6 +2,24 @@ import { createSelector } from 'reselect';
 import { fromJS } from 'immutable';
 const makeSelectManualMasterState = state => state.get('apps-ManualMaster-reducer');
 
+const makeSelectCategoryList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'optionMgr', 'categoryList']),
+  );
+
+const makeSelectChooseRelMual = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'optionMgr', 'selectedRelationManual']),
+  );
+
+const makeSelectRelationManualList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'optionMgr', 'relationManualList']),
+  );
+
 const makeSelectUserInfoList = () =>
   createSelector(
     makeSelectManualMasterState,
@@ -108,19 +126,62 @@ const makeSelectScrollComp = () =>
     state => state.getIn(['manualMasterState', 'manualEditorEntity', 'scrollComp']),
   );
 
-const makeSelectRelationManualList = () =>
-  createSelector(
-    makeSelectManualMasterState,
-    state => state.getIn(['manualMasterState', 'manualOptionMgr', 'relationManualList']),
-  );
-
 const makeSelectIsRelationMualModal = () =>
   createSelector(
     makeSelectManualMasterState,
     state => state.getIn(['manualMasterState', 'manualOptionMgr', 'isRelationMualModal']),
   );
 
+const makeSelectIsAddMualTypeModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'isAddMualTypeModal']),
+  );
+
+const makeSelectCompareTemplet = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'compareTempletList']).toJS(),
+  );
+
+const makeSelectedCompareTempletNode = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'selectedNode']).toJS(),
+  );
+
+const makeSelectedCompareTempletViewMode = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'viewMode']),
+  );
+
+const makeSelectCompareTempletHoverKey = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'hoverKey']),
+  );
+
+const makeSelectCompareManageTemplet = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'templet']).toJS(),
+  );
+
+const makeSelectCompareManageData = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'data']).toJS(),
+  );
+
+const makeSelectedCompareManageIdx = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'selectedIdx']),
+  );
+
 export default {
+  makeSelectChooseRelMual,
   makeSelectManualMaster,
   makeSelectDefaultMgr,
   makeSelectMovePageType,
@@ -139,4 +200,13 @@ export default {
   makeSelectScrollComp,
   makeSelectRelationManualList,
   makeSelectIsRelationMualModal,
+  makeSelectIsAddMualTypeModal,
+  makeSelectCompareTemplet,
+  makeSelectedCompareTempletNode,
+  makeSelectedCompareTempletViewMode,
+  makeSelectCompareTempletHoverKey,
+  makeSelectCategoryList,
+  makeSelectCompareManageTemplet,
+  makeSelectCompareManageData,
+  makeSelectedCompareManageIdx,
 };

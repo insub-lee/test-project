@@ -43,7 +43,7 @@ class EditorMain extends Component {
         onClick={() => handleChangeCompIdx(0)}
       >
         <Scrollbars
-          style={{ height: 'calc(100vh - 111px)' }}
+          style={{ height: 'calc(100vh - 149px)' }}
           ref={c => {
             setScrollComponent(c);
           }}

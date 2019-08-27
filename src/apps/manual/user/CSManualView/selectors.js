@@ -58,6 +58,46 @@ const makeSelectHistoryList = () =>
     (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'historyList']),
   );
 
+const makeSelectHistoryListByWidgetId = widgetId =>
+  createSelector(
+    makeSelectManualViewState,
+    state => state.getIn(['manualViewMap', widgetId, 'historyList']),
+  );
+
+const makeSelectBookmarkList = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'bookmarkList']),
+  );
+
+const makeSelectBookmarkListByWidgetId = widgetId =>
+  createSelector(
+    makeSelectManualViewState,
+    state => state.getIn(['manualViewMap', widgetId, 'bookmarkList']),
+  );
+
+const makeSelectManualMaster = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'manualMaster']),
+  );
+
+const makeSelectManualViewNavList = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'navList']),
+  );
+
+const makeSelectManualViewRelationList = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'relationList']),
+  );
+
 export default {
   makeSelectMaulTabList,
   makeSelectedTabIdx,
@@ -67,4 +107,10 @@ export default {
   makeSelectScrollComp,
   makeSelectedMualIdxByWidgetId,
   makeSelectHistoryList,
+  makeSelectHistoryListByWidgetId,
+  makeSelectBookmarkList,
+  makeSelectBookmarkListByWidgetId,
+  makeSelectManualMaster,
+  makeSelectManualViewNavList,
+  makeSelectManualViewRelationList,
 };

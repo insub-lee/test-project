@@ -3,7 +3,7 @@ import { Button, Input, Radio } from 'antd';
 import FroalaEditor from '../../../../../components/RichTextEditor/FroalaEditor';
 import FroalaEditorView from '../../../../../components/RichTextEditor/FroalaEditorView';
 
-import { froalaEditorConfig } from './FroalaEditorConfig';
+import { froalaEditorConfig } from '../../../../../components/RichTextEditor/FroalaEditorConfig';
 import QnA from './QnA';
 
 const onClickComponent = (e, selectItem, selectedComponentIdx, handleChangeCompIdx) => {
@@ -16,8 +16,14 @@ const RenderEditorComponent = (item, handleChangeCompValue, handleChangeCompIdx,
   switch (item.TYPE) {
     case 'editor':
       innerContent = (
-        <div className="manualEditorComponent">
-          {selectedComponentIdx === item.MUAL_TABCOMP_PIDX || selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
+        <div
+          className={`manualEditorComponent${
+            (selectedComponentIdx === item.MUAL_TABCOMP_PIDX && selectedComponentIdx > 0) || selectedComponentIdx === item.MUAL_TABCOMP_IDX
+              ? ' manualEditorActive'
+              : ''
+          }`}
+        >
+          {(selectedComponentIdx === item.MUAL_TABCOMP_PIDX && selectedComponentIdx > 0) || selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
             <FroalaEditor
               config={froalaEditorConfig}
               model={item.MUAL_COMPVIEWINFO}

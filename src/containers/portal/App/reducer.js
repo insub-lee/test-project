@@ -60,6 +60,8 @@ const portalReducer = (state = initialState, action) => {
       return state.set('showRodal', false);
     case actionTypes.RESET_DATA:
       return initialState;
+    case actionTypes.SET_MENU_SHOW:
+      return state.set('open', action.open);
     default:
       return state;
   }

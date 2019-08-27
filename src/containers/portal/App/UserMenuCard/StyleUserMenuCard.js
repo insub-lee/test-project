@@ -7,10 +7,9 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserMenuCard = styled.div`
-  position: fixed;
+  position: absolute;
   top: 42px;
-  left: 46px;
-  width: calc(100% - 46px);
+  width: 100%;
   height: 100vh;
   padding: 0;
   background-color: #ffffff;

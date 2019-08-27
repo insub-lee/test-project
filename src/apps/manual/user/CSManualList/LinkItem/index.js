@@ -15,7 +15,7 @@ const handleListItemClick = (item, linkItemAction) => {
 const LinkItem = ({ item, linkItemAction }) => (
   <Styled>
     <Checkbox
-      checked={linkItemAction.checkedManualList.findIndex(find => find.mualIdx === item.MUAL_IDX) > -1}
+      checked={linkItemAction.checkedManualList.findIndex(find => find.get('mualIdx') === item.MUAL_IDX) > -1}
       onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX, item.MUAL_ORG_IDX, linkItemAction.widgetId)}
     />
     <Button type="link" onClick={() => handleListItemClick(item, linkItemAction)}>

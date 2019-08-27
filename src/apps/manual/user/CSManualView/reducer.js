@@ -34,8 +34,13 @@ const appReducer = (state = initialState, action) => {
       return state
         .setIn(['manualViewMap', widgetId, 'selectedMualTabIdx'], 0)
         .setIn(['manualViewMap', widgetId, 'selectedTabIdx'], 0)
-        .setIn(['manualViewMap', widgetId, 'selectedCompIdx'], fromJS([]))
-        .setIn(['manualViewMap', widgetId, 'manualTabList'], fromJS([]));
+        .setIn(['manualViewMap', widgetId, 'selectedCompIdx'], 0)
+        .setIn(['manualViewMap', widgetId, 'manualTabList'], fromJS([]))
+        .setIn(['manualViewMap', widgetId, 'historyList'], fromJS([]))
+        .setIn(['manualViewMap', widgetId, 'bookmarkList'], fromJS([]))
+        .setIn(['manualViewMap', widgetId, 'manualMaster'], fromJS({}))
+        .setIn(['manualViewMap', widgetId, 'navList'], fromJS([]))
+        .setIn(['manualViewMap', widgetId, 'relationList'], fromJS([]));
     }
     case constantTypes.SET_SCROLL_COMPONENT_REDUCR: {
       const { item, widgetId } = action;
@@ -44,6 +49,31 @@ const appReducer = (state = initialState, action) => {
     case constantTypes.SET_MANUAL_VIEW_HISTORY_REDUCR: {
       const { historyList, widgetId } = action;
       return state.setIn(['manualViewMap', widgetId, 'historyList'], historyList);
+    }
+    case constantTypes.SET_MANUAL_BOOKMARK_REDUCR: {
+      const { historyList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'bookmarkList'], historyList);
+    }
+    case constantTypes.SET_MANUAL_MASTER_REDUCR: {
+      const { manualMaster, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'manualMaster'], manualMaster);
+    }
+    case constantTypes.SET_MANUAL_VIEW_NAV_LIST_REDUCR: {
+      const { navList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'navList'], navList);
+    }
+    case constantTypes.SET_MANUAL_VIEW_RELATION_LIST_REDUCR: {
+      const { relationList, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'relationList'], relationList);
+    }
+    case constantTypes.SET_MANUAL_VIEW_INFO_REDUCR: {
+      const { maulTabList, historyList, bookmarkList, manualMaster, navList, widgetId } = action;
+      return state
+        .setIn(['manualViewMap', widgetId, 'manualTabList'], maulTabList)
+        .setIn(['manualViewMap', widgetId, 'historyList'], historyList)
+        .setIn(['manualViewMap', widgetId, 'bookmarkList'], bookmarkList)
+        .setIn(['manualViewMap', widgetId, 'manualMaster'], manualMaster)
+        .setIn(['manualViewMap', widgetId, 'navList'], navList);
     }
     default:
       return state;

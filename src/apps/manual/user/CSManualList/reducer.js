@@ -25,11 +25,23 @@ const appCSMualListReducer = (state = initialState, action) => {
     case constantTypes.SET_CHECK_MANUAL_REDUCR: {
       const { mualIdx, mualOrgIdx, widgetId } = action;
       const checkedMualList = state.getIn(['manualListMap', widgetId, 'checkedMualList']) || fromJS([]);
-      const findIdx = checkedMualList.findIndex(item => item.mualIdx === mualIdx);
+      const findIdx = checkedMualList.findIndex(item => item.get('mualIdx') === mualIdx);
       if (findIdx > -1) {
         return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.splice(findIdx, 1));
       }
-      return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.push({ mualIdx, mualOrgIdx }));
+      return state.setIn(['manualListMap', widgetId, 'checkedMualList'], checkedMualList.push(fromJS({ mualIdx, mualOrgIdx })));
+    }
+    case constantTypes.RESET_CHECK_MANUAL_REDUCR: {
+      const { widgetId } = action;
+      return state.setIn(['manualListMap', widgetId, 'checkedMualList'], fromJS([]));
+    }
+    case constantTypes.SET_COMPARE_VIEW_REDUCR: {
+      const { widgetId, list, data } = action;
+      return state.setIn(['manualListMap', widgetId, 'compareViewList'], fromJS(list)).setIn(['manualListMap', widgetId, 'compareViewTemplet'], fromJS(data));
+    }
+    case constantTypes.SET_IS_COMPARE_VIEW_REDUCR: {
+      const { widgetId, flag } = action;
+      return state.setIn(['manualListMap', widgetId, 'isCompareView'], flag);
     }
     default:
       return state;

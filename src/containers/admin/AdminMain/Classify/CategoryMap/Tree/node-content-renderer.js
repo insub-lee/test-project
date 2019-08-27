@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styles from './node-content-renderer.module.scss';
+import styles from './node-content-renderer.scss';
 
 function isDescendant(older, younger) {
-  return !!older.children && typeof older.children !== 'function' && older.children.some(child => child === younger || isDescendant(child, younger));
+  return (
+    !!older.children &&
+    typeof older.children !== 'function' &&
+    older.children.some(child => child === younger || isDescendant(child, younger))
+  );
 }
 
 // eslint-disable-next-line react/prefer-stateless-function
@@ -46,7 +50,7 @@ class CustomThemeNodeContentRenderer extends Component {
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
 
-    const nodeContent = connectDragPreview(
+    const nodeContent = connectDragPreview((
       <div
         className={
           styles.row +
@@ -61,9 +65,19 @@ class CustomThemeNodeContentRenderer extends Component {
           ...style,
         }}
       >
-        <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')}>
+        <div
+          className={
+            styles.rowContents +
+            (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')
+          }
+        >
           <div className={styles.rowLabel}>
-            <span className={styles.rowTitle + (node.subtitle ? ` ${styles.rowTitleWithSubtitle} rstcustom__rowTitle` : ' rstcustom__rowTitle')}>
+            <span
+              className={
+                styles.rowTitle +
+                (node.subtitle ? ` ${styles.rowTitleWithSubtitle}` : '')
+              }
+            >
               {typeof nodeTitle === 'function'
                 ? nodeTitle({
                   node,
@@ -97,14 +111,14 @@ class CustomThemeNodeContentRenderer extends Component {
             ))}
           </div>
         </div>
-      </div>,
-    );
+      </div>
+    ));
 
     const renderButton = () => {
       let jsx = '';
       if (toggleChildrenVisibility) {
         // if (node.NODE_TYPE === 'F' || node.children && (node.children.length > 0 || typeof node.children === 'function')) {
-        if ((node.children !== undefined && node.children != null && node.children.length > 0) || typeof node.children === 'function') {
+        if (node.children !== undefined && node.children != null && node.children.length > 0 || typeof node.children === 'function') {
           jsx = (
             <div>
               <button
@@ -114,7 +128,9 @@ class CustomThemeNodeContentRenderer extends Component {
                 // 클릭 시 글자와 버튼 모두 같이 색상 변경
                 type="button"
                 aria-label={node.expanded ? 'Collapse' : 'Expand'}
-                className={node.expanded ? `${styles.collapseButton} rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
+                className={
+                  node.expanded ? styles.collapseButton : styles.expandButton
+                }
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
                 onClick={() =>
                   toggleChildrenVisibility({
@@ -125,12 +141,13 @@ class CustomThemeNodeContentRenderer extends Component {
                 }
               />
 
-              {node.expanded && !isDragging && (
-                <div
-                  style={{ width: scaffoldBlockPxWidth }}
+              {node.expanded &&
+                !isDragging && (
+                  <div
+                    style={{ width: scaffoldBlockPxWidth }}
                   // className={styles.lineChildren}
-                />
-              )}
+                  />
+                )}
             </div>
           );
         } else {
@@ -153,8 +170,15 @@ class CustomThemeNodeContentRenderer extends Component {
     return (
       <div style={{ height: '100%' }} {...otherProps}>
         {renderButton()}
-        <div className={styles.rowWrapper + (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')}>
-          {canDrag ? connectDragSource(nodeContent, { dropEffect: 'copy' }) : nodeContent}
+        <div
+          className={
+            styles.rowWrapper +
+            (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')
+          }
+        >
+          {canDrag
+            ? connectDragSource(nodeContent, { dropEffect: 'copy' })
+            : nodeContent}
         </div>
       </div>
     );
@@ -184,7 +208,7 @@ CustomThemeNodeContentRenderer.defaultProps = {
 
 CustomThemeNodeContentRenderer.propTypes = {
   buttons: PropTypes.arrayOf(PropTypes.node),
-  canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  canDrag: PropTypes.bool,
   className: PropTypes.string,
   icons: PropTypes.arrayOf(PropTypes.node),
   isSearchFocus: PropTypes.bool,
@@ -213,7 +237,7 @@ CustomThemeNodeContentRenderer.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   parentNode: PropTypes.shape({}), // Needed for dndManager
   // Drop target
-  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
+  canDrop: PropTypes.bool,
   isOver: PropTypes.bool.isRequired,
 };
 

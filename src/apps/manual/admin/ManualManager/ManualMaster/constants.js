@@ -34,6 +34,23 @@ export const GET_DEFAULTMGR_BY_VERSION_SAGA = 'apps/manual/admin/ManualManager/M
 export const SET_SCROLL_COMPONENT_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_SCROLL_COMPONENT_REDUCR';
 export const GET_OPTIONMGR_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_OPTIONMGR_SAGA';
 export const SET_IS_RELATION_MUAL_MODAL_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_IS_RELATION_MUAL_MODAL_REDUCR';
+export const SET_IS_ADD_MUAL_TYPE_MODAL_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_IS_ADD_MUAL_TYPE_MODAL_REDUCR';
+export const GET_COMPARE_TEMPLET_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_COMPARE_TEMPLET_SAGA';
+export const SET_COMPARE_TEMPLET_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_TEMPLET_REDUCR';
+export const SET_COMPARE_TEMPLET_VIEW_MODE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_TEMPLET_VIEW_MODE_REDUCR';
+export const SAVE_COMPARE_TEMPLET = 'apps/manual/admin/ManualManager/ManualMaster/SAVE_COMPARE_TEMPLET';
+export const SET_COMPARE_TEMPLET_CHANGE_VALUE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_TEMPLET_CHANGE_VALUE_REDUCR';
+export const SET_COMPARE_TEMPLET_HOVER_KEY_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_TEMPLET_HOVER_KEY_REDUCR';
+export const SET_COMPARE_TEMPLET_CONTENT_NAME_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_TEMPLET_CONTENT_NAME_REDUCR';
+export const REMOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/REMOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR';
+export const ADD_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/ADD_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR';
+export const MOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/MOVE_COMPARE_TEMPLET_CONTENT_ITEM_REDUCR';
+export const GET_COMPARE_MGR_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_COMPARE_MGR_SAGA';
+export const SET_COMPARE_MANAGE_TEMPLET_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_TEMPLET_REDUCR';
+export const SET_COMPARE_MANAGE_DATA_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_DATA_REDUCR';
+export const SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR';
+export const SAVE_COMPARE_DATA_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/SAVE_COMPARE_DATA_SAGA';
+export const SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR';
 
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
 export const GET_USERINFO_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_USERINFO_SAGA';
@@ -41,3 +58,15 @@ export const SET_USERINFO_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster
 export const SET_SELECTEDUSERINFO_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_SELECTEDUSERiNFO_REDUCR';
 export const GET_SELECTEDUSERINFO_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_SELECTEDUSERINFO_SAGA';
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
+
+// :::::::::::::::::::::::: 관련정보 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+export const GET_CATEGORYLIST = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/GET_CATEGORYLIST';
+export const GET_MANUALLIST_INFO_SAGA = 'apps/manual/admin/ManualManager/OptionMgr/GET_MANUALLIST_INFO_SAGA';
+export const SET_CATEGORYLIST_REDUCR = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_CATEGORYLIST_REDUCR';
+export const SET_RELATIONCATEGORYIDX = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_RELATIONCATEGORYIDX';
+export const GET_RELATIONMANUALLIST_SAGA = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/GET_RELATIONMANUALLIST_SAGA';
+export const SET_RELATIONMANUALLIST_REDUCR = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_RELATIONMANUALLIST_REDUCR';
+export const SET_RELATIONMANUALLIST_SAGA = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_RELATIONMANUALLIST_SAGA';
+export const SET_SELECTEDRELATIONMANUAL_REDUCR = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_SELECTEDRELATIONMANUAL_REDUCR';
+export const SET_RELATIONMANUALLISTBYMUALIDX_REDUCR = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_RELATIONMANUALLISTBYMUALIDX_REDUCR';
+// :::::::::::::::::::::::: 관련정보 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

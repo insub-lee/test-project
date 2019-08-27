@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import IconCollection from '../IconCollection';
 import Styled from './Styled';
 
-const User = ({ profile }) => (
+const User = ({ profile, setMenuClose, isShow}) => (
   <Styled>
     <div>
-      <button type="button" className="btn-pin">
-        <IconCollection className="icon-pin" />
+      <button type="button" className="btn-pin" onClick={setMenuClose}>
+        <IconCollection className={isShow ? 'icon-pin' : ''} />
       </button>
       <div className="user-img">
         <img src={`/portalWeb/uploadfile/pictures/${profile.EMP_NO}.jpg`} onError={(e) => { e.target.src = '/img-user-sample.png'; }} alt="profile-img" />
@@ -23,6 +23,8 @@ const User = ({ profile }) => (
 
 User.propTypes = {
   profile: PropTypes.object.isRequired,
+  setMenuClose: PropTypes.func.isRequired,
+  isShow: PropTypes.bool,
 };
 
 export default User;

@@ -30,9 +30,7 @@ const StyleAuthSetting = styled.div`
         background: url(${IconOut}) no-repeat 50% 50%;
       }
     }
-
   }
-
 `;
 
 export default StyleAuthSetting;

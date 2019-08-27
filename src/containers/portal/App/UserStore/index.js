@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Route, Switch } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Input, Button } from 'antd';
 import { createStructuredSelector } from 'reselect';
 // import { lang } from 'utils/commonUtils';
 import { ThemeProvider } from 'styled-components';
@@ -12,6 +12,8 @@ import { ThemeProvider } from 'styled-components';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import themes from 'config/themes/index';
+import { intlObj } from 'utils/commonUtils';
+import messages from '../messages';
 
 import * as selectors from './selectors';
 import reducer from './reducer';
@@ -33,6 +35,8 @@ import BizMenuList from './AppMain/Biz/BizMenuList';
 import BizStore from './AppMain/BizStore';
 import BizManage from './AppMain/BizManage';
 
+
+
 import './global-store.css';
 
 const { Content, Sider } = Layout;
@@ -51,9 +55,11 @@ class UserStore extends Component {
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
-          <h2 className="pageHeader">Store</h2>
+          <div className="pageHeaderWrapper">
+            <h2 className="pageHeader">App Store</h2>
+          </div>
           <ThemeProvider theme={themes.themedefault}>
-            <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
+            <Layout className="storeLayout" style={{ minHeight: '100%' }}>
               <Sider trigger={null} collapsible collapsed={collapsed} className="siderLayout" />
               <AppWrapper style={{ width: '100%' }}>
                 <Content className="storeContent">

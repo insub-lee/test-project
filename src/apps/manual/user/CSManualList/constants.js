@@ -5,3 +5,7 @@ export const SET_SELECTED_MUAL_IDX_REDUCR = 'apps/manual/user/CSManualList/SET_S
 export const SET_CHECK_MANUAL_REDUCR = 'apps/manual/user/CSManualList/SET_CHECK_MANUAL_REDUCR';
 export const SET_SELECTED_MUAL_ORG_IDX_SAGA = 'apps/manual/user/CSManualList/SET_SELECTED_MUAL_ORG_IDX_SAGA';
 export const SET_MULTI_VIEW_SAGA = 'apps/manual/user/CSManualList/SET_MULTI_VIEW_SAGA';
+export const RESET_CHECK_MANUAL_REDUCR = 'apps/manual/user/CSManualList/RESET_CHECK_MANUAL_REDUCR';
+export const GET_COMPARE_VIEW_SAGA = 'apps/manual/user/CSManualList/GET_COMPARE_VIEW_SAGA';
+export const SET_COMPARE_VIEW_REDUCR = 'apps/manual/user/CSManualList/SET_COMPARE_VIEW_REDUCR';
+export const SET_IS_COMPARE_VIEW_REDUCR = 'apps/manual/user/CSManualList/SET_IS_COMPARE_VIEW_REDUCR';

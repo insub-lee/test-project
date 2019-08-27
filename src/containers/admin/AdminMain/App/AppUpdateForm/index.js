@@ -42,7 +42,7 @@ class AppUpdateForm extends React.Component {
       INTL_YN: 'Y',
       linkType: 'POPUP',
       // DisLoc: 'd1',
-      METHOD: 'GET',
+      LINK_METHOD: 'GET',
       SEC_REQ_YN: 'Y',
       appPlus1: false,
       appList1: [],
@@ -68,7 +68,7 @@ class AppUpdateForm extends React.Component {
       DSCR_CHN: '',
       CATG_ID: 0,
       CATG_NAME: '',
-      ORIGIN_APP_ID: '',
+      // ORIGIN_APP_ID: '',
       VER_1: '',
       VER_2: '',
       VER_3: '',
@@ -78,7 +78,7 @@ class AppUpdateForm extends React.Component {
       LINK_URL: '',
       // WIDTH: '',
       // HEIGHT: '',
-      PARAM: '',
+      LINK_PARAM: '',
       SERVICE_FORM: [],
       NAME_KOR_CHK: false,
       APP_ABBR_KOR_CHK: false,
@@ -90,6 +90,8 @@ class AppUpdateForm extends React.Component {
       SVC_YN: '',
       WIDGET_SVC_YN: '',
       MENU_SVC_YN: '',
+      SRC_PATH: '',
+      ITEM_VALUE: '',
     };
     this.onFileUploadedIcon = this.onFileUploadedIcon.bind(this);
     this.onFileUploadedWork = this.onFileUploadedWork.bind(this);
@@ -114,7 +116,7 @@ class AppUpdateForm extends React.Component {
       DSCR_CHN: nextProps.setMyAppDetail.DSCR_CHN,
       CATG_ID: nextProps.setMyAppDetail.CATG_ID,
       CATG_NAME: nextProps.setMyAppDetail.CATG_PATH,
-      ORIGIN_APP_ID: nextProps.setMyAppDetail.ORIGIN_APP_ID,
+      // ORIGIN_APP_ID: nextProps.setMyAppDetail.ORIGIN_APP_ID,
       // DFLT_SKIN: nextProps.setMyAppDetail.DFLT_SKIN,
       VER_1: nextProps.setMyAppDetail.VER_1,
       VER_2: nextProps.setMyAppDetail.VER_2,
@@ -125,8 +127,8 @@ class AppUpdateForm extends React.Component {
       INTL_YN: nextProps.setMyAppDetail.INTL_TYPE,
       linkType: nextProps.systemLink.TARGET,
       LINK_URL: nextProps.systemLink.URL,
-      METHOD: nextProps.systemLink.METHOD,
-      PARAM: nextProps.systemLink.PARAM,
+      LINK_METHOD: nextProps.systemLink.LINK_METHOD,
+      LINK_PARAM: nextProps.systemLink.PARAM,
       SEC_REQ_YN: nextProps.setMyAppDetail.SEC_REQ_YN,
       UploadFilesScreenshot: nextProps.screenshotList,
       UploadFilesIcon: nextProps.appIconArr,
@@ -140,6 +142,8 @@ class AppUpdateForm extends React.Component {
       SVC_YN: nextProps.setMyAppDetail.SVC_YN,
       WIDGET_SVC_YN: nextProps.setMyAppDetail.WIDGET_SVC_YN,
       MENU_SVC_YN: nextProps.setMyAppDetail.MENU_SVC_YN,
+      SRC_PATH: nextProps.setMyAppDetail.SRC_PATH,
+      ITEM_VALUE: nextProps.setMyAppDetail.APPCFG,
     });
     if (nextProps.setMyAppDetail.NAME_KOR !== undefined) {
       if (nextProps.setMyAppDetail.NAME_KOR.length > 0) {
@@ -277,7 +281,7 @@ class AppUpdateForm extends React.Component {
       this.setState({ linkType: val.target.value });
     };
     const onChangeMethod = (val) => {
-      this.setState({ METHOD: val.target.value });
+      this.setState({ LINK_METHOD: val.target.value });
     };
     const onChangeSecReqYn = (val) => {
       this.setState({ SEC_REQ_YN: val.target.value });
@@ -382,7 +386,7 @@ class AppUpdateForm extends React.Component {
         this.state.APP_ABBR_CHN,
         this.state.DSCR_CHN,
         this.state.CATG_ID,
-        this.state.ORIGIN_APP_ID,
+        // this.state.ORIGIN_APP_ID,
         history,
         this.state.UploadFilesIcon,
         this.state.VER_1,
@@ -401,14 +405,15 @@ class AppUpdateForm extends React.Component {
         this.state.LINK_URL,
         // this.state.WIDTH,
         // this.state.HEIGHT,
-        this.state.METHOD,
-        this.state.PARAM,
+        this.state.LINK_METHOD,
+        this.state.LINK_PARAM,
         this.state.SEC_REQ_YN,
         this.state.appList1,
         this.state.appList2,
         // this.state.DFLT_SKIN,
         this.state.SERVICE_FORM,
         this.state.uv,
+        this.state.ITEM_VALUE,
       );
     };
     const appInfoSaveChk = () => {
@@ -416,11 +421,18 @@ class AppUpdateForm extends React.Component {
     };
     const appInfoSave = () => {
       if (this.state.NAME_KOR_CHK && this.state.APP_ABBR_KOR_CHK
-        && this.state.NAME_ENG_CHK && this.state.APP_ABBR_ENG_CHK
-        && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
+        // && this.state.NAME_ENG_CHK && this.state.APP_ABBR_ENG_CHK
+        // && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
         && this.state.CATG_ID_CHK
         && this.state.LANG_LIST.length > 0 && this.state.CLIENT_TYPE.length > 0
+        && this.state.INTL_YN === 'Y' && this.state.SERVICE_FORM.indexOf('WY') > -1 ? (this.state.ITEM_VALUE ? true : false) : true
       ) {
+        this.setState({
+          NAME_ENG: this.state.NAME_ENG ? this.state.NAME_ENG : this.state.NAME_KOR,
+          APP_ABBR_ENG: this.state.APP_ABBR_ENG ? this.state.APP_ABBR_ENG : this.state.APP_ABBR_KOR,
+          NAME_CHN: this.state.NAME_CHN ? this.state.NAME_CHN : this.state.NAME_KOR,
+          APP_ABBR_CHN: this.state.APP_ABBR_CHN ? this.state.APP_ABBR_CHN : this.state.APP_ABBR_KOR,
+        });        
         appInfoSaveChk();
       } else {
         message.error(
@@ -519,7 +531,7 @@ class AppUpdateForm extends React.Component {
       this.setState({ LINK_URL: val.target.value });
     };
     const onChangeParam = (val) => {
-      this.setState({ PARAM: val.target.value });
+      this.setState({ LINK_PARAM: val.target.value });
     };
     const imgClick = (e) => {
       e.stopPropagation();
@@ -527,6 +539,9 @@ class AppUpdateForm extends React.Component {
     const onChangeServiceForm = (val) => {
       this.setState({ SERVICE_FORM: val });
     };
+    const onChangeItemValue = (val) => {
+      this.setState({ ITEM_VALUE: val.target.value });
+    };    
     return (
       <div>
         <MyAppCategoryModal
@@ -665,9 +680,9 @@ class AppUpdateForm extends React.Component {
                   label={intlObj.get(messages.appNameEng)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.NAME_ENG_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.NAME_ENG_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -684,9 +699,9 @@ class AppUpdateForm extends React.Component {
                   label={intlObj.get(messages.appAbbrEng)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.APP_ABBR_ENG_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.APP_ABBR_ENG_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -723,9 +738,9 @@ class AppUpdateForm extends React.Component {
                   label={intlObj.get(messages.appNameChn)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.NAME_CHN_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.NAME_CHN_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -742,9 +757,9 @@ class AppUpdateForm extends React.Component {
                   label={intlObj.get(messages.appAbbrChn)}
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
-                  className="required"
-                  hasFeedback={true}
-                  validateStatus={this.state.APP_ABBR_CHN_CHK ? 'success' : 'error'}
+                  // className="required"
+                  // hasFeedback={true}
+                  // validateStatus={this.state.APP_ABBR_CHN_CHK ? 'success' : 'error'}
                 >
                   <Input
                     placeholder=""
@@ -802,6 +817,222 @@ class AppUpdateForm extends React.Component {
             {/* <h4 className="required">App ID</h4> */}
             <h4 className="required">SRC PATH [앱경로]</h4>
             <p style={{ paddingLeft: 10 }}>{this.state.SRC_PATH}</p>
+            <h3
+              className="sectionTitle"
+              style={{ padding: '33px 0 20px' }}
+            >
+              {intlObj.get(messages.serviceGubun)}
+            </h3>
+            <div
+              style={{ display: !((this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U') ? 'block' : 'none' }}
+            >
+              <h4>{intlObj.get(messages.serviceGubun)}</h4>
+              <FormItem>
+                <div>
+                  <RadioGroup
+                    className="typeOptions"
+                    // onChange={onChangeIntlYn}
+                    value={this.state.INTL_YN}
+                    readOnly
+                  >
+                    <Radio value="Y">
+                      {intlObj.get(messages.insideService)}
+                    </Radio>
+                    <Radio value="N">
+                      {intlObj.get(messages.outService)}
+                    </Radio>
+                  </RadioGroup>
+                </div>
+              </FormItem>
+              <div
+                className="subFormArea"
+                style={{ display: this.state.INTL_YN === 'Y' ? 'none' : 'block' }}
+              >
+                <FormItem
+                  label={intlObj.get(messages.display)}
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <RadioGroup
+                    className="typeOptions"
+                    onChange={onChangeLinkType}
+                    value={this.state.linkType}
+                  >
+                    {loopLinkType(this.props.linkTypeList)}
+                  </RadioGroup>
+                </FormItem>
+                <FormItem
+                  label="URL"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <Input
+                    placeholder=""
+                    title="URL"
+                    style={{ width: 350 }}
+                    maxLength="500"
+                    onChange={onChangeLinkurl}
+                    value={this.state.LINK_URL}
+                  />
+                </FormItem>
+                {/* <FormItem
+                  label="창 크기 (pixel)"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <Row>
+                    {loopWindowSizeList(this.props.windowSizeList)}
+                  </Row>
+                </FormItem> */}
+                {/* <FormItem
+                  label="표시위치 (pixel)"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <RadioGroup
+                    className="typeOptions"
+                    onChange={onChangePopupPos}
+                    value={this.state.DisLoc}
+                  >
+                    {loopPopupPos(this.props.popupPosList)}
+                    <Radio value="d1">좌상단</Radio>
+                    <Radio value="d2">중앙</Radio>
+                    <Radio value="d3">우상단</Radio>
+                  </RadioGroup>
+                </FormItem> */}
+                <FormItem
+                  label={intlObj.get(messages.protocol)}
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <RadioGroup
+                    className="typeOptions"
+                    onChange={onChangeMethod}
+                    value={this.state.LINK_METHOD}
+                  >
+                    {loopMethod(this.props.methodList)}
+                  </RadioGroup>
+                </FormItem>
+                <FormItem
+                  label={intlObj.get(messages.variable)}
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <Input
+                    placeholder=""
+                    title={intlObj.get(messages.variable)}
+                    style={{ width: 350 }}
+                    maxLength="500"
+                    onChange={onChangeParam}
+                    value={this.state.LINK_PARAM}
+                  />
+                  <div className="infoVarList">
+                    * 전달변수 중, 자동 채번 변수방식(표시 내용 변경 후 다국어 작업 예정))
+                    <ul>
+                      <li>#EMPNO = 사번</li>
+                      <li>#EMPNAME = 구성원 이름</li>
+                      <li>#DEPTCD =</li>
+                    </ul>
+                  </div>
+                </FormItem>
+              </div>
+              <div
+                className="subFormArea"
+                style={{ display: this.state.INTL_YN === 'N' ? 'none' : 'block' }}
+              >
+                <FormItem
+                  label={intlObj.get(messages.serviceForm)}
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 16 }}
+                >
+                  <Checkbox.Group
+                    style={{ width: 290 }}
+                    onChange={onChangeServiceForm}
+                    value={this.state.SERVICE_FORM}
+                  // value={}
+                  >
+                    <Row>
+                      <Col span={8}>
+                        <Checkbox value="WY">{intlObj.get(messages.wedgetYn)}</Checkbox>
+                      </Col>
+                      <Col span={8}>
+                        <Checkbox value="MY">{intlObj.get(messages.menuYn)}</Checkbox>
+                      </Col>
+                    </Row>
+                  </Checkbox.Group>
+                </FormItem>
+                <Row style={{ marginTop: 10, display: this.state.uv === 'V' && this.state.SERVICE_FORM && this.state.SERVICE_FORM.indexOf('WY') > -1 ? 'block' : 'none' }}>
+                  <Col sm={24}>
+                    <FormItem
+                      label="위젯설정"
+                      labelCol={{ span: 6 }}
+                      wrapperCol={{ span: 16 }}
+                      hasFeedback={true}
+                      validateStatus={this.state.ITEM_VALUE ? 'success' : 'error'}
+                      className="ta_feedback"
+                    >
+                      <textarea
+                        row="10"
+                        placeholder="위젯설정 (ITEM_VALUE)"
+                        title="위젯설정 (ITEM_VALUE)"
+                        onChange={onChangeItemValue}
+                        style={{ minHeight: 250 }}
+                        value={this.state.ITEM_VALUE}
+                      />
+                    </FormItem>
+                  </Col>
+                </Row>                
+              </div>
+            </div>
+            <div
+              className="formTable appDetail"
+              style={{ display: (this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U' ? 'block' : 'none' }}
+            >
+              <div style={{ display: this.state.INTL_YN === 'N' ? 'block' : 'none' }}>
+                <h4>{intlObj.get(messages.serviceGubun)}</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  {this.state.INTL_YN === 'Y' ? intlObj.get(messages.insideService) : ''}
+                  {this.state.INTL_YN === 'N' ? intlObj.get(messages.outService) : ''}
+                </p>
+                <h4>{intlObj.get(messages.serviceForm)}</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  {this.state.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
+                  {this.state.WIDGET_SVC_YN === 'Y' && this.state.MENU_SVC_YN === 'Y' ? '/' : ''}
+                  {this.state.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
+                </p>
+                <h4>{intlObj.get(messages.display)}</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  {lang.get('TARGET', this.props.systemLink)}
+                </p>
+                <h4>URL</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  <a href={this.props.systemLink.URL} target="_blank" rel="noopener noreferrer">
+                    {this.props.systemLink.URL}
+                  </a>
+                </p>
+                <h4>{intlObj.get(messages.protocol)}</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  {this.props.systemLink.METHOD}
+                </p>
+                <h4>{intlObj.get(messages.variable)}</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  {this.props.systemLink.PARAM}
+                </p>
+              </div>
+              <div style={{ display: this.state.INTL_YN === 'Y' ? 'block' : 'none' }}>
+                <h4>{intlObj.get(messages.serviceGubun)}</h4>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
+                  {this.state.INTL_YN === 'Y' ? intlObj.get(messages.insideService) : ''}
+                  {this.state.INTL_YN === 'N' ? intlObj.get(messages.outService) : ''}
+                </p>
+                <h4>{intlObj.get(messages.serviceForm)}</h4>
+                <p style={{ paddingLeft: 10 }}>
+                  {this.state.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
+                  {this.state.WIDGET_SVC_YN === 'Y' && this.state.MENU_SVC_YN === 'Y' ? '/' : ''}
+                  {this.state.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
+                </p>
+              </div>
+            </div>            
             <h3 className="sectionTitle">{intlObj.get(messages.verInfo)}</h3>
             {/* 6. 아이콘 */}
             <h4>{intlObj.get(messages.icon)}</h4>
@@ -1156,201 +1387,6 @@ class AppUpdateForm extends React.Component {
                 </Col>
               </Row>
             </section>
-            <h3
-              className="sectionTitle"
-              style={{ padding: '33px 0 20px' }}
-            >
-              {intlObj.get(messages.serviceGubun)}
-            </h3>
-            <div
-              style={{ display: !((this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U') ? 'block' : 'none' }}
-            >
-              <h4>{intlObj.get(messages.serviceGubun)}</h4>
-              <FormItem>
-                <div>
-                  <RadioGroup
-                    className="typeOptions"
-                    // onChange={onChangeIntlYn}
-                    value={this.state.INTL_YN}
-                    readOnly
-                  >
-                    <Radio value="Y">
-                      {intlObj.get(messages.insideService)}
-                    </Radio>
-                    <Radio value="N">
-                      {intlObj.get(messages.outService)}
-                    </Radio>
-                  </RadioGroup>
-                </div>
-              </FormItem>
-              <div
-                className="subFormArea"
-                style={{ display: this.state.INTL_YN === 'Y' ? 'none' : 'block' }}
-              >
-                <FormItem
-                  label={intlObj.get(messages.display)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangeLinkType}
-                    value={this.state.linkType}
-                  >
-                    {loopLinkType(this.props.linkTypeList)}
-                  </RadioGroup>
-                </FormItem>
-                <FormItem
-                  label="URL"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <Input
-                    placeholder=""
-                    title="URL"
-                    style={{ width: 350 }}
-                    maxLength="500"
-                    onChange={onChangeLinkurl}
-                    value={this.state.LINK_URL}
-                  />
-                </FormItem>
-                {/* <FormItem
-                  label="창 크기 (pixel)"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <Row>
-                    {loopWindowSizeList(this.props.windowSizeList)}
-                  </Row>
-                </FormItem> */}
-                {/* <FormItem
-                  label="표시위치 (pixel)"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangePopupPos}
-                    value={this.state.DisLoc}
-                  >
-                    {loopPopupPos(this.props.popupPosList)}
-                    <Radio value="d1">좌상단</Radio>
-                    <Radio value="d2">중앙</Radio>
-                    <Radio value="d3">우상단</Radio>
-                  </RadioGroup>
-                </FormItem> */}
-                <FormItem
-                  label={intlObj.get(messages.protocol)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangeMethod}
-                    value={this.state.METHOD}
-                  >
-                    {loopMethod(this.props.methodList)}
-                  </RadioGroup>
-                </FormItem>
-                <FormItem
-                  label={intlObj.get(messages.variable)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <Input
-                    placeholder=""
-                    title={intlObj.get(messages.variable)}
-                    style={{ width: 350 }}
-                    maxLength="500"
-                    onChange={onChangeParam}
-                    value={this.state.PARAM}
-                  />
-                  <div className="infoVarList">
-                    * 전달변수 중, 자동 채번 변수방식(표시 내용 변경 후 다국어 작업 예정))
-                    <ul>
-                      <li>#EMPNO = 사번</li>
-                      <li>#EMPNAME = 구성원 이름</li>
-                      <li>#DEPTCD =</li>
-                    </ul>
-                  </div>
-                </FormItem>
-              </div>
-              <div
-                className="subFormArea"
-                style={{ display: this.state.INTL_YN === 'N' ? 'none' : 'block' }}
-              >
-                <FormItem
-                  label={intlObj.get(messages.serviceForm)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <Checkbox.Group
-                    style={{ width: 290 }}
-                    onChange={onChangeServiceForm}
-                    value={this.state.SERVICE_FORM}
-                  // value={}
-                  >
-                    <Row>
-                      <Col span={8}>
-                        <Checkbox value="WY">{intlObj.get(messages.wedgetYn)}</Checkbox>
-                      </Col>
-                      <Col span={8}>
-                        <Checkbox value="MY">{intlObj.get(messages.menuYn)}</Checkbox>
-                      </Col>
-                    </Row>
-                  </Checkbox.Group>
-                </FormItem>
-              </div>
-            </div>
-            <div
-              className="formTable appDetail"
-              style={{ display: (this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U' ? 'block' : 'none' }}
-            >
-              <div style={{ display: this.state.INTL_YN === 'N' ? 'block' : 'none' }}>
-                <h4>{intlObj.get(messages.serviceGubun)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.state.INTL_YN === 'Y' ? intlObj.get(messages.insideService) : ''}
-                  {this.state.INTL_YN === 'N' ? intlObj.get(messages.outService) : ''}
-                </p>
-                <h4>{intlObj.get(messages.serviceForm)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.state.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
-                  {this.state.WIDGET_SVC_YN === 'Y' && this.state.MENU_SVC_YN === 'Y' ? '/' : ''}
-                  {this.state.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
-                </p>
-                <h4>{intlObj.get(messages.display)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {lang.get('TARGET', this.props.systemLink)}
-                </p>
-                <h4>URL</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  <a href={this.props.systemLink.URL} target="_blank" rel="noopener noreferrer">
-                    {this.props.systemLink.URL}
-                  </a>
-                </p>
-                <h4>{intlObj.get(messages.protocol)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.props.systemLink.METHOD}
-                </p>
-                <h4>{intlObj.get(messages.variable)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.props.systemLink.PARAM}
-                </p>
-              </div>
-              <div style={{ display: this.state.INTL_YN === 'Y' ? 'block' : 'none' }}>
-                <h4>{intlObj.get(messages.serviceGubun)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.state.INTL_YN === 'Y' ? intlObj.get(messages.insideService) : ''}
-                  {this.state.INTL_YN === 'N' ? intlObj.get(messages.outService) : ''}
-                </p>
-                <h4>{intlObj.get(messages.serviceForm)}</h4>
-                <p style={{ paddingLeft: 10 }}>
-                  {this.state.WIDGET_SVC_YN === 'Y' ? intlObj.get(messages.wedgetYn) : ''}
-                  {this.state.WIDGET_SVC_YN === 'Y' && this.state.MENU_SVC_YN === 'Y' ? '/' : ''}
-                  {this.state.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
-                </p>
-              </div>
-            </div>
             <h3 className="sectionTitle">{intlObj.get(messages.permissions)}</h3>
             <h4>{intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}</h4>
             <ul className="infoAuthList">
@@ -1427,7 +1463,7 @@ const mapDispatchToProps = dispatch => (
       APP_ABBR_CHN,
       DSCR_CHN,
       CATG_ID,
-      ORIGIN_APP_ID,
+      // ORIGIN_APP_ID,
       history,
       UploadFilesIcon,
       VER_1,
@@ -1446,14 +1482,15 @@ const mapDispatchToProps = dispatch => (
       LINK_URL,
       // WIDTH,
       // HEIGHT,
-      METHOD,
-      PARAM,
+      LINK_METHOD,
+      LINK_PARAM,
       SEC_REQ_YN,
       appList1,
       appList2,
       // DFLT_SKIN,
       SERVICE_FORM,
       uv,
+      ITEM_VALUE,
     ) => {
       dispatch(actions.insertAppInfo(
         APP_ID,
@@ -1470,7 +1507,7 @@ const mapDispatchToProps = dispatch => (
         APP_ABBR_CHN,
         DSCR_CHN,
         CATG_ID,
-        ORIGIN_APP_ID,
+        // ORIGIN_APP_ID,
         history,
         UploadFilesIcon,
         VER_1,
@@ -1489,14 +1526,15 @@ const mapDispatchToProps = dispatch => (
         LINK_URL,
         // WIDTH,
         // HEIGHT,
-        METHOD,
-        PARAM,
+        LINK_METHOD,
+        LINK_PARAM,
         SEC_REQ_YN,
         appList1,
         appList2,
         // DFLT_SKIN,
         SERVICE_FORM,
         uv,
+        ITEM_VALUE,
       ));
     },
   }

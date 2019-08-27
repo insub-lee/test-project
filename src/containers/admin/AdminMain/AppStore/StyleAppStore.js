@@ -55,12 +55,12 @@ const StyleAppStore = styled.div`
     width: calc(100% - 332px);
 
     h4 {
-      height: 40px;
-      margin-top: 10px;
+      height: auto;
+      margin-top: 0;
       color: #404040;
       font-size: 14px;
       line-height: 40px;
-      text-align: center;
+      text-align: left;
     }
 
     .custom-scrollbar {

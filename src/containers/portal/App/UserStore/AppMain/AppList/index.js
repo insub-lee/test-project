@@ -8,14 +8,14 @@ import { BackTop, Input, Button } from 'antd';
 // import * as commonjs from 'containers/common/functions/common';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actionsLoading from 'containers/common/Loading/actions';
-import Footer from '../../Footer';
 import { intlObj } from 'utils/commonUtils';
-import messages from '../../../messages';
 import NavList from 'components/Header/NavList';
 import NavListItem from 'components/Header/NavListItem';
 import NavLink from 'components/Header/NavLink';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import messages from '../../../messages';
+import Footer from '../../Footer';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -82,12 +82,14 @@ class AppList extends Component {
     } else if (this.props.searchword !== searchword || (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet')) {
       this.props.history.push(`/portal/store/appMain/bizStore/${type}/search/${searchword}`);
     }
+    event.stopPropagation();
   };
 
   searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
+    event.stopPropagation();
   };
 
   render() {
@@ -119,7 +121,7 @@ class AppList extends Component {
         </ErrorBoundary>
         <NavList className="navTabs">
           <NavListItem>
-            <NavLink to="/portal/store/appMain/bizStore/app/list" className="current">
+            <NavLink to="/portal/store/appMain/bizStore" className="current">
               {' '}
               {/* 현재 활성화된 상태에 current 클래스 적용 */}
               {intlObj.get(messages.category)}
@@ -129,9 +131,8 @@ class AppList extends Component {
             <NavLink to="/portal/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
           </NavListItem> */}
         </NavList>
-
-        <ErrorBoundary>
-          <StyleAppList>
+        
+        <StyleAppList>
             <div className="topPart">
               <div className="searchInput">
                 <Input
@@ -148,6 +149,7 @@ class AppList extends Component {
             </div>
           </StyleAppList>
 
+        <ErrorBoundary>
           <ItemList
             type={initType}
             mapList={mapList}

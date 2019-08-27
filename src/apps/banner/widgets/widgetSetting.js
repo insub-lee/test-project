@@ -22,7 +22,9 @@ import saga from './saga';
 
 const RadioGroup = AntRadiobox(Radio.Group);
 
-const debouncedOnChange = _.debounce((action, value) => { action(value); }, 300);
+const debouncedOnChange = _.debounce((action, value) => {
+  action(value);
+}, 300);
 
 class WidgetSetting extends PureComponent {
   constructor(props) {
@@ -49,13 +51,12 @@ class WidgetSetting extends PureComponent {
       const content = [];
       let emptyContent = new Object();
       emptyContent.SEQNO = `${0}`;
-      emptyContent.TITLE = "";
-      emptyContent.URL = "";
-      emptyContent.IMAGE = "";
-      emptyContent.METHOD = "get";
-      emptyContent.param = "";
+      emptyContent.TITLE = '';
+      emptyContent.URL = '';
+      emptyContent.IMAGE = '';
+      emptyContent.METHOD = 'get';
+      emptyContent.param = '';
       content.push(emptyContent);
-
       this.state = {
         itemList: item,
         bannerList: content,
@@ -108,9 +109,7 @@ class WidgetSetting extends PureComponent {
   };
 
   dndChangePosition = (seqNo, afterSeqNo) => {
-    const {
-      bannerList,
-    } = this.state;
+    const { bannerList } = this.state;
 
     const index = bannerList.findIndex(i => i.SEQNO === seqNo);
     const afterIndex = bannerList.findIndex(i => i.SEQNO === afterSeqNo);
@@ -130,7 +129,7 @@ class WidgetSetting extends PureComponent {
 
   getBannerSettingList = () => {
     const { bannerList } = this.state;
-    const result = bannerList.map((bannerList, index) => (
+    const result = bannerList.map((bannerList, index) =>
       bannerList.isShow !== false ? (
         <BannerListChild
           index={index}
@@ -139,16 +138,13 @@ class WidgetSetting extends PureComponent {
           changeIsWidgetDragged={this.changeIsWidgetDragged}
           dndChangePosition={this.dndChangePosition}
         />
-      ) : null
-    ));
+      ) : null,
+    );
     return result;
   };
 
-  setDeletedBannerIndex = (SEQNO) => {
-    const {
-      bannerList,
-      deletedBannerIndex
-    } = this.state;
+  setDeletedBannerIndex = SEQNO => {
+    const { bannerList, deletedBannerIndex } = this.state;
     const index = bannerList.findIndex(bannerList => bannerList.SEQNO === SEQNO);
     let bannerListCopy = update(bannerList, {
       [index]: {
@@ -164,20 +160,9 @@ class WidgetSetting extends PureComponent {
   };
 
   deleteBanner = () => {
-    const {
-      itemList,
-      bannerList,
-      viewType,
-      widgetId,
-      pageId,
-    } = this.state;
+    const { itemList, bannerList, viewType, widgetId, pageId } = this.state;
 
-    const {
-      handleSaveSettingBanners,
-      handleSaveSettingBizBanners,
-      updateBizGroupChgYn,
-      type,
-    } = this.props;
+    const { handleSaveSettingBanners, handleSaveSettingBizBanners, updateBizGroupChgYn, type } = this.props;
 
     const bannerListCopy = bannerList
       .filter(bannerList => bannerList.isShow !== false)
@@ -203,7 +188,7 @@ class WidgetSetting extends PureComponent {
     };
     const item = JSON.stringify(result);
 
-    if (type === "mypage") {
+    if (type === 'mypage') {
       handleSaveSettingBanners(item, widgetId, pageId);
     } else {
       //업무그룹
@@ -267,9 +252,8 @@ class WidgetSetting extends PureComponent {
     const { bannerList, numChildren } = this.state;
     const content = this.getBannerSettingList();
 
-    const viewTypeChange = (e) => {
-      this.setState({ viewType: e.target.value }, function () {
-      });
+    const viewTypeChange = e => {
+      this.setState({ viewType: e.target.value }, function() {});
     };
 
     return (
@@ -279,20 +263,20 @@ class WidgetSetting extends PureComponent {
             <tbody>
               <tr>
                 <th>
-                  <label className="subtitle" htmlFor="wSubject">배너 설정</label>
+                  <label className="subtitle" htmlFor="wSubject">
+                    배너 설정
+                  </label>
                 </th>
                 <td>
                   <WidgetSettingStyle>
                     <div className="viewType">
-                      <RadioGroup
-                        value={this.state.viewType}
-                        className="typeOptions"
-                        onChange={viewTypeChange}
-                      >
+                      <RadioGroup value={this.state.viewType} className="typeOptions" onChange={viewTypeChange}>
                         <Radio value="0">{intlObj.get(messages.viewDivision)}</Radio>
                         <Radio value="1">{intlObj.get(messages.viewSlide)}</Radio>
                       </RadioGroup>
-                      <BtnDkGray style={{ float: 'right', marginTop: '-4px' }} onClick={this.deleteBanner}>배너 적용</BtnDkGray>
+                      <BtnDkGray style={{ float: 'right', marginTop: '-4px' }} onClick={this.deleteBanner}>
+                        배너 적용
+                      </BtnDkGray>
                     </div>
                     {/* <Scrollbars
                       className="custom-scrollbar"
@@ -307,7 +291,13 @@ class WidgetSetting extends PureComponent {
                     {content}
                     {/* </Scrollbars> */}
                     <div className="btnWrapper">
-                      <BtnIconAdd title="addNewForm" onClick={(e) => { e.preventDefault(); this.handleAppendBanner() }} />
+                      <BtnIconAdd
+                        title="addNewForm"
+                        onClick={e => {
+                          e.preventDefault();
+                          this.handleAppendBanner();
+                        }}
+                      />
                     </div>
                   </WidgetSettingStyle>
                 </td>
@@ -340,7 +330,10 @@ export function mapDispatchToProps(dispatch) {
 
 const withReducer = injectReducer({ key: 'bannerSetting', reducer });
 const withSaga = injectSaga({ key: 'bannerSetting', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 export default compose(
   withReducer,

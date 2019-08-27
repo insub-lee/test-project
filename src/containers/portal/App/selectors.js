@@ -150,7 +150,7 @@ const makeSelectApps = () =>
   );
 
 // ****************** app 스토어에서 가져오는 state ******************
-const selectApp = state => state.get('app').toJS();
+const selectApp = state => state.get('app');
 
 const makeSelectOpen = () =>
   createSelector(

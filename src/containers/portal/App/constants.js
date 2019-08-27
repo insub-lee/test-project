@@ -38,3 +38,6 @@ export const RESET_DATA = `${prefix}RESET_DATA`;
 
 export const OPEN_RODAL = `${prefix}OPEN_RODAL`;
 export const CLOSE_RODAL = `${prefix}CLOSE_RODAL`;
+
+export const SET_MENU_SHOW = `${prefix}SET_MENU_SHOW`;
+

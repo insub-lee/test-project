@@ -25,6 +25,8 @@ export function* getMyAppList(payload) {
         CATE_CHN: item.CATE_CHN,
         CATE_JPN: item.CATE_JPN,
         CATE_ETC: item.CATE_ETC,
+        MENU_SVC_YN: item.MENU_SVC_YN,
+        WIDGET_SVC_YN: item.WIDGET_SVC_YN,
         APV_STATUS_KOR: item.APV_STATUS_KOR,
         APV_STATUS_ENG: item.APV_STATUS_ENG,
         APV_STATUS_CHN: item.APV_STATUS_CHN,

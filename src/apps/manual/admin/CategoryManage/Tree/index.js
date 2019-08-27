@@ -19,10 +19,10 @@ import * as actions from '../actions';
 import * as manageActions from '../../ManualManager/actions';
 import * as masterActions from '../../ManualManager/ManualMaster/actions';
 
-import CustomTheme from './theme';
-import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn, FolderBtn } from './StyleMyAppTree';
+import CustomTheme from '../../../components/Tree/theme';
+import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn, FolderBtn } from '../../../components/Tree/StyleMyAppTree';
 import messages from './messages';
-import './tree-node.css';
+import '../../../components/Tree/tree-node.css';
 
 const getTreeData = flatData =>
   getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 0 });
@@ -54,8 +54,8 @@ const handleOnClick = (node, setViewMode, setManualManage, setSelectedIndex) => 
 
 const handleAddOnClick = (node, setViewMode, setManualManage, setSelectedIndex) => {
   setViewMode(node, 'V');
-  setManualManage('view', node.CATEGORY_IDX, 0);
   setSelectedIndex(node.CATEGORY_IDX);
+  setManualManage('view', node.CATEGORY_IDX, 0);
 };
 
 const handleMoveNode = (treeData, moveCategory) => {
@@ -220,10 +220,7 @@ const mapDispatchToProps = dispatch => ({
   setCategoryTreeData: categoryList => dispatch(actions.changeCategoryTreeData(categoryList)),
   setOnHoverKey: key => dispatch(actions.setOnHoverKey(key)),
   setSelectedIndex: idx => dispatch(actions.changeSelectedIndex(idx)),
-  setManualManage: (pageType, categoryIdx, manualIdx) => {
-    dispatch(masterActions.initDefaultMgrByReduc());
-    dispatch(manageActions.setPageModeByReducr(pageType, categoryIdx, manualIdx));
-  },
+  setManualManage: (pageType, categoryIdx, manualIdx) => dispatch(manageActions.setPageModeByReducr(pageType, categoryIdx, manualIdx)),
 });
 
 export default connect(

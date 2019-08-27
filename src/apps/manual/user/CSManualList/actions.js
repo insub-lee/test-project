@@ -18,3 +18,11 @@ export const setSelectedMualOrgIdxBySaga = (mualIdx, widgetId, orgIdxList) => ({
 });
 
 export const setMultiViewBySaga = widgetId => ({ type: constantTypes.SET_MULTI_VIEW_SAGA, widgetId });
+
+export const resetCheckManualByReducr = widgetId => ({ type: constantTypes.RESET_CHECK_MANUAL_REDUCR, widgetId });
+
+export const getCompareViewBySaga = widgetId => ({ type: constantTypes.GET_COMPARE_VIEW_SAGA, widgetId });
+
+export const setCompareViewByReducr = (widgetId, list, data) => ({ type: constantTypes.SET_COMPARE_VIEW_REDUCR, widgetId, list, data });
+
+export const setIsCompareViewByReducr = (widgetId, flag) => ({ type: constantTypes.SET_IS_COMPARE_VIEW_REDUCR, widgetId, flag });
