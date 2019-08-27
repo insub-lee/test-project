@@ -17,30 +17,20 @@ class Widget extends PureComponent {
     super(props);
     const initData = this.props.item.data;
     if (Object.keys(initData).length === 0) {
-      console.log('객체빈값');
+      console.log('카테고리설정안함');
     } else {
       console.log(initData.categorie);
       this.props.getDetail(initData.categorie);
     }
-    this.state = {
-      detail: [],
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    console.log(nextProps.detail);
-    this.setState({
-      detail: nextProps.detail,
-    });
   }
 
   render() {
-    const { item } = this.props;
+    const { item, detail } = this.props;
     console.log('아이템값');
     console.log(item);
     return (
       <StyleWidget>
-        <HelperWidget detail={this.state.detail} />
+        <HelperWidget detail={detail} />
       </StyleWidget>
     );
   }

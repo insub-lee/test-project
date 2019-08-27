@@ -13,23 +13,38 @@ import * as actions from './actions';
 class testConfig extends PureComponent {
   constructor(props) {
     super(props);
-    this.props.getWidgetInfo();
+    props.getWidgetInfo([2874]);
+    this.state = {
+      items: props.item,
+    };
   }
 
+  componentDidMount() {}
+
   HandleCategorieChange = PRNT_ID => {
-    console.log(PRNT_ID);
+    const before = this.state.items;
+    this.setState({
+      items: { ...before, data: { categorie: PRNT_ID } },
+    });
+  };
+
+  handleClick = () => {
+    if (this.state.items.data.categorie !== 0) {
+      alert('적용되었습니다.');
+      console.log(this.state.items);
+      this.props.deleteConfig(this.state.items);
+      this.props.updateBizGroupChgYn();
+    } else {
+      alert('카테고리를 설정해주세요!.');
+    }
   };
 
   render() {
     const { categorie } = this.props;
-    const { item, type } = this.props;
 
-    console.log(item);
-    console.log(type);
     return (
       <div>
-        <Config item={categorie} onCategorieChange={this.HandleCategorieChange} />
-        <Button className="modalClose" onClick={this.props.onClose} />
+        <Config categorie={categorie} onCategorieChange={this.HandleCategorieChange} onClick={this.handleClick} items={this.state.items} />
       </div>
     );
   }
@@ -40,6 +55,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getWidgetInfo: () => dispatch(actions.getWidgetInfo()),
+  deleteConfig: payload => dispatch(actions.deleteConfig(payload)),
 });
 
 const withReducer = injectReducer({ key: 'test-Widget', reducer });

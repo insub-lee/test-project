@@ -21,9 +21,12 @@ class detail extends PureComponent {
         });
         if (temp.length === 0) {
         } else {
+          parent.children = temp;
           result.push(parent);
         }
       });
+      console.log('필터결과!');
+      console.log(result);
       newArray = result;
     }
     /* 필터 용 함수 */
