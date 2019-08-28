@@ -18,7 +18,7 @@ const Styled = styled.div`
     display: inline-block;
     vertical-align: middle;
     &.mualView-btn-wrapper {
-      width: 900px;
+      width: 940px;
     }
     &.mualView-select-wrapper {
       margin-left: 10px;

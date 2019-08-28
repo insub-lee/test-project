@@ -104,6 +104,7 @@ const mapDispatchToProps = dispatch => ({
   handleChangeCompId: id => dispatch(actions.setAddEditorComponentIdByReduc(id)),
   handleChangeFocusIdx: idx => dispatch(actions.setFocusEditorComponentIdxByReduc(idx)),
   setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
+  // handlePushCompValue: (tabIdx, compIdx, key, value) => dispatch(actions.addEditorComponentValueByReduc(tabIdx, compIdx, key, value)),
 });
 
 export default connect(

@@ -53,9 +53,10 @@ const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
 const onClickIndex = (e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) => {
   e.preventDefault();
   e.stopPropagation();
+
   if (node.TYPE === 'index' && node.MUAL_TABCOMP_IDX !== addAreaIdx) handleChangeAddAreaIdx(node.MUAL_TABCOMP_IDX);
   else if (node.MUAL_TABCOMP_IDX === addAreaIdx) handleChangeAddAreaIdx(0);
-
+  console.debug(node);
   if (node.MUAL_TABCOMP_IDX === 0) return;
   const selectedComp = document.querySelector(`#editorCompID_${node.MUAL_TAB_IDX}_${node.MUAL_TABCOMP_IDX}`);
   const topPosition = selectedComp.getBoundingClientRect().top;
@@ -68,7 +69,7 @@ const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveCo
     <div className="editorIndexTreeTitle">
       <Button
         className={`${node.MUAL_TABCOMP_IDX === addAreaIdx ? 'active' : ''}`}
-        onClick={e => (node.TYPE === 'index' ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) : false)}
+        onClick={e => (node.TYPE.indexOf('index') > -1 ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) : false)}
         block
       >
         {node.TYPE.indexOf('index') > -1 ? (

@@ -26,3 +26,13 @@ export const setBizBuillderWidgetSettingAsJSON = cols => ({
   type: constantTypes.SET_BIZBUILDERLIST_SETTING_BYREDUCR_ASJSON,
   cols,
 });
+
+// work list read
+export const getWorkListBySaga = () => ({
+  type: constantTypes.GET_WORKLIST_BYSAGA,
+});
+
+export const setWorkListByReducr = workList => ({
+  type: constantTypes.SET_WORKLIST_BYREDUCR,
+  workList,
+});

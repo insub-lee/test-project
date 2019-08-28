@@ -9,7 +9,7 @@ import selectors from '../selectors';
 import * as actions from '../actions';
 
 const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType, handleSelectOptionMgr, defaultMgrMap, handleSelectCompareMgr }) => (
-  <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]}>
+  <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]} style={{ marginBottom: '20px' }}>
     <Menu.Item key="DefaultMgr" onClick={() => handleChangePageType('DefaultMgr')}>
       <Icon type="form" />
       기본정보
@@ -64,7 +64,7 @@ const mapDispatchToProps = dispatch => ({
   handleChangeIsEditorMgr: () => dispatch(actions.setIsEditorMgrByReduc(true)),
   handleChangePageType: pageType => dispatch(actions.setPageTypeByReduc(pageType)),
   handleSelectOptionMgr: () => {
-    dispatch(actions.getOptionMgrBySaga());
+    // dispatch(actions.getOptionMgrBySaga());
     dispatch(actions.setPageTypeByReduc('OptionMgr'));
   },
   handleSelectCompareMgr: () => {
