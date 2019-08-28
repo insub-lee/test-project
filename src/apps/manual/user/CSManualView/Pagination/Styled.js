@@ -16,6 +16,7 @@ const Styled = styled.div`
   & > div {
     position: relative;
     display: inline-block;
+    vertical-align: middle;
     &.mualView-btn-wrapper {
       width: 900px;
     }
@@ -34,9 +35,8 @@ const Styled = styled.div`
           right: 0;
         }
         & button {
+          position: relative;
           vertical-align: middle;
-          -webkit-appearance: none;
-          -moz-appearance: none;
           appearance: none;
           background: none;
           border: 0;
@@ -44,9 +44,19 @@ const Styled = styled.div`
           font-size: 14px;
           cursor: pointer;
           color: #666666;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 250px;
           &.prev-btn {
+            text-align: left;
+            padding-left: 25px;
             &:before {
               content: '';
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              left: 0;
               background: url(${btnPrevOff}) no-repeat center;
               display: inline-block;
               width: 20px;
@@ -57,8 +67,14 @@ const Styled = styled.div`
             }
           }
           &.next-btn {
+            text-align: right;
+            padding-right: 25px;
             &:after {
               content: '';
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              right: 0;
               background: url(${btnNextOff}) no-repeat center;
               display: inline-block;
               width: 20px;
@@ -94,7 +110,12 @@ const Styled = styled.div`
           border-radius: 15px;
           font-size: 14px;
           color: #7b57b3;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 300px;
           padding: 5px 20px;
+          vertical-align: middle;
         }
       }
     }

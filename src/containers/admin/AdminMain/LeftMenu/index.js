@@ -7,7 +7,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { /* intlObj, */lang } from 'utils/commonUtils';
+import { /* intlObj, */ lang } from 'utils/commonUtils';
 // import Trigger from '../../App/Trigger';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -46,7 +46,7 @@ const MenuList = styled.ul`
       cursor: pointer;
 
       &:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
@@ -56,24 +56,25 @@ const MenuList = styled.ul`
         background-color: #b3b3b3;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         text-decoration: none;
       }
 
       &.current {
-        color: #f85023;
+        color: #886ab5;
         background: #edeff2;
       }
 
       &.current:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background-color: #f85023;
+        background-color: #886ab5;
       }
     }
   }
@@ -84,7 +85,8 @@ class menuList extends React.Component {
     super(prop);
 
     this.state = {
-      strUrl: window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
+      strUrl:
+        window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
     };
 
     this.classChange = this.classChange.bind(this);
@@ -103,13 +105,12 @@ class menuList extends React.Component {
   //   alert('YES');
   // }
 
-  classChange = (url) => {
+  classChange = url => {
     // alert(url);
-
 
     if (!url || url.length < 1) {
       return;
-    } else if (this.state.strUrl === url) {
+    } if (this.state.strUrl === url) {
       // return;
     }
 
@@ -118,15 +119,20 @@ class menuList extends React.Component {
     });
 
     this.props.historyPush(`${url}`);
-  }
+  };
 
-  classString = (url) => {
+  classString = url => {
     let clsStr = '';
     let strCurUrl = window.parent.document.location.pathname.toLowerCase();
 
-    if (strCurUrl === '/admin' || strCurUrl === '/admin/'
-    || strCurUrl === '/admin/adminmain' || strCurUrl === '/admin/adminmain/'
-    || strCurUrl === '/admin/adminmain/siteadmin/sitereg' || strCurUrl === '/admin/adminmain/siteadmin/sitereg/') {
+    if (
+      strCurUrl === '/admin' ||
+      strCurUrl === '/admin/' ||
+      strCurUrl === '/admin/adminmain' ||
+      strCurUrl === '/admin/adminmain/' ||
+      strCurUrl === '/admin/adminmain/siteadmin/sitereg' ||
+      strCurUrl === '/admin/adminmain/siteadmin/sitereg/'
+    ) {
       strCurUrl = '/admin/adminmain/siteadmin';
     } else if (strCurUrl === '/admin/adminmain/orgadmin/orglist' || strCurUrl === '/admin/adminmain/orgadmin/orglist/') {
       strCurUrl = '/admin/adminmain/orgadmin';
@@ -136,21 +142,21 @@ class menuList extends React.Component {
       clsStr = 'menu current';
     } else if (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) {
       clsStr = 'menu current';
-    // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin') {
-    //   clsStr = 'menu current';
-    // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/') {
-    //   clsStr = 'menu current';
-    // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/adminmain') {
-    //   clsStr = 'menu current';
-    // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/adminmain/') {
-    //   clsStr = 'menu current';
+      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin') {
+      //   clsStr = 'menu current';
+      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/') {
+      //   clsStr = 'menu current';
+      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/adminmain') {
+      //   clsStr = 'menu current';
+      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/adminmain/') {
+      //   clsStr = 'menu current';
     } else {
       clsStr = 'menu';
     }
     return clsStr;
-  }
+  };
 
-  makeMenu = mnuList => (
+  makeMenu = mnuList =>
     mnuList.map(m => (
       <li key={m.SCR_CD}>
         <span
@@ -160,13 +166,13 @@ class menuList extends React.Component {
           role="button"
           tabIndex="0"
           style={{ paddingLeft: `${m.SORT_SQ % 100 > 0 ? 15 : 0}px` }}
-        >{lang.get('NAME', m)}
+        >
+          {lang.get('NAME', m)}
         </span>
       </li>
-    ))
-    // console.log(this.makeMenu(menuList), 'dfdfdsfdsfdsfdsfsdf'));
+    ));
+  // console.log(this.makeMenu(menuList), 'dfdfdsfdsfdsfdsfsdf'));
   //   { menuList }
-  );
 
   render() {
     return (
@@ -185,12 +191,8 @@ class menuList extends React.Component {
   }
 }
 
-
 menuList.propTypes = {
-  leftMenuList: PropTypes.oneOfType([
-    PropTypes.array,
-    PropTypes.object,
-  ]).isRequired,
+  leftMenuList: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   history: PropTypes.object, //eslint-disable-line
   // .isRequired,
   location: PropTypes.object, // eslint-disable-line
@@ -198,21 +200,21 @@ menuList.propTypes = {
   getMenu: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    historyPush: url => dispatch(push(url)),
-    getMenu: SCRGRP_CD => dispatch(actions.getMenu(SCRGRP_CD)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  historyPush: url => dispatch(push(url)),
+  getMenu: SCRGRP_CD => dispatch(actions.getMenu(SCRGRP_CD)),
+});
 
 const mapStateToProps = createStructuredSelector({
   leftMenuList: selectors.makeMenuList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'menuList', saga });
 const withReducer = injectReducer({ key: 'menuList', reducer });
-
 
 export default compose(
   withReducer,
