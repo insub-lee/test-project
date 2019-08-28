@@ -17,33 +17,33 @@ import ListBtnIcon from 'images/bizstore/icon-list.png';
 import LinkBtnUpdateIcon from 'images/common/icon-update.png';
 
 /* Gray Tone 버튼 */
-const BtnBlack = styled.button`
-  
-`;
+const BtnBlack = styled.button``;
 
 const BtnDkGray = styled.button`
-  min-width:90px;
-  height:30px;
+  min-width: 90px;
+  height: 30px;
   padding: 0 10px;
-  background-color:#333333;
+  background-color: #333333;
   border: 1px solid #333333;
   border-radius: 3px;
-  font-size:13px;
-  color:#ffffff;
+  font-size: 13px;
+  color: #ffffff;
   line-height: 29px;
   cursor: pointer;
 
-  &:hover, &:focus {
-    background-color:#333333;
-    border:1px solid #333333;
-    color:#ffffff;
-    border-color:#333333;
+  &:hover,
+  &:focus {
+    background-color: #333333;
+    border: 1px solid #333333;
+    color: #ffffff;
+    border-color: #333333;
   }
 
-  &.disabled, &:disabled {
-    background-color:#909090;
-    border:1px solid #909090;
-    color:#dadada;
+  &.disabled,
+  &:disabled {
+    background-color: #909090;
+    border: 1px solid #909090;
+    color: #dadada;
     cursor: default;
   }
 `;
@@ -51,29 +51,33 @@ const BtnDkGray = styled.button`
 /* 링크(link)로 된 버튼 */
 const LinkBtnDkGray = styled.span`
   display: inline-block;
-  min-width:90px;
-  height:30px;
+  min-width: 90px;
+  height: 30px;
   padding: 0 3px;
-  background-color:#333333;
+  background-color: #333333;
   border: 1px solid #333333;
   border-radius: 3px;
-  font-size:13px;
-  color:#ffffff;
+  font-size: 13px;
+  color: #ffffff;
   text-align: center;
   line-height: 29px;
   cursor: pointer;
 
-  &:hover, &:focus, a, a:hover, a:focus {
-    background-color:#333333;
-    border:1px solid #333333;
-    color:#ffffff;
-    border-color:#333333;
+  &:hover,
+  &:focus,
+  a,
+  a:hover,
+  a:focus {
+    background-color: #333333;
+    border: 1px solid #333333;
+    color: #ffffff;
+    border-color: #333333;
   }
 
   &.disabled {
-    background-color:#909090;
-    border:1px solid #909090;
-    color:#dadada;
+    background-color: #909090;
+    border: 1px solid #909090;
+    color: #dadada;
     cursor: default;
   }
 
@@ -84,63 +88,69 @@ const LinkBtnDkGray = styled.span`
 `;
 
 const BtnGray = styled.button`
-  min-width:90px;
-  height:30px;
+  min-width: 90px;
+  height: 30px;
   padding: 0 10px;
-  background-color:#696969;
+  background-color: #696969;
   border: 1px solid #696969;
   border-radius: 3px;
-  font-size:13px;
-  color:#ffffff;
+  font-size: 13px;
+  color: #ffffff;
   line-height: 29px;
   cursor: pointer;
 
-  &:hover, &:focus {
-    background-color:#696969;
-    border:1px solid #696969;
-    color:#ffffff;
-    border-color:#696969;
+  &:hover,
+  &:focus {
+    background-color: #696969;
+    border: 1px solid #696969;
+    color: #ffffff;
+    border-color: #696969;
   }
 `;
 
 const BtnLgtGray = styled.button`
-  min-width:90px;
-  height:30px;
+  min-width: 90px;
+  height: 30px;
   padding: 0 10px;
-  background-color:#dadada;
+  background-color: #dadada;
   border: 1px solid #dadada;
   border-radius: 3px;
-  font-size:13px;
-  color:#333333;
+  font-size: 13px;
+  color: #333333;
   text-align: center;
   line-height: 29px;
   cursor: pointer;
 
-  &:hover, &:focus {
-    background-color:#dadada;
-    border:1px solid #dadada;
-    color:#333333;
+  &:hover,
+  &:focus {
+    background-color: #dadada;
+    border: 1px solid #dadada;
+    color: #333333;
   }
 `;
 
 const LinkBtnLgtGray = styled.span`
   display: inline-block;
-  min-width:90px;
-  height:30px;
+  min-width: 90px;
+  height: 30px;
   padding: 0 3px;
-  background-color:#dadada;
+  background-color: #dadada;
   border: 1px solid #dadada;
   border-radius: 3px;
-  font-size:13px;
-  color:#333333;
+  font-size: 13px;
+  color: #333333;
   text-align: center;
   line-height: 29px;
   cursor: pointer;
 
-  &:hover, &:focus, a, a:hover, a:focus {
-    background-color:#dadada;
-    border:1px solid #dadada;
-    color:#333333;
+  &:hover,
+  &:focus,
+  a,
+  a:hover,
+  a:focus {
+    background-color: #dadada;
+    border: 1px solid #dadada;
+    color: #333333;
   }
 
   a {
@@ -152,7 +162,7 @@ const LinkBtnLgtGray = styled.span`
 /* 사용중 */
 const BtnLgtGrayRegisted = styled.button`
   min-width: 90px;
-  height:30px;
+  height: 30px;
   padding: 0 10px;
   background-color: #e0e0e0;
   border: 1px solid #e0e0e0;
@@ -202,7 +212,7 @@ const BtnRedShare = styled.button`
   color: #f85023;
   font-size: 14px;
   line-height: 32px;
-  background:#ffffff url(${ShareRedIcon}) no-repeat 7px 50%;
+  background: #ffffff url(${ShareRedIcon}) no-repeat 7px 50%;
   cursor: pointer;
 `;
 
@@ -216,12 +226,13 @@ const BtnWhiteArr = styled.button`
   border-radius: 3px;
   color: #555555;
   font-size: 13px;
-  background:#ffffff url(${TriangleIcon}) no-repeat 8px 50%;
+  background: #ffffff url(${TriangleIcon}) no-repeat 8px 50%;
   letter-spacing: -0.5px;
   line-height: 26px;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border-color: #d2d2d2;
   }
 `;
@@ -236,10 +247,11 @@ const BtnWhiteWrite = styled.button`
   font-size: 12px;
   line-height: 1;
   text-align: left;
-  background:#ffffff url(${WriteIcon}) no-repeat 10px 50%;
+  background: #ffffff url(${WriteIcon}) no-repeat 10px 50%;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border-color: #d2d2d2;
   }
 `;
@@ -254,10 +266,11 @@ const BtnWhiteRate = styled.button`
   font-size: 12px;
   line-height: 1;
   text-align: left;
-  background:#ffffff url(${ReviewIcon}) no-repeat 10px 50%;
+  background: #ffffff url(${ReviewIcon}) no-repeat 10px 50%;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     border-color: #d2d2d2;
   }
 `;
@@ -273,48 +286,47 @@ const BtnWhiteDel = styled.button`
   background: url(${DeleteIcon}) no-repeat 6px 50%;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     background-color: transparent;
     border: none;
   }
 `;
 /* 추가 */
-const BtnWhiteAdd = styled.button`
-  
-`;
+const BtnWhiteAdd = styled.button``;
 
 const BtnDelete = styled.button`
-  height:30px;
+  height: 30px;
   padding: 0 6px 0 22px;
   color: #333333;
   font-size: 13px;
   line-height: 29px;
   border: none;
-  background:#ffffff url(${DeleteBtnIcon}) no-repeat 6px 50%;
+  background: #ffffff url(${DeleteBtnIcon}) no-repeat 6px 50%;
   cursor: pointer;
 `;
 
 const LinkBtnList = styled.span`
   display: inline-block;
-  height:30px;
+  height: 30px;
   padding: 0 6px 0 25px;
   color: #333333;
   font-size: 14px;
   line-height: 29px;
   border: none;
-  background:#ffffff url(${ListBtnIcon}) no-repeat 6px 50%;
+  background: #ffffff url(${ListBtnIcon}) no-repeat 6px 50%;
   cursor: pointer;
 `;
 
 const LinkBtnUpdate = styled.span`
   display: inline-block;
-  height:30px;
+  height: 30px;
   padding: 0 6px 0 25px;
   color: #333333;
   font-size: 14px;
   line-height: 29px;
   border: none;
-  background:#ffffff url(${LinkBtnUpdateIcon}) no-repeat 6px 50%;
+  background: #ffffff url(${LinkBtnUpdateIcon}) no-repeat 6px 50%;
   cursor: pointer;
 `;
 
@@ -324,7 +336,7 @@ const BtnIconShare = styled.button`
   width: 50px;
   height: 30px;
   border-radius: 3px;
-  background:#858585 url(${ShareWhiteIcon}) no-repeat 50% 50%;
+  background: #858585 url(${ShareWhiteIcon}) no-repeat 50% 50%;
   vertical-align: middle;
   cursor: pointer;
 `;
@@ -333,7 +345,7 @@ const BtnIconRegist = styled.button`
   width: 50px;
   height: 30px;
   border-radius: 3px;
-  background:#585858 url(${RgtIcon}) no-repeat 50% 50%;
+  background: #585858 url(${RgtIcon}) no-repeat 50% 50%;
   vertical-align: middle;
   cursor: pointer;
 `;
@@ -343,7 +355,7 @@ const BtnIconTree = styled.button`
   width: 50px;
   height: 30px;
   border-radius: 3px;
-  background:#585858 url(${TreeIcon}) no-repeat 50% 50%;
+  background: #585858 url(${TreeIcon}) no-repeat 50% 50%;
   cursor: pointer;
 `;
 /* 아이콘 > 앱등록 */
@@ -351,7 +363,7 @@ const BtnIconApp = styled.button`
   width: 50px;
   height: 30px;
   border-radius: 3px;
-  background:#585858 url(${AppIcon}) no-repeat 50% 50%;
+  background: #585858 url(${AppIcon}) no-repeat 50% 50%;
   cursor: pointer;
 `;
 
@@ -365,13 +377,9 @@ const BtnAppRegi = styled.button`
   cursor: pointer;
 `;
 
-const BtnIconMnRegist = styled.button`
-  
-`;
+const BtnIconMnRegist = styled.button``;
 
-const BtnIconCgrRegist = styled.button`
-  
-`;
+const BtnIconCgrRegist = styled.button``;
 
 const BtnSeeMore = styled.button`
   width: 100%;
@@ -389,10 +397,31 @@ const BtnSeeMore = styled.button`
   }
 `;
 
-export { 
-  BtnBlack, BtnDkGray, LinkBtnDkGray, BtnGray, BtnLgtGray, LinkBtnLgtGray, BtnLgtGrayRegisted,
-  BtnRedMnRegist, BtnRedCgrRegist, BtnRedShare,
-  BtnWhiteArr, BtnWhiteWrite, BtnWhiteRate, BtnWhiteDel, BtnWhiteAdd,
-  BtnIconShare, BtnIconRegist, BtnIconMnRegist, BtnIconCgrRegist,
-  BtnSeeMore, BtnDelete, LinkBtnList, LinkBtnUpdate, BtnIconTree, BtnIconApp, BtnAppRegi,
+export {
+  BtnBlack,
+  BtnDkGray,
+  LinkBtnDkGray,
+  BtnGray,
+  BtnLgtGray,
+  LinkBtnLgtGray,
+  BtnLgtGrayRegisted,
+  BtnRedMnRegist,
+  BtnRedCgrRegist,
+  BtnRedShare,
+  BtnWhiteArr,
+  BtnWhiteWrite,
+  BtnWhiteRate,
+  BtnWhiteDel,
+  BtnWhiteAdd,
+  BtnIconShare,
+  BtnIconRegist,
+  BtnIconMnRegist,
+  BtnIconCgrRegist,
+  BtnSeeMore,
+  BtnDelete,
+  LinkBtnList,
+  LinkBtnUpdate,
+  BtnIconTree,
+  BtnIconApp,
+  BtnAppRegi,
 };

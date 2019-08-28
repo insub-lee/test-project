@@ -76,7 +76,7 @@ const BoxWrapper = styled.div`
   }
 
   .appBox {
-    width: 290px;
+    width: 275px;
     height: 110px;
     margin: 0 5px 10px 5px;
 

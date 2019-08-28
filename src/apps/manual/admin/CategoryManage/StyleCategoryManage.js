@@ -11,6 +11,7 @@ const StyleCategoryManage = styled.div`
     background-color: #ffffff;
     display: table;
     padding: 15px;
+    border: 1px solid rgb(220, 220, 221);
 
     > .categoryTitleWrapper {
       position: relative;
