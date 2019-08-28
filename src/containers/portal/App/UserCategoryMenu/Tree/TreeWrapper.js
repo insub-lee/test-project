@@ -105,6 +105,14 @@ const TreeWrapper = styled.div`
   .sortableTreeWrapper.sidebar .rstcustom__rowSearchMatch {
     outline: none;
   }
+
+  .sortableTreeWrapper .rstcustom__rowSearchMatch .rstcustom__rowTitle button {
+    color: #ff0000;
+  }
+  .sortableTreeWrapper .rstcustom__rowSearchFocus .rstcustom__rowTitle button {
+    color: #ff0000;
+  }
+
   /* 임시 */
   .sortableTreeWrapper.sidebar .rstcustom__rowSearchFocus .rstcustom__rowTitle,
   .sortableTreeWrapper.sidebar .rstcustom__rowSearchMatch .rstcustom__rowTitle {
