@@ -604,19 +604,38 @@ class App extends React.PureComponent {
     this.setState({ show: false });
   };
 
+  hideApps = () => {
+    const { apps }  = this.props;
+    const appsCopy = apps.slice();
+    appsCopy.forEach((o, i) => {
+      if (o.containerInfo.children[i + 1]) {
+        Object.assign(o.containerInfo.children[i + 1].style, {
+          position: 'relative',
+          width: 0,
+          display: 'none',
+        });
+        o.containerInfo.children[i + 1].classList.remove('activeMenu');      
+      }
+    });    
+  }
+
   goStore = () => {
+    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizStore`);
   };
 
   goSettings = () => {
+    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/settings`);
   };
 
   goBusinessReg = () => {
+    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
   };
 
   goHomeWidget = homeId => {
+    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
@@ -757,11 +776,12 @@ class App extends React.PureComponent {
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
             </div>
+            {/* 환경설정 주석 처리 2019-08-28
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="환경설정">
                 <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
               </Tooltip>
-            </div>
+            </div> */}
           </SideMenu>
           <Layout
             style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}
