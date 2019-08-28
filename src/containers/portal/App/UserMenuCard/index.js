@@ -17,7 +17,6 @@ const { Content } = Layout;
 class UserMenuCard extends PureComponent {
   render() {
     console.debug('&&&&&&&& this.props: ', this.props);
-    const { execMenu } = this.props
     return(
       <StyleUserMenuCard className="userSetting">
         <div className="userBizMenuWrapper">
@@ -29,7 +28,7 @@ class UserMenuCard extends PureComponent {
                   <div className="contentWrapper">
                     <ErrorBoundary>
                       <Switch>
-                        <Route path="/portal/card/:TYPE/list/:ID" render={ props => <BizMenuCardList {...props} execMenu={execMenu}/> } />
+                        <Route path="/portal/card/:TYPE/list/:ID" component={BizMenuCardList} />
                         <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" component={BizMenuCardDetail} />
                         <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
                         <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
