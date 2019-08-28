@@ -852,6 +852,8 @@ class App extends React.PureComponent {
                           render={props => (
                             <UserMenuCard //eslint-disable-line
                               {...props}
+                              execMenu={this.execMenu}
+                              execPage={this.execPage}
                               applySkin={this.applySkin}
                             />
                           )}
