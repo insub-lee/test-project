@@ -79,13 +79,20 @@ const StyleEditorMain = styled.div`
             /* display: none; */
             > div {
               padding: 10px;
+              display: flex;
+              align-items: center;
               > span {
                 width: 100px;
                 display: inline-block;
+                vertical-align: top;
               }
               > input[type='text'] {
                 width: calc(100% - 100px);
               }
+            }
+            .manualEditorUpload {
+              display: inline-block;
+              width: calc(100% - 100px);
             }
           }
           /* .manualLinkIndexContent.linkIndexActive {
@@ -213,12 +220,14 @@ const StyleEditorMain = styled.div`
 
   .manualEditorComponent {
     min-height: 40px;
-    padding: 0 20px;
     cursor: pointer;
-  }
-
-  .manualEditorActive {
-    padding: 0px;
+    .fr-view {
+      padding: 20px;
+      font-size: 13px;
+    }
+    .fr-box.fr-basic .fr-element.fr-view {
+      font-size: 13px;
+    }
   }
 `;
 

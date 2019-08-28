@@ -37,7 +37,11 @@ class RelationManual extends Component {
 
   onCategroyChange = categoryIdx => {
     const { getRelationManualList, chooseRelMual } = this.props;
-    getRelationManualList(categoryIdx, chooseRelMual);
+    if (categoryIdx !== undefined) {
+      getRelationManualList(categoryIdx, chooseRelMual);
+    } else {
+      getRelationManualList(0, chooseRelMual);
+    }
   };
 
   onItemSelect = (key, selected, target) => {
@@ -85,10 +89,11 @@ class RelationManual extends Component {
         mergeData.push({ ...item, disabled: false, checked: false });
       }
     });
-
+    const count = 1;
     mergeData.map(item => {
       const fidx = relationManualList.findIndex(x => x.MUAL_IDX === item.MUAL_IDX);
       if (fidx >= 0) {
+        console.debug(fidx);
         relationManualList[fidx].disabled = true;
         relationManualList[fidx].checked = false;
       }
@@ -108,6 +113,7 @@ class RelationManual extends Component {
 
     relationManualList.map(item => {
       const fidx = difRows.findIndex(x => x.MUAL_IDX === item.MUAL_IDX);
+
       if (fidx >= 0) {
         rData.push({ ...item, disabled: true });
       } else {
@@ -158,11 +164,11 @@ class RelationManual extends Component {
       });
     });
     return (
-      <div>
+      <div style={{ marginTop: '15px' }}>
         <table>
           <tr>
             <td>
-              <div>
+              <div style={{ marginBottom: '10px' }}>
                 <TreeSelect
                   style={{ width: 400 }}
                   dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
@@ -174,8 +180,8 @@ class RelationManual extends Component {
               </div>
               <Table rowSelection={this.leftRowSelection} columns={this.leftTableColumns} dataSource={leftDataSource}></Table>
             </td>
-            <td>
-              <div>
+            <td style={{ padding: '0 10px' }}>
+              <div style={{ marginBottom: '5px' }}>
                 <Button size="small" onClick={this.onRightClick}>
                   {
                     <span>
@@ -195,9 +201,9 @@ class RelationManual extends Component {
               </div>
               <div>&nbsp;</div>
             </td>
-            <td>
-              <div>
-                <Button size="small" onClick={this.onApply}>
+            <td style={{ verticalAlign: 'top' }}>
+              <div style={{ marginBottom: '10px', textAlign: 'right' }}>
+                <Button size="middle" onClick={this.onApply}>
                   {
                     <span>
                       <Icon type="import" />
@@ -206,7 +212,7 @@ class RelationManual extends Component {
                   }
                 </Button>
               </div>
-              <Table rowSelection={this.rightRowSelection} columns={this.rightTableColumns} dataSource={chooseRelMual}></Table>
+              <Table rowSelection={this.rightRowSelection} columns={this.rightTableColumns} dataSource={chooseRelMual} style={{ width: 400 }}></Table>
             </td>
           </tr>
         </table>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Button } from 'antd';
+import { Input, Button, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -38,45 +38,56 @@ class ConfigBizBuilder extends Component {
   };
 
   componentDidMount() {
-    const { getBizBuilderWidgetSettingBySaga, item } = this.props;
-    console.debug(item);
+    const { getBizBuilderWidgetSettingBySaga, getWorkListBySaga, item } = this.props;
     getBizBuilderWidgetSettingBySaga(item);
+    getWorkListBySaga();
   }
 
   render() {
-    const { setBizBuilderConfigChangeValueByReducr, BizBuilderConfigInfo, setBizBuillderWidgetSettingAsJSON } = this.props;
-
+    const { setBizBuilderConfigChangeValueByReducr, BizBuilderConfigInfo, workList, setBizBuillderWidgetSettingAsJSON } = this.props;
+    const workListOpt = [];
+    const { Option } = Select;
+    for (let i = 0; i < workList.length; i++) {
+      workListOpt.push(
+        <Option key={workList[i].WORK_ID}>
+          {workList[i].NAME_KOR} [테이블명 : {workList[i].WORK_ID}]
+        </Option>,
+      );
+    }
     return (
       <table>
-        <tr>
-          <td>컬럼정보: </td>
-          <td>
-            <TextArea
-              id="sourcecols"
-              cols={100}
-              rows={10}
-              onChange={e => setBizBuillderWidgetSettingAsJSON(e.target.value)}
-              value={JSON.stringify(BizBuilderConfigInfo.sourcecols)}
-            ></TextArea>
-          </td>
-        </tr>
-        <tr>
-          <td>쿼리 : </td>
-          <td>
-            <TextArea
-              id="strsql"
-              cols={100}
-              rows={10}
-              onChange={e => setBizBuilderConfigChangeValueByReducr('strsql', e.target.value)}
-              value={BizBuilderConfigInfo.strsql}
-            ></TextArea>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={2}>
-            <Button onClick={this.onApply}>적용</Button>
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td>컬럼정보: </td>
+            <td>
+              <TextArea
+                id="sourcecols"
+                cols={100}
+                rows={10}
+                onChange={e => setBizBuillderWidgetSettingAsJSON(e.target.value)}
+                value={JSON.stringify(BizBuilderConfigInfo.sourcecols)}
+              ></TextArea>
+            </td>
+          </tr>
+          <tr>
+            <td>업무빌더 선택 : </td>
+            <td>
+              <Select
+                onChange={work_seq => setBizBuilderConfigChangeValueByReducr('WORK_ID', work_seq)}
+                placeholder="chooes bizbuilder"
+                style={{ width: '100%' }}
+                value={BizBuilderConfigInfo.WORK_ID}
+              >
+                {workListOpt}
+              </Select>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2}>
+              <Button onClick={this.onApply}>적용</Button>
+            </td>
+          </tr>
+        </tbody>
       </table>
     );
   }
@@ -85,7 +96,7 @@ class ConfigBizBuilder extends Component {
 ConfigBizBuilder.propTypes = {
   item: PropTypes.object,
   size: PropTypes.string,
-  sizeArr: PropTypes.object,
+  sizeArr: PropTypes.array,
   user: PropTypes.object,
   data: PropTypes.object,
   setBizBuilderWidgetSettingBySaga: PropTypes.func,
@@ -94,6 +105,8 @@ ConfigBizBuilder.propTypes = {
   type: PropTypes.string,
   getBizBuilderWidgetSettingBySaga: PropTypes.func,
   setBizBuillderWidgetSettingAsJSON: PropTypes.func,
+  getWorkListBySaga: PropTypes.func,
+  workList: PropTypes.array,
 };
 
 ConfigBizBuilder.defaultProps = {
@@ -107,14 +120,17 @@ ConfigBizBuilder.defaultProps = {
   data: {},
   setBizBuilderWidgetSettingBySaga: () => false,
   setBizBuilderConfigChangeValueByReducr: () => false,
-  BizBuilderConfigInfo: [],
+  BizBuilderConfigInfo: {},
   type: 'common',
   getBizBuilderWidgetSettingBySaga: () => false,
   setBizBuillderWidgetSettingAsJSON: () => false,
+  getWorkListBySaga: () => false,
+  workList: [],
 };
 
 const mapStateToProps = createStructuredSelector({
   BizBuilderConfigInfo: selectors.makeSelectBizBuilderConfigInfo(),
+  workList: selectors.makeSelectWorkList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -122,6 +138,7 @@ const mapDispatchToProps = dispatch => ({
   setBizBuilderConfigChangeValueByReducr: (key, value) => dispatch(actions.setBizBuilderConfigChangeValueByReducr(key, value)),
   getBizBuilderWidgetSettingBySaga: item => dispatch(actions.getBizBuilderWidgetSettingBySaga(item)),
   setBizBuillderWidgetSettingAsJSON: cols => dispatch(actions.setBizBuillderWidgetSettingAsJSON(cols)),
+  getWorkListBySaga: () => dispatch(actions.getWorkListBySaga()),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-BizBuilderWidget-ConfigBizBuilder-reducer', reducer });

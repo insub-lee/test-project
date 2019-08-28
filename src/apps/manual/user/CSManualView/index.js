@@ -13,7 +13,6 @@ import StyledTabPanel from '../components/Tab/StyledTabPanel';
 import TopbarBtnWrap from '../components/TopbarBtnWrap';
 import IconCollection from '../components/IconCollection';
 import * as listActions from '../CSManualList/actions';
-import * as newsfeedAction from 'apps/newsFeed/widgets/action';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -50,9 +49,8 @@ class ManualView extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setNewsfeedModalView, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
+    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
     setIsViewContents(false, widgetId);
-    setNewsfeedModalView(false);
     resetManualView(widgetId);
     setSelectedMualIdx(0, widgetId);
     setListSelectedMualIdx(0, widgetId);
@@ -162,7 +160,6 @@ class ManualView extends Component {
 
 ManualView.propTypes = {
   getManualView: PropTypes.func,
-  setNewsfeedModalView: PropTypes.func,
   maulTabList: PropTypes.object,
   selectedTabIdx: PropTypes.number,
   setSelectedTabIdx: PropTypes.func,
@@ -178,7 +175,6 @@ ManualView.propTypes = {
 
 ManualView.defaultProps = {
   getManualView: () => false,
-  setNewsfeedModalView: () => false,
   maulTabList: fromJS([]),
   selectedTabIdx: 0,
   setSelectedTabIdx: () => false,
@@ -205,7 +201,6 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getManualView: (widgetId, flag) => dispatch(actions.getManualViewBySaga(widgetId, flag)),
-  setNewsfeedModalView: modalView => dispatch(newsfeedAction.setModalView(modalView)),
   setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
   setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
   setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),

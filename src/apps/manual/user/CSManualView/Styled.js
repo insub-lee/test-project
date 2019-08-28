@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  width: 1150px;
+  width: 1190px;
   .tab-wrap {
     position: relative;
     .tab-btn-wrap {

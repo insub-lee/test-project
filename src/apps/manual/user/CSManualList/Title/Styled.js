@@ -6,7 +6,7 @@ const Styled = styled.div`
   background-color: #505050;
   height: auto;
   line-height: 1.5;
-  padding: 12px 90px 12px 40px;
+  padding: 12px 90px 12px 15px;
 
   & .board_header__title {
     display: inline-block;

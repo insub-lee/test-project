@@ -210,3 +210,5 @@ export const setCompareManageChangeValueByReducr = (idx, value) => ({ type: cons
 export const saveCompareDataBySaga = () => ({ type: constantTypes.SAVE_COMPARE_DATA_SAGA });
 
 export const setSelectedCompareManageIdx = idx => ({ type: constantTypes.SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR, idx });
+
+// export const addEditorComponentValueByReduc =

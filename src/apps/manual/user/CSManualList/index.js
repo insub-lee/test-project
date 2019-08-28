@@ -137,7 +137,7 @@ class CSManualList extends Component {
           </Row>,
         ])}
         <Modal
-          width={1158}
+          width={1198}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
           style={{ top: 42 }}
           visible={isViewContents && selectedMualIdx > 0}
