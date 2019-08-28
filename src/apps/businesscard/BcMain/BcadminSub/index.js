@@ -46,7 +46,7 @@ const MenuList = styled.ul`
       cursor: pointer;
 
       &:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
@@ -56,25 +56,26 @@ const MenuList = styled.ul`
         background-color: #b3b3b3;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         text-decoration: none;
       }
 
       &.current {
-        color: #f85023;
+        color: #886ab5;
         background: #edeff2;
         cursor: default;
       }
 
       &.current:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #f85023;
+        background-color: #886ab5;
       }
     }
   }
@@ -89,13 +90,11 @@ class BcAdmin extends React.Component {
     this.classChange = this.classChange.bind(this);
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
-  componentDidUpdate() {
-  }
+  componentDidUpdate() {}
 
-  classChange = (url) => {
+  classChange = url => {
     if (url.length <= 0) {
       return;
     } else if (this.state.strUrl === url) {
@@ -106,111 +105,102 @@ class BcAdmin extends React.Component {
       strUrl: url,
     });
     this.props.historyPush(`/${basicPath.APPS}/businesscard/BcMain/${url}Sub`);
-  }
+  };
 
   render() {
     const menuParsing = url => (
       <MenuList>
-
-          <span
-            className={url === 'Guide' ? 'menu current' : 'menu'}
-            onClick={() => this.classChange('Guide')}
-            onKeyPress={() => this.classChange('Guide')}
-            role="button"
-            tabIndex="1"
-            key={1}
-          >이용 안내
-          </span>
-          
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          
-          <span
-            className={url === 'Bcask' ? 'menu current' : 'menu'}
-            onClick={() => this.classChange('Bcask')}
-            onKeyPress={() => this.classChange('Bcask')}
-            role="button"
-            tabIndex="1"
-            key={2}
-          >명함 신청
-          </span>
-          
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-          <span
-            className={url === 'Bcaskinfo' ? 'menu current' : 'menu'}
-            onClick={() => this.classChange('Bcaskinfo')}
-            onKeyPress={() => this.classChange('Bcaskinfo')}
-            role="button"
-            tabIndex="1"
-            key={3}
-          >신청결과 조회
-          </span>
-          
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-          <span
-            className={url === 'Bcadmin' ? 'menu current' : 'menu'}
-            onClick={() => this.classChange('Bcadmin')}
-            onKeyPress={() => this.classChange('Bcadmin')}
-            role="button"
-            tabIndex="1"
-            key={4}
-          >명함신청 관리
-          </span>
-          
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-          <span
-            className={url === 'Bcaskorg' ? 'menu current' : 'menu'}
-            onClick={() => this.classChange('Bcaskorg')}
-            onKeyPress={() => this.classChange('Bcaskorg')}
-            role="button"
-            tabIndex="1"
-            key={5}
-          >신청자 원본 조회
-          </span>
-          
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-          <span
-            className={url === 'Notify' ? 'menu current' : 'menu'}
-            onClick={() => this.classChange('Notify')}
-            onKeyPress={() => this.classChange('Notify')}
-            role="button"
-            tabIndex="1"
-            key={6}
-          > ...임시
-          </span>
-
+        <span
+          className={url === 'Guide' ? 'menu current' : 'menu'}
+          onClick={() => this.classChange('Guide')}
+          onKeyPress={() => this.classChange('Guide')}
+          role="button"
+          tabIndex="1"
+          key={1}
+        >
+          이용 안내
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span
+          className={url === 'Bcask' ? 'menu current' : 'menu'}
+          onClick={() => this.classChange('Bcask')}
+          onKeyPress={() => this.classChange('Bcask')}
+          role="button"
+          tabIndex="1"
+          key={2}
+        >
+          명함 신청
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span
+          className={url === 'Bcaskinfo' ? 'menu current' : 'menu'}
+          onClick={() => this.classChange('Bcaskinfo')}
+          onKeyPress={() => this.classChange('Bcaskinfo')}
+          role="button"
+          tabIndex="1"
+          key={3}
+        >
+          신청결과 조회
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span
+          className={url === 'Bcadmin' ? 'menu current' : 'menu'}
+          onClick={() => this.classChange('Bcadmin')}
+          onKeyPress={() => this.classChange('Bcadmin')}
+          role="button"
+          tabIndex="1"
+          key={4}
+        >
+          명함신청 관리
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span
+          className={url === 'Bcaskorg' ? 'menu current' : 'menu'}
+          onClick={() => this.classChange('Bcaskorg')}
+          onKeyPress={() => this.classChange('Bcaskorg')}
+          role="button"
+          tabIndex="1"
+          key={5}
+        >
+          신청자 원본 조회
+        </span>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span
+          className={url === 'Notify' ? 'menu current' : 'menu'}
+          onClick={() => this.classChange('Notify')}
+          onKeyPress={() => this.classChange('Notify')}
+          role="button"
+          tabIndex="1"
+          key={6}
+        >
+          {' '}
+          ...임시
+        </span>
       </MenuList>
     );
 
     return (
       <StyledAdminMenu>
-        <nav>
-          {menuParsing(this.state.strUrl)}
-        </nav>
+        <nav>{menuParsing(this.state.strUrl)}</nav>
       </StyledAdminMenu>
     );
   }
 }
 
-
 BcAdmin.propTypes = {
-  history: PropTypes.object,//eslint-disable-line
+  history: PropTypes.object, //eslint-disable-line
   historyPush: PropTypes.func, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    historyPush: url => dispatch(push(url)),
-  }
-);
-
-const mapStateToProps = createStructuredSelector({
+const mapDispatchToProps = dispatch => ({
+  historyPush: url => dispatch(push(url)),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const mapStateToProps = createStructuredSelector({});
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 export default compose(withConnect)(BcAdmin);
-
