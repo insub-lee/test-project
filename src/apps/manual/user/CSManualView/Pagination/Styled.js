@@ -51,14 +51,12 @@ const Styled = styled.div`
           &.prev-btn {
             text-align: left;
             padding-left: 25px;
-
             &:before {
               content: '';
               position: absolute;
               top: 50%;
               transform: translateY(-50%);
               left: 0;
-
               background: url(${btnPrevOff}) no-repeat center;
               display: inline-block;
               width: 20px;
@@ -71,14 +69,12 @@ const Styled = styled.div`
           &.next-btn {
             text-align: right;
             padding-right: 25px;
-
             &:after {
               content: '';
               position: absolute;
               top: 50%;
               transform: translateY(-50%);
               right: 0;
-
               background: url(${btnNextOff}) no-repeat center;
               display: inline-block;
               width: 20px;

@@ -134,7 +134,7 @@ class App extends React.PureComponent {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
         const EXEC_PAGE_IDS = [];
-        dockAppList.forEach((o) => {
+        dockAppList.forEach(o => {
           // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
           //   || o.LAST_EXEC_YN === 'Y') {
           //   EXEC_PAGE_IDS.push(o.PAGE_ID);
@@ -298,12 +298,12 @@ class App extends React.PureComponent {
     }
   }
 
-  onReload = (item) => {
+  onReload = item => {
     const { handleReload } = this.props;
     handleReload(item);
   };
   // ****************** 메뉴 관련 함수 ******************
-  onSetOpen = (open) => {
+  onSetOpen = open => {
     this.setState({ open: open }); //eslint-disable-line
     event.preventDefault();
   };
@@ -315,12 +315,15 @@ class App extends React.PureComponent {
   };
 
   setOpen = () => {
-    this.setState(prevState => ({
-      open: !prevState.open,
-    }), () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300));
+    this.setState(
+      prevState => ({
+        open: !prevState.open,
+      }),
+      () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
+    );
     event.preventDefault();
   };
-  
+
   setMenuOpen = () => {
     this.setState(prevState => ({
       headerMenuOpen: !prevState.headerMenuOpen,
@@ -334,9 +337,12 @@ class App extends React.PureComponent {
   };
 
   setMenuClose = () => {
-    this.setState({
-      open: false,
-    }, () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300));
+    this.setState(
+      {
+        open: false,
+      },
+      () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
+    );
     event.preventDefault();
   };
 
@@ -757,10 +763,12 @@ class App extends React.PureComponent {
               </Tooltip>
             </div>
           </SideMenu>
-          <Layout style={isDesktop(view) ? { ...desktopDockCss, marginLeft:this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}>
+          <Layout
+            style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}
+          >
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
-                <AppWrapper style={{ width: '100%', backgroundColor: '#faf8fb' }}>
+                <AppWrapper style={{ width: '100%', backgroundColor: '#f7f8f9' }}>
                   <Fullscreen
                     enabled={this.state.isFullscreenEnabled}
                     onChange={this.setIsFullscreenEnabled}
@@ -776,7 +784,11 @@ class App extends React.PureComponent {
                   >
                     <div
                       id="child"
-                      className={ `${(setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'}`}
+                      className={`${
+                        (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize
+                          ? ''
+                          : 'gridWrapper'
+                      }`}
                     >
                       <Content
                         className="portalContent"
