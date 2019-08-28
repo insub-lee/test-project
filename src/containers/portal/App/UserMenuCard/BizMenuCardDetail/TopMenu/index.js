@@ -57,7 +57,7 @@ class TopMenu extends React.Component {
   render() {
     /* eslint-disable */
     const { bizInfo, bizManagerList } = this.props;
-
+    console.debug('>>>>>>this.props: ', this.props);
     return (
       <div>
         <StyleTopMenu>

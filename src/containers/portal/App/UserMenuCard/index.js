@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { Layout } from 'antd';
 import { ThemeProvider } from 'styled-components';
@@ -14,30 +14,36 @@ import './global-userMenuCard.css';
 
 const { Content } = Layout;
 
-const UserMenuCard = () => (
-  <StyleUserMenuCard className="userSetting">
-    <div className="userBizMenuWrapper">
-      <h2 className="pageHeader">업무 폴더 메뉴</h2>
-      <ThemeProvider theme={themes.themedefault}>
-        <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
-          <AppWrapper style={{ width: '100%' }}>
-            <Content className="storeContent">
-              <div className="contentWrapper">
-                <ErrorBoundary>
-                  <Switch>
-                    <Route path="/portal/card/:TYPE/list/:ID" component={BizMenuCardList} />
-                    <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" component={BizMenuCardDetail} />
-                    <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
-                    <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
-                  </Switch>
-                </ErrorBoundary>
-              </div>
-            </Content>
-          </AppWrapper>
-        </Layout>
-      </ThemeProvider>
-    </div>
-  </StyleUserMenuCard>
-);
+class UserMenuCard extends PureComponent {
+  render() {
+    console.debug('&&&&&&&& this.props: ', this.props);
+    const { execMenu } = this.props
+    return(
+      <StyleUserMenuCard className="userSetting">
+        <div className="userBizMenuWrapper">
+          <h2 className="pageHeader">업무 폴더 메뉴</h2>
+          <ThemeProvider theme={themes.themedefault}>
+            <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
+              <AppWrapper style={{ width: '100%' }}>
+                <Content className="storeContent">
+                  <div className="contentWrapper">
+                    <ErrorBoundary>
+                      <Switch>
+                        <Route path="/portal/card/:TYPE/list/:ID" render={ props => <BizMenuCardList {...props} execMenu={execMenu}/> } />
+                        <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" component={BizMenuCardDetail} />
+                        <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
+                        <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
+                      </Switch>
+                    </ErrorBoundary>
+                  </div>
+                </Content>
+              </AppWrapper>
+            </Layout>
+          </ThemeProvider>
+        </div>
+      </StyleUserMenuCard>
+    );
+  }
+};
 
 export default UserMenuCard;
