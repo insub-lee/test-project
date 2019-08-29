@@ -29,36 +29,33 @@ class NewsFeed extends Component {
     }
   }
 
-  modalID = undefined;
-
-  handleClick = mualIdx => {
-    const { setModalIdx } = this.props;
+  handleClick = (mualIdx) => {
     this.setState({
       selectedMualIdx: mualIdx,
-    }, () => this.showModal()  )
-    //setModalIdx(mualIdx);
+    }, () => this.showModal())
   };
 
   showModal = () => {
     const { setModalView } = this.props;
-    setModalView(true);
+    const widget_id = this.props.item.WIDGET_ID;
+    setModalView(true, widget_id);
   };
   
   handleCloseModal = () => {
-    const { setModalView, setModalIdx } = this.props;
-    setModalIdx(undefined);
-    setModalView(false);
+    const { setModalView } = this.props;
+    const widget_id = this.props.item.WIDGET_ID;
+    this.setState({
+      selectedMualIdx: undefined,
+    }, () => setModalView(false, widget_id))
   };
 
-  
-  
   handlePageReload = () => {
     const { widgetSize, selectedCategory, getNewsFeed } = this.props;
     getNewsFeed(widgetSize, selectedCategory);
   };
   
   componentDidMount() {
-    const { getNewsFeed, item, setWidgetConfig, widgetDataList } = this.props;
+    const { getNewsFeed, item, setModalView } = this.props;
     let app_id = item.APP_ID;
     let widget_id = item.WIDGET_ID;
     let selectedCategory =  item.data.selectedCategory;
@@ -67,22 +64,18 @@ class NewsFeed extends Component {
       selectedCategory = [];
     }
 
-    setWidgetConfig(app_id, widget_id, selectedCategory);
+    setModalView(false, widget_id);
     getNewsFeed(widget_id, selectedCategory);
 
-    
   }
 
   render() {
     const { handleCloseModal, handleClick, handlePageReload } = this;
     const { selectedMualIdx, totalList, updateList, newList } = this.state
-    const { widgetDataList } = this.props;
-    console.log('데이터리스트 확인', widgetDataList);
+    const { widgetDataList , modalView } = this.props;
 
-    let widget_id = Number(this.props.item.WIDGET_ID);
-    //const widgetDataFilter = widgetDataList.filter(data => Number(data.widget_id) === widget_id);
-    const widgetDataFind = widgetDataList.find( item => Number(item.widget_id) === widget_id);
-    console.log('파인드 데이터',widgetDataFind)
+    let widget_id = this.props.item.WIDGET_ID;
+    const widgetDataFind = widgetDataList.find( item => Number(item.widget_id) === Number(widget_id));
 
     if(widgetDataFind !== undefined){
       if(totalList !== widgetDataFind.totalList){
@@ -95,17 +88,17 @@ class NewsFeed extends Component {
     }
 
     return (
-      <div>
+      <div id={`newsFeed_${widget_id}`}>
         <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
               <Tabs defaultActiveKey="total">
                 <TabPane tab="전체" key="total">
-                  <News dataList={totalList} handleClick={handleClick}/>
+                  <News dataList={totalList} handleClick={handleClick} widget_id={widget_id}/>
                 </TabPane>
                 <TabPane tab="변경" key="update">
-                  <News dataList={updateList} handleClick={handleClick}/>
+                  <News dataList={updateList} handleClick={handleClick}  widget_id={widget_id}/>
                 </TabPane>
                 <TabPane tab="신규" key="new">
-                  <News dataList={newList} handleClick={handleClick}/>
+                  <News dataList={newList} handleClick={handleClick}  widget_id={widget_id}/>
                 </TabPane>
               </Tabs>
         </StyleWiget>
@@ -113,12 +106,12 @@ class NewsFeed extends Component {
           width={1154}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
           style={{ top: 42 }}
-          visible={this.props.modalView}
+          visible={ modalView }
           footer={null}
           onCancel={() => handleCloseModal()}
           closable={false}
         >
-          <CSManualView mualIdx={selectedMualIdx} />
+          <CSManualView mualIdx={selectedMualIdx} widgetId={widget_id} />
         </Modal>
         </div>
     );
@@ -154,8 +147,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   getNewsFeed: (widget_id, selectedCategory) => dispatch(actions.getNewsfeedDataList(widget_id, selectedCategory)),
   setModalIdx: (modalIdx) => dispatch(actions.setModalIdx(modalIdx)),
-  setModalView:( modalView) => dispatch(actions.setModalView(modalView)),
-  setWidgetConfig: (app_id, widget_id, selectedCategory) => dispatch(actions.setWidgetConfig(app_id, widget_id, selectedCategory)),
+  setModalView:( modalView, widget_id) => dispatch(actions.setModalView(modalView, widget_id)),
 });
 
 const withConnect = connect(
