@@ -24,7 +24,7 @@ class AppCard extends React.PureComponent {
           </div>
           <div className="app-card-text">
             <p>{title}</p>
-            <span>수신업무와 관련 메뉴 어쩌고저쩌고</span>
+            <span>상담업무와 관련 메뉴 상세내용은 어쩌고저쩌고</span>
             <Rate allowHalf disabled value={4.5} style={{ fontSize: '12px' }} />
           </div>
         </div>
