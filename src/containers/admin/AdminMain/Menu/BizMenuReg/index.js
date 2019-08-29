@@ -84,7 +84,7 @@ class BizMenuReg extends Component {
     const { BIZGRP_ID } = this.state;
     const pathArr = history.location.pathname.split('/');
     const type = pathArr[3];
-        const handleTreeOnClick = node => {
+    const handleTreeOnClick = node => {
       const { key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID } = node;
       changeSelectedIndex(key);
 

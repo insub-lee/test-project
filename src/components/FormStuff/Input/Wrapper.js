@@ -223,8 +223,9 @@ const InputSearchWrapper = ComponentName => styled(ComponentName)`
       ${borderRadius('4px')};
       ${transition()};
 
-      &:focus {
-        border-color: ${palette('primary', 0)};
+      &:focus,
+      &:hover {
+        border-color: #886ab5;
       }
 
       &.ant-input-lg {
@@ -267,7 +268,7 @@ const InputSearchWrapper = ComponentName => styled(ComponentName)`
       color: ${palette('grayscale', 0)};
 
       &:hover {
-        color: ${palette('primary', 0)};
+        color: #886ab5;
       }
     }
   }

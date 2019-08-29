@@ -149,15 +149,20 @@ const Card = styled(CardComp)`
     min-width: 48px;
     height: 20px;
     padding-left: 14px;
-    background: url(${CheckedIcon}) no-repeat 0 50%;
+    //background: url(${CheckedIcon}) no-repeat 0 50%;
+    & i {
+      color: #544b7f;
+      vertical-align: middle;
+      margin-right: 2px;
+    }
 
     @media only screen and (max-width: 1024px) {
       right: 10px;
     }
 
     .infoRgt {
-      float: right;
-      color: #656565;
+      display: inline-block;
+      color: #544b7f;
       font-size: 12px;
       letter-spacing: -0.5px;
     }

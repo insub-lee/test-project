@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import Loadable from 'react-loadable';
 import Loading from './Loading';
@@ -7,6 +7,8 @@ import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
 import PropTypes from 'prop-types';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
+import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
+import Draft from './WorkFlow/User/Draft';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -47,7 +49,11 @@ class AppsRouter extends React.PureComponent {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
             <div>
-              <Route path={`/${basicPath.APPS}/${item.legacyPath}`} component={param} />
+              <Switch>
+                <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
+                <Route path={`/${basicPath.APPS}/draft/:CATE`} component={Draft} />
+                <Route path={`/${basicPath.APPS}/${item.legacyPath}`} component={param} />
+              </Switch>
             </div>
         )
       } else {

@@ -35,13 +35,13 @@ const StyleAppQna = styled.div`
     border-bottom: 0;
 
     .ant-tabs-ink-bar {
-      background-color: #000000;
+      background-color: #886ab5;
     }
 
     .ant-tabs-tab {
       margin-right: 1px;
       padding: 12px 40px;
-      border-bottom: 3px solid #e3e3e3;
+      border-bottom: 2px solid #e3e3e3;
       color: #959595;
       font-size: 15px;
 
@@ -55,8 +55,8 @@ const StyleAppQna = styled.div`
       }
 
       &.ant-tabs-tab-active {
-        color: #000000;
-        border-color: #000000;
+        color: #886ab5;
+        border-color: #886ab5;
       }
     }
   }

@@ -78,12 +78,7 @@ class Draft extends Component {
   }
 
   render() {
-    const {
-      match,
-      draftList,
-      selectedDraft,
-      visibleViewModal,
-    } = this.props;
+    const { match, draftList, selectedDraft, visibleViewModal } = this.props;
     const { CATE } = match.params;
     let columns = [
       {

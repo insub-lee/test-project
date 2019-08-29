@@ -12,11 +12,15 @@ const Styled = styled.div`
     border-left: 3px solid #886ab5;
     border-radius: 3px;
     width: 100%;
+    &:hover {
+      border-color: #886ab5;
+    }
     .appd-card-icon {
       display: table-cell;
       vertical-align: middle;
       align-items: center;
       width: 70px;
+      display: none;
       img {
         display: block;
       }
@@ -27,7 +31,7 @@ const Styled = styled.div`
       align-items: center;
       cursor: pointer;
       p {
-        font-size: 16px;
+        font-size: 14px;
         color: #000;
         font-weight: 600;
         margin: 0;

@@ -8,6 +8,12 @@ const makeSelectBizBuilderConfigInfo = () =>
     state => state.getIn(['BizBuilderWidget', 'BizBuilderConfigInfo', 'data']),
   );
 
+const makeSelectWorkList = () =>
+  createSelector(
+    makeSelectBizBuilderWidgetState,
+    state => state.getIn(['BizBuilderWidget', 'workList']),
+  );
 export default {
   makeSelectBizBuilderConfigInfo,
+  makeSelectWorkList,
 };
