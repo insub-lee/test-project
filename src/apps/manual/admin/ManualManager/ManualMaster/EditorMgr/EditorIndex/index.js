@@ -50,26 +50,26 @@ const setTreeData = (treeData, handleChangeCompList, tabComponentList) => {
   handleChangeCompList(resultList);
 };
 
-const onClickIndex = (e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) => {
+const onClickIndex = (e, node, addAreaIdx, handleChangeAddAreaIdx) => {
   e.preventDefault();
   e.stopPropagation();
 
   if (node.TYPE === 'index' && node.MUAL_TABCOMP_IDX !== addAreaIdx) handleChangeAddAreaIdx(node.MUAL_TABCOMP_IDX);
   else if (node.MUAL_TABCOMP_IDX === addAreaIdx) handleChangeAddAreaIdx(0);
-  console.debug(node);
   if (node.MUAL_TABCOMP_IDX === 0) return;
   const selectedComp = document.querySelector(`#editorCompID_${node.MUAL_TAB_IDX}_${node.MUAL_TABCOMP_IDX}`);
+  const scrollComp = document.querySelector('#manualMainContentWrapper');
   const topPosition = selectedComp.getBoundingClientRect().top;
-  const scrollTop = scrollComp.getScrollTop();
-  scrollComp.scrollTop(scrollTop + topPosition - 121);
+  const { scrollTop } = scrollComp;
+  scrollComp.scrollTop = scrollTop + topPosition - 163;
 };
 
-const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, scrollComp) => ({
+const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp) => ({
   title: (
     <div className="editorIndexTreeTitle">
       <Button
         className={`${node.MUAL_TABCOMP_IDX === addAreaIdx ? 'active' : ''}`}
-        onClick={e => (node.TYPE.indexOf('index') > -1 ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx, scrollComp) : false)}
+        onClick={e => (node.TYPE.indexOf('index') > -1 ? onClickIndex(e, node, addAreaIdx, handleChangeAddAreaIdx) : false)}
         block
       >
         {node.TYPE.indexOf('index') > -1 ? (
@@ -85,7 +85,7 @@ const renderNode = ({ node }, handleChangeAddAreaIdx, addAreaIdx, handleRemoveCo
   ),
 });
 
-const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName, scrollComp }) => (
+const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, selectedTabName }) => (
   <StyleEditorIndex>
     <div className="editorIndexTreeWrapper">
       <div className="editorIndexTitle">컴포넌트 목록</div>
@@ -94,7 +94,7 @@ const EditorIndex = ({ tabComponentList, handleChangeCompList, handleChangeAddAr
           treeData={getTreeData(tabComponentList.toJS(), selectedTabName)}
           onChange={treeData => setTreeData(treeData, handleChangeCompList, tabComponentList.toJS())}
           canDrop={({ nextParent }) => nextParent !== null && nextParent.TYPE === 'index'}
-          generateNodeProps={rowInfo => renderNode(rowInfo, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp, scrollComp)}
+          generateNodeProps={rowInfo => renderNode(rowInfo, handleChangeAddAreaIdx, addAreaIdx, handleRemoveComp)}
           // rowHeight={({ node: { TYPE, MUAL_COMPVIEWINFO } }) => {
           //   const title = TYPE.includes('index') ? MUAL_COMPVIEWINFO : TYPE;
           //   console.debug('Title', title, title.length);
@@ -133,7 +133,7 @@ const mapStateToProps = createStructuredSelector({
   tabComponentList: selectors.makeSelectTabComponentList(),
   addAreaIdx: selectors.makeSelectAddEditorComponentIndex(),
   selectedTabName: selectors.makeSelectedTabName(),
-  scrollComp: selectors.makeSelectScrollComp(),
+  // scrollComp: selectors.makeSelectScrollComp(),
 });
 
 const mapDispatchToProps = dispatch => ({
