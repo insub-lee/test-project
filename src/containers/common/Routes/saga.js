@@ -1044,11 +1044,13 @@ export function* getMyAppTree(payload) {
       treeFunc.mergeArray(newCategoryData, oldCategoryData);
 
       // 최초 1단 펼치기
+      /* 2019.08.29 주석 처리
       for (let z = 0; z < newCategoryData.length; z += 1) {
         if (newCategoryData[z].NODE_TYPE === 'F' || (newCategoryData[z].REF_TYPE === 'B' && newCategoryData[z].NODE_TYPE === 'R')) {
           Object.assign(newCategoryData[z], { expanded: true });
         }
       }
+      */
 
       // 미확인
       const myAppTree = myAppTreeData.toJS();
