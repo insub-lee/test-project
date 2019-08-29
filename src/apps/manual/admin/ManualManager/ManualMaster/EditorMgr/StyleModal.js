@@ -270,6 +270,8 @@ const StyleModal = styled.div`
         margin: 0;
         display: inline-block;
         width: calc(100% - 400px);
+        height: calc(100% - 37px);
+        overflow-y: auto;
       }
     }
   }

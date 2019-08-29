@@ -8,6 +8,8 @@ export const froalaEditorConfig = {
   imageDefaultWidth: 'auto',
   imageUpload: true,
   pasteImage: true,
+  toolbarSticky: true,
+  scrollableContainer: '.manualMainContentWrapper',
   toolbarButtons: [
     'bold',
     'italic',
@@ -43,7 +45,6 @@ export const froalaEditorConfig = {
     'Montserrat,sans-serif': 'Montserrat',
     'sans-serif': 'Open Sans Condensed',
   },
-  fontFamilySelection: true,
   pluginsEnabled: [
     'align',
     'charCounter',
@@ -66,9 +67,10 @@ export const froalaEditorConfig = {
     'save',
     'image',
     'table',
+    'toolbarSticky',
   ],
   toolbarBottom: true,
-  toolbarSticky: false,
+  fontFamilySelection: true,
   imageUploadURL: 'http://192.168.0.35:12082/upload',
   events: {
     'image.loaded': img => {
