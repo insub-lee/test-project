@@ -16,15 +16,17 @@ class Widget extends PureComponent {
   constructor(props) {
     super(props);
     const initData = this.props.item.data;
+    const initId = this.props.item.WIDGET_ID;
     if (Object.keys(initData).length === 0) {
       console.log('카테고리설정안함');
     } else {
       console.log(initData.categorie);
-      this.props.getDetail(initData.categorie);
+      this.props.getDetail(initData.categorie, initId);
     }
   }
 
   render() {
+    console.log('@@@@ 프롭테스트: ', this.props);
     const { item, detail } = this.props;
     console.log('아이템값');
     console.log(item);
@@ -49,7 +51,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getDetail: PRNT_ID => dispatch(actions.getDetail(PRNT_ID)),
+  getDetail: (PRNT_ID, WIDGET_ID) => dispatch(actions.getDetail(PRNT_ID, WIDGET_ID)),
 });
 
 const withReducer = injectReducer({ key: 'apps-Widget', reducer });

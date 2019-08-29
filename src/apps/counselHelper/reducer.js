@@ -2,13 +2,14 @@ import { fromJS } from 'immutable';
 import * as actionConst from './constants';
 
 const initialState = fromJS({
-  detail: [],
+  detailMap: {},
 });
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionConst.SAVE_DETAIL: {
-      return state.set('detail', fromJS(action.detail));
+      const { detail, WIDGET_ID } = action;
+      return state.setIn(['detailMap', WIDGET_ID, 'detail'], fromJS(detail));
     }
 
     default:
