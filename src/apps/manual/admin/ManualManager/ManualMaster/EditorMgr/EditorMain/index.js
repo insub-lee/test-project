@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Scrollbars } from 'react-custom-scrollbars';
+// import { Scrollbars } from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
 import { fromJS } from 'immutable';
 import { createStructuredSelector } from 'reselect';
@@ -34,31 +34,32 @@ class EditorMain extends Component {
       handleChangeFocusIdx,
       focusComponetIdx,
       addAreaIdx,
-      setScrollComponent,
     } = this.props;
     return (
       <StyleEditorMain
+        id="editorMainWrapper"
         className="editorMainWrapper"
         onMouseOver={() => (focusComponetIdx === 0 ? false : handleChangeFocusIdx(0))}
         onClick={() => handleChangeCompIdx(0)}
       >
-        <Scrollbars
+        {/* <Scrollbars
+          className="editorMainWrapperScroll"
           style={{ height: 'calc(100vh - 149px)' }}
           ref={c => {
             setScrollComponent(c);
           }}
-        >
-          <div className="dropWrapper editorMainDrop">
-            {tabComponentList &&
-              tabComponentList.size > 0 &&
-              tabComponentList
-                .toJS()
-                .filter(comp => comp.IS_REMOVE !== 'Y')
-                .map((item, index) =>
-                  RenderEditorComponent(item, handleChangeCompValue, handleChangeCompIdx, selectedComponentIdx, focusComponetIdx, addAreaIdx),
-                )}
-          </div>
-        </Scrollbars>
+        > */}
+        <div className="dropWrapper editorMainDrop">
+          {tabComponentList &&
+            tabComponentList.size > 0 &&
+            tabComponentList
+              .toJS()
+              .filter(comp => comp.IS_REMOVE !== 'Y')
+              .map((item, index) =>
+                RenderEditorComponent(item, handleChangeCompValue, handleChangeCompIdx, selectedComponentIdx, focusComponetIdx, addAreaIdx),
+              )}
+        </div>
+        {/* </Scrollbars> */}
       </StyleEditorMain>
     );
   }
@@ -74,7 +75,7 @@ EditorMain.propTypes = {
   addComponetId: PropTypes.string,
   focusComponetIdx: PropTypes.number,
   addAreaIdx: PropTypes.number,
-  setScrollComponent: PropTypes.func,
+  // setScrollComponent: PropTypes.func,
 };
 
 EditorMain.defaultProps = {
@@ -87,7 +88,7 @@ EditorMain.defaultProps = {
   addComponetId: '',
   focusComponetIdx: 0,
   addAreaIdx: 0,
-  setScrollComponent: () => false,
+  // setScrollComponent: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -103,7 +104,8 @@ const mapDispatchToProps = dispatch => ({
   handleChangeCompIdx: idx => dispatch(actions.setEditorComponentIndexByReduc(idx)),
   handleChangeCompId: id => dispatch(actions.setAddEditorComponentIdByReduc(id)),
   handleChangeFocusIdx: idx => dispatch(actions.setFocusEditorComponentIdxByReduc(idx)),
-  setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
+  // setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
+  // handlePushCompValue: (tabIdx, compIdx, key, value) => dispatch(actions.addEditorComponentValueByReduc(tabIdx, compIdx, key, value)),
 });
 
 export default connect(

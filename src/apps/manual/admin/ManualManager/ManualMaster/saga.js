@@ -76,7 +76,7 @@ function* insertDefaultMgrSaga() {
     defaultMgrMap,
     selectedUserInfo,
   };
-
+  console.debug('selectedMualIdx', pageMoveType.get('selectedMualIdx'));
   const response = yield call(Axios.post, `/api/manual/v1/ManualMasterHandler/${pageMoveType.get('selectedMualIdx')}`, { param });
 
   const { MUAL_IDX } = response;
@@ -283,6 +283,7 @@ function* getDefaultMgrByVersion(action) {
 
 function* getOptionMgr() {
   const param = yield select(selectors.makeSelectMovePageType());
+  console.debug('param.get selectedMualIdx', param.get('selectedMualIdx'));
   const response = yield call(Axios.get, `/api/manual/v1/ManualOptionHandler/${param.get('selectedMualIdx')}`);
   console.debug(response);
 }
@@ -341,12 +342,13 @@ function* getRelationManualListBySaga(action) {
   const response = yield call(Axios.get, `/api/manual/v1/ManualListHandler/${categoryIdx}`);
   const manualList = fromJS(response).get('manualList');
   const convertMualList = [];
+
   manualList.forEach(item => {
     const fobj = chooesItem.find(x => x.key === item.get('MUAL_IDX'));
-    if (fobj === undefined && chooesItem.length > 0) {
-      convertMualList.push({ ...item.toJS(), disabled: true, checked: false });
-    } else {
+    if (fobj === undefined) {
       convertMualList.push({ ...item.toJS(), disabled: false, checked: false });
+    } else {
+      convertMualList.push({ ...item.toJS(), disabled: true, checked: false });
     }
   });
   yield put(actions.setRelationManualListByRecur(convertMualList));

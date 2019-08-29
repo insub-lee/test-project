@@ -15,6 +15,8 @@ class Tree extends Component {
   }
 
   handleClick = (value, extas) => {
+    console.debug('>>>>>>extas: ', extas);
+    console.debug('>>>>>>value: ', value);
     const { execMenu, execPage } = this.props;
 
     this.setState({

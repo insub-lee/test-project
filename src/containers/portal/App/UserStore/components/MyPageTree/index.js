@@ -74,15 +74,19 @@ class MyPageTree extends Component {
           treeData: nextProps.treeData,
           selectedIndex: nextProps.selectedIndex,
         });
-      } else {
+      } else if(this.treeFlatData.get(nextProps.selectedIndex)) {
         this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
-
         this.setState({
           treeData: toggleExpandedForSelected({
             treeData: nextProps.treeData,
-            path: this.treeFlatData.get(nextProps.selectedIndex).path,
+            path: this.treeFlatData.get(nextProps.selectedIndex),
           }),
           selectedIndex: nextProps.selectedIndex,
+        });
+      } else {
+        this.setState({
+          treeData: nextProps.treeData,
+          selectedIndex: -1,
         });
       }
     } else {

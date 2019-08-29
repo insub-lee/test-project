@@ -205,7 +205,7 @@ class BizMenuTree extends Component {
     } = this.props;
 
     const pathArr = history.location.pathname.split('/');
-    const type = pathArr[3];    
+    const type = pathArr[3];
     const BIZGRP_ID = bizGroupInfo.BIZGRP_ID;
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1, BIZGRP_ID };
@@ -508,7 +508,7 @@ class BizMenuTree extends Component {
               history.push(`/admin/adminmain/${type}/bizMenuReg/info/${BIZGRP_ID}`);
             }}
             className="ellipsis"
-            style={{ color: `${selectedIndex === -1 ? '#f85023' : 'inherit'}`, paddingLeft: 6 }}
+            style={{ color: `${selectedIndex === -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 6 }}
           >
             {lang.get('NAME', bizGroupInfo)}
           </button>
