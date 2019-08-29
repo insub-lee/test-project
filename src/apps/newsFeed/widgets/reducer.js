@@ -2,10 +2,8 @@ import { fromJS } from 'immutable';
 import * as constants from './constants';
 
 const initState = fromJS({
-  app_id: undefined,
-  widget_id: undefined,
   selectedCategory: [],
-  modalView: false,
+  modalView: {},
   modalIdx: undefined,
   totalCategory: [],
   widgetDataList: [],
@@ -13,14 +11,6 @@ const initState = fromJS({
 
 const NewsFeedReducer = (state = initState, action) => {
   switch (action.type) {
-    case constants.SET_NEWSFEED_CONFIG: {
-      const { app_id,  widget_id, selectedCategory} = action;
-      return state
-        .set('app_id', app_id)
-        .set('widget_id', widget_id)
-        .set('selectedCategory', selectedCategory);
-    }
-
     case constants.SET_NEWSFEED_DATA_LIST: {
       const { newDataList } = action;
       return state.set('widgetDataList', newDataList);
@@ -37,8 +27,10 @@ const NewsFeedReducer = (state = initState, action) => {
     case constants.SET_MODAL_IDX:
       return state.set('modalIdx',action.modalIdx);  
 
-    case constants.SET_MODAL_VIEW:
-      return state.set('modalView', action.modalView);
+    case constants.SET_MODAL_VIEW:{
+      const { modalView, widget_id } = action;
+      return state.setIn(['modalView', widget_id], modalView);
+    }
 
     default:
       return state;

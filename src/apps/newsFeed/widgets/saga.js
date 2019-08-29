@@ -1,4 +1,4 @@
-import { put, call, select, takeLatest } from 'redux-saga/effects';
+import { put, call, select, takeLatest, takeEvery } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
 import * as actions from './action';
@@ -69,7 +69,7 @@ export function* changeCategoryList(payload) {
 }
 
 export default function* watcher() {
-  yield takeLatest(constants.GET_NEWSFEED_DATA_LIST, getDataList);
+  yield takeEvery(constants.GET_NEWSFEED_DATA_LIST, getDataList);
   yield takeLatest(constants.GET_INIT_CATEGORY, getInitCategoryList);
   yield takeLatest(constants.CHANGE_SELECTED_CATEGORY, changeCategoryList);
 }
