@@ -45,35 +45,41 @@ const StyleModal = styled.div`
         margin-top: 15px;
         padding: 0 15px 15px;
         border: 1px solid #c1c1c1 !important;
-        
-        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+
+        @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
           /* IE10+ specific styles go here */
           margin-bottom: 17px;
         }
 
-        .SUTable > div {max-height: 450px !important;}
+        .SUTable > div {
+          max-height: 450px !important;
+        }
       }
     }
 
     // 구성원 즐겨찾기
     .modalContents.orgAcivityBody {
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         margin-bottom: 17px;
       }
-      
+
       .members > div:not(.userGridResult) > div:last-child > div {
         width: 100% !important;
       }
 
-      .react-grid-Cell:first-child {width: calc(100% - 40px) !important;} // 체크박스 셀 너비를 제외한 너비
+      .react-grid-Cell:first-child {
+        width: calc(100% - 40px) !important;
+      } // 체크박스 셀 너비를 제외한 너비
     }
 
     // 서비스, 구성원
     .treeBox {
       height: 100%;
 
-      > div {width: 100% !important;}
+      > div {
+        width: 100% !important;
+      }
     }
 
     .inBtn {
@@ -83,7 +89,7 @@ const StyleModal = styled.div`
       background: url(${iconIn2}) no-repeat 50% 50% !important;
     }
   }
-  
+
   .modalTitle {
     position: relative;
     display: block;
@@ -144,9 +150,10 @@ const StyleModal = styled.div`
     height: 529px;
     margin-top: 15px;
 
-    
     // MobileView
-    @media only screen and (max-width: 650px) {height: auto;}
+    @media only screen and (max-width: 650px) {
+      height: auto;
+    }
   }
 
   .orgActivityInnerBody {
@@ -157,7 +164,9 @@ const StyleModal = styled.div`
     margin-right: 0 !important;
     border: 1px solid #c1c1c1;
 
-    @media only screen and (max-width: 1160px) {border: none;}
+    @media only screen and (max-width: 1160px) {
+      border: none;
+    }
   }
 
   .orgAcivityBody .ant-row {
@@ -180,7 +189,7 @@ const StyleModal = styled.div`
     margin-bottom: 0 !important;
   }
 
-  .orgAcivityBody .inBtn, 
+  .orgAcivityBody .inBtn,
   .orgAcivityBody .outBtn {
     position: absolute;
     top: 50%;
@@ -244,7 +253,9 @@ const StyleModal = styled.div`
     margin-top: 5px;
   }
 
-  .orgAcivityBody .leftActivity .searchOptions .inputWrapper .ant-input {border-radius: 4px;}
+  .orgAcivityBody .leftActivity .searchOptions .inputWrapper .ant-input {
+    border-radius: 4px;
+  }
 
   .orgAcivityBody .leftActivity .userGridResult {
     // 탭이 있는 경우
@@ -302,7 +313,8 @@ const StyleModal = styled.div`
         margin-bottom: 10px;
       }
 
-      .react-grid-Header, .react-grid-Header > div > div,
+      .react-grid-Header,
+      .react-grid-Header > div > div,
       .react-grid-HeaderCell {
         height: 0 !important;
       }
@@ -318,7 +330,6 @@ const StyleModal = styled.div`
         }
       }
     }
-
   }
 
   .orgAcivityBody .rightActivity {
@@ -329,8 +340,14 @@ const StyleModal = styled.div`
     margin-bottom: 0 !important;
     border: 2px solid #c1c1c1;
 
-    @media only screen and (max-width: 1160px) {height: 529px; margin-top: 0;} // TabletView
-    @media only screen and (max-width: 650px) {width: 100%; height: calc(100vh - 120px);} //MobileView
+    @media only screen and (max-width: 1160px) {
+      height: 529px;
+      margin-top: 0;
+    } // TabletView
+    @media only screen and (max-width: 650px) {
+      width: 100%;
+      height: calc(100vh - 120px);
+    } //MobileView
   }
 
   .rightActivity {
@@ -370,7 +387,8 @@ const StyleModal = styled.div`
           font-size: 14px;
         }
 
-        .dept, .phone {
+        .dept,
+        .phone {
           font-size: 12px;
         }
 
@@ -399,7 +417,7 @@ const StyleModal = styled.div`
       }
     }
 
-    .buttonWrapper{
+    .buttonWrapper {
       display: inline-block;
       width: 100%;
       height: 60px;
@@ -412,10 +430,13 @@ const StyleModal = styled.div`
         min-width: 71px;
         max-width: 89px;
 
-        @media only screen and (max-width: 650px) {max-width: 142px; min-width: 59px;}
+        @media only screen and (max-width: 650px) {
+          max-width: 142px;
+          min-width: 59px;
+        }
 
         &:not(:last-child) {
-          margin-right: 8px;
+          margin-right: 3px;
         }
 
         > button {
@@ -461,17 +482,22 @@ const StyleModal = styled.div`
             border-bottom: 1px solid #dddddd;
             color: #404040;
             font-size: 12px;
-
-            }
+          }
 
           &.majorJob td {
             height: 158px;
 
-            @media only screen and (max-width: 650px) {height: auto;}
+            @media only screen and (max-width: 650px) {
+              height: auto;
+            }
 
             &:last-child > div {
-              @media only screen and (max-width: 1160px) {height: 190px !important;} // TabletView
-              @media only screen and (max-width: 650px) {height: calc(100vh - 460px) !important;}
+              @media only screen and (max-width: 1160px) {
+                height: 190px !important;
+              } // TabletView
+              @media only screen and (max-width: 650px) {
+                height: calc(100vh - 460px) !important;
+              }
             }
 
             ul {
@@ -479,7 +505,9 @@ const StyleModal = styled.div`
               padding: 5px 0;
               overflow-y: auto;
 
-              @media only screen and (max-width: 650px) {height: auto;}
+              @media only screen and (max-width: 650px) {
+                height: auto;
+              }
             }
           }
 
@@ -487,11 +515,9 @@ const StyleModal = styled.div`
             border-color: #cacaca;
           }
         }
-
       }
     }
   }
-
 `;
 
 export default StyleModal;

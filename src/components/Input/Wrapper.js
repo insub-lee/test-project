@@ -112,7 +112,7 @@ const InputGroupWrapper = ComponentName => styled(ComponentName)`
     }
 
     & > .ant-input:not(:first-child):not(:last-child) {
-      ${''/* border-left: 0; */};
+      ${'' /* border-left: 0; */};
     }
 
     .ant-input:first-child:last-child {
@@ -135,19 +135,12 @@ const InputGroupWrapper = ComponentName => styled(ComponentName)`
     &.ant-input-group-compact > *:first-child,
     &.ant-input-group-compact > .ant-select:first-child > .ant-select-selection,
     &.ant-input-group-compact > .ant-calendar-picker:first-child .ant-input,
-    &.ant-input-group-compact
-      > .ant-select-auto-complete:first-child
-      .ant-input,
+    &.ant-input-group-compact > .ant-select-auto-complete:first-child .ant-input,
     &.ant-input-group-compact > .ant-cascader-picker:first-child .ant-input,
-    &.ant-input-group-compact
-      > .ant-mention-wrapper:first-child
-      .ant-mention-editor,
-    &.ant-input-group-compact
-      > .ant-time-picker:first-child
-      .ant-time-picker-input {
+    &.ant-input-group-compact > .ant-mention-wrapper:first-child .ant-mention-editor,
+    &.ant-input-group-compact > .ant-time-picker:first-child .ant-time-picker-input {
       border-radius: ${props => (props['data-rtl'] === 'rtl' ? '0 4px 4px 0' : '4px 0 0 4px')};
-      border-left-width: 1px
-        ${'' /* border-right-width: ${props =>
+      border-left-width: 1px ${'' /* border-right-width: ${props =>
         props['data-rtl'] === 'rtl' ? '1px' : '0'}; */};
     }
 
@@ -156,12 +149,8 @@ const InputGroupWrapper = ComponentName => styled(ComponentName)`
     &.ant-input-group-compact > .ant-calendar-picker:last-child .ant-input,
     &.ant-input-group-compact > .ant-select-auto-complete:last-child .ant-input,
     &.ant-input-group-compact > .ant-cascader-picker:last-child .ant-input,
-    &.ant-input-group-compact
-      > .ant-mention-wrapper:last-child
-      .ant-mention-editor,
-    &.ant-input-group-compact
-      > .ant-time-picker:last-child
-      .ant-time-picker-input {
+    &.ant-input-group-compact > .ant-mention-wrapper:last-child .ant-mention-editor,
+    &.ant-input-group-compact > .ant-time-picker:last-child .ant-time-picker-input {
       border-radius: ${props => (props['data-rtl'] === 'rtl' ? '4px 0 0 4px' : '0 4px 4px 0')};
       border-right-width: ${props => (props['data-rtl'] === 'rtl' ? '0 ' : '1px')};
     }
@@ -234,8 +223,9 @@ const InputSearchWrapper = ComponentName => styled(ComponentName)`
       ${borderRadius('4px')};
       ${transition()};
 
-      &:focus {
-        border-color: ${palette('primary', 0)};
+      &:focus,
+      &:hover {
+        border-color: #886ab5;
       }
 
       &.ant-input-lg {
@@ -278,7 +268,7 @@ const InputSearchWrapper = ComponentName => styled(ComponentName)`
       color: ${palette('grayscale', 0)};
 
       &:hover {
-        color: ${palette('primary', 0)};
+        color: #886ab5;
       }
     }
   }

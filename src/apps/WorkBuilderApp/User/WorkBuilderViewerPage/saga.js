@@ -49,6 +49,7 @@ function* postData({ payload, prcId, processStep }) {
   } else {
     const nextResponse = yield call(Axios.post, '/api/builder/v1/work/taskComplete', {
       PARAM: {
+        ...payload,
         TASK_SEQ: taskSeq,
         WORK_SEQ: workSeq,
         prcId,

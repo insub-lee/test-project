@@ -23,6 +23,7 @@ class EditorMgr extends Component {
   }
 
   render() {
+    const { handleChangeCompIdx } = this.props;
     return (
       <StyleModal className="modalWrapper inPage">
         <div>
@@ -35,7 +36,7 @@ class EditorMgr extends Component {
             <div className="manualMainIndexWrapper">
               <EditorIndex />
             </div>
-            <div className="manualMainContentWrapper">
+            <div id="manualMainContentWrapper" className="manualMainContentWrapper" onClick={handleChangeCompIdx}>
               <EditorMain />
             </div>
           </div>
@@ -48,16 +49,19 @@ class EditorMgr extends Component {
 EditorMgr.propTypes = {
   getManualEditorMgr: PropTypes.func,
   resetManualEditorMgr: PropTypes.func,
+  handleChangeCompIdx: PropTypes.func,
 };
 
 EditorMgr.defaultProps = {
   getManualEditorMgr: () => false,
   resetManualEditorMgr: () => false,
+  handleChangeCompIdx: () => false,
 };
 
 const mapDispatchToProps = dispatch => ({
   getManualEditorMgr: () => dispatch(actions.getManualEditorMgrBySaga()),
   resetManualEditorMgr: () => dispatch(actions.resetEditorMgrByReduc()),
+  handleChangeCompIdx: () => dispatch(actions.setEditorComponentIndexByReduc(0)),
 });
 
 export default connect(

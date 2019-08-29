@@ -25,7 +25,7 @@ const WidgetWrapper = styled.div`
       background: transparent !important;
       > h2 {
         color: #222222;
-        font-size: 18px;
+        font-size: 16px;
       }
     }
     .widgetBody {
@@ -1447,7 +1447,7 @@ const WidgetWrapper = styled.div`
 
 const WidgetHeader = styled.div`
   position: relative;
-  height: 50px;
+  height: 45px;
   border-bottom: 1px solid #d2d2d2;
 
   > h2 {
@@ -1455,7 +1455,7 @@ const WidgetHeader = styled.div`
     font-size: 14px;
     font-weight: 600;
     text-align: left;
-    line-height: 50px;
+    line-height: 45px;
     padding: 0 20px;
 
     &:hover {
@@ -1472,7 +1472,7 @@ const WidgetHeader = styled.div`
       display: inline-block;
       width: 100%;
       height: 35px;
-      background-color: rgba(0,0,0,0.4);
+      background-color: rgba(0, 0, 0, 0.4);
       text-align: right;
       opacity: 0;
       z-index: 1;
@@ -1746,6 +1746,8 @@ const WidgetBox = styled.div`
   }
 `;
 
-const WidgetColumn = styled.div`align-content: flex-start;`;
+const WidgetColumn = styled.div`
+  align-content: flex-start;
+`;
 
 export { WidgetWrapper, WidgetBox, WidgetHeader, WidgetColumn };

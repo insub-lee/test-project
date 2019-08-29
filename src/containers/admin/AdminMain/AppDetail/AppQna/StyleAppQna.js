@@ -2,7 +2,6 @@ import styled from 'styled-components';
 // import { transition, borderRadius, boxShadow } from 'config/style-util';
 import replyIcon from '../../../../../images/bizstore/icon-reply.png';
 
-
 const StyleAppQna = styled.div`
   position: relative;
   padding-top: 15px;
@@ -12,7 +11,8 @@ const StyleAppQna = styled.div`
     padding-top: 0;
   }
 
-  .newQnaWrite, .newFaqWrite {
+  .newQnaWrite,
+  .newFaqWrite {
     position: absolute;
     top: 12px;
     right: 0;
@@ -29,19 +29,19 @@ const StyleAppQna = styled.div`
   .ant-tabs-tabpane.ant-tabs-tabpane-inactive > div {
     display: none;
   }
-  
+
   .ant-tabs-bar {
-    margin:0;
+    margin: 0;
     border-bottom: 0;
 
     .ant-tabs-ink-bar {
-      background-color: #000000;
+      background-color: #886ab5;
     }
 
     .ant-tabs-tab {
       margin-right: 1px;
       padding: 12px 40px;
-      border-bottom: 3px solid #e3e3e3;
+      border-bottom: 2px solid #e3e3e3;
       color: #959595;
       font-size: 15px;
 
@@ -55,8 +55,8 @@ const StyleAppQna = styled.div`
       }
 
       &.ant-tabs-tab-active {
-        color: #000000;
-        border-color: #000000;
+        color: #886ab5;
+        border-color: #886ab5;
       }
     }
   }
@@ -68,41 +68,41 @@ const StyleAppQna = styled.div`
       border-bottom: none;
 
       .ant-collapse-header {
-        padding:9px 0px 10px 18px;
-        line-height:1;
-        color:#555;
+        padding: 9px 0px 10px 18px;
+        line-height: 1;
+        color: #555;
 
         i {
-          position:absolute;
-          top:14px;
-          left:5px;
-          width:4px;
-          height:4px;
-          background:#bcbcbc;
-          
+          position: absolute;
+          top: 14px;
+          left: 5px;
+          width: 4px;
+          height: 4px;
+          background: #bcbcbc;
+
           &:before {
-            content:none;
+            content: none;
           }
         }
       }
 
       .ant-collapse-content {
-        margin:10px 0px 28px 0px;
-        padding:10px 0px 10px 20px;
-        color:#555;
-        
+        margin: 10px 0px 28px 0px;
+        padding: 10px 0px 10px 20px;
+        color: #555;
+
         .ant-collapse-content-box {
-          position:relative;
-          padding:0;
+          position: relative;
+          padding: 0;
 
           img {
-            position:absolute;
-            top:4px;
-            left:0px;
+            position: absolute;
+            top: 4px;
+            left: 0px;
           }
 
           p {
-            padding-left:20px;
+            padding-left: 20px;
           }
         }
       }
@@ -143,7 +143,7 @@ const StyleAppQna = styled.div`
           color: #bcbcbc;
           font-size: 14px;
         }
-        
+
         &:hover {
           background: #f4f6f7;
           cursor: pointer;
@@ -213,7 +213,7 @@ const StyleAppQna = styled.div`
           color: #bcbcbc;
           font-size: 14px;
         }
-        
+
         &:hover {
           background: #f4f6f7;
           cursor: pointer;
@@ -236,8 +236,11 @@ const StyleAppQna = styled.div`
           }
         }
 
-        .itemQContent, .itemQUserInfo,
-        .itemAnswer, .itemAContent, .itemAUserInfo {
+        .itemQContent,
+        .itemQUserInfo,
+        .itemAnswer,
+        .itemAContent,
+        .itemAUserInfo {
           display: block;
           // width: 100%;
           overflow: hidden;
@@ -245,12 +248,15 @@ const StyleAppQna = styled.div`
           white-space: nowrap;
         }
 
-        .itemQContent, .itemQUserInfo,
-        .itemAContent, .itemAUserInfo {
+        .itemQContent,
+        .itemQUserInfo,
+        .itemAContent,
+        .itemAUserInfo {
           margin-top: 6px;
         }
 
-        .itemQUserInfo, .itemAUserInfo {
+        .itemQUserInfo,
+        .itemAUserInfo {
           @media only screen and (max-width: 1024px) {
             font-size: 12px;
           }

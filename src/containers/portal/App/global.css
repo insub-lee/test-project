@@ -6,13 +6,13 @@ html {
 }
 
 /* webkit scrollbar transparent - skin 적용시 크롬에서 눈에 띔 */
-.custom-scrollbar>div::-webkit-scrollbar,
+.custom-scrollbar > div::-webkit-scrollbar,
 .FullScreen.Active::-webkit-scrollbar {
-  width: 0 !important
+  width: 0 !important;
 }
 
 /* .custom-scrollbar > div, .FullScreen.Active { -ms-overflow-style: none; } */
-.custom-scrollbar>div,
+.custom-scrollbar > div,
 .FullScreen.Active {
   overflow: -moz-scrollbars-none;
 }
@@ -31,6 +31,7 @@ html {
 .ant-btn:hover,
 .ant-btn:focus {
   border-color: transparent;
+  border: 0;
 }
 
 .ant-btn-clicked:after {
@@ -53,12 +54,12 @@ html {
   CheckboxGroup 안에 Checkbox 컴포넌트 정의가 없어서 antd 스타일만 적용되는 경우가 있으므로
   여기(global.css)에서 재정의를 함.
 */
-.ant-checkbox-wrapper+.ant-checkbox-wrapper {
+.ant-checkbox-wrapper + .ant-checkbox-wrapper {
   margin-left: 8px;
 }
 
-.ant-checkbox-wrapper+span,
-.ant-checkbox+span {
+.ant-checkbox-wrapper + span,
+.ant-checkbox + span {
   padding-left: 8px;
   padding-right: 8px;
 }
@@ -94,7 +95,7 @@ html {
   display: block;
   width: 1.125rem;
   height: 1.125rem;
-  content: "";
+  content: '';
   background-repeat: no-repeat;
   background-position: 0.125rem 0.125rem;
   top: initial;
@@ -129,7 +130,7 @@ html {
   border-color: #f5f5f5;
 }
 
-.ant-checkbox-disabled+span {
+.ant-checkbox-disabled + span {
   color: rgba(0, 0, 0, 0.25);
   cursor: not-allowed;
 }
@@ -144,7 +145,7 @@ html {
   margin-right: 0;
 }
 
-.ant-checkbox-group-item+.ant-checkbox-group-item {
+.ant-checkbox-group-item + .ant-checkbox-group-item {
   margin-left: 0;
 }
 
@@ -172,7 +173,7 @@ html {
     /* 임시 */
   }
 
-  .portalLayout .custom-scrollbar>div:first-child {
+  .portalLayout .custom-scrollbar > div:first-child {
     overflow: hidden scroll !important;
   }
 
@@ -180,9 +181,9 @@ html {
 }
 
 /* Header toktok서브메뉴, 언어선택 서브메뉴 -- content 스타일: StyledHeader.js 정의됨*/
-.ant-popover-placement-bottom>.ant-popover-content>.ant-popover-arrow,
-.ant-popover-placement-bottomLeft>.ant-popover-content>.ant-popover-arrow,
-.ant-popover-placement-bottomRight>.ant-popover-content>.ant-popover-arrow {
+.ant-popover-placement-bottom > .ant-popover-content > .ant-popover-arrow,
+.ant-popover-placement-bottomLeft > .ant-popover-content > .ant-popover-arrow,
+.ant-popover-placement-bottomRight > .ant-popover-content > .ant-popover-arrow {
   box-shadow: 0;
 }
 
@@ -315,7 +316,6 @@ html {
   }
 }
 
-
 /* 담당자 정보 Popover (content 제외) -- content 스타일: StyleUserNotice.js 정의됨*/
 /* .managerPopover {position:fixed; top: 30px !important;} */
 .managerPopover.ant-popover-placement-bottom,
@@ -363,7 +363,7 @@ html {
 
 .customCheckboxType1:hover .ant-checkbox-inner,
 .customCheckboxType1:hover .ant-checkbox:hover .ant-checkbox-inner,
-.customCheckboxType1 .ant-checkbox-input:focus+.ant-checkbox-inner,
+.customCheckboxType1 .ant-checkbox-input:focus + .ant-checkbox-inner,
 .customCheckboxType1 .ant-checkbox-checked:after,
 .customCheckboxType1 .ant-checkbox-checked .ant-checkbox-inner:after {
   border: 0;
@@ -591,7 +591,6 @@ html {
   }
 }
 
-
 /* 알림창 message */
 .ant-message {
   z-index: 2000;
@@ -666,7 +665,6 @@ html {
 }
 
 .link {
-
   transition: all 0.3s ease-in-out;
   display: inline-block;
   width: 100px;
@@ -688,7 +686,7 @@ html {
 
 .l1:after {
   transition: all 0.3s ease-in-out;
-  content: "";
+  content: '';
   display: block;
   background-color: white;
   margin-top: 0px;
@@ -709,8 +707,6 @@ div.button {
   left: 59px;
   transform: translate(-50%, -50%);
 }
-
-
 
 div.button input {
   padding: 5px;

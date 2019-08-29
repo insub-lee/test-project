@@ -108,9 +108,12 @@ class UserCategoryMenu extends Component {
           <div className="area-title">Timeline</div>
           <WorkTimeLine height="calc(100% - 47px)" />
         </div>
-        <div className="active-btn">
-          <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} />
-        </div>
+        {
+          !isShow && 
+          <div className="active-btn">
+            <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} />
+          </div>
+        }
       </Styled>
     );
   }

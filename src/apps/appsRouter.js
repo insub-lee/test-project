@@ -1,73 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router-dom';
-
+import { Switch, Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
+import Loadable from 'react-loadable';
+import Loading from './Loading';
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
-
+import PropTypes from 'prop-types';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
-import Bookroom from './bookroom';
-import Bc from './businesscard';
-import PMSheetList from './hypm_pmSheetList';
-import PmSheetTablet from './hypm_pmSheetTablet';
-import PMSheetModeling from './hypm_pmSheetModeling';
-import InformNote from './hypm_informNote';
-import CicdProject from './cicdProject';
-import CicdService from './cicdService';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
-import ManualCategoryManage from './manual/admin/CategoryManage';
 import Draft from './WorkFlow/User/Draft';
 
-const getAppsRouter = selectedApp => {
-  const type = 'swidget';
-  const item = selectedApp[0];
-  console.log('$$$ appsRouter item', item);
-  if (selectedApp.length > 0) {
-    // 해당 앱의 상태가 중지인 경우
-    if (item.SVC_YN === 'C') {
-      return (
-        <WidgetsWrapper item={item}>
-          <ServiceStop item={item} type={type} />
-        </WidgetsWrapper>
-      );
-    } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y') {
-      // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
-      return (
-        <div>
-          <Switch>
-            <Route path={`/${basicPath.APPS}/bookroom`} component={Bookroom} />
-            <Route path={`/${basicPath.APPS}/businesscard`} component={Bc} />
-            <Route path={`/${basicPath.APPS}/pmSheetList`} component={PMSheetList} />
-            <Route path={`/${basicPath.APPS}/pmSheetModeling`} component={PMSheetModeling} />
-            <Route path={`/${basicPath.APPS}/informNote`} component={InformNote} />
-            <Route path={`/${basicPath.APPS}/pmSheetTablet`} component={PmSheetTablet} />
-            <Route path={`/${basicPath.APPS}/cicdProject`} component={CicdProject} />
-            <Route path={`/${basicPath.APPS}/cicdService`} component={CicdService} />
-            <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
-            <Route path={`/${basicPath.APPS}/manualCategoryManage`} component={ManualCategoryManage} />
-            <Route path={`/${basicPath.APPS}/draft/:CATE`} component={Draft} />
-          </Switch>
-        </div>
-      );
-    }
-
-    // 해당 앱에 권한이 없는 경우
-    return (
-      <WidgetsWrapper item={item}>
-        <ApplyWidget item={item} type={type} />
-      </WidgetsWrapper>
-    );
-  }
-  return <div />;
-};
-
-const AppsRouter = ({ selectedApp, id }) => (
-  <div className="appsRoute">{getAppsRouter(selectedApp)}</div>
-);
-
-
-/*
 class AppsRouter extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -75,62 +17,69 @@ class AppsRouter extends React.PureComponent {
 
   componentDidMount() {
     const { selectedApp } = this.props;
-    this.contents = this.getAppsRouter(selectedApp);
     this.forceUpdate();
+    this.contents = this.getAppsRouter(selectedApp);
   }
 
-  getAppsRouter = selectedApp => {
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
+      this.contents = this.getAppsRouter(nextProps.columns);
+    }
+  }
+
+  getAppsRouter = (selectedApp) => {
     const type = 'swidget';
     const item = selectedApp[0];
     console.log('$$$ appsRouter item', item);
+
+    const param = Loadable({
+      loader: () => import(`apps/${item.legacyPath}`),
+      loading: Loading,
+    });
+
     if (selectedApp.length > 0) {
       // 해당 앱의 상태가 중지인 경우
-      if (item.SVC_YN === 'C') {
+      if (item.SVC_YN === 'C' || item.CATG_ID === '' ) {
         return (
           <WidgetsWrapper item={item}>
             <ServiceStop item={item} type={type} />
           </WidgetsWrapper>
         );
-      } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y') {
+      } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
-          <div>
-            <Switch>
-              <Route path={`/${basicPath.APPS}/bookroom`} component={Bookroom} />
-              <Route path={`/${basicPath.APPS}/businesscard`} component={Bc} />
-              <Route path={`/${basicPath.APPS}/pmSheetList`} component={PMSheetList} />
-              <Route path={`/${basicPath.APPS}/pmSheetModeling`} component={PMSheetModeling} />
-              <Route path={`/${basicPath.APPS}/informNote`} component={InformNote} />
-              <Route path={`/${basicPath.APPS}/pmSheetTablet`} component={PmSheetTablet} />
-              <Route path={`/${basicPath.APPS}/cicdProject`} component={CicdProject} />
-              <Route path={`/${basicPath.APPS}/cicdService`} component={CicdService} />
-              <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
-              <Route path={`/${basicPath.APPS}/manualCategoryManage`} component={ManualCategoryManage} />
-            </Switch>
-          </div>
-        );
+            <div>
+              <Switch>
+                <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
+                <Route path={`/${basicPath.APPS}/draft/:CATE`} component={Draft} />
+                <Route path={`/${basicPath.APPS}/${item.legacyPath}`} component={param} />
+              </Switch>
+            </div>
+        )
       } else {
         return (
           // 해당 앱에 권한이 없는 경우
           <WidgetsWrapper item={item}>
             <ApplyWidget item={item} type={type} />
           </WidgetsWrapper>
-        );
+        )
       }
     } else {
-      return <div />;
+      <div />
     }
-  };
+  }
 
   render() {
-    console.log('$$$ appsRouter의 render()');
-    return <div className="appsRoute">{this.contents}</div>;
+    console.log('$$$ appsRouter의 render()', this.contents);
+    return (
+      <div className="appsRoute">{this.contents}</div>
+    );
   }
 }
- */
 
 AppsRouter.propTypes = {
   selectedApp: PropTypes.array.isRequired,
+  columns: PropTypes.array.isRequired,
 };
 
 export default AppsRouter;

@@ -95,7 +95,7 @@ class AppScreenshot extends React.Component {
           feed.showConfirm(`${lang.get('NAME', item)} ${intlObj.get(messages.appInput)}`, `${intlObj.get(messages.catgAppInput)}`, registerCategorys);
         return (
           <div key={item.REF_APP_ID} className="appCols">
-            <Link to={`/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
+            <Link to={`/portal/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
               <img src={imgUrl.get('120x120', item.ICON)} alt={lang.get('NAME', item)} style={{ width: '100%', height: '100%' }} />
             </Link>
             <Popover
@@ -137,7 +137,7 @@ class AppScreenshot extends React.Component {
                 <img src={moreMenu} alt={intlObj.get(messages.appMenu)} />
               </div>
             </Popover>
-            <Link to={`/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
+            <Link to={`/portal/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
               <p className="appName">{lang.get('NAME', item)}</p>
             </Link>
           </div>

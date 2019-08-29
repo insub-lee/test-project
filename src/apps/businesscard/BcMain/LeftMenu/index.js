@@ -35,7 +35,7 @@ const MenuList = styled.ul`
       cursor: pointer;
 
       &:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
@@ -45,25 +45,26 @@ const MenuList = styled.ul`
         background-color: #b3b3b3;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         text-decoration: none;
       }
 
       &.current {
-        color: #f85023;
+        color: #886ab5;
         background: #edeff2;
         cursor: default;
       }
 
       &.current:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #f85023;
+        background-color: #886ab5;
       }
     }
   }
@@ -79,7 +80,7 @@ const MenuList = styled.ul`
       cursor: pointer;
 
       &:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
@@ -89,25 +90,26 @@ const MenuList = styled.ul`
         background-color: #b3b3b3;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         text-decoration: none;
       }
 
       &.current {
-        color: #f85023;
+        color: #886ab5;
         background: #edeff2;
         cursor: default;
       }
 
       &.current:before {
-        content: "";
+        content: '';
         position: relative;
         left: -8px;
         display: inline-block;
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        background-color: #f85023;
+        background-color: #886ab5;
       }
     }
   }
@@ -115,7 +117,7 @@ const MenuList = styled.ul`
 class LeftMenu extends React.Component {
   constructor(prop) {
     super(prop);
-    
+
     this.state = {
       // strUrl: 'Bcask',
       strUrl: this.props.history.location.param === 'fromWidget' ? 'Bcaskinfo' : 'Bcask',
@@ -123,12 +125,10 @@ class LeftMenu extends React.Component {
     this.classChange = this.classChange.bind(this);
   }
 
-  componentDidMount() {
-  }
-  componentDidUpdate() {
-  }
+  componentDidMount() {}
+  componentDidUpdate() {}
 
-  classChange = (url) => {
+  classChange = url => {
     if (url.length <= 0) {
       return;
     } else if (this.state.strUrl === url) {
@@ -139,12 +139,11 @@ class LeftMenu extends React.Component {
       strUrl: url,
     });
     this.props.history.push(`/${basicPath.APPS}/businesscard/BcMain/${url}Sub`);
-  }
+  };
 
   render() {
     const menuParsing = url => (
       <MenuList>
-
         <li>
           <span
             className={url === 'Guide' ? 'menu current' : 'menu'}
@@ -153,7 +152,8 @@ class LeftMenu extends React.Component {
             role="button"
             tabIndex="0"
             key={1}
-          >이용 안내
+          >
+            이용 안내
           </span>
         </li>
 
@@ -165,7 +165,8 @@ class LeftMenu extends React.Component {
             role="button"
             tabIndex="0"
             key={2}
-          >명함 신청
+          >
+            명함 신청
           </span>
         </li>
         <li>
@@ -176,104 +177,107 @@ class LeftMenu extends React.Component {
             role="button"
             tabIndex="0"
             key={3}
-          >신청결과 조회
+          >
+            신청결과 조회
           </span>
         </li>
 
         <li>
-          <span
-            className={url === 'Bcadmin' ? 'menu current' : 'menu'}
-            role="button"
-            tabIndex="0"
-            key={4}
-          >명함신청 관리
+          <span className={url === 'Bcadmin' ? 'menu current' : 'menu'} role="button" tabIndex="0" key={4}>
+            명함신청 관리
           </span>
         </li>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin00' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin00')}
-                                  onKeyPress={() => this.classChange('BcAdmin00')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={5}
-                                >전체현황
-                                </span>
-                              </ol>
+        <ol>
+          <span
+            className={url === 'BcAdmin00' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin00')}
+            onKeyPress={() => this.classChange('BcAdmin00')}
+            role="button"
+            tabIndex="0"
+            key={5}
+          >
+            전체현황
+          </span>
+        </ol>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin01' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin01')}
-                                  onKeyPress={() => this.classChange('BcAdmin01')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={6}
-                                >승인대상
-                                </span>
-                              </ol>
+        <ol>
+          <span
+            className={url === 'BcAdmin01' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin01')}
+            onKeyPress={() => this.classChange('BcAdmin01')}
+            role="button"
+            tabIndex="0"
+            key={6}
+          >
+            승인대상
+          </span>
+        </ol>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin02' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin02')}
-                                  onKeyPress={() => this.classChange('BcAdmin02')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={7}
-                                >발급대기
-                                </span>
-                              </ol>
+        <ol>
+          <span
+            className={url === 'BcAdmin02' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin02')}
+            onKeyPress={() => this.classChange('BcAdmin02')}
+            role="button"
+            tabIndex="0"
+            key={7}
+          >
+            발급대기
+          </span>
+        </ol>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin03' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin03')}
-                                  onKeyPress={() => this.classChange('BcAdmin03')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={8}
-                                >발급완료
-                                </span>
-                              </ol>
+        <ol>
+          <span
+            className={url === 'BcAdmin03' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin03')}
+            onKeyPress={() => this.classChange('BcAdmin03')}
+            role="button"
+            tabIndex="0"
+            key={8}
+          >
+            발급완료
+          </span>
+        </ol>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin04' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin04')}
-                                  onKeyPress={() => this.classChange('BcAdmin04')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={9}
-                                >배송완료
-                                </span>
-                              </ol>
+        <ol>
+          <span
+            className={url === 'BcAdmin04' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin04')}
+            onKeyPress={() => this.classChange('BcAdmin04')}
+            role="button"
+            tabIndex="0"
+            key={9}
+          >
+            배송완료
+          </span>
+        </ol>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin05' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin05')}
-                                  onKeyPress={() => this.classChange('BcAdmin05')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={10}
-                                >보류내역
-                                </span>
-                              </ol>
+        <ol>
+          <span
+            className={url === 'BcAdmin05' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin05')}
+            onKeyPress={() => this.classChange('BcAdmin05')}
+            role="button"
+            tabIndex="0"
+            key={10}
+          >
+            보류내역
+          </span>
+        </ol>
 
-                              <ol>
-                                <span
-                                  className={url === 'BcAdmin06' ? 'menu current' : 'menu'}
-                                  onClick={() => this.classChange('BcAdmin06')}
-                                  onKeyPress={() => this.classChange('BcAdmin06')}
-                                  role="button"
-                                  tabIndex="0"
-                                  key={11}
-                                >취소내역
-                                </span>
-                              </ol>
-
+        <ol>
+          <span
+            className={url === 'BcAdmin06' ? 'menu current' : 'menu'}
+            onClick={() => this.classChange('BcAdmin06')}
+            onKeyPress={() => this.classChange('BcAdmin06')}
+            role="button"
+            tabIndex="0"
+            key={11}
+          >
+            취소내역
+          </span>
+        </ol>
 
         <li>
           <span
@@ -283,10 +287,11 @@ class LeftMenu extends React.Component {
             role="button"
             tabIndex="0"
             key={12}
-          >신청자원본조회
+          >
+            신청자원본조회
           </span>
         </li>
-{/*
+        {/*
         <li>
           <span
             className={url === 'Notify' ? 'menu current' : 'menu'}
@@ -304,29 +309,26 @@ class LeftMenu extends React.Component {
 
     return (
       <StyledAdminLeftMenu>
-        <nav>
-          {menuParsing(this.state.strUrl)}
-        </nav>
+        <nav>{menuParsing(this.state.strUrl)}</nav>
       </StyledAdminLeftMenu>
     );
   }
 }
 
-
 LeftMenu.propTypes = {
-  history: PropTypes.object,    //eslint-disable-line
-  historyPush: PropTypes.func,  //eslint-disable-line
+  history: PropTypes.object, //eslint-disable-line
+  historyPush: PropTypes.func, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    historyPush: url => dispatch(push(url)),
-  }
-);
-
-const mapStateToProps = createStructuredSelector({
+const mapDispatchToProps = dispatch => ({
+  historyPush: url => dispatch(push(url)),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const mapStateToProps = createStructuredSelector({});
+
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 export default compose(withConnect)(LeftMenu);
