@@ -540,6 +540,8 @@ class App extends React.PureComponent {
   };
 
   execPage = (node, type) => {
+    console.debug('@@@@ node: ', node);
+    console.debug('@@@@ type: ', type);
     const { dockAppList } = this.props;
     if (node === 'common') {
       const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
