@@ -51,6 +51,7 @@ class ManualView extends Component {
   handleCloseModal = () => {
     const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
     setIsViewContents(false, widgetId);
+    setNewsfeedModalView(false, widgetId);
     resetManualView(widgetId);
     setSelectedMualIdx(0, widgetId);
     setListSelectedMualIdx(0, widgetId);
@@ -201,6 +202,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getManualView: (widgetId, flag) => dispatch(actions.getManualViewBySaga(widgetId, flag)),
+  setNewsfeedModalView: (modalView, widget_id) => dispatch(newsfeedAction.setModalView(modalView, widget_id)),
   setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
   setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
   setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),

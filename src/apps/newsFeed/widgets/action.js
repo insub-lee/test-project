@@ -52,7 +52,8 @@ export const setModalIdx = (modalIdx) => ({
   modalIdx,
 });
 
-export const setModalView = (modalView) => ({
+export const setModalView = (modalView, widget_id) => ({
   type: constants.SET_MODAL_VIEW,
   modalView,
+  widget_id,
 });
