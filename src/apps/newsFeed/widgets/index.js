@@ -103,7 +103,7 @@ class NewsFeed extends Component {
               </Tabs>
         </StyleWiget>
         <Modal
-          width={1154}
+          width={1198}
           bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
           style={{ top: 42 }}
           visible={ modalView }

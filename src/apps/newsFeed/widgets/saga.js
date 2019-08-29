@@ -13,7 +13,6 @@ export function* getDataList(payload) {
   };
 
   const result = yield call(Axios.post, `/api/manual/v1/ManualWidgetHandler`, data);
-  console.log('리스폰확인', result.widgetData);
   const widgetData = result.widgetData
   const oldWidgetDataList = yield select(selectors.selectWidgetDataList())
 

@@ -13,6 +13,7 @@ import StyledTabPanel from '../components/Tab/StyledTabPanel';
 import TopbarBtnWrap from '../components/TopbarBtnWrap';
 import IconCollection from '../components/IconCollection';
 import * as listActions from '../CSManualList/actions';
+import * as newsfeedAction from 'apps/newsFeed/widgets/action';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -49,7 +50,7 @@ class ManualView extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId } = this.props;
+    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId, setNewsfeedModalView } = this.props;
     setIsViewContents(false, widgetId);
     setNewsfeedModalView(false, widgetId);
     resetManualView(widgetId);
