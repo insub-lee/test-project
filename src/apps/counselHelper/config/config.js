@@ -15,6 +15,7 @@ class config extends PureComponent {
       let styled;
       const LVL = query.get('LVL');
       const BIZGRP_ID = query.get('BIZGRP_ID');
+      const KEY = query.get('BIZGRP_ID');
       const NAME_KOR = query.get('NAME_KOR');
       switch (LVL) {
         case 1:
@@ -39,7 +40,7 @@ class config extends PureComponent {
       }
 
       return (
-        <li style={styled} role="presentation">
+        <li style={styled} role="presentation" key={KEY}>
           {NAME_KOR}
         </li>
       );

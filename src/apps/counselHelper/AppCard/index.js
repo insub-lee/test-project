@@ -1,5 +1,8 @@
 import React from 'react';
 import { Modal, Rate } from 'antd';
+// import Test from 'containers/portal/App/UserMenuCard/BizMenuCardDetail/BizInfo';
+import ModalView from 'containers/portal/App/UserMenuCard/BizMenuCardDetail/modalindex';
+import { createBrowserHistory as createHistory } from 'history';
 import appImg from '../../../images/icon-app.png';
 import Styled from './Styled';
 // <a href={`/portal/card/bizMenu/detail/info/${value}`} className="app-card-text">
@@ -14,8 +17,16 @@ class AppCard extends React.PureComponent {
   };
 
   render() {
+    const history = createHistory();
     const { title, value } = this.props;
-    console.log('앱카드프롭', this.props);
+    const bizInfo = value;
+    const match = {
+      path: '/portal/card/:TYPE/detail/info/:BIZGRP_ID',
+      params: { BIZGRP_ID: value.toString(), TYPE: 'bizMenu' },
+      url: `/portal/card/bizMenu/detail/info/${value}`,
+    };
+    history.location.pathname = `/portal/card/bizMenu/detail/info/${value}`;
+
     return (
       <Styled className="app-card">
         <div className="app-card-body" onClick={this.handleOnclick} role="presentation">
@@ -37,7 +48,7 @@ class AppCard extends React.PureComponent {
           onCancel={this.handleOnclick}
           closable={false}
         >
-          <p>테스트 {title}</p>
+          <ModalView BIZGRP_ID={value} bizInfo={bizInfo} TYPE="bizMenu" match={match} history={history}></ModalView>
         </Modal>
       </Styled>
     );

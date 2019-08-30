@@ -18,18 +18,14 @@ class Widget extends PureComponent {
     const initData = this.props.item.data;
     const initId = this.props.item.WIDGET_ID;
     if (Object.keys(initData).length === 0) {
-      console.log('카테고리설정안함');
     } else {
-      console.log(initData.categorie);
       this.props.getDetail(initData.categorie, initId);
     }
   }
 
   render() {
-    console.log('@@@@ 프롭테스트: ', this.props);
     const { item, detail } = this.props;
-    console.log('아이템값');
-    console.log(item);
+    console.log('히스토리찾기', this.props);
     return (
       <StyleWidget>
         <HelperWidget detail={detail} />
