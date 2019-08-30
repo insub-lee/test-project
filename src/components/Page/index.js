@@ -302,9 +302,10 @@ class Page extends Component {
               </div>
             ) : (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' ? (
+                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' 
+                && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
                   <div>
-                    {setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE' ? (
+                    { (setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( //TODO 임시 풀사이즈 위젯 처리
                       <GridLayout
                         className="layout"
                         layout={layout}

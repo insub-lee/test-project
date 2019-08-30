@@ -24,9 +24,16 @@ const RootRouter = ({
     styleSpinner.height = '100vh';
     styleSpinner.paddingTop = '70%';
   }
+  const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size === 'FullSize';
   return (
     <div>
-      <div className={setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE' ? '' : 'gridWrapper'}>
+      <div
+        className={`${
+          (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize
+            ? ''
+            : 'gridWrapper'
+        }`}
+      >
         <Content
           className="portalContent"
           style={{

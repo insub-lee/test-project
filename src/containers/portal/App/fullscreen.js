@@ -197,7 +197,7 @@ var FullScreen = (function(_super) {
           ref: function(node) {
             return (_this.node = node);
           },
-          style: { width, position: 'relative', marginLeft: '55px' },
+          style: { width, position: 'relative', marginLeft: _this.props.isPreview ? '0px' : '55px' },
         },
         this.props.children,
       );
@@ -217,6 +217,7 @@ var FullScreen = (function(_super) {
   };
   FullScreen.defaultProps = {
     enabled: false,
+    isPreview: false,
   };
   return FullScreen;
 })(React.Component);
