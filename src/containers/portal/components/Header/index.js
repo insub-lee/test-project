@@ -136,8 +136,8 @@ Header.propTypes = {
   setMyMenuData: PropTypes.object,
   managerInfo: PropTypes.array,
   view: PropTypes.string.isRequired,
-  hasRoleAdmin: PropTypes.bool.isRequired,
-  location: PropTypes.object.isRequired,
+  hasRoleAdmin: PropTypes.bool,
+  location: PropTypes.object,
   headerTitle: PropTypes.string,
 };
 
@@ -145,6 +145,8 @@ Header.defaultProps = {
   setMyMenuData: 'common',
   managerInfo: undefined,
   headerTitle: '',
+  hasRoleAdmin: false,
+  location: {},
 };
 
 export default Header;
