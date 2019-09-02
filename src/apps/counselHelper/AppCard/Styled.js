@@ -25,10 +25,11 @@ const Styled = styled.div`
         display: block;
       }
     }
-    & > a {
+    & > div {
       display: table-cell;
       vertical-align: middle;
       align-items: center;
+      cursor: pointer;
       p {
         font-size: 14px;
         color: #000;

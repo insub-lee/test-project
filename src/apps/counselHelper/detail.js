@@ -9,26 +9,20 @@ class detail extends PureComponent {
     const noMap = <NoResult treeData={treeData} searchWord={searchWord} />;
 
     //  필터용 함수
-    let newArray = treeData.filter((item, index, array) => {
-      return !!~item.title.search(searchWord);
-    });
-    if (newArray.length === 0) {
-      const result = [];
-      newArray = treeData.filter((item, index, array) => {
-        const parent = item;
-        const temp = item.children.filter(function(item, index, array) {
-          return !!~item.title.search(searchWord);
-        });
-        if (temp.length === 0) {
-        } else {
-          parent.children = temp;
-          result.push(parent);
-        }
+    const newArray = treeData.filter((item, index, array) => {
+      if (item.title.search(searchWord) !== -1) {
+        return !!~item.title.search(searchWord);
+      }
+      const parent = item;
+      const test = item.children.filter(function(item, index, array) {
+        return !!~item.title.search(searchWord);
       });
-      console.log('필터결과!');
-      console.log(result);
-      newArray = result;
-    }
+      if (test.length !== 0) {
+        parent.children = test;
+
+        return parent;
+      }
+    });
     /* 필터 용 함수 */
 
     const appCardList = newArray.map(query => {

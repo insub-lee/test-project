@@ -175,7 +175,8 @@ export function* deleteNode(payload) {
 
     // main으로 화면 전환(현재 열려있는 메뉴가 삭제된 경우)
     if (node.APP_ID === APP_ID || node.PAGE_ID === PAGE_ID) {
-      history.push('/portal/store/appMain/myPage');
+      history.push('/portal/store/appMain/myPage/modal/app/list');
+      // history.push('/portal/store/appMain/myPage');
       // history.goBack();
     } else {
       // 메뉴 사용중 -> 사용안함 상태로 변경(앱, 업무그룹, 업무메뉴 리스트 화면인 경우)

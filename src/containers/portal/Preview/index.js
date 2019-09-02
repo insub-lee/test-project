@@ -155,6 +155,7 @@ class App extends React.Component {
                 view={view}
                 // UserSetting으로 전달될 콜백
                 myHNotiCnt={0}
+                headerTitle="PreView"
               />
               <Fullscreen
                 enabled={this.state.isFullscreenEnabled}
@@ -163,6 +164,7 @@ class App extends React.Component {
                 // 모바일 Dock ContextMenu 플래그 설정
                 view={view}
                 setIsCloseToFalse={this.setIsCloseToFalse}
+                isPreview={true} //임시 marginLeft 맞추기
               >
                 <Route
                   exact
@@ -182,12 +184,12 @@ class App extends React.Component {
                   )}
                 />
               </Fullscreen>
-              <Footer
+              {/* <Footer
                 style={{
                   background: 'transparent',
                 }}
                 view={view}
-              />
+              /> */}
             </AppWrapper>
           </Scrollbars>
         </Layout>

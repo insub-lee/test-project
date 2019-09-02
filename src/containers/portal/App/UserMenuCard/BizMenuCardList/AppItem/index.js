@@ -10,7 +10,10 @@ import Card from '../../../UserStore/components/uielements/card.style';
 
 /* eslint-disable */
 const Item = ({ paramType, appId, categoryId, title, subTitle, starPoint, starTotal, appIcon }) => {
-  const subTit = subTitle.length > 40 ? `${subTitle.substring(0, 40)}...` : subTitle.substring(0, 40);
+  let subTit = '';
+  if(subTitle) {
+    subTit = subTitle.length > 40 ? `${subTitle.substring(0, 40)}...` : subTitle.substring(0, 40);
+  }
 
   return (
     <Card className="categoryAppCard">

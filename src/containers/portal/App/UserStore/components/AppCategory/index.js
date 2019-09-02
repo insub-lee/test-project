@@ -48,7 +48,7 @@ class AppCategory extends Component {
           <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
               <Tab style={{ width: '100%' }}>
-                <Link to={'/portal/store'} onClick={resetSearchword}>
+                <Link to={'/portal/store/appMain/myPage/modal/app/list'} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
