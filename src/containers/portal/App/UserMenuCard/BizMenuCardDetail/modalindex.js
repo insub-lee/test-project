@@ -17,8 +17,6 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import BizInfo from './BizInfo';
-import AppInfo from './AppInfo';
-import PageInfo from './PageInfo';
 import TopMenu from './TopMenu/index';
 
 import StyleBizDetail from './StyleBizDetail';
@@ -62,7 +60,6 @@ class BizMenuCardDetail extends Component {
 
   /* eslint-disable */
   handleTreeOnClick = node => {
-    console.log('트리클릭 테스트');
     const {
       handleChangeSelectedIndex,
       history,
@@ -71,8 +68,9 @@ class BizMenuCardDetail extends Component {
         params: { TYPE },
       },
     } = this.props;
-    console.log(match);
+    console.log('핸들클릭 테스트', match);
     const preUrl = match.path.substr(0, match.path.indexOf('/:TYPE'));
+
     handleChangeSelectedIndex(node.MENU_ID);
 
     if (node.TYPE === 'Y') {
@@ -92,6 +90,7 @@ class BizMenuCardDetail extends Component {
 
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
     const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
+    console.log('랜더테스트 preURL', match);
 
     const {
       match: {
@@ -130,11 +129,7 @@ class BizMenuCardDetail extends Component {
                 />
               </li>
               <li className="rightContent">
-                <Switch>
-                  <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
-                  <Route path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
-                  <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
-                </Switch>
+                <BizInfo match={match}></BizInfo>
               </li>
             </ul>
           </StyleBizDetailContent>
