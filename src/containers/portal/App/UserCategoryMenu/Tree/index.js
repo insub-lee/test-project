@@ -11,11 +11,11 @@ import IconGo from 'images/portal/icon_go.png';
 import { lang } from 'utils/commonUtils';
 import { InputSearch } from 'components/Input';
 
+import { basicPath } from 'containers/common/constants';
 import CustomTheme from './theme';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
 import { SortableTreeWithoutDndContext as SortableTree } from './SortableMenuTree/react-sortable-tree';
-import { basicPath } from 'containers/common/constants';
 
 const features = 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes';
 
@@ -117,6 +117,7 @@ class Tree extends Component {
           }}
           style={{ cursor: 'pointer' }}
         >
+          <i className={nodeData.children && nodeData.children.length > 0 ? 'fa fa-address-card' : 'file'} />
           {lang.get('NAME', nodeData)}
           <Badge count={nodeData.UNREAD_CNT !== undefined ? nodeData.UNREAD_CNT : ''} overflowCount={99} className="inTree" />
         </button>

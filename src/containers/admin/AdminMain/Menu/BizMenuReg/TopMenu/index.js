@@ -18,7 +18,7 @@ import * as actions from './actions';
 import messages from './messages';
 
 import StyleTopMenu from './StyleTopMenu';
-import { BtnDkGray, BtnBizPreview, BtnBizSettings } from '../../../../components/uielements/buttons.style';
+import { BtnPrimary, BtnBizPreview, BtnBizSettings } from '../../../../components/uielements/buttons.style';
 
 // import BizMenuTree from '../../../../components/AppPreview/BizMenuTree';
 // import AppPreview from '../../../../components/AppPreview';
@@ -86,14 +86,14 @@ class TopMenu extends React.Component {
                 ''
               )}
               {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') ? (
-                <BtnDkGray
+                <BtnPrimary
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {
                     feed.showConfirm(`${intlObj.get(messages.askConfirm)}`, '', () => confirmBizGroup(history, BIZGRP_ID));
                   }}
                 >
                   확정
-                </BtnDkGray>
+                </BtnPrimary>
               ) : (
                 ''
               )}
