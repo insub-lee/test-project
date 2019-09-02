@@ -107,7 +107,7 @@ class ItemList extends Component {
           const serviceType = `${app.MENU_SVC_YN === 'Y' ? 'A' : ''}${app.MENU_SVC_YN === 'Y' && app.MENU_SVC_YN === app.WIDGET_SVC_YN ? '/' : ''}${app.WIDGET_SVC_YN === 'Y' ? 'W' : ''}`;
 
           if (app.APP_TYPE === 'A') { // A - 앱
-            const handleRegistApp = () => registApp(app.APP_ID, app.CATG_ID);
+            const handleRegistApp = () => registApp(app.APP_ID, app.CATG_ID, app.SRC_PATH);
             const handleRegistCategory = () => registCategory(app.APP_ID, app.CATG_ID);
 
             return (
