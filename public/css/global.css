@@ -179,6 +179,10 @@ html a:active {
   visibility: visible !important;
   height: 2px;
 }
+
+.widgetBody .ant-tabs-bar .ant-tabs-nav-wrap {
+  margin-bottom: 0;
+}
 .widgetBody .ant-tabs-bar .ant-tabs-nav .ant-tabs-ink-bar {
   height: 1px;
 }

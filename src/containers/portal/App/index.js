@@ -25,6 +25,7 @@ import { basicPath } from 'containers/common/constants';
 import SideMenu from 'components/SideMenu';
 import * as routesSelector from 'containers/common/Routes/selectors';
 import * as authSelector from 'containers/common/Auth/selectors';
+import { BtnMyhome } from './UserStore/components/uielements/buttons.style';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
 import * as selectors from './selectors';
@@ -177,7 +178,8 @@ class App extends React.PureComponent {
             console.log('$$$ 8-3 독 고정상태에서 독 삭제');
             this.deleteApps();
             return;
-          } else if (executedDockPageId && executedDockPageId !== prevProps.executedDockPageId) {
+          }
+          if (executedDockPageId && executedDockPageId !== prevProps.executedDockPageId) {
             const index = Object.keys(apps).findIndex(o => apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
 
             if (index === -1) {
@@ -302,6 +304,7 @@ class App extends React.PureComponent {
     const { handleReload } = this.props;
     handleReload(item);
   };
+
   // ****************** 메뉴 관련 함수 ******************
   onSetOpen = open => {
     this.setState({ open: open }); //eslint-disable-line
@@ -607,7 +610,7 @@ class App extends React.PureComponent {
   };
 
   hideApps = () => {
-    const { apps }  = this.props;
+    const { apps } = this.props;
     const appsCopy = apps.slice();
     appsCopy.forEach((o, i) => {
       if (o.containerInfo.children[i + 1]) {
@@ -616,10 +619,10 @@ class App extends React.PureComponent {
           width: 0,
           display: 'none',
         });
-        o.containerInfo.children[i + 1].classList.remove('activeMenu');      
+        o.containerInfo.children[i + 1].classList.remove('activeMenu');
       }
-    });    
-  }
+    });
+  };
 
   goStore = () => {
     this.hideApps();
@@ -765,7 +768,12 @@ class App extends React.PureComponent {
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="home">
-                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} />
+              </Tooltip>
+            </div>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Tooltip placement="right" title="my home">
+                <BtnMyhome onClick={() => this.execPage(dockHomeItem, 'execDock')} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
@@ -780,6 +788,7 @@ class App extends React.PureComponent {
             </div>
             {/* 환경설정 주석 처리 2019-08-28
             <div className="iconPositon" style={{ marginTop: '20px' }}>
+
               <Tooltip placement="right" title="환경설정">
                 <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
               </Tooltip>
