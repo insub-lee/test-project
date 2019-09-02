@@ -65,8 +65,6 @@ class MyPageTree extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('nextProps.selectedIndex');
-    console.log(nextProps.selectedIndex);
     if (nextProps.treeData && nextProps.treeData.length > 0) {
       if (nextProps.selectedIndex === -1) {
         this.setState({

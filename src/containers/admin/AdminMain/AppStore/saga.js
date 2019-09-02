@@ -258,10 +258,11 @@ export function* deleteNode(payload) {
       feed.error(`${intlObj.get(messages.cateDeleteFail2)}`);
     }
   } else if (node.NODE_TYPE === 'A' || node.NODE_TYPE === 'P') {
+    const { SITE_ID, APP_ID, PRNT_ID, CATG_ID } = node;
     const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteApp', {
-      SITE_ID: Number(node.SITE_ID),
-      APP_ID: Number(node.APP_ID),
-      CATG_ID: Number(node.PRNT_ID),
+      SITE_ID: Number(SITE_ID),
+      APP_ID: Number(APP_ID),
+      CATG_ID: Number(PRNT_ID),
     });
     const { code, resultCategoryData } = response;
 
@@ -280,8 +281,9 @@ export function* deleteNode(payload) {
         selectedIndex: node.PRNT_ID.toString(),
       });
       // 성공 시 사용중으로 상태 변경.
-      // const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
-      // yield put({ type: constants.SET_MAPLIST, mapList });
+      const AppListStore = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
+      const mapList = changeWGCount(AppListStore.get('mapList'), CATG_ID, APP_ID, 0);
+      yield put({ type: constantsAppList.SET_MAPLIST, mapList });
     } else if (code === 500) {
       feed.error('앱 삭제에 실패 하였습니다.');
     }
@@ -312,6 +314,27 @@ export function* updateMymenuDisp() {
   // else {
   //   console.log('error?');
   // }
+}
+
+// 성공 시 사용중으로 상태 변경.
+function changeWGCount(mapList, CATG_ID, APP_ID, WG_COUNT) {
+  let matchMapIndex = 0;
+  let matchAppIndex = 0;
+  let result = false;
+
+  mapList.some((map, i) => {
+    result = false;
+    map.get('appList').some((m, j) => {
+      if (m.get('APP_ID') === APP_ID) {
+        matchMapIndex = i;
+        matchAppIndex = j;
+        result = true;
+        return result;
+      }
+    });
+    if (result) return result;
+  });
+  return mapList.setIn([matchMapIndex, 'appList', matchAppIndex, 'WG_COUNT'], WG_COUNT);
 }
 
 export default function* rootSaga() {
