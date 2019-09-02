@@ -12,7 +12,6 @@ export const SET_INIT_CATEGORY = 'apps/manual/newsFeed/SET_INIT_CATEGORY';
 
 // 카테고리
 export const CHANGE_SELECTED_CATEGORY = 'apps/manual/newsFeed/CHANGE_SELECTED_CATEGORY';
-export const SET_SELECTED_CATEGORY = 'apps/manual/newsFeed/SET_SELECTED_CATEGORY';
 export const SAVE_SELECTED_CATEGORY = 'apps/manual/newsFeed/SAVE_SELECTED_CATEGORY';
 
 // 모달

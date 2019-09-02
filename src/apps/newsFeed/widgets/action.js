@@ -37,21 +37,11 @@ export const selectCategoryList = (selectedCategoryList, item) => ({
   item,
 });
 
-export const setSelectedCategoryList = selectedCategoryList => ({
-  type: constants.SET_SELECTED_CATEGORY,
-  selectedCategoryList,
-});
-
 export const saveSelectedCategory = () => ({
   type: constants.SAVE_SELECTED_CATEGORY,
 });
 
 // 모달
-export const setModalIdx = (modalIdx) => ({
-  type: constants.SET_MODAL_IDX,
-  modalIdx,
-});
-
 export const setModalView = (modalView, widget_id) => ({
   type: constants.SET_MODAL_VIEW,
   modalView,

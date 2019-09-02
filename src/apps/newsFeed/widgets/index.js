@@ -20,7 +20,7 @@ class NewsFeed extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      widge_id: this.props.item.WIDGET_ID,
+      widget_id: this.props.item.WIDGET_ID,
       selectedMualIdx: undefined,
       selectedCategory: this.props.item.data.selectedCategory,
       totalList: [],
@@ -56,7 +56,6 @@ class NewsFeed extends Component {
   
   componentDidMount() {
     const { getNewsFeed, item, setModalView } = this.props;
-    let app_id = item.APP_ID;
     let widget_id = item.WIDGET_ID;
     let selectedCategory =  item.data.selectedCategory;
 
@@ -66,7 +65,19 @@ class NewsFeed extends Component {
 
     setModalView(false, widget_id);
     getNewsFeed(widget_id, selectedCategory);
+  }
 
+  componentWillReceiveProps(nextProps) {
+    const { widget_id, selectedCategory } = this.state;
+    const { getNewsFeed } = this.props;
+    const nextSelectedCategory = nextProps.item.data.selectedCategory;
+    
+    console.log('넥스트 프롬스 바뀌었니?',nextProps.item);
+    console.log('스테이트',selectedCategory);
+    console.log('넥스트프롬스', nextSelectedCategory);
+    if( selectedCategory !== nextSelectedCategory){
+      getNewsFeed(widget_id, nextSelectedCategory);
+    }
   }
 
   render() {
@@ -146,7 +157,6 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getNewsFeed: (widget_id, selectedCategory) => dispatch(actions.getNewsfeedDataList(widget_id, selectedCategory)),
-  setModalIdx: (modalIdx) => dispatch(actions.setModalIdx(modalIdx)),
   setModalView:( modalView, widget_id) => dispatch(actions.setModalView(modalView, widget_id)),
 });
 

@@ -47,7 +47,8 @@ const selectWidgetTotalCategory = () =>
 const selectWidgetCategory = () =>
   createSelector(
     selectNewsFeedData,
-    state => state.get('selectedCategory'),
+    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : undefined ), 
+    (state, widgetId) => state.getIn(['selectedCategory', widgetId]),
   );
 
 // 모달 - visible(bool)
@@ -60,10 +61,10 @@ const selectModalView = () =>
 
   // 모달 - IDX
 const selectModalIdx = () =>
-createSelector(
-  selectNewsFeedData,
-  state => state.get('modalIdx'),
-);
+  createSelector(
+    selectNewsFeedData,
+    state => state.get('modalIdx'),
+  );
 
 
 export {

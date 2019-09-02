@@ -44,8 +44,7 @@ export function* changeCategoryList(payload) {
           item_value:JSON.stringify({
           size: payload.item.size,
           user: payload.item.user,
-          data: {selectedCategory: []
-          },
+          data: {selectedCategory: []},
       })
       };
     yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
