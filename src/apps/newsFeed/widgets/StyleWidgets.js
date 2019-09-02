@@ -136,10 +136,10 @@ const StyleWidget = styled.div`
               color: #404040;
               font-size: 13px;
               background-color: transparent !important; //위젯 스킨 배경색 반영
+              box-shadow: none !important;
 
               &:first-child {
                 padding-left: 12px;
-                // background-image: url($/*{bulletIcon});  //위젯색상테마 포함됨
                 background-repeat: no-repeat;
                 background-position: 0 11px;
               }
@@ -156,13 +156,18 @@ const StyleWidget = styled.div`
                   text-overflow: ellipsis;
                   overflow: hidden;
                   white-space: nowrap;
+                  width: calc(100% - 50px);
                 }
 
                 .empInfo {
-                  // 임시로 Display: 
-                  display: none;
+                  // 임시로 Display:
+                  display: block;
                   margin-top: -2px;
                   line-height: 12px;
+                  position: absolute;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  right: 10px;
 
                   .subInfo {
                     // color: #707070;  //위젯색상테마 포함됨
@@ -178,7 +183,6 @@ const StyleWidget = styled.div`
                       width: 16px;
                       height: 12px;
                       margin-bottom: -1px;
-                      // background-image: url($/*{replyGrayIcon});  //위젯색상테마 포함됨
                       background-repeat: no-repeat;
                       background-position: 50% 2px;
                     }
