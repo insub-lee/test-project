@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Route, Switch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -86,7 +86,7 @@ class BizMenuCardDetail extends Component {
   render() {
     console.debug('@@@@ this.props: ', this.props);
 
-    const { bizMenuData, selectedIndex, history, match } = this.props;
+    const { bizMenuData, selectedIndex, history, match, onCancel } = this.props;
 
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
     const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
@@ -112,13 +112,14 @@ class BizMenuCardDetail extends Component {
             <ul className="bizDetailContentWrapper">
               <li className="leftContent inPage">
                 <h2>
-                  <button
-                    onClick={() => history.push(`${buttonPreUrl}/detail/info/${BIZGRP_ID}`)}
-                    className="ellipsis"
-                    style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
-                  >
-                    {lang.get('NAME', bizMenuData)}
-                  </button>
+                  <Link to={`${buttonPreUrl}/detail/info/${BIZGRP_ID}`} onClick={onCancel}>
+                    <button
+                      className="ellipsis"
+                      style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
+                    >
+                      {lang.get('NAME', bizMenuData)}
+                    </button>
+                  </Link>
                 </h2>
                 {bizMenuData.children ? '' : <p style={{ paddingLeft: 12 }}>{intlObj.get(messages.noMenu)}</p>}
                 <BizMenuTree

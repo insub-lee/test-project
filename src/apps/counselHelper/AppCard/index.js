@@ -48,7 +48,7 @@ class AppCard extends React.PureComponent {
           onCancel={this.handleOnclick}
           closable={false}
         >
-          <ModalView BIZGRP_ID={value} bizInfo={bizInfo} TYPE="bizMenu" match={match} history={history}></ModalView>
+          <ModalView match={match} history={history} onCancel={this.handleOnclick}></ModalView>
         </Modal>
       </Styled>
     );

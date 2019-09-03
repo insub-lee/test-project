@@ -25,7 +25,7 @@ class Widget extends PureComponent {
 
   render() {
     const { item, detail } = this.props;
-    console.log('히스토리찾기', this.props);
+
     return (
       <StyleWidget>
         <HelperWidget detail={detail} />
