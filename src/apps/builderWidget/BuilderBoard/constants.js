@@ -1,4 +1,4 @@
-const prefix = 'apps/builderWidget/';
+const prefix = 'apps/BuilderWidget/';
 export const ACTION_TYPES = `${prefix}ACTION_TYPES`;
 export const GET_VIEW = `${prefix}GET_VIEW`;
 export const SUCCESS_GET_VIEW = `${prefix}SUCCESS_GET_VIEW`;
