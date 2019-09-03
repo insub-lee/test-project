@@ -1,6 +1,7 @@
 import React from 'react';
 import { fromJS } from 'immutable';
 import { takeLatest, put, call, select } from 'redux-saga/effects';
+import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
@@ -114,6 +115,24 @@ function* getEditorInfoSaga() {
   const response = yield call(Axios.get, `/api/manual/v1/ManualEditorHandler?MUAL_IDX=${pageMoveType.get('selectedMualIdx')}`);
   if (response && response.tabList) {
     const tabList = makeEditorTabList(response.tabList, response.componentList);
+    if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
+      const indexRelationIdxList = response.componentList.filter(find => find.TYPE === 'indexRelation');
+      const indexRelationParam = [];
+      indexRelationIdxList.forEach(node => {
+        if (node.COMP_OPTION.length > 0) {
+          const { MUAL_ORG_IDX, MUAL_TABCOMP_OIDX } = JSON.parse(node.COMP_OPTION);
+          if (indexRelationParam.findIndex(find => find.MUAL_TABCOMP_OIDX === MUAL_TABCOMP_OIDX) === -1) {
+            indexRelationParam.push({ MUAL_ORG_IDX, MUAL_TABCOMP_OIDX });
+          }
+        }
+      });
+      const responseComp = yield call(Axios.post, `/api/manual/v1/IndexRelationComponetHandler/${pageMoveType.get('selectedMualIdx')}`, {
+        paramList: indexRelationParam,
+      });
+      if (responseComp) {
+        yield put(actions.setIndexRelationListByReducr(fromJS(responseComp.list || [])));
+      }
+    }
     yield put(actions.setEditorMgrByReduc(fromJS(tabList)));
     yield put(actions.setEditorComponentIndexByReduc(0));
   }
@@ -425,6 +444,52 @@ function* saveCompareData() {
   }
 }
 
+function* getIndexRelationManualList(action) {
+  const { idx } = action;
+  const response = yield call(Axios.get, `/api/manual/v1/ManualListHandler/${idx}`);
+  if (response) {
+    const { manualList } = response;
+    yield put(actions.setIndexRelationManualListByReducr(fromJS(manualList || [])));
+  }
+}
+
+function* getInexRelationComponentList(action) {
+  const { idx } = action;
+  const response = yield call(Axios.get, `/api/manual/v1/IndexRelationComponetHandler/${idx}`);
+  if (response && response.tabList) {
+    const tabList = makeRelationCompList(response.tabList, response.componentList);
+    yield put(actions.setInexRelationComponentListByReduc(fromJS(tabList)));
+    // yield put(actions.setEditorComponentIndexByReduc(0));
+  }
+}
+
+const makeRelationCompList = (tabList, componentList) => {
+  const resultList = tabList.map(item => {
+    let tempComp = componentList.filter(comp => comp.MUAL_TAB_IDX === item.MUAL_TAB_IDX && comp.TYPE === 'index');
+    tempComp = tempComp.sort((a, b) => (a.SORT_SQ > b.SORT_SQ ? 1 : -1));
+    tempComp = tempComp.map(comp => {
+      const { MUAL_IDX, MUAL_TAB_IDX, MUAL_TABCOMP_IDX, MUAL_TABCOMP_OIDX, MUAL_TABCOMP_PIDX, MUAL_COMPVIEWINFO, SORT_SQ, TYPE, MUAL_ORG_IDX } = comp;
+      const childComp = componentList.filter(subComp => subComp.MUAL_TABCOMP_PIDX === MUAL_TABCOMP_IDX && subComp.TYPE === 'editor');
+      return {
+        MUAL_IDX,
+        MUAL_TAB_IDX,
+        MUAL_TABCOMP_OIDX,
+        MUAL_TABCOMP_PIDX,
+        SORT_SQ,
+        TYPE,
+        key: MUAL_TABCOMP_IDX,
+        title: MUAL_COMPVIEWINFO,
+        childComp,
+        MUAL_ORG_IDX,
+      };
+    });
+    tempComp = getTreeFromFlatData({ flatData: tempComp, getKey: node => node.key, getParentKey: node => node.MUAL_TABCOMP_PIDX, rootKey: 0 });
+    const { MUAL_IDX, MUAL_TABNAME, MUAL_TAB_IDX, SORT_SQ } = item;
+    return { MUAL_IDX, SORT_SQ, key: MUAL_TAB_IDX, title: MUAL_TABNAME, children: tempComp };
+  });
+  return resultList;
+};
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
@@ -446,4 +511,6 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.GET_CATEGORYLIST, getCategoryListBySaga);
   yield takeLatest(constantTypes.GET_COMPARE_MGR_SAGA, getCompareMgr);
   yield takeLatest(constantTypes.SAVE_COMPARE_DATA_SAGA, saveCompareData);
+  yield takeLatest(constantTypes.GET_INDEX_RELATION_MANUAL_LIST_SAGA, getIndexRelationManualList);
+  yield takeLatest(constantTypes.GET_INDEX_RELATION_COMPONENT_LIST_SAGA, getInexRelationComponentList);
 }

@@ -80,42 +80,38 @@ const StyleMyAppTree = styled.div`
 
 // 카테고리 추가 아이콘 버튼
 const FolderBtn = styled.button`
-  width: 15px;
-  height: 15px;
+  width: 25px;
+  height: 25px;
   border: 1px solid #d3d5d7;
   border-radius: 3px;
   background: #ffffff url(${iconFolder}) no-repeat 50% 50%;
-  background-size: 12px;
 `;
 
 // 매뉴얼 추가 아이콘 버튼
 const AddCtgBtn = styled.button`
-  width: 15px;
-  height: 15px;
+  width: 25px;
+  height: 25px;
   border-color: #ffffff;
   border-radius: 3px;
   background: #ffffff url(${iconAddCtg}) no-repeat 50% 50%;
-  background-size: 12px;
 `;
 
 // 수정 아이콘 버튼
 const EditCtgBtn = styled.button`
-  width: 15px;
-  height: 15px;
+  width: 25px;
+  height: 25px;
   border-color: #ffffff;
   border-radius: 3px;
   background: #ffffff url(${iconEdit}) no-repeat 50% 50%;
-  background-size: 12px;
 `;
 
 // 삭제 아이콘 버튼
 const DeleteCtgBtn = styled.button`
-  width: 15px;
-  height: 15px;
+  width: 25px;
+  height: 25px;
   border-color: #2a2a2a;
   border-radius: 3px;
   background: #2a2a2a url(${iconTrashcan}) no-repeat 50% 50%;
-  background-size: 12px;
 `;
 
 export default StyleMyAppTree;

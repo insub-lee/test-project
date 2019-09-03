@@ -211,4 +211,26 @@ export const saveCompareDataBySaga = () => ({ type: constantTypes.SAVE_COMPARE_D
 
 export const setSelectedCompareManageIdx = idx => ({ type: constantTypes.SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR, idx });
 
-// export const addEditorComponentValueByReduc =
+export const addEditorComponentValueByReduc = (tabIdx, compIdx, key, value) => ({
+  type: constantTypes.ADD_EDITOR_COMPONENT_VALUE_REDUCR,
+  tabIdx,
+  compIdx,
+  key,
+  value,
+});
+
+export const removeEditorComponentValueByReduc = (tabIdx, compIdx, key) => ({ type: constantTypes.REMOVE_EDITOR_COMPONENT_VALUE_REDUCR, tabIdx, compIdx, key });
+
+export const setIsIndexRelationModalByReducr = flag => ({ type: constantTypes.SET_IS_INDEX_RELATION_MODAL_REDUCR, flag });
+
+export const getIndexRelationManualListBySaga = idx => ({ type: constantTypes.GET_INDEX_RELATION_MANUAL_LIST_SAGA, idx });
+
+export const setIndexRelationManualListByReducr = list => ({ type: constantTypes.SET_INDEX_RELATION_MANUAL_LIST_REDUCR, list });
+
+export const getIndexRelationComponetListBySaga = idx => ({ type: constantTypes.GET_INDEX_RELATION_COMPONENT_LIST_SAGA, idx });
+
+export const setInexRelationComponentListByReduc = list => ({ type: constantTypes.SET_INDEX_RELATION_COMPONENT_LIST_REDUCR, list });
+
+export const setIndexRelationComponetIitemByReducr = item => ({ type: constantTypes.SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR, item });
+
+export const setIndexRelationListByReducr = list => ({ type: constantTypes.SET_INDEX_RELATION_LIST_REDUCR, list });
