@@ -3,7 +3,7 @@ export const writingTool = {
   menus: [
     { menuId: 0, menuName: 'Editor', menuIcon: 'toolIcon tiEditor', menuType: 'editor' },
     { menuId: 1, menuName: '일반 목차', menuIcon: 'toolIcon tiIndex', menuType: 'index' },
-    // { menuId: 2, menuName: '내부 목차', menuIcon: 'toolIcon tiIndex', menuType: 'innerIndex' },
+    { menuId: 2, menuName: '관련 목차', menuIcon: 'toolIcon tiIndex', menuType: 'indexRelationPopup' },
     { menuId: 3, menuName: '링크 목차', menuIcon: 'toolIcon tiIndex', menuType: 'indexLink' },
     // { menuId: 4, menuName: '외부URL', menuIcon: 'toolIcon tiIndex', menuType: 'outerIndex' },
     { menuId: 5, menuName: '파일링크', menuIcon: 'toolIcon tiIndex', menuType: 'indexFile' },

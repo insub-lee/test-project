@@ -32,7 +32,15 @@ const Pagination = ({
             <button
               type="button"
               className="prev-btn"
-              onClick={() => handleClickNav(mualHistoryList.getIn([selectedIdx - 1, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx)}
+              onClick={() =>
+                handleClickNav(
+                  mualHistoryList.getIn([selectedIdx - 1, 'MUAL_ORG_IDX']),
+                  widgetId,
+                  setSelectedMualIdx,
+                  setListSelectedMualIdx,
+                  setNewsfeedModalIdx,
+                )
+              }
             >
               {mualHistoryList.getIn([selectedIdx - 1, 'MUAL_NAME']) || ''}
             </button>
@@ -46,7 +54,9 @@ const Pagination = ({
             <button
               type="button"
               className="next-btn"
-              onClick={() => handleClickNav(mualHistoryList.getIn([nextIdx, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx)}
+              onClick={() =>
+                handleClickNav(mualHistoryList.getIn([nextIdx, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx)
+              }
             >
               {mualHistoryList.getIn([nextIdx, 'MUAL_NAME']) || ''}
             </button>

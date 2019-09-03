@@ -29,7 +29,7 @@ const columns = setManualManage => [
     key: 'MUAL_IDX',
     render: (text, record) => (
       <Button className="manualListTitle" type="link" onClick={() => setManualManage('view', record.CATEGORY_IDX, record.MUAL_IDX)}>
-        {record.MUAL_NAME}
+        {<span dangerouslySetInnerHTML={{ __html: record.MUAL_NAME }} />}
       </Button>
     ),
     width: '60%',

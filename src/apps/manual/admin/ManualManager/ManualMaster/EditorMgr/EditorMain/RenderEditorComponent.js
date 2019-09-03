@@ -5,13 +5,24 @@ import IndexLink from './IndexLink';
 import IndexFile from './IndexFile';
 import Editor from './Editor';
 import IndexBasic from './IndexBasic';
+import IndexRelation from './IndexRelation';
 
 const onClickComponent = (e, selectItem, selectedComponentIdx, handleChangeCompIdx) => {
   e.stopPropagation();
   if (selectItem.MUAL_TABCOMP_IDX !== selectedComponentIdx) handleChangeCompIdx(selectItem.MUAL_TABCOMP_IDX);
 };
 
-const RenderEditorComponent = (item, handleChangeCompValue, handleChangeCompIdx, selectedComponentIdx, focusComponetIdx, addAreaIdx) => {
+const RenderEditorComponent = (
+  item,
+  handleChangeCompValue,
+  handleChangeCompIdx,
+  selectedComponentIdx,
+  focusComponetIdx,
+  addAreaIdx,
+  handlePushCompValue,
+  handleRemoveCompValue,
+  indexRelationList,
+) => {
   let innerContent = '';
   switch (item.TYPE) {
     case 'editor':
@@ -24,7 +35,25 @@ const RenderEditorComponent = (item, handleChangeCompValue, handleChangeCompIdx,
       innerContent = <IndexLink item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
       break;
     case 'indexFile':
-      innerContent = <IndexFile item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
+      innerContent = (
+        <IndexFile
+          item={item}
+          selectedComponentIdx={selectedComponentIdx}
+          handleChangeCompValue={handleChangeCompValue}
+          handlePushCompValue={handlePushCompValue}
+          handleRemoveCompValue={handleRemoveCompValue}
+        />
+      );
+      break;
+    case 'indexRelation':
+      innerContent = (
+        <IndexRelation
+          item={item}
+          selectedComponentIdx={selectedComponentIdx}
+          handleChangeCompValue={handleChangeCompValue}
+          indexRelationList={indexRelationList}
+        />
+      );
       break;
     case 'qna':
       innerContent = <QnA item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
