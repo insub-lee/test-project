@@ -18,6 +18,8 @@ import LinkBtnUpdateIcon from 'images/common/icon-update.png';
 
 import PreviewIcon from 'images/common/icon-preview.png';
 import SettingsIcon from 'images/common/icon-settings.png';
+
+import MyhomeIcon from 'images/common/icon-myhome.png';
 /* eslint-disable */
 // Gray Tone 버튼
 const BtnBlack = styled.button``;
@@ -467,6 +469,15 @@ const BtnBizSettings = styled.button`
   cursor: pointer;
 `;
 
+/* 개인홈 아이콘 */
+const BtnMyhome = styled.button`
+  width: 20px;
+  height: 20px;
+  background: url(${MyhomeIcon}) no-repeat center;
+  background-size: 100%;
+  cursor: pointer;
+`;
+
 export {
   BtnBlack,
   BtnDkGray,
@@ -496,4 +507,5 @@ export {
   BtnAppRegi,
   BtnBizPreview,
   BtnBizSettings,
+  BtnMyhome,
 };

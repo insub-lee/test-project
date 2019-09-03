@@ -77,8 +77,8 @@ class AppList extends Component {
       history.goBack();
     };
 
-    const registApp = (APP_ID, CATG_ID) => {
-      feed.showConfirm('등록 하시겠습니까?', '', () => handleRegistApp(APP_ID, CATG_ID, history));
+    const registApp = (APP_ID, CATG_ID, SRC_PATH) => {
+      feed.showConfirm('등록 하시겠습니까?', '', () => handleRegistApp(APP_ID, CATG_ID, SRC_PATH, history));
     };
 
     const registCategory = (APP_ID, CATG_ID) => {
@@ -158,8 +158,8 @@ export function mapDispatchToProps(dispatch) {
     handleGetMapListOne: key => dispatch(actions.getMapListOne(key)),
     handleGetMapAppListMore: key => dispatch(actions.getMapListMore(key)),
 
-    handleRegistApp: (APP_ID, CATG_ID, history) => {
-      dispatch(actions.registAppModal(APP_ID, CATG_ID, history));
+    handleRegistApp: (APP_ID, CATG_ID, SRC_PATH, history) => {
+      dispatch(actions.registAppModal(APP_ID, CATG_ID, SRC_PATH, history));
     },
     handleRegistCategory: (APP_ID, CATG_ID, type, history) => {
       dispatch(actions.registCategoryModal(APP_ID, CATG_ID, history));
