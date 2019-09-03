@@ -27,7 +27,7 @@ export default class News extends PureComponent {
       </a>
       <div className="empInfo">
         <span className="subInfo"></span>
-        <button className="more" onClick={() => false} id={val.row.MUAL_IDX}>
+        <button className="more" onClick={() => this.props.handleClick(val.row.MUAL_IDX)} id={val.row.MUAL_IDX}>
         <span>더보기</span>
         </button>
       </div>
