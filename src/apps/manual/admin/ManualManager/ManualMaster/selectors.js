@@ -180,6 +180,36 @@ const makeSelectedCompareManageIdx = () =>
     state => state.getIn(['manualMasterState', 'compareTempletMgr', 'manage', 'selectedIdx']),
   );
 
+const makeSelectIsIndexRelationModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'isIndexRelationModal']),
+  );
+
+const makeSelectIndexRelationManual = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'indexRelationManualList']).toJS(),
+  );
+
+const makeSelectIndexRelationComponetList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'indexRelationComponetList']).toJS(),
+  );
+
+const makeSelectedIndexRelationComponetIitem = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'selectedIRComponetItem']).toJS(),
+  );
+
+const makeSelectIndexRelationList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'indexRelationList']).toJS(),
+  );
+
 export default {
   makeSelectChooseRelMual,
   makeSelectManualMaster,
@@ -209,4 +239,9 @@ export default {
   makeSelectCompareManageTemplet,
   makeSelectCompareManageData,
   makeSelectedCompareManageIdx,
+  makeSelectIsIndexRelationModal,
+  makeSelectIndexRelationManual,
+  makeSelectIndexRelationComponetList,
+  makeSelectedIndexRelationComponetIitem,
+  makeSelectIndexRelationList,
 };

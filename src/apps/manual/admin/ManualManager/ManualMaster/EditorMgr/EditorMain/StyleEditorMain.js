@@ -91,6 +91,20 @@ const StyleEditorMain = styled.div`
               > input[type='text'] {
                 width: calc(100% - 100px);
               }
+              &.manualEditorFileLinkWrap {
+                align-items: baseline;
+                > div {
+                  width: 100%;
+                  margin-right: 2px;
+                }
+                .manualEditorFileLinkInputWrap {
+                  margin-bottom: 2px;
+                  > input[type='text'] {
+                    width: calc(100% - 39px);
+                    margin-right: 2px;
+                  }
+                }
+              }
             }
             .manualEditorUpload {
               display: inline-block;
