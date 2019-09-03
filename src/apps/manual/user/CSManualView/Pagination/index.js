@@ -7,13 +7,14 @@ import Styled from './Styled';
 
 const { Option } = Select;
 
-const handleClickNav = (mualOrgIdx, widgetId, setSelectedMualIdx, setListSelectedMualIdx) => {
+const handleClickNav = (mualOrgIdx, widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx) => {
   setListSelectedMualIdx(mualOrgIdx, widgetId);
   setSelectedMualIdx(mualOrgIdx, widgetId);
+  setNewsfeedModalIdx(mualOrgIdx, widgetId);
 };
 
 const Pagination = ({
-  pagerProps: { mualHistoryList, selectedMualIdx, setSelectedMualIdx, setListSelectedMualIdx, mualBookmarkList },
+  pagerProps: { mualHistoryList, selectedMualIdx, setSelectedMualIdx, setListSelectedMualIdx, mualBookmarkList, setNewsfeedModalIdx },
   widgetId,
   mualMaster,
 }) => {
@@ -31,7 +32,7 @@ const Pagination = ({
             <button
               type="button"
               className="prev-btn"
-              onClick={() => handleClickNav(mualHistoryList.getIn([selectedIdx - 1, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx)}
+              onClick={() => handleClickNav(mualHistoryList.getIn([selectedIdx - 1, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx)}
             >
               {mualHistoryList.getIn([selectedIdx - 1, 'MUAL_NAME']) || ''}
             </button>
@@ -45,7 +46,7 @@ const Pagination = ({
             <button
               type="button"
               className="next-btn"
-              onClick={() => handleClickNav(mualHistoryList.getIn([nextIdx, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx)}
+              onClick={() => handleClickNav(mualHistoryList.getIn([nextIdx, 'MUAL_ORG_IDX']), widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx)}
             >
               {mualHistoryList.getIn([nextIdx, 'MUAL_NAME']) || ''}
             </button>
@@ -56,7 +57,7 @@ const Pagination = ({
         <Select
           placeholder="Bookmark"
           style={{ width: 220 }}
-          onChange={mualOrgIdx => handleClickNav(mualOrgIdx, widgetId, setSelectedMualIdx, setListSelectedMualIdx)}
+          onChange={mualOrgIdx => handleClickNav(mualOrgIdx, widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx)}
         >
           {mualBookmarkList.map(node => (
             <Option key={`mualViewBookmark_${node.get('MUAL_ORG_IDX')}`} value={node.get('MUAL_ORG_IDX')}>
