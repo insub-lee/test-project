@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ReactDataGrid from 'containers/portal/components/ReactDataGrid';
+import noDataImg from 'images/bizstore/no-result.png';
 
 export default class News extends PureComponent {
   constructor(props) {
@@ -30,41 +31,42 @@ export default class News extends PureComponent {
 
   render() {
     const { dataList } = this.props;
-
-    const EmptyData = () => (
-      <div className="noWidgetContent">
-        <p className="noWCIcon">등록된 글이 없습니다.</p>
-      </div>
-    );
-
     const wgHeight = Number(this.props.widgetSize.split('X')[1]);
     const wgTitleHeight = 35;
     const rowHeight = 35;
     const item = dataList;
 
-    return (
-      <ReactDataGrid
-        columns={this.columns}
-        rowGetter={i => item[i]}
-        rowsCount={item.length}
-        rowHeight={rowHeight}
-        scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
-        minHeight={rowHeight * item.length} // 위젯 row 전체 높이
-        headerRowHeight={-1}
-        emptyRowsView={EmptyData}
-      />
-    );
+    if(item.length === 0){
+      return(
+      <div className='emptyDataView'>
+          <p>
+            <img src={noDataImg}></img><br/>등록된 게시물이 없습니다.
+          </p>
+      </div>
+      );
+    } else {
+      return (
+        <ReactDataGrid
+          columns={this.columns}
+          rowGetter={i => item[i]}
+          rowsCount={item.length}
+          rowHeight={rowHeight}
+          scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
+          minHeight={rowHeight * item.length} // 위젯 row 전체 높이
+          headerRowHeight={-1}
+        />
+      );
+    }
+
   }
 }
 
 News.propTypes = {
-  widgetSize: PropTypes.string,
   dataList: PropTypes.array,
   handleClick: PropTypes.func,
 };
 
 News.defaultProps = {
-  widgetSize: '1X1',
   dataList: [],
   handleClick: () => false,
 };
