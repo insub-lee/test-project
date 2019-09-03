@@ -40,10 +40,11 @@ export const registerBiz = (APP_ID, CATG_ID) => ({
   CATG_ID,
 });
 
-export const registAppModal = (APP_ID, CATG_ID, history) => ({
+export const registAppModal = (APP_ID, CATG_ID, SRC_PATH, history) => ({
   type: constants.REGIST_APP_MODAL,
   APP_ID,
   CATG_ID,
+  SRC_PATH,
   history,
 });
 

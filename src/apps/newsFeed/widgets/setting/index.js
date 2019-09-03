@@ -17,26 +17,40 @@ import './index.css';
 class NewsfeedSetting extends PureComponent {
   constructor(props) {
     super(props);
-    this.props.getInitCategoryList();
+    let widget_category = this.props.item.data.selectedCategory;
+
+    if(widget_category === undefined){
+      widget_category = [];
+    }
+
     this.state = {
-      items: [],
+      selectedItem: widget_category,
     };
   }
 
   onChangeCategory = e => {
     this.setState({
-      items: e,
+      selectedItem: e,
     });
   };
 
   applyWidgetConfig = () => {
-    const { selectCategoryList, item } = this.props;
-    const { items } = this.state;
-    selectCategoryList(items, item);
+    const { selectCategoryList, item, updateBizGroupChgYn } = this.props;
+    const { selectedItem } = this.state;
+
+    selectCategoryList(selectedItem, item);
+    updateBizGroupChgYn();
   };
 
+  componentDidMount(){
+    const { getInitCategoryList } = this.props;
+    getInitCategoryList();
+  }
+
   render() {
-    const { totalCategory, selectedCategoryList } = this.props;
+    const { totalCategory } = this.props;
+    const { selectedItem } = this.state;
+
     let flatData;
     if (totalCategory.size > 0) {
       flatData = totalCategory
@@ -54,30 +68,36 @@ class NewsfeedSetting extends PureComponent {
 
     const treeData = getTreeFromFlatData({ flatData, getKey: node => node.key, getParentKey: node => node.parentValue, rootKey: 0 });
 
+    const treeSelectConfig = {
+      treeData,
+      value: selectedItem,
+      onChange: this.onChangeCategory,
+      placeholder: '카테고리를 선택하세요',
+      treeNodeFilterProp: 'title',
+      allowClear: true,
+      multiple: true,
+      dropdownStyle: { maxHeight: 400, overflow: 'auto' },
+      style: { width: 500 },
+    }
+
     return (
-      <table>
-        <tr>
-          <td>
-            <TreeSelect
-              showSearch
-              treeData={treeData}
-              style={{ width: 500 }}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              placeholder="카테고리 선택"
-              autoClearSearchValue
-              defaultValue={selectedCategoryList.size === 0 ? null : selectedCategoryList.toJS()}
-              allowClear
-              multiple
-              onChange={this.onChangeCategory}
-            />
-          </td>
-          <td>
-            <Button type="primary" onClick={this.applyWidgetConfig}>
-              적용
-            </Button>
-          </td>
-        </tr>
-      </table>
+      <div className="commonPage">
+        <div className="basicSettingTable">
+          <table>
+            <tr>
+              <th>신규지식 카테고리 설정</th>
+              <td>
+                <TreeSelect  {...treeSelectConfig} />
+              </td>
+              <td>
+                <Button type="primary" onClick={this.applyWidgetConfig}>
+                  선택완료
+                </Button>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
     );
   }
 }
@@ -99,13 +119,11 @@ NewsfeedSetting.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   selectedCategoryList: selectors.selectWidgetCategory(),
   totalCategory: selectors.selectWidgetTotalCategory(),
-  widgetSize: selectors.selectWidgetSize(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getInitCategoryList: () => dispatch(actions.getInitCategoryList()),
   selectCategoryList: (selectedCategoryList, item) => dispatch(actions.selectCategoryList(selectedCategoryList, item)),
-  getNewsFeed: (widgetSize, selectedCategory) => dispatch(actions.getNewsfeedDataList(widgetSize, selectedCategory)),
 });
 
 const withConnect = connect(

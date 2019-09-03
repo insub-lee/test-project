@@ -6,25 +6,26 @@ import * as selectors from './selector';
 
 // 게시물 리스트 가져오기
 export function* getDataList(payload) {
-  const widget_id = payload.widget_id;
+  const {widget_id, selectedCategory } = payload;
+  
+  // 선택된 카테고리의 하위카테고리 전부 가져오기
+  const categoryData = {
+    category: selectedCategory, 
+  };    
+  const response = yield call(Axios.post, '/api/manual/v1/ManualWidgetSettingHandler', categoryData)
+
+  let responseData = response.selectedCategory;
+  if(responseData === undefined){
+    responseData = [];
+  }
+
   const data = {
     widget_id: widget_id,
-    category: payload.selectedCategory,
+    category: responseData,
   };
-
   const result = yield call(Axios.post, `/api/manual/v1/ManualWidgetHandler`, data);
-  const widgetData = result.widgetData
-  const oldWidgetDataList = yield select(selectors.selectWidgetDataList())
-
-  if(oldWidgetDataList.size !== 0){
-    const oldDataList = oldWidgetDataList.filter(item => item.widget_id !== widget_id);
-    const newDataList = oldDataList.concat(widgetData);
-    yield put(actions.setNewsfeedDataList({ newDataList}));
-  } else {
-    const oldDataList = oldWidgetDataList;
-    const newDataList = oldDataList.concat(widgetData);
-    yield put(actions.setNewsfeedDataList({ newDataList}));
-  }
+  const newDataList = result.widgetData;
+  yield put(actions.setNewsfeedDataList({ newDataList, widget_id }));
 }
 
 // (Tree) 전체 카테고리 리스트 불러오기
@@ -34,7 +35,7 @@ export function* getInitCategoryList() {
   yield put(actions.setCategoryList(list));
 }
 
-// 선택된 카테고리 store 저장
+// 선택된 카테고리 저장
 export function* changeCategoryList(payload) {
   const check = payload.selectedCategoryList.length;
 
@@ -44,22 +45,17 @@ export function* changeCategoryList(payload) {
           item_value:JSON.stringify({
           size: payload.item.size,
           user: payload.item.user,
-          data: {selectedCategory: []
-          },
+          data: {selectedCategory: []},
       })
       };
     yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
   } else {
-    const data = {
-      category: payload.selectedCategoryList, 
-    };    
-    const response = yield call(Axios.post, '/api/manual/v1/ManualWidgetSettingHandler', data)
     const result ={
         widget_id: payload.item.WIDGET_ID,
         item_value:JSON.stringify({
         size: payload.item.size,
         user: payload.item.user,
-        data: {selectedCategory: response.selectedCategory
+        data: {selectedCategory: payload.selectedCategoryList,
         },
       })
     };

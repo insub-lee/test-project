@@ -69,7 +69,7 @@ class IfBoard extends PureComponent {
     // }
     if (nextProps.catePageList.length > 0) {
       if (this.state.widgetId === nextProps.catePageList[0].widgetId) {
-        if ((nextProps.setIfBoardDataList.length === nextProps.catePageList.length) && (nextProps.setIfBoardDataList.length === this.state.cateList.length)) {
+        if (nextProps.setIfBoardDataList.length === nextProps.catePageList.length && nextProps.setIfBoardDataList.length === this.state.cateList.length) {
           this.setState({
             boardDataList: nextProps.setIfBoardDataList,
             catePageList: nextProps.catePageList,
@@ -84,15 +84,13 @@ class IfBoard extends PureComponent {
     }
   }
 
-  onClickOpen = (url) => {
+  onClickOpen = url => {
     window.open(url);
-  }
+  };
 
-  HyperlinkFormatter = (val) => {
+  HyperlinkFormatter = val => {
     const url = `${this.props.iflowUrl}/group/article/${val.dependentValues.arSeq}`;
-    const replyIcon = (
-      <span className="replyIcon" />
-    );
+    const replyIcon = <span className="replyIcon" />;
     return (
       <div>
         <a
@@ -106,24 +104,31 @@ class IfBoard extends PureComponent {
         </a>
         <div className="empInfo">
           <span className="subInfo">
-            by {val.dependentValues.empName} <i className="div"> | </i> {val.dependentValues.regDt.split(' ')[0]}  {val.dependentValues.cntReply !== 0 ? replyIcon : ''}
+            by {val.dependentValues.empName} <i className="div"> | </i> {val.dependentValues.regDt.split(' ')[0]}{' '}
+            {val.dependentValues.cntReply !== 0 ? replyIcon : ''}
           </span>
-          {this.props.item.execMenu !== undefined ?
-            <button className="more" onClick={() => { this.props.item.show(val.dependentValues, this.state.tabNum) }} id={val.dependentValues.arSeq}><span>+{intlObj.get(messages.moreView)}</span></button>
-            :
+          {this.props.item.execMenu !== undefined ? (
+            <button
+              className="more"
+              onClick={() => {
+                this.props.item.show(val.dependentValues, this.state.tabNum);
+              }}
+              id={val.dependentValues.arSeq}
+            >
+              <span>+{intlObj.get(messages.moreView)}</span>
+            </button>
+          ) : (
             <div />
-          }
+          )}
         </div>
       </div>
     );
   };
-  handleTabClicks = (num) => {
+  handleTabClicks = num => {
     this.setState({ tabNum: num });
-  }
+  };
   render() {
-    const {
-      catePageList,
-    } = this.state;
+    const { catePageList } = this.state;
     const EmptyData = () => (
       <div className="noWidgetContent">
         <p className="noWCIcon">{intlObj.get(messages.noPosts)}</p>
@@ -134,7 +139,7 @@ class IfBoard extends PureComponent {
       const wgWidth = Number(this.props.item.size.split('X')[0]);
       const wgHeight = Number(this.props.item.size.split('X')[1]);
       const wgTitleHeight = 35;
-      const rowHeight = 44;
+      const rowHeight = 35;
 
       const minWidth = this.props.view === 'Mobile' ? 630 : wgWidth * 320;
 
@@ -143,16 +148,16 @@ class IfBoard extends PureComponent {
         <TabPane tab={this.state.cateList[i].ctName} key={i + 1}>
           <ReactDataGrid
             columns={this.columns}
-            rowGetter={(j) => {
-              if (j === ((catePageList[i].page * pagepernum) - 1)) {
-                  catePageList[i].page = catePageList[i].page + 1;
+            rowGetter={j => {
+              if (j === catePageList[i].page * pagepernum - 1) {
+                catePageList[i].page = catePageList[i].page + 1;
                 this.props.boardListPageing(this.state.boardDataList, catePageList, i, pagepernum);
               }
-              return item[j]
+              return item[j];
             }}
             rowsCount={item.length}
             rowHeight={rowHeight}
-            scrollHeight={wgHeight * 270 - wgTitleHeight} // 슬림스크롤 높이
+            scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
             minHeight={rowHeight * item.length} // 위젯 row 전체 높이
             minWidth={minWidth} // 위젯 최소 넓이
             headerRowHeight={-1}
@@ -164,15 +169,12 @@ class IfBoard extends PureComponent {
 
     return (
       <BoardsStyle className="board" style={{ width: '100%', height: '100%' }}>
-        {this.state.boardDataList.length > 0 ?
-          <Tabs defaultActiveKey="1"
-            activeKey={this.state.tabNum}
-            onTabClick={this.handleTabClicks}
-          >  
+        {this.state.boardDataList.length > 0 ? (
+          <Tabs defaultActiveKey="1" activeKey={this.state.tabNum} onTabClick={this.handleTabClicks}>
             {boardTab()}
           </Tabs>
-          :          
-          <ApplyPageStyle> 
+        ) : (
+          <ApplyPageStyle>
             {/* <div className="applyPageWrapper">
               <div className="singleWidget"> */}
             <div className="widgetContent bgImgApplyPage">
@@ -184,9 +186,10 @@ class IfBoard extends PureComponent {
                 </span>
               </p>
             </div>
-              {/* </div>
+            {/* </div>
             </div> */}
-          </ApplyPageStyle>}
+          </ApplyPageStyle>
+        )}
       </BoardsStyle>
     );
   }
@@ -211,7 +214,10 @@ const mapStateToProps = createStructuredSelector({
   catePageList: selectors.makeCatePageList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'IfBoard', saga });
 const withReducer = injectReducer({ key: 'IfBoard', reducer });
 

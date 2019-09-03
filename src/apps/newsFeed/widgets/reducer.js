@@ -2,34 +2,38 @@ import { fromJS } from 'immutable';
 import * as constants from './constants';
 
 const initState = fromJS({
-  selectedCategory: [],
+  selectedCategory: {},
   modalView: {},
-  modalIdx: undefined,
+  modalIdx: {},
+  widgetDataList: {},
   totalCategory: [],
-  widgetDataList: [],
 });
 
 const NewsFeedReducer = (state = initState, action) => {
   switch (action.type) {
+    // 위젯 - 게시물 데이터
     case constants.SET_NEWSFEED_DATA_LIST: {
-      const { newDataList } = action;
-      return state.set('widgetDataList', newDataList);
+      const { newDataList, widget_id } = action;
+      console.log('리듀서위젯아디', widget_id);
+      console.log('리듀서뉴데이터', newDataList);
+      return state.setIn(['widgetDataList', widget_id], newDataList);
     }
 
+    // 세팅 - 전체카테고리 값
     case constants.SET_INIT_CATEGORY: {
       const { list } = action;
       return state.set('totalCategory', fromJS(list));
     }
 
-    case constants.SET_SELECTED_CATEGORY:
-      return state.set('selectedCategory', fromJS(action.selectedCategoryList));
-
-    case constants.SET_MODAL_IDX:
-      return state.set('modalIdx',action.modalIdx);  
-
+    // 모달 on / off
     case constants.SET_MODAL_VIEW:{
       const { modalView, widget_id } = action;
       return state.setIn(['modalView', widget_id], modalView);
+    }
+
+    case constants.SET_MODAL_IDX:{
+      const { mualIdx, widget_id } = action;
+      return state.setIn(['modalIdx', widget_id], mualIdx);
     }
 
     default:

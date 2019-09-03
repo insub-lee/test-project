@@ -10,7 +10,6 @@ import * as constantsAppStore from 'containers/admin/AdminMain/AppStore/constant
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as constants from './constants';
 
-
 // ONE - 단일 앱리스트(mapList key - 선택된 CATG_ID)
 // ALL - 전체 앱리스트 (mapList key - 각 CATG_ID)
 // SEARCH - 검색 앱리스트 (mapList key - 0)
@@ -81,9 +80,11 @@ export function* initPage(payload) {
   // ONE. 단일 앱리스트
   if (initType.indexOf('ONE') > -1) {
     yield put({ type: constants.GET_MAPLIST_ONE, key: param });
-  } else if (initType.indexOf('SEARCH') > -1) { // SEARCH. 검색 결과 앱리스트
+  } else if (initType.indexOf('SEARCH') > -1) {
+    // SEARCH. 검색 결과 앱리스트
     yield put({ type: constants.GET_MAPLIST_SEARCH, searchword: param });
-  } else { // ALL. 전체 앱리스트
+  } else {
+    // ALL. 전체 앱리스트
     yield put({ type: constants.GET_MAPLIST_ALL });
   }
 }
@@ -178,7 +179,7 @@ export function* getMapListAll() {
   const { result } = response;
   const newResult = _.groupBy(result, 'CATG_ID');
   let mapList = fromJS([]);
-  categoryData.forEach((data) => {
+  categoryData.forEach(data => {
     let newData = data;
     const categoryKey = data.get('CATG_ID');
     newData = newData.set('showReadMoreBtn', false);
@@ -213,7 +214,7 @@ export function* getMapListSearch(payload) {
     const appListMap = _.groupBy(result, 'CATG_ID');
     let mapList = fromJS([]);
 
-    Object.keys(appListMap).map((CATG_ID) => {
+    Object.keys(appListMap).map(CATG_ID => {
       let newData = fromJS(categoryFlatData.get(Number(CATG_ID)));
       newData = newData.set('showReadMoreBtn', false);
       newData = newData.set('searchword', searchword);
@@ -238,29 +239,20 @@ export function* getMapListSearch(payload) {
 function changeWGCount(mapList, CATG_ID, APP_ID, WG_COUNT) {
   let matchMapIndex = 0;
   let matchAppIndex = 0;
+  let result = false;
 
-  let matchAppList = mapList.filter((map, i) => {
-    if (Number(map.get('CATG_ID')) === CATG_ID) {
-      matchMapIndex = i;
-      return true;
-    }
-    return false;
+  mapList.some((map, i) => {
+    result = false;
+    map.get('appList').some((m, j) => {
+      if (m.get('APP_ID') === APP_ID) {
+        matchMapIndex = i;
+        matchAppIndex = j;
+        result = true;
+        return result;
+      }
+    });
+    if (result) return result;
   });
-
-  if (matchAppList.size === 0) {
-    matchAppList = mapList.get(0).get('appList');
-  } else {
-    matchAppList = matchAppList.get(0).get('appList');
-  }
-
-  matchAppList.filter((map, i) => {
-    if (map.get('APP_ID') === APP_ID) {
-      matchAppIndex = i;
-      return true;
-    }
-    return false;
-  });
-
   return mapList.setIn([matchMapIndex, 'appList', matchAppIndex, 'WG_COUNT'], WG_COUNT);
 }
 
@@ -332,10 +324,10 @@ export function* registerBiz(payload) {
 */
 /* 모달 앱 등록(마이페이지) */
 export function* registAppModal(payload) {
-  const { APP_ID } = payload;
+  const { APP_ID, SRC_PATH } = payload;
 
   // set Url
-  // const store = yield select(state => state.get('storeAppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
 
   // get PRNT_ID
   const parentStore = yield select(state => state.get('admin/AdminMain/AppStore'));
@@ -365,12 +357,12 @@ export function* registAppModal(payload) {
     yield put({
       type: constantsAppStore.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
-      selectedIndex: `A-${APP_ID}`,
+      selectedIndex: `${SRC_PATH === 'PAGE' ? 'P' : 'A'}-${APP_ID}`,
     });
 
     // 성공 시 사용중으로 상태 변경.
-    // const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
-    // yield put({ type: constants.SET_MAPLIST, mapList });
+    const mapList = changeWGCount(store.get('mapList'), CATG_ID, APP_ID, 1);
+    yield put({ type: constants.SET_MAPLIST, mapList });
   } else if (code === 500) {
     if (msg && msg === 'dupicate') {
       feed.error('이미 등록된 앱 입니다.');

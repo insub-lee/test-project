@@ -50,8 +50,9 @@ class ManualView extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId, setNewsfeedModalView } = this.props;
+    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId, setNewsfeedModalView, setNewsfeedModalIdx } = this.props;
     setIsViewContents(false, widgetId);
+    setNewsfeedModalIdx(undefined, widgetId);
     setNewsfeedModalView(false, widgetId);
     resetManualView(widgetId);
     setSelectedMualIdx(0, widgetId);
@@ -110,6 +111,7 @@ class ManualView extends Component {
       navList,
       relationList,
       addManualHistory,
+      setNewsfeedModalIdx,
     } = this.props;
 
     const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
@@ -140,6 +142,7 @@ class ManualView extends Component {
                 setSelectedMualIdx,
                 setListSelectedMualIdx,
                 mualBookmarkList,
+                setNewsfeedModalIdx,
               },
               mualMaster.toJS(),
               navList.toJS(),
@@ -204,6 +207,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   getManualView: (widgetId, flag) => dispatch(actions.getManualViewBySaga(widgetId, flag)),
   setNewsfeedModalView: (modalView, widget_id) => dispatch(newsfeedAction.setModalView(modalView, widget_id)),
+  setNewsfeedModalIdx: (mualIdx, widget_id) => dispatch(newsfeedAction.setModalIdx(mualIdx, widget_id)),
   setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
   setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
   setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),

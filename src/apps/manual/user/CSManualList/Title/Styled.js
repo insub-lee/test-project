@@ -14,6 +14,10 @@ const Styled = styled.div`
     font-size: 18px;
     margin: 0;
     line-height: normal;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
   }
   & > .ant-checkbox-wrapper {
     position: absolute;
