@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import IconCollection from '../IconCollection';
 import Styled from './Styled';
 
-const User = ({ profile, setMenuClose, isShow}) => (
+const User = ({ profile, setFixedOpenMenu, isShow}) => (
   <Styled>
     <div>
-      <button type="button" className="btn-pin" onClick={setMenuClose}>
+      <button type="button" className="btn-pin" onClick={setFixedOpenMenu}>
         <IconCollection className={isShow ? 'icon-pin' : ''} />
       </button>
       <div className="user-img">

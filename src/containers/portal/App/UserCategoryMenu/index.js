@@ -68,6 +68,8 @@ class UserCategoryMenu extends Component {
       history,
       execApp,
       setClose,
+      setOpen,
+      setFixedOpenMenu,
       myAppStoreTreeData,
       moveNode,
       updateMymenuDisp,
@@ -77,9 +79,9 @@ class UserCategoryMenu extends Component {
     } = this.props;
 
     return (
-      <Styled className={isShow ? 'active' : ''}>
+      <Styled className={isShow ? 'active' : ''} onMouseLeave={setMenuClose}>
         <div className="profile-area">
-          <Profile profile={profile} setMenuClose={setMenuClose} isShow={isShow}/>
+          <Profile profile={profile} setFixedOpenMenu={setFixedOpenMenu} isShow={isShow}/>
         </div>
         <div className="category-menu-area">
           <div className="area-title">{profile.DEPT_NAME_KOR}</div>
@@ -111,7 +113,8 @@ class UserCategoryMenu extends Component {
         {
           !isShow && 
           <div className="active-btn">
-            <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} />
+            {/* <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} /> */}
+            <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onMouseOver={setOpen} />
           </div>
         }
       </Styled>
