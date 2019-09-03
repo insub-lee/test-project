@@ -87,6 +87,8 @@ class App extends React.PureComponent {
       // 스피너 상태
       isSpinnerShow: false,
       // isPreviewPage: false,
+      // menu 고정용 state,
+      fixedMenu: false,
     };
 
     this.count = 0;
@@ -318,14 +320,23 @@ class App extends React.PureComponent {
   };
 
   setOpen = () => {
-    this.setState(
-      prevState => ({
-        open: !prevState.open,
-      }),
-      () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
-    );
+    // this.setState(
+    //   prevState => ({
+    //     open: true,
+    //   }),
+    //   () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
+    // );
+    this.setState({
+      open: true,
+    });
     event.preventDefault();
   };
+
+  setFixedOpenMenu = () => {
+    this.setState(prevState => ({
+      fixedMenu: !prevState.fixedMenu,
+    }));
+  }
 
   setMenuOpen = () => {
     this.setState(prevState => ({
@@ -340,12 +351,14 @@ class App extends React.PureComponent {
   };
 
   setMenuClose = () => {
-    this.setState(
-      {
-        open: false,
-      },
-      () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
-    );
+    if(!this.state.fixedMenu) {
+      this.setState(
+        {
+          open: false,
+        },
+        () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
+      );
+    }
     event.preventDefault();
   };
 
@@ -751,6 +764,8 @@ class App extends React.PureComponent {
           <UserCategoryMenu
             isShow={open}
             toggleMenu={open ? this.setMenuClose : this.setOpen}
+            setOpen={this.setOpen}
+            setFixedOpenMenu={this.setFixedOpenMenu}
             execMenu={this.execMenu}
             execPage={this.execPage}
             myMNotiCnt={myMNotiCnt}
