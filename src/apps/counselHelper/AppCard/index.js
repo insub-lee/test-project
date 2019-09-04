@@ -32,6 +32,15 @@ class AppCard extends React.PureComponent {
     return result;
   };
 
+  execLink = node => {
+    const state = {
+      type: 'execMenu',
+      node,
+      executedDockPageId: node.PAGE_ID,
+    };
+    return state;
+  };
+
   render() {
     const { title, value, linkProps } = this.props;
     const { SubMenu } = Menu;
@@ -44,11 +53,12 @@ class AppCard extends React.PureComponent {
           return <SubMenu title={item.NAME_KOR} key={item.key}></SubMenu>;
         }
         const tempURL = this.execPage(item);
+        const state = this.execLink(item);
         //  console.log(tempURL);
         return (
           <Menu.Item key={item.key}>
             {' '}
-            <Link to={tempURL}>{item.NAME_KOR} </Link>
+            <Link to={{ pathname: tempURL, execInfo: state }}>{item.NAME_KOR} </Link>
           </Menu.Item>
         );
       });
