@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rate, Menu, Dropdown } from 'antd';
+import { Rate, Menu, Dropdown, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import PropTypes from 'prop-types';
@@ -32,6 +32,15 @@ class AppCard extends React.PureComponent {
     return result;
   };
 
+  execLink = node => {
+    const state = {
+      type: 'execMenu',
+      node,
+      executedDockPageId: node.PAGE_ID,
+    };
+    return state;
+  };
+
   render() {
     const { title, value, linkProps } = this.props;
     const { SubMenu } = Menu;
@@ -44,11 +53,12 @@ class AppCard extends React.PureComponent {
           return <SubMenu title={item.NAME_KOR} key={item.key}></SubMenu>;
         }
         const tempURL = this.execPage(item);
+        const state = this.execLink(item);
         //  console.log(tempURL);
         return (
           <Menu.Item key={item.key}>
             {' '}
-            <Link to={tempURL}>{item.NAME_KOR} </Link>
+            <Link to={{ pathname: tempURL, execInfo: state }}>{item.NAME_KOR} </Link>
           </Menu.Item>
         );
       });
@@ -71,20 +81,22 @@ class AppCard extends React.PureComponent {
     }
 
     return (
-      <Dropdown overlay={dropMenu} trigger={['click']}>
-        <Styled className="app-card">
-          <div className="app-card-body" onClick={this.handleOnclick} role="presentation">
-            <div className="appd-card-icon">
-              <img src={appImg} alt="" />
-            </div>
-            <div className="app-card-text">
-              <p>{title}</p>
-              <span>상담업무와 관련 메뉴 상세내용은 어쩌고저쩌고</span>
-              <Rate allowHalf disabled value={4.5} style={{ fontSize: '12px' }} />
+      <Styled className="app-card">
+        <div className="app-card-body" onClick={this.handleOnclick} role="presentation">
+          <div className="appd-card-icon">
+            <img src={appImg} alt="" />
+          </div>
+          <div className="app-card-text">
+            <Rate className="rateDesign" allowHalf disabled value={4.5} />
+            <p>{title}</p>
+            <div className="app-run-button">
+              <Dropdown overlay={dropMenu} trigger={['click']}>
+                <Button>앱실행</Button>
+              </Dropdown>
             </div>
           </div>
-        </Styled>
-      </Dropdown>
+        </div>
+      </Styled>
     );
   }
 }
