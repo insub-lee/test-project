@@ -4,7 +4,7 @@ const StyledTabList = styled.div`
   &.treeWrapper {
       position: fixed;
       top: 42px;
-      left: 0;
+      /* left: 0; */
       width: 300px;
       height: calc(100vh - 42px);
       padding: 10px;

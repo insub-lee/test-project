@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Select } from 'antd';
+import { Select, Input } from 'antd';
 
 import * as feed from 'components/Feedback/functions';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as commonjs from 'containers/common/functions/common';
-
+import { LinkBtnLgtGray } from 'containers/admin/components/uielements/buttons.style';
 // import reducer from 'containers/store/AppMain/AppList/reducer';
 // import saga from 'containers/store/AppMain/AppList/saga';
 // import * as selectors from 'containers/store/AppMain/AppList/selectors';
@@ -29,7 +29,11 @@ function checkValue(v1, v2) {
 
 class AppList extends Component {
   componentDidMount() {
-    const { match: { params: { CATG_ID, searchword } } } = this.props;
+    const {
+      match: {
+        params: { CATG_ID, searchword },
+      },
+    } = this.props;
     if (CATG_ID) {
       this.CATG_ID = CATG_ID;
       this.props.handleInitPage('ONE', CATG_ID);
@@ -57,7 +61,19 @@ class AppList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
-  
+
+  handleClick = () => {
+    console.log('this.searchInput.input');
+    console.log(this.searchInput);
+    console.log(this.searchInput.input);
+    const searchword = this.searchInput.input.value;
+    const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
+    if (searchword) {
+      this.props.history.push(`${preUrl}/app/list/search/${searchword}`);
+    } else {
+      this.props.history.push(`${preUrl}/app/list`);
+    }
+  };
 
   render() {
     const {
@@ -87,7 +103,7 @@ class AppList extends Component {
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
 
-    const handleOnChange = (key) => {
+    const handleOnChange = key => {
       // this.searchword = '';
       // this.searchInput.input.value = '';
       if (key === 0) {
@@ -96,27 +112,37 @@ class AppList extends Component {
         history.push(`${preUrl}/app/list/${key}`);
       }
       window.scrollTo(0, 0);
+      this.searchInput.input.value = '';
     };
 
     let selectedCategoryId = 0;
     const pn = history.location.pathname;
     const str = 'list/';
-    if (pn.indexOf(str) > -1) {
+    if (pn.indexOf('/search') < 0 && pn.indexOf(str) > -1) {
       selectedCategoryId = Number(pn.substring(pn.indexOf(str) + str.length, pn.length));
     }
 
     return (
       <div>
         <div className="topPart">
-          <Select
-            value={ selectedCategoryId }
-            style={{ width: 200, float: 'right' }}
-            onChange={handleOnChange}
-          >
-            {this.props.categoryComboData.map(item =>
-              <Option value={item.NODE_TYPE === 'R' ? 0 : item.CATG_ID}>{item.NAME_KOR}</Option>)
-            }
+          <Select value={selectedCategoryId} style={{ width: 200, float: 'right' }} onChange={handleOnChange}>
+            {this.props.categoryComboData.map(item => (
+              <Option value={item.NODE_TYPE === 'R' ? 0 : item.CATG_ID}>{item.NAME_KOR}</Option>
+            ))}
           </Select>
+          <Input
+            maxLength={200}
+            onKeyPress={e => {
+              if (e.key === 'Enter') this.handleClick();
+            }}
+            ref={ref => {
+              this.searchInput = ref;
+            }}
+            style={{ width: 200, marginRight: 10 }}
+          />
+          <LinkBtnLgtGray onClick={this.handleClick} style={{ marginRight: '10px' }}>
+            검색
+          </LinkBtnLgtGray>
         </div>
         <ItemList
           type={initType}
@@ -178,7 +204,10 @@ const mapStateToProps = createStructuredSelector({
   categoryComboData: selectors.makeCategoryComboData(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppStore/AppModal/AppList', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore/AppModal/AppList', saga });

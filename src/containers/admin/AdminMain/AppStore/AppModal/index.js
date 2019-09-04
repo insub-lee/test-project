@@ -79,7 +79,7 @@ class AppModal extends PureComponent {
           <Switch>
             <Route path={`${preUrl}/app/list`} component={AppList} exact />
             <Route path={`${preUrl}/app/list/:CATG_ID`} component={AppList} exact />
-            <Route path={`${preUrl}/app/search/:searchword`} component={AppList} exact />
+            <Route path={`${preUrl}/app/list/search/:searchword`} component={AppList} exact />
           </Switch>
         </ErrorBoundary>
       </StyleAppModal>
