@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 // import createHistory from 'history/createBrowserHistory';
+import globalConfigs from 'utils/globalConfigs';
 import { createBrowserHistory as createHistory } from 'history';
 import 'antd/dist/antd.css';
 import 'xeicon/xeicon.min.css';
@@ -24,11 +25,12 @@ history.listen((location, action) => {
   console.log(action, location.pathname, 'location.pathname');
 });
 const store = configureStore(initialState, history);
+globalConfigs.store = store;
 const MOUNT_NODE = window.document.getElementById('root');
 
 const NonBlockApp = withRouter(Routes);
 
-const render = (messages) => {
+const render = messages => {
   ReactDOM.render(
     <Provider store={store}>
       <LanguageProvider messages={messages}>
@@ -42,12 +44,12 @@ const render = (messages) => {
 };
 
 if (!window.Intl) {
-  new Promise((resolve) => {
+  new Promise(resolve => {
     resolve(import('intl'));
   })
     .then(() => Promise.all([import('intl/locale-data/jsonp/en.js'), import('intl/locale-data/jsonp/ko.js'), import('intl/locale-data/jsonp/zh.js')]))
     .then(() => render(translationMessages))
-    .catch((err) => {
+    .catch(err => {
       throw err;
     });
 } else {
