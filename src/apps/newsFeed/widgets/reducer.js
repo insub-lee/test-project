@@ -29,6 +29,7 @@ const NewsFeedReducer = (state = initState, action) => {
       return state.setIn(['modalView', widget_id], modalView);
     }
 
+    // 모달 페이지 전환
     case constants.SET_MODAL_IDX:{
       const { mualIdx, widget_id } = action;
       return state.setIn(['modalIdx', widget_id], mualIdx);

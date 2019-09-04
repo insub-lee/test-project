@@ -8,7 +8,6 @@ import * as selectors from './selector';
 export function* getDataList(payload) {
   const {widget_id, selectedCategory } = payload;
   
-  // 선택된 카테고리의 하위카테고리 전부 가져오기
   const categoryData = {
     category: selectedCategory, 
   };    
