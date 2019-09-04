@@ -1,24 +1,62 @@
-import 'whatwg-fetch';
+import axios from 'axios';
+import { Cookies } from 'react-cookie';
+import globalConfigs from './globalConfigs';
 
-function parseJSON(response) {
-  if (response.status === 204 || response.status === 205) {
-    return null;
-  }
-  return response.json();
-}
+// const getUUID = () => getToken().get('idToken') || 'no token';
+export const getMeta = () => globalConfigs.store.getState().getIn(['auth', 'meta']) || {};
 
-function checkStatus(response) {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  }
+const client = axios.create({
+  // baseURL: process.env.REACT_APP_DOMAIN,
+  // timeout: 10000,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
 
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error;
-}
+const request = options => {
+  const optionWithMeta = {
+    ...options,
+    headers: {
+      ...options.headers,
+      'Cache-Control': 'no-cache',
+      Pragma: 'no-cache',
+      META: JSON.stringify(getMeta()),
+    },
+  };
+  console.debug('>>>> optionWithMeta', optionWithMeta);
+  const onSuccess = response => {
+    console.debug('Requst Successful', response);
+    return response.data;
+  };
+  const onError = error => {
+    console.error('Request Failed:', error.config);
+    if (error.response) {
+      if (error.response.status === 401) {
+        const cookies = new Cookies();
+        cookies.remove('empNo', { path: '/' });
+        cookies.remove('access_token', { path: '/' });
+        window.location.href = `/api/common/v1/auth/oauth`;
+      }
+      if (error.response.status === 409) {
+        console.error('이미 등록된 정보가 있습니다.');
+      }
+      console.error('Status:', error.response.status);
+      console.error('Data:', error.response.data);
+      console.error('Headers:', error.response.headers);
+      console.error('Error Message', error.message);
+    } else {
+      console.error('Error Message', error.message);
+    }
+    // return Promise.reject(error.response || error.message);
+    // return ({ error: (error.response || error.message) });
+    return { error: error.message };
+  };
 
-export default function request(url, options) {
-  return fetch(url, options)
-    .then(checkStatus)
-    .then(parseJSON);
-}
+  return client(optionWithMeta)
+    .then(onSuccess)
+    .then(response => ({ response }))
+    .catch(onError);
+};
+
+export default request;

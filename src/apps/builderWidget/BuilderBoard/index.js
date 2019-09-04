@@ -9,6 +9,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import SignLine from 'apps/WorkFlow/Admin/SignLine';
+import { allFormStuffs } from 'components/WorkBuilder/config';
 
 import View from './View';
 import reducer from './reducer';
@@ -28,12 +29,8 @@ class BuilderBoard extends Component {
 
   componentDidMount() {
     const { getView, item } = this.props;
-    // const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 668;
     const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : -1;
-    const WORK_SEQ = item && item.data ? item.data : -1;
-    console.debug('item >>', item);
-    console.debug('widgetId >>', widgetId);
-    console.debug('WORK_SEQ >> ', WORK_SEQ);
+    const WORK_SEQ = item && item.data && item.data.WORK_SEQ ? item.data.WORK_SEQ : -1;
     getView(widgetId, WORK_SEQ);
   }
 
@@ -104,6 +101,29 @@ class BuilderBoard extends Component {
 
     const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : -1;
 
+    const defaultColumns = [];
+    const tempFun = () => {};
+    formStuffs.forEach(formStuff => {
+      const jData = {};
+      jData.title = formStuff.NAME_KOR;
+      jData.dataIndex = formStuff.COMP_FIELD;
+      jData.key = formStuff.id;
+      if (formStuff.COMP_TAG === 'work-selector') {
+        jData.render = (text, record) =>
+          allFormStuffs[formStuff.COMP_TAG].renderer({ formStuff, tempFun, workSeq, taskSeq: record.TASK_SEQ, text: JSON.parse(text), readOnly: true });
+      }
+      defaultColumns.push(jData);
+    });
+
+    // 기본등록일자추가
+    const basic = {
+      title: '등록날짜',
+      dataIndex: 'REG_DTTM',
+      key: 'REG_DTTM',
+      align: 'center',
+    };
+    defaultColumns.push(basic);
+
     return (
       <Wrapper style={{ height: 'calc(100vh - 42px)' }}>
         <div style={{ textAlign: 'right', marginBottom: '10px' }}>
@@ -121,12 +141,13 @@ class BuilderBoard extends Component {
         </div>
         <div>
           <AntdTable
-            columns={columns.map(({ headerName, field }) => ({
-              title: headerName || field,
-              dataIndex: field,
-              key: field,
-              align: 'center',
-            }))}
+            // columns={columns.map(({ headerName, field }) => ({
+            //   title: headerName || field,
+            //   dataIndex: field,
+            //   key: field,
+            //   align: 'center',
+            // }))}
+            columns={defaultColumns}
             dataSource={list}
             onRow={({ WORK_SEQ, TASK_SEQ }) => ({
               onClick: () => openEditModal(widgetId, WORK_SEQ, TASK_SEQ),

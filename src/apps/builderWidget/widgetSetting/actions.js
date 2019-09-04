@@ -14,9 +14,9 @@ export const changeWorkSeq = workSeq => ({
   workSeq,
 });
 
-export const getBuilderWidgetConfig = widgetId => ({
+export const getBuilderWidgetConfig = payload => ({
   type: actionTypes.GET_BUILDER_WIDGET_CONFIG,
-  widgetId,
+  payload,
 });
 
 export const setBuilderWidgetConfig = ITEM_VALUE => ({
