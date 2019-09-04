@@ -48,7 +48,7 @@ const Styled = styled.div`
   
   .active-btn {    
     position: absolute;
-    top: 4.35%;
+    top: 40%;
     right: -19px;
   }
 
