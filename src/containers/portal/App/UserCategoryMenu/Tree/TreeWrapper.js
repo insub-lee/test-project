@@ -19,18 +19,29 @@ const TreeWrapper = styled.div`
     position: relative;
     display: inline-block;
     width: 80%;
-    margin-top: 9px;
     margin-bottom: 9px;
     margin-left: 9px;
     height: 32px;
 
-    > input {
+    & > span.ant-input-affix-wrapper > input.ant-input.ant-input-sm {
       position: relative;
-      float: left;
-      padding-right: 30px;
-      border: 1px solid #c1c1c1;
+      border: 1px solid #e5e5e5;
       border-radius: 4px;
-      font-size: 13px;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 400;
+      line-height: 1.47;
+      color: #495057;
+      background-color: #fff;
+      background-clip: padding-box;
+      height: calc(1.47em + 0.9rem + 2px);
+      &:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #886ab5;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem transparent;
+      }
     }
 
     > .searchBtn {
@@ -87,6 +98,11 @@ const TreeWrapper = styled.div`
   .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__rowTitle button {
     width: 320px;
     text-align: left;
+    & > i {
+      margin-right: 5px;
+      height: 23px;
+      margin-top: 0;
+    }
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent .inTree.ant-badge .ant-badge-count {
     width: 28px;
@@ -99,6 +115,11 @@ const TreeWrapper = styled.div`
     font-weight: 600;
     line-height: 17px;
     background: #e6e6e6;
+  }
+  .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__ordinaryButton {
+    width: 5px;
+    height: 5px;
+    left: -10px !important;
   }
   /* .sortableTreeWrapper.sidebar .rstcustom__rowTitle button.active {color: #e6e6e6; background-color: #f85023;} */
   .sortableTreeWrapper.sidebar .rstcustom__rowSearchFocus,

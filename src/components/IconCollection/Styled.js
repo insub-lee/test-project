@@ -5,6 +5,7 @@ import iconList from 'images/portal/icon-list.png';
 import iconClose from 'images/portal/btn-close.png';
 import iconPen from 'images/portal/icon-pen.png';
 import iconPin from 'images/portal/icon-pin.png';
+import iconworkCard from 'images/portal/icon-workCard.png';
 
 const Styled = styled.i`
   display: inline-block;
@@ -36,6 +37,12 @@ const Styled = styled.i`
   }
   &.icon-pin {
     background: url(${iconPin}) no-repeat center;
+    width: 15px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-workCard {
+    background: url(${iconworkCard}) no-repeat center;
     width: 15px;
     height: 15px;
     background-size: 100%;

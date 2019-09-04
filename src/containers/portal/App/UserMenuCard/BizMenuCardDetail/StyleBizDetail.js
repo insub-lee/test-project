@@ -5,9 +5,8 @@ import seeMoreBtnUp from '../../../../../images/bizstore/arrow-up2.png';
 const StyleBizDetail = styled.div`
   display: inline-block;
   width: 100%;
-  margin: 10px auto 0;
+  margin: 0px auto 0;
   padding: 0;
-  border: 1px solid #d1d2d3;
   background-color: #ffffff;
   // overflow: hidden;
 
