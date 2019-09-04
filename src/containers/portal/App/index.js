@@ -335,6 +335,7 @@ class App extends React.PureComponent {
   setFixedOpenMenu = () => {
     this.setState(prevState => ({
       fixedMenu: !prevState.fixedMenu,
+      open: false,
     }));
   }
 
