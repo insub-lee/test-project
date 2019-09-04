@@ -1,83 +1,35 @@
 import React from 'react';
-// import { Link } from 'react-router-dom';
-// import { Route } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
+import { Icon } from 'antd';
 import { /* intlObj, */ lang } from 'utils/commonUtils';
-// import Trigger from '../../App/Trigger';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
+import StyledAdminMenu from './StyledAdminMenu';
+import MenuItem from './MenuItem';
 
 const StyledAdminLeftMenu = styled.div`
   position: fixed;
-  top: 45px;
+  /* top: 45px; */
   left: 0;
-  width: 200px;
-  height: calc(100vh - 45px);
-  //padding: 10px 15px;
-  padding: 10px 15px 10px 30px;
-  border-right: 1px solid #d1d2d3;
-  background-color: #ffffff;
+  /* width: 270px; */
+  width: 230px;
+  /* height: calc(100vh - 45px); */
+  height: 100%;
+  /* padding: 10px 15px; */
+  /* padding: 10px 15px 10px 30px; */
+  /* border-right: 1px solid #d1d2d3; */
+  /* background-color: #ffffff; */
   z-index: 100;
   overflow-y: auto;
-`;
-
-const MenuList = styled.ul`
-  display: inline-block;
-  width: 100%;
-
-  > li {
-    height: 35px;
-    line-height: 35px;
-
-    .menu {
-      display: block;
-      padding-left: 20px;
-      font-size: 14px;
-      color: #404040;
-      cursor: pointer;
-
-      &:before {
-        content: '';
-        position: relative;
-        left: -8px;
-        display: inline-block;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background-color: #b3b3b3;
-      }
-
-      &:hover,
-      &:focus {
-        text-decoration: none;
-      }
-
-      &.current {
-        color: #886ab5;
-        background: #edeff2;
-      }
-
-      &.current:before {
-        content: '';
-        position: relative;
-        left: -8px;
-        display: inline-block;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background-color: #886ab5;
-      }
-    }
-  }
 `;
 
 class menuList extends React.Component {
@@ -87,6 +39,7 @@ class menuList extends React.Component {
     this.state = {
       strUrl:
         window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
+      openMenuCode: 'SITE',
     };
 
     this.classChange = this.classChange.bind(this);
@@ -94,23 +47,11 @@ class menuList extends React.Component {
     this.props.getMenu('ADMIN');
   }
 
-  componentDidMount() {
-    // this.classChange(this.state.strUrl);
-  }
-
-  // componentWillReceiveProps(nextProps) {
-  //   this.classChange(this.state.strUrl);
-  // }
-  // componentDidUpdate() {
-  //   alert('YES');
-  // }
-
   classChange = url => {
-    // alert(url);
-
     if (!url || url.length < 1) {
       return;
-    } if (this.state.strUrl === url) {
+    }
+    if (this.state.strUrl === url) {
       // return;
     }
 
@@ -139,52 +80,79 @@ class menuList extends React.Component {
     }
 
     if (url === strCurUrl) {
-      clsStr = 'menu current';
+      // clsStr = 'menu current';
+      clsStr = 'active';
     } else if (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) {
-      clsStr = 'menu current';
-      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin') {
-      //   clsStr = 'menu current';
-      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/') {
-      //   clsStr = 'menu current';
-      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/adminmain') {
-      //   clsStr = 'menu current';
-      // } else if (url === '/admin/adminmain/siteadmin' && strCurUrl === '/admin/adminmain/') {
-      //   clsStr = 'menu current';
+      // clsStr = 'menu current';
+      clsStr = 'active';
     } else {
-      clsStr = 'menu';
+      // clsStr = 'menu';
+      clsStr = '';
     }
     return clsStr;
   };
 
-  makeMenu = mnuList =>
-    mnuList.map(m => (
-      <li key={m.SCR_CD}>
-        <span
-          className={this.classString(m.URL)}
-          onClick={() => this.classChange(m.URL)}
-          onKeyPress={() => this.classChange(m.URL)}
-          role="button"
-          tabIndex="0"
-          style={{ paddingLeft: `${m.SORT_SQ % 100 > 0 ? 15 : 0}px` }}
-        >
-          {lang.get('NAME', m)}
-        </span>
-      </li>
+  setIcon = code => {
+    switch (code) {
+      case 'BUILDER':
+        return 'build';
+      case 'APPSTORE':
+        return 'appstore';
+      case 'ORG':
+        return 'apartment';
+      case 'CODE':
+        return 'share-alt';
+      case 'ALARM':
+        return 'message';
+      case 'CLASSIFY':
+        return 'database';
+      default:
+        return 'setting';
+    }
+  };
+
+  setOpenMenuCode = code => {
+    this.setState({ openMenuCode: code });
+  };
+
+  makeMenu = leftMenuList =>
+    leftMenuList.map(m => (
+      <MenuItem menuItem={m} openMenuCode={this.state.openMenuCode} classString={this.classString} classChange={this.classChange} setIcon={this.setIcon} setOpenMenuCode={this.setOpenMenuCode} />
+      // <li className={`${this.classString(m.URL)} ${m.child ? ' open' : ''}`}>
+      //   <a onClick={() => !m.child && this.classChange(m.URL)} onKeyPress={() => !m.child && this.classChange(m.URL)}>
+      //     <Icon type={this.setIcon(m.SCR_CD)} />
+      //     <span className="nav-link-text">{lang.get('NAME', m)}</span>
+      //     {m.child && (
+      //       <b className="collapse-sign">
+      //         <em className="fa fa-angle-up"></em>
+      //       </b>
+      //     )}
+      //   </a>
+      //   {m.child && (
+      //     <ul>
+      //       {m.child.map(s => (
+      //         <li className={this.classString(s.URL)}>
+      //           <a onClick={() => this.classChange(s.URL)} onKeyPress={() => this.classChange(s.URL)}>
+      //             <span className="nav-link-text">{lang.get('NAME', s)}</span>
+      //           </a>
+      //         </li>
+      //       ))}
+      //     </ul>
+      //   )}
+      // </li>
     ));
-  // console.log(this.makeMenu(menuList), 'dfdfdsfdsfdsfdsfsdf'));
-  //   { menuList }
 
   render() {
     return (
       <StyledAdminLeftMenu>
         <nav>
-          <MenuList>
-            {/* {this.makeMenu(this.props.leftMenuList.filter(row => row.ROLE_CD === 'SA'
-                          || (row.ROLE_CD === 'SM' && row.SCR_CD === 'SITE')
-                          || (row.ROLE_CD === 'SM' && row.SCR_CD === 'MSG')
-                          || (row.ROLE_CD === 'SM' && row.SCR_CD === 'VGROUP')))} */}
-            {this.makeMenu(this.props.leftMenuList)}
-          </MenuList>
+          <StyledAdminMenu>
+            <div>
+              <div className="wrap-nav">
+                <ul className="nav-menu">{this.makeMenu(this.props.leftMenuList)}</ul>
+              </div>
+            </div>
+          </StyledAdminMenu>
         </nav>
       </StyledAdminLeftMenu>
     );
@@ -194,7 +162,6 @@ class menuList extends React.Component {
 menuList.propTypes = {
   leftMenuList: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   history: PropTypes.object, //eslint-disable-line
-  // .isRequired,
   location: PropTypes.object, // eslint-disable-line
   historyPush: PropTypes.func, //eslint-disable-line
   getMenu: PropTypes.func.isRequired,
