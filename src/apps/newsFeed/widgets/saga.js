@@ -1,8 +1,10 @@
+import React from 'react';
 import { put, call, select, takeLatest, takeEvery } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
 import * as actions from './action';
-import * as selectors from './selector';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 // 게시물 리스트 가져오기
 export function* getDataList(payload) {
@@ -47,7 +49,15 @@ export function* changeCategoryList(payload) {
           data: {selectedCategory: []},
       })
       };
-    yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
+    const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
+    if (response.result === 'success'){
+      message.success(
+        <MessageContent>
+          카테고리가 선택되었습니다.
+        </MessageContent>,
+        2,
+      );
+    };
   } else {
     const result ={
         widget_id: payload.item.WIDGET_ID,
@@ -58,7 +68,15 @@ export function* changeCategoryList(payload) {
         },
       })
     };
-    yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
+    const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
+    if (response.result === 'success'){
+      message.success(
+        <MessageContent>
+          카테고리가 선택되었습니다.
+        </MessageContent>,
+        2,
+      );
+    };
   }
 }
 

@@ -12,7 +12,6 @@ import * as selectors from '../selector';
 import * as actions from '../action';
 import saga from '../saga';
 import reducer from '../reducer';
-import './index.css';
 
 class NewsfeedSetting extends PureComponent {
   constructor(props) {
