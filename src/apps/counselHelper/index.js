@@ -35,7 +35,7 @@ class Widget extends PureComponent {
 }
 Widget.propTypes = {
   getDetail: PropTypes.func,
-  detail: PropTypes.object,
+  detail: PropTypes.array,
   myAppTreeData: PropTypes.array,
   item: PropTypes.object,
 };

@@ -41,7 +41,7 @@ class AppCard extends React.PureComponent {
       const result = linkProps.children.map(item => {
         if (item.NODE_TYPE === 'F') {
           //  console.log(item.NAME_KOR);
-          return <SubMenu title={item.NAME_KOR}></SubMenu>;
+          return <SubMenu title={item.NAME_KOR} key={item.key}></SubMenu>;
         }
         const tempURL = this.execPage(item);
         //  console.log(tempURL);
@@ -54,7 +54,9 @@ class AppCard extends React.PureComponent {
       });
       dropMenu = (
         <Menu>
-          <SubMenu title={title}>{result}</SubMenu>
+          <SubMenu title={title} key={value}>
+            {result}
+          </SubMenu>
         </Menu>
       );
     } else {
@@ -91,6 +93,6 @@ export default AppCard;
 
 AppCard.propTypes = {
   title: PropTypes.string,
-  value: PropTypes.string,
-  linkProps: PropTypes.array,
+  value: PropTypes.number,
+  linkProps: PropTypes.object,
 };

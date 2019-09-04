@@ -68,6 +68,6 @@ export default class helperWidget extends PureComponent {
   }
 }
 helperWidget.propTypes = {
-  detail: PropTypes.object,
+  detail: PropTypes.array,
   linkData: PropTypes.object,
 };

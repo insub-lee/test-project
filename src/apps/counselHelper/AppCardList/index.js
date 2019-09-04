@@ -27,5 +27,5 @@ export default AppCardList;
 AppCardList.propTypes = {
   title: PropTypes.string,
   childNode: PropTypes.array,
-  linkProp: PropTypes.array,
+  linkProp: PropTypes.object,
 };
