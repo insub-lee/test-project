@@ -18,13 +18,11 @@ const { Option } = Select;
 class BuilderWidgetSetting extends Component {
   componentDidMount() {
     const { item } = this.props;
+    console.debug('props', this.props);
+    console.debug('item', item);
     this.props.getWorkList();
     this.props.getBuilderWidgetConfig(item.WIDGET_ID);
   }
-
-  // componentDidUnmount() {
-  //   this.props.initSettingData();
-  // }
 
   onSaveWidgetConfig = () => {
     const { item, updateBizGroupChgYn, saveBuilderWidgetConfig, ITEM_VALUE } = this.props;
@@ -52,7 +50,7 @@ class BuilderWidgetSetting extends Component {
               </label>
             </td>
             <td>
-              <Select defaultValue={ITEM_VALUE.data} style={{ width: '300px', marginLeft: '20px' }} onChange={val => this.props.changeWorkSeq(val)}>
+              <Select value={ITEM_VALUE.data} style={{ width: '300px', marginLeft: '20px' }} onChange={val => this.props.changeWorkSeq(val)}>
                 {workList.map(work => (
                   <Option key={work.WORK_SEQ} value={work.WORK_SEQ}>
                     {work.NAME_KOR}
@@ -74,13 +72,11 @@ BuilderWidgetSetting.propTypes = {
   item: PropTypes.object,
   updateBizGroupChgYn: PropTypes.func,
   workList: PropTypes.array.isRequired,
-  WORK_SEQ: PropTypes.number.isRequired,
   ITEM_VALUE: PropTypes.object.isRequired,
   getWorkList: PropTypes.func.isRequired,
   changeWorkSeq: PropTypes.func.isRequired,
   getBuilderWidgetConfig: PropTypes.func,
   saveBuilderWidgetConfig: PropTypes.func,
-  initSettingData: PropTypes.func,
 };
 
 BuilderWidgetSetting.defaultProps = {
@@ -88,7 +84,6 @@ BuilderWidgetSetting.defaultProps = {
   updateBizGroupChgYn: () => console.debug('no bind'),
   getBuilderWidgetConfig: () => console.debug('no bind'),
   saveBuilderWidgetConfig: () => console.debug('no bind'),
-  initSettingData: () => console.debug('no bind'),
 };
 
 const mapStateToProps = createStructuredSelector({

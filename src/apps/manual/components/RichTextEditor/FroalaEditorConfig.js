@@ -1,13 +1,12 @@
 export const froalaEditorConfig = {
   placeholder: 'Edit Me',
   width: '100%',
-  // height: 300,
   charCounterCount: false,
   language: 'ko',
-  imageUploadRemoteUrls: false,
-  imageDefaultWidth: 'auto',
-  imageUpload: true,
-  pasteImage: true,
+  // imageUploadRemoteUrls: true,
+  // imageDefaultWidth: 'auto',
+  // imageUpload: true,
+  // pasteImage: true,
   toolbarSticky: true,
   scrollableContainer: '.manualMainContentWrapper',
   toolbarButtons: [
@@ -71,7 +70,7 @@ export const froalaEditorConfig = {
   ],
   toolbarBottom: true,
   fontFamilySelection: true,
-  imageUploadURL: 'http://192.168.0.35:12082/upload',
+  imageUploadURL: '/upload',
   events: {
     'image.loaded': img => {
       img.each((index, el) => {

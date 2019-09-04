@@ -5,7 +5,7 @@ import { fromJS } from 'immutable';
 
 import Upload from 'components/FormStuff/Upload';
 
-const IndexFile = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
+const IndexFile = ({ item, selectedComponentIdx, handleChangeCompValue, handlePushCompValue, handleRemoveCompValue }) => (
   <div className="manualEditorComponent">
     <div className="manualIndexWrapper">
       <div className="manualIndexTitle">
@@ -44,15 +44,22 @@ const IndexFile = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
               </div>
             </div>
           ) : (
-            <div>
+            <div className="manualEditorFileLinkWrap">
               <span>파일링크 : </span>
-              <Input
-                type="text"
-                value={item.COMP_OPTION.URL || ''}
-                placeholder="파일 URL을 입력해주세요"
-                onChange={e => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.URL', e.target.value)}
-              />
-              <Button onClick={() => console.debug('aaa')}>+</Button>
+              <div>
+                {item.COMP_OPTION.URL.map((linkItem, itemIdx) => (
+                  <div className="manualEditorFileLinkInputWrap">
+                    <Input
+                      type="text"
+                      value={linkItem || ''}
+                      placeholder="파일 URL을 입력해주세요"
+                      onChange={e => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, `COMP_OPTION.URL.${itemIdx}`, e.target.value)}
+                    />
+                    <Button onClick={() => handleRemoveCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, `COMP_OPTION.URL.${itemIdx}`)}>-</Button>
+                  </div>
+                ))}
+              </div>
+              <Button onClick={() => handlePushCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.URL', '')}>+</Button>
             </div>
           )}
         </div>
@@ -65,12 +72,16 @@ IndexFile.propTypes = {
   handleChangeCompValue: PropTypes.func,
   item: PropTypes.object,
   selectedComponentIdx: PropTypes.number,
+  handlePushCompValue: PropTypes.func,
+  handleRemoveCompValue: PropTypes.func,
 };
 
 IndexFile.defaultProps = {
   handleChangeCompValue: () => false,
   item: {},
   selectedComponentIdx: 0,
+  handlePushCompValue: () => false,
+  handleRemoveCompValue: () => false,
 };
 
 export default IndexFile;

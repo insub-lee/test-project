@@ -87,7 +87,10 @@ ItemToolBar.defaultProps = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  addEditorComponent: compType => dispatch(actions.addEditorComponentByReduc(compType)),
+  addEditorComponent: compType => {
+    dispatch(actions.addEditorComponentByReduc(compType));
+    if (compType === 'indexRelationPopup') dispatch(actions.getCategoryListBySaga());
+  },
 });
 
 export default connect(

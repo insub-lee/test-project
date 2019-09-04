@@ -1,5 +1,8 @@
+import React from 'react';
 import { takeLatest, call, put } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import * as actionTypes from './constants';
 import * as actions from './actions';
 
@@ -17,7 +20,7 @@ function* getBuilderWidgetConfig({ widgetId }) {
 
 function* saveBuilderWidgetConfig({ payload }) {
   const response = yield call(Axios.post, '/api/manual/v1/ManualWidgetConfigHandler', { PARAM: payload });
-  console.debug('response', response);
+  message.success(<MessageContent>적용하였습니다.</MessageContent>, 3);
 }
 
 export default function* watcher() {

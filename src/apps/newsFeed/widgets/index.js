@@ -21,6 +21,7 @@ class NewsFeed extends Component {
     super(props);
     this.state = {
       widget_id: this.props.item.WIDGET_ID,
+      widgetSize: this.props.item.size,
       selectedCategory: this.props.item.data.selectedCategory,
       newsfeedDataList: this.props.widgetDataList,
     }
@@ -50,14 +51,6 @@ class NewsFeed extends Component {
     setModalView(false, widget_id);
   };
 
-
-  handlePageReload = () => {
-    const { widgetSize, getNewsFeed } = this.props;
-    const { selectedCategory } = this.state;
-    getNewsFeed(widgetSize, selectedCategory);
-  };
-  
-
   componentDidMount() {
     const { getNewsFeed, item, setModalView } = this.props;
     const  {widget_id} = this.state; 
@@ -71,29 +64,30 @@ class NewsFeed extends Component {
     getNewsFeed(widget_id, selectedCategory);
   }
 
-
-  //componentWillReceiveProps(nextProps) {}
-
   render() {
-    const { handleCloseModal, handleClick, handlePageReload } = this;
-    const { widget_id } = this.state
+    const { handleCloseModal, handleClick } = this;
+    const { widget_id, widgetSize } = this.state
     const { modalView, modalIdx ,widgetDataList } = this.props;
     const totalList = widgetDataList.totalList;
     const updateList = widgetDataList.updateList;
     const newList = widgetDataList.newList;
-    
+
+    console.log('토탈리스트', totalList);
+    console.log('업데이트리스트', updateList);
+    console.log('뉴리스트', newList);
+
     return (
       <div>
         <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
               <Tabs defaultActiveKey="total">
                 <TabPane tab="전체" key="total">
-                  <News dataList={totalList} handleClick={handleClick} widget_id={widget_id}/>
+                  <News dataList={totalList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
                 </TabPane>
                 <TabPane tab="변경" key="update">
-                  <News dataList={updateList} handleClick={handleClick}  widget_id={widget_id}/>
+                  <News dataList={updateList} handleClick={handleClick}  widget_id={widget_id} widgetSize={widgetSize} />
                 </TabPane>
                 <TabPane tab="신규" key="new">
-                  <News dataList={newList} handleClick={handleClick}  widget_id={widget_id}/>
+                  <News dataList={newList} handleClick={handleClick}  widget_id={widget_id} widgetSize={widgetSize} />
                 </TabPane>
               </Tabs>
         </StyleWiget>

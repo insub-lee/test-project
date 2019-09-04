@@ -14,8 +14,6 @@ const NewsFeedReducer = (state = initState, action) => {
     // 위젯 - 게시물 데이터
     case constants.SET_NEWSFEED_DATA_LIST: {
       const { newDataList, widget_id } = action;
-      console.log('리듀서위젯아디', widget_id);
-      console.log('리듀서뉴데이터', newDataList);
       return state.setIn(['widgetDataList', widget_id], newDataList);
     }
 

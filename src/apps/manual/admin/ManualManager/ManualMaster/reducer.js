@@ -34,6 +34,11 @@ const initialState = fromJS({
       editorTabList: [],
       selectedAddIdx: 0,
       scrollComp: {},
+      isIndexRelationModal: false,
+      indexRelationManualList: [],
+      indexRelationComponetList: [],
+      selectedIRComponetItem: {},
+      indexRelationList: [],
     },
     manualOptionMgr: {
       relationManualList: [],
@@ -231,6 +236,11 @@ const appReducer = (state = initialState, action) => {
             addComponentId: '',
             editorTabList: [],
             selectedAddIdx: 0,
+            isIndexRelationModal: false,
+            indexRelationManualList: [],
+            indexRelationComponetList: [],
+            selectedIRComponetItem: {},
+            indexRelationList: [],
           }),
         )
         .setIn(['manualMasterState', 'isEditorMgr'], false);
@@ -276,6 +286,11 @@ const appReducer = (state = initialState, action) => {
     }
     case constantTypes.ADD_EDITOR_COMPONENT_REDUCR: {
       const { compType } = action;
+      if (compType === 'indexRelationPopup') {
+        return state
+          .setIn(['manualMasterState', 'manualEditorEntity', 'isIndexRelationModal'], true)
+          .setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationComponetList'], fromJS([]));
+      }
       return addComponentInfo(state, compType);
     }
     case constantTypes.SET_EDITOR_COMPONENT_VALUE_REDUCR: {
@@ -284,13 +299,57 @@ const appReducer = (state = initialState, action) => {
       const editorComponentList = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList']);
       if (editorComponentList && editorComponentList.size > 0) {
         const innerIdx = editorComponentList.findIndex(item => item.get('MUAL_TABCOMP_IDX') === compIdx);
-        if (key.indexOf('COMP_OPTION') > -1) {
-          return state.setIn(
-            ['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx, 'COMP_OPTION', key.split('.')[1]],
-            value,
-          );
+        if (key.indexOf('.') > -1) {
+          const setKey = ['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx];
+          key.split('.').forEach(keyItem => {
+            setKey.push(keyItem);
+          });
+          return state.setIn(setKey, value);
         }
         return state.setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx, key], value);
+      }
+      return state;
+    }
+    case constantTypes.ADD_EDITOR_COMPONENT_VALUE_REDUCR: {
+      const { tabIdx, compIdx, key, value } = action;
+      const idx = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList']).findIndex(item => item.get('MUAL_TAB_IDX') === tabIdx);
+      const editorComponentList = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList']);
+      if (editorComponentList && editorComponentList.size > 0) {
+        const innerIdx = editorComponentList.findIndex(item => item.get('MUAL_TABCOMP_IDX') === compIdx);
+        if (key.indexOf('.') > -1) {
+          const setKey = ['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx];
+          const compListKey = [innerIdx];
+          key.split('.').forEach(keyItem => {
+            setKey.push(keyItem);
+            compListKey.push(keyItem);
+          });
+          const list = editorComponentList.getIn(compListKey);
+          return state.setIn(setKey, list.push(value));
+        }
+        return state.setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx, key], value);
+      }
+      return state;
+    }
+    case constantTypes.REMOVE_EDITOR_COMPONENT_VALUE_REDUCR: {
+      const { tabIdx, compIdx, key } = action;
+      const idx = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList']).findIndex(item => item.get('MUAL_TAB_IDX') === tabIdx);
+      const editorComponentList = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList']);
+      if (editorComponentList && editorComponentList.size > 0) {
+        const innerIdx = editorComponentList.findIndex(item => item.get('MUAL_TABCOMP_IDX') === compIdx);
+        const compListKey = [innerIdx];
+        if (key.indexOf('.') > -1) {
+          const setKey = ['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx];
+          key.split('.').forEach(keyItem => {
+            setKey.push(keyItem);
+            compListKey.push(keyItem);
+          });
+          const list = editorComponentList.getIn(compListKey);
+          if (list > 1) {
+            return state.deleteIn(setKey);
+          }
+        } else {
+          return state.deleteIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx, key]);
+        }
       }
       return state;
     }
@@ -406,6 +465,26 @@ const appReducer = (state = initialState, action) => {
       const { idx } = action;
       return state.setIn(['manualMasterState', 'compareTempletMgr', 'manage', 'selectedIdx'], idx);
     }
+    case constantTypes.SET_IS_INDEX_RELATION_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'isIndexRelationModal'], flag);
+    }
+    case constantTypes.SET_INDEX_RELATION_MANUAL_LIST_REDUCR: {
+      const { list } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationManualList'], list);
+    }
+    case constantTypes.SET_INDEX_RELATION_COMPONENT_LIST_REDUCR: {
+      const { list } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationComponetList'], list);
+    }
+    case constantTypes.SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR: {
+      const { item } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'selectedIRComponetItem'], item);
+    }
+    case constantTypes.SET_INDEX_RELATION_LIST_REDUCR: {
+      const { list } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationList'], list);
+    }
     default:
       return state;
   }
@@ -439,7 +518,7 @@ const addTabInfo = state => {
 };
 
 const addComponentInfo = (state, compType) => {
-  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna'];
+  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna', 'indexRelation'];
   if (addType.findIndex(item => item === compType) === -1) {
     console.debug('type error');
     return state;
@@ -472,13 +551,27 @@ const addComponentInfo = (state, compType) => {
     IS_SAVE: 'N',
   };
   if (compType === 'indexLink') {
-    newComp.COMP_OPTION = { URL: '', VIEW_TYPE: 'popup', ACTION_TYPE: 'menu' };
+    newComp.COMP_OPTION = fromJS({ URL: '', VIEW_TYPE: 'popup', ACTION_TYPE: 'menu' });
   }
   if (compType === 'indexFile') {
-    newComp.COMP_OPTION = { VIEW_TYPE: 'link' };
+    newComp.COMP_OPTION = fromJS({ VIEW_TYPE: 'link', URL: fromJS(['']) });
   }
   if (compType === 'qna') {
-    newComp.COMP_OPTION = { ANSWER: '' };
+    newComp.COMP_OPTION = fromJS({ ANSWER: '' });
+  }
+  let indexRelationInfo = fromJS({});
+  if (compType === 'indexRelation') {
+    const selectedCompOrgItem = state.getIn(['manualMasterState', 'manualEditorEntity', 'selectedIRComponetItem']);
+    indexRelationInfo = fromJS({
+      MUAL_TABCOMP_OIDX: selectedCompOrgItem.get('MUAL_TABCOMP_OIDX'),
+      MUAL_ORG_IDX: selectedCompOrgItem.get('MUAL_ORG_IDX'),
+      CHILD_NODE: selectedCompOrgItem.get('childComp'),
+    });
+    newComp.COMP_OPTION = fromJS({
+      MUAL_TABCOMP_OIDX: selectedCompOrgItem.get('MUAL_TABCOMP_OIDX'),
+      MUAL_ORG_IDX: selectedCompOrgItem.get('MUAL_ORG_IDX'),
+    });
+    newComp.MUAL_COMPVIEWINFO = selectedCompOrgItem.get('title');
   }
   editorComponentList = editorComponentList.push(fromJS(newComp));
   if (compType === 'index') {
@@ -509,7 +602,18 @@ const addComponentInfo = (state, compType) => {
     compList = hierarhySort(hashArr, 0, []);
     compList = compList.map((comp, index) => ({ ...comp, SORT_SQ: index + 1 }));
   }
-
+  if (compType === 'indexRelation') {
+    let indexRelationList = state.getIn(['manualMasterState', 'manualEditorEntity', 'indexRelationList']);
+    if (indexRelationList.findIndex(find => find.get('MUAL_TABCOMP_OIDX') === indexRelationInfo.get('MUAL_TABCOMP_OIDX')) === -1) {
+      indexRelationList = indexRelationList.push(indexRelationInfo);
+    }
+    return state
+      .setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(compList))
+      .setIn(['manualMasterState', 'manualEditorEntity', 'addComponentId'], `editorCompID_${selectedTabIdx}_${maulCompIdx}`)
+      .setIn(['manualMasterState', 'manualEditorEntity', 'selectedComponentIdx'], maulCompIdx)
+      .setIn(['manualMasterState', 'manualEditorEntity', 'isIndexRelationModal'], false)
+      .setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationList'], indexRelationList);
+  }
   if (compType.indexOf('index') > -1 || compType === 'qna') {
     return state
       .setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(compList))

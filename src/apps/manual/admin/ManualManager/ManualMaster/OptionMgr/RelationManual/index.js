@@ -8,6 +8,7 @@ import { getTreeFromFlatData } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
 import difference from 'lodash/difference';
 import selectors from '../../selectors';
+import Styled from './Styled';
 import * as actions from '../../actions';
 
 class RelationManual extends Component {
@@ -164,59 +165,61 @@ class RelationManual extends Component {
       });
     });
     return (
-      <div style={{ marginTop: '15px' }}>
-        <table>
-          <tr>
-            <td>
-              <div style={{ marginBottom: '10px' }}>
-                <TreeSelect
-                  style={{ width: 400 }}
-                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  placeholder="Please select"
-                  allowClear
-                  treeData={treeData}
-                  onChange={this.onCategroyChange}
-                ></TreeSelect>
-              </div>
-              <Table rowSelection={this.leftRowSelection} columns={this.leftTableColumns} dataSource={leftDataSource}></Table>
-            </td>
-            <td style={{ padding: '0 10px' }}>
-              <div style={{ marginBottom: '5px' }}>
-                <Button size="small" onClick={this.onRightClick}>
-                  {
-                    <span>
-                      <Icon type="right" />
-                    </span>
-                  }
-                </Button>
-              </div>
-              <div>
-                <Button size="small" onClick={this.onLeftClick}>
-                  {
-                    <span>
-                      <Icon type="left" />
-                    </span>
-                  }
-                </Button>
-              </div>
-              <div>&nbsp;</div>
-            </td>
-            <td style={{ verticalAlign: 'top' }}>
-              <div style={{ marginBottom: '10px', textAlign: 'right' }}>
-                <Button size="middle" onClick={this.onApply}>
-                  {
-                    <span>
-                      <Icon type="import" />
-                      적용하기
-                    </span>
-                  }
-                </Button>
-              </div>
-              <Table rowSelection={this.rightRowSelection} columns={this.rightTableColumns} dataSource={chooseRelMual} style={{ width: 400 }}></Table>
-            </td>
-          </tr>
-        </table>
-      </div>
+      <Styled>
+        <div style={{ marginTop: '15px' }}>
+          <table>
+            <tr>
+              <td>
+                <div style={{ marginBottom: '10px' }}>
+                  <TreeSelect
+                    style={{ width: 390 }}
+                    dropdownStyle={{ maxHeight: 390, overflow: 'auto' }}
+                    placeholder="Please select"
+                    allowClear
+                    treeData={treeData}
+                    onChange={this.onCategroyChange}
+                  ></TreeSelect>
+                </div>
+                <Table rowSelection={this.leftRowSelection} columns={this.leftTableColumns} dataSource={leftDataSource}></Table>
+              </td>
+              <td style={{ padding: '0 10px' }}>
+                <div style={{ marginBottom: '5px' }}>
+                  <Button size="small" onClick={this.onRightClick}>
+                    {
+                      <span>
+                        <Icon type="right" />
+                      </span>
+                    }
+                  </Button>
+                </div>
+                <div>
+                  <Button size="small" onClick={this.onLeftClick}>
+                    {
+                      <span>
+                        <Icon type="left" />
+                      </span>
+                    }
+                  </Button>
+                </div>
+                <div>&nbsp;</div>
+              </td>
+              <td style={{ verticalAlign: 'top' }}>
+                <div style={{ marginBottom: '10px', textAlign: 'right' }}>
+                  <Button size="middle" onClick={this.onApply}>
+                    {
+                      <span>
+                        <Icon type="import" />
+                        적용하기
+                      </span>
+                    }
+                  </Button>
+                </div>
+                <Table rowSelection={this.rightRowSelection} columns={this.rightTableColumns} dataSource={chooseRelMual} style={{ width: 390 }}></Table>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </Styled>
     );
   }
 }
