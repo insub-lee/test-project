@@ -37,7 +37,7 @@ const Styled = styled.div`
       cursor: pointer;
       p {
         text-align: center;
-        font-size: 16px;
+        font-size: 15px;
         color: #000;
         font-weight: 600;
         margin: 0;
