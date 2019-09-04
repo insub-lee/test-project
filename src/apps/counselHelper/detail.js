@@ -9,17 +9,14 @@ class detail extends PureComponent {
     const noMap = <NoResult treeData={treeData} searchWord={searchWord} />;
 
     //  필터용 함수
-    const newArray = treeData.filter((item, index, array) => {
-      if (item.title.search(searchWord) !== -1) {
-        return !!~item.title.search(searchWord);
+    const newArray = treeData.filter(pItem => {
+      if (pItem.title.search(searchWord) !== -1) {
+        return !!~pItem.title.search(searchWord);
       }
-      const parent = item;
-      const test = item.children.filter(function(item, index, array) {
-        return !!~item.title.search(searchWord);
-      });
+      const parent = pItem;
+      const test = pItem.children.filter(item => !!~item.title.search(searchWord));
       if (test.length !== 0) {
         parent.children = test;
-
         return parent;
       }
     });
@@ -28,8 +25,9 @@ class detail extends PureComponent {
     const appCardList = newArray.map(query => {
       const { title } = query;
       const { children } = query;
+      const { linkProp } = query;
       const { key } = query;
-      return <AppCardList title={title} childNode={children} key={key} />;
+      return <AppCardList title={title} childNode={children} key={key} linkProp={linkProp} />;
     });
 
     return <div className="groupWrap">{newArray.length === 0 ? <div>{noMap}</div> : <div>{appCardList}</div>}</div>;
