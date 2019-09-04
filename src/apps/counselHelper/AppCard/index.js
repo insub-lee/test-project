@@ -46,7 +46,7 @@ class AppCard extends React.PureComponent {
         const tempURL = this.execPage(item);
         //  console.log(tempURL);
         return (
-          <Menu.Item key={value}>
+          <Menu.Item key={item.key}>
             {' '}
             <Link to={tempURL}>{item.NAME_KOR} </Link>
           </Menu.Item>
