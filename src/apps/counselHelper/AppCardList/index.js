@@ -1,17 +1,18 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import Title from '../Title';
 import AppCard from '../AppCard';
 import Styled from './Styled';
 
-const AppCardList = ({ title, childNode }) => {
+const AppCardList = ({ title, childNode, linkProp }) => {
   const appMap = childNode.map(query => {
     const appTitle = query.title;
     const { key } = query;
     const { value } = query;
-    return <AppCard title={appTitle} value={value} key={key} />;
+    const appLinkProps = query.linkProp;
+    return <AppCard title={appTitle} value={value} key={key} linkProps={appLinkProps} />;
   });
-
+  console.log(title, linkProp);
   return (
     <Styled>
       <Title title={title} />
@@ -22,6 +23,9 @@ const AppCardList = ({ title, childNode }) => {
 };
 
 export default AppCardList;
-AppCardList.defaultProps = {
-  detail: [],
+
+AppCardList.propTypes = {
+  title: PropTypes.string,
+  childNode: PropTypes.array,
+  linkProp: PropTypes.array,
 };

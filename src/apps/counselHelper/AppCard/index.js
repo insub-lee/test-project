@@ -1,59 +1,96 @@
 import React from 'react';
-import { Modal, Rate } from 'antd';
-// import Test from 'containers/portal/App/UserMenuCard/BizMenuCardDetail/BizInfo';
-import ModalView from 'containers/portal/App/UserMenuCard/BizMenuCardDetail/modalindex';
-import { createBrowserHistory as createHistory } from 'history';
+import { Rate, Menu, Dropdown } from 'antd';
+import { Link } from 'react-router-dom';
+import { basicPath } from 'containers/common/constants';
+import PropTypes from 'prop-types';
 import appImg from '../../../images/icon-app.png';
 import Styled from './Styled';
-// <a href={`/portal/card/bizMenu/detail/info/${value}`} className="app-card-text">
-class AppCard extends React.PureComponent {
-  state = {
-    visiable: false,
-  };
 
-  handleOnclick = () => {
-    const { visiable } = this.state;
-    this.setState({ visiable: !visiable });
+class AppCard extends React.PureComponent {
+  execPage = node => {
+    let result;
+    // console.log('EXEC_Page@@@@@@@@@@@@@');
+    // console.log('@@@@ NODE: ', node);
+    // console.log('EXEC_Page@@@@@@@@@@@@@');
+
+    // 1. 내부서비스 /apps/SRC_PATH ex) 회의실예약, 명함신청
+    // 2. 외부서비스 /apps/PAGE_ID ex) 큐브
+    // 3. 페이지 /page/PAGE_ID
+    if (node) {
+      if (node.INTL_TYPE === 'Y') {
+        // console.log('!!!!!!!!!!!!!! INTL TYPE !!!!!!!!!!', node);
+
+        result = `/${basicPath.APPS}/${node.SRC_PATH}`;
+      } else if (node.SRC_PATH === 'legacySVC') {
+        // console.log('!!!!!!!!!!!!!! INTL TYPE2 !!!!!!!!!', node);
+        result = `/${basicPath.APPS}/${node.PAGE_ID}`;
+      } else {
+        // console.log('!!!!!!!!!!!!!! INTL TYPE3 !!!!!!!!!!', node);
+        result = `/${basicPath.PAGE}/${node.PAGE_ID}`;
+      }
+    }
+    return result;
   };
 
   render() {
-    const history = createHistory();
-    const { title, value } = this.props;
-    const bizInfo = value;
-    const match = {
-      path: '/portal/card/:TYPE/detail/info/:BIZGRP_ID',
-      params: { BIZGRP_ID: value.toString(), TYPE: 'bizMenu' },
-      url: `/portal/card/bizMenu/detail/info/${value}`,
-    };
-    history.location.pathname = `/portal/card/bizMenu/detail/info/${value}`;
+    const { title, value, linkProps } = this.props;
+    const { SubMenu } = Menu;
+    let dropMenu;
+    // console.log(title, linkProps);
+    if (linkProps.hasOwnProperty('children')) {
+      const result = linkProps.children.map(item => {
+        if (item.NODE_TYPE === 'F') {
+          //  console.log(item.NAME_KOR);
+          return <SubMenu title={item.NAME_KOR}></SubMenu>;
+        }
+        const tempURL = this.execPage(item);
+        //  console.log(tempURL);
+        return (
+          <Menu.Item key={value}>
+            {' '}
+            <Link to={tempURL}>{item.NAME_KOR} </Link>
+          </Menu.Item>
+        );
+      });
+      dropMenu = (
+        <Menu>
+          <SubMenu title={title}>{result}</SubMenu>
+        </Menu>
+      );
+    } else {
+      dropMenu = (
+        <Menu>
+          <Menu.Item key={value}>
+            {' '}
+            <Link to={`/portal/card/bizMenu/detail/info/${value}`}>{title} </Link>
+          </Menu.Item>
+        </Menu>
+      );
+    }
 
     return (
-      <Styled className="app-card">
-        <div className="app-card-body" onClick={this.handleOnclick} role="presentation">
-          <div className="appd-card-icon">
-            <img src={appImg} alt="" />
+      <Dropdown overlay={dropMenu} trigger={['click']}>
+        <Styled className="app-card">
+          <div className="app-card-body" onClick={this.handleOnclick} role="presentation">
+            <div className="appd-card-icon">
+              <img src={appImg} alt="" />
+            </div>
+            <div className="app-card-text">
+              <p>{title}</p>
+              <span>상담업무와 관련 메뉴 상세내용은 어쩌고저쩌고</span>
+              <Rate allowHalf disabled value={4.5} style={{ fontSize: '12px' }} />
+            </div>
           </div>
-          <div className="app-card-text">
-            <p>{title}</p>
-            <span>상담업무와 관련 메뉴 상세내용은 어쩌고저쩌고</span>
-            <Rate allowHalf disabled value={4.5} style={{ fontSize: '12px' }} />
-          </div>
-        </div>
-        <Modal
-          width={1154}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          style={{ top: 42 }}
-          visible={this.state.visiable}
-          footer={null}
-          onCancel={this.handleOnclick}
-          closable={false}
-        >
-          <ModalView match={match} history={history} onCancel={this.handleOnclick}></ModalView>
-        </Modal>
-      </Styled>
+        </Styled>
+      </Dropdown>
     );
   }
 }
 
 export default AppCard;
-// <MenuCard BIZ_ID={value} TYPE="bizMenu" path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" url={`/portal/card/bizMenu/detail/info/${value}`}></MenuCard>
+
+AppCard.propTypes = {
+  title: PropTypes.string,
+  value: PropTypes.string,
+  linkProps: PropTypes.array,
+};
