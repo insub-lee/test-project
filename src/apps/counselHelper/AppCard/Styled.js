@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
+  .rateDesign {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+  }
   width: 100%;
   overflow: hidden;
   & .app-card-body {
@@ -31,7 +36,8 @@ const Styled = styled.div`
       align-items: center;
       cursor: pointer;
       p {
-        font-size: 14px;
+        text-align: center;
+        font-size: 16px;
         color: #000;
         font-weight: 600;
         margin: 0;
@@ -49,6 +55,15 @@ const Styled = styled.div`
         text-overflow: ellipsis;
         word-break: break-all;
       }
+     .app-run-button{
+       width:100%:
+       
+     }
+     .app-run-button button{
+      display: block;
+       margin:auto;
+     } 
+     .app-run-button button:hover{border:1px solid #886ab5;}
     }
   }
 `;
