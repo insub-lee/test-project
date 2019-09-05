@@ -16,6 +16,7 @@ import CustomTheme from './theme';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
 import { SortableTreeWithoutDndContext as SortableTree } from './SortableMenuTree/react-sortable-tree';
+import IconCollection from '../../../../../components/IconCollection';
 
 const features = 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes';
 
@@ -117,7 +118,7 @@ class Tree extends Component {
           }}
           style={{ cursor: 'pointer' }}
         >
-          <i className={nodeData.children && nodeData.children.length > 0 ? 'fa fa-address-card' : 'file'} />
+          <IconCollection className={nodeData.children && nodeData.children.length > 0 ? 'icon-workCard' : 'icon-pen'} />
           {lang.get('NAME', nodeData)}
           <Badge count={nodeData.UNREAD_CNT !== undefined ? nodeData.UNREAD_CNT : ''} overflowCount={99} className="inTree" />
         </button>
