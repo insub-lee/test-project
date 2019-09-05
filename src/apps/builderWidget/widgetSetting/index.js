@@ -37,7 +37,9 @@ class BuilderWidgetSetting extends Component {
     };
 
     saveBuilderWidgetConfig(result);
-    updateBizGroupChgYn();
+    if (type && type === 'bizgroup') {
+      updateBizGroupChgYn();
+    }
   };
 
   onChangeBuilder = val => {
@@ -46,8 +48,6 @@ class BuilderWidgetSetting extends Component {
 
   render() {
     const { workList, ITEM_VALUE } = this.props;
-
-    console.debug('ITEM_VALUE', ITEM_VALUE);
 
     return (
       <div style={{ marginTop: '10px' }}>
