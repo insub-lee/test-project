@@ -25,6 +25,7 @@ import { BtnWhiteArr, BtnRedShare, BtnLgtGrayRegisted } from '../../../component
 // import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
 
 import AppMaNagerList from '../../../components/AppManagerList';
+import Button from '../../../../../../../components/Button/StyledButton';
 
 class AppBasicInfo extends React.Component {
   constructor(prop) {
@@ -138,12 +139,20 @@ class AppBasicInfo extends React.Component {
                 <h2 className="ellipsis">{lang.get('NAME', this.props.resAppBasicInfo)}</h2>
               </div>
               <div className="btnsWrapperTop">
-                <BtnWhiteArr onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}>
+                <Button
+                  type="button"
+                  className="btn-outline-secondary btn-sm"
+                  onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}
+                >
                   {intlObj.get(messages.workSteps)}
-                </BtnWhiteArr>
-                <BtnWhiteArr onClick={() => onClickWorking(this.props.appManual.ITEM_TYPE, this.props.appManual.FILE_PATH, 'm')}>
+                </Button>
+                <Button
+                  type="button"
+                  className="btn-outline-secondary btn-sm"
+                  onClick={() => onClickWorking(this.props.appManual.ITEM_TYPE, this.props.appManual.FILE_PATH, 'm')}
+                >
                   {intlObj.get(messages.appManual)}
-                </BtnWhiteArr>
+                </Button>
                 <Popover
                   placement="bottomRight"
                   content={
@@ -156,7 +165,9 @@ class AppBasicInfo extends React.Component {
                   overlayClassName="managerList"
                   trigger="click"
                 >
-                  <BtnWhiteArr className="demoPosBtn">{intlObj.get(messages.manager)}</BtnWhiteArr>
+                  <Button type="button" className="btn-outline-secondary btn-sm demoPosBtn">
+                    {intlObj.get(messages.manager)}
+                  </Button>
                 </Popover>
               </div>
             </li>

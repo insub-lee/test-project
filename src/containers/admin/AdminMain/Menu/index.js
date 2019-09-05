@@ -141,7 +141,7 @@ class BizManage extends Component {
     return (
       <div className="appMyPageWrapper">
         {isTreeGroup && (
-          <StyledTabList className="treeWrapper" style={{ left: '200px' }}>
+          <StyledTabList className="treeWrapper">
             <ErrorBoundary>
               <BizGroupTree
                 treeData={categoryData}

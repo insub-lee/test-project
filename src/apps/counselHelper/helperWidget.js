@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import ScrollBar from 'react-custom-scrollbars';
+import PropTypes from 'prop-types';
 import Detail from './detail';
 import SearchWidget from './searchWidget';
 export default class helperWidget extends PureComponent {
@@ -14,7 +15,7 @@ export default class helperWidget extends PureComponent {
   };
 
   render() {
-    const { detail } = this.props;
+    const { detail, linkData } = this.props;
     const result = [];
     let first = -1;
     /* 트리데이터생성 */
@@ -23,28 +24,35 @@ export default class helperWidget extends PureComponent {
       const LVL = query.get('LVL');
       const BIZGRP_ID = query.get('BIZGRP_ID');
       const NAME_KOR = query.get('NAME_KOR');
+      let parentProps = [];
+      let childProps = {};
       switch (LVL) {
         case 2:
           first += 1;
+          parentProps = linkData.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             children: [],
+            linkProp: parentProps[0],
           };
           result.push(tempData);
           break;
         case 3:
+          childProps = result[first].linkProp.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             children: [],
+            linkProp: childProps[0],
           };
           result[first].children.push(tempData);
           break;
         default:
       }
+      return result;
     });
 
     return (
@@ -59,3 +67,7 @@ export default class helperWidget extends PureComponent {
     );
   }
 }
+helperWidget.propTypes = {
+  detail: PropTypes.array,
+  linkData: PropTypes.object,
+};

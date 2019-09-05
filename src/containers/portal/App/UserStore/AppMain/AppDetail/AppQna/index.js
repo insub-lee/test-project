@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { Tabs } from 'antd';
+import { Tabs, Icon } from 'antd';
 
 // import * as feed from 'components/Feedback/functions';
 import { intlObj } from 'utils/commonUtils';
+import noDataIcon from 'images/bizstore/no-result-sm2.png';
 import messages from '../messages';
 
 import reducer from './reducer';
@@ -18,8 +19,8 @@ import * as actions from './actions';
 
 import StyleAppQna from './StyleAppQna';
 
-import noDataIcon from 'images/bizstore/no-result-sm2.png';
 import { BtnWhiteWrite, BtnSeeMore } from '../../../components/uielements/buttons.style';
+import Button from '../../../../../../../components/Button/StyledButton';
 
 class AppQna extends React.Component {
   constructor(prop) {
@@ -291,9 +292,10 @@ class AppQna extends React.Component {
         <Tabs defaultActiveKey="2" onChange={handleChangeTabs}>
           <Tabs.TabPane tab="FAQ" key="1">
             <div className="newFaqWrite" style={{ display: this.props.appManagerChk > 0 && this.state.faqButtonOpen ? 'block' : 'none' }}>
-              <BtnWhiteWrite type="button" onClick={faqWriting}>
+              <Button type="button" className="btn-outline-primary btn-sm" onClick={faqWriting}>
+                <Icon type="edit" />
                 {intlObj.get(messages.faqRegist)}
-              </BtnWhiteWrite>
+              </Button>
             </div>
             <div
               // style={{ height: this.state.faqheiFlog ? '332px' : 'auto' }}
@@ -316,9 +318,10 @@ class AppQna extends React.Component {
           </Tabs.TabPane>
           <Tabs.TabPane tab="Q&amp;A" key="2">
             <div className="newQnaWrite" style={{ display: this.state.qnaButtonOpen ? 'block' : 'none' }}>
-              <BtnWhiteWrite type="button" onClick={qnaWriting}>
+              <Button type="button" className="btn-outline-primary btn-sm" onClick={qnaWriting}>
+                <Icon type="edit" />
                 {intlObj.get(messages.qnaRegist)}
-              </BtnWhiteWrite>
+              </Button>
             </div>
             <div
               style={{ height: 'auto', marginBottom: 10 }}

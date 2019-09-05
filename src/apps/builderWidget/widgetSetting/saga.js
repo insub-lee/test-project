@@ -12,8 +12,8 @@ function* getWorkList() {
   yield put(actions.setWorkList(list));
 }
 
-function* getBuilderWidgetConfig({ widgetId }) {
-  const response = yield call(Axios.get, `/api/manual/v1/ManualWidgetConfigHandler?WIDGET_ID=${widgetId}`);
+function* getBuilderWidgetConfig({ payload }) {
+  const response = yield call(Axios.get, `/api/manual/v1/ManualWidgetConfigHandler?WIDGET_ID=${payload.widgetId}&type=${payload.type}`);
   const { result } = response;
   yield put(actions.setBuilderWidgetConfig(result.ITEM_VALUE));
 }

@@ -335,6 +335,7 @@ class App extends React.PureComponent {
   setFixedOpenMenu = () => {
     this.setState(prevState => ({
       fixedMenu: !prevState.fixedMenu,
+      open: false,
     }));
   }
 
@@ -657,6 +658,21 @@ class App extends React.PureComponent {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
+  goCommonHome = (dockHomeItem) => {
+    const { commonMenuTreeData }  = this.props;
+    /*
+     현재공통메뉴 홈을 구분 해 줄수 있는 구분자가 없음
+     공통메뉴의 첫번째 메뉴를 임의로 공통메뉴 홈으로 설정
+     없을 경우 개인 홈으로 이동
+     */
+    if (commonMenuTreeData && commonMenuTreeData.length > 0) { 
+      const commonHome = commonMenuTreeData[0].value;
+      this.props.history.push(`/${basicPath.PAGE}/${commonHome}`);
+    } else {
+      this.execPage(dockHomeItem, 'execDock');
+    }
+  };  
+
   getLayoutMarginRight = () => {
     const { dockFixedYn } = this.props;
     return dockFixedYn === 'Y' ? 90 : 0;
@@ -783,7 +799,7 @@ class App extends React.PureComponent {
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="home">
-                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} />
+                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome(dockHomeItem)}/>
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
@@ -994,6 +1010,7 @@ App.propTypes = {
   headerTitle: PropTypes.string,
   profile: PropTypes.object.isRequired,
   handleMenuShow: PropTypes.func.isRequired,
+  commonMenuTreeData: PropTypes.array.isRequired,
 };
 
 App.defaultProps = {
@@ -1038,6 +1055,7 @@ const mapStateToProps = createStructuredSelector({
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
+  commonMenuTreeData: routesSelector.makeCommonMenuTree(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),
