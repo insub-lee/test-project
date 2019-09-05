@@ -47,7 +47,7 @@ const StyleEditorIndex = styled.div`
           padding: 0;
           width: auto;
           min-width: inherit;
-          max-width: 200px;
+          max-width: 220px;
         }
       }
     }

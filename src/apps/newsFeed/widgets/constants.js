@@ -14,6 +14,8 @@ export const SET_INIT_CATEGORY = 'apps/manual/newsFeed/SET_INIT_CATEGORY';
 export const CHANGE_SELECTED_CATEGORY = 'apps/manual/newsFeed/CHANGE_SELECTED_CATEGORY';
 export const SAVE_SELECTED_CATEGORY = 'apps/manual/newsFeed/SAVE_SELECTED_CATEGORY';
 
-// 모달
-export const SET_MODAL_IDX = 'apps/manual/newsFeed/SET_MODAL_IDX';
+// 모달 - on / off
 export const SET_MODAL_VIEW = 'apps/manual/newsFeed/SET_MODAL_VIEW';
+
+// 모달 내 카테고리 선택(모달 내 뷰 전환)
+export const SET_MODAL_IDX = 'apps/manual/newsFeed/SET_MODAL_IDX';

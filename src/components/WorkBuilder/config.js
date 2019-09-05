@@ -18,6 +18,7 @@ import { froalaEditorConfig } from 'components/FormStuff/config';
 // Custom
 import UserSelector from 'components/FormStuff/UserSearchSelector';
 import ProcessInfoSelector from 'components/FormStuff/Custom/ProcessInfoSelector';
+import WorkSelector from 'components/FormStuff/Custom/WorkSelector';
 
 export const defaultFormStuffs = {
   text: {
@@ -213,6 +214,31 @@ export const defaultFormStuffs = {
 };
 
 export const customFormStuffs = {
+  'work-selector': {
+    label: 'WorkSelector',
+    icon: 'fa fa-briefcase fa-3x',
+    previewRenderer: formStuff => (
+      <MaskDiv>
+        <WorkSelector {...formStuff.property} preview />
+      </MaskDiv>
+    ),
+    renderer: ({ formStuff, saveTempContents, workSeq, taskSeq, text, readOnly }) => {
+      const { property } = formStuff;
+      return readOnly ? (
+        <p>{text.values}</p>
+      ) : (
+        <WorkSelector
+          {...formStuff.property}
+          loadWorkSeq={formStuff.property.workSeq}
+          contSeq={formStuff.CONT_SEQ}
+          saveTempContents={saveTempContents}
+          workSeq={workSeq}
+          taskSeq={taskSeq}
+          defaultValue={property.defaultValue}
+        />
+      );
+    },
+  },
   // user: {
   //   label: 'User',
   //   icon: 'fa fa-user fa-3x',
