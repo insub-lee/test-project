@@ -1,2 +1,2 @@
-export const SAVE_DETAIL = '/app/manual/widgets/SAVE_DETAIL';
-export const GET_DETAIL = '/app/manual/widgets/GET_DETAIL';
+export const SAVE_DETAIL = '/app/widget/counselHelper/SAVE_DETAIL';
+export const GET_DETAIL = '/app/widget/counselHelper/GET_DETAIL';

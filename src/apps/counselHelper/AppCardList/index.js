@@ -12,7 +12,7 @@ const AppCardList = ({ title, childNode, linkProp }) => {
     const appLinkProps = query.linkProp;
     return <AppCard title={appTitle} value={value} key={key} linkProps={appLinkProps} />;
   });
-  console.log(title, linkProp);
+  // console.log(title, linkProp);
   return (
     <Styled>
       <Title title={title} />
