@@ -34,6 +34,9 @@ class EditorMain extends Component {
       handleChangeFocusIdx,
       focusComponetIdx,
       addAreaIdx,
+      handlePushCompValue,
+      handleRemoveCompValue,
+      indexRelationList,
     } = this.props;
     return (
       <StyleEditorMain
@@ -56,7 +59,17 @@ class EditorMain extends Component {
               .toJS()
               .filter(comp => comp.IS_REMOVE !== 'Y')
               .map((item, index) =>
-                RenderEditorComponent(item, handleChangeCompValue, handleChangeCompIdx, selectedComponentIdx, focusComponetIdx, addAreaIdx),
+                RenderEditorComponent(
+                  item,
+                  handleChangeCompValue,
+                  handleChangeCompIdx,
+                  selectedComponentIdx,
+                  focusComponetIdx,
+                  addAreaIdx,
+                  handlePushCompValue,
+                  handleRemoveCompValue,
+                  indexRelationList,
+                ),
               )}
         </div>
         {/* </Scrollbars> */}
@@ -67,6 +80,8 @@ class EditorMain extends Component {
 
 EditorMain.propTypes = {
   handleChangeCompValue: PropTypes.func,
+  handlePushCompValue: PropTypes.func,
+  handleRemoveCompValue: PropTypes.func,
   handleChangeCompIdx: PropTypes.func,
   handleChangeCompId: PropTypes.func,
   handleChangeFocusIdx: PropTypes.func,
@@ -75,11 +90,14 @@ EditorMain.propTypes = {
   addComponetId: PropTypes.string,
   focusComponetIdx: PropTypes.number,
   addAreaIdx: PropTypes.number,
+  indexRelationList: PropTypes.arrayOf(PropTypes.object),
   // setScrollComponent: PropTypes.func,
 };
 
 EditorMain.defaultProps = {
   handleChangeCompValue: () => false,
+  handlePushCompValue: () => false,
+  handleRemoveCompValue: () => false,
   handleChangeCompIdx: () => false,
   handleChangeCompId: () => false,
   handleChangeFocusIdx: () => false,
@@ -88,6 +106,7 @@ EditorMain.defaultProps = {
   addComponetId: '',
   focusComponetIdx: 0,
   addAreaIdx: 0,
+  indexRelationList: [],
   // setScrollComponent: () => false,
 };
 
@@ -97,6 +116,7 @@ const mapStateToProps = createStructuredSelector({
   addComponetId: selectors.makeSelectAddEditorComponentId(),
   focusComponetIdx: selectors.makeSelectFocusEditorComponentIndex(),
   addAreaIdx: selectors.makeSelectAddEditorComponentIndex(),
+  indexRelationList: selectors.makeSelectIndexRelationList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -105,7 +125,8 @@ const mapDispatchToProps = dispatch => ({
   handleChangeCompId: id => dispatch(actions.setAddEditorComponentIdByReduc(id)),
   handleChangeFocusIdx: idx => dispatch(actions.setFocusEditorComponentIdxByReduc(idx)),
   // setScrollComponent: item => dispatch(actions.setScrollComponentByReducr(item)),
-  // handlePushCompValue: (tabIdx, compIdx, key, value) => dispatch(actions.addEditorComponentValueByReduc(tabIdx, compIdx, key, value)),
+  handlePushCompValue: (tabIdx, compIdx, key, value) => dispatch(actions.addEditorComponentValueByReduc(tabIdx, compIdx, key, value)),
+  handleRemoveCompValue: (tabIdx, compIdx, key) => dispatch(actions.removeEditorComponentValueByReduc(tabIdx, compIdx, key)),
 });
 
 export default connect(

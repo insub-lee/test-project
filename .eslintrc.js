@@ -16,19 +16,19 @@ module.exports = {
     },
   },
   settings: {
-    "import/resolver" : {
-      "alias" : {
-        "map" : [
-          ["components","./src/components/"],
-          ["utils","./src/utils/"],
-          ["containers","./src/containers/"],
-          ["images","./src/images/"],
-          ["apps","./src/apps/"],
-          ["style","./src/style/"],
+    'import/resolver': {
+      alias: {
+        map: [
+          ['components', './src/components/'],
+          ['utils', './src/utils/'],
+          ['containers', './src/containers/'],
+          ['images', './src/images/'],
+          ['apps', './src/apps/'],
+          ['style', './src/style/'],
         ],
-        "extensions": [".js"]
-      }
-    }
+        extensions: ['.js'],
+      },
+    },
   },
   rules: {
     'prettier/prettier': [
@@ -53,7 +53,7 @@ module.exports = {
     'import/no-unresolved': 2,
     'import/no-webpack-loader-syntax': 0,
     'import/prefer-default-export': 0,
-    'indent': [
+    indent: [
       'error',
       2,
       {

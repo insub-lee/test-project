@@ -19,7 +19,7 @@ const LinkItem = ({ item, linkItemAction }) => (
       onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX, item.MUAL_ORG_IDX, linkItemAction.widgetId)}
     />
     <Button type="link" onClick={() => handleListItemClick(item, linkItemAction)}>
-      {item.MUAL_NAME}
+      <span dangerouslySetInnerHTML={{ __html: item.MUAL_NAME }}></span>
     </Button>
   </Styled>
 );

@@ -51,6 +51,15 @@ export const SET_COMPARE_MANAGE_DATA_REDUCR = 'apps/manual/admin/ManualManager/M
 export const SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_COMPARE_MANAGE_CHANGE_VALUE_REDUCR';
 export const SAVE_COMPARE_DATA_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/SAVE_COMPARE_DATA_SAGA';
 export const SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_SELECTED_COMPARE_MANAGE_IDX_REDUCR';
+export const ADD_EDITOR_COMPONENT_VALUE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/ADD_EDITOR_COMPONENT_VALUE_REDUCR';
+export const REMOVE_EDITOR_COMPONENT_VALUE_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/REMOVE_EDITOR_COMPONENT_VALUE_REDUCR';
+export const SET_IS_INDEX_RELATION_MODAL_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_IS_INDEX_RELATION_MODAL_REDUCR';
+export const GET_INDEX_RELATION_MANUAL_LIST_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_INDEX_RELATION_MANUAL_LIST_SAGA';
+export const SET_INDEX_RELATION_MANUAL_LIST_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_MANUAL_LIST_REDUCR';
+export const GET_INDEX_RELATION_COMPONENT_LIST_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_INDEX_RELATION_COMPONENT_LIST_SAGA';
+export const SET_INDEX_RELATION_COMPONENT_LIST_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_COMPONENT_LIST_REDUCR';
+export const SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR';
+export const SET_INDEX_RELATION_LIST_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_LIST_REDUCR';
 
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
 export const GET_USERINFO_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_USERINFO_SAGA';
