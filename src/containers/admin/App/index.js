@@ -34,10 +34,7 @@ import AppWrapper from './AppWrapper';
 
 import LeftMenu from '../AdminMain/LeftMenu';
 
-const {
-  Header,
-  Content,
-} = Layout;
+const { Header, Content } = Layout;
 
 class App extends Component {
   constructor() {
@@ -73,7 +70,7 @@ class App extends Component {
     this.setState({
       // visible: false,
     });
-  }
+  };
 
   // handleVisibleChange(visible) {
   //   this.setState({ visible });
@@ -101,11 +98,9 @@ class App extends Component {
   render() {
     return (
       <ThemeProvider theme={themes.themedefault}>
-        <Layout
-          className="storeLayout"
-          style={{ minHeight: '100vh' }}
-        >
+        <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
           <AppWrapper style={{ width: '100%' }}>
+            {/*
             <Header className="storeHeader">
               <Trigger className="triggerSider">
                 <Icon
@@ -120,6 +115,7 @@ class App extends Component {
                 </Link>
               </div>
             </Header>
+            */}
             <Content className="storeContent">
               <div className="appListWrapper">
                 <LeftMenu />
@@ -153,14 +149,12 @@ App.propTypes = {
   menuAuthChk: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    toggleCollapseSidebar: () => dispatch(actions.toggleCollapseSidebar()),
-    historyPush: url => dispatch(push(url)),
-    changeSearchword: searchword => dispatch(actions.changeSearchword(searchword)),
-    menuAuthChk: (pathname, history, SCRGRP_CD) => dispatch(actions.menuAuthChk(pathname, history, SCRGRP_CD)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  toggleCollapseSidebar: () => dispatch(actions.toggleCollapseSidebar()),
+  historyPush: url => dispatch(push(url)),
+  changeSearchword: searchword => dispatch(actions.changeSearchword(searchword)),
+  menuAuthChk: (pathname, history, SCRGRP_CD) => dispatch(actions.menuAuthChk(pathname, history, SCRGRP_CD)),
+});
 
 const mapStateToProps = createStructuredSelector({
   menus: selectors.makeSelectMenus(),
@@ -168,7 +162,10 @@ const mapStateToProps = createStructuredSelector({
   searchword: selectors.makeSearchword(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'app', reducer });
 

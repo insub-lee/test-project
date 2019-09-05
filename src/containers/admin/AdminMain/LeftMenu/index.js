@@ -30,6 +30,12 @@ const StyledAdminLeftMenu = styled.div`
   /* background-color: #ffffff; */
   z-index: 100;
   overflow-y: auto;
+  overflow-x: hidden;
+  backface-visibility: hidden;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 class menuList extends React.Component {
@@ -117,7 +123,14 @@ class menuList extends React.Component {
 
   makeMenu = leftMenuList =>
     leftMenuList.map(m => (
-      <MenuItem menuItem={m} openMenuCode={this.state.openMenuCode} classString={this.classString} classChange={this.classChange} setIcon={this.setIcon} setOpenMenuCode={this.setOpenMenuCode} />
+      <MenuItem
+        menuItem={m}
+        openMenuCode={this.state.openMenuCode}
+        classString={this.classString}
+        classChange={this.classChange}
+        setIcon={this.setIcon}
+        setOpenMenuCode={this.setOpenMenuCode}
+      />
       // <li className={`${this.classString(m.URL)} ${m.child ? ' open' : ''}`}>
       //   <a onClick={() => !m.child && this.classChange(m.URL)} onKeyPress={() => !m.child && this.classChange(m.URL)}>
       //     <Icon type={this.setIcon(m.SCR_CD)} />

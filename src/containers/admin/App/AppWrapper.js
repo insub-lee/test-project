@@ -34,7 +34,7 @@ const AppWrapper = styled.div`
 
   .storeContent {
     min-height: 100vh;
-    padding: 42px 0 0 0;
+    padding: 0;
     flex-shrink: 0;
     background: #ffffff;
 

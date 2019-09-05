@@ -107,9 +107,17 @@ class BizMenuReg extends Component {
       this.setState({ pageID });
     };
 
-    let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' };
+    let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', padding: '20px 20px 0', height: '100vh' };
     if (type === 'work') {
-      divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', marginLeft: '300px' };
+      divStyle = {
+        display: 'flex',
+        flexFlow: 'column',
+        backgroundColor: '#f7f8f9',
+        marginLeft: '280px',
+        padding: '40px 20px 0',
+        width: 'calc(100% - 280px)',
+        height: '100vh',
+      };
     }
 
     return (

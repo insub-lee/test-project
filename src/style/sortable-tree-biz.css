@@ -29,7 +29,7 @@
 }
 .sortableTreeWrapper .rstcustom__expandButton,
 .sortableTreeWrapper .rstcustom__collapseButton {
-  background-color: #ffffff;
+  background-color: transparent;
   background-repeat: no-repeat;
   background-position: center;
 }

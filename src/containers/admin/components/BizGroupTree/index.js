@@ -184,9 +184,7 @@ class BizGroupTree extends Component {
   );
 
   render() {
-    const {
-      treeData, searchString, searchFocusIndex, selectedIndex,
-    } = this.state;
+    const { treeData, searchString, searchFocusIndex, selectedIndex } = this.state;
 
     const {
       history,
@@ -215,15 +213,13 @@ class BizGroupTree extends Component {
         canDrop={({ node, prevParent, nextParent }) => {
           // [ 노드 드롭 가능 여부 ]
           // 조건 : 최하위 노드 하위에 이동불가 && 업무그룹폴더 하위에 이동불가
-          if ((node.LVL === 1 && !nextParent)
-          || (node.LVL !== 1 && nextParent && prevParent.key === nextParent.key)) {
+          if ((node.LVL === 1 && !nextParent) || (node.LVL !== 1 && nextParent && prevParent.key === nextParent.key)) {
             this.state = { moveNodeFlag: 1 };
             return true;
           }
           this.state = { moveNodeFlag: 2 };
           return false;
         }}
-
         onDragStateChanged={({ isDragging }) => {
           if (isDragging) {
             this.state = { moveNodeFlag: 0 };
@@ -232,7 +228,10 @@ class BizGroupTree extends Component {
           }
         }}
         style={{
-          display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
+          display: 'inline-block',
+          width: '100%',
+          height: '100%',
+          overflow: 'visible',
         }}
         isVirtualized={false}
         onMoveNode={({ treeData, node, nextParentNode }) => {
@@ -271,7 +270,7 @@ class BizGroupTree extends Component {
         }}
         rowHeight={35}
         scaffoldBlockPxWidth={22}
-        generateNodeProps={(rowInfo) => {
+        generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
@@ -377,12 +376,12 @@ class BizGroupTree extends Component {
           flex: '1 0 50%',
           padding: 0,
           flexDirection: 'column',
-          height: 'calc(100vh - 65px)',
+          height: 'calc(100vh - 45px)',
           width: '100%',
         }}
       >
         {treeData.length > 0 ? (
-          <ScrollBar style={{ width: 280, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+          <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
             {tree}
           </ScrollBar>
         ) : (

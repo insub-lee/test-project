@@ -34,7 +34,7 @@ const StyledAdminMenu = styled.div`
           margin-bottom: 1rem;
         }
         &:last-of-type {
-          margin-bottom: 0;
+          margin-bottom: 3rem;
         }
         & a,
         & a > i {
