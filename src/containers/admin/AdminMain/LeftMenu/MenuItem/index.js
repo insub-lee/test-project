@@ -5,10 +5,11 @@ import { /* intlObj, */ lang } from 'utils/commonUtils';
 
 class MenuItem extends Component {
   handleClick = item => {
-    const { setOpenMenuCode } = this.props;
+    const { openMenuCode, setOpenMenuCode } = this.props;
     if (!item.child) this.props.classChange(item.URL);
     else {
-      setOpenMenuCode(item.SCR_CD);
+      const code = openMenuCode === item.SCR_CD ? '' : item.SCR_CD;
+      setOpenMenuCode(code);
     }
   };
 
