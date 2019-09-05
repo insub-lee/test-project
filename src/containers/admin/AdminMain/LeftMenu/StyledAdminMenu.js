@@ -38,7 +38,7 @@ const StyledAdminMenu = styled.div`
         }
         & a,
         & a > i {
-          transition: all 0.3s ease-out;
+          /* transition: all 0.3s ease-out; */
         }
         & ul {
           padding-left: 0;
@@ -114,7 +114,7 @@ const StyledAdminMenu = styled.div`
             & > a {
               color: #fff;
               background-color: rgba(255, 255, 255, 0.04);
-              box-shadow: inset 3px 0 0 #886ab5;
+              box-shadow: inset 5px 0 0 #886ab5;
             }
           }
           &.open {
