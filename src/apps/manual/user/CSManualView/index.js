@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import * as newsfeedAction from 'apps/newsFeed/widgets/action';
+import * as newsfeedAction from '../newsFeed/widgets/action';
 import Tab from '../components/Tab';
 import TabTitle from '../components/Tab/TabTitle';
 import StyledTabPanel from '../components/Tab/StyledTabPanel';

@@ -17,10 +17,8 @@ const { Content } = Layout;
 class UserMenuCard extends PureComponent {
   render() {
     console.debug('&&&&&&&& this.props: ', this.props);
-    const { execMenu } = this.props;
-    return (
     const { execMenu, execPage } = this.props;
-    return(
+    return (
       <StyleUserMenuCard className="userSetting">
         <div className="userBizMenuWrapper">
           <h2 className="pageHeader">업무 폴더 메뉴</h2>
