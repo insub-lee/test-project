@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 
-const Settings = ({ type, target, targetIndex, boxType, action: { changeTitle, changeName, changeMaxLength, changeFormStuffSpan, changeRequired } }) => (
+const Settings = ({
+  type,
+  target,
+  targetIndex,
+  boxType,
+  works,
+  action: { changeTitle, changeName, changeMaxLength, changeFormStuffSpan, changeRequired, changeWorkSelectorProperty },
+}) => (
   <div className="sm-sector">
     <div className="sm-title">
       <span className="icon-settings fa fa-cog" /> Settings
@@ -68,6 +75,72 @@ const Settings = ({ type, target, targetIndex, boxType, action: { changeTitle, c
             </div>
           </div>
         )}
+        {/* work-selector 에 대한 스타일 지정 */}
+        {target.type === 'work-selector' && (
+          <React.Fragment>
+            <div className="trt-trait">
+              <div className="label" title="Box Type">
+                Work
+              </div>
+              <div className="field field-text">
+                <div className="input-holder">
+                  {console.debug('@@ workSeq', target.property.workSeq)}
+                  <select
+                    key={`${type}-${target}-${targetIndex}-work-seq`}
+                    className="field-select"
+                    defaultValue={target.property.workSeq || -1}
+                    onChange={e => changeWorkSelectorProperty(targetIndex, e, 'workSeq')}
+                  >
+                    <option value={-1} disabled>
+                      업무를 선택
+                    </option>
+                    {works.map(work => (
+                      <option key={work.WORK_SEQ} value={work.WORK_SEQ}>
+                        {console.debug('@@ WORK_SEQ', work.WORK_SEQ)}
+                        {work.NAME_KOR}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="sel-arrow">
+                  <div className="d-s-arrow" />
+                </div>
+              </div>
+            </div>
+            <div className="trt-trait">
+              <div className="label" title="Title">
+                Key
+              </div>
+              <div className="field field-text">
+                <div className="input-holder">
+                  <input
+                    type="text"
+                    key={`${type}-${target}-${targetIndex}-work-key`}
+                    defaultValue={target.property.workKey}
+                    placeholder="eg. Text here"
+                    onChange={e => changeWorkSelectorProperty(targetIndex, e, 'workKey')}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="trt-trait">
+              <div className="label" title="Title">
+                Value
+              </div>
+              <div className="field field-text">
+                <div className="input-holder">
+                  <input
+                    type="text"
+                    key={`${type}-${target}-${targetIndex}-work-value`}
+                    defaultValue={target.property.workValue}
+                    placeholder="eg. Text here"
+                    onChange={e => changeWorkSelectorProperty(targetIndex, e, 'workValue')}
+                  />
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
         {boxType === 'table' && (
           <div className="trt-trait">
             <div className="label" title="Box Type">
@@ -102,22 +175,27 @@ Settings.propTypes = {
   targetIndex: PropTypes.number.isRequired,
   type: PropTypes.string.isRequired,
   boxType: PropTypes.string,
+  works: PropTypes.arrayOf(PropTypes.object),
   action: PropTypes.shape({
     changeTitle: PropTypes.func,
     changeName: PropTypes.func,
     changeMaxLength: PropTypes.func,
-    changeSpan: PropTypes.func,
+    changeFormStuffSpan: PropTypes.func,
+    changeRequired: PropTypes.func,
+    changeWorkSelectorProperty: PropTypes.func,
   }),
 };
 
 Settings.defaultProps = {
   boxType: '',
+  works: [],
   action: {
     changeTitle: () => false,
     changeName: () => false,
     changeMaxLength: () => false,
+    changeFormStuffSpan: () => false,
     changeRequired: () => false,
-    changeSpan: () => false,
+    changeWorkSelectorProperty: () => console.debug('no bind event'),
   },
 };
 

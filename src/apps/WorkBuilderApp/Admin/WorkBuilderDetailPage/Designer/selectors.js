@@ -41,7 +41,7 @@ const makeSelectProperty = () =>
   createSelector(
     selectWorkBuilderDetailDesigner,
     state => {
-      const { boxes, groups, formStuffs, tabId, viewTargetId, viewTargetType, useSignLine, signLine, blockOpenStatus } = state.toJS();
+      const { boxes, groups, formStuffs, tabId, viewTargetId, viewTargetType, useSignLine, signLine, blockOpenStatus, tableList } = state.toJS();
       return {
         canvasProperty: {
           boxes,
@@ -61,6 +61,7 @@ const makeSelectProperty = () =>
           useSignLine,
           signLine,
           blockOpenStatus,
+          works: tableList,
         },
       };
     },
@@ -93,6 +94,12 @@ const makeSelectIsLoading = () =>
     state => state.get('isLoading'),
   );
 
+const makeSelectTableList = () =>
+  createSelector(
+    selectWorkBuilderDetailDesigner,
+    state => state.get('tableSelect'),
+  );
+
 export {
   makeSelectCanvasProperty,
   makeSelectPanelsProperty,
@@ -101,4 +108,5 @@ export {
   makeSelectOnPreview,
   makeSelectWorkSeq,
   makeSelectIsLoading,
+  makeSelectTableList,
 };

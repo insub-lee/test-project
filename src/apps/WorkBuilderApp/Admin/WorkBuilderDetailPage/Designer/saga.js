@@ -16,6 +16,12 @@ function* fetchData({ id }) {
   yield put(actions.disableLoading());
 }
 
+function* getList() {
+  const response = yield call(Axios.get, '/api/builder/v1/work/main');
+  const { list } = response;
+  yield put(actions.successGetList(list));
+}
+
 function* saveLayers() {
   yield put(actions.enableLoading());
   const workSeq = yield select(selectors.makeSelectWorkSeq());
@@ -161,7 +167,8 @@ function* addFormStuff({ formStuffType }) {
   const prntTargetIndex = boxes.findIndex(box => box.id === viewTargetId);
   if (prntTargetIndex > -1) {
     const prntSeq = boxes[prntTargetIndex].META_SEQ;
-    const newId = `${formStuffType}_${new Date().getTime()}`.substring(0, 20);
+    const newId = `${formStuffType}_${formStuffs.length}_${new Date().getTime()}`.substring(0, 20);
+    // const newId = `${formStuffType}_${new Date().getTime()}`.substring(0, 20);
     const newObj = {
       type: formStuffType,
       id: newId,
@@ -619,8 +626,36 @@ function* removeLayer({ id, layerType }) {
   }
 }
 
+function* changeWorkSelectorProperty({ index, value, propertyKey }) {
+  yield delay(800);
+  const { formStuffs } = yield select(selectors.makeSelectCanvasProperty());
+  const formStuff = formStuffs[index];
+  formStuff.property[propertyKey] = value;
+  const param = {
+    WORK_SEQ: formStuff.WORK_SEQ,
+    META_SEQ: formStuff.META_SEQ,
+    PRNT_SEQ: formStuff.PRNT_SEQ,
+    ORD: formStuff.ORD,
+    DCSR: formStuff.DCSR,
+    COMP_TYPE: formStuff.COMP_TYPE,
+    COMP_TAG: formStuff.COMP_TAG,
+    NAME_KOR: formStuff.NAME_KOR,
+    COMP_FIELD: formStuff.COMP_FIELD,
+    CONFIG: JSON.stringify({
+      info: makeInfo(formStuff),
+      property: {
+        ...formStuff,
+      },
+      option: {},
+    }),
+  };
+  const response = yield call(Axios.post, '/api/builder/v1/work/meta', { PARAM: param });
+  yield put(actions.successChangeWorkSelectorProperty({ index, value: formStuff }));
+}
+
 export default function* watcher() {
   yield takeLatest(actionTypes.FETCH_DATA, fetchData);
+  yield takeLatest(actionTypes.GET_LIST, getList);
   yield takeLatest(actionTypes.SAVE_LAYERS, saveLayers);
   yield takeLatest(actionTypes.SAVE_TEMPORARY, saveTemporary);
   yield takeEvery(actionTypes.ADD_BOX, addBox);
@@ -635,4 +670,5 @@ export default function* watcher() {
   yield takeLatest(actionTypes.CHANGE_REQUIRED, changeRequired);
   yield takeLatest(actionTypes.REMOVE_LAYER, removeLayer);
   yield takeLatest(actionTypes.CHANGE_MAX_LENGTH, changeMaxLength);
+  yield takeLatest(actionTypes.CHANGE_WORK_SELECTOR_PROPERTY, changeWorkSelectorProperty);
 }
