@@ -18,6 +18,7 @@ const RodalContentStyle = styled.div`
   }
 
   .leftActivity {
+    width: 75%;
     @media only screen and (max-width: 1160px) {
       height: 50% !important;
     }
@@ -27,7 +28,7 @@ const RodalContentStyle = styled.div`
 
     .rodalCustomScrollbar {
       width: calc(100% - 15px) !important;
-      height: calc(100vh - 230px) !important;
+      height: calc(100vh - 130px) !important;
       background: #ffffff;
 
       @media only screen and (max-width: 1160px) {
@@ -42,6 +43,7 @@ const RodalContentStyle = styled.div`
   }
 
   .rightActivity {
+    width: 25%;
     @media only screen and (max-width: 1160px) {
       width: 100% !important;
       height: 50% !important;

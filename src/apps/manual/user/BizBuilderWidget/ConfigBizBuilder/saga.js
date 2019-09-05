@@ -17,17 +17,27 @@ function* getBizBuilderWidgetSettingBySaga(payload) {
   const response = yield call(Axios.get, `/api/manual/v1/ManualWidgetConfigHandler?WIDGET_ID=${item.id}`);
   // sourcecols, strsql
   const { result } = response;
-  yield put(actions.setBizBuilderWidgetSttingByReducr(result.ITEM_VALUE));
+
+  yield put(actions.setBizBuilderWidgetSttingByReducr(item.id, result.ITEM_VALUE));
+  yield put(actions.getWorkMetaBySaga(item.id, result.ITEM_VALUE.data.WORK_SEQ));
 }
 
-function* getWorkListBySaga() {
+function* getWorkListBySaga(payload) {
+  const { widgetId } = payload;
   const response = yield call(Axios.get, '/api/manual/v1/BizBuilderWorkHandler');
   const { workList } = response;
-  yield put(actions.setWorkListByReducr(workList));
+  yield put(actions.setWorkListByReducr(widgetId, workList));
+}
+
+function* getWorkMetaInfoBySaga(payload) {
+  const { widgetId, workSeq } = payload;
+  const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${workSeq}`);
+  yield put(actions.setWorkMetaByReducr(widgetId, response));
 }
 
 export default function* watcher() {
   yield takeLatest(constantTypes.SET_BIZBUILDERLIST_SETTING_BYSAGA, setBizBuilderWidgetSettingBySaga);
   yield takeLatest(constantTypes.GET_BIZBUILDERLIST_SETTING_BYSAGA, getBizBuilderWidgetSettingBySaga);
   yield takeLatest(constantTypes.GET_WORKLIST_BYSAGA, getWorkListBySaga);
+  yield takeLatest(constantTypes.GET_WORKMETA_BYSAGA, getWorkMetaInfoBySaga);
 }

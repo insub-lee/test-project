@@ -39,6 +39,8 @@ const initialState = fromJS({
       indexRelationComponetList: [],
       selectedIRComponetItem: {},
       indexRelationList: [],
+      paragraphTypeIdx: 0,
+      isParagraphModal: false,
     },
     manualOptionMgr: {
       relationManualList: [],
@@ -285,13 +287,13 @@ const appReducer = (state = initialState, action) => {
       return state.setIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList'], fromJS(compList));
     }
     case constantTypes.ADD_EDITOR_COMPONENT_REDUCR: {
-      const { compType } = action;
+      const { compType, text } = action;
       if (compType === 'indexRelationPopup') {
         return state
           .setIn(['manualMasterState', 'manualEditorEntity', 'isIndexRelationModal'], true)
           .setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationComponetList'], fromJS([]));
       }
-      return addComponentInfo(state, compType);
+      return addComponentInfo(state, compType, text);
     }
     case constantTypes.SET_EDITOR_COMPONENT_VALUE_REDUCR: {
       const { tabIdx, compIdx, key, value } = action;
@@ -485,6 +487,12 @@ const appReducer = (state = initialState, action) => {
       const { list } = action;
       return state.setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationList'], list);
     }
+    case constantTypes.SET_EDITOR_PARAGRAPH_REDUCR: {
+      const { idx, flag } = action;
+      return state
+        .setIn(['manualMasterState', 'manualEditorEntity', 'paragraphTypeIdx'], idx)
+        .setIn(['manualMasterState', 'manualEditorEntity', 'isParagraphModal'], flag);
+    }
     default:
       return state;
   }
@@ -517,7 +525,7 @@ const addTabInfo = state => {
     .setIn(['manualMasterState', 'manualEditorEntity', 'selectedMualTabIdx'], maulTabIdx);
 };
 
-const addComponentInfo = (state, compType) => {
+const addComponentInfo = (state, compType, text) => {
   const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna', 'indexRelation'];
   if (addType.findIndex(item => item === compType) === -1) {
     console.debug('type error');
@@ -558,6 +566,9 @@ const addComponentInfo = (state, compType) => {
   }
   if (compType === 'qna') {
     newComp.COMP_OPTION = fromJS({ ANSWER: '' });
+  }
+  if (compType === 'editor') {
+    newComp.MUAL_COMPVIEWINFO = text || '';
   }
   let indexRelationInfo = fromJS({});
   if (compType === 'indexRelation') {

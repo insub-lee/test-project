@@ -16,7 +16,7 @@ class ItemToolBar extends Component {
   }
 
   render() {
-    const { addEditorComponent } = this.props;
+    const { addEditorComponent, addParagraph } = this.props;
     return (
       <Menu borderless className="itemtoolbar" icon vertical>
         <Scrollbars autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ height: '100%' }}>
@@ -37,7 +37,7 @@ class ItemToolBar extends Component {
                         iconName={menu.menuIcon}
                         handleMenuClick={e => {
                           e.preventDefault();
-                          this.props.handleWritingToolClick(menu.menuId);
+                          addParagraph(menu.menuId);
                         }}
                       />
                     ))}
@@ -80,10 +80,12 @@ class ItemToolBar extends Component {
 
 ItemToolBar.propTypes = {
   addEditorComponent: PropTypes.func,
+  addParagraph: PropTypes.func,
 };
 
 ItemToolBar.defaultProps = {
   addEditorComponent: () => false,
+  addParagraph: () => false,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -91,6 +93,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.addEditorComponentByReduc(compType));
     if (compType === 'indexRelationPopup') dispatch(actions.getCategoryListBySaga());
   },
+  addParagraph: idx => dispatch(actions.setEditorParagraphByReducr(idx, true)),
 });
 
 export default connect(

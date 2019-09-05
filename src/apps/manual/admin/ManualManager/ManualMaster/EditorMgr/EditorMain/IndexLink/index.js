@@ -22,6 +22,7 @@ const IndexLink = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
           <div>
             <span>URL 정보 : </span>
             <Input
+              key={`manualEditorLinkInput_${item.MUAL_TABCOMP_IDX}`}
               type="text"
               value={item.COMP_OPTION.URL || ''}
               placeholder="URL을 입력해주세요"
@@ -31,6 +32,7 @@ const IndexLink = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
           <div>
             <span>조회방법 : </span>
             <Radio.Group
+              key={`manualEditorLinkRadioGroup1_${item.MUAL_TABCOMP_IDX}`}
               onChange={e => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.VIEW_TYPE', e.target.value)}
               value={item.COMP_OPTION.VIEW_TYPE}
             >
@@ -41,6 +43,7 @@ const IndexLink = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
           <div>
             <span>action 대상 : </span>
             <Radio.Group
+              key={`manualEditorLinkRadioGroup2_${item.MUAL_TABCOMP_IDX}`}
               onChange={e => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.ACTION_TYPE', e.target.value)}
               value={item.COMP_OPTION.ACTION_TYPE}
             >
