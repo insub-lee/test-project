@@ -79,10 +79,12 @@ class menuList extends React.Component {
       strCurUrl = '/admin/adminmain/orgadmin';
     }
 
-    if (url === strCurUrl) {
-      // clsStr = 'menu current';
-      clsStr = 'active';
-    } else if (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) {
+    if (
+      url === strCurUrl ||
+      (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) ||
+      (url === '/admin/adminmain/menu' && strCurUrl.startsWith('/admin/adminmain/menu')) ||
+      (url === '/admin/adminmain/work' && strCurUrl.startsWith('/admin/adminmain/work'))
+    ) {
       // clsStr = 'menu current';
       clsStr = 'active';
     } else {
@@ -117,7 +119,14 @@ class menuList extends React.Component {
 
   makeMenu = leftMenuList =>
     leftMenuList.map(m => (
-      <MenuItem menuItem={m} openMenuCode={this.state.openMenuCode} classString={this.classString} classChange={this.classChange} setIcon={this.setIcon} setOpenMenuCode={this.setOpenMenuCode} />
+      <MenuItem
+        menuItem={m}
+        openMenuCode={this.state.openMenuCode}
+        classString={this.classString}
+        classChange={this.classChange}
+        setIcon={this.setIcon}
+        setOpenMenuCode={this.setOpenMenuCode}
+      />
       // <li className={`${this.classString(m.URL)} ${m.child ? ' open' : ''}`}>
       //   <a onClick={() => !m.child && this.classChange(m.URL)} onKeyPress={() => !m.child && this.classChange(m.URL)}>
       //     <Icon type={this.setIcon(m.SCR_CD)} />

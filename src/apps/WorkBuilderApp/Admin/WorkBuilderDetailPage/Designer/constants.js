@@ -42,3 +42,7 @@ export const LOADING_OFF = `${prefix}LOADING_OFF`;
 export const RESET_DATA = `${prefix}RESET_DATA`;
 export const CHANGE_MAX_LENGTH = `${prefix}CHANGE_MAX_LENGTH`;
 export const SUCCESS_CHANGE_MAX_LENGTH = `${prefix}SUCCESS_CHANGE_MAX_LENGTH`;
+export const CHANGE_WORK_SELECTOR_PROPERTY = `${prefix}CHANGE_WORK_SELECTOR_PROPERTY`;
+export const SUCCESS_CHANGE_WORK_SELECTOR_PROPERTY = `${prefix}SUCCESS_CHANGE_WORK_SELECTOR_PROPERTY`;
+export const GET_LIST = `${prefix}GET_LIST`;
+export const SUCCESS_GET_LIST = `${prefix}SUCCESS_GET_LIST`;
