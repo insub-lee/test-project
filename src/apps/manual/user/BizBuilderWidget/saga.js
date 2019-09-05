@@ -7,11 +7,10 @@ import * as constantTypes from './constants';
 import * as actions from './actions';
 
 function* getBizBuilderListBySaga(payload) {
-  const { data } = payload;
+  const { widgetId, data } = payload;
   const param = { param: data };
-  const response = yield call(Axios.post, '/api/manual/v1/BizBuilderWidgetHandler', param);
-  const { bizBuilderList } = response;
-  yield put(actions.setBizBuilderListByReducr(bizBuilderList));
+  const response = yield call(Axios.get, '/api/builder/v1/work/taskList/668', param);
+  yield put(actions.setBizBuilderListByReducr(widgetId, response));
 }
 
 function* getBizBuilderListSettingBySaga(payload) {
@@ -19,11 +18,19 @@ function* getBizBuilderListSettingBySaga(payload) {
   const response = yield call(Axios.get, `/api/manual/v1/ManualWidgetConfigHandler?WIDGET_ID=${widgetId}&type=${typeObj}`);
   const { result } = response;
   const { ITEM_VALUE } = result;
-  yield put(actions.setBizBuilderListSettingByReducr(ITEM_VALUE.data));
-  yield put(actions.getBizBuilderListBySaga(ITEM_VALUE.data));
+  yield put(actions.setBizBuilderListSettingByReducr(widgetId, ITEM_VALUE.data));
+  yield put(actions.getBizBuilderListBySaga(widgetId, ITEM_VALUE.data));
+}
+
+function* getBizBuilderContentViewBySaga(payload) {
+  const { widgetId, workSeq, taskSeq } = payload;
+  const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`);
+  console.debug('response내용', response);
+  yield put(actions.setBizBuilderContentViewByReducr(widgetId, response));
 }
 
 export default function* watcher() {
   yield takeLatest(constantTypes.GET_BIZBULDERLISTWIDGET_SETTINGINFO_BYSAGA, getBizBuilderListSettingBySaga);
   yield takeLatest(constantTypes.GET_BIZBUILDERLIST_BYSAGA, getBizBuilderListBySaga);
+  yield takeLatest(constantTypes.GET_BIZBUILDERVIEW_BYSAGA, getBizBuilderContentViewBySaga);
 }

@@ -15,6 +15,12 @@ import EditorTab from './EditorTab';
 import EditorMain from './EditorMain';
 import EditorIndex from './EditorIndex';
 import IndexRelation from './IndexRelation';
+import ParagraphLeft from './EditorMain/ParagraphTool/ParagraphLeft';
+import ParagraphRight from './EditorMain/ParagraphTool/ParagraphRight';
+import ParagraphTwo from './EditorMain/ParagraphTool/ParagraphTwo';
+import ParagraphThree from './EditorMain/ParagraphTool/ParagraphThree';
+import ParagraphFour from './EditorMain/ParagraphTool/ParagraphFour';
+import ParagraphFirst from './EditorMain/ParagraphTool/ParagraphFirst';
 
 class EditorMgr extends Component {
   componentDidMount() {
@@ -40,7 +46,9 @@ class EditorMgr extends Component {
       setSelectedCompItem,
       addEditorComponent,
       selectedCompItem,
-      indexRelationList,
+      isParagraphModal,
+      setParagraphModal,
+      paragraphTypeIdx,
     } = this.props;
     return (
       <StyleModal className="modalWrapper inPage">
@@ -67,7 +75,7 @@ class EditorMgr extends Component {
           footer={null}
           onCancel={setIsIndexRelationModal}
           getContainer={() => document.querySelector('#manualMainContentWrapper')}
-          title="관련 목차 선택"
+          title="문단 입력"
         >
           <IndexRelation
             treeData={treeData}
@@ -79,6 +87,23 @@ class EditorMgr extends Component {
             addEditorComponent={addEditorComponent}
             selectedCompItem={selectedCompItem}
           />
+        </Modal>
+        <Modal
+          width={728}
+          bodyStyle={{ height: 'calc(100vh - 296px)', padding: '4px' }}
+          style={{ top: 42 }}
+          visible={isParagraphModal}
+          footer={null}
+          onCancel={setParagraphModal}
+          getContainer={() => document.querySelector('#manualMainContentWrapper')}
+          title="관련 목차 선택"
+        >
+          {paragraphTypeIdx === 30 && <ParagraphLeft addEditorComponent={addEditorComponent} />}
+          {paragraphTypeIdx === 31 && <ParagraphRight addEditorComponent={addEditorComponent} />}
+          {paragraphTypeIdx === 32 && <ParagraphTwo addEditorComponent={addEditorComponent} />}
+          {paragraphTypeIdx === 33 && <ParagraphThree addEditorComponent={addEditorComponent} />}
+          {paragraphTypeIdx === 34 && <ParagraphFour addEditorComponent={addEditorComponent} />}
+          {paragraphTypeIdx === 35 && <ParagraphFirst addEditorComponent={addEditorComponent} />}
         </Modal>
       </StyleModal>
     );
@@ -99,6 +124,9 @@ EditorMgr.propTypes = {
   setSelectedCompItem: PropTypes.func,
   addEditorComponent: PropTypes.func,
   selectedCompItem: PropTypes.object,
+  paragraphTypeIdx: PropTypes.number,
+  isParagraphModal: PropTypes.bool,
+  setParagraphModal: PropTypes.func,
 };
 
 EditorMgr.defaultProps = {
@@ -115,6 +143,9 @@ EditorMgr.defaultProps = {
   setSelectedCompItem: () => false,
   addEditorComponent: () => false,
   selectedCompItem: {},
+  paragraphTypeIdx: 0,
+  isParagraphModal: false,
+  setParagraphModal: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -123,6 +154,8 @@ const mapStateToProps = createStructuredSelector({
   manualList: selectors.makeSelectIndexRelationManual(),
   compList: selectors.makeSelectIndexRelationComponetList(),
   selectedCompItem: selectors.makeSelectedIndexRelationComponetIitem(),
+  paragraphTypeIdx: selectors.makeSelectParagraphTypeIdx(),
+  isParagraphModal: selectors.makeSelectIsParagraphModal(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -133,7 +166,11 @@ const mapDispatchToProps = dispatch => ({
   getMualList: idx => dispatch(actions.getIndexRelationManualListBySaga(idx)),
   getCompList: idx => dispatch(actions.getIndexRelationComponetListBySaga(idx)),
   setSelectedCompItem: item => dispatch(actions.setIndexRelationComponetIitemByReducr(item)),
-  addEditorComponent: compType => dispatch(actions.addEditorComponentByReduc(compType)),
+  addEditorComponent: (compType, text) => {
+    dispatch(actions.addEditorComponentByReduc(compType, text));
+    if (compType === 'editor') dispatch(actions.setEditorParagraphByReducr(0, false));
+  },
+  setParagraphModal: () => dispatch(actions.setEditorParagraphByReducr(0, false)),
 });
 
 export default connect(

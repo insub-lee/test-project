@@ -15,7 +15,7 @@ const IndexRelation = ({ item, selectedComponentIdx, handleChangeCompValue, inde
         childNode.CHILD_NODE &&
         childNode.CHILD_NODE.map(node => (
           <div>
-            <FroalaEditorView model={node.MUAL_COMPVIEWINFO} />
+            <FroalaEditorView key={`manualEditorRelationFroalaEditorView_${item.MUAL_TABCOMP_IDX}`} model={node.MUAL_COMPVIEWINFO} />
           </div>
         ));
     }
@@ -26,6 +26,7 @@ const IndexRelation = ({ item, selectedComponentIdx, handleChangeCompValue, inde
         <div className="manualIndexTitle">
           {selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
             <Input
+              key={`manualEditorRelationInput_${item.MUAL_TABCOMP_IDX}`}
               type="text"
               defaultValue={item.MUAL_COMPVIEWINFO}
               placeholder="목차명을 입력해주세요"

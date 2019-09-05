@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import moment from 'moment';
+import { fromJS } from 'immutable';
 import Rodal from 'rodal';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -12,12 +13,14 @@ import ScrollBar from 'react-custom-scrollbars';
 import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
+import 'rodal/lib/rodal.css';
 import * as actions from './actions';
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
+import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
 
 class BizBuilderWidget extends Component {
   state = {
-    visible: true,
+    visible: false,
   };
 
   componentDidMount() {
@@ -26,17 +29,50 @@ class BizBuilderWidget extends Component {
   }
 
   render() {
-    const { bizBuilderList, bizBuilderConfigInfo } = this.props;
-    const { sourcecols } = bizBuilderConfigInfo;
+    const { bizBuilderList, bizBuilderConfigInfo, viewInfo } = this.props;
+    const { colsListDesignInfo } = bizBuilderConfigInfo;
+
+    const onTitleClick = selectRow => {
+      this.setState({ visible: true });
+      const { getBizBuilderContentViewBySaga, item } = this.props;
+      const { record } = selectRow;
+      getBizBuilderContentViewBySaga(item.id, record.WORK_SEQ, record.TASK_SEQ);
+    };
+
+    const onViewListClick = vList => {
+      const { getBizBuilderContentViewBySaga, item } = this.props;
+      getBizBuilderContentViewBySaga(item.id, vList.item.WORK_SEQ, vList.item.TASK_SEQ);
+    };
+
+    const listCols =
+      colsListDesignInfo &&
+      colsListDesignInfo.map(item => ({
+        title: item.NAME_KOR,
+        dataIndex: item.COMP_FIELD,
+        key: item.COMP_FIELD,
+        render: (text, record) =>
+          item.COMP_FIELD === 'TITLE' ? (
+            <a styling="link" onClick={() => onTitleClick({ record })}>
+              {text}
+            </a>
+          ) : (
+            undefined
+          ),
+      }));
+    const { data } = viewInfo;
+    const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 5);
+    const onRodalClose = () => {
+      this.setState({ visible: false });
+    };
+
     return (
       <div>
-        <Table columns={sourcecols} dataSource={bizBuilderList}></Table>
+        <Table pagination={false} columns={listCols} dataSource={listDataSource}></Table>
         <Rodal
-          className="drillDownCon"
           customStyles={{
-            position: 'relative',
-            width: 1580,
-            height: 'calc(100vh - 200px)',
+            position: 'absolute',
+            width: 1300,
+            height: 'calc(100vh - 100px)',
             backgroundColor: '#646567',
             top: 0,
             left: 0,
@@ -45,6 +81,8 @@ class BizBuilderWidget extends Component {
             padding: '15px',
           }}
           visible={this.state.visible}
+          onClose={onRodalClose.bind(this)}
+          duration={300}
         >
           <div>
             <RodalContentStyle className="contentWrapper">
@@ -52,7 +90,9 @@ class BizBuilderWidget extends Component {
               <Row type="flex" justify="space-between">
                 <Col xs={24} md={24} xl={16} className="leftActivity">
                   <ScrollBar className="rodalCustomScrollbar">
-                    <div className="content">ㅇㅎㄹㅇㅎㄹ</div>
+                    <div className="content">
+                      {data && data.CONTENT && data.CONTENT.length > 0 && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
+                    </div>
                   </ScrollBar>
                 </Col>
                 <Col xl={8} className="rightActivity">
@@ -67,19 +107,16 @@ class BizBuilderWidget extends Component {
                                 <li>
                                   <div className="empPicture"></div>
                                 </li>
-                                <li className="name"></li>
-                                <li className="empNo"></li>
+                                <li className="name">{data && data.REG_NAME_KOR ? data.REG_NAME_KOR : ''}</li>
+                                <li className="empNo">{data && data.REG_NAME_KOR ? data.REG_NAME_KOR : ''}</li>
                                 <li className="dept"></li>
                                 <li className="position"></li>
                               </ul>
-                              <div className="writtenDate"></div>
-                              <h1 className="title ellipsis"></h1>
+                              <div className="writtenDate">{data && data.REG_DTTM ? data.REG_DTTM : ''}</div>
+                              <h1 className="title ellipsis">{data && data.TITLE ? data.TITLE : ''}</h1>
                             </div>
 
                             <div className="attachedfiles">
-                              <div className="saveAll">
-                                <button type="button" title="모두 저장"></button>
-                              </div>
                               <table>
                                 <tbody>
                                   <tr>
@@ -101,7 +138,18 @@ class BizBuilderWidget extends Component {
                         </div>
                         <div className="viewBottom">
                           <ScrollBar className="rodalCustomScrollbar">
-                            <ul className="otherListItems"></ul>
+                            <ul className="otherListItems">
+                              {bizBuilderList &&
+                                bizBuilderList.list &&
+                                bizBuilderList.list.map(item => (
+                                  <li>
+                                    <button onClick={() => onViewListClick({ item })} className="ellipsis">
+                                      <span> [{item.REG_DTTM.substring(0, 10)}]</span>
+                                      {item.TITLE}
+                                    </button>
+                                  </li>
+                                ))}
+                            </ul>
                           </ScrollBar>
                         </div>
                       </div>
@@ -122,22 +170,28 @@ BizBuilderWidget.propTypes = {
   getBizBuilderListSettingBySaga: PropTypes.func,
   bizBuilderList: PropTypes.object,
   bizBuilderConfigInfo: PropTypes.object,
+  getBizBuilderContentViewBySaga: PropTypes.func,
+  viewInfo: PropTypes.object,
 };
 
 BizBuilderWidget.defaultProps = {
-  item: { id: '11078' },
+  item: { id: '11128' },
   getBizBuilderListSettingBySaga: () => false,
-  bizBuilderList: [],
-  bizBuilderConfigInfo: [],
+  bizBuilderList: {},
+  bizBuilderConfigInfo: {},
+  getBizBuilderContentViewBySaga: () => false,
+  viewInfo: {},
 };
 
 const mapStateToProps = createStructuredSelector({
   bizBuilderList: selectors.makeSelectBizBuilderList(),
   bizBuilderConfigInfo: selectors.makeSelectBizBuilderConfigInfo(),
+  viewInfo: selectors.makeSelectBizBuilderViewInfo(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getBizBuilderListSettingBySaga: (widgetId, type) => dispatch(actions.getBizBuilderListSettingBySaga(widgetId, type)),
+  getBizBuilderContentViewBySaga: (widgetId, workSeq, taskSeq) => dispatch(actions.getBizBuilderContentViewBySaga(widgetId, workSeq, taskSeq)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-BizBuilderWidget-reducer', reducer });

@@ -210,6 +210,18 @@ const makeSelectIndexRelationList = () =>
     state => state.getIn(['manualMasterState', 'manualEditorEntity', 'indexRelationList']).toJS(),
   );
 
+const makeSelectParagraphTypeIdx = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'paragraphTypeIdx']),
+  );
+
+const makeSelectIsParagraphModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'isParagraphModal']),
+  );
+
 export default {
   makeSelectChooseRelMual,
   makeSelectManualMaster,
@@ -244,4 +256,6 @@ export default {
   makeSelectIndexRelationComponetList,
   makeSelectedIndexRelationComponetIitem,
   makeSelectIndexRelationList,
+  makeSelectParagraphTypeIdx,
+  makeSelectIsParagraphModal,
 };

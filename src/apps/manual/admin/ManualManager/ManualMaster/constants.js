@@ -60,6 +60,7 @@ export const GET_INDEX_RELATION_COMPONENT_LIST_SAGA = 'apps/manual/admin/ManualM
 export const SET_INDEX_RELATION_COMPONENT_LIST_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_COMPONENT_LIST_REDUCR';
 export const SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR';
 export const SET_INDEX_RELATION_LIST_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_INDEX_RELATION_LIST_REDUCR';
+export const SET_EDITOR_PARAGRAPH_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_EDITOR_PARAGRAPH_REDUCR';
 
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
 export const GET_USERINFO_SAGA = 'apps/manual/admin/ManualManager/ManualMaster/GET_USERINFO_SAGA';

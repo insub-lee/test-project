@@ -161,7 +161,15 @@ function* saveEditorInfoSaga() {
       ...item,
       SORT_SQ: idx + 1,
       MUAL_TABVIEWINFO: JSON.stringify(setEditorTabViewInfo(compList, 0)),
-      editorComponentList: compList.length > 0 ? compList.map(comp => ({ ...comp, COMP_OPTION: JSON.stringify(comp.COMP_OPTION) })) : [],
+      editorComponentList:
+        compList.length > 0
+          ? compList.map(comp => ({
+            ...comp,
+            COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
+            MUAL_COMPVIEWINFO:
+                comp.MUAL_COMPVIEWINFO && typeof comp.MUAL_COMPVIEWINFO === 'object' ? JSON.stringify(comp.MUAL_COMPVIEWINFO) : comp.MUAL_COMPVIEWINFO,
+          }))
+          : [],
     };
   });
   const param = { editorTabList, selectedMualIdx: pageMoveType.get('selectedMualIdx') };
