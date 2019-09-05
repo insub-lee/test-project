@@ -90,7 +90,7 @@ class EditorMgr extends Component {
         </Modal>
         <Modal
           width={728}
-          bodyStyle={{ height: 'calc(100vh - 296px)', padding: '4px' }}
+          bodyStyle={{ height: 'calc(100vh - 256px)', padding: '4px' }}
           style={{ top: 42 }}
           visible={isParagraphModal}
           footer={null}
