@@ -224,6 +224,15 @@ export const fetchData = id => ({
   id,
 });
 
+export const getList = () => ({
+  type: actionTypes.GET_LIST,
+});
+
+export const successGetList = list => ({
+  type: actionTypes.SUCCESS_GET_LIST,
+  list,
+});
+
 export const successFetchData = data => ({
   type: actionTypes.SUCCESS_FETCH_DATA,
   data,
@@ -247,4 +256,19 @@ export const disableLoading = () => ({
 
 export const resetData = () => ({
   type: actionTypes.RESET_DATA,
+});
+
+export const changeWorkSelectorProperty = (index, value, propertyKey) => ({
+  type: actionTypes.CHANGE_WORK_SELECTOR_PROPERTY,
+  index,
+  value,
+  propertyKey,
+});
+
+export const successChangeWorkSelectorProperty = ({ index, value }) => ({
+  type: actionTypes.SUCCESS_CHANGE_WORK_SELECTOR_PROPERTY,
+  payload: {
+    index,
+    value,
+  },
 });
