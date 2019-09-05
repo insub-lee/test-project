@@ -8,10 +8,10 @@ import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserMenuCard = styled.div`
   position: absolute;
-  top: 42px;
+  top: 0;
   width: 100%;
   height: 100vh;
-  padding: 0;
+  padding: 42px 0 45px 0;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
@@ -20,7 +20,7 @@ const StyleUserMenuCard = styled.div`
   }
 
   .userBizMenuWrapper {
-    width: 90%;
+    width: 100%;
     margin: 0 auto; //커스텀 스크롤바로 이동된 만큼 중앙에 맞추기
 
     @media only screen and (max-width: 1024px) {
@@ -29,12 +29,14 @@ const StyleUserMenuCard = styled.div`
 
     .pageHeader {
       width: 100%;
-      height: 55px;
-      border-bottom: 1px solid #222222;
+      height: 75px;
+      border-bottom: 1px solid #e5e5e5;
       color: #222222;
-      font-size: 18px;
-      line-height: 55px;
-      text-align: center;
+      font-size: 24px;
+      line-height: 75px;
+      text-align: left;
+      font-weight: 600;
+      padding-left: 45px;
     }
 
     .navigation {
