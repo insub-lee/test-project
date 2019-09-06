@@ -4,18 +4,35 @@ import { Icon } from 'antd';
 import { /* intlObj, */ lang } from 'utils/commonUtils';
 
 class MenuItem extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { isOpen: true };
+  }
+
   handleClick = item => {
+    const { isOpen } = this.state;
+    if (item.child) {
+      this.setState({ isOpen: !isOpen });
+    } else if (item.URL) {
+      this.props.classChange(item.URL);
+    }
+
+    /*
     const { openMenuCode, setOpenMenuCode } = this.props;
     if (!item.child) this.props.classChange(item.URL);
     else {
       const code = openMenuCode === item.SCR_CD ? '' : item.SCR_CD;
       setOpenMenuCode(code);
     }
+    */
   };
 
   subMenuOpen = item => {
+    return item.child && this.state.isOpen;
+    /*
     const { openMenuCode } = this.props;
     return item.child && openMenuCode === item.SCR_CD;
+    */
   };
 
   render() {
@@ -53,7 +70,7 @@ MenuItem.propTypes = {
   classString: PropTypes.func.isRequired,
   classChange: PropTypes.func.isRequired,
   setIcon: PropTypes.func.isRequired,
-  setOpenMenuCode: PropTypes.func.isRequired,
+  // setOpenMenuCode: PropTypes.func.isRequired,
   openMenuCode: PropTypes.string.isRequired,
 };
 

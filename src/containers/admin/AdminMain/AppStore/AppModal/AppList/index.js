@@ -33,16 +33,17 @@ class AppList extends Component {
       match: {
         params: { CATG_ID, searchword },
       },
+      handleInitPage,
     } = this.props;
     if (CATG_ID) {
       this.CATG_ID = CATG_ID;
-      this.props.handleInitPage('ONE', CATG_ID);
+      handleInitPage('ONE', CATG_ID);
     } else if (searchword) {
       this.CATG_ID = '';
-      this.props.handleInitPage('SEARCH', searchword);
+      handleInitPage('SEARCH', searchword);
     } else {
       this.CATG_ID = '';
-      this.props.handleInitPage('ALL');
+      handleInitPage('ALL');
     }
   }
 
@@ -50,70 +51,62 @@ class AppList extends Component {
     const { match, initType } = nextProps;
     const { params } = match;
     const { CATG_ID, searchword } = params;
+    const { handleInitPage, handleGetMapListOne, handleGetMapAppListSearch } = this.props;
+
     if (checkValue(searchword, nextProps.searchword)) {
       this.CATG_ID = '';
-      this.props.handleGetMapAppListSearch(searchword);
+      handleGetMapAppListSearch(searchword);
     } else if (checkValue(CATG_ID, this.CATG_ID)) {
       this.CATG_ID = CATG_ID;
-      this.props.handleGetMapListOne(CATG_ID);
+      handleGetMapListOne(CATG_ID);
     } else if (!CATG_ID && !searchword && initType !== 'ALL') {
       this.CATG_ID = '';
-      this.props.handleInitPage('ALL');
+      handleInitPage('ALL');
     }
   }
 
   handleClick = () => {
-    console.log('this.searchInput.input');
-    console.log(this.searchInput);
-    console.log(this.searchInput.input);
+    const { history } = this.props;
     const searchword = this.searchInput.input.value;
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
     if (searchword) {
-      this.props.history.push(`${preUrl}/app/list/search/${searchword}`);
+      history.push(`${preUrl}/app/list/search/${searchword}`);
     } else {
-      this.props.history.push(`${preUrl}/app/list`);
+      history.push(`${preUrl}/app/list`);
     }
   };
 
-  render() {
+  handleGoBack = () => {
+    this.props.history.goBack();
+  };
+
+  registApp = (APP_ID, CATG_ID, SRC_PATH) => {
+    const { history, handleRegistApp } = this.props;
+    feed.showConfirm('등록 하시겠습니까?', '', () => handleRegistApp(APP_ID, CATG_ID, SRC_PATH, history));
+  };
+
+  registCategory = (APP_ID, CATG_ID) => {
+    const { history, handleRegistCategory } = this.props;
+    handleRegistCategory(APP_ID, CATG_ID, history);
+  };
+
+  handleOnChange = key => {
+    this.searchInput.input.value = '';
     const {
       history,
-      initType,
-      mapList,
-      handleGetMapAppListMore,
-      handleRegistApp,
-      handleRegistCategory,
-      handleRegistBiz,
-      handleGetMapListOne,
-
-      searchword,
+      match: { path },
     } = this.props;
+    const preUrl = commonjs.getPreUrl(path, '/modal');
+    if (key === 0) {
+      history.push(`${preUrl}/app/list`);
+    } else {
+      history.push(`${preUrl}/app/list/${key}`);
+    }
+    window.scrollTo(0, 0);
+  };
 
-    const handleGoBack = () => {
-      history.goBack();
-    };
-
-    const registApp = (APP_ID, CATG_ID, SRC_PATH) => {
-      feed.showConfirm('등록 하시겠습니까?', '', () => handleRegistApp(APP_ID, CATG_ID, SRC_PATH, history));
-    };
-
-    const registCategory = (APP_ID, CATG_ID) => {
-      handleRegistCategory(APP_ID, CATG_ID, history);
-    };
-
-    const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
-
-    const handleOnChange = key => {
-      // this.searchword = '';
-      // this.searchInput.input.value = '';
-      if (key === 0) {
-        history.push(`${preUrl}/app/list`);
-      } else {
-        history.push(`${preUrl}/app/list/${key}`);
-      }
-      window.scrollTo(0, 0);
-      this.searchInput.input.value = '';
-    };
+  render() {
+    const { history, initType, mapList, handleGetMapAppListMore, handleRegistBiz, handleGetMapListOne, categoryComboData, searchword } = this.props;
 
     let selectedCategoryId = 0;
     const pn = history.location.pathname;
@@ -125,12 +118,14 @@ class AppList extends Component {
     return (
       <div>
         <div className="topPart">
-          <Select value={selectedCategoryId} style={{ width: 200, float: 'right' }} onChange={handleOnChange}>
-            {this.props.categoryComboData.map(item => (
+          <Select value={selectedCategoryId} style={{ width: 200, float: 'right' }} onChange={this.handleOnChange}>
+            {categoryComboData.map(item => (
               <Option value={item.NODE_TYPE === 'R' ? 0 : item.CATG_ID}>{item.NAME_KOR}</Option>
             ))}
           </Select>
           <Input
+            type="text"
+            allowClear
             maxLength={200}
             onKeyPress={e => {
               if (e.key === 'Enter') this.handleClick();
@@ -139,8 +134,9 @@ class AppList extends Component {
               this.searchInput = ref;
             }}
             style={{ width: 200, marginRight: 10 }}
+            placeholder="앱 검색"
           />
-          <LinkBtnLgtGray onClick={this.handleClick} style={{ marginRight: '10px' }}>
+          <LinkBtnLgtGray onClick={this.handleClick} style={{ width: '20px', marginRight: '10px' }}>
             검색
           </LinkBtnLgtGray>
         </div>
@@ -149,10 +145,10 @@ class AppList extends Component {
           mapList={mapList}
           getMapListOne={handleGetMapListOne}
           getMapListMore={handleGetMapAppListMore}
-          registApp={registApp}
-          registCategory={registCategory}
+          registApp={this.registApp}
+          registCategory={this.registCategory}
           registBiz={handleRegistBiz}
-          goBack={handleGoBack}
+          goBack={this.handleGoBack}
           searchword={searchword}
           history={history}
         />
