@@ -20,6 +20,12 @@ const StyleTopMenu = styled.div`
     color: #404040;
     font-size: 14px;
   }
+
+  @media (min-width: 576px) {
+    .ant-col-sm-24 {
+      width: auto;
+    }
+  }
 `;
 
 export default StyleTopMenu;

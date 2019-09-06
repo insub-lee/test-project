@@ -75,16 +75,17 @@ const StyleAppBizModal = styled.div`
     display: inline-block;
     width: 100%;
     padding: 0 14px;
+    padding-left: 260px;
 
     @media only screen and (max-width: 1280px) {
-      padding: 0 10px !important;
+      padding: 0 10px;
     }
 
     @media only screen and (max-width: 1024px) {
       display: flex;
       width: 100%;
       padding: 0;
-      padding-top: 0 !important;
+      padding-top: 0;
     }
   }
 `;

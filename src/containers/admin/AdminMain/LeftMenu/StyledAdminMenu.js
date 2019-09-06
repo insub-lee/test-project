@@ -89,7 +89,7 @@ const StyledAdminMenu = styled.div`
             outline: 0;
             padding: 0.8125rem 1rem;
             font-size: 0.875rem;
-            color: #bdafd1 !important;
+            color: #fff !important;
             font-weight: 400;
             text-decoration: none;
             & > .nav-link-text {

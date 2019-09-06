@@ -74,7 +74,7 @@ const StyleAppModal = styled.div`
     display: inline-block;
     width: 100%;
     padding: 0 14px;
-    
+
     @media only screen and (max-width: 1280px) {
       padding: 0 10px !important;
     }
@@ -86,7 +86,6 @@ const StyleAppModal = styled.div`
       padding-top: 0 !important;
     }
   }
-
 `;
 
 export default StyleAppModal;
