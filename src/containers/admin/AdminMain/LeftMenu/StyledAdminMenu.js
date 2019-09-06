@@ -6,7 +6,7 @@ const StyledAdminMenu = styled.div`
   align-items: stretch;
   flex: 1 1 auto;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   & > div {
     position: relative;
     background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
@@ -89,7 +89,7 @@ const StyledAdminMenu = styled.div`
             outline: 0;
             padding: 0.8125rem 1rem;
             font-size: 0.875rem;
-            color: #bdafd1;
+            color: #bdafd1 !important;
             font-weight: 400;
             text-decoration: none;
             & > .nav-link-text {

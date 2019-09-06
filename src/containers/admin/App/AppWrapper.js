@@ -40,6 +40,7 @@ const AppWrapper = styled.div`
 
     .storeLayoutContentWrapper {
       min-height: calc(100vh - 140px); //header와 footer 높이값 빼기
+      padding-left: 300px;
     }
   }
 
