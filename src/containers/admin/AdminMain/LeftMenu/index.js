@@ -5,7 +5,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { createStructuredSelector } from 'reselect';
-import { Icon } from 'antd';
 import { /* intlObj, */ lang } from 'utils/commonUtils';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -39,7 +38,7 @@ class menuList extends React.Component {
     this.state = {
       strUrl:
         window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
-      openMenuCode: 'SITE',
+      // openMenuCode: 'SITE',
     };
 
     this.classChange = this.classChange.bind(this);
@@ -85,10 +84,8 @@ class menuList extends React.Component {
       (url === '/admin/adminmain/menu' && strCurUrl.startsWith('/admin/adminmain/menu')) ||
       (url === '/admin/adminmain/work' && strCurUrl.startsWith('/admin/adminmain/work'))
     ) {
-      // clsStr = 'menu current';
       clsStr = 'active';
     } else {
-      // clsStr = 'menu';
       clsStr = '';
     }
     return clsStr;
@@ -113,42 +110,21 @@ class menuList extends React.Component {
     }
   };
 
+  /*
   setOpenMenuCode = code => {
     this.setState({ openMenuCode: code });
   };
-
+  */
   makeMenu = leftMenuList =>
     leftMenuList.map(m => (
       <MenuItem
         menuItem={m}
-        openMenuCode={this.state.openMenuCode}
+        // openMenuCode={this.state.openMenuCode}
         classString={this.classString}
         classChange={this.classChange}
         setIcon={this.setIcon}
-        setOpenMenuCode={this.setOpenMenuCode}
+        // setOpenMenuCode={this.setOpenMenuCode}
       />
-      // <li className={`${this.classString(m.URL)} ${m.child ? ' open' : ''}`}>
-      //   <a onClick={() => !m.child && this.classChange(m.URL)} onKeyPress={() => !m.child && this.classChange(m.URL)}>
-      //     <Icon type={this.setIcon(m.SCR_CD)} />
-      //     <span className="nav-link-text">{lang.get('NAME', m)}</span>
-      //     {m.child && (
-      //       <b className="collapse-sign">
-      //         <em className="fa fa-angle-up"></em>
-      //       </b>
-      //     )}
-      //   </a>
-      //   {m.child && (
-      //     <ul>
-      //       {m.child.map(s => (
-      //         <li className={this.classString(s.URL)}>
-      //           <a onClick={() => this.classChange(s.URL)} onKeyPress={() => this.classChange(s.URL)}>
-      //             <span className="nav-link-text">{lang.get('NAME', s)}</span>
-      //           </a>
-      //         </li>
-      //       ))}
-      //     </ul>
-      //   )}
-      // </li>
     ));
 
   render() {
