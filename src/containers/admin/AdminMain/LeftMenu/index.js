@@ -30,6 +30,12 @@ const StyledAdminLeftMenu = styled.div`
   /* background-color: #ffffff; */
   z-index: 100;
   overflow-y: auto;
+  overflow-x: hidden;
+  backface-visibility: hidden;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 class menuList extends React.Component {

@@ -31,7 +31,11 @@ const workHomeUrl = '/admin/adminmain/work';
 class BizManage extends Component {
   componentDidMount() {
     this.props.getUserRole();
-    const { match: { params: { MENU } } } = this.props;
+    const {
+      match: {
+        params: { MENU },
+      },
+    } = this.props;
     if (MENU === 'menu') {
       this.props.getMenuBizGrpID();
     } else if (MENU === 'work') {
@@ -41,13 +45,17 @@ class BizManage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { match: { params: { MENU } } } = nextProps;
+    const {
+      match: {
+        params: { MENU },
+      },
+    } = nextProps;
     this.MENU = MENU;
 
     if (workHomeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
-        const generateList = (data) => {
+        const generateList = data => {
           for (let i = 0; i < data.length; i += 1) {
             const node = data[i];
 
@@ -80,8 +88,16 @@ class BizManage extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { match: { params: { MENU: PREVMENU } } } = prevProps;
-    const { match: { params: { MENU } } } = this.props;
+    const {
+      match: {
+        params: { MENU: PREVMENU },
+      },
+    } = prevProps;
+    const {
+      match: {
+        params: { MENU },
+      },
+    } = this.props;
 
     if (PREVMENU !== MENU) {
       this.props.getUserRole();
@@ -113,7 +129,7 @@ class BizManage extends Component {
 
     const preUrl = this.props.match.url;
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);
       if (node.MENU_EXIST_YN !== 'N') {
         history.push(`/admin/adminmain/work/bizMenuReg/info/${node.key}`);
@@ -149,7 +165,6 @@ class BizManage extends Component {
                 onClick={handleTreeOnClick}
                 canDrag={() => true}
                 canDrop={() => true}
-
                 saveData={saveData}
                 addEmptyNode={addEmptyNode}
                 moveNode={moveNode}
@@ -165,7 +180,7 @@ class BizManage extends Component {
           <ModalRoute path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} />
           <ModalContainer />
         </ErrorBoundary>
-        <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
+        <div className="myPageContentWrapper" style={{ minHeight: '100vh' }}>
           <ErrorBoundary>
             <Switch>
               <Route path="/admin/adminmain/work/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
@@ -204,7 +219,6 @@ BizManage.propTypes = {
   userRole: PropTypes.string.isRequired,
 };
 
-
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
@@ -239,8 +253,10 @@ const withConnect = connect(
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizManage));
+export default injectIntl(
+  compose(
+    withReducer,
+    withSaga,
+    withConnect,
+  )(BizManage),
+);
