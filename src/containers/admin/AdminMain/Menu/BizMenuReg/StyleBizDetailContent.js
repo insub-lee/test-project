@@ -12,7 +12,7 @@ const StyleBizDetailContent = styled.div`
 
   .leftContent {
     position: relative;
-    width: 298px;
+    width: 230px;
     min-height: calc(100vh - 200px);
     padding-left: 6px;
     padding-bottom: 6px; //히딘 버튼메뉴
@@ -62,11 +62,11 @@ const StyleBizDetailContent = styled.div`
       height: 165px;
       padding: 10px 15px 0 15px;
       background: #e9e9e9;
-    
+
       .entryName {
         > li {
           padding: 3px 0;
-    
+
           label {
             display: inline-block;
             width: 80px;
@@ -76,24 +76,24 @@ const StyleBizDetailContent = styled.div`
             color: #404040;
             font-size: 14px;
           }
-    
+
           .ant-input {
             width: calc(100% - 80px);
           }
         }
       }
-    
+
       .buttonWrapper {
         padding: 9px 0 14px;
         text-align: right;
-    
+
         > button {
           background: transparent;
           color: #404040;
           font-size: 14px;
           font-weight: 600;
           text-decoration: underline;
-          
+
           &:first-child {
             margin-right: 10px;
           }

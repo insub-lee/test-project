@@ -27,11 +27,12 @@ const StyleAppBizModal = styled.div`
     position: absolute;
     top: 0;
     height: 100%;
+    width: 250px;
   }
 
   .topPart {
     height: 55px;
-    margin: 0 20px;
+    margin: 0 20px 0 260px;
     padding-top: 14px;
     border-bottom: 1px solid #d1d2d3;
 
