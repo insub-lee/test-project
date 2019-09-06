@@ -5,15 +5,25 @@ const makeSelectBizBuilderWidgetState = state => state.get('apps-manual-user-Biz
 const makeSelectBizBuilderList = () =>
   createSelector(
     makeSelectBizBuilderWidgetState,
-    state => state.getIn(['BizBuilderWidget', 'bizBuilderList']),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11128),
+    (state, widgetId) => state.getIn(['BizBuilderWidget', `${widgetId}`, 'bizBuilderList']),
   );
 
 const makeSelectBizBuilderConfigInfo = () =>
   createSelector(
     makeSelectBizBuilderWidgetState,
-    state => state.getIn(['BizBuilderWidget', 'ConfigInfo']),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11128),
+    (state, widgetId) => state.getIn(['BizBuilderWidget', `${widgetId}`, 'ConfigInfo']),
+  );
+
+const makeSelectBizBuilderViewInfo = () =>
+  createSelector(
+    makeSelectBizBuilderWidgetState,
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11128),
+    (state, widgetId) => state.getIn(['BizBuilderWidget', `${widgetId}`, 'viewInfo']),
   );
 export default {
   makeSelectBizBuilderList,
   makeSelectBizBuilderConfigInfo,
+  makeSelectBizBuilderViewInfo,
 };

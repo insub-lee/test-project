@@ -7,13 +7,13 @@
 .sortableTreeWrapper .rst__lineFullVertical::after,
 .sortableTreeWrapper .rst__lineHalfVerticalTop::after,
 .sortableTreeWrapper .rst__lineHalfVerticalBottom::after {
-  left: calc(50% - 1px);
+  left: calc(50% - 0px);
   width: 1px;
-  background-color: #d2d2d2;
+  background-color: #ddd;
 }
 .sortableTreeWrapper .rstcustom__expandButton {
   border-radius: 0;
-  border: 1px solid #666;
+  border: 1px solid transparent;
   background-image: url(../images/bizstore/tree-icon-expand-gray2.png);
   background-size: 7px;
   width: 14px;
@@ -21,7 +21,7 @@
 }
 .sortableTreeWrapper .rstcustom__collapseButton {
   border-radius: 0;
-  border: 1px solid #666;
+  border: 1px solid transparent;
   background-image: url(../images/bizstore/tree-icon-collapsed2.png);
   background-size: 7px;
   width: 14px;

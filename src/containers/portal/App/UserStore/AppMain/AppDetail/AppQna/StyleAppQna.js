@@ -16,6 +16,11 @@ const StyleAppQna = styled.div`
     position: absolute;
     top: 12px;
     right: 0;
+    & button > i {
+      margin-right: 4px;
+      font-size: 15px;
+      vertical-align: middle;
+    }
 
     @media only screen and (max-width: 1024px) {
       display: none !important;

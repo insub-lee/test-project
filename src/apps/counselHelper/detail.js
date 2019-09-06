@@ -10,13 +10,17 @@ class detail extends PureComponent {
 
     //  필터용 함수
     const newArray = treeData.filter(pItem => {
-      if (pItem.title.search(searchWord) !== -1) {
-        return !!~pItem.title.search(searchWord);
+      if (pItem.title.indexOf(searchWord) !== -1) {
+        return pItem;
       }
       const parent = pItem;
-      const test = pItem.children.filter(item => !!~item.title.search(searchWord));
-      if (test.length !== 0) {
-        parent.children = test;
+      const child = pItem.children.filter(cItem => {
+        if (cItem.title.indexOf(searchWord) !== -1) {
+          return cItem;
+        }
+      });
+      if (child.length !== 0) {
+        parent.children = child;
         return parent;
       }
     });

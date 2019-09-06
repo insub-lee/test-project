@@ -139,7 +139,7 @@ export const resetEditorMgrByReduc = () => ({ type: constantTypes.RESET_EDITORMG
 
 export const moveTabComponentByReduc = node => ({ type: constantTypes.MOVE_TAB_COMPONENT_REDUCR, node });
 
-export const addEditorComponentByReduc = compType => ({ type: constantTypes.ADD_EDITOR_COMPONENT_REDUCR, compType });
+export const addEditorComponentByReduc = (compType, text) => ({ type: constantTypes.ADD_EDITOR_COMPONENT_REDUCR, compType, text });
 
 export const setEditorComponentValueByReduc = (tabIdx, compIdx, key, value) => ({
   type: constantTypes.SET_EDITOR_COMPONENT_VALUE_REDUCR,
@@ -234,3 +234,5 @@ export const setInexRelationComponentListByReduc = list => ({ type: constantType
 export const setIndexRelationComponetIitemByReducr = item => ({ type: constantTypes.SET_INDEX_RELATION_COMPONENT_ITEM_REDUCR, item });
 
 export const setIndexRelationListByReducr = list => ({ type: constantTypes.SET_INDEX_RELATION_LIST_REDUCR, list });
+
+export const setEditorParagraphByReducr = (idx, flag) => ({ type: constantTypes.SET_EDITOR_PARAGRAPH_REDUCR, idx, flag });

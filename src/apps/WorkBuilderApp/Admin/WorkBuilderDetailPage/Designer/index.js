@@ -17,8 +17,9 @@ import saga from './saga';
 
 class Designer extends Component {
   componentDidMount() {
-    const { fetchData, id } = this.props;
+    const { fetchData, getList, id } = this.props;
     fetchData(id);
+    getList();
   }
 
   componentWillUnmount() {
@@ -60,6 +61,7 @@ Designer.propTypes = {
   closePreview: PropTypes.func,
   isLoading: PropTypes.bool,
   resetData: PropTypes.func,
+  getList: PropTypes.func,
 };
 
 Designer.defaultProps = {
@@ -72,6 +74,7 @@ Designer.defaultProps = {
   closePreview: () => console.debug('no bind events'),
   isLoading: true,
   resetData: () => console.debug('no bind events'),
+  getList: () => console.debug('no bind events'),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -79,6 +82,7 @@ const mapStateToProps = createStructuredSelector({
   layers: selectors.makeSelectLayers(),
   onPreview: selectors.makeSelectOnPreview(),
   isLoading: selectors.makeSelectIsLoading(),
+  // tableList: selectors.makeSelectTableList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -151,6 +155,15 @@ const mapDispatchToProps = dispatch => ({
           changeRequired: (type, index, value) => {
             dispatch(actions.changeRequired(type, index, value));
           },
+          changeWorkSelectorProperty: (index, e, propertyKey) => {
+            let { value } = e.target;
+            if (propertyKey !== 'workSeq') {
+              value = value.replace(/[^A-Z_]/gi, '').toUpperCase();
+              e.target.value = value;
+              console.debug('@@ changer work-selector-property', index, value, propertyKey);
+            }
+            dispatch(actions.changeWorkSelectorProperty(index, value, propertyKey));
+          },
           changeMaxLength: (type, index, e) => {
             let { value } = e.target;
             const number = parseInt(value, 10) || 0;
@@ -185,6 +198,7 @@ const mapDispatchToProps = dispatch => ({
   fetchData: id => dispatch(actions.fetchData(id)),
   closePreview: () => dispatch(actions.closePreview()),
   resetData: () => dispatch(actions.resetData()),
+  getList: () => dispatch(actions.getList()),
 });
 
 const withReducer = injectReducer({ key: 'work-builder-detail-designer', reducer });

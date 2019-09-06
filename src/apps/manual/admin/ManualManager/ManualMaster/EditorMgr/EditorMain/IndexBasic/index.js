@@ -8,6 +8,7 @@ const IndexBasic = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
       <div className="manualIndexTitle">
         {selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
           <Input
+            key={`manualEditorIndexInput_${item.MUAL_TABCOMP_IDX}`}
             type="text"
             defaultValue={item.MUAL_COMPVIEWINFO}
             placeholder="목차명을 입력해주세요"

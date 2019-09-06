@@ -11,6 +11,7 @@ const IndexFile = ({ item, selectedComponentIdx, handleChangeCompValue, handlePu
       <div className="manualIndexTitle">
         {selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
           <Input
+            key={`manualEditorFileInput_${item.MUAL_TABCOMP_IDX}`}
             type="text"
             defaultValue={item.MUAL_COMPVIEWINFO}
             placeholder="목차명을 입력해주세요"
@@ -25,6 +26,7 @@ const IndexFile = ({ item, selectedComponentIdx, handleChangeCompValue, handlePu
           <div>
             <span>조회방법 : </span>
             <Radio.Group
+              key={`manualEditorFileRadioGroup_${item.MUAL_TABCOMP_IDX}`}
               onChange={e => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.VIEW_TYPE', e.target.value)}
               value={item.COMP_OPTION.VIEW_TYPE || 'link'}
             >
@@ -37,6 +39,7 @@ const IndexFile = ({ item, selectedComponentIdx, handleChangeCompValue, handlePu
               <span>파일첨부 : </span>
               <div className="manualEditorUpload">
                 <Upload
+                  key={`manualEditorFileUpload_${item.MUAL_TABCOMP_IDX}`}
                   readOnly={false}
                   defaultValue={{ DETAIL: item.COMP_OPTION.FILE || [] }}
                   saveTempContents={fileList => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'COMP_OPTION.FILE', fromJS(fileList))}

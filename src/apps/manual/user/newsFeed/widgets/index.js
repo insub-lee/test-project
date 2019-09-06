@@ -16,22 +16,17 @@ import CSManualView from 'apps/manual/user/CSManualView';
 
 const TabPane  = Tabs.TabPane;
 
+// 신규지식 위젯
 class NewsFeed extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      widget_id: this.props.item.WIDGET_ID,
-      widgetSize: this.props.item.size,
-      selectedCategory: this.props.item.data.selectedCategory,
-      newsfeedDataList: this.props.widgetDataList,
-    }
   }
 
 
   handleClick = (mualIdx) => {
-    const { setModalIdx } = this.props;
-    const { widget_id } = this.state;
     const { showModal } = this;
+    const { setModalIdx } = this.props;
+    const  widget_id = this.props.item.WIDGET_ID;
     setModalIdx(mualIdx, widget_id);
     showModal();
   };
@@ -39,21 +34,21 @@ class NewsFeed extends Component {
 
   showModal = () => {
     const { setModalView } = this.props;
-    const {widget_id} = this. state;
+    const widget_id = this.props.item.WIDGET_ID;
     setModalView(true, widget_id);
   };
   
 
   handleCloseModal = () => {
     const { setModalView, setModalIdx } = this.props;
-    const {widget_id} = this.state;
+    const widget_id = this.props.item.WIDGET_ID;
     setModalIdx(undefined, widget_id);
     setModalView(false, widget_id);
   };
 
   componentDidMount() {
     const { getNewsFeed, item, setModalView } = this.props;
-    const  {widget_id} = this.state; 
+    const  widget_id = this.props.item.WIDGET_ID;
     let selectedCategory =  item.data.selectedCategory;
 
     if (selectedCategory == '' || selectedCategory === undefined || selectedCategory === null){
@@ -66,7 +61,8 @@ class NewsFeed extends Component {
 
   render() {
     const { handleCloseModal, handleClick } = this;
-    const { widget_id, widgetSize } = this.state
+    const widget_id = this.props.item.WIDGET_ID;
+    const widgetSize = this.props.item.size;
     const { modalView, modalIdx ,widgetDataList } = this.props;
     const totalList = widgetDataList.totalList;
     const updateList = widgetDataList.updateList;

@@ -4,13 +4,16 @@ const initialState = fromJS({});
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case constantTypes.SET_BIZBULDERLISTWIDGET_SETTINGINFO_BYREDUCR: {
-      const { configInfo } = action;
-      return state.setIn(['BizBuilderWidget', 'ConfigInfo'], configInfo);
+      const { widgetId, configInfo } = action;
+      return state.setIn(['BizBuilderWidget', `${widgetId}`, 'ConfigInfo'], configInfo);
     }
     case constantTypes.SET_BIZBUILDERLIST_BYREDUCR: {
-      const { bizBuilderList } = action;
-      console.debug('bizBuilderList', bizBuilderList);
-      return state.setIn(['BizBuilderWidget', 'bizBuilderList'], bizBuilderList);
+      const { widgetId, bizBuilderList } = action;
+      return state.setIn(['BizBuilderWidget', `${widgetId}`, 'bizBuilderList'], bizBuilderList);
+    }
+    case constantTypes.SET_BIZBUILDERVIEW_BYREDUCR: {
+      const { widgetId, viewInfo } = action;
+      return state.setIn(['BizBuilderWidget', `${widgetId}`, 'viewInfo'], viewInfo);
     }
     default:
       return state;

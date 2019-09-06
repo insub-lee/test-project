@@ -6,8 +6,9 @@ export const setBizBuilderWidgetSettingBySaga = item => ({
   item,
 });
 
-export const setBizBuilderConfigChangeValueByReducr = (key, value) => ({
+export const setBizBuilderConfigChangeValueByReducr = (widgetId, key, value) => ({
   type: constantTypes.SET_BIZBUILDERLIST_CONFIGCHANGEVALUE,
+  widgetId,
   key,
   value,
 });
@@ -17,8 +18,9 @@ export const getBizBuilderWidgetSettingBySaga = item => ({
   item,
 });
 
-export const setBizBuilderWidgetSttingByReducr = item => ({
+export const setBizBuilderWidgetSttingByReducr = (widgetId, item) => ({
   type: constantTypes.SET_BIZBUILDERLIST_SETTING_BYREDUCR,
+  widgetId,
   item,
 });
 
@@ -28,11 +30,25 @@ export const setBizBuillderWidgetSettingAsJSON = cols => ({
 });
 
 // work list read
-export const getWorkListBySaga = () => ({
+export const getWorkListBySaga = widgetId => ({
   type: constantTypes.GET_WORKLIST_BYSAGA,
+  widgetId,
 });
 
-export const setWorkListByReducr = workList => ({
+export const setWorkListByReducr = (widgetId, workList) => ({
   type: constantTypes.SET_WORKLIST_BYREDUCR,
+  widgetId,
   workList,
+});
+
+export const getWorkMetaBySaga = (widgetId, workSeq) => ({
+  type: constantTypes.GET_WORKMETA_BYSAGA,
+  widgetId,
+  workSeq,
+});
+
+export const setWorkMetaByReducr = (widgetId, metaInfo) => ({
+  type: constantTypes.SET_WORKMETA_BYREDUCR,
+  widgetId,
+  metaInfo,
 });

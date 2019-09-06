@@ -34,7 +34,7 @@ const Styled = styled.div`
       display: table-cell;
       vertical-align: middle;
       align-items: center;
-      cursor: pointer;
+  
       p {
         text-align: center;
         font-size: 15px;

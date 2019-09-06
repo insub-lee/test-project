@@ -20,6 +20,7 @@ const initialState = fromJS({
   },
   onPreview: false,
   isLoading: true,
+  tableList: [],
 });
 
 const reducer = (state = initialState, action) => {
@@ -135,6 +136,10 @@ const reducer = (state = initialState, action) => {
       const { type, index, value } = action.payload;
       return state.setIn([type, index], fromJS(value));
     }
+    case actionTypes.SUCCESS_CHANGE_WORK_SELECTOR_PROPERTY: {
+      const { index, value } = action.payload;
+      return state.setIn(['formStuffs', index], fromJS(value));
+    }
     case actionTypes.TOGGLE_BLOCK_OPEN_STATUS: {
       const { blockType } = action;
       return state.setIn(['blockOpenStatus', blockType], !state.getIn(['blockOpenStatus', blockType]));
@@ -171,6 +176,10 @@ const reducer = (state = initialState, action) => {
       return state.set('isLoading', false);
     case actionTypes.RESET_DATA:
       return initialState;
+    case actionTypes.SUCCESS_GET_LIST: {
+      const { list } = action;
+      return state.set('tableList', fromJS(list));
+    }
     case actionTypes.ACTION_TYPES:
     default:
       return state;
