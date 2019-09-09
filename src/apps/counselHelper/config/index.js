@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { Button } from 'antd';
+import { message } from 'antd';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -30,13 +30,22 @@ class testConfig extends PureComponent {
 
   handleClick = () => {
     if (this.state.items.data.categorie !== 0) {
-      alert('적용되었습니다.');
+      this.success();
       console.log(this.state.items);
+      console.log('히스토리테스트', this.props.history);
       this.props.deleteConfig(this.state.items);
       this.props.updateBizGroupChgYn();
     } else {
-      alert('카테고리를 설정해주세요!.');
+      this.error();
     }
+  };
+
+  success = () => {
+    message.success('적용되었습니다.');
+  };
+
+  error = () => {
+    message.error('카테고리를 설정해주세요');
   };
 
   render() {

@@ -22,13 +22,17 @@ class Widget extends PureComponent {
     }
   }
 
+  componentDidMount() {
+    console.log('마운트됨');
+  }
+
   render() {
-    const { detail, myAppTreeData } = this.props;
-    const filteredData = myAppTreeData.filter(item => item.BIZGRP_ID === 2874);
+    const { detail, myAppTreeData, starPoint } = this.props;
+    const linkData = myAppTreeData.filter(item => item.BIZGRP_ID === 2874);
 
     return (
       <StyleWidget>
-        <HelperWidget detail={detail} linkData={filteredData[0]} />
+        <HelperWidget detail={detail} linkData={linkData[0]} starPoint={starPoint} />
       </StyleWidget>
     );
   }
@@ -47,6 +51,7 @@ Widget.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   detail: selectors.makeSelectDetail(),
   myAppTreeData: routeSelectors.makeMyAppTree(),
+  starPoint: selectors.makeSelectStar(),
 });
 
 const mapDispatchToProps = dispatch => ({

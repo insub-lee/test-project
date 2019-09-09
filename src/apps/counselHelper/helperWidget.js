@@ -15,13 +15,16 @@ export default class helperWidget extends PureComponent {
   };
 
   render() {
-    const { detail, linkData } = this.props;
+    const { detail, linkData, starPoint } = this.props;
+
     const result = [];
     let first = -1;
     /* 트리데이터생성 */
     detail.map(query => {
+      let point = 0;
       let tempData = {};
       const LVL = query.get('LVL');
+      const DSCR_KOR = query.get('DSCR_KOR');
       const BIZGRP_ID = query.get('BIZGRP_ID');
       const NAME_KOR = query.get('NAME_KOR');
       let parentProps = [];
@@ -34,17 +37,26 @@ export default class helperWidget extends PureComponent {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
+            DSCR_KOR,
             children: [],
             linkProp: parentProps[0],
           };
           result.push(tempData);
           break;
         case 3:
+          starPoint.map(starItem => {
+            if (starItem.BIZGRP_ID === BIZGRP_ID) {
+              point = starItem.STARPOINT;
+            }
+            return point;
+          });
           childProps = result[first].linkProp.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
+            DSCR_KOR,
+            starPoint: point,
             children: [],
             linkProp: childProps[0],
           };

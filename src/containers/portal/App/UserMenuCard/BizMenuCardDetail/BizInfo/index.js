@@ -18,7 +18,7 @@ import * as actions from './actions';
 
 import { AppIntroduction } from '../../../UserStore/AppMain/AppDetail/AppScreenshot/StyleAppScreenShot';
 import AppQna from '../../../UserStore/AppMain/AppDetail/AppQna';
-
+import GroupRating from '../../../UserStore/AppMain/AppDetail/BizGroupRating';
 class BizInfo extends Component {
   componentDidMount() {
     const {
@@ -70,6 +70,7 @@ class BizInfo extends Component {
           <div className="dscr">{lang.get('DSCR', bizInfo)}</div>
         </AppIntroduction>
         <AppQna appId={BIZGRP_ID} gubun="b" />
+        <GroupRating appId={BIZGRP_ID}></GroupRating>
       </div>
     );
   }
