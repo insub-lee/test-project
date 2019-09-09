@@ -6,6 +6,7 @@ import iconClose from 'images/portal/btn-close.png';
 import iconPen from 'images/portal/icon-pen.png';
 import iconPin from 'images/portal/icon-pin.png';
 import iconworkCard from 'images/portal/icon-workCard.png';
+import iconworkFolder from 'images/portal/settings-menu01.png';
 
 const Styled = styled.i`
   display: inline-block;
@@ -43,6 +44,12 @@ const Styled = styled.i`
   }
   &.icon-workCard {
     background: url(${iconworkCard}) no-repeat center;
+    width: 15px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-workFolder {
+    background: url(${iconworkFolder}) no-repeat center;
     width: 15px;
     height: 15px;
     background-size: 100%;

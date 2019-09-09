@@ -107,6 +107,15 @@ class Tree extends Component {
   generateNodeProps = ({ node }) => {
     const { selectedIndex } = this.props;
     const nodeData = { ...node, active: node.key === selectedIndex };
+    let menuIconClassName = 'icon-workCard';
+    if(node.MENU_NODE_TYPE === 'BIZ') { // 업무폴더일 경우
+      menuIconClassName = 'icon-workCard';
+    } else if(node.MENU_NODE_TYPE === 'FLD') { // 일반 폴더일 경우 (업무메뉴 중)
+      menuIconClassName = 'icon-workFolder';
+    } else { // 그 외
+      menuIconClassName = 'icon-pen';
+    }
+
     return {
       title: (
         <button
@@ -118,7 +127,8 @@ class Tree extends Component {
           }}
           style={{ cursor: 'pointer' }}
         >
-          <IconCollection className={nodeData.children && nodeData.children.length > 0 ? 'icon-workCard' : 'icon-pen'} />
+          {/* 업무 메뉴에서 일반폴더 와 업무폴더일 경우 아이콘으로 분류  */}
+          <IconCollection className={menuIconClassName} />
           {lang.get('NAME', nodeData)}
           <Badge count={nodeData.UNREAD_CNT !== undefined ? nodeData.UNREAD_CNT : ''} overflowCount={99} className="inTree" />
         </button>

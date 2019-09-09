@@ -335,8 +335,8 @@ class App extends React.PureComponent {
   setFixedOpenMenu = () => {
     this.setState(prevState => ({
       fixedMenu: !prevState.fixedMenu,
-      open: false,
-    }));
+    }), this.setMenuClose());
+    console.debug('!!!! this.state.', this.state.fixedMenu);
   }
 
   setMenuOpen = () => {
@@ -352,6 +352,7 @@ class App extends React.PureComponent {
   };
 
   setMenuClose = () => {
+    console.debug('!!!! this.state.menuclose', this.state.fixedMenu);
     if(!this.state.fixedMenu) {
       this.setState(
         {
