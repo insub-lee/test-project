@@ -159,3 +159,5 @@ export const GET_SINGLEMODE_LOADDATA_SAGA = 'container/common/Routes/GET_SINGLEM
 export const GET_COMMON_MENU_TREE_SAGA = 'containers/common/Routes/GET_COMMON_MENU_TREE_SAGA';
 export const SET_COMMON_MENU_TREE = 'containers/common/Routes/SET_COMMON_MENU_TREE';
 // 9. 마이 메뉴 관련 상수 끝 ******************
+
+export const RESET_LAST_EXEC_YN = 'containers/common/Routes/RESET_LAST_EXEC_YN';
