@@ -15,9 +15,6 @@
   border-radius: 0;
 }
 
-.storeLayout input:hover,
-.storeLayout textarea:hover,
-.storeLayout .ant-input:hover,
 .storeLayout input:focus,
 .storeLayout textarea:focus,
 .storeLayout .ant-input:focus {

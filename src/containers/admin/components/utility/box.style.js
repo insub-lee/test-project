@@ -7,12 +7,14 @@ import arrowGoToPageMobile from 'images/bizstore/arrow-gray-mobile.png';
 const BoxWrapper = styled.div`
   width: 100%;
   padding: 0;
-  margin: 0;
+  margin: 0 0 30px 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   .storeListTitle {
     position: relative;
-    height: 32px;
-    margin: 24px 5px 0 5px;
+    margin: 0 5px 0 5px;
     padding-bottom: 10px;
 
     h3 {
