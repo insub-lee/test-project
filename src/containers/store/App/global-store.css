@@ -14,9 +14,7 @@
   border: 1px solid #e5e5e5;
   border-radius: 4px;
 }
-.storeLayout input:hover,
-.storeLayout textarea:hover,
-.storeLayout .ant-input:hover,
+
 .storeLayout input:focus,
 .storeLayout textarea:focus,
 .storeLayout .ant-input:focus {
