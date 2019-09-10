@@ -6,7 +6,6 @@ export function* getBizInfo(payload) {
   const { BIZGRP_ID } = payload;
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/bizgroupinfo', { BIZGRP_ID: Number(BIZGRP_ID), pageType: 'test' });
-  console.log('userBizCardDetail', response);
   if (response.result) {
     yield put({
       type: constants.SET_BIZ_INFO,

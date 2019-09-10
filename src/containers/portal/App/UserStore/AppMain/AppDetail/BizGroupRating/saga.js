@@ -125,7 +125,11 @@ export function* registRating(payload) {
         feed.error(`${intlObj.get(messages.reviewDeleteErr)}`);
       }
     }
-
+    const { starList } = yield call(Axios.post, `/api/bizstore/v1/bizgroup/ADetailHandler`, { type: 'star' });
+    yield put({
+      type: constants.SAVE_STAR_POINT,
+      starList,
+    });
     yield put({
       type: constants.REQ_APP_RATING_INFO,
       payload: param,

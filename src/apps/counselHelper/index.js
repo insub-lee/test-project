@@ -22,10 +22,6 @@ class Widget extends PureComponent {
     }
   }
 
-  componentDidMount() {
-    console.log('마운트됨');
-  }
-
   render() {
     const { detail, myAppTreeData, starPoint } = this.props;
     const linkData = myAppTreeData.filter(item => item.BIZGRP_ID === 2874);
@@ -42,6 +38,7 @@ Widget.propTypes = {
   detail: PropTypes.object,
   myAppTreeData: PropTypes.array,
   item: PropTypes.object,
+  starPoint: PropTypes.array,
 };
 
 Widget.defaultProps = {
