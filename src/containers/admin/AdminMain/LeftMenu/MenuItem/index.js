@@ -37,7 +37,7 @@ class MenuItem extends Component {
 
   render() {
     const { menuItem, classString, classChange, setIcon } = this.props;
-
+    /* eslint-disable jsx-a11y/anchor-is-valid, jsx-a11y/no-static-element-interactions */
     return (
       <li className={`${classString(menuItem.URL)}${this.subMenuOpen(menuItem) ? ' open' : ''}`}>
         <a onClick={() => this.handleClick(menuItem)} onKeyPress={() => this.handleClick(menuItem)}>
@@ -71,7 +71,7 @@ MenuItem.propTypes = {
   classChange: PropTypes.func.isRequired,
   setIcon: PropTypes.func.isRequired,
   // setOpenMenuCode: PropTypes.func.isRequired,
-  openMenuCode: PropTypes.string.isRequired,
+  // openMenuCode: PropTypes.string.isRequired,
 };
 
 export default MenuItem;

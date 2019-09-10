@@ -1591,18 +1591,19 @@ export function* getCommonMenuTree() {
 export function* resetLastExecYn() {
   const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
   const index = dockAppList.findIndex(dockApp => dockApp.LAST_EXEC_YN === 'Y');
-  const dockAppListUpdate = update(dockAppList, {
-    [index]: {
-      EXEC_YN: { $set: 'Y' },
-      LAST_EXEC_YN: { $set: 'N' },
-    },
-  });
-  yield put({
-    type: actionTypes.EXEC_DOCKITEM,
-    payload: dockAppListUpdate,
-  });
+  if (index > -1) {
+    const dockAppListUpdate = update(dockAppList, {
+      [index]: {
+        EXEC_YN: { $set: 'Y' },
+        LAST_EXEC_YN: { $set: 'N' },
+      },
+    });
+    yield put({
+      type: actionTypes.EXEC_DOCKITEM,
+      payload: dockAppListUpdate,
+    });
+  }
 }
-
 
 export default function* appSaga() {
   yield takeLatest(actionTypes.AUTH_REQUEST_UUID, loginRequestUUID);
