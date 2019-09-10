@@ -54,7 +54,6 @@ const StyleGroupReg = styled.div`
         letter-spacing: -0.7px;
 
         &:before {
-          //content:url($/*{IconOption});
           position: absolute;
           display: inline-block;
           width: 15px;
@@ -64,7 +63,6 @@ const StyleGroupReg = styled.div`
 
         //필수입력 표시
         &.required:before {
-          // content:url($/*{IconRequired});
           position: absolute;
           display: inline-block;
           width: 15px;
@@ -247,34 +245,37 @@ const StyleGroupReg = styled.div`
     line-height: 1.3;
     resize: none;
   }
+  .btnText-wrap {
+    border: 1px solid #e5e5e5;
+    border-top: 0;
+    text-align: center;
+    .btnText {
+      display: inline-block;
+      color: #555555;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      & > i {
+        font-size: 13px;
+        color: #999;
+      }
+      & > span {
+        margin-left: 5px;
+      }
 
-  .btnText {
-    display: inline-block;
-    width: auto;
-    height: 23px;
-    margin-left: 13px;
-    padding-left: 15px;
-    padding-right: 15px;
-    border: none;
-    color: #555555;
-    font-size: 12px;
-    font-weight: 600;
-    background: #e0e0e0;
-    border-radius: 11.5px;
-    cursor: pointer;
+      &.pl0 {
+        padding-left: 0;
+      }
 
-    &.pl0 {
-      padding-left: 0;
-    }
-
-    &.attachFile {
-      .dropzone {
-        height: 23px;
-        line-height: 23px;
+      &.attachFile {
+        .dropzone {
+          height: 23px;
+          line-height: 23px;
+        }
       }
     }
   }
-
   //색상 선택
   .typeOptions {
     vertical-align: middle;
@@ -383,10 +384,10 @@ const StyleGroupReg = styled.div`
   .appManagerListBox {
     display: inline-block;
     width: 100%;
-    max-width: 500px;
     min-height: 43px;
     max-height: 195px;
-    border: 1px solid #cccccc;
+    border: 1px solid #e5e5e5;
+    border-bottom: 1px dotted #e5e5e5;
     vertical-align: top;
 
     // 커스터마이징
@@ -407,8 +408,8 @@ const StyleGroupReg = styled.div`
           width: 100%;
           height: 18px;
           color: #707070;
-          font-size: 11px;
-          background: #ececec;
+          font-size: 12px;
+          background: #f3f3f3;
           text-align: center;
         }
 

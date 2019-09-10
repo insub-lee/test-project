@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Radio, Checkbox } from 'antd';
+import { Form, Input, Button, Radio, Checkbox, Icon } from 'antd';
 import { intlObj, imgUrl, lang } from 'utils/commonUtils';
 import AppMaNagerList from 'components/OrgReturnView';
 import Organization from 'containers/portal/components/Organization';
@@ -577,15 +577,17 @@ class BizGroupReg extends Component {
                               ''
                             )}
                           </div>
-                          <Button
-                            className="btnText"
-                            style={{ marginTop: 11 }}
-                            onClick={() => {
-                              this.managerOrgOpen(MANAGER);
-                            }}
-                          >
-                            {intlObj.get(messages.find)}
-                          </Button>
+                          <div className="btnText-wrap">
+                            <Button
+                              className="btnText"
+                              onClick={() => {
+                                this.managerOrgOpen(MANAGER);
+                              }}
+                            >
+                              <Icon type="plus-circle" />
+                              {intlObj.get(messages.find)}
+                            </Button>
+                          </div>
                         </div>
                       </FormItem>
                     </td>
@@ -644,15 +646,17 @@ class BizGroupReg extends Component {
                               ''
                             )}
                           </div>
-                          <Button
-                            className="btnText"
-                            style={{ marginTop: 11 }}
-                            onClick={() => {
-                              this.managerOrgOpen(VIEWAUTH);
-                            }}
-                          >
-                            {intlObj.get(messages.find)}
-                          </Button>
+                          <div className="btnText-wrap">
+                            <Button
+                              className="btnText"
+                              onClick={() => {
+                                this.managerOrgOpen(VIEWAUTH);
+                              }}
+                            >
+                              <Icon type="plus-circle" />
+                              {intlObj.get(messages.find)}
+                            </Button>
+                          </div>
                         </div>
                       </FormItem>
                     </td>

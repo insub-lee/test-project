@@ -265,9 +265,8 @@ const StyleModal = styled.div`
 
     .userSearch {
       width: 100%;
-      height: 58px;
-      padding: 15px;
-      background: #f5f5f5;
+      padding: 10px;
+      //background: #f5f5f5;
 
       .inputWrapper {
         position: relative;
@@ -278,7 +277,10 @@ const StyleModal = styled.div`
         .ant-input {
           height: calc(1.47em + 1rem + 2px);
           border-color: #e5e5e5;
-          border-radius: 4px;
+          border-radius: 3px;
+          &:focus {
+            border-color: #886ab5;
+          }
         }
 
         .searchButton {
@@ -338,7 +340,7 @@ const StyleModal = styled.div`
     height: 497px;
     margin-top: 15px;
     margin-bottom: 0 !important;
-    border: 2px solid #c1c1c1;
+    border: 1px solid #e5e5e5;
 
     @media only screen and (max-width: 1160px) {
       height: 529px;
