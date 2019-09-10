@@ -44,7 +44,8 @@ class menuList extends React.Component {
 
     this.state = {
       strUrl:
-        window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
+        // window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
+        window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/menu',
       // openMenuCode: 'SITE',
     };
 
@@ -73,14 +74,22 @@ class menuList extends React.Component {
     let strCurUrl = window.parent.document.location.pathname.toLowerCase();
 
     if (
+      /*
       strCurUrl === '/admin' ||
       strCurUrl === '/admin/' ||
       strCurUrl === '/admin/adminmain' ||
       strCurUrl === '/admin/adminmain/' ||
       strCurUrl === '/admin/adminmain/siteadmin/sitereg' ||
       strCurUrl === '/admin/adminmain/siteadmin/sitereg/'
+      */
+      strCurUrl === '/admin' ||
+      strCurUrl === '/admin/' ||
+      strCurUrl === '/admin/adminmain' ||
+      strCurUrl === '/admin/adminmain/' ||
+      strCurUrl.startsWith('/admin/adminmain/menu')
     ) {
-      strCurUrl = '/admin/adminmain/siteadmin';
+      // strCurUrl = '/admin/adminmain/siteadmin';
+      strCurUrl = '/admin/adminmain/menu';
     } else if (strCurUrl === '/admin/adminmain/orgadmin/orglist' || strCurUrl === '/admin/adminmain/orgadmin/orglist/') {
       strCurUrl = '/admin/adminmain/orgadmin';
     }
@@ -135,13 +144,14 @@ class menuList extends React.Component {
     ));
 
   render() {
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
     return (
       <StyledAdminLeftMenu>
         <nav>
           <StyledAdminMenu>
             <div>
               <div className="nav-logo">
-                <img src={adminLogo} alt="" />
+                <img src={adminLogo} alt="BizMicro Portal Admin" />
               </div>
               <div className="wrap-nav">
                 <ul className="nav-menu">{this.makeMenu(this.props.leftMenuList)}</ul>
