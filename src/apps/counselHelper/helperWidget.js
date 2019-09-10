@@ -24,7 +24,7 @@ export default class helperWidget extends PureComponent {
       let point = 0;
       let tempData = {};
       const LVL = query.get('LVL');
-      const DSCR_KOR = query.get('DSCR_KOR');
+      const DSCR_KOR = query.get('DSCR_KOR') === ' ' ? '상담업무와 관련 메뉴 상세내용은 클릭하여 확인하세요' : query.get('DSCR_KOR');
       const BIZGRP_ID = query.get('BIZGRP_ID');
       const NAME_KOR = query.get('NAME_KOR');
       let parentProps = [];

@@ -18,6 +18,9 @@ class detail extends PureComponent {
         if (cItem.title.indexOf(searchWord) !== -1) {
           return cItem;
         }
+        if (cItem.DSCR_KOR.indexOf(searchWord) !== -1) {
+          return cItem;
+        }
       });
       if (child.length !== 0) {
         parent.children = child;
