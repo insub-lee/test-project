@@ -1,19 +1,15 @@
 import styled from 'styled-components';
 
 const SelectedUser = styled.div`
-
   padding: 0;
 
-  // 선택목록 
+  // 선택목록
   .SUTitle {
     position: relative;
-    height: 33px;
-    padding-left: 6px;
-    border-bottom: 1px solid #cdcdcd;
     color: #404040;
-    font-size: 13px;
-    line-height: 33px;
+    font-size: 12px;
     text-align: center;
+    padding: 15px 0 5px;
     letter-spacing: -0.5px;
 
     .ant-checkbox-wrapper {
@@ -25,21 +21,26 @@ const SelectedUser = styled.div`
     }
 
     .deleteAll {
-      color: #404040;
-      font-size: 12px;
+      color: #fd3995;
+      font-size: 11px;
       position: absolute;
-      right: 0;
+      right: 0px;
       background: transparent;
+      border: 1px solid #fd3995;
+      border-radius: 3px;
+      padding: 3px 6px;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 
   // 구성원, 가상그룹, 직위, 직책
   .SUSubTitle {
-    height: 18px;
-    margin: 5px 0;
+    margin: 10px 0;
+    padding: 8px 0;
     color: #707070;
     font-size: 11px;
-    background: #ececec;
+    background: #f3f3f3;
     line-height: 16px;
     text-align: center;
   }
@@ -50,7 +51,6 @@ const SelectedUser = styled.div`
     }
   }
 
-  
   // 테이블
   .SUTable {
     // IE에서 table 안에 체크박스가 있을 때, border로 제작된 checked 표시가 눈에 보이지 않는 버그가 있음.
@@ -65,7 +65,7 @@ const SelectedUser = styled.div`
         height: 33px;
         padding: 0 0 0 6px;
         color: #707070;
-      
+
         & > span:not(.ant-checkbox) {
           display: block;
           float: right;
@@ -80,7 +80,6 @@ const SelectedUser = styled.div`
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        
       }
 
       &.grpItem {
@@ -136,7 +135,8 @@ const SelectedUser = styled.div`
         }
       }
 
-      .ant-checkbox-wrapper + span, .ant-checkbox + span {
+      .ant-checkbox-wrapper + span,
+      .ant-checkbox + span {
         padding-left: 0 !important;
         padding-right: 0 !important;
       }

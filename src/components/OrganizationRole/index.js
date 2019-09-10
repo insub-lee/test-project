@@ -15,6 +15,7 @@ import Input from 'components/Input';
 import { BtnDkGray, BtnLgtGray } from 'containers/portal/components/uielements/buttons.style';
 import Draggable from 'react-draggable';
 import GroupData from 'components/OrganizationRole/groupData';
+import StyledButton from '../Button/StyledButton';
 
 import SelectedUser from './selecteduser';
 import reducer from './reducer';
@@ -37,10 +38,7 @@ class Organization extends Component {
     super(props);
     console.log(props.orgName, 'constructor******');
 
-    const {
-      ROLE_CD,
-      handleGetGroupData,
-    } = props;
+    const { ROLE_CD, handleGetGroupData } = props;
 
     handleGetGroupData(ROLE_CD);
 
@@ -76,19 +74,8 @@ class Organization extends Component {
   // Input 태그의 경우 Tab 변경 후 Input 태그가 렌더링 되므로, handleSelect 함수에서 아래의 작업을 할 수 없다.
   /* eslint-disable */
   componentDidUpdate(prevProps) {
-    const {
-      isDragged,
-      isDraggedEnd,
-    } = this.state;
-    const {
-      show,
-      closeModalInit,
-      selectedUsers,
-      checkedDept,
-      checkedPstn,
-      checkedDuty,
-      checkedGrp,
-    } = this.props;
+    const { isDragged, isDraggedEnd } = this.state;
+    const { show, closeModalInit, selectedUsers, checkedDept, checkedPstn, checkedDuty, checkedGrp } = this.props;
     if (!this.state.selectedusers) {
       if (!isDragged && isDraggedEnd) {
         this.setState({
@@ -122,13 +109,7 @@ class Organization extends Component {
   }
   /* eslint-disable */
   onSave = () => {
-    const {
-      selectedusers,
-      checkedDept,
-      checkedPstn,
-      checkedDuty,
-      selectedGrp,
-    } = this.state;
+    const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
     const { getDataFromOrganization } = this.props;
     const resultObj = {
       selectedUsers: selectedusers,
@@ -143,11 +124,9 @@ class Organization extends Component {
     this.initializeSelectedList();
     this.props.closeModalInit();
     this.props.closeModal();
-  }
+  };
   dndChangePositionUser = (draggedEmpNo, EmpNo) => {
-    const {
-      selectedusers,
-    } = this.state;
+    const { selectedusers } = this.state;
     const index = selectedusers.findIndex(i => i.EMP_NO === draggedEmpNo);
     const afterIndex = selectedusers.findIndex(i => i.EMP_NO === EmpNo);
     const temp = selectedusers[index];
@@ -158,27 +137,21 @@ class Organization extends Component {
     this.setState({
       selectedusers: selectedusersCopy,
     });
-  }
+  };
   dndChangePositionCallback = () => {
-    const {
-      dndChangePositionCallback,
-      item,
-    } = this.props;
-    const {
-      selectedusers,
-      checkedDept,
-      checkedPstn,
-      checkedDuty,
-      selectedGrp,
-    } = this.state;
+    const { dndChangePositionCallback, item } = this.props;
+    const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
     if (item) {
-      dndChangePositionCallback({
-        users: selectedusers,
-        dept: checkedDept,
-        pstn: checkedPstn,
-        duty: checkedDuty,
-        grp: selectedGrp,
-      }, item);
+      dndChangePositionCallback(
+        {
+          users: selectedusers,
+          dept: checkedDept,
+          pstn: checkedPstn,
+          duty: checkedDuty,
+          grp: selectedGrp,
+        },
+        item,
+      );
     } else {
       dndChangePositionCallback({
         users: selectedusers,
@@ -188,7 +161,7 @@ class Organization extends Component {
         grp: selectedGrp,
       });
     }
-  }
+  };
   getTab = () => {
     const {
       checkboxInitialize,
@@ -200,29 +173,17 @@ class Organization extends Component {
       searchResultData,
       handleGetGroupMemberData,
     } = this.props;
-    const {
-      gridFlag,
-    } = this.state;
+    const { gridFlag } = this.state;
     const content = [];
     /* eslint-disable */
     content.push(
       <div className="members" key={content.length}>
-
-        <GroupData
-          groupData={groupData}
-          getGroupMemberData={handleGetGroupMemberData}
-          ROLE_CD={ROLE_CD}
-          setGridFlag={this.setGridFlag}
-        />
+        <GroupData groupData={groupData} getGroupMemberData={handleGetGroupMemberData} ROLE_CD={ROLE_CD} setGridFlag={this.setGridFlag} />
 
         <div className="userGridResult">
           <div className="userSearch">
-            <div className="inputWrapper" ref={ref => this.searchInputUser = ref}>
-              <Input
-                placeholder={intlObj.get(messages.inputKeyowrd)}
-                onKeyUp={this.changeInputKeyword}
-                name='searchInput'
-              />
+            <div className="inputWrapper" ref={ref => (this.searchInputUser = ref)}>
+              <Input placeholder={intlObj.get(messages.inputKeyowrd)} onKeyUp={this.changeInputKeyword} name="searchInput" />
               <Button className="searchButton" title={intlObj.get(messages.search)} onClick={this.organizationUserSearch} />
             </div>
           </div>
@@ -232,17 +193,16 @@ class Organization extends Component {
             checkboxInitialize={checkboxInitialize}
             handleInitializeCheckbox={handleInitializeCheckbox}
             loadSelectedUser={this.loadSelectedUser}
-
             groupMemberData={groupMemberData}
             searchResultData={searchResultData}
             gridFlag={gridFlag}
           />
         </div>
-      </div>
+      </div>,
     );
     /* eslint-disable */
     return content;
-  }
+  };
   initializeSelectedList = () => {
     this.setState({
       users: [],
@@ -260,32 +220,35 @@ class Organization extends Component {
     grpList = [];
     pstnList = [];
     dutyList = [];
-  }
+  };
   closeModal = () => {
     deptList = [];
     grpList = [];
     pstnList = [];
     dutyList = [];
-    this.setState({
-      reload: true,
-      reset: true,
-      selected: 0,
-      users: [],
-      checkDept: [],
-      checkpstn: [],
-      checkduty: [],
-      checkgrp: [],
-      selectedusers: undefined,
-      checkedDept: undefined,
-      checkedPstn: undefined,
-      checkedDuty: undefined,
-      selectedGrp: undefined,
-    }, () => {
-      this.props.closeModalInit();
-      this.props.closeModal();
-    });
-  }
-  initializeSearchInput = (type) => {
+    this.setState(
+      {
+        reload: true,
+        reset: true,
+        selected: 0,
+        users: [],
+        checkDept: [],
+        checkpstn: [],
+        checkduty: [],
+        checkgrp: [],
+        selectedusers: undefined,
+        checkedDept: undefined,
+        checkedPstn: undefined,
+        checkedDuty: undefined,
+        selectedGrp: undefined,
+      },
+      () => {
+        this.props.closeModalInit();
+        this.props.closeModal();
+      },
+    );
+  };
+  initializeSearchInput = type => {
     switch (type) {
       case 'pstn':
         this.searchInputPstn.firstChild.value = '';
@@ -297,41 +260,37 @@ class Organization extends Component {
         this.searchInputUser.firstChild.value = '';
         break;
     }
-  }
+  };
   setIsDragged = () => {
-    const {
-      isDragged,
-    } = this.state;
+    const { isDragged } = this.state;
     this.setState({
       isDragged: true,
     });
-  }
+  };
   setIsDraggedEnd = () => {
-    const {
-      isDraggedEnd,
-    } = this.state;
+    const { isDraggedEnd } = this.state;
     this.setState({
       isDraggedEnd: false,
     });
-  }
+  };
   isEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
       return false;
     }
-    arr1.forEach((v) => {
-      arr2.forEach((v2) => {
+    arr1.forEach(v => {
+      arr2.forEach(v2 => {
         if (v.USER_ID !== v2.USER_ID) {
           return false;
         }
-      })
+      });
     });
     return true;
-  }
+  };
   setGridFlag = () => {
     this.setState({
       gridFlag: !this.state.gridFlag,
     });
-  }
+  };
   // 트리에서 검색어 onChange 호출 시 불리는 함수
   setSearchString = (searchString, treeType) => {
     switch (treeType) {
@@ -356,120 +315,114 @@ class Organization extends Component {
         });
         break;
     }
-  }
+  };
   sendDelete = (id, type) => {
-    const {
-      selectedusers,
-      checkedDept,
-      checkedPstn,
-      checkedDuty,
-      selectedGrp,
-    } = this.state;
-    const {
-      deleteCallback,
-      isModal,
-      item,
-    } = this.props;
+    const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
+    const { deleteCallback, isModal, item } = this.props;
     let deletedData = '';
     if (type === 'user') {
-      deletedData = selectedusers.splice(selectedusers.findIndex(user => (
-        user.USER_ID === id
-      )), 1);
-      this.setState({
-        selectedusers,
-      }, () => {
-        if (!isModal) {
-          if (item) {
-            deleteCallback(deletedData, item);
-          } else {
-            deleteCallback(deletedData);
+      deletedData = selectedusers.splice(selectedusers.findIndex(user => user.USER_ID === id), 1);
+      this.setState(
+        {
+          selectedusers,
+        },
+        () => {
+          if (!isModal) {
+            if (item) {
+              deleteCallback(deletedData, item);
+            } else {
+              deleteCallback(deletedData);
+            }
           }
-        }
-      });
+        },
+      );
     } else if (type === 'dept') {
-      deletedData = checkedDept.splice(checkedDept.findIndex(dept => (
-        dept.id === id
-      )), 1);
-      this.setState({
-        checkedDept,
-      }, () => {
-        if (!isModal) {
-          if (item) {
-            deleteCallback(deletedData, item);
-          } else {
-            deleteCallback(deletedData);
+      deletedData = checkedDept.splice(checkedDept.findIndex(dept => dept.id === id), 1);
+      this.setState(
+        {
+          checkedDept,
+        },
+        () => {
+          if (!isModal) {
+            if (item) {
+              deleteCallback(deletedData, item);
+            } else {
+              deleteCallback(deletedData);
+            }
           }
-        }
-      });
+        },
+      );
     } else if (type === 'pstn') {
-      deletedData = checkedPstn.splice(checkedPstn.findIndex(pstn => (
-        pstn.id === id
-      )), 1);
-      this.setState({
-        checkedPstn,
-      }, () => {
-        if (!isModal) {
-          if (item) {
-            deleteCallback(deletedData, item);
-          } else {
-            deleteCallback(deletedData);
+      deletedData = checkedPstn.splice(checkedPstn.findIndex(pstn => pstn.id === id), 1);
+      this.setState(
+        {
+          checkedPstn,
+        },
+        () => {
+          if (!isModal) {
+            if (item) {
+              deleteCallback(deletedData, item);
+            } else {
+              deleteCallback(deletedData);
+            }
           }
-        }
-      });
+        },
+      );
     } else if (type === 'duty') {
-      deletedData = checkedDuty.splice(checkedDuty.findIndex(duty => (
-        duty.id === id
-      )), 1);
-      this.setState({
-        checkedDuty,
-      }, () => {
-        if (!isModal) {
-          if (item) {
-            deleteCallback(deletedData, item);
-          } else {
-            deleteCallback(deletedData);
+      deletedData = checkedDuty.splice(checkedDuty.findIndex(duty => duty.id === id), 1);
+      this.setState(
+        {
+          checkedDuty,
+        },
+        () => {
+          if (!isModal) {
+            if (item) {
+              deleteCallback(deletedData, item);
+            } else {
+              deleteCallback(deletedData);
+            }
           }
-        }
-      });
+        },
+      );
     } else if (type === 'grp') {
-      deletedData = selectedGrp.splice(selectedGrp.findIndex(grp => (
-        grp.id === id
-      )), 1);
-      this.setState({
-        selectedGrp,
-      }, () => {
+      deletedData = selectedGrp.splice(selectedGrp.findIndex(grp => grp.id === id), 1);
+      this.setState(
+        {
+          selectedGrp,
+        },
+        () => {
+          if (!isModal) {
+            if (item) {
+              deleteCallback(deletedData, item);
+            } else {
+              deleteCallback(deletedData);
+            }
+          }
+        },
+      );
+    }
+  };
+  deleteAll = () => {
+    const { deleteAllCallback, isModal, item } = this.props;
+    this.setState(
+      {
+        selectedusers: [],
+        checkedDept: [],
+        checkedPstn: [],
+        checkedDuty: [],
+        selectedGrp: [],
+      },
+      () => {
         if (!isModal) {
           if (item) {
-            deleteCallback(deletedData, item);
+            deleteAllCallback(item);
           } else {
-            deleteCallback(deletedData);
+            deleteAllCallback();
           }
         }
-      });
-    }
-  }
-  deleteAll = () => {
-    const {
-      deleteAllCallback,
-      isModal,
-      item,
-    } = this.props;
-    this.setState({
-      selectedusers: [],
-      checkedDept: [],
-      checkedPstn: [],
-      checkedDuty: [],
-      selectedGrp: [],
-    }, () => {
-      if (!isModal) {
-        if (item) {
-          deleteAllCallback(item);
-        } else {
-          deleteAllCallback();
-        }
-      }
-    });
-  }
+      },
+    );
+  };
   resetUsers = () => {
     this.setState({
       users: [],
@@ -479,7 +432,7 @@ class Organization extends Component {
       checkduty: [],
       reset: true,
     });
-  }
+  };
   sendAdd = () => {
     const { addCallback, isModal, item } = this.props;
     let copyusers = this.state.users.slice();
@@ -514,7 +467,7 @@ class Organization extends Component {
       this.setState({ selectedusers: list, checkAll: false });
     }
     if (selectedDept !== undefined && selectedDept.length !== 0) {
-      copyselectedDept = this.state.checkDept.slice();// Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
+      copyselectedDept = this.state.checkDept.slice(); // Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
       this.setState({ checkedDept: copyselectedDept, checkAll: false, checkDept: [] });
     }
     if (selectedPstn !== undefined && selectedPstn.length !== 0) {
@@ -539,18 +492,19 @@ class Organization extends Component {
     // addCallback({ users: list, dept: copyselectedDept, pstn: copyselectedPstn, duty: copyselectedDuty, grp: copyselectedGrp });
     this.props.resetCheckbox();
     this.resetUsers();
-  }
+  };
   // 탭변경
   handleSelect = (key, label) => {
     const { tabArr, tabType } = this.state;
     let i = 0;
-    tabArr.map((la, index) => la.map((l) => {
-      if (l === label) {
-        i = index;
-        this.setState({ selected: index });
-      }
-    }
-    ));
+    tabArr.map((la, index) =>
+      la.map(l => {
+        if (l === label) {
+          i = index;
+          this.setState({ selected: index });
+        }
+      }),
+    );
     const type = tabType[i];
     this.setState({
       users: [],
@@ -565,30 +519,28 @@ class Organization extends Component {
     grpList = [];
     pstnList = [];
     dutyList = [];
-  }
+  };
   initializeCheckbox = () => {
     const { handleInitializeCheckbox } = this.props;
     handleInitializeCheckbox();
-  }
+  };
   // 그리드에서 구성원 클릭 시 해당 구성원의 부서명을 이용해 선택 목록에 들어갈 데이터를 생성
-  loadSelected = (users) => {
+  loadSelected = users => {
     if (users.length > 0 && users[0].ACNT_TYPE === 'D') {
-      users[0]["checked"] = true;
-      users[0]["title"] = users[0].NAME_KOR;
-      users[0]["id"] = users[0].USER_ID;
+      users[0]['checked'] = true;
+      users[0]['title'] = users[0].NAME_KOR;
+      users[0]['id'] = users[0].USER_ID;
       let deptname = users[0].DEPT_NAME_KOR;
       deptList = this.state.checkedDept.slice();
       this.loadSelectedDept(users[0], deptname);
     } else if (users.length > 0) {
       this.setState({ users });
     }
-  }
+  };
   loadSelectedDept = (dept, name) => {
-    const {
-      checkedDept,
-    } = this.state;
+    const { checkedDept } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
-    if (checkedDept.findIndex((item) => item.id === dept.id) === -1) {
+    if (checkedDept.findIndex(item => item.id === dept.id) === -1) {
       const idx = deptList.findIndex(t => t.id === dept.id);
       if (deptList.length === 0) {
         deptList = this.state.checkedDept.slice();
@@ -604,7 +556,7 @@ class Organization extends Component {
             NAME_ETC: dept.node.NAME_ETC,
           };
           if (name !== undefined) {
-            obj["deptName"] = name;
+            obj['deptName'] = name;
           }
           deptList.push(obj);
         }
@@ -616,13 +568,11 @@ class Organization extends Component {
       }
       this.setState({ checkDept: deptList, reload: false, reset: false });
     }
-  }
-  loadSelectedGrp = (grp) => {
-    const {
-      selectedGrp,
-    } = this.state;
+  };
+  loadSelectedGrp = grp => {
+    const { selectedGrp } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
-    if (selectedGrp.findIndex((item) => item.id === grp.id) === -1) {
+    if (selectedGrp.findIndex(item => item.id === grp.id) === -1) {
       const idx = grpList.findIndex(t => t.id === grp.id);
       if (grpList.length === 0) {
         grpList = this.state.selectedGrp.slice();
@@ -647,13 +597,11 @@ class Organization extends Component {
       }
       this.setState({ checkgrp: grpList, reload: false, reset: false });
     }
-  }
+  };
   loadSelectedPstn = (pstn, name) => {
-    const {
-      checkedPstn,
-    } = this.state;
+    const { checkedPstn } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
-    if (checkedPstn.findIndex((item) => item.id === pstn.id) === -1) {
+    if (checkedPstn.findIndex(item => item.id === pstn.id) === -1) {
       let idx = pstnList.findIndex(t => t.id === pstn.id);
       if (pstnList.length === 0) {
         pstnList = this.state.checkedPstn.slice();
@@ -669,7 +617,7 @@ class Organization extends Component {
             NAME_ETC: pstn.node.NAME_ETC,
           };
           if (name !== undefined) {
-            obj["deptName"] = name;
+            obj['deptName'] = name;
           }
           pstnList.push(obj);
         }
@@ -681,13 +629,11 @@ class Organization extends Component {
       }
       this.setState({ checkpstn: pstnList, reload: false, reset: false });
     }
-  }
+  };
   loadSelectedDuty = (duty, name) => {
-    const {
-      checkedDuty,
-    } = this.state;
+    const { checkedDuty } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
-    if (checkedDuty.findIndex((item) => item.id === duty.id) === -1) {
+    if (checkedDuty.findIndex(item => item.id === duty.id) === -1) {
       const idx = dutyList.findIndex(t => t.id === duty.id);
       if (dutyList.length === 0) {
         dutyList = this.state.checkedDuty.slice();
@@ -703,7 +649,7 @@ class Organization extends Component {
             NAME_ETC: duty.node.NAME_ETC,
           };
           if (name !== undefined) {
-            obj["deptName"] = name;
+            obj['deptName'] = name;
           }
           dutyList.push(obj);
         }
@@ -715,10 +661,10 @@ class Organization extends Component {
       }
       this.setState({ checkduty: dutyList, reload: false, reset: false });
     }
-  }
+  };
 
   /* 구성원 검색 (검색 입력창에서 엔터를 쳤을 경우) */
-  changeInputKeyword = (e) => {
+  changeInputKeyword = e => {
     const { handleGetSearchResultData } = this.props;
     if (e.target.name === 'searchInput' && e.keyCode === 13) {
       handleGetSearchResultData('SM', e.target.value.trim());
@@ -727,14 +673,14 @@ class Organization extends Component {
         keyword: e.target.value,
       });
     }
-  }
+  };
   /* 구성원 검색 (검색 버튼을 마우스로 클릭 했을 경우) */
   organizationUserSearch = () => {
     const { keyword } = this.state;
     const { handleGetSearchResultData } = this.props;
 
     handleGetSearchResultData('SM', keyword);
-  }
+  };
   render() {
     const customstyle = {
       content: {
@@ -744,13 +690,9 @@ class Organization extends Component {
         left: '50%',
         transform: 'translate(-50%, -50%)',
       },
-    }
-    const {
-      isModal,
-      isDraggable,
-      view,
-    } = this.props;
-    let modalWrapperClass = ''
+    };
+    const { isModal, isDraggable, view } = this.props;
+    let modalWrapperClass = '';
     if (isModal) {
       modalWrapperClass = 'modalWrapper';
     } else {
@@ -764,12 +706,12 @@ class Organization extends Component {
       width: '1200px',
       marginLeft: '-600px',
     };
-    
+
     if (isModal) {
       switch (view) {
         case 'Tablet':
-        styleModalObject.width = '440px'; 
-        styleModalObject.marginLeft = 'calc(440px / 2 * -1)';
+          styleModalObject.width = '440px';
+          styleModalObject.marginLeft = 'calc(440px / 2 * -1)';
           break;
         case 'Mobile':
           styleModalObject.width = '100vw';
@@ -790,43 +732,31 @@ class Organization extends Component {
       ariaHideApp: false,
       portalClassName: 'portalCommonModal',
     };
-    let common =
-      <Draggable
-        handle="h2.modalTitle"
-      >
-        <StyleModal
-          className={modalWrapperClass}
-          style={styleModalObject}
-        >
-          {
-            isModal ?
-              <h2 className="modalTitle" style={{ cursor: "move" }}>
-                {intlObj.get(messages.organization)}
-                <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
-              </h2>
-              :
-              ''
-          }
+    let common = (
+      <Draggable handle="h2.modalTitle">
+        <StyleModal className={modalWrapperClass} style={styleModalObject}>
+          {isModal ? (
+            <h2 className="modalTitle" style={{ cursor: 'move' }}>
+              {intlObj.get(messages.organization)}
+              <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
+            </h2>
+          ) : (
+            ''
+          )}
           <div className="modalContents orgAcivityBody">
             <Row style={rowStyle} gutter={gutter} className="orgActivityInnerBody">
-              {
-                // 탭이나 모바일일 경우, 프로필만 보여야 한다
-                view === 'Tablet' || view === 'Mobile'
-                  ?
-                    ''
-                  :
-                    <Col xl={16} style={colStyle} className="leftActivity">
-                      <Tabs selected={this.state.selected} onSelect={this.handleSelect}>
-                        <Tab
-                          label="ROLE"
-                        >
-                          {content}
-                        </Tab>
-                      </Tabs>
-                      <Button className="inBtn" title={intlObj.get(messages.add)} onClick={this.sendAdd} />
-                    </Col>
-              }
-              <Col xl={8} style={colStyle} className="rightActivity" >
+              {// 탭이나 모바일일 경우, 프로필만 보여야 한다
+              view === 'Tablet' || view === 'Mobile' ? (
+                ''
+              ) : (
+                <Col xl={16} style={colStyle} className="leftActivity">
+                  <Tabs selected={this.state.selected} onSelect={this.handleSelect}>
+                    <Tab label="ROLE">{content}</Tab>
+                  </Tabs>
+                  <Button className="inBtn" title={intlObj.get(messages.add)} onClick={this.sendAdd} />
+                </Col>
+              )}
+              <Col xl={8} style={colStyle} className="rightActivity">
                 <SelectedUser
                   selectedUsers={this.state.selectedusers}
                   complete={this.state.complete}
@@ -846,32 +776,29 @@ class Organization extends Component {
               </Col>
             </Row>
           </div>
-          {
-            isModal
-              ?
-              <div className="modalFooter">
-              {
-                isDesktop(view)
-                  ?
-                    <BtnLgtGray onClick={this.closeModal}>{intlObj.get(messages.cancel)}</BtnLgtGray>
-                  :
-                    ''
-              }
-                <BtnDkGray onClick={this.onSave} >{intlObj.get(messages.confirm)}</BtnDkGray>
-              </div>
-              :
-              ''
-          }
+          {isModal ? (
+            <div className="modalFooter">
+              {isDesktop(view) ? (
+                <StyledButton className="btn-light" onClick={this.closeModal}>
+                  {intlObj.get(messages.cancel)}
+                </StyledButton>
+              ) : (
+                ''
+              )}
+              <StyledButton className="btn-primary" onClick={this.onSave}>
+                {intlObj.get(messages.confirm)}
+              </StyledButton>
+            </div>
+          ) : (
+            ''
+          )}
         </StyleModal>
       </Draggable>
+    );
     if (isModal) {
       common = e(Modal, modalProperty, common);
     }
-    return (
-      <div>
-        {common}
-      </div>
-    );
+    return <div>{common}</div>;
   }
 }
 Organization.propTypes = {
@@ -971,7 +898,10 @@ const mapStateToProps = createStructuredSelector({
   groupMemberData: selectors.makeSelectGroupMemberData(),
   searchResultData: selectors.makeSelectSearchResultData(),
 });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withReducer = injectReducer({ key: 'orgRole', reducer });
 const withSaga = injectSaga({ key: 'orgRole', saga });
 export default compose(
