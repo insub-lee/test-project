@@ -31,10 +31,10 @@ const StyleAppBizModal = styled.div`
   }
 
   .topPart {
-    height: 55px;
     margin: 0 20px 0 260px;
-    padding-top: 14px;
-    border-bottom: 1px solid #d1d2d3;
+    padding-top: 15px;
+    border-bottom: 0px solid #e5e5e5;
+    overflow: hidden;
 
     @media only screen and (max-width: 1280px) {
       margin: 0 15px !important;
@@ -49,19 +49,25 @@ const StyleAppBizModal = styled.div`
       position: relative;
       float: right;
       width: 200px;
-      height: 26px;
-      border: 1px solid #d1d2d3;
-      border-radius: 3px;
 
       > .ant-input {
-        height: 24px;
         padding: 4px 28px 4px 11px;
-        border: none !important;
+        height: calc(1.47em + 1rem + 2px);
+        padding: 0.5rem 0.875rem;
+        font-size: 0.8125rem;
+        font-weight: 400;
+        line-height: 1.47;
+        &:focus {
+          color: #495057;
+          background-color: #fff;
+          border-color: #886ab5;
+          outline: 0;
+        }
       }
 
       > button {
         position: absolute;
-        top: 0;
+        top: 7px;
         right: 4px;
         width: 24px;
         height: 24px;
@@ -75,16 +81,17 @@ const StyleAppBizModal = styled.div`
     display: inline-block;
     width: 100%;
     padding: 0 14px;
+    padding-left: 260px;
 
     @media only screen and (max-width: 1280px) {
-      padding: 0 10px !important;
+      padding: 0 10px;
     }
 
     @media only screen and (max-width: 1024px) {
       display: flex;
       width: 100%;
       padding: 0;
-      padding-top: 0 !important;
+      padding-top: 0;
     }
   }
 `;

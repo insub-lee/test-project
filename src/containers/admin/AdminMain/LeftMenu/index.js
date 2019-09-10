@@ -14,6 +14,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import StyledAdminMenu from './StyledAdminMenu';
 import MenuItem from './MenuItem';
+import adminLogo from '../../../../images/portal/admin-logo.png';
 
 const StyledAdminLeftMenu = styled.div`
   position: fixed;
@@ -27,7 +28,7 @@ const StyledAdminLeftMenu = styled.div`
   /* padding: 10px 15px 10px 30px; */
   /* border-right: 1px solid #d1d2d3; */
   /* background-color: #ffffff; */
-  z-index: 100;
+  z-index: 105;
   overflow-y: auto;
   overflow-x: hidden;
   backface-visibility: hidden;
@@ -139,6 +140,9 @@ class menuList extends React.Component {
         <nav>
           <StyledAdminMenu>
             <div>
+              <div className="nav-logo">
+                <img src={adminLogo} alt="" />
+              </div>
               <div className="wrap-nav">
                 <ul className="nav-menu">{this.makeMenu(this.props.leftMenuList)}</ul>
               </div>

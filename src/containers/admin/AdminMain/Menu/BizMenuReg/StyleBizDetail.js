@@ -34,14 +34,14 @@ const StyleBizDetail = styled.div`
   }
 
   @media only screen and (max-width: 1280px) {
-    width: calc(100vw - 345px); // Tree너비 + 양옆 12px 씩 + 스크롤바 너비
+    //width: calc(100vw - 345px); // Tree너비 + 양옆 12px 씩 + 스크롤바 너비
     margin: 20px auto 0;
   }
 
   @media only screen and (max-width: 1024px) {
-    width: calc(100vw - 24px);
-    max-width: 933px;
-    margin-top: 100px;
+    // width: calc(100vw - 24px);
+    // max-width: 933px;
+    // margin-top: 100px;
   }
 `;
 

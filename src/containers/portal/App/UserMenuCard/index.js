@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 import { ThemeProvider } from 'styled-components';
 import themes from 'config/themes/index';
@@ -15,6 +16,10 @@ import './global-userMenuCard.css';
 const { Content } = Layout;
 
 class UserMenuCard extends PureComponent {
+  componentDidMount() {
+    this.props.hideExecApps();
+  }
+
   render() {
     console.debug('&&&&&&&& this.props: ', this.props);
     const { execMenu, execPage } = this.props;
@@ -45,5 +50,9 @@ class UserMenuCard extends PureComponent {
     );
   }
 }
+
+UserMenuCard.propTypes = {
+  hideExecApps: PropTypes.func.isRequired,
+};
 
 export default UserMenuCard;

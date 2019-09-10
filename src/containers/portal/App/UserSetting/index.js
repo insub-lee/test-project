@@ -30,11 +30,13 @@ class SettingsPopover extends Component {
       active: 1,
     };
   }
+
   componentDidMount() {
     this.props.onLoadCheck();
     this.props.loadLang();
     // RoutesAction의 디스패쳐
     this.props.loadSkin();
+    this.props.hideExecApps();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,23 +47,28 @@ class SettingsPopover extends Component {
 
   onModal = () => {
     this.setState({ selected: '토스트 메시지 수신 설정' });
-  }
+  };
+
   setMessage = (app, stat) => {
     this.setState({ app, stat });
-  }
-  setSkin = (skin) => {
+  };
+
+  setSkin = skin => {
     this.props.loadSkin();
     this.setState({ skin });
-  }
-  setLang = (lang) => {
+  };
+
+  setLang = lang => {
     this.setState({
       lang,
     });
-  }
+  };
+
   closeModal = () => {
     this.setState({ app: '', stat: '' });
-  }
-  handleSelect = (key) => {
+  };
+
+  handleSelect = key => {
     if (key === 'toast') {
       this.setState({
         selected: key,
@@ -90,27 +97,27 @@ class SettingsPopover extends Component {
         active: 3,
       });
     }
-  }
-  render() {
+  };
 
+  render() {
     const { currentView } = this.props;
-    let className = "";
+    let className = '';
     let minHeight;
     switch (currentView) {
       case 'DesktopWide':
-      className = "navContent";
+        className = 'navContent';
         break;
       case 'Desktop':
-      className = "navContent";
+        className = 'navContent';
         break;
       case 'DesktopNarrow':
-      className = "navContent";
+        className = 'navContent';
         break;
       case 'Tablet':
-      className = "navContent";
+        className = 'navContent';
         break;
       default:
-      className = "navContentMobile";
+        className = 'navContentMobile';
     }
 
     const RenderSettingView = () => {
@@ -118,21 +125,31 @@ class SettingsPopover extends Component {
         if (this.state.app === 'all') {
           if (this.state.stat) {
             return (
-              <p className="responseTxt">{intlObj.get(messages.all)} {intlObj.get(messages.activate)}</p>
+              <p className="responseTxt">
+                {intlObj.get(messages.all)} {intlObj.get(messages.activate)}
+              </p>
             );
-          } else if (!this.state.stat) {
+          }
+          if (!this.state.stat) {
             return (
-              <p className="responseTxt">{intlObj.get(messages.all)} {intlObj.get(messages.activate)}</p>
+              <p className="responseTxt">
+                {intlObj.get(messages.all)} {intlObj.get(messages.activate)}
+              </p>
             );
           }
         } else if (this.state.app !== 'all') {
           if (this.state.stat) {
             return (
-              <p className="responseTxt">{this.state.app} {intlObj.get(messages.activate)}</p>
+              <p className="responseTxt">
+                {this.state.app} {intlObj.get(messages.activate)}
+              </p>
             );
-          } else if (!this.state.stat) {
+          }
+          if (!this.state.stat) {
             return (
-              <p className="responseTxt">{this.state.app} {intlObj.get(messages.inactivate)}</p>
+              <p className="responseTxt">
+                {this.state.app} {intlObj.get(messages.inactivate)}
+              </p>
             );
           }
         }
@@ -141,55 +158,54 @@ class SettingsPopover extends Component {
       }
     };
 
-
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
-          <h2 className="pageHeader">
-            설정
-          </h2>
+          <h2 className="pageHeader">설정</h2>
           <Row>
             <Col xl={8} className="navigation">
               <nav>
                 <ul>
-                  <li><Button className={this.state.active === 1 ? 'current' : null} onClick={() => this.handleSelect('toast')} >{intlObj.get(messages.setToastMessage)}</Button></li>
-                  <li><Button className={this.state.active === 2 ? 'current' : null} onClick={() => this.handleSelect('skin')} >{intlObj.get(messages.setSkin)}</Button></li>
-                  <li><Button className={this.state.active === 3 ? 'current' : null} onClick={() => this.handleSelect('language')} >{intlObj.get(messages.setMultipleLanguage)}</Button></li>
+                  <li>
+                    <Button className={this.state.active === 1 ? 'current' : null} onClick={() => this.handleSelect('toast')}>
+                      {intlObj.get(messages.setToastMessage)}
+                    </Button>
+                  </li>
+                  <li>
+                    <Button className={this.state.active === 2 ? 'current' : null} onClick={() => this.handleSelect('skin')}>
+                      {intlObj.get(messages.setSkin)}
+                    </Button>
+                  </li>
+                  <li>
+                    <Button className={this.state.active === 3 ? 'current' : null} onClick={() => this.handleSelect('language')}>
+                      {intlObj.get(messages.setMultipleLanguage)}
+                    </Button>
+                  </li>
                 </ul>
               </nav>
             </Col>
-            <Col xl={16} className={className} >
-              {this.state.selected === 'toast' ?
-                <MessageTab
-                  onClose={this.props.closeSetting}
-                  message={this.setMessage}
-                  list={this.state.list}
-                  currentView={this.props.currentView}
-                /> :
+            <Col xl={16} className={className}>
+              {this.state.selected === 'toast' ? (
+                <MessageTab onClose={this.props.closeSetting} message={this.setMessage} list={this.state.list} currentView={this.props.currentView} />
+              ) : (
                 false
-                }
+              )}
               {/* 언어별 적용 방법에 대한 고려 필요 */}
               {RenderSettingView()}
-                    {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
-                    {this.state.selected === 'skin' ? 
-                    <SkinTab onClose={this.closeModal} setSkin={this.setSkin} currentView={this.props.currentView} />
-                    :
-                    false
-                    }
-                    {this.state.skin ? <p className="responseTxt">{this.state.skin}테마가 활성화 되었습니다.</p>
-                      : false}
-                    {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
-                    {this.state.selected === 'language' ?
-                    <LanguageTab onClose={this.closeModal} setLang={this.setLang} currentView={this.props.currentView} />
-                    :
-                    false
-                    }
-                    {this.state.lang ? <p className="responseTxt">{intlObj.get(messages.selectLanguage)}</p>
-                      : false}
-                    {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
-              </Col>
-            </Row>
-          </div>
+              {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
+              {this.state.selected === 'skin' ? <SkinTab onClose={this.closeModal} setSkin={this.setSkin} currentView={this.props.currentView} /> : false}
+              {this.state.skin ? <p className="responseTxt">{this.state.skin}테마가 활성화 되었습니다.</p> : false}
+              {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
+              {this.state.selected === 'language' ? (
+                <LanguageTab onClose={this.closeModal} setLang={this.setLang} currentView={this.props.currentView} />
+              ) : (
+                false
+              )}
+              {this.state.lang ? <p className="responseTxt">{intlObj.get(messages.selectLanguage)}</p> : false}
+              {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
+            </Col>
+          </Row>
+        </div>
       </StyleUserSetting>
     );
   }
@@ -203,6 +219,8 @@ SettingsPopover.propTypes = {
   loadLang: PropTypes.func.isRequired,
   list: PropTypes.array.isRequired,
   closeSetting: PropTypes.func.isRequired,
+  hideExecApps: PropTypes.func.isRequired,
+  currentView: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -221,7 +239,10 @@ export function mapDispatchToProps(dispatch) {
 
 const withReducer = injectReducer({ key: 'messagetab', reducer });
 const withSaga = injectSaga({ key: 'messagetab', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 export default compose(
   withReducer,

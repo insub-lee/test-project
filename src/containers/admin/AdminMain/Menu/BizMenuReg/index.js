@@ -107,7 +107,7 @@ class BizMenuReg extends Component {
       this.setState({ pageID });
     };
 
-    let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', padding: '20px 20px 0', height: '100vh' };
+    let divStyle = { display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9', padding: '20px 20px 0', minWidth: '1280px', minHeight: '100vh' };
     if (type === 'work') {
       divStyle = {
         display: 'flex',
@@ -116,6 +116,7 @@ class BizMenuReg extends Component {
         marginLeft: '280px',
         padding: '40px 20px 0',
         width: 'calc(100% - 280px)',
+        minWidth: '1280px',
         height: '100vh',
       };
     }
