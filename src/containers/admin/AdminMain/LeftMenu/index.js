@@ -14,6 +14,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import StyledAdminMenu from './StyledAdminMenu';
 import MenuItem from './MenuItem';
+import adminLogo from '../../../../images/portal/admin-logo.png';
 
 const StyledAdminLeftMenu = styled.div`
   position: fixed;
@@ -139,6 +140,9 @@ class menuList extends React.Component {
         <nav>
           <StyledAdminMenu>
             <div>
+              <div className="nav-logo">
+                <img src={adminLogo} alt="" />
+              </div>
               <div className="wrap-nav">
                 <ul className="nav-menu">{this.makeMenu(this.props.leftMenuList)}</ul>
               </div>

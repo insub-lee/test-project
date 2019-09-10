@@ -2,18 +2,17 @@ import { takeLatest, put, call } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
 
-// export function* getBizInfo(payload) {
-//   const { BIZGRP_ID } = payload;
+export function* getBizInfo(payload) {
+  const { BIZGRP_ID } = payload;
 
-//   const response = yield call(Axios.post, '/api/bizstore/v1/store/bizgroupinfo', { BIZGRP_ID: Number(BIZGRP_ID) });
-
-//   if (response.result) {
-//     yield put({
-//       type: constants.SET_BIZ_INFO,
-//       bizInfo: response.result,
-//     });
-//   }
-// }
+  const response = yield call(Axios.post, '/api/bizstore/v1/store/bizgroupinfo', { BIZGRP_ID: Number(BIZGRP_ID), pageType: 'test' });
+  if (response.result) {
+    yield put({
+      type: constants.SET_BIZ_INFO,
+      bizInfo: response.result,
+    });
+  }
+}
 
 export function* getBizFeedBackList(payload) {
   const { BIZGRP_ID, BOARD_TYPE } = payload;
@@ -36,6 +35,6 @@ export function* getBizFeedBackList(payload) {
 }
 
 export default function* rootSaga() {
-  // yield takeLatest(constants.GET_BIZ_INFO, getBizInfo);
+  yield takeLatest(constants.GET_BIZ_INFO, getBizInfo);
   yield takeLatest(constants.GET_BIZ_FEEDBACKLIST, getBizFeedBackList);
 }

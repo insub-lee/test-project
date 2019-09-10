@@ -380,6 +380,10 @@ class BizGroupTree extends Component {
           width: '100%',
         }}
       >
+        <div className="fixedMenu">
+          {this.registFolder(rootRowInfo)}
+          {this.registBizgroup(rootRowInfo)}
+        </div>
         {treeData.length > 0 ? (
           <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
             {tree}
@@ -387,10 +391,6 @@ class BizGroupTree extends Component {
         ) : (
           tree
         )}
-        <div className="fixedMenu">
-          {this.registFolder(rootRowInfo)}
-          {this.registBizgroup(rootRowInfo)}
-        </div>
       </StyleMyPageTree>
     );
   }

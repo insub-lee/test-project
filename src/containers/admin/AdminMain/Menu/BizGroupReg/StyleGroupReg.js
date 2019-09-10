@@ -9,8 +9,8 @@ import DelListItem from 'images/common/widget-icon-delete.png';
 const StyleGroupReg = styled.div`
   width: 920px;
   /* margin: 30px auto 0; */
-  padding: 0 30px 30px 30px;
-  border: 1px solid #d1d2d3;
+  padding: 0;
+  border: 1px solid #e5e5e5;
   background: #ffffff;
   margin-top: 30px;
   margin-bottom: 0;
@@ -18,11 +18,12 @@ const StyleGroupReg = styled.div`
 
   .pageTitle {
     height: 60px;
-    border-bottom: 1px solid #222222;
+    border-bottom: 1px solid #e5e5e5;
     color: #404040;
     font-size: 18px;
     line-height: 60px;
     letter-spacing: -0.7px;
+    padding: 0 30px;
   }
 
   .sectionTitle {
@@ -35,6 +36,7 @@ const StyleGroupReg = styled.div`
 
   .formTable {
     margin: 20px 0;
+    padding: 0 30px;
 
     table {
       width: 100%;
@@ -367,8 +369,8 @@ const StyleGroupReg = styled.div`
 
   // 하단 버튼들
   .buttonWrapper {
-    padding-top: 15px;
-    border-top: 1px solid #d3d3d3;
+    padding: 20px 30px;
+    border-top: 1px solid #e5e5e5;
     text-align: right;
 
     button {

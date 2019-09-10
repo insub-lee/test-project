@@ -11,17 +11,14 @@
 .storeLayout input,
 .storeLayout textarea,
 .storeLayout .ant-input {
-  border: 1px solid #cccccc !important;
+  border: 1px solid #e5e5e5;
   border-radius: 0;
 }
 
-.storeLayout input:hover,
-.storeLayout textarea:hover,
-.storeLayout .ant-input:hover,
 .storeLayout input:focus,
 .storeLayout textarea:focus,
 .storeLayout .ant-input:focus {
-  border-color: #cccccc;
+  border-color: #886ab5;
 }
 
 .storeLayout input:read-only,

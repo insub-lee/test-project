@@ -7,7 +7,7 @@ const StyledTabList = styled.div`
     /* left: 0; */
     width: 280px;
     height: 100vh;
-    padding: 20px;
+    padding: 10px;
     border-right: 1px solid #e4dee9;
     background-color: #ece3f1;
     z-index: 100;
@@ -25,21 +25,23 @@ const StyledTabList = styled.div`
       .react-tabs__tab {
         float: left;
         display: inline-block;
-        width: 50%;
+        width: 100%;
         height: inherit;
         text-align: center;
 
         > a {
           display: block;
-          height: 46px;
-          border-bottom: 1px solid #d1d2d3;
+          height: 50px;
+          border-bottom: 1px solid #ddd;
           color: #808080;
-          line-height: 46px;
+          line-height: 50px;
+          font-size: 16px;
+          font-weight: bold;
         }
 
         &.react-tabs__tab--selected a {
           color: #222222;
-          border-bottom: 3px solid #222222;
+          border-bottom: 1px solid #ccc;
         }
       }
     }

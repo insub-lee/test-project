@@ -34,7 +34,7 @@ const Styled = styled.div`
       display: table-cell;
       vertical-align: middle;
       align-items: center;
-  
+
       p {
         text-align: center;
         font-size: 15px;
@@ -47,6 +47,7 @@ const Styled = styled.div`
         word-break: break-all;
       }
       span {
+        text-align: center;
         font-size: 12px;
         color: #666;
         display: block;
@@ -55,15 +56,11 @@ const Styled = styled.div`
         text-overflow: ellipsis;
         word-break: break-all;
       }
-     .app-run-button{
-       width:100%:
-       
-     }
-     .app-run-button button{
-      display: block;
-       margin:auto;
-     } 
-     .app-run-button button:hover{border:1px solid #886ab5;}
+      .app-run {
+        float: right;
+        margin-top: 5px;
+        font-size: 12px;
+      }
     }
   }
 `;

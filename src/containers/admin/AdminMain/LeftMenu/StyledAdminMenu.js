@@ -17,6 +17,14 @@ const StyledAdminMenu = styled.div`
     flex-direction: column;
     flex: 1 0 auto;
     display: flex;
+    & .nav-logo {
+      margin-bottom: 0;
+      padding: 20px 20px 5px;
+      text-align: center;
+      & > img {
+        width: 180px;
+      }
+    }
     & .wrap-nav {
       overflow: auto;
       overflow-x: hidden;

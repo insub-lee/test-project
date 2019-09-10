@@ -47,10 +47,10 @@ class config extends PureComponent {
             treeData={result}
             treeCheckable
             showCheckedStrategy={SHOW_PARENT}
-            showSearch={false}
             searchPlaceholder="카테고리를 설정해주세요"
             style={{ width: '200px' }}
             treeDefaultExpandAll
+            searchValue=""
             onChange={onCategorieChange}
             defaultValue={items.data.categorie}
           />

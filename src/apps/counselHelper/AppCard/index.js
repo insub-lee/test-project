@@ -1,6 +1,6 @@
 import React from 'react';
-import { Rate, Menu, Dropdown, Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { Rate, Menu, Dropdown, Icon } from 'antd';
+import { Link, Redirect } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import PropTypes from 'prop-types';
 import appImg from '../../../images/icon-app.png';
@@ -32,6 +32,10 @@ class AppCard extends React.PureComponent {
     return result;
   };
 
+  // state = {
+  //   flag: false,
+  // };
+
   execLink = node => {
     const state = {
       type: 'execMenu',
@@ -41,15 +45,46 @@ class AppCard extends React.PureComponent {
     return state;
   };
 
+  // handleClick = () => {
+  //   const { flag } = this.state;
+  //   this.setState({
+  //     flag: !flag,
+  //   });
+  // };
+
+  // redirectRender = () => {
+  //   const { value } = this.props;
+  //   if (this.state.flag) {
+  //     return <Redirect to={`/portal/card/bizMenu/detail/info/${value}`} />;
+  //   }
+  // };
+
   render() {
-    const { title, value, linkProps } = this.props;
+    const { title, value, linkProps, starPoint, DSCR_KOR } = this.props;
     const { SubMenu } = Menu;
     let dropMenu;
     // console.log(title, linkProps);
-    if (linkProps.hasOwnProperty('children')) {
+    if (Object.prototype.hasOwnProperty.call(linkProps, 'children')) {
       const result = linkProps.children.map(item => {
         if (item.NODE_TYPE === 'F') {
           //  console.log(item.NAME_KOR);
+          if (Object.prototype.hasOwnProperty.call(item, 'children')) {
+            const folderITEM = item.children.map(fItem => {
+              const tempURL = this.execPage(fItem);
+              const state = this.execLink(fItem);
+              return (
+                <Menu.Item key={fItem.key}>
+                  {' '}
+                  <Link to={{ pathname: tempURL, execInfo: state }}>{fItem.NAME_KOR} </Link>
+                </Menu.Item>
+              );
+            });
+            return (
+              <SubMenu title={item.NAME_KOR} key={item.key}>
+                {folderITEM}
+              </SubMenu>
+            );
+          }
           return <SubMenu title={item.NAME_KOR} key={item.key}></SubMenu>;
         }
         const tempURL = this.execPage(item);
@@ -82,18 +117,19 @@ class AppCard extends React.PureComponent {
 
     return (
       <Styled className="app-card">
-        <div className="app-card-body" onClick={this.handleOnclick} role="presentation">
+        <div className="app-card-body" role="presentation">
           <div className="appd-card-icon">
             <img src={appImg} alt="" />
           </div>
           <div className="app-card-text">
-            <Rate className="rateDesign" allowHalf disabled value={4.5} />
+            <Rate className="rateDesign" allowHalf disabled value={starPoint} />
             <p>{title}</p>
-            <div className="app-run-button">
-              <Dropdown overlay={dropMenu} trigger={['click']}>
-                <Button>앱실행</Button>
-              </Dropdown>
-            </div>
+            <span>{DSCR_KOR}</span>
+            <Dropdown overlay={dropMenu} trigger={['hover']}>
+              <p className="app-run">
+                앱실행 <Icon type="down" />
+              </p>
+            </Dropdown>
           </div>
         </div>
       </Styled>
@@ -107,4 +143,5 @@ AppCard.propTypes = {
   title: PropTypes.string,
   value: PropTypes.number,
   linkProps: PropTypes.object,
+  DSCR_KOR: PropTypes.string,
 };
