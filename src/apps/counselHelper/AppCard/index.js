@@ -60,11 +60,7 @@ class AppCard extends React.PureComponent {
   // };
 
   render() {
-    const { title, value, linkProps, starPoint } = this.props;
-    let { DSCR_KOR } = this.props;
-    if (DSCR_KOR === ' ') {
-      DSCR_KOR = '상담업무와 관련 메뉴 상세내용은 어쩌고저쩌고';
-    }
+    const { title, value, linkProps, starPoint, DSCR_KOR } = this.props;
     const { SubMenu } = Menu;
     let dropMenu;
     // console.log(title, linkProps);
