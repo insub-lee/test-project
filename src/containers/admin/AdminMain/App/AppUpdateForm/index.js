@@ -1408,10 +1408,10 @@ class AppUpdateForm extends React.Component {
               </RadioGroup>
             </FormItem>
             <div className="buttonWrapper">
-              <Link to="/admin/adminmain/app" style={{ float: 'left' }}>
+              <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
                 <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
               </Link>
-              <Link to={`/admin/adminmain/app/appDetail/${this.state.APP_ID}/${this.state.VER}`}>
+              <Link to={`/admin/adminmain/sysapp/appDetail/${this.state.APP_ID}/${this.state.VER}`}>
                 <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
               </Link>
               <BtnDkGray onClick={appInfoSave}>{intlObj.get(messages.save)}</BtnDkGray>

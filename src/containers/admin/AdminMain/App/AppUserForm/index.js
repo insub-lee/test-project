@@ -285,10 +285,10 @@ class AppUserForm extends React.Component {
             </div>
 
             <div className="buttonWrapper">
-              <Link to="/admin/adminmain/app" style={{ float: 'left' }}>
+              <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
                 <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
               </Link>
-              <Link to="/admin/adminmain/app">
+              <Link to="/admin/adminmain/sysapp">
                 <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
               </Link>
               <BtnDkGray onClick={appUserSaveChk}>{intlObj.get(messages.save)}</BtnDkGray>

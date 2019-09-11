@@ -48,7 +48,7 @@ class wrap extends PureComponent {
       <div>
         {/* 어드민 메인 콘텐츠 */}
         <Switch>
-          <Route path="/admin/adminmain/app" component={App} />
+          <Route path="/admin/adminmain/sysapp" component={App} />
           <Route path="/admin/adminmain/codeadmin" component={CodeAdmin} />
           <Route path="/admin/adminmain/siteadmin" component={SiteAdmin} />
           <Route path="/admin/adminmain/globaladmin" component={GlobalAdmin} />
