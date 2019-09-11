@@ -1524,7 +1524,17 @@ const WidgetBox = styled.div`
   width: 100%;
   // height: calc(100% - 35px) !important;
   height: calc(100% - 50px);
-  padding: 10px 0;
+  padding: 10px 10px;
+
+  .ant-table-thead > tr > th {
+    background: #6a60b9;
+    border-bottom: 0px solid #e8e8e8;
+    color: #fff;
+  }
+
+  .ant-table-thead > tr > th, .ant-table-tbody > tr > td {
+    padding: 10px;
+  }
 
   // '내용 없음' 공통 스타일
   .react-grid-Empty, .noWidgetWrapper {

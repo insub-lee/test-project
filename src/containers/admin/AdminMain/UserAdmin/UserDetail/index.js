@@ -21,14 +21,15 @@ import StyleUserDtl from './StyleUserDtl';
 import { LinkBtnLgtGray, BtnDkGray } from '../../../../store/components/uielements/buttons.style';
 import messages from '../messages';
 import UserRegTree from '../../../components/UserRegTree';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
-const emailValid = (str) => {
+const emailValid = str => {
   const re = /^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i;
   return re.test(String(str).toLowerCase());
 };
-const phonelValid = (str) => {
+const phonelValid = str => {
   const re = /^\d{2,3}-\d{3,4}-\d{4}$/;
   return re.test(String(str).toLowerCase());
 };
@@ -101,11 +102,12 @@ class UserReg extends React.Component {
   onClickToList = () => {
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/adminmain/account', state: setListState(this.state),
+      pathname: '/admin/adminmain/account',
+      state: setListState(this.state),
     });
-  }
+  };
 
-  setUserInfo = (userInfo) => {
+  setUserInfo = userInfo => {
     this.setState({
       empNo: userInfo.EMP_NO,
       nameKor: userInfo.NAME_KOR,
@@ -127,13 +129,13 @@ class UserReg extends React.Component {
     });
   };
 
-  getSelectNode = (node) => {
+  getSelectNode = node => {
     this.setState({
       selectedNode: node,
     });
   };
 
-  getSelectDept = (id) => {
+  getSelectDept = id => {
     switch (this.state.modalType) {
       case 'dept':
         this.props.getChangeDeptTreeData(id);
@@ -156,7 +158,7 @@ class UserReg extends React.Component {
     this.props.getEmpCheck(userId, empNo.toUpperCase());
   };
 
-  handleChange = (e) => {
+  handleChange = e => {
     let { value } = e.target;
     switch (e.target.name) {
       case 'officeTel':
@@ -173,7 +175,7 @@ class UserReg extends React.Component {
     });
   };
 
-  handleStatusChange = (val) => {
+  handleStatusChange = val => {
     this.setState({
       statusCd: val,
     });
@@ -338,33 +340,40 @@ class UserReg extends React.Component {
       if (this.state.mode === 'D') {
         return (
           <ErrorBoundary>
-            <LinkBtnLgtGray onClick={this.onClickToList}>
+            <StyledButton className="btn-light" onClick={this.onClickToList}>
               {intlObj.get(messages.lblCancel)}
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={() => this.setState({ mode: 'U' })}>{intlObj.get(messages.lblUdt)}</BtnDkGray>
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => this.setState({ mode: 'U' })}>
+              {intlObj.get(messages.lblUdt)}
+            </StyledButton>
           </ErrorBoundary>
         );
-      } else if (this.state.mode === 'U') {
+      } if (this.state.mode === 'U') {
         return (
           <ErrorBoundary>
-            <LinkBtnLgtGray
+            <StyledButton
+              className="btn-light"
               onClick={() => {
                 this.setUserInfo(this.props.userInfo);
                 this.setState({ mode: 'D' });
               }}
             >
               {intlObj.get(messages.lblCancel)}
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblSave)}</BtnDkGray>
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.regConfirm}>
+              {intlObj.get(messages.lblSave)}
+            </StyledButton>
           </ErrorBoundary>
         );
       }
       return (
         <ErrorBoundary>
-          <LinkBtnLgtGray onClick={this.onClickToList}>
+          <StyledButton className="btn-light" onClick={this.onClickToList}>
             {intlObj.get(messages.lblCancel)}
-          </LinkBtnLgtGray>
-          <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblReg)}</BtnDkGray>
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={this.regConfirm}>
+            {intlObj.get(messages.lblReg)}
+          </StyledButton>
         </ErrorBoundary>
       );
     };
@@ -703,7 +712,7 @@ UserReg.propTypes = {
   getChangePSTNTreeData: PropTypes.func, //eslint-disable-line
   getPSTNComboData: PropTypes.func, //eslint-disable-line
   getChangeRANKTreeData: PropTypes.func, //eslint-disable-line
-  getRANKComboData: PropTypes.func, //eslint-disable-line  
+  getRANKComboData: PropTypes.func, //eslint-disable-line
   getEmpCheck: PropTypes.func, //eslint-disable-line
   getUser: PropTypes.func, //eslint-disable-line
   empNo: PropTypes.string, //eslint-disable-line
