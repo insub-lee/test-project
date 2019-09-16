@@ -173,9 +173,6 @@ var FullScreen = (function(_super) {
     var _this = this;
     const { dockFixedYn, dockIconType, setMyMenuData } = _this.props;
     // 모바일이나 테블릿일 때는 width = '100%'
-    console.debug('@@@@@@@@@@dockFixedYn: ', dockFixedYn);
-    console.debug('@@@@@@@@@@dockIconType: ', dockIconType);
-    console.debug('@@@@@@@@@@setMyMenuData: ', setMyMenuData);
     let width = '100%';
     if (this.props.view !== 'Tablet' && this.props.view !== 'Mobile' && dockFixedYn === 'Y') {
       /*

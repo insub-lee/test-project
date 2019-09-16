@@ -88,7 +88,7 @@ class App extends React.PureComponent {
       isSpinnerShow: false,
       // isPreviewPage: false,
       // menu 고정용 state,
-      fixedMenu: false,
+      fixedMenu: TextTrackCue,
     };
 
     this.count = 0;
@@ -333,10 +333,9 @@ class App extends React.PureComponent {
   };
 
   setFixedOpenMenu = () => {
-    this.setState(prevState => ({
-      fixedMenu: !prevState.fixedMenu,
-    }), this.setMenuClose());
-    console.debug('!!!! this.state.', this.state.fixedMenu);
+    this.setState(prevState => {
+      return { fixedMenu: !prevState.fixedMenu };
+    });
   }
 
   setMenuOpen = () => {
@@ -352,16 +351,10 @@ class App extends React.PureComponent {
   };
 
   setMenuClose = () => {
-    console.debug('!!!! this.state.menuclose', this.state.fixedMenu);
-    if(!this.state.fixedMenu) {
-      this.setState(
-        {
-          open: false,
-        },
-        () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
-      );
-    }
-    event.preventDefault();
+    this.setState(prevState => {
+      const { fixedMenu, open } = prevState;
+      return { open: fixedMenu ? open : false };
+    });
   };
 
   setHeaderMenuClose = () => {
@@ -783,6 +776,7 @@ class App extends React.PureComponent {
             isShow={open}
             toggleMenu={open ? this.setMenuClose : this.setOpen}
             setOpen={this.setOpen}
+            setMenuClose={this.setMenuClose}
             setFixedOpenMenu={this.setFixedOpenMenu}
             execMenu={this.execMenu}
             execPage={this.execPage}
@@ -828,7 +822,7 @@ class App extends React.PureComponent {
             </div> */}
           </SideMenu>
           <Layout
-            style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}
+            style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight(), transition: 'margin-left 0.3s ease-out 0s' } : mobileDockCss}
           >
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>

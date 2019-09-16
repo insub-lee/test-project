@@ -6,8 +6,6 @@ import { IflowApi } from 'utils/IflowFunc';
 
 export function* getIflBoardDataList(payload) {
   /* eslint-disabled */
-  console.debug('>>>>>>>>payload: ', payload);
-  /* eslint-disabled */
   const grSeq = [];
   const ctSeq = [];
   const catePageList = [];
@@ -26,10 +24,6 @@ export function* getIflBoardDataList(payload) {
   for (var i = 0; i < ctSeq.length; i++) {
     const param = { grseq: grSeq[i], ctseq: ctSeq[i], page: payload.page, pagepernum: payload.pagepernum };
     const bData = yield call(IflowApi.get, 'articleList', param);
-    /* eslint-disabled */
-    console.debug('>>>>>>>>bData: ', bData);
-    /* eslint-disabled */
-
     // // 답글이 아닌 글만 추려냄
     // const articles = [];
     // bData.articles.map(item => {
@@ -39,12 +33,6 @@ export function* getIflBoardDataList(payload) {
     bArray.push(bData.articles);
     catePageList[i].totalCount = bData.totalCount;
   }
-
-  /* eslint-disabled */
-  console.debug('>>>>>>>>catePageList: ', catePageList);
-  console.debug('>>>>>>>>bArray: ', bArray);
-  /* eslint-disabled */
-
   yield put({ type: constants.CATE_PAGE_LIST, payload: fromJS(catePageList) });
   yield put({ type: constants.SET_IFBOARD_DATA_LIST, payload: fromJS(bArray) });
 }

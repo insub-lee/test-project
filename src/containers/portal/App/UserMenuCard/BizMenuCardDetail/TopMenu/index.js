@@ -50,14 +50,9 @@ class TopMenu extends React.Component {
     }
   }
 
-  handleExecApp = () => {
-    alert('app exec click event');
-  }
-
   render() {
     /* eslint-disable */
     const { bizInfo, bizManagerList } = this.props;
-    console.debug('>>>>>>this.props: ', this.props);
     return (
       <div>
         <StyleTopMenu>
@@ -84,14 +79,11 @@ class TopMenu extends React.Component {
             <Col sm={24} xl={8}>
               <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
             </Col>
-            <Col sm={24} xl={7} style={{ textAlign: 'right' }}>
-              <Button onClick={this.handleExecApp}>앱실행</Button>
-            </Col>
-            <Col sm={24} xl={7} style={{ textAlign: 'right' }}>
+            {/* <Col sm={24} xl={7} style={{ textAlign: 'right' }}>
               <CopyToClipboard text={window.location.href} onCopy={() => feed.success(`${intlObj.get(messages.urlCopyMassage)}`)}>
                 <BtnIconShare title={intlObj.get(messages.urlCopy)} style={{ marginRight: 6 }} />
               </CopyToClipboard>
-            </Col>
+            </Col> */}
           </Row>
         </StyleTopMenu>
       </div>

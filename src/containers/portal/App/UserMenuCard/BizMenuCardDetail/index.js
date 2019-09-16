@@ -86,9 +86,7 @@ class BizMenuCardDetail extends Component {
   };
 
   render() {
-    console.debug('@@@@ this.props: ', this.props);
-
-    const { bizMenuData, selectedIndex, history, match } = this.props;
+    const { bizMenuData, selectedIndex, history, match, execMenu, execPage } = this.props;
 
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
     const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
@@ -108,7 +106,7 @@ class BizMenuCardDetail extends Component {
         }}
       >
         <StyleBizDetail>
-          <TopMenu history={history} match={match} BIZGRP_ID={Number(BIZGRP_ID)} />
+          <TopMenu history={history} match={match} BIZGRP_ID={Number(BIZGRP_ID)} execMenu={execMenu} execPage={execPage}/>
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }}>
             <ul className="bizDetailContentWrapper">
               <li className="leftContent inPage">
