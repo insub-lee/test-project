@@ -348,7 +348,8 @@ class UserReg extends React.Component {
             </StyledButton>
           </ErrorBoundary>
         );
-      } if (this.state.mode === 'U') {
+      }
+      if (this.state.mode === 'U') {
         return (
           <ErrorBoundary>
             <StyledButton

@@ -448,9 +448,9 @@ class UserList extends React.Component {
             </Select>
 
             {/* 오른쪽 */}
-            <LinkBtnLgtGray onClick={this.initSearch} style={{ marginRight: '10px' }}>
+            <StyledButton className="btn-dark btn-sm btn-bs-none init-search" onClick={this.initSearch} style={{ marginRight: '10px' }}>
               {intlObj.get(messages.initSearch)}
-            </LinkBtnLgtGray>
+            </StyledButton>
             <Select value={this.state.keywordType} onChange={this.handleSelect} style={{ width: 120, marginRight: 10 }} dropdownStyle={{ fontSize: 13 }}>
               <Option value="userNameKor">{intlObj.get(messages.nameKor)}</Option>
               <Option value="userEmpNo">{intlObj.get(messages.titleUserEmpNo)}</Option>

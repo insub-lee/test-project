@@ -253,7 +253,7 @@ html a:active {
 .ant-modal-content input:read-only,
 .ant-modal-content textarea:read-only,
 .ant-modal-content .ant-input:read-only {
-  background: #f5f5f5;
+  background: #f3f3f3;
   cursor: default;
 }
 

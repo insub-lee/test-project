@@ -12,7 +12,8 @@
 .storeLayout textarea,
 .storeLayout .ant-input {
   border: 1px solid #e5e5e5;
-  border-radius: 4px;
+  border-radius: 3px;
+  font-size: 13px;
 }
 
 .storeLayout input:focus,
@@ -23,7 +24,7 @@
 .storeLayout input:read-only,
 .storeLayout textarea:read-only,
 .storeLayout .ant-input:read-only {
-  background: #f5f5f5;
+  background: #f3f3f3;
   cursor: default;
 }
 
@@ -34,7 +35,7 @@
 .storeLayout .searchWrapper > input {
   font-size: 13px;
   border: 1px solid #e5e5e5 !important;
-  border-radius: 4px !important;
+  border-radius: 3px !important;
 }
 .storeLayout .ant-select.ant-select-open,
 .storeLayout .searchWrapper > input:hover {
