@@ -16,7 +16,7 @@ export function* getMyAppDetail(payload) {
   if (response.managerChk === 0) {
     feed.error(`${intlObj.get(messages.authChk)}`);
     if (response.mod === 1) {
-      history.push('/admin/adminmain/app');
+      history.push('/admin/adminmain/sysapp');
     } else if (response.mod === 2) {
       history.push('/store/appMain/AppOpinion');
     }

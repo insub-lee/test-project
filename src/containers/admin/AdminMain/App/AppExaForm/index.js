@@ -318,7 +318,7 @@ class AppExaForm extends React.Component {
             style={{ display: this.props.appinfo.APV_STATUS_CODE === 'N' || this.props.appinfo.APV_STATUS_CODE === 'R' ? 'block' : 'none', paddingBottom: 15 }}
           >
             <Link
-              to="/admin/adminmain/app"
+              to="/admin/adminmain/sysapp"
               style={{
                 float: 'left',
                 display: this.state.EXA_MODE === 'U' ? 'block' : 'none',
@@ -326,7 +326,7 @@ class AppExaForm extends React.Component {
             >
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
-            <Link to={`/admin/adminmain/app/appDetail/${this.state.APP_ID}/${this.state.VER}`}>
+            <Link to={`/admin/adminmain/sysapp/appDetail/${this.state.APP_ID}/${this.state.VER}`}>
               <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
             </Link>
             <BtnDkGray onClick={this.appExamine}>{intlObj.get(messages.request)}</BtnDkGray>

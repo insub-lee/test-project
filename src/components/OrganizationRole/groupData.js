@@ -9,10 +9,7 @@ const content = [];
 
 class GroupData extends Component {
   componentDidUpdate(prevProps) {
-    const {
-      groupData,
-      ROLE_CD,
-    } = this.props;
+    const { groupData, ROLE_CD } = this.props;
 
     if (!_.isEqualWith(groupData, prevProps.groupData) && groupData.length > 0) {
       const allList = {
@@ -29,9 +26,9 @@ class GroupData extends Component {
               textAlign: 'center',
               fontWeight: '500',
               width: '100%',
-              marginBottom: '6px',
-              marginTop: '10px',
+              marginBottom: '15px',
               color: 'rgba(0, 0, 0, 0.85)',
+              fontSize: '14px',
             }}
           >
             {intlObj.get(messages[title])}
@@ -46,50 +43,51 @@ class GroupData extends Component {
               paddingBottom: '10px',
             }}
           >
-            {
-              listData[0].ACNT_TYPE === 'U'
-                ?
-                  <li
+            {listData[0].ACNT_TYPE === 'U' ? (
+              <li
+                style={{
+                  marginLeft: '10px',
+                }}
+              >
+                <button
+                  onClick={() => {
+                    this.getGroupMemberData(ROLE_CD, 'U', -1);
+                  }}
+                  style={{
+                    background: 'white',
+                  }}
+                >
+                  {intlObj.get(messages.allUsers)}
+                </button>
+              </li>
+            ) : (
+              listData.map(o => (
+                <li
+                  style={{
+                    marginLeft: '10px',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                  }}
+                  value={`${o.ACNT_TYPE}/${o.ACNT_ID}`}
+                >
+                  <button
+                    onClick={() => {
+                      this.getGroupMemberData(ROLE_CD, o.ACNT_TYPE, o.ACNT_ID);
+                    }}
                     style={{
-                      marginLeft: '10px',
+                      background: 'white',
                     }}
                   >
-                    <button
-                      onClick={() => {
-                        this.getGroupMemberData(ROLE_CD, 'U', -1);
-                      }}
-                      style={{
-                        background: 'white',
-                      }}
-                    >
-                      {intlObj.get(messages.allUsers)}
-                    </button>
-                  </li>
-                :
-                  listData.map(o => (
-                    <li
-                      style={{
-                        marginLeft: '10px',
-                        cursor: 'pointer',
-                      }}
-                      value={`${o.ACNT_TYPE}/${o.ACNT_ID}`}
-                    >
-                      <button
-                        onClick={() => { this.getGroupMemberData(ROLE_CD, o.ACNT_TYPE, o.ACNT_ID); }}
-                        style={{
-                          background: 'white',
-                        }}
-                      >
-                        {lang.get('NAME', o)}
-                      </button>
-                    </li>
-                  ))
-            }
+                    {lang.get('NAME', o)}
+                  </button>
+                </li>
+              ))
+            )}
           </ul>
         </div>
       );
 
-      groupData.forEach((o) => {
+      groupData.forEach(o => {
         if (o.ACNT_TYPE === 'U') {
           allList.userList.push(o);
         }
@@ -106,7 +104,7 @@ class GroupData extends Component {
           allList.dutyList.push(o);
         }
       });
-      Object.keys(allList).forEach((o) => {
+      Object.keys(allList).forEach(o => {
         if (allList[o].length > 0) {
           content.push(getLayout(o, allList[o]));
         }
@@ -115,14 +113,11 @@ class GroupData extends Component {
   }
 
   getGroupMemberData = (ROLE_CD, ACNT_TYPE, ACNT_ID) => {
-    const {
-      getGroupMemberData,
-      setGridFlag,
-    } = this.props;
+    const { getGroupMemberData, setGridFlag } = this.props;
 
     setGridFlag();
     getGroupMemberData(ROLE_CD, ACNT_TYPE, ACNT_ID);
-  }
+  };
 
   render() {
     return (

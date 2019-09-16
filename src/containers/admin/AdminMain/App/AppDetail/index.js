@@ -342,7 +342,7 @@ class MyAppDetail extends React.Component {
             className="buttonsWrapper bottom"
             style={{ display: APV_STATUS_CODE === 'NC' ? 'block' : 'none' }}
           >
-            <Link to="/admin/adminmain/app">
+            <Link to="/admin/adminmain/sysapp">
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
           </div>
@@ -351,11 +351,11 @@ class MyAppDetail extends React.Component {
             className="buttonsWrapper bottom"
             style={{ display: APV_STATUS_CODE === 'R' ? 'block' : 'none' }}
           >
-            <Link to="/admin/adminmain/app">
+            <Link to="/admin/adminmain/sysapp">
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
             <div className="alignRight">
-              <Link to={`/admin/adminmain/app/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
+              <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <BtnGray>
                   {intlObj.get(messages.Modified)}
                 </BtnGray>
@@ -372,7 +372,7 @@ class MyAppDetail extends React.Component {
             className="buttonsWrapper bottom"
             style={{ display: APV_STATUS_CODE === 'P' ? 'block' : 'none' }}
           >
-            <Link to="/admin/adminmain/app">
+            <Link to="/admin/adminmain/sysapp">
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
           </div>
@@ -381,11 +381,11 @@ class MyAppDetail extends React.Component {
             className="buttonsWrapper bottom"
             style={{ display: APV_STATUS_CODE === 'N' ? 'block' : 'none' }}
           >
-            <Link to="/admin/adminmain/app">
+            <Link to="/admin/adminmain/sysapp">
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
             <div className="alignRight">
-              <Link to={`/admin/adminmain/app/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
+              <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <BtnGray>
                   {intlObj.get(messages.Modified)}
                 </BtnGray>
@@ -402,16 +402,16 @@ class MyAppDetail extends React.Component {
             className="buttonsWrapper bottom"
             style={{ display: APV_STATUS_CODE === 'S' ? 'block' : 'none' }}
           >
-            <Link to="/admin/adminmain/app">
+            <Link to="/admin/adminmain/sysapp">
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
-            <Link to={`/admin/adminmain/app/appUpdate/V/${APP_ID}/${VER}/1/${APV_STATUS_CODE}`}>
+            <Link to={`/admin/adminmain/sysapp/appUpdate/V/${APP_ID}/${VER}/1/${APV_STATUS_CODE}`}>
               <LinkBtnUpdate>
                 {intlObj.get(messages.verUpdate)}
               </LinkBtnUpdate>
             </Link>
             <div className="alignRight">
-              <Link to={`/admin/adminmain/app/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
+              <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <BtnGray>
                   {intlObj.get(messages.Modified)}
                 </BtnGray>
@@ -424,16 +424,16 @@ class MyAppDetail extends React.Component {
             className="buttonsWrapper bottom"
             style={{ display: APV_STATUS_CODE === 'C' ? 'block' : 'none' }}
           >
-            <Link to="/admin/adminmain/app">
+            <Link to="/admin/adminmain/sysapp">
               <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
             </Link>
-            <Link to={`/admin/adminmain/app/appUpdate/V/${APP_ID}/${VER}/1/${APV_STATUS_CODE}`}>
+            <Link to={`/admin/adminmain/sysapp/appUpdate/V/${APP_ID}/${VER}/1/${APV_STATUS_CODE}`}>
               <LinkBtnUpdate>
                 {intlObj.get(messages.verUpdate)}
               </LinkBtnUpdate>
             </Link>
             <div className="alignRight">
-              <Link to={`/admin/adminmain/app/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
+              <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <BtnGray>
                   {intlObj.get(messages.Modified)}
                 </BtnGray>

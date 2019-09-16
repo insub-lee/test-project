@@ -41,10 +41,11 @@ const StyledAdminLeftMenu = styled.div`
 class menuList extends React.Component {
   constructor(prop) {
     super(prop);
-
+    const pathname = window.parent.document.location.pathname.toLowerCase();
     this.state = {
       strUrl:
-        window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
+        // window.parent.document.location.pathname.toLowerCase() !== '' ? window.parent.document.location.pathname.toLowerCase() : '/admin/adminmain/siteadmin',
+        pathname !== '' ? pathname : '/admin/adminmain/menu',
       // openMenuCode: 'SITE',
     };
 
@@ -71,26 +72,30 @@ class menuList extends React.Component {
   classString = url => {
     let clsStr = '';
     let strCurUrl = window.parent.document.location.pathname.toLowerCase();
-
     if (
+      /*
       strCurUrl === '/admin' ||
       strCurUrl === '/admin/' ||
       strCurUrl === '/admin/adminmain' ||
       strCurUrl === '/admin/adminmain/' ||
       strCurUrl === '/admin/adminmain/siteadmin/sitereg' ||
       strCurUrl === '/admin/adminmain/siteadmin/sitereg/'
+      */
+      strCurUrl === '/admin' ||
+      strCurUrl === '/admin/' ||
+      strCurUrl === '/admin/adminmain' ||
+      strCurUrl === '/admin/adminmain/' ||
+      strCurUrl.startsWith('/admin/adminmain/menu')
     ) {
-      strCurUrl = '/admin/adminmain/siteadmin';
+      // strCurUrl = '/admin/adminmain/siteadmin';
+      strCurUrl = '/admin/adminmain/menu';
     } else if (strCurUrl === '/admin/adminmain/orgadmin/orglist' || strCurUrl === '/admin/adminmain/orgadmin/orglist/') {
       strCurUrl = '/admin/adminmain/orgadmin';
     }
 
-    if (
-      url === strCurUrl ||
-      (url === '/admin/adminmain/account' && strCurUrl.startsWith('/admin/adminmain/account/')) ||
-      (url === '/admin/adminmain/menu' && strCurUrl.startsWith('/admin/adminmain/menu')) ||
-      (url === '/admin/adminmain/work' && strCurUrl.startsWith('/admin/adminmain/work'))
-    ) {
+    if (strCurUrl.startsWith('/admin/adminmain/workbuilder/manageapp')) {
+      if (url === strCurUrl) clsStr = 'active';
+    } else if (url === strCurUrl || strCurUrl.startsWith(url)) {
       clsStr = 'active';
     } else {
       clsStr = '';
@@ -135,13 +140,14 @@ class menuList extends React.Component {
     ));
 
   render() {
+    /* eslint-disable jsx-a11y/no-noninteractive-element-interactions, jsx-a11y/click-events-have-key-events */
     return (
       <StyledAdminLeftMenu>
         <nav>
           <StyledAdminMenu>
             <div>
               <div className="nav-logo">
-                <img src={adminLogo} alt="" />
+                <img src={adminLogo} alt="BizMicro Portal Admin" />
               </div>
               <div className="wrap-nav">
                 <ul className="nav-menu">{this.makeMenu(this.props.leftMenuList)}</ul>

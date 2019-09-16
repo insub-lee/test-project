@@ -113,7 +113,7 @@ class AppDetailForm extends React.Component {
           key={item.APP_ID}
           className="appCols"
         >
-          <a href={`/admin/adminmain/app/appDetail/${item.CATG_ID}/${item.APP_ID}`} target="_blank" rel="noopener noreferrer">
+          <a href={`/admin/adminmain/sysapp/appDetail/${item.CATG_ID}/${item.APP_ID}`} target="_blank" rel="noopener noreferrer">
             <img
               src={imgUrl.get('120x120', item.ICON)}
               alt={lang.get('NAME', item)}
