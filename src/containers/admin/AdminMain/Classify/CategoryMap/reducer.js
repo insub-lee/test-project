@@ -14,6 +14,9 @@ const initialState = fromJS({
     NAME_KOR: '',
     NAME_ENG: '',
     NAME_CHN: '',
+    CODE: '',
+    DESCIPTION: '',
+    USE_YN: '',
     children: [],
   },
   isAdd: false,
@@ -21,6 +24,9 @@ const initialState = fromJS({
     NAME_KOR: '',
     NAME_ENG: '',
     NAME_CHN: '',
+    CODE: '',
+    DESCIPTION: '',
+    USE_YN: '',
   },
 });
 

@@ -7,3 +7,4 @@ export const UPDATE_ROOTMAP = `${base}/UPDATE_ROOTMAP`;
 export const DELETE_ROOTMAP = `${base}/DELETE_ROOTMAP`;
 export const SET_SELECTED_ROW_KEYS = `${base}/SET_SELECTED_ROW_KEYS`;
 export const SET_SELECTED_ROOTMAP = `${base}/SET_SELECTED_ROOTMAP`;
+export const SET_ROOTMAP_GUBUN = `${base}/SET_ROOTMAP_GUBUN`;

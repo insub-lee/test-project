@@ -126,9 +126,7 @@ class SignLine extends Component {
   };
 
   // 부모에서 데이터 조회시 호출할 함수
-  getProcessDataCall = () => {
-    return this.props.processStep;
-  };
+  getProcessDataCall = () => this.props.processStep;
 
   render() {
     const { processStep } = this.props;

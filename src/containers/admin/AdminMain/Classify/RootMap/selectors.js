@@ -26,4 +26,10 @@ const makeSelectedRootMap = () =>
     state => state.get('selectedRootMap').toJS(),
   );
 
-export { makeRootMapList, makeVisibleModal, makeSelectedRowKeys, makeSelectedRootMap };
+const makeRootMapGuun = () =>
+  createSelector(
+    selectClassifyRootMap,
+    state => state.get('GUBUN'),
+  );
+
+export { makeRootMapList, makeVisibleModal, makeSelectedRowKeys, makeSelectedRootMap, makeRootMapGuun };
