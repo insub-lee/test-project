@@ -25,8 +25,12 @@ class RootMap extends Component {
   }
 
   componentDidMount() {
-    const payload = {};
+    const { GUBUN } = this.props.match.params;
+    const payload = {
+      GUBUN,
+    };
     this.props.getRootMapList(payload);
+    this.props.setRootMapGubun(GUBUN);
   }
 
   onSelectChange = selectedRowKeys => {
@@ -64,6 +68,7 @@ class RootMap extends Component {
 
   render() {
     const { rootMapList, visibleModal, setVisibleModal, selectedRowKeys, addRootMap, updateRootMap, selectedRootMap, setSelectedRootMap } = this.props;
+    const { GUBUN } = this.props.match.params;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -99,7 +104,7 @@ class RootMap extends Component {
         align: 'center',
         render: text => (
           <span>
-            <Link to={`/admin/adminmain/classify/categorymap/${text}`}>
+            <Link to={`/admin/adminmain/classify/categorymap/${GUBUN}/${text}`}>
               <Button size="small" type="primary">
                 설정
               </Button>
@@ -143,6 +148,8 @@ class RootMap extends Component {
 }
 
 RootMap.propTypes = {
+  GUBUN: PropTypes.number,
+  match: PropTypes.object,
   rootMapList: PropTypes.array.isRequired,
   getRootMapList: PropTypes.func.isRequired,
   visibleModal: PropTypes.bool.isRequired,
@@ -154,6 +161,11 @@ RootMap.propTypes = {
   setSelectedRowKeys: PropTypes.func.isRequired,
   selectedRootMap: PropTypes.object.isRequired,
   setSelectedRootMap: PropTypes.func.isRequired,
+  setRootMapGubun: PropTypes.func,
+};
+
+RootMap.defaultProps = {
+  GUBUN: 1,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -171,6 +183,7 @@ const mapDispatchToProps = dispatch => ({
   deleteRootMap: payload => dispatch(actions.deleteRootMap(payload)),
   setSelectedRowKeys: selectedRowKeys => dispatch(actions.setSelectedRowKeys(selectedRowKeys)),
   setSelectedRootMap: rootMap => dispatch(actions.setSelectedRootMap(rootMap)),
+  setRootMapGubun: gubun => dispatch(actions.setRootMapGubun(gubun)),
 });
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Classify.RootMap', reducer });

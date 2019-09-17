@@ -39,3 +39,8 @@ export const setSelectedRootMap = rootMap => ({
   type: actionTypes.SET_SELECTED_ROOTMAP,
   rootMap,
 });
+
+export const setRootMapGubun = gubun => ({
+  type: actionTypes.SET_ROOTMAP_GUBUN,
+  gubun,
+});

@@ -6,6 +6,7 @@ const initialState = fromJS({
   selectedRowKeys: [],
   visibleModal: false,
   selectedRootMap: {},
+  GUBUN: 1,
 });
 
 const appReducer = (state = initialState, action) => {

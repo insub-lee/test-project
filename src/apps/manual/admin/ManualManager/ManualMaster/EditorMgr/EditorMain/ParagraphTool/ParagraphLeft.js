@@ -15,16 +15,13 @@ const handleSubmit = (e, addEditorComponent) => {
   formData.forEach((value, key) => {
     payload[key] = value;
   });
-  let callbackStr = '';
-  callbackStr += '<table style="width: 100%;"><tbody><tr><td style="width: 100.0000%; border: none;">';
-  callbackStr += '<p>';
-  callbackStr += `<p style="float:left; padding-right: 20px;"><img style="width: 186px;" src="${payload.image.replace('200x200', '0x0')}" /></p>`;
-  if (payload.title !== '') {
-    callbackStr += `<h2 style="padding-bottom: 20px;">${payload.title}</h2>`;
-  }
-  callbackStr += contentMake(payload.content);
-  callbackStr += '</p>';
-  callbackStr += '</td></tr></tbody></table>';
+  const callbackStr = `<table class="toolview-paragraph" style="width: 100%;"><tbody><tr><td style="border: none;">
+    <div>
+      <div style="float:left; padding-right: 20px;"><img style="width: 186px;" src="${payload.image.replace('200x200', '0x0')}" /></div>
+      ${payload.title !== '' ? `<h2 style="padding-bottom: 20px;">${payload.title}</h2>` : ''}
+      ${contentMake(payload.content)}
+    </div>
+  </td></tr></tbody></table>`;
   addEditorComponent('editor', callbackStr);
 };
 

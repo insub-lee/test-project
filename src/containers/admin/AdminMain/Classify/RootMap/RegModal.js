@@ -1,15 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Modal, Button } from 'antd';
+import { Input, Modal, Button, Select } from 'antd';
+
+const { Option } = Select;
 
 class RegModal extends Component {
-  componentDidMount() {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      useYn: '',
+    };
+  }
 
   handleOkModal = e => {
     e.preventDefault();
     const { rootMap } = this.props;
     const isRootMap = Object.prototype.hasOwnProperty.call(rootMap, 'MAP_ID');
     const data = new FormData(e.target);
+
     if (isRootMap) {
       const payload = {
         ...rootMap,
@@ -32,15 +40,20 @@ class RegModal extends Component {
     this.props.setVisibleModal(false);
   };
 
+  handleUseYnChange = val => {
+    this.setState({ useYn: val });
+  };
+
   render() {
     const { rootMap } = this.props;
+    const { useYn } = this.state;
     const isRootMap = Object.prototype.hasOwnProperty.call(rootMap, 'MAP_ID');
 
     return (
       <Modal
         title="분류추가"
         visible={this.props.visible}
-        onOk={this.handleOkModal}
+        onOk={() => {}}
         onCancel={this.handleCloselModal}
         width="400px"
         style={{ top: 100 }}
@@ -61,6 +74,14 @@ class RegModal extends Component {
               <li>
                 <label htmlFor="l_ch">中國語</label>
                 <Input name="NAME_CHN" maxLength={100} defaultValue={rootMap.NAME_CHN} />
+              </li>
+              <li>
+                <label htmlFor="l_ch">사용여부</label>
+                <Select value={useYn !== '' ? useYn : rootMap.USE_YN} onChange={val => this.handleUseYnChange(val)}>
+                  <Option value="Y">사용</Option>
+                  <Option value="N">사용안함</Option>
+                </Select>
+                <input type="hidden" name="USE_YN" value={useYn !== '' ? useYn : rootMap.USE_YN} />
               </li>
             </ul>
           </div>

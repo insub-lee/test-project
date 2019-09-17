@@ -45,8 +45,8 @@ class WorkSelector extends Component {
       const filterList = list.filter(item => item[workKey] === value);
       if (filterList && filterList.length > 0) {
         const selectedOptionText = filterList[0][workValue];
-        const selectedValue = { key: value, values: selectedOptionText };
-        this.setState({ selectedValue: JSON.stringify(selectedValue) }, () => saveTempContents(selectedValue, name, 'work-selector', contSeq));
+        const selectedValue = JSON.stringify({ key: value, values: selectedOptionText });
+        this.setState({ selectedValue }, () => saveTempContents(selectedValue, name, 'work-selector', contSeq));
       }
     }
   };
@@ -69,7 +69,7 @@ class WorkSelector extends Component {
             </Select.Option>
           ))}
         </Select>
-        <input type="hidden" name={name} value={selectedValue} data-type="string" />
+        <input type="hidden" name={name} value={selectedValue} data-type="json" />
       </div>
     );
   }

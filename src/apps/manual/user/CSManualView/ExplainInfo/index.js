@@ -7,7 +7,7 @@ import Panel from './Panel';
 import InfoConWrap from './InfoConWrap';
 import Styled from './Styled';
 
-const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, navList }) => (
+const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, navList, indexRelationList }) => (
   <Styled>
     <Panel mualMaster={mualMaster} navList={navList}>
       <Scrollbars
@@ -16,7 +16,7 @@ const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, 
           setScrollComponent(c, widgetId);
         }}
       >
-        <InfoConWrap componentList={componentList} />
+        <InfoConWrap componentList={componentList} indexRelationList={indexRelationList} />
       </Scrollbars>
     </Panel>
   </Styled>

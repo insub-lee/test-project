@@ -11,7 +11,7 @@ import * as newsfeedAction from '../newsFeed/widgets/action';
 import Tab from '../components/Tab';
 import TabTitle from '../components/Tab/TabTitle';
 import StyledTabPanel from '../components/Tab/StyledTabPanel';
-import TopbarBtnWrap from '../components/TopbarBtnWrap';
+import TopbarBtnWrap from './TopbarBtnWrap';
 import IconCollection from '../components/IconCollection';
 import * as listActions from '../CSManualList/actions';
 
@@ -73,7 +73,7 @@ class ManualView extends Component {
     }
   };
 
-  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps, mualMaster, navList, quickProps) =>
+  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps, mualMaster, navList, quickProps, indexRelationList) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -89,6 +89,7 @@ class ManualView extends Component {
             mualMaster={mualMaster}
             navList={navList}
             quickProps={quickProps}
+            indexRelationList={indexRelationList}
           />
         </StyledTabPanel>
       ),
@@ -112,6 +113,7 @@ class ManualView extends Component {
       relationList,
       addManualHistory,
       setNewsfeedModalIdx,
+      indexRelationList,
     } = this.props;
 
     const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
@@ -123,10 +125,8 @@ class ManualView extends Component {
         event: isBookmark ? this.handleClickTopBarButton : this.handleClickTopBarButton,
         widgetId,
       },
-      { key: 'viewTopbar1', title: '오류신고', event: undefined },
-      { key: 'viewTopbar2', title: '오류신고', event: undefined },
-      { key: 'viewTopbar3', title: '오류신고', event: undefined },
-      { key: 'viewTopbar4', title: '오류신고', event: undefined },
+      { key: 'viewTopbar1', title: '오류신고1', event: undefined },
+      { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
     return (
       <Styled>
@@ -147,13 +147,20 @@ class ManualView extends Component {
               mualMaster.toJS(),
               navList.toJS(),
               { relationList: relationList.toJS(), widgetId, addManualHistory, setListSelectedMualIdx },
+              indexRelationList.toJS(),
             )}
             keyName="MUAL_TAB_IDX"
             selectedTabIdx={selectedTabIdx}
             setSelectedTabIdx={setSelectedTabIdx}
             widgetId={widgetId}
           />
-          <TopbarBtnWrap className="tab-btn-wrap" data={topBarButton} />
+          <TopbarBtnWrap
+            className="tab-btn-wrap"
+            data={topBarButton}
+            mualMaster={mualMaster}
+            action={{ setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx }}
+            widgetId={widgetId}
+          />
           <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
             <IconCollection className="icon-close" />
           </button>
@@ -176,6 +183,7 @@ ManualView.propTypes = {
   navList: PropTypes.object,
   relationList: PropTypes.object,
   addManualHistory: PropTypes.func,
+  indexRelationList: PropTypes.object,
 };
 
 ManualView.defaultProps = {
@@ -191,6 +199,7 @@ ManualView.defaultProps = {
   navList: fromJS([]),
   relationList: fromJS([]),
   addManualHistory: () => false,
+  indexRelationList: fromJS([]),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -202,6 +211,7 @@ const mapStateToProps = createStructuredSelector({
   mualMaster: selectors.makeSelectManualMaster(),
   navList: selectors.makeSelectManualViewNavList(),
   relationList: selectors.makeSelectManualViewRelationList(),
+  indexRelationList: selectors.makeSelectManualViewIndexRelationList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -209,7 +219,7 @@ const mapDispatchToProps = dispatch => ({
   setNewsfeedModalView: (modalView, widget_id) => dispatch(newsfeedAction.setModalView(modalView, widget_id)),
   setNewsfeedModalIdx: (mualIdx, widget_id) => dispatch(newsfeedAction.setModalIdx(mualIdx, widget_id)),
   setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
-  setSelectedMualIdx: (idx, widgetId) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId)),
+  setSelectedMualIdx: (idx, widgetId, isLastVersion) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId, isLastVersion)),
   setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),
   setIsViewContents: (flag, widgetId) => dispatch(listActions.setIsViewContentsByReducr(flag, widgetId)),
   setListSelectedMualIdx: (idx, widgetId) => dispatch(listActions.setSelectedMualIdxByReducr(idx, widgetId)),
