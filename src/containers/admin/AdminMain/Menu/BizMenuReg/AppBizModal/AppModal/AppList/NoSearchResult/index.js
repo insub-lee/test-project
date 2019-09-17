@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { intlObj } from 'utils/commonUtils';
 import noResultImage from 'images/bizstore/no-result.png';
-import messages from 'containers/store/AppMain/AppList/NoSearchResult/messages';
+import messages from './messages';
 import NoResultBox from './noResultStyle';
 
 class NoSearchResult extends PureComponent {

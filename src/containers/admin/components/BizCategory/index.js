@@ -6,7 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { Link } from 'react-router-dom';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import * as actionsApp from 'containers/store/App/actions';
+import * as actionsApp from 'containers/admin/App/actions';
 import Tree from '../Tree';
 import injectReducer from '../../../../utils/injectReducer';
 import injectSaga from '../../../../utils/injectSaga';
