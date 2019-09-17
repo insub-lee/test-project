@@ -10,12 +10,15 @@ const AppInfo = ({
   match: {
     params: { appId },
   },
+  match: {
+    params: { BIZGRP_ID },
+  },
   history,
   execMenu,
   execPage,
 }) => (
   <div>
-    <AppBasicInfo targetUrl={window.location.href} appId={appId} history={history} execMenu={execMenu} execPage={execPage}/>
+    <AppBasicInfo targetUrl={window.location.href} appId={appId} BIZGRP_ID={BIZGRP_ID} history={history} execMenu={execMenu} execPage={execPage}/>
     <AppScreenshot appId={appId} gubun={2} />
     <AppQna appId={appId} gubun="b" />
     <AppRating appId={appId} />
