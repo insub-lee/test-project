@@ -52,7 +52,7 @@ const StyleSiteAdminForm = styled.div`
               .resultsTableWrapper {
                 width: calc(100% - 17px);
                 padding: 5px;
-                @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+                @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
                   /* IE10+ specific styles go here */
                   margin-bottom: 20px;
                 }
@@ -101,15 +101,8 @@ const StyleSiteAdminForm = styled.div`
               .textLinkBtn {
                 position: absolute;
                 bottom: 0;
-                right: -160px;
-                width: 160px;
-                height: 33px;
-                padding: 0 10px;
-                color: #222222;
-                font-size: 13px;
-                text-align: left;
-                text-decoration: underline;
-                background: #ffffff;
+                right: -70px;
+                font-size: 12px;
               }
 
               .skinWrapper {
@@ -117,21 +110,23 @@ const StyleSiteAdminForm = styled.div`
 
                 .skinOptions {
                   width: 180px;
-  
+
                   label {
                     width: 100%;
-  
-                    .ant-radio, .ant-radio + span {
+
+                    .ant-radio,
+                    .ant-radio + span {
                       display: inline-block;
                       width: 100%;
                       float: left;
                       padding: 0;
                     }
-  
+
                     .ant-radio {
                       padding: 15px 30px 10px 0;
 
-                      input.ant-radio-input, .ant-radio-inner {
+                      input.ant-radio-input,
+                      .ant-radio-inner {
                         top: 0;
                         left: 50%;
                         margin-left: -8px;
@@ -150,27 +145,25 @@ const StyleSiteAdminForm = styled.div`
                         animation-fill-mode: none;
                       }
                     }
-  
+
                     .skinItem {
                       display: inline-block;
                       width: 150px;
                       height: 80px;
                       background: #dadada;
-  
+
                       > img {
                         width: 100%;
                       }
                     }
                   }
                 }
-
               }
             }
           }
         }
       }
     }
-
   }
 `;
 

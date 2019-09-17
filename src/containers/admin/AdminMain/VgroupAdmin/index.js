@@ -22,6 +22,7 @@ import * as actions from './actions';
 import VgroupTree from '../../components/VgroupTree';
 import StyleVGroup from './StyleVGroup';
 import StyleVGroupForm from './StyleVGroupForm';
+import StyledButton from '../../../../components/Button/StyledButton';
 
 const Option = Select.Option; // eslint-disable-line
 
@@ -64,6 +65,7 @@ class VgroupAdmin extends React.Component {
   onChangeKeyword = e => {
     this.setState({ searchKeyword: e.target.value });
   };
+
   onChangeSite = val => {
     this.setState({
       SITE_ID: val,
@@ -80,21 +82,25 @@ class VgroupAdmin extends React.Component {
     this.props.getVgroupTreeList(this.state.searchKeyword, val);
     this.props.getVgroupDtlInfo(-1, this.state.SITE_ID);
   };
+
   mOrgOpen = () => {
     this.setState({
       mOrgShow: true,
     });
   };
+
   mOrgClose = () => {
     this.setState({
       mOrgShow: false,
     });
   };
+
   uOrgOpen = () => {
     this.setState({
       uOrgShow: true,
     });
   };
+
   uOrgClose = () => {
     this.setState({
       uOrgShow: false,
@@ -232,7 +238,14 @@ class VgroupAdmin extends React.Component {
       });
       this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
     };
-    const saveButton = () => (this.state.showAddMember ? <BtnDkGray onClick={this.updateMember}>저장</BtnDkGray> : '');
+    const saveButton = () =>
+      this.state.showAddMember ? (
+        <StyledButton className="btn-primary" onClick={this.updateMember}>
+          저장
+        </StyledButton>
+      ) : (
+        ''
+      );
     return (
       <div>
         <StyleVGroup>
@@ -301,11 +314,11 @@ class VgroupAdmin extends React.Component {
                 show={this.state.mOrgShow}
                 closeModal={this.mOrgClose}
                 isTreeCheckbox={false}
-                userTab={true}
+                userTab
                 getDataFromOrganization={getDataFromOrgMng}
                 selectedUsers={this.state.managerSetMembers.slice()}
               />
-              <MemberList managerList={this.state.managerSetMembers} delFlag={true} returnManagerList={returnManagerList} />
+              <MemberList managerList={this.state.managerSetMembers} delFlag returnManagerList={returnManagerList} />
               <div className="buttonWrapper">
                 <Button onClick={this.mOrgOpen} title="조직도열기" className="addRow" disabled={!this.state.showAddMember} />
               </div>
@@ -314,7 +327,7 @@ class VgroupAdmin extends React.Component {
                 <Organization
                   show={this.state.uOrgShow}
                   closeModal={this.uOrgClose}
-                  userTab={true}
+                  userTab
                   getDataFromOrganization={getDataFromOrgMem}
                   selectedUsers={this.state.userSetMembers.slice()}
                 />
@@ -324,8 +337,8 @@ class VgroupAdmin extends React.Component {
               <MemberList
                 userList={this.state.userSetMembers}
                 deptList={this.state.deptSetMembers}
-                delFlag={true}
-                isTreeCheckbox={true}
+                delFlag
+                isTreeCheckbox
                 returnUserList={returnUserList}
                 returnDetpList={returnDeptList}
               />

@@ -23,6 +23,7 @@ import Select, { SelectOption } from '../../../../../components/Select';
 import StyleSiteAdminList from './StyleSiteAdminList';
 import StyleDataGrid from '../../../../store/components/uielements/dataGrid.style';
 import { LinkBtnDkGray, BtnDelete } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const Option = SelectOption;
 let pageNum = 20;
@@ -79,13 +80,7 @@ class SiteList extends React.Component {
 
     pageNum = pageIndex;
 
-    this.props.getList(
-      pageNum,
-      this.state.sortColumnParam,
-      this.state.sortDirectionParam,
-      this.state.keywordType,
-      this.state.keyword,
-    );
+    this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
 
     // 함수 bind
     this.onRowsSelected = this.onRowsSelected.bind(this);
@@ -109,7 +104,7 @@ class SiteList extends React.Component {
   //   alert(nextProps.getRow);
   // }
 
-  onRowsSelected = (rows) => {
+  onRowsSelected = rows => {
     const totalSelected = this.state.selectedIndexes.concat(rows.map(r => r.rowIdx));
 
     const totalGridSelected = this.state.getList;
@@ -125,35 +120,30 @@ class SiteList extends React.Component {
     });
   };
 
-  onRowsDeselected = (rows) => {
+  onRowsDeselected = rows => {
     const rowIndexes = rows.map(r => r.rowIdx);
     const rowSites = rows.map(r => r.row.SITE_ID);
     this.setState({
-      selectedIndexes: this.state.selectedIndexes.filter(i =>
-        rowIndexes.indexOf(i) === -1),
+      selectedIndexes: this.state.selectedIndexes.filter(i => rowIndexes.indexOf(i) === -1),
       delData: this.state.delData.filter(i => rowSites.indexOf(i) === -1),
     });
   };
 
-  HyperlinkFomatter = (val) => {
+  HyperlinkFomatter = val => {
     const hyperlinkName = lang.get('NAME', val.dependentValues);
-    return (
-      <hltext onClick={() => this.dtlLink(val.dependentValues)}>
-        {hyperlinkName}
-      </hltext>
-    );
+    return <hltext onClick={() => this.dtlLink(val.dependentValues)}>{hyperlinkName}</hltext>;
   };
 
-  dtlLink = (data) => {
+  dtlLink = data => {
     this.props.history.push({ pathname: '/admin/adminmain/siteadmin/SiteDetail', search: 'D', state: data });
-  }
+  };
 
-  openClick = (url) => {
+  openClick = url => {
     const linkUrl = url.startsWith('http') ? url : `http://${url}`;
     window.open(linkUrl);
   };
 
-  HyperlinkFomatter1 = (val) => {
+  HyperlinkFomatter1 = val => {
     const hyperlinkName = val.dependentValues.URL;
     const detailKey = val.dependentValues.URL;
 
@@ -180,27 +170,21 @@ class SiteList extends React.Component {
       sortColumnParam: '',
       sortDirectionParam: '',
     });
-  }
+  };
 
-  rowList = (i) => {
+  rowList = i => {
     if (i === pageNum - 1) {
       pageNum += pageIndex;
-      this.props.getList(
-        pageNum,
-        this.state.sortColumnParam,
-        this.state.sortDirectionParam,
-        this.state.keywordType,
-        this.state.keyword,
-      );
+      this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
     }
     return this.props.getRow[i];
-  }
+  };
 
   delConfirm = () => {
     if (this.state.delData.length <= 0) return;
 
     feed.showConfirm(`${intlObj.get(messages.delConfirm)}`, '', this.deleteRow);
-  }
+  };
 
   deleteRow = () => {
     this.props.delRow(this.state.delData);
@@ -212,27 +196,15 @@ class SiteList extends React.Component {
       sortColumnParam: sortColumn,
       sortDirectionParam: sortDirection,
     });
-    this.props.getList(
-      pageNum,
-      sortColumn,
-      sortDirection,
-      this.state.keywordType,
-      this.state.keyword,
-    );
+    this.props.getList(pageNum, sortColumn, sortDirection, this.state.keywordType, this.state.keyword);
   };
 
   // Input 검색아이콘 클릭 시(조회)
   handleClick = () => {
     // this.initState();
     pageNum = pageIndex;
-    this.props.getList(
-      pageNum,
-      this.state.sortColumnParam,
-      this.state.sortDirectionParam,
-      this.state.keywordType,
-      this.state.keyword,
-    );
-  }
+    this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
+  };
 
   // Input 검색값 변경 시
   handleSearch(e) {
@@ -240,13 +212,7 @@ class SiteList extends React.Component {
     this.setState({ keyword: e.target.value });
     // this.handleClick();
     pageNum = pageIndex;
-    this.props.getList(
-      pageNum,
-      this.state.sortColumnParam,
-      this.state.sortDirectionParam,
-      this.state.keywordType,
-      e.target.value,
-    );
+    this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, e.target.value);
   }
 
   // Input 키 누를 때
@@ -269,14 +235,17 @@ class SiteList extends React.Component {
   render() {
     const EmptyData = () => (
       <div>
-        <td colSpan="5"><font size="5">{intlObj.get(messages.emptySearch)}</font></td>
+        <td colSpan="5">
+          <font size="5">{intlObj.get(messages.emptySearch)}</font>
+        </td>
       </div>
     );
 
     return (
       <div>
         <StyleSiteAdminList>
-          <h3 className="pageTitle list">{this.state.title}
+          <h3 className="pageTitle list">
+            {this.state.title}
             <div className="searchBox">
               <ErrorBoundary>
                 <Select
@@ -302,11 +271,7 @@ class SiteList extends React.Component {
                     onChange={this.handleSearch}
                     // onKeyPress={this.handleKeyPress}
                   />
-                  <button
-                    title={intlObj.get(messages.lblSearch)}
-                    className="searchBtn"
-                    onClick={this.handleClick}
-                  />
+                  <button title={intlObj.get(messages.lblSearch)} className="searchBtn" onClick={this.handleClick} />
                 </div>
               </ErrorBoundary>
             </div>
@@ -338,12 +303,14 @@ class SiteList extends React.Component {
           </StyleDataGrid>
           <div className="buttonWrapper">
             <ErrorBoundary>
-              <BtnDelete onClick={this.delConfirm}>{intlObj.get(messages.lblDelete)}</BtnDelete>
+              <StyledButton className="btn-dark" onClick={this.delConfirm}>
+                {intlObj.get(messages.lblDelete)}
+              </StyledButton>
             </ErrorBoundary>
             <ErrorBoundary>
-              <LinkBtnDkGray style={{ float: 'right' }}>
+              <StyledButton className="btn-primary" style={{ float: 'right' }}>
                 <Link to="/admin/adminmain/siteadmin/SiteReg">{intlObj.get(messages.lblReg)}</Link>
-              </LinkBtnDkGray>
+              </StyledButton>
             </ErrorBoundary>
           </div>
         </StyleSiteAdminList>
@@ -355,39 +322,29 @@ class SiteList extends React.Component {
 SiteList.propTypes = {
   siteId: PropTypes.string, //eslint-disable-line
   getList: PropTypes.func, //eslint-disable-line
-  delRow: PropTypes.func,  //eslint-disable-line
+  delRow: PropTypes.func, //eslint-disable-line
   getRow: PropTypes.array, //eslint-disable-line
-  delList: PropTypes.array,  //eslint-disable-line
-  history: PropTypes.object,//eslint-disable-line
+  delList: PropTypes.array, //eslint-disable-line
+  history: PropTypes.object, //eslint-disable-line
   historyPush: PropTypes.func, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getList: (
-      pgNum,
-      sortColumnParam,
-      sortDirectionParam,
-      keywordType,
-      keyword,
-    ) => dispatch(actions.getList(
-      pgNum,
-      sortColumnParam,
-      sortDirectionParam,
-      keywordType,
-      keyword,
-    )),
-    historyPush: url => dispatch(push(url)),
-    delRow: delData => dispatch(actions.delRow(delData)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getList: (pgNum, sortColumnParam, sortDirectionParam, keywordType, keyword) =>
+    dispatch(actions.getList(pgNum, sortColumnParam, sortDirectionParam, keywordType, keyword)),
+  historyPush: url => dispatch(push(url)),
+  delRow: delData => dispatch(actions.delRow(delData)),
+});
 
 const mapStateToProps = createStructuredSelector({
   getRow: selectors.makeSelectSiteList(),
   delList: selectors.makeDelRow(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'SiteList', saga });
 const withReducer = injectReducer({ key: 'SiteList', reducer });
 
