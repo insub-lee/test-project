@@ -152,8 +152,8 @@ class AppBasicInfo extends React.Component {
                   onClick={this.menuClick}
                 >
                   앱실행
-                </Button>
-                <Button
+                </StyledButton>
+                <StyledButton
                   type="button"
                   className="btn-outline-secondary btn-sm"
                   onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}

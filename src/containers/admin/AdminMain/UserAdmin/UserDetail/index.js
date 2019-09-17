@@ -7,7 +7,6 @@ import { createStructuredSelector } from 'reselect';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import message from 'components/Feedback/message';
 import { intlObj } from 'utils/commonUtils';
-import { Link } from 'react-router-dom';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
@@ -18,7 +17,7 @@ import saga from './saga';
 import * as selectors from './selectors';
 import StyleUserForm from './StyleUserForm';
 import StyleUserDtl from './StyleUserDtl';
-import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from '../../../../store/components/uielements/buttons.style';
+import { LinkBtnList } from '../../../../store/components/uielements/buttons.style';
 import messages from '../messages';
 import UserRegTree from '../../../components/UserRegTree';
 import StyledButton from '../../../../../components/Button/StyledButton';
@@ -340,9 +339,9 @@ class UserReg extends React.Component {
       if (this.state.mode === 'D') {
         return (
           <ErrorBoundary>
-            <StyledButton className="btn-light" onClick={this.onClickToList}>
-              {intlObj.get(messages.lblCancel)}
-            </StyledButton>
+            <LinkBtnList style={{ float: 'left' }} onClick={this.onClickToList}>
+              {intlObj.get(messages.lblList)}
+            </LinkBtnList>
             <StyledButton className="btn-primary" onClick={() => this.setState({ mode: 'U' })}>
               {intlObj.get(messages.lblUdt)}
             </StyledButton>
@@ -352,6 +351,9 @@ class UserReg extends React.Component {
       if (this.state.mode === 'U') {
         return (
           <ErrorBoundary>
+            <LinkBtnList style={{ float: 'left' }} onClick={this.onClickToList}>
+              {intlObj.get(messages.lblList)}
+            </LinkBtnList>
             <StyledButton
               className="btn-light"
               onClick={() => {
@@ -369,9 +371,9 @@ class UserReg extends React.Component {
       }
       return (
         <ErrorBoundary>
-          <StyledButton className="btn-light" onClick={this.onClickToList}>
-            {intlObj.get(messages.lblCancel)}
-          </StyledButton>
+          <LinkBtnList style={{ float: 'left' }} onClick={this.onClickToList}>
+            {intlObj.get(messages.lblList)}
+          </LinkBtnList>
           <StyledButton className="btn-primary" onClick={this.regConfirm}>
             {intlObj.get(messages.lblReg)}
           </StyledButton>
