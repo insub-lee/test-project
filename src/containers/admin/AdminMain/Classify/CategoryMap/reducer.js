@@ -10,7 +10,7 @@ const initialState = fromJS({
     PARENT_NODE_ID: -1,
     LVL: 0,
     NODE_ORDINAL: '',
-    FULL_PATH: '',
+    FULLPATH: '',
     NAME_KOR: '',
     NAME_ENG: '',
     NAME_CHN: '',
