@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Input from '../../../../../components/FormStuff/Input';
-import Radio from '../../../../../components/FormStuff/Radio/index';
+import Input from 'components/FormStuff/Input';
+import Radio from '../../Radio';
 import Styled from './Styled';
 
 const WriteBoard = () => (
