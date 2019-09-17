@@ -14,8 +14,8 @@ class Classify extends Component {
     return (
       <div>
         <Switch>
-          <Route path="/admin/adminmain/classify/rootmap" component={RootMap} />
-          <Route path="/admin/adminmain/classify/categorymap/:MAP_ID" component={CategoryMap} />
+          <Route path="/admin/adminmain/classify/rootmap/:GUBUN" component={RootMap} />
+          <Route path="/admin/adminmain/classify/categorymap/:GUBUN/:MAP_ID" component={CategoryMap} />
         </Switch>
       </div>
     );

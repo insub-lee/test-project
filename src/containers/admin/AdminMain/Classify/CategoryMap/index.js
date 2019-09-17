@@ -28,8 +28,9 @@ class CategoryMap extends Component {
   }
 
   componentDidMount() {
-    const { MAP_ID } = this.props.match.params;
+    const { GUBUN, MAP_ID } = this.props.match.params;
     const payload = {
+      GUBUN,
       MAP_ID,
     };
     this.props.getRootMapList(payload);
@@ -39,20 +40,11 @@ class CategoryMap extends Component {
   onChangeNode = (e, fieldName) => {
     const { selectedNode, isAdd, addNodeInfo } = this.props;
     if (isAdd) {
-      const nodeInfo = {
-        NAME_KOR: fieldName === 'NAME_KOR' ? e.target.value : addNodeInfo.NAME_KOR,
-        NAME_ENG: fieldName === 'NAME_ENG' ? e.target.value : addNodeInfo.NAME_ENG,
-        NAME_CHN: fieldName === 'NAME_CHN' ? e.target.value : addNodeInfo.NAME_CHN,
-      };
-      this.props.setAddNodeInfo(nodeInfo);
+      addNodeInfo[fieldName] = e.target.value;
+      this.props.setAddNodeInfo(addNodeInfo);
     } else {
-      const nodeInfo = {
-        ...selectedNode,
-        NAME_KOR: fieldName === 'NAME_KOR' ? e.target.value : selectedNode.NAME_KOR,
-        NAME_ENG: fieldName === 'NAME_ENG' ? e.target.value : selectedNode.NAME_ENG,
-        NAME_CHN: fieldName === 'NAME_CHN' ? e.target.value : selectedNode.NAME_CHN,
-      };
-      this.props.setSelectedNode(nodeInfo);
+      selectedNode[fieldName] = e.target.value;
+      this.props.setSelectedNode(selectedNode);
     }
   };
 
@@ -90,6 +82,23 @@ class CategoryMap extends Component {
     }
   };
 
+  handleUseYnChange = val => {
+    const { selectedNode, isAdd, addNodeInfo } = this.props;
+    if (isAdd) {
+      const nodeInfo = {
+        ...addNodeInfo,
+        USE_YN: val,
+      };
+      this.props.setAddNodeInfo(nodeInfo);
+    } else {
+      const nodeInfo = {
+        ...selectedNode,
+        USE_YN: val,
+      };
+      this.props.setSelectedNode(nodeInfo);
+    }
+  };
+
   render() {
     const {
       rootMapList,
@@ -106,9 +115,7 @@ class CategoryMap extends Component {
       addNodeInfo,
       updateCategoryMapList,
     } = this.props;
-    const { MAP_ID } = this.props.match.params;
-
-    // const isSelectedNode = Object.prototype.hasOwnProperty.call(selectedNode, 'NODE_ID');
+    const { GUBUN, MAP_ID } = this.props.match.params;
 
     return (
       <StyleCategory>
@@ -173,12 +180,40 @@ class CategoryMap extends Component {
                         <Input name="NAME_CHN" value={isAdd ? addNodeInfo.NAME_CHN : selectedNode.NAME_CHN} onChange={e => this.onChangeNode(e, 'NAME_CHN')} />
                       </td>
                     </tr>
+                    <tr>
+                      <th>
+                        <label htmlFor="v2">코드</label>
+                      </th>
+                      <td>
+                        <Input name="CODE" value={isAdd ? addNodeInfo.CODE : selectedNode.CODE} onChange={e => this.onChangeNode(e, 'CODE')} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <label htmlFor="v2">DESCRIPTION</label>
+                      </th>
+                      <td>
+                        <Input name="DESCIPTION" value={isAdd ? addNodeInfo.DESCIPTION : selectedNode.DESCIPTION} onChange={e => this.onChangeNode(e, 'DESCIPTION')} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <label htmlFor="v2">사용여부</label>
+                      </th>
+                      <td>
+                        <Select defaultValue={isAdd ? addNodeInfo.USE_YN : selectedNode.USE_YN} onChange={val => this.handleUseYnChange(val)}>
+                          <Option value="Y">사용</Option>
+                          <Option value="N">사용안함</Option>
+                        </Select>
+                        <input type="hidden" name="USE_YN" value={isAdd ? addNodeInfo.USE_YN : selectedNode.USE_YN} />
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </StyleCategoryForm>
             </div>
             <div className="buttonWrapper">
-              <Link to="/admin/adminmain/classify/rootmap">
+              <Link to={`/admin/adminmain/classify/rootmap/${GUBUN}`}>
                 <Button type="default" size="large" icon="unordered-list">
                   목록으로
                 </Button>
