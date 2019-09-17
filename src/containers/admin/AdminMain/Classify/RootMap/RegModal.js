@@ -77,7 +77,7 @@ class RegModal extends Component {
               </li>
               <li>
                 <label htmlFor="l_ch">사용여부</label>
-                <Select defaultValue={isRootMap ? rootMap.USE_YN : useYn} onChange={val => this.handleUseYnChange(val)}>
+                <Select value={useYn !== '' ? useYn : rootMap.USE_YN} onChange={val => this.handleUseYnChange(val)}>
                   <Option value="Y">사용</Option>
                   <Option value="N">사용안함</Option>
                 </Select>
