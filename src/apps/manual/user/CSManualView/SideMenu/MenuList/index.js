@@ -25,6 +25,7 @@ const renderListItem = (componentList, pIdx, level, setSelectedCompIdx, selected
     let currentNode = '';
     switch (item.TYPE) {
       case 'index':
+      case 'indexRelation':
         currentNode = (
           <a onClick={() => setScroll(item.MUAL_TABCOMP_IDX, setSelectedCompIdx, scrollComp, widgetId)}>
             {item.MUAL_COMPVIEWINFO}

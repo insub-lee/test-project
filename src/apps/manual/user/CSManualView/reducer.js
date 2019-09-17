@@ -18,8 +18,8 @@ const appReducer = (state = initialState, action) => {
       return state.setIn(['manualViewMap', widgetId, 'manualTabList'], maulTabList);
     }
     case constantTypes.SET_SELECTED_MUAL_IDX_REDUCR: {
-      const { mualIdx, widgetId } = action;
-      return state.setIn(['manualViewMap', widgetId, 'selectedMualIdx'], mualIdx);
+      const { mualIdx, widgetId, isLastVersion } = action;
+      return state.setIn(['manualViewMap', widgetId, 'selectedMualIdx'], mualIdx).setIn(['manualViewMap', widgetId, 'isLastVersion'], isLastVersion || 'Y');
     }
     case constantTypes.SET_SELECTED_TAB_IDX_REDUCR: {
       const { idx, widgetId } = action;
@@ -74,6 +74,10 @@ const appReducer = (state = initialState, action) => {
         .setIn(['manualViewMap', widgetId, 'bookmarkList'], bookmarkList)
         .setIn(['manualViewMap', widgetId, 'manualMaster'], manualMaster)
         .setIn(['manualViewMap', widgetId, 'navList'], navList);
+    }
+    case constantTypes.SET_VIEW_INDEX_RELATION_LIST_REDUCR: {
+      const { list, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'indexRelationList'], list);
     }
     default:
       return state;

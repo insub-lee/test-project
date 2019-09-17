@@ -6,7 +6,7 @@ const selectNewsFeedData = state => state.get('NewsFeed');
 const selectWidgetDataList = () =>
   createSelector(
     selectNewsFeedData,
-    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : undefined ), 
+    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11079),
     (state, widgetId) => state.getIn(['widgetDataList', widgetId]),
   );
 
@@ -21,7 +21,7 @@ const selectWidgetTotalCategory = () =>
 const selectWidgetCategory = () =>
   createSelector(
     selectNewsFeedData,
-    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : undefined ), 
+    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11079),
     (state, widgetId) => state.getIn(['selectedCategory', widgetId]),
   );
 
@@ -29,24 +29,16 @@ const selectWidgetCategory = () =>
 const selectModalView = () =>
   createSelector(
     selectNewsFeedData,
-    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : undefined ), 
+    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11079),
     (state, widgetId) => state.getIn(['modalView', widgetId]),
   );
 
-  // 모달 - IDX
+// 모달 - IDX
 const selectModalIdx = () =>
   createSelector(
     selectNewsFeedData,
-    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : undefined ), 
+    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11079),
     (state, widgetId) => state.getIn(['modalIdx', widgetId]),
   );
 
-
-export {
-  selectNewsFeedData,
-  selectWidgetDataList,
-  selectWidgetCategory,
-  selectWidgetTotalCategory,
-  selectModalView,
-  selectModalIdx,
-};
+export { selectNewsFeedData, selectWidgetDataList, selectWidgetCategory, selectWidgetTotalCategory, selectModalView, selectModalIdx };

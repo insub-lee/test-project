@@ -16,10 +16,10 @@ const handleSubmit = (e, addEditorComponent) => {
     payload[key] = value;
   });
   let callbackStr = '';
-  callbackStr += '<p>';
+  callbackStr += '<div>';
   callbackStr += `<span style="font-size: 40px; float: left; display: inline-block; line-height: 1.1; padding-right: 5px;">${payload.content.charAt(0)}</span>`;
-  callbackStr += `<p style="padding-top: 7px;">${contentMake(payload.content)}</p>`;
-  callbackStr += '</p>';
+  callbackStr += `<div style="padding-top: 7px;">${contentMake(payload.content)}</div>`;
+  callbackStr += '</div>';
   addEditorComponent('editor', callbackStr);
 };
 

@@ -33,27 +33,29 @@ export default class News extends PureComponent {
     const rowHeight = 35;
     const item = dataList;
 
-    if(item.length === 0){
-      return(
-      <div className='emptyDataView'>
-          <p>
-            <img src={noDataImg}></img><br/>등록된 게시물이 없습니다.
-          </p>
-      </div>
-      );
-    } else {
+    if (item.length === 0) {
       return (
-        <ReactDataGrid
-          columns={this.columns}
-          rowGetter={i => item[i]}
-          rowsCount={item.length}
-          rowHeight={rowHeight}
-          scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
-          minHeight={rowHeight * item.length} // 위젯 row 전체 높이
-          headerRowHeight={-1}
-        />
+        <div className='emptyDataView'>
+          <p>
+            <img src={noDataImg}></img>
+            <br />
+            등록된 게시물이 없습니다.
+          </p>
+          </div>
       );
     }
+    return (
+      <ReactDataGrid
+        columns={this.columns}
+        rowGetter={i => item[i]}
+        rowsCount={item.length}
+        rowHeight={rowHeight}
+        scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
+        minHeight={rowHeight * item.length} // 위젯 row 전체 높이
+        headerRowHeight={-1}
+      />
+    );
+    
 
   }
 }

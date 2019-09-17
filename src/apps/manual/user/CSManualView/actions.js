@@ -8,7 +8,12 @@ export const addManualHistoryBySaga = (widgetId, mualIdx, mualOrgIdx) => ({ type
 
 // set
 export const setManualViewByReducr = (maulTabList, widgetId) => ({ type: constantTypes.SET_MANUAL_VIEW_REDUCR, maulTabList, widgetId });
-export const setSelectedMualIdxByReducr = (mualIdx, widgetId) => ({ type: constantTypes.SET_SELECTED_MUAL_IDX_REDUCR, mualIdx, widgetId });
+export const setSelectedMualIdxByReducr = (mualIdx, widgetId, isLastVersion) => ({
+  type: constantTypes.SET_SELECTED_MUAL_IDX_REDUCR,
+  mualIdx,
+  widgetId,
+  isLastVersion,
+});
 export const setSelectedTabIdxByReducr = (idx, widgetId) => ({ type: constantTypes.SET_SELECTED_TAB_IDX_REDUCR, idx, widgetId });
 export const setSelectedCompIdxByReducr = (idx, widgetId) => ({ type: constantTypes.SET_SELECTED_COMPONENT_IDX_REDUCR, idx, widgetId });
 export const setScrollComponentByReducr = (item, widgetId) => ({ type: constantTypes.SET_SCROLL_COMPONENT_REDUCR, item, widgetId });
@@ -31,6 +36,7 @@ export const setManualViewInfoByReducr = (maulTabList, historyList, bookmarkList
   navList,
   widgetId,
 });
+export const setViewIndexRelationListByReducr = (list, widgetId) => ({ type: constantTypes.SET_VIEW_INDEX_RELATION_LIST_REDUCR, list, widgetId });
 
 // remove
 
