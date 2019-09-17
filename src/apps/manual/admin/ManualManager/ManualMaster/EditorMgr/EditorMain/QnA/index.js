@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'antd';
-import { SortablePane, Pane } from 'react-sortable-pane';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -13,11 +12,6 @@ import QnAList from './QnaList';
 class QnA extends Component {
   componentDidMount() {}
 
-  onClickEdit = e => {
-    const { item, handleChangeCompValue } = this.props;
-    const editYn = item.COMP_OPTION.EDIT;
-  };
-
   // 저장버튼 (추가버튼)
   onClickSaveBtn = () => {
     const { item, handleChangeCompValue } = this.props;
@@ -28,33 +22,12 @@ class QnA extends Component {
       IDX: orgQnaDataList.length,
       TITLE: '',
       ANSWER: '',
-      modifyYn: false,
     };
     const newQnaDataList = orgQnaDataList.concat(newQnaRow);
     handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(newQnaDataList));
   };
 
-  // 편집모드 on /off
-  onClickModifyBtn = idx => {
-    const { item, handleChangeCompValue } = this.props;
-    const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
-    const selectedIdx = qnaDataList.findIndex(data => data.IDX === idx);
-    const selectedData = qnaDataList[selectedIdx];
-    const nextQnaDataList = [...qnaDataList];
-
-    let editYn = false;
-    if (selectedData.modifyYn !== true) {
-      editYn = true;
-    }
-
-    nextQnaDataList[selectedIdx] = {
-      ...selectedData,
-      modifyYn: editYn,
-    };
-    handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(nextQnaDataList));
-  };
-
-  // 편집 - 제목수정
+  // 제목수정
   onChangeTitleModify = (idx, value) => {
     const { item, handleChangeCompValue } = this.props;
     const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
@@ -69,7 +42,7 @@ class QnA extends Component {
     handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(nextQnaDataList));
   };
 
-  // 편집 - 내용수정
+  //  내용수정
   onChangeAnswerModify = (idx, value) => {
     const { item, handleChangeCompValue } = this.props;
     const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
@@ -103,10 +76,10 @@ class QnA extends Component {
     const { item, handleChangeCompValue } = this.props;
     const sortData = e.map(data => JSON.parse(data));
     const newQnaDataList = sortData.map((data, i) => ({ ...data, IDX: i }));
-    console.log('바뀐순서', newQnaDataList);
     handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(newQnaDataList));
   };
 
+  // dnd 아이템 인덱스 재정렬
   reOrder = (startIndex, endIndex) => {
     const { item, handleChangeCompValue } = this.props;
     const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
@@ -121,25 +94,24 @@ class QnA extends Component {
     const { item, selectedComponentIdx, handleChangeCompValue } = this.props;
     const { onChangeTitleModify, onClickRemoveBtn, onChangeAnswerModify, onClickSaveBtn } = this;
 
-    if (item.MUAL_COMPVIEWINFO === null || item.MUAL_COMPVIEWINFO === undefined || item.MUAL_COMPVIEWINFO === '') {
-      const defaultQnaDataList = [{ IDX: 0, TITLE: '', ANSWER: '', modifyYn: false }];
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(defaultQnaDataList));
-    }
-
-    const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
-    const qnaDataLength = qnaDataList.length;
-    const action = {
-      onChangeTitleModify,
-      onChangeAnswerModify,
-      onClickRemoveBtn,
-      onClickSaveBtn,
-    };
-
     const onDragEnd = result => {
       if (!result.destination) {
         return;
       }
       this.reOrder(result.source.index, result.destination.index);
+    };
+
+    if (item.MUAL_COMPVIEWINFO === null || item.MUAL_COMPVIEWINFO === undefined || item.MUAL_COMPVIEWINFO === '') {
+      const defaultQnaDataList = [{ IDX: 0, TITLE: '', ANSWER: '' }];
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(defaultQnaDataList));
+    }
+
+    const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
+    const action = {
+      onChangeTitleModify,
+      onChangeAnswerModify,
+      onClickRemoveBtn,
+      onClickSaveBtn,
     };
 
     return (
@@ -149,7 +121,7 @@ class QnA extends Component {
             <Droppable droppableId="qnaContent" type="column-item" isDropDisabled={false}>
               {(dropProvided, dropSnapshot) => (
                 <div {...dropProvided.droppableProps} ref={dropProvided.innerRef}>
-                  {qnaDataList.length > 0 &&
+                  {qnaDataList !== null &&
                     qnaDataList.map((data, index) => (
                       <Draggable key={`${data.IDX}`} index={data.IDX} draggableId={`${data.IDX}`}>
                         {(dragProvided, dragSnapshot) => (
@@ -158,7 +130,7 @@ class QnA extends Component {
                               item={item}
                               index={index}
                               qnaData={data}
-                              qnaDataLength={qnaDataLength}
+                              qnaDataLength={qnaDataList.length}
                               action={action}
                               selectedComponentIdx={selectedComponentIdx}
                             />
