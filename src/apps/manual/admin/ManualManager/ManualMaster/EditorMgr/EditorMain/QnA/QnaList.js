@@ -79,6 +79,7 @@ class QnAList extends Component {
                 type="button"
                 className="btn-primary"
                 onClick={() => {
+                  setHover(false);
                   action.onClickSaveBtn();
                 }}
               >
@@ -97,7 +98,6 @@ QnAList.propTypes = {
   qnaData: PropTypes.object,
   qnaDataLength: PropTypes.number,
   action: PropTypes.object,
-  selectedYn: PropTypes.bool,
 };
 
 QnAList.defaultProps = {
@@ -107,7 +107,6 @@ QnAList.defaultProps = {
     onClickRemoveBtn: () => false,
     onClickSaveBtn: () => false,
   },
-  selectedYn: false,
 };
 
 export default QnAList;
