@@ -16,7 +16,7 @@ function* getRootMapList({ payload }) {
 function* getCategoryMapList({ payload }) {
   const response = yield call(Axios.get, `/api/admin/v1/common/categoryMapList?MAP_ID=${payload.MAP_ID}`);
   const { categoryMapList } = response;
-  yield put(actions.setCategoryMapList(categoryMapList.map(item => ({ ...item, expanded: item.LVL <= 1, key: item.NODE_ID }))));
+  yield put(actions.setCategoryMapList(categoryMapList.map(item => ({ ...item, expanded: item.LVL === 0, key: item.NODE_ID }))));
 }
 
 function* addCategoryMap({ categoryMap }) {

@@ -135,7 +135,7 @@ class CategoryMap extends Component {
               <Input type="text" name="" placeholder="검색" />
               <button type="button" title="검색" className="searchBtn" />
             </div>
-            <div style={{ paddingTop: '10px' }}>
+            <div style={{ marginTop: '10px' }}>
               <Tree
                 treeData={categoryMapList}
                 setCategoryMapList={setCategoryMapList}
