@@ -25,7 +25,7 @@ import { BtnWhiteArr, BtnRedShare, BtnLgtGrayRegisted } from '../../../component
 // import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
 
 import AppMaNagerList from '../../../components/AppManagerList';
-import Button from '../../../../../../../components/Button/StyledButton';
+import StyledButton from '../../../../../../../components/Button/StyledButton';
 
 class AppBasicInfo extends React.Component {
   constructor(prop) {
@@ -146,7 +146,7 @@ class AppBasicInfo extends React.Component {
                 <h2 className="ellipsis">{lang.get('NAME', this.props.resAppBasicInfo)}</h2>
               </div>
               <div className="btnsWrapperTop">
-                <Button
+                <StyledButton
                   type="button"
                   className="btn-outline-secondary btn-sm"
                   onClick={this.menuClick}
@@ -159,14 +159,14 @@ class AppBasicInfo extends React.Component {
                   onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}
                 >
                   {intlObj.get(messages.workSteps)}
-                </Button>
-                <Button
+                </StyledButton>
+                <StyledButton
                   type="button"
                   className="btn-outline-secondary btn-sm"
                   onClick={() => onClickWorking(this.props.appManual.ITEM_TYPE, this.props.appManual.FILE_PATH, 'm')}
                 >
                   {intlObj.get(messages.appManual)}
-                </Button>
+                </StyledButton>
                 <Popover
                   placement="bottomRight"
                   content={
@@ -179,9 +179,9 @@ class AppBasicInfo extends React.Component {
                   overlayClassName="managerList"
                   trigger="click"
                 >
-                  <Button type="button" className="btn-outline-secondary btn-sm demoPosBtn">
+                  <StyledButton type="button" className="btn-outline-secondary btn-sm demoPosBtn">
                     {intlObj.get(messages.manager)}
-                  </Button>
+                  </StyledButton>
                 </Popover>
               </div>
             </li>

@@ -25,12 +25,19 @@ const StyleUserList = styled.div`
   .searchBox {
     width: 100%;
     padding: 20px 24px;
-    border: 4px solid #efefef;
+    border: 1px solid #d6d3da;
     text-align: right;
+    background: #f7f7f7;
+    border-radius: 3px;
+
+    .init-search {
+      padding: 0 0.644rem;
+      height: 30px;
+    }
 
     .totalResultNum {
-      float:left;
-      display:inline-block;
+      float: left;
+      display: inline-block;
       color: #f85023;
       font-size: 12px;
       line-height: 30px;
@@ -42,19 +49,18 @@ const StyleUserList = styled.div`
       height: 30px;
       float: right;
 
-      > .DatePicker, 
+      > .DatePicker,
       > .RangePicker,
       > input {
         border: 1px solid #c1c1c1;
         border-radius: 4px;
       }
 
-      > .DatePicker, 
+      > .DatePicker,
       > .RangePicker {
-
         //커스텀 캘린더 아이콘으로 교체
         &:before {
-          content: "";
+          content: '';
           display: block;
           width: 30px;
           height: 30px;
@@ -65,9 +71,13 @@ const StyleUserList = styled.div`
         }
 
         //기존 캘린더 아이콘 숨기기
-        .anticon.anticon-calendar.ant-calendar-picker-icon {display: none;}
+        .anticon.anticon-calendar.ant-calendar-picker-icon {
+          display: none;
+        }
         //캘린더 초기화 아이콘 숨기기
-        .anticon.anticon-close-circle.ant-calendar-picker-clear {display: none;}
+        .anticon.anticon-close-circle.ant-calendar-picker-clear {
+          display: none;
+        }
       }
 
       > .DatePicker {
@@ -90,10 +100,15 @@ const StyleUserList = styled.div`
           border-color: transparent !important;
           background: transparent !important;
 
-          .ant-calendar-range-picker-input {background: #ffffff; border-color: #ffffff !important;}
+          .ant-calendar-range-picker-input {
+            background: #ffffff;
+            border-color: #ffffff !important;
+          }
         }
 
-        .ant-calendar-range-picker-separator {line-height: 30px;}
+        .ant-calendar-range-picker-separator {
+          line-height: 30px;
+        }
       }
 
       > input {
@@ -151,7 +166,7 @@ const StyleUserList = styled.div`
       }
     }
   }
-  
+
   // cell에서 생략부호 보여주기
   .react-grid-Cell__value div span hltext,
   .react-grid-Cell__value div span div {

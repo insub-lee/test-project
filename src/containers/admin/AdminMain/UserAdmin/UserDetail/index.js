@@ -21,6 +21,7 @@ import StyleUserDtl from './StyleUserDtl';
 import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from '../../../../store/components/uielements/buttons.style';
 import messages from '../messages';
 import UserRegTree from '../../../components/UserRegTree';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
@@ -339,38 +340,41 @@ class UserReg extends React.Component {
       if (this.state.mode === 'D') {
         return (
           <ErrorBoundary>
-            <LinkBtnList style={{ float: 'left' }} onClick={this.onClickToList}>
-              {intlObj.get(messages.lblList)}
-            </LinkBtnList>
-            <BtnDkGray onClick={() => this.setState({ mode: 'U' })}>{intlObj.get(messages.lblUdt)}</BtnDkGray>
+            <StyledButton className="btn-light" onClick={this.onClickToList}>
+              {intlObj.get(messages.lblCancel)}
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => this.setState({ mode: 'U' })}>
+              {intlObj.get(messages.lblUdt)}
+            </StyledButton>
           </ErrorBoundary>
         );
       }
       if (this.state.mode === 'U') {
         return (
           <ErrorBoundary>
-            <LinkBtnList style={{ float: 'left' }} onClick={this.onClickToList}>
-              {intlObj.get(messages.lblList)}
-            </LinkBtnList>
-            <LinkBtnLgtGray
+            <StyledButton
+              className="btn-light"
               onClick={() => {
                 this.setUserInfo(this.props.userInfo);
                 this.setState({ mode: 'D' });
               }}
             >
               {intlObj.get(messages.lblCancel)}
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblSave)}</BtnDkGray>
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.regConfirm}>
+              {intlObj.get(messages.lblSave)}
+            </StyledButton>
           </ErrorBoundary>
         );
       }
       return (
         <ErrorBoundary>
-          <LinkBtnList style={{ float: 'left' }} onClick={this.onClickToList}>
-            {intlObj.get(messages.lblList)}
-          </LinkBtnList>
-          <LinkBtnLgtGray onClick={this.onClickToList}>{intlObj.get(messages.lblCancel)}</LinkBtnLgtGray>
-          <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblReg)}</BtnDkGray>
+          <StyledButton className="btn-light" onClick={this.onClickToList}>
+            {intlObj.get(messages.lblCancel)}
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={this.regConfirm}>
+            {intlObj.get(messages.lblReg)}
+          </StyledButton>
         </ErrorBoundary>
       );
     };
@@ -709,7 +713,7 @@ UserReg.propTypes = {
   getChangePSTNTreeData: PropTypes.func, //eslint-disable-line
   getPSTNComboData: PropTypes.func, //eslint-disable-line
   getChangeRANKTreeData: PropTypes.func, //eslint-disable-line
-  getRANKComboData: PropTypes.func, //eslint-disable-line  
+  getRANKComboData: PropTypes.func, //eslint-disable-line
   getEmpCheck: PropTypes.func, //eslint-disable-line
   getUser: PropTypes.func, //eslint-disable-line
   empNo: PropTypes.string, //eslint-disable-line
