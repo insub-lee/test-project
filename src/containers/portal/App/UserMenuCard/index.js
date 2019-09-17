@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 import { ThemeProvider } from 'styled-components';
 import themes from 'config/themes/index';
@@ -15,8 +16,11 @@ import './global-userMenuCard.css';
 const { Content } = Layout;
 
 class UserMenuCard extends PureComponent {
+  componentDidMount() {
+    this.props.hideExecApps();
+  }
+
   render() {
-    console.debug('&&&&&&&& this.props: ', this.props);
     const { execMenu, execPage } = this.props;
     return (
       <StyleUserMenuCard className="userSetting">
@@ -29,10 +33,10 @@ class UserMenuCard extends PureComponent {
                   <div className="contentWrapper">
                     <ErrorBoundary>
                       <Switch>
-                        <Route path="/portal/card/:TYPE/list/:ID" render={props => <BizMenuCardList {...props} execMenu={execMenu} execPage={execPage} />} />
-                        <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" component={BizMenuCardDetail} />
-                        <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
-                        <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" component={BizMenuCardDetail} />
+                        <Route path="/portal/card/:TYPE/list/:ID" render={props => <BizMenuCardList {...props} />} />
+                        <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />} />
+                        <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />} />
+                        <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />} />
                       </Switch>
                     </ErrorBoundary>
                   </div>
@@ -45,5 +49,9 @@ class UserMenuCard extends PureComponent {
     );
   }
 }
+
+UserMenuCard.propTypes = {
+  hideExecApps: PropTypes.func.isRequired,
+};
 
 export default UserMenuCard;

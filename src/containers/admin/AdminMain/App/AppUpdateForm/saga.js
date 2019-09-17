@@ -31,7 +31,7 @@ export function* insertAppInfo(payload) {
     );
     // history.push(`/store/appMain/MyApp/MyAppDetail/${appId}/${ver}`);
     if (SVC_YN === 'N') {
-      history.push(`/admin/adminmain/app/appUpdate/U/${appId}/${ver}/2/N`);
+      history.push(`/admin/adminmain/sysapp/appUpdate/U/${appId}/${ver}/2/N`);
     }
   } else if (code === 510) {
     feed.error(`${intlObj.get(messages.reqValFail)}`);
@@ -68,7 +68,7 @@ export function* getMyAppDetail(payload) {
 
   if (response.managerChk === 0) {
     feed.error(`${intlObj.get(messages.authChk)}`);
-    history.push('/admin/adminmain/app');
+    history.push('/admin/adminmain/sysapp');
   } else {
     const { appinfo } = response;
 

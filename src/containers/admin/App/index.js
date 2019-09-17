@@ -48,6 +48,13 @@ class App extends Component {
     // this.handleVisibleChange = this.handleVisibleChange.bind(this);
   }
 
+  componentDidMount() {
+    const url = this.props.history.location.pathname.toLowerCase();
+    if (url === '/admin' || url === '/admin/') {
+      this.props.history.push('/admin/adminmain/menu');
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     const {
       searchword,
@@ -63,7 +70,7 @@ class App extends Component {
       this.searchInput.input.value = searchword;
     }
 
-    this.props.menuAuthChk(pathname, history, 'ADMIN');
+    // this.props.menuAuthChk(pathname, history, 'ADMIN');
   }
 
   hide = () => {

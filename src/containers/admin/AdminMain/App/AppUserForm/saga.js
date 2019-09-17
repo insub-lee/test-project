@@ -29,9 +29,9 @@ export function* appUserSave(payload) {
       3,
     );
     if (appinfo.APV_STATUS_CODE === 'S' || appinfo.APV_STATUS_CODE === 'C') {
-      history.push(`/admin/adminmain/app/appDetail/${appId}/${ver}`);
+      history.push(`/admin/adminmain/sysapp/appDetail/${appId}/${ver}`);
     } else {
-      history.push(`/admin/adminmain/app/appUpdate/U/${appId}/${ver}/3/N`);
+      history.push(`/admin/adminmain/sysapp/appUpdate/U/${appId}/${ver}/3/N`);
     }
   } else if (code === 510) {
     feed.error(`${intlObj.get(messages.reqValFail)}`);
@@ -61,7 +61,7 @@ export function* getAppUser(payload) {
 
   if (response.managerChk === 0) {
     feed.error(`${intlObj.get(messages.authChk)}`);
-    history.push('/admin/adminmain/app');
+    history.push('/admin/adminmain/sysapp');
   } else {
     yield put({ type: constants.APP_MANAGER_LIST, payload: fromJS(response.appmanager) });
 

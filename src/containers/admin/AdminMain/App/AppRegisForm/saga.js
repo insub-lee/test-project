@@ -25,7 +25,7 @@ export function* insertAppInfo(payload) {
       </MessageContent>,
       3,
     );
-    history.push(`/admin/adminmain/app/appUpdate/U/${appId}/${ver}/2/N`);
+    history.push(`/admin/adminmain/sysapp/appUpdate/U/${appId}/${ver}/2/N`);
   } else if (code === 510) {
     feed.error(`${intlObj.get(messages.reqValFail)}`);
   } else if (code === 520) {

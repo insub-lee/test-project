@@ -55,6 +55,11 @@ class AppBasicInfo extends React.Component {
     this.setState({ popUpVisible: false });
   };
 
+  menuClick = () => {
+    const { execPage, resAppBasicInfo} = this.props;
+    execPage(resAppBasicInfo, 'execMenu');
+  }
+
   render() {
     const popUp = (
       <div className="newFaqWrite">
@@ -110,6 +115,8 @@ class AppBasicInfo extends React.Component {
       this.setState({ orgShow, userinfo });
     };
 
+    console.debug('!!!!! appBasicInfo: ', this.props);
+
     const closeModal = () => this.setState({ orgShow: false });
     /* eslint-disable */
     return (
@@ -140,6 +147,13 @@ class AppBasicInfo extends React.Component {
               </div>
               <div className="btnsWrapperTop">
                 <StyledButton
+                  type="button"
+                  className="btn-outline-secondary btn-sm"
+                  onClick={this.menuClick}
+                >
+                  앱실행
+                </Button>
+                <Button
                   type="button"
                   className="btn-outline-secondary btn-sm"
                   onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}

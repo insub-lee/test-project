@@ -33,10 +33,10 @@ class UserCategoryMenu extends Component {
     this.setState(prevState => ({ visible: !prevState.visible }));
   };
 
-  onNoneClick = () => {
-    this.setState({ visible: false });
-    this.props.setMenuClose();
-  };
+  // onNoneClick = () => {
+  //   this.setState({ visible: false });
+  //   this.props.setMenuClose();
+  // };
 
   onMenuClick = () => {
     this.setState({ visible: false });

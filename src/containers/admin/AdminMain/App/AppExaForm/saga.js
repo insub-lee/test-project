@@ -22,7 +22,7 @@ export function* appExamine(payload) {
       </MessageContent>,
       3,
     );
-    history.push('/admin/adminmain/app');
+    history.push('/admin/adminmain/sysapp');
     // yield put({ type: constants.APP_EXAMINE_OK, payload: true });
   } else if (code === 201) {
     feed.error(`${intlObj.get(messages.appExaInsertFail2)}`);

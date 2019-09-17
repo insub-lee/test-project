@@ -12,7 +12,7 @@ import * as constants from './constants';
 
 export function* reqAppRatingInfo(payload) {
   const { page, pagePerNum, appRatingList } = payload.payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/store/apprating/', payload.payload);
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/AGroupRatingHandler', payload.payload);
   if (response.appRatingList.length > 0) {
     response.appRatingList.map(item =>
       appRatingList.push({
@@ -104,7 +104,7 @@ export function* registRating(payload) {
     appRatingList: [],
   };
   const gubun = payload.payload.GUBUN;
-  const response = yield call(Axios.post, '/api/bizstore/v1/store/registrating/', payload.payload);
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/AGroupRegistRatingHandler', payload.payload);
   const { code } = response;
 
   if (code === 200 || code === 201) {
@@ -125,7 +125,11 @@ export function* registRating(payload) {
         feed.error(`${intlObj.get(messages.reviewDeleteErr)}`);
       }
     }
-
+    const { starList } = yield call(Axios.post, `/api/bizstore/v1/bizgroup/ADetailHandler`, { type: 'star' });
+    yield put({
+      type: constants.SAVE_STAR_POINT,
+      starList,
+    });
     yield put({
       type: constants.REQ_APP_RATING_INFO,
       payload: param,

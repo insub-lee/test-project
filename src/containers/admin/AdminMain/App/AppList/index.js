@@ -118,7 +118,7 @@ class MyAppList extends React.Component {
   }
   HyperlinkFomatter = (val) => {
     const hyperlinkName = lang.get('NAME', val.dependentValues);
-    const myAppKey = `/admin/adminmain/app/appDetail/${val.dependentValues.APP_ID}/${val.dependentValues.VER}`;
+    const myAppKey = `/admin/adminmain/sysapp/appDetail/${val.dependentValues.APP_ID}/${val.dependentValues.VER}`;
 
     return (
       <Link to={myAppKey}>
@@ -278,7 +278,7 @@ class MyAppList extends React.Component {
             />
           </StyleDataGrid>
           <div className="buttonWrapper">
-            <Link to="/admin/adminmain/app/appRegis">
+            <Link to="/admin/adminmain/sysapp/appRegis">
               <LinkBtnDkGray>
                 {intlObj.get(messages.appRegis)}
               </LinkBtnDkGray>

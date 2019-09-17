@@ -1588,6 +1588,23 @@ export function* getCommonMenuTree() {
   }
 }
 
+export function* resetLastExecYn() {
+  const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
+  const index = dockAppList.findIndex(dockApp => dockApp.LAST_EXEC_YN === 'Y');
+  if (index > -1) {
+    const dockAppListUpdate = update(dockAppList, {
+      [index]: {
+        EXEC_YN: { $set: 'Y' },
+        LAST_EXEC_YN: { $set: 'N' },
+      },
+    });
+    yield put({
+      type: actionTypes.EXEC_DOCKITEM,
+      payload: dockAppListUpdate,
+    });
+  }
+}
+
 export default function* appSaga() {
   yield takeLatest(actionTypes.AUTH_REQUEST_UUID, loginRequestUUID);
   yield takeLatest(actionTypes.AUTH_RECONNECT_UUID, loginReconnectUUID);
@@ -1671,4 +1688,7 @@ export default function* appSaga() {
 
   // 9-1
   yield takeLatest(actionTypes.GET_COMMON_MENU_TREE_SAGA, getCommonMenuTree);
+
+  yield takeLatest(actionTypes.RESET_LAST_EXEC_YN, resetLastExecYn);
+  
 }

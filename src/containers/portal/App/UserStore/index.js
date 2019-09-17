@@ -46,7 +46,8 @@ class UserStore extends Component {
     super(props);
   }
   componentDidMount() {
-    this.props.getMenu('STORE');
+    // this.props.getMenu('STORE');
+    this.props.hideExecApps();
   }
 
   render() {
@@ -102,6 +103,7 @@ UserStore.propTypes = {
   menuAuthChk: PropTypes.func.isRequired,
   currentView: PropTypes.string.isRequired,
   appbizGubun: PropTypes.number.isRequired,
+  hideExecApps: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

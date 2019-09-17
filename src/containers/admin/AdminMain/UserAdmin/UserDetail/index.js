@@ -18,7 +18,7 @@ import saga from './saga';
 import * as selectors from './selectors';
 import StyleUserForm from './StyleUserForm';
 import StyleUserDtl from './StyleUserDtl';
-import { LinkBtnLgtGray, BtnDkGray } from '../../../../store/components/uielements/buttons.style';
+import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from '../../../../store/components/uielements/buttons.style';
 import messages from '../messages';
 import UserRegTree from '../../../components/UserRegTree';
 import StyledButton from '../../../../../components/Button/StyledButton';

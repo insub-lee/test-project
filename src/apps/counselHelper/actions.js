@@ -11,3 +11,8 @@ export const getDetail = (detail, WIDGET_ID) => ({
   detail,
   WIDGET_ID,
 });
+
+export const saveStarPoint = starList => ({
+  type: action.SAVE_STAR_POINT,
+  starList,
+});

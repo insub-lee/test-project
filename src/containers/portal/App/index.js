@@ -88,7 +88,7 @@ class App extends React.PureComponent {
       isSpinnerShow: false,
       // isPreviewPage: false,
       // menu 고정용 state,
-      fixedMenu: false,
+      fixedMenu: TextTrackCue,
     };
 
     this.count = 0;
@@ -333,10 +333,9 @@ class App extends React.PureComponent {
   };
 
   setFixedOpenMenu = () => {
-    this.setState(prevState => ({
-      fixedMenu: !prevState.fixedMenu,
-      open: false,
-    }));
+    this.setState(prevState => {
+      return { fixedMenu: !prevState.fixedMenu };
+    });
   }
 
   setMenuOpen = () => {
@@ -352,15 +351,10 @@ class App extends React.PureComponent {
   };
 
   setMenuClose = () => {
-    if(!this.state.fixedMenu) {
-      this.setState(
-        {
-          open: false,
-        },
-        () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
-      );
-    }
-    event.preventDefault();
+    this.setState(prevState => {
+      const { fixedMenu, open } = prevState;
+      return { open: fixedMenu ? open : false };
+    });
   };
 
   setHeaderMenuClose = () => {
@@ -623,8 +617,8 @@ class App extends React.PureComponent {
     this.setState({ show: false });
   };
 
-  hideApps = () => {
-    const { apps } = this.props;
+  hideExecApps = () => {
+    const { apps, resetLastExecYn} = this.props;
     const appsCopy = apps.slice();
     appsCopy.forEach((o, i) => {
       if (o.containerInfo.children[i + 1]) {
@@ -636,25 +630,23 @@ class App extends React.PureComponent {
         o.containerInfo.children[i + 1].classList.remove('activeMenu');
       }
     });
+    // common.dockAppList 의 LAST_EXEC_YN 값을 'N'으로 변경 - DB는 변경 하지 않음
+    resetLastExecYn();
   };
 
   goStore = () => {
-    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizStore`);
   };
 
   goSettings = () => {
-    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/settings`);
   };
 
   goBusinessReg = () => {
-    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
   };
 
   goHomeWidget = homeId => {
-    this.hideApps();
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
@@ -665,12 +657,14 @@ class App extends React.PureComponent {
      공통메뉴의 첫번째 메뉴를 임의로 공통메뉴 홈으로 설정
      없을 경우 개인 홈으로 이동
      */
-    if (commonMenuTreeData && commonMenuTreeData.length > 0) { 
-      const commonHome = commonMenuTreeData[0].value;
-      this.props.history.push(`/${basicPath.PAGE}/${commonHome}`);
-    } else {
-      this.execPage(dockHomeItem, 'execDock');
+    if (commonMenuTreeData && commonMenuTreeData.length > 0) {
+      const idx = commonMenuTreeData.findIndex(item => item.extras.APP_YN === 'N');
+      if(idx > -1 ) {
+        this.execPage(commonMenuTreeData[idx].extras, 'execMenu');
+        return;
+      } 
     }
+    this.execPage(dockHomeItem, 'execDock');
   };  
 
   getLayoutMarginRight = () => {
@@ -715,6 +709,7 @@ class App extends React.PureComponent {
       history,
       headerTitle,
       profile,
+      resetLastExecYn,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -781,6 +776,7 @@ class App extends React.PureComponent {
             isShow={open}
             toggleMenu={open ? this.setMenuClose : this.setOpen}
             setOpen={this.setOpen}
+            setMenuClose={this.setMenuClose}
             setFixedOpenMenu={this.setFixedOpenMenu}
             execMenu={this.execMenu}
             execPage={this.execPage}
@@ -826,7 +822,7 @@ class App extends React.PureComponent {
             </div> */}
           </SideMenu>
           <Layout
-            style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight() } : mobileDockCss}
+            style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight(), transition: 'margin-left 0.3s ease-out 0s' } : mobileDockCss}
           >
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
@@ -867,6 +863,7 @@ class App extends React.PureComponent {
                           render={() => (
                             <UserSetting //eslint-disable-line
                               applySkin={this.applySkin}
+                              hideExecApps={this.hideExecApps}
                             />
                           )}
                         />
@@ -877,6 +874,7 @@ class App extends React.PureComponent {
                             <UserStore //eslint-disable-line
                               {...props}
                               applySkin={this.applySkin}
+                              hideExecApps={this.hideExecApps}
                             />
                           )}
                         />
@@ -886,6 +884,7 @@ class App extends React.PureComponent {
                             <UserStore //eslint-disable-line
                               {...props}
                               applySkin={this.applySkin}
+                              hideExecApps={this.hideExecApps}
                             />
                           )}
                         />
@@ -897,6 +896,7 @@ class App extends React.PureComponent {
                               execMenu={this.execMenu}
                               execPage={this.execPage}
                               applySkin={this.applySkin}
+                              hideExecApps={this.hideExecApps}
                             />
                           )}
                         />
@@ -1011,6 +1011,7 @@ App.propTypes = {
   profile: PropTypes.object.isRequired,
   handleMenuShow: PropTypes.func.isRequired,
   commonMenuTreeData: PropTypes.array.isRequired,
+  resetLastExecYn: PropTypes.func.isRequired,
 };
 
 App.defaultProps = {
@@ -1079,6 +1080,7 @@ const mapDispatchToProps = dispatch => ({
   handleGetDataForApps: EXEC_PAGE_IDS => dispatch(routesAction.getDataForApps(EXEC_PAGE_IDS)),
   handleSaveApps: (apps, setMyMenuData) => dispatch(routesAction.saveApps(apps, setMyMenuData)),
   handleMenuShow: open => dispatch(actions.setMenuShow(open)),
+  resetLastExecYn: () => dispatch(routesAction.resetLastExecYn()),
 });
 const withConnect = connect(
   mapStateToProps,
