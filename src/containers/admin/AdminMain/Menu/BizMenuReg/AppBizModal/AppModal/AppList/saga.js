@@ -5,7 +5,6 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 
 import { Axios } from 'utils/AxiosFunc';
 
-// import * as constantsApp from 'containers/store/App/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as constantsBizMenu from '../../../constants';
 

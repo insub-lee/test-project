@@ -1,4 +1,4 @@
-import * as appConstants from 'containers/store/App/constants';
+import * as appConstants from 'containers/admin/App/constants';
 import * as constants from './constants';
 
 export const initPage = (initType, param) => ({

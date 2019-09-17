@@ -15,11 +15,11 @@ import * as actionsLoading from 'containers/common/Loading/actions';
 import { fromJS } from 'immutable';
 import { injectIntl } from 'react-intl';
 import Upload from 'components/Upload';
-import MyAppCategoryModal from 'containers/store/AppMain/MyApp/MyAppCategoryModal';
-
+// import MyAppCategoryModal from 'containers/store/AppMain/MyApp/MyAppCategoryModal';
+import MyAppCategoryModal from 'containers/admin/AdminMain/App/AppCategoryModal';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import Footer from 'containers/store/App/Footer';
+import Footer from 'containers/admin/App/Footer';
 import * as selectors from './selectors';
 import * as menuSelectors from '../selectors';
 import * as actions from './actions';
