@@ -7,11 +7,16 @@ const Styled = styled.div`
   .react-tabs__tab input {
     background-color: #eff0f2;
     display: inherit;
-    width: 100px;
+    width: 120px;
     border: none;
     padding: 0;
     line-height: normal;
     height: 22px;
+    & {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 `;
 

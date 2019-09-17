@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+
 import { Input } from 'antd';
-import WriteTab from 'components/WritePage/WriteTab';
-import WriteTabTitle from 'components/WritePage/WriteTab/WriteTabTitle';
-import StyledWriteTabPanel from 'components/WritePage/StyledWriteTabPanel';
+import WriteTab from '../../../../../../components/WritePage/WriteTab';
+import WriteTabTitle from '../../../../../../components/WritePage/WriteTab/WriteTabTitle';
+import StyledWriteTabPanel from '../../../../../../components/WritePage/StyledWriteTabPanel';
 import FroalaEditor from '../../../../../../components/RichTextEditor/FroalaEditor';
 import FroalaEditorView from '../../../../../../components/RichTextEditor/FroalaEditorView';
 import { froalaEditorConfig } from '../../../../../../components/RichTextEditor/FroalaEditorConfig';
@@ -127,10 +127,18 @@ class Tab extends Component {
     return false;
   };
 
+  maxFlag = data => {
+    if (data.length === 5) {
+      return true;
+    }
+    return false;
+  };
+
   render() {
     const { item, selectedComponentIdx, handleChangeCompValue } = this.props;
     const tabData = this.initData(item.MUAL_COMPVIEWINFO);
     const removeFlag = this.removeFlag(tabData);
+    const maxFlag = this.maxFlag(tabData);
     const WriteTabData = tabData.map(data => ({
       id: data.id,
       TabComponent: (
@@ -150,7 +158,7 @@ class Tab extends Component {
       id: data.id,
       TabComponent: (
         <WriteTabTitle
-          title={data.title}
+          title={<div className="titleWrap">{data.title}</div>}
           onRemove={e => {
             this.handlerRemove(e, data.id);
           }}
@@ -174,6 +182,7 @@ class Tab extends Component {
             onClick={this.handlerOnClick}
             selectedIndex={this.state.selectedIndex}
             setIndex={this.handlerSetIndex}
+            flag={maxFlag ? 'noShow' : 'show'}
           ></WriteTab>
         ) : (
           <WriteTab
@@ -182,6 +191,7 @@ class Tab extends Component {
             onClick={this.handlerOnClick}
             selectedIndex={this.state.selectedIndex}
             setIndex={this.handlerSetIndex}
+            flag={maxFlag ? 'noShow' : 'show'}
           ></WriteTab>
         )}
       </Styled>
