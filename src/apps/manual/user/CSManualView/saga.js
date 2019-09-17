@@ -11,7 +11,7 @@ import selectors from './selectors';
 function* getManualView(action) {
   const { flag, widgetId } = action;
   let mualIdx = yield select(selectors.makeSelectedMualIdxByWidgetId(widgetId));
-  const lastVersionYN = flag ? flag.toUpperCase() : 'Y';
+  const lastVersionYN = flag ? flag.toUpperCase() : yield select(selectors.makeSelectIsLastVersionByWidgetId(widgetId)) || 'Y';
 
   if (mualIdx && mualIdx > 0) {
     yield put(actions.resetManualViewByReducr(widgetId));
@@ -32,6 +32,35 @@ function* getManualView(action) {
         ),
       );
       mualIdx = defaultMgrMap.MUAL_IDX;
+      let isIndexRelation = false;
+      let indexRelationIdxList = [];
+      // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
+      if (maulTabList.length > 0) {
+        maulTabList.forEach(node => {
+          const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
+          if (tempList.length > 0) {
+            isIndexRelation = true;
+            indexRelationIdxList = indexRelationIdxList.concat(tempList);
+          }
+        });
+      }
+      if (isIndexRelation) {
+        const indexRelationParam = [];
+        indexRelationIdxList.forEach(node => {
+          if (node.COMP_OPTION) {
+            const { MUAL_ORG_IDX, MUAL_TABCOMP_OIDX } = node.COMP_OPTION;
+            if (indexRelationParam.findIndex(find => find.MUAL_TABCOMP_OIDX === MUAL_TABCOMP_OIDX) === -1) {
+              indexRelationParam.push({ MUAL_ORG_IDX, MUAL_TABCOMP_OIDX });
+            }
+          }
+        });
+        const responseComp = yield call(Axios.post, `/api/manual/v1/IndexRelationComponetHandler/${mualIdx}`, {
+          paramList: indexRelationParam,
+        });
+        if (responseComp) {
+          yield put(actions.setViewIndexRelationListByReducr(fromJS(responseComp.list || []), widgetId));
+        }
+      }
     } else {
       console.debug('tab error');
     }

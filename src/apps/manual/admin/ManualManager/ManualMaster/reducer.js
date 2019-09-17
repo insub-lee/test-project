@@ -526,7 +526,7 @@ const addTabInfo = state => {
 };
 
 const addComponentInfo = (state, compType, text) => {
-  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna', 'indexRelation'];
+  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna', 'indexRelation', 'tab'];
   if (addType.findIndex(item => item === compType) === -1) {
     console.debug('type error');
     return state;
@@ -554,7 +554,7 @@ const addComponentInfo = (state, compType, text) => {
     MUAL_IDX: selectedMualIdx,
     SORT_SQ: sortSQ,
     TYPE: compType,
-    MUAL_COMPVIEWINFO: '',
+    MUAL_COMPVIEWINFO: null, // 이정현 수정
     IS_REMOVE: 'N',
     IS_SAVE: 'N',
   };
@@ -565,7 +565,7 @@ const addComponentInfo = (state, compType, text) => {
     newComp.COMP_OPTION = fromJS({ VIEW_TYPE: 'link', URL: fromJS(['']) });
   }
   if (compType === 'qna') {
-    newComp.COMP_OPTION = fromJS({ ANSWER: '' });
+    newComp.COMP_OPTION = fromJS({ TITLE: '' });
   }
   if (compType === 'editor') {
     newComp.MUAL_COMPVIEWINFO = text || '';

@@ -166,7 +166,7 @@ function* saveEditorInfoSaga() {
           ? compList.map(comp => ({
             ...comp,
             COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
-            MUAL_COMPVIEWINFO:
+              MUAL_COMPVIEWINFO:
                 comp.MUAL_COMPVIEWINFO && typeof comp.MUAL_COMPVIEWINFO === 'object' ? JSON.stringify(comp.MUAL_COMPVIEWINFO) : comp.MUAL_COMPVIEWINFO,
           }))
           : [],

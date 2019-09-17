@@ -73,26 +73,25 @@ const StyleWidget = styled.div`
     }
   }
 
-  
   // 하단 emptyDataView
-  .emptyDataView{
+  .emptyDataView {
     display: table;
     width: 100%;
     min-height: 200px;
     background-color: transparent !important;
     margin-top: -10px;
     > p {
-            display: table-cell;
-            color: #707070;
-            font-size: 16px;
-            text-align: center;
-            vertical-align: middle;
-              > img {
-                margin-bottom: 10px;
-              }
-          }
+      display: table-cell;
+      color: #707070;
+      font-size: 16px;
+      text-align: center;
+      vertical-align: middle;
+      > img {
+        margin-bottom: 10px;
+      }
+    }
   }
-  
+
   // 하단 data grid
   .react-grid-Container {
     width: 100% !important;

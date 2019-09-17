@@ -18,15 +18,15 @@ const handleSubmit = (e, addEditorComponent) => {
 
   const firstThumb = payload.image1 ? `<img src="${payload.image1.replace('200x200', '0x0')}" alt="firstImg" name="two" style="width:100%;" />` : '';
   const firstTitle = payload.title1 !== '' ? `<h2>${payload.title1}</h2>` : '';
-  const firstContents = payload.contents1 !== '' ? `<p style="padding-top: 20px; text-align: left;">${contentMake(payload.contents1)}</p>` : '';
+  const firstContents = payload.contents1 !== '' ? `<div style="padding-top: 20px; text-align: left;">${contentMake(payload.contents1)}</div>` : '';
 
   const secondThumb = payload.image2 ? `<img src="${payload.image2.replace('200x200', '0x0')}" alt="secondImg" name="two" style="width:100%;" />` : '';
   const secondTitle = payload.title2 !== '' ? `<h2>${payload.title2}</h2>` : '';
-  const secondContents = payload.contents2 !== '' ? `<p style="padding-top: 20px; text-align: left;">${contentMake(payload.contents2)}</p>` : '';
+  const secondContents = payload.contents2 !== '' ? `<div style="padding-top: 20px; text-align: left;">${contentMake(payload.contents2)}</div>` : '';
 
   const thirdThumb = payload.image3 ? `<img src="${payload.image3.replace('200x200', '0x0')}" alt="secondImg" name="two" style="width:100%;" />` : '';
   const thirdTitle = payload.title3 !== '' ? `<h2>${payload.title3}</h2>` : '';
-  const thirdContents = payload.contents3 !== '' ? `<p style="padding-top: 20px; text-align: left;">${contentMake(payload.contents3)}</p>` : '';
+  const thirdContents = payload.contents3 !== '' ? `<div style="padding-top: 20px; text-align: left;">${contentMake(payload.contents3)}</div>` : '';
 
   const callbackStr = `<table class="" style="width: 100%;">
         <tbody>

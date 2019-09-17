@@ -47,4 +47,4 @@ export const setModalIdx = (mualIdx, widget_id) => ({
   type: constants.SET_MODAL_IDX,
   mualIdx,
   widget_id,
-})
+});

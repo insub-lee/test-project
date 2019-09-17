@@ -17,7 +17,7 @@ const StyleEditorMain = styled.div`
       border-color: rgba(15, 156, 238, 0.37);
     }
     .fr-wrapper {
-      div:first-child {
+      > div:first-child {
         display: none;
       }
     }
@@ -249,6 +249,180 @@ const StyleEditorMain = styled.div`
     .fr-toolbar.fr-bottom {
       border-top: 2px solid #000;
       border-radius: 0;
+    }
+  }
+
+  .editorComponent {
+    .fr-box.fr-basic .fr-element {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-top: 0;
+      border-bottom: 0;
+    }
+    .fr-toolbar.fr-bottom {
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-top: 0;
+    }
+  }
+
+  /* QNA - Btn - CSS */
+  .btn-primary {
+    color: #fff;
+    background-color: #886ab5;
+    border-color: #886ab5;
+    box-shadow: 0 2px 6px 0 rgba(136, 106, 181, 0.5);
+    &:hover {
+      color: #fff;
+      background-color: #7453a6;
+      border-color: #6e4e9e;
+    }
+  }
+
+  .btn-outline-success {
+    color: #2196f3;
+    background-color: #fff;
+    border-color: #2196f3;
+    box-shadow: 0 2px 6px 0 rgba(33, 150, 243, 0.5);
+    &:hover {
+      color: #fff;
+      background-color: #0c83e2;
+      border-color: #0c7cd5;
+    }
+  }
+
+  .btn-outline-secondary {
+    color: #868e96;
+    background-color: #fff;
+    border-color: #868e96;
+    box-shadow: 0 2px 6px 0 rgba(134, 142, 150, 0.5);
+    &:hover {
+      color: #fff;
+      background-color: #727b84;
+      border-color: #6c757d;
+    }
+  }
+
+  .btn-outline-danger {
+    color: #fd3995;
+    background-color: #fff;
+    border-color: #fd3995;
+    box-shadow: 0 2px 6px 0 rgba(253, 57, 149, 0.5);
+    &:hover {
+      color: #fff;
+      background-color: #fd1381;
+      border-color: #fc077a;
+    }
+  }
+
+  /* QNA - CSS */
+  .manual-qna-wrap {
+    border: 1px solid #e5e5e5;
+    border-top: 2px solid #886ab5;
+    padding: 10px 20px 10px;
+    .qna-data-wrap {
+      margin: 10px;
+      padding: 10px;
+      /* border: 2px solid black; */
+    }
+    .qna-dl {
+      padding: 15px 0;
+      min-height: 206px;
+      &.qna-dl-edit {
+        padding: 30px 0px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      & .btn-wrap {
+        text-align: center;
+        margin: 0 auto;
+        text-align: center;
+        padding: 0;
+        margin-top: 20px;
+      }
+      & > div {
+        position: relative;
+        padding-left: 60px;
+        margin-bottom: 15px;
+        & > span {
+          position: absolute;
+          left: 0;
+          display: block;
+          width: 40px;
+          height: 40px;
+          line-height: 35px;
+          border-radius: 100%;
+          text-align: center;
+          font-size: 20px;
+          font-weight: 600;
+        }
+      }
+      .qna-dt {
+        & > span {
+          top: 50%;
+          transform: translateY(-50%);
+          color: #886ab5;
+          background-color: #fff;
+          border: 1px solid #e5e5e5;
+        }
+        & > p {
+          color: #000;
+          font-size: 18px;
+          font-weight: 600;
+          border-bottom: 1px solid #e5e5e5;
+          width: 100%;
+          height: 58px;
+          padding: 15px 0;
+          margin: 0;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          padding-right: 0px;
+          & > input {
+            display: block;
+            width: 100%;
+            background-color: #fff;
+            border: 0;
+            color: #000;
+            font-size: 18px;
+            font-weight: 600;
+          }
+        }
+        & > .edit-btn-wrap {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          right: 0;
+          & > button {
+            margin-right: 10px;
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+        }
+      }
+      .qna-dd {
+        & > .fr-box {
+          cursor: auto;
+        }
+        & > span {
+          top: 0;
+          background-color: #886ab5;
+          color: #fff;
+          border: 1px solid #886ab5;
+        }
+        & > .text-box {
+          background-color: #f6f6f6;
+          padding: 15px;
+          line-height: 2;
+          & p {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 10px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+      }
     }
   }
 `;

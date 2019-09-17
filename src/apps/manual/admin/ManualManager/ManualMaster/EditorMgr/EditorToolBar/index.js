@@ -17,6 +17,7 @@ class ItemToolBar extends Component {
 
   render() {
     const { addEditorComponent, addParagraph } = this.props;
+
     return (
       <Menu borderless className="itemtoolbar" icon vertical>
         <Scrollbars autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ height: '100%' }}>
