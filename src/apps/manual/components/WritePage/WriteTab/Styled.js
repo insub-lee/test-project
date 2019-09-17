@@ -17,8 +17,8 @@ const Styled = styled.div`
       }
     }
     ul.react-tabs__tab-list {
-      display: inline-flex;
-      flex-wrap: wrap;
+      width: 100%;
+      display: flax;
       padding-left: 0;
       margin-bottom: 0;
       list-style: none;

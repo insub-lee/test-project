@@ -12,6 +12,7 @@ const Styled = styled.div`
   display: block;
   padding: 0.5rem 1.125rem;
   .titleWrap {
+    text-align: left;
     display: inherit;
     border: none;
     padding: 0;
@@ -28,17 +29,16 @@ const Styled = styled.div`
     background-color: transparent;
     border: none;
     outline: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 5px;
     & > i {
       font-size: 20px;
       color: #886ab5;
     }
   }
-  input ~ .btn-m-minus {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    right: 5px;
-  }
+
   .noShow {
     display: none;
   }
