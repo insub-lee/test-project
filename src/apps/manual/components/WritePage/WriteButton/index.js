@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Icon } from 'antd';
 
-import Button from '../../../../../components/Button/StyledButton';
+import Button from '../../CommonButton/StyledButton';
 import Styled from './Styled';
 
 const WriteButton = () => (
