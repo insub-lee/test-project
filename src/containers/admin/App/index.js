@@ -21,8 +21,8 @@ import Trigger from './Trigger';
 import AdminMain from '../AdminMain/SiteAdmin/SiteList';
 import AdminList from '../AdminMain';
 
-import AdminUpload from '../Account/Admin/index2';
-import Study from '../Study';
+// import AdminUpload from '../Account/Admin/index2';
+// import Study from '../Study';
 
 import * as selectors from './selectors';
 import reducer from './reducer';
@@ -132,8 +132,8 @@ class App extends Component {
                     <Route exact path="/" />
                     <Route exact path="/admin" component={AdminMain} />
                     <Route path="/admin/adminMain" component={AdminList} />
-                    <Route path="/admin/upload" component={AdminUpload} />
-                    <Route path="/admin/study" component={Study} />
+                    {/* <Route path="/admin/upload" component={AdminUpload} />
+                    <Route path="/admin/study" component={Study} /> */}
                   </Switch>
                 </div>
               </div>
