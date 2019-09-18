@@ -12,7 +12,7 @@ import { ThemeProvider } from 'styled-components';
 
 import themes from 'config/themes/index';
 import storeHome from 'images/bizstore/system-admin-appstore.png';
-import 'containers/store/App/global-store.css';
+import 'containers/admin/App/global-store.css';
 import 'containers/admin/App/global-admin.css';
 
 import injectReducer from '../../../utils/injectReducer';
