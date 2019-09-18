@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  width: 580px;
-  padding: 10px 100px 10px 0px;
+  /*width: 580px;
+  padding: 10px 100px 10px 0px; */
+  width: 100%;
+  padding: 10px 0;
   .templetManageTitle {
     text-align: center;
   }
@@ -19,7 +21,8 @@ const Styled = styled.div`
     padding: 10px;
   }
   .templetManageButtonWrap {
-    padding-top: 10px;
+    text-align: center;
+    margin-top: 30px;
   }
   .templetManageContent {
     min-height: 24px;
