@@ -23,7 +23,24 @@ const Styled = styled.div`
       margin-bottom: 0;
       list-style: none;
       li.react-tabs__tab {
-        width: 20%;
+        width: ${props => {
+    switch (props.length) {
+      case 1:
+        return 'calc(100% - 40px)';
+
+      case 2:
+        return 'calc(50% - 20px)';
+
+      case 3:
+        return 'calc(33.33% - 13px)';
+
+      case 4:
+        return 'calc(25% - 10px)';
+
+      default:
+        return '20%';
+    }
+  }};
         margin-bottom: -1px;
         &.react-tabs__tab--selected {
           & > div {
@@ -32,7 +49,7 @@ const Styled = styled.div`
           }
         }
         &:last-child {
-          & > div {
+          & div {
             border-right: 1px solid #e5e5e5;
           }
           .tab-dividers::after {

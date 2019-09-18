@@ -134,11 +134,14 @@ class Tab extends Component {
     return false;
   };
 
+  lengData = data => data.length;
+
   render() {
-    const { item, selectedComponentIdx, handleChangeCompValue } = this.props;
+    const { item, selectedComponentIdx } = this.props;
     const tabData = this.initData(item.MUAL_COMPVIEWINFO);
     const removeFlag = this.removeFlag(tabData);
     const maxFlag = this.maxFlag(tabData);
+    const length = this.lengData(tabData);
     const WriteTabData = tabData.map(data => ({
       id: data.id,
       TabComponent: (
@@ -162,7 +165,7 @@ class Tab extends Component {
           onRemove={e => {
             this.handlerRemove(e, data.id);
           }}
-          flag={removeFlag ? 'noShow' : 'show'}
+          flag="noShow"
         />
       ),
       TabPanelComponent: (
@@ -183,6 +186,7 @@ class Tab extends Component {
             selectedIndex={this.state.selectedIndex}
             setIndex={this.handlerSetIndex}
             flag={maxFlag ? 'noShow' : 'show'}
+            length={length}
           ></WriteTab>
         ) : (
           <WriteTab
@@ -192,10 +196,12 @@ class Tab extends Component {
             selectedIndex={this.state.selectedIndex}
             setIndex={this.handlerSetIndex}
             flag={maxFlag ? 'noShow' : 'show'}
+            length={length}
           ></WriteTab>
         )}
       </Styled>
     );
   }
 }
+
 export default Tab;

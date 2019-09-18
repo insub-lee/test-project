@@ -7,7 +7,7 @@ const Styled = styled.div`
   .react-tabs__tab input {
     background-color: #eff0f2;
     display: inherit;
-    width: 120px;
+    width: 93%;
     border: none;
     padding: 0;
     line-height: normal;

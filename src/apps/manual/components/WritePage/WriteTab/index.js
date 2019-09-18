@@ -5,8 +5,8 @@ import { Icon } from 'antd';
 
 import Styled from './Styled';
 
-const WriteTab = ({ tabs, keyName, onClick, selectedIndex, setIndex, flag }) => (
-  <Styled>
+const WriteTab = ({ tabs, keyName, onClick, selectedIndex, setIndex, flag, length }) => (
+  <Styled length={length}>
     <ReactTabs
       selectedIndex={selectedIndex}
       onSelect={index => {
@@ -20,10 +20,10 @@ const WriteTab = ({ tabs, keyName, onClick, selectedIndex, setIndex, flag }) => 
               {tab.TabComponent}
             </Tab>
           ))}
+          <button type="button" className={`btn-m-plus ${flag}`} onClick={onClick}>
+            <Icon type="plus-circle" />
+          </button>
         </TabList>
-        <button type="button" className={`btn-m-plus ${flag}`} onClick={onClick}>
-          <Icon type="plus-circle" />
-        </button>
       </div>
       {tabs.map(tab => (
         <TabPanel key={tab[keyName]}>{tab.TabPanelComponent}</TabPanel>

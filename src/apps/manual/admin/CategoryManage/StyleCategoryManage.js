@@ -27,7 +27,6 @@ const StyleCategoryManage = styled.div`
       button {
         position: absolute;
         right: 0px;
-        padding: 0 10px;
         font-size: 12px;
         height: auto;
         box-shadow: none;

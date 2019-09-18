@@ -17,6 +17,7 @@ import StyleCategoryManage from './StyleCategoryManage';
 import Tree from './Tree';
 import CategoryInfo from './CategoryInfo';
 import WaitManualList from './WaitManualList';
+import StyledButton from '../../../../components/Button/StyledButton';
 
 class CategoryManage extends Component {
   componentDidMount() {
@@ -46,7 +47,9 @@ class CategoryManage extends Component {
         <div className="categoryWrapper">
           <div className="categoryTitleWrapper">
             <h3 className="pageTitle list">카테고리 관리</h3>
-            <Button onClick={() => setIsWaitModal(true)}>미확정 리스트 보기</Button>
+            <StyledButton className="btn-sm btn-bs-none btn-outline-danger" onClick={() => setIsWaitModal(true)}>
+              미확정 리스트 보기
+            </StyledButton>
           </div>
           <div className="categoryManageWrapper">
             <div className="categoryTreeWrapper">

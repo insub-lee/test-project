@@ -13,7 +13,7 @@ const WriteTabTitle = ({ title, onRemove, flag }) => (
 );
 
 WriteTabTitle.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.object,
 };
 
 WriteTabTitle.defaultProps = {

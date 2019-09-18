@@ -13,6 +13,7 @@ import selectors from '../selectors';
 import * as actions from '../actions';
 import * as manageActions from '../../actions';
 
+import StyledButton from '../../../../../../components/Button/StyledButton';
 import StyleDefaultMgr from './StyleDefaultMgr';
 import AddManualType from './AddManualType';
 
@@ -195,44 +196,44 @@ class DefaultMgr extends Component {
                   <Option value={1}>일반매뉴얼</Option>
                   {this.renderSelectOption(compareList, 0)}
                 </Select>
-                <Button type="primary" onClick={() => setIsAddMualTypeModal(true)}>
+                <StyledButton className="btn-sm btn-bs-none btn-dark btn-add" onClick={() => setIsAddMualTypeModal(true)}>
                   추가
-                </Button>
+                </StyledButton>
               </td>
             </tr>
             <tr>
               <td colSpan="4" className="defaultMgrButtonWarp">
                 {pageMoveType.get('selectedMualIdx') === 0 ? (
-                  <Button type="primary" onClick={InsertDefaultMgrBySaga}>
+                  <StyledButton className="btn-primary btn-bs-none" onClick={InsertDefaultMgrBySaga}>
                     저장
-                  </Button>
+                  </StyledButton>
                 ) : (
-                  <Button type="primary" onClick={UpdateDefaultMgrBySaga}>
+                  <StyledButton className="btn-primary btn-bs-none" onClick={UpdateDefaultMgrBySaga}>
                     수정
-                  </Button>
+                  </StyledButton>
                 )}
                 {IsMaxVersion && defaultMgrMap.get('MUAL_STATE') === 'PUBS' && (
-                  <Button type="primary" onClick={RevisionManualBySaga}>
+                  <StyledButton className="btn-success btn-bs-none" onClick={RevisionManualBySaga}>
                     새버전
-                  </Button>
+                  </StyledButton>
                 )}
                 {pageMoveType.get('selectedMualIdx') !== 0 &&
                   defaultMgrMap.get('MUAL_STATE') === 'WAIT' && [
-                    <Button type="primary" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
+                    <StyledButton className="btn-success btn-bs-none" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
                       확정
-                    </Button>,
-                    <Button type="primary" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
+                    </StyledButton>,
+                    <StyledButton className="btn-dark btn-bs-none" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
                       삭제
-                    </Button>,
+                    </StyledButton>,
                   ]}
                 {IsMaxVersion && defaultMgrMap.get('VERSIONLIST').size > 1 && defaultMgrMap.get('MUAL_STATE') === 'PUBS' && (
-                  <Button type="primary" onClick={ResetDefaultMgrBySaga}>
+                  <StyledButton className="btn-dark btn-bs-none" onClick={ResetDefaultMgrBySaga}>
                     초기화
-                  </Button>
+                  </StyledButton>
                 )}
-                <Button type="primary" onClick={() => setManualManage('change', pageMoveType.get('selectedCategoryIdx'), 0)}>
+                <StyledButton className="btn-secondary btn-bs-none" onClick={() => setManualManage('change', pageMoveType.get('selectedCategoryIdx'), 0)}>
                   목록
-                </Button>
+                </StyledButton>
               </td>
             </tr>
           </tbody>
