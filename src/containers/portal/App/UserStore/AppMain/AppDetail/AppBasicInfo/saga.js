@@ -13,7 +13,7 @@ export function* reqAppBasicInfo(payload) {
 
   if (response.appInfo !== null) {
     yield put({ 
-      type: constants.RES_APP_BASIC_INFO, 
+      type: constants.RES_APP_BASIC_INFO,
       payload: response.appInfo,
       appPageInfoData: response.appPageInfoData,
      });

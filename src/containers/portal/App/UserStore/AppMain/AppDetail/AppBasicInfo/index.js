@@ -43,19 +43,22 @@ class AppBasicInfo extends React.Component {
   }
 
   componentDidMount() {
-    const { reqAppBasicInfo, appId, BIZGRP_ID } = this.props;
+    const { reqAppBasicInfo, appId, BIZGRP_ID, history: { location : { pathname }} } = this.props;
     const params = {
       appId,
       bizgroupId: BIZGRP_ID,
+      menuGubun: pathname.split('/')[3],
     };
     reqAppBasicInfo(params);
   }
 
   componentWillReceiveProps(nextProps) {
+    const {history: { location : { pathname }} } = nextProps;
     if (this.state.appId !== nextProps.appId) {
       const params = {
         appId: nextProps.appId,
         bizgroupId: nextProps.BIZGRP_ID,
+        menuGubun: pathname.split('/')[3],
       };
       this.setState({
         appId: nextProps.appId,
@@ -127,7 +130,7 @@ class AppBasicInfo extends React.Component {
     const userProfile = (userinfo, orgShow) => {
       this.setState({ orgShow, userinfo });
     };
-
+    console.debug('>>>>>>>this.props: ', this.props);
     const closeModal = () => this.setState({ orgShow: false });
     /* eslint-disable */
     return (

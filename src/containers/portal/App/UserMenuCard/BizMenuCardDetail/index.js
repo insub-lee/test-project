@@ -62,7 +62,6 @@ class BizMenuCardDetail extends Component {
 
   /* eslint-disable */
   handleTreeOnClick = node => {
-    console.log('트리클릭 테스트');
     const {
       handleChangeSelectedIndex,
       history,
@@ -87,9 +86,6 @@ class BizMenuCardDetail extends Component {
 
   render() {
     const { bizMenuData, selectedIndex, history, match, execMenu, execPage } = this.props;
-
-    console.debug('>>>>>>>>bizMenuData: ', bizMenuData);
-
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
     const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
 

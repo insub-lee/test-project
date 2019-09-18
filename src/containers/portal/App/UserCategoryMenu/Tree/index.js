@@ -110,7 +110,7 @@ class Tree extends Component {
     let menuIconClassName = 'icon-workCard';
     if(node.MENU_NODE_TYPE === 'BIZ') { // 업무폴더일 경우
       menuIconClassName = 'icon-workCard';
-    } else if(node.MENU_NODE_TYPE === 'FLD') { // 일반 폴더일 경우 (업무메뉴 중)
+    } else if(node.MENU_NODE_TYPE === 'FLD') { // 일반 폴더일 경우
       menuIconClassName = 'icon-workFolder';
     } else { // 그 외
       menuIconClassName = 'icon-pen';
