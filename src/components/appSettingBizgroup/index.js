@@ -9,7 +9,8 @@ import { intlObj, lang } from 'utils/commonUtils';
 import { Form, Button, Radio, Col, Row, Input } from 'antd';
 import { Link } from 'react-router-dom';
 
-import * as actionsBizManage from 'containers/store/AppMain/BizManage/BizMenuReg/PageInfo/actions';
+// import * as actionsBizManage from 'containers/store/AppMain/BizManage/BizMenuReg/PageInfo/actions';
+import * as actionsBizManage from 'containers/admin/AdminMain/Menu/BizMenuReg/PageInfo/actions';
 
 import messages from './messages';
 import injectReducer from '../../utils/injectReducer';
