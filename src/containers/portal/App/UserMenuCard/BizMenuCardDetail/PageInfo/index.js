@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import BizStorePage from 'containers/store/components/BizStorePage';
 import { lang } from 'utils/commonUtils';
 import _ from 'lodash';
 
@@ -14,6 +13,8 @@ import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
+
+import BizStorePage from '../../../UserStore/components/BizStorePage';
 
 class PageInfo extends Component {
   constructor(props) {
@@ -30,8 +31,7 @@ class PageInfo extends Component {
     const { params } = match;
     const { pageId } = params;
 
-    if (pageId
-      && this.state.PAGE_ID !== pageId) {
+    if (pageId && this.state.PAGE_ID !== pageId) {
       this.setState({
         PAGE_ID: pageId,
       });
@@ -40,10 +40,7 @@ class PageInfo extends Component {
   }
 
   render() {
-    const {
-      widgetList,
-    } = this.props;
-
+    const { widgetList, pageInfoData, execPage, execMenu } = this.props;
     /* widgetList를 미리보기용으로 변경 */
     const cWidgetList = _.clone(widgetList); // 복제
     const { length } = cWidgetList;
@@ -58,7 +55,7 @@ class PageInfo extends Component {
 
     return (
       <div>
-        <BizStorePage columns={this.props.widgetList} />
+        <BizStorePage columns={this.props.widgetList} pageInfoData={pageInfoData} execPage={execPage} execMenu={execMenu} />
       </div>
     );
   }
@@ -68,6 +65,9 @@ PageInfo.propTypes = {
   match: PropTypes.object.isRequired,
   getWidgetList: PropTypes.func.isRequired,
   widgetList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  pageInfoData: PropTypes.object.isRequired,
+  execPage: PropTypes.func.isRequired,
+  execMenu: PropTypes.func.isRequired,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -78,11 +78,15 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
+  pageInfoData: selectors.makePageInfoData(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
-const withReducer = injectReducer({ key: 'bizPage', reducer });
-const withSaga = injectSaga({ key: 'bizPage', saga });
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
+const withReducer = injectReducer({ key: 'portal_bizMenuCard_PageInfo', reducer });
+const withSaga = injectSaga({ key: 'portal_bizMenuCard_PageInfo', saga });
 
 export default compose(
   withReducer,
