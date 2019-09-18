@@ -27,6 +27,7 @@ import StyleSiteAdminDtl from './StyleSiteAdminDtl';
 import { LinkBtnLgtGray, BtnDkGray } from '../../../../store/components/uielements/buttons.style';
 import messages from '../messages';
 import AntRadiobox from '../../../../portal/components/uielements/radiobox.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const FormItem = Form.Item;
 const RadioGroup = AntRadiobox(Radio.Group);
@@ -227,39 +228,44 @@ class SiteReg extends React.Component {
 
     // managerSetMembersDefault.USER_ID = '';
 
-
     this.setState({
       managerSetMembers: managerSetMembersDefault,
       grpSetMembers: grpSetMembersDefault,
     });
-  }
+  };
 
   vaildChk = () => {
     const mngCnt = this.state.managerSetMembers.length;
-    const usrCnt = this.state.userSetMembers.length
-    + this.state.pstnSetMembers.length
-    + this.state.deptSetMembers.length
-    + this.state.dutySetMembers.length
-    + this.state.grpSetMembers.length;
+    const usrCnt =
+      this.state.userSetMembers.length +
+      this.state.pstnSetMembers.length +
+      this.state.deptSetMembers.length +
+      this.state.dutySetMembers.length +
+      this.state.grpSetMembers.length;
 
-    if (this.state.NAME_KOR !== '' && this.state.NAME_KOR !== null
-    && this.state.URL !== '' && this.state.URL !== null
-    && this.state.THEME_CD !== '' && this.state.THEME_CD !== null
-    && mngCnt > 0 && usrCnt > 0) {
+    if (
+      this.state.NAME_KOR !== '' &&
+      this.state.NAME_KOR !== null &&
+      this.state.URL !== '' &&
+      this.state.URL !== null &&
+      this.state.THEME_CD !== '' &&
+      this.state.THEME_CD !== null &&
+      mngCnt > 0 &&
+      usrCnt > 0
+    ) {
       if (!this.props.getNameChkK && !this.props.getUrlChk) return true;
       message.error(`${intlObj.get(messages.chkInput)}`, 2);
       return false;
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
-  }
-
+  };
 
   regConfirm = () => {
     if (this.vaildChk()) {
       feed.showConfirm(`${intlObj.get(messages.regConfirm)}`, '', this.regSite);
     }
-  }
+  };
 
   regSite = () => {
     // 저장 프로세스
@@ -282,7 +288,7 @@ class SiteReg extends React.Component {
       this.state.grpSetMembers,
       this.props.history,
     );
-  }
+  };
 
   managerOrgOpen = () => {
     this.setState({
@@ -319,7 +325,7 @@ class SiteReg extends React.Component {
 
   render() {
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganization = (resultObj) => {
+    const getDataFromOrganization = resultObj => {
       const managerSetMembersFromOrganization = resultObj.selectedUsers;
 
       this.setState({
@@ -328,39 +334,39 @@ class SiteReg extends React.Component {
     };
 
     // 조직도에서 가져온 리스트 뷰
-    const returnManagerList = (resultObj) => {
+    const returnManagerList = resultObj => {
       this.setState({
         managerSetMembers: resultObj,
       });
     };
 
-    const returnUserList = (resultObj) => {
+    const returnUserList = resultObj => {
       this.setState({
         userSetMembers: resultObj,
       });
     };
-    const returnDutyList = (resultObj) => {
+    const returnDutyList = resultObj => {
       this.setState({
         dutySetMembers: resultObj,
       });
     };
-    const returnPstnList = (resultObj) => {
+    const returnPstnList = resultObj => {
       this.setState({
         pstnSetMembers: resultObj,
       });
     };
-    const returnGrpList = (resultObj) => {
+    const returnGrpList = resultObj => {
       this.setState({
         grpSetMembers: resultObj,
       });
     };
-    const returnDetpList = (resultObj) => {
+    const returnDetpList = resultObj => {
       this.setState({
         deptSetMembers: resultObj,
       });
     };
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = (resultObj) => {
+    const getDataFromOrganizationAll = resultObj => {
       // 구성원
       const userSetMembersFromOrganization = resultObj.selectedUsers;
       // 직위
@@ -400,7 +406,7 @@ class SiteReg extends React.Component {
             padding: '0 0 0 0',
             bordar: '0',
             float: 'left',
-                }}
+          }}
           className="skinOptions"
         >
           <ErrorBoundary>
@@ -424,34 +430,34 @@ class SiteReg extends React.Component {
 
     // const homeRow = this.props.loadHome.map(keycomp => <Option key={keycomp.BIZGRP_ID}>{lang.get('NAME', keycomp)}</Option>);
 
-    const dupNameChkK = (stat) => {
+    const dupNameChkK = stat => {
       if (this.state.NAME_KOR !== '') {
-        if (stat) return (<font color="RED">{intlObj.get(messages.dupName)}</font>);
-        return (<font color="GREEN">{intlObj.get(messages.dupNameX)}</font>);
+        if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
+        return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
       }
       return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
     };
 
-    const dupNameChkC = (stat) => {
+    const dupNameChkC = stat => {
       if (this.state.NAME_CHN !== '') {
-        if (stat) return (<font color="RED">{intlObj.get(messages.dupName)}</font>);
-        return (<font color="GREEN">{intlObj.get(messages.dupNameX)}</font>);
+        if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
+        return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
       }
       return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
     };
 
-    const dupNameChkE = (stat) => {
+    const dupNameChkE = stat => {
       if (this.state.NAME_ENG !== '') {
-        if (stat) return (<font color="RED">{intlObj.get(messages.dupName)}</font>);
-        return (<font color="GREEN">{intlObj.get(messages.dupNameX)}</font>);
+        if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
+        return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
       }
       return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
     };
 
-    const dupUrlChk = (stat) => {
+    const dupUrlChk = stat => {
       if (this.state.URL !== '') {
-        if (stat) return (<font color="RED">{intlObj.get(messages.dupUrl)}</font>);
-        return (<font color="GREEN">{intlObj.get(messages.dupUrlX)}</font>);
+        if (stat) return <font color="RED">{intlObj.get(messages.dupUrl)}</font>;
+        return <font color="GREEN">{intlObj.get(messages.dupUrlX)}</font>;
       }
       return ''; // (<font color="RED">URL이 잘못되었습니다.</font>);
     };
@@ -464,7 +470,7 @@ class SiteReg extends React.Component {
 
     return (
       <div>
-        {this.state.managerOrgShow ?
+        {this.state.managerOrgShow ? (
           <ErrorBoundary>
             <OrganizationRole
               show={this.state.managerOrgShow}
@@ -475,9 +481,9 @@ class SiteReg extends React.Component {
               ROLE_CD="SM"
             />
           </ErrorBoundary>
-          :
+        ) : (
           ''
-        }
+        )}
         <ErrorBoundary>
           <Organization
             isDeptSelectbox={true}
@@ -512,11 +518,7 @@ class SiteReg extends React.Component {
                     <label htmlFor="s1">{intlObj.get(messages.titleSiteNameKor)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.state.nameValid_Kor && !this.props.getNameChkK ? 'success' : 'error'}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.state.nameValid_Kor && !this.props.getNameChkK ? 'success' : 'error'}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblSiteNamePlaceholder)}
@@ -539,11 +541,7 @@ class SiteReg extends React.Component {
                     <label htmlFor="s1">{intlObj.get(messages.titleSiteNameEng)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.state.nameValid_Eng && !this.props.getNameChkE ? 'success' : 'error'}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.state.nameValid_Eng && !this.props.getNameChkE ? 'success' : 'error'}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblSiteNamePlaceholder)}
@@ -565,11 +563,7 @@ class SiteReg extends React.Component {
                     <label htmlFor="s1">{intlObj.get(messages.titleSiteNameChn)}</label>
                   </th>
                   <td>
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.state.nameValid_Chn && !this.props.getNameChkC ? 'success' : 'error'}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.state.nameValid_Chn && !this.props.getNameChkC ? 'success' : 'error'}>
                       <ErrorBoundary>
                         <Input
                           placeholder={intlObj.get(messages.lblSiteNamePlaceholder)}
@@ -591,11 +585,7 @@ class SiteReg extends React.Component {
                     <label htmlFor="s2">URL</label>
                   </th>
                   <td className="urlForm">
-                    <FormItem
-                      {...formItemLayout}
-                      hasFeedback
-                      validateStatus={this.state.urlValid && !this.props.getUrlChk ? 'success' : 'error'}
-                    >
+                    <FormItem {...formItemLayout} hasFeedback validateStatus={this.state.urlValid && !this.props.getUrlChk ? 'success' : 'error'}>
                       <span className="mainUrlTxt">http://</span>
                       <ErrorBoundary>
                         <Input
@@ -623,14 +613,12 @@ class SiteReg extends React.Component {
                       <div className="authorityList">
                         {/* // 리턴 뷰 사용 */}
                         <ErrorBoundary>
-                          <SiteManagerList
-                            managerList={this.state.managerSetMembers}
-                            delFlag={true}
-                            returnManagerList={returnManagerList}
-                          />
+                          <SiteManagerList managerList={this.state.managerSetMembers} delFlag={true} returnManagerList={returnManagerList} />
                         </ErrorBoundary>
                       </div>
-                      <button onClick={this.managerOrgOpen} className="textLinkBtn">&lt; {intlObj.get(messages.lblEdit)}</button>
+                      <button onClick={this.managerOrgOpen} className="textLinkBtn">
+                        &lt; {intlObj.get(messages.lblEdit)}
+                      </button>
                     </FormItem>
                   </td>
                 </tr>
@@ -659,7 +647,9 @@ class SiteReg extends React.Component {
                           />
                         </ErrorBoundary>
                       </div>
-                      <button onClick={this.allOrgOpen} className="textLinkBtn">&lt; {intlObj.get(messages.lblEdit)}</button>
+                      <button onClick={this.allOrgOpen} className="textLinkBtn">
+                        &lt; {intlObj.get(messages.lblEdit)}
+                      </button>
                     </FormItem>
                   </td>
                 </tr>
@@ -707,9 +697,7 @@ class SiteReg extends React.Component {
                       <div className="skinWrapper">
                         <ErrorBoundary>
                           <RadioGroup onChange={this.onChangeTheme} value={this.state.THEME_CD}>
-                            <ul className="skinList">
-                              {skinRow(this.props.loadSkin)}
-                            </ul>
+                            <ul className="skinList">{skinRow(this.props.loadSkin)}</ul>
                           </RadioGroup>
                         </ErrorBoundary>
                       </div>
@@ -721,14 +709,14 @@ class SiteReg extends React.Component {
           </StyleSiteAdminForm>
           <div className="buttonWrapper">
             <ErrorBoundary>
-              <LinkBtnLgtGray>
-                <Link to="/admin/adminmain/siteadmin">
-                  {intlObj.get(messages.lblCancel)}
-                </Link>
-              </LinkBtnLgtGray>
+              <StyledButton className="btn-dark">
+                <Link to="/admin/adminmain/siteadmin">{intlObj.get(messages.lblCancel)}</Link>
+              </StyledButton>
             </ErrorBoundary>
             <ErrorBoundary>
-              <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.lblReg)}</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={this.regConfirm}>
+                {intlObj.get(messages.lblReg)}
+              </StyledButton>
             </ErrorBoundary>
           </div>
         </StyleSiteAdminDtl>
@@ -757,28 +745,28 @@ SiteReg.propTypes = {
   getNameChkC: PropTypes.string.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    chkName: (keywordType, NAME_KOR) => dispatch(actions.chkName(keywordType, NAME_KOR)),
-    chkUrl: (keywordType, URL) => dispatch(actions.chkUrl(keywordType, URL)),
-    getSkinList: () => dispatch(actions.getSkinList()),
-    getHomeList: () => dispatch(actions.getHomeList()),
-    registSite: (
-      nameKor,
-      nameChn,
-      nameEng,
-      url,
-      bizgrpId,
-      themeCd,
-      managerSetMembers,
-      userSetMembers,
-      pstnSetMembers,
-      deptSetMembers,
-      dutySetMembers,
-      grpSetMembers,
-      history,
-    ) =>
-      dispatch(actions.registSite(
+const mapDispatchToProps = dispatch => ({
+  chkName: (keywordType, NAME_KOR) => dispatch(actions.chkName(keywordType, NAME_KOR)),
+  chkUrl: (keywordType, URL) => dispatch(actions.chkUrl(keywordType, URL)),
+  getSkinList: () => dispatch(actions.getSkinList()),
+  getHomeList: () => dispatch(actions.getHomeList()),
+  registSite: (
+    nameKor,
+    nameChn,
+    nameEng,
+    url,
+    bizgrpId,
+    themeCd,
+    managerSetMembers,
+    userSetMembers,
+    pstnSetMembers,
+    deptSetMembers,
+    dutySetMembers,
+    grpSetMembers,
+    history,
+  ) =>
+    dispatch(
+      actions.registSite(
         nameKor,
         nameChn,
         nameEng,
@@ -792,10 +780,10 @@ const mapDispatchToProps = dispatch => (
         dutySetMembers,
         grpSetMembers,
         history,
-      )),
-    getDefaultList: () => dispatch(actions.getDefaultList()),
-  }
-);
+      ),
+    ),
+  getDefaultList: () => dispatch(actions.getDefaultList()),
+});
 
 const mapStateToProps = createStructuredSelector({
   loadSkin: selectors.makeSkinList(),
@@ -810,7 +798,10 @@ const mapStateToProps = createStructuredSelector({
   getDefault: selectors.makeDefaultList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'SiteReg', saga });
 const withReducer = injectReducer({ key: 'SiteReg', reducer });
 

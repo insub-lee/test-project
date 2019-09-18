@@ -15,6 +15,7 @@ import message from 'components/Feedback/message';
 import Footer from 'containers/admin/App/Footer';
 import { Input, Select } from 'antd';
 import { LinkBtnLgtGray, BtnDkGray } from '../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../components/Button/StyledButton';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -71,7 +72,7 @@ class Position extends React.Component {
     }
   }
 
-  onChangeDept = (val) => {
+  onChangeDept = val => {
     this.setState({
       PSTN_ID: '',
       PSTN_NAME: '',
@@ -90,51 +91,55 @@ class Position extends React.Component {
       // UPD_USER_NAME: '',
       // UPD_DTTM: '',
     });
-    if (val === 0) { // 최상위 등록
+    if (val === 0) {
+      // 최상위 등록
       this.setState({ mode: 'I' });
       this.textKor.focus();
     }
     this.props.getChangePstnTreeData(val);
-  }
+  };
 
   /* 추가 작업
   onChangePstnCODE = (e) => {
     this.setState({ PSTN_CODE: e.target.value });
   }
   */
-  onChangeNameKOR = (e) => {
+  onChangeNameKOR = e => {
     this.setState({ NAME_KOR: e.target.value });
-  }
-  onChangeNameENG = (e) => {
+  };
+
+  onChangeNameENG = e => {
     this.setState({ NAME_ENG: e.target.value });
-  }
-  onChangeNameCHN = (e) => {
+  };
+
+  onChangeNameCHN = e => {
     this.setState({ NAME_CHN: e.target.value });
-  }
-  onChangeNameJPN = (e) => {
+  };
+
+  onChangeNameJPN = e => {
     this.setState({ NAME_JPN: e.target.value });
-  }
-  onChangeNameETC = (e) => {
+  };
+
+  onChangeNameETC = e => {
     this.setState({ NAME_ETC: e.target.value });
-  }
-  onChangePSTNCD = (e) => {
+  };
+
+  onChangePSTNCD = e => {
     this.setState({ PSTN_CD: e.target.value });
-  }
-  onChangeCOMPCD = (e) => {
+  };
+
+  onChangeCOMPCD = e => {
     this.setState({ COMP_CD: e.target.value });
-  }
+  };
 
   udtConfirm = () => {
-    feed.showConfirm(
-      '저장하시겠습니까?',
-      '',
-      this.udtSave,
-    );
-  }
+    feed.showConfirm('저장하시겠습니까?', '', this.udtSave);
+  };
 
   udtSave = () => {
     if (this.vaildChk()) {
-      if (this.state.mode === 'U') { // 수정
+      if (this.state.mode === 'U') {
+        // 수정
         this.props.updatePstn(
           Number(this.state.selectedIndex),
           this.state.PSTN_CD,
@@ -148,7 +153,8 @@ class Position extends React.Component {
           this.state.selectedDept,
         );
       }
-      if (this.state.mode === 'I') { // 신규등록
+      if (this.state.mode === 'I') {
+        // 신규등록
         this.props.insertPstn(
           this.state.PSTN_CD,
           Number(this.state.PRNT_ID),
@@ -163,31 +169,30 @@ class Position extends React.Component {
       }
       this.setState({ mode: 'D' });
     }
-  }
+  };
 
   vaildChk = () => {
-    if (this.state.NAME_KOR !== '' &&
+    if (
+      this.state.NAME_KOR !== '' &&
       this.state.NAME_ENG !== '' &&
       this.state.NAME_CHN !== '' &&
       this.state.NAME_JPN !== '' &&
       this.state.NAME_ETC !== '' &&
-      this.state.PSTN_CD !== '') {
+      this.state.PSTN_CD !== ''
+    ) {
       return true;
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
-  }
+  };
 
   render() {
     // const {
     //   type,
     // } = this.props;
     const type = '';
-    const comboOptions = comboList => (
-      comboList.map(item =>
-        <Option value={item.PSTN_ID}>{item.NAME_KOR}</Option>)
-    );
-    const handleTreeOnClick = (node) => {
+    const comboOptions = comboList => comboList.map(item => <Option value={item.PSTN_ID}>{item.NAME_KOR}</Option>);
+    const handleTreeOnClick = node => {
       this.setState({
         PSTN_ID: node.PSTN_ID,
         PSTN_NAME: lang.get('NAME', node),
@@ -217,7 +222,7 @@ class Position extends React.Component {
       }
     };
 
-    const returnGateInfo = (node) => {
+    const returnGateInfo = node => {
       this.setState({
         mode: 'I',
         PSTN_CD: '',
@@ -239,12 +244,13 @@ class Position extends React.Component {
       this.props.deletePstn(PSTN_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
     };
 
-    const movePosition = (treeData) => {
+    const movePosition = treeData => {
       this.props.movePosition(this.state.selectedDept, treeData);
     };
 
-    const botBtn = (mode) => {
-      if (mode === 'I') { // 등록
+    const botBtn = mode => {
+      if (mode === 'I') {
+        // 등록
         return (
           <React.Fragment>
             {/* <LinkBtnLgtGray onClick={() => {
@@ -255,10 +261,13 @@ class Position extends React.Component {
             }}
             >취소
             </LinkBtnLgtGray> */}
-            <BtnDkGray onClick={this.udtConfirm}>저장</BtnDkGray>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              저장
+            </StyledButton>
           </React.Fragment>
         );
-      } else if (mode === 'D') { // 상세
+      } if (mode === 'D') {
+        // 상세
         return (
           <React.Fragment>
             {/* <div style={{ float: 'left' }}> */}
@@ -266,34 +275,42 @@ class Position extends React.Component {
             {/* </div> */}
             <BtnDkGray
               style={{ float: 'rigth' }}
-              onClick={() => this.setState({
-              mode: 'U',
-              orgNameKor: this.state.NAME_KOR,
-              orgNameEng: this.state.NAME_ENG,
-              orgNameChn: this.state.NAME_CHN,
-              orgNameJpn: this.state.NAME_JPN,
-              orgNameEtc: this.state.NAME_ETC,
-              orgCompCd: this.state.COMP_CD,
-              orgPstnCd: this.state.PSTN_CD,
-             })}
-            >수정
+              onClick={() =>
+                this.setState({
+                  mode: 'U',
+                  orgNameKor: this.state.NAME_KOR,
+                  orgNameEng: this.state.NAME_ENG,
+                  orgNameChn: this.state.NAME_CHN,
+                  orgNameJpn: this.state.NAME_JPN,
+                  orgNameEtc: this.state.NAME_ETC,
+                  orgCompCd: this.state.COMP_CD,
+                  orgPstnCd: this.state.PSTN_CD,
+                })
+              }
+            >
+              수정
             </BtnDkGray>
           </React.Fragment>
         );
-      } else if (mode === 'U') { // 수정
+      } else if (mode === 'U') {
+        // 수정
         return (
           <React.Fragment>
-            <LinkBtnLgtGray onClick={() => this.setState({
-              mode: 'D',
-              NAME_KOR: this.state.orgNameKor,
-              NAME_ENG: this.state.orgNameEng,
-              NAME_CHN: this.state.orgNameChn,
-              NAME_JPN: this.state.orgNameJpn,
-              NAME_ETC: this.state.orgNameEtc,
-              COMP_CD: this.state.orgCompCd,
-              PSTN_CD: this.state.orgPstnCd,
-              })}
-            >취소
+            <LinkBtnLgtGray
+              onClick={() =>
+                this.setState({
+                  mode: 'D',
+                  NAME_KOR: this.state.orgNameKor,
+                  NAME_ENG: this.state.orgNameEng,
+                  NAME_CHN: this.state.orgNameChn,
+                  NAME_JPN: this.state.orgNameJpn,
+                  NAME_ETC: this.state.orgNameEtc,
+                  COMP_CD: this.state.orgCompCd,
+                  PSTN_CD: this.state.orgPstnCd,
+                })
+              }
+            >
+              취소
             </LinkBtnLgtGray>
             <BtnDkGray onClick={this.udtConfirm}>저장</BtnDkGray>
           </React.Fragment>
@@ -323,9 +340,9 @@ class Position extends React.Component {
                   returnGateDelete={returnGateDelete}
                   history={this.props.history}
                   selectedIndex={this.state.selectedIndex}
-                  canDrag={true}
+                  canDrag
                   canDropOut={false}
-                  canDrop={true}
+                  canDrop
                   moveNode={movePosition}
                   onOk={onOk}
                 />
@@ -347,7 +364,7 @@ class Position extends React.Component {
                           onChange={this.onChangeNameKOR}
                           readOnly={this.state.mode === 'D'}
                           maxLength={200}
-                          ref={(ref) => {
+                          ref={ref => {
                             if (ref) {
                               this.textKor = ref;
                             }
@@ -360,13 +377,7 @@ class Position extends React.Component {
                         <label htmlFor="v3">직위 명(ENG)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v3"
-                          value={this.state.NAME_ENG}
-                          onChange={this.onChangeNameENG}
-                          readOnly={this.state.mode === 'D'}
-                          maxLength={200}
-                        />
+                        <Input id="v3" value={this.state.NAME_ENG} onChange={this.onChangeNameENG} readOnly={this.state.mode === 'D'} maxLength={200} />
                       </td>
                     </tr>
                     <tr>
@@ -374,13 +385,7 @@ class Position extends React.Component {
                         <label htmlFor="v4">직위 명(CHN)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v4"
-                          value={this.state.NAME_CHN}
-                          onChange={this.onChangeNameCHN}
-                          readOnly={this.state.mode === 'D'}
-                          maxLength={200}
-                        />
+                        <Input id="v4" value={this.state.NAME_CHN} onChange={this.onChangeNameCHN} readOnly={this.state.mode === 'D'} maxLength={200} />
                       </td>
                     </tr>
                     <tr>
@@ -388,13 +393,7 @@ class Position extends React.Component {
                         <label htmlFor="v5">직위 명(JPN)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v5"
-                          value={this.state.NAME_JPN}
-                          onChange={this.onChangeNameJPN}
-                          readOnly={this.state.mode === 'D'}
-                          maxLength={200}
-                        />
+                        <Input id="v5" value={this.state.NAME_JPN} onChange={this.onChangeNameJPN} readOnly={this.state.mode === 'D'} maxLength={200} />
                       </td>
                     </tr>
                     <tr>
@@ -402,13 +401,7 @@ class Position extends React.Component {
                         <label htmlFor="v6">직위 명(ETC)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v6"
-                          value={this.state.NAME_ETC}
-                          onChange={this.onChangeNameETC}
-                          readOnly={this.state.mode === 'D'}
-                          maxLength={200}
-                        />
+                        <Input id="v6" value={this.state.NAME_ETC} onChange={this.onChangeNameETC} readOnly={this.state.mode === 'D'} maxLength={200} />
                       </td>
                     </tr>
                     <tr>
@@ -416,13 +409,7 @@ class Position extends React.Component {
                         <label htmlFor="v7">직위 코드</label>
                       </th>
                       <td>
-                        <Input
-                          id="v7"
-                          value={this.state.PSTN_CD}
-                          onChange={this.onChangePSTNCD}
-                          readOnly={this.state.mode === 'D'}
-                          maxLength={10}
-                        />
+                        <Input id="v7" value={this.state.PSTN_CD} onChange={this.onChangePSTNCD} readOnly={this.state.mode === 'D'} maxLength={10} />
                       </td>
                     </tr>
                     <tr>
@@ -430,12 +417,7 @@ class Position extends React.Component {
                         <label htmlFor="v8">법인 코드</label>
                       </th>
                       <td>
-                        <Input
-                          id="v8"
-                          value={this.state.COMP_CD}
-                          onChange={this.onChangeCOMPCD}
-                          readOnly={this.state.mode === 'D'}
-                        />
+                        <Input id="v8" value={this.state.COMP_CD} onChange={this.onChangeCOMPCD} readOnly={this.state.mode === 'D'} />
                       </td>
                     </tr>
                     {/* <tr>
@@ -474,9 +456,7 @@ class Position extends React.Component {
                 </table>
               </StyleCategoryForm>
             </div>
-            <div className="buttonWrapper">
-              {botBtn(this.state.mode)}
-            </div>
+            <div className="buttonWrapper">{botBtn(this.state.mode)}</div>
           </div>
           <Footer />
         </StyleCategory>
@@ -487,8 +467,8 @@ class Position extends React.Component {
 
 Position.propTypes = {
   // type: PropTypes.string.isRequired,
-  show: PropTypes.bool,  //eslint-disable-line
-  onCancel: PropTypes.func,  //eslint-disable-line
+  show: PropTypes.bool, //eslint-disable-line
+  onCancel: PropTypes.func, //eslint-disable-line
   getPstnTreeData: PropTypes.func, //eslint-disable-line
   getChangePstnTreeData: PropTypes.func, //eslint-disable-line
   pstnTreeData: PropTypes.array, //eslint-disable-line
@@ -509,53 +489,11 @@ export function mapDispatchToProps(dispatch) {
   return {
     getPstnTreeData: () => dispatch(actions.getPstnTreeData()),
     getChangePstnTreeData: PSTN_ID => dispatch(actions.getChangePstnTreeData(PSTN_ID)),
-    insertPstn: (
-      PSTN_CD,
-      PRNT_ID,
-      NAME_KOR,
-      NAME_ENG,
-      NAME_CHN,
-      NAME_JPN,
-      NAME_ETC,
-      COMP_CD,
-      selectedDept,
-    ) => {
-      dispatch(actions.insertPstn(
-        PSTN_CD,
-        PRNT_ID,
-        NAME_KOR,
-        NAME_ENG,
-        NAME_CHN,
-        NAME_JPN,
-        NAME_ETC,
-        COMP_CD,
-        selectedDept,
-      ));
+    insertPstn: (PSTN_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => {
+      dispatch(actions.insertPstn(PSTN_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept));
     },
-    updatePstn: (
-      PSTN_ID,
-      PSTN_CD,
-      PRNT_ID,
-      NAME_KOR,
-      NAME_ENG,
-      NAME_CHN,
-      NAME_JPN,
-      NAME_ETC,
-      COMP_CD,
-      selectedDept,
-    ) => {
-      dispatch(actions.updatePstn(
-        PSTN_ID,
-        PSTN_CD,
-        PRNT_ID,
-        NAME_KOR,
-        NAME_ENG,
-        NAME_CHN,
-        NAME_JPN,
-        NAME_ETC,
-        COMP_CD,
-        selectedDept,
-      ));
+    updatePstn: (PSTN_ID, PSTN_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => {
+      dispatch(actions.updatePstn(PSTN_ID, PSTN_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept));
     },
     deletePstn: (PSTN_ID, PRNT_ID, SORT_SQ, selectedDept) => {
       dispatch(actions.deletePstn(PSTN_ID, PRNT_ID, SORT_SQ, selectedDept));
@@ -572,7 +510,10 @@ const mapStateToProps = createStructuredSelector({
   selectedIndex: selectors.makeSelectedIndex(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'Position', saga });
 const withReducer = injectReducer({ key: 'Position', reducer });
 

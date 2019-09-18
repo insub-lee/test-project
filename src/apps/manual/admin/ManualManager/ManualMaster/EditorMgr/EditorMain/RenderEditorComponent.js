@@ -1,6 +1,7 @@
 import React from 'react';
 
 import QnA from './QnA';
+import Tab from './Tab';
 import IndexLink from './IndexLink';
 import IndexFile from './IndexFile';
 import Editor from './Editor';
@@ -58,8 +59,10 @@ const RenderEditorComponent = (
     case 'qna':
       innerContent = <QnA item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
       break;
+    case 'tab':
+      innerContent = <Tab item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
+      break;
     default:
-      innerContent = '';
       break;
   }
   return (

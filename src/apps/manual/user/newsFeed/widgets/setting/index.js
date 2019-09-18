@@ -18,7 +18,7 @@ class NewsfeedSetting extends PureComponent {
     super(props);
     let widget_category = this.props.item.data.selectedCategory;
 
-    if(widget_category === undefined){
+    if (widget_category === undefined) {
       widget_category = [];
     }
 
@@ -41,7 +41,7 @@ class NewsfeedSetting extends PureComponent {
     updateBizGroupChgYn();
   };
 
-  componentDidMount(){
+  componentDidMount() {
     const { getInitCategoryList } = this.props;
     getInitCategoryList();
   }
@@ -77,7 +77,7 @@ class NewsfeedSetting extends PureComponent {
       multiple: true,
       dropdownStyle: { maxHeight: 400, overflow: 'auto' },
       style: { width: 500 },
-    }
+    };
 
     return (
       <div className="commonPage">
@@ -86,7 +86,7 @@ class NewsfeedSetting extends PureComponent {
             <tr>
               <th>신규지식 카테고리 설정</th>
               <td>
-                <TreeSelect  {...treeSelectConfig} />
+                <TreeSelect {...treeSelectConfig} />
               </td>
               <td>
                 <Button type="primary" onClick={this.applyWidgetConfig}>
@@ -109,6 +109,11 @@ NewsfeedSetting.propTypes = {
 };
 
 NewsfeedSetting.defaultProps = {
+  item: {
+    WIDGET_ID: 11083,
+    size: '2X1',
+    data: undefined,
+  },
   totalCategory: [],
   selectedCategoryList: [],
   getInitCategoryList: () => false,

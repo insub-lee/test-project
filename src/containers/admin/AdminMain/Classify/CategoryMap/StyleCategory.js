@@ -22,7 +22,7 @@ const StyleCategory = styled.div`
   .categoryTreeWrapper {
     float: left;
     width: 312px;
-    height: calc(100vh - 160px);
+    height: calc(100vh - 170px);
     padding-top: 10px;
     padding-left: 10px;
     margin-top: 10px;

@@ -1,27 +1,27 @@
 import React from 'react';
 import { put, call, select, takeLatest, takeEvery } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
-import * as constants from './constants';
-import * as actions from './action';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import * as constants from './constants';
+import * as actions from './action';
 
 // 게시물 리스트 가져오기
 export function* getDataList(payload) {
-  const {widget_id, selectedCategory } = payload;
-  
+  const { widget_id, selectedCategory } = payload;
+
   const categoryData = {
-    category: selectedCategory, 
-  };    
-  const response = yield call(Axios.post, '/api/manual/v1/ManualWidgetSettingHandler', categoryData)
+    category: selectedCategory,
+  };
+  const response = yield call(Axios.post, '/api/manual/v1/ManualWidgetSettingHandler', categoryData);
 
   let responseData = response.selectedCategory;
-  if(responseData === undefined){
+  if (responseData === undefined) {
     responseData = [];
   }
 
   const data = {
-    widget_id: widget_id,
+    widget_id,
     category: responseData,
   };
   const result = yield call(Axios.post, `/api/manual/v1/ManualWidgetHandler`, data);
@@ -41,42 +41,31 @@ export function* changeCategoryList(payload) {
   const check = payload.selectedCategoryList.length;
 
   if (check === 0) {
-      const result ={
-          widget_id: payload.item.WIDGET_ID,
-          item_value:JSON.stringify({
-          size: payload.item.size,
-          user: payload.item.user,
-          data: {selectedCategory: []},
-      })
-      };
-    const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
-    if (response.result === 'success'){
-      message.success(
-        <MessageContent>
-          카테고리가 선택되었습니다.
-        </MessageContent>,
-        2,
-      );
-    };
-  } else {
-    const result ={
-        widget_id: payload.item.WIDGET_ID,
-        item_value:JSON.stringify({
+    const result = {
+      widget_id: payload.item.WIDGET_ID,
+      item_value: JSON.stringify({
         size: payload.item.size,
         user: payload.item.user,
-        data: {selectedCategory: payload.selectedCategoryList,
-        },
-      })
+        data: { selectedCategory: [] },
+      }),
     };
-    const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result)
-    if (response.result === 'success'){
-      message.success(
-        <MessageContent>
-          카테고리가 선택되었습니다.
-        </MessageContent>,
-        2,
-      );
+    const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result);
+    if (response.result === 'success') {
+      message.success(<MessageContent>카테고리가 선택되었습니다.</MessageContent>, 2);
+    }
+  } else {
+    const result = {
+      widget_id: payload.item.WIDGET_ID,
+      item_value: JSON.stringify({
+        size: payload.item.size,
+        user: payload.item.user,
+        data: { selectedCategory: payload.selectedCategoryList },
+      }),
     };
+    const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result);
+    if (response.result === 'success') {
+      message.success(<MessageContent>카테고리가 선택되었습니다.</MessageContent>, 2);
+    }
   }
 }
 

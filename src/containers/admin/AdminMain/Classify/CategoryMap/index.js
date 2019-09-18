@@ -135,7 +135,7 @@ class CategoryMap extends Component {
               <Input type="text" name="" placeholder="검색" />
               <button type="button" title="검색" className="searchBtn" />
             </div>
-            <div style={{ paddingTop: '10px' }}>
+            <div style={{ marginTop: '10px' }}>
               <Tree
                 treeData={categoryMapList}
                 setCategoryMapList={setCategoryMapList}
@@ -156,6 +156,14 @@ class CategoryMap extends Component {
               <StyleCategoryForm>
                 <table className="adminTbl categoryTbl">
                   <tbody>
+                    <tr>
+                      <th className="required">
+                        <label htmlFor="v2">코드</label>
+                      </th>
+                      <td>
+                        <Input name="CODE" value={isAdd ? addNodeInfo.CODE : selectedNode.CODE} onChange={e => this.onChangeNode(e, 'CODE')} />
+                      </td>
+                    </tr>
                     <tr>
                       <th className="required">
                         <label htmlFor="v2">카테고리 명(KOR)</label>
@@ -182,14 +190,6 @@ class CategoryMap extends Component {
                     </tr>
                     <tr>
                       <th>
-                        <label htmlFor="v2">코드</label>
-                      </th>
-                      <td>
-                        <Input name="CODE" value={isAdd ? addNodeInfo.CODE : selectedNode.CODE} onChange={e => this.onChangeNode(e, 'CODE')} />
-                      </td>
-                    </tr>
-                    <tr>
-                      <th>
                         <label htmlFor="v2">DESCRIPTION</label>
                       </th>
                       <td>
@@ -201,7 +201,7 @@ class CategoryMap extends Component {
                         <label htmlFor="v2">사용여부</label>
                       </th>
                       <td>
-                        <Select defaultValue={isAdd ? addNodeInfo.USE_YN : selectedNode.USE_YN} onChange={val => this.handleUseYnChange(val)}>
+                        <Select value={isAdd ? addNodeInfo.USE_YN : selectedNode.USE_YN} onChange={val => this.handleUseYnChange(val)}>
                           <Option value="Y">사용</Option>
                           <Option value="N">사용안함</Option>
                         </Select>
