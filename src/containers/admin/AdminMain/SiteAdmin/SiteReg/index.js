@@ -709,7 +709,7 @@ class SiteReg extends React.Component {
           </StyleSiteAdminForm>
           <div className="buttonWrapper">
             <ErrorBoundary>
-              <StyledButton className="btn-dark">
+              <StyledButton className="btn-light">
                 <Link to="/admin/adminmain/siteadmin">{intlObj.get(messages.lblCancel)}</Link>
               </StyledButton>
             </ErrorBoundary>

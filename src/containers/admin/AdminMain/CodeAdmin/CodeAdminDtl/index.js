@@ -23,8 +23,8 @@ import messages from '../messages';
 import StyleDataGridDrag from '../../../../store/components/uielements/dataGridDrag.style';
 import StyleCodeAdminForm from './StyleCodeAdminForm.js';
 import StyleCodeAdminDtl from './StyleCodeAdminDtl.js';
-import { LinkBtnLgtGray, BtnDkGray, BtnLgtGray, LinkBtnList, BtnDelete } from '../../../../store/components/uielements/buttons.style';
 import Select, { SelectOption } from '../../../../../components/Select';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const Option = SelectOption;
 const FormItem = Form.Item;
@@ -171,24 +171,25 @@ class CodeAdminDtl extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/CodeAdmin/', state: data,
+      pathname: '/admin/AdminMain/CodeAdmin/',
+      state: data,
     });
-  }
+  };
 
-  onIconClick = (sortSq) => {
+  onIconClick = sortSq => {
     if (this.state.currentMode !== 'D') {
       this.deleteRows(sortSq);
     } else {
       message.error(`${intlObj.get(messages.canNotUdt)}`, 3);
     }
-  }
+  };
 
   // 로우 삭제 아이콘 formatter
-  IconFormatter = (val) => {
+  IconFormatter = val => {
     const sortSq = val.dependentValues.SORT_SQ;
     if (this.state.currentMode !== 'D' && sortSq > 0) {
       return (
-        <format onClick={() => this.onIconClick(sortSq)} >
+        <format onClick={() => this.onIconClick(sortSq)}>
           <div className="deleteRow" />
         </format>
       );
@@ -197,24 +198,24 @@ class CodeAdminDtl extends React.Component {
   };
 
   // 해당 Row 삭제
-  deleteRows = (sortSq) => {
+  deleteRows = sortSq => {
     let rows = this.props.setCodeAdminDtl.slice();
     rows = rows.filter(row => row.SORT_SQ !== sortSq);
     this.keyRearrange(rows);
     this.setState({
       count: rows.length + 1,
     });
-  }
+  };
 
   // 순번 재배열
-  keyRearrange =(rows) => {
+  keyRearrange = rows => {
     const rowData = rows;
     for (let i = 0; i < rowData.length; i += 1) {
       rowData[i].SORT_SQ = i + 1;
     }
 
     this.props.updateGrid(rowData);
-  }
+  };
 
   // 로우 추가
   handleAddRow = () => {
@@ -246,26 +247,26 @@ class CodeAdminDtl extends React.Component {
   };
 
   // selectbox 값 변경 시
-  handleSelect = (e) => {
+  handleSelect = e => {
     this.setState({ keywordType: e });
-  }
+  };
 
   // Input 검색아이콘 클릭 시(조회)
   handleClick = () => {
     this.props.getCodeAdminDtl(this.state.keywordType, this.state.keyword, this.state.codeGrpCd);
-  }
+  };
 
   // Input 검색값 변경 시
-  handleSearch = (e) => {
+  handleSearch = e => {
     this.setState({ keyword: e.target.value });
-  }
+  };
 
   // Input 키 누를 때
-  handleKeyPress = (e) => {
+  handleKeyPress = e => {
     if (e.key === 'Enter') {
       this.handleClick();
     }
-  }
+  };
 
   // Grid data udpate
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -296,7 +297,7 @@ class CodeAdminDtl extends React.Component {
     } else if (codeGroupInfo === 'CODE_NAME_ETC') {
       this.setState({ codeNameEtc: e.target.value });
     }
-  }
+  };
 
   // 공통코드 상세에서 등록버튼 클릭 시
   changeRegMode = () => {
@@ -313,7 +314,7 @@ class CodeAdminDtl extends React.Component {
     // 그리드 빈값으로
     const initGrid = [];
     this.props.updateGrid(initGrid);
-  }
+  };
 
   // 공통코드 상세에서 수정버튼 클릭 시
   changeUdtMode = () => {
@@ -326,7 +327,7 @@ class CodeAdminDtl extends React.Component {
     });
     isInit = false;
     this.props.getCodeAdminDtl('', '', this.state.codeGrpCd);
-  }
+  };
 
   // 공통코드 수정 or 등록 에서 취소버튼 클릭시
   cancelCodeAdmin = () => {
@@ -340,12 +341,8 @@ class CodeAdminDtl extends React.Component {
     });
     isInit = false;
     // 그리드 수정하기전 데이터로
-    this.props.getCodeAdminDtl(
-      this.state.keywordType,
-      this.state.orgKeyword,
-      this.state.orgCodeGrpCd,
-    );
-  }
+    this.props.getCodeAdminDtl(this.state.keywordType, this.state.orgKeyword, this.state.orgCodeGrpCd);
+  };
 
   // 공통코드 상세에서 삭제버튼 클릭 시
   delCodeAdmin = () => {
@@ -355,7 +352,7 @@ class CodeAdminDtl extends React.Component {
       delCode = this.props.setCodeAdminDtl[0].CODE_CD;
     }
     this.props.delCodeAdmin(delGrpCode, delCode, this.props.history);
-  }
+  };
 
   // 공통코드 수정에서 저장버튼 클릭 시
   udtCodeAdmin = () => {
@@ -374,7 +371,7 @@ class CodeAdminDtl extends React.Component {
       isInit = false;
       this.setState({ currentMode: 'D' });
     }
-  }
+  };
 
   // 공통코드 등록에서 등록버튼 클릭 시
   regCodeAdmin = () => {
@@ -393,21 +390,21 @@ class CodeAdminDtl extends React.Component {
         currentMode: 'D',
       });
     }
-  }
+  };
 
   delConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.delConfirm)}`, '', this.delCodeAdmin);
-  }
+  };
 
   regConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.regConfirm)}`, '', this.regCodeAdmin);
-  }
+  };
 
   udtConfirm = () => {
     if (this.vaildChk()) {
       feed.showConfirm(`${intlObj.get(messages.udtConfirm)}`, '', this.udtCodeAdmin);
     }
-  }
+  };
 
   // 유효성 체크
   vaildChk = () => {
@@ -453,10 +450,7 @@ class CodeAdminDtl extends React.Component {
           errorType = 'chkInputCodeName';
         }
         // 코드 ID
-        if (
-          this.props.setCodeAdminDtl[i].CODE_CD === null ||
-          this.props.setCodeAdminDtl[i].CODE_CD === ''
-        ) {
+        if (this.props.setCodeAdminDtl[i].CODE_CD === null || this.props.setCodeAdminDtl[i].CODE_CD === '') {
           isChk = false;
           errorType = 'chkInputCode';
         }
@@ -499,14 +493,14 @@ class CodeAdminDtl extends React.Component {
       message.error(`${intlObj.get(messages.overlapCode)}`, 3);
     }
     return isChk;
-  }
+  };
 
   dupliCheck = () => {
     isInit = false;
     if (this.state.codeGrpCd !== null && this.state.codeGrpCd !== '') {
       this.props.getCodeGrpCd(this.state.codeGrpCd);
     }
-  }
+  };
 
   isDraggedRowSelected = (selectedRows, rowDragSource) => {
     if (selectedRows && selectedRows.length > 0) {
@@ -516,12 +510,11 @@ class CodeAdminDtl extends React.Component {
     return false;
   };
 
-  reorderRows = (e) => {
+  reorderRows = e => {
     if (this.state.currentMode !== 'D') {
       if (this.props.setCodeAdminDtl.length > 1) {
         const selectedRows = e.rowSource.idx;
-        const draggedRows = this.isDraggedRowSelected(selectedRows, e.rowSource) ?
-          selectedRows : [e.rowSource.data];
+        const draggedRows = this.isDraggedRowSelected(selectedRows, e.rowSource) ? selectedRows : [e.rowSource.data];
         const undraggedRows = this.props.setCodeAdminDtl.filter(r => draggedRows.indexOf(r) === -1);
         const args = [e.rowTarget.idx, 0].concat(draggedRows);
         Array.prototype.splice.apply(undraggedRows, args);
@@ -549,72 +542,94 @@ class CodeAdminDtl extends React.Component {
     const mode = this.state.currentMode;
     const urlMode = this.props.history.location.search.replace('?', '');
 
-    const title = (titleMode) => {
+    const title = titleMode => {
       if (titleMode === 'R') return intlObj.get(messages.codeRegister);
-      else if (titleMode === 'D') return intlObj.get(messages.codeDetail);
+      if (titleMode === 'D') return intlObj.get(messages.codeDetail);
       else if (titleMode === 'U') return intlObj.get(messages.codeUpdate);
       return '';
     };
 
     const dupliCodeGrpCd = (currentmode, stat) => {
       if (currentmode === 'R' && this.state.codeGrpCd !== '') {
-        if (stat) return (<font color="RED">{intlObj.get(messages.unUsedCodeGrp)}</font>);
-        return (<font color="GREEN">{intlObj.get(messages.usedCodeGrp)}</font>);
+        if (stat) return <font color="RED">{intlObj.get(messages.unUsedCodeGrp)}</font>;
+        return <font color="GREEN">{intlObj.get(messages.usedCodeGrp)}</font>;
       }
       return '';
     };
 
-    const controlBtn = (btnMode) => {
-      if (btnMode === 'R') { // 등록
-        return (
-          urlMode === 'R' ?
-            <React.Fragment>
-              <div style={{ float: 'left' }}>
-                <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
-              </div>
-              {/* <LinkBtnLgtGray onClick={() => this.cancelCodeAdmin()}>
+    const controlBtn = btnMode => {
+      if (btnMode === 'R') {
+        // 등록
+        return urlMode === 'R' ? (
+          <React.Fragment>
+            <div style={{ float: 'left' }}>
+              <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
+            </div>
+            {/* <LinkBtnLgtGray onClick={() => this.cancelCodeAdmin()}>
                 <Link to="../">{intlObj.get(messages.cancel)}</Link>
               </LinkBtnLgtGray> */}
-              <LinkBtnLgtGray onClick={this.onClickToList}>
-                {intlObj.get(messages.cancel)}
-              </LinkBtnLgtGray>
-              <BtnDkGray onClick={this.regConfirm}>{intlObj.get(messages.register)}</BtnDkGray>
-            </React.Fragment>
-            :
-            <React.Fragment>
-              <div style={{ float: 'left' }}>
-                <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
-              </div>
-              <BtnLgtGray onClick={() => this.cancelCodeAdmin()}>
-                {intlObj.get(messages.cancel)}
-              </BtnLgtGray>
-              <BtnDkGray onClick={this.regCodeAdmin}>{intlObj.get(messages.register)}</BtnDkGray>
-            </React.Fragment>
+            <StyledButton className="btn-light" onClick={this.onClickToList}>
+              {intlObj.get(messages.cancel)}
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.regConfirm}>
+              {intlObj.get(messages.register)}
+            </StyledButton>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <div style={{ float: 'left' }}>
+              <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
+            </div>
+            <StyledButton className="btn-light" onClick={() => this.cancelCodeAdmin()}>
+              {intlObj.get(messages.cancel)}
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.regCodeAdmin}>
+              {intlObj.get(messages.register)}
+            </StyledButton>
+          </React.Fragment>
         );
-      } else if (btnMode === 'D') { // 상세
+      }
+      if (btnMode === 'D') {
+        // 상세
         return (
           <React.Fragment>
             <div style={{ float: 'left' }}>
-              <BtnDelete onClick={this.delConfirm}>{intlObj.get(messages.delete)}</BtnDelete>
+              <StyledButton className="btn-light" onClick={this.delConfirm}>
+                {intlObj.get(messages.delete)}
+              </StyledButton>
               {/* <Link to="../" style={{ marginLeft: 23 }}> */}
-              <LinkBtnList onClick={this.onClickToList}>{intlObj.get(messages.toList)}</LinkBtnList>
+              <StyledButton className="btn-light" onClick={this.onClickToList}>
+                {intlObj.get(messages.toList)}
+              </StyledButton>
               {/* </Link> */}
             </div>
-            <BtnLgtGray onClick={this.changeUdtMode}>{intlObj.get(messages.update)}</BtnLgtGray>
-            <BtnDkGray onClick={this.changeRegMode}>{intlObj.get(messages.new)}</BtnDkGray>
+            <StyledButton className="btn-primary" onClick={this.changeUdtMode}>
+              {intlObj.get(messages.update)}
+            </StyledButton>
+            <StyledButton className="btn-dark" onClick={this.changeRegMode}>
+              {intlObj.get(messages.new)}
+            </StyledButton>
           </React.Fragment>
         );
-      } else if (btnMode === 'U') { // 수정
+      }
+      if (btnMode === 'U') {
+        // 수정
         return (
           <React.Fragment>
             <div style={{ float: 'left' }}>
               <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
               {/* <Link to="../"> */}
-              <LinkBtnList onClick={this.onClickToList}>{intlObj.get(messages.toList)}</LinkBtnList>
+              <StyledButton className="btn-light" onClick={this.onClickToList}>
+                {intlObj.get(messages.toList)}
+              </StyledButton>
               {/* </Link> */}
             </div>
-            <BtnLgtGray onClick={this.cancelCodeAdmin} >{intlObj.get(messages.cancel)}</BtnLgtGray>
-            <BtnDkGray onClick={this.udtConfirm}>{intlObj.get(messages.save)}</BtnDkGray>
+            <StyledButton className="btn-light" onClick={this.cancelCodeAdmin}>
+              {intlObj.get(messages.cancel)}
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              {intlObj.get(messages.save)}
+            </StyledButton>
           </React.Fragment>
         );
       }
@@ -644,7 +659,7 @@ class CodeAdminDtl extends React.Component {
                         <Input
                           value={this.state.codeGrpCd}
                           onChange={event => this.changeInputKeyword(event, 'CODE_GRP_CD')}
-                          onKeyUp={(e) => {
+                          onKeyUp={e => {
                             // 한글입력제한(임시)
                             this.setState({ codeGrpCd: e.target.value.replace(/[^a-z0-9_]/gi, '') });
                           }}
@@ -789,9 +804,7 @@ class CodeAdminDtl extends React.Component {
               onChange={this.onCellChange}
             />
           </StyleDataGridDrag>
-          <div className="buttonWrapper">
-            {controlBtn(mode)}
-          </div>
+          <div className="buttonWrapper">{controlBtn(mode)}</div>
         </StyleCodeAdminDtl>
       </div>
     );
@@ -809,63 +822,21 @@ CodeAdminDtl.propTypes = {
   setCodeAdmin: PropTypes.object, //eslint-disable-line
   getCodeGrpCd: PropTypes.func, //eslint-disable-line
   setCodeGrpCd: PropTypes.bool, //eslint-disable-line
-  match: PropTypes.object.isRequired, //eslint-disable-line		
+  match: PropTypes.object.isRequired, //eslint-disable-line
   handleInitPage: PropTypes.func.isRequired, //eslint-disable-line
 };
 
 // 컴포넌트의 특정 함수형 props 를 실행 했을 때, 개발자가 지정한 action을 dispatch 하도록 설정
-const mapDispatchToProps = dispatch => (
-  {
-    getCodeAdminDtl: (keywordType, keyword, codeGrpCd) =>
-      dispatch(actions.getCodeAdminDtl(keywordType, keyword, codeGrpCd)),
-    updateGrid: rows =>
-      dispatch(actions.updateGrid(rows)),
-    registerCodeAdmin: (
-      codeGrpCd,
-      codeNameKor,
-      codeNameEng,
-      codeNameChn,
-      codeNameJpn,
-      codeNameEtc,
-      setCodeAdminDtl,
-    ) =>
-      dispatch(actions.registerCodeAdmin(
-        codeGrpCd,
-        codeNameKor,
-        codeNameEng,
-        codeNameChn,
-        codeNameJpn,
-        codeNameEtc,
-        setCodeAdminDtl,
-      )),
-    delCodeAdmin: (delGrpCode, delCode, history) =>
-      dispatch(actions.delCodeAdmin(delGrpCode, delCode, history)),
-    udtCodeAdmin: (
-      codeGrpCd,
-      codeNameKor,
-      codeNameEng,
-      codeNameChn,
-      codeNameJpn,
-      codeNameEtc,
-      setCodeAdminDtl,
-      keywordType,
-      keyword,
-    ) =>
-      dispatch(actions.udtCodeAdmin(
-        codeGrpCd,
-        codeNameKor,
-        codeNameEng,
-        codeNameChn,
-        codeNameJpn,
-        codeNameEtc,
-        setCodeAdminDtl,
-        keywordType,
-        keyword,
-      )),
-    getCodeGrpCd: codeGrpCd =>
-      dispatch(actions.getCodeGrpCd(codeGrpCd)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getCodeAdminDtl: (keywordType, keyword, codeGrpCd) => dispatch(actions.getCodeAdminDtl(keywordType, keyword, codeGrpCd)),
+  updateGrid: rows => dispatch(actions.updateGrid(rows)),
+  registerCodeAdmin: (codeGrpCd, codeNameKor, codeNameEng, codeNameChn, codeNameJpn, codeNameEtc, setCodeAdminDtl) =>
+    dispatch(actions.registerCodeAdmin(codeGrpCd, codeNameKor, codeNameEng, codeNameChn, codeNameJpn, codeNameEtc, setCodeAdminDtl)),
+  delCodeAdmin: (delGrpCode, delCode, history) => dispatch(actions.delCodeAdmin(delGrpCode, delCode, history)),
+  udtCodeAdmin: (codeGrpCd, codeNameKor, codeNameEng, codeNameChn, codeNameJpn, codeNameEtc, setCodeAdminDtl, keywordType, keyword) =>
+    dispatch(actions.udtCodeAdmin(codeGrpCd, codeNameKor, codeNameEng, codeNameChn, codeNameJpn, codeNameEtc, setCodeAdminDtl, keywordType, keyword)),
+  getCodeGrpCd: codeGrpCd => dispatch(actions.getCodeGrpCd(codeGrpCd)),
+});
 
 // (Function) store 의 state 를 컴포넌트의 props 에 매핑
 const mapStateToProps = createStructuredSelector({
@@ -874,7 +845,10 @@ const mapStateToProps = createStructuredSelector({
   setCodeGrpCd: selectors.makeSelectCodeGrpCd(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'CodeDtl', saga });
 const withReducer = injectReducer({ key: 'CodeDtl', reducer });
 

@@ -14,7 +14,6 @@ import message from 'components/Feedback/message';
 
 import Footer from 'containers/admin/App/Footer';
 import { Input, Select } from 'antd';
-import { LinkBtnLgtGray, BtnDkGray } from '../../../store/components/uielements/buttons.style';
 import StyledButton from '../../../../components/Button/StyledButton';
 
 import reducer from './reducer';
@@ -266,15 +265,17 @@ class Position extends React.Component {
             </StyledButton>
           </React.Fragment>
         );
-      } if (mode === 'D') {
+      }
+      if (mode === 'D') {
         // 상세
         return (
           <React.Fragment>
             {/* <div style={{ float: 'left' }}> */}
             {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
             {/* </div> */}
-            <BtnDkGray
-              style={{ float: 'rigth' }}
+            <StyledButton
+              className="btn-primary"
+              style={{ float: 'right' }}
               onClick={() =>
                 this.setState({
                   mode: 'U',
@@ -289,14 +290,16 @@ class Position extends React.Component {
               }
             >
               수정
-            </BtnDkGray>
+            </StyledButton>
           </React.Fragment>
         );
-      } else if (mode === 'U') {
+      }
+      if (mode === 'U') {
         // 수정
         return (
           <React.Fragment>
-            <LinkBtnLgtGray
+            <StyledButton
+              className="btn-light"
               onClick={() =>
                 this.setState({
                   mode: 'D',
@@ -311,8 +314,10 @@ class Position extends React.Component {
               }
             >
               취소
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={this.udtConfirm}>저장</BtnDkGray>
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              저장
+            </StyledButton>
           </React.Fragment>
         );
       }

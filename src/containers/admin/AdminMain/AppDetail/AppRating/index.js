@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { Rate, Row, Col, Progress } from 'antd';
+import { Rate, Row, Col, Progress, Icon } from 'antd';
 import ModalDrag from 'components/ModalDrag';
 
 import * as feed from 'components/Feedback/functions';
@@ -24,7 +24,8 @@ import Modals from '../../../../../components/Modal/index';
 import ModalStyle from '../../../components/Modal/StyleModal';
 import WithDirection from '../../../../../config/withDirection';
 
-import { BtnWhiteRate, BtnLgtGray, BtnDkGray, BtnWhiteDel, BtnSeeMore } from '../../../components/uielements/buttons.style';
+import { BtnSeeMore } from '../../../components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const isoModal = ModalStyle(Modals);
 const Modal = WithDirection(isoModal);
@@ -135,7 +136,10 @@ class AppRating extends React.Component {
 
     const registPop = (
       <div className="newRatingWrite">
-        <BtnWhiteRate onClick={this.registShowModal}>{intlObj.get(messages.reviewRegist)}</BtnWhiteRate>
+        <StyledButton className="btn-outline-primary btn-sm" onClick={this.registShowModal}>
+          <Icon type="like" />
+          {intlObj.get(messages.reviewRegist)}
+        </StyledButton>
         <Modal
           visible={this.state.visible}
           title={<ModalDrag title={intlObj.get(messages.reviewRegist)} num={0} />}
@@ -144,12 +148,12 @@ class AppRating extends React.Component {
           maskClosable={false}
           confirmLoading={false}
           footer={[
-            <BtnLgtGray key="back" onClick={this.handleCancel}>
+            <StyledButton className="btn-outline-dark btn-sm" key="back" onClick={this.handleCancel}>
               {intlObj.get(messages.cancel)}
-            </BtnLgtGray>,
-            <BtnDkGray key="submit" loading={this.state.loading} onClick={this.handleOk} className={this.state.saveon ? '' : 'disabled'}>
+            </StyledButton>,
+            <StyledButton key="submit" loading={this.state.loading} onClick={this.handleOk} className={this.state.saveon ? 'btn-primary' : 'disabled btn-sm'}>
               {intlObj.get(messages.regist)}
-            </BtnDkGray>,
+            </StyledButton>,
           ]}
           style={{ height: 'auto' }}
           className="storeModal"
@@ -170,7 +174,10 @@ class AppRating extends React.Component {
 
     const updatePop = (
       <div className="newRatingWrite">
-        <BtnWhiteRate onClick={this.updateShowModal}>{intlObj.get(messages.reviewUpdate)}</BtnWhiteRate>
+        <StyledButton className="btn-outline-primary btn-sm" onClick={this.updateShowModal}>
+          <Icon type="like" />
+          {intlObj.get(messages.reviewUpdate)}
+        </StyledButton>
         <Modal
           visible={this.state.visible}
           title={<ModalDrag title={intlObj.get(messages.reviewUpdate)} num={0} />}
@@ -178,15 +185,20 @@ class AppRating extends React.Component {
           onCancel={this.handleCancel}
           maskClosable={false}
           footer={[
-            <BtnWhiteDel key="update" onClick={this.deleteHandleOk} className="delete">
+            <StyledButton key="update" onClick={this.deleteHandleOk} className="delete btn-outline-dark btn-sm">
               {intlObj.get(messages.delete)}
-            </BtnWhiteDel>,
-            <BtnLgtGray key="back" onClick={this.handleCancel}>
+            </StyledButton>,
+            <StyledButton className="btn-light btn-sm" key="back" onClick={this.handleCancel}>
               {intlObj.get(messages.cancel)}
-            </BtnLgtGray>,
-            <BtnDkGray key="submit" loading={this.state.loading} onClick={this.updateHandleOk} className={this.state.updateon ? '' : 'disabled'}>
+            </StyledButton>,
+            <StyledButton
+              key="submit"
+              loading={this.state.loading}
+              onClick={this.updateHandleOk}
+              className={this.state.updateon ? 'btn-primary btn-sm' : 'btn-sm disabled'}
+            >
               {intlObj.get(messages.save)}
-            </BtnDkGray>,
+            </StyledButton>,
           ]}
           style={{ height: 330 }}
           className="storeModal"

@@ -17,7 +17,7 @@ import { Form, Input, DatePicker, Select } from 'antd';
 import StyleNotifyAdminReg from './StyleNotifyAdminReg';
 import StyleNotifyAdminForm from '../style/StyleNotifyAdminForm';
 import NotifyImgChild from './notifyImgChild';
-import { LinkBtnList, BtnDkGray } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 import { BtnIconAdd } from '../../../../../components/uielements/styles/buttons.style';
 import StyleNotifyMediaForm from '../style/StyleNotifyMediaForm';
 
@@ -37,7 +37,6 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const { RangePicker } = DatePicker;
 const dateFormat = 'YYYY-MM-DD';
-
 
 // 기본값 세팅(임시)
 const companyCd = 1000;
@@ -129,7 +128,7 @@ class NotifyAdminReg extends React.Component {
     // console.log('componentWillReceiveProps: ', JSON.stringify(nextProps));
     const { msgId } = this.props;
     if (msgId !== nextProps.msgId) {
-      const data = ({
+      const data = {
         MSG_ID: nextProps.msgId,
         OPEN_YN: this.state.MSG_TYPE === 'P' ? 'Y' : 'N',
         sortColumnParam: this.state.listSortColumn,
@@ -140,7 +139,7 @@ class NotifyAdminReg extends React.Component {
         oneDateStr: this.state.listOneDateStr,
         startDateStr: this.state.listStartDateStr,
         endDateStr: this.state.listEndDateStr,
-      });
+      };
       this.props.history.push({ pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminDtl', state: data });
     }
   }
@@ -158,83 +157,71 @@ class NotifyAdminReg extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/NotifyAdmin/', state: data,
+      pathname: '/admin/AdminMain/NotifyAdmin/',
+      state: data,
     });
-  }
+  };
 
-  onChangeSystem = (e) => {
+  onChangeSystem = e => {
     this.setState({ SYSTEM: e.target.value });
   };
 
-  onChangeAppID = (e) => {
+  onChangeAppID = e => {
     this.setState({ APP_ID: e.target.value });
   };
 
-  onChangeMsgType = (val) => {
+  onChangeMsgType = val => {
     this.setState({ MSG_TYPE: val });
   };
 
-  onChangeTitle = (e) => {
+  onChangeTitle = e => {
     this.setState({ TITLE: e.target.value });
     if (e.target.value !== '') this.setState({ titleValid: true });
     else this.setState({ titleValid: false });
   };
 
-  onChangeContent = (e) => {
+  onChangeContent = e => {
     this.setState({ CONTENT: e.target.value });
     if (e.target.value !== '') this.setState({ contentValid: true });
     else this.setState({ contentValid: false });
   };
 
-  onChangeUrl = (e) => {
+  onChangeUrl = e => {
     this.setState({ URL: e.target.value });
   };
 
   // 게시기5간 from ~ to
-  onPeriodChange = (dates) => {
+  onPeriodChange = dates => {
     this.setState({
       periodDates: [dates[0], dates[1]],
     });
-  }
+  };
 
   getImgSettingList = () => {
     const { imgList } = this.state;
-    const result = imgList.map((imgList, index) => {  // eslint-disable-line
+    const result = imgList.map((imgList, index) => {
+      // eslint-disable-line
       if (imgList.isShow !== false) {
-        return (
-          <NotifyImgChild
-            index={index}
-            imgList={imgList}
-            setDeletedImgIndex={this.setDeletedImgIndex}
-          />
-        );
+        return <NotifyImgChild index={index} imgList={imgList} setDeletedImgIndex={this.setDeletedImgIndex} />;
       }
     });
     return result;
-  }
+  };
 
   getBtnSettingList = () => {
     const { btnList } = this.state;
-    const result = btnList.map((btnList, index) => {  // eslint-disable-line
+    const result = btnList.map((btnList, index) => {
+      // eslint-disable-line
       if (btnList.isShow !== false) {
-        return (
-          <NotifyBtnChild
-            index={index}
-            btnList={btnList}
-            setDeletedBtnIndex={this.setDeletedBtnIndex}
-          />
-        );
+        return <NotifyBtnChild index={index} btnList={btnList} setDeletedBtnIndex={this.setDeletedBtnIndex} />;
       }
     });
     return result;
-  }
+  };
 
-  setDeletedImgIndex = (SEQNO) => {
-    const {
-      imgList,
-      deletedImgIndex,
-    } = this.state;
-    const index = imgList.findIndex(imgList => imgList.SEQNO === SEQNO);  // eslint-disable-line
+  setDeletedImgIndex = SEQNO => {
+    const { imgList, deletedImgIndex } = this.state;
+    const index = imgList.findIndex(imgList => imgList.SEQNO === SEQNO); // eslint-disable-line
     const imgListCopy = update(imgList, {
       [index]: {
         isShow: {
@@ -246,14 +233,11 @@ class NotifyAdminReg extends React.Component {
       imgList: imgListCopy,
     });
     deletedImgIndex.push(SEQNO);
-  }
+  };
 
-  setDeletedBtnIndex = (SEQNO) => {
-    const {
-      btnList,
-      deletedBtnIndex,
-    } = this.state;
-    const index = btnList.findIndex(btnList => btnList.SEQNO === SEQNO);  // eslint-disable-line
+  setDeletedBtnIndex = SEQNO => {
+    const { btnList, deletedBtnIndex } = this.state;
+    const index = btnList.findIndex(btnList => btnList.SEQNO === SEQNO); // eslint-disable-line
     const btnListCopy = update(btnList, {
       [index]: {
         isShow: {
@@ -265,13 +249,14 @@ class NotifyAdminReg extends React.Component {
       btnList: btnListCopy,
     });
     deletedBtnIndex.push(SEQNO);
-  }
+  };
 
   vaildChk = () => {
-    if (this.state.titleValid &&
+    if (
+      this.state.titleValid &&
       this.state.contentValid &&
-      this.props.siteCombo.length > 0 && (
-        this.state.userSetMembers.length > 0 ||
+      this.props.siteCombo.length > 0 &&
+      (this.state.userSetMembers.length > 0 ||
         this.state.pstnSetMembers.length > 0 ||
         this.state.deptSetMembers.length > 0 ||
         this.state.dutySetMembers.length > 0 ||
@@ -281,9 +266,9 @@ class NotifyAdminReg extends React.Component {
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
-  }
+  };
 
-  imgValidChk = (imgList) => {
+  imgValidChk = imgList => {
     for (let i = 0; i < imgList.length; i += 1) {
       if (imgList[i].IMAGE === '') {
         message.error('이미지를 선택하십시오', 2);
@@ -291,9 +276,9 @@ class NotifyAdminReg extends React.Component {
       }
     }
     return true;
-  }
+  };
 
-  btnValidChk = (btnList) => {
+  btnValidChk = btnList => {
     for (let i = 0; i < btnList.length; i += 1) {
       if (btnList[i].VALUE === '') {
         message.error('버튼 VALUE를 입력하십시오', 2);
@@ -301,10 +286,11 @@ class NotifyAdminReg extends React.Component {
       }
     }
     return true;
-  }
+  };
 
   dateSet = () => {
-    if (this.state.periodDates.length !== 0 &&
+    if (
+      this.state.periodDates.length !== 0 &&
       this.state.periodDates[0]._isValid === true && //eslint-disable-line
       this.state.periodDates[1]._isValid === true //eslint-disable-line
     ) {
@@ -314,13 +300,13 @@ class NotifyAdminReg extends React.Component {
       startDttm = '';
       endDttm = '';
     }
-  }
+  };
 
   // 날짜변환함수(년.월.일)
   timeToDateForm = (val, formType) => {
     const timestamp = new Date(val).getTime();
-    const todate = ('00'.concat(new Date(timestamp).getDate())).slice(-2);
-    const tomonth = ('00'.concat(new Date(timestamp).getMonth() + 1)).slice(-2);
+    const todate = '00'.concat(new Date(timestamp).getDate()).slice(-2);
+    const tomonth = '00'.concat(new Date(timestamp).getMonth() + 1).slice(-2);
     const toyear = new Date(timestamp).getFullYear();
     let originalDate = '';
 
@@ -330,7 +316,7 @@ class NotifyAdminReg extends React.Component {
       originalDate = `${toyear}-${tomonth}-${todate}`;
     }
     return originalDate;
-  }
+  };
 
   regSave = () => {
     this.dateSet();
@@ -358,11 +344,11 @@ class NotifyAdminReg extends React.Component {
         btnList,
       );
     }
-  }
+  };
 
   saveConfirm = () => {
     feed.showConfirm('저장하시겠습니까?', '', this.regSave);
-  }
+  };
 
   allOrgOpen = () => {
     this.setState({
@@ -392,7 +378,7 @@ class NotifyAdminReg extends React.Component {
       imgList: content,
       numChildren: numChildren + 1,
     });
-  }
+  };
 
   handleAppendBtn = () => {
     const content = this.state.btnList.slice();
@@ -409,7 +395,7 @@ class NotifyAdminReg extends React.Component {
       btnList: content,
       btnNumChildren: btnNumChildren + 1,
     });
-  }
+  };
 
   render() {
     const formItemLayout = {
@@ -425,34 +411,34 @@ class NotifyAdminReg extends React.Component {
     const title = intlObj.get(messages.notifyReg);
 
     // 조직도로부터 데이터 가져오는 함수
-    const returnUserList = (resultObj) => {
+    const returnUserList = resultObj => {
       this.setState({
         userSetMembers: resultObj,
       });
     };
-    const returnDutyList = (resultObj) => {
+    const returnDutyList = resultObj => {
       this.setState({
         dutySetMembers: resultObj,
       });
     };
-    const returnPstnList = (resultObj) => {
+    const returnPstnList = resultObj => {
       this.setState({
         pstnSetMembers: resultObj,
       });
     };
-    const returnGrpList = (resultObj) => {
+    const returnGrpList = resultObj => {
       this.setState({
         grpSetMembers: resultObj,
       });
     };
-    const returnDetpList = (resultObj) => {
+    const returnDetpList = resultObj => {
       this.setState({
         deptSetMembers: resultObj,
       });
     };
 
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = (resultObj) => {
+    const getDataFromOrganizationAll = resultObj => {
       // 구성원
       const userSetMembersFromOrganization = resultObj.selectedUsers;
       // 직위
@@ -479,14 +465,14 @@ class NotifyAdminReg extends React.Component {
 
     const siteComboList = this.props.siteCombo;
 
-    const getDefaultCombo = (comboList) => {
+    const getDefaultCombo = comboList => {
       if (comboList.length > 0) {
         return comboList[0].SITE_ID;
       }
       return '';
     };
 
-    const getComboList = (comboList) => {
+    const getComboList = comboList => {
       // console.log('comboList', comboList[0]);
       if (comboList.length > 0) {
         return (
@@ -499,7 +485,7 @@ class NotifyAdminReg extends React.Component {
             {comboList.map(item => (
               // <Option value={item.SITE_ID}>{lang.get('NAME', item)}</Option>
               <Option value={item.SITE_ID}>{item.NAME_KOR}</Option>
-          ))}
+            ))}
           </Select>
         );
       }
@@ -536,20 +522,14 @@ class NotifyAdminReg extends React.Component {
                       <label htmlFor="n1">{intlObj.get(messages.system)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.state.SYSTEM}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           onChange={this.onChangeSystem}
                           id="n1"
                         /> */}
-                        <Input
-                          value={this.state.SYSTEM}
-                          onChange={this.onChangeSystem}
-                          id="n1"
-                        />
+                        <Input value={this.state.SYSTEM} onChange={this.onChangeSystem} id="n1" />
                       </FormItem>
                     </td>
                   </tr>
@@ -557,18 +537,14 @@ class NotifyAdminReg extends React.Component {
                     <th className="required">
                       <label htmlFor="n2">사이트ID</label>
                     </th>
-                    <td>
-                      {getComboList(siteComboList)}
-                    </td>
+                    <td>{getComboList(siteComboList)}</td>
                   </tr>
                   <tr>
                     <th className="">
                       <label htmlFor="n3">APP ID</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.state.APP_ID}
                           autosize={{ minRows: 1, maxRow: 4 }}
@@ -583,7 +559,7 @@ class NotifyAdminReg extends React.Component {
                         <Input
                           value={this.state.APP_ID}
                           onChange={this.onChangeAppID}
-                          onKeyUp={(e) => {
+                          onKeyUp={e => {
                             // 숫자를 제외한 입력제한
                             this.setState({ APP_ID: e.target.value.replace(/[^0-9]/gi, '') });
                           }}
@@ -598,9 +574,7 @@ class NotifyAdminReg extends React.Component {
                       <label htmlFor="n4">{intlObj.get(messages.postPeriod)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         <RangePicker
                           className="RangePicker"
                           format={dateFormat}
@@ -617,9 +591,7 @@ class NotifyAdminReg extends React.Component {
                     </td>
                   </tr>
                   <tr>
-                    <th className="required">
-                      {intlObj.get(messages.codeName)}
-                    </th>
+                    <th className="required">{intlObj.get(messages.codeName)}</th>
                     <td>
                       <Select
                         defaultValue={this.state.MSG_TYPE}
@@ -638,20 +610,14 @@ class NotifyAdminReg extends React.Component {
                       <label htmlFor="n5">{intlObj.get(messages.title)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.state.TITLE}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           onChange={this.onChangeTitle}
                           id="n5"
                         /> */}
-                        <Input
-                          value={this.state.TITLE}
-                          onChange={this.onChangeTitle}
-                          id="n5"
-                        />
+                        <Input value={this.state.TITLE} onChange={this.onChangeTitle} id="n5" />
                       </FormItem>
                     </td>
                   </tr>
@@ -660,15 +626,8 @@ class NotifyAdminReg extends React.Component {
                       <label htmlFor="n6">{intlObj.get(messages.content)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
-                        <TextArea
-                          value={this.state.CONTENT}
-                          autosize={{ minRows: 1, maxRow: 4 }}
-                          onChange={this.onChangeContent}
-                          id="n6"
-                        />
+                      <FormItem {...formItemLayout}>
+                        <TextArea value={this.state.CONTENT} autosize={{ minRows: 1, maxRow: 4 }} onChange={this.onChangeContent} id="n6" />
                       </FormItem>
                     </td>
                   </tr>
@@ -677,9 +636,7 @@ class NotifyAdminReg extends React.Component {
                       <label htmlFor="n7">{intlObj.get(messages.receiver)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         <div className="authorityList">
                           <NotifyManagerList
                             isDeptSelectbox={true}
@@ -697,7 +654,9 @@ class NotifyAdminReg extends React.Component {
                             siteIdParam={this.state.siteParam}
                           />
                         </div>
-                        <button onClick={this.allOrgOpen} className="textLinkBtn">&lt; 편집</button>
+                        <button onClick={this.allOrgOpen} className="textLinkBtn">
+                          &lt; 편집
+                        </button>
                       </FormItem>
                     </td>
                   </tr>
@@ -706,9 +665,7 @@ class NotifyAdminReg extends React.Component {
                       <label htmlFor="n8">URL</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           placeholder="URL은 http:// 로 시작해주십시오."
                           value={this.state.URL}
@@ -716,37 +673,40 @@ class NotifyAdminReg extends React.Component {
                           onChange={this.onChangeUrl}
                           id="n7"
                         /> */}
-                        <Input
-                          placeholder="URL은 http:// 로 시작해주십시오."
-                          value={this.state.URL}
-                          onChange={this.onChangeUrl}
-                          id="n8"
-                        />
+                        <Input placeholder="URL은 http:// 로 시작해주십시오." value={this.state.URL} onChange={this.onChangeUrl} id="n8" />
                       </FormItem>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      이미지
-                    </th>
+                    <th className="">이미지</th>
                     <td>
                       <StyleNotifyMediaForm>
                         {imgContent}
                         <div className="btnWrapper">
-                          <BtnIconAdd title="addNewForm" onClick={(e) => { e.preventDefault(); this.handleAppendImg(); }} />
+                          <BtnIconAdd
+                            title="addNewForm"
+                            onClick={e => {
+                              e.preventDefault();
+                              this.handleAppendImg();
+                            }}
+                          />
                         </div>
                       </StyleNotifyMediaForm>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      버튼
-                    </th>
+                    <th className="">버튼</th>
                     <td>
                       <StyleNotifyMediaForm>
                         {btnContent}
                         <div className="btnWrapper">
-                          <BtnIconAdd title="addNewForm" onClick={(e) => { e.preventDefault(); this.handleAppendBtn(); }} />
+                          <BtnIconAdd
+                            title="addNewForm"
+                            onClick={e => {
+                              e.preventDefault();
+                              this.handleAppendBtn();
+                            }}
+                          />
                         </div>
                       </StyleNotifyMediaForm>
                     </td>
@@ -758,11 +718,13 @@ class NotifyAdminReg extends React.Component {
           <div className="buttonWrapper">
             <React.Fragment>
               <div style={{ float: 'left' }}>
-                <LinkBtnList onClick={this.onClickToList}>
+                <StyledButton className="btn-light" onClick={this.onClickToList}>
                   {intlObj.get(messages.toList)}
-                </LinkBtnList>
+                </StyledButton>
               </div>
-              <BtnDkGray onClick={this.saveConfirm}>저장</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={this.saveConfirm}>
+                저장
+              </StyledButton>
             </React.Fragment>
           </div>
         </StyleNotifyAdminReg>
@@ -779,57 +741,61 @@ NotifyAdminReg.propTypes = {
   siteCombo: PropTypes.array, // eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    regNotify: (
-      SYSTEM,
-      COMPANY_CD,
-      SITE_ID,
-      APP_ID,
-      MSG_TYPE,
-      OPEN_YN,
-      TITLE,
-      CONTENT,
-      URL,
-      START_DTTM,
-      END_DTTM,
-      userSetMembers,
-      pstnSetMembers,
-      deptSetMembers,
-      dutySetMembers,
-      grpSetMembers,
-      imgList,
-      btnList,
-    ) => dispatch(actions.regNotify(
-      SYSTEM,
-      COMPANY_CD,
-      SITE_ID,
-      APP_ID,
-      MSG_TYPE,
-      OPEN_YN,
-      TITLE,
-      CONTENT,
-      URL,
-      START_DTTM,
-      END_DTTM,
-      userSetMembers,
-      pstnSetMembers,
-      deptSetMembers,
-      dutySetMembers,
-      grpSetMembers,
-      imgList,
-      btnList,
-    )),
-    getSiteCombo: SCR_CD => dispatch(actions.getSiteCombo(SCR_CD)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  regNotify: (
+    SYSTEM,
+    COMPANY_CD,
+    SITE_ID,
+    APP_ID,
+    MSG_TYPE,
+    OPEN_YN,
+    TITLE,
+    CONTENT,
+    URL,
+    START_DTTM,
+    END_DTTM,
+    userSetMembers,
+    pstnSetMembers,
+    deptSetMembers,
+    dutySetMembers,
+    grpSetMembers,
+    imgList,
+    btnList,
+  ) =>
+    dispatch(
+      actions.regNotify(
+        SYSTEM,
+        COMPANY_CD,
+        SITE_ID,
+        APP_ID,
+        MSG_TYPE,
+        OPEN_YN,
+        TITLE,
+        CONTENT,
+        URL,
+        START_DTTM,
+        END_DTTM,
+        userSetMembers,
+        pstnSetMembers,
+        deptSetMembers,
+        dutySetMembers,
+        grpSetMembers,
+        imgList,
+        btnList,
+      ),
+    ),
+  getSiteCombo: SCR_CD => dispatch(actions.getSiteCombo(SCR_CD)),
+});
 
 const mapStateToProps = createStructuredSelector({
   msgId: selectors.makeSelectRegNotify(),
   siteCombo: selectors.makeSelectSiteCombo(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'NotifyAdminReg', saga });
 const withReducer = injectReducer({ key: 'NotifyAdminReg', reducer });
 
@@ -838,4 +804,3 @@ export default compose(
   withSaga,
   withConnect,
 )(NotifyAdminReg);
-

@@ -13,14 +13,13 @@ import { Link } from 'react-router-dom';
 import { Form, Input } from 'antd';
 import StyleGlobalAdminDtl from './StyleGlobalAdminDtl';
 import StyleGlobalAdminForm from './StyleGlobalAdminForm';
-import { LinkBtnLgtGray, BtnDkGray, BtnDelete, LinkBtnList } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import messages from '../messages';
-
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -42,22 +41,25 @@ class GlobalAdminDtl extends React.Component {
     };
   }
 
-  onChangeMsgKey = (e) => {
+  onChangeMsgKey = e => {
     this.setState({ msgKey: e.target.value });
     if (e.target.value !== '') this.setState({ msgKeyValid: true });
     else this.setState({ msgKeyValid: false });
   };
-  onChangeDscrKOR = (e) => {
+
+  onChangeDscrKOR = e => {
     this.setState({ dscrKOR: e.target.value });
     if (e.target.value !== '') this.setState({ dscrKorValid: true });
     else this.setState({ dscrKorValid: false });
   };
-  onChangeDscrENG = (e) => {
+
+  onChangeDscrENG = e => {
     this.setState({ dscrENG: e.target.value });
     if (e.target.value !== '') this.setState({ dscrEngValid: true });
     else this.setState({ dscrEngValid: false });
   };
-  onChangeDscrCHN = (e) => {
+
+  onChangeDscrCHN = e => {
     this.setState({ dscrCHN: e.target.value });
     if (e.target.value !== '') this.setState({ dscrChnValid: true });
     else this.setState({ dscrChnValid: false });
@@ -72,48 +74,33 @@ class GlobalAdminDtl extends React.Component {
         DSCR_CHN: this.state.dscrCHN,
       };
       this.setState({ orgVal: tempVal });
-      this.props.registGlobalMsg(
-        this.state.msgKey,
-        this.state.dscrKOR,
-        this.state.dscrENG,
-        this.state.dscrCHN,
-        this.props.history,
-      );
+      this.props.registGlobalMsg(this.state.msgKey, this.state.dscrKOR, this.state.dscrENG, this.state.dscrCHN, this.props.history);
       this.setState({ mode: 'D' });
     }
-  }
+  };
 
   delConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.delConfirm)}`, '', this.delGlobalMsg);
-  }
+  };
 
   delGlobalMsg = () => {
     const delKeys = [this.state.msgKey];
     this.props.delGlobalMsg(delKeys, this.props.history);
-  }
+  };
 
   udtConfirm = () => {
     if (this.vaildChk()) {
       feed.showConfirm(`${intlObj.get(messages.udtConfirm)}`, '', this.udtGlobalMsg);
     }
-  }
+  };
 
   udtGlobalMsg = () => {
-    this.props.udtGlobalMsg(
-      this.state.msgKey,
-      this.state.dscrKOR,
-      this.state.dscrENG,
-      this.state.dscrCHN,
-      this.props.history,
-    );
+    this.props.udtGlobalMsg(this.state.msgKey, this.state.dscrKOR, this.state.dscrENG, this.state.dscrCHN, this.props.history);
     this.setState({ mode: 'D' });
-  }
+  };
 
   vaildChk = () => {
-    if (this.state.msgKeyValid
-    && this.state.dscrKorValid
-    && this.state.dscrEngValid
-    && this.state.dscrChnValid) {
+    if (this.state.msgKeyValid && this.state.dscrKorValid && this.state.dscrEngValid && this.state.dscrChnValid) {
       if (this.state.mode !== 'I') {
         return true;
       }
@@ -123,13 +110,13 @@ class GlobalAdminDtl extends React.Component {
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
-  }
+  };
 
   dupliCheck = () => {
     if (this.state.msgKey !== undefined && this.state.msgKey !== '') {
       this.props.getGlobalMsg(this.state.msgKey);
     }
-  }
+  };
 
   render() {
     const formItemLayout = {
@@ -142,67 +129,88 @@ class GlobalAdminDtl extends React.Component {
         sm: { span: 20 },
       },
     };
-    const title = (mode) => {
+    const title = mode => {
       if (mode === 'I') return '다국어 메시지 등록';
-      else if (mode === 'D') return '다국어 메시지 상세';
-      else if (mode === 'U') return '다국어 메시지 수정';
+      if (mode === 'D') return '다국어 메시지 상세';
+      if (mode === 'U') return '다국어 메시지 수정';
       return '';
     };
     const dupliMsg = (mode, stat) => {
       if (mode === 'I' && this.state.msgKey !== '') {
-        if (stat) return (<font color="RED">이미 존재하는 메시지 코드입니다.</font>);
-        return (<font color="GREEN">사용가능한 메시지코드 입니다.</font>);
+        if (stat) return <font color="RED">이미 존재하는 메시지 코드입니다.</font>;
+        return <font color="GREEN">사용가능한 메시지코드 입니다.</font>;
       }
       return '';
     };
-    const botBtn = (mode) => {
-      if (mode === 'I') { // 등록
+    const botBtn = mode => {
+      if (mode === 'I') {
+        // 등록
         return (
           <React.Fragment>
-            <LinkBtnLgtGray>
+            <StyledButton className="btn-light btn-cancel">
               <Link to="../GlobalAdmin/">취소</Link>
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={this.regGlobalMsg}>등록</BtnDkGray>
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.regGlobalMsg}>
+              등록
+            </StyledButton>
           </React.Fragment>
         );
-      } else if (mode === 'D') { // 상세
+      }
+      if (mode === 'D') {
+        // 상세
         return (
           <React.Fragment>
             <div style={{ float: 'left' }}>
-              <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete>
-              <Link to="../GlobalAdmin/" style={{ marginLeft: 23 }}>
-                <LinkBtnList>목록으로</LinkBtnList>
+              <StyledButton className="btn-light" onClick={this.delConfirm}>
+                삭제
+              </StyledButton>
+              <Link to="../GlobalAdmin/" style={{ marginLeft: 10 }}>
+                <StyledButton className="btn-light">목록으로</StyledButton>
               </Link>
             </div>
-            <BtnDkGray onClick={() => this.setState({
-              mode: 'U',
-              msgKeyValid: true,
-              dscrKorValid: true,
-              dscrEngValid: true,
-              dscrChnValid: true,
-             })}
-            >수정
-            </BtnDkGray>
+            <StyledButton
+              className="btn-primary"
+              onClick={() =>
+                this.setState({
+                  mode: 'U',
+                  msgKeyValid: true,
+                  dscrKorValid: true,
+                  dscrEngValid: true,
+                  dscrChnValid: true,
+                })
+              }
+            >
+              수정
+            </StyledButton>
           </React.Fragment>
         );
-      } else if (mode === 'U') { // 수정
+      }
+      if (mode === 'U') {
+        // 수정
         return (
           <React.Fragment>
             <div style={{ float: 'left' }}>
               <Link to="../GlobalAdmin/">
-                <LinkBtnList>목록으로</LinkBtnList>
+                <StyledButton className="btn-light">목록으로</StyledButton>
               </Link>
             </div>
-            <LinkBtnLgtGray onClick={() => this.setState({
-              mode: 'D',
-              // msgKey: orgVal.MSG_KEY,
-              dscrKOR: this.state.orgVal.DSCR_KOR,
-              dscrENG: this.state.orgVal.DSCR_ENG,
-              dscrCHN: this.state.orgVal.DSCR_CHN,
-              })}
-            >취소
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={this.udtConfirm}>저장</BtnDkGray>
+            <StyledButton
+              className="btn-light btn-cancel"
+              onClick={() =>
+                this.setState({
+                  mode: 'D',
+                  // msgKey: orgVal.MSG_KEY,
+                  dscrKOR: this.state.orgVal.DSCR_KOR,
+                  dscrENG: this.state.orgVal.DSCR_ENG,
+                  dscrCHN: this.state.orgVal.DSCR_CHN,
+                })
+              }
+            >
+              취소
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              저장
+            </StyledButton>
           </React.Fragment>
         );
       }
@@ -231,7 +239,7 @@ class GlobalAdminDtl extends React.Component {
                         <Input
                           value={this.state.msgKey}
                           onChange={this.onChangeMsgKey}
-                          onKeyUp={(e) => {
+                          onKeyUp={e => {
                             // 한글입력제한(임시)
                             this.setState({ msgKey: e.target.value.replace(/[^a-z0-9_]/gi, '') });
                           }}
@@ -311,9 +319,7 @@ class GlobalAdminDtl extends React.Component {
               </table>
             </Form>
           </StyleGlobalAdminForm>
-          <div className="buttonWrapper">
-            {botBtn(this.state.mode)}
-          </div>
+          <div className="buttonWrapper">{botBtn(this.state.mode)}</div>
         </StyleGlobalAdminDtl>
       </div>
     );
@@ -330,24 +336,21 @@ GlobalAdminDtl.propTypes = {
   location: PropTypes.object, // eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getGlobalMsg: MSG_KEY =>
-      dispatch(actions.getGlobalMsg(MSG_KEY)),
-    registGlobalMsg: (MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history) =>
-      dispatch(actions.registGlobalMsg(MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history)),
-    delGlobalMsg: (delKeys, history) =>
-      dispatch(actions.delGlobalMsg(delKeys, history)),
-    udtGlobalMsg: (MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history) =>
-      dispatch(actions.udtGlobalMsg(MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getGlobalMsg: MSG_KEY => dispatch(actions.getGlobalMsg(MSG_KEY)),
+  registGlobalMsg: (MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history) => dispatch(actions.registGlobalMsg(MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history)),
+  delGlobalMsg: (delKeys, history) => dispatch(actions.delGlobalMsg(delKeys, history)),
+  udtGlobalMsg: (MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history) => dispatch(actions.udtGlobalMsg(MSG_KEY, DSCR_KOR, DSCR_ENG, DSCR_CHN, history)),
+});
 
 const mapStateToProps = createStructuredSelector({
   globalMsgRes: selectors.makeSelectGlobalMsg(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'GlobalAdminDtl', saga });
 const withReducer = injectReducer({ key: 'GlobalAdminDtl', reducer });
 

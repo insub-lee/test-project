@@ -18,6 +18,7 @@ import * as actions from './actions';
 import Tree from './Tree';
 import StyleCategory from './StyleCategory';
 import StyleCategoryForm from './StyleCategoryForm';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const { Option } = Select;
 
@@ -193,7 +194,11 @@ class CategoryMap extends Component {
                         <label htmlFor="v2">DESCRIPTION</label>
                       </th>
                       <td>
-                        <Input name="DESCIPTION" value={isAdd ? addNodeInfo.DESCIPTION : selectedNode.DESCIPTION} onChange={e => this.onChangeNode(e, 'DESCIPTION')} />
+                        <Input
+                          name="DESCIPTION"
+                          value={isAdd ? addNodeInfo.DESCIPTION : selectedNode.DESCIPTION}
+                          onChange={e => this.onChangeNode(e, 'DESCIPTION')}
+                        />
                       </td>
                     </tr>
                     <tr>
@@ -214,18 +219,16 @@ class CategoryMap extends Component {
             </div>
             <div className="buttonWrapper">
               <Link to={`/admin/adminmain/classify/rootmap/${GUBUN}`}>
-                <Button type="default" size="large" icon="unordered-list">
-                  목록으로
-                </Button>
+                <StyledButton className="btn-light">목록으로</StyledButton>
               </Link>
               {isAdd ? (
-                <Button type="primary" htmlType="submit" size="large">
+                <StyledButton className="btn-primary" htmlType="submit">
                   추가
-                </Button>
+                </StyledButton>
               ) : (
-                <Button type="primary" htmlType="submit" size="large">
+                <StyledButton className="btn-primary" htmlType="submit">
                   저장
-                </Button>
+                </StyledButton>
               )}
             </div>
           </form>

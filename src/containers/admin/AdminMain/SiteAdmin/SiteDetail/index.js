@@ -472,7 +472,7 @@ class SiteDetail extends React.Component {
           <React.Fragment>
             <div style={{ float: 'left' }}>
               <ErrorBoundary>
-                <StyledButton className="btn-dark btn-bs-none" onClick={this.delConfirm}>
+                <StyledButton className="btn-light" onClick={this.delConfirm}>
                   {intlObj.get(messages.lblDelete)}
                 </StyledButton>
                 <Link to="/admin/adminmain/siteadmin" style={{ marginLeft: 10 }}>
@@ -535,7 +535,7 @@ class SiteDetail extends React.Component {
             </div>
             <ErrorBoundary>
               <StyledButton
-                className="btn-dark btn-cancel"
+                className="btn-light btn-cancel"
                 onClick={() => {
                   console.log(this.state);
                   // this.nameRef.blur();
@@ -591,7 +591,7 @@ class SiteDetail extends React.Component {
               </ErrorBoundary>
             </div>
             <ErrorBoundary>
-              <StyledButton className="textLinkBtn btn-xs btn-secondary btn-bs-none" onClick={this.managerOrgOpen}>
+              <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.managerOrgOpen}>
                 &lt; {intlObj.get(messages.lblEdit)}
               </StyledButton>
             </ErrorBoundary>
@@ -648,7 +648,7 @@ class SiteDetail extends React.Component {
               </ErrorBoundary>
             </div>
             <ErrorBoundary>
-              <StyledButton className="textLinkBtn btn-xs btn-secondary btn-bs-none" onClick={this.allOrgOpen}>
+              <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.allOrgOpen}>
                 &lt; {intlObj.get(messages.lblEdit)}
               </StyledButton>
             </ErrorBoundary>
