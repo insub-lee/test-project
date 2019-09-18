@@ -10,6 +10,7 @@ import difference from 'lodash/difference';
 import selectors from '../../selectors';
 import Styled from './Styled';
 import * as actions from '../../actions';
+import StyledButton from '../../../../../../../components/Button/StyledButton';
 
 class RelationManual extends Component {
   leftTableColumns = [
@@ -205,14 +206,14 @@ class RelationManual extends Component {
               </td>
               <td style={{ verticalAlign: 'top' }}>
                 <div style={{ marginBottom: '10px', textAlign: 'right' }}>
-                  <Button size="middle" onClick={this.onApply}>
+                  <StyledButton className="btn-secondary btn-sm btn-bs-none" onClick={this.onApply}>
                     {
                       <span>
                         <Icon type="import" />
                         적용하기
                       </span>
                     }
-                  </Button>
+                  </StyledButton>
                 </div>
                 <Table rowSelection={this.rightRowSelection} columns={this.rightTableColumns} dataSource={chooseRelMual} style={{ width: 390 }}></Table>
               </td>

@@ -16,7 +16,7 @@ const Styled = styled.div`
     display: inherit;
     border: none;
     padding: 0;
-    width: 130px;
+    width: 93%;
     line-height: normal;
     height: 22px;
     overflow: hidden;

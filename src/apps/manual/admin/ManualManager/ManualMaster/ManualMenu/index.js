@@ -5,28 +5,31 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
 
+import StyledManualMenu from './StyledManualMenu';
+
 import selectors from '../selectors';
 import * as actions from '../actions';
 
 const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageType, handleSelectOptionMgr, defaultMgrMap, handleSelectCompareMgr }) => (
-  <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]} style={{ marginBottom: '20px' }}>
-    <Menu.Item key="DefaultMgr" onClick={() => handleChangePageType('DefaultMgr')}>
-      <Icon type="form" />
-      기본정보
-    </Menu.Item>
-    <Menu.Item key="ManualWrite" onClick={handleChangeIsEditorMgr}>
-      <Icon type="edit" />
-      매뉴얼작성
-    </Menu.Item>
-    <Menu.Item key="OptionMgr" onClick={() => handleSelectOptionMgr()}>
-      <Icon type="setting" />
-      옵션
-    </Menu.Item>
-    <Menu.Item key="Compare" disabled={defaultMgrMap.get('MUAL_TYPE') === 1} onClick={() => handleSelectCompareMgr()}>
-      <Icon type="diff" />
-      상품비교정보
-    </Menu.Item>
-    {/* <Menu.Item key="DisplayDefine" onClick={() => handleChangePageType('DisplayDefine')}>
+  <StyledManualMenu>
+    <Menu mode="horizontal" selectedKeys={[movePageType.get('pageType')]}>
+      <Menu.Item key="DefaultMgr" onClick={() => handleChangePageType('DefaultMgr')}>
+        <Icon type="form" />
+        기본정보
+      </Menu.Item>
+      <Menu.Item key="ManualWrite" onClick={handleChangeIsEditorMgr}>
+        <Icon type="edit" />
+        매뉴얼작성
+      </Menu.Item>
+      <Menu.Item key="OptionMgr" onClick={() => handleSelectOptionMgr()}>
+        <Icon type="setting" />
+        옵션
+      </Menu.Item>
+      <Menu.Item key="Compare" disabled={defaultMgrMap.get('MUAL_TYPE') === 1} onClick={() => handleSelectCompareMgr()}>
+        <Icon type="diff" />
+        상품비교정보
+      </Menu.Item>
+      {/* <Menu.Item key="DisplayDefine" onClick={() => handleChangePageType('DisplayDefine')}>
       <Icon type="layout" />
       화면정의
     </Menu.Item>
@@ -34,7 +37,8 @@ const ManualMenu = ({ handleChangeIsEditorMgr, movePageType, handleChangePageTyp
       <Icon type="audit" />
       심의요청
     </Menu.Item> */}
-  </Menu>
+    </Menu>
+  </StyledManualMenu>
 );
 
 ManualMenu.propTypes = {

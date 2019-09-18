@@ -11,6 +11,7 @@ import FroalaEditor from '../../../../components/RichTextEditor/FroalaEditor';
 import FroalaEditorView from '../../../../components/RichTextEditor/FroalaEditorView';
 import { froalaEditorConfig } from '../../../../components/RichTextEditor/FroalaEditorConfig';
 
+import StyledButton from '../../../../../../components/Button/StyledButton';
 import Styled from './Styled';
 
 const handleNodeClick = (event, setSelectedIdx, idx) => {
@@ -47,9 +48,9 @@ const CompareMgr = ({ manageTemplet, manageData, setCompareManageChangeValue, sa
       ))}
     <Row>
       <Col className="templetManageButtonWrap">
-        <Button type="primary" onClick={saveCompareData}>
+        <StyledButton className="btn-primary btn-bs-none" onClick={saveCompareData}>
           저장
-        </Button>
+        </StyledButton>
       </Col>
     </Row>
   </Styled>
