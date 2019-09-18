@@ -38,16 +38,29 @@ class AppBasicInfo extends React.Component {
       userinfo: [],
       orgShow: false,
     };
-    prop.reqAppBasicInfo(this.state.appId);
+    // prop.reqAppBasicInfo(this.state.appId);
     this.props.appBizGubun(3);
+  }
+
+  componentDidMount() {
+    const { reqAppBasicInfo, appId, BIZGRP_ID } = this.props;
+    const params = {
+      appId,
+      bizgroupId: BIZGRP_ID
+    };
+    reqAppBasicInfo(params);
   }
 
   componentWillReceiveProps(nextProps) {
     if (this.state.appId !== nextProps.appId) {
+      const params = {
+        appId: nextProps.appId,
+        bizgroupId: nextProps.BIZGRP_ID
+      };
       this.setState({
         appId: nextProps.appId,
       });
-      this.props.reqAppBasicInfo(nextProps.appId);
+      this.props.reqAppBasicInfo(params);
     }
   }
 
@@ -114,8 +127,6 @@ class AppBasicInfo extends React.Component {
     const userProfile = (userinfo, orgShow) => {
       this.setState({ orgShow, userinfo });
     };
-
-    console.debug('!!!!! appBasicInfo: ', this.props);
 
     const closeModal = () => this.setState({ orgShow: false });
     /* eslint-disable */
@@ -269,7 +280,7 @@ AppBasicInfo.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  reqAppBasicInfo: appId => dispatch(actions.reqAppBasicInfo(appId)),
+  reqAppBasicInfo: params => dispatch(actions.reqAppBasicInfo(params)),
   registCategory: APP_ID => dispatch(actions.registCategory(APP_ID)),
   registApp: APP_ID => dispatch(actions.registApp(APP_ID)),
   appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),

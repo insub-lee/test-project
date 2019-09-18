@@ -88,6 +88,8 @@ class BizMenuCardDetail extends Component {
   render() {
     const { bizMenuData, selectedIndex, history, match, execMenu, execPage } = this.props;
 
+    console.debug('>>>>>>>>bizMenuData: ', bizMenuData);
+
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
     const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
 

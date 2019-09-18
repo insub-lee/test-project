@@ -13,7 +13,7 @@ import { Form, Input, Button } from 'antd';
 import StyleNotifyAdminDtl from './StyleNotifyAdminDtl';
 import StyleNotifyAdminForm from './StyleNotifyAdminDtlForm';
 import NotifyImgChild from './notifyImgChild';
-import { BtnDkGray, LinkBtnList } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 import StyleNotifyMediaForm from '../style/StyleNotifyMediaForm';
 
 import NotifyBtnChild from './notifyBtnChild';
@@ -23,7 +23,6 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import messages from '../messages';
-
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -90,11 +89,12 @@ class NotifyAdminDtl extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/NotifyAdmin/', state: data,
+      pathname: '/admin/AdminMain/NotifyAdmin/',
+      state: data,
     });
-  }
+  };
 
-  getSecInfoFromDBAll = (resultList) => {
+  getSecInfoFromDBAll = resultList => {
     const userSetMembersCopy = [];
     const pstnSetMembersCopy = [];
     const deptSetMembersCopy = [];
@@ -102,16 +102,21 @@ class NotifyAdminDtl extends React.Component {
     const grpSetMembersCopy = [];
 
     if (resultList !== '' && resultList !== undefined) {
-      resultList.map((obj) => {
-        if (resultList.findIndex(o => o.RECEIVER_TYPE === 'U' && obj.RECEIVER_TYPE === 'U') > -1) { // 구성원
+      resultList.map(obj => {
+        if (resultList.findIndex(o => o.RECEIVER_TYPE === 'U' && obj.RECEIVER_TYPE === 'U') > -1) {
+          // 구성원
           userSetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'P' && obj.RECEIVER_TYPE === 'P') > -1) { // 직위
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'P' && obj.RECEIVER_TYPE === 'P') > -1) {
+          // 직위
           pstnSetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'D' && obj.RECEIVER_TYPE === 'D') > -1) { // 부서
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'D' && obj.RECEIVER_TYPE === 'D') > -1) {
+          // 부서
           deptSetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'T' && obj.RECEIVER_TYPE === 'T') > -1) { // 직책
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'T' && obj.RECEIVER_TYPE === 'T') > -1) {
+          // 직책
           dutySetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'V' && obj.RECEIVER_TYPE === 'V') > -1) { // 가상그룹
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'V' && obj.RECEIVER_TYPE === 'V') > -1) {
+          // 가상그룹
           grpSetMembersCopy.push(obj);
         }
         return resultList; // userSetMembersCopy;
@@ -125,7 +130,7 @@ class NotifyAdminDtl extends React.Component {
       dutySetMembers: dutySetMembersCopy,
       grpSetMembers: grpSetMembersCopy,
     });
-  }
+  };
 
   getImgSettingList = () => {
     if (this.props.setNotifyMsg !== undefined) {
@@ -135,15 +140,10 @@ class NotifyAdminDtl extends React.Component {
           const actionJS = JSON.parse(action);
           const imgList = actionJS.images;
           if (imgList.length > 0) {
-            const result = imgList.map((imgList, index) => {  // eslint-disable-line
+            const result = imgList.map((imgList, index) => {
+              // eslint-disable-line
               if (imgList.isShow !== false) {
-                return (
-                  <NotifyImgChild
-                    index={index}
-                    imgList={imgList}
-                    setDeletedImgIndex={this.setDeletedImgIndex}
-                  />
-                );
+                return <NotifyImgChild index={index} imgList={imgList} setDeletedImgIndex={this.setDeletedImgIndex} />;
               }
             });
             return result;
@@ -152,7 +152,7 @@ class NotifyAdminDtl extends React.Component {
       }
     }
     return '';
-  }
+  };
 
   getBtnSettingList = () => {
     if (this.props.setNotifyMsg !== undefined) {
@@ -161,15 +161,10 @@ class NotifyAdminDtl extends React.Component {
         if (action.trim() !== '') {
           const actionJS = JSON.parse(action);
           const btnList = actionJS.buttons;
-          const result = btnList.map((btnList, index) => {  // eslint-disable-line
+          const result = btnList.map((btnList, index) => {
+            // eslint-disable-line
             if (btnList.isShow !== false) {
-              return (
-                <NotifyBtnChild
-                  index={index}
-                  btnList={btnList}
-                  setDeletedBtnIndex={this.setDeletedBtnIndex}
-                />
-              );
+              return <NotifyBtnChild index={index} btnList={btnList} setDeletedBtnIndex={this.setDeletedBtnIndex} />;
             }
           });
           return result;
@@ -177,18 +172,15 @@ class NotifyAdminDtl extends React.Component {
       }
     }
     return '';
-  }
+  };
 
   postToggle = () => {
     this.setState({
       postDisabled: !this.state.postDisabled,
     });
 
-    this.props.udtPostState(
-      this.state.MSG_ID,
-      !this.state.postDisabled ? 'Y' : 'N',
-    );
-  }
+    this.props.udtPostState(this.state.MSG_ID, !this.state.postDisabled ? 'Y' : 'N');
+  };
 
   ShowSetFormatter = () => {
     if (this.props.setNotifyMsg.END_DTTM !== undefined && this.props.setNotifyMsg.END_DTTM !== '') {
@@ -213,13 +205,13 @@ class NotifyAdminDtl extends React.Component {
       }
     }
     return '';
-  }
+  };
 
   // 날짜변환함수(년.월.일)
   timeToDateForm = (val, formType) => {
     const timestamp = new Date(val).getTime();
-    const todate = ('00'.concat(new Date(timestamp).getDate())).slice(-2);
-    const tomonth = ('00'.concat(new Date(timestamp).getMonth() + 1)).slice(-2);
+    const todate = '00'.concat(new Date(timestamp).getDate()).slice(-2);
+    const tomonth = '00'.concat(new Date(timestamp).getMonth() + 1).slice(-2);
     const toyear = new Date(timestamp).getFullYear();
     let originalDate = '';
 
@@ -229,7 +221,7 @@ class NotifyAdminDtl extends React.Component {
       originalDate = `${toyear}-${tomonth}-${todate}`;
     }
     return originalDate;
-  }
+  };
 
   notifyUdt = () => {
     // console.log('상세화면_키워드타입', this.state.listKeywordType);
@@ -248,39 +240,40 @@ class NotifyAdminDtl extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminUdt', state: data,
+      pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminUdt',
+      state: data,
     });
-  }
+  };
 
   render() {
     // 조직도에서 가져온 리스트 뷰
-    const returnUserList = (resultObj) => {
+    const returnUserList = resultObj => {
       this.setState({
         userSetMembers: resultObj,
       });
     };
-    const returnDutyList = (resultObj) => {
+    const returnDutyList = resultObj => {
       this.setState({
         dutySetMembers: resultObj,
       });
     };
-    const returnPstnList = (resultObj) => {
+    const returnPstnList = resultObj => {
       this.setState({
         pstnSetMembers: resultObj,
       });
     };
-    const returnGrpList = (resultObj) => {
+    const returnGrpList = resultObj => {
       this.setState({
         grpSetMembers: resultObj,
       });
     };
-    const returnDetpList = (resultObj) => {
+    const returnDetpList = resultObj => {
       this.setState({
         deptSetMembers: resultObj,
       });
     };
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = (resultObj) => {
+    const getDataFromOrganizationAll = resultObj => {
       // 구성원
       const userSetMembersFromOrganization = resultObj.selectedUsers;
       // 직위
@@ -365,20 +358,14 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n1">{intlObj.get(messages.system)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.props.setNotifyMsg.SYSTEM}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d1"
                         /> */}
-                        <Input
-                          value={this.props.setNotifyMsg.SYSTEM}
-                          readOnly={true}
-                          id="n1"
-                        />
+                        <Input value={this.props.setNotifyMsg.SYSTEM} readOnly={true} id="n1" />
                       </FormItem>
                     </td>
                   </tr>
@@ -387,20 +374,14 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n2">{intlObj.get(messages.siteName)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('SITE_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d2"
                         /> */}
-                        <Input
-                          value={lang.get('SITE_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n2"
-                        />
+                        <Input value={lang.get('SITE_NAME', this.props.setNotifyMsg)} readOnly={true} id="n2" />
                       </FormItem>
                     </td>
                   </tr>
@@ -409,20 +390,14 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n3">APP ID</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('APP_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d3"
                         /> */}
-                        <Input
-                          value={lang.get('APP_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n3"
-                        />
+                        <Input value={lang.get('APP_NAME', this.props.setNotifyMsg)} readOnly={true} id="n3" />
                       </FormItem>
                     </td>
                   </tr>
@@ -431,9 +406,7 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n4">{intlObj.get(messages.postPeriod)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={
                             this.props.setNotifyMsg.START_DTTM && this.props.setNotifyMsg.END_DTTM ?
@@ -446,9 +419,12 @@ class NotifyAdminDtl extends React.Component {
                         /> */}
                         <Input
                           value={
-                            this.props.setNotifyMsg.START_DTTM && this.props.setNotifyMsg.END_DTTM ?
-                            `${this.timeToDateForm(this.props.setNotifyMsg.START_DTTM, 'point')} ~ ${this.timeToDateForm(this.props.setNotifyMsg.END_DTTM, 'point')}`
-                            : ''
+                            this.props.setNotifyMsg.START_DTTM && this.props.setNotifyMsg.END_DTTM
+                              ? `${this.timeToDateForm(this.props.setNotifyMsg.START_DTTM, 'point')} ~ ${this.timeToDateForm(
+                                  this.props.setNotifyMsg.END_DTTM,
+                                  'point',
+                                )}`
+                              : ''
                           }
                           readOnly={true}
                           id="d4"
@@ -457,38 +433,24 @@ class NotifyAdminDtl extends React.Component {
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      {intlObj.get(messages.codeName)}
-                    </th>
+                    <th className="">{intlObj.get(messages.codeName)}</th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('CODE_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d5"
                         /> */}
-                        <Input
-                          value={lang.get('CODE_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="d5"
-                        />
-                        <div style={{ float: 'right' }}>
-                          {this.ShowSetFormatter()}
-                        </div>
+                        <Input value={lang.get('CODE_NAME', this.props.setNotifyMsg)} readOnly={true} id="d5" />
+                        <div style={{ float: 'right' }}>{this.ShowSetFormatter()}</div>
                       </FormItem>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      {intlObj.get(messages.receiver)}
-                    </th>
+                    <th className="">{intlObj.get(messages.receiver)}</th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {allList()}
                         {/* <ul>
                           {this.props.setNotifyReceiver.map(item => (
@@ -503,20 +465,14 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n5">{intlObj.get(messages.title)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('TITLE', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d7"
                         /> */}
-                        <Input
-                          value={lang.get('TITLE', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n5"
-                        />
+                        <Input value={lang.get('TITLE', this.props.setNotifyMsg)} readOnly={true} id="n5" />
                       </FormItem>
                     </td>
                   </tr>
@@ -525,15 +481,8 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n6">{intlObj.get(messages.content)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
-                        <TextArea
-                          value={lang.get('CONTENT', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          autosize={{ minRows: 1, maxRow: 8 }}
-                          id="n6"
-                        />
+                      <FormItem {...formItemLayout}>
+                        <TextArea value={lang.get('CONTENT', this.props.setNotifyMsg)} readOnly={true} autosize={{ minRows: 1, maxRow: 8 }} id="n6" />
                       </FormItem>
                     </td>
                   </tr>
@@ -542,20 +491,14 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n7">{intlObj.get(messages.regDttm)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d9"
                         /> */}
-                        <Input
-                          value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`}
-                          readOnly={true}
-                          id="n7"
-                        />
+                        <Input value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`} readOnly={true} id="n7" />
                       </FormItem>
                     </td>
                   </tr>
@@ -564,20 +507,14 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n8">{intlObj.get(messages.userName)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('USER_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d10"
                         /> */}
-                        <Input
-                          value={lang.get('USER_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n8"
-                        />
+                        <Input value={lang.get('USER_NAME', this.props.setNotifyMsg)} readOnly={true} id="n8" />
                       </FormItem>
                     </td>
                   </tr>
@@ -586,41 +523,27 @@ class NotifyAdminDtl extends React.Component {
                       <label htmlFor="n9">URL</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.props.setNotifyMsg.URL}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d11"
                         /> */}
-                        <Input
-                          value={this.props.setNotifyMsg.URL}
-                          readOnly={true}
-                          id="n9"
-                        />
+                        <Input value={this.props.setNotifyMsg.URL} readOnly={true} id="n9" />
                       </FormItem>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      이미지
-                    </th>
+                    <th className="">이미지</th>
                     <td>
-                      <StyleNotifyMediaForm>
-                        {imgContent}
-                      </StyleNotifyMediaForm>
+                      <StyleNotifyMediaForm>{imgContent}</StyleNotifyMediaForm>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      버튼
-                    </th>
+                    <th className="">버튼</th>
                     <td>
-                      <StyleNotifyMediaForm>
-                        {btnContent}
-                      </StyleNotifyMediaForm>
+                      <StyleNotifyMediaForm>{btnContent}</StyleNotifyMediaForm>
                     </td>
                   </tr>
                 </tbody>
@@ -630,12 +553,14 @@ class NotifyAdminDtl extends React.Component {
           <div className="buttonWrapper">
             <React.Fragment>
               <div style={{ float: 'left' }}>
-                <LinkBtnList onClick={this.onClickToList}>
+                <StyledButton className="btn-light" onClick={this.onClickToList}>
                   {intlObj.get(messages.toList)}
-                </LinkBtnList>
+                </StyledButton>
               </div>
             </React.Fragment>
-            <BtnDkGray onClick={this.notifyUdt}>수정</BtnDkGray>
+            <StyledButton className="btn-primary" onClick={this.notifyUdt}>
+              수정
+            </StyledButton>
           </div>
         </StyleNotifyAdminDtl>
       </div>
@@ -651,21 +576,20 @@ NotifyAdminDtl.propTypes = {
   history: PropTypes.object, // eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getNotifyMsg: MSG_ID =>
-      dispatch(actions.getNotifyMsg(MSG_ID)),
-    udtPostState: (MSG_ID, OPEN_YN) =>
-      dispatch(actions.udtPostState(MSG_ID, OPEN_YN)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getNotifyMsg: MSG_ID => dispatch(actions.getNotifyMsg(MSG_ID)),
+  udtPostState: (MSG_ID, OPEN_YN) => dispatch(actions.udtPostState(MSG_ID, OPEN_YN)),
+});
 
 const mapStateToProps = createStructuredSelector({
   setNotifyMsg: selectors.makeSelectNotifyMsg(),
   setNotifyReceiver: selectors.makeSelectNotifyReceiver(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'NotifyAdminDtl', saga });
 const withReducer = injectReducer({ key: 'NotifyAdminDtl', reducer });
 

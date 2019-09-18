@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Modal, Button, Select } from 'antd';
+import { Input, Modal, Select } from 'antd';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const { Option } = Select;
 
@@ -86,12 +87,12 @@ class RegModal extends Component {
             </ul>
           </div>
           <div style={{ width: '100%', textAlign: 'right', padding: '20px 0 0' }}>
-            <Button key="back" htmlType="button" onClick={this.handleCloselModal}>
+            <StyledButton className="btn-light" key="back" htmlType="button" onClick={this.handleCloselModal}>
               닫기
-            </Button>
-            <Button key="ok" type="primary" htmlType="submit" style={{ marginLeft: '8px' }}>
+            </StyledButton>
+            <StyledButton className="btn-primary" key="ok" type="primary" htmlType="submit" style={{ marginLeft: '8px' }}>
               {isRootMap ? '수정' : '저장'}
-            </Button>
+            </StyledButton>
           </div>
         </form>
       </Modal>

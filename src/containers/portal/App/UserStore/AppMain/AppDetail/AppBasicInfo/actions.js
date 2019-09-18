@@ -1,9 +1,9 @@
 import * as constants from './constants';
 import * as appConstants from '../../../constants';
 
-export const reqAppBasicInfo = appId => ({
+export const reqAppBasicInfo = params => ({
   type: constants.REQ_APP_BASIC_INFO,
-  payload: { appId },
+  payload: { params },
 });
 
 export const resAppBasicInfo = list => ({

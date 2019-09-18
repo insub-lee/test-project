@@ -85,7 +85,7 @@ const StyleCategory = styled.div`
     width: 100%;
     height: 30px;
     padding-right: 10px;
-    /* float: right; */
+    margin-top: 10px;
 
     > input {
       position: relative;

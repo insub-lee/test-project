@@ -16,7 +16,7 @@ import { Form, Input, Button, DatePicker, Select } from 'antd';
 import StyleNotifyAdminUdt from './StyleNotifyAdminUdt';
 import StyleNotifyAdminForm from '../style/StyleNotifyAdminForm';
 import NotifyImgChild from './notifyImgChild';
-import { LinkBtnList, BtnDkGray, BtnLgtGray } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 import { BtnIconAdd } from '../../../../../components/uielements/styles/buttons.style';
 import StyleNotifyImgForm from '../style/StyleNotifyMediaForm';
 
@@ -89,7 +89,6 @@ class NotifyAdminUdt extends React.Component {
       btnList: [],
       btnNumChildren: 0,
       deletedBtnIndex: [],
-
     };
     // 화면 로드 시 데이터 가져옴
     this.props.getNotifyMsg(location.MSG_ID);
@@ -104,25 +103,16 @@ class NotifyAdminUdt extends React.Component {
         const nextImgList = actionJS.images;
         const nextBtnList = actionJS.buttons;
         for (let i = 0; i < nextImgList.length; i += 1) {
-          Object.assign(
-            nextImgList[i],
-            { SEQNO: `${i}` },
-            { TITLE: nextImgList[i].id },
-            { URL: nextImgList[i].url },
-            { IMAGE: nextImgList[i].seq },
-          );
+          Object.assign(nextImgList[i], { SEQNO: `${i}` }, { TITLE: nextImgList[i].id }, { URL: nextImgList[i].url }, { IMAGE: nextImgList[i].seq });
         }
         for (let i = 0; i < nextBtnList.length; i += 1) {
-          Object.assign(
-            nextBtnList[i],
-            { SEQNO: `${i}` },
-            { VALUE: nextBtnList[i].value },
-            { URL: nextBtnList[i].link.url },
-          );
+          Object.assign(nextBtnList[i], { SEQNO: `${i}` }, { VALUE: nextBtnList[i].value }, { URL: nextBtnList[i].link.url });
         }
         this.setState({
-          periodDates: [moment(this.timeToDateForm(nextProps.setNotifyMsg.START_DTTM, 'bar')),
-            moment(this.timeToDateForm(nextProps.setNotifyMsg.END_DTTM, 'bar'))],
+          periodDates: [
+            moment(this.timeToDateForm(nextProps.setNotifyMsg.START_DTTM, 'bar')),
+            moment(this.timeToDateForm(nextProps.setNotifyMsg.END_DTTM, 'bar')),
+          ],
           imgList: nextImgList,
           btnList: nextBtnList,
           numChildren: nextImgList.length,
@@ -152,71 +142,59 @@ class NotifyAdminUdt extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/NotifyAdmin/', state: data,
+      pathname: '/admin/AdminMain/NotifyAdmin/',
+      state: data,
     });
-  }
+  };
 
   // 게시기5간 from ~ to
-  onPeriodChange = (dates) => {
+  onPeriodChange = dates => {
     this.setState({
       periodDates: [dates[0], dates[1]],
     });
-  }
+  };
 
-  onChangeMsgType = (val) => {
+  onChangeMsgType = val => {
     this.setState({ MSG_TYPE: val });
   };
 
-  onChangeTitle = (e) => {
+  onChangeTitle = e => {
     this.setState({ TITLE: e.target.value });
   };
 
-  onChangeContent = (e) => {
+  onChangeContent = e => {
     this.setState({ CONTENT: e.target.value });
   };
 
-  onChangeUrl = (e) => {
+  onChangeUrl = e => {
     this.setState({ URL: e.target.value });
   };
 
   getImgSettingList = () => {
     const { imgList } = this.state;
-    const result = imgList.map((imgList, index) => {  // eslint-disable-line
+    const result = imgList.map((imgList, index) => {
+      // eslint-disable-line
       if (imgList.isShow !== false) {
-        return (
-          <NotifyImgChild
-            index={index}
-            imgList={imgList}
-            setDeletedImgIndex={this.setDeletedImgIndex}
-          />
-        );
+        return <NotifyImgChild index={index} imgList={imgList} setDeletedImgIndex={this.setDeletedImgIndex} />;
       }
     });
     return result;
-  }
+  };
 
   getBtnSettingList = () => {
     const { btnList } = this.state;
-    const result = btnList.map((btnList, index) => {  // eslint-disable-line
+    const result = btnList.map((btnList, index) => {
+      // eslint-disable-line
       if (btnList.isShow !== false) {
-        return (
-          <NotifyBtnChild
-            index={index}
-            btnList={btnList}
-            setDeletedBtnIndex={this.setDeletedBtnIndex}
-          />
-        );
+        return <NotifyBtnChild index={index} btnList={btnList} setDeletedBtnIndex={this.setDeletedBtnIndex} />;
       }
     });
     return result;
-  }
+  };
 
-  setDeletedImgIndex = (SEQNO) => {
-    const {
-      imgList,
-      deletedImgIndex,
-    } = this.state;
-    const index = imgList.findIndex(imgList => imgList.SEQNO === SEQNO);  // eslint-disable-line
+  setDeletedImgIndex = SEQNO => {
+    const { imgList, deletedImgIndex } = this.state;
+    const index = imgList.findIndex(imgList => imgList.SEQNO === SEQNO); // eslint-disable-line
     const imgListCopy = update(imgList, {
       [index]: {
         isShow: {
@@ -228,14 +206,11 @@ class NotifyAdminUdt extends React.Component {
       imgList: imgListCopy,
     });
     deletedImgIndex.push(SEQNO);
-  }
+  };
 
-  setDeletedBtnIndex = (SEQNO) => {
-    const {
-      btnList,
-      deletedBtnIndex,
-    } = this.state;
-    const index = btnList.findIndex(btnList => btnList.SEQNO === SEQNO);  // eslint-disable-line
+  setDeletedBtnIndex = SEQNO => {
+    const { btnList, deletedBtnIndex } = this.state;
+    const index = btnList.findIndex(btnList => btnList.SEQNO === SEQNO); // eslint-disable-line
     const btnListCopy = update(btnList, {
       [index]: {
         isShow: {
@@ -247,9 +222,9 @@ class NotifyAdminUdt extends React.Component {
       btnList: btnListCopy,
     });
     deletedBtnIndex.push(SEQNO);
-  }
+  };
 
-  getSecInfoFromDBAll = (resultList) => {
+  getSecInfoFromDBAll = resultList => {
     const userSetMembersCopy = [];
     const pstnSetMembersCopy = [];
     const deptSetMembersCopy = [];
@@ -257,16 +232,21 @@ class NotifyAdminUdt extends React.Component {
     const grpSetMembersCopy = [];
 
     if (resultList !== '' && resultList !== undefined) {
-      resultList.map((obj) => {
-        if (resultList.findIndex(o => o.RECEIVER_TYPE === 'U' && obj.RECEIVER_TYPE === 'U') > -1) { // 구성원
+      resultList.map(obj => {
+        if (resultList.findIndex(o => o.RECEIVER_TYPE === 'U' && obj.RECEIVER_TYPE === 'U') > -1) {
+          // 구성원
           userSetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'P' && obj.RECEIVER_TYPE === 'P') > -1) { // 직위
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'P' && obj.RECEIVER_TYPE === 'P') > -1) {
+          // 직위
           pstnSetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'D' && obj.RECEIVER_TYPE === 'D') > -1) { // 부서
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'D' && obj.RECEIVER_TYPE === 'D') > -1) {
+          // 부서
           deptSetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'T' && obj.RECEIVER_TYPE === 'T') > -1) { // 직책
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'T' && obj.RECEIVER_TYPE === 'T') > -1) {
+          // 직책
           dutySetMembersCopy.push(obj);
-        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'V' && obj.RECEIVER_TYPE === 'V') > -1) { // 가상그룹
+        } else if (resultList.findIndex(o => o.RECEIVER_TYPE === 'V' && obj.RECEIVER_TYPE === 'V') > -1) {
+          // 가상그룹
           grpSetMembersCopy.push(obj);
         }
         return resultList; // userSetMembersCopy;
@@ -280,7 +260,7 @@ class NotifyAdminUdt extends React.Component {
       dutySetMembers: dutySetMembersCopy,
       grpSetMembers: grpSetMembersCopy,
     });
-  }
+  };
 
   handleAppendImg = () => {
     const content = this.state.imgList.slice();
@@ -298,7 +278,7 @@ class NotifyAdminUdt extends React.Component {
       imgList: content,
       numChildren: numChildren + 1,
     });
-  }
+  };
 
   handleAppendBtn = () => {
     const content = this.state.btnList.slice();
@@ -315,18 +295,15 @@ class NotifyAdminUdt extends React.Component {
       btnList: content,
       btnNumChildren: btnNumChildren + 1,
     });
-  }
+  };
 
   postToggle = () => {
     this.setState({
       postDisabled: !this.state.postDisabled,
     });
 
-    this.props.udtPostState(
-      this.state.MSG_ID,
-      !this.state.postDisabled ? 'Y' : 'N',
-    );
-  }
+    this.props.udtPostState(this.state.MSG_ID, !this.state.postDisabled ? 'Y' : 'N');
+  };
 
   ShowSetFormatter = () => {
     if (this.props.setNotifyMsg.END_DTTM !== undefined && this.props.setNotifyMsg.END_DTTM !== '') {
@@ -341,25 +318,21 @@ class NotifyAdminUdt extends React.Component {
         return (
           <div>
             {/* <Button onClick={this.postToggle} disabled={this.state.postDisabled}> */}
-            <Button disabled={this.state.postDisabled}>
-              {intlObj.get(messages.post)}
-            </Button>
+            <Button disabled={this.state.postDisabled}>{intlObj.get(messages.post)}</Button>
             {/* <Button onClick={this.postToggle} disabled={!this.state.postDisabled}> */}
-            <Button disabled={!this.state.postDisabled}>
-              {intlObj.get(messages.cancel)}
-            </Button>
+            <Button disabled={!this.state.postDisabled}>{intlObj.get(messages.cancel)}</Button>
           </div>
         );
       }
     }
     return '';
-  }
+  };
 
   // 날짜변환함수(년.월.일)
   timeToDateForm = (val, formType) => {
     const timestamp = new Date(val).getTime();
-    const todate = ('00'.concat(new Date(timestamp).getDate())).slice(-2);
-    const tomonth = ('00'.concat(new Date(timestamp).getMonth() + 1)).slice(-2);
+    const todate = '00'.concat(new Date(timestamp).getDate()).slice(-2);
+    const tomonth = '00'.concat(new Date(timestamp).getMonth() + 1).slice(-2);
     const toyear = new Date(timestamp).getFullYear();
     let originalDate = '';
 
@@ -369,7 +342,7 @@ class NotifyAdminUdt extends React.Component {
       originalDate = `${toyear}-${tomonth}-${todate}`;
     }
     return originalDate;
-  }
+  };
 
   allOrgOpen = () => {
     this.setState({
@@ -398,9 +371,10 @@ class NotifyAdminUdt extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/notifyAdmin/notifyAdminDtl', state: data,
+      pathname: '/admin/AdminMain/notifyAdmin/notifyAdminDtl',
+      state: data,
     });
-  }
+  };
 
   udtSave = () => {
     this.dateSet();
@@ -445,18 +419,20 @@ class NotifyAdminUdt extends React.Component {
     };
     // console.log('!!!!!!', data);
     this.props.history.push({
-      pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminDtl', state: data,
+      pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminDtl',
+      state: data,
     });
-  }
+  };
 
   saveConfirm = () => {
     feed.showConfirm('저장하시겠습니까?', '', this.udtSave);
-  }
+  };
 
   vaildChk = () => {
-    if (this.state.TITLE !== '' &&
-      this.state.CONTENT !== '' && (
-        this.state.userSetMembers.length > 0 ||
+    if (
+      this.state.TITLE !== '' &&
+      this.state.CONTENT !== '' &&
+      (this.state.userSetMembers.length > 0 ||
         this.state.pstnSetMembers.length > 0 ||
         this.state.deptSetMembers.length > 0 ||
         this.state.dutySetMembers.length > 0 ||
@@ -466,9 +442,9 @@ class NotifyAdminUdt extends React.Component {
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
-  }
+  };
 
-  imgValidChk = (imgList) => {
+  imgValidChk = imgList => {
     for (let i = 0; i < imgList.length; i += 1) {
       if (imgList[i].IMAGE === '') {
         message.error('이미지를 선택하십시오', 2);
@@ -476,9 +452,9 @@ class NotifyAdminUdt extends React.Component {
       }
     }
     return true;
-  }
+  };
 
-  btnValidChk = (btnList) => {
+  btnValidChk = btnList => {
     for (let i = 0; i < btnList.length; i += 1) {
       if (btnList[i].VALUE === '') {
         message.error('버튼 VALUE를 입력하십시오', 2);
@@ -486,10 +462,11 @@ class NotifyAdminUdt extends React.Component {
       }
     }
     return true;
-  }
+  };
 
   dateSet = () => {
-    if (this.state.periodDates.length !== 0 &&
+    if (
+      this.state.periodDates.length !== 0 &&
       this.state.periodDates[0]._isValid === true && //eslint-disable-line
       this.state.periodDates[1]._isValid === true //eslint-disable-line
     ) {
@@ -499,37 +476,37 @@ class NotifyAdminUdt extends React.Component {
       startDttm = '';
       endDttm = '';
     }
-  }
+  };
 
   render() {
     // 조직도에서 가져온 리스트 뷰
-    const returnUserList = (resultObj) => {
+    const returnUserList = resultObj => {
       this.setState({
         userSetMembers: resultObj,
       });
     };
-    const returnDutyList = (resultObj) => {
+    const returnDutyList = resultObj => {
       this.setState({
         dutySetMembers: resultObj,
       });
     };
-    const returnPstnList = (resultObj) => {
+    const returnPstnList = resultObj => {
       this.setState({
         pstnSetMembers: resultObj,
       });
     };
-    const returnGrpList = (resultObj) => {
+    const returnGrpList = resultObj => {
       this.setState({
         grpSetMembers: resultObj,
       });
     };
-    const returnDetpList = (resultObj) => {
+    const returnDetpList = resultObj => {
       this.setState({
         deptSetMembers: resultObj,
       });
     };
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = (resultObj) => {
+    const getDataFromOrganizationAll = resultObj => {
       // 구성원
       const userSetMembersFromOrganization = resultObj.selectedUsers;
       // 직위
@@ -569,7 +546,9 @@ class NotifyAdminUdt extends React.Component {
             siteIdParam={this.state.siteParam}
           />
         </div>
-        <button onClick={this.allOrgOpen} className="textLinkBtn">&lt; 편집</button>
+        <button onClick={this.allOrgOpen} className="textLinkBtn">
+          &lt; 편집
+        </button>
       </div>
     );
 
@@ -619,20 +598,14 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n1">{intlObj.get(messages.system)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.props.setNotifyMsg.SYSTEM}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d1"
                         /> */}
-                        <Input
-                          value={this.props.setNotifyMsg.SYSTEM}
-                          readOnly={true}
-                          id="n1"
-                        />
+                        <Input value={this.props.setNotifyMsg.SYSTEM} readOnly={true} id="n1" />
                       </FormItem>
                     </td>
                   </tr>
@@ -641,20 +614,14 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n2">{intlObj.get(messages.siteName)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('SITE_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d2"
                         /> */}
-                        <Input
-                          value={lang.get('SITE_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n2"
-                        />
+                        <Input value={lang.get('SITE_NAME', this.props.setNotifyMsg)} readOnly={true} id="n2" />
                       </FormItem>
                     </td>
                   </tr>
@@ -663,20 +630,14 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n3">APP ID</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('APP_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d3"
                         /> */}
-                        <Input
-                          value={lang.get('APP_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n3"
-                        />
+                        <Input value={lang.get('APP_NAME', this.props.setNotifyMsg)} readOnly={true} id="n3" />
                       </FormItem>
                     </td>
                   </tr>
@@ -685,9 +646,7 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n4">{intlObj.get(messages.postPeriod)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         <RangePicker
                           className="RangePicker"
                           format={dateFormat}
@@ -704,13 +663,9 @@ class NotifyAdminUdt extends React.Component {
                     </td>
                   </tr>
                   <tr>
-                    <th className="required">
-                      {intlObj.get(messages.codeName)}
-                    </th>
+                    <th className="required">{intlObj.get(messages.codeName)}</th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         <Select
                           value={this.state.MSG_TYPE}
                           onChange={this.onChangeMsgType}
@@ -721,9 +676,7 @@ class NotifyAdminUdt extends React.Component {
                           <Option value="P">Popup</Option>
                           <Option value="T">ToDo</Option>
                         </Select>
-                        <div style={{ float: 'right' }}>
-                          {this.ShowSetFormatter()}
-                        </div>
+                        <div style={{ float: 'right' }}>{this.ShowSetFormatter()}</div>
                       </FormItem>
                     </td>
                   </tr>
@@ -732,11 +685,7 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n10">{intlObj.get(messages.receiver)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
-                        {allList()}
-                      </FormItem>
+                      <FormItem {...formItemLayout}>{allList()}</FormItem>
                     </td>
                   </tr>
                   <tr>
@@ -744,20 +693,14 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n5">{intlObj.get(messages.title)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.state.TITLE}
                           onChange={this.onChangeTitle}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d7"
                         /> */}
-                        <Input
-                          value={this.state.TITLE}
-                          onChange={this.onChangeTitle}
-                          id="n5"
-                        />
+                        <Input value={this.state.TITLE} onChange={this.onChangeTitle} id="n5" />
                       </FormItem>
                     </td>
                   </tr>
@@ -766,15 +709,8 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n6">{intlObj.get(messages.content)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
-                        <TextArea
-                          value={this.state.CONTENT}
-                          onChange={this.onChangeContent}
-                          autosize={{ minRows: 1, maxRow: 8 }}
-                          id="n6"
-                        />
+                      <FormItem {...formItemLayout}>
+                        <TextArea value={this.state.CONTENT} onChange={this.onChangeContent} autosize={{ minRows: 1, maxRow: 8 }} id="n6" />
                       </FormItem>
                     </td>
                   </tr>
@@ -783,20 +719,14 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n7">{intlObj.get(messages.regDttm)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="n7"
                         /> */}
-                        <Input
-                          value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`}
-                          readOnly={true}
-                          id="n7"
-                        />
+                        <Input value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`} readOnly={true} id="n7" />
                       </FormItem>
                     </td>
                   </tr>
@@ -805,20 +735,14 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n8">{intlObj.get(messages.userName)}</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={lang.get('USER_NAME', this.props.setNotifyMsg)}
                           readOnly={true}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d10"
                         /> */}
-                        <Input
-                          value={lang.get('USER_NAME', this.props.setNotifyMsg)}
-                          readOnly={true}
-                          id="n8"
-                        />
+                        <Input value={lang.get('USER_NAME', this.props.setNotifyMsg)} readOnly={true} id="n8" />
                       </FormItem>
                     </td>
                   </tr>
@@ -827,46 +751,47 @@ class NotifyAdminUdt extends React.Component {
                       <label htmlFor="n9">URL</label>
                     </th>
                     <td>
-                      <FormItem
-                        {...formItemLayout}
-                      >
+                      <FormItem {...formItemLayout}>
                         {/* <TextArea
                           value={this.state.URL}
                           onChange={this.onChangeUrl}
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d11"
                         /> */}
-                        <Input
-                          placeholder="URL은 http:// 로 시작해주십시오."
-                          value={this.state.URL}
-                          onChange={this.onChangeUrl}
-                          id="n9"
-                        />
+                        <Input placeholder="URL은 http:// 로 시작해주십시오." value={this.state.URL} onChange={this.onChangeUrl} id="n9" />
                       </FormItem>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      이미지
-                    </th>
+                    <th className="">이미지</th>
                     <td>
                       <StyleNotifyImgForm>
                         {imgContent}
                         <div className="btnWrapper">
-                          <BtnIconAdd title="addNewForm" onClick={(e) => { e.preventDefault(); this.handleAppendImg(); }} />
+                          <BtnIconAdd
+                            title="addNewForm"
+                            onClick={e => {
+                              e.preventDefault();
+                              this.handleAppendImg();
+                            }}
+                          />
                         </div>
                       </StyleNotifyImgForm>
                     </td>
                   </tr>
                   <tr>
-                    <th className="">
-                      버튼
-                    </th>
+                    <th className="">버튼</th>
                     <td>
                       <StyleNotifyImgForm>
                         {btnContent}
                         <div className="btnWrapper">
-                          <BtnIconAdd title="addNewForm" onClick={(e) => { e.preventDefault(); this.handleAppendBtn(); }} />
+                          <BtnIconAdd
+                            title="addNewForm"
+                            onClick={e => {
+                              e.preventDefault();
+                              this.handleAppendBtn();
+                            }}
+                          />
                         </div>
                       </StyleNotifyImgForm>
                     </td>
@@ -878,12 +803,16 @@ class NotifyAdminUdt extends React.Component {
           <div className="buttonWrapper">
             <React.Fragment>
               <div style={{ float: 'left' }}>
-                <LinkBtnList onClick={this.onClickToList}>
+                <StyledButton className="btn-light" onClick={this.onClickToList}>
                   {intlObj.get(messages.toList)}
-                </LinkBtnList>
+                </StyledButton>
               </div>
-              <BtnLgtGray onClick={this.cancelNotify} >{intlObj.get(messages.cancel)}</BtnLgtGray>
-              <BtnDkGray onClick={this.saveConfirm}>저장</BtnDkGray>
+              <StyledButton className="btn-light btn-cancle" onClick={this.cancelNotify}>
+                {intlObj.get(messages.cancel)}
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.saveConfirm}>
+                저장
+              </StyledButton>
             </React.Fragment>
           </div>
         </StyleNotifyAdminUdt>
@@ -901,62 +830,64 @@ NotifyAdminUdt.propTypes = {
   udtNotify: PropTypes.func, // eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getNotifyMsg: MSG_ID =>
-      dispatch(actions.getNotifyMsg(MSG_ID)),
-    udtPostState: (MSG_ID, OPEN_YN) =>
-      dispatch(actions.udtPostState(MSG_ID, OPEN_YN)),
-    udtNotify: (
-      MSG_ID,
-      SYSTEM,
-      COMPANY_CD,
-      SITE_ID,
-      APP_ID,
-      MSG_TYPE,
-      OPEN_YN,
-      TITLE,
-      CONTENT,
-      URL,
-      START_DTTM,
-      END_DTTM,
-      userSetMembers,
-      pstnSetMembers,
-      deptSetMembers,
-      dutySetMembers,
-      grpSetMembers,
-      imgList,
-      btnList,
-    ) => dispatch(actions.udtNotify(
-      MSG_ID,
-      SYSTEM,
-      COMPANY_CD,
-      SITE_ID,
-      APP_ID,
-      MSG_TYPE,
-      OPEN_YN,
-      TITLE,
-      CONTENT,
-      URL,
-      START_DTTM,
-      END_DTTM,
-      userSetMembers,
-      pstnSetMembers,
-      deptSetMembers,
-      dutySetMembers,
-      grpSetMembers,
-      imgList,
-      btnList,
-    )),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getNotifyMsg: MSG_ID => dispatch(actions.getNotifyMsg(MSG_ID)),
+  udtPostState: (MSG_ID, OPEN_YN) => dispatch(actions.udtPostState(MSG_ID, OPEN_YN)),
+  udtNotify: (
+    MSG_ID,
+    SYSTEM,
+    COMPANY_CD,
+    SITE_ID,
+    APP_ID,
+    MSG_TYPE,
+    OPEN_YN,
+    TITLE,
+    CONTENT,
+    URL,
+    START_DTTM,
+    END_DTTM,
+    userSetMembers,
+    pstnSetMembers,
+    deptSetMembers,
+    dutySetMembers,
+    grpSetMembers,
+    imgList,
+    btnList,
+  ) =>
+    dispatch(
+      actions.udtNotify(
+        MSG_ID,
+        SYSTEM,
+        COMPANY_CD,
+        SITE_ID,
+        APP_ID,
+        MSG_TYPE,
+        OPEN_YN,
+        TITLE,
+        CONTENT,
+        URL,
+        START_DTTM,
+        END_DTTM,
+        userSetMembers,
+        pstnSetMembers,
+        deptSetMembers,
+        dutySetMembers,
+        grpSetMembers,
+        imgList,
+        btnList,
+      ),
+    ),
+});
 
 const mapStateToProps = createStructuredSelector({
   setNotifyMsg: selectors.makeSelectNotifyMsg(),
   setNotifyReceiver: selectors.makeSelectNotifyReceiver(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'NotifyAdminUdt', saga });
 const withReducer = injectReducer({ key: 'NotifyAdminUdt', reducer });
 

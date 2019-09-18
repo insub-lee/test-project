@@ -17,6 +17,7 @@ import * as actions from './actions';
 
 import RegModal from './RegModal';
 import StyledRootMap from './StyledRootMap';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 class RootMap extends Component {
   constructor(props) {
@@ -105,9 +106,7 @@ class RootMap extends Component {
         render: text => (
           <span>
             <Link to={`/admin/adminmain/classify/categorymap/${GUBUN}/${text}`}>
-              <Button size="small" type="primary">
-                설정
-              </Button>
+              <StyledButton className="btn-secondary btn-sm btn-pills">설정</StyledButton>
             </Link>
           </span>
         ),
@@ -127,12 +126,12 @@ class RootMap extends Component {
           <Table rowSelection={rowSelection} columns={columns} dataSource={rootMapList.map(item => ({ ...item, key: item.MAP_ID }))} bordered size="small" />
         </div>
         <div className="buttonWrapper">
-          <Button type="primary" size="large" onClick={() => this.props.setVisibleModal(true)}>
-            추가
-          </Button>
-          <Button type="primary" size="large" onClick={this.handleDeleteRootMap}>
+          <StyledButton className="btn-light" onClick={this.handleDeleteRootMap}>
             삭제
-          </Button>
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={() => this.props.setVisibleModal(true)}>
+            추가
+          </StyledButton>
         </div>
         <RegModal
           rootMap={selectedRootMap}

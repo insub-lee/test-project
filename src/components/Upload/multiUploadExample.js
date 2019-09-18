@@ -4,7 +4,8 @@ import { fromJS } from 'immutable';
 import Upload from 'components/Upload';
 import basicStyle from 'config/basicStyle';
 import { Row, Col } from 'antd';
-import { StyleAppRegisForm } from 'containers/store/AppMain/MyApp/AppRegisForm/StyleAppRegisForm';
+// import { StyleAppRegisForm } from 'containers/store/AppMain/MyApp/AppRegisForm/StyleAppRegisForm';
+import { StyleAppRegisForm } from 'containers/admin/AdminMain/App/AppRegisForm/StyleAppRegisForm';
 
 const { rowStyle, colStyle, gutter } = basicStyle;
 
