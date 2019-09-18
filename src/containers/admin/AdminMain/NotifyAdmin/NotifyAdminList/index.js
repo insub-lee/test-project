@@ -1,4 +1,3 @@
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -22,8 +21,7 @@ import * as actions from './actions';
 import StyleNotifyAdminList from './StyleNotifyAdminList';
 import StyleDataGrid from '../../../../store/components/uielements/dataGrid.style';
 import messages from '../messages';
-import { LinkBtnDkGray } from '../../../../store/components/uielements/buttons.style';
-
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -197,8 +195,7 @@ class NotifyAdminList extends React.Component {
 
     // 알림 상세에서 넘어온 Data
     console.log('NotifyAdminList_location', this.props.history.location.state);
-    if (this.props.history.location.state !== null &&
-      this.props.history.location.state !== undefined) {
+    if (this.props.history.location.state !== null && this.props.history.location.state !== undefined) {
       const location = this.props.history.location.state;
 
       dtKeyword = location.keyword;
@@ -212,33 +209,43 @@ class NotifyAdminList extends React.Component {
 
       // 작성일: 날짜 데이터로 변경
       if (dtOneDateStr !== '' && dtOneDateStr !== undefined) {
-        oneDateDate = moment(dtOneDateStr.substring(0, 4)
-          .concat('-')
-          .concat(dtOneDateStr.substring(4, 6))
-          .concat('-')
-          .concat(dtOneDateStr.substring(6, 8)));
+        oneDateDate = moment(
+          dtOneDateStr
+            .substring(0, 4)
+            .concat('-')
+            .concat(dtOneDateStr.substring(4, 6))
+            .concat('-')
+            .concat(dtOneDateStr.substring(6, 8)),
+        );
         isOneDate = true;
       }
 
       // 게시기간: 날짜 데이터로 변경
-      if (dtStartDateStr !== '' && dtStartDateStr !== undefined &&
-      dtEndDateStr !== '' && dtEndDateStr !== undefined) {
-        startDateDate = moment(dtStartDateStr.substring(0, 4)
-          .concat('-')
-          .concat(dtStartDateStr.substring(4, 6))
-          .concat('-')
-          .concat(dtStartDateStr.substring(6, 8)));
+      if (dtStartDateStr !== '' && dtStartDateStr !== undefined && dtEndDateStr !== '' && dtEndDateStr !== undefined) {
+        startDateDate = moment(
+          dtStartDateStr
+            .substring(0, 4)
+            .concat('-')
+            .concat(dtStartDateStr.substring(4, 6))
+            .concat('-')
+            .concat(dtStartDateStr.substring(6, 8)),
+        );
 
-        endDateDate = moment(dtStartDateStr.substring(0, 4)
-          .concat('-')
-          .concat(dtStartDateStr.substring(4, 6))
-          .concat('-')
-          .concat(dtStartDateStr.substring(6, 8)));
+        endDateDate = moment(
+          dtStartDateStr
+            .substring(0, 4)
+            .concat('-')
+            .concat(dtStartDateStr.substring(4, 6))
+            .concat('-')
+            .concat(dtStartDateStr.substring(6, 8)),
+        );
 
         isPeriodDate = true;
       }
 
-      if (dtKeywordType === 'codeName') { isDtMsgType = true; }
+      if (dtKeywordType === 'codeName') {
+        isDtMsgType = true;
+      }
     }
 
     this.state = {
@@ -282,7 +289,7 @@ class NotifyAdminList extends React.Component {
     console.log(setNotifyList, 'tesafsdfdasf');
   }
 
-  onChangeType = (val) => {
+  onChangeType = val => {
     this.setState({ searchType: val });
 
     // 작성일
@@ -295,7 +302,7 @@ class NotifyAdminList extends React.Component {
         oneDate: moment(),
         periodDates: [],
       });
-    // 게시기간 from ~ to
+      // 게시기간 from ~ to
     } else if (val === 'postPeriod') {
       this.setState({
         isDPicker: false,
@@ -325,9 +332,9 @@ class NotifyAdminList extends React.Component {
       });
     }
     // console.log('searchKeyword', this.state.searchKeyword);
-  }
+  };
 
-  onChangeSite = (val) => {
+  onChangeSite = val => {
     // console.log('searchSite', val);
     this.setState({ searchSite: val.toString(), notifyList: [] });
     oneDateString = '';
@@ -349,25 +356,25 @@ class NotifyAdminList extends React.Component {
       endDateString,
       val.toString(),
     );
-  }
+  };
 
-  onChangeKeyword = (e) => {
+  onChangeKeyword = e => {
     this.setState({ searchKeyword: e.target.value });
-  }
+  };
 
-  onOneChange = (date) => {
+  onOneChange = date => {
     this.setState({
       oneDate: date,
     });
-  }
+  };
 
-  onPeriodChange = (dates) => {
+  onPeriodChange = dates => {
     this.setState({
       periodDates: [dates[0], dates[1]],
     });
-  }
+  };
 
-  onChangeMsgType = (val) => {
+  onChangeMsgType = val => {
     searchVal = val;
     this.setState({ searchKeyword: val });
   };
@@ -378,14 +385,15 @@ class NotifyAdminList extends React.Component {
       return this.props.siteCombo[0].SITE_ID.toString();
     }
     return '';
-  }
+  };
 
   dateSet = () => {
     if (this.state.oneDate !== null && this.state.oneDate !== '') {
       oneDateString = this.timeToDateForm(this.state.oneDate, 'bar').replace(/-/g, '');
       startDateString = '';
       endDateString = '';
-    } else if (this.state.periodDates.length !== 0 &&
+    } else if (
+      this.state.periodDates.length !== 0 &&
       this.state.periodDates[0]._isValid === true && //eslint-disable-line
       this.state.periodDates[1]._isValid === true //eslint-disable-line
     ) {
@@ -397,35 +405,29 @@ class NotifyAdminList extends React.Component {
       startDateString = '';
       endDateString = '';
     }
-  }
-
-  RecvFormatter = (val) => {
-    const RecvRow = `${val.dependentValues.RECV_CNT}/${val.dependentValues.TOT_CNT}`;
-    return (
-      <format>
-        {RecvRow}
-      </format>
-    );
   };
 
-  PeriodFormatter = (val) => {
+  RecvFormatter = val => {
+    const RecvRow = `${val.dependentValues.RECV_CNT}/${val.dependentValues.TOT_CNT}`;
+    return <format>{RecvRow}</format>;
+  };
+
+  PeriodFormatter = val => {
     if (
-      val.dependentValues.START_DTTM !== '' && val.dependentValues.START_DTTM !== undefined &&
-      val.dependentValues.END_DTTM !== '' && val.dependentValues.END_DTTM !== undefined
+      val.dependentValues.START_DTTM !== '' &&
+      val.dependentValues.START_DTTM !== undefined &&
+      val.dependentValues.END_DTTM !== '' &&
+      val.dependentValues.END_DTTM !== undefined
     ) {
       const startDttm = this.timeToDateForm(val.dependentValues.START_DTTM, 'point');
       const endDttm = this.timeToDateForm(val.dependentValues.END_DTTM, 'point');
       const PeriodRow = `${startDttm} ~ ${endDttm}`;
-      return (
-        <format>
-          {PeriodRow}
-        </format>
-      );
+      return <format>{PeriodRow}</format>;
     }
     return '';
   };
 
-  ShowSetFormatter = (val) => {
+  ShowSetFormatter = val => {
     if (val.dependentValues.END_DTTM !== undefined && val.dependentValues.END_DTTM !== '') {
       const curDate = this.timeToDateForm(new Date(), 'bar');
       const curDateArr = curDate.split('-');
@@ -438,15 +440,8 @@ class NotifyAdminList extends React.Component {
         if (val.dependentValues.OPEN_YN === 'Y') {
           return (
             <div>
-              <Button
-                disabled={true}
-              >
-                {intlObj.get(messages.post)}
-              </Button>
-              <Button
-                onClick={() => this.postToggle(val.dependentValues.MSG_ID, false)}
-                disabled={false}
-              >
+              <Button disabled={true}>{intlObj.get(messages.post)}</Button>
+              <Button onClick={() => this.postToggle(val.dependentValues.MSG_ID, false)} disabled={false}>
                 {intlObj.get(messages.cancel)}
               </Button>
             </div>
@@ -454,24 +449,17 @@ class NotifyAdminList extends React.Component {
         } else if (val.dependentValues.OPEN_YN === 'N') {
           return (
             <div>
-              <Button
-                onClick={() => this.postToggle(val.dependentValues.MSG_ID, true)}
-                disabled={false}
-              >
+              <Button onClick={() => this.postToggle(val.dependentValues.MSG_ID, true)} disabled={false}>
                 {intlObj.get(messages.post)}
               </Button>
-              <Button
-                disabled={true}
-              >
-                {intlObj.get(messages.cancel)}
-              </Button>
+              <Button disabled={true}>{intlObj.get(messages.cancel)}</Button>
             </div>
           );
         }
       }
     }
     return '';
-  }
+  };
 
   postToggle = (MSG_ID, OPEN_YN) => {
     this.setState({
@@ -495,34 +483,36 @@ class NotifyAdminList extends React.Component {
       endDateString,
       this.state.searchSite,
     );
-  }
+  };
 
-  HyperlinkFormatter = (val) => {
+  HyperlinkFormatter = val => {
     const hyperlinkText = lang.get('SITE_NAME', val.dependentValues);
     this.dateSet();
     return (
-      <hltext onClick={() =>
-        this.dtlLink({
-          MSG_ID: val.dependentValues.MSG_ID,
-          OPEN_YN: val.dependentValues.OPEN_YN,
-          sortColumnParam: this.state.sortColumnParam,
-          sortDirectionParam: this.state.sortDirectionParam,
-          keywordType: this.state.searchType,
-          keyword: this.state.searchKeyword,
-          site: this.state.searchSite,
-          oneDateStr: oneDateString,
-          startDateStr: startDateString,
-          endDateStr: endDateString,
-        })}
+      <hltext
+        onClick={() =>
+          this.dtlLink({
+            MSG_ID: val.dependentValues.MSG_ID,
+            OPEN_YN: val.dependentValues.OPEN_YN,
+            sortColumnParam: this.state.sortColumnParam,
+            sortDirectionParam: this.state.sortDirectionParam,
+            keywordType: this.state.searchType,
+            keyword: this.state.searchKeyword,
+            site: this.state.searchSite,
+            oneDateStr: oneDateString,
+            startDateStr: startDateString,
+            endDateStr: endDateString,
+          })
+        }
       >
         {hyperlinkText}
       </hltext>
     );
   };
 
-  dtlLink = (data) => {
+  dtlLink = data => {
     this.props.history.push({ pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminDtl', state: data });
-  }
+  };
 
   handleGridSort = (sortColumn, sortDirection) => {
     this.setState({
@@ -546,7 +536,7 @@ class NotifyAdminList extends React.Component {
     );
   };
 
-  rowGetter = (i) => {
+  rowGetter = i => {
     // console.log('isPaging', isPaging);
     if (i === pageENum - 1) {
       pageSNum += pageIndex;
@@ -569,7 +559,7 @@ class NotifyAdminList extends React.Component {
     }
     // return this.props.setNotifyList[i];
     return this.state.notifyList[i];
-  }
+  };
 
   // rowGetter = i => this.state.notifyList[i];
 
@@ -598,8 +588,8 @@ class NotifyAdminList extends React.Component {
   // 날짜변환함수(년.월.일)
   timeToDateForm = (val, formType) => {
     const timestamp = new Date(val).getTime();
-    const todate = ('00'.concat(new Date(timestamp).getDate())).slice(-2);
-    const tomonth = ('00'.concat(new Date(timestamp).getMonth() + 1)).slice(-2);
+    const todate = '00'.concat(new Date(timestamp).getDate()).slice(-2);
+    const tomonth = '00'.concat(new Date(timestamp).getMonth() + 1).slice(-2);
     const toyear = new Date(timestamp).getFullYear();
     let originalDate = '';
 
@@ -609,7 +599,7 @@ class NotifyAdminList extends React.Component {
       originalDate = `${toyear}-${tomonth}-${todate}`;
     }
     return originalDate;
-  }
+  };
 
   render() {
     const isShowDate = this.state.isDPicker ? 'block' : 'none';
@@ -619,14 +609,14 @@ class NotifyAdminList extends React.Component {
 
     const siteComboList = this.props.siteCombo;
 
-    const getDefaultCombo = (comboList) => {
+    const getDefaultCombo = comboList => {
       if (comboList.length > 0) {
         return comboList[0].SITE_ID;
       }
       return '';
     };
 
-    const getComboList = (comboList) => {
+    const getComboList = comboList => {
       // console.log('comboList', comboList[0]);
       if (comboList.length > 0) {
         return (
@@ -638,14 +628,14 @@ class NotifyAdminList extends React.Component {
           >
             {comboList.map(item => (
               <Option value={item.SITE_ID}>{lang.get('NAME', item)}</Option>
-          ))}
+            ))}
           </Select>
         );
       }
       return false;
     };
 
-    const data = ({
+    const data = {
       // MSG_ID: val.dependentValues.MSG_ID,
       // OPEN_YN: val.dependentValues.OPEN_YN,
       sortColumnParam: this.state.sortColumnParam,
@@ -656,11 +646,14 @@ class NotifyAdminList extends React.Component {
       oneDateStr: oneDateString,
       startDateStr: startDateString,
       endDateStr: endDateString,
-    });
+    };
 
     // 검색결과 없을 때 표시(임시)
-    const EmptyData = () =>
-      <div colSpan="5"><font size="5">{intlObj.get(messages.noSearch)}</font></div>;
+    const EmptyData = () => (
+      <div colSpan="5">
+        <font size="5">{intlObj.get(messages.noSearch)}</font>
+      </div>
+    );
 
     return (
       <div>
@@ -668,12 +661,7 @@ class NotifyAdminList extends React.Component {
           <h3 className="pageTitle">{intlObj.get(messages.notifyList)}</h3>
           <div className="searchBox">
             {getComboList(siteComboList)}
-            <Select
-              defaultValue={this.state.searchType}
-              onChange={this.onChangeType}
-              style={{ width: 120, marginRight: 10 }}
-              dropdownStyle={{ fontSize: 13 }}
-            >
+            <Select defaultValue={this.state.searchType} onChange={this.onChangeType} style={{ width: 120, marginRight: 10 }} dropdownStyle={{ fontSize: 13 }}>
               {/* <Option value="ALL">전체</Option> */}
               <Option value="siteName">{intlObj.get(messages.siteName)}</Option>
               <Option value="postPeriod">{intlObj.get(messages.postPeriod)}</Option>
@@ -706,8 +694,7 @@ class NotifyAdminList extends React.Component {
                 value={this.state.periodDates !== '' ? this.state.periodDates : null}
               />
               <Select
-                defaultValue={this.state.searchType === 'codeName' ?
-                this.state.searchKeyword : 'A'}
+                defaultValue={this.state.searchType === 'codeName' ? this.state.searchKeyword : 'A'}
                 onChange={this.onChangeMsgType}
                 style={{ display: isShowMType }}
                 dropdownStyle={{ fontSize: 13 }}
@@ -720,7 +707,7 @@ class NotifyAdminList extends React.Component {
                 value={this.state.searchKeyword}
                 onChange={this.onChangeKeyword}
                 placeholder={intlObj.get(messages.inputSearch)}
-                onKeyPress={(e) => {
+                onKeyPress={e => {
                   if (e.key === 'Enter') {
                     this.setState({
                       notifyList: [],
@@ -791,12 +778,13 @@ class NotifyAdminList extends React.Component {
             readMore={this.readMore}
           /> */}
           <div className="buttonWrapper">
-            <LinkBtnDkGray
+            <StyledButton
+              className="btn-primary"
               style={{ float: 'right' }}
               onClick={() => this.props.history.push({ pathname: '/admin/AdminMain/NotifyAdmin/NotifyAdminReg', state: data })}
             >
               {intlObj.get(messages.register)}
-            </LinkBtnDkGray>
+            </StyledButton>
           </div>
         </StyleNotifyAdminList>
       </div>
@@ -808,27 +796,20 @@ NotifyAdminList.propTypes = {
   getNotifyList: PropTypes.func, //eslint-disable-line
   setNotifyList: PropTypes.array, //eslint-disable-line
   udtPostState: PropTypes.func, //eslint-disable-line
-  history: PropTypes.object,//eslint-disable-line
+  history: PropTypes.object, //eslint-disable-line
   getSiteCombo: PropTypes.func, //eslint-disable-line
   siteCombo: PropTypes.array, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getNotifyList: (
-      sNum,
-      eNum,
-      notifyList,
-      sortColumn,
-      sortDirection,
-      searchType,
-      searchKeyword,
-      oneDate,
-      startDate,
-      endDate,
-      searchSite,
-    ) =>
-      dispatch(actions.getNotifyList(
+const mapDispatchToProps = dispatch => ({
+  getNotifyList: (sNum, eNum, notifyList, sortColumn, sortDirection, searchType, searchKeyword, oneDate, startDate, endDate, searchSite) =>
+    dispatch(actions.getNotifyList(sNum, eNum, notifyList, sortColumn, sortDirection, searchType, searchKeyword, oneDate, startDate, endDate, searchSite)),
+
+  udtPostState: (MSG_ID, OPEN_YN, sNum, eNum, notifyList, sortColumn, sortDirection, searchType, searchKeyword, oneDate, startDate, endDate, searchSite) =>
+    dispatch(
+      actions.udtPostState(
+        MSG_ID,
+        OPEN_YN,
         sNum,
         eNum,
         notifyList,
@@ -840,47 +821,20 @@ const mapDispatchToProps = dispatch => (
         startDate,
         endDate,
         searchSite,
-      )),
-
-    udtPostState: (
-      MSG_ID,
-      OPEN_YN,
-      sNum,
-      eNum,
-      notifyList,
-      sortColumn,
-      sortDirection,
-      searchType,
-      searchKeyword,
-      oneDate,
-      startDate,
-      endDate,
-      searchSite,
-    ) => dispatch(actions.udtPostState(
-      MSG_ID,
-      OPEN_YN,
-      sNum,
-      eNum,
-      notifyList,
-      sortColumn,
-      sortDirection,
-      searchType,
-      searchKeyword,
-      oneDate,
-      startDate,
-      endDate,
-      searchSite,
-    )),
-    getSiteCombo: SCR_CD => dispatch(actions.getSiteCombo(SCR_CD)),
-  }
-);
+      ),
+    ),
+  getSiteCombo: SCR_CD => dispatch(actions.getSiteCombo(SCR_CD)),
+});
 
 const mapStateToProps = createStructuredSelector({
   setNotifyList: selectors.makeSelectNotifyList(),
   siteCombo: selectors.makeSelectSiteCombo(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'NotifyAdmin', saga });
 const withReducer = injectReducer({ key: 'NotifyAdmin', reducer });
 

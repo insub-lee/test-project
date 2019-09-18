@@ -339,7 +339,7 @@ class UserReg extends React.Component {
       if (this.state.mode === 'D') {
         return (
           <ErrorBoundary>
-            <StyledButton className="btn-secondary" style={{ float: 'left' }} onClick={this.onClickToList}>
+            <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
               {intlObj.get(messages.lblList)}
             </StyledButton>
             <StyledButton className="btn-primary" onClick={() => this.setState({ mode: 'U' })}>
@@ -351,7 +351,7 @@ class UserReg extends React.Component {
       if (this.state.mode === 'U') {
         return (
           <ErrorBoundary>
-            <StyledButton className="btn-secondary" style={{ float: 'left' }} onClick={this.onClickToList}>
+            <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
               {intlObj.get(messages.lblList)}
             </StyledButton>
             <StyledButton
@@ -371,7 +371,7 @@ class UserReg extends React.Component {
       }
       return (
         <ErrorBoundary>
-          <StyledButton className="btn-secondary" style={{ float: 'left' }} onClick={this.onClickToList}>
+          <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
             {intlObj.get(messages.lblList)}
           </StyledButton>
           <StyledButton className="btn-primary" onClick={this.regConfirm}>

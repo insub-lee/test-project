@@ -22,7 +22,7 @@ import Select, { SelectOption } from '../../../../../components/Select';
 
 import StyleDataGrid from '../../../../store/components/uielements/dataGrid.style';
 import StyleCodeAdminList from './StyleCodeAdminList';
-import { LinkBtnDkGray, BtnDelete } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const Option = SelectOption;
 
@@ -88,8 +88,7 @@ class CodeAdminList extends React.Component {
     let dtSortColumn = '';
     let dtSortDirection = '';
     // 공통코드 상세에서 넘어온 Data
-    if (this.props.history.location.state !== null &&
-      this.props.history.location.state !== undefined) {
+    if (this.props.history.location.state !== null && this.props.history.location.state !== undefined) {
       const location = this.props.history.location.state;
 
       dtKeyword = location.keyword;
@@ -131,7 +130,7 @@ class CodeAdminList extends React.Component {
   }
 
   // 로우선택 시
-  onRowsSelected = (rows) => {
+  onRowsSelected = rows => {
     const totalSelected = this.state.selectedIndexes.concat(rows.map(r => r.rowIdx));
 
     const totalGridSelected = this.state.codeAdminList;
@@ -148,7 +147,7 @@ class CodeAdminList extends React.Component {
   };
 
   // 로우선택 해제 시
-  onRowsDeselected = (rows) => {
+  onRowsDeselected = rows => {
     const rowIndexes = rows.map(r => r.rowIdx);
     const rowCodes = rows.map(r => r.row.CODE_GRP_CD);
     this.setState({
@@ -157,40 +156,45 @@ class CodeAdminList extends React.Component {
     });
   };
 
-  onTextClick = (data) => {
+  onTextClick = data => {
     this.props.history.push({
-      pathname: `/admin/AdminMain/CodeAdmin/CodeAdminDtl/D/${data.CODE_GRP_CD}`, state: data,
+      pathname: `/admin/AdminMain/CodeAdmin/CodeAdminDtl/D/${data.CODE_GRP_CD}`,
+      state: data,
     });
-  }
+  };
 
-  HyperlinkFormatter = (val) => {
+  HyperlinkFormatter = val => {
     const hyperlinkRow = val.dependentValues.CODE_GRP_CD;
     return (
       <format
-        onClick={() => this.onTextClick({
-          CODE_GRP_CD: val.dependentValues.CODE_GRP_CD,
-          sortColumnParam: this.state.sortColumnParam,
-          sortDirectionParam: this.state.sortDirectionParam,
-          keywordType: this.state.keywordType,
-          keyword: this.state.keyword,
-          })}
+        onClick={() =>
+          this.onTextClick({
+            CODE_GRP_CD: val.dependentValues.CODE_GRP_CD,
+            sortColumnParam: this.state.sortColumnParam,
+            sortDirectionParam: this.state.sortDirectionParam,
+            keywordType: this.state.keywordType,
+            keyword: this.state.keyword,
+          })
+        }
       >
         {hyperlinkRow}
       </format>
     );
   };
 
-  HyperlinkFormatter2 = (val) => {
+  HyperlinkFormatter2 = val => {
     const hyperlinkRow = lang.get('CODE_NAME', val.dependentValues);
     return (
       <format
-        onClick={() => this.onTextClick({
-          CODE_GRP_CD: val.dependentValues.CODE_GRP_CD,
-          sortColumnParam: this.state.sortColumnParam,
-          sortDirectionParam: this.state.sortDirectionParam,
-          keywordType: this.state.keywordType,
-          keyword: this.state.keyword,
-          })}
+        onClick={() =>
+          this.onTextClick({
+            CODE_GRP_CD: val.dependentValues.CODE_GRP_CD,
+            sortColumnParam: this.state.sortColumnParam,
+            sortDirectionParam: this.state.sortDirectionParam,
+            keywordType: this.state.keywordType,
+            keyword: this.state.keyword,
+          })
+        }
       >
         {hyperlinkRow}
       </format>
@@ -198,7 +202,7 @@ class CodeAdminList extends React.Component {
   };
 
   // 날짜변환함수
-  timeToDate = (val) => {
+  timeToDate = val => {
     const orgTime = val.dependentValues.REG_DTTM;
     const timestamp = new Date(orgTime).getTime();
     const todate = new Date(timestamp).getDate();
@@ -209,12 +213,8 @@ class CodeAdminList extends React.Component {
     if (!Number.isNaN(Number(orgTime))) {
       originalDate = `${toyear}.${tomonth}.${todate}`;
     }
-    return (
-      <format>
-        {originalDate}
-      </format>
-    );
-  }
+    return <format>{originalDate}</format>;
+  };
 
   // Grid sort
   handleGridSort = (sortColumn, sortDirection) => {
@@ -225,26 +225,18 @@ class CodeAdminList extends React.Component {
     });
     pageSNum = 1;
     pageENum = pageIndex;
-    this.props.getCodeAdminList(
-      pageSNum,
-      pageENum,
-      [],
-      sortColumn,
-      sortDirection,
-      this.state.searchText,
-      this.state.searchType,
-    );
+    this.props.getCodeAdminList(pageSNum, pageENum, [], sortColumn, sortDirection, this.state.searchText, this.state.searchType);
   };
 
   // state 값 초기화
   initState = () => {
     this.setState({ selectedIndexes: [], delData: [] });
-  }
+  };
 
   // selectbox 값 변경 시
-  handleSelect = (e) => {
+  handleSelect = e => {
     this.setState({ keywordType: e });
-  }
+  };
 
   // 삭제버튼 클릭 시
   handleDel = () => {
@@ -264,12 +256,12 @@ class CodeAdminList extends React.Component {
       this.state.keyword,
     );
     this.initState();
-  }
+  };
 
   // 등록버튼 클릭 시
   handleRegist = () => {
     // console.log(this.state.selectedIndexes);
-  }
+  };
 
   // Input 검색아이콘 클릭 시(조회)
   handleClick = () => {
@@ -279,31 +271,23 @@ class CodeAdminList extends React.Component {
     // });
     pageSNum = 1;
     pageENum = pageIndex;
-    this.props.getCodeAdminList(
-      pageSNum,
-      pageENum,
-      [],
-      this.state.sortColumnParam,
-      this.state.sortDirectionParam,
-      this.state.keywordType,
-      this.state.keyword,
-    );
-  }
+    this.props.getCodeAdminList(pageSNum, pageENum, [], this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
+  };
 
   // Input 검색값 변경 시
-  handleSearch = (e) => {
+  handleSearch = e => {
     this.setState({ keyword: e.target.value });
-  }
+  };
 
   // Input 키 누를 때
-  handleKeyPress = (e) => {
+  handleKeyPress = e => {
     if (e.key === 'Enter') {
       this.handleClick();
     }
-  }
+  };
 
   // rowGetter
-  rowGetter = (rowNumber) => {
+  rowGetter = rowNumber => {
     if (rowNumber === pageENum - 1) {
       pageSNum += pageIndex;
       pageENum += pageIndex;
@@ -319,11 +303,15 @@ class CodeAdminList extends React.Component {
     }
     // return this.props.setCodeAdminList[rowNumber];
     return this.state.codeAdminList[rowNumber];
-  }
+  };
+
   render() {
     // 검색결과 없을 때 표시(임시)
-    const EmptyData = () =>
-      <div colSpan="5"><font size="5">{intlObj.get(messages.noSearch)}</font></div>;
+    const EmptyData = () => (
+      <div colSpan="5">
+        <font size="5">{intlObj.get(messages.noSearch)}</font>
+      </div>
+    );
     const initGrid = {
       CODE_GRP_CD: null,
       sortColumnParam: this.state.sortColumnParam,
@@ -334,7 +322,8 @@ class CodeAdminList extends React.Component {
     return (
       <div>
         <StyleCodeAdminList>
-          <h3 className="pageTitle list">{intlObj.get(messages.codeGrpList)}
+          <h3 className="pageTitle list">
+            {intlObj.get(messages.codeGrpList)}
             <div className="searchBox">
               {/* <p className="totalResultNum">
                 * 등록된 공통코드 총  {this.props.setCodeAdminList.length} 개
@@ -374,7 +363,6 @@ class CodeAdminList extends React.Component {
                 onRowsDeselected: this.onRowsDeselected,
                 selectBy: {
                   indexes: this.state.selectedIndexes,
-
                 },
               }}
               onGridSort={this.handleGridSort}
@@ -382,13 +370,16 @@ class CodeAdminList extends React.Component {
             />
           </StyleDataGrid>
           <div className="buttonWrapper">
-            <BtnDelete onClick={() => feed.showConfirm(`${intlObj.get(messages.delConfirm)}`, '', this.handleDel)}>{intlObj.get(messages.delete)}</BtnDelete>
-            <LinkBtnDkGray
+            <StyledButton className="btn-light" onClick={() => feed.showConfirm(`${intlObj.get(messages.delConfirm)}`, '', this.handleDel)}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
+            <StyledButton
+              className="btn-primary"
               style={{ float: 'right' }}
               onClick={() => this.props.history.push({ pathname: '/admin/AdminMain/CodeAdmin/CodeAdminDtl/R', state: initGrid })}
             >
               {intlObj.get(messages.register)}
-            </LinkBtnDkGray>
+            </StyledButton>
           </div>
         </StyleCodeAdminList>
       </div>
@@ -405,14 +396,12 @@ CodeAdminList.propTypes = {
 };
 
 // 컴포넌트의 특정 함수형 props 를 실행 했을 때, 개발자가 지정한 action을 dispatch 하도록 설정
-const mapDispatchToProps = dispatch => (
-  {
-    getCodeAdminList: (sNum, eNum, codeAdminList, sortColumn, sortDirection, keywordType, keyword) =>
-      dispatch(actions.getCodeAdminList(sNum, eNum, codeAdminList, sortColumn, sortDirection, keywordType, keyword)),
-    delRow: (sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword) =>
-      dispatch(actions.delRow(sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getCodeAdminList: (sNum, eNum, codeAdminList, sortColumn, sortDirection, keywordType, keyword) =>
+    dispatch(actions.getCodeAdminList(sNum, eNum, codeAdminList, sortColumn, sortDirection, keywordType, keyword)),
+  delRow: (sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword) =>
+    dispatch(actions.delRow(sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword)),
+});
 
 // (Function) store 의 state 를 컴포넌트의 props 에 매핑
 const mapStateToProps = createStructuredSelector({
@@ -420,7 +409,10 @@ const mapStateToProps = createStructuredSelector({
   delAdminList: selectors.makeSelectDelRow(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'codeAdmin', saga });
 const withReducer = injectReducer({ key: 'codeAdmin', reducer });
 

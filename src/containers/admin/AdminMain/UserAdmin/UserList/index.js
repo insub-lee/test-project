@@ -448,7 +448,7 @@ class UserList extends React.Component {
             </Select>
 
             {/* 오른쪽 */}
-            <StyledButton className="btn-dark btn-sm btn-bs-none init-search" onClick={this.initSearch} style={{ marginRight: '10px' }}>
+            <StyledButton className="btn-dark btn-sm init-search" onClick={this.initSearch} style={{ marginRight: '10px' }}>
               {intlObj.get(messages.initSearch)}
             </StyledButton>
             <Select value={this.state.keywordType} onChange={this.handleSelect} style={{ width: 120, marginRight: 10 }} dropdownStyle={{ fontSize: 13 }}>

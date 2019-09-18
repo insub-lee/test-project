@@ -303,7 +303,7 @@ class SiteList extends React.Component {
           </StyleDataGrid>
           <div className="buttonWrapper">
             <ErrorBoundary>
-              <StyledButton className="btn-dark" onClick={this.delConfirm}>
+              <StyledButton className="btn-light" onClick={this.delConfirm}>
                 {intlObj.get(messages.lblDelete)}
               </StyledButton>
             </ErrorBoundary>

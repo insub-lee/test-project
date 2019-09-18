@@ -12,18 +12,16 @@ const StyleGlobalAdminDtl = styled.div`
 
   @media only screen and (max-width: 1280px) {
     width: 900px;
-    padding:  0;
+    padding: 0;
   }
 
   .buttonWrapper {
     padding-top: 16px;
     text-align: right;
-
-    button {
-      margin-left: 10px;
+    & .btn-cancel {
+      margin-right: 10px;
     }
   }
-
 `;
 
 export default StyleGlobalAdminDtl;

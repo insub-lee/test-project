@@ -19,7 +19,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import StyleGlobalAdminList from './StyleGlobalAdminList';
 import StyleDataGrid from '../../../../store/components/uielements/dataGrid.style';
-import { LinkBtnDkGray, BtnDelete } from '../../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 import messages from '../messages';
 
 const Option = Select;
@@ -77,17 +77,11 @@ class GlobalAdminList extends React.Component {
       selectedKeys: [],
     };
     pageNum = pageIndex;
-    this.props.getGlobalMsgList(
-      pageNum,
-      this.state.sortColumnParam,
-      this.state.sortDirectionParam,
-      this.state.searchType,
-      this.state.searchKeyword,
-    );
+    this.props.getGlobalMsgList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchType, this.state.searchKeyword);
   }
 
   // rowSelection~
-  onRowsSelected = (rows) => {
+  onRowsSelected = rows => {
     const totalSelected = this.state.selectedIndexes.concat(rows.map(r => r.rowIdx));
 
     const totalGridSelected = this.state.getGlobalMsgList;
@@ -103,7 +97,7 @@ class GlobalAdminList extends React.Component {
     });
   };
 
-  onRowsDeselected = (rows) => {
+  onRowsDeselected = rows => {
     const rowIndexes = rows.map(r => r.rowIdx);
     const keyIndexes = rows.map(r => r.row.MSG_KEY);
     this.setState({
@@ -113,13 +107,13 @@ class GlobalAdminList extends React.Component {
   };
   // ~rowSelection
 
-  onChangeType = (val) => {
+  onChangeType = val => {
     this.setState({ searchType: val });
-  }
+  };
 
-  onChangeKeyword = (e) => {
+  onChangeKeyword = e => {
     this.setState({ searchKeyword: e.target.value });
-  }
+  };
 
   onRowClick = (rowIdx, row, col) => {
     // 조건걸지 않을 시 헤더클릭에도 호출됨
@@ -142,7 +136,7 @@ class GlobalAdminList extends React.Component {
     );
     // 선택 항목 초기화
     this.setState({ selectedIndexes: [], selectedKeys: [] });
-  }
+  };
 
   deleteConfirm = () => {
     if (this.state.selectedKeys.length === 0) {
@@ -150,34 +144,24 @@ class GlobalAdminList extends React.Component {
     } else {
       feed.showConfirm(`${intlObj.get(messages.delConfirm)}`, '', this.onDeleteGlobalMsg);
     }
-  }
+  };
 
   handleGridSort = (sortColumn, sortDirection) => {
     this.setState({
       sortColumnParam: sortColumn,
       sortDirectionParam: sortDirection,
     });
-    this.props.getGlobalMsgList(
-      pageNum,
-      sortColumn,
-      sortDirection,
-      this.state.searchType,
-      this.state.searchKeyword,
-    );
+    this.props.getGlobalMsgList(pageNum, sortColumn, sortDirection, this.state.searchType, this.state.searchKeyword);
   };
 
-  HyperlinkFormatter = (val) => {
+  HyperlinkFormatter = val => {
     const hyperlinkText = val.dependentValues.MSG_KEY;
-    return (
-      <hltext onClick={() => this.dtlLink(val.dependentValues)}>
-        {hyperlinkText}
-      </hltext>
-    );
+    return <hltext onClick={() => this.dtlLink(val.dependentValues)}>{hyperlinkText}</hltext>;
   };
 
-  dtlLink = (data) => {
+  dtlLink = data => {
     this.props.history.push({ pathname: '/admin/AdminMain/GlobalAdmin/GlobalAdminDtl', search: 'D', state: data });
-  }
+  };
 
   // rowGetter = (i) => {
   //   const mgs = this.props.setGlobalMsgList[i];
@@ -196,24 +180,23 @@ class GlobalAdminList extends React.Component {
   //   return mgs;
   // }
 
-  rowGetter = (i) => {
+  rowGetter = i => {
     if (i === pageNum - 1) {
       pageNum += pageIndex;
-      this.props.getGlobalMsgList(
-        pageNum,
-        this.state.sortColumnParam,
-        this.state.sortDirectionParam,
-        this.state.searchType,
-        this.state.searchKeyword,
-      );
+      this.props.getGlobalMsgList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchType, this.state.searchKeyword);
     }
     return this.props.setGlobalMsgList[i];
-  }
+  };
 
   render() {
     // 검색결과 없을 때 표시(임시)
-    const EmptyData = () =>
-      <div><td colSpan="5"><font size="5">검색결과 없음</font></td></div>;
+    const EmptyData = () => (
+      <div>
+        <td colSpan="5">
+          <font size="5">검색결과 없음</font>
+        </td>
+      </div>
+    );
     const bInfo = {
       MSG_KEY: '',
       DSCR_KOR: '',
@@ -223,7 +206,8 @@ class GlobalAdminList extends React.Component {
     return (
       <div>
         <StyleGlobalAdminList>
-          <h3 className="pageTitle list">다국어 메시지 목록
+          <h3 className="pageTitle list">
+            다국어 메시지 목록
             <div className="searchBox">
               <Select
                 defaultValue={this.state.searchType}
@@ -242,7 +226,7 @@ class GlobalAdminList extends React.Component {
                   value={this.state.searchKeyword}
                   onChange={this.onChangeKeyword}
                   placeholder="검색어를 입력해주세요."
-                  onKeyPress={(e) => {
+                  onKeyPress={e => {
                     if (e.key === 'Enter') {
                       pageNum = pageIndex;
                       this.props.getGlobalMsgList(
@@ -261,16 +245,15 @@ class GlobalAdminList extends React.Component {
                   title="검색"
                   className="searchBtn"
                   onClick={() => {
-                      pageNum = pageIndex;
-                      this.props.getGlobalMsgList(
-                        pageNum,
-                        this.state.sortColumnParam,
-                        this.state.sortDirectionParam,
-                        this.state.searchType,
-                        this.state.searchKeyword,
-                      );
-                    }
-                  }
+                    pageNum = pageIndex;
+                    this.props.getGlobalMsgList(
+                      pageNum,
+                      this.state.sortColumnParam,
+                      this.state.sortDirectionParam,
+                      this.state.searchType,
+                      this.state.searchKeyword,
+                    );
+                  }}
                 />
               </div>
             </div>
@@ -295,13 +278,17 @@ class GlobalAdminList extends React.Component {
             />
           </StyleDataGrid>
           <div className="buttonWrapper">
-            <BtnDelete onClick={this.deleteConfirm}>삭제</BtnDelete>
-            <LinkBtnDkGray
+            <StyledButton className="btn-light" onClick={this.deleteConfirm}>
+              삭제
+            </StyledButton>
+            <StyledButton
+              className="btn-primary"
               style={{ float: 'right' }}
               onClick={() => this.props.history.push({ pathname: '/admin/AdminMain/GlobalAdmin/GlobalAdminDtl', search: 'I', state: bInfo })}
-            >등록
+            >
+              등록
               {/* <Link to="/admin/AdminMain/GlobalAdmin/GlobalAdminDtl">등록</Link> */}
-            </LinkBtnDkGray>
+            </StyledButton>
           </div>
         </StyleGlobalAdminList>
       </div>
@@ -314,31 +301,25 @@ GlobalAdminList.propTypes = {
   setGlobalMsgList: PropTypes.Array, //eslint-disable-line
   delGlobalMsg: PropTypes.func, //eslint-disable-line
   delGlobalMsgList: PropTypes.func, //eslint-disable-line
-  history: PropTypes.object,//eslint-disable-line
+  history: PropTypes.object, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getGlobalMsgList: (num, sortColumn, sortDirection, searchType, searchKeyword) =>
-      dispatch(actions.getGlobalMsgList(num, sortColumn, sortDirection, searchType, searchKeyword)),
-    delGlobalMsg: (delKeys, num, sortColumn, sortDirection, searchType, searchKeyword) =>
-      dispatch(actions.delGlobalMsg(
-        delKeys,
-        num,
-        sortColumn,
-        sortDirection,
-        searchType,
-        searchKeyword,
-      )),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getGlobalMsgList: (num, sortColumn, sortDirection, searchType, searchKeyword) =>
+    dispatch(actions.getGlobalMsgList(num, sortColumn, sortDirection, searchType, searchKeyword)),
+  delGlobalMsg: (delKeys, num, sortColumn, sortDirection, searchType, searchKeyword) =>
+    dispatch(actions.delGlobalMsg(delKeys, num, sortColumn, sortDirection, searchType, searchKeyword)),
+});
 
 const mapStateToProps = createStructuredSelector({
   setGlobalMsgList: selectors.makeSelectGlobalMsgList(),
   // delGlobalMsgList: selectors.makeDeleteGlobalMsg(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'GlobalAdmin', saga });
 const withReducer = injectReducer({ key: 'GlobalAdmin', reducer });
 

@@ -15,7 +15,7 @@ import message from 'components/Feedback/message';
 
 import Footer from 'containers/admin/App/Footer';
 import { Input, Select } from 'antd';
-import { LinkBtnLgtGray, BtnDkGray } from '../../../store/components/uielements/buttons.style';
+import StyledButton from '../../../../components/Button/StyledButton';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -91,7 +91,7 @@ class Category extends React.Component {
     }
   }
 
-  onChangeSite = (val) => {
+  onChangeSite = val => {
     this.setState({
       CATG_ID: 0,
       APP_NAME: '',
@@ -110,34 +110,35 @@ class Category extends React.Component {
       // UPD_DTTM: '',
     });
     this.props.initCategoryData(val);
-  }
+  };
 
-  onChangeNameKOR = (e) => {
+  onChangeNameKOR = e => {
     this.setState({ NAME_KOR: e.target.value });
-  }
-  onChangeNameENG = (e) => {
+  };
+
+  onChangeNameENG = e => {
     this.setState({ NAME_ENG: e.target.value });
-  }
-  onChangeNameCHN = (e) => {
+  };
+
+  onChangeNameCHN = e => {
     this.setState({ NAME_CHN: e.target.value });
-  }
-  onChangeDscrKOR = (e) => {
+  };
+
+  onChangeDscrKOR = e => {
     this.setState({ DSCR_KOR: e.target.value });
-  }
-  onChangeDscrENG = (e) => {
+  };
+
+  onChangeDscrENG = e => {
     this.setState({ DSCR_ENG: e.target.value });
-  }
-  onChangeDscrCHN = (e) => {
+  };
+
+  onChangeDscrCHN = e => {
     this.setState({ DSCR_CHN: e.target.value });
-  }
+  };
 
   udtConfirm = () => {
-    feed.showConfirm(
-      '저장하시겠습니까?',
-      '',
-      this.udtSave,
-    );
-  }
+    feed.showConfirm('저장하시겠습니까?', '', this.udtSave);
+  };
 
   udtSave = () => {
     if (this.vaildChk()) {
@@ -153,28 +154,23 @@ class Category extends React.Component {
       );
       this.setState({ mode: 'D' });
     }
-  }
+  };
 
   vaildChk = () => {
-    if (this.state.NAME_KOR !== '' &&
-      this.state.NAME_ENG !== '' &&
-      this.state.NAME_CHN !== '') {
+    if (this.state.NAME_KOR !== '' && this.state.NAME_ENG !== '' && this.state.NAME_CHN !== '') {
       return true;
     }
     message.error(`${intlObj.get(messages.chkInput)}`, 2);
     return false;
-  }
+  };
 
   render() {
     // const {
     //   type,
     // } = this.props;
     const type = '';
-    const comboOptions = comboList => (
-      comboList.map(item =>
-        <Option value={item.SITE_ID}>{item.NAME_KOR}</Option>)
-    );
-    const handleTreeOnClick = (node) => {
+    const comboOptions = comboList => comboList.map(item => <Option value={item.SITE_ID}>{item.NAME_KOR}</Option>);
+    const handleTreeOnClick = node => {
       this.setState({
         CATG_ID: node.CATG_ID,
         APP_NAME: lang.get('NAME', node),
@@ -222,28 +218,20 @@ class Category extends React.Component {
       this.textKor.focus();
     };
     const returnGateUpdate = (CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
-      this.props.cateUpdate(
-        this.state.SITE_ID,
-        CATG_ID,
-        NAME_KOR,
-        NAME_ENG,
-        NAME_CHN,
-        '',
-        '',
-        '',
-      );
+      this.props.cateUpdate(this.state.SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN, '', '', '');
     };
     const returnGateDelete = (CATG_ID, SORT_SQ) => {
       // alert(resultObj1 + resultObj2);
       this.props.cateDelete(this.state.SITE_ID, CATG_ID, SORT_SQ);
     };
 
-    const moveMymenu = (treeData) => {
+    const moveMymenu = treeData => {
       this.props.moveMymenu(this.state.SITE_ID, treeData);
     };
 
-    const botBtn = (mode) => {
-      if (mode === 'I') { // 등록
+    const botBtn = mode => {
+      if (mode === 'I') {
+        // 등록
         return (
           <React.Fragment>
             {/* <LinkBtnLgtGray>
@@ -252,42 +240,57 @@ class Category extends React.Component {
             <BtnDkGray onClick={this.regGlobalMsg}>저장</BtnDkGray> */}
           </React.Fragment>
         );
-      } else if (mode === 'D') { // 상세
+      }
+      if (mode === 'D') {
+        // 상세
         return (
           <React.Fragment>
             {/* <div style={{ float: 'left' }}> */}
             {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
             {/* </div> */}
-            <BtnDkGray
+            <StyledButton
+              className="btn-primary"
               style={{ float: 'rigth' }}
-              onClick={() => this.setState({
-              mode: 'U',
-              orgNameKor: this.state.NAME_KOR,
-              orgNameEng: this.state.NAME_ENG,
-              orgNameChn: this.state.NAME_CHN,
-              orgDscrKor: this.state.DSCR_KOR,
-              orgDscrEng: this.state.DSCR_ENG,
-              orgDscrChn: this.state.DSCR_CHN,
-             })}
-            >수정
-            </BtnDkGray>
+              onClick={() =>
+                this.setState({
+                  mode: 'U',
+                  orgNameKor: this.state.NAME_KOR,
+                  orgNameEng: this.state.NAME_ENG,
+                  orgNameChn: this.state.NAME_CHN,
+                  orgDscrKor: this.state.DSCR_KOR,
+                  orgDscrEng: this.state.DSCR_ENG,
+                  orgDscrChn: this.state.DSCR_CHN,
+                })
+              }
+            >
+              수정
+            </StyledButton>
           </React.Fragment>
         );
-      } else if (mode === 'U') { // 수정
+      }
+      if (mode === 'U') {
+        // 수정
         return (
           <React.Fragment>
-            <LinkBtnLgtGray onClick={() => this.setState({
-              mode: 'D',
-              NAME_KOR: this.state.orgNameKor,
-              NAME_ENG: this.state.orgNameEng,
-              NAME_CHN: this.state.orgNameChn,
-              DSCR_KOR: this.state.orgDscrKor,
-              DSCR_ENG: this.state.orgDscrEng,
-              DSCR_CHN: this.state.orgDscrChn,
-              })}
-            >취소
-            </LinkBtnLgtGray>
-            <BtnDkGray onClick={this.udtConfirm}>저장</BtnDkGray>
+            <StyledButton
+              className="btn-light"
+              onClick={() =>
+                this.setState({
+                  mode: 'D',
+                  NAME_KOR: this.state.orgNameKor,
+                  NAME_ENG: this.state.orgNameEng,
+                  NAME_CHN: this.state.orgNameChn,
+                  DSCR_KOR: this.state.orgDscrKor,
+                  DSCR_ENG: this.state.orgDscrEng,
+                  DSCR_CHN: this.state.orgDscrChn,
+                })
+              }
+            >
+              취소
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              저장
+            </StyledButton>
           </React.Fragment>
         );
       }
@@ -315,7 +318,7 @@ class Category extends React.Component {
                   returnGateDelete={returnGateDelete}
                   history={this.props.history}
                   selectedIndex={this.state.selectedIndex}
-                  canDrag={true}
+                  canDrag
                   canDrop={false}
                   moveMymenu={moveMymenu}
                   onOk={onOk}
@@ -333,12 +336,7 @@ class Category extends React.Component {
                         <label htmlFor="v2">카테고리 명(KOR)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v2"
-                          value={this.state.NAME_KOR}
-                          onChange={this.onChangeNameKOR}
-                          readOnly={this.state.mode === 'D'}
-                        />
+                        <Input id="v2" value={this.state.NAME_KOR} onChange={this.onChangeNameKOR} readOnly={this.state.mode === 'D'} />
                       </td>
                     </tr>
                     <tr>
@@ -346,12 +344,7 @@ class Category extends React.Component {
                         <label htmlFor="v3">카테고리 명(ENG)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v3"
-                          value={this.state.NAME_ENG}
-                          onChange={this.onChangeNameENG}
-                          readOnly={this.state.mode === 'D'}
-                        />
+                        <Input id="v3" value={this.state.NAME_ENG} onChange={this.onChangeNameENG} readOnly={this.state.mode === 'D'} />
                       </td>
                     </tr>
                     <tr>
@@ -359,12 +352,7 @@ class Category extends React.Component {
                         <label htmlFor="v4">카테고리 명(CHN)</label>
                       </th>
                       <td>
-                        <Input
-                          id="v4"
-                          value={this.state.NAME_CHN}
-                          onChange={this.onChangeNameCHN}
-                          readOnly={this.state.mode === 'D'}
-                        />
+                        <Input id="v4" value={this.state.NAME_CHN} onChange={this.onChangeNameCHN} readOnly={this.state.mode === 'D'} />
                       </td>
                     </tr>
                     <tr>
@@ -378,7 +366,7 @@ class Category extends React.Component {
                           onChange={this.onChangeDscrKOR}
                           readOnly={this.state.mode === 'D'}
                           autosize={{ minRows: 1, maxRow: 4 }}
-                          ref={(ref) => {
+                          ref={ref => {
                             if (ref) {
                               this.textKor = ref;
                             }
@@ -453,9 +441,7 @@ class Category extends React.Component {
                 </table>
               </StyleCategoryForm>
             </div>
-            <div className="buttonWrapper">
-              {botBtn(this.state.mode)}
-            </div>
+            <div className="buttonWrapper">{botBtn(this.state.mode)}</div>
           </div>
           <Footer />
         </StyleCategory>
@@ -466,8 +452,8 @@ class Category extends React.Component {
 
 Category.propTypes = {
   // type: PropTypes.string.isRequired,
-  show: PropTypes.bool,  //eslint-disable-line
-  onCancel: PropTypes.func,  //eslint-disable-line
+  show: PropTypes.bool, //eslint-disable-line
+  onCancel: PropTypes.func, //eslint-disable-line
   initCategoryData: PropTypes.func, //eslint-disable-line
   categoryData: PropTypes.array, //eslint-disable-line
   selectedIndex: PropTypes.number, //eslint-disable-line
@@ -491,26 +477,8 @@ export function mapDispatchToProps(dispatch) {
     cateinsert: (SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
       dispatch(actions.cateinsert(SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN));
     },
-    cateUpdate: (
-      SITE_ID,
-      CATG_ID,
-      NAME_KOR,
-      NAME_ENG,
-      NAME_CHN,
-      DSCR_KOR,
-      DSCR_ENG,
-      DSCR_CHN,
-    ) => {
-      dispatch(actions.cateUpdate(
-        SITE_ID,
-        CATG_ID,
-        NAME_KOR,
-        NAME_ENG,
-        NAME_CHN,
-        DSCR_KOR,
-        DSCR_ENG,
-        DSCR_CHN,
-      ));
+    cateUpdate: (SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN, DSCR_KOR, DSCR_ENG, DSCR_CHN) => {
+      dispatch(actions.cateUpdate(SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN, DSCR_KOR, DSCR_ENG, DSCR_CHN));
     },
     cateDelete: (SITE_ID, CATG_ID, SORT_SQ) => {
       dispatch(actions.cateDelete(SITE_ID, CATG_ID, SORT_SQ));
@@ -527,7 +495,10 @@ const mapStateToProps = createStructuredSelector({
   tp: selectors.makeSelectTp(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'Category', saga });
 const withReducer = injectReducer({ key: 'Category', reducer });
 

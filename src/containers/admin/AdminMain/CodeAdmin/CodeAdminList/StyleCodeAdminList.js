@@ -15,8 +15,14 @@ const StyleAdminList = styled.div`
     width: 900px;
   }
 
-  .pageTitle {
+  .buttonWrapper {
+    & i {
+      font-size: 15px;
+      margin-right: 4px;
+    }
+  }
 
+  .pageTitle {
     .searchBox {
       display: inline-block;
       float: right;
@@ -29,9 +35,9 @@ const StyleAdminList = styled.div`
         float: left;
 
         &:after {
-          content: " ";
+          content: ' ';
           display: block;
-          clear:both;
+          clear: both;
         }
       }
 
@@ -60,7 +66,6 @@ const StyleAdminList = styled.div`
         }
       }
     }
-
   }
 
   .react-grid-HeaderCell {
@@ -68,7 +73,6 @@ const StyleAdminList = styled.div`
       text-align: left;
     }
 
-    
     &.react-grid-HeaderCell--locked {
       padding-left: 0 !important;
     }
