@@ -5,3 +5,7 @@ export const setUrl = (url, WIDGET_ID) => ({
   url,
   WIDGET_ID,
 });
+export const deleteUrl = payload => ({
+  type: action.DELETE_URL,
+  payload,
+});

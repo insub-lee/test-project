@@ -50,6 +50,8 @@ class Tab extends Component {
   handlerBoardChange = (value, id) => {
     const { item, handleChangeCompValue } = this.props;
     const data = item.MUAL_COMPVIEWINFO;
+    console.log('보드이벤트실행중');
+    console.log(value);
 
     let findIndex;
     if (typeof data === 'string') {
@@ -69,13 +71,15 @@ class Tab extends Component {
     }
   };
 
-  handlerTitleChange = (value, id, e) => {
+  handlerTitleChange = (e, id) => {
     e.stopPropagation();
     const { item, handleChangeCompValue } = this.props;
+    const { value } = e.target;
     const data = item.MUAL_COMPVIEWINFO;
     let findIndex;
     if (typeof data === 'string') {
       const parseData = JSON.parse(data);
+
       findIndex = parseData.findIndex(findData => findData.id === id);
       parseData[findIndex].title = value;
       handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', parseData);
@@ -86,6 +90,7 @@ class Tab extends Component {
         return;
       }
       data[findIndex].title = value;
+
       handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', data);
     }
   };
@@ -110,7 +115,7 @@ class Tab extends Component {
     const { item, handleChangeCompValue } = this.props;
     if (!data) {
       const newData = [{ id: 0, title: 'New Tab', board: '' }];
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', newData);
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(newData));
       return newData;
     }
     if (typeof data === 'string') {
@@ -138,6 +143,7 @@ class Tab extends Component {
 
   render() {
     const { item, selectedComponentIdx } = this.props;
+    console.log(item, '아이템테스트');
     const tabData = this.initData(item.MUAL_COMPVIEWINFO);
     const removeFlag = this.removeFlag(tabData);
     const maxFlag = this.maxFlag(tabData);
@@ -146,7 +152,7 @@ class Tab extends Component {
       id: data.id,
       TabComponent: (
         <WriteTabTitle
-          title={<Input value={data.title} onChange={e => this.handlerTitleChange(e.target.value, data.id, e)} />}
+          title={<input value={data.title} onChange={e => this.handlerTitleChange(e, data.id)} type="text" />}
           onRemove={e => {
             this.handlerRemove(e, data.id);
           }}
