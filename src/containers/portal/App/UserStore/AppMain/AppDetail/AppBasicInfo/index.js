@@ -19,7 +19,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import StyleAppBasicInfo from './StyleAppBasicInfo';
-import { BtnWhiteArr, BtnRedShare, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
+import { BtnRedShare, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
 // import { BtnWhiteArr, BtnRedShare, BtnRedCgrRegist, BtnRedMnRegist, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
 // import RgtCategoryIcon from 'images/bizstore/icon-category-rgt3.png';
 // import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
@@ -46,7 +46,7 @@ class AppBasicInfo extends React.Component {
     const { reqAppBasicInfo, appId, BIZGRP_ID } = this.props;
     const params = {
       appId,
-      bizgroupId: BIZGRP_ID
+      bizgroupId: BIZGRP_ID,
     };
     reqAppBasicInfo(params);
   }
@@ -55,7 +55,7 @@ class AppBasicInfo extends React.Component {
     if (this.state.appId !== nextProps.appId) {
       const params = {
         appId: nextProps.appId,
-        bizgroupId: nextProps.BIZGRP_ID
+        bizgroupId: nextProps.BIZGRP_ID,
       };
       this.setState({
         appId: nextProps.appId,
@@ -69,9 +69,9 @@ class AppBasicInfo extends React.Component {
   };
 
   menuClick = () => {
-    const { execPage, resAppBasicInfo} = this.props;
-    execPage(resAppBasicInfo, 'execMenu');
-  }
+    const { execPage, appPageInfoData } = this.props;
+    execPage(appPageInfoData, 'execMenu');
+  };
 
   render() {
     const popUp = (
@@ -272,11 +272,14 @@ AppBasicInfo.propTypes = {
   registApp: PropTypes.func, //eslint-disable-line
   targetUrl: PropTypes.string, //eslint-disable-line
   appId: PropTypes.string, //eslint-disable-line
+  BIZGRP_ID: PropTypes.string,
   appProcess: PropTypes.object, //eslint-disable-line
   appManual: PropTypes.object, //eslint-disable-line
   appManagerList: PropTypes.array, //eslint-disable-line
   appBizGubun: PropTypes.func, //eslint-disable-line
   currentView: PropTypes.string.isRequired, //eslint-disable-line
+  execPage: PropTypes.func.isRequired,
+  appPageInfoData: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -292,6 +295,7 @@ const mapStateToProps = createStructuredSelector({
   appManual: selectors.makeSelectAppManual(),
   appManagerList: selectors.makeSelectAppManagerList(),
   currentView: selectors.currentView(),
+  appPageInfoData: selectors.makeAppPageInfoData(),
 });
 
 const withConnect = connect(

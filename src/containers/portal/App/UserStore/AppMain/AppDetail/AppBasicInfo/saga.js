@@ -9,11 +9,14 @@ import * as constants from './constants';
 import { Axios } from 'utils/AxiosFunc';
 
 export function* reqAppBasicInfo(payload) {
-  console.debug('!!!payload: ', payload.payload.params);
   const response = yield call(Axios.post, '/api/bizstore/v1/store/appbasicinfo/', payload.payload.params);
 
   if (response.appInfo !== null) {
-    yield put({ type: constants.RES_APP_BASIC_INFO, payload: response.appInfo });
+    yield put({ 
+      type: constants.RES_APP_BASIC_INFO, 
+      payload: response.appInfo,
+      appPageInfoData: response.appPageInfoData,
+     });
   } else {
     yield put({ type: constants.RES_APP_BASIC_INFO, payload: fromJS({}) });
   }

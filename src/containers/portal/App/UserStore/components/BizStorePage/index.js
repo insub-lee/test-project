@@ -22,9 +22,7 @@ function createComponents(item) {
   return (
     <div key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
       <WidgetsWrapper item={item}>
-        <COMP
-          item={item}
-        />
+        <COMP item={item} />
       </WidgetsWrapper>
     </div>
   );
@@ -79,7 +77,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   let cH = 0;
   let cHH = 0;
   let cH2 = 0;
-  items.forEach((item) => {
+  items.forEach(item => {
     let w = item.position[2];
     const h = item.position[3];
 
@@ -271,17 +269,22 @@ class BizStorePage extends PureComponent {
         layoutConfig,
         currentView,
       });
+    } else if (columns.length === 0) {
+      this.setState({
+        columns: [],
+      });
     }
   }
 
-  render() {
-    const {
-      layout,
-      layoutConfig,
-      columns,
-      currentView,
-    } = this.state;
+  execApp = () => {
+    const { pageInfoData, execPage } = this.props;
+    execPage(pageInfoData, 'execMenu');
+  };
 
+  render() {
+    // const { layout, layoutConfig, columns, currentView } = this.state;
+    const { layout, layoutConfig, columns } = this.state;
+    console.debug('!!!! this.props: ', this.props);
     return (
       <WidgetGridWrapper>
         {/* <GridLayout
@@ -296,6 +299,11 @@ class BizStorePage extends PureComponent {
         >
           {columns.map(createComponents)}
         </GridLayout> */}
+        <div>
+          <button type="button" onClick={this.execApp}>
+            앱실행
+          </button>
+        </div>
         <ReactGridLayout
           className="layouts"
           layout={layout}
@@ -316,6 +324,8 @@ class BizStorePage extends PureComponent {
 BizStorePage.propTypes = {
   columns: PropTypes.array.isRequired,
   currentView: PropTypes.string.isRequired,
+  execPage: PropTypes.func.isRequired,
+  pageInfoData: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({

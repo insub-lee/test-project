@@ -27,6 +27,8 @@ const AppInfo = ({
 
 AppInfo.propTypes = {
   match: PropTypes.object.isRequired,
+  execMenu: PropTypes.func.isRequired,
+  execPage: PropTypes.func.isRequired,
 };
 
 export default AppInfo;
