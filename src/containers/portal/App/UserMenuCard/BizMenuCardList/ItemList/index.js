@@ -17,7 +17,6 @@ class ItemList extends Component {
   renderBizList = (mapList, paramType) => {
     if (mapList.length > 0) {
       return mapList.map(app => {
-        console.debug('>>>>>>>>.app: ', app);
         const appColkey = `appCol${app.RNUM}`;
         const nodeType = app.NODE_TYPE;
         const appYn = app.APP_YN;
