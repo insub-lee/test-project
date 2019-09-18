@@ -17,12 +17,8 @@ export function getToken() {
 export function timeDifference(givenTime) {
   const newDate = new Date(givenTime);
   const milliseconds = new Date().getTime() - newDate.getTime();
-  const numberEnding = number => (
-    number > 1 ? 's' : ''
-  );
-  const number = num => (
-    num > 9 ? `${num}` : `0${num}`
-  );
+  const numberEnding = number => (number > 1 ? 's' : '');
+  const number = num => (num > 9 ? `${num}` : `0${num}`);
   const getTime = () => {
     let temp = Math.floor(milliseconds / 1000);
     const years = Math.floor(temp / 31536000);
@@ -37,20 +33,7 @@ export function timeDifference(givenTime) {
       if (days < 28) {
         return `${days} day${numberEnding(days)}`;
       }
-      const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const month = months[newDate.getUTCMonth()];
       const day = number(newDate.getUTCDate());
       return `${day} ${month}`;
@@ -67,7 +50,6 @@ export function timeDifference(givenTime) {
   };
   return getTime();
 }
-
 
 export function isEquivalent(a, b) {
   // Create arrays of property names
@@ -96,7 +78,6 @@ export function isEquivalent(a, b) {
 }
 
 export const isEqual = (value, other) => {
-
   // Get the value type
   const type = Object.prototype.toString.call(value);
 
@@ -109,13 +90,11 @@ export const isEqual = (value, other) => {
   if (valueLen !== otherLen) return false;
 
   const compare = (item1, item2) => {
-
     const itemType = Object.prototype.toString.call(item1);
 
     if (['[object Array]', '[object Object]'].indexOf(itemType) >= 0) {
       if (!isEqual(item1, item2)) return false;
     } else {
-
       if (itemType !== Object.prototype.toString.call(item2)) return false;
 
       if (itemType === '[object Function]') {
@@ -123,7 +102,6 @@ export const isEqual = (value, other) => {
       } else {
         if (item1 !== item2) return false;
       }
-
     }
   };
 
@@ -186,4 +164,12 @@ export function makeUniqueTypes(types, prefix = '') {
     actionTypes[type] = prefix + type;
   });
   return actionTypes;
+}
+
+export function isJSON(str) {
+  try {
+    return JSON.parse(str) && !!str;
+  } catch (e) {
+    return false;
+  }
 }
