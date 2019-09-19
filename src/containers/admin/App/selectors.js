@@ -1,25 +1,23 @@
 import { createSelector } from 'reselect';
 
-const selectApp = state => state.get('app');
+const selectMenuList = state => state.get('adminMenu');
 
-const makeSelectCollapsed = () => createSelector(
-  selectApp,
-  appState => appState.get('collapsed'),
-);
+const makeSearchword = () =>
+  createSelector(
+    selectMenuList,
+    menuListState => menuListState.get('searchword'),
+  );
 
-const makeSelectMenus = () => createSelector(
-  selectApp,
-  appState => appState.get('menus').toJS(),
-);
+const makeMenuName = () =>
+  createSelector(
+    selectMenuList,
+    menuListState => menuListState.get('menuName'),
+  );
 
-const makeSearchword = () => createSelector(
-  selectApp,
-  appState => appState.get('searchword'),
-);
+const makeMenuList = () =>
+  createSelector(
+    selectMenuList,
+    menuListState => menuListState.get('menuList'),
+  );
 
-export {
-  selectApp,
-  makeSelectCollapsed,
-  makeSelectMenus,
-  makeSearchword,
-};
+export { selectMenuList, makeSearchword, makeMenuName, makeMenuList };
