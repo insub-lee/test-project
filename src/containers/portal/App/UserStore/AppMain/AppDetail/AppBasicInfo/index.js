@@ -43,7 +43,14 @@ class AppBasicInfo extends React.Component {
   }
 
   componentDidMount() {
-    const { reqAppBasicInfo, appId, BIZGRP_ID, history: { location : { pathname }} } = this.props;
+    const {
+      reqAppBasicInfo,
+      appId,
+      BIZGRP_ID,
+      history: {
+        location: { pathname },
+      },
+    } = this.props;
     const params = {
       appId,
       bizgroupId: BIZGRP_ID,
@@ -53,7 +60,11 @@ class AppBasicInfo extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {history: { location : { pathname }} } = nextProps;
+    const {
+      history: {
+        location: { pathname },
+      },
+    } = nextProps;
     if (this.state.appId !== nextProps.appId) {
       const params = {
         appId: nextProps.appId,
@@ -160,11 +171,7 @@ class AppBasicInfo extends React.Component {
                 <h2 className="ellipsis">{lang.get('NAME', this.props.resAppBasicInfo)}</h2>
               </div>
               <div className="btnsWrapperTop">
-                <StyledButton
-                  type="button"
-                  className="btn-outline-secondary btn-sm"
-                  onClick={this.menuClick}
-                >
+                <StyledButton type="button" className="btn-outline-secondary btn-sm" onClick={this.menuClick}>
                   앱실행
                 </StyledButton>
                 <StyledButton
