@@ -41,6 +41,16 @@ export function* getMenu(payload) {
   });
 }
 
+export function* menuAuthChk(payload) {
+  const { pathname, history, SCRGRP_CD } = payload.payload;
+
+  const response = yield call(Axios.post, '/api/bizstore/v1/store/menuAuthChk', { pathname, SCRGRP_CD });
+
+  if (!response.menuAuthChk) {
+    history.push('/error');
+  }
+}
 export default function* rootSaga() {
   yield takeLatest(constants.GET_MENU, getMenu);
+  yield takeLatest(constants.MENU_AUTH_CHK, menuAuthChk);
 }
