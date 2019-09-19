@@ -5,7 +5,10 @@ const StyleWidgetGrid = styled.div`
   width: 850px;
   margin: 0 auto;
 
-  @media on
+  & .btnsWrapperTop {
+    text-align: right;
+    padding: 10px 0 20px;
+  }
 
   @media only screen and (max-width: 1490px) {
     width: 690px;

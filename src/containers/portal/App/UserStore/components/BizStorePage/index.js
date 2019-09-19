@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 // import GridLayout from 'react-grid-layout';
-import RGL, { WidthProvider } from "react-grid-layout";
+import RGL, { WidthProvider } from 'react-grid-layout';
 import Loadable from 'react-loadable';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import WidgetsWrapper from './WidgetsWrapper';
 import WidgetGridWrapper from './StyleWidgetGrid';
+import StyledButton from '../../../../../../components/Button/StyledButton';
 import Loading from './Loading';
 import * as selectors from './selectors';
 
@@ -67,7 +68,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   const layout = [];
   const arrH = [];
 
-  items.sort((a, b) => (a.ord - b.ord));
+  items.sort((a, b) => a.ord - b.ord);
 
   for (let i = 0; i < Math.ceil(items.length / layoutConfig.col) + 10; i += 1) {
     arrH.push([]);
@@ -130,7 +131,7 @@ function changeLayoutConfig(layoutConfig, view, items) {
   const layout = [];
   const arrH = [];
 
-  items.sort(function (a, b) {
+  items.sort(function(a, b) {
     if (a.y == b.y) return a.x - b.x;
     return a.y - b.y || a.x - b.x;
   });
@@ -299,10 +300,10 @@ class BizStorePage extends PureComponent {
         >
           {columns.map(createComponents)}
         </GridLayout> */}
-        <div>
-          <button type="button" onClick={this.execApp}>
+        <div className="btnsWrapperTop">
+          <StyledButton className="btn-outline-secondary btn-sm" type="button" onClick={this.execApp}>
             앱실행
-          </button>
+          </StyledButton>
         </div>
         <ReactGridLayout
           className="layouts"
