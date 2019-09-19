@@ -22,7 +22,6 @@ const AppMain = () => (
       <Route path="/portal/store/appMain/AppSec" component={AppSec} />
       <Route path="/portal/store/appMain/errorPage" component={ErrorPage} exact />
     </Switch>
-
   </div>
 );
 

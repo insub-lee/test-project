@@ -43,6 +43,8 @@ class AppBasicInfo extends React.Component {
   }
 
   componentDidMount() {
+    console.debug('>>>>>>>app info: ', this.props);
+    
     const {
       reqAppBasicInfo,
       appId,
@@ -51,6 +53,7 @@ class AppBasicInfo extends React.Component {
         location: { pathname },
       },
     } = this.props;
+    console.debug('>>>>>>>app info pathname: ', pathname.split('/')[3]);
     const params = {
       appId,
       bizgroupId: BIZGRP_ID,
