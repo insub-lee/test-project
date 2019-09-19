@@ -397,6 +397,9 @@ export function toggleExpandedForAll({ treeData, expanded = true }) {
 }
 
 export function toggleExpandedForSelected({ treeData, path }) {
+  console.debug('>>>>>>>>>treeData: ', treeData);
+  console.debug('>>>>>>>>>path: ', path);
+
   return map({
     treeData,
     callback: ({ node }) => ({ ...node, expanded: node.expanded || path.includes(node.key) }),
