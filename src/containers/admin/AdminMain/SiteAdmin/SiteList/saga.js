@@ -13,13 +13,19 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 
 export function* getList(payload) {
   // const { pageingNum, pageingStandard } = payload.payload;
+  const { siteList: prevList } = payload;
+  const param = payload;
+  delete param.siteList;
+  delete param.type;
+
 
   const response = yield call(Axios.post, '/api/admin/v1/common/siteadminlist', payload);
+  const siteList = prevList.length > 0 ? prevList.concat(response.siteList) : response.siteList;
 
   if (response.siteList !== null) {
     yield put({
       type: constants.SET_SITE_LIST,
-      payload: fromJS(response.siteList),
+      payload: fromJS(siteList),
     });
   } else {
     yield put({
@@ -32,6 +38,7 @@ export function* getList(payload) {
 export function* delRow(payload) {
   // const { history } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/deletesite', payload);
+  const { sNum, eNum, sortColumn, sortDirection, keywordType, keyword } = payload;
 
   if (response.code === 200) {
     // 성공
@@ -43,6 +50,13 @@ export function* delRow(payload) {
     );
     yield put({
       type: constants.GET_SITE_LIST,
+      sNum,
+      eNum,
+      sortColumn,
+      sortDirection,
+      keywordType,
+      keyword,
+      siteList: [],
     });
   }
 }

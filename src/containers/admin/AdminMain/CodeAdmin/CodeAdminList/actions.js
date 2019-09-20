@@ -11,11 +11,10 @@ export const getCodeAdminList = (sNum, eNum, codeAdminList, sortColumn, sortDire
   keyword,
 });
 
-export const delRow = (sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword) => ({
+export const delRow = (sNum, eNum, sortColumn, sortDirection, delData, keywordType, keyword) => ({
   type: constants.GET_DEL_CODEID,
   sNum,
   eNum,
-  codeAdminList,
   sortColumn,
   sortDirection,
   delData,

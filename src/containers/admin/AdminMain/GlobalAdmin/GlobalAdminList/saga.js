@@ -7,27 +7,32 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 import messages from '../messages';
 
 export function* getGlobalMsgList(payload) {
+  const { globalMsgList: prevList } = payload.payload;
+  const param = payload.payload;
+  delete param.globalMsgList;
+
   const response = yield call(Axios.post, '/api/admin/v1/common/globaladminlist', payload.payload);
-  yield put({ type: constants.SET_GLOBAL_MSG_LIST, payload: fromJS(response.globalMsgList) });
+  const globalMsgList = prevList.length > 0 ? prevList.concat(response.globalMsgList) : response.globalMsgList;
+  yield put({ type: constants.SET_GLOBAL_MSG_LIST, payload: fromJS(globalMsgList) });
 }
 
 export function* delGlobalMsgList(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/delglobalmsg', payload);
   const { code } = response;
+  const { sNum, eNum, sortColumn, sortDirection, searchType, searchKeyword } = payload;
 
-  const {
-    num, sortColumn, sortDirection, searchType, searchKeyword,
-  } = payload;
   if (code === 200) {
     message.success(`${intlObj.get(messages.delComplete)}`, 2);
     yield put({
       type: constants.GET_GLOBAL_MSG_LIST,
       payload: {
-        num,
+        sNum,
+        eNum,
         sortColumn,
         sortDirection,
         searchType,
         searchKeyword,
+        globalMsgList: [],
       },
     });
   } else if (code === 500) {

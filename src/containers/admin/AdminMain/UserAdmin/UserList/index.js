@@ -188,7 +188,7 @@ class UserList extends React.Component {
   rowGetter = rowNumber => {
     const { userList } = this.props;
     if (rowNumber === pageENum - 1) {
-      pageSNum += pageIndex;
+      pageSNum = pageENum + 1;
       pageENum += pageIndex;
       this.props.getUserList(
         pageSNum,
@@ -215,6 +215,8 @@ class UserList extends React.Component {
 
   handleStatusSelect = e => {
     this.setState({ statusCode: e }, () => {
+      pageSNum = 1;
+      pageENum = pageIndex;
       this.props.getUserList(
         pageSNum,
         pageENum,
@@ -256,7 +258,7 @@ class UserList extends React.Component {
       userList: [],
     });
     pageSNum = 1;
-    pageENum = pageIndex;
+    // pageENum = pageIndex;
 
     this.props.getUserList(
       pageSNum,
@@ -332,6 +334,8 @@ class UserList extends React.Component {
         [`${this.state.modalType}Id`]: this.state.selectedNode.key,
       },
       () => {
+        pageSNum = 1;
+        pageENum = pageIndex;
         this.props.getUserList(
           pageSNum,
           pageENum,
