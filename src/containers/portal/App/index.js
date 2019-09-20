@@ -883,6 +883,8 @@ class App extends React.PureComponent {
                           render={props => (
                             <UserStore //eslint-disable-line
                               {...props}
+                              execMenu={this.execMenu}
+                              execPage={this.execPage}
                               applySkin={this.applySkin}
                               hideExecApps={this.hideExecApps}
                             />
