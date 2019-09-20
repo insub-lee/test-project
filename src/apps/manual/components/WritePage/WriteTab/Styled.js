@@ -42,6 +42,7 @@ const Styled = styled.div`
     }
   }};
         margin-bottom: -1px;
+
         &.react-tabs__tab--selected {
           & > div {
             background-color: #fff;
