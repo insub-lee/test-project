@@ -48,6 +48,9 @@ class Tab extends PureComponent {
     if (isJSON(data)) {
       const parseData = JSON.parse(data);
       findIndex = parseData.findIndex(findData => findData.id === id);
+      if (findIndex === -1) {
+        return;
+      }
       parseData[findIndex].board = value;
       handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(parseData));
     } else {
@@ -63,7 +66,6 @@ class Tab extends PureComponent {
     let findIndex;
     if (isJSON(data)) {
       const parseData = JSON.parse(data);
-
       findIndex = parseData.findIndex(findData => findData.id === id);
       parseData[findIndex].title = value;
       handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(parseData));

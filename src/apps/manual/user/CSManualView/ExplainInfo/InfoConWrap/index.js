@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
+import { isJSON } from 'utils/helpers';
 import Title from '../Title';
 import InfoCon from '../InfoCon';
 import QnA from '../QnA';
+import Tab from '../Tab';
 import Styled from './Styled';
 
 const InfoConWrap = ({ componentList, indexRelationList }) => (
   <Styled>
     {componentList &&
       componentList.map(item => {
+        console.log('메뉴얼그리기', item);
         switch (item.TYPE) {
           case 'index':
             return (
@@ -45,6 +47,9 @@ const InfoConWrap = ({ componentList, indexRelationList }) => (
             return indexRelationItem;
           case 'qna':
             return <QnA key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} contents={item.MUAL_COMPVIEWINFO}></QnA>;
+          case 'tab':
+            const tabData = isJSON(item.MUAL_COMPVIEWINFO) ? JSON.parse(item.MUAL_COMPVIEWINFO) : [];
+            return <Tab key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} tabData={tabData} keyName="id"></Tab>;
           default:
             return '';
         }

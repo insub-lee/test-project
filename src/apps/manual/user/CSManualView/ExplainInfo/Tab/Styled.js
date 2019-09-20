@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  width: 686px;
+  margin: 0 !important;
+  padding: 0 !important;
   .affix-container {
     background-color: #ffffff;
   }
@@ -17,20 +18,36 @@ const Styled = styled.div`
     padding-left: 0;
     margin-bottom: 0;
     list-style: none;
-    // nav-tabs Option
-    // Clean Option
     height: 40px;
     border-bottom: 1px solid #d9d9d9;
-    background-color: #ffffff;
-
+    background-color: #fff;
     li.react-tabs__tab {
+      z-index: 0;
+      width: ${props => {
+    switch (props.length) {
+      case 1:
+        return '100%';
+
+      case 2:
+        return '50% ';
+
+      case 3:
+        return '33.33%';
+
+      case 4:
+        return '25%';
+
+      default:
+        return '20%';
+    }
+  }};
+      position: static;
+      pointer-events: auto !important;
       margin-bottom: -1px;
-      display: block;
       padding: 0.5rem 2.125rem;
       border: 1px solid #d9d9d9;
       border-left: 0px solid #d9d9d9;
       height: 40px;
-      display: flex;
       align-items: center;
       font-weight: 500;
       font-size: 15px;
@@ -43,6 +60,7 @@ const Styled = styled.div`
       }
       &.react-tabs__tab--selected {
         background-color: #fff;
+        z-index: 0 !important;
         border-bottom: 1px solid transparent;
         color: #000000;
 
@@ -55,6 +73,17 @@ const Styled = styled.div`
 
   div.react-tabs__tab-panel.react-tabs__tab-panel--selected {
     // padding: 1rem !important;
+  }
+  .titleWrap {
+    text-align: left;
+    border: none;
+    padding: 0;
+    width: 100%;
+    line-height: normal;
+    height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 `;
 
