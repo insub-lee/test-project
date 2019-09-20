@@ -18,6 +18,23 @@ const Styled = styled.div`
       white-space: nowrap;
     }
   }
+  .manualEditorComponent {
+    min-height: 40px;
+    cursor: pointer;
+    .fr-view {
+      padding: 20px;
+      font-size: 13px;
+    }
+    .fr-box.fr-basic .fr-element.fr-view {
+      font-size: 13px;
+      border: 1px solid #f7f7f7;
+      border-bottom: 0;
+    }
+    .fr-toolbar.fr-bottom {
+      border-top: 2px solid #000;
+      border-radius: 0;
+    }
+  }
 `;
 
 export default Styled;

@@ -59,7 +59,6 @@ class Tab extends PureComponent {
     e.stopPropagation();
     const { value } = e.target;
     const { item, handleChangeCompValue } = this.props;
-    const { value } = e.target;
     const data = item.MUAL_COMPVIEWINFO;
     let findIndex;
     if (isJSON(data)) {
@@ -154,7 +153,7 @@ class Tab extends PureComponent {
     }));
 
     return (
-      <Styled>
+      <Styled className="manualEditorComponent">
         {selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
           <WriteTab
             tabs={WriteTabData}
