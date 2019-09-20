@@ -10,6 +10,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import Footer from 'containers/admin/App/Footer';
 
+import StyledButton from 'components/Button/StyledButton';
 import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
@@ -18,7 +19,6 @@ import * as actions from './actions';
 import Tree from './Tree';
 import StyleCategory from './StyleCategory';
 import StyleCategoryForm from './StyleCategoryForm';
-import StyledButton from '../../../../../components/Button/StyledButton';
 
 const { Option } = Select;
 
@@ -218,7 +218,7 @@ class CategoryMap extends Component {
               </StyleCategoryForm>
             </div>
             <div className="buttonWrapper">
-              <Link to={`/admin/adminmain/classify/rootmap/${GUBUN}`}>
+              <Link to={`/admin/adminmain/classify/${GUBUN}`}>
                 <StyledButton className="btn-light">목록으로</StyledButton>
               </Link>
               {isAdd ? (
