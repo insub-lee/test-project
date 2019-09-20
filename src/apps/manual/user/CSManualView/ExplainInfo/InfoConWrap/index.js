@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Title from '../Title';
 import InfoCon from '../InfoCon';
+import QnA from '../QnA';
 import Styled from './Styled';
 
 const InfoConWrap = ({ componentList, indexRelationList }) => (
@@ -42,6 +43,8 @@ const InfoConWrap = ({ componentList, indexRelationList }) => (
                 });
             }
             return indexRelationItem;
+          case 'qna':
+            return <QnA key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} contents={item.MUAL_COMPVIEWINFO}></QnA>;
           default:
             return '';
         }
