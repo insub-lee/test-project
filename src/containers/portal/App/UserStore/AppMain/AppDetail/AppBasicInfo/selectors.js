@@ -22,6 +22,11 @@ const makeSelectAppManagerList = () => createSelector(
   appBasicInfoState => appBasicInfoState.get('appManagerList').toJS(),
 );
 
+const makeAppPageInfoData = () => createSelector(
+  selectAppDetail,
+  appBasicInfoState => appBasicInfoState.get('appPageInfoData'),
+);
+
 const selectView = state => state.get('common');
 
 const currentView = () => createSelector(
@@ -36,4 +41,5 @@ export {
   makeSelectAppManual,
   makeSelectAppManagerList,
   currentView,
+  makeAppPageInfoData,
 };

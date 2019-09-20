@@ -7,7 +7,8 @@ import { intlObj, imgUrl } from 'utils/commonUtils';
 import categoryRgtIcon from 'images/bizstore/icon-category-rgt.png';
 import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
 import userIcon from 'images/bizstore/icon-user.png';
-import messages from 'containers/store/AppMain/AppList/Item/messages';
+// import messages from 'containers/store/AppMain/AppList/Item/messages';
+import messages from 'components/CardItemBiz/messages';
 import Card from 'containers/store/components/uielements/card.style';
 
 class CardItemApp extends PureComponent {

@@ -23,12 +23,16 @@ const StyleAppRating = styled.div`
     position: absolute;
     top: 25px;
     right: 0;
+    & i {
+      font-size: 15px;
+      margin-right: 4px;
+    }
 
     @media only screen and (max-width: 1024px) {
       top: 10px;
     }
   }
-  
+
   .ratingAvgChart {
     margin: 30px 0 0 0 !important;
     width: 100%;
@@ -49,7 +53,7 @@ const StyleAppRating = styled.div`
       }
 
       :after {
-        content: "";
+        content: '';
         display: table;
         clear: both;
       }
@@ -68,7 +72,6 @@ const StyleAppRating = styled.div`
   }
 
   .ratingChart {
-
     @media only screen and (max-width: 1280px) {
       width: 55%;
     }
@@ -91,7 +94,7 @@ const StyleAppRating = styled.div`
       @media only screen and (max-width: 1024px) {
         font-size: 12px;
       }
-    }    
+    }
 
     .anticon-star {
       margin-right: 10px;
@@ -146,13 +149,12 @@ const StyleAppRating = styled.div`
   }
 
   .ratingReview {
-
     > div {
       margin-bottom: 1px;
 
-       &:last-child {
-         margin-bottom: 0;
-       }
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
 
     .ratingReviewBox {
@@ -175,7 +177,7 @@ const StyleAppRating = styled.div`
         width: 55px;
         height: 55px;
         border-radius: 50%;
-        overflow:hidden;
+        overflow: hidden;
 
         @media only screen and (max-width: 1024px) {
           top: 13px;
@@ -185,15 +187,16 @@ const StyleAppRating = styled.div`
         }
 
         .profilePic {
-          width:100%;
+          width: 100%;
         }
       }
 
       .rateInfo {
         display: block;
         margin: 2px 0 5px;
-        
-        .reviewDate, .reviewVersion {
+
+        .reviewDate,
+        .reviewVersion {
           display: inline-block;
           margin-left: 10px;
           color: #404040;
@@ -209,7 +212,7 @@ const StyleAppRating = styled.div`
         white-space: pre-wrap;
       }
     }
-  }  
+  }
 `;
 
 export default StyleAppRating;

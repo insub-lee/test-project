@@ -51,7 +51,7 @@ class UserStore extends Component {
   }
 
   render() {
-    const { collapsed } = this.props;
+    const { collapsed, execMenu, execPage } = this.props;
 
     return (
       <StyleUserSetting className="userSetting">
@@ -70,7 +70,7 @@ class UserStore extends Component {
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
                       <Route path="/portal/store/appMain/myPage/widgetsetting" component={MyPage} />
-                      <Route exact path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} />
+                      <Route exact path="/portal/store/appMain/myPage/app/:APP_ID" render={ props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />} />
                       <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
                       <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
                       <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />

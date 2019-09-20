@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import { Rate, Row, Col, Progress } from 'antd';
+import { Rate, Row, Col, Progress, Icon } from 'antd';
 import ModalDrag from 'components/ModalDrag';
 
 import * as feed from 'components/Feedback/functions';
@@ -24,7 +24,8 @@ import Modals from '../../../../../components/Modal/index';
 import ModalStyle from '../../../components/Modal/StyleModal';
 import WithDirection from '../../../../../config/withDirection';
 
-import { BtnWhiteRate, BtnLgtGray, BtnDkGray, BtnWhiteDel, BtnSeeMore } from '../../../components/uielements/buttons.style';
+import { BtnLgtGray, BtnDkGray, BtnWhiteDel, BtnSeeMore } from '../../../components/uielements/buttons.style';
+import StyledButton from '../../../../../components/Button/StyledButton';
 
 const isoModal = ModalStyle(Modals);
 const Modal = WithDirection(isoModal);
@@ -41,7 +42,7 @@ class AppRating extends React.Component {
       saveon: false,
       updateon: true,
       page: 1,
-      pagePerNum: (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ? 2 : 5,
+      pagePerNum: this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet' ? 2 : 5,
     };
     this.props.reqAppRatingInfo(this.state.appId, this.state.page, this.state.pagePerNum, []);
   }
@@ -83,14 +84,7 @@ class AppRating extends React.Component {
 
   insertReview = () => {
     if (this.state.saveon) {
-      this.props.registRating(
-        this.state.ratingPoint,
-        this.state.ratingComnt,
-        this.state.appId,
-        'INSERT',
-        1,
-        this.state.pagePerNum,
-      );
+      this.props.registRating(this.state.ratingPoint, this.state.ratingComnt, this.state.appId, 'INSERT', 1, this.state.pagePerNum);
       this.setState({ visible: false });
     } else {
       feed.error(`${intlObj.get(messages.reviewContent)}`);
@@ -107,14 +101,7 @@ class AppRating extends React.Component {
 
   updateReview = () => {
     if (this.state.updateon) {
-      this.props.registRating(
-        this.state.ratingPoint,
-        this.state.ratingComnt,
-        this.state.appId,
-        'UPDATE',
-        1,
-        this.state.pagePerNum,
-      );
+      this.props.registRating(this.state.ratingPoint, this.state.ratingComnt, this.state.appId, 'UPDATE', 1, this.state.pagePerNum);
       this.setState({ visible: false });
     } else {
       feed.error(`${intlObj.get(messages.reviewContent)}`);
@@ -130,23 +117,15 @@ class AppRating extends React.Component {
   };
 
   deleteReview = () => {
-    this.props.registRating(
-      this.state.ratingPoint,
-      this.state.ratingComnt,
-      this.state.appId,
-      'DELETE',
-      1,
-      this.state.pagePerNum,
-    );
+    this.props.registRating(this.state.ratingPoint, this.state.ratingComnt, this.state.appId, 'DELETE', 1, this.state.pagePerNum);
     this.setState({ visible: false });
   };
 
   deleteHandleOk = () => feed.showConfirm(`${intlObj.get(messages.reviewDeleteing)}`, '', this.deleteReview);
 
-
   render() {
     const ratingPointChange = point => this.setState({ ratingPoint: point });
-    const lengthCheck = (lengthCnt) => {
+    const lengthCheck = lengthCnt => {
       this.setState({ ratingComnt: lengthCnt.target.value });
       if (lengthCnt.target.value.length > 9) {
         this.setState({ saveon: true, updateon: true });
@@ -157,57 +136,41 @@ class AppRating extends React.Component {
 
     const registPop = (
       <div className="newRatingWrite">
-        <BtnWhiteRate onClick={this.registShowModal}>
+        <StyledButton className="btn-outline-primary btn-sm" onClick={this.registShowModal}>
+          <Icon type="like" />
           {intlObj.get(messages.reviewRegist)}
-        </BtnWhiteRate>
+        </StyledButton>
         <Modal
           visible={this.state.visible}
-          title={
-            <ModalDrag
-              title={intlObj.get(messages.reviewRegist)}
-              num={0}
-            />
-          }
+          title={<ModalDrag title={intlObj.get(messages.reviewRegist)} num={0} />}
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           maskClosable={false}
           confirmLoading={false}
           footer={[
-            <BtnLgtGray
-              key="back"
-              onClick={this.handleCancel}
-            >
+            <StyledButton className="btn-outline-dark btn-sm" key="back" onClick={this.handleCancel}>
               {intlObj.get(messages.cancel)}
-            </BtnLgtGray>,
-            <BtnDkGray
+            </StyledButton>,
+            <StyledButton
               key="submit"
               loading={this.state.loading}
               onClick={this.handleOk}
-              className={this.state.saveon ? '' : 'disabled'}
+              className={this.state.saveon ? 'btn-primary btn-sm' : 'disabled btn-sm'}
             >
               {intlObj.get(messages.regist)}
-            </BtnDkGray>,
+            </StyledButton>,
           ]}
           style={{ height: 'auto' }}
           className="storeModal"
         >
           <div className="ant-modal-body-content" style={{ height: 205 }}>
-            <p
-              className="labelTxt"
-              style={{ display: 'inline-block', width: 65, marginTop: 0 }}
-            >
+            <p className="labelTxt" style={{ display: 'inline-block', width: 65, marginTop: 0 }}>
               {intlObj.get(messages.ratingPoint)}
             </p>
-            <Rate
-              value={this.state.ratingPoint}
-              onChange={ratingPointChange}
-            />
-            <label htmlFor="content" className="labelTxt">{intlObj.get(messages.content)}
-              <textarea
-                onChange={lengthCheck}
-                maxLength={150}
-                value={this.state.ratingComnt}
-              />
+            <Rate value={this.state.ratingPoint} onChange={ratingPointChange} />
+            <label htmlFor="content" className="labelTxt">
+              {intlObj.get(messages.content)}
+              <textarea onChange={lengthCheck} maxLength={150} value={this.state.ratingComnt} />
             </label>
           </div>
         </Modal>
@@ -216,58 +179,43 @@ class AppRating extends React.Component {
 
     const updatePop = (
       <div className="newRatingWrite">
-        <BtnWhiteRate onClick={this.updateShowModal}>
+        <StyledButton className="btn-outline-primary btn-sm" onClick={this.updateShowModal}>
+          <Icon type="like" />
           {intlObj.get(messages.reviewUpdate)}
-        </BtnWhiteRate>
+        </StyledButton>
         <Modal
           visible={this.state.visible}
-          title={
-            <ModalDrag
-              title={intlObj.get(messages.reviewUpdate)}
-              num={0}
-            />
-          }
+          title={<ModalDrag title={intlObj.get(messages.reviewUpdate)} num={0} />}
           onOk={this.updateHandleOk}
           onCancel={this.handleCancel}
           maskClosable={false}
           footer={[
-            <BtnWhiteDel
-              key="update"
-              onClick={this.deleteHandleOk}
-              className="delete"
-            >
+            <StyledButton key="update" onClick={this.deleteHandleOk} className="delete btn-outline-dark btn-sm">
               {intlObj.get(messages.delete)}
-            </BtnWhiteDel>,
-            <BtnLgtGray
-              key="back"
-              onClick={this.handleCancel}
-            >
+            </StyledButton>,
+            <StyledButton className="btn-light btn-sm" key="back" onClick={this.handleCancel}>
               {intlObj.get(messages.cancel)}
-            </BtnLgtGray>,
-            <BtnDkGray
+            </StyledButton>,
+            <StyledButton
               key="submit"
               loading={this.state.loading}
               onClick={this.updateHandleOk}
-              className={this.state.updateon ? '' : 'disabled'}
+              className={this.state.updateon ? 'btn-primary btn-sm' : 'btn-sm disabled'}
             >
               {intlObj.get(messages.save)}
-            </BtnDkGray>,
+            </StyledButton>,
           ]}
           style={{ height: 330 }}
           className="storeModal"
         >
           <div className="ant-modal-body-content" style={{ height: 205 }}>
-            <p className="labelTxt" style={{ display: 'inline-block', width: 65, marginTop: 0 }}>{intlObj.get(messages.ratingPoint)}</p>
-            <Rate
-              value={this.state.ratingPoint}
-              onChange={ratingPointChange}
-            />
-            <label htmlFor="content" className="labelTxt">{intlObj.get(messages.content)}
-              <textarea
-                onChange={lengthCheck}
-                maxLength={150}
-                value={this.state.ratingComnt}
-              />
+            <p className="labelTxt" style={{ display: 'inline-block', width: 65, marginTop: 0 }}>
+              {intlObj.get(messages.ratingPoint)}
+            </p>
+            <Rate value={this.state.ratingPoint} onChange={ratingPointChange} />
+            <label htmlFor="content" className="labelTxt">
+              {intlObj.get(messages.content)}
+              <textarea onChange={lengthCheck} maxLength={150} value={this.state.ratingComnt} />
             </label>
           </div>
         </Modal>
@@ -276,14 +224,16 @@ class AppRating extends React.Component {
 
     const loop = data =>
       data.map(item => (
-        <Col key={item.RNUM} xl={24} md={24} sm={24} >
+        <Col key={item.RNUM} xl={24} md={24} sm={24}>
           <div className="ratingReviewBox">
             <div>
               <img
                 src={`/portalWeb/uploadfile/pictures/${item.EMP_NO}.jpg`}
                 alt={lang.get('NAME', item)}
                 className="profilePic"
-                onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+                onError={e => {
+                  e.target.src = '/no_img_pro.jpg';
+                }}
               />
             </div>
             <p className="userInfo">
@@ -291,18 +241,12 @@ class AppRating extends React.Component {
             </p>
             <span className="rateInfo" style={{ color: '#555', size: '12px' }}>
               <Rate disabled value={item.POINT} />
-              <span className="reviewDate">
-                {item.UPD_DTTM}
-              </span>
-              <span className="reviewVersion">
-                [{item.VER}]
-              </span>
+              <span className="reviewDate">{item.UPD_DTTM}</span>
+              <span className="reviewVersion">[{item.VER}]</span>
             </span>
-            <p className="userReviewText">
-              {item.COMNT}
-            </p>
+            <p className="userReviewText">{item.COMNT}</p>
           </div>
-        </Col >
+        </Col>
       ));
 
     const rtButton = () => {
@@ -324,28 +268,21 @@ class AppRating extends React.Component {
         <Row style={rowStyle} gutter={gutter} className="ratingAvgChart">
           <Col span={8} style={colStyle}>
             <div className="ratingAvgInfo">
-              <h3>
-                {this.props.resAppRatingInfo.TOTAVG ? this.props.resAppRatingInfo.TOTAVG : 0}
-              </h3>
-              <Rate
-                allowHalf
-                disabled
-                value={parseFloat(this.props.resAppRatingInfo.STARPOINT)}
-              />
+              <h3>{this.props.resAppRatingInfo.TOTAVG ? this.props.resAppRatingInfo.TOTAVG : 0}</h3>
+              <Rate allowHalf disabled value={parseFloat(this.props.resAppRatingInfo.STARPOINT)} />
             </div>
           </Col>
           <Col span={12} style={colStyle} className="ratingChart">
-            <p className="ratingSubTitle">{this.props.resAppRatingInfo.TOTCNT ? this.props.resAppRatingInfo.TOTCNT : 0}{intlObj.get(messages.ratingCnt)}</p>
+            <p className="ratingSubTitle">
+              {this.props.resAppRatingInfo.TOTCNT ? this.props.resAppRatingInfo.TOTCNT : 0}
+              {intlObj.get(messages.ratingCnt)}
+            </p>
             <Row style={rowStyle} gutter={gutter} justify="start">
               <Col span={3} style={colStyle}>
                 <i className="anticon anticon-star" /> 5
               </Col>
               <Col span={21} style={colStyle}>
-                <Progress
-                  percent={this.props.resAppRatingInfo.FIVEPER}
-                  strokeWidth={5}
-                  showInfo={false}
-                />
+                <Progress percent={this.props.resAppRatingInfo.FIVEPER} strokeWidth={5} showInfo={false} />
               </Col>
             </Row>
             <Row style={rowStyle} gutter={gutter} justify="start">
@@ -353,11 +290,7 @@ class AppRating extends React.Component {
                 <i className="anticon anticon-star" /> 4
               </Col>
               <Col span={21} style={colStyle}>
-                <Progress
-                  percent={this.props.resAppRatingInfo.FOURPER}
-                  strokeWidth={5}
-                  showInfo={false}
-                />
+                <Progress percent={this.props.resAppRatingInfo.FOURPER} strokeWidth={5} showInfo={false} />
               </Col>
             </Row>
             <Row style={rowStyle} gutter={gutter} justify="start">
@@ -365,11 +298,7 @@ class AppRating extends React.Component {
                 <i className="anticon anticon-star" /> 3
               </Col>
               <Col span={21} style={colStyle}>
-                <Progress
-                  percent={this.props.resAppRatingInfo.THREEPER}
-                  strokeWidth={5}
-                  showInfo={false}
-                />
+                <Progress percent={this.props.resAppRatingInfo.THREEPER} strokeWidth={5} showInfo={false} />
               </Col>
             </Row>
             <Row style={rowStyle} gutter={gutter} justify="start">
@@ -377,11 +306,7 @@ class AppRating extends React.Component {
                 <i className="anticon anticon-star" /> 2
               </Col>
               <Col span={21} style={colStyle}>
-                <Progress
-                  percent={this.props.resAppRatingInfo.TWOPER}
-                  strokeWidth={5}
-                  showInfo={false}
-                />
+                <Progress percent={this.props.resAppRatingInfo.TWOPER} strokeWidth={5} showInfo={false} />
               </Col>
             </Row>
             <Row style={rowStyle} gutter={gutter} justify="start">
@@ -389,11 +314,7 @@ class AppRating extends React.Component {
                 <i className="anticon anticon-star" /> 1
               </Col>
               <Col span={21} style={colStyle}>
-                <Progress
-                  percent={this.props.resAppRatingInfo.ONEPER}
-                  strokeWidth={5}
-                  showInfo={false}
-                />
+                <Progress percent={this.props.resAppRatingInfo.ONEPER} strokeWidth={5} showInfo={false} />
               </Col>
             </Row>
           </Col>
@@ -428,21 +349,19 @@ AppRating.propTypes = {
   registRating: PropTypes.func, //eslint-disable-line
   myAppRating: PropTypes.object, //eslint-disable-line
   updateRating: PropTypes.func, //eslint-disable-line
-  rtheiFlog: PropTypes.bool,  //eslint-disable-line
-  appRatingListSize: PropTypes.number,  //eslint-disable-line
+  rtheiFlog: PropTypes.bool, //eslint-disable-line
+  appRatingListSize: PropTypes.number, //eslint-disable-line
   currentView: PropTypes.string.isRequired, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    reqAppRatingInfo: (appId, page, pagePerNum, appRatingList) => {
-      dispatch(actions.reqAppRatingInfo(appId, page, pagePerNum, appRatingList));
-    },
-    registRating: (POINT, COMNT, APP_ID, GUBUN, page, pagePerNum) => {
-      dispatch(actions.registRating(POINT, COMNT, APP_ID, GUBUN, page, pagePerNum)); // page를 0으로 하드코딩한것 수정
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  reqAppRatingInfo: (appId, page, pagePerNum, appRatingList) => {
+    dispatch(actions.reqAppRatingInfo(appId, page, pagePerNum, appRatingList));
+  },
+  registRating: (POINT, COMNT, APP_ID, GUBUN, page, pagePerNum) => {
+    dispatch(actions.registRating(POINT, COMNT, APP_ID, GUBUN, page, pagePerNum)); // page를 0으로 하드코딩한것 수정
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   resAppRatingInfo: selectors.makeSelectAppRatingInfo(),
@@ -453,7 +372,10 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'appRating', saga });
 const withReducer = injectReducer({ key: 'appRating', reducer });
 
@@ -462,4 +384,3 @@ export default compose(
   withSaga,
   withConnect,
 )(AppRating);
-

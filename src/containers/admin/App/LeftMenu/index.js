@@ -1,17 +1,7 @@
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { push } from 'react-router-redux';
-import { createStructuredSelector } from 'reselect';
-import { /* intlObj, */ lang } from 'utils/commonUtils';
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
-import reducer from './reducer';
-import saga from './saga';
-import * as selectors from './selectors';
-import * as actions from './actions';
 import StyledAdminMenu from './StyledAdminMenu';
 import MenuItem from './MenuItem';
 import adminLogo from '../../../../images/portal/admin-logo.png';
@@ -50,8 +40,6 @@ class menuList extends React.Component {
     };
 
     this.classChange = this.classChange.bind(this);
-
-    this.props.getMenu('ADMIN');
   }
 
   classChange = url => {
@@ -66,7 +54,7 @@ class menuList extends React.Component {
       strUrl: url,
     });
 
-    this.props.historyPush(`${url}`);
+    this.props.history.push(url);
   };
 
   classString = url => {
@@ -164,28 +152,6 @@ menuList.propTypes = {
   leftMenuList: PropTypes.oneOfType([PropTypes.array, PropTypes.object]).isRequired,
   history: PropTypes.object, //eslint-disable-line
   location: PropTypes.object, // eslint-disable-line
-  historyPush: PropTypes.func, //eslint-disable-line
-  getMenu: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  historyPush: url => dispatch(push(url)),
-  getMenu: SCRGRP_CD => dispatch(actions.getMenu(SCRGRP_CD)),
-});
-
-const mapStateToProps = createStructuredSelector({
-  leftMenuList: selectors.makeMenuList(),
-});
-
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
-const withSaga = injectSaga({ key: 'menuList', saga });
-const withReducer = injectReducer({ key: 'menuList', reducer });
-
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(menuList);
+export default menuList;

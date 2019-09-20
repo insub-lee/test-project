@@ -19,7 +19,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import StyleAppBasicInfo from './StyleAppBasicInfo';
-import { BtnWhiteArr, BtnRedShare, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
+import { BtnRedShare, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
 // import { BtnWhiteArr, BtnRedShare, BtnRedCgrRegist, BtnRedMnRegist, BtnLgtGrayRegisted } from '../../../components/uielements/buttons.style';
 // import RgtCategoryIcon from 'images/bizstore/icon-category-rgt3.png';
 // import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
@@ -38,16 +38,46 @@ class AppBasicInfo extends React.Component {
       userinfo: [],
       orgShow: false,
     };
-    prop.reqAppBasicInfo(this.state.appId);
+    // prop.reqAppBasicInfo(this.state.appId);
     this.props.appBizGubun(3);
   }
 
+  componentDidMount() {
+    console.debug('>>>>>>>app info: ', this.props);
+    
+    const {
+      reqAppBasicInfo,
+      appId,
+      BIZGRP_ID,
+      history: {
+        location: { pathname },
+      },
+    } = this.props;
+    console.debug('>>>>>>>app info pathname: ', pathname.split('/')[3]);
+    const params = {
+      appId,
+      bizgroupId: BIZGRP_ID,
+      menuGubun: pathname.split('/')[3],
+    };
+    reqAppBasicInfo(params);
+  }
+
   componentWillReceiveProps(nextProps) {
+    const {
+      history: {
+        location: { pathname },
+      },
+    } = nextProps;
     if (this.state.appId !== nextProps.appId) {
+      const params = {
+        appId: nextProps.appId,
+        bizgroupId: nextProps.BIZGRP_ID,
+        menuGubun: pathname.split('/')[3],
+      };
       this.setState({
         appId: nextProps.appId,
       });
-      this.props.reqAppBasicInfo(nextProps.appId);
+      this.props.reqAppBasicInfo(params);
     }
   }
 
@@ -56,9 +86,9 @@ class AppBasicInfo extends React.Component {
   };
 
   menuClick = () => {
-    const { execPage, resAppBasicInfo} = this.props;
-    execPage(resAppBasicInfo, 'execMenu');
-  }
+    const { execPage, appPageInfoData } = this.props;
+    execPage(appPageInfoData, 'execMenu');
+  };
 
   render() {
     const popUp = (
@@ -114,9 +144,7 @@ class AppBasicInfo extends React.Component {
     const userProfile = (userinfo, orgShow) => {
       this.setState({ orgShow, userinfo });
     };
-
-    console.debug('!!!!! appBasicInfo: ', this.props);
-
+    console.debug('>>>>>>>this.props: ', this.props);
     const closeModal = () => this.setState({ orgShow: false });
     /* eslint-disable */
     return (
@@ -146,11 +174,7 @@ class AppBasicInfo extends React.Component {
                 <h2 className="ellipsis">{lang.get('NAME', this.props.resAppBasicInfo)}</h2>
               </div>
               <div className="btnsWrapperTop">
-                <StyledButton
-                  type="button"
-                  className="btn-outline-secondary btn-sm"
-                  onClick={this.menuClick}
-                >
+                <StyledButton type="button" className="btn-outline-secondary btn-sm" onClick={this.menuClick}>
                   앱실행
                 </StyledButton>
                 <StyledButton
@@ -261,15 +285,18 @@ AppBasicInfo.propTypes = {
   registApp: PropTypes.func, //eslint-disable-line
   targetUrl: PropTypes.string, //eslint-disable-line
   appId: PropTypes.string, //eslint-disable-line
+  BIZGRP_ID: PropTypes.string,
   appProcess: PropTypes.object, //eslint-disable-line
   appManual: PropTypes.object, //eslint-disable-line
   appManagerList: PropTypes.array, //eslint-disable-line
   appBizGubun: PropTypes.func, //eslint-disable-line
   currentView: PropTypes.string.isRequired, //eslint-disable-line
+  execPage: PropTypes.func.isRequired,
+  appPageInfoData: PropTypes.object.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  reqAppBasicInfo: appId => dispatch(actions.reqAppBasicInfo(appId)),
+  reqAppBasicInfo: params => dispatch(actions.reqAppBasicInfo(params)),
   registCategory: APP_ID => dispatch(actions.registCategory(APP_ID)),
   registApp: APP_ID => dispatch(actions.registApp(APP_ID)),
   appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),
@@ -281,6 +308,7 @@ const mapStateToProps = createStructuredSelector({
   appManual: selectors.makeSelectAppManual(),
   appManagerList: selectors.makeSelectAppManagerList(),
   currentView: selectors.currentView(),
+  appPageInfoData: selectors.makeAppPageInfoData(),
 });
 
 const withConnect = connect(

@@ -9,9 +9,13 @@ export function* getWidgetList(payload) {
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/bizpageinfo', { PAGE_ID });
 
-  const { widgetList } = response;
+  const { widgetList, pageInfoData } = response;
   if (widgetList) {
-    yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(JSON.parse(widgetList)) });
+    yield put({
+      type: constants.SET_WIDGET_LIST,
+      widgetList: fromJS(JSON.parse(widgetList)),
+      pageInfoData,
+    });
   }
 }
 

@@ -23,15 +23,13 @@ const StyledRootMap = styled.div`
 
   .searchBox {
     width: 100%;
-    padding: 20px 24px;
-    border: 4px solid #efefef;
     margin-bottom: 20px;
+    overflow: hidden;
 
     .searchWrapper {
       position: relative;
       width: 246px;
-      height: 30px;
-      /* float: right; */
+      float: right;
 
       > input {
         position: relative;

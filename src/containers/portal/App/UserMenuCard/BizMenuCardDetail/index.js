@@ -62,7 +62,6 @@ class BizMenuCardDetail extends Component {
 
   /* eslint-disable */
   handleTreeOnClick = node => {
-    console.log('트리클릭 테스트');
     const {
       handleChangeSelectedIndex,
       history,
@@ -87,7 +86,6 @@ class BizMenuCardDetail extends Component {
 
   render() {
     const { bizMenuData, selectedIndex, history, match, execMenu, execPage } = this.props;
-
     const preUrl = match.path.substr(0, match.path.indexOf('/detail'));
     const buttonPreUrl = match.url.substr(0, match.url.indexOf('/detail'));
 
@@ -131,7 +129,7 @@ class BizMenuCardDetail extends Component {
                 <Switch>
                   <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
                   <Route path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`} render={ props => (<AppInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
-                  <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} component={PageInfo} exact />
+                  <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} render={ props => (<PageInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
                 </Switch>
               </li>
             </ul>

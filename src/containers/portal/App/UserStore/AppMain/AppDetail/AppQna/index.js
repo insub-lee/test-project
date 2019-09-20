@@ -20,7 +20,7 @@ import * as actions from './actions';
 import StyleAppQna from './StyleAppQna';
 
 import { BtnWhiteWrite, BtnSeeMore } from '../../../components/uielements/buttons.style';
-import Button from '../../../../../../../components/Button/StyledButton';
+import StyledButton from '../../../../../../../components/Button/StyledButton';
 
 class AppQna extends React.Component {
   constructor(prop) {
@@ -292,10 +292,10 @@ class AppQna extends React.Component {
         <Tabs defaultActiveKey="2" onChange={handleChangeTabs}>
           <Tabs.TabPane tab="FAQ" key="1">
             <div className="newFaqWrite" style={{ display: this.props.appManagerChk > 0 && this.state.faqButtonOpen ? 'block' : 'none' }}>
-              <Button type="button" className="btn-outline-primary btn-sm" onClick={faqWriting}>
+              <StyledButton type="button" className="btn-outline-primary btn-sm" onClick={faqWriting}>
                 <Icon type="edit" />
                 {intlObj.get(messages.faqRegist)}
-              </Button>
+              </StyledButton>
             </div>
             <div
               // style={{ height: this.state.faqheiFlog ? '332px' : 'auto' }}
@@ -318,10 +318,10 @@ class AppQna extends React.Component {
           </Tabs.TabPane>
           <Tabs.TabPane tab="Q&amp;A" key="2">
             <div className="newQnaWrite" style={{ display: this.state.qnaButtonOpen ? 'block' : 'none' }}>
-              <Button type="button" className="btn-outline-primary btn-sm" onClick={qnaWriting}>
+              <StyledButton type="button" className="btn-outline-primary btn-sm" onClick={qnaWriting}>
                 <Icon type="edit" />
                 {intlObj.get(messages.qnaRegist)}
-              </Button>
+              </StyledButton>
             </div>
             <div
               style={{ height: 'auto', marginBottom: 10 }}
