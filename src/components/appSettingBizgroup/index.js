@@ -256,12 +256,14 @@ class appSetting extends Component {
     const {
       widget,
       widgetList,
+      match: { url },
     } = this.props;
 
     const {
       WIDGET_ID,
     } = this.state;
 
+    const preUrl = url.substr(0, url.indexOf('/widgetsetting'));
     return (
       <div className="settingsPage" style={{ width: '100vw', height: '100vh', top: 0, left: 0 }}>
           <StyleWidgetSetting>
@@ -277,7 +279,7 @@ class appSetting extends Component {
                       {widgetList.map(w => (
                           <li>
                             <div className={Number(w.id) === WIDGET_ID? 'current' : null}>
-                              <Link to={`/store/appMain/bizManage/bizMenuReg/widgetsetting/${w.BIZGRP_ID}/${w.PAGE_ID}/${w.id}`}>
+                              <Link to={`${preUrl}/widgetsetting/${w.BIZGRP_ID}/${w.PAGE_ID}/${w.id}`}>
                                 {lang.get('NAME', w)}
                               </Link>
                             </div>
