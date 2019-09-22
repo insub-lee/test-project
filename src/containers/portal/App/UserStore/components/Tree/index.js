@@ -1,7 +1,3 @@
-/* eslint-disable object-curly-newline */
-/* eslint-disable react/default-props-match-prop-types */
-/* eslint-disable react/require-default-props */
-/* eslint-disable arrow-parens */
 import React, { Component } from 'react';
 import { SortableTreeWithoutDndContext as SortableTree } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
@@ -117,6 +113,7 @@ class Tree extends Component {
           return {
             title: (
               <button
+                type="button"
                 className={`${node.key === selectedIndex ? `${className} active` : `${className}`}`}
                 onClick={() => this.handleOnTreeNodeClick(node)}
                 style={{ cursor: 'pointer' }}
@@ -148,7 +145,7 @@ class Tree extends Component {
           }}
         >
           {treeData.length > 0 ? (
-            <ScrollBar style={{ width: 280, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            <ScrollBar style={{ width: 270, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
               {tree}
             </ScrollBar>
           ) : (
@@ -162,7 +159,7 @@ class Tree extends Component {
 
 Tree.propTypes = {
   treeData: PropTypes.array.isRequired,
-  selectedIndex: PropTypes.number.isRequired,
+  selectedIndex: PropTypes.number,
   generateNodeProps: PropTypes.func.isRequired,
   onClick: PropTypes.func,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),

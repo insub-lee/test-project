@@ -34,9 +34,18 @@ class UserMenuCard extends PureComponent {
                     <ErrorBoundary>
                       <Switch>
                         <Route path="/portal/card/:TYPE/list/:ID" render={props => <BizMenuCardList {...props} />} />
-                        <Route path="/portal/card/:TYPE/detail/info/:BIZGRP_ID" render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />} />
-                        <Route path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID" render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />} />
-                        <Route path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID" render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />} />
+                        <Route
+                          path="/portal/card/:TYPE/detail/info/:BIZGRP_ID"
+                          render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />}
+                        />
+                        <Route
+                          path="/portal/card/:TYPE/detail/app/:BIZGRP_ID/:ID"
+                          render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />}
+                        />
+                        <Route
+                          path="/portal/card/:TYPE/detail/page/:BIZGRP_ID/:ID"
+                          render={props => <BizMenuCardDetail {...props} execMenu={execMenu} execPage={execPage} />}
+                        />
                       </Switch>
                     </ErrorBoundary>
                   </div>

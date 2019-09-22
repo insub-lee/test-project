@@ -15,7 +15,7 @@ import BizCategory from '../../../../components/BizCategory';
 
 import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
-import BizList from './BizList';
+import BizList from '../../../Biz/BizList';
 import StyleAppBizModal from '../StyleAppBizModal';
 
 class BizModal extends PureComponent {
@@ -31,7 +31,7 @@ class BizModal extends PureComponent {
     this.searchword = searchword;
   };
 
-  searchEnter = (e) => {
+  searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
@@ -45,7 +45,7 @@ class BizModal extends PureComponent {
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       this.searchword = '';
       this.searchInput.input.value = '';
       history.push(`${preUrl}/biz/list/${node.key}`);
@@ -64,7 +64,7 @@ class BizModal extends PureComponent {
               placeholder=""
               title={intlObj.get(messages.searchBizStore)}
               onKeyPress={this.searchEnter}
-              ref={(ref) => {
+              ref={ref => {
                 this.searchInput = ref;
               }}
             />
