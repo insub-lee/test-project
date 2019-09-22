@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -24,8 +25,10 @@ import messages from '../messages';
 
 const Option = Select;
 
-let pageNum = 20;
-const pageIndex = 20;
+// 페이징에 필요한 변수
+const pageIndex = 20; // 페이징 단위
+let pageSNum = 1; // 페이징 시작 변수
+let pageENum = 20; // 페이징 종료 변수
 
 class GlobalAdminList extends React.Component {
   constructor(prop) {
@@ -76,8 +79,17 @@ class GlobalAdminList extends React.Component {
       selectedIndexes: [],
       selectedKeys: [],
     };
-    pageNum = pageIndex;
-    this.props.getGlobalMsgList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchType, this.state.searchKeyword);
+    pageSNum = 1;
+    pageENum = pageIndex;
+    this.props.getGlobalMsgList(
+      pageSNum,
+      pageENum,
+      this.state.sortColumnParam,
+      this.state.sortDirectionParam,
+      this.state.searchType,
+      this.state.searchKeyword,
+      [],
+    );
   }
 
   // rowSelection~
@@ -126,9 +138,12 @@ class GlobalAdminList extends React.Component {
   };
 
   onDeleteGlobalMsg = () => {
+    pageSNum = 1;
+    // pageENum = pageIndex;
     this.props.delGlobalMsg(
       this.state.selectedKeys,
-      pageNum,
+      pageSNum,
+      pageENum,
       this.state.sortColumnParam,
       this.state.sortDirectionParam,
       this.state.searchType,
@@ -151,7 +166,9 @@ class GlobalAdminList extends React.Component {
       sortColumnParam: sortColumn,
       sortDirectionParam: sortDirection,
     });
-    this.props.getGlobalMsgList(pageNum, sortColumn, sortDirection, this.state.searchType, this.state.searchKeyword);
+    pageSNum = 1;
+    // pageENum = pageIndex;
+    this.props.getGlobalMsgList(pageSNum, pageENum, sortColumn, sortDirection, this.state.searchType, this.state.searchKeyword, []);
   };
 
   HyperlinkFormatter = val => {
@@ -181,9 +198,18 @@ class GlobalAdminList extends React.Component {
   // }
 
   rowGetter = i => {
-    if (i === pageNum - 1) {
-      pageNum += pageIndex;
-      this.props.getGlobalMsgList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchType, this.state.searchKeyword);
+    if (i === pageENum - 1) {
+      pageSNum = pageENum + 1;
+      pageENum += pageIndex;
+      this.props.getGlobalMsgList(
+        pageSNum,
+        pageENum,
+        this.state.sortColumnParam,
+        this.state.sortDirectionParam,
+        this.state.searchType,
+        this.state.searchKeyword,
+        this.props.setGlobalMsgList,
+      );
     }
     return this.props.setGlobalMsgList[i];
   };
@@ -228,13 +254,16 @@ class GlobalAdminList extends React.Component {
                   placeholder="검색어를 입력해주세요."
                   onKeyPress={e => {
                     if (e.key === 'Enter') {
-                      pageNum = pageIndex;
+                      pageSNum = 1;
+                      pageENum = pageIndex;
                       this.props.getGlobalMsgList(
-                        pageNum,
+                        pageSNum,
+                        pageENum,
                         this.state.sortColumnParam,
                         this.state.sortDirectionParam,
                         this.state.searchType,
                         this.state.searchKeyword,
+                        [],
                       );
                     }
                   }}
@@ -245,13 +274,16 @@ class GlobalAdminList extends React.Component {
                   title="검색"
                   className="searchBtn"
                   onClick={() => {
-                    pageNum = pageIndex;
+                    pageSNum = 1;
+                    pageENum = pageIndex;
                     this.props.getGlobalMsgList(
-                      pageNum,
+                      pageSNum,
+                      pageENum,
                       this.state.sortColumnParam,
                       this.state.sortDirectionParam,
                       this.state.searchType,
                       this.state.searchKeyword,
+                      [],
                     );
                   }}
                 />
@@ -305,10 +337,10 @@ GlobalAdminList.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getGlobalMsgList: (num, sortColumn, sortDirection, searchType, searchKeyword) =>
-    dispatch(actions.getGlobalMsgList(num, sortColumn, sortDirection, searchType, searchKeyword)),
-  delGlobalMsg: (delKeys, num, sortColumn, sortDirection, searchType, searchKeyword) =>
-    dispatch(actions.delGlobalMsg(delKeys, num, sortColumn, sortDirection, searchType, searchKeyword)),
+  getGlobalMsgList: (sNum, eNum, sortColumn, sortDirection, searchType, searchKeyword, globalMsgList) =>
+    dispatch(actions.getGlobalMsgList(sNum, eNum, sortColumn, sortDirection, searchType, searchKeyword, globalMsgList)),
+  delGlobalMsg: (delKeys, sNum, eNum, sortColumn, sortDirection, searchType, searchKeyword) =>
+    dispatch(actions.delGlobalMsg(delKeys, sNum, eNum, sortColumn, sortDirection, searchType, searchKeyword)),
 });
 
 const mapStateToProps = createStructuredSelector({

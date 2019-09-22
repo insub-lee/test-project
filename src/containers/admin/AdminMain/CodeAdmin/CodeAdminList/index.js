@@ -224,7 +224,7 @@ class CodeAdminList extends React.Component {
       codeAdminList: [],
     });
     pageSNum = 1;
-    pageENum = pageIndex;
+    // pageENum = pageIndex;
     this.props.getCodeAdminList(pageSNum, pageENum, [], sortColumn, sortDirection, this.state.searchText, this.state.searchType);
   };
 
@@ -244,11 +244,10 @@ class CodeAdminList extends React.Component {
       codeAdminList: [],
     });
     pageSNum = 1;
-    pageENum = pageIndex;
+    // pageENum = pageIndex;
     this.props.delRow(
       pageSNum,
       pageENum,
-      [],
       this.state.sortColumnParam,
       this.state.sortDirectionParam,
       this.state.delData,
@@ -289,7 +288,7 @@ class CodeAdminList extends React.Component {
   // rowGetter
   rowGetter = rowNumber => {
     if (rowNumber === pageENum - 1) {
-      pageSNum += pageIndex;
+      pageSNum = pageENum + 1;
       pageENum += pageIndex;
       this.props.getCodeAdminList(
         pageSNum,
@@ -399,8 +398,8 @@ CodeAdminList.propTypes = {
 const mapDispatchToProps = dispatch => ({
   getCodeAdminList: (sNum, eNum, codeAdminList, sortColumn, sortDirection, keywordType, keyword) =>
     dispatch(actions.getCodeAdminList(sNum, eNum, codeAdminList, sortColumn, sortDirection, keywordType, keyword)),
-  delRow: (sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword) =>
-    dispatch(actions.delRow(sNum, eNum, codeAdminList, sortColumn, sortDirection, delData, keywordType, keyword)),
+  delRow: (sNum, eNum, sortColumn, sortDirection, delData, keywordType, keyword) =>
+    dispatch(actions.delRow(sNum, eNum, sortColumn, sortDirection, delData, keywordType, keyword)),
 });
 
 // (Function) store 의 state 를 컴포넌트의 props 에 매핑

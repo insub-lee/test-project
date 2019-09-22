@@ -10,38 +10,17 @@ import * as constants from './constants';
 import { Axios } from '../../../../../utils/AxiosFunc';
 
 export function* getCodeAdminList(payload) {
-  // console.log('payload', payload);
-  // const { codeAdminList } = payload;
-  // console.log('codeAdminList', codeAdminList);
-  const response = yield call(Axios.post, '/api/admin/v1/common/codeadminlist', payload);
-  // console.log('reponse', response);
-  // if (response.codeadminlist.length > 0) {
-  //   response.codeadminlist.map(item => (
-  //     codeAdminList.push({
-  //       RNUM: item.RNUM,
-  //       CODE_GRP_CD: item.CODE_GRP_CD,
-  //       CODE_NAME_KOR: item.CODE_NAME_KOR,
-  //       CODE_NAME_ENG: item.CODE_NAME_ENG,
-  //       CODE_NAME_CHN: item.CODE_NAME_CHN,
-  //       CODE_NAME_JPN: item.CODE_NAME_JPN,
-  //       CODE_NAME_ETC: item.CODE_NAME_ETC,
-  //       SYS_YN: item.SYS_YN,
-  //       USER_ID: item.USER_ID,
-  //       EMP_NO: item.EMP_NO,
-  //       NAME_KOR: item.NAME_KOR,
-  //       NAME_ENG: item.NAME_ENG,
-  //       NAME_CHN: item.NAME_CHN,
-  //       NAME_JPN: item.NAME_JPN,
-  //       NAME_ETC: item.NAME_ETC,
-  //       REG_DTTM: item.REG_DTTM,
-  //     })
-  //   ));
-  // }
+  const { codeAdminList: prevList } = payload;
+  const param = payload;
+  delete param.codeAdminList;
+  delete param.type;
+
+  const response = yield call(Axios.post, '/api/admin/v1/common/codeadminlist', param);
+  const codeAdminList = prevList.length > 0 ? prevList.concat(response.codeAdminList) : response.codeAdminList;
 
   yield put({
     type: constants.SET_CODE_ADMIN_LIST,
-    // payload: fromJS(response.codeadminlist),
-    payload: fromJS(response.codeadminlist),
+    payload: fromJS(codeAdminList),
   });
 }
 
@@ -49,28 +28,15 @@ export function* getDelList(payload2) {
   // console.log('saga_delData', payload2);
   const response = yield call(Axios.post, '/api/admin/v1/common/deletecodeadmin', payload2);
   const { code } = response;
-  const {
-    sNum,
-    eNum,
-    codeAdminList,
-    sortColumn,
-    sortDirection,
-    keywordType,
-    keyword,
-  } = payload2;
+  const { sNum, eNum, sortColumn, sortDirection, keywordType, keyword } = payload2;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.delComplete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.delComplete)}</MessageContent>, 3);
     yield put({
       type: constants.GET_CODE_ADMIN_LIST,
       sNum,
       eNum,
-      codeAdminList,
+      codeAdminList: [],
       sortColumn,
       sortDirection,
       keywordType,

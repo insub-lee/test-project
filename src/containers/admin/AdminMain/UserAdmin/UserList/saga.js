@@ -4,13 +4,12 @@ import * as actionTypes from './constants';
 import { Axios } from 'utils/AxiosFunc';
 
 export function* getUserList(payload) {
-  const {
-    userList: oldUserList, sNum, eNum, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId,
-  } = payload.payload;
+  const { userList: oldUserList } = payload.payload;
+  const param = payload.payload;
+  delete param.userList;
+  delete param.type;
 
-  const response = yield call(Axios.post, '/api/admin/v1/common/getUserList', {
-    sNum, eNum, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId,
-  });
+  const response = yield call(Axios.post, '/api/admin/v1/common/getUserList', param);
 
   const userList = oldUserList.length > 0 ? oldUserList.concat(response.userList) : response.userList;
   yield put({ type: actionTypes.SET_USER_LIST, payload: userList });
@@ -124,7 +123,7 @@ export function* getChangePstnTreeData(payload) {
 
 export function* getRankComboData() {
   yield put({
-    type: actionType.IS_LOADING,
+    type: actionTypes.IS_LOADING,
     isLoading: true,
   });
   const response = yield call(Axios.get, '/api/common/v1/account/organizationRankList', {});
