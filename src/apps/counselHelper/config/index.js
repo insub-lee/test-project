@@ -10,7 +10,7 @@ import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
 import * as actions from './actions';
-class testConfig extends PureComponent {
+class counselConfig extends PureComponent {
   constructor(props) {
     super(props);
     props.getWidgetInfo([2874]);
@@ -32,7 +32,6 @@ class testConfig extends PureComponent {
     if (this.state.items.data.categorie !== 0) {
       this.success();
       console.log(this.state.items);
-      console.log('히스토리테스트', this.props.history);
       this.props.deleteConfig(this.state.items);
       this.props.updateBizGroupChgYn();
     } else {
@@ -67,8 +66,8 @@ const mapDispatchToProps = dispatch => ({
   deleteConfig: payload => dispatch(actions.deleteConfig(payload)),
 });
 
-const withReducer = injectReducer({ key: 'test-Widget', reducer });
-const withSaga = injectSaga({ key: 'test-Widget', saga });
+const withReducer = injectReducer({ key: 'counsel-config', reducer });
+const withSaga = injectSaga({ key: 'counsel-config', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
@@ -77,4 +76,4 @@ export default compose(
   withReducer,
   withSaga,
   withConnect,
-)(testConfig);
+)(counselConfig);
