@@ -206,6 +206,7 @@ class Organization extends Component {
       // 2. 트리 클릭 상태에서 그리드 무한 스크롤 시, 추가 구성원 목록을 가져올 떄 사용
       selectedGrpDept: undefined,
     };
+    this.deptTreeElement = React.createRef();
   }
   shouldComponentUpdate(nextProps) {
     const {
@@ -300,6 +301,9 @@ class Organization extends Component {
       isDeptSelectbox,
       siteId,
       siteIdParam,
+      onlyDept,
+      onlyUser,
+      selectSingleDept,
     } = this.props;
     const {
       // selectedId,
@@ -349,9 +353,10 @@ class Organization extends Component {
       content.push(
         <div className="members" key={content.length}>
           <Tree
+            ref={this.deptTreeElement}
             initializeSearchInput={this.initializeSearchInput}
             setSelectedIdAndCount={this.setSelectedIdAndCount}
-            isTreeCheckbox={isProfile ? false : isTreeCheckbox}
+            isTreeCheckbox={isProfile ? false : (!onlyUser && isTreeCheckbox)}
             reset={reset}
             setSearchString={this.setSearchString}
             treeData={treeData}
@@ -370,45 +375,49 @@ class Organization extends Component {
             isProfile={isProfile}
             selectedUserDeptName={isProfile ? selectedUserDeptName : undefined}
             handleSetSelectedIndex={handleSetSelectedIndex}
+            selectSingleDept={selectSingleDept}
           />
-          <div className={isTab === false ? 'userGridResult userGridResultNoTab' : 'userGridResult'}>
-            <div className="userSearch">
-              <div className="inputWrapper" ref={ref => this.searchInputUser = ref}>
-                <Input
-                  placeholder={intlObj.get(messages.inputKeyowrd)}
-                  onKeyUp={this.changeInputKeyword}
-                  name='searchInput'
-                />
-                <Button className="searchButton" title={intlObj.get(messages.search)} onClick={this.organizationUserSearch} />
+          {!onlyDept &&
+            // userTab 이고 onlyDept 일 때는, 중앙 사용자 선택창을 Hide 하기 위한 flag
+            <div className={isTab === false ? 'userGridResult userGridResultNoTab' : 'userGridResult'}>
+              <div className="userSearch">
+                <div className="inputWrapper" ref={ref => this.searchInputUser = ref}>
+                  <Input
+                    placeholder={intlObj.get(messages.inputKeyowrd)}
+                    onKeyUp={this.changeInputKeyword}
+                    name='searchInput'
+                  />
+                  <Button className="searchButton" title={intlObj.get(messages.search)} onClick={this.organizationUserSearch} />
+                </div>
               </div>
+              <Grid
+                users={users}
+                organizationSearchResult={organizationSearchResult}
+                emptyRowsView={emptyRowsView}
+                loadingGridData={handleLoadingGridData}
+                selectedId={selectedId}
+                loadingCountTree={loadingCountTree}
+                loadingCountSearch={loadingCountSearch}
+                loadingGridDataFunctions={loadingGridDataFunctions}
+                selected={selected}
+                tabType={tabType}
+                scrollTopFlag={scrollTopFlag}
+                scrollTop={scrollTop}
+                setScrollTop={this.setScrollTop}
+                loadSelected={this.loadSelected}
+                checkboxInitialize={checkboxInitialize}
+                handleInitializeCheckbox={handleInitializeCheckbox}
+                keywordSearched={keywordSearched}
+                compCdSearched={compCdSearched}
+                isProfile={isProfile}
+                gridType={'user'}
+                isTab={isTab}
+                loadProfileData={handleLoadProfileData}
+                loadSelectedUser={this.loadSelectedUser}
+                selectedIndex={selectedIndex}
+              />
             </div>
-            <Grid
-              users={users}
-              organizationSearchResult={organizationSearchResult}
-              emptyRowsView={emptyRowsView}
-              loadingGridData={handleLoadingGridData}
-              selectedId={selectedId}
-              loadingCountTree={loadingCountTree}
-              loadingCountSearch={loadingCountSearch}
-              loadingGridDataFunctions={loadingGridDataFunctions}
-              selected={selected}
-              tabType={tabType}
-              scrollTopFlag={scrollTopFlag}
-              scrollTop={scrollTop}
-              setScrollTop={this.setScrollTop}
-              loadSelected={this.loadSelected}
-              checkboxInitialize={checkboxInitialize}
-              handleInitializeCheckbox={handleInitializeCheckbox}
-              keywordSearched={keywordSearched}
-              compCdSearched={compCdSearched}
-              isProfile={isProfile}
-              gridType={'user'}
-              isTab={isTab}
-              loadProfileData={handleLoadProfileData}
-              loadSelectedUser={this.loadSelectedUser}
-              selectedIndex={selectedIndex}
-            />
-          </div>
+          }
         </div>
       );
       /* eslint-disable */
@@ -705,8 +714,17 @@ class Organization extends Component {
       keywordSearchedForPstn,
       keywordSearchedForDuty,
     } = this.state;
+    const { onlyDept } = this.props;
     switch (tabType[selected]) {
       case 'user':
+        if (onlyDept) {
+          /*
+            부서만 이용 할 때,
+            가운데 사용자 검색 <Input /> render 되지 않음.
+            ref 바인딩을 하지 않기 위해 break
+          */
+          break;
+        }
         this.searchInputUser.firstChild.value = keywordSearched;
         break;
       case 'pstn':
@@ -721,7 +739,7 @@ class Organization extends Component {
     }
   }
   sendAdd = () => {
-    const { addCallback, isModal, item } = this.props;
+    const { addCallback, isModal, item, selectSingleDept, selectSingleUser } = this.props;
     let copyusers = this.state.users.slice();
     let list = this.state.selectedusers.size === 0 ? [] : this.state.selectedusers;
     let copyselectedusers = this.state.selectedusers.slice();
@@ -748,13 +766,45 @@ class Organization extends Component {
       }
     }
     if (copyusers.length !== 0) {
-      for (let i = 0; i < copyusers.length; i++) {
-        list.push(copyusers[i]);
+      if (!selectSingleUser) {
+        for (let i = 0; i < copyusers.length; i++) {
+          list.push(copyusers[i]);
+        }
+        this.setState({ selectedusers: list, checkAll: false });
+      } else {
+        /*
+          selectSingleUser 플래그가 true 일 때,
+          1) 기존에 선택된 인원이 없고,
+          2) 선택된 인원이 1명일 때
+          추가
+        */
+        if (list.length === 0 && copyusers.length === 1) {
+          for (let i = 0; i < copyusers.length; i++) {
+            list.push(copyusers[i]);
+          }
+          this.setState({ selectedusers: list, checkAll: false });
+        } else {
+          if (list.length !== 0) { alert('이미 추가된 사용자가 있습니다.') };
+          if (copyusers.length > 1) { alert('한명만 선택 가능합니다.') };
+        }
       }
-      this.setState({ selectedusers: list, checkAll: false });
     }
     if (selectedDept !== undefined && selectedDept.length !== 0) {
+      // 하위 tree 선택된 데이터 배열 초기화
+      this.deptTreeElement.current.resetCheckedList();
+
       copyselectedDept = this.state.checkDept.slice();// Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
+      /*
+        하나만 선택 할 수 있는 옵션 일 때,
+        기존 선택된 데이터가 있을 때는 선택 안되도록 처리
+      */
+      if (selectSingleDept) {
+        if (copyselectedDept.length > 1) {
+          console.log('copyselectedDept : ', copyselectedDept);
+          alert('이미 추가된 부서가 있습니다.');
+          return;
+        }
+      }
       this.setState({ checkedDept: copyselectedDept, checkAll: false, checkDept: [] });
     }
     if (selectedPstn !== undefined && selectedPstn.length !== 0) {
@@ -849,6 +899,11 @@ class Organization extends Component {
       this.setState({
         checkedDept
       }, () => {
+        /*
+          제거하고 추가할 때, 기존 데이터가 추가되는 이슈 수정 (19/09/22)
+          deptList 전역 array 초기화
+        */
+        deptList = checkedDept.slice();
         if (!isModal) {
           if (item) {
             deleteCallback(deletedData, item);
@@ -1019,6 +1074,7 @@ class Organization extends Component {
     });
   }
   initializeSearchInput = (type) => {
+    const { onlyDept } = this.props;
     switch (type) {
       case 'pstn':
         this.searchInputPstn.firstChild.value = '';
@@ -1027,6 +1083,14 @@ class Organization extends Component {
         this.searchInputDuty.firstChild.value = '';
         break;
       default:
+        if (onlyDept) {
+          /*
+            부서만 이용 할 때,
+            가운데 사용자 검색 <Input /> render 되지 않음.
+            ref 바인딩을 하지 않기 위해 break
+          */
+          break;
+        }
         this.searchInputUser.firstChild.value = '';
         break;
     }
@@ -1583,6 +1647,7 @@ class Organization extends Component {
       isDraggable,
       view,
       userSetting,
+      onlyDept,
     } = this.props;
     let modalWrapperClass = ''
     if (isModal) {
@@ -1655,7 +1720,23 @@ class Organization extends Component {
                           <Tabs selected={this.state.selected} onSelect={this.handleSelect}>
                             {content.map((v, i) => {
                               const e = React.createElement;
-                              return e(Tab, { label: intlObj.get(messages[tabType[i] === 'user' ? 'member' : tabType[i] === 'pstn' ? 'position' : tabType[i] === 'grp' ? 'virtualGroup' : 'duty']) }, v);
+                              return e(Tab, {
+                                label: intlObj.get(
+                                  messages[tabType[i] === 'user' ?
+                                    onlyDept ?
+                                      'department'
+                                      :
+                                      'member'
+                                    :
+                                    tabType[i] === 'pstn' ?
+                                      'position'
+                                      :
+                                      tabType[i] === 'grp' ?
+                                        'virtualGroup'
+                                        :
+                                        'duty'
+                                  ]
+                                )}, v);
                             })}
                           </Tabs>
                           :
@@ -1863,6 +1944,10 @@ Organization.propTypes = {
   view: PropTypes.string.isRequired,
   closeModal: PropTypes.func.isRequired,
   userSetting: PropTypes.bool,
+  onlyDept: PropTypes.bool,
+  onlyUser: PropTypes.bool,
+  selectSingleDept: PropTypes.bool,
+  selectSingleUser: PropTypes.bool,
 };
 Organization.defaultProps = {
   userTab: false,
@@ -1892,6 +1977,10 @@ Organization.defaultProps = {
   isDeptSelectbox: false,
   siteIdParam: undefined,
   userSetting: false,
+  onlyDept: false,
+  onlyUser: false,
+  selectSingleDept: false,
+  selectSingleUser: false,
 };
 export function mapDispatchToProps(dispatch) {
   return {

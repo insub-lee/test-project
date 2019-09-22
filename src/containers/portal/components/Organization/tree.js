@@ -51,10 +51,15 @@ class Tree extends Component {
       this.setDeptName(treeDataTemp);
     }
   }
+
+  resetCheckedList = () => {
+    this.setState({ checkedList: [] });
+  }
+
   // 트리의 체크박스 체크 시 불리는 함수로, loadSelected~를 호출하여 선택목록에 담을 준비를 함
   onCheckChange = (event) => {
     const { checkedList, deptName } = this.state;
-    const { loadSelected } = this.props;
+    const { loadSelected, selectSingleDept } = this.props;
     const { target } = event;
     const value = target.checked;
     const { name } = target; // DEPT_ID
@@ -65,6 +70,14 @@ class Tree extends Component {
     });
 
     if (target.checked) {
+      /*
+        하나만 선택 할 수 있는 옵션 일 때,
+        기존 선택된 데이터가 있을 때는 선택 안되도록 처리
+      */
+      if (selectSingleDept) {
+        if (checkedList.length > 0) return;
+      }
+
       loadSelected(target, deptName);
       deptIdArr = checkedList.slice();
       deptIdArr.push(deptId);
@@ -345,6 +358,7 @@ Tree.propTypes = {
   isDeptSelectbox: PropTypes.bool.isRequired,
   siteId: PropTypes.number.isRequired,
   siteIdParam: PropTypes.number.isRequired,
+  selectSingleDept: PropTypes.bool,
 };
 
 Tree.defaultProps = {
@@ -353,6 +367,7 @@ Tree.defaultProps = {
   loadSelected: undefined,
   searchString: '',
   selectedUserDeptName: undefined,
+  selectSingleDept: false,
 };
 
 export default Tree;

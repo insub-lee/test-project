@@ -309,6 +309,10 @@ class BizGroupReg extends Component {
             pstnTab
             dutyTab
             grpTab
+            // onlyDept
+            // selectSingleDept
+            // onlyUser
+            // selectSingleUser
             // 조직도 모달창으로 가져갈 데이터
             selectedUsers={oldUsers.slice()}
             checkedDept={oldDepts.slice()}
