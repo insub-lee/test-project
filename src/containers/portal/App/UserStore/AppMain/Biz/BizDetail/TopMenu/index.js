@@ -19,8 +19,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import StyleTopMenu from './StyleTopMenu';
-import { BtnWhiteArr, BtnIconShare, BtnIconRegist, BtnLgtGrayRegisted }
-  from '../../../../components/uielements/buttons.style';
+import { BtnWhiteArr, BtnIconShare, BtnIconRegist, BtnLgtGrayRegisted } from '../../../../components/uielements/buttons.style';
 import AppMaNagerList from '../../../../components/AppManagerList';
 
 class TopMenu extends React.Component {
@@ -42,23 +41,15 @@ class TopMenu extends React.Component {
   }
 
   render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
+    const { BIZGRP_ID } = this.state;
 
-    const {
-      history,
-      bizInfo,
-      bizManagerList,
-    } = this.props;
+    const { history, bizInfo, bizManagerList } = this.props;
 
-    const {
-      location,
-    } = history;
+    const { location } = history;
 
-    const {
-      pathname,
-    } = location;
+    const { pathname } = location;
+
+    console.debug('>>>>>>>bizInfo: ', bizInfo);
 
     const menu = pathname.indexOf('/menulist') > -1 ? 'grid' : 'tree';
 
@@ -79,20 +70,22 @@ class TopMenu extends React.Component {
             <Col sm={24} xl={9}>
               <Popover
                 placement="bottomLeft"
-                content={bizManagerList.length > 0 ? <AppMaNagerList managerList={bizManagerList} currentView={this.props.currentView} /> : `${intlObj.get(messages.noManager)}`}
+                content={
+                  bizManagerList.length > 0 ? (
+                    <AppMaNagerList managerList={bizManagerList} currentView={this.props.currentView} />
+                  ) : (
+                    `${intlObj.get(messages.noManager)}`
+                  )
+                }
                 trigger="click"
                 className="mngList"
               >
-                <BtnWhiteArr
-                  style={{ marginTop: 2 }}
-                >
-                  {intlObj.get(messages.manager)}
-                </BtnWhiteArr>
+                <BtnWhiteArr style={{ marginTop: 2 }}>{intlObj.get(messages.manager)}</BtnWhiteArr>
               </Popover>
               <p className="openDate">
                 {intlObj.get(messages.openDate)}: {bizInfo.OPEN_DTTM}
               </p>
-              {(this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ?
+              {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
                 <div className="viewMode">
                   <Button
                     className={`view treeIcon ${menu === 'tree' ? 'current' : ''}`}
@@ -107,36 +100,23 @@ class TopMenu extends React.Component {
                   {/* <Icon type="smile" theme="outlined" onClick={() => history.push(`${preUrl}/detail/info/${BIZGRP_ID}`)} /> */}
                   {/* <Icon type="appstore" theme="outlined" onClick={() => history.push(`${preUrl}/menulist/${BIZGRP_ID}`)} /> */}
                 </div>
-                : ''}
+              ) : (
+                ''
+              )}
             </Col>
             <Col sm={24} xl={8}>
-              <h1 className="bizGrpTitle ellipsis">
-                {lang.get('NAME', bizInfo)}
-              </h1>
+              <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
             </Col>
             <Col sm={24} xl={7} style={{ textAlign: 'right' }}>
               {/* <Button title="트리보기" className="showBizTreeMobile"><span className="iconArrow" />메뉴보기</Button> */}
-              <CopyToClipboard
-                text={window.location.href}
-                onCopy={() => feed.success(`${intlObj.get(messages.urlCopyMassage)}`)}
-              >
-                <BtnIconShare
-                  title={intlObj.get(messages.urlCopy)}
-                  style={{ marginRight: 6 }}
-                />
+              <CopyToClipboard text={window.location.href} onCopy={() => feed.success(`${intlObj.get(messages.urlCopyMassage)}`)}>
+                <BtnIconShare title={intlObj.get(messages.urlCopy)} style={{ marginRight: 6 }} />
               </CopyToClipboard>
-              {bizInfo.WG_COUNT > 0 ?
-                (
-                  <BtnLgtGrayRegisted title={intlObj.get(messages.apping)}>
-                    {intlObj.get(messages.apping)}
-                  </BtnLgtGrayRegisted>
-                ) : (
-                  <BtnIconRegist
-                    title={intlObj.get(messages.registBiz)}
-                    onClick={handleRegistBiz}
-                  />
-                )
-              }
+              {bizInfo.WG_COUNT > 0 ? (
+                <BtnLgtGrayRegisted title={intlObj.get(messages.apping)}>{intlObj.get(messages.apping)}</BtnLgtGrayRegisted>
+              ) : (
+                <BtnIconRegist title={intlObj.get(messages.registBiz)} onClick={handleRegistBiz} />
+              )}
             </Col>
           </Row>
         </StyleTopMenu>
@@ -169,7 +149,10 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'topMenu', reducer });
 const withSaga = injectSaga({ key: 'topMenu', saga });
@@ -179,4 +162,3 @@ export default compose(
   withSaga,
   withConnect,
 )(TopMenu);
-

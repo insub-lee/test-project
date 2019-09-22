@@ -48,15 +48,15 @@ class BizCategory extends Component {
     return (
       <StyledTabList className="treeWrapper" style={{ left: 0 }}>
         {currentView !== 'Mobile' && currentView !== 'Tablet' ? (
-          <Tabs onSelect={() => {}} selectedIndex={1}>
+          <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
-              <Tab>
+              {/* <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
-              </Tab>
+              </Tab> */}
               {!isBizManage ? (
-                <Tab>
+                <Tab style={{ width: '100%' }}>
                   <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
                     <FormattedMessage {...messages.bizGroup} />
                   </Link>
@@ -66,7 +66,7 @@ class BizCategory extends Component {
               )}
             </TabList>
             <TabPanel />
-            <TabPanel />
+            {/* <TabPanel /> */}
           </Tabs>
         ) : (
           ''

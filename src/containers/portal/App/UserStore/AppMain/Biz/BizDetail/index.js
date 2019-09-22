@@ -63,6 +63,11 @@ class BizDetail extends Component {
       history,
       match,
       handleTreeOnClick,
+      execPage,
+      execMenu,
+      match: {
+        params: { BIZGRP_ID },
+      },
     } = this.props;
 
     // /store/appMain/myPage/biz/detail
@@ -85,6 +90,7 @@ class BizDetail extends Component {
               <li className="leftContent inPage">
                 <h2>
                   <button
+                    type="button"
                     onClick={() => history.push(`${preUrl}/info/${match.params.BIZGRP_ID}`)}
                     // className="currentTreeLevel ellipsis"
                     className="ellipsis"
@@ -108,7 +114,10 @@ class BizDetail extends Component {
               <li className="rightContent">
                 <Switch>
                   <Route exact path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} />
-                  <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} />
+                  <Route
+                    path={`${preUrl}/app/:BIZGRP_ID/:appId`}
+                    render={props => <AppInfo {...props} BIZGRP_ID={BIZGRP_ID} execMenu={execMenu} execPage={execPage} />}
+                  />
                   <Route path={`${preUrl}/page/:BIZGRP_ID/:pageId`} component={PageInfo} />
                 </Switch>
               </li>
@@ -131,6 +140,8 @@ BizDetail.propTypes = {
   // handleChangeSelectedIndex: PropTypes.func.isRequired,
   appBizGubun: PropTypes.func.isRequired,
   handleTreeOnClick: PropTypes.func.isRequired,
+  execPage: PropTypes.func.isRequired,
+  execMenu: PropTypes.func.isRequired,
 };
 
 export function mapDispatchToProps(dispatch) {

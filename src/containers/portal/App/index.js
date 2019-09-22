@@ -774,9 +774,8 @@ class App extends React.PureComponent {
           />
           <UserCategoryMenu
             isShow={open}
-            toggleMenu={open ? this.setMenuClose : this.setOpen}
+            // toggleMenu={open ? this.setMenuClose : this.setOpen}
             setOpen={this.setOpen}
-            setMenuClose={this.setMenuClose}
             setFixedOpenMenu={this.setFixedOpenMenu}
             execMenu={this.execMenu}
             execPage={this.execPage}

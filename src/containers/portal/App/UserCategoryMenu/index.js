@@ -53,18 +53,18 @@ class UserCategoryMenu extends Component {
   };
 
   render() {
-    const { isShow, toggleMenu, setMenuClose } = this.props;
-    const { showNoti } = this.state;
+    const { isShow, setMenuClose } = this.props;
+    // const { showNoti } = this.state;
     const {
       execMenu,
       execPage,
       myMNotiCnt,
-      myHNotiCnt,
-      myMNotiList,
+      // myHNotiCnt,
+      // myMNotiList,
       selectedIndex,
       menuName,
       handleSetMenuNameSelectedIndex,
-      view,
+      // view,
       history,
       execApp,
       setClose,
@@ -81,7 +81,7 @@ class UserCategoryMenu extends Component {
     return (
       <Styled className={isShow ? 'active' : ''} onMouseLeave={setMenuClose}>
         <div className="profile-area">
-          <Profile profile={profile} setFixedOpenMenu={setFixedOpenMenu} isShow={isShow}/>
+          <Profile profile={profile} setFixedOpenMenu={setFixedOpenMenu} isShow={isShow} />
         </div>
         <div className="category-menu-area">
           <div className="area-title">{profile.DEPT_NAME_KOR}</div>
@@ -110,13 +110,12 @@ class UserCategoryMenu extends Component {
           <div className="area-title">Timeline</div>
           <WorkTimeLine height="calc(100% - 47px)" />
         </div>
-        {
-          !isShow && 
+        {!isShow && (
           <div className="active-btn">
             {/* <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} /> */}
-            <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onMouseOver={setOpen} />
+            <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onMouseOver={setOpen} onFocus={() => {}} />
           </div>
-        }
+        )}
       </Styled>
     );
   }
@@ -124,7 +123,7 @@ class UserCategoryMenu extends Component {
 
 UserCategoryMenu.propTypes = {
   isShow: PropTypes.bool,
-  toggleMenu: PropTypes.func,
+  // toggleMenu: PropTypes.func,
   // open: PropTypes.bool.isRequired,
   myAppTreeData: PropTypes.array.isRequired,
   myAppStoreTreeData: PropTypes.array.isRequired,
@@ -132,8 +131,8 @@ UserCategoryMenu.propTypes = {
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   myMNotiCnt: PropTypes.number.isRequired,
-  myHNotiCnt: PropTypes.number.isRequired,
-  myMNotiList: PropTypes.array.isRequired,
+  // myHNotiCnt: PropTypes.number.isRequired,
+  // myMNotiList: PropTypes.array.isRequired,
   selectedIndex: PropTypes.number.isRequired,
   menuName: PropTypes.string.isRequired,
   handleSetMenuNameSelectedIndex: PropTypes.func.isRequired,
@@ -142,19 +141,22 @@ UserCategoryMenu.propTypes = {
   updateMymenuDisp: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   setClose: PropTypes.func,
-  setMenuClose: PropTypes.func.isRequired,
-  view: PropTypes.string.isRequired,
+  setMenuClose: PropTypes.func,
+  // view: PropTypes.string.isRequired,
   execApp: PropTypes.func,
   history: PropTypes.object.isRequired,
   profile: PropTypes.object,
+  setOpen: PropTypes.func.isRequired,
+  setFixedOpenMenu: PropTypes.func.isRequired,
 };
 
 UserCategoryMenu.defaultProps = {
   isShow: false,
-  toggleMenu: () => false,
+  // toggleMenu: () => false,
   setClose: undefined,
   execApp: () => {},
   profile: {},
+  setMenuClose: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({

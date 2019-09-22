@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectOrg = state => state.get('bizList');
+const selectOrg = state => state.get('portal_bizList');
 
 const makeInitType = () => createSelector(
   selectOrg,

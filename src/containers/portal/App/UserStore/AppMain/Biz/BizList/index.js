@@ -42,6 +42,7 @@ class BizList extends Component {
 
     this.props.appBizGubun(1);
   }
+
   componentWillReceiveProps(nextProps) {
     const { match, loadingOn } = nextProps;
     const { params } = match;
@@ -56,6 +57,7 @@ class BizList extends Component {
       this.props.handleGetMapListOne(this.BIZGRP_ID);
     }
   }
+
   render() {
     const {
       initType,
@@ -157,8 +159,8 @@ const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
 );
-const withReducer = injectReducer({ key: 'bizList', reducer });
-const withSaga = injectSaga({ key: 'bizList', saga });
+const withReducer = injectReducer({ key: 'portal_bizList', reducer });
+const withSaga = injectSaga({ key: 'portal_bizList', saga });
 export default compose(
   withReducer,
   withSaga,

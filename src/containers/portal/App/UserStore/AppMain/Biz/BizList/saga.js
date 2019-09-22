@@ -48,7 +48,7 @@ export function* getMapListOne(payload) {
   const { key } = payload;
   const BIZGRP_ID = Number(key);
 
-  const store = yield select(state => state.get('bizList'));
+  const store = yield select(state => state.get('portal_bizList'));
   const categoryFlatData = store.get('categoryFlatData');
   const url = '/api/bizstore/v1/store/bizlist';
 
@@ -83,7 +83,7 @@ export function* getMapListMore(payload) {
   const { key } = payload;
   const BIZGRP_ID = Number(key);
 
-  const store = yield select(state => state.get('bizList'));
+  const store = yield select(state => state.get('portal_bizList'));
   const initType = store.get('initType');
   const searchword = store.get('searchword');
   let mapList = store.get('mapList'); // 기존 리스트
@@ -114,7 +114,7 @@ export function* getMapListMore(payload) {
 
 /* 1dept 카테고리 - 앱리스트 8개씩 */
 export function* getMapListAll() {
-  const store = yield select(state => state.get('bizList'));
+  const store = yield select(state => state.get('portal_bizList'));
   const categoryData = store.get('categoryData'); // 카테고리 데이터
   const categoryKeys = categoryData.map(data => Number(data.get('key'))); // 카테고리 데이터 key list - [1,2,3,4]
   const url = '/api/bizstore/v1/store/bizlist';
@@ -208,7 +208,7 @@ export function* registerBiz(payload) {
   const { app } = payload;
   const langGubun = lang.getLocale();
 
-  const store = yield select(state => state.get('bizList'));
+  const store = yield select(state => state.get('portal_bizList'));
   const url = '/api/bizstore/v1/mypage/registbiz';
 
   const response = yield call(Axios.post, url, { BIZGRP_ID: Number(app), langGubun });
@@ -232,7 +232,7 @@ export function* registBizModal(payload) {
   const { BIZGRP_ID } = payload;
   const langGubun = lang.getLocale();
 
-  const store = yield select(state => state.get('bizList'));
+  const store = yield select(state => state.get('portal_bizList'));
   const url = '/api/bizstore/v1/mypage/registbizmodal';
 
   const mypage = yield select(state => state.get('mypage'));
@@ -241,7 +241,9 @@ export function* registBizModal(payload) {
   const PRNT_ID = node ? node.key : -1;
 
   const response = yield call(Axios.post, url, {
-    BIZGRP_ID: Number(BIZGRP_ID), PRNT_ID, langGubun,
+    BIZGRP_ID: Number(BIZGRP_ID),
+    PRNT_ID,
+    langGubun,
   });
   const { code, resultCategoryData } = response;
 
@@ -271,7 +273,7 @@ export function* registBizModal(payload) {
 export function* updateChangeWGCount(payload) {
   const { BIZGRP_ID, EXISTYN } = payload;
   // 성공 시 사용중으로 상태 변경.
-  const store = yield select(state => state.get('bizList'));
+  const store = yield select(state => state.get('portal_bizList'));
   const mapList = changeWGCount(store.get('mapList'), BIZGRP_ID, EXISTYN);
 
   yield put({ type: constants.SET_MAPLIST, mapList });
