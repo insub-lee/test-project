@@ -75,7 +75,6 @@ class Tree extends Component {
 
   handleClickMenuFolder = node => {
     event.stopPropagation();
-    console.debug('>>>>>>>this.node: ', node);
     const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
@@ -138,11 +137,7 @@ class Tree extends Component {
 
   render() {
     const { searchFocusIndex, searchString, editTree, editMenuMode } = this.state;
-
-    console.debug('>>>>>>>>editTree: ', editTree);
-
     const { treeData, showNoti, history } = this.props;
-    console.debug();
     return (
       <TreeWrapper>
         <div className={`tree-contents ${showNoti ? 'show-noti' : ''}`}>

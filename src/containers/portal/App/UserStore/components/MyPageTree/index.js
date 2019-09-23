@@ -209,10 +209,8 @@ class MyPageTree extends Component {
     } = this.props;
 
     // 조건 DEFAULT_YN 조건으로 변경하기 - daemon 쿼리 변경 후
-    // const findRootAppMenuIndex = _.filter(treeData, { NAME_KOR: '개인 App' });
-    // const findRootBizMenuIndex = _.filter(treeData, { NAME_KOR: '개인 업무' });
-    // const findRootAppMenuID = findRootAppMenuIndex[0] ? findRootAppMenuIndex[0].MENU_ID : '';
-    // const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
+    const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, SORT_SQ: 2 });
+    const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
 
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
@@ -381,7 +379,7 @@ class MyPageTree extends Component {
             onClick(node);
           };
 
-          const storeUrl =  (node.DEFAULT_YN === 'Y'&& node.NODE_TYPE === 'F' && node.SORT_SQ === 2) ? 
+          const storeUrl =  (node.key === findRootBizMenuID || node.path[1] === findRootBizMenuID) ? 
             '/portal/store/appMain/myPage/modal/biz/list' : '/portal/store/appMain/myPage/modal/app/list';
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때 , 개인화 홈 메뉴가 아닐 경우
