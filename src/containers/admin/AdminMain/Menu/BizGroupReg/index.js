@@ -309,6 +309,13 @@ class BizGroupReg extends Component {
             pstnTab
             dutyTab
             grpTab
+            /*
+              <부서/사용자 선택 중 옵션 flag>
+              onlyDept - 사용자 선택 제외한 부서만 선택
+              onlyUser - 부서 선택 제외한 사용자만 선택
+              selectSingleDept - 하나의(단일) 부서만 선택 가능
+              selectSingleUser - 하나의(단일) 사용자만 선택 가능
+            */
             // onlyDept
             // selectSingleDept
             // onlyUser
@@ -323,8 +330,8 @@ class BizGroupReg extends Component {
             getDataFromOrganization={result => {
               const mData = {
                 users: convertOrgData(result.selectedUsers, 'USER_ID', SEC_TYPE, USER),
-                pstns: convertOrgData(result.checkedDept, 'id', SEC_TYPE, DEPT),
-                depts: convertOrgData(result.checkedPstn, 'id', SEC_TYPE, PSTN),
+                pstns: convertOrgData(result.checkedPstn, 'id', SEC_TYPE, PSTN),
+                depts: convertOrgData(result.checkedDept, 'id', SEC_TYPE, DEPT),
                 dutys: convertOrgData(result.checkedDuty, 'id', SEC_TYPE, DUTY),
                 grps: convertOrgData(result.checkedGrp, 'id', SEC_TYPE, GRP),
               };

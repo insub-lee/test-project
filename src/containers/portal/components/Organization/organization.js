@@ -37,6 +37,7 @@ const tabLabel = [
   ['직위', '@직위', '@@직위', '@@@직위', '@@@@직위'],
   ['직책', '@직책', '@@직책', '@@@직책', '@@@@직책'],
   ['가상그룹', '@가상그룹', '@@가상그룹', '@@@가상그룹', '@@@@가상그룹'],
+  ['부서', '@부서', '@@부서', '@@@부서', '@@@@부서'],
 ];
 class Organization extends Component {
   constructor(props) {
@@ -64,6 +65,7 @@ class Organization extends Component {
       siteIdParam,
       view,
       isDeptSelectbox,
+      onlyDept,
     } = props;
 
     let isTab = false;
@@ -92,7 +94,11 @@ class Organization extends Component {
       if (userTab) {
         handleGetTreeData();
         handleGetOrganizationData();
+        if (onlyDept) {
+          tabArr.push(tabLabel[4]);
+        } else {
         tabArr.push(tabLabel[0]);
+        }
         tabType[tabIndex] = 'user';
         tabIndex += 1;
       }
@@ -1020,6 +1026,7 @@ class Organization extends Component {
       checkedDuty,
       checkedGrp: selectedGrp,
     };
+    console.log('resultObj : ', resultObj);
     if (getDataFromOrganization) {
       getDataFromOrganization(resultObj);
     }
