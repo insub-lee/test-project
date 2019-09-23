@@ -143,7 +143,6 @@ class AppBasicInfo extends React.Component {
     const userProfile = (userinfo, orgShow) => {
       this.setState({ orgShow, userinfo });
     };
-    console.debug('>>>>>>>this.props: ', this.props);
     const closeModal = () => this.setState({ orgShow: false });
     /* eslint-disable */
     return (
