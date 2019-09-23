@@ -10,6 +10,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
 
+import StyledButton from 'components/Button/StyledButton';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -17,7 +18,6 @@ import * as actions from './actions';
 
 import RegModal from './RegModal';
 import StyledRootMap from './StyledRootMap';
-import StyledButton from '../../../../../components/Button/StyledButton';
 
 class RootMap extends Component {
   constructor(props) {
@@ -105,7 +105,7 @@ class RootMap extends Component {
         align: 'center',
         render: text => (
           <span>
-            <Link to={`/admin/adminmain/classify/categorymap/${GUBUN}/${text}`}>
+            <Link to={`/admin/adminmain/classify/${GUBUN}/${text}`}>
               <StyledButton className="btn-secondary btn-sm btn-pills">설정</StyledButton>
             </Link>
           </span>

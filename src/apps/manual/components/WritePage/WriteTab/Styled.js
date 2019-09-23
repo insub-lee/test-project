@@ -42,16 +42,16 @@ const Styled = styled.div`
     }
   }};
         margin-bottom: -1px;
+
         &.react-tabs__tab--selected {
           & > div {
             background-color: #fff;
             border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #fff;
           }
         }
-        &:last-child {
-          & div {
-            border-right: 1px solid #e5e5e5;
-          }
+        & div:last-child {
+          border-right: 1px solid #e5e5e5;
+          border-radius: 3px 3px 0 0;
           .tab-dividers::after {
             opacity: 0;
           }

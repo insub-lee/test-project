@@ -8,7 +8,7 @@ import BizCategory from '../../components/BizCategory';
 
 class Biz extends PureComponent {
   render() {
-    const { history, match } = this.props;
+    const { history, match, execPage, execMenu } = this.props;
     /* eslint-disable */
     const handleTreeOnClick = node => {
       if (node.children || node.MENU_EXIST_YN === 'N') {
@@ -27,7 +27,7 @@ class Biz extends PureComponent {
           <Route path={`${match.path}/list`} component={BizList} exact />
           <Route path={`${match.path}/search/:searchword`} component={BizList} exact />
           <Route path={`${match.path}/menulist/:BIZGRP_ID`} component={BizMenuList} />
-          <Route path={`${match.path}/detail/:type/:BIZGRP_ID`} component={BizDetail} />
+          <Route path={`${match.path}/detail/:type/:BIZGRP_ID`} render={props => <BizDetail {...props} execPage={execPage} execMenu={execMenu} />} />
         </Switch>
       </div>
     );
@@ -37,6 +37,8 @@ class Biz extends PureComponent {
 Biz.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
+  execPage: PropTypes.func.isRequired,
+  execMenu: PropTypes.func.isRequired,
 };
 
 export default Biz;

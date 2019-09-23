@@ -51,10 +51,11 @@ class AppBasicInfo extends React.Component {
         location: { pathname },
       },
     } = this.props;
+    const storeYn = pathname.includes('card');
     const params = {
       appId,
       bizgroupId: BIZGRP_ID,
-      menuGubun: pathname.split('/')[3],
+      menuGubun: storeYn ? pathname.split('/')[3] : pathname.split('/')[4],
     };
     reqAppBasicInfo(params);
   }
@@ -66,10 +67,11 @@ class AppBasicInfo extends React.Component {
       },
     } = nextProps;
     if (this.state.appId !== nextProps.appId) {
+      const storeYn = pathname.includes('card');
       const params = {
         appId: nextProps.appId,
         bizgroupId: nextProps.BIZGRP_ID,
-        menuGubun: pathname.split('/')[3],
+        menuGubun: storeYn ? pathname.split('/')[3] : pathname.split('/')[4],
       };
       this.setState({
         appId: nextProps.appId,

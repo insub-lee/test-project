@@ -54,14 +54,14 @@ const StyledTabList = styled.div`
     }
 
     .treeWrapper2 {
-      min-height: calc(100vh - 115px);
+      min-height: calc(100vh - 160px);
 
       .treeBox {
-        min-height: calc(100vh - 115px);
+        min-height: calc(100vh - 160px);
         padding: 11px 0px 0px 10px !important;
 
         > div {
-          min-height: calc(100vh - 115px);
+          min-height: calc(100vh - 160px);
         }
       }
     }

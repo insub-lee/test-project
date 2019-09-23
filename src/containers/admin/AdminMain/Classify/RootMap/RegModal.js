@@ -51,16 +51,7 @@ class RegModal extends Component {
     const isRootMap = Object.prototype.hasOwnProperty.call(rootMap, 'MAP_ID');
 
     return (
-      <Modal
-        title="분류추가"
-        visible={this.props.visible}
-        onOk={() => {}}
-        onCancel={this.handleCloselModal}
-        width="400px"
-        style={{ top: 100 }}
-        footer={null}
-        destroyOnClose
-      >
+      <Modal title="분류추가" visible={this.props.visible} onCancel={this.handleCloselModal} width="400px" style={{ top: 100 }} footer={null} destroyOnClose>
         <form onSubmit={this.handleOkModal}>
           <div>
             <ul className="entryName">
@@ -87,9 +78,9 @@ class RegModal extends Component {
             </ul>
           </div>
           <div style={{ width: '100%', textAlign: 'right', padding: '20px 0 0' }}>
-            <StyledButton className="btn-light" key="back" htmlType="button" onClick={this.handleCloselModal}>
+            {/* <StyledButton className="btn-light" key="back" htmlType="button" onClick={this.handleCloselModal}>
               닫기
-            </StyledButton>
+            </StyledButton> */}
             <StyledButton className="btn-primary" key="ok" type="primary" htmlType="submit" style={{ marginLeft: '8px' }}>
               {isRootMap ? '수정' : '저장'}
             </StyledButton>

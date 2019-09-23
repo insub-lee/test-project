@@ -466,7 +466,7 @@ class NotifyAdminList extends React.Component {
       notifyList: [],
     });
     pageSNum = 1;
-    pageENum = pageIndex;
+    // pageENum = pageIndex;
     this.dateSet();
     this.props.udtPostState(
       MSG_ID,
@@ -521,6 +521,8 @@ class NotifyAdminList extends React.Component {
       notifyList: [],
     });
     this.dateSet();
+    pageSNum = 1;
+    // pageENum = pageIndex;
     this.props.getNotifyList(
       pageSNum,
       pageENum,
@@ -539,7 +541,7 @@ class NotifyAdminList extends React.Component {
   rowGetter = i => {
     // console.log('isPaging', isPaging);
     if (i === pageENum - 1) {
-      pageSNum += pageIndex;
+      pageSNum = pageENum + 1;
       pageENum += pageIndex;
       this.dateSet();
       this.props.getNotifyList(

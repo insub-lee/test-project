@@ -139,6 +139,8 @@ class Tree extends Component {
   render() {
     const { searchFocusIndex, searchString, editTree, editMenuMode } = this.state;
 
+    console.debug('>>>>>>>>editTree: ', editTree);
+
     const { treeData, showNoti, history } = this.props;
     console.debug();
     return (

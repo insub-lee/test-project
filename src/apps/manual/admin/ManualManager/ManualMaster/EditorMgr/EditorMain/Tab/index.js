@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Input } from 'antd';
+import { isJSON } from 'utils/helpers';
 import WriteTab from '../../../../../../components/WritePage/WriteTab';
 import WriteTabTitle from '../../../../../../components/WritePage/WriteTab/WriteTabTitle';
 import StyledWriteTabPanel from '../../../../../../components/WritePage/StyledWriteTabPanel';
@@ -8,7 +9,7 @@ import FroalaEditor from '../../../../../../components/RichTextEditor/FroalaEdit
 import FroalaEditorView from '../../../../../../components/RichTextEditor/FroalaEditorView';
 import { froalaEditorConfig } from '../../../../../../components/RichTextEditor/FroalaEditorConfig';
 import Styled from './Styled';
-class Tab extends Component {
+class Tab extends PureComponent {
   state = {
     selectedIndex: 0,
   };
@@ -23,7 +24,8 @@ class Tab extends Component {
     const data = item.MUAL_COMPVIEWINFO;
     let lastId;
     let lastIndex;
-    if (typeof data === 'string') {
+
+    if (isJSON(data)) {
       const parseData = JSON.parse(data);
       lastIndex = parseData.length - 1;
       if (lastIndex < 0) {
@@ -32,61 +34,43 @@ class Tab extends Component {
         lastId = parseData[lastIndex].id;
       }
       parseData.push({ id: lastId + 1, title: 'New Tab', board: '' });
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', parseData);
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(parseData));
     } else {
-      lastIndex = data.length - 1;
-      if (lastIndex < 0) {
-        lastId = -1;
-      } else {
-        lastId = data[lastIndex].id;
-      }
-      data.push({ id: lastId + 1, title: 'New Tab', board: '' });
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', data);
+      console.log('Insert 버그테스트');
     }
-
     this.handlerSetIndex(lastIndex + 1);
   };
 
   handlerBoardChange = (value, id) => {
     const { item, handleChangeCompValue } = this.props;
     const data = item.MUAL_COMPVIEWINFO;
-
     let findIndex;
-    if (typeof data === 'string') {
+    if (isJSON(data)) {
       const parseData = JSON.parse(data);
       findIndex = parseData.findIndex(findData => findData.id === id);
-      parseData[findIndex].board = value;
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', parseData);
-    } else {
-      findIndex = data.findIndex(findData => findData.id === id);
-
-      // 이벤트가 왜 2번발생하는지모르겟음;
       if (findIndex === -1) {
         return;
       }
-      data[findIndex].board = value;
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', data);
+      parseData[findIndex].board = value;
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(parseData));
+    } else {
+      console.log('Board 버그테스트');
     }
   };
 
-  handlerTitleChange = (value, id, e) => {
+  handlerTitleChange = (e, id) => {
     e.stopPropagation();
+    const { value } = e.target;
     const { item, handleChangeCompValue } = this.props;
     const data = item.MUAL_COMPVIEWINFO;
     let findIndex;
-    if (typeof data === 'string') {
+    if (isJSON(data)) {
       const parseData = JSON.parse(data);
       findIndex = parseData.findIndex(findData => findData.id === id);
       parseData[findIndex].title = value;
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', parseData);
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(parseData));
     } else {
-      findIndex = data.findIndex(findData => findData.id === id);
-
-      if (findIndex === -1) {
-        return;
-      }
-      data[findIndex].title = value;
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', data);
+      console.log('title 버그테스트');
     }
   };
 
@@ -94,30 +78,15 @@ class Tab extends Component {
     e.stopPropagation();
     const { item, handleChangeCompValue } = this.props;
     const data = item.MUAL_COMPVIEWINFO;
-
     let filteredData;
-    if (typeof data === 'string') {
+    if (isJSON(data)) {
       const parseData = JSON.parse(data);
       filteredData = parseData.filter(parData => parData.id !== id);
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(filteredData));
     } else {
-      filteredData = data.filter(fData => fData.id !== id);
+      console.log('Remove 버그테스트');
     }
     this.handlerSetIndex(0);
-    handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', filteredData);
-  };
-
-  initData = data => {
-    const { item, handleChangeCompValue } = this.props;
-    if (!data) {
-      const newData = [{ id: 0, title: 'New Tab', board: '' }];
-      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', newData);
-      return newData;
-    }
-    if (typeof data === 'string') {
-      return JSON.parse(data);
-    }
-
-    return data;
   };
 
   removeFlag = data => {
@@ -137,8 +106,17 @@ class Tab extends Component {
   lengData = data => data.length;
 
   render() {
-    const { item, selectedComponentIdx } = this.props;
-    const tabData = this.initData(item.MUAL_COMPVIEWINFO);
+    const { item, selectedComponentIdx, handleChangeCompValue } = this.props;
+    let tabData;
+    if (item.MUAL_COMPVIEWINFO === null || item.MUAL_COMPVIEWINFO === undefined || item.MUAL_COMPVIEWINFO === '') {
+      tabData = [{ id: 0, title: 'New Tab', board: '' }];
+      handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', JSON.stringify(tabData));
+    } else if (isJSON(item.MUAL_COMPVIEWINFO)) {
+      tabData = JSON.parse(item.MUAL_COMPVIEWINFO);
+    } else {
+      tabData = [{ id: 0, title: 'New Tab', board: '' }];
+    }
+
     const removeFlag = this.removeFlag(tabData);
     const maxFlag = this.maxFlag(tabData);
     const length = this.lengData(tabData);
@@ -146,7 +124,7 @@ class Tab extends Component {
       id: data.id,
       TabComponent: (
         <WriteTabTitle
-          title={<Input value={data.title} onChange={e => this.handlerTitleChange(e.target.value, data.id, e)} />}
+          title={<Input value={data.title} onChange={e => this.handlerTitleChange(e, data.id)} />}
           onRemove={e => {
             this.handlerRemove(e, data.id);
           }}
@@ -177,7 +155,7 @@ class Tab extends Component {
     }));
 
     return (
-      <Styled>
+      <Styled className="manualEditorComponent">
         {selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
           <WriteTab
             tabs={WriteTabData}
@@ -204,4 +182,9 @@ class Tab extends Component {
   }
 }
 
+Tab.propTypes = {
+  item: PropTypes.object.isRequired,
+  selectedComponentIdx: PropTypes.number.isRequired,
+  handleChangeCompValue: PropTypes.func.isRequired,
+};
 export default Tab;

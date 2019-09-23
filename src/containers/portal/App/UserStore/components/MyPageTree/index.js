@@ -9,7 +9,7 @@ import { lang, intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 // import 'style/sortable-tree-biz.css';
-import { toggleExpandedForSelected } from './tree-data-utils';
+import { toggleExpandedForSelected, toggleExpandedForSelectedMyPage } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
 import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
@@ -77,9 +77,10 @@ class MyPageTree extends Component {
       } else if(this.treeFlatData.get(nextProps.selectedIndex)) {
         this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
         this.setState({
-          treeData: toggleExpandedForSelected({
+          treeData: toggleExpandedForSelectedMyPage({
             treeData: nextProps.treeData,
-            path: this.treeFlatData.get(nextProps.selectedIndex),
+            expanded: this.treeFlatData.get(nextProps.selectedIndex).expanded || true,
+            // path: this.treeFlatData.get(nextProps.selectedIndex),
           }),
           selectedIndex: nextProps.selectedIndex,
         });
@@ -208,10 +209,10 @@ class MyPageTree extends Component {
     } = this.props;
 
     // 조건 DEFAULT_YN 조건으로 변경하기 - daemon 쿼리 변경 후
-    const findRootAppMenuIndex = _.filter(treeData, { NAME_KOR: '개인 App' });
-    const findRootBizMenuIndex = _.filter(treeData, { NAME_KOR: '개인 업무' });
-    const findRootAppMenuID = findRootAppMenuIndex[0] ? findRootAppMenuIndex[0].MENU_ID : '';
-    const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
+    // const findRootAppMenuIndex = _.filter(treeData, { NAME_KOR: '개인 App' });
+    // const findRootBizMenuIndex = _.filter(treeData, { NAME_KOR: '개인 업무' });
+    // const findRootAppMenuID = findRootAppMenuIndex[0] ? findRootAppMenuIndex[0].MENU_ID : '';
+    // const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
 
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
@@ -380,9 +381,8 @@ class MyPageTree extends Component {
             onClick(node);
           };
 
-          const nodeDefaultYn = node.DEFAULT_YN;
-
-          console.debug('>>>>>>>>>>>sotrtable node: ', nodeDefaultYn, node);
+          const storeUrl =  (node.DEFAULT_YN === 'Y'&& node.NODE_TYPE === 'F' && node.SORT_SQ === 2) ? 
+            '/portal/store/appMain/myPage/modal/biz/list' : '/portal/store/appMain/myPage/modal/app/list';
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때 , 개인화 홈 메뉴가 아닐 경우
           if (onHoverKey === node.key && !(node.DEFAULT_YN === 'Y' && node.NODE_TYPE === 'E')) {
@@ -394,7 +394,7 @@ class MyPageTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push('/portal/store/appMain/myPage/modal/app/list');
+                    history.push(`${storeUrl}`);
                   }}
                 />
               ) : (

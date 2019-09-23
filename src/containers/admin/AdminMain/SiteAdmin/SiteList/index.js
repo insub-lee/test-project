@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -26,8 +27,10 @@ import { LinkBtnDkGray, BtnDelete } from '../../../../store/components/uielement
 import StyledButton from '../../../../../components/Button/StyledButton';
 
 const Option = SelectOption;
-let pageNum = 20;
-const pageIndex = 20;
+// 페이징에 필요한 변수
+const pageIndex = 20; // 페이징 단위
+let pageSNum = 1; // 페이징 시작 변수
+let pageENum = 20; // 페이징 종료 변수
 
 class SiteList extends React.Component {
   constructor(prop) {
@@ -78,9 +81,9 @@ class SiteList extends React.Component {
       // siteId: prop.siteId,
     };
 
-    pageNum = pageIndex;
-
-    this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
+    pageSNum = 1;
+    pageENum = pageIndex;
+    this.props.getList(pageSNum, pageENum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword, []);
 
     // 함수 bind
     this.onRowsSelected = this.onRowsSelected.bind(this);
@@ -161,7 +164,8 @@ class SiteList extends React.Component {
   };
 
   initState = () => {
-    pageNum = pageIndex;
+    pageSNum = 1;
+    pageENum = pageIndex;
     this.setState({
       selectedIndexes: [],
       delData: [],
@@ -173,9 +177,18 @@ class SiteList extends React.Component {
   };
 
   rowList = i => {
-    if (i === pageNum - 1) {
-      pageNum += pageIndex;
-      this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
+    if (i === pageENum - 1) {
+      pageSNum = pageENum + 1;
+      pageENum += pageIndex;
+      this.props.getList(
+        pageSNum,
+        pageENum,
+        this.state.sortColumnParam,
+        this.state.sortDirectionParam,
+        this.state.keywordType,
+        this.state.keyword,
+        this.props.getRow,
+      );
     }
     return this.props.getRow[i];
   };
@@ -187,7 +200,17 @@ class SiteList extends React.Component {
   };
 
   deleteRow = () => {
-    this.props.delRow(this.state.delData);
+    pageSNum = 1;
+    // pageENum = pageIndex;
+    this.props.delRow(
+      this.state.delData,
+      pageSNum,
+      pageENum,
+      this.state.sortColumnParam,
+      this.state.sortDirectionParam,
+      this.state.keywordType,
+      this.state.keyword,
+    );
     this.initState();
   };
 
@@ -196,14 +219,17 @@ class SiteList extends React.Component {
       sortColumnParam: sortColumn,
       sortDirectionParam: sortDirection,
     });
-    this.props.getList(pageNum, sortColumn, sortDirection, this.state.keywordType, this.state.keyword);
+    pageSNum = 1;
+    // pageENum = pageIndex;
+    this.props.getList(pageSNum, pageENum, sortColumn, sortDirection, this.state.keywordType, this.state.keyword, []);
   };
 
   // Input 검색아이콘 클릭 시(조회)
   handleClick = () => {
     // this.initState();
-    pageNum = pageIndex;
-    this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword);
+    pageSNum = 1;
+    pageENum = pageIndex;
+    this.props.getList(pageSNum, pageENum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, this.state.keyword, []);
   };
 
   // Input 검색값 변경 시
@@ -211,8 +237,9 @@ class SiteList extends React.Component {
     // console.log(e.target.value);
     this.setState({ keyword: e.target.value });
     // this.handleClick();
-    pageNum = pageIndex;
-    this.props.getList(pageNum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, e.target.value);
+    pageSNum = 1;
+    pageENum = pageIndex;
+    this.props.getList(pageSNum, pageENum, this.state.sortColumnParam, this.state.sortDirectionParam, this.state.keywordType, e.target.value, []);
   }
 
   // Input 키 누를 때
@@ -330,10 +357,11 @@ SiteList.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  getList: (pgNum, sortColumnParam, sortDirectionParam, keywordType, keyword) =>
-    dispatch(actions.getList(pgNum, sortColumnParam, sortDirectionParam, keywordType, keyword)),
+  getList: (sNum, eNum, sortColumnParam, sortDirectionParam, keywordType, keyword, siteList) =>
+    dispatch(actions.getList(sNum, eNum, sortColumnParam, sortDirectionParam, keywordType, keyword, siteList)),
   historyPush: url => dispatch(push(url)),
-  delRow: delData => dispatch(actions.delRow(delData)),
+  delRow: (delData, sNum, eNum, sortColumnParam, sortDirectionParam, keywordType, keyword) =>
+    dispatch(actions.delRow(delData, sNum, eNum, sortColumnParam, sortDirectionParam, keywordType, keyword)),
 });
 
 const mapStateToProps = createStructuredSelector({

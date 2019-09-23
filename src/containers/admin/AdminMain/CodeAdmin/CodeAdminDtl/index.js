@@ -800,7 +800,7 @@ class CodeAdminDtl extends React.Component {
               onGridRowsUpdated={this.handleGridRowsUpdated}
               rowActionsCell={RowActionsCell}
               // onRowClick={this.onRowClick}
-              rowRenderer={<RowRenderer onRowDrop={this.reorderRows} />}
+              // rowRenderer={<RowRenderer onRowDrop={this.reorderRows} />}
               onChange={this.onCellChange}
             />
           </StyleDataGridDrag>

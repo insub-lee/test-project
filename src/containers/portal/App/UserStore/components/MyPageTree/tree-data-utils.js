@@ -14,9 +14,7 @@ function getNodeDataAtTreeIndexOrNextIndex({
   isPseudoRoot = false,
 }) {
   // The pseudo-root is not considered in the path
-  const selfPath = !isPseudoRoot
-    ? [...path, getNodeKey({ node, treeIndex: currentIndex })]
-    : [];
+  const selfPath = !isPseudoRoot ? [...path, getNodeKey({ node, treeIndex: currentIndex })] : [];
 
   // Return target node when found
   if (currentIndex === targetIndex) {
@@ -101,18 +99,8 @@ function walkDescendants({
   lowerSiblingCounts = [],
 }) {
   // The pseudo-root is not considered in the path
-  const selfPath = isPseudoRoot
-    ? []
-    : [...path, getNodeKey({ node, treeIndex: currentIndex })];
-  const selfInfo = isPseudoRoot
-    ? null
-    : {
-      node,
-      parentNode,
-      path: selfPath,
-      lowerSiblingCounts,
-      treeIndex: currentIndex,
-    };
+  const selfPath = isPseudoRoot ? [] : [...path, getNodeKey({ node, treeIndex: currentIndex })];
+  const selfInfo = isPseudoRoot ? null : { node, parentNode, path: selfPath, lowerSiblingCounts, treeIndex: currentIndex };
 
   if (!isPseudoRoot) {
     const callbackResult = callback(selfInfo);
@@ -124,10 +112,7 @@ function walkDescendants({
   }
 
   // Return self on nodes with no children or hidden children
-  if (
-    !node.children ||
-    (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)
-  ) {
+  if (!node.children || (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)) {
     return currentIndex;
   }
 
@@ -190,9 +175,7 @@ function mapDescendants({
   const nextNode = { ...node };
 
   // The pseudo-root is not considered in the path
-  const selfPath = isPseudoRoot
-    ? []
-    : [...path, getNodeKey({ node: nextNode, treeIndex: currentIndex })];
+  const selfPath = isPseudoRoot ? [] : [...path, getNodeKey({ node: nextNode, treeIndex: currentIndex })];
   const selfInfo = {
     node: nextNode,
     parentNode,
@@ -202,10 +185,7 @@ function mapDescendants({
   };
 
   // Return self on nodes with no children or hidden children
-  if (
-    !nextNode.children ||
-    (nextNode.expanded !== true && ignoreCollapsed && !isPseudoRoot)
-  ) {
+  if (!nextNode.children || (nextNode.expanded !== true && ignoreCollapsed && !isPseudoRoot)) {
     return {
       treeIndex: currentIndex,
       node: callback(selfInfo),
@@ -247,28 +227,15 @@ function mapDescendants({
  * @return {number} count
  */
 export function getVisibleNodeCount({ treeData }) {
-  const traverse = (node) => {
-    if (
-      !node.children ||
-      node.expanded !== true ||
-      typeof node.children === 'function'
-    ) {
+  const traverse = node => {
+    if (!node.children || node.expanded !== true || typeof node.children === 'function') {
       return 1;
     }
 
-    return (
-      1 +
-      node.children.reduce(
-        (total, currentNode) => total + traverse(currentNode),
-        0,
-      )
-    );
+    return 1 + node.children.reduce((total, currentNode) => total + traverse(currentNode), 0);
   };
 
-  return treeData.reduce(
-    (total, currentNode) => total + traverse(currentNode),
-    0,
-  );
+  return treeData.reduce((total, currentNode) => total + traverse(currentNode), 0);
 }
 
 /**
@@ -284,11 +251,7 @@ export function getVisibleNodeCount({ treeData }) {
  *      lowerSiblingCounts: []number
  *  }|null} node - The node at targetIndex, or null if not found
  */
-export function getVisibleNodeInfoAtIndex({
-  treeData,
-  index: targetIndex,
-  getNodeKey,
-}) {
+export function getVisibleNodeInfoAtIndex({ treeData, index: targetIndex, getNodeKey }) {
   if (!treeData || treeData.length < 1) {
     return null;
   }
@@ -324,12 +287,7 @@ export function getVisibleNodeInfoAtIndex({
  *
  * @return void
  */
-export function walk({
-  treeData,
-  getNodeKey,
-  callback,
-  ignoreCollapsed = true,
-}) {
+export function walk({ treeData, getNodeKey, callback, ignoreCollapsed = true }) {
   if (!treeData || treeData.length < 1) {
     return;
   }
@@ -357,12 +315,7 @@ export function walk({
  *
  * @return {Object[]} changedTreeData - The changed tree data
  */
-export function map({
-  treeData,
-  getNodeKey,
-  callback,
-  ignoreCollapsed = true,
-}) {
+export function map({ treeData, getNodeKey, callback, ignoreCollapsed = true }) {
   if (!treeData || treeData.length < 1) {
     return [];
   }
@@ -405,6 +358,15 @@ export function toggleExpandedForSelected({ treeData, path }) {
   });
 }
 
+export function toggleExpandedForSelectedMyPage({ treeData, expanded }) {
+  return map({
+    treeData,
+    callback: ({ node }) => ({ ...node, expanded }),
+    getNodeKey: ({ treeIndex }) => treeIndex,
+    ignoreCollapsed: false,
+  });
+}
+
 /**
  * Replaces node at path with object, or callback-defined object
  *
@@ -417,33 +379,18 @@ export function toggleExpandedForSelected({ treeData, path }) {
  *
  * @return {Object[]} changedTreeData - The changed tree data
  */
-export function changeNodeAtPath({
-  treeData,
-  path,
-  newNode,
-  getNodeKey,
-  ignoreCollapsed = true,
-}) {
+export function changeNodeAtPath({ treeData, path, newNode, getNodeKey, ignoreCollapsed = true }) {
   const RESULT_MISS = 'RESULT_MISS';
-  const traverse = ({
-    isPseudoRoot = false,
-    node,
-    currentTreeIndex,
-    pathIndex,
-  }) => {
-    if (
-      !isPseudoRoot &&
-      getNodeKey({ node, treeIndex: currentTreeIndex }) !== path[pathIndex]
-    ) {
+  const traverse = ({ isPseudoRoot = false, node, currentTreeIndex, pathIndex }) => {
+    if (!isPseudoRoot && getNodeKey({ node, treeIndex: currentTreeIndex }) !== path[pathIndex]) {
       return RESULT_MISS;
     }
 
     if (pathIndex >= path.length - 1) {
       // If this is the final location in the path, return its changed form
-      return typeof newNode === 'function'
-        ? newNode({ node, treeIndex: currentTreeIndex })
-        : newNode;
-    } else if (!node.children) {
+      return typeof newNode === 'function' ? newNode({ node, treeIndex: currentTreeIndex }) : newNode;
+    }
+    if (!node.children) {
       // If this node is part of the path, but has no children, return the unchanged node
       throw new Error('Path referenced children of node with no children.');
     }
@@ -463,26 +410,18 @@ export function changeNodeAtPath({
           //  pass it to the next level of recursion up
           return {
             ...node,
-            children: [
-              ...node.children.slice(0, i),
-              result,
-              ...node.children.slice(i + 1),
-            ],
+            children: [...node.children.slice(0, i), result, ...node.children.slice(i + 1)],
           };
         }
         // If the result was falsy (returned from the newNode function), then
         //  delete the node from the array.
         return {
           ...node,
-          children: [
-            ...node.children.slice(0, i),
-            ...node.children.slice(i + 1),
-          ],
+          children: [...node.children.slice(0, i), ...node.children.slice(i + 1)],
         };
       }
 
-      nextTreeIndex +=
-        1 + getDescendantCount({ node: node.children[i], ignoreCollapsed });
+      nextTreeIndex += 1 + getDescendantCount({ node: node.children[i], ignoreCollapsed });
     }
 
     return RESULT_MISS;
@@ -513,12 +452,7 @@ export function changeNodeAtPath({
  *
  * @return {Object[]} changedTreeData - The tree data with the node removed
  */
-export function removeNodeAtPath({
-  treeData,
-  path,
-  getNodeKey,
-  ignoreCollapsed = true,
-}) {
+export function removeNodeAtPath({ treeData, path, getNodeKey, ignoreCollapsed = true }) {
   return changeNodeAtPath({
     treeData,
     path,
@@ -541,12 +475,7 @@ export function removeNodeAtPath({
  * @return {Object} result.node - The node that was removed
  * @return {number} result.treeIndex - The previous treeIndex of the removed node
  */
-export function removeNode({
-  treeData,
-  path,
-  getNodeKey,
-  ignoreCollapsed = true,
-}) {
+export function removeNode({ treeData, path, getNodeKey, ignoreCollapsed = true }) {
   let removedNode = null;
   let removedTreeIndex = null;
   const nextTreeData = changeNodeAtPath({
@@ -580,12 +509,7 @@ export function removeNode({
  *
  * @return {Object|null} nodeInfo - The node info at the given path, or null if not found
  */
-export function getNodeAtPath({
-  treeData,
-  path,
-  getNodeKey,
-  ignoreCollapsed = true,
-}) {
+export function getNodeAtPath({ treeData, path, getNodeKey, ignoreCollapsed = true }) {
   let foundNodeInfo = null;
 
   try {
@@ -620,14 +544,7 @@ export function getNodeAtPath({
  * @return {Object[]} result.treeData - The updated tree data
  * @return {number} result.treeIndex - The tree index at which the node was inserted
  */
-export function addNodeUnderParent({
-  treeData,
-  newNode,
-  parentKey = null,
-  getNodeKey,
-  ignoreCollapsed = true,
-  expandParent = false,
-}) {
+export function addNodeUnderParent({ treeData, newNode, parentKey = null, getNodeKey, ignoreCollapsed = true, expandParent = false }) {
   if (parentKey === null) {
     return {
       treeData: [...(treeData || []), newNode],
@@ -672,9 +589,7 @@ export function addNodeUnderParent({
 
       let nextTreeIndex = treeIndex + 1;
       for (let i = 0; i < parentNode.children.length; i += 1) {
-        nextTreeIndex +=
-          1 +
-          getDescendantCount({ node: parentNode.children[i], ignoreCollapsed });
+        nextTreeIndex += 1 + getDescendantCount({ node: parentNode.children[i], ignoreCollapsed });
       }
 
       insertedTreeIndex = nextTreeIndex;
@@ -710,15 +625,10 @@ function addNodeAtDepthAndIndex({
   getNodeKey,
   path = [],
 }) {
-  const selfPath = n => (isPseudoRoot
-    ? []
-    : [...path, getNodeKey({ node: n, treeIndex: currentIndex })]);
+  const selfPath = n => (isPseudoRoot ? [] : [...path, getNodeKey({ node: n, treeIndex: currentIndex })]);
 
   // If the current position is the only possible place to add, add it
-  if (
-    currentIndex >= minimumTreeIndex - 1 ||
-    (isLastChild && !(node.children && node.children.length))
-  ) {
+  if (currentIndex >= minimumTreeIndex - 1 || (isLastChild && !(node.children && node.children.length))) {
     if (typeof node.children === 'function') {
       throw new Error('Cannot add to children defined by a function');
     } else {
@@ -744,11 +654,7 @@ function addNodeAtDepthAndIndex({
   // i.e., where the newNode can be added to the current node's children
   if (currentDepth >= targetDepth - 1) {
     // Skip over nodes with no children or hidden children
-    if (
-      !node.children ||
-      typeof node.children === 'function' ||
-      (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)
-    ) {
+    if (!node.children || typeof node.children === 'function' || (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)) {
       return { node, nextIndex: currentIndex + 1 };
     }
 
@@ -767,8 +673,7 @@ function addNodeAtDepthAndIndex({
       }
 
       // Increment the index by the child itself plus the number of descendants it has
-      childIndex +=
-        1 + getDescendantCount({ node: node.children[i], ignoreCollapsed });
+      childIndex += 1 + getDescendantCount({ node: node.children[i], ignoreCollapsed });
     }
 
     // If no valid indices to add the node were found
@@ -787,11 +692,7 @@ function addNodeAtDepthAndIndex({
     // Insert the newNode at the insertIndex
     const nextNode = {
       ...node,
-      children: [
-        ...node.children.slice(0, insertIndex),
-        newNode,
-        ...node.children.slice(insertIndex),
-      ],
+      children: [...node.children.slice(0, insertIndex), newNode, ...node.children.slice(insertIndex)],
     };
 
     // Return node with successful insert result
@@ -805,11 +706,7 @@ function addNodeAtDepthAndIndex({
   }
 
   // Skip over nodes with no children or hidden children
-  if (
-    !node.children ||
-    typeof node.children === 'function' ||
-    (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)
-  ) {
+  if (!node.children || typeof node.children === 'function' || (node.expanded !== true && ignoreCollapsed && !isPseudoRoot)) {
     return { node, nextIndex: currentIndex + 1 };
   }
 
@@ -840,11 +737,7 @@ function addNodeAtDepthAndIndex({
       });
 
       if ('insertedTreeIndex' in mapResult) {
-        ({
-          insertedTreeIndex,
-          parentNode,
-          parentPath: pathFragment,
-        } = mapResult);
+        ({ insertedTreeIndex, parentNode, parentPath: pathFragment } = mapResult);
       }
 
       childIndex = mapResult.nextIndex;
@@ -887,15 +780,7 @@ function addNodeAtDepthAndIndex({
  * after insertion
  * @return {Object} result.parentNode - The parent node of the inserted node
  */
-export function insertNode({
-  treeData,
-  depth: targetDepth,
-  minimumTreeIndex,
-  newNode,
-  getNodeKey = () => {},
-  ignoreCollapsed = true,
-  expandParent = false,
-}) {
+export function insertNode({ treeData, depth: targetDepth, minimumTreeIndex, newNode, getNodeKey = () => {}, ignoreCollapsed = true, expandParent = false }) {
   if (!treeData && targetDepth === 0) {
     return {
       treeData: [newNode],
@@ -927,10 +812,7 @@ export function insertNode({
   return {
     treeData: insertResult.node.children,
     treeIndex,
-    path: [
-      ...insertResult.parentPath,
-      getNodeKey({ node: newNode, treeIndex }),
-    ],
+    path: [...insertResult.parentPath, getNodeKey({ node: newNode, treeIndex })],
     parentNode: insertResult.parentNode,
   };
 }
@@ -948,11 +830,7 @@ export function insertNode({
  *      lowerSiblingCounts: []number
  *  }}[] nodes - The node array
  */
-export function getFlatDataFromTree({
-  treeData,
-  getNodeKey,
-  ignoreCollapsed = true,
-}) {
+export function getFlatDataFromTree({ treeData, getNodeKey, ignoreCollapsed = true }) {
   if (!treeData || treeData.length < 1) {
     return [];
   }
@@ -981,18 +859,13 @@ export function getFlatDataFromTree({
  *
  * @return {Object[]} treeData - The flat data represented as a tree
  */
-export function getTreeFromFlatData({
-  flatData,
-  getKey = node => node.id,
-  getParentKey = node => node.parentId,
-  rootKey = '0',
-}) {
+export function getTreeFromFlatData({ flatData, getKey = node => node.id, getParentKey = node => node.parentId, rootKey = '0' }) {
   if (!flatData) {
     return [];
   }
 
   const childrenToParents = {};
-  flatData.forEach((child) => {
+  flatData.forEach(child => {
     const parentKey = getParentKey(child);
 
     if (parentKey in childrenToParents) {
@@ -1006,7 +879,7 @@ export function getTreeFromFlatData({
     return [];
   }
 
-  const trav = (parent) => {
+  const trav = parent => {
     const parentKey = getKey(parent);
     if (parentKey in childrenToParents) {
       return {
@@ -1030,11 +903,7 @@ export function getTreeFromFlatData({
  * @return {boolean}
  */
 export function isDescendant(older, younger) {
-  return (
-    !!older.children &&
-    typeof older.children !== 'function' &&
-    older.children.some(child => child === younger || isDescendant(child, younger))
-  );
+  return !!older.children && typeof older.children !== 'function' && older.children.some(child => child === younger || isDescendant(child, younger));
 }
 
 /**
@@ -1054,10 +923,7 @@ export function getDepth(node, depth = 0) {
     return depth + 1;
   }
 
-  return node.children.reduce(
-    (deepest, child) => Math.max(deepest, getDepth(child, depth + 1)),
-    depth,
-  );
+  return node.children.reduce((deepest, child) => Math.max(deepest, getDepth(child, depth + 1)), depth);
 }
 
 /**
@@ -1080,38 +946,18 @@ export function getDepth(node, depth = 0) {
  *                               If expandAllMatchPaths and expandFocusMatchPaths are both false,
  *                               it will be the same as the original tree data.
  */
-export function find({
-  getNodeKey,
-  treeData,
-  searchQuery,
-  searchMethod,
-  searchFocusOffset,
-  expandAllMatchPaths = false,
-  expandFocusMatchPaths = true,
-}) {
+export function find({ getNodeKey, treeData, searchQuery, searchMethod, searchFocusOffset, expandAllMatchPaths = false, expandFocusMatchPaths = true }) {
   let matchCount = 0;
-  const trav = ({
-    isPseudoRoot = false, node, currentIndex, path = [],
-  }) => {
+  const trav = ({ isPseudoRoot = false, node, currentIndex, path = [] }) => {
     let matches = [];
     let isSelfMatch = false;
     let hasFocusMatch = false;
     // The pseudo-root is not considered in the path
-    const selfPath = isPseudoRoot
-      ? []
-      : [...path, getNodeKey({ node, treeIndex: currentIndex })];
-    const extraInfo = isPseudoRoot
-      ? null
-      : {
-        path: selfPath,
-        treeIndex: currentIndex,
-      };
+    const selfPath = isPseudoRoot ? [] : [...path, getNodeKey({ node, treeIndex: currentIndex })];
+    const extraInfo = isPseudoRoot ? null : { path: selfPath, treeIndex: currentIndex };
 
     // Nodes with with children that aren't lazy
-    const hasChildren =
-      node.children &&
-      typeof node.children !== 'function' &&
-      node.children.length > 0;
+    const hasChildren = node.children && typeof node.children !== 'function' && node.children.length > 0;
 
     // Examine the current node to see if it is a match
     if (!isPseudoRoot && searchMethod({ ...extraInfo, node, searchQuery })) {
@@ -1134,7 +980,7 @@ export function find({
     const newNode = { ...node };
     if (hasChildren) {
       // Get all descendants
-      newNode.children = newNode.children.map((child) => {
+      newNode.children = newNode.children.map(child => {
         const mapResult = trav({
           node: child,
           currentIndex: childIndex + 1,
@@ -1160,11 +1006,7 @@ export function find({
 
           // Expand the current node if it has descendants matching the search
           // and the settings are set to do so.
-          if (
-            (expandAllMatchPaths && mapResult.matches.length > 0) ||
-            ((expandAllMatchPaths || expandFocusMatchPaths) &&
-              mapResult.hasFocusMatch)
-          ) {
+          if ((expandAllMatchPaths && mapResult.matches.length > 0) || ((expandAllMatchPaths || expandFocusMatchPaths) && mapResult.hasFocusMatch)) {
             newNode.expanded = true;
           }
         }
