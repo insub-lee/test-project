@@ -13,7 +13,7 @@ export function* getMenu(payload) {
 
   try {
     if (menuList && menuList.length > 0) {
-      if (menuList[0].SORT_SQ < 1000) {
+      if (menuList[0].SORT_SQ < 100) {
         menu = menuList;
       } else {
         menuList.map(item => {
