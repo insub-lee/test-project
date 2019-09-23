@@ -31,6 +31,10 @@ class OrganizationWrapper extends React.PureComponent {
       siteIdParam,
       closeModal,
       userSetting,
+      onlyDept,
+      onlyUser,
+      selectSingleDept,
+      selectSingleUser,
     } = this.props;
 
     return (
@@ -65,6 +69,10 @@ class OrganizationWrapper extends React.PureComponent {
                 siteIdParam={siteIdParam}
                 closeModal={closeModal}
                 userSetting={userSetting}
+                onlyDept={onlyDept}
+                onlyUser={onlyUser}
+                selectSingleDept={selectSingleDept}
+                selectSingleUser={selectSingleUser}
               />
             :
               ''
@@ -101,6 +109,10 @@ OrganizationWrapper.propTypes = {
   siteIdParam: PropTypes.number,
   closeModal: PropTypes.func.isRequired,
   userSetting: PropTypes.bool,
+  onlyDept: PropTypes.bool,
+  onlyUser: PropTypes.bool,
+  selectSingleDept: PropTypes.bool,
+  selectSingleUser: PropTypes.bool,
 };
 
 OrganizationWrapper.defaultProps = {
@@ -128,6 +140,10 @@ OrganizationWrapper.defaultProps = {
   isDeptSelectbox: false,
   siteIdParam: undefined,
   userSetting: false,
+  onlyDept: false,
+  onlyUser: false,
+  selectSingleDept: false,
+  selectSingleUser: false,
 };
 
 export default OrganizationWrapper;
