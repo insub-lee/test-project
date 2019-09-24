@@ -80,7 +80,6 @@ class PublicRoutes extends Component {
 
     if (isLoggedIn) {
       if (location.pathname === '/') {
-        // portalloc.skhynix.com
         getLoaddata('latest');
       } else if (checkPath(pathArray[1], portalPath)) {
         // go to getLoaddata

@@ -892,7 +892,6 @@ class SiteDetail extends React.Component {
                           hasFeedback={this.state.readOnly === 'false'}
                           validateStatus={this.state.urlValid && !this.props.getUrlChk ? 'success' : 'error'}
                         >
-                          {/* <span>http://portal.skhynix.com/</span> */}
                           {urlInput(this.state.readOnly)}
                           <span className="tipText">{dupUrlChk(this.props.getUrlChk)}</span>
                         </FormItem>

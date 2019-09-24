@@ -1,118 +1,118 @@
 import { createSelector } from 'reselect';
 
-const selectHynixCommon = state => state.get('common');
+const selectCommon = state => state.get('common');
 
 const makeSelectView = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     viewState => viewState.view,
   );
 
 const makeSelectDockAppList = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.dockAppList,
   );
 
 const makeSelectDockFixedYn = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.dockFixedYn,
   );
 
 const makeSelectDockIconType = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.dockIconType,
   );
 
 const makeSelectHeaderTitle = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.get('headerTitle'),
   );
 
 const makeSelectSetBizHome = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.setBizHome,
   );
 
 const makeSelectSetMyMenuNodeData = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.setMyMenuNodeData,
   );
 
 const makeSelectSelectedIndex = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.selectedIndex,
   );
 
 const makeSelectMenuName = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.menuName,
   );
 
 const makeSelectManagerInfo = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.managerInfo,
   );
 
 const makeSelectSkin = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.mySkin,
   );
 
 const makeSelectMNotiCnt = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.myMNotiCnt,
   );
 
 const makeSelectIsUnfixDockItem = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.isUnfixDockItem,
   );
 
 const makeSelectApps = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.selectedApp,
   );
 
 const makeUnreadCnt = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.isUnreadCnt,
   );
 
 const makeSelectMyMenuData = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.setMyMenuData,
   );
 
 const makeMyAppTree = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.get('myAppTreeData').toJS(),
   );
 
 const makeMyAppStoreTree = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.get('myAppStoreTreeData').toJS(),
   );
 
 const makeCommonMenuTree = () =>
   createSelector(
-    selectHynixCommon,
+    selectCommon,
     portalState => portalState.get('commonMenuTreeData').toJS(),
   );
 

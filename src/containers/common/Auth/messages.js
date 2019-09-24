@@ -3,7 +3,7 @@ import { defineMessages } from 'react-intl';
 export default defineMessages({
   title: {
     id: 'bizmicro-admin.containers.Auth.title',
-    defaultMessage: 'SkHynix',
+    defaultMessage: 'PORTAL',
   },
   usernamePlaceHolder: {
     id: 'bizmicro-admin.containers.Auth.usernamePlaceHolder',

@@ -53,13 +53,10 @@ class UserProfile extends Component {
         window.location.href = `/signin`;
         break;
       // case 'mail':
-      //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${profile.EMAIL}`);
+      //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
       //   break;
       // case 'todo':
-      //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${profile.EMP_NO}`);
-      //   break;
-      // case 'hithanks':
-      //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${profile.EMP_NO}`);
+      //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
       //   break;
       case 'set':
         execPage('set');
@@ -130,7 +127,7 @@ class UserProfile extends Component {
             <Popover placement="left" content={contents} trigger="hover" overlayClassName="userProfileMenu">
               <div className="myPicture">
                 <img
-                  src={`${userProfileImgUrl.URL}/${profile.EMP_NO}.jpg`}
+                  src={`/img/thumb/200x200/${profile.PHOTO}`}
                   alt={profile.EMP_NO}
                   onError={e => {
                     e.target.src = '/no_img_pro.jpg';

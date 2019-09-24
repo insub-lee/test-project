@@ -162,7 +162,7 @@ export default notify;
   },
   "link": {
     "type": "popup/window",
-    "url": "http://iflow.skhynix.com/",
+    "url": "http://dev.board.com/",
     "size": [400,600]
   },
   "images": [],
@@ -173,7 +173,7 @@ export default notify;
       "value": "확인",
       "link": {
         "type": "out",
-        "url": "http://iflow.skhynix.com",
+        "url": "http://dev.board.com",
         "size": [400,600]
       }
     }

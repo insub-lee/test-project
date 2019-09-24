@@ -10,7 +10,6 @@ function* makeRequestHeader() {
 
 function errorAxiosProcess(error) {
   if (error.response.status === 401) {
-    //window.location.href = `http://ssodev.skhynix.com/sso/agentless/agentless_redirect.jsp?initpage=${error.response.data.url}`;
     const cookies = new Cookies();
     cookies.remove('empNo', { path: '/' })
     cookies.remove('access_token', { path: '/' })

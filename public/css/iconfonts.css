@@ -1,8 +1,10 @@
 @font-face {
-  font-family: 'skhynix-icon';
-  src: url('../iconfont/skhynix-icon.eot?b9335p');
-  src: url('../iconfont/skhynix-icon.eot?b9335p#iefix') format('embedded-opentype'), url('../iconfont/skhynix-icon.ttf?b9335p') format('truetype'),
-    url('../iconfont/skhynix-icon.woff?b9335p') format('woff'), url('../iconfont/skhynix-icon.svg?b9335p#skhynix-icon') format('svg');
+  font-family: 'iconfont';
+  src:  url('../iconfont/iconfont.eot?b9335p');
+  src:  url('../iconfont/iconfont.eot?b9335p#iefix') format('embedded-opentype'),
+    url('../iconfont/iconfont.ttf?b9335p') format('truetype'),
+    url('../iconfont/iconfont.woff?b9335p') format('woff'),
+    url('../iconfont/iconfont.svg?b9335p#iconfont') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -10,7 +12,7 @@
 [class^='icon-'],
 [class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'skhynix-icon' !important;
+  font-family: 'iconfont' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;

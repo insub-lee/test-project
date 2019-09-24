@@ -120,7 +120,7 @@ class SiteReg extends React.Component {
       title: `${intlObj.get(messages.titleAllUser)}`,
       NAME_KOR: `${intlObj.get(messages.titleAllUser)}`,
       ACNT_TYPE: 'V',
-      // deptname: 'SK하이닉스',
+      // deptname: '부서',
     });
 
     // managerSetMembersDefault[0].USER_ID = '';
@@ -170,7 +170,7 @@ class SiteReg extends React.Component {
 
   // onKeyPressURL(e) {
   //   if (e.charCode === 13) {
-  //     const strURL = `http://portal.skhynix.com/${this.state.URL}/`;
+  //     const strURL = `http://dev.protal.com/${this.state.URL}/`;
   //     this.props.chkUrl('URL_CHK', strURL);
   //   }
   // }
@@ -223,7 +223,7 @@ class SiteReg extends React.Component {
       title: `${intlObj.get(messages.titleAllUser)}`,
       NAME_KOR: `${intlObj.get(messages.titleAllUser)}`,
       ACNT_TYPE: 'V',
-      // deptname: 'SK하이닉스',
+      // deptname: '부서',
     });
 
     // managerSetMembersDefault.USER_ID = '';
