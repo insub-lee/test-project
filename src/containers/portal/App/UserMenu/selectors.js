@@ -1,15 +1,15 @@
 import { createSelector } from 'reselect';
 
-const selectHynixCommon = state => state.get('common');
+const selectCommon = state => state.get('common');
 
 // ****************** 초기 로그인 성공시 라우터의 스토어에서 가져오는 state ******************
 const makeMyAppTree = () => createSelector(
-  selectHynixCommon,
+  selectCommon,
   portalState => portalState.get('myAppTreeData').toJS(),
 );
 
 const makeMyAppStoreTree = () => createSelector(
-  selectHynixCommon,
+  selectCommon,
   portalState => portalState.get('myAppStoreTreeData').toJS(),
 );
 

@@ -20,13 +20,13 @@ function* getIflowUrl() {
       qnaCtseq: 8882,
       faqCtseq: 18821,
     }
-  } else if (uInfo.iflowUrl === 'http://iflow.skhynix.com') {
+  } else if (uInfo.iflowUrl === 'http://dev.board.com') {
     getIflowUrlArr = {
       iflowUrl: uInfo.iflowUrl,
       IFLOW_TOKEN: uInfo.IFLOW_TOKEN,
-      qnaGrseq: 1462,
-      qnaCtseq: 4416,
-      faqCtseq: 4415,
+      qnaGrseq: 1501,
+      qnaCtseq: 8882,
+      faqCtseq: 18821,
     }
   }
   return getIflowUrlArr;
@@ -40,10 +40,10 @@ function* makeRequestHeader() {
 
 function* errorAxiosProcess(error) {
   if (error.response.status === 401) {
-    if (uInfo.iflowUrl === 'http://iflowdev.skhynix.com') {
-      window.location.href = `http://ssodev.skhynix.com/sso/agentless/agentless_redirect.jsp?initpage=${error.response.data.url}`;
-    } else if (uInfo.iflowUrl === 'http://iflow.skhynix.com') {
-      window.location.href = `http://sso.skhynix.com/sso/agentless/agentless_redirect.jsp?initpage=${error.response.data.url}`;
+    if (uInfo.iflowUrl === 'http://218.147.96.143:12081') {
+      window.location.href = `http://218.147.96.143:12081?initpage=${error.response.data.url}`;
+    } else if (uInfo.iflowUrl === 'http://dev.board.com') {
+      window.location.href = `http://dev.board.com?initpage=${error.response.data.url}`;
     }
   } else {
     console.log(error);

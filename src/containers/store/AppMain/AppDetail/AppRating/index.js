@@ -228,7 +228,7 @@ class AppRating extends React.Component {
           <div className="ratingReviewBox">
             <div>
               <img
-                src={`/portalWeb/uploadfile/pictures/${item.EMP_NO}.jpg`}
+                src={`/img/thumb/200x200/${item.PHOTO}`}
                 alt={lang.get('NAME', item)}
                 className="profilePic"
                 onError={e => {

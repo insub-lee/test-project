@@ -29,14 +29,11 @@ class AppManagerList extends React.Component {
       alert('준비중입니다.');
     }
     // } else if (gubun === 'talk') {
-    //   window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${param1}`);
+    //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
     // } else if (gubun === 'mail') {
-    //   window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${param1}`);
+    //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
     // } else if (gubun === 'todo') {
-    //   window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${param1}`);
-    // } else if (gubun === 'hithanks') {
-    //   window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${param1}`);
-    // }
+    //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
   }
 
   render() {
@@ -80,7 +77,7 @@ class AppManagerList extends React.Component {
                               >
                                 <img
                                   className="listImg"
-                                  src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`}
+                                  src={`/img/thumb/200x200/${user.PHOTO}`}
                                   alt={lang.get('NAME', user)}
                                 />
                               </div>

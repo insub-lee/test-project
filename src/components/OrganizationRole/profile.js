@@ -24,17 +24,14 @@ class Profile extends PureComponent {
 
     switch (type) {
       case 'talk':
-        window.open(`http://cube.skhynix.com/web/BizWorks/Default.jsp?type=DM&empno=${empNo}`);
+        window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
         return;
       case 'mail':
-        window.open(`https://email.skhynix.com/WOW/MailA/Message/AddNewMessage.aspx?a=New&to=${eMail}`);
+        window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
         return;
       case 'todo':
-        window.open(`http://schedule.skhynix.com/task/AddTask.aspx?a=New&exuserid=${empNo}`);
+        window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
         return;
-      case 'hithanks':
-        window.open(`http://thanks.skhynix.com/front/TR/ht_thanks_proc_pop.do?recvMemId=${empNo}`);
-        break;
       default:
     }
     */
@@ -86,13 +83,13 @@ class Profile extends PureComponent {
           <div className="picWrapper">
             {selectedUser.length ?
               <img
-                src={`/portalWeb/uploadfile/pictures/${selectedUser.EMP_NO}.jpg`}
+                src={`/img/thumb/200x200/${selectedUser.PHOTO}`}
                 alt={selectedUser.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               /> :
 
               <img
-                src={`/portalWeb/uploadfile/pictures/${loadProfile.EMP_NO}.jpg`}
+                src={`/img/thumb/200x200/${loadProfile.PHOTO}`}
                 alt={loadProfile.EMP_NO}
                 onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
               />

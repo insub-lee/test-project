@@ -67,7 +67,7 @@ class AppManagerList extends Component {
                                 e.target.src = '/no_img_pro.jpg';
                               }}
                             >
-                              <img className="listImg" src={`/portalWeb/uploadfile/pictures/${user.EMP_NO}.jpg`} alt={lang.get('NAME', user)} />
+                              <img className="listImg" src={`/img/thumb/200x200/${user.PHOTO}`} alt={lang.get('NAME', user)} />
                             </div>
                           </Popover>
                         </Table.Cell>

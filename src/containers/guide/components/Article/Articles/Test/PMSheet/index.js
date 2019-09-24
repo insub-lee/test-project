@@ -123,7 +123,6 @@ class PMSheet extends PureComponent {
     }
     // handlePmSheetExcelUpload(event);
     // handleUploadToServer(event.target.files[0]);
-    // http://portalloc.skhynix.com/files/
     // yield call(Axios.post, '/api/gipms/v1/pmsheet/PmSheetExcelUpload', data, { headers: { 'Content-Type': 'multipart/form-data' } });
   }
 
@@ -276,7 +275,7 @@ class PMSheet extends PureComponent {
 
   handleDownloadFile = () => {
     axios({
-      url: 'http://portalloc.skhynix.com/files/test.xlsx',
+      url: '/files/test.xlsx',
       method: 'GET',
       responseType: 'blob',
       // timeout

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { fromJS } from 'immutable';
 import { Form, Input, Select, Modal } from 'antd';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -21,6 +22,7 @@ import { LinkBtnList } from '../../../../store/components/uielements/buttons.sty
 import messages from '../messages';
 import UserRegTree from '../../../components/UserRegTree';
 import StyledButton from '../../../../../components/Button/StyledButton';
+import Upload from 'components/Upload';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
@@ -59,6 +61,7 @@ class UserReg extends React.Component {
       nameKor: '',
       nameEng: '',
       nameChn: '',
+      photo: '',
       email: '',
       statusCd: 'C',
       deptId: '',
@@ -112,6 +115,7 @@ class UserReg extends React.Component {
       nameKor: userInfo.NAME_KOR,
       nameEng: userInfo.NAME_ENG,
       nameChn: userInfo.NAME_CHN,
+      photo: userInfo.PHOTO,
       email: userInfo.EMAIL,
       statusCd: userInfo.STATUS_CD,
       deptId: userInfo.DEPT_ID,
@@ -249,6 +253,7 @@ class UserReg extends React.Component {
       nameKor: this.state.nameKor,
       nameEng: this.state.nameEng,
       nameChn: this.state.nameChn,
+      photo: this.state.photo,
       email: this.state.email,
       statusCd: this.state.statusCd,
       deptId: this.state.deptId,
@@ -260,10 +265,10 @@ class UserReg extends React.Component {
       compCd: this.state.compCd,
     };
     const { history } = this.props;
-    const data = setListState(this.state);
+    const listParam = setListState(this.state);
 
-    if (this.state.mode === 'I') this.props.registUser(userInfo, data, history);
-    else this.props.updateUser(userInfo, data, history);
+    if (this.state.mode === 'I') this.props.registUser(userInfo, listParam, history, this.onSaveSuccess);
+    else this.props.updateUser(userInfo, listParam, history, this.onSaveSuccess);
   };
 
   showModal = (title, type) => {
@@ -292,6 +297,10 @@ class UserReg extends React.Component {
       });
     }
   };
+
+  onSaveSuccess = () => {
+    this.setState({ mode: 'D' });
+  }  
 
   handleOk = () => {
     this.setState({
@@ -322,6 +331,83 @@ class UserReg extends React.Component {
     }
     return '';
   };
+  
+  userPhoto = () => {
+    const { photo, mode } = this.state;
+    const comp = (
+      <div style={{ width: '100px', height: '100px', cursor: mode !== 'D' ? "pointer" : '' }}>
+      <img
+        src={photo ? `/img/thumb/100x100/${photo}` : '/no_img_pro.jpg'}
+        style={{ width: '100%', maxHeight: 100 }}
+        onError={e => {
+          e.target.src = '/no_img_pro.jpg';
+        }}
+      />
+    </div>      
+    );
+    if (mode !== 'D') {
+      return (
+        <Upload
+        accept="image/jpeg, image/png" // default ALL
+        onFileUploaded={file => this.setState({ photo: file.seq })}
+        multiple={false} // default true
+        width={100}
+        height={100}
+        borderStyle="none"
+      >
+      {comp}
+      </Upload>        
+      )
+    }
+    return comp;
+  };
+
+  button = () => {
+    const { mode } = this.state;
+    if (mode === 'D') {
+      return (
+        <ErrorBoundary>
+          <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
+            {intlObj.get(messages.lblList)}
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={() => this.setState({ mode: 'U' })}>
+            {intlObj.get(messages.lblUdt)}
+          </StyledButton>
+        </ErrorBoundary>
+      );
+    }
+    if (mode === 'U') {
+      return (
+        <ErrorBoundary>
+          <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
+            {intlObj.get(messages.lblList)}
+          </StyledButton>
+          <StyledButton
+            className="btn-light"
+            onClick={() => {
+              this.setUserInfo(this.props.userInfo);
+              this.setState({ mode: 'D' });
+            }}
+          >
+            {intlObj.get(messages.lblCancel)}
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={this.regConfirm}>
+            {intlObj.get(messages.lblSave)}
+          </StyledButton>
+        </ErrorBoundary>
+      );
+    }
+    return (
+      <ErrorBoundary>
+        <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
+          {intlObj.get(messages.lblList)}
+        </StyledButton>
+        <StyledButton className="btn-primary" onClick={this.regConfirm}>
+          {intlObj.get(messages.lblReg)}
+        </StyledButton>
+      </ErrorBoundary>
+    );
+  };  
 
   render() {
     const formItemLayout = {
@@ -333,52 +419,6 @@ class UserReg extends React.Component {
         xs: { span: 20 },
         sm: { span: 20 },
       },
-    };
-
-    const button = () => {
-      if (this.state.mode === 'D') {
-        return (
-          <ErrorBoundary>
-            <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
-              {intlObj.get(messages.lblList)}
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.setState({ mode: 'U' })}>
-              {intlObj.get(messages.lblUdt)}
-            </StyledButton>
-          </ErrorBoundary>
-        );
-      }
-      if (this.state.mode === 'U') {
-        return (
-          <ErrorBoundary>
-            <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
-              {intlObj.get(messages.lblList)}
-            </StyledButton>
-            <StyledButton
-              className="btn-light"
-              onClick={() => {
-                this.setUserInfo(this.props.userInfo);
-                this.setState({ mode: 'D' });
-              }}
-            >
-              {intlObj.get(messages.lblCancel)}
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={this.regConfirm}>
-              {intlObj.get(messages.lblSave)}
-            </StyledButton>
-          </ErrorBoundary>
-        );
-      }
-      return (
-        <ErrorBoundary>
-          <StyledButton className="btn-light" style={{ float: 'left' }} onClick={this.onClickToList}>
-            {intlObj.get(messages.lblList)}
-          </StyledButton>
-          <StyledButton className="btn-primary" onClick={this.regConfirm}>
-            {intlObj.get(messages.lblReg)}
-          </StyledButton>
-        </ErrorBoundary>
-      );
     };
     return (
       <div>
@@ -493,6 +533,19 @@ class UserReg extends React.Component {
                     </FormItem>
                   </td>
                 </tr>
+                <tr>
+                  <th>
+                    <label htmlFor="s4-1">{intlObj.get(messages.titleUserPhoto)}</label>
+                  </th>
+                  <td>
+                    <FormItem {...formItemLayout}>
+                      <ErrorBoundary>
+                        {this.userPhoto()}
+                      </ErrorBoundary>
+                      <span className="tipText" />
+                    </FormItem>
+                  </td>
+                </tr>                
                 <tr>
                   <th className="required">
                     <label htmlFor="s5">EMAIL</label>
@@ -693,7 +746,7 @@ class UserReg extends React.Component {
               </tbody>
             </table>
           </StyleUserForm>
-          <div className="buttonWrapper">{button()}</div>
+          <div className="buttonWrapper">{this.button()}</div>
         </StyleUserDtl>
       </div>
     );
@@ -731,10 +784,10 @@ const mapDispatchToProps = dispatch => ({
   getDutyComboData: () => dispatch(actions.getDutyComboData()),
   getChangePSTNTreeData: PSTN_ID => dispatch(actions.getChangePSTNTreeData(PSTN_ID)),
   getPSTNComboData: () => dispatch(actions.getPSTNComboData()),
-  registUser: (userInfo, data, history) => dispatch(actions.insertUser(userInfo, data, history)),
+  registUser: (userInfo, listParam, history, onSaveSuccess) => dispatch(actions.insertUser(userInfo, listParam, history, onSaveSuccess)),
   getChangeRANKTreeData: RANK_ID => dispatch(actions.getChangeRANKTreeData(RANK_ID)),
   getRANKComboData: () => dispatch(actions.getRANKComboData()),
-  updateUser: (userId, data, history) => dispatch(actions.updateUser(userId, data, history)),
+  updateUser: (userId, listParam, history, onSaveSuccess) => dispatch(actions.updateUser(userId, listParam, history, onSaveSuccess)),
   getUser: userId => dispatch(actions.getUser(userId)),
 });
 

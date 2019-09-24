@@ -10,7 +10,7 @@ const FooterMenu = () => (
       <Button
         type="button"
         onClick={() => window.open(
-          'http://skynet.skhynix.com/portlet/ptl/cmm/ptlprivacy.jsp',
+          'http://www.kb-sys.co.kr',
           'privacy',
           'width=766, height=535, toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=yes, resizable=0',
         )}
@@ -29,7 +29,7 @@ const FooterMenu = () => (
       <Button
         type="button"
         onClick={() => window.open(
-            'http://skynet.skhynix.com/portlet/ptl/cmm/ptlhelptel.jsp?addToRoster=y',
+            'http://www.kb-sys.co.kr/contactUs',
             'HelpTel',
             'width=575, height=650, toolbar=0, location=0, directories=0, status=0, menubar=0, scrollbars=0, resizable=0',
           )}

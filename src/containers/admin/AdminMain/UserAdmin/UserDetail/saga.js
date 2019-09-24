@@ -25,30 +25,46 @@ export function* getUserInfo(payload) {
 }
 
 export function* insertUserInfo(payload) {
-  const { history, userInfo } = payload;
+  const { history, listParam, userInfo, onSaveSuccess } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/registUser/', userInfo);
-  const data = response;
-  if (data.code === 200 && data.userId !== 0) {
+  const result = response;
+  if (result.code === 200 && result.userId !== 0) {
     message.success(<MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>, 3);
-    const listParam = payload.data;
-    history.push({
-      pathname: '/admin/adminmain/account', state: listParam,
+    // 저장후 상상보기 페이지 유지
+    onSaveSuccess();
+    yield put({
+      type: actionType.GET_USER_DATA,
+      userId: userInfo.userId,
     });
+    /*    
+    // 저장후 리스트로
+    history.push({
+      pathname: `/admin/adminmain/account/user/${data.userId}`, state: listParam,
+    });
+    */
   } else {
     feed.error(`${intlObj.get(messages.regFail)}`);
   }
 }
 
 export function* updatetUserInfo(payload) {
-  const { history, userInfo } = payload;
+  const { history, listParam, userInfo, onSaveSuccess } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/updateUser/', userInfo);
-  const data = response;
-  if (data.code === 200) {
+  const result = response;
+  if (result.code === 200) {
     message.success(<MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>, 3);
-    const listParam = payload.data;
+    // 저장후 상상보기 페이지 유지
+    onSaveSuccess();
+    yield put({
+      type: actionType.GET_USER_DATA,
+      userId: userInfo.userId,
+    });    
+    /*
+    // 저장후 리스트로
     history.push({
-      pathname: '/admin/adminmain/account', state: listParam,
+      pathname: `/admin/adminmain/account/user/${userInfo.userId}`, state: listParam,
     });
+    */
   } else {
     feed.error(`${intlObj.get(messages.udtFail)}`);
   }

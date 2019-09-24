@@ -106,7 +106,7 @@ class AppQna extends React.Component {
           <div className="itemAUserInfo">
             <div className="userPic">
               <img
-                src={`/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
+                src={`${item.empnoRegist}.jpg`}
                 alt={item.empnoRegist}
                 className="profilePic"
                 onError={e => {
@@ -136,7 +136,7 @@ class AppQna extends React.Component {
           <div className="itemQUserInfo">
             <div className="userPic">
               <img
-                src={`/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
+                src={`${item.empnoRegist}.jpg`}
                 alt={item.empName}
                 className="profilePic"
                 onError={e => {
@@ -180,7 +180,7 @@ class AppQna extends React.Component {
           <div className="itemQUserInfo">
             <div className="userPic">
               <img
-                src={`/portalWeb/uploadfile/pictures/${item.empnoRegist}.jpg`}
+                src={`${item.empnoRegist}.jpg`}
                 alt={item.empName}
                 className="profilePic"
                 onError={e => {

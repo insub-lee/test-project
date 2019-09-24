@@ -5,18 +5,20 @@ export const getUser = userId => ({
   userId,
 });
 
-export const insertUser = (userInfo, data, history) => ({
+export const insertUser = (userInfo, listParam, history, onSaveSuccess) => ({
   type: constants.INSERT_USER_DATA,
   userInfo,
-  data,
+  listParam,
   history,
+  onSaveSuccess,
 });
 
-export const updateUser = (userInfo, data, history) => ({
+export const updateUser = (userInfo, listParam, history, onSaveSuccess) => ({
   type: constants.UPDATE_USER_DATA,
   userInfo,
-  data,
+  listParam,
   history,
+  onSaveSuccess,
 });
 
 export const checkEmpNo = (userId, empNo) => ({

@@ -117,6 +117,10 @@ export default defineMessages({
     id: 'admin.AdminMain.UserAdmin.titleUserNameEng',
     defaultMessage: '사용자 명(영어)',
   },
+  titleUserPhoto: {
+    id: 'admin.AdminMain.UserAdmin.titleUserPhoto',
+    defaultMessage: '사진',
+  },
   titleUserStatus: {
     id: 'admin.AdminMain.UserAdmin.titleUserStatus',
     defaultMessage: '상태',
