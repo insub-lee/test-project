@@ -9,8 +9,8 @@ theme.header = {
   backgroundColor: '#584475',
   backgroundImage: 'linear-gradient(270deg,rgba(51,148,225,.18),transparent)',
   borderTop: 'none',
-  iconMenuColor: '#ffffff', /* 사이드바 열기-닫기 아이콘 폰트 색상 */
-  iconGoBizStoreColor: '#ffffff', /* 비즈스토어 가기 아이콘 폰트 색상 */
+  iconMenuColor: '#ffffff' /* 사이드바 열기-닫기 아이콘 폰트 색상 */,
+  iconGoBizStoreColor: '#ffffff' /* 비즈스토어 가기 아이콘 폰트 색상 */,
   userInfo: {
     fontColor: '#ffffff',
     fontSize: '13px',
@@ -19,11 +19,11 @@ theme.header = {
     inputBackgroundColor: 'rgba(255,255,255,0.3)',
     fontColor: '#ffffff',
     fontSize: '12px',
-    iconSearchButtonColor: '#ffffff', /* 구성원검색 버튼 아이콘 폰트 색상 */
+    iconSearchButtonColor: '#ffffff' /* 구성원검색 버튼 아이콘 폰트 색상 */,
   },
-  iconAlarmColor: '#ffffff', /* 알림 아이콘 폰트 색상 */
-  iconSettingColor: '#ffffff', /* 설정 아이콘 폰트 색상 */
-  iconFullScreenColor: '#ffffff', /* 풀스크린 아이콘 폰트 색상 */
+  iconAlarmColor: '#ffffff' /* 알림 아이콘 폰트 색상 */,
+  iconSettingColor: '#ffffff' /* 설정 아이콘 폰트 색상 */,
+  iconFullScreenColor: '#ffffff' /* 풀스크린 아이콘 폰트 색상 */,
 };
 
 // theme.portalContentBackground = `#e2e7ea url(${BackgroundImage}) repeat 0 0`;
@@ -69,7 +69,7 @@ theme.dock = {
     color: '#222222',
   },
   dockExecItem: {
-    color: '#222222',
+    color: '#fff',
   },
   pagingBtns: {
     bgColor: '#676a6d',

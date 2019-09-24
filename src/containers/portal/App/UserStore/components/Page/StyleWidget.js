@@ -5,15 +5,24 @@ import notifyMark from 'images/common/widget-notify-mark.png';
 import setupWidget from 'images/common/widget-icon-settings2.png';
 import deleteWidget from 'images/common/icon-delete-11x11.png';
 
+const WidgetGridDv = styled.div`
+  &.addNew .isoWidgetsWrapper {
+    background: #fff;
+    border: 0;
+  }
+`;
+
 const WidgetWrapper = styled.div`
   margin: 0 0px;
   height: 100%;
-  // border: 1px solid #d8d8d8;
+  border: 1px solid #e5e5e5;
   color: #333333;
-  background: #ffffff;
+  background: #f3f1f5;
 
   // IE에서 위젯 이동시 제목 사라짐 해결
-  *::selection {color: #333333;}
+  *::selection {
+    color: #333333;
+  }
 
   @media only screen and (max-width: 767) {
     margin-right: 0 !important;
@@ -71,7 +80,8 @@ const WidgetHeader = styled.div`
       > li {
         float: left;
 
-        .setupWidget, .deleteWidget {
+        .setupWidget,
+        .deleteWidget {
           display: inline-block;
           width: 28px;
           height: 28px;
@@ -141,6 +151,8 @@ const WidgetBox = styled.div`
   }
 `;
 
-const WidgetColumn = styled.div`align-content: flex-start;`;
+const WidgetColumn = styled.div`
+  align-content: flex-start;
+`;
 
-export { WidgetWrapper, WidgetBox, WidgetHeader, WidgetColumn };
+export { WidgetWrapper, WidgetBox, WidgetHeader, WidgetColumn, WidgetGridDv };

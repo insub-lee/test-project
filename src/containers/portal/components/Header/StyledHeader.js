@@ -161,6 +161,7 @@ const StyledHeader = styled.header`
 
           &:before {
             color: ${props => props.theme.header.iconAlarmColor};
+            opacity: 0.5;
           }
         }
 
@@ -173,6 +174,7 @@ const StyledHeader = styled.header`
 
           &:before {
             color: ${props => props.theme.header.iconFullScreenColor};
+            opacity: 0.5;
           }
         }
 
