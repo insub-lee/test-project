@@ -5,19 +5,9 @@ import WidgetHeader from './WidgetsHeader';
 import WidgetBox from './WidgetsBox';
 // import Watermark from './WidgetsWatermark';
 
-
 export default class WidgetsWrapper extends PureComponent {
   render() {
-    const {
-      width,
-      gutterTop,
-      gutterRight,
-      gutterBottom,
-      gutterLeft,
-      padding,
-      children,
-      item,
-    } = this.props;
+    const { width, gutterTop, gutterRight, gutterBottom, gutterLeft, padding, children, item } = this.props;
 
     const wrapperStyle = {
       marginTop: gutterTop,
@@ -32,16 +22,9 @@ export default class WidgetsWrapper extends PureComponent {
 
     return (
       <div style={{ position: 'relative', height: '100%' }}>
-        <WidgetWrapper
-          className="isoWidgetsWrapper"
-          style={wrapperStyle}
-        >
+        <WidgetWrapper className="isoWidgetsWrapper" style={wrapperStyle}>
           <WidgetHeader item={item} />
-          <WidgetBox
-            item={item}
-          >
-            {children}
-          </WidgetBox>
+          <WidgetBox item={item}>{children}</WidgetBox>
         </WidgetWrapper>
         {/* <Watermark /> */}
       </div>

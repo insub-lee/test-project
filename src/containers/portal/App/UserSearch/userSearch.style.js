@@ -3,8 +3,8 @@ import styled from 'styled-components';
 // import WithDirection from '../../config/withDirection';
 
 const UserSearch = styled.div`
-
-  .history.visible, .results.visible {
+  .history.visible,
+  .results.visible {
     position: relative;
     width: 350px;
     height: 100%;
@@ -13,7 +13,7 @@ const UserSearch = styled.div`
     top: 7px;
     left: -65px;
     background-color: #ffffff;
-    box-shadow: 0px 2px 7px 0px rgba(0,0,0,0.3);
+    box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.3);
 
     @media only screen and (max-width: 1024px) {
       left: -101px;
@@ -25,7 +25,8 @@ const UserSearch = styled.div`
     }
   }
 
-  .history.visible:after, .results.visible:after {
+  .history.visible:after,
+  .results.visible:after {
     position: absolute;
     top: -4px;
     left: 50%;
@@ -34,7 +35,7 @@ const UserSearch = styled.div`
     height: 8px;
     margin-left: 0;
     background: #ffffff;
-    content: "";
+    content: '';
     transform: translateX(-50%) rotate(45deg);
 
     @media only screen and (max-width: 1024px) {
@@ -54,9 +55,9 @@ const UserSearch = styled.div`
   .custom-scrollbar {
     width: 100%;
 
-    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
       /* IE10+ specific styles go here */
-      padding-bottom: 15px; 
+      padding-bottom: 15px;
     }
   }
 
@@ -66,7 +67,7 @@ const UserSearch = styled.div`
     padding: 10px 0 0 15px;
     max-width: 350px;
 
-    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
       /* IE10+ specific styles go here */
       padding: 10px 0 15px 15px;
     }
@@ -87,11 +88,11 @@ const UserSearch = styled.div`
       }
 
       .listDivImg {
-        position:relative;
-        width:25px;
-        height:25px;
-        border-radius:50%;
-        overflow:hidden;
+        position: relative;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        overflow: hidden;
       }
     }
   }
@@ -99,7 +100,7 @@ const UserSearch = styled.div`
   .resultsTableWrapper {
     padding: 10px 0 10px 15px;
 
-    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
       /* IE10+ specific styles go here */
       padding: 10px 0 15px 15px;
     }
@@ -113,20 +114,20 @@ const UserSearch = styled.div`
     }
 
     .listDivImg {
-      position:relative;
-      width:25px;
-      height:25px;
-      border-radius:50%;
-      vertical-align:middle;
-      overflow:hidden;
+      position: relative;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      vertical-align: middle;
+      overflow: hidden;
     }
   }
 
   .listImg {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
   }
 
   .ellipsis {
@@ -142,8 +143,9 @@ const UserSearch = styled.div`
     line-height: 1;
     background-color: #f4f4f4;
 
-    .deleteHistoryAllBtn, .closeBtn {
-      height:36px !important;
+    .deleteHistoryAllBtn,
+    .closeBtn {
+      height: 36px !important;
       padding: 0 15px;
       color: #404040;
       font-size: 12px !important;
@@ -158,6 +160,7 @@ const UserSearch = styled.div`
   .icon-search {
     &:before {
       color: ${props => props.theme.header.memberSearch.iconSearchButtonColor};
+      opacity: 0.5;
     }
   }
 `;

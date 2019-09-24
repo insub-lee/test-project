@@ -9,8 +9,8 @@
   font-style: normal;
 }
 
-
-[class^="icon-"], [class*=" icon-"] {
+[class^='icon-'],
+[class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'iconfont' !important;
   speak: none;
@@ -26,69 +26,70 @@
 }
 /* 1. header 왼쪽 */
 .icon-menu:before {
-  content: "\e908";
+  content: '\e908';
   color: #575958;
 }
 
 /* 2. header 오른쪽 */
 .icon-search:before {
-  content: "\e90a";
+  content: '\e90a';
   color: #686868;
 }
 .icon-bell:before {
-  content: "\e901";
+  content: '\e901';
   color: #686868;
 }
 
 .icon-full:before {
-  content: "\e904";
+  content: '\e904';
   color: #686868;
 }
 
 /* sidebar */
 .icon-app:before {
-  content: "\e900";
+  content: '\e900';
   color: #fff;
 }
 .icon-home:before {
-  content: "\e905";
+  content: '\e905';
   color: #fff;
 }
 .icon-setting:before {
-  content: "\e90b";
+  content: '\e90b';
   color: #fff;
+  opacity: 0.5;
 }
 
 /* 3. footer 로고(왼쪽) */
 .icon-logo:before {
-  content: "\e907";
+  content: '\e907';
   color: #979797;
 }
 
 /* 4. footer 오른쪽 */
 .icon-list:before {
-  content: "\e906";
+  content: '\e906';
   color: #8a8a8a;
 }
 .icon-contact:before {
-  content: "\e902";
+  content: '\e902';
   color: #8a8a8a;
 }
 .icon-user:before {
-  content: "\e90d";
+  content: '\e90d';
   color: #8a8a8a;
 }
 
 /* 5. widget */
 .icon-setting2:before {
-  content: "\e90c";
+  content: '\e90c';
   color: #606060;
 }
 .icon-reload:before {
-  content: "\e909";
+  content: '\e909';
   color: #606060;
 }
 .icon-export:before {
-  content: "\e903";
+  content: '\e903';
   color: #606060;
 }

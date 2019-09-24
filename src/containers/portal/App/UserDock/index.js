@@ -241,7 +241,7 @@ class UserDock extends React.Component {
     if (!isDesktop(view)) {
       styleObjCopy.dockDivWidth = '100%';
     } else if (dockIconType === 'MAX') {
-      styleObjCopy.dockDivWidth = '90px';
+      styleObjCopy.dockDivWidth = '70px';
     } else {
       styleObjCopy.dockDivWidth = '42px';
     }
@@ -323,7 +323,7 @@ class UserDock extends React.Component {
           position="right"
           isVisible
           dimMode="none"
-          size={dockIconType === 'MAX' ? 90 : 42}
+          size={dockIconType === 'MAX' ? 70 : 42}
           dockFixedYn={dockFixedYn}
           dockIconType={dockIconType}
           appYn={appYn}
@@ -502,10 +502,10 @@ class UserDock extends React.Component {
       height: dockItemHeight,
       width: dockIconType === 'MAX' ? '70px' : '34px',
 
-      marginTop: '9px',
+      marginTop: '10px',
       marginRight: 'auto',
       marginBottom: 'auto',
-      marginLeft: dockIconType === 'MAX' ? '9px' : '4px',
+      // marginLeft: dockIconType === 'MAX' ? '9px' : '4px',
     };
     if (isDesktop(this.props.view)) {
       // 홈 앱
