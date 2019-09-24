@@ -53,34 +53,30 @@ const Header = ({
         <ul>
           <li className="leftBottom">
             <Trigger>
-              <span
-                className="trigger icon icon-menu"
-                onClick={showMenu}
-                onKeyDown={showMenu}
-                role="button"
-                tabIndex="0"
-              />
+              <span className="trigger icon icon-menu" onClick={showMenu} onKeyDown={showMenu} role="button" tabIndex="0" />
               {/* <Badge count={myHNotiCnt} overflowCount={99}>
                 <Link to="/" className="badgeLink" />
               </Badge> */}
             </Trigger>
             <h1 className="siteHeader">
               {siteId === 1183 ? (
-                <img src={HyundaiLogo} alt="Hyundai Moto" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0" style={{ display: 'inline-block', height: '100%' }} />
-              ) : (
-                <span
-                  className="gotoHome"
+                <img
+                  src={HyundaiLogo}
+                  alt="Hyundai Moto"
                   onClick={() => gotoHome('common')}
                   onKeyDown={() => gotoHome('common')}
                   role="button"
                   tabIndex="0"
-                >
+                  style={{ display: 'inline-block', height: '100%' }}
+                />
+              ) : (
+                <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
                   {view !== 'Mobile' && headerTitle}
                 </span>
               )}
               <span> {appName} </span>
               {/* 담당자 popover */}
-              {(menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE') && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
+              {menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE' && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
             </h1>
           </li>
         </ul>
@@ -90,10 +86,12 @@ const Header = ({
           <li className="rightBottom">
             <ul className="iconMenuWrapper">
               <li>
-                <UserSearch />{/* 구성원검색 */}
+                <UserSearch />
+                {/* 구성원검색 */}
               </li>
               <li>
-                <AlarmPopover />{/* 알림 */}
+                <AlarmPopover />
+                {/* 알림 */}
               </li>
               {/*
                 <li>
@@ -102,7 +100,7 @@ const Header = ({
               */}
               <li>
                 <div className="full-screenable-node">
-                  <div align="right">
+                  <div>
                     <Button type="mFullscreenButton" onClick={showFullScreen}>
                       <span className="icon icon-full" />
                     </Button>
@@ -111,7 +109,8 @@ const Header = ({
                 {/* 풀스크린 버튼 */}
               </li>
               <li>
-                <UserProfile execPage={execPage} />{/* 프로필 */}
+                <UserProfile execPage={execPage} />
+                {/* 프로필 */}
               </li>
               {hasRoleAdmin === true && (
                 <li>

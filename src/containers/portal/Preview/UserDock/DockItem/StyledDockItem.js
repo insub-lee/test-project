@@ -4,8 +4,8 @@ import WithDirection from 'config/withDirection';
 const DockItemWrapper = styled.div`
   display: inline-block;
   height: 100%;
-  margin : auto;
-  position : relative;
+  margin: auto;
+  position: relative;
   cursor: pointer;
   // border: 1px solid transparent;
   border-radius: 5px;
@@ -22,7 +22,9 @@ const DockItemWrapper = styled.div`
     height: 100%;
   }
 
-  .dockItemDockY, .dockItemExec, .dockItemLastExec {
+  .dockItemDockY,
+  .dockItemExec,
+  .dockItemLastExec {
     position: relative;
     display: table-cell;
     border-radius: 5px;
@@ -30,7 +32,7 @@ const DockItemWrapper = styled.div`
     word-wrap: break-word;
     vertical-align: middle;
   }
-  
+
   .dockItemDockY {
     background: transparent;
     box-shadow: none;
@@ -40,7 +42,7 @@ const DockItemWrapper = styled.div`
   .dockItemExec {
     background: #e2e3e5;
     word-break: break-all;
-    
+
     .dockItemName {
       color: ${props => props.theme.dock.dockExecItem.color};
       white-space: normal !important;
@@ -60,7 +62,7 @@ const DockItemWrapper = styled.div`
 
   img {
     display: block;
-    cursor : pointer;
+    cursor: pointer;
   }
 
   .dockItemName {

@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import WidgetsWrapper from './WidgetsWrapper';
 import WidgetGridWrapper from './StyleWidgetGrid';
+import { WidgetGridDv } from './StyleWidget';
 import Loading from './Loading';
 import * as selectors from './selectors';
 
@@ -22,11 +23,11 @@ function createComponents(item) {
   };
   const COMP = Loadable(param);
   return (
-    <div key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
+    <WidgetGridDv key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
       <WidgetsWrapper item={item}>
         <COMP item={item} />
       </WidgetsWrapper>
-    </div>
+    </WidgetGridDv>
   );
 }
 
@@ -79,7 +80,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   let cH = 0;
   let cHH = 0;
   let cH2 = 0;
-  items.forEach((item) => {
+  items.forEach(item => {
     let w = item.position[2];
     const h = item.position[3];
 
@@ -147,7 +148,7 @@ function changeLayoutConfig(layoutConfig, view, items) {
   let cH2 = 0;
 
   let count = 1;
-  items.forEach((item) => {
+  items.forEach(item => {
     // eslint-disable-next-line prefer-destructuring
     let w = item.w;
 

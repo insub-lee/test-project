@@ -61,7 +61,7 @@ const mobileDockCss = {
 
 const desktopDockCss = {
   marginLeft: 45,
-  marginRight: 90,
+  marginRight: 70,
 };
 
 class App extends React.PureComponent {
@@ -336,7 +336,7 @@ class App extends React.PureComponent {
     this.setState(prevState => {
       return { fixedMenu: !prevState.fixedMenu };
     });
-  }
+  };
 
   setMenuOpen = () => {
     this.setState(prevState => ({
@@ -618,7 +618,7 @@ class App extends React.PureComponent {
   };
 
   hideExecApps = () => {
-    const { apps, resetLastExecYn} = this.props;
+    const { apps, resetLastExecYn } = this.props;
     const appsCopy = apps.slice();
     appsCopy.forEach((o, i) => {
       if (o.containerInfo.children[i + 1]) {
@@ -650,8 +650,8 @@ class App extends React.PureComponent {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
-  goCommonHome = (dockHomeItem) => {
-    const { commonMenuTreeData }  = this.props;
+  goCommonHome = dockHomeItem => {
+    const { commonMenuTreeData } = this.props;
     /*
      현재공통메뉴 홈을 구분 해 줄수 있는 구분자가 없음
      공통메뉴의 첫번째 메뉴를 임의로 공통메뉴 홈으로 설정
@@ -659,17 +659,17 @@ class App extends React.PureComponent {
      */
     if (commonMenuTreeData && commonMenuTreeData.length > 0) {
       const idx = commonMenuTreeData.findIndex(item => item.extras.APP_YN === 'N');
-      if(idx > -1 ) {
+      if (idx > -1) {
         this.execPage(commonMenuTreeData[idx].extras, 'execMenu');
         return;
-      } 
+      }
     }
     this.execPage(dockHomeItem, 'execDock');
-  };  
+  };
 
   getLayoutMarginRight = () => {
     const { dockFixedYn } = this.props;
-    return dockFixedYn === 'Y' ? 90 : 0;
+    return dockFixedYn === 'Y' ? 70 : 0;
   };
 
   getLayoutMarginLeft = () => {
@@ -794,7 +794,7 @@ class App extends React.PureComponent {
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="home">
-                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome(dockHomeItem)}/>
+                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome(dockHomeItem)} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
@@ -821,7 +821,16 @@ class App extends React.PureComponent {
             </div> */}
           </SideMenu>
           <Layout
-            style={isDesktop(view) ? { ...desktopDockCss, marginLeft: this.getLayoutMarginLeft(), marginRight: this.getLayoutMarginRight(), transition: 'margin-left 0.3s ease-out 0s' } : mobileDockCss}
+            style={
+              isDesktop(view)
+                ? {
+                    ...desktopDockCss,
+                    marginLeft: this.getLayoutMarginLeft(),
+                    marginRight: this.getLayoutMarginRight(),
+                    transition: 'margin-left 0.3s ease-out 0s',
+                  }
+                : mobileDockCss
+            }
           >
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
