@@ -38,7 +38,8 @@ class AppDetail extends React.Component {
 
   render() {
     const menuNum = 0; // 0-카테고리, 1-업무그룹
-    const handleOnClick = node => this.props.history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
+    const { history } = this.props;
+    const handleOnClick = node => history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
     return (
       <div className="appDetailWrapper" style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
         <AppDetailStyle>
@@ -46,7 +47,7 @@ class AppDetail extends React.Component {
             <AppCategory handleOnClick={handleOnClick} menuNum={menuNum} selectedIndex={Number(this.state.CATG_ID)} preUrl="/store/appMain/bizStore" />
           </ErrorBoundary>
           <ErrorBoundary>
-            <AppBasicInfo targetUrl={window.location.href} appId={this.state.APP_ID} />
+            <AppBasicInfo targetUrl={window.location.href} appId={this.state.APP_ID} history={history} />
           </ErrorBoundary>
 
           <ErrorBoundary>

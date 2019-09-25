@@ -92,7 +92,7 @@ class AppRegisForm extends React.Component {
       ITEM_VALUE_EXAMPLE: `{
         "appKey" : "appKey",
         "appInfo" : {
-          "path" : "/example/index",
+          "path" : "example/index",
           "default" : "1X1",
           "data" : { }
         },

@@ -14,6 +14,7 @@ import injectSaga from 'utils/injectSaga';
 import themes from 'config/themes/index';
 // import { intlObj } from 'utils/commonUtils';
 // import messages from '../messages';
+import { ModalContainer, ModalRoute } from 'react-router-modal';
 
 import * as selectors from './selectors';
 import reducer from './reducer';
@@ -25,7 +26,6 @@ import StyleUserSetting from './StyleUserSetting';
 import AppList from './AppMain/AppList';
 import AppMain from './AppMain';
 
-import MyPage from './AppMain/MyPage';
 import Main from './AppMain/MyPage/Main';
 import AppInfo from './AppMain/MyPage/AppInfo';
 import PageInfo from './AppMain/MyPage/PageInfo';
@@ -34,6 +34,9 @@ import BizDetail from './AppMain/Biz/BizDetail';
 import BizMenuList from './AppMain/Biz/BizMenuList';
 import BizStore from './AppMain/BizStore';
 import BizManage from './AppMain/BizManage';
+
+import Widget from 'components/appSetting';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import './global-store.css';
 
@@ -67,7 +70,6 @@ class UserStore extends Component {
                       <Route exact path="/portal/store" component={AppList} />
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
-                      <Route path="/portal/store/appMain/myPage/widgetsetting" component={MyPage} />
                       <Route exact path="/portal/store/appMain/myPage/app/:APP_ID" render={ props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />} />
                       <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
                       <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
@@ -78,6 +80,14 @@ class UserStore extends Component {
                       <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
                     </Switch>
                   </div>
+                  <ErrorBoundary>
+                    <ModalRoute
+                      path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
+                      component={Widget}
+                      outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
+                    />
+                  </ErrorBoundary>
+                  <ModalContainer />
                 </Content>
               </AppWrapper>
             </Layout>
