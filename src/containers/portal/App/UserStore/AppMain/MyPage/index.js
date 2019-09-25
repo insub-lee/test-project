@@ -1,35 +1,19 @@
 import PropTypes from 'prop-types';
-// import { Route } from 'react-router-dom';
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import { ModalContainer, ModalRoute } from 'react-router-modal';
-
 import 'react-router-modal/css/react-router-modal.css';
-
-import Widget from 'components/appSetting';
-import Footer from '../../Footer';
-
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
-
-// import Main from './Main';
 import MyPageTree from '../../components/MyPageTree';
 import MyStoreTreeStyledTabList from '../../components/TabList/MyStoreTreeStyledTabList';
-// import AppInfo from './AppInfo';
-// import PageInfo from './PageInfo';
-// import BizDetail from '../Biz/BizDetail';
-// import BizMenuList from '../Biz/BizMenuList';
-// import Popup from './Popup';
-// import AppBizModal from './AppBizModal';
 
 const homeUrl = '/portal/store/appMain/myPage';
 
@@ -148,31 +132,6 @@ class MyPage extends Component {
             />
           </ErrorBoundary>
         </MyStoreTreeStyledTabList>
-
-        <ErrorBoundary>
-          <ModalRoute
-            path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
-            component={Widget}
-            // className="widgetsetting-modal"
-            // inClassName="widgetsetting-modal-in"
-            // outClassName="widgetsetting-modal-out"
-            // backdropClassName="widgetsetting-backdrop"
-            outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
-          />
-        </ErrorBoundary>
-
-        <ModalContainer />
-        {/* <div className="myPageContentWrapper"> */}
-        {/* <ErrorBoundary>
-          <Route path="/portal/store/appMain/myPage" component={Main} exact />
-          <Route path="/portal/store/appMain/myPage/app/:APP_ID" component={AppInfo} exact />
-          <Route path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} exact />
-          <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
-          <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" component={BizDetail} />
-          <Route path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
-        </ErrorBoundary> */}
-        {/* </div> */}
-        {/*<Footer />*/}
       </div>
     );
   }
