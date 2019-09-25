@@ -88,7 +88,7 @@ class App extends React.PureComponent {
       isSpinnerShow: false,
       // isPreviewPage: false,
       // menu 고정용 state,
-      fixedMenu: TextTrackCue,
+      fixedMenu: true,
     };
 
     this.count = 0;
@@ -320,22 +320,28 @@ class App extends React.PureComponent {
   };
 
   setOpen = () => {
-    // this.setState(
-    //   prevState => ({
-    //     open: true,
-    //   }),
-    //   () => setTimeout(() => this.props.handleMenuShow(this.state.open), 300),
-    // );
+    const { open, fixedMenu } = this.state;
+    this.setState({
+        open: true,
+      },
+      () => {
+        // 처음 메뉴 열었을때
+        if (!open && fixedMenu) {
+          setTimeout(() => this.props.handleMenuShow(this.state.open), 300)
+        }
+    });
+    /*
     this.setState({
       open: true,
     });
+    */
     event.preventDefault();
   };
 
   setFixedOpenMenu = () => {
     this.setState(prevState => {
       return { fixedMenu: !prevState.fixedMenu };
-    });
+    }, () => setTimeout(() => this.props.handleMenuShow(this.state.fixedMenu), 300));
   };
 
   setMenuOpen = () => {
