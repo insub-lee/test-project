@@ -52,13 +52,20 @@ class UserStore extends Component {
   }
 
   render() {
-    const { collapsed, execMenu, execPage, history: { location: { pathname } } } = this.props;
+    const {
+      collapsed,
+      execMenu,
+      execPage,
+      history: {
+        location: { pathname },
+      },
+    } = this.props;
     const bizStoreYn = pathname.includes('biz') ? 'Biz' : 'App';
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
-            <h2 className="pageHeader">{ bizStoreYn } Store</h2>
+            <h2 className="pageHeader">{bizStoreYn} Store</h2>
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ minHeight: '100%' }}>
@@ -70,13 +77,20 @@ class UserStore extends Component {
                       <Route exact path="/portal/store" component={AppList} />
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
-                      <Route exact path="/portal/store/appMain/myPage/app/:APP_ID" render={ props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />} />
+                      <Route
+                        exact
+                        path="/portal/store/appMain/myPage/app/:APP_ID"
+                        render={props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />}
+                      />
                       <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
                       <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
-                      <Route path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID" render={props => <BizDetail {...props} execMenu={execMenu} execPage={execPage} />}/>
+                      <Route
+                        path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID"
+                        render={props => <BizDetail {...props} execMenu={execMenu} execPage={execPage} />}
+                      />
                       <Route exact path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
                       <Route path="/portal/store/appMain/bizManage" component={BizManage} />
-                      <Route path="/portal/store/appMain/bizStore" render={ props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
+                      <Route path="/portal/store/appMain/bizStore" render={props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
                       <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
                     </Switch>
                   </div>
