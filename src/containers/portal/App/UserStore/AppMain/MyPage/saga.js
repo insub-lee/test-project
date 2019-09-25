@@ -164,6 +164,9 @@ export function* deleteNode(payload) {
   if (code === 200) {
     // delete tree node
     const newCategoryData = treeFunc.deleteNode(rowInfo, categoryData);
+    console.debug('>>>>>> delete rowInfo: ', rowInfo);
+    console.debug('>>>>>> delete categoryData: ', categoryData);
+    console.debug('>>>>>> delete newCategoryData: ', newCategoryData);
 
     yield put({
       type: constants.SET_CATEGORY_DATA,
