@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -16,26 +16,45 @@ import * as actions from './actions';
 
 import BizStorePage from '../../../UserStore/components/BizStorePage';
 
-class PageInfo extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      PAGE_ID: props.match.params.pageId,
+class PageInfo extends PureComponent {
+  componentDidMount() {
+    const {
+      match: {
+        params: { TYPE },
+      },
+      match: {
+        params: { pageId },
+      },
+    } = this.props;
+    const params = {
+      pageType: TYPE,
+      PAGE_ID: pageId,
     };
-    this.props.getWidgetList(Number(this.state.PAGE_ID));
+    this.props.getWidgetList(params);
   }
 
   componentWillReceiveProps(nextProps) {
-    const { match } = nextProps;
-    const { params } = match;
-    const { pageId } = params;
-
-    if (pageId && this.state.PAGE_ID !== pageId) {
-      this.setState({
-        PAGE_ID: pageId,
-      });
-      this.props.getWidgetList(Number(pageId));
+    const {
+      match: {
+        params: { TYPE },
+      },
+      match: {
+        params: { pageId },
+      },
+    } = nextProps;
+    const {
+      match: {
+        params: {
+          pageId: { propsPageId },
+        },
+      },
+    } = this.props;
+    const params = {
+      pageType: TYPE,
+      PAGE_ID: pageId,
+    };
+    if (propsPageId && propsPageId !== pageId) {
+      this.props.getWidgetList(params);
     }
   }
 
@@ -72,7 +91,7 @@ PageInfo.propTypes = {
 
 export function mapDispatchToProps(dispatch) {
   return {
-    getWidgetList: PAGE_ID => dispatch(actions.getWidgetList(PAGE_ID)),
+    getWidgetList: params => dispatch(actions.getWidgetList(params)),
   };
 }
 

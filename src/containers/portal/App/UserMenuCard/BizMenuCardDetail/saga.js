@@ -31,7 +31,7 @@ export function* getBizMenu(payload) {
     const type = pathname.indexOf('/app/') > -1 ? 'app' : 'page';
 
     const bizmenuFlatData = treeFunc.getFlatMapDataFromTreeData(children);
-    bizmenuFlatData.map((obj) => {
+    bizmenuFlatData.map(obj => {
       if ((type === 'page' && id === obj.PAGE_ID) || (type === 'app' && id === obj.APP_ID)) {
         selectedIndex = obj.MENU_ID;
       }
