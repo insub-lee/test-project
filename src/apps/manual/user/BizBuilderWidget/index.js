@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
-import { Table, Row, Col } from 'antd';
+import { Table, Row, Col, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import moment from 'moment';
 import { fromJS } from 'immutable';
+import ReactDataGrid from 'react-data-grid';
 import Rodal from 'rodal';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ScrollBar from 'react-custom-scrollbars';
 import reducer from './reducer';
 import saga from './saga';
+import StyleWiget from './StyleWidgets';
 import selectors from './selectors';
 import 'rodal/lib/rodal.css';
 import * as actions from './actions';
@@ -64,9 +65,36 @@ class BizBuilderWidget extends Component {
     const onRodalClose = () => {
       this.setState({ visible: false });
     };
+    const { TabPane } = Tabs;
 
     return (
       <div>
+        <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
+          <Tabs defaultActiveKey="total" type="card">
+            <TabPane tab="전체" key="total">
+              <ul>
+                <li>
+                  <button className="ellipsis">
+                    <span> [2019.01.01]</span>
+                    안녕하세요
+                  </button>
+                </li>
+                <li>
+                  <button className="ellipsis">
+                    <span> [2019.01.01]</span>
+                    안녕하세요
+                  </button>
+                </li>
+                <li>
+                  <button className="ellipsis">
+                    <span> [2019.01.01]</span>
+                    안녕하세요
+                  </button>
+                </li>
+              </ul>
+            </TabPane>
+          </Tabs>
+        </StyleWiget>
         <Table pagination={false} columns={listCols} dataSource={listDataSource}></Table>
         <Rodal
           customStyles={{
@@ -143,7 +171,7 @@ class BizBuilderWidget extends Component {
                                 bizBuilderList.list &&
                                 bizBuilderList.list.map(item => (
                                   <li>
-                                    <button onClick={() => onViewListClick({ item })} className="ellipsis">
+                                    <button type="button" onClick={() => onViewListClick({ item })} className="ellipsis">
                                       <span> [{item.REG_DTTM.substring(0, 10)}]</span>
                                       {item.TITLE}
                                     </button>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Spin } from 'antd';
+import { Table, Button, Spin, Input, Icon } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
@@ -22,39 +22,85 @@ import StyleManualList from './StyleManualList';
 
 const AntdTable = StyledAntdTable(Table);
 
-const columns = setManualManage => [
-  {
-    title: '매뉴얼명',
-    dataIndex: 'MUAL_NAME',
-    key: 'MUAL_IDX',
-    render: (text, record) => (
-      <Button className="manualListTitle" type="link" onClick={() => setManualManage('view', record.CATEGORY_IDX, record.MUAL_IDX)}>
-        {<span dangerouslySetInnerHTML={{ __html: record.MUAL_NAME }} />}
-      </Button>
-    ),
-    width: '60%',
-  },
-  {
-    title: 'Version',
-    dataIndex: 'VERSION',
-    key: 'VERSION',
-    // width: '10%',
-  },
-  {
-    title: '담당자',
-    dataIndex: 'MANAGERNAME',
-    key: 'MANAGERNAME',
-    // width: '10%',
-  },
-  {
-    title: '배포일',
-    dataIndex: 'PUBDATE',
-    key: 'PUBDATE',
-    // width: '10%',
-  },
-];
-
 class ManualList extends Component {
+  handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    this.setState({ searchText: selectedKeys[0] });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
+
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder="Search "
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button type="primary" onClick={() => this.handleSearch(selectedKeys, confirm)} icon="search" size="small" style={{ width: 90, marginRight: 8 }}>
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+  });
+
+  columns = setManualManage => [
+    {
+      title: '매뉴얼명',
+      dataIndex: 'MUAL_NAME',
+      key: 'MUAL_IDX',
+      ...this.getColumnSearchProps('MUAL_NAME'),
+      render: (text, record) => (
+        <Button className="manualListTitle" type="link" onClick={() => setManualManage('view', record.CATEGORY_IDX, record.MUAL_IDX)}>
+          {<span dangerouslySetInnerHTML={{ __html: record.MUAL_NAME }} />}
+        </Button>
+      ),
+      width: '60%',
+    },
+    {
+      title: 'Version',
+      dataIndex: 'VERSION',
+      key: 'VERSION',
+      // width: '10%',
+    },
+    {
+      title: '담당자',
+      dataIndex: 'MANAGERNAME',
+      key: 'MANAGERNAME',
+      ...this.getColumnSearchProps('MANAGERNAME'),
+      // width: '10%',
+    },
+    {
+      title: '배포일',
+      dataIndex: 'PUBDATE',
+      key: 'PUBDATE',
+      // width: '10%',
+    },
+  ];
+
   componentDidMount() {
     const { GetManualList, match, categoryIndex } = this.props;
     if (match && match.params) {
@@ -95,7 +141,7 @@ class ManualList extends Component {
         <Spin tip="Loading..." spinning={isLoading}>
           <AntdTable
             dataSource={dataSource}
-            columns={columns(setManualManage)}
+            columns={this.columns(setManualManage)}
             pagination={{ current: paginationIdx }}
             onChange={pagination => setPaginationIdx(pagination.current)}
           />
