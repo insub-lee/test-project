@@ -27,10 +27,10 @@ const StyleEditorMain = styled.div`
     .editorComponent {
       /* width: calc(100% - 64px); */
       width: 100%;
-      border: 2px solid rgba(255, 255, 255, 0);
+      /* border: 2px solid rgba(255, 255, 255, 0); */
       border-radius: 3px;
       position: relative;
-      padding: 4px;
+      /* padding: 4px; */
       /* &.dragging {
         .manualIndexContent {
           display: none !important;
@@ -68,6 +68,11 @@ const StyleEditorMain = styled.div`
           }
           input[type='text'] {
             /* width: calc(100% - 120px); */
+            background: transparent;
+            border: 0;
+            color: #076dac;
+            font-weight: 600;
+            padding-left: 0;
           }
           /* .manualIndexTitleButtonWrapper {
             display: inline-block;
@@ -238,13 +243,17 @@ const StyleEditorMain = styled.div`
     min-height: 40px;
     cursor: pointer;
     .fr-view {
-      padding: 20px;
+      padding: 15px 20px;
       font-size: 13px;
+      & td {
+        color: #000;
+      }
     }
     .fr-box.fr-basic .fr-element.fr-view {
       font-size: 13px;
       border: 1px solid #f7f7f7;
       border-bottom: 0;
+      padding: 15px 20px;
     }
     .fr-toolbar.fr-bottom {
       border-top: 2px solid #000;
@@ -266,14 +275,19 @@ const StyleEditorMain = styled.div`
 
   /* QNA - Btn - CSS */
   .btn-primary {
-    color: #fff;
-    background-color: #886ab5;
+    color: #886ab5;
+    background-color: #fff;
     border-color: #886ab5;
     box-shadow: 0 2px 6px 0 rgba(136, 106, 181, 0.5);
     &:hover {
       color: #fff;
       background-color: #7453a6;
       border-color: #6e4e9e;
+    }
+    &:focus {
+      color: #fff;
+      background-color: #7453a6;
+      border-color: #7453a6;
     }
   }
 
@@ -307,6 +321,11 @@ const StyleEditorMain = styled.div`
     border-color: #fd3995;
     box-shadow: 0 2px 6px 0 rgba(253, 57, 149, 0.5);
     &:hover {
+      color: #fff;
+      background-color: #fd1381;
+      border-color: #fc077a;
+    }
+    &:focus {
       color: #fff;
       background-color: #fd1381;
       border-color: #fc077a;

@@ -13,6 +13,8 @@ class QnAList extends Component {
     };
   }
 
+  componentDidMount() {}
+
   setHover = value => {
     this.setState({ isHover: value });
   };
@@ -27,6 +29,11 @@ class QnAList extends Component {
         setHover(false);
       }
     }
+    // else if(qnaDataLength === index + 1){
+    //     if (isHover !== true) {
+    //       setHover(true);
+    //     }
+    //   }
 
     return (
       <div className="qna-data-wrap">
@@ -48,19 +55,21 @@ class QnAList extends Component {
             ) : (
               <p onClick={() => setHover(true)}>{qnaData.TITLE}</p> || <p onClick={() => setHover(true)}>질문을 입력해주세요</p>
             )}
-            <div className="edit-btn-wrap">
-              <Button
-                shape="circle"
-                type="button"
-                className="btn-sm btn-outline-danger"
-                onClick={e => {
-                  e.stopPropagation();
-                  action.onClickRemoveBtn(qnaData.IDX);
-                }}
-              >
-                <Icon type="close" />
-              </Button>
-            </div>
+            {selectedComponentIdx === item.MUAL_TABCOMP_IDX && (
+              <div className="edit-btn-wrap">
+                <Button
+                  shape="circle"
+                  type="button"
+                  className="btn-sm btn-outline-danger"
+                  onClick={e => {
+                    e.stopPropagation();
+                    action.onClickRemoveBtn(qnaData.IDX);
+                  }}
+                >
+                  <Icon type="close" />
+                </Button>
+              </div>
+            )}
           </div>
           <div className="qna-dd">
             <span>A</span>
@@ -72,7 +81,7 @@ class QnAList extends Component {
               </div>
             )}
           </div>
-          {qnaDataLength === index + 1 && (
+          {qnaDataLength === index + 1 && selectedComponentIdx === item.MUAL_TABCOMP_IDX && (
             <div className="btn-wrap">
               <Button
                 shape="circle"

@@ -61,7 +61,7 @@ const Styled = styled.div`
       &.react-tabs__tab--selected {
         background-color: #fff;
         z-index: 0 !important;
-        border-bottom: 1px solid #d9d9d9;
+        border-bottom: 1px solid transparent;
         color: #000000;
 
         &:not(:hover) {

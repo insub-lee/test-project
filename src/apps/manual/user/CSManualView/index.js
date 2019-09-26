@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
 import PropTypes from 'prop-types';
+import { Modal } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -21,6 +22,7 @@ import selectors from './selectors';
 import * as actions from './actions';
 import ContentBody from './ContentBody';
 import Styled from './Styled';
+// import CSDiffView from '../CSDiffView';
 
 class ManualView extends Component {
   constructor(props) {
@@ -125,11 +127,11 @@ class ManualView extends Component {
         event: isBookmark ? this.handleClickTopBarButton : this.handleClickTopBarButton,
         widgetId,
       },
-      { key: 'viewTopbar1', title: '오류신고1', event: undefined },
+      { key: 'diffView', title: '비교보기', event: undefined },
       { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
     return (
-      <Styled>
+      <Styled id={`#csManualView_${widgetId}`}>
         <div className="tab-wrap">
           <Tab
             tabs={this.getTabData(
@@ -165,6 +167,18 @@ class ManualView extends Component {
             <IconCollection className="icon-close" />
           </button>
         </div>
+        {/* <Modal
+          width={1198}
+          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+          style={{ top: 42 }}
+          visible
+          footer={null}
+          // onCancel={() => this.handleCloseModal()}
+          closable={false}
+          // getContainer={() => document.querySelector(`#csManualView_${widgetId}`)}
+        >
+          <CSDiffView widgetId={widgetId} maulTabList={maulTabList.toJS()} />
+        </Modal> */}
       </Styled>
     );
   }

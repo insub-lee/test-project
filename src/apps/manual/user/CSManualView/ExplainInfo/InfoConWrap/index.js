@@ -11,7 +11,6 @@ const InfoConWrap = ({ componentList, indexRelationList }) => (
   <Styled>
     {componentList &&
       componentList.map(item => {
-        console.log('메뉴얼그리기', item);
         switch (item.TYPE) {
           case 'index':
             return (
@@ -33,7 +32,6 @@ const InfoConWrap = ({ componentList, indexRelationList }) => (
               />,
             ];
             if (item.COMP_OPTION) {
-              console.debug(item.COMP_OPTION, indexRelationList);
               indexRelationList
                 .filter(node => node.MUAL_ORG_IDX === item.COMP_OPTION.MUAL_ORG_IDX && node.MUAL_TABCOMP_OIDX === item.COMP_OPTION.MUAL_TABCOMP_OIDX)
                 .forEach(node => {
