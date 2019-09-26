@@ -10,17 +10,30 @@ const Styled = styled.div`
     width: 100%;
     height: 100%;
     & > div {
-      display: table-cell;
+      /* display: table-cell;
       vertical-align: middle;
-      align-items: center;
+      align-items: center; */
+      float: left;
       &.user-img {
-        width: 85px;
+        position: relative;
+        overflow: hidden;
+        width: 70px;
+        height: 70px;
+        text-align: center;
+        border-radius: 100%;
+        margin-right: 15px;
         img {
-          display: block;
-          width: 70px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          max-width: 100%;
+          height: auto;
         }
       }
       &.user-info {
+        padding-top: 10px;
         span {
           display: block;
           &.user-info-name {
