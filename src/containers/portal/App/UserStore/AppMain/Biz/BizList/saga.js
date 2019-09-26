@@ -208,16 +208,23 @@ export function* registerBiz(payload) {
   const { app } = payload;
   const langGubun = lang.getLocale();
 
+  const mypage = yield select(state => state.get('mypage'));
+  const rowInfo = mypage.get('tempRowInfo');
+  const { node } = rowInfo;
+  console.debug('>>>>>>>response node : ', node);
+  // const PRNT_ID = node ? node.key : -1;
+
   const store = yield select(state => state.get('portal_bizList'));
   const url = '/api/bizstore/v1/mypage/registbiz';
 
   const response = yield call(Axios.post, url, { BIZGRP_ID: Number(app), langGubun });
-
+  console.debug('>>>>>>>response: ', response);
   const { code } = response;
 
   if (code === 200) {
     // feed.success(`${intlObj.get(messages.bizRegistOk)}`);
-
+    const oldCategoryData = mypage.get('categoryData').toJS();
+    console.debug('>>>>>>>response oldCategoryData: ', oldCategoryData);
     const mapList = changeWGCount(store.get('mapList'), app, 'Y');
 
     yield put({ type: constants.SET_MAPLIST, mapList });

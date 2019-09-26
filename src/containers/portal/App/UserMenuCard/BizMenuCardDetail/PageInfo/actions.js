@@ -1,8 +1,8 @@
 import * as constants from './constants';
 
-export const getWidgetList = PAGE_ID => ({
+export const getWidgetList = params => ({
   type: constants.GET_WIDGET_LIST,
-  PAGE_ID,
+  params,
 });
 
 export const test = pageId => ({

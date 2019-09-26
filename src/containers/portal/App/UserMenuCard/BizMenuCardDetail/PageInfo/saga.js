@@ -5,9 +5,9 @@ import { fromJS } from 'immutable';
 import * as constants from './constants';
 
 export function* getWidgetList(payload) {
-  const { PAGE_ID } = payload;
+  const { params } = payload;
 
-  const response = yield call(Axios.post, '/api/bizstore/v1/store/bizpageinfo', { PAGE_ID });
+  const response = yield call(Axios.post, '/api/bizstore/v1/store/bizpageinfo', params);
 
   const { widgetList, pageInfoData } = response;
   if (widgetList) {
