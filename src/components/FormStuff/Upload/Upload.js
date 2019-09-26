@@ -24,7 +24,7 @@ class Upload extends Component {
     previewImage: '',
   };
 
-  handlePreview = async (file) => {
+  handlePreview = async file => {
     console.debug('@@@@ hanlePreview', file);
     let previewImage = file.preview;
     if (!file.url && !file.preview) {
@@ -38,9 +38,7 @@ class Upload extends Component {
   };
 
   render() {
-    const {
-      handleChange, fileList, customRequest, action, limit,
-    } = this.props;
+    const { handleChange, fileList, customRequest, action, limit } = this.props;
     const { previewVisible, previewImage } = this.state;
     return (
       <div className="clearfix">
