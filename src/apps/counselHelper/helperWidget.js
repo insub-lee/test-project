@@ -8,71 +8,57 @@ export default class helperWidget extends PureComponent {
     searchWord: '',
   };
 
-  handlerSearch = searchWord => {
-    this.setState({
-      searchWord,
-    });
+  handlerSearch = KEYWORD => {
+    const { getList, BIZGRP_ID, WIDGET_ID } = this.props;
+    getList(BIZGRP_ID, WIDGET_ID, KEYWORD);
   };
 
   render() {
-    const { detail, linkData, starPoint } = this.props;
-
+    const { cardList, keyword } = this.props;
+    console.log(cardList, '카드리스트테스트');
     const result = [];
     let first = -1;
     /* 트리데이터생성 */
-    detail.map(query => {
-      let point = 0;
+    cardList.map(query => {
+      console.log('트리데이터생성중');
       let tempData = {};
-      const LVL = query.get('LVL');
-      const DSCR_KOR = query.get('DSCR_KOR') === ' ' ? '상담업무와 관련 메뉴 상세내용은 클릭하여 확인하세요' : query.get('DSCR_KOR');
-      const BIZGRP_ID = query.get('BIZGRP_ID');
-      const NAME_KOR = query.get('NAME_KOR');
-      let parentProps = [];
-      let childProps = {};
+      const { LVL, DSCR_KOR, BIZGRP_ID, NAME_KOR, STARPOINT } = query;
+
       switch (LVL) {
         case 2:
           first += 1;
-          parentProps = linkData.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             DSCR_KOR,
             children: [],
-            linkProp: parentProps[0],
           };
           result.push(tempData);
           break;
         case 3:
-          starPoint.map(starItem => {
-            if (starItem.BIZGRP_ID === BIZGRP_ID) {
-              point = starItem.STARPOINT;
-            }
-            return point;
-          });
-          childProps = result[first].linkProp.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             DSCR_KOR,
-            starPoint: point,
+            STARPOINT,
             children: [],
-            linkProp: childProps[0],
           };
           result[first].children.push(tempData);
           break;
         default:
       }
+      console.log(result, '결과테스트');
       return result;
     });
 
     return (
       <div className="wrapper">
-        <SearchWidget searchWord={this.state.searchWord} onSearch={this.handlerSearch} />
+        <SearchWidget keyword={keyword} onSearch={this.handlerSearch} />
         <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
           <div className="widget">
-            <Detail item={detail} treeData={result} searchWord={this.state.searchWord} />
+            <Detail treeData={result} keyword={keyword} />
           </div>
         </ScrollBar>
       </div>
@@ -80,9 +66,9 @@ export default class helperWidget extends PureComponent {
   }
 }
 helperWidget.propTypes = {
-  detail: PropTypes.object,
+  cardList: PropTypes.object,
   linkData: PropTypes.object,
 };
 helperWidget.defaultProps = {
-  detail: [],
+  cardList: [],
 };

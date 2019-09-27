@@ -4,20 +4,15 @@ import Title from '../Title';
 import AppCard from '../AppCard';
 import Styled from './Styled';
 
-const AppCardList = ({ title, childNode }) => {
+const AppCardList = ({ pTitle, childNode }) => {
   const appMap = childNode.map(query => {
-    const appTitle = query.title;
-    const { key } = query;
-    const { DSCR_KOR } = query;
-    const { starPoint } = query;
-    const { value } = query;
-    const appLinkProps = query.linkProp;
-    return <AppCard title={appTitle} value={value} key={key} DSCR_KOR={DSCR_KOR} linkProps={appLinkProps} starPoint={starPoint} />;
+    const { title, key, DSCR_KOR, value, STARPOINT } = query;
+    return <AppCard title={title} value={value} key={key} DSCR_KOR={DSCR_KOR} starPoint={STARPOINT} />;
   });
   // console.log(title, linkProp);
   return (
     <Styled>
-      <Title title={title} />
+      <Title title={pTitle} />
 
       <div className="app-card-list">{appMap}</div>
     </Styled>

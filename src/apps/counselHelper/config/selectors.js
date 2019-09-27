@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectAppsWidgetState = state => state.get('test-Widget');
+const selectAppsWidgetState = state => state.get('apps-counselHelper');
 
 const makeSelectWidget = () =>
   createSelector(

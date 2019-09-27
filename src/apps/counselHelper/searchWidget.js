@@ -15,11 +15,13 @@ class searchWidget extends Component {
   };
 
   render() {
-    const { onSearch } = this.props;
+    const { onSearch, keyword } = this.props;
+    console.debug('keyword in Search >>', keyword);
     return (
       <div className="searchInput">
         <InputSearch
           placeholder="검색어를 입력해주세요"
+          defaultValue={keyword}
           style={{ width: '100%' }}
           onChange={this.handlerChange}
           onKeyPress={e => {
@@ -37,5 +39,6 @@ class searchWidget extends Component {
 }
 searchWidget.propTypes = {
   onSearch: PropTypes.func,
+  keyword: PropTypes.string,
 };
 export default searchWidget;

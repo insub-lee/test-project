@@ -4,7 +4,7 @@ import noResultImage from 'images/bizstore/no-result.png';
 import PropTypes from 'prop-types';
 export default class noResult extends PureComponent {
   render() {
-    const { searchWord, treeData } = this.props;
+    const { keyword, treeData } = this.props;
     return (
       <div>
         <Row style={{ textAlign: 'center' }}>
@@ -15,7 +15,7 @@ export default class noResult extends PureComponent {
             <span>카테고리를 선택해 주세요.</span>
           ) : (
             <div>
-              <span style={{ color: 'red' }}>`{searchWord}`</span>
+              <span style={{ color: 'red' }}>`{keyword}`</span>
               <span>에 대한 검색결과가 없습니다.</span>
             </div>
           )}

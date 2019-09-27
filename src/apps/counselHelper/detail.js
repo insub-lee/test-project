@@ -5,20 +5,22 @@ import NoResult from './noResult';
 
 class detail extends PureComponent {
   render() {
-    const { searchWord, treeData } = this.props;
-    const noMap = <NoResult treeData={treeData} searchWord={searchWord} />;
+    const { keyword, treeData } = this.props;
+    const noMap = <NoResult treeData={treeData} keyword={keyword} />;
+
+    console.debug('keyword in detail >>', keyword);
 
     //  필터용 함수
     const newArray = treeData.filter(pItem => {
-      if (pItem.title.indexOf(searchWord) !== -1) {
+      if (pItem.title.indexOf(keyword) !== -1) {
         return pItem;
       }
       const parent = pItem;
       const child = pItem.children.filter(cItem => {
-        if (cItem.title.indexOf(searchWord) !== -1) {
+        if (cItem.title.indexOf(keyword) !== -1) {
           return cItem;
         }
-        if (cItem.DSCR_KOR.indexOf(searchWord) !== -1) {
+        if (cItem.DSCR_KOR.indexOf(keyword) !== -1) {
           return cItem;
         }
       });
@@ -31,17 +33,17 @@ class detail extends PureComponent {
 
     const appCardList = newArray.map(query => {
       const { title } = query;
+
       const { children } = query;
-      const { linkProp } = query;
       const { key } = query;
-      return <AppCardList title={title} childNode={children} key={key} linkProp={linkProp} />;
+      return <AppCardList pTitle={title} childNode={children} key={key} />;
     });
 
     return <div className="groupWrap">{newArray.length === 0 ? <div>{noMap}</div> : <div>{appCardList}</div>}</div>;
   }
 }
 detail.propTypes = {
-  searchWord: PropTypes.string,
+  keyword: PropTypes.string,
   treeData: PropTypes.array,
 };
 export default detail;
