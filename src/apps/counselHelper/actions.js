@@ -13,3 +13,9 @@ export const getCardList = (BIZGRP_ID, WIDGET_ID, KEYWORD) => ({
   WIDGET_ID,
   KEYWORD,
 });
+
+export const chageKeyword = (WIDGET_ID, KEYWORD) => ({
+  type: action.CHANGE_KEYWORD,
+  WIDGET_ID,
+  KEYWORD,
+});

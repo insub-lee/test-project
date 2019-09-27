@@ -1,9 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import AppCardList from './AppCardList';
 import NoResult from './noResult';
 
-class detail extends PureComponent {
+class detail extends Component {
+  componentDidMount() {}
+
   render() {
     const { keyword, treeData } = this.props;
     const noMap = <NoResult treeData={treeData} keyword={keyword} />;
