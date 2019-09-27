@@ -1,17 +1,18 @@
 import { createSelector } from 'reselect';
 
-const selectAppsWidgetState = state => state.get('apps-Widget');
+const selectAppsWidgetState = state => state.get('apps-counselHelper');
 
-const makeSelectDetail = () =>
+const makeSelectCardList = () =>
   createSelector(
     selectAppsWidgetState,
     (widgetstate, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11052),
-    (widgetstate, WIDGET_ID) => widgetstate.getIn(['detailMap', WIDGET_ID, 'detail']),
+    (widgetstate, WIDGET_ID) => widgetstate.getIn(['cardMap', WIDGET_ID, 'cardList']),
   );
-const makeSelectStar = () =>
+const makeSelectKeyword = () =>
   createSelector(
     selectAppsWidgetState,
-    widgetstate => widgetstate.get('starList'),
+    (widgetstate, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11052),
+    (widgetstate, WIDGET_ID) => widgetstate.getIn(['cardMap', WIDGET_ID, 'keyword']),
   );
 
-export default { selectAppsWidgetState, makeSelectDetail, makeSelectStar };
+export default { makeSelectCardList, makeSelectKeyword };

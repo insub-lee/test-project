@@ -66,8 +66,8 @@ const mapDispatchToProps = dispatch => ({
   deleteConfig: payload => dispatch(actions.deleteConfig(payload)),
 });
 
-const withReducer = injectReducer({ key: 'counsel-config', reducer });
-const withSaga = injectSaga({ key: 'counsel-config', saga });
+const withReducer = injectReducer({ key: 'apps-counselHelper', reducer });
+const withSaga = injectSaga({ key: 'apps-counselHelper', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
