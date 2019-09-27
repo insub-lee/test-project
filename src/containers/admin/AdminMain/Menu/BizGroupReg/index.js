@@ -191,12 +191,14 @@ class BizGroupReg extends Component {
       }
 
       // 사용자 매뉴얼 초기값 초기값 설정
-      mData.MANUAL_TYPE = !!mData.MANUAL_TYPE ? mData.MANUAL_TYPE : 'L';
+      const { MANUAL_TYPE, MANUAL_PATH } = mData;
+      mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
+      const manualPath = !!MANUAL_PATH ? MANUAL_PATH.trim() : '';
 
       this.setState({
         data: mData,
-        manualUrl: !!mData.MANUAL_TYPE && mData.MANUAL_TYPE === 'L' ? mData.MANUAL_PATH : '',
-        manualLink: !!mData.MANUAL_TYPE && mData.MANUAL_TYPE === 'F' ? mData.MANUAL_PATH : '',
+        manualUrl: !!MANUAL_TYPE && MANUAL_TYPE  === 'L' ? manualPath : '',
+        manualLink: !!MANUAL_TYPE && MANUAL_TYPE  === 'F' ? manualPath : '',
       });
       this.inputKor.focus();
     }
@@ -848,7 +850,7 @@ class BizGroupReg extends Component {
                       }
 
                       //사용자 매뉴얼 파일 세팅
-                      data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl : manualLink;
+                      data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl.trim() : manualLink.trim();
 
                       const resultData = { ...data };
                       resultData.delList = acntIdStringtoInteger(delList);
