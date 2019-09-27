@@ -9,6 +9,8 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
 import { intlObj, lang } from 'utils/commonUtils';
+import * as feed from 'components/Feedback/functions';
+import StyledButton from 'components/Button/StyledButton';
 import messages from '../messages';
 
 import reducer from './reducer';
@@ -55,6 +57,16 @@ class BizInfo extends Component {
     }
   }
 
+  onClickUserManual = (flag, url) => {
+    if (flag === 'L') {
+      window.open(url);
+    } else if (flag === 'F') {
+      window.location.assign(url);
+    } else {
+      feed.error(`${intlObj.get(messages.noManual)}`);
+    }
+  };
+
   render() {
     const {
       bizInfo,
@@ -68,6 +80,9 @@ class BizInfo extends Component {
         <AppIntroduction style={{ padding: '0 0 20px 0', border: 'none' }}>
           <h2 className="adTitle">{intlObj.get(messages.appdscr)}</h2>
           <div className="dscr">{lang.get('DSCR', bizInfo)}</div>
+          <StyledButton type="button" className="btn-outline-secondary btn-sm" onClick={() => this.onClickUserManual(bizInfo.MANUAL_TYPE, bizInfo.MANUAL_PATH)}>
+            {intlObj.get(messages.userManual)}
+          </StyledButton>
         </AppIntroduction>
         <AppQna appId={BIZGRP_ID} gubun="b" />
         <GroupRating appId={BIZGRP_ID}></GroupRating>
