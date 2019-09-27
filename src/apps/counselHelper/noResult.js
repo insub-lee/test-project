@@ -1,8 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { Row } from 'antd';
-import noResultImage from 'images/bizstore/no-result.png';
 import PropTypes from 'prop-types';
-export default class noResult extends PureComponent {
+
+import noResultImage from 'images/bizstore/no-result.png';
+
+class noResult extends Component {
+  componentDidMount() {}
+
   render() {
     const { keyword, treeData } = this.props;
     return (
@@ -25,5 +29,12 @@ export default class noResult extends PureComponent {
   }
 }
 noResult.propTypes = {
-  searchWord: PropTypes.string,
+  keyword: PropTypes.string,
+  treeData: PropTypes.array,
 };
+
+noResult.defaultProps = {
+  treeData: [],
+};
+
+export default noResult;
