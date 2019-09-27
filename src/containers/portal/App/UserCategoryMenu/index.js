@@ -76,12 +76,13 @@ class UserCategoryMenu extends Component {
       myAppTreeData,
       saveData,
       profile,
+      fixedMenu, 
     } = this.props;
 
     return (
       <Styled className={isShow ? 'active' : ''} onMouseLeave={setMenuClose}>
         <div className="profile-area">
-          <Profile profile={profile} setFixedOpenMenu={setFixedOpenMenu} isShow={isShow} />
+          <Profile profile={profile} setFixedOpenMenu={setFixedOpenMenu} fixedMenu={fixedMenu} />
         </div>
         <div className="category-menu-area">
           <div className="area-title">{profile.DEPT_NAME_KOR}</div>
@@ -148,6 +149,7 @@ UserCategoryMenu.propTypes = {
   profile: PropTypes.object,
   setOpen: PropTypes.func.isRequired,
   setFixedOpenMenu: PropTypes.func.isRequired,
+  fixedMenu: PropTypes.bool.isRequired,
 };
 
 UserCategoryMenu.defaultProps = {

@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import IconCollection from '../IconCollection';
 import Styled from './Styled';
 
-const User = ({ profile, setFixedOpenMenu, isShow }) => (
+const User = ({ profile, setFixedOpenMenu, fixedMenu }) => (
   <Styled>
     <div>
       <button type="button" className="btn-pin" onClick={setFixedOpenMenu}>
-        <IconCollection className={isShow ? 'icon-pin' : ''} />
+        <IconCollection className={fixedMenu ? 'icon-pin-pill' : 'icon-pin'} />
       </button>
       <div className="user-img">
         <img
@@ -31,8 +31,8 @@ const User = ({ profile, setFixedOpenMenu, isShow }) => (
 
 User.propTypes = {
   profile: PropTypes.object.isRequired,
-  setMenuClose: PropTypes.func.isRequired,
-  isShow: PropTypes.bool,
+  setFixedOpenMenu: PropTypes.func.isRequired,
+  fixedMenu: PropTypes.bool,
 };
 
 export default User;
