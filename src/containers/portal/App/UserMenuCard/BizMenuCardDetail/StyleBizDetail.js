@@ -9,14 +9,22 @@ const StyleBizDetail = styled.div`
   padding: 0;
   background-color: #ffffff;
   // overflow: hidden;
+  & .title-wrapper {
+    position: relative;
+    h2.adTitle {
+      margin-bottom: 14px;
+      color: #000000;
+      font-size: 18px;
 
-  h2.adTitle {
-    margin-bottom: 14px;
-    color: #000000;
-    font-size: 18px;
-
-    @media only screen and (max-width: 1024px) {
-      font-size: 16px;
+      @media only screen and (max-width: 1024px) {
+        font-size: 16px;
+      }
+    }
+    & > button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 0;
     }
   }
 
