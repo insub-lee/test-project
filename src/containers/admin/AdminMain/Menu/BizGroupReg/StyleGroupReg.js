@@ -604,6 +604,48 @@ const StyleGroupReg = styled.div`
       }
     }
   }
+
+  // 업로드할 파일 선택버튼
+  section {
+    &.btnText {
+      display: inline-block;
+      width: auto;
+      height: 23px;
+      float: right;
+      padding-left: 15px;
+      padding-right: 15px;
+      border: none;
+      color: #555555;
+      font-size: 12px;
+      font-weight: 600;
+      background: #e0e0e0;
+      border-radius: 11.5px;
+      cursor: pointer;
+
+      &.pl0 {
+        padding-left: 0;
+      }
+
+      &.attachFile,
+      &.edit {
+        position: absolute;
+        right: 0;
+
+        .dropzone {
+          height: 23px;
+          line-height: 23px;
+        }
+      }
+
+      &.attachFile {
+        top: 8px;
+      }
+
+      &.edit {
+        top: -38px;
+      }
+    }
+  }
 `;
 
 const Vesions = styled.div`

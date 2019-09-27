@@ -10,6 +10,8 @@ import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import { intlObj, lang } from 'utils/commonUtils';
+import * as feed from 'components/Feedback/functions';
+import StyledButton from 'components/Button/StyledButton';
 import messages from '../messages';
 
 import reducer from './reducer';
@@ -47,8 +49,7 @@ class BizInfo extends Component {
     const { params } = match;
     const { BIZGRP_ID } = params;
 
-    if (BIZGRP_ID
-      && this.state.BIZGRP_ID !== BIZGRP_ID) {
+    if (BIZGRP_ID && this.state.BIZGRP_ID !== BIZGRP_ID) {
       this.props.handleGetBizInfo(BIZGRP_ID);
       this.props.handleGetBizFeedBackList(BIZGRP_ID, 'F');
       this.props.handleGetBizFeedBackList(BIZGRP_ID, 'Q');
@@ -58,38 +59,40 @@ class BizInfo extends Component {
     }
   }
 
-  render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
+  onClickUserManual = (flag, url) => {
+    if (flag === 'L') {
+      window.open(url);
+    } else if (flag === 'F') {
+      window.location.assign(url);
+    } else {
+      feed.error(`${intlObj.get(messages.noManual)}`);
+    }
+  };
 
-    const {
-      bizInfo,
-    } = this.props;
+  render() {
+    const { BIZGRP_ID } = this.state;
+
+    const { bizInfo } = this.props;
 
     // console.log(BIZGRP_ID);
 
     return (
       <div>
         <ErrorBoundary>
-          <AppIntroduction
-            style={{ padding: '0 0 20px 0', border: 'none' }}
-          >
-            <h2
-              className="adTitle"
+          <AppIntroduction style={{ padding: '0 0 20px 0', border: 'none' }}>
+            <h2 className="adTitle">{intlObj.get(messages.appdscr)}</h2>
+            <div className="dscr">{lang.get('DSCR', bizInfo)}</div>
+            <StyledButton
+              type="button"
+              className="btn-outline-secondary btn-sm"
+              onClick={() => this.onClickUserManual(bizInfo.MANUAL_TYPE, bizInfo.MANUAL_PATH)}
             >
-              {intlObj.get(messages.appdscr)}
-            </h2>
-            <div className="dscr">
-              {lang.get('DSCR', bizInfo)}
-            </div>
+              {intlObj.get(messages.userManual)}
+            </StyledButton>
           </AppIntroduction>
         </ErrorBoundary>
         <ErrorBoundary>
-          <AppQna
-            appId={BIZGRP_ID}
-            gubun="b"
-          />
+          <AppQna appId={BIZGRP_ID} gubun="b" />
         </ErrorBoundary>
       </div>
     );
@@ -107,8 +110,7 @@ BizInfo.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     handleGetBizInfo: BIZGRP_ID => dispatch(actions.getBizInfo(BIZGRP_ID)),
-    handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) =>
-      dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
+    handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) => dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
   };
 }
 
@@ -117,7 +119,10 @@ const mapStateToProps = createStructuredSelector({
   bizInfo: selectors.makgeBizInfo(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/BizInfo', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/BizInfo', saga });
@@ -127,4 +132,3 @@ export default compose(
   withSaga,
   withConnect,
 )(BizInfo);
-

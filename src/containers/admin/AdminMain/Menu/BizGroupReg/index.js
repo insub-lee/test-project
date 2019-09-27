@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Input, Button, Radio, Checkbox, Icon } from 'antd';
@@ -111,12 +112,15 @@ class BizGroupReg extends Component {
           dutys: [],
           grps: [],
         },
+        MANUAL_TYPE: 'L',
+        MANUAL_PATH: '',
       },
-
       orgShow: false,
       CATG_ID_CHK: false,
       MyAppCategoryModalShow: false,
       SEC_TYPE: MANAGER,
+      manualUrl: '',
+      manualLink: '',
     };
 
     this.onChangeData = this.onChangeData.bind(this);
@@ -186,8 +190,13 @@ class BizGroupReg extends Component {
         };
       }
 
+      // 사용자 매뉴얼 초기값 초기값 설정
+      mData.MANUAL_TYPE = !!mData.MANUAL_TYPE ? mData.MANUAL_TYPE : 'L';
+
       this.setState({
         data: mData,
+        manualUrl: !!mData.MANUAL_TYPE && mData.MANUAL_TYPE === 'L' ? mData.MANUAL_PATH : '',
+        manualLink: !!mData.MANUAL_TYPE && mData.MANUAL_TYPE === 'F' ? mData.MANUAL_PATH : '',
       });
       this.inputKor.focus();
     }
@@ -241,8 +250,16 @@ class BizGroupReg extends Component {
     });
   };
 
+  onChangeUserManual = val => {
+    this.onChangeData({ MANUAL_TYPE: val.target.value });
+  };
+
+  onChangeUserManualUrl = val => {
+    this.setState({ manualUrl: val.target.value });
+  };
+
   render() {
-    const { data, SEC_TYPE } = this.state;
+    const { data, SEC_TYPE, manualUrl, manualLink } = this.state;
 
     const { dataP, updateBizGroup, history, userRole } = this.props;
 
@@ -503,6 +520,54 @@ class BizGroupReg extends Component {
                       </section>
                     </td>
                   </tr>
+                  {data.MENU_EXIST_YN === 'Y' ? (
+                    <tr>
+                      <th className="top">
+                        <span className="">{intlObj.get(messages.userManual)}</span>
+                      </th>
+                      <td>
+                        <FormItem>
+                          <div style={{ position: 'relative' }}>
+                            <div>
+                              <RadioGroup className="typeOptions" onChange={this.onChangeUserManual} value={data.MANUAL_TYPE}>
+                                <Radio value="L">{intlObj.get(messages.webside)}</Radio>
+                                <Radio value="F" style={{ width: 295 }}>
+                                  {intlObj.get(messages.documentation)}
+                                </Radio>
+                              </RadioGroup>
+                            </div>
+                            <div style={{ display: data.MANUAL_TYPE === 'L' ? 'block' : 'none', marginTop: 10 }}>
+                              <Input
+                                placeholder=""
+                                title={intlObj.get(messages.webside)}
+                                style={{ verticalAlign: 'middle' }}
+                                maxLength="1000"
+                                onChange={this.onChangeUserManualUrl}
+                                value={manualUrl}
+                              />
+                            </div>
+                            <div style={{ display: data.MANUAL_TYPE === 'F' ? 'block' : 'none', marginTop: 10 }}>
+                              <Input placeholder="" title={intlObj.get(messages.documentation)} style={{ verticalAlign: 'middle' }} value={manualLink} />
+                              <section className="btnText attachFile">
+                                <Upload
+                                  // accept="image/jpeg, image/png" // default ALL
+                                  onFileUploaded={file => this.setState({ manualLink: file.down })}
+                                  multiple={false} // default true
+                                  // width={123}
+                                  // height={123}
+                                  borderStyle="none"
+                                >
+                                  <span>{intlObj.get(messages.attachment)}</span>
+                                </Upload>
+                              </section>
+                            </div>
+                          </div>
+                        </FormItem>
+                      </td>
+                    </tr>
+                  ) : (
+                    ''
+                  )}
                   {/* <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.category)}</span>
@@ -781,6 +846,10 @@ class BizGroupReg extends Component {
                       if (data.SYS_YN === 'X') {
                         data.SYS_YN = 'N';
                       }
+
+                      //사용자 매뉴얼 파일 세팅
+                      data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl : manualLink;
+
                       const resultData = { ...data };
                       resultData.delList = acntIdStringtoInteger(delList);
                       resultData.I = acntIdStringtoInteger(newI);

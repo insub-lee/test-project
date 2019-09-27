@@ -683,7 +683,7 @@ class App extends React.PureComponent {
   };
 
   render() {
-    const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
+    const { open, isClose, isSpinnerShow, headerMenuOpen, fixedMenu } = this.state;
     const {
       mySkin,
       myHNotiCnt,
@@ -796,6 +796,7 @@ class App extends React.PureComponent {
             setMenuClose={this.setMenuClose}
             view={view}
             history={this.props.history}
+            fixedMenu={fixedMenu}
           />
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
