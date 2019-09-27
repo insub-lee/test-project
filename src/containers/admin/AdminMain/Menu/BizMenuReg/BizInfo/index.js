@@ -80,15 +80,17 @@ class BizInfo extends Component {
       <div>
         <ErrorBoundary>
           <AppIntroduction style={{ padding: '0 0 20px 0', border: 'none' }}>
-            <h2 className="adTitle">{intlObj.get(messages.appdscr)}</h2>
+            <div className="title-wrapper">
+              <h2 className="adTitle">{intlObj.get(messages.appdscr)}</h2>
+              <StyledButton
+                type="button"
+                className="btn-outline-secondary btn-sm"
+                onClick={() => this.onClickUserManual(bizInfo.MANUAL_TYPE, bizInfo.MANUAL_PATH)}
+              >
+                {intlObj.get(messages.userManual)}
+              </StyledButton>
+            </div>
             <div className="dscr">{lang.get('DSCR', bizInfo)}</div>
-            <StyledButton
-              type="button"
-              className="btn-outline-secondary btn-sm"
-              onClick={() => this.onClickUserManual(bizInfo.MANUAL_TYPE, bizInfo.MANUAL_PATH)}
-            >
-              {intlObj.get(messages.userManual)}
-            </StyledButton>
           </AppIntroduction>
         </ErrorBoundary>
         <ErrorBoundary>
