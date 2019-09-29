@@ -209,9 +209,7 @@ export function* registerBiz(payload) {
   const langGubun = lang.getLocale();
 
   const mypage = yield select(state => state.get('mypage'));
-  const rowInfo = mypage.get('tempRowInfo');
-  const { node } = rowInfo;
-  console.debug('>>>>>>>response node : ', node);
+
   // const PRNT_ID = node ? node.key : -1;
 
   const store = yield select(state => state.get('portal_bizList'));
@@ -219,14 +217,21 @@ export function* registerBiz(payload) {
 
   const response = yield call(Axios.post, url, { BIZGRP_ID: Number(app), langGubun });
   console.debug('>>>>>>>response: ', response);
-  const { code } = response;
+  const { code, resultCategoryData } = response;
 
   if (code === 200) {
     // feed.success(`${intlObj.get(messages.bizRegistOk)}`);
+    const result = JSON.parse(`[${resultCategoryData.join('')}]`); // response.result -> json string 배열
+    const newCategoryData = result[0].children;
     const oldCategoryData = mypage.get('categoryData').toJS();
-    console.debug('>>>>>>>response oldCategoryData: ', oldCategoryData);
-    const mapList = changeWGCount(store.get('mapList'), app, 'Y');
 
+    treeFunc.mergeArray(newCategoryData, oldCategoryData);
+    yield put({
+      type: constantsMyPage.SET_CATEGORY_DATA,
+      categoryData: fromJS(newCategoryData),
+    });
+
+    const mapList = changeWGCount(store.get('mapList'), app, 'Y');
     yield put({ type: constants.SET_MAPLIST, mapList });
   } else if (code === 201) {
     // feed.error(`${intlObj.get(messages.bizRegistfail)}`);
