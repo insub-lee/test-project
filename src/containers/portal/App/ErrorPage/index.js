@@ -1,14 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { compose } from 'redux';
+import { connect } from 'react-redux';
+import { createStructuredSelector } from 'reselect';
+import * as commonSelectors from 'containers/portal/App/selectors';
 import error404img from 'images/common/apple404page.png';
 
-class ErrorPage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-    };
-  }
+class ErrorPage extends React.PureComponent {
   render() {
+    const { dockAppList } = this.props;
     return (
       <div
         style={{
@@ -30,13 +30,27 @@ class ErrorPage extends React.Component {
             fontSize: '12pt',
             display: 'inline-block',
           }}
-          href="/"
+          href={dockAppList && dockAppList.length > 0 ? `/page/${dockAppList[1].PAGE_ID}` : '/'}
         >
-        홈으로 이동
+          홈으로 이동
         </a>
       </div>
     );
   }
 }
 
-export default ErrorPage;
+ErrorPage.propType = {
+  dockAppList: PropTypes.array,
+};
+
+ErrorPage.defaultProps = {
+  dockAppList: [],
+};
+
+const mapStateToProps = createStructuredSelector({
+  dockAppList: commonSelectors.makeSelectDockAppList(),
+});
+
+const withConnect = connect(mapStateToProps);
+
+export default compose(withConnect)(ErrorPage);
