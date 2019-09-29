@@ -122,8 +122,11 @@ class PublicRoutes extends Component {
         getLoaddata(param1, param2, param3);
       } else if (checkPath(pathArray[1], portalSinglePath)) {
         // eslint-disable-line
+
+
         const param1 = pathArray[1];
-        const param2 = pathArray[2];
+        let param2 = pathArray.slice(2).join('/');
+        if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);        
         getSingleModeLoaddata(param1, param2);
       } else if (checkPath(pathArray[1], etcPath)) {
         // eslint-disable-line

@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 import Loadable from 'react-loadable';
 import Loading from './Loading';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
+import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
+import Draft from './WorkFlow/User/Draft';
 
 // import PMSheetList from './hypm_pmSheetList';
 // import PmSheetTablet from './hypm_pmSheetTablet';
@@ -57,6 +59,8 @@ class SmAppsRouter extends PureComponent {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
           <div>
+            <Route path={`/${basicPath.SINGLE}/workBuilder/:ID`} component={WorkBuilderViewer} />
+            <Route path={`/${basicPath.SINGLE}/draft/:CATE`} component={Draft} />
             <Route path={`/${basicPath.SINGLE}/${item.legacyPath}`} component={param} />
           </div>
         );
