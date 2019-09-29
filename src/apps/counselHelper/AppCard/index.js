@@ -3,7 +3,7 @@ import { Rate, Menu, Dropdown, Icon } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import PropTypes from 'prop-types';
-import appImg from '../../../images/icon-app.png';
+// import appImg from '../../../images/icon-app.png';
 import Styled from './Styled';
 
 class AppCard extends React.PureComponent {
@@ -118,14 +118,13 @@ class AppCard extends React.PureComponent {
     return (
       <Styled className="app-card">
         <div className="app-card-body" role="presentation">
-          <div className="appd-card-icon">
-            <img src={appImg} alt="" />
-          </div>
+          <div className="appd-card-icon"></div>
           <div className="app-card-text">
             <Rate className="rateDesign" allowHalf disabled value={starPoint} />
             <p>{title}</p>
             <span>{DSCR_KOR}</span>
             {/*
+              {//<img src={appImg} alt="" />}
             <p>{title}</p>
             <span>{DSCR_KOR}</span>
             <Dropdown overlay={dropMenu} trigger={['hover']}>
