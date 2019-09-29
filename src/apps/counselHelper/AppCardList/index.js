@@ -6,8 +6,8 @@ import Styled from './Styled';
 
 const AppCardList = ({ pTitle, childNode }) => {
   const appMap = childNode.map(query => {
-    const { title, key, DSCR_KOR, value, STARPOINT } = query;
-    return <AppCard title={title} value={value} key={key} DSCR_KOR={DSCR_KOR} starPoint={STARPOINT} />;
+    const { title, key, DSCR_KOR, value, STARPOINT, link } = query;
+    return <AppCard title={title} value={value} key={key} DSCR_KOR={DSCR_KOR} starPoint={STARPOINT} linkProps={link} />;
   });
   // console.log(title, linkProp);
   return (
@@ -22,6 +22,6 @@ const AppCardList = ({ pTitle, childNode }) => {
 export default AppCardList;
 
 AppCardList.propTypes = {
-  title: PropTypes.string,
+  ptitle: PropTypes.string,
   childNode: PropTypes.array,
 };

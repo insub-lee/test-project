@@ -15,6 +15,8 @@ import * as actions from './actions';
 import HelperWidget from './helperWidget';
 import StyleWidget from './StyleWidget';
 
+// local 3193 실서버 2874..
+const categorieID = 2874;
 class Widget extends Component {
   componentDidMount() {
     const initData = this.props.item.data;
@@ -31,12 +33,20 @@ class Widget extends Component {
   };
 
   render() {
-    const { cardList, item, keyword, chageKeyword } = this.props;
-    const { WIDGET_ID } = item;
-
+    const { cardList, keyword, chageKeyword, myAppTreeData, item } = this.props;
+    const findedData = myAppTreeData.filter(x => x.BIZGRP_ID === categorieID);
+    const linkData = findedData.length > 0 ? findedData[0] : {};
+    console.log(linkData);
     return (
       <StyleWidget>
-        <HelperWidget cardList={cardList} getList={this.handlerSearch} keyword={keyword} WIDGET_ID={WIDGET_ID} chageKeyword={chageKeyword} />
+        <HelperWidget
+          WIDGET_ID={item.WIDGET_ID}
+          cardList={cardList}
+          linkData={linkData}
+          getList={this.handlerSearch}
+          keyword={keyword}
+          chageKeyword={chageKeyword}
+        />
       </StyleWidget>
     );
   }
@@ -48,15 +58,19 @@ Widget.propTypes = {
   getList: PropTypes.func,
   WIDGET_ID: PropTypes.string,
   chageKeyword: PropTypes.func,
+  myAppTreeData: PropTypes.array,
 };
 
 Widget.defaultProps = {
   keyword: '',
+  myAppTreeData: [],
+  findedData: [],
 };
 
 const mapStateToProps = createStructuredSelector({
   cardList: selectors.makeSelectCardList(),
   keyword: selectors.makeSelectKeyword(),
+  myAppTreeData: routeSelectors.makeMyAppTree(),
 });
 
 const mapDispatchToProps = dispatch => ({
