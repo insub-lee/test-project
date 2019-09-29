@@ -11,8 +11,6 @@ class detail extends Component {
     const { keyword, treeData } = this.props;
     const noMap = <NoResult treeData={treeData} keyword={keyword} />;
 
-    console.debug('keyword in detail >>', keyword);
-
     //  필터용 함수
     const newArray = treeData.filter(pItem => {
       if (pItem.title.indexOf(keyword) !== -1) {
@@ -36,10 +34,10 @@ class detail extends Component {
 
     const appCardList = newArray.map(query => {
       const { title } = query;
-
+      const { link } = query;
       const { children } = query;
       const { key } = query;
-      return <AppCardList pTitle={title} childNode={children} key={key} />;
+      return <AppCardList pTitle={title} childNode={children} key={key} link={link} />;
     });
 
     return <div className="groupWrap">{newArray.length === 0 ? <div>{noMap}</div> : <div>{appCardList}</div>}</div>;

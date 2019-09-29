@@ -14,25 +14,25 @@ class searchWidget extends Component {
   componentDidMount() {}
 
   handlerChange = e => {
-    // this.setState({
-    //   text: e.target.value,
-    // });
-    this.props.chageKeyword(this.props.WIDGET_ID, e.target.value);
+    this.setState({
+      text: e.target.value,
+    });
   };
 
   render() {
     const { onSearch, keyword } = this.props;
+    const { text } = this.state;
     console.debug('keyword in search >> ', keyword);
     return (
       <div className="searchInput">
         <InputSearch
           placeholder="검색어를 입력해주세요"
-          value={keyword}
+          defaultValue={keyword}
           style={{ width: '100%' }}
           onChange={this.handlerChange}
           onKeyPress={e => {
             if (e.key === 'Enter') {
-              onSearch(keyword);
+              onSearch(text);
             }
           }}
           // onSearch={() => {

@@ -9,28 +9,35 @@ class helperWidget extends Component {
   componentDidMount() {}
 
   render() {
-    const { WIDGET_ID, cardList, keyword, getList, chageKeyword } = this.props;
+    const { linkData, cardList, keyword, getList, chageKeyword, WIDGET_ID } = this.props;
     const result = [];
     let first = -1;
+    const linkProp = Object.prototype.hasOwnProperty.call(linkData, 'children') ? linkData.children : [];
 
     /* 트리데이터생성 */
     cardList.map(query => {
       let tempData = {};
       const { LVL, DSCR_KOR, BIZGRP_ID, NAME_KOR, STARPOINT } = query;
-
+      let prntLink;
+      let childLink;
       switch (LVL) {
         case 2:
           first += 1;
+          prntLink = linkProp.length > 0 ? linkProp.filter(x => x.BIZGRP_ID === BIZGRP_ID) : [{}];
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             DSCR_KOR,
             children: [],
+            link: prntLink[0],
           };
           result.push(tempData);
           break;
         case 3:
+          childLink = Object.prototype.hasOwnProperty.call(result[first].link, 'children')
+            ? result[first].link.children.filter(x => x.BIZGRP_ID === BIZGRP_ID)
+            : [{}];
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
@@ -38,6 +45,7 @@ class helperWidget extends Component {
             DSCR_KOR,
             STARPOINT,
             children: [],
+            link: childLink[0],
           };
           result[first].children.push(tempData);
           break;
@@ -60,11 +68,12 @@ class helperWidget extends Component {
 }
 
 helperWidget.propTypes = {
-  WIDGET_ID: PropTypes.string,
-  cardList: PropTypes.object,
+  cardList: PropTypes.array,
   keyword: PropTypes.string,
   getList: PropTypes.func,
   chageKeyword: PropTypes.func,
+  linkData: PropTypes.object,
+  WIDGET_ID: PropTypes.string,
 };
 
 helperWidget.defaultProps = {
