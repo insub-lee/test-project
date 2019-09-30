@@ -10,10 +10,10 @@ const currentView = () =>
 
 const selectApp = state => state.get('app');
 
-const makeSelectUserMenuOpen = () =>
-  createSelector(
-    selectApp,
-    appState => (appState ? appState.get('open') : false),
-  );
+const makeSelectMenuFixedYn = () =>
+createSelector(
+  selectApp,
+  portalState => portalState.menuFixedYn,
+);  
 
-export { selectView, currentView, makeSelectUserMenuOpen };
+export { selectView, currentView, makeSelectMenuFixedYn };
