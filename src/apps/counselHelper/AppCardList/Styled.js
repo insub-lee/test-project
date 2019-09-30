@@ -6,7 +6,7 @@ const Styled = styled.div`
     width: 100%;
     overflow: hidden;
     & .app-card {
-      width: 193px;
+      width: 186px;
       margin: 10px 5px 0 5px;
       flex: 0 0 auto;
       float: left;

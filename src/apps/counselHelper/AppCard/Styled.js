@@ -49,6 +49,7 @@ const Styled = styled.div`
       span {
         text-align: center;
         font-size: 12px;
+        height: 18px;
         color: #666;
         display: block;
         white-space: nowrap;
