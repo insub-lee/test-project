@@ -51,10 +51,13 @@ const DockItemWrapper = styled.div`
 
   .dockItemLastExec {
     word-break: break-all;
+    border: 1px solid #888;
+    background: #fff;
+    border-radius: 0;
 
     .dockItemName {
       width: 60px;
-      color: ${props => props.theme.dock.dockExecItem.color};
+      color: #222;
       white-space: normal !important;
     }
   }

@@ -15,7 +15,7 @@ const Styled = styled.div`
     height: 43px;
     padding: 5px 3px 4px 3px;
     background: #dee1e6;
-    & .chrome-tabs-bottom-bar {
+    .chrome-tabs-bottom-bar {
       position: absolute;
       bottom: 0;
       height: 4px;
@@ -24,7 +24,7 @@ const Styled = styled.div`
       background: #fff;
       z-index: 10;
     }
-    & > ul.react-tabs__tab-list {
+    > ul.react-tabs__tab-list {
       position: relative;
       width: 100%;
       height: 100%;
@@ -74,7 +74,7 @@ const Styled = styled.div`
           &:not(:hover) {
             color: #000;
           }
-          & .tab-background {
+          .tab-background {
             left: -10px;
             width: calc(100% + 20px);
           }

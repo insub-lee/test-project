@@ -9,7 +9,7 @@ const StyleBizDetail = styled.div`
   padding: 0;
   background-color: #ffffff;
   // overflow: hidden;
-  & .title-wrapper {
+  .title-wrapper {
     position: relative;
     h2.adTitle {
       margin-bottom: 14px;
@@ -20,7 +20,7 @@ const StyleBizDetail = styled.div`
         font-size: 16px;
       }
     }
-    & > button {
+    > button {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);

@@ -17,15 +17,15 @@ const StyledAdminMenu = styled.div`
     flex-direction: column;
     flex: 1 0 auto;
     display: flex;
-    & .nav-logo {
+    .nav-logo {
       margin-bottom: 0;
       padding: 20px 20px 5px;
       text-align: center;
-      & > img {
+      > img {
         width: 180px;
       }
     }
-    & .wrap-nav {
+    .wrap-nav {
       overflow: auto;
       overflow-x: hidden;
       backface-visibility: hidden;
@@ -44,22 +44,22 @@ const StyledAdminMenu = styled.div`
         &:last-of-type {
           margin-bottom: 3rem;
         }
-        & a,
-        & a > i {
+        a,
+        a > i {
           /* transition: all 0.3s ease-out; */
         }
-        & ul {
+        ul {
           padding-left: 0;
           list-style: none;
           display: none;
         }
-        & li {
+        li {
           position: relative;
-          & > ul {
+          > ul {
             background-color: rgba(0, 0, 0, 0.1);
             padding-top: 10px;
             padding-bottom: 10px;
-            & li a {
+            li a {
               color: #af9fc7;
               padding: 0.8125rem 2rem 0.8125rem 3rem;
               &:hover {
@@ -67,8 +67,8 @@ const StyledAdminMenu = styled.div`
                 background-color: rgba(0, 0, 0, 0.1);
               }
             }
-            & li.active {
-              & > a {
+            li.active {
+              > a {
                 color: #fff;
                 background-color: transparent;
                 box-shadow: none;
@@ -90,7 +90,7 @@ const StyledAdminMenu = styled.div`
               }
             }
           }
-          & a {
+          a {
             position: relative;
             display: flex;
             align-items: center;
@@ -100,13 +100,13 @@ const StyledAdminMenu = styled.div`
             color: #fff !important;
             font-weight: 400;
             text-decoration: none;
-            & > .nav-link-text {
+            > .nav-link-text {
               flex: 1;
               display: inline-flex;
               align-items: center;
               line-height: normal;
             }
-            & > i {
+            > i {
               margin-right: 0.25rem;
               font-size: 1.125rem;
               width: 1.75rem;
@@ -119,25 +119,25 @@ const StyledAdminMenu = styled.div`
             }
           }
           &.active {
-            & > a {
+            > a {
               color: #fff;
               background-color: rgba(255, 255, 255, 0.04);
               box-shadow: inset 5px 0 0 #886ab5;
             }
           }
           &.open {
-            & > ul {
+            > ul {
               display: block;
             }
-            & > a {
+            > a {
               color: #fff;
             }
           }
         }
-        & > li > a {
+        > li > a {
           font-size: 0.875rem;
         }
-        & b.collapse-sign {
+        b.collapse-sign {
           display: flex;
           align-items: center;
           justify-content: center;
