@@ -51,6 +51,8 @@ class CSManualBookmarkWidgetSetting extends Component {
       updateBookmarkBySaga(item, selectedMual, type);
       if (type === 'bizgroup') {
         updateBizGroupChgYn();
+      } else {
+        message.success(<MessageContent>설정이 변경 되었습니다.</MessageContent>, 2);
       }
     }
   };
@@ -91,19 +93,23 @@ class CSManualBookmarkWidgetSetting extends Component {
 }
 
 CSManualBookmarkWidgetSetting.propTypes = {
-  item: PropTypes.object,
   profile: PropTypes.object,
+  item: PropTypes.object,
   getBookmarkBySaga: PropTypes.func,
   updateBookmarkBySaga: PropTypes.func,
+  updateBizGroupChgYn: PropTypes.func,
   bookmarkList: PropTypes.array,
   type: PropTypes.string,
 };
 
 CSManualBookmarkWidgetSetting.defaultProps = {
+  profile: {},
   item: {},
   getBookmarkBySaga: () => false,
   updateBookmarkBySaga: () => false,
+  updateBizGroupChgYn: () => false,
   bookmarkList: [],
+  type: '',
 };
 
 const mapStateToProps = createStructuredSelector({

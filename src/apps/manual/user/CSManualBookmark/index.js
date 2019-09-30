@@ -26,8 +26,6 @@ class CSManualBookmarkWidget extends PureComponent {
       mualCheck = true;
     }
 
-    console.log('프롭스 들어옴', viewMualIdx);
-
     return (
       <StyleWiget>
         {mualCheck ? (
@@ -49,6 +47,7 @@ CSManualBookmarkWidget.propTypes = {
 };
 
 CSManualBookmarkWidget.defaultProps = {
+  item: {},
   viewMualIdx: -1,
   setWidgetInitData: () => false,
 };

@@ -32,7 +32,7 @@ function* updateBookmarkBySaga(payload) {
 
   const response = yield call(Axios.put, '/api/manual/v1/ManualBookmarkWidgetHandler', params);
   if (response.result === 'success' && settingType !== 'bizgroup') {
-    message.success(<MessageContent>설정이 변경 되었습니다.</MessageContent>, 2);
+    console.debug(response.result);
   }
 }
 
