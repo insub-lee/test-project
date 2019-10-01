@@ -113,7 +113,7 @@ class MenuCategory extends React.Component {
 
     return (
       <div onMouseLeave={this.onNoneClick} onMouseEnter={this.onMenuClick}>
-        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch={true} shadow={true}>
+        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch shadow>
           <p style={{ dispaly: 'none' }}>remove children undefined error</p>
         </Sidebar>
       </div>

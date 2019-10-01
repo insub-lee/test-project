@@ -48,4 +48,13 @@ theme.widget = {
   },
 };
 
+theme.formstuff = {
+  ckRadio: {
+    borderColor: '#3a6488',
+    checkedBgColor: '#406687',
+    checkedBorder: '1px solid #3a6488',
+    afterBgColor: '#406687',
+  },
+};
+
 export default theme;

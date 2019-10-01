@@ -11,9 +11,8 @@ const StyledHeader = styled.header`
     padding: 0;
     border-top: ${props => props.theme.header.borderTop};
     //background: ${props => props.theme.header.backgroundColor};
-    background-image: -webkit-gradient(linear,right top, left top,from(rgba(51,148,225,.18)),to(transparent));
     background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
-    background-color: #584475;
+    background-color: ${props => props.theme.header.backgroundColor};
     
     z-index: 1010;
 
