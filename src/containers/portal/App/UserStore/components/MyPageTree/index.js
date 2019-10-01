@@ -75,15 +75,22 @@ class MyPageTree extends Component {
           selectedIndex: nextProps.selectedIndex,
         });
       } else if(this.treeFlatData.get(nextProps.selectedIndex)) {
-        this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
-        this.setState({
-          treeData: toggleExpandedForSelectedMyPage({
+        if(!treeFunc.generateList(fromJS(nextProps.treeData)).get(nextProps.selectedIndex)) {
+          this.setState({
             treeData: nextProps.treeData,
-            expanded: this.treeFlatData.get(nextProps.selectedIndex).expanded || true,
-            // path: this.treeFlatData.get(nextProps.selectedIndex),
-          }),
-          selectedIndex: nextProps.selectedIndex,
-        });
+            selectedIndex: -1,
+          });
+        } else {
+          this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
+          this.setState({
+            selectedIndex: nextProps.selectedIndex,
+            treeData: toggleExpandedForSelected({
+              treeData: nextProps.treeData,
+              path: this.treeFlatData.get(nextProps.selectedIndex).path,
+              // expanded: this.treeFlatData.get(nextProps.selectedIndex).expanded || true,
+            }),
+          });
+        }
       } else {
         this.setState({
           treeData: nextProps.treeData,
@@ -223,7 +230,7 @@ class MyPageTree extends Component {
             <Input
               placeholder=""
               title={intlObj.get(messages.kor)}
-              maxLength="100"
+              maxLength={100}
               ref={ref => {
                 if (ref) {
                   this.inputKor = ref;
@@ -262,7 +269,7 @@ class MyPageTree extends Component {
             <Input
               placeholder=""
               title={intlObj.get(messages.eng)}
-              maxLength="100"
+              maxLength={100}
               ref={ref => {
                 if (ref) {
                   this.inputEng = ref;
@@ -277,7 +284,7 @@ class MyPageTree extends Component {
             <Input
               placeholder=""
               title={intlObj.get(messages.chn)}
-              maxLength="100"
+              maxLength={100}
               ref={ref => {
                 if (ref) {
                   this.inputChn = ref;
@@ -358,7 +365,9 @@ class MyPageTree extends Component {
         rowHeight={35}
         scaffoldBlockPxWidth={22}
         generateNodeProps={rowInfo => {
+          console.debug('>>>>>>rowInfo: ', rowInfo);
           const { node } = rowInfo;
+          console.debug('>>>>>>rowInfo: ', node);
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
 
