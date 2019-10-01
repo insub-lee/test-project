@@ -47,14 +47,10 @@ CSManualBookmarkWidget.propTypes = {
 };
 
 CSManualBookmarkWidget.defaultProps = {
-<<<<<<< HEAD
   item: {
     WIDGET_ID: 99999,
     data: { selectedBookmark: undefined },
   },
-=======
-  item: {},
->>>>>>> origin/master
   viewMualIdx: -1,
   setWidgetInitData: () => false,
 };
