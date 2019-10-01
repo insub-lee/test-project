@@ -9,13 +9,12 @@ const Editor = ({ item, selectedComponentIdx, handleChangeCompValue }) => (
   <div className="manualEditorComponent">
     {(selectedComponentIdx === item.MUAL_TABCOMP_PIDX && selectedComponentIdx > 0) || selectedComponentIdx === item.MUAL_TABCOMP_IDX ? (
       <FroalaEditor
-        key={`manualEditorFroalaEditor_${item.MUAL_TABCOMP_IDX}`}
         config={froalaEditorConfig}
         model={item.MUAL_COMPVIEWINFO}
         onModelChange={text => handleChangeCompValue(item.MUAL_TAB_IDX, item.MUAL_TABCOMP_IDX, 'MUAL_COMPVIEWINFO', text)}
       />
     ) : (
-      <FroalaEditorView key={`manualEditorFroalaEditorView_${item.MUAL_TABCOMP_IDX}`} model={item.MUAL_COMPVIEWINFO} />
+      <FroalaEditorView model={item.MUAL_COMPVIEWINFO} />
     )}
   </div>
 );

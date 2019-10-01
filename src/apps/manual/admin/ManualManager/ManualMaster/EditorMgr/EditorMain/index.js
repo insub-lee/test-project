@@ -58,8 +58,8 @@ class EditorMain extends Component {
             tabComponentList
               .toJS()
               .filter(comp => comp.IS_REMOVE !== 'Y')
-              .map((item, index) =>
-                RenderEditorComponent(
+              .map((item, index) => {
+                const restProps = {
                   item,
                   handleChangeCompValue,
                   handleChangeCompIdx,
@@ -69,8 +69,9 @@ class EditorMain extends Component {
                   handlePushCompValue,
                   handleRemoveCompValue,
                   indexRelationList,
-                ),
-              )}
+                };
+                return <RenderEditorComponent key={item.MUAL_TABCOMP_IDX} {...restProps} />
+              })}
         </div>
         {/* </Scrollbars> */}
       </StyleEditorMain>
