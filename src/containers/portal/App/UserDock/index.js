@@ -221,7 +221,7 @@ class UserDock extends React.Component {
       styleObjCopy.settingMenuNameSmallIconColor = '#f85023';
     } else {
       styleObjCopy.floattingSettingAreaBottom = '20px';
-      styleObjCopy.pagingBtnsWidth = '90px';
+      styleObjCopy.pagingBtnsWidth = '70px';
       styleObjCopy.pagingBtnsHeight = '20px';
       styleObjCopy.pagingUpWidth = '50%';
       styleObjCopy.pagingDownWidth = '50%';

@@ -9,35 +9,40 @@ class config extends PureComponent {
     let tempData = {};
     const { categorie, onCategorieChange, onClick, items } = this.props;
 
+    console.debug('categorie >> ', categorie);
+
     let first = -1;
     let second = -1;
-    categorie.map(query => {
-      const LVL = query.get('LVL');
-      const BIZGRP_ID = query.get('BIZGRP_ID');
+    if (categorie && categorie.size > 0) {
+      console.debug('1111#################################');
+      categorie.map(query => {
+        const LVL = query.get('LVL');
+        const BIZGRP_ID = query.get('BIZGRP_ID');
 
-      const NAME_KOR = query.get('NAME_KOR');
-      switch (LVL) {
-        case 1:
-          second = -1;
-          first += 1;
+        const NAME_KOR = query.get('NAME_KOR');
+        switch (LVL) {
+          case 1:
+            second = -1;
+            first += 1;
 
-          tempData = { title: NAME_KOR, key: BIZGRP_ID, value: BIZGRP_ID, LVL, children: [] };
-          result.push(tempData);
-          break;
-        case 2:
-          second += 1;
+            tempData = { title: NAME_KOR, key: BIZGRP_ID, value: BIZGRP_ID, LVL, children: [] };
+            result.push(tempData);
+            break;
+          case 2:
+            second += 1;
 
-          tempData = { title: NAME_KOR, key: BIZGRP_ID, value: BIZGRP_ID, children: [] };
-          result[first].children.push(tempData);
-          break;
-        case 3:
-          tempData = { title: NAME_KOR, key: BIZGRP_ID, value: BIZGRP_ID, disabled: true };
-          result[first].children[second].children.push(tempData);
-          break;
-        default:
-      }
-      return result;
-    });
+            tempData = { title: NAME_KOR, key: BIZGRP_ID, value: BIZGRP_ID, children: [] };
+            result[first].children.push(tempData);
+            break;
+          case 3:
+            tempData = { title: NAME_KOR, key: BIZGRP_ID, value: BIZGRP_ID, disabled: true };
+            result[first].children[second].children.push(tempData);
+            break;
+          default:
+        }
+        return result;
+      });
+    }
 
     return (
       <Row type="flex">
@@ -67,6 +72,7 @@ class config extends PureComponent {
 }
 config.propTypes = {
   onCategorieChange: PropTypes.func,
+  categorie: PropTypes.array,
 };
 
 export default config;

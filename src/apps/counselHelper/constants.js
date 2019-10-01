@@ -1,3 +1,3 @@
-export const SAVE_DETAIL = '/app/widget/counselHelper/SAVE_DETAIL';
-export const GET_DETAIL = '/app/widget/counselHelper/GET_DETAIL';
-export const SAVE_STAR_POINT = '/app/widget/counselHelper/SAVE_STAR_POINT';
+export const SAVE_CARD_LIST = '/app/widget/counselHelper/SAVE_CARD_LIST';
+export const GET_CARD_LIST = '/app/widget/counselHelper/GET_CARD_LIST';
+export const CHANGE_KEYWORD = '/app/widget/counselHelper/CHANGE_KEYWORD';

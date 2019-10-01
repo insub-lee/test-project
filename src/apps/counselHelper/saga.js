@@ -1,19 +1,17 @@
 import { Axios } from 'utils/AxiosFunc';
-import { takeEvery, call, put } from 'redux-saga/effects';
+import { takeEvery, takeLatest, call, put } from 'redux-saga/effects';
 import * as action from './constants';
+import * as actions from './actions';
 
-function* getDetail(payload) {
-  const BIZ_ID = payload.detail;
-  const { WIDGET_ID } = payload;
-  const response = yield call(Axios.post, `/api/bizstore/v1/bizgroup/ADetailHandler`, { BIZ_ID, type: 'detail' });
-  const { detail } = response;
-  const { starList } = response;
-  if (starList.length > 0) {
-    yield put({ type: action.SAVE_STAR_POINT, starList });
-  }
-  yield put({ type: action.SAVE_DETAIL, detail, WIDGET_ID });
+function* getCardList(payload) {
+  const { BIZGRP_ID, WIDGET_ID, KEYWORD } = payload;
+  const response = yield call(Axios.post, `/api/bizstore/v1/bizgroup/counsel`, { BIZGRP_ID, KEYWORD });
+  const { cardList } = response;
+
+  // yield put({ type: action.SAVE_CARD_LIST, cardList, WIDGET_ID, KEYWORD });
+  yield put(actions.saveCardList(cardList, WIDGET_ID, KEYWORD));
 }
 
 export default function* watcher() {
-  yield takeEvery(action.GET_DETAIL, getDetail);
+  yield takeLatest(action.GET_CARD_LIST, getCardList);
 }

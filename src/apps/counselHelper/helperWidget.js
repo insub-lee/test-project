@@ -1,64 +1,51 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import ScrollBar from 'react-custom-scrollbars';
 import PropTypes from 'prop-types';
+
 import Detail from './detail';
 import SearchWidget from './searchWidget';
-export default class helperWidget extends PureComponent {
-  state = {
-    searchWord: '',
-  };
 
-  handlerSearch = searchWord => {
-    this.setState({
-      searchWord,
-    });
-  };
+class helperWidget extends Component {
+  componentDidMount() {}
 
   render() {
-    const { detail, linkData, starPoint } = this.props;
-
+    const { linkData, cardList, keyword, getList, chageKeyword, WIDGET_ID } = this.props;
     const result = [];
     let first = -1;
+    const linkProp = Object.prototype.hasOwnProperty.call(linkData, 'children') ? linkData.children : [];
+
     /* 트리데이터생성 */
-    detail.map(query => {
-      let point = 0;
+    cardList.map(query => {
       let tempData = {};
-      const LVL = query.get('LVL');
-      const DSCR_KOR = query.get('DSCR_KOR') === ' ' ? '상담업무와 관련 메뉴 상세내용은 클릭하여 확인하세요' : query.get('DSCR_KOR');
-      const BIZGRP_ID = query.get('BIZGRP_ID');
-      const NAME_KOR = query.get('NAME_KOR');
-      let parentProps = [];
-      let childProps = {};
+      const { LVL, DSCR_KOR, BIZGRP_ID, NAME_KOR, STARPOINT } = query;
+      let prntLink;
+      let childLink;
       switch (LVL) {
         case 2:
           first += 1;
-          parentProps = linkData.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
+          prntLink = linkProp.length > 0 ? linkProp.filter(x => x.BIZGRP_ID === BIZGRP_ID) : [{}];
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             DSCR_KOR,
             children: [],
-            linkProp: parentProps[0],
+            link: prntLink[0],
           };
           result.push(tempData);
           break;
         case 3:
-          starPoint.map(starItem => {
-            if (starItem.BIZGRP_ID === BIZGRP_ID) {
-              point = starItem.STARPOINT;
-            }
-            return point;
-          });
-          childProps = result[first].linkProp.children.filter(item => item.BIZGRP_ID === BIZGRP_ID);
+          childLink = Object.prototype.hasOwnProperty.call(result[first].link, 'children')
+            ? result[first].link.children.filter(x => x.BIZGRP_ID === BIZGRP_ID)
+            : [{}];
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,
             value: BIZGRP_ID,
             DSCR_KOR,
-            starPoint: point,
+            STARPOINT,
             children: [],
-            linkProp: childProps[0],
+            link: childLink[0],
           };
           result[first].children.push(tempData);
           break;
@@ -69,20 +56,28 @@ export default class helperWidget extends PureComponent {
 
     return (
       <div className="wrapper">
-        <SearchWidget searchWord={this.state.searchWord} onSearch={this.handlerSearch} />
+        <SearchWidget WIDGET_ID={WIDGET_ID} keyword={keyword} onSearch={getList} chageKeyword={chageKeyword} />
         <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
           <div className="widget">
-            <Detail item={detail} treeData={result} searchWord={this.state.searchWord} />
+            <Detail treeData={result} keyword={keyword} />
           </div>
         </ScrollBar>
       </div>
     );
   }
 }
+
 helperWidget.propTypes = {
-  detail: PropTypes.object,
+  cardList: PropTypes.array,
+  keyword: PropTypes.string,
+  getList: PropTypes.func,
+  chageKeyword: PropTypes.func,
   linkData: PropTypes.object,
+  WIDGET_ID: PropTypes.string,
 };
+
 helperWidget.defaultProps = {
-  detail: [],
+  cardList: [],
 };
+
+export default helperWidget;

@@ -8,7 +8,7 @@ const Styled = styled.div`
   }
   width: 100%;
   overflow: hidden;
-  & .app-card-body {
+  .app-card-body {
     display: table;
     table-layout: fixed;
     background-color: #fff;
@@ -30,7 +30,7 @@ const Styled = styled.div`
         display: block;
       }
     }
-    & > div {
+    > div {
       display: table-cell;
       vertical-align: middle;
       align-items: center;
@@ -49,6 +49,7 @@ const Styled = styled.div`
       span {
         text-align: center;
         font-size: 12px;
+        height: 18px;
         color: #666;
         display: block;
         white-space: nowrap;

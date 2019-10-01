@@ -99,9 +99,4 @@ export const closeRodal = () => ({
   type: actionTypes.CLOSE_RODAL,
 });
 
-export const setMenuShow = open => ({
-  type: actionTypes.SET_MENU_SHOW,
-  open,
-});
-
 

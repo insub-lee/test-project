@@ -3,7 +3,7 @@ import { Rate, Menu, Dropdown, Icon } from 'antd';
 import { Link, Redirect } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import PropTypes from 'prop-types';
-import appImg from '../../../images/icon-app.png';
+// import appImg from '../../../images/icon-app.png';
 import Styled from './Styled';
 
 class AppCard extends React.PureComponent {
@@ -32,9 +32,9 @@ class AppCard extends React.PureComponent {
     return result;
   };
 
-  // state = {
-  //   flag: false,
-  // };
+  state = {
+    flag: false,
+  };
 
   execLink = node => {
     const state = {
@@ -45,25 +45,25 @@ class AppCard extends React.PureComponent {
     return state;
   };
 
-  // handleClick = () => {
-  //   const { flag } = this.state;
-  //   this.setState({
-  //     flag: !flag,
-  //   });
-  // };
+  handleClick = () => {
+    const { flag } = this.state;
+    this.setState({
+      flag: !flag,
+    });
+  };
 
-  // redirectRender = () => {
-  //   const { value } = this.props;
-  //   if (this.state.flag) {
-  //     return <Redirect to={`/portal/card/bizMenu/detail/info/${value}`} />;
-  //   }
-  // };
+  redirectRender = () => {
+    const { value } = this.props;
+    if (this.state.flag) {
+      return <Redirect to={`/portal/card/bizMenu/detail/info/${value}`} />;
+    }
+  };
 
   render() {
-    const { title, value, linkProps, starPoint, DSCR_KOR } = this.props;
+    const { title, value, DSCR_KOR, linkProps, starPoint } = this.props;
     const { SubMenu } = Menu;
     let dropMenu;
-    // console.log(title, linkProps);
+    console.log(title, linkProps);
     if (Object.prototype.hasOwnProperty.call(linkProps, 'children')) {
       const result = linkProps.children.map(item => {
         if (item.NODE_TYPE === 'F') {
@@ -118,9 +118,7 @@ class AppCard extends React.PureComponent {
     return (
       <Styled className="app-card">
         <div className="app-card-body" role="presentation">
-          <div className="appd-card-icon">
-            <img src={appImg} alt="" />
-          </div>
+          <div className="appd-card-icon"></div>
           <div className="app-card-text">
             <Rate className="rateDesign" allowHalf disabled value={starPoint} />
             <p>{title}</p>
@@ -142,6 +140,6 @@ export default AppCard;
 AppCard.propTypes = {
   title: PropTypes.string,
   value: PropTypes.number,
-  linkProps: PropTypes.object,
+
   DSCR_KOR: PropTypes.string,
 };

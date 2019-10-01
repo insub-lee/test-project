@@ -1,18 +1,21 @@
 import * as action from './constants';
 
-export const saveDetail = (detail, WIDGET_ID) => ({
-  type: action.SAVE_DETAIL,
-  detail,
+export const saveCardList = (cardList, WIDGET_ID, KEYWORD) => ({
+  type: action.SAVE_CARD_LIST,
+  cardList,
   WIDGET_ID,
+  KEYWORD,
 });
 
-export const getDetail = (detail, WIDGET_ID) => ({
-  type: action.GET_DETAIL,
-  detail,
+export const getCardList = (BIZGRP_ID, WIDGET_ID, KEYWORD) => ({
+  type: action.GET_CARD_LIST,
+  BIZGRP_ID,
   WIDGET_ID,
+  KEYWORD,
 });
 
-export const saveStarPoint = starList => ({
-  type: action.SAVE_STAR_POINT,
-  starList,
+export const chageKeyword = (WIDGET_ID, KEYWORD) => ({
+  type: action.CHANGE_KEYWORD,
+  WIDGET_ID,
+  KEYWORD,
 });

@@ -1,62 +1,85 @@
-import React, { PureComponent } from 'react';
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
+import React, { Component } from 'react';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
+
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import * as routeSelectors from 'containers/common/Routes/selectors';
+
 import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
 import * as actions from './actions';
 import HelperWidget from './helperWidget';
 import StyleWidget from './StyleWidget';
-class Widget extends PureComponent {
-  constructor(props) {
-    super(props);
+
+// local 3193 실서버 2874..
+const categorieID = 2874;
+class Widget extends Component {
+  componentDidMount() {
     const initData = this.props.item.data;
     const initId = this.props.item.WIDGET_ID;
     if (Object.keys(initData).length !== 0) {
-      this.props.getDetail(initData.categorie, initId);
+      this.props.getList(initData.categorie, initId, this.props.keyword);
     }
   }
 
-  render() {
-    const { detail, myAppTreeData, starPoint } = this.props;
-    const linkData = myAppTreeData.filter(item => item.BIZGRP_ID === 2874);
+  handlerSearch = KEYWORD => {
+    const { getList, item } = this.props;
+    const { categorie: BIZGRP_ID } = item.data;
+    getList(BIZGRP_ID, item.WIDGET_ID, KEYWORD);
+  };
 
+  render() {
+    const { cardList, keyword, chageKeyword, myAppTreeData, item } = this.props;
+    const findedData = myAppTreeData.filter(x => x.BIZGRP_ID === categorieID);
+    const linkData = findedData.length > 0 ? findedData[0] : {};
+    console.log(linkData);
     return (
       <StyleWidget>
-        <HelperWidget detail={detail} linkData={linkData[0]} starPoint={starPoint} />
+        <HelperWidget
+          WIDGET_ID={item.WIDGET_ID}
+          cardList={cardList}
+          linkData={linkData}
+          getList={this.handlerSearch}
+          keyword={keyword}
+          chageKeyword={chageKeyword}
+        />
       </StyleWidget>
     );
   }
 }
 Widget.propTypes = {
-  getDetail: PropTypes.func,
-  detail: PropTypes.object,
-  myAppTreeData: PropTypes.array,
+  cardList: PropTypes.array,
   item: PropTypes.object,
-  starPoint: PropTypes.array,
+  keyword: PropTypes.string,
+  getList: PropTypes.func,
+  WIDGET_ID: PropTypes.string,
+  chageKeyword: PropTypes.func,
+  myAppTreeData: PropTypes.array,
 };
 
 Widget.defaultProps = {
+  keyword: '',
   myAppTreeData: [],
+  findedData: [],
 };
 
 const mapStateToProps = createStructuredSelector({
-  detail: selectors.makeSelectDetail(),
+  cardList: selectors.makeSelectCardList(),
+  keyword: selectors.makeSelectKeyword(),
   myAppTreeData: routeSelectors.makeMyAppTree(),
-  starPoint: selectors.makeSelectStar(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getDetail: (PRNT_ID, WIDGET_ID) => dispatch(actions.getDetail(PRNT_ID, WIDGET_ID)),
+  getList: (BIZGRP_ID, WIDGET_ID, KEYWORD) => dispatch(actions.getCardList(BIZGRP_ID, WIDGET_ID, KEYWORD)),
+  chageKeyword: (WIDGET_ID, KEYWORD) => dispatch(actions.chageKeyword(WIDGET_ID, KEYWORD)),
 });
 
-const withReducer = injectReducer({ key: 'apps-Widget', reducer });
-const withSaga = injectSaga({ key: 'apps-Widget', saga });
+const withReducer = injectReducer({ key: 'apps-counselHelper', reducer });
+const withSaga = injectSaga({ key: 'apps-counselHelper', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,

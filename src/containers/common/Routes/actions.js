@@ -233,3 +233,8 @@ export const setCommonMenuTree = commonMenuTreeData => ({
 export const resetLastExecYn = () => ({
   type: actionTypes.RESET_LAST_EXEC_YN,
 });
+
+export const updateMenuFixedYn = menuFixedYn => ({
+  type: actionTypes.UPDATE_MENU_FIXED_YN,
+  menuFixedYn,
+});

@@ -1,13 +1,17 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  width: 1190px;
+  width: ${props => (props.widgetYn ? '100%' : '1190px')};
   .tab-wrap {
     position: relative;
     .tab-btn-wrap {
       transform: none;
       top: 8px;
+<<<<<<< HEAD
       right: ${props => (props.widgetYn ? '0px' : '50px')};
+=======
+      right: ${props => (props.widgetYn ? '10px' : '50px')};
+>>>>>>> origin/master
     }
     .tab-btn-close {
       position: absolute;

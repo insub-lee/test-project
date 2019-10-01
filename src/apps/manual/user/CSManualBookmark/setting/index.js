@@ -104,10 +104,14 @@ CSManualBookmarkWidgetSetting.propTypes = {
 
 CSManualBookmarkWidgetSetting.defaultProps = {
   profile: {},
+<<<<<<< HEAD
   item: {
     WIDGET_ID: 99999,
     data: { selectedBookmark: undefined },
   },
+=======
+  item: {},
+>>>>>>> origin/master
   getBookmarkBySaga: () => false,
   updateBookmarkBySaga: () => false,
   updateBizGroupChgYn: () => false,

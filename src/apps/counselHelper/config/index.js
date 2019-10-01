@@ -13,7 +13,8 @@ import * as actions from './actions';
 class counselConfig extends PureComponent {
   constructor(props) {
     super(props);
-    props.getWidgetInfo([2874]);
+    // dev =3193 실서버 2874....
+    props.getWidgetInfo(2874);
     this.state = {
       items: props.item,
     };
@@ -29,11 +30,13 @@ class counselConfig extends PureComponent {
   };
 
   handleClick = () => {
+    const { type, updateBizGroupChgYn } = this.props;
     if (this.state.items.data.categorie !== 0) {
       this.success();
-      console.log(this.state.items);
-      this.props.deleteConfig(this.state.items);
-      this.props.updateBizGroupChgYn();
+      this.props.deleteConfig({ item: this.state.items, type });
+      if (type && type === 'bizgroup') {
+        updateBizGroupChgYn();
+      }
     } else {
       this.error();
     }
@@ -62,12 +65,12 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getWidgetInfo: () => dispatch(actions.getWidgetInfo()),
+  getWidgetInfo: BIZGRP_ID => dispatch(actions.getWidgetInfo(BIZGRP_ID)),
   deleteConfig: payload => dispatch(actions.deleteConfig(payload)),
 });
 
-const withReducer = injectReducer({ key: 'counsel-config', reducer });
-const withSaga = injectSaga({ key: 'counsel-config', saga });
+const withReducer = injectReducer({ key: 'apps-counselHelper', reducer });
+const withSaga = injectSaga({ key: 'apps-counselHelper', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,
