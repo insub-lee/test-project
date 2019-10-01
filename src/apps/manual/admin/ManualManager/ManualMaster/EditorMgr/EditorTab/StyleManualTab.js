@@ -16,7 +16,7 @@ const StyleManualTab = styled.div`
     padding: 5px 3px 4px 3px;
     width: 100%;
     background: #dee1e6;
-    & .chrome-tabs-bottom-bar {
+    .chrome-tabs-bottom-bar {
       position: absolute;
       bottom: 0;
       height: 4px;
@@ -36,7 +36,7 @@ const StyleManualTab = styled.div`
       padding-left: 0;
       background-color: #dee1e6;
 
-      & > li {
+      > li {
       position: absolute;
       left: 0;
       height: 34px;
@@ -71,7 +71,7 @@ const StyleManualTab = styled.div`
         &:not(:hover) {
           color: #000;
         }
-        & .tab-background {
+        .tab-background {
           left: -10px;
           width: calc(100% + 20px);
         }
@@ -140,7 +140,7 @@ const StyleManualTab = styled.div`
         pointer-events: all;
         width: 100%;
         cursor: pointer;
-        & .tab-title {
+        .tab-title {
           width: 100%;
           text-align: center;
           font-size: 12px;

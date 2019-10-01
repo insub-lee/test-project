@@ -15,6 +15,7 @@ import StyledTabPanel from '../components/Tab/StyledTabPanel';
 import TopbarBtnWrap from './TopbarBtnWrap';
 import IconCollection from '../components/IconCollection';
 import * as listActions from '../CSManualList/actions';
+import * as bookmarkViewWidgetAction from '../CSManualBookmark/action';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -116,6 +117,8 @@ class ManualView extends Component {
       addManualHistory,
       setNewsfeedModalIdx,
       indexRelationList,
+      setbookmarkWidgetViewIdx,
+      widgetYn,
     } = this.props;
 
     const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
@@ -131,7 +134,7 @@ class ManualView extends Component {
       { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
     return (
-      <Styled id={`#csManualView_${widgetId}`}>
+      <Styled id={`#csManualView_${widgetId}`} widgetYn={widgetYn}>
         <div className="tab-wrap">
           <Tab
             tabs={this.getTabData(
@@ -145,6 +148,7 @@ class ManualView extends Component {
                 setListSelectedMualIdx,
                 mualBookmarkList,
                 setNewsfeedModalIdx,
+                setbookmarkWidgetViewIdx,
               },
               mualMaster.toJS(),
               navList.toJS(),
@@ -160,12 +164,14 @@ class ManualView extends Component {
             className="tab-btn-wrap"
             data={topBarButton}
             mualMaster={mualMaster}
-            action={{ setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx }}
+            action={{ setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx }}
             widgetId={widgetId}
           />
-          <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
-            <IconCollection className="icon-close" />
-          </button>
+          {!widgetYn && (
+            <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
+              <IconCollection className="icon-close" />
+            </button>
+          )}
         </div>
         {/* <Modal
           width={1198}
@@ -198,6 +204,8 @@ ManualView.propTypes = {
   relationList: PropTypes.object,
   addManualHistory: PropTypes.func,
   indexRelationList: PropTypes.object,
+  setbookmarkWidgetViewIdx: PropTypes.func,
+  widgetYn: PropTypes.bool,
 };
 
 ManualView.defaultProps = {
@@ -214,6 +222,8 @@ ManualView.defaultProps = {
   relationList: fromJS([]),
   addManualHistory: () => false,
   indexRelationList: fromJS([]),
+  widgetYn: false,
+  setbookmarkWidgetViewIdx: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -240,6 +250,7 @@ const mapDispatchToProps = dispatch => ({
   resetManualView: widgetId => dispatch(actions.resetManualViewByReducr(widgetId)),
   setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
   addManualHistory: (widgetId, mualIdx, mualOrgIdx) => dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
+  setbookmarkWidgetViewIdx: (widgetId, selectedMual) => dispatch(bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

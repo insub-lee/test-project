@@ -8,7 +8,7 @@ const Styled = styled.div`
   text-align: center;
   border-bottom: 1px solid #d9d9d9;
 
-  & .quick_header__title {
+  .quick_header__title {
     color: #076dac;
     font-size: 16px;
     margin: 0;

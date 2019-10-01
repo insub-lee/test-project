@@ -8,7 +8,7 @@ const Styled = styled.div`
   text-align: center;
   border-bottom: 1px solid #d9d9d9;
 
-  & .quick_item__title {
+  .quick_item__title {
     color: #010101;
     font-size: 14px;
   }

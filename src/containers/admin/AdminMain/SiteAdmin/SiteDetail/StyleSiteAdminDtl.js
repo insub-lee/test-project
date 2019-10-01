@@ -18,7 +18,7 @@ const StyleSiteAdminDtl = styled.div`
   .buttonWrapper {
     padding-top: 16px;
     text-align: right;
-    & .btn-cancel {
+    .btn-cancel {
       margin-right: 10px;
     }
   }
