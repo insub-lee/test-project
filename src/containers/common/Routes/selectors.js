@@ -116,6 +116,12 @@ const makeCommonMenuTree = () =>
     portalState => portalState.get('commonMenuTreeData').toJS(),
   );
 
+  const makeSelectMenuFixedYn = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.menuFixedYn,
+  );
+
 export {
   makeSelectView,
   // 1-1
@@ -142,4 +148,6 @@ export {
   makeMyAppStoreTree,
   // 9-1
   makeCommonMenuTree,
+
+  makeSelectMenuFixedYn,
 };

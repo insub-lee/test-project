@@ -149,14 +149,14 @@ const makeSelectApps = () =>
     portalState => portalState.apps,
   );
 
+  const makeSelectMenuFixedYn = () =>
+  createSelector(
+    selectRoute,
+    portalState => portalState.menuFixedYn,
+  );  
+
 // ****************** app 스토어에서 가져오는 state ******************
 const selectApp = state => state.get('app');
-
-const makeSelectOpen = () =>
-  createSelector(
-    selectApp,
-    appState => appState.get('open'),
-  );
 
 const makeSelectHeaderMenuOpen = () =>
   createSelector(
@@ -236,8 +236,8 @@ export {
   makeSelectExecutedDockPageId,
   makeSelectDataForApps,
   makeSelectApps,
+  makeSelectMenuFixedYn,
 
-  makeSelectOpen,
   makeSelectHeaderMenuOpen,
   makeSelectIsFullscreenEnabled,
   makeSelectSet,

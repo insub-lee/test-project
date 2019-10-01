@@ -161,3 +161,6 @@ export const SET_COMMON_MENU_TREE = 'containers/common/Routes/SET_COMMON_MENU_TR
 // 9. 마이 메뉴 관련 상수 끝 ******************
 
 export const RESET_LAST_EXEC_YN = 'containers/common/Routes/RESET_LAST_EXEC_YN';
+
+export const UPDATE_MENU_FIXED_YN = 'containers/common/Routes/UPDATE_MENU_FIXED_YN';
+export const SET_MENU_FIXED_YN = 'containers/common/Routes/SET_MENU_FIXED_YN';
