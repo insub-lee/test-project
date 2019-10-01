@@ -8,12 +8,10 @@ const currentView = () =>
     viewState => viewState.get('view'),
   );
 
-const selectApp = state => state.get('app');
-
 const makeSelectMenuFixedYn = () =>
 createSelector(
-  selectApp,
-  portalState => portalState.menuFixedYn,
+  selectView,
+  viewState => viewState.get('menuFixedYn'),
 );  
 
 export { selectView, currentView, makeSelectMenuFixedYn };
