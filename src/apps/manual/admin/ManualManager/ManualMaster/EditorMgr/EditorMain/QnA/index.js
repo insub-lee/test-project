@@ -44,6 +44,7 @@ class QnA extends Component {
 
   //  내용수정
   onChangeAnswerModify = (idx, value) => {
+    console.debug('@@@ Test', idx, value);
     const { item, handleChangeCompValue } = this.props;
     const qnaDataList = JSON.parse(item.MUAL_COMPVIEWINFO);
     const selectedIdx = qnaDataList.findIndex(data => data.IDX === idx);

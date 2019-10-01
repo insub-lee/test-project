@@ -13,17 +13,17 @@ const onClickComponent = (e, selectItem, selectedComponentIdx, handleChangeCompI
   if (selectItem.MUAL_TABCOMP_IDX !== selectedComponentIdx) handleChangeCompIdx(selectItem.MUAL_TABCOMP_IDX);
 };
 
-const RenderEditorComponent = (
-  item,
-  handleChangeCompValue,
-  handleChangeCompIdx,
-  selectedComponentIdx,
-  focusComponetIdx,
-  addAreaIdx,
-  handlePushCompValue,
-  handleRemoveCompValue,
-  indexRelationList,
-) => {
+const RenderEditorComponent = ({
+                                 item,
+                                 handleChangeCompValue,
+                                 handleChangeCompIdx,
+                                 selectedComponentIdx,
+                                 focusComponetIdx,
+                                 addAreaIdx,
+                                 handlePushCompValue,
+                                 handleRemoveCompValue,
+                                 indexRelationList,
+                               }) => {
   let innerContent = '';
   switch (item.TYPE) {
     case 'editor':

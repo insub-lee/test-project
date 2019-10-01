@@ -79,6 +79,10 @@ const appReducer = (state = initialState, action) => {
       const { list, widgetId } = action;
       return state.setIn(['manualViewMap', widgetId, 'indexRelationList'], list);
     }
+    case constantTypes.SET_OLD_VERSION_MANUAL_BY_REDUCR: {
+      const { list, widgetId } = action;
+      return state.setIn(['manualViewMap', widgetId, 'oldVersionManual'], list);
+    }
     default:
       return state;
   }

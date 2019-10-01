@@ -8,8 +8,7 @@ import * as actions from './actions';
 
 function* getBizBuilderListBySaga(payload) {
   const { widgetId, data } = payload;
-  const param = { param: data };
-  const response = yield call(Axios.get, '/api/builder/v1/work/taskList/668', param);
+  const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${data.WORK_SEQ}`);
   yield put(actions.setBizBuilderListByReducr(widgetId, response));
 }
 
@@ -25,7 +24,6 @@ function* getBizBuilderListSettingBySaga(payload) {
 function* getBizBuilderContentViewBySaga(payload) {
   const { widgetId, workSeq, taskSeq } = payload;
   const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`);
-  console.debug('response내용', response);
   yield put(actions.setBizBuilderContentViewByReducr(widgetId, response));
 }
 

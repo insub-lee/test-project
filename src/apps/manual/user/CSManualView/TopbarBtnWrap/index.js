@@ -7,10 +7,11 @@ import Styled from './Styled';
 
 const { Option } = Select;
 
-const handleClickSelect = (mualIdx, widgetId, { setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx }) => {
+const handleClickSelect = (mualIdx, widgetId, { setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx }) => {
   setListSelectedMualIdx(mualIdx, widgetId);
   setSelectedMualIdx(mualIdx, widgetId, 'N');
   setNewsfeedModalIdx(mualIdx, widgetId);
+  setbookmarkWidgetViewIdx(widgetId, mualIdx);
 };
 
 const TopbarBtnWrap = ({ className, data, mualMaster, widgetId, action }) => (

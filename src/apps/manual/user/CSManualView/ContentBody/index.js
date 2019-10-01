@@ -20,7 +20,7 @@ const ContentBody = ({ componentList, setScrollComponent, widgetId, pagerProps, 
       />
       <QuickLink quickProps={quickProps} />
     </div>
-    <Pagination pagerProps={pagerProps} widgetId={widgetId} mualMaster={mualMaster} />
+    <Pagination className="pagination-wrap" pagerProps={pagerProps} widgetId={widgetId} mualMaster={mualMaster} />
   </Styled>
 );
 

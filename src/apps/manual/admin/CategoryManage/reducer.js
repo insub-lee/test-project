@@ -12,6 +12,13 @@ const initialState = fromJS({
   manualListState: {},
   isLoding: false,
   paginationIdx: 1,
+  isSecurityModal: false,
+  listDept: [],
+  listGrp: [],
+  listPstn: [],
+  listDuty: [],
+  listUser: [],
+  securityList: [],
 });
 
 const appReducer = (state = initialState, action) => {
@@ -71,6 +78,23 @@ const appReducer = (state = initialState, action) => {
     case constantTypes.SET_PAGINATION_IDX_REDUCR: {
       const { idx } = action;
       return state.set('paginationIdx', idx);
+    }
+    case constantTypes.SET_IS_SECURITY_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.set('isSecurityModal', flag);
+    }
+    case constantTypes.SET_SECURITY_SELECT_DATA_REDUCR: {
+      const { listDept, listGrp, listPstn, listDuty, listUser } = action;
+      return state
+        .set('listDept', listDept)
+        .set('listGrp', listGrp)
+        .set('listPstn', listPstn)
+        .set('listDuty', listDuty)
+        .set('listUser', listUser);
+    }
+    case constantTypes.SET_SECURITY_LIST_REDUCR: {
+      const { list } = action;
+      return state.set('securityList', list);
     }
     default:
       return state;

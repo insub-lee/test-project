@@ -1,22 +1,84 @@
 import React from 'react';
-import { Input, Radio } from 'antd';
+import { Input, Radio, Table, Button, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import AntRadiobox from 'containers/portal/components/uielements/radiobox.style';
-import { BtnDkGray, BtnLgtGray } from 'containers/portal/components/uielements/buttons.style';
+import StyledButton from 'components/Button/StyledButton';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+
 import selectors from '../selectors';
 import * as actions from '../actions';
 
 import StyleCategoryManageForm from './StyleCategoryManageForm';
+import SecurityManage from './SecurityManage';
 
+const AntdTable = StyledAntdTable(Table);
 const RadioGroup = AntRadiobox(Radio.Group);
+const columnInfo = [
+  {
+    title: '구분',
+    dataIndex: ' ACNT_TYPE',
+    key: 'ACNT_TYPE',
+  },
+  {
+    title: '적용대상',
+    dataIndex: 'TARGETKEY',
+    key: 'TARGETKEY',
+  },
+  {
+    title: '하위적용',
+    dataIndex: 'ISHERITANCE',
+    key: 'ISHERITANCE',
+  },
+  {
+    title: '입력',
+    dataIndex: 'ISCREATE',
+    key: 'ISCREATE',
+  },
+  {
+    title: '수정',
+    dataIndex: 'ISUPDATE',
+    key: 'ISUPDATE',
+  },
+  {
+    title: '삭제',
+    dataIndex: 'ISDELETE',
+    key: 'ISDELETE',
+  },
+  {
+    title: '관리',
+    dataIndex: 'ISADMIN',
+    key: 'ISADMIN',
+  },
+];
 
-const CategoryInfoView = ({ mode, categoryInfo, handleChangeCategoryItem, saveCategoryInfo, handleChangeViewMode }) => (
+const CategoryInfoView = ({
+  mode,
+  categoryInfo,
+  handleChangeCategoryItem,
+  saveCategoryInfo,
+  setIsSecurityModal,
+  isSecurityModal,
+  getSecuritySelectData,
+  listDept,
+  listGrp,
+  listPstn,
+  listDuty,
+  listUser,
+  getSecurityList,
+  securityList,
+  setSecurityList,
+  saveSecurity,
+  saveSecurityRow,
+  removeSecurityRow,
+}) => (
   <div>
-    <div className="categoryContents">
-      <h4>카테고리 기본정보</h4>
+    <div id="categoryContents" className="categoryContents">
+      <div className="title">
+        <h4>카테고리 기본정보</h4>
+      </div>
       <StyleCategoryManageForm>
         <table className="adminTbl categoryTbl">
           <tbody>
@@ -52,16 +114,61 @@ const CategoryInfoView = ({ mode, categoryInfo, handleChangeCategoryItem, saveCa
                 </RadioGroup>
               </td>
             </tr>
+            <tr>
+              <th className="required">
+                <label htmlFor="v3">권한설정</label>
+              </th>
+              <td className="setSecurityWrap">
+                <Button
+                  type="dashed"
+                  icon="setting"
+                  className="setSecurityBtn"
+                  onClick={() => {
+                    setIsSecurityModal(true);
+                    getSecuritySelectData();
+                    getSecurityList();
+                  }}
+                >
+                  권한설정
+                </Button>
+                <AntdTable columns={columnInfo}></AntdTable>
+              </td>
+            </tr>
           </tbody>
         </table>
       </StyleCategoryManageForm>
     </div>
     <div className="buttonWrapper">
       <React.Fragment>
-        {/* <BtnLgtGray onClick={() => handleChangeViewMode(null, 'V')}>닫기</BtnLgtGray> */}
-        <BtnDkGray onClick={saveCategoryInfo}>저장</BtnDkGray>
+        <StyledButton className="btn-primary" onClick={saveCategoryInfo}>
+          저장
+        </StyledButton>
       </React.Fragment>
     </div>
+    <Modal
+      title="권한설정"
+      width={800}
+      visible={isSecurityModal}
+      getContainer={() => document.querySelector('#categoryContents')}
+      onCancel={() => setIsSecurityModal(false)}
+      destroyOnClose
+      footer={null}
+    >
+      <SecurityManage
+        setIsSecurityModal={setIsSecurityModal}
+        listDept={listDept}
+        listGrp={listGrp}
+        listPstn={listPstn}
+        listDuty={listDuty}
+        listUser={listUser}
+        securityList={securityList}
+        categoryIdx={categoryInfo.get('CATEGORY_IDX')}
+        setSecurityList={setSecurityList}
+        saveSecurity={saveSecurity}
+        saveSecurityRow={saveSecurityRow}
+        removeSecurityRow={removeSecurityRow}
+      />
+    </Modal>
   </div>
 );
 
@@ -71,6 +178,20 @@ CategoryInfoView.propTypes = {
   saveCategoryInfo: PropTypes.func,
   mode: PropTypes.string,
   categoryInfo: PropTypes.object,
+  setIsSecurityModal: PropTypes.func,
+  isSecurityModal: PropTypes.bool,
+  getSecuritySelectData: PropTypes.func,
+  listDept: PropTypes.array,
+  listGrp: PropTypes.array,
+  listPstn: PropTypes.array,
+  listDuty: PropTypes.array,
+  listUser: PropTypes.array,
+  getSecurityList: PropTypes.func,
+  securityList: PropTypes.array,
+  setSecurityList: PropTypes.func,
+  saveSecurity: PropTypes.func,
+  saveSecurityRow: PropTypes.func,
+  removeSecurityRow: PropTypes.func,
 };
 
 CategoryInfoView.defaultProps = {
@@ -79,17 +200,45 @@ CategoryInfoView.defaultProps = {
   saveCategoryInfo: () => false,
   mode: '',
   categoryInfo: {},
+  setIsSecurityModal: () => false,
+  isSecurityModal: false,
+  getSecuritySelectData: () => false,
+  listDept: [],
+  listGrp: [],
+  listPstn: [],
+  listDuty: [],
+  listUser: [],
+  getSecurityList: () => false,
+  securityList: [],
+  setSecurityList: () => false,
+  saveSecurity: () => false,
+  saveSecurityRow: () => false,
+  removeSecurityRow: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
   mode: selectors.makeSelectMode(),
   categoryInfo: selectors.makeSelectCategoryInfo(),
+  isSecurityModal: selectors.makeSelectIsSecurityModal(),
+  listDept: selectors.makeSelectListDept(),
+  listGrp: selectors.makeSelectListGrp(),
+  listPstn: selectors.makeSelectListPstn(),
+  listDuty: selectors.makeSelectListDuty(),
+  listUser: selectors.makeSelectListUser(),
+  securityList: selectors.makeSelectSecurityList(),
 });
 
 const mapDispatchToProps = dispatch => ({
   handleChangeViewMode: (node, flag) => dispatch(actions.changeViewMode(node, flag)),
   handleChangeCategoryItem: (key, value) => dispatch(actions.changeCategoryInfo(key, value)),
   saveCategoryInfo: () => dispatch(actions.saveCategoryInfo()),
+  setIsSecurityModal: flag => dispatch(actions.setIsSecurityModalByReducr(flag)),
+  getSecuritySelectData: () => dispatch(actions.getSecuritySelectDataBySaga()),
+  getSecurityList: () => dispatch(actions.getSecurityListBySaga()),
+  setSecurityList: list => dispatch(actions.setSecurityListByReducr(list)),
+  saveSecurity: () => dispatch(actions.saveSecurityBySaga()),
+  saveSecurityRow: (row, flag) => dispatch(actions.saveSecurityRowBySaga(row, flag)),
+  removeSecurityRow: row => dispatch(actions.removeSecurityRowBySaga(row)),
 });
 
 export default connect(

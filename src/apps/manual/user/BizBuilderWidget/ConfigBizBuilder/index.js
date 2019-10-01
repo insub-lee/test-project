@@ -110,6 +110,7 @@ class ConfigBizBuilder extends Component {
             </Option>,
           ),
         );
+
     const workListOpt = [];
 
     for (let i = 0; i < workList.length; i += 1) {
@@ -128,7 +129,7 @@ class ConfigBizBuilder extends Component {
           <tr>
             <td>업무빌더 선택 : </td>
             <td>
-              <Select onChange={e => this.onChange(e)} placeholder="chooes bizbuilder" style={{ width: '100%' }} value={BizBuilderConfigInfo.WORK_SEQ}>
+              <Select onChange={e => this.onChange(e)} placeholder="chooes bizbuilder" style={{ width: '500px' }} value={BizBuilderConfigInfo.WORK_SEQ}>
                 {workListOpt}
               </Select>
             </td>
@@ -139,7 +140,7 @@ class ConfigBizBuilder extends Component {
               <Select
                 mode="multiple"
                 onChange={this.onListColsChange}
-                style={{ width: '100%' }}
+                style={{ width: '300px' }}
                 value={BizBuilderConfigInfo.listCols}
                 placeholder="리스트 컬럼정보을 선택 해주세요"
               >
@@ -243,7 +244,7 @@ ConfigBizBuilder.propTypes = {
 };
 
 ConfigBizBuilder.defaultProps = {
-  item: { id: '11128' },
+  item: { id: '11541' },
   size: '2X1',
   sizeArr: ['2X1'],
   user: {

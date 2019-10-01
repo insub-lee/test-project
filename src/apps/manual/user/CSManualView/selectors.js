@@ -111,6 +111,14 @@ const makeSelectManualViewIndexRelationList = () =>
     (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'indexRelationList']),
   );
 
+const makeSelectOldVersionManual = () =>
+  createSelector(
+    makeSelectManualViewState,
+    (state, props) => props.widgetId || 24240,
+    (state, widgetId) =>
+      state.getIn(['manualViewMap', widgetId, 'oldVersionManual']) ? state.getIn(['manualViewMap', widgetId, 'oldVersionManual']).toJS() : [],
+  );
+
 export default {
   makeSelectMaulTabList,
   makeSelectedTabIdx,
@@ -128,4 +136,5 @@ export default {
   makeSelectManualViewRelationList,
   makeSelectIsLastVersionByWidgetId,
   makeSelectManualViewIndexRelationList,
+  makeSelectOldVersionManual,
 };

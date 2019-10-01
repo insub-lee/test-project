@@ -7,7 +7,7 @@ const Styled = styled.div`
     .tab-btn-wrap {
       transform: none;
       top: 8px;
-      right: 50px;
+      right: ${props => (props.widgetYn ? '0px' : '50px')};
     }
     .tab-btn-close {
       position: absolute;

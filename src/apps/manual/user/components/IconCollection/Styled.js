@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
-import iconTabs from '../../images/icon-tabs.png';
-import iconList from '../../images/icon-list.png';
-import iconClose from '../../images/btn-close.png';
-import iconCloseSoft from '../../images/btn-close-soft.png';
-import iconPen from '../../images/icon-pen.png';
-import iconPlus from '../../images/icon-plus.png';
-import iconArrUp from '../../images/icon-arr-up.png';
+import iconTabs from '../../../images/icon-tabs.png';
+import iconList from '../../../images/icon-list.png';
+import iconClose from '../../../images/btn-close.png';
+import iconCloseSoft from '../../../images/btn-close-soft.png';
+import iconPen from '../../../images/icon-pen.png';
+import iconPlus from '../../../images/icon-plus.png';
+import iconArrUp from '../../../images/icon-arr-up.png';
 
 const Styled = styled.i`
   display: inline-block;

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import iconPlus from '../../../../../user/images/icon-plus.png';
-import iconMinus from '../../../../../user/images/icon-minus.png';
+import iconPlus from '../../../../../images/icon-plus.png';
+import iconMinus from '../../../../../images/icon-minus.png';
 
 const StyleEditorIndex = styled.div`
   display: inline-block;
