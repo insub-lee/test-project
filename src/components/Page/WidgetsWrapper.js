@@ -48,7 +48,7 @@ export default class WidgetsWrapper extends Component {
       wrapperStyle.color = item.color;
     }
 
-    if (item.size === 'FullSize') {
+    if (item.size.toUpperCase() === 'FULLSIZE') {
       wrapperStyle.height = 'auto';
     }
 
@@ -57,7 +57,7 @@ export default class WidgetsWrapper extends Component {
         style={{
           position: 'relative',
           height: '100%',
-          overflow: item.size === 'FullSize' ? 'auto' : 'hidden',
+          overflow: item.size.toUpperCase() === 'FULLSIZE' ? 'auto' : 'hidden',
           borderRadius: 2,
         }}
       >

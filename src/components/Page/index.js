@@ -12,6 +12,7 @@ import WidgetsWrapper from './WidgetsWrapper';
 import SingleWidgetsWrapper from './SingleWidgetsWrapper';
 import Loading from './Loading';
 import * as selectors from './selectors';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 function createComponents(item) {
   console.log(item, 'createComponents');
@@ -32,20 +33,26 @@ function createComponents(item) {
       if (app.SVC_YN === 'C') {
         return (
           <WidgetsWrapper item={item}>
-            <ServiceStop item={item} type={type} />
+            <ErrorBoundary>
+              <ServiceStop item={item} type={type} />
+            </ErrorBoundary>
           </WidgetsWrapper>
         );
       }
       if (app.SVC_YN !== 'C' && app.SEC_YN === 'Y') {
         return (
           <WidgetsWrapper item={item}>
-            <COMP item={item} />
+            <ErrorBoundary>
+              <COMP item={item} />
+            </ErrorBoundary>
           </WidgetsWrapper>
         );
       }
       return (
         <WidgetsWrapper item={item}>
-          <ApplyWidget item={item} type={type} />
+          <ErrorBoundary>
+            <ApplyWidget item={item} type={type} />
+          </ErrorBoundary>
         </WidgetsWrapper>
       );
     };
@@ -73,17 +80,23 @@ function createSingleComponents(item, isFullSize) {
     <div key={`${item.id}`}>
       {item.SVC_YN === 'C' ? (
         <SingleWidgetsWrapper item={item}>
-          <ServiceStop item={item} type={type} />
+          <ErrorBoundary>
+            <ServiceStop item={item} type={type} />
+          </ErrorBoundary>
         </SingleWidgetsWrapper>
       ) : (
         <div>
           {item.SEC_YN === 'Y' ? (
             <SingleWidgetsWrapper item={item}>
-              <COMP item={item} />
+              <ErrorBoundary>
+                <COMP item={item} />
+              </ErrorBoundary>
             </SingleWidgetsWrapper>
           ) : (
             <SingleWidgetsWrapper item={item}>
-              <ApplyWidget item={item} type={type} />
+              <ErrorBoundary>
+                <ApplyWidget item={item} type={type} />
+              </ErrorBoundary>
             </SingleWidgetsWrapper>
           )}
         </div>
@@ -267,7 +280,7 @@ class Page extends Component {
     }
     // const columns2 = Object.values(this.props.columns);
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
-    const isFullSize = columns.length === 1 && columns[0].size === 'FullSize';
+    const isFullSize = columns.length === 1 && columns[0].size.toUpperCase() === 'FULLSIZE';
     return (
       <div style={!isFullSize && setMyMenuData.SRC_PATH !== 'legacySVC' ? { width: `${layoutConfig.width}px`, margin: '0 auto' } : {}}>
         {!setMyMenuData ? (

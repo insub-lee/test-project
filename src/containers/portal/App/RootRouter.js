@@ -24,7 +24,7 @@ const RootRouter = ({
     styleSpinner.height = '100vh';
     styleSpinner.paddingTop = '70%';
   }
-  const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size === 'FullSize';
+  const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size.toUpperCase() === 'FULLSIZE';
   return (
     <div>
       <div
