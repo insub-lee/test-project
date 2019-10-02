@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
 import PropTypes from 'prop-types';
