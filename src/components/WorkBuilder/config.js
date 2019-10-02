@@ -105,14 +105,14 @@ export const defaultFormStuffs = {
     icon: 'fa fa-file-text-o fa-3x',
     previewRenderer: formStuff => (
       <MaskDiv>
-        <RichTextEditor {...formStuff.property} config={froalaEditorConfig} />
+        <RichTextEditor {...formStuff.property} config={froalaEditorConfig()} />
       </MaskDiv>
     ),
     renderer: ({ formStuff, saveTempContents, workSeq, taskSeq }) => (
       <RichTextEditor
         {...formStuff.property}
         contSeq={formStuff.CONT_SEQ}
-        config={froalaEditorConfig}
+        config={froalaEditorConfig()}
         saveTempContents={saveTempContents}
         workSeq={workSeq}
         taskSeq={taskSeq}
