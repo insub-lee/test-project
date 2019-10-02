@@ -1,19 +1,32 @@
 import styled from 'styled-components';
 
-import iconTabs from 'images/portal/icon-tabs.png';
-import iconList from 'images/portal/icon-list.png';
 import iconClose from 'images/portal/btn-close.png';
+import iconComment from 'images/portal/icon-comment.png';
+import iconList from 'images/portal/icon-list.png';
+import iconHeart from 'images/portal/icon-heart.png';
 import iconPen from 'images/portal/icon-pen.png';
+import iconRead from 'images/portal/icon-read.png';
+import iconReadOn from 'images/portal/icon-read-on.png';
+import iconReply from 'images/portal/icon-reply.png';
+import iconReplyOn from 'images/portal/icon-reply-on.png';
+import iconTabs from 'images/portal/icon-tabs.png';
 import iconworkCard from 'images/portal/icon-workCard.png';
 import iconworkFolder from 'images/portal/icon-folder.png';
 
 const Styled = styled.i`
   display: inline-block;
   vertical-align: middle;
-  &.icon-tabs {
-    background: url(${iconTabs}) no-repeat center;
-    width: 40px;
-    height: 34px;
+
+  &.icon-close {
+    background: url(${iconClose}) no-repeat center;
+    width: 15px;
+    height: 15px;
+  }
+  &.icon-comment {
+    background: url(${iconComment}) no-repeat center;
+    width: 12px;
+    height: 12px;
+    background-size: 100%;
   }
   &.icon-list {
     background: url(${iconList}) no-repeat center;
@@ -22,10 +35,11 @@ const Styled = styled.i`
     margin-right: 8px;
     background-size: 15px;
   }
-  &.icon-close {
-    background: url(${iconClose}) no-repeat center;
-    width: 15px;
-    height: 15px;
+  &.icon-heart {
+    background: url(${iconHeart}) no-repeat center;
+    width: 12px;
+    height: 12px;
+    background-size: 100%;
   }
   &.icon-pen {
     background: url(${iconPen}) no-repeat center;
@@ -34,18 +48,6 @@ const Styled = styled.i`
     background-size: 100%;
     margin-right: 5px;
     margin-top: -5px;
-  }
-  &.icon-workCard {
-    background: url(${iconworkCard}) no-repeat center;
-    width: 15px;
-    height: 15px;
-    background-size: 100%;
-  }
-  &.icon-workFolder {
-    background: url(${iconworkFolder}) no-repeat center;
-    width: 15px;
-    height: 15px;
-    background-size: 100%;
   }
   &.icon-pin {
     background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjBweCIgeT0iMHB4Igp3aWR0aD0iMjQiIGhlaWdodD0iMjQiCnZpZXdCb3g9IjAgMCAxNzIgMTcyIgpzdHlsZT0iIGZpbGw6IzAwMDAwMDsiPjxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyIgc3Ryb2tlPSJub25lIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJidXR0IiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiIHN0cm9rZS1kYXNoYXJyYXk9IiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjAiIGZvbnQtZmFtaWx5PSJub25lIiBmb250LXdlaWdodD0ibm9uZSIgZm9udC1zaXplPSJub25lIiB0ZXh0LWFuY2hvcj0ibm9uZSIgc3R5bGU9Im1peC1ibGVuZC1tb2RlOiBub3JtYWwiPjxwYXRoIGQ9Ik0wLDE3MnYtMTcyaDE3MnYxNzJ6IiBmaWxsPSJub25lIj48L3BhdGg+PGcgZmlsbD0iIzg4NmFiNSI+PHBhdGggZD0iTTEwNS40MDAzOSwxNi40MzI5NGwtMTAuMTM0MTEsMTAuMTM0MTFsNy44NTI1NCw3Ljg1MjU0bC00NC40Mjc3NCwzNS42MzczN2wtMTAuNjI0MDIsLTEwLjYyNDAybC0xMC4xMzQxMSwxMC4xMzQxMWwyNy4yMzg5MywyNy4yMzg5M2wtNDMuNjcxODcsNDMuNjU3ODh2MTAuMDM2MTRoMTAuMDM2MTNsNDMuNjU3ODgsLTQzLjY3MTg3bDI3LjIzODkzLDI3LjIzODkzbDEwLjEzNDExLC0xMC4xMzQxMWwtMTAuMDA4MTQsLTEwLjAwODE0bDM1LjE0NzQ2LC00NC45MTc2NGw3LjcyNjU2LDcuNzI2NTZsMTAuMTM0MTEsLTEwLjEzNDExek0xMTMuMjI0OTMsNDQuNjkzNjhsMTQuMTkzMzYsMTQuMTkzMzZsLTM0LjQxOTYsNDQuMDIxODFsLTIzLjMwNTY2LC0yMy4zMDU2NnoiPjwvcGF0aD48L2c+PC9nPjwvc3ZnPg==')
@@ -60,6 +62,47 @@ const Styled = styled.i`
     background-size: 100%;
     width: 20px;
     height: 20px;
+  }
+  &.icon-read {
+    background: url(${iconRead}) no-repeat center;
+    width: 20px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-read-on {
+    background: url(${iconReadOn}) no-repeat center;
+    width: 20px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-reply {
+    background: url(${iconReply}) no-repeat center;
+    width: 12px;
+    height: 12px;
+    background-size: 100%;
+  }
+  &.icon-reply-on {
+    background: url(${iconReplyOn}) no-repeat center;
+    width: 12px;
+    height: 12px;
+    background-size: 100%;
+  }
+  &.icon-tabs {
+    background: url(${iconTabs}) no-repeat center;
+    width: 40px;
+    height: 34px;
+  }
+  &.icon-workCard {
+    background: url(${iconworkCard}) no-repeat center;
+    width: 15px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-workFolder {
+    background: url(${iconworkFolder}) no-repeat center;
+    width: 15px;
+    height: 15px;
+    background-size: 100%;
   }
 `;
 

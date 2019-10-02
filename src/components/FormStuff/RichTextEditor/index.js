@@ -18,25 +18,36 @@ class RichTextEditor extends Component {
     }
   }
 
-  onModelChange = (model) => {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { defaultValue } = this.props;
+    const { defaultValue: prevValue } = prevProps;
+    if (defaultValue !== prevValue) {
+      if (defaultValue[0] && defaultValue[0].hasOwnProperty('DETAIL')) {
+        const { DETAIL: model } = defaultValue[0];
+        this.setState({ model });
+      }
+    }
+  }
+
+  onModelChange = model => {
     const { saveTempContents, name, contSeq } = this.props;
     this.setState({ model }, () => saveTempContents(model, name, 'rich-text-editor', contSeq));
   };
 
   getCurrentValue = () => {
     const { model } = this.state;
-    const {
-      name, workSeq, taskSeq, contSeq,
-    } = this.props;
-    return JSON.stringify([{
-      WORK_SEQ: workSeq,
-      TASK_SEQ: taskSeq,
-      CONT_SEQ: contSeq,
-      FIELD_NM: name,
-      ORD: 0,
-      TYPE: 'rich-text-editor',
-      DETAIL: model,
-    }]);
+    const { name, workSeq, taskSeq, contSeq } = this.props;
+    return JSON.stringify([
+      {
+        WORK_SEQ: workSeq,
+        TASK_SEQ: taskSeq,
+        CONT_SEQ: contSeq,
+        FIELD_NM: name,
+        ORD: 0,
+        TYPE: 'rich-text-editor',
+        DETAIL: model,
+      },
+    ]);
   };
 
   render() {

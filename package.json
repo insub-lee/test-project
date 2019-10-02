@@ -29,6 +29,7 @@
     "fs-extra": "3.0.1",
     "history": "^4.7.2",
     "hoist-non-react-statics": "^2.3.1",
+    "html-react-parser": "^0.9.1",
     "html-webpack-plugin": "2.29.0",
     "immutability-helper": "^2.7.1",
     "immutable": "^3.8.2",
