@@ -268,6 +268,12 @@ export function* getInitialPortalPage(payload) {
     dockIconType: response.dockIconType,
     headerTitle: response.headerTitle,
   });
+
+  yield put({
+    type: actionTypes.SET_MENU_FIXED_YN,
+    menuFixedYn: response.menuFixedYn,
+  });  
+
 }
 
 export function* dockSetMyMenuData(payload) {
@@ -1605,6 +1611,18 @@ export function* resetLastExecYn() {
   }
 }
 
+export function* updateMenuFixedYn (payload) {
+  const { menuFixedYn } = payload;
+  const response = yield call(Axios.post, '/api/common/v1/account/updateMenuFixed', { menuFixedYn });
+
+  if (response.result === 'success') {
+    yield put({
+      type: actionTypes.SET_MENU_FIXED_YN,
+      menuFixedYn,
+    });
+  }
+}
+
 export default function* appSaga() {
   yield takeLatest(actionTypes.AUTH_REQUEST_UUID, loginRequestUUID);
   yield takeLatest(actionTypes.AUTH_RECONNECT_UUID, loginReconnectUUID);
@@ -1690,5 +1708,7 @@ export default function* appSaga() {
   yield takeLatest(actionTypes.GET_COMMON_MENU_TREE_SAGA, getCommonMenuTree);
 
   yield takeLatest(actionTypes.RESET_LAST_EXEC_YN, resetLastExecYn);
+
+  yield takeLatest(actionTypes.UPDATE_MENU_FIXED_YN, updateMenuFixedYn );
   
 }

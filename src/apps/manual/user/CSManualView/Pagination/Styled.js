@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import btnPrevOff from '../../images/btn-prev-off.png';
-import btnPrevOn from '../../images/btn-prev-on.png';
-import btnNextOff from '../../images/btn-next-off.png';
-import btnNextOn from '../../images/btn-next-on.png';
+import btnPrevOff from '../../../images/btn-prev-off.png';
+import btnPrevOn from '../../../images/btn-prev-on.png';
+import btnNextOff from '../../../images/btn-next-off.png';
+import btnNextOn from '../../../images/btn-next-on.png';
 
 const Styled = styled.div`
   width: 100%;

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Styled = styled.div`
   padding: 10px 0px 20px;
-  & .app-card-list {
+  .app-card-list {
     width: 100%;
     overflow: hidden;
     & .app-card {

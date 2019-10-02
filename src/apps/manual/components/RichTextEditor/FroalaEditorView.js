@@ -10,7 +10,7 @@ import 'froala-editor/js/plugins/table.min';
 import 'froala-editor/js/plugins/colors.min';
 import FroalaView from 'react-froala-wysiwyg/FroalaEditorView';
 
-const FroalaEditorView = ({ model, key }) => <FroalaView key={key} id={key} model={model} />;
+const FroalaEditorView = ({ model }) => <FroalaView model={model} />;
 
 FroalaEditorView.propTypes = {
   model: PropTypes.string,

@@ -79,7 +79,7 @@ class AppsRouter extends React.PureComponent {
 
 AppsRouter.propTypes = {
   selectedApp: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired,
+  columns: PropTypes.array,
 };
 
 export default AppsRouter;

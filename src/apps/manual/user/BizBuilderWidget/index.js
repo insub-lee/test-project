@@ -18,6 +18,8 @@ import 'rodal/lib/rodal.css';
 import * as actions from './actions';
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
 import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+const AntdTable = StyledAntdTable(Table);
 
 class BizBuilderWidget extends Component {
   state = {
@@ -45,57 +47,58 @@ class BizBuilderWidget extends Component {
       getBizBuilderContentViewBySaga(item.id, vList.item.WORK_SEQ, vList.item.TASK_SEQ);
     };
 
-    const listCols =
-      colsListDesignInfo &&
-      colsListDesignInfo.map(item => ({
-        title: item.NAME_KOR,
-        dataIndex: item.COMP_FIELD,
-        key: item.COMP_FIELD,
-        render: (text, record) =>
-          item.COMP_FIELD === 'TITLE' ? (
-            <a styling="link" onClick={() => onTitleClick({ record })}>
-              {text}
-            </a>
-          ) : (
-            undefined
-          ),
-      }));
+    // const listCols =
+    //   colsListDesignInfo &&
+    //   colsListDesignInfo.map(item => ({
+    //     title: item.NAME_KOR,
+    //     dataIndex: item.COMP_FIELD,
+    //     key: item.COMP_FIELD,
+    //     render: (text, record) =>
+    //       item.COMP_FIELD === 'TITLE' ? (
+    //         <a styling="link" onClick={() => onTitleClick({ record })}>
+    //           {text}
+    //         </a>
+    //       ) : (
+    //         undefined
+    //       ),
+    //   }));
+    const listCols = [
+      {
+        title: '수신일',
+        dataIndex: 'REG_DTTM',
+        key: 'REG_DTTM',
+        render: text => text.substring(0, 10),
+        align: 'center',
+        width: 100,
+      },
+      {
+        title: '제목',
+        dataIndex: 'TITLE',
+        key: 'TITLE',
+        render: (text, record) => (
+          <a styling="link" onClick={() => onTitleClick({ record })}>
+            {text}
+          </a>
+        ),
+      },
+      {
+        title: '발신부서',
+        dataIndex: 'dept',
+        key: 'dept',
+        render: () => '스마트고객센터',
+        align: 'center',
+        width: 100,
+      },
+    ];
     const { data } = viewInfo;
     const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 5);
     const onRodalClose = () => {
       this.setState({ visible: false });
     };
-    const { TabPane } = Tabs;
 
     return (
       <div>
-        <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
-          <Tabs defaultActiveKey="total" type="card">
-            <TabPane tab="전체" key="total">
-              <ul>
-                <li>
-                  <button className="ellipsis">
-                    <span> [2019.01.01]</span>
-                    안녕하세요
-                  </button>
-                </li>
-                <li>
-                  <button className="ellipsis">
-                    <span> [2019.01.01]</span>
-                    안녕하세요
-                  </button>
-                </li>
-                <li>
-                  <button className="ellipsis">
-                    <span> [2019.01.01]</span>
-                    안녕하세요
-                  </button>
-                </li>
-              </ul>
-            </TabPane>
-          </Tabs>
-        </StyleWiget>
-        <Table pagination={false} columns={listCols} dataSource={listDataSource}></Table>
+        <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
         <Rodal
           customStyles={{
             position: 'absolute',
@@ -203,7 +206,7 @@ BizBuilderWidget.propTypes = {
 };
 
 BizBuilderWidget.defaultProps = {
-  item: { id: '11128' },
+  item: { id: '11541' },
   getBizBuilderListSettingBySaga: () => false,
   bizBuilderList: {},
   bizBuilderConfigInfo: {},

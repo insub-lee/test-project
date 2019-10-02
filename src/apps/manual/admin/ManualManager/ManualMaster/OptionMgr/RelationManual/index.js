@@ -10,6 +10,7 @@ import difference from 'lodash/difference';
 import selectors from '../../selectors';
 import Styled from './Styled';
 import * as actions from '../../actions';
+import message from 'components/Feedback/message';
 import StyledButton from '../../../../../../../components/Button/StyledButton';
 
 class RelationManual extends Component {
@@ -130,6 +131,7 @@ class RelationManual extends Component {
   onApply = () => {
     const { setRelationManualListBySaga, chooseRelMual } = this.props;
     setRelationManualListBySaga(chooseRelMual);
+    message.success('## Save Complete');
   };
 
   render() {

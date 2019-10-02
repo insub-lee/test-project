@@ -37,10 +37,12 @@ function* getManualView(action) {
       // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
       if (maulTabList.length > 0) {
         maulTabList.forEach(node => {
-          const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
-          if (tempList.length > 0) {
-            isIndexRelation = true;
-            indexRelationIdxList = indexRelationIdxList.concat(tempList);
+          if (node.MUAL_TABVIEWINFO && node.MUAL_TABVIEWINFO.length > 0) {
+            const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
+            if (tempList.length > 0) {
+              isIndexRelation = true;
+              indexRelationIdxList = indexRelationIdxList.concat(tempList);
+            }
           }
         });
       }
@@ -113,8 +115,23 @@ function* addManualHistory(action) {
   }
 }
 
+function* getOldVersionManual(action) {
+  const { widgetId, mualIdx } = action;
+  if (mualIdx > 0) {
+    const profile = yield select(makeSelectProfile());
+    const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
+    const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}/N/${userId}`);
+    const { list } = response;
+    if (list && list.length > 0) {
+      const maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO) }));
+      yield put(actions.setOldVersionManualByReducr(fromJS(maulTabList), widgetId));
+    }
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(constantTypes.GET_MANUAL_VIEW_SAGA, getManualView);
   yield takeLatest(constantTypes.SET_MANUAL_BOOKMARK_SAGA, setManualBookmark);
   yield takeLatest(constantTypes.ADD_HISTORY_HISTORY_SAGA, addManualHistory);
+  yield takeLatest(constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, getOldVersionManual);
 }

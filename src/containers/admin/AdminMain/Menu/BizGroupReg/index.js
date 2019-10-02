@@ -522,54 +522,51 @@ class BizGroupReg extends Component {
                       </section>
                     </td>
                   </tr>
-                  {data.MENU_EXIST_YN === 'Y' ? (
-                    <tr>
-                      <th className="top">
-                        <span className="">{intlObj.get(messages.userManual)}</span>
-                      </th>
-                      <td>
-                        <FormItem>
-                          <div style={{ position: 'relative' }}>
-                            <div>
-                              <RadioGroup className="typeOptions" onChange={this.onChangeUserManual} value={data.MANUAL_TYPE}>
-                                <Radio value="L">{intlObj.get(messages.webside)}</Radio>
-                                <Radio value="F" style={{ width: 295 }}>
-                                  {intlObj.get(messages.documentation)}
-                                </Radio>
-                              </RadioGroup>
-                            </div>
-                            <div style={{ display: data.MANUAL_TYPE === 'L' ? 'block' : 'none', marginTop: 10 }}>
-                              <Input
-                                placeholder=""
-                                title={intlObj.get(messages.webside)}
-                                style={{ verticalAlign: 'middle' }}
-                                maxLength="1000"
-                                onChange={this.onChangeUserManualUrl}
-                                value={manualUrl}
-                              />
-                            </div>
-                            <div style={{ display: data.MANUAL_TYPE === 'F' ? 'block' : 'none', marginTop: 10 }}>
-                              <Input placeholder="" title={intlObj.get(messages.documentation)} style={{ verticalAlign: 'middle' }} value={manualLink} />
-                              <section className="btnText attachFile">
-                                <Upload
-                                  // accept="image/jpeg, image/png" // default ALL
-                                  onFileUploaded={file => this.setState({ manualLink: file.down })}
-                                  multiple={false} // default true
-                                  // width={123}
-                                  // height={123}
-                                  borderStyle="none"
-                                >
-                                  <span>{intlObj.get(messages.attachment)}</span>
-                                </Upload>
-                              </section>
-                            </div>
+                  {/* 매뉴얼 업로드 업무카드 폴더에서 필요 없을 경우 조건부 블럭 처리 */}
+                  <tr>
+                    <th className="top">
+                      <span className="">{intlObj.get(messages.userManual)}</span>
+                    </th>
+                    <td>
+                      <FormItem>
+                        <div style={{ position: 'relative' }}>
+                          <div>
+                            <RadioGroup className="typeOptions" onChange={this.onChangeUserManual} value={data.MANUAL_TYPE}>
+                              <Radio value="L">{intlObj.get(messages.webside)}</Radio>
+                              <Radio value="F" style={{ width: 295 }}>
+                                {intlObj.get(messages.documentation)}
+                              </Radio>
+                            </RadioGroup>
                           </div>
-                        </FormItem>
-                      </td>
-                    </tr>
-                  ) : (
-                    ''
-                  )}
+                          <div style={{ display: data.MANUAL_TYPE === 'L' ? 'block' : 'none', marginTop: 10 }}>
+                            <Input
+                              placeholder=""
+                              title={intlObj.get(messages.webside)}
+                              style={{ verticalAlign: 'middle' }}
+                              maxLength="1000"
+                              onChange={this.onChangeUserManualUrl}
+                              value={manualUrl}
+                            />
+                          </div>
+                          <div style={{ display: data.MANUAL_TYPE === 'F' ? 'block' : 'none', marginTop: 10 }}>
+                            <Input placeholder="" title={intlObj.get(messages.documentation)} style={{ verticalAlign: 'middle' }} value={manualLink} />
+                            <section className="btnText attachFile">
+                              <Upload
+                                // accept="image/jpeg, image/png" // default ALL
+                                onFileUploaded={file => this.setState({ manualLink: file.down })}
+                                multiple={false} // default true
+                                // width={123}
+                                // height={123}
+                                borderStyle="none"
+                              >
+                                <span>{intlObj.get(messages.attachment)}</span>
+                              </Upload>
+                            </section>
+                          </div>
+                        </div>
+                      </FormItem>
+                    </td>
+                  </tr>
                   {/* <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.category)}</span>
