@@ -63,7 +63,6 @@ class AppCard extends React.PureComponent {
     const { title, value, DSCR_KOR, linkProps, starPoint } = this.props;
     const { SubMenu } = Menu;
     let dropMenu;
-    console.log(title, linkProps);
     if (Object.prototype.hasOwnProperty.call(linkProps, 'children')) {
       const result = linkProps.children.map(item => {
         if (item.NODE_TYPE === 'F') {
