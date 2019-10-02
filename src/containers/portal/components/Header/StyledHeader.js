@@ -152,7 +152,7 @@ const StyledHeader = styled.header`
 
         .icon-bell, .icon-setting, .icon-full {
           display: inline-block;
-          line-height: 26px;
+          line-height: 30px;
         }
 
         .icon-bell {

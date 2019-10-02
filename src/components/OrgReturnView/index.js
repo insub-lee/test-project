@@ -116,7 +116,7 @@ class OrgReturnView extends Component {
           className="custom-scrollbar"
           autoHeight
           autoHeightMin={41}
-          autoHeightMax={192}
+          autoHeightMax={197}
         >
           <div className="resultsTableWrapper">
             <Table size="small" style={{ width: '100%' }}>
