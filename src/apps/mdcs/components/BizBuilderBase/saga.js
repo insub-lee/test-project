@@ -114,7 +114,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     },
   });
   yield put(actions.successSaveTask(id));
-  yield put(actions.getBuilderData(reloadId || id, workSeq, taskSeq));
+  yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
   // const apiArr = yield select(selectors.makeSelectApiArrById(reloadId || id));
   // yield put(actions.getExtraApiData(reloadId || id, apiArr));
 
