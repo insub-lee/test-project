@@ -33,7 +33,7 @@ class Counsel extends Component {
               </button>
             </div>
             <div className="item item01">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('신용')}>
+              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('신용대출')}>
                 <span className="item-deco">
                   <span className="icon" />
                   <span className="txt">대출</span>
@@ -57,7 +57,7 @@ class Counsel extends Component {
               </button>
             </div>
             <div className="item item03">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('담보')}>
+              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('담보대출')}>
                 <span className="item-deco">
                   <span className="icon" />
                   <span className="txt">전자금융</span>
