@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
 
@@ -12,7 +13,7 @@ import WidgetsWrapper from './WidgetsWrapper';
 import SingleWidgetsWrapper from './SingleWidgetsWrapper';
 import Loading from './Loading';
 import * as selectors from './selectors';
-import ErrorBoundary from 'containers/common/ErrorBoundary';
+
 
 function createComponents(item) {
   console.log(item, 'createComponents');

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import Loadable from 'react-loadable';
 import Loading from './Loading';
 import ApplyWidget from 'components/ApplyWidget';
@@ -9,7 +10,7 @@ import PropTypes from 'prop-types';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
 import Draft from './WorkFlow/User/Draft';
-import ErrorBoundary from 'containers/common/ErrorBoundary';
+
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
