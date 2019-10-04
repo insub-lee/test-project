@@ -17,7 +17,7 @@ const StyleWidget = styled.div`
         border: none;
         border-collapse: collapse;
         empty-cells: show;
-        max-width: 80vmax;
+        max-width: 100vmax;
       }
 
       /* 하단 */
@@ -47,7 +47,7 @@ const StyleWidget = styled.div`
         border: none;
         border-collapse: collapse;
         empty-cells: show;
-        max-width: 80vmax;
+        max-width: 100vmax;
       }
 
       /* 하단 */

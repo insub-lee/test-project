@@ -57,21 +57,35 @@ class CSManualBookmarkWidgetSetting extends Component {
     }
   };
 
+  bookmarkCheck = (arr, value) => {
+    const check = arr.findIndex(arrItem => arrItem.MUAL_ORG_IDX === value);
+    console.log('arr', arr);
+    console.log('value', value);
+
+    if (check === -1) {
+      return false;
+    }
+    return true;
+  };
+
   render() {
     const { item, profile, bookmarkList } = this.props;
-    const { onChangeHandler, onClickHandler } = this;
+    const { onChangeHandler, onClickHandler, bookmarkCheck } = this;
     const { Option } = Select;
 
     // 북마크 리스트(JSX)
     const options = bookmarkList.map(bookmark => <Option value={bookmark.MUAL_ORG_IDX}>{bookmark.MUAL_NAME}</Option>);
 
+    const widgetValue = item.data.selectedBookmark;
+    const bookmarkCheckValue = bookmarkCheck(bookmarkList, widgetValue);
+    
     return (
       <StyleWidgetSetting>
         <div className="infoText">{profile.NAME_KOR}님의 북마크 매뉴얼 목록입니다.</div>
         <div className="settingWrap">
           <div className="bookmarkSelect">
             <Select
-              defaultValue={item.data.selectedBookmark}
+              defaultValue={bookmarkCheckValue ? item.data.selectedBookmark : undefined}
               showSearch
               style={{ width: 500 }}
               placeholder="북마크 매뉴얼을 선택하세요(검색가능)"

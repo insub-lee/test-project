@@ -12,10 +12,10 @@ import TopTitle from './TopTitle';
 import MenuList from './MenuList';
 import Styled from './Styled';
 
-const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp, widgetId }) => (
+const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp, widgetId, bookmarkWidgetData }) => (
   <Styled>
     <TopTitle />
-    <Scrollbars style={{ height: 'calc(100% - 50px)' }}>
+    <Scrollbars style={bookmarkWidgetData.widgetYn ? { height: 'calc(100% - 16px)' } : { height: 'calc(100% - 50px)' }}>
       <MenuList
         componentList={maulCompList}
         setSelectedCompIdx={setSelectedCompIdx}
