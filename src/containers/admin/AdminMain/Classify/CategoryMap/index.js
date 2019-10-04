@@ -54,6 +54,9 @@ class CategoryMap extends Component {
       MAP_ID: val,
     };
     this.props.getCategoryMapList(payload);
+    this.props.setSelectedNode({});
+    this.props.setAddNodeInfo({});
+    this.props.setIsAdd(false);
   };
 
   onSubmit = e => {

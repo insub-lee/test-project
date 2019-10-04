@@ -9,8 +9,9 @@ import { Link } from 'react-router-dom';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
-
 import StyledButton from 'components/Button/StyledButton';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -18,6 +19,8 @@ import * as actions from './actions';
 
 import RegModal from './RegModal';
 import StyledRootMap from './StyledRootMap';
+
+const AntdTable = StyledAntdTable(Table);
 
 class RootMap extends Component {
   constructor(props) {
@@ -79,12 +82,14 @@ class RootMap extends Component {
       {
         title: 'No',
         dataIndex: 'RNUM',
+        key: 'RNUM',
         width: '5%',
         align: 'center',
       },
       {
         title: '분류명',
         dataIndex: 'NAME_KOR',
+        key: 'NAME_KOR',
         render: (text, record) => (
           <Button type="link" onClick={() => this.onClickTitle(record)}>
             {text}
@@ -94,6 +99,7 @@ class RootMap extends Component {
       {
         title: '하위 카테고리 수',
         dataIndex: 'CATEGORY_CNT',
+        key: 'CATEGORY_CNT',
         width: '10%',
         align: 'center',
         render: text => <span>{text}개</span>,
@@ -101,6 +107,7 @@ class RootMap extends Component {
       {
         title: '설정',
         dataIndex: 'MAP_ID',
+        key: 'MAP_ID',
         width: '7%',
         align: 'center',
         render: text => (
@@ -123,7 +130,7 @@ class RootMap extends Component {
           </div>
         </div>
         <div>
-          <Table rowSelection={rowSelection} columns={columns} dataSource={rootMapList.map(item => ({ ...item, key: item.MAP_ID }))} bordered size="small" />
+          <AntdTable rowSelection={rowSelection} columns={columns} dataSource={rootMapList.map(item => ({ ...item, key: item.MAP_ID }))} bordered />
         </div>
         <div className="buttonWrapper">
           <StyledButton className="btn-light" onClick={this.handleDeleteRootMap}>
