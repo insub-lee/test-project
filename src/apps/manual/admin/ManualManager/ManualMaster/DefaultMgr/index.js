@@ -5,7 +5,7 @@ import PropTypes, { object } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal, Table } from 'antd';
+import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal, Table, message } from 'antd';
 import locale from 'antd/lib/date-picker/locale/ko_KR';
 import moment from 'moment';
 
@@ -264,7 +264,14 @@ class DefaultMgr extends Component {
             <tr>
               <td>권한설정</td>
               <td colSpan="3" className="contentSecurityWrap">
-                <Button type="dashed" icon="setting" className="setSecurityBtn" onClick={() => this.handleClickSecurityManage()}>
+                <Button
+                  type="dashed"
+                  icon="setting"
+                  className="setSecurityBtn"
+                  onClick={() =>
+                    defaultMgrMap.get('MUAL_ORG_IDX') === 0 ? message.warning('매뉴얼 등록 후 권한 설정할 수 있습니다') : this.handleClickSecurityManage()
+                  }
+                >
                   권한설정
                 </Button>
                 <AntdTable columns={columnInfo} dataSource={contentSecurityViewList} key="securityViewTable" rowKey={record => record.ACCOUNT_ID}></AntdTable>
@@ -336,6 +343,7 @@ class DefaultMgr extends Component {
             listUser={listUser}
             securityList={contentSecurityList}
             targetKey={defaultMgrMap.get('MUAL_ORG_IDX')}
+            targetFolderKey={defaultMgrMap.get('CATEGORY_IDX')}
             setSecurityList={setContentSecurityList}
             saveSecurity={saveContentSecurity}
             removeSecurity={removeContentSecurity}

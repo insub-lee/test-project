@@ -15,12 +15,17 @@ import w2x3 from '../../images/common/w2x3.png';
 const StyleWidgetSetting = styled.div`
   position: absolute;
   width:  ${props => (props.isMenuFixed ? 'calc(100vw - 435px)' : '90vw')};
-  left: ${props => (props.isMenuFixed ? '350px' : '')};
+  left: ${props => (props.isMenuFixed ? '350px' : '96px')};
   height: 100vh;
-  // padding: 0 30px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
-
+  ${props =>
+    props.isPortal
+      && `padding: 45px 0px 0px;
+      -webkit-transition: width 0.3s ease-out 0s, left 0.3s ease-out 0s;
+      -o-transition: width 0.3s ease-out 0s, left 0.3s ease-out 0s;
+      transition: width 0.3s ease-out 0s, left 0.3s ease-out 0s;`};
+  
   .userSettingWrapper {
     width: 100%;
 

@@ -266,8 +266,8 @@ class appSetting extends Component {
     const isPortal = path.toUpperCase().startsWith('/PORTAL');
     const isMenuFixed = menuFixedYn === 'Y' && isPortal;
     return (
-      <div className="settingsPage" style={{ width: '100vw', height: '100vh', top: 0, left: 0, padding: '45px 96px 0px 96px' }}>
-          <StyleWidgetSetting isMenuFixed={isMenuFixed}>
+      <div className="settingsPage" style={{ width: '100vw', height: '100vh'}}>
+          <StyleWidgetSetting isMenuFixed={isMenuFixed} isPortal={isPortal}>
             <div className="userSettingWrapper">
               <h2 className="pageHeader">
               {intlObj.get(messages.widgetSetting)}

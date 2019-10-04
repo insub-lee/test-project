@@ -26,7 +26,7 @@ const initialState = fromJS({
     NAME_CHN: '',
     CODE: '',
     DESCIPTION: '',
-    USE_YN: '',
+    USE_YN: 'Y',
   },
 });
 

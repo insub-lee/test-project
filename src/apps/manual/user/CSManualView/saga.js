@@ -18,16 +18,17 @@ function* getManualView(action) {
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}/${lastVersionYN}/${userId}`);
-    const { list, historyList, navigationList, defaultMgrMap } = response;
-    if (list && list.length > 0) {
+
+    if (response) {
+      const { list, historyList, navigationList, defaultMgrMap } = response;
       const maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO), disabled: false }));
       yield put(
         actions.setManualViewInfoByReducr(
-          fromJS(maulTabList),
-          fromJS(historyList),
-          fromJS(historyList.filter(node => node.ISBOOKMARK === 'Y')),
-          fromJS(defaultMgrMap),
-          fromJS(navigationList),
+          fromJS(maulTabList || []),
+          fromJS(historyList || []),
+          fromJS(historyList.filter(node => node.ISBOOKMARK === 'Y') || []),
+          fromJS(defaultMgrMap || []),
+          fromJS(navigationList || []),
           widgetId,
         ),
       );
