@@ -1,6 +1,7 @@
 import React from 'react';
 import { notification } from 'antd';
 import styled from 'styled-components';
+import parse from 'html-react-parser';
 import { BtnDkGray } from 'containers/portal/components/uielements/buttons.style';
 
 const NotificationContent = styled.div`
@@ -22,14 +23,14 @@ const NotificationContent = styled.div`
     min-height: 50px;
     height: 50px;
     padding-left: 10px;
-    
+
     a.linkedImg {
       display: inline-block;
       width: 100%;
       height: 100%;
       overflow: hidden;
       border: 1px solid #d1d2d3;
-      
+
       > img {
         max-width: 100%;
         max-height: 100%;
@@ -38,10 +39,9 @@ const NotificationContent = styled.div`
   }
 `;
 
-
 const close = () => {};
 
-const notificationConfig = (args) => {
+const notificationConfig = args => {
   const config = {
     duration: 5,
     placement: 'bottomRight',
@@ -59,39 +59,24 @@ const notificationConfig = (args) => {
 
     config.description = (
       <NotificationContent>
-        {URL !== false ?
-          <a
-            href={URL}
-            onClick={btnClick}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="textDesc">{msg.CONTENT_KOR}</span>
+        {URL !== false ? (
+          <a href={URL} onClick={btnClick} target="_blank" rel="noopener noreferrer">
+            <span className="textDesc">{parse(msg.CONTENT_KOR)}</span>
           </a>
-          :
-          <span className="textDesc">{msg.CONTENT_KOR}</span>
-        }
-        {src.length > 0 ?
+        ) : (
+          <span className="textDesc">{parse(msg.CONTENT_KOR)}</span>
+        )}
+        {src.length > 0 ? (
           <div className="imgContent">
-            {
-              src.map(image => (
-                <a
-                  href={image.url !== '' ? image.url : false}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="linkedImg"
-                >
-                  <img
-                    src={`/img/thumb/200x200/${image.seq}`}
-                    alt={image.id}
-                  />
-                </a>
-              ))
-            }
+            {src.map(image => (
+              <a href={image.url !== '' ? image.url : false} target="_blank" rel="noopener noreferrer" className="linkedImg">
+                <img src={`/img/thumb/200x200/${image.seq}`} alt={image.id} />
+              </a>
+            ))}
           </div>
-          :
+        ) : (
           false
-        }
+        )}
       </NotificationContent>
     );
     config.message = msg.TITLE_KOR;
@@ -123,13 +108,13 @@ const notificationConfig = (args) => {
   return config;
 };
 
-const openNotification = (args) => {
+const openNotification = args => {
   if (args.RECV_YN === 'Y') {
     notification.open(notificationConfig(args));
   }
 };
 
-const openNotificationCustom = (args) => {
+const openNotificationCustom = args => {
   if (args.RECV_YN === 'Y') {
     notification.open({
       duration: 5,

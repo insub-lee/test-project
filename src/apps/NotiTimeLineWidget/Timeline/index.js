@@ -1,15 +1,52 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
+import { Modal } from 'antd';
+
+import BizBuilderBase from 'apps/mdcs/components/BizBuilderBase';
 
 import IconCollection from '../../../components/IconCollection';
 import Styled from './Styled';
+import View from '../View';
 
 class Timeline extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      workSeq: -1,
+      taskSeq: -1,
+      visibleModal: false,
+    };
+  }
+
   componentDidMount() {}
+
+  onTimelineClick = notify => {
+    console.debug('notify >> ', notify);
+    if (notify.hasOwnProperty('PARAM')) {
+      const notifyParam = notify.PARAM;
+      if (notifyParam && notifyParam !== '' && notifyParam.startsWith('{')) {
+        const param = JSON.parse(notifyParam);
+        this.setState({
+          workSeq: param.WORK_SEQ,
+          taskSeq: param.TASK_SEQ,
+          visibleModal: true,
+        });
+      }
+    }
+  };
+
+  onCancel = () => {
+    this.setState({
+      workSeq: -1,
+      taskSeq: -1,
+      visibleModal: false,
+    });
+  };
 
   render() {
     const { notify } = this.props;
+    const { workSeq, taskSeq, visibleModal } = this.state;
 
     let elapsedTime = `${notify.SECOND}초전`;
     if (notify.SECOND > 60) {
@@ -30,7 +67,11 @@ class Timeline extends Component {
 
     return (
       <Styled>
-        <div className="timeline-wrap">
+        <div
+          className="timeline-wrap"
+          onClick={() => this.onTimelineClick(notify)}
+          style={{ cursor: `${notify.PARAM.startsWith('{') ? 'pointer' : 'default'}` }}
+        >
           <div className="timeline-title">
             <p>{notify.TITLE_KOR}</p>
           </div>
@@ -77,6 +118,17 @@ class Timeline extends Component {
             </ul> */}
           </div>
         </div>
+        <Modal
+          visible={visibleModal}
+          width={800}
+          height={550}
+          bodyStyle={{ padding: '49px 8px 10px 8px' }}
+          footer={[]}
+          onCancel={() => this.onCancel('VIEW')}
+          destroyOnClose
+        >
+          <BizBuilderBase id="notifyView" workSeq={workSeq} taskSeq={taskSeq} component={View} viewType="VIEW" {...this.props} />
+        </Modal>
       </Styled>
     );
   }

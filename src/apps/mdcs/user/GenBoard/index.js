@@ -34,9 +34,11 @@ class GenBoard extends Component {
   };
 
   onSaveComplete = id => {
-    this.setState({
-      isEditModal: false,
-    });
+    this.setState({ isEditModal: false });
+  };
+
+  onDeleteComplete = id => {
+    this.setState({ isViewModal: false });
   };
 
   onCancel = viewType => {
@@ -92,6 +94,7 @@ class GenBoard extends Component {
             taskSeq={this.state.taskSeq}
             component={View}
             onChangeMovePageHandler={this.onChangeMovePage}
+            onDeleteComplete={this.onDeleteComplete}
             viewType="VIEW"
             {...this.props}
             key={this.state.taskSeq}
