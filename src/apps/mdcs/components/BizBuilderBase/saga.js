@@ -148,21 +148,20 @@ function* modifyTask({ id, callbackFunc }) {
   }
 }
 
-function* deleteTask({ id, workSeq, taskSeq }) {
+function* deleteTask({ id, workSeq, taskSeq, callbackFunc }) {
   // 삭제도 saveTask처럼 reloadId 필요한지 확인
   const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`);
-  yield put(actions.getBuilderData(id, workSeq, taskSeq));
-  const apiArr = yield select(selectors.makeSelectApiArrById(id));
-  yield put(actions.getExtraApiData(id, apiArr));
+  yield put(actions.getBuilderData(id, workSeq, -1));
+
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id);
+  }
+  // const apiArr = yield select(selectors.makeSelectApiArrById(id));
+  // yield put(actions.getExtraApiData(id, apiArr));
 }
 
 function* addNotifyBuilder({ id, workSeq, taskSeq, titleKey, contentKey }) {
-  console.debug('workSeq > ', workSeq);
-  console.debug('taskSeq > ', taskSeq);
-  console.debug('contentKey > ', contentKey);
   const response = yield call(Axios.post, `/api/builder/v1/work/builderNotifyAdd`, { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, titleKey, contentKey });
-  console.debug('##########');
-  console.debug(response);
 }
 
 export default function* watcher() {

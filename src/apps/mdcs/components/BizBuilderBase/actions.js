@@ -98,11 +98,12 @@ export const modifyTask = (id, callbackFunc) => ({
   callbackFunc,
 });
 
-export const deleteTask = (id, workSeq, taskSeq) => ({
+export const deleteTask = (id, workSeq, taskSeq, callbackFunc) => ({
   type: `${actionTypes.DELETE_TASK}_${id}`,
   id,
   workSeq,
   taskSeq,
+  callbackFunc,
 });
 
 export const initFormData = (id, workSeq, metaList) => ({
