@@ -38,16 +38,23 @@ class BizBuilderWidget extends Component {
     this.setState({ visible: false });
   };
 
+  onSmallTitleClick = record => {
+    this.setState({ visible: true });
+    const { getBizBuilderContentViewBySaga, item } = this.props;
+    getBizBuilderContentViewBySaga(item.id, record.item.WORK_SEQ, record.item.TASK_SEQ);
+  };
+
+  onTitleClick = selectRow => {
+    this.setState({ visible: true });
+    const { getBizBuilderContentViewBySaga, item } = this.props;
+    const { record } = selectRow;
+    getBizBuilderContentViewBySaga(item.id, record.WORK_SEQ, record.TASK_SEQ);
+  };
+
   render() {
-    const { bizBuilderList, bizBuilderConfigInfo, viewInfo } = this.props;
+    const { bizBuilderList, bizBuilderConfigInfo, viewInfo, item } = this.props;
     const { colsListDesignInfo } = bizBuilderConfigInfo;
-    console.debug(this.props);
-    const onTitleClick = selectRow => {
-      this.setState({ visible: true });
-      const { getBizBuilderContentViewBySaga, item } = this.props;
-      const { record } = selectRow;
-      getBizBuilderContentViewBySaga(item.id, record.WORK_SEQ, record.TASK_SEQ);
-    };
+    console.debug('####', this.props);
 
     const onViewListClick = vList => {
       const { getBizBuilderContentViewBySaga, item } = this.props;
@@ -68,7 +75,7 @@ class BizBuilderWidget extends Component {
         dataIndex: 'TITLE',
         key: 'TITLE',
         render: (text, record) => (
-          <a styling="link" onClick={() => onTitleClick({ record })}>
+          <a styling="link" onClick={() => this.onTitleClick({ record })}>
             {text}
           </a>
         ),
@@ -84,26 +91,27 @@ class BizBuilderWidget extends Component {
     ];
 
     const { data } = viewInfo;
-    const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 5);
-    console.debug('###listDataSource', listDataSource);
-    console.debug('###', this.state.visible);
+    const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 4);
+    const smallDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 7);
     return (
       <div id="manualBizBuilderWidget">
-        <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
-        <List
-          dataSource={listDataSource}
-          size="small"
-          renderItem={item => (
-            <List.Item>
-              [{item.REG_DTTM.substring(0, 10)}] {item.TITLE}
-            </List.Item>
-          )}
-        />
+        {item.size === '1X1' ? (
+          <ul style={{ listStyleType: 'disc', marginLeft: '17px', padding: '2px', lineHeight: '29px' }}>
+            {smallDataSource &&
+              smallDataSource.map(item => (
+                <li>
+                  <a onClick={() => this.onSmallTitleClick({ item })}>{item.TITLE}</a>
+                </li>
+              ))}
+          </ul>
+        ) : (
+          <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
+        )}
+
         <AntdModal
           width={1000}
           height={600}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '24px' }}
-          style={{ top: 42 }}
+          // bodyStyle={{ padding: '24px' }}
           //   width={1000}
           //   height={500}
           visible={this.state.visible}
