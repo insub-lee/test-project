@@ -11,6 +11,7 @@ import ScrollBar from 'react-custom-scrollbars';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import ReactDataGrid from 'components/ReactDataGrid';
 
+import { fromJS } from 'immutable';
 import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
@@ -21,7 +22,6 @@ import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
 import StyledModalWrapper from './StyledModalWrapper';
 
 const AntdTable = StyledAntdTable(Table);
-
 const AntdModal = StyledModalWrapper(Modal);
 
 class BizBuilderWidget extends Component {
@@ -86,6 +86,7 @@ class BizBuilderWidget extends Component {
     const { data } = viewInfo;
     const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 5);
     console.debug('###listDataSource', listDataSource);
+    console.debug('###', this.state.visible);
     return (
       <div id="manualBizBuilderWidget">
         <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
@@ -100,11 +101,15 @@ class BizBuilderWidget extends Component {
         />
         <AntdModal
           width={1000}
-          height={500}
+          height={600}
+          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '24px' }}
+          style={{ top: 42 }}
+          //   width={1000}
+          //   height={500}
           visible={this.state.visible}
-          style={{ top: '10%' }}
-          // style={{ top: '50%', transform: 'translateY(-50%)' }}
-          getContainer={() => document.querySelector('#manualBizBuilderWidget')}
+          //  // style={{ top: '10%' }}
+          //    style={{ top: '50%', transform: 'translateY(-50%)' }}
+          // getContainer={() => document.querySelector('#manualBizBuilderWidget')}
           onCancel={this.onRodalClose}
           footer={null}
         >
@@ -203,10 +208,10 @@ BizBuilderWidget.propTypes = {
 };
 
 BizBuilderWidget.defaultProps = {
-  item: { id: '11541' },
+  item: { id: '11627' },
   getBizBuilderListSettingBySaga: () => false,
   bizBuilderList: {},
-  bizBuilderConfigInfo: {},
+  bizBuilderConfigInfo: fromJS({}),
   getBizBuilderContentViewBySaga: () => false,
   viewInfo: {},
   onRodalClose: () => false,

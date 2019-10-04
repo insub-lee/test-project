@@ -5,20 +5,62 @@ import PropTypes, { object } from 'prop-types';
 import debounce from 'lodash/debounce';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal } from 'antd';
+import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal, Table } from 'antd';
 import locale from 'antd/lib/date-picker/locale/ko_KR';
 import moment from 'moment';
 
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import selectors from '../selectors';
 import * as actions from '../actions';
 import * as manageActions from '../../actions';
-
 import StyledButton from '../../../../../../components/Button/StyledButton';
+
 import StyleDefaultMgr from './StyleDefaultMgr';
 import AddManualType from './AddManualType';
+import SecurityManage from './SecurityManage';
 
 const { Option, OptGroup } = Select;
 const { Search } = Input;
+
+const AntdTable = StyledAntdTable(Table);
+const columnInfo = [
+  {
+    title: '구분',
+    dataIndex: 'ACNT_NAME',
+    align: 'center',
+  },
+  {
+    title: '적용대상',
+    dataIndex: 'ACCOUNT_NAME',
+    key: 'ACCOUNT_ID',
+    align: 'center',
+  },
+  {
+    title: '조회',
+    dataIndex: 'ISREAD',
+    align: 'center',
+  },
+  {
+    title: '입력',
+    dataIndex: 'ISCREATE',
+    align: 'center',
+  },
+  {
+    title: '수정',
+    dataIndex: 'ISUPDATE',
+    align: 'center',
+  },
+  {
+    title: '삭제',
+    dataIndex: 'ISDELETE',
+    align: 'center',
+  },
+  {
+    title: '관리',
+    dataIndex: 'ISADMIN',
+    align: 'center',
+  },
+];
 
 class DefaultMgr extends Component {
   constructor(props) {
@@ -39,17 +81,25 @@ class DefaultMgr extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { pageMoveType, GetDefaultMgrBySaga, GetSelectedUserInfoSaga } = this.props;
+    const { pageMoveType, GetDefaultMgrBySaga, GetSelectedUserInfoSaga, getContentSecurityList } = this.props;
     const { pageMoveType: prevPageMoveType } = prevProps;
 
     if (Number(pageMoveType.get('selectedMualIdx')) !== 0 && Number(pageMoveType.get('selectedMualIdx')) !== Number(prevPageMoveType.get('selectedMualIdx'))) {
       // saga를 통해 기존에 매뉴얼 정보를 읽어온다.
       GetDefaultMgrBySaga();
       GetSelectedUserInfoSaga();
+      getContentSecurityList();
     }
     // else if (pageMoveType.get('selectedMualIdx') === 0 && pageMoveType.get('selectedCategoryIdx') !== prevProps.pageMoveType.get('selectedCategoryIdx')) {
     //   InitDefaultMgr();
     // }
+  }
+
+  handleClickSecurityManage() {
+    const { setIsSecurityModal, getSecuritySelectData, getContentSecurityList } = this.props;
+    setIsSecurityModal(true);
+    getSecuritySelectData();
+    getContentSecurityList();
   }
 
   renderSelectOption(compareList, idx) {
@@ -89,6 +139,16 @@ class DefaultMgr extends Component {
       isAddMualTypeModal,
       setIsAddMualTypeModal,
       compareList,
+      contentSecurityViewList,
+      setIsSecurityModal,
+      isSecurityModal,
+      listDept,
+      listGrp,
+      listUser,
+      contentSecurityList,
+      setContentSecurityList,
+      saveContentSecurity,
+      removeContentSecurity,
     } = this.props;
     let IsMaxVersion = false;
     if (defaultMgrMap && defaultMgrMap.get('VERSION') > 0) {
@@ -202,6 +262,15 @@ class DefaultMgr extends Component {
               </td>
             </tr>
             <tr>
+              <td>권한설정</td>
+              <td colSpan="3" className="contentSecurityWrap">
+                <Button type="dashed" icon="setting" className="setSecurityBtn" onClick={() => this.handleClickSecurityManage()}>
+                  권한설정
+                </Button>
+                <AntdTable columns={columnInfo} dataSource={contentSecurityViewList} key="securityViewTable" rowKey={record => record.ACCOUNT_ID}></AntdTable>
+              </td>
+            </tr>
+            <tr>
               <td colSpan="4" className="defaultMgrButtonWarp">
                 {pageMoveType.get('selectedMualIdx') === 0 ? (
                   <StyledButton className="btn-primary btn-bs-none" onClick={InsertDefaultMgrBySaga}>
@@ -217,15 +286,16 @@ class DefaultMgr extends Component {
                     새버전
                   </StyledButton>
                 )}
-                {pageMoveType.get('selectedMualIdx') !== 0 &&
-                  defaultMgrMap.get('MUAL_STATE') === 'WAIT' && [
+                {pageMoveType.get('selectedMualIdx') !== 0 && defaultMgrMap.get('MUAL_STATE') === 'WAIT' && (
+                  <React.Fragment>
                     <StyledButton className="btn-success btn-bs-none" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
                       확정
-                    </StyledButton>,
+                    </StyledButton>
                     <StyledButton className="btn-dark btn-bs-none" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
                       삭제
-                    </StyledButton>,
-                  ]}
+                    </StyledButton>
+                  </React.Fragment>
+                )}
                 {IsMaxVersion && defaultMgrMap.get('VERSIONLIST').size > 1 && defaultMgrMap.get('MUAL_STATE') === 'PUBS' && (
                   <StyledButton className="btn-dark btn-bs-none" onClick={ResetDefaultMgrBySaga}>
                     초기화
@@ -249,6 +319,27 @@ class DefaultMgr extends Component {
           title="매뉴얼유형 추가"
         >
           <AddManualType />
+        </Modal>
+        <Modal
+          title="권한설정"
+          width={800}
+          visible={isSecurityModal}
+          getContainer={() => document.querySelector('#defaultMgrWrapper')}
+          onCancel={() => setIsSecurityModal(false)}
+          destroyOnClose
+          footer={null}
+        >
+          <SecurityManage
+            setIsSecurityModal={setIsSecurityModal}
+            listDept={listDept}
+            listGrp={listGrp}
+            listUser={listUser}
+            securityList={contentSecurityList}
+            targetKey={defaultMgrMap.get('MUAL_ORG_IDX')}
+            setSecurityList={setContentSecurityList}
+            saveSecurity={saveContentSecurity}
+            removeSecurity={removeContentSecurity}
+          />
         </Modal>
       </StyleDefaultMgr>
     );
@@ -289,6 +380,12 @@ const mapStateToProps = createStructuredSelector({
   selectedUserInfo: selectors.makeSelectedUserInfo(),
   isAddMualTypeModal: selectors.makeSelectIsAddMualTypeModal(),
   compareList: selectors.makeSelectCompareTemplet(),
+  contentSecurityViewList: selectors.makeSelectContentSecurityViewList(),
+  isSecurityModal: selectors.makeSelectIsSecurityModal(),
+  listDept: selectors.makeSelectListDept(),
+  listGrp: selectors.makeSelectListGrp(),
+  listUser: selectors.makeSelectListUser(),
+  contentSecurityList: selectors.makeSelectContentSecurityList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -310,6 +407,12 @@ const mapDispatchToProps = dispatch => ({
   RemoveManualBySaga: () => dispatch(actions.RemoveManualBySaga()),
   GetDefaultMgrByVersionBySaga: selectedVersion => dispatch(actions.GetDefaultMgrByVersionBySaga(selectedVersion)),
   setIsAddMualTypeModal: flag => dispatch(actions.setIsAddMualTypeModalByReducr(flag)),
+  getContentSecurityList: () => dispatch(actions.getContentSecurityListBySaga()),
+  setContentSecurityList: list => dispatch(actions.setContentSecurityListByReducr(list)),
+  setIsSecurityModal: flag => dispatch(actions.setIsSecurityModalByReducr(flag)),
+  getSecuritySelectData: () => dispatch(actions.getSecuritySelectDataBySaga()),
+  saveContentSecurity: () => dispatch(actions.saveContentSecurityBySaga()),
+  removeContentSecurity: row => dispatch(actions.removeContentSecurityBySaga(row)),
 });
 
 export default connect(

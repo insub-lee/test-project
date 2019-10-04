@@ -26,6 +26,9 @@ const StyleDefaultMgr = styled.div`
     height: 32px;
     padding: 0 0.644rem;
   }
+  .contentSecurityWrap {
+    text-align: right;
+  }
 `;
 
 export default StyleDefaultMgr;
