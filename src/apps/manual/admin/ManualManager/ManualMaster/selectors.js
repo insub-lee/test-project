@@ -222,6 +222,12 @@ const makeSelectIsParagraphModal = () =>
     state => state.getIn(['manualMasterState', 'manualEditorEntity', 'isParagraphModal']),
   );
 
+const makeSelectIsPreviewModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.get('previewYn'),
+  );
+
 export default {
   makeSelectChooseRelMual,
   makeSelectManualMaster,
@@ -258,4 +264,5 @@ export default {
   makeSelectIndexRelationList,
   makeSelectParagraphTypeIdx,
   makeSelectIsParagraphModal,
+  makeSelectIsPreviewModal,
 };

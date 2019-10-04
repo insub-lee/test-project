@@ -67,6 +67,7 @@ const initialState = fromJS({
       },
     },
   },
+  previewYn: false, // 에디터 프리뷰
 });
 
 const initDefaultMgrMapValue = fromJS({
@@ -493,6 +494,10 @@ const appReducer = (state = initialState, action) => {
         .setIn(['manualMasterState', 'manualEditorEntity', 'paragraphTypeIdx'], idx)
         .setIn(['manualMasterState', 'manualEditorEntity', 'isParagraphModal'], flag);
     }
+    case constantTypes.SET_PREVIEW_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.set('previewYn', flag);
+    }
     default:
       return state;
   }
@@ -554,7 +559,7 @@ const addComponentInfo = (state, compType, text) => {
     MUAL_IDX: selectedMualIdx,
     SORT_SQ: sortSQ,
     TYPE: compType,
-    MUAL_COMPVIEWINFO: null, // 이정현 수정
+    MUAL_COMPVIEWINFO: null,
     IS_REMOVE: 'N',
     IS_SAVE: 'N',
   };

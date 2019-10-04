@@ -8,6 +8,8 @@ import { fromJS } from 'immutable';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import * as selectors from '../selector';
 import * as actions from '../action';
 import saga from '../saga';
@@ -34,11 +36,14 @@ class NewsfeedSetting extends PureComponent {
   };
 
   applyWidgetConfig = () => {
-    const { selectCategoryList, item, updateBizGroupChgYn } = this.props;
+    const { selectCategoryList, item, updateBizGroupChgYn, type } = this.props;
     const { selectedItem } = this.state;
-
-    selectCategoryList(selectedItem, item);
-    updateBizGroupChgYn();
+    selectCategoryList(selectedItem, item, type);
+    if (type === 'bizgroup') {
+      updateBizGroupChgYn();
+    } else {
+      message.success(<MessageContent>카테고리가 선택되었습니다.</MessageContent>, 2);
+    }
   };
 
   componentDidMount() {
@@ -127,7 +132,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getInitCategoryList: () => dispatch(actions.getInitCategoryList()),
-  selectCategoryList: (selectedCategoryList, item) => dispatch(actions.selectCategoryList(selectedCategoryList, item)),
+  selectCategoryList: (selectedCategoryList, item, settingType) => dispatch(actions.selectCategoryList(selectedCategoryList, item, settingType)),
 });
 
 const withConnect = connect(

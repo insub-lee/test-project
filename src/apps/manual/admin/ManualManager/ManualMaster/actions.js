@@ -236,3 +236,5 @@ export const setIndexRelationComponetIitemByReducr = item => ({ type: constantTy
 export const setIndexRelationListByReducr = list => ({ type: constantTypes.SET_INDEX_RELATION_LIST_REDUCR, list });
 
 export const setEditorParagraphByReducr = (idx, flag) => ({ type: constantTypes.SET_EDITOR_PARAGRAPH_REDUCR, idx, flag });
+
+export const setPreviewModalByReducr = flag => ({ type: constantTypes.SET_PREVIEW_MODAL_REDUCR, flag });

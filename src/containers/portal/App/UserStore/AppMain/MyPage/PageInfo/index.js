@@ -38,8 +38,7 @@ class PageInfo extends Component {
     const { params } = match;
     const { PAGE_ID } = params;
 
-    if (PAGE_ID
-      && this.state.PAGE_ID !== Number(PAGE_ID)) {
+    if (PAGE_ID && this.state.PAGE_ID !== Number(PAGE_ID)) {
       this.setState({
         PAGE_ID: Number(PAGE_ID),
       });
@@ -48,9 +47,7 @@ class PageInfo extends Component {
   }
 
   render() {
-    const {
-      PAGE_ID,
-    } = this.state;
+    const { PAGE_ID } = this.state;
     const {
       widgetList,
       deleteWidget,
@@ -113,7 +110,7 @@ class PageInfo extends Component {
       },
     };
 
-    const addList = (app) => {
+    const addList = app => {
       const widgetArr = [];
       for (let i = 0; i < app.length; i += 1) {
         widgetArr.push(app[i].APP_ID);
@@ -131,13 +128,7 @@ class PageInfo extends Component {
         </ErrorBoundary>
 
         <ErrorBoundary>
-          <AppSelector
-            type="widget"
-            show={this.state.show}
-            closeModal={closeModal}
-            addList={addList}
-            style={{ marginTop: 570 }}
-          />
+          <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
         </ErrorBoundary>
       </div>
     );
@@ -169,13 +160,18 @@ const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withReducer = injectReducer({ key: 'pageInfo', reducer });
 const withSaga = injectSaga({ key: 'pageInfo', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PageInfo));
+export default injectIntl(
+  compose(
+    withReducer,
+    withSaga,
+    withConnect,
+  )(PageInfo),
+);

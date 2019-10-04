@@ -80,3 +80,7 @@ export const SET_RELATIONMANUALLIST_SAGA = 'apps/manual/admin/ManualManager/Opti
 export const SET_SELECTEDRELATIONMANUAL_REDUCR = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_SELECTEDRELATIONMANUAL_REDUCR';
 export const SET_RELATIONMANUALLISTBYMUALIDX_REDUCR = 'apps/manual/admin/ManualManager/OptionMgr/RelactionManualList/SET_RELATIONMANUALLISTBYMUALIDX_REDUCR';
 // :::::::::::::::::::::::: 관련정보 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+// :::::::::::::::::::::::: 에디터 미리보기 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+export const SET_PREVIEW_MODAL_REDUCR = 'apps/manual/admin/ManualManager/ManualMaster/SET_PREVIEW_MODAL_REDUCR';
+// :::::::::::::::::::::::: 에디터 미리보기 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

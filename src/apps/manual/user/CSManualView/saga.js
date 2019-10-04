@@ -37,10 +37,12 @@ function* getManualView(action) {
       // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
       if (maulTabList.length > 0) {
         maulTabList.forEach(node => {
-          const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
-          if (tempList.length > 0) {
-            isIndexRelation = true;
-            indexRelationIdxList = indexRelationIdxList.concat(tempList);
+          if(node.MUAL_TABVIEWINFO !== null){ // 조건문추가(이정현 - filter 에러시 페이지 로드가 안되요)
+            const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
+            if (tempList.length > 0) {
+              isIndexRelation = true;
+              indexRelationIdxList = indexRelationIdxList.concat(tempList);
+            }
           }
         });
       }

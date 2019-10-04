@@ -16,6 +16,7 @@ import TopbarBtnWrap from './TopbarBtnWrap';
 import IconCollection from '../components/IconCollection';
 import * as listActions from '../CSManualList/actions';
 import * as bookmarkViewWidgetAction from '../CSManualBookmark/action';
+import * as editorActions from '../../admin/ManualManager/ManualMaster/actions';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -53,13 +54,23 @@ class ManualView extends Component {
   }
 
   handleCloseModal = () => {
-    const { resetManualView, setIsViewContents, setSelectedMualIdx, setListSelectedMualIdx, widgetId, setNewsfeedModalView, setNewsfeedModalIdx } = this.props;
+    const {
+      resetManualView,
+      setIsViewContents,
+      setSelectedMualIdx,
+      setListSelectedMualIdx,
+      widgetId,
+      setNewsfeedModalView,
+      setNewsfeedModalIdx,
+      setEditorPreviewModal,
+    } = this.props;
     setIsViewContents(false, widgetId);
     setNewsfeedModalIdx(undefined, widgetId);
     setNewsfeedModalView(false, widgetId);
     resetManualView(widgetId);
     setSelectedMualIdx(0, widgetId);
     setListSelectedMualIdx(0, widgetId);
+    setEditorPreviewModal(false);
   };
 
   handleClickTopBarButton = key => {
@@ -76,7 +87,7 @@ class ManualView extends Component {
     }
   };
 
-  getTabData = (maulTabList, setScrollComponent, widgetId, pagerProps, mualMaster, navList, quickProps, indexRelationList) =>
+  getTabData = (maulTabList, setScrollComponent, widgetId, bookmarkWidgetData, pagerProps, mualMaster, navList, quickProps, indexRelationList) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -93,6 +104,7 @@ class ManualView extends Component {
             navList={navList}
             quickProps={quickProps}
             indexRelationList={indexRelationList}
+            bookmarkWidgetData={bookmarkWidgetData}
           />
         </StyledTabPanel>
       ),
@@ -118,7 +130,7 @@ class ManualView extends Component {
       setNewsfeedModalIdx,
       indexRelationList,
       setbookmarkWidgetViewIdx,
-      widgetYn,
+      bookmarkWidgetData,
     } = this.props;
 
     const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
@@ -133,14 +145,16 @@ class ManualView extends Component {
       { key: 'diffView', title: '비교보기', event: undefined },
       { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
+
     return (
-      <Styled id={`#csManualView_${widgetId}`} widgetYn={widgetYn}>
+      <Styled id={`#csManualView_${widgetId}`} bookmarkWidgetData={bookmarkWidgetData}>
         <div className="tab-wrap">
           <Tab
             tabs={this.getTabData(
               maulTabList.toJS(),
               setScrollComponent,
               widgetId,
+              bookmarkWidgetData,
               {
                 mualHistoryList,
                 selectedMualIdx,
@@ -167,7 +181,7 @@ class ManualView extends Component {
             action={{ setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx }}
             widgetId={widgetId}
           />
-          {!widgetYn && (
+          {!bookmarkWidgetData.widgetYn && (
             <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
               <IconCollection className="icon-close" />
             </button>
@@ -205,7 +219,8 @@ ManualView.propTypes = {
   addManualHistory: PropTypes.func,
   indexRelationList: PropTypes.object,
   setbookmarkWidgetViewIdx: PropTypes.func,
-  widgetYn: PropTypes.bool,
+  bookmarkWidgetData: PropTypes.object,
+  setEditorPreviewModal: PropTypes.func,
 };
 
 ManualView.defaultProps = {
@@ -222,8 +237,9 @@ ManualView.defaultProps = {
   relationList: fromJS([]),
   addManualHistory: () => false,
   indexRelationList: fromJS([]),
-  widgetYn: false,
+  bookmarkWidgetData: { widgetYn: false },
   setbookmarkWidgetViewIdx: () => false,
+  setEditorPreviewModal: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -251,6 +267,7 @@ const mapDispatchToProps = dispatch => ({
   setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
   addManualHistory: (widgetId, mualIdx, mualOrgIdx) => dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
   setbookmarkWidgetViewIdx: (widgetId, selectedMual) => dispatch(bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)),
+  setEditorPreviewModal: flag => dispatch(editorActions.setPreviewModalByReducr(flag)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

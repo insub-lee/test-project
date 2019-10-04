@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import * as feed from 'components/Feedback/functions';
 import * as actions from '../../actions';
 
-const EditorMenu = ({ isGroupAdmin, isSuperAdmin, handlePostTemplate, handleChangeIsEditorMgr, handleSaveEditorMgr, getManualEditorMgr }) => (
+const EditorMenu = ({ isGroupAdmin, isSuperAdmin, handlePostTemplate, handleChangeIsEditorMgr, handleSaveEditorMgr, getManualEditorMgr, setPreviewModal }) => (
   <Menu className="WriteHeader">
     <Menu secondary className="right WriteHeaderMenu">
       <Menu.Item>
@@ -48,6 +48,11 @@ const EditorMenu = ({ isGroupAdmin, isSuperAdmin, handlePostTemplate, handleChan
         </Popup>
       </Menu.Item>
       <Menu.Item>
+        <Button basic compact inverted className="blackBtn" onClick={() => setPreviewModal(true)}>
+          미리보기
+        </Button>
+      </Menu.Item>
+      <Menu.Item>
         <Button type="button" basic compact inverted onClick={handleSaveEditorMgr}>
           저장
         </Button>
@@ -60,18 +65,21 @@ EditorMenu.propTypes = {
   handleChangeIsEditorMgr: PropTypes.func,
   handleSaveEditorMgr: PropTypes.func,
   getManualEditorMgr: PropTypes.func,
+  setPreviewModal: PropTypes.func,
 };
 
 EditorMenu.defaultProps = {
   handleChangeIsEditorMgr: () => false,
   handleSaveEditorMgr: () => false,
   getManualEditorMgr: () => false,
+  setPreviewModal: () => false,
 };
 
 const mapDispatchToProps = dispatch => ({
   handleChangeIsEditorMgr: () => dispatch(actions.setIsEditorMgrByReduc(false)),
   handleSaveEditorMgr: () => dispatch(actions.saveEditorMgrBySaga()),
   getManualEditorMgr: () => dispatch(actions.getManualEditorMgrBySaga()),
+  setPreviewModal: flag => dispatch(actions.setPreviewModalByReducr(flag)),
 });
 
 export default connect(

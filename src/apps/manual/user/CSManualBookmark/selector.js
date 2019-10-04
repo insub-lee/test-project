@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 
 const CSManualWidgetData = state => state.get('CSManual-Bookmark-Widget');
 const auth = state => state.get('auth');
+const common = state => state.get('common');
 
 const selectUserProfile = () =>
   createSelector(
@@ -24,4 +25,11 @@ const selectViewMualIdx = () =>
     (state, widgetId) => state.getIn(['bookmarkWidget', widgetId, 'viewMualIdx']),
   );
 
-export { selectUserProfile, selectBookmarkList, selectViewMualIdx };
+// 화면에 그려질 앱 갯수
+const selectedApp = () =>
+  createSelector(
+    common,
+    state => state.get('selectedApp'),
+  );
+
+export { selectUserProfile, selectBookmarkList, selectViewMualIdx, selectedApp };

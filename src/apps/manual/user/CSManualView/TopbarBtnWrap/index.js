@@ -7,10 +7,11 @@ import Styled from './Styled';
 
 const { Option } = Select;
 
-const handleClickSelect = (mualIdx, widgetId, { setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx }) => {
+const handleClickSelect = (mualIdx, widgetId, { setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx }) => {
   setListSelectedMualIdx(mualIdx, widgetId);
   setSelectedMualIdx(mualIdx, widgetId, 'N');
   setNewsfeedModalIdx(mualIdx, widgetId);
+  setbookmarkWidgetViewIdx(widgetId, mualIdx);
 };
 
 const TopbarBtnWrap = ({ className, data, mualMaster, widgetId, action }) => (
@@ -18,7 +19,7 @@ const TopbarBtnWrap = ({ className, data, mualMaster, widgetId, action }) => (
     {data && data.map((item, idx) => <TopbarBtn key={`${item.key}_${idx}`} data={item} />)}
     {mualMaster && mualMaster.get('VERSIONLIST') && mualMaster.get('VERSIONLIST').size > 0 && (
       <Select
-        value={mualMaster.get('MUAL_IDX')}
+        defaultValue={mualMaster.get('MUAL_IDX')}
         className="manualViewTopbarSelect"
         placeholder="이력보기"
         style={{ width: 78 }}

@@ -12,7 +12,7 @@ import TopTitle from './TopTitle';
 import MenuList from './MenuList';
 import Styled from './Styled';
 
-const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp, widgetId }) => (
+const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollComp, widgetId, bookmarkWidgetData }) => (
   <Styled>
     <TopTitle />
     <Scrollbars style={{ height: 'calc(100% - 50px)' }}>
@@ -22,6 +22,7 @@ const SideMenu = ({ maulCompList, setSelectedCompIdx, selectedCompIdx, scrollCom
         selectedCompIdx={selectedCompIdx}
         scrollComp={scrollComp}
         widgetId={widgetId}
+        bookmarkWidgetData={bookmarkWidgetData}
       />
     </Scrollbars>
   </Styled>
@@ -32,6 +33,7 @@ SideMenu.propTypes = {
   setSelectedCompIdx: PropTypes.func,
   selectedCompIdx: PropTypes.number,
   scrollComp: PropTypes.object,
+  bookmarkWidgetData: PropTypes.object,
 };
 
 SideMenu.defaultProps = {
@@ -39,6 +41,7 @@ SideMenu.defaultProps = {
   setSelectedCompIdx: () => false,
   selectedCompIdx: fromJS([]),
   scrollComp: {},
+  bookmarkWidgetData: { widgetYn: false },
 };
 
 const mapStateToProps = createStructuredSelector({

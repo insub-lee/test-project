@@ -1,34 +1,64 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyleWidget = styled.div`
-  & .bookmarkWidget_wrap {
-    width: 100%;
-  }
+  ${props =>
+    props.appCount === 1 &&
+    css`
+      & .bookmarkWidget_wrap {
+      }
 
-  & .lbKRjY {
-    width: 98%;
-    height: 100%;
-  }
+      & .gKTCno {
+        position: relative;
+        padding: 0px 0px 20px 0px;
+      }
 
-  & .UzVzK .fr-view {
-    padding: 0px 15px;
-  }
+      /* 테이블  */
+      & .fr-view table {
+        border: none;
+        border-collapse: collapse;
+        empty-cells: show;
+        max-width: 80vmax;
+      }
 
-  & .fr-view table {
-    border: none;
-    border-collapse: collapse;
-    empty-cells: show;
-    max-width: 100%;
-    width: 100%;
-  }
+      /* 하단 */
+      & .dkXVuF > div.mualView-btn-wrapper {
+        width: 80%;
+      }
 
-  & .dkXVuF > div.mualView-btn-wrapper {
-    width: 80%;
-  }
+      & .dkXVuF > div.mualView-select-wrapper {
+        margin-left: 10px;
+        width: 15%;
+      }
+    `};
 
-  & .dkXVuF > div.mualView-select-wrapper {
-    margin-left: 50px;
-    width: 15%;
-  }
+  ${props =>
+    props.appCount > 1 &&
+    css`
+      & .bookmarkWidget_wrap {
+      }
+
+      & .gKTCno {
+        position: relative;
+        padding: 0px 0px 20px 0px;
+      }
+
+      /* 테이블  */
+      & .fr-view table {
+        border: none;
+        border-collapse: collapse;
+        empty-cells: show;
+        max-width: 80vmax;
+      }
+
+      /* 하단 */
+      & .dkXVuF > div.mualView-btn-wrapper {
+        width: 80%;
+      }
+
+      & .dkXVuF > div.mualView-select-wrapper {
+        margin-left: 10px;
+        width: 15%;
+      }
+    `};
 `;
 export default StyleWidget;
