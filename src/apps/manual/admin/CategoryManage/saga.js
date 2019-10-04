@@ -85,11 +85,11 @@ export function* getSecuritySelectData() {
   const responseGrp = yield call(Axios.get, '/api/common/v1/account/grpTree', { data: 'temp' });
   const listGrp = JSON.parse(`[${responseGrp.result.join('')}]`);
 
-  const responsePstn = yield call(Axios.get, '/api/common/v1/account/pstnTree', { data: 'temp' });
-  const listPstn = JSON.parse(`[${responsePstn.result.join('')}]`);
+  // const responsePstn = yield call(Axios.get, '/api/common/v1/account/pstnTree', { data: 'temp' });
+  // const listPstn = JSON.parse(`[${responsePstn.result.join('')}]`);
 
-  const responseDuty = yield call(Axios.get, '/api/common/v1/account/dutyTree', { data: 'temp' });
-  const listDuty = JSON.parse(`[${responseDuty.result.join('')}]`);
+  // const responseDuty = yield call(Axios.get, '/api/common/v1/account/dutyTree', { data: 'temp' });
+  // const listDuty = JSON.parse(`[${responseDuty.result.join('')}]`);
 
   const profile = yield select(makeSelectProfile());
   const data = {
@@ -103,14 +103,15 @@ export function* getSecuritySelectData() {
   if (listUser === undefined || listUser.size === 0) {
     listUser = fromJS([]);
   }
-  yield put(actions.setSecuritySelectData(fromJS(listDept), fromJS(listGrp), fromJS(listPstn), fromJS(listDuty), listUser));
+  yield put(actions.setSecuritySelectData(fromJS(listDept), fromJS(listGrp), listUser));
 }
 
 export function* getSecurityList() {
   const categoryInfo = yield select(selectors.makeSelectCategoryInfo());
   const response = yield call(Axios.get, `/api/manual/v1/ManualSecurityHandler?TARGETKEY=${categoryInfo.get('CATEGORY_IDX')}`);
   if (response && response.list) {
-    yield put(actions.setSecurityListByReducr(fromJS(response.list)));
+    yield put(actions.setSecurityListByReducr(fromJS(response.list), 'securityList'));
+    yield put(actions.setSecurityListByReducr(fromJS(response.list), 'securityViewList'));
   }
 }
 
@@ -118,6 +119,9 @@ export function* saveSecurity() {
   const securityList = yield select(selectors.makeSelectSecurityList());
   if (securityList.length > 0) {
     const response = yield call(Axios.post, '/api/manual/v1/ManualSecurityHandler', { AUTHS: securityList, ISINHERIT: 'N' });
+    if (response) {
+      yield put(actions.getSecurityListBySaga());
+    }
   } else {
     console.debug('no data');
   }
@@ -126,6 +130,9 @@ export function* saveSecurity() {
 export function* saveSecurityRow({ row, flag }) {
   if (row) {
     const response = yield call(Axios.post, '/api/manual/v1/ManualSecurityHandler', { AUTHS: [row], ISINHERIT: flag });
+    if (response) {
+      yield put(actions.getSecurityListBySaga());
+    }
   } else {
     console.debug('no data');
   }
@@ -133,7 +140,10 @@ export function* saveSecurityRow({ row, flag }) {
 
 export function* removeSecurityRow({ row }) {
   if (row) {
-    const response = yield call(Axios.delete, '/api/manual/v1/ManualSecurityHandler', { AUTHS: [row] });
+    const response = yield call(Axios.delete, `/api/manual/v1/ManualSecurityHandler?TARGETKEY=${row.TARGETKEY}&ACCOUNT_ID=${row.ACCOUNT_ID}`, row);
+    if (response) {
+      yield put(actions.getSecurityListBySaga());
+    }
   } else {
     console.debug('no data');
   }

@@ -254,7 +254,7 @@ ConfigBizBuilder.defaultProps = {
   data: {},
   setBizBuilderWidgetSettingBySaga: () => false,
   setBizBuilderConfigChangeValueByReducr: () => false,
-  BizBuilderConfigInfo: {},
+  BizBuilderConfigInfo: fromJS({}),
   type: 'common',
   getBizBuilderWidgetSettingBySaga: () => false,
   setBizBuillderWidgetSettingAsJSON: () => false,

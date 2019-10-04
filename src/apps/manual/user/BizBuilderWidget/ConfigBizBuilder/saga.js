@@ -18,7 +18,7 @@ function* getBizBuilderWidgetSettingBySaga(payload) {
   // sourcecols, strsql
   const { result } = response;
 
-  yield put(actions.setBizBuilderWidgetSttingByReducr(item.id, result.ITEM_VALUE));
+  yield put(actions.setBizBuilderWidgetSttingByReducr(item.id, fromJS(result.ITEM_VALUE)));
   yield put(actions.getWorkMetaBySaga(item.id, result.ITEM_VALUE.data.WORK_SEQ));
 }
 

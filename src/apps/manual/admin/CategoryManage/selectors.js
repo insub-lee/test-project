@@ -86,17 +86,17 @@ const makeSelectListGrp = () =>
     state => state.get('listGrp').toJS(),
   );
 
-const makeSelectListPstn = () =>
-  createSelector(
-    selectAppsCategoryManageState,
-    state => state.get('listPstn').toJS(),
-  );
+// const makeSelectListPstn = () =>
+//   createSelector(
+//     selectAppsCategoryManageState,
+//     state => state.get('listPstn').toJS(),
+//   );
 
-const makeSelectListDuty = () =>
-  createSelector(
-    selectAppsCategoryManageState,
-    state => state.get('listDuty').toJS(),
-  );
+// const makeSelectListDuty = () =>
+//   createSelector(
+//     selectAppsCategoryManageState,
+//     state => state.get('listDuty').toJS(),
+//   );
 
 const makeSelectListUser = () =>
   createSelector(
@@ -108,6 +108,12 @@ const makeSelectSecurityList = () =>
   createSelector(
     selectAppsCategoryManageState,
     state => state.get('securityList').toJS(),
+  );
+
+const makeSelectSecurityViewList = () =>
+  createSelector(
+    selectAppsCategoryManageState,
+    state => state.get('securityViewList').toJS(),
   );
 
 export default {
@@ -125,8 +131,9 @@ export default {
   makeSelectIsSecurityModal,
   makeSelectListDept,
   makeSelectListGrp,
-  makeSelectListPstn,
-  makeSelectListDuty,
+  // makeSelectListPstn,
+  // makeSelectListDuty,
   makeSelectListUser,
   makeSelectSecurityList,
+  makeSelectSecurityViewList,
 };

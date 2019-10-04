@@ -17,8 +17,6 @@ import * as actions from '../../actions';
 import IconCollection from '../../../../../user/components/IconCollection';
 import StyleEditorIndex from './StyleEditorIndex';
 
-const { Link } = Anchor;
-
 const getTreeData = (list, selectedTabName) => {
   const flatData = list.filter(item => item.IS_REMOVE !== 'Y');
   flatData.push({ MUAL_TABCOMP_IDX: 0, MUAL_TABCOMP_PIDX: -1, MUAL_COMPVIEWINFO: selectedTabName, TYPE: 'index', SORT_SQ: 0, expanded: true });
