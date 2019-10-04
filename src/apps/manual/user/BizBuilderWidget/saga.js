@@ -1,5 +1,5 @@
 import React from 'react';
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 
 import { Axios } from 'utils/AxiosFunc';
@@ -8,7 +8,6 @@ import * as actions from './actions';
 
 function* getBizBuilderListBySaga(payload) {
   const { widgetId, data } = payload;
-  console.debug('###', data);
   const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${data.WORK_SEQ}`);
   yield put(actions.setBizBuilderListByReducr(widgetId, response));
 }
@@ -29,7 +28,7 @@ function* getBizBuilderContentViewBySaga(payload) {
 }
 
 export default function* watcher() {
-  yield takeLatest(constantTypes.GET_BIZBULDERLISTWIDGET_SETTINGINFO_BYSAGA, getBizBuilderListSettingBySaga);
-  yield takeLatest(constantTypes.GET_BIZBUILDERLIST_BYSAGA, getBizBuilderListBySaga);
-  yield takeLatest(constantTypes.GET_BIZBUILDERVIEW_BYSAGA, getBizBuilderContentViewBySaga);
+  yield takeEvery(constantTypes.GET_BIZBULDERLISTWIDGET_SETTINGINFO_BYSAGA, getBizBuilderListSettingBySaga);
+  yield takeEvery(constantTypes.GET_BIZBUILDERLIST_BYSAGA, getBizBuilderListBySaga);
+  yield takeEvery(constantTypes.GET_BIZBUILDERVIEW_BYSAGA, getBizBuilderContentViewBySaga);
 }
