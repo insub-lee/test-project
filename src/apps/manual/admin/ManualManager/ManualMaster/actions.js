@@ -237,4 +237,23 @@ export const setIndexRelationListByReducr = list => ({ type: constantTypes.SET_I
 
 export const setEditorParagraphByReducr = (idx, flag) => ({ type: constantTypes.SET_EDITOR_PARAGRAPH_REDUCR, idx, flag });
 
+export const getContentSecurityListBySaga = () => ({ type: constantTypes.GET_CONTENT_SECURITY_LIST_SAGA });
+
+export const setContentSecurityListByReducr = (list, key) => ({ type: constantTypes.SET_CONTENT_SECURITY_LIST_REDUCR, list, key });
+
+export const setIsSecurityModalByReducr = flag => ({ type: constantTypes.SET_IS_SECURITY_MODAL_REDUCR, flag });
+
+export const setSecuritySelectData = (listDept, listGrp, listUser) => ({
+  type: constantTypes.SET_SECURITY_SELECT_DATA_REDUCR,
+  listDept,
+  listGrp,
+  listUser,
+});
+
+export const getSecuritySelectDataBySaga = () => ({ type: constantTypes.GET_SECURITY_SELECT_DATA_SAGA });
+
+export const saveContentSecurityBySaga = () => ({ type: constantTypes.SAVE_CONTENT_SECURITY_SAGA });
+
+export const removeContentSecurityBySaga = row => ({ type: constantTypes.REMOVE_CONTENT_SECURITY_SAGA, row });
+
 export const setPreviewModalByReducr = flag => ({ type: constantTypes.SET_PREVIEW_MODAL_REDUCR, flag });

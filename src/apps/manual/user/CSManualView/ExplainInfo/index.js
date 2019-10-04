@@ -7,11 +7,11 @@ import Panel from './Panel';
 import InfoConWrap from './InfoConWrap';
 import Styled from './Styled';
 
-const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, navList, indexRelationList, bookmarkWidgetData }) => (
+const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, navList, indexRelationList }) => (
   <Styled>
     <Panel mualMaster={mualMaster} navList={navList}>
       <Scrollbars
-        style={bookmarkWidgetData.widgetYn ? { height: 'calc(100vh - 25vh)' } : { height: 'calc(100vh - 208px)' }}
+        style={{ height: 'calc(100vh - 208px)' }}
         ref={c => {
           if (c) {
             setScrollComponent(c, widgetId);

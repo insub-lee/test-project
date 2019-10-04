@@ -11,6 +11,8 @@ import saga from './saga';
 import reducer from './reducer';
 import * as actions from './actions';
 import Styled from './Styled';
+import ImgHead from './images/img-head-tit.png';
+import ImgFoot from './images/img-foot.png';
 
 class Counsel extends Component {
   componentDidMount() {}
@@ -18,56 +20,80 @@ class Counsel extends Component {
   render() {
     return (
       <Styled>
-        <div className="listWrap">
-          <div className="listForm">
-            <div className="item item01">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('신용')}>
-                <span className="item-deco">
-                  <span className="icon" />
-                  <span className="txt">대출</span>
-                </span>
-                <span className="item-tit">
-                  <strong className="txt">신용대출</strong>
-                  {/* <span className="num">1</span> */}
-                </span>
-              </button>
+        <div className="body-wrapper">
+          <div className="header">
+            통신사 고객센터<span>00:39</span>
+          </div>
+          <div className="content">
+            <div className="cont-head">
+              <img src={ImgHead} alt="" />
             </div>
-            <div className="item item02">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('적금')}>
-                <span className="item-deco">
-                  <span className="icon" />
-                  <span className="txt">예금</span>
-                </span>
-                <span className="item-tit">
-                  <strong className="txt">적금</strong>
-                  {/* <span className="num">2</span> */}
-                </span>
-              </button>
+            <div className="listWrap">
+              <div className="listForm">
+                <div className="item item01">
+                  <button type="button" onClick={() => this.props.pushCounselHelperKeyword('')}>
+                    <span className="item-deco">
+                      <span className="icon" />
+                      <span className="txt">상담업무</span>
+                    </span>
+                    <span className="item-tit">
+                      <strong className="txt">전체</strong>
+                    </span>
+                  </button>
+                </div>
+                <div className="item item01">
+                  <button type="button" onClick={() => this.props.pushCounselHelperKeyword('신용')}>
+                    <span className="item-deco">
+                      <span className="icon" />
+                      <span className="txt">대출</span>
+                    </span>
+                    <span className="item-tit">
+                      <strong className="txt">신용대출</strong>
+                      {/* <span className="num">1</span> */}
+                    </span>
+                  </button>
+                </div>
+                <div className="item item02">
+                  <button type="button" onClick={() => this.props.pushCounselHelperKeyword('적금')}>
+                    <span className="item-deco">
+                      <span className="icon" />
+                      <span className="txt">예금</span>
+                    </span>
+                    <span className="item-tit">
+                      <strong className="txt">적금</strong>
+                      {/* <span className="num">2</span> */}
+                    </span>
+                  </button>
+                </div>
+                <div className="item item03">
+                  <button type="button" onClick={() => this.props.pushCounselHelperKeyword('담보')}>
+                    <span className="item-deco">
+                      <span className="icon" />
+                      <span className="txt">전자금융</span>
+                    </span>
+                    <span className="item-tit">
+                      <strong className="txt">담보대출</strong>
+                      {/* <span className="num">3</span> */}
+                    </span>
+                  </button>
+                </div>
+                <div className="item item04">
+                  <button type="button" onClick={() => this.props.pushCounselHelperKeyword('업무그룹명')}>
+                    <span className="item-deco">
+                      <span className="icon" />
+                      <span className="txt">기타</span>
+                    </span>
+                    <span className="item-tit">
+                      <strong className="txt">업무그룹명</strong>
+                      {/* <span className="num">4</span> */}
+                    </span>
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="item item03">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('담보')}>
-                <span className="item-deco">
-                  <span className="icon" />
-                  <span className="txt">전자금융</span>
-                </span>
-                <span className="item-tit">
-                  <strong className="txt">담보대출</strong>
-                  {/* <span className="num">3</span> */}
-                </span>
-              </button>
-            </div>
-            <div className="item item04">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('업무그룹명')}>
-                <span className="item-deco">
-                  <span className="icon" />
-                  <span className="txt">기타</span>
-                </span>
-                <span className="item-tit">
-                  <strong className="txt">업무그룹명</strong>
-                  {/* <span className="num">4</span> */}
-                </span>
-              </button>
-            </div>
+          </div>
+          <div className="foot-fix">
+            <img src={ImgFoot} alt="" />
           </div>
         </div>
       </Styled>
