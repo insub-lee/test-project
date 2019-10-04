@@ -268,11 +268,8 @@ const mapDispatchToProps = dispatch => ({
   setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
   addManualHistory: (widgetId, mualIdx, mualOrgIdx) => dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
   setbookmarkWidgetViewIdx: (widgetId, selectedMual) => dispatch(bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)),
-<<<<<<< HEAD
   setEditorPreviewModal: flag => dispatch(editorActions.setPreviewModalByReducr(flag)),
-=======
   getOldVerManual: (widgetId, mualIdx) => dispatch(actions.getOldVersionManualBySaga(widgetId, mualIdx)),
->>>>>>> master
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });
