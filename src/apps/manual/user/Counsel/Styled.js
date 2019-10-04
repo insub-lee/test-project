@@ -6,6 +6,37 @@ import icon03 from './images/icon03.png';
 import icon04 from './images/icon04.png';
 
 const Styled = styled.div`
+  .body-wrapper {
+    .header {
+      background-color: #2f313e;
+      color: #fff;
+      font-size: 18px;
+      padding: 25px 15px;
+      > span {
+        display: inline-block;
+        color: #00cd65;
+        font-size: 12px;
+        margin-left: 10px;
+        font-weight: 600;
+      }
+    }
+    .content {
+      background: #000;
+      padding: 10px;
+      .cont-head {
+        margin-bottom: 3px;
+        img {
+          width: 100%;
+        }
+      }
+    }
+    .foot-fix {
+      > img {
+        width: 100%;
+      }
+    }
+  }
+
   .listWrap {
     overflow-y: scroll;
     max-height: 445px;
