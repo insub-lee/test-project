@@ -21,19 +21,7 @@ class Counsel extends Component {
         <div className="listWrap">
           <div className="listForm">
             <div className="item item01">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('')}>
-                <span className="item-deco">
-                  <span className="icon" />
-                  <span className="txt">전체</span>
-                </span>
-                <span className="item-tit">
-                  <strong className="txt">전체</strong>
-                  {/* <span className="num">1</span> */}
-                </span>
-              </button>
-            </div>
-            <div className="item item01">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('대출')}>
+              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('신용')}>
                 <span className="item-deco">
                   <span className="icon" />
                   <span className="txt">대출</span>
@@ -45,7 +33,7 @@ class Counsel extends Component {
               </button>
             </div>
             <div className="item item02">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('예금')}>
+              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('적금')}>
                 <span className="item-deco">
                   <span className="icon" />
                   <span className="txt">예금</span>
@@ -57,7 +45,7 @@ class Counsel extends Component {
               </button>
             </div>
             <div className="item item03">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('전자금융')}>
+              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('담보')}>
                 <span className="item-deco">
                   <span className="icon" />
                   <span className="txt">전자금융</span>
@@ -69,7 +57,7 @@ class Counsel extends Component {
               </button>
             </div>
             <div className="item item04">
-              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('기타')}>
+              <button type="button" onClick={() => this.props.pushCounselHelperKeyword('업무그룹명')}>
                 <span className="item-deco">
                   <span className="icon" />
                   <span className="txt">기타</span>

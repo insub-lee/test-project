@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Row, Col, Tabs } from 'antd';
+import { Table, Row, Col, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -19,7 +19,11 @@ import * as actions from './actions';
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
 import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledModalWrapper from './StyledModalWrapper';
+
 const AntdTable = StyledAntdTable(Table);
+
+const AntdModal = StyledModalWrapper(Modal);
 
 class BizBuilderWidget extends Component {
   state = {
@@ -97,23 +101,16 @@ class BizBuilderWidget extends Component {
     };
 
     return (
-      <div>
+      <div id="manualBizBuilderWidget">
         <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
-        <Rodal
-          customStyles={{
-            position: 'absolute',
-            width: 1300,
-            height: 'calc(100vh - 100px)',
-            backgroundColor: '#646567',
-            top: 0,
-            left: 0,
-            margin: 'auto',
-            borderRadius: '3px',
-            padding: '15px',
-          }}
+        <AntdModal
+          width={1000}
+          height={600}
           visible={this.state.visible}
-          onClose={onRodalClose.bind(this)}
-          duration={300}
+          style={{ top: '50%', transform: 'translateY(-50%)' }}
+          getContainer={() => document.querySelector('#manualBizBuilderWidget')}
+          // onClose={onRodalClose.bind(this)}
+          // duration={300}
         >
           <div>
             <RodalContentStyle className="contentWrapper">
@@ -122,7 +119,9 @@ class BizBuilderWidget extends Component {
                 <Col xs={24} md={24} xl={16} className="leftActivity">
                   <ScrollBar className="rodalCustomScrollbar">
                     <div className="content">
-                      {data && data.CONTENT && data.CONTENT.length > 0 && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
+                      {data && data.CONTENT && typeof data.CONTENT === 'string'
+                        ? data.CONTENT
+                        : data && data.CONTENT && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
                     </div>
                   </ScrollBar>
                 </Col>
@@ -190,7 +189,7 @@ class BizBuilderWidget extends Component {
               </Row>
             </RodalContentStyle>
           </div>
-        </Rodal>
+        </AntdModal>
       </div>
     );
   }

@@ -6,8 +6,6 @@ import icon03 from './images/icon03.png';
 import icon04 from './images/icon04.png';
 
 const Styled = styled.div`
-  padding: 48px;
-
   .listWrap {
     overflow-y: scroll;
     max-height: 445px;
