@@ -113,9 +113,9 @@ class CSManualList extends Component {
     const topBarButton = [
       { key: 'mualListSetMultiView', title: '모아보기', event: this.handleClickTopBarButton },
       { key: 'mualListCompare', title: '상품비교', event: this.handleClickTopBarButton },
-      { key: 'listTopbar2', title: '오류신고', event: this.handleClickTopBarButton },
-      { key: 'listTopbar3', title: '오류신고', event: this.handleClickTopBarButton },
-      { key: 'listTopbar4', title: '오류신고', event: this.handleClickTopBarButton },
+      // { key: 'listTopbar2', title: '오류신고', event: this.handleClickTopBarButton },
+      // { key: 'listTopbar3', title: '오류신고', event: this.handleClickTopBarButton },
+      // { key: 'listTopbar4', title: '오류신고', event: this.handleClickTopBarButton },
     ];
 
     return (
