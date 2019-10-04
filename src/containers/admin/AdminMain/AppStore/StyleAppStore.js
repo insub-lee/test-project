@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const StyleAppStore = styled.div`
   // max-width: 1200px;
-  max-width: 1450px;
+  max-width: 1520px;
   min-width: 900px;
   width: 100%;
   margin: 12px auto 0;
