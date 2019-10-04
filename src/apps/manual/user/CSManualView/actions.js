@@ -2,6 +2,7 @@ import * as constantTypes from './constants';
 
 // get
 export const getManualViewBySaga = (widgetId, flag) => ({ type: constantTypes.GET_MANUAL_VIEW_SAGA, flag, widgetId });
+export const getOldVersionManualBySaga = (widgetId, mualIdx) => ({ type: constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, widgetId, mualIdx });
 
 // add
 export const addManualHistoryBySaga = (widgetId, mualIdx, mualOrgIdx) => ({ type: constantTypes.ADD_HISTORY_HISTORY_SAGA, widgetId, mualIdx, mualOrgIdx });
@@ -37,6 +38,7 @@ export const setManualViewInfoByReducr = (maulTabList, historyList, bookmarkList
   widgetId,
 });
 export const setViewIndexRelationListByReducr = (list, widgetId) => ({ type: constantTypes.SET_VIEW_INDEX_RELATION_LIST_REDUCR, list, widgetId });
+export const setOldVersionManualByReducr = (list, widgetId) => ({ type: constantTypes.SET_OLD_VERSION_MANUAL_BY_REDUCR, list, widgetId });
 
 // remove
 

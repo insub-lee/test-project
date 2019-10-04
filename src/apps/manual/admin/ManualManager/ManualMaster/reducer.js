@@ -302,6 +302,9 @@ const appReducer = (state = initialState, action) => {
       const editorComponentList = state.getIn(['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList']);
       if (editorComponentList && editorComponentList.size > 0) {
         const innerIdx = editorComponentList.findIndex(item => item.get('MUAL_TABCOMP_IDX') === compIdx);
+        if (innerIdx < 0) {
+          return state;
+        }
         if (key.indexOf('.') > -1) {
           const setKey = ['manualMasterState', 'manualEditorEntity', 'editorTabList', idx, 'editorComponentList', innerIdx];
           key.split('.').forEach(keyItem => {

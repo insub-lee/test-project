@@ -68,11 +68,11 @@ class App extends React.PureComponent {
   constructor(props) {
     super(props, 'App/index');
 
-    const { view } = props;
+    const { view, menuFixedYn } = props;
 
     this.state = {
       // UserMenu open flag
-      open: false,
+      open: menuFixedYn === 'Y' ? true : false,      
       // MenuCategory open flag
       headerMenuOpen: false,
       // FullScreen
@@ -87,8 +87,6 @@ class App extends React.PureComponent {
       // 스피너 상태
       isSpinnerShow: false,
       // isPreviewPage: false,
-      // menu 고정용 state,
-      fixedMenu: true,
     };
 
     this.count = 0;
@@ -308,10 +306,12 @@ class App extends React.PureComponent {
   };
 
   // ****************** 메뉴 관련 함수 ******************
+  /*
   onSetOpen = open => {
     this.setState({ open: open }); //eslint-disable-line
     event.preventDefault();
   };
+  */
   /* eslint-disable */
   setIsSpinnerShow = () => {
     this.setState({
@@ -320,28 +320,16 @@ class App extends React.PureComponent {
   };
 
   setOpen = () => {
-    const { open, fixedMenu } = this.state;
     this.setState({
         open: true,
-      },
-      () => {
-        // 처음 메뉴 열었을때
-        if (!open && fixedMenu) {
-          setTimeout(() => this.props.handleMenuShow(this.state.open), 300)
-        }
-    });
-    /*
-    this.setState({
-      open: true,
-    });
-    */
+      });
     event.preventDefault();
   };
 
   setFixedOpenMenu = () => {
-    this.setState(prevState => {
-      return { fixedMenu: !prevState.fixedMenu };
-    }, () => setTimeout(() => this.props.handleMenuShow(this.state.fixedMenu), 300));
+    const { handleUpdateMenuFixedYn, menuFixedYn} = this.props;
+    const isMenuFixed = menuFixedYn === 'Y' ? true : false;
+    handleUpdateMenuFixedYn(isMenuFixed ? 'N' : 'Y');
   };
 
   setMenuOpen = () => {
@@ -357,9 +345,10 @@ class App extends React.PureComponent {
   };
 
   setMenuClose = () => {
+    const { menuFixedYn } = this.props;
     this.setState(prevState => {
-      const { fixedMenu, open } = prevState;
-      return { open: fixedMenu ? open : false };
+      const { open } = prevState;
+      return { open: menuFixedYn === 'Y' ? open : false };
     });
   };
 
@@ -537,7 +526,7 @@ class App extends React.PureComponent {
   };
   // ****************** 스킨 설정 함수 끝 ******************
   hideMenuButtonClick = () => {
-    this.onSetOpen(false);
+    // this.onSetOpen(false);
   };
 
   execMenu = (PAGE_ID, TARGET, node) => {
@@ -679,11 +668,12 @@ class App extends React.PureComponent {
   };
 
   getLayoutMarginLeft = () => {
-    return this.state.open ? 335 : 45;
+    const { menuFixedYn } = this.props;
+    return open && menuFixedYn === 'Y' ? 335 : 45;
   };
 
   render() {
-    const { open, isClose, isSpinnerShow, headerMenuOpen, fixedMenu } = this.state;
+    const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
     const {
       mySkin,
       myHNotiCnt,
@@ -716,6 +706,7 @@ class App extends React.PureComponent {
       headerTitle,
       profile,
       resetLastExecYn,
+      menuFixedYn,
     } = this.props;
     console.debug('$$$$my App Tree: ', this.props);
     const dockCallbacks = {
@@ -742,7 +733,7 @@ class App extends React.PureComponent {
     const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
     const dockHomeItem = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
 
-    const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size === 'FullSize';
+    const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size.toUpperCase() === 'FULLSIZE';
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
@@ -796,7 +787,7 @@ class App extends React.PureComponent {
             setMenuClose={this.setMenuClose}
             view={view}
             history={this.props.history}
-            fixedMenu={fixedMenu}
+            fixedMenu={menuFixedYn === 'Y' ? true : false}
           />
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
@@ -1026,9 +1017,10 @@ App.propTypes = {
   hasRoleAdmin: PropTypes.bool,
   headerTitle: PropTypes.string,
   profile: PropTypes.object.isRequired,
-  handleMenuShow: PropTypes.func.isRequired,
+  handleMenuShow: PropTypes.func,
   commonMenuTreeData: PropTypes.array.isRequired,
   resetLastExecYn: PropTypes.func.isRequired,
+  menuFixedYn: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -1074,6 +1066,7 @@ const mapStateToProps = createStructuredSelector({
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
   commonMenuTreeData: routesSelector.makeCommonMenuTree(),
+  menuFixedYn:selectors.makeSelectMenuFixedYn(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),
@@ -1096,8 +1089,8 @@ const mapDispatchToProps = dispatch => ({
   handleLoadBoard: num => dispatch(boardAction.getIfDetailBoardList(num)),
   handleGetDataForApps: EXEC_PAGE_IDS => dispatch(routesAction.getDataForApps(EXEC_PAGE_IDS)),
   handleSaveApps: (apps, setMyMenuData) => dispatch(routesAction.saveApps(apps, setMyMenuData)),
-  handleMenuShow: open => dispatch(actions.setMenuShow(open)),
   resetLastExecYn: () => dispatch(routesAction.resetLastExecYn()),
+  handleUpdateMenuFixedYn: menuFixedYn => dispatch(routesAction.updateMenuFixedYn(menuFixedYn)),
 });
 const withConnect = connect(
   mapStateToProps,

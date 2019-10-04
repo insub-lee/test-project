@@ -28,7 +28,7 @@ const StyleVGroup = styled.div`
     padding-left: 10px;
     margin-top: 10px;
     background: #f5f5f5;
-    
+
     @media only screen and (max-width: 1280px) {
       height: 100vh !important;
 
@@ -37,7 +37,9 @@ const StyleVGroup = styled.div`
       }
     }
 
-    .ant-select {width: calc(100% - 10px);}
+    .ant-select {
+      width: calc(100% - 10px);
+    }
   }
 
   .vgroupContents {
@@ -54,7 +56,7 @@ const StyleVGroup = styled.div`
     }
 
     .custom-scrollbar {
-      max-height: 160px !important;
+      max-height: 197px !important;
       border-top: 1px solid #222222;
 
       @media only screen and (max-width: 1280px) {
@@ -83,7 +85,7 @@ const StyleVGroup = styled.div`
             &.groupName {
               display: none;
             }
-  
+
             &:first-child {
               width: 100%;
               padding-left: 10px;
@@ -91,7 +93,7 @@ const StyleVGroup = styled.div`
 
             &:last-child {
               width: 35px;
-              
+
               > button.delete {
                 width: 100%;
                 height: 38px;
@@ -115,13 +117,12 @@ const StyleVGroup = styled.div`
                 padding: 6px 0 0 5px;
               }
             }
-  
+
             > div {
               float: left;
             }
           }
         }
-        
       }
     }
 

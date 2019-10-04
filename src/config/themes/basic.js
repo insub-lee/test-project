@@ -77,4 +77,15 @@ theme.dock = {
   flottingBtnBackground: dockSettingBlack,
 };
 
+theme.formstuff = {
+  ckRadio: {
+    borderColor: '#6e4e9e',
+    checkedBgColor: '#7a59ad',
+    checkedBorder: '1px solid #6e4e9e',
+    afterBgColor: '#7a59ad',
+  },
+};
+
+theme.mainColor = '#886ab5';
+
 export default theme;

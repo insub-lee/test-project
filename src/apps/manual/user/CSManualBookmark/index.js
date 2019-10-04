@@ -59,7 +59,10 @@ CSManualBookmarkWidget.propTypes = {
 };
 
 CSManualBookmarkWidget.defaultProps = {
-  item: {},
+  item: {
+    WIDGET_ID: 99999,
+    data: { selectedBookmark: undefined },
+  },
   viewMualIdx: -1,
   setWidgetInitData: () => false,
   setWidgetViewIdx: () => false,

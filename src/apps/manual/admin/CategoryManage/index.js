@@ -65,7 +65,14 @@ class CategoryManage extends Component {
             )} */}
           </div>
         </div>
-        <Modal width={800} visible={isWaitModal} footer={null} onCancel={() => setIsWaitModal(false)} destroyOnClose>
+        <Modal
+          width={800}
+          bodyStyle={{ padding: '49px 8px 10px 8px' }}
+          visible={isWaitModal}
+          footer={null}
+          onCancel={() => setIsWaitModal(false)}
+          destroyOnClose
+        >
           <WaitManualList />
         </Modal>
       </StyleCategoryManage>

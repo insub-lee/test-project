@@ -12,8 +12,8 @@ import iconSearch from 'images/portal/icon-search.png';
 import iconIn from 'images/portal/icon-in.png';
 import iconIn2 from 'images/portal/icon-in2.png';
 import iconOut from 'images/portal/icon-out.png';
-import toolIcons from '../../../../user/images/toolIcons.png';
-import toolIconsOn from '../../../../user/images/toolIcons_on.png';
+import toolIcons from '../../../../images/toolIcons.png';
+import toolIconsOn from '../../../../images/toolIcons_on.png';
 
 const StyleModal = styled.div`
   width: 100%;

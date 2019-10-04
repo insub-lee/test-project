@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+import workFold from 'images/bizstore/biz-folder-icon.png';
 import Card from '../../../UserStore/components/uielements/card.style';
-import bizAppIcon from 'images/bizstore/biz-app-icon.png';
 
 /* eslint-disable */
 const FolderItem = ({ paramType, BIZGRP_ID, title, subTitle }) => (
   <Card className="bizAppCard">
     <div className="BizDivIcons">
-      <img src={bizAppIcon} alt={title} style={{ position: 'absolute', top: 0, left: 0 }} />
+      <img src={workFold} alt={title} style={{ position: 'absolute', top: 0, left: 0 }} />
     </div>
     <Link to={`/portal/card/${paramType}/detail/info/${BIZGRP_ID}`} title={subTitle}>
       <h4 className="appTitle">{title}</h4>

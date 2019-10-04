@@ -13,7 +13,9 @@ const ExplainInfo = ({ componentList, setScrollComponent, widgetId, mualMaster, 
       <Scrollbars
         style={bookmarkWidgetData.widgetYn ? { height: 'calc(100vh - 25vh)' } : { height: 'calc(100vh - 208px)' }}
         ref={c => {
-          setScrollComponent(c, widgetId);
+          if (c) {
+            setScrollComponent(c, widgetId);
+          }
         }}
       >
         <InfoConWrap componentList={componentList} indexRelationList={indexRelationList} />

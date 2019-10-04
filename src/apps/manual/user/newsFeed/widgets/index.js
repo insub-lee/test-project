@@ -61,8 +61,6 @@ class NewsFeed extends Component {
     const { updateList } = widgetDataList;
     const { newList } = widgetDataList;
 
-    console.log('widgetDataList', widgetDataList);
-
     return (
       <div>
         <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>

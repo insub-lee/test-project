@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import Loadable from 'react-loadable';
 import Loading from './Loading';
 import ApplyWidget from 'components/ApplyWidget';
@@ -9,6 +10,7 @@ import PropTypes from 'prop-types';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
 import Draft from './WorkFlow/User/Draft';
+
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -32,7 +34,7 @@ class AppsRouter extends React.PureComponent {
     const item = selectedApp[0];
     console.log('$$$ appsRouter item', item);
 
-    const param = Loadable({
+    const Comp = Loadable({
       loader: () => import(`apps/${item.legacyPath}`),
       loading: Loading,
     });
@@ -42,7 +44,9 @@ class AppsRouter extends React.PureComponent {
       if (item.SVC_YN === 'C' || item.CATG_ID === '' ) {
         return (
           <WidgetsWrapper item={item}>
-            <ServiceStop item={item} type={type} />
+            <ErrorBoundary>
+              <ServiceStop item={item} type={type} />
+            </ErrorBoundary>
           </WidgetsWrapper>
         );
       } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
@@ -50,9 +54,27 @@ class AppsRouter extends React.PureComponent {
         return (
             <div>
               <Switch>
-                <Route path={`/${basicPath.APPS}/workBuilder/:ID`} component={WorkBuilderViewer} />
-                <Route path={`/${basicPath.APPS}/draft/:CATE`} component={Draft} />
-                <Route path={`/${basicPath.APPS}/${item.legacyPath}`} component={param} />
+                <Route path={`/${basicPath.APPS}/workBuilder/:ID`} 
+                  render={props => 
+                    <ErrorBoundary>
+                      <WorkBuilderViewer {...props}/>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route path={`/${basicPath.APPS}/draft/:CATE`} 
+                  render={props => 
+                    <ErrorBoundary>
+                      <Draft {...props}/>
+                    </ErrorBoundary>
+                  }
+                />
+                <Route path={`/${basicPath.APPS}/${item.legacyPath}`} 
+                  render={() => 
+                    <ErrorBoundary>
+                      <Comp/>
+                    </ErrorBoundary>
+                  }
+                />
               </Switch>
             </div>
         )
@@ -60,7 +82,9 @@ class AppsRouter extends React.PureComponent {
         return (
           // 해당 앱에 권한이 없는 경우
           <WidgetsWrapper item={item}>
-            <ApplyWidget item={item} type={type} />
+            <ErrorBoundary>
+              <ApplyWidget item={item} type={type} />
+            </ErrorBoundary>
           </WidgetsWrapper>
         )
       }
@@ -79,7 +103,7 @@ class AppsRouter extends React.PureComponent {
 
 AppsRouter.propTypes = {
   selectedApp: PropTypes.array.isRequired,
-  columns: PropTypes.array.isRequired,
+  columns: PropTypes.array,
 };
 
 export default AppsRouter;

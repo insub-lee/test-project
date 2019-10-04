@@ -12,8 +12,8 @@ import 'froala-editor/js/plugins/font_size.min';
 
 import ReactFroalaEditor from 'react-froala-wysiwyg';
 
-const FroalaEditor = ({ config, model, onModelChange, key }) => (
-  <ReactFroalaEditor key={key} id={key} tag="textarea" config={config} model={model} onModelChange={onModelChange} />
+const FroalaEditor = ({ config, model, onModelChange }) => (
+  <ReactFroalaEditor tag="textarea" config={config} model={model} onModelChange={onModelChange} />
 );
 
 FroalaEditor.propTypes = {

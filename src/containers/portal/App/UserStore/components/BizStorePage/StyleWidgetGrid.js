@@ -5,7 +5,7 @@ const StyleWidgetGrid = styled.div`
   width: 850px;
   margin: 0 auto;
 
-  & .btnsWrapperTop {
+  .btnsWrapperTop {
     text-align: right;
     padding: 10px 0 20px;
   }

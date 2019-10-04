@@ -1,4 +1,4 @@
-export const froalaEditorConfig = {
+export const froalaEditorConfig = () => ({
   placeholder: 'Edit Me',
   charCounterCount: true,
   imageUploadURL: 'http://192.168.0.35:12082/upload',
@@ -17,4 +17,4 @@ export const froalaEditorConfig = {
       });
     },
   },
-};
+});

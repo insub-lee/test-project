@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import iconPlus from '../../../images/icon-plus.png';
-import iconMinus from '../../../images/icon-minus.png';
-import iconUp from '../../../images/icon-arr-up.png';
-import iconDown from '../../../images/icon-arr-down.png';
+import iconPlus from '../../../../images/icon-plus.png';
+import iconMinus from '../../../../images/icon-minus.png';
+import iconUp from '../../../../images/icon-arr-up.png';
+import iconDown from '../../../../images/icon-arr-down.png';
 
 const Styled = styled.div`
   width: 220px;

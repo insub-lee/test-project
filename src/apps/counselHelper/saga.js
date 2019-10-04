@@ -13,5 +13,5 @@ function* getCardList(payload) {
 }
 
 export default function* watcher() {
-  yield takeLatest(action.GET_CARD_LIST, getCardList);
+  yield takeEvery(action.GET_CARD_LIST, getCardList);
 }

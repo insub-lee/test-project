@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import { Table, Row, Col, Tabs } from 'antd';
+import { Table, List, Row, Col, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { fromJS } from 'immutable';
-import ReactDataGrid from 'react-data-grid';
-import Rodal from 'rodal';
+
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ScrollBar from 'react-custom-scrollbars';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import ReactDataGrid from 'components/ReactDataGrid';
+
 import reducer from './reducer';
 import saga from './saga';
-import StyleWiget from './StyleWidgets';
 import selectors from './selectors';
-import 'rodal/lib/rodal.css';
 import * as actions from './actions';
+
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
 import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
+import StyledModalWrapper from './StyledModalWrapper';
+
+const AntdTable = StyledAntdTable(Table);
+
+const AntdModal = StyledModalWrapper(Modal);
 
 class BizBuilderWidget extends Component {
   state = {
@@ -29,10 +34,14 @@ class BizBuilderWidget extends Component {
     getBizBuilderListSettingBySaga(item.id, 'common');
   }
 
+  onRodalClose = () => {
+    this.setState({ visible: false });
+  };
+
   render() {
     const { bizBuilderList, bizBuilderConfigInfo, viewInfo } = this.props;
     const { colsListDesignInfo } = bizBuilderConfigInfo;
-
+    console.debug(this.props);
     const onTitleClick = selectRow => {
       this.setState({ visible: true });
       const { getBizBuilderContentViewBySaga, item } = this.props;
@@ -45,72 +54,59 @@ class BizBuilderWidget extends Component {
       getBizBuilderContentViewBySaga(item.id, vList.item.WORK_SEQ, vList.item.TASK_SEQ);
     };
 
-    const listCols =
-      colsListDesignInfo &&
-      colsListDesignInfo.map(item => ({
-        title: item.NAME_KOR,
-        dataIndex: item.COMP_FIELD,
-        key: item.COMP_FIELD,
-        render: (text, record) =>
-          item.COMP_FIELD === 'TITLE' ? (
-            <a styling="link" onClick={() => onTitleClick({ record })}>
-              {text}
-            </a>
-          ) : (
-            undefined
-          ),
-      }));
+    const listCols = [
+      {
+        title: '수신일',
+        dataIndex: 'REG_DTTM',
+        key: 'REG_DTTM',
+        render: text => text.substring(0, 10),
+        align: 'center',
+        width: 100,
+      },
+      {
+        title: '제목',
+        dataIndex: 'TITLE',
+        key: 'TITLE',
+        render: (text, record) => (
+          <a styling="link" onClick={() => onTitleClick({ record })}>
+            {text}
+          </a>
+        ),
+      },
+      {
+        title: '발신부서',
+        dataIndex: 'dept',
+        key: 'dept',
+        render: () => '스마트고객센터',
+        align: 'center',
+        width: 100,
+      },
+    ];
+
     const { data } = viewInfo;
     const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 5);
-    const onRodalClose = () => {
-      this.setState({ visible: false });
-    };
-    const { TabPane } = Tabs;
-
+    console.debug('###listDataSource', listDataSource);
     return (
-      <div>
-        <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
-          <Tabs defaultActiveKey="total" type="card">
-            <TabPane tab="전체" key="total">
-              <ul>
-                <li>
-                  <button className="ellipsis">
-                    <span> [2019.01.01]</span>
-                    안녕하세요
-                  </button>
-                </li>
-                <li>
-                  <button className="ellipsis">
-                    <span> [2019.01.01]</span>
-                    안녕하세요
-                  </button>
-                </li>
-                <li>
-                  <button className="ellipsis">
-                    <span> [2019.01.01]</span>
-                    안녕하세요
-                  </button>
-                </li>
-              </ul>
-            </TabPane>
-          </Tabs>
-        </StyleWiget>
-        <Table pagination={false} columns={listCols} dataSource={listDataSource}></Table>
-        <Rodal
-          customStyles={{
-            position: 'absolute',
-            width: 1300,
-            height: 'calc(100vh - 100px)',
-            backgroundColor: '#646567',
-            top: 0,
-            left: 0,
-            margin: 'auto',
-            borderRadius: '3px',
-            padding: '15px',
-          }}
+      <div id="manualBizBuilderWidget">
+        <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
+        <List
+          dataSource={listDataSource}
+          size="small"
+          renderItem={item => (
+            <List.Item>
+              [{item.REG_DTTM.substring(0, 10)}] {item.TITLE}
+            </List.Item>
+          )}
+        />
+        <AntdModal
+          width={1000}
+          height={500}
           visible={this.state.visible}
-          onClose={onRodalClose.bind(this)}
-          duration={300}
+          style={{ top: '10%' }}
+          // style={{ top: '50%', transform: 'translateY(-50%)' }}
+          getContainer={() => document.querySelector('#manualBizBuilderWidget')}
+          onCancel={this.onRodalClose}
+          footer={null}
         >
           <div>
             <RodalContentStyle className="contentWrapper">
@@ -119,7 +115,9 @@ class BizBuilderWidget extends Component {
                 <Col xs={24} md={24} xl={16} className="leftActivity">
                   <ScrollBar className="rodalCustomScrollbar">
                     <div className="content">
-                      {data && data.CONTENT && data.CONTENT.length > 0 && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
+                      {data && data.CONTENT && typeof data.CONTENT === 'string'
+                        ? data.CONTENT
+                        : data && data.CONTENT && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
                     </div>
                   </ScrollBar>
                 </Col>
@@ -187,7 +185,7 @@ class BizBuilderWidget extends Component {
               </Row>
             </RodalContentStyle>
           </div>
-        </Rodal>
+        </AntdModal>
       </div>
     );
   }
@@ -200,15 +198,19 @@ BizBuilderWidget.propTypes = {
   bizBuilderConfigInfo: PropTypes.object,
   getBizBuilderContentViewBySaga: PropTypes.func,
   viewInfo: PropTypes.object,
+  onRodalClose: PropTypes.func,
+  listDataSource: PropTypes.array,
 };
 
 BizBuilderWidget.defaultProps = {
-  item: { id: '11128' },
+  item: { id: '11541' },
   getBizBuilderListSettingBySaga: () => false,
   bizBuilderList: {},
   bizBuilderConfigInfo: {},
   getBizBuilderContentViewBySaga: () => false,
   viewInfo: {},
+  onRodalClose: () => false,
+  listDataSource: [],
 };
 
 const mapStateToProps = createStructuredSelector({

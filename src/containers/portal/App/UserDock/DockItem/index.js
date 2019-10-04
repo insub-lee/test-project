@@ -55,6 +55,7 @@ class DockItem extends React.PureComponent {
       // isPressed: false,
     };
   }
+
   componentDidUpdate(prevProps) {
     if (this.props.dockItem.SORT_SQ !== prevProps.dockItem.SORT_SQ || this.props.dockIconType !== prevProps.dockIconType) {
       this.setPreviewIcon(this.props);
@@ -142,7 +143,7 @@ class DockItem extends React.PureComponent {
     const styleDockItemClass = {
       width: dockIconType === 'MAX' ? '70px' : '24px',
       height: dockIconType === 'MAX' ? '70px' : '24px',
-      padding: dockIconType === 'MAX' ? '0 5px' : '5px 5px',
+      padding: dockIconType === 'MAX' ? '5px 5px' : '5px 5px',
     };
 
     const styleDockImage = {

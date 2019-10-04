@@ -1,6 +1,6 @@
 // get
 export const GET_MANUAL_VIEW_SAGA = 'apps/manual/user/ManualView/GET_MANUAL_VIEW_SAGA';
-
+export const GET_OLD_VERSION_MANUAL_BY_SAGA = 'apps/manual/user/ManualView/GET_OLD_VERSION_MANUAL_BY_SAGA';
 // add
 
 // set
@@ -18,6 +18,7 @@ export const SET_MANUAL_VIEW_RELATION_LIST_REDUCR = 'apps/manual/user/ManualView
 export const SET_MANUAL_VIEW_INFO_REDUCR = 'apps/manual/user/ManualView/SET_MANUAL_VIEW_INFO_REDUCR';
 export const ADD_HISTORY_HISTORY_SAGA = 'apps/manual/user/ManualView/ADD_HISTORY_HISTORY_SAGA';
 export const SET_VIEW_INDEX_RELATION_LIST_REDUCR = 'apps/manual/user/ManualView/SET_VIEW_INDEX_RELATION_LIST_REDUCR';
+export const SET_OLD_VERSION_MANUAL_BY_REDUCR = 'apps/manual/user/ManualView/SET_OLD_VERSION_MANUAL_BY_REDUCR';
 
 // remove
 

@@ -62,3 +62,26 @@ export const setPaginationIdxByReducr = idx => ({
   type: constantTypes.SET_PAGINATION_IDX_REDUCR,
   idx,
 });
+
+export const setIsSecurityModalByReducr = flag => ({ type: constantTypes.SET_IS_SECURITY_MODAL_REDUCR, flag });
+
+export const setSecuritySelectData = (listDept, listGrp, listUser) => ({
+  type: constantTypes.SET_SECURITY_SELECT_DATA_REDUCR,
+  listDept,
+  listGrp,
+  // listPstn,
+  // listDuty,
+  listUser,
+});
+
+export const getSecuritySelectDataBySaga = () => ({ type: constantTypes.GET_SECURITY_SELECT_DATA_SAGA });
+
+export const getSecurityListBySaga = () => ({ type: constantTypes.GET_SECURITY_LIST_SAGA });
+
+export const setSecurityListByReducr = (list, key) => ({ type: constantTypes.SET_SECURITY_LIST_REDUCR, list, key });
+
+export const saveSecurityBySaga = () => ({ type: constantTypes.SAVE_SECURITY_SAGA });
+
+export const saveSecurityRowBySaga = (row, flag) => ({ type: constantTypes.SAVE_SECURITY_ROW_SAGA, row, flag });
+
+export const removeSecurityRowBySaga = row => ({ type: constantTypes.REMOVE_SECURITY_ROW_SAGA, row });

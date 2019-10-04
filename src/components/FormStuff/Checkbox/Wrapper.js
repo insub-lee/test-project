@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 const CheckWrapper = ComponentName => styled(ComponentName)`
-  & .ant-checkbox {
-    & .ant-checkbox-inner {
+  .ant-checkbox {
+    .ant-checkbox-inner {
       width: 1.125rem;
       height: 1.125rem;
       border: #adb5bd solid 2px;
@@ -11,7 +11,7 @@ const CheckWrapper = ComponentName => styled(ComponentName)`
       &:after {
         border: 1px solid #6e4e9e;
       }
-      & .ant-checkbox-inner {
+      .ant-checkbox-inner {
         background-color: #7a59ad;
         border-color: #6e4e9e;
         &:after {

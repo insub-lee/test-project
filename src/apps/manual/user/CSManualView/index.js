@@ -143,7 +143,7 @@ class ManualView extends Component {
         widgetId,
       },
       { key: 'diffView', title: '비교보기', event: undefined },
-      { key: 'viewTopbar2', title: '오류신고2', event: undefined },
+      // { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
 
     return (
@@ -252,6 +252,7 @@ const mapStateToProps = createStructuredSelector({
   navList: selectors.makeSelectManualViewNavList(),
   relationList: selectors.makeSelectManualViewRelationList(),
   indexRelationList: selectors.makeSelectManualViewIndexRelationList(),
+  oldVerMual: selectors.makeSelectOldVersionManual(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -267,7 +268,11 @@ const mapDispatchToProps = dispatch => ({
   setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
   addManualHistory: (widgetId, mualIdx, mualOrgIdx) => dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
   setbookmarkWidgetViewIdx: (widgetId, selectedMual) => dispatch(bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)),
+<<<<<<< HEAD
   setEditorPreviewModal: flag => dispatch(editorActions.setPreviewModalByReducr(flag)),
+=======
+  getOldVerManual: (widgetId, mualIdx) => dispatch(actions.getOldVersionManualBySaga(widgetId, mualIdx)),
+>>>>>>> master
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

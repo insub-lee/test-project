@@ -8,12 +8,10 @@ const currentView = () =>
     viewState => viewState.get('view'),
   );
 
-const selectApp = state => state.get('app');
+const makeSelectMenuFixedYn = () =>
+createSelector(
+  selectView,
+  viewState => viewState.get('menuFixedYn'),
+);  
 
-const makeSelectUserMenuOpen = () =>
-  createSelector(
-    selectApp,
-    appState => (appState ? appState.get('open') : false),
-  );
-
-export { selectView, currentView, makeSelectUserMenuOpen };
+export { selectView, currentView, makeSelectMenuFixedYn };

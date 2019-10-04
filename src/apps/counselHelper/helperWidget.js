@@ -35,9 +35,10 @@ class helperWidget extends Component {
           result.push(tempData);
           break;
         case 3:
-          childLink = Object.prototype.hasOwnProperty.call(result[first].link, 'children')
-            ? result[first].link.children.filter(x => x.BIZGRP_ID === BIZGRP_ID)
-            : [{}];
+          childLink =
+            result[first].link !== undefined && Object.prototype.hasOwnProperty.call(result[first].link, 'children')
+              ? result[first].link.children.filter(x => x.BIZGRP_ID === BIZGRP_ID)
+              : [{}];
           tempData = {
             title: NAME_KOR,
             key: BIZGRP_ID,

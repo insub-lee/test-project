@@ -38,6 +38,7 @@ const initialState = fromJS({
   // 마지막에 종료/실행한 독의 페이지아이디
   deletedDockPageId: undefined,
   executedDockPageId: undefined,
+  menuFixedYn: 'N',
 });
 
 const windowResizeReducer = (state = initialState, action) => {
@@ -257,6 +258,9 @@ const windowResizeReducer = (state = initialState, action) => {
       const { commonMenuTreeData } = action;
       return state.set('commonMenuTreeData', fromJS(commonMenuTreeData));
     }
+    case actionTypes.SET_MENU_FIXED_YN:
+      return state
+        .set('menuFixedYn', action.menuFixedYn);
     default:
       return state;
   }
