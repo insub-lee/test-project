@@ -530,6 +530,33 @@ export function* getSecuritySelectData() {
   yield put(actions.setSecuritySelectData(fromJS(listDept), fromJS(listGrp), listUser));
 }
 
+export function* saveContentSecurity() {
+  const securityList = yield select(selectors.makeSelectContentSecurityList());
+  if (securityList.length > 0) {
+    console.debug(securityList);
+    const response = yield call(Axios.post, '/api/manual/v1/ManualContentSecurityHandler', { AUTHS: securityList, TARGETKEY: securityList[0].TARGETKEY });
+    if (response) {
+      yield put(actions.getContentSecurityListBySaga());
+    }
+  } else {
+    console.debug('no data');
+  }
+}
+
+export function* removeContentSecurity({ row }) {
+  if (row) {
+    const response = yield call(
+      Axios.delete,
+      `/api/manual/v1/ManualContentSecurityHandler?TARGETFOLDERKEY=${row.TARGETFOLDERKEY}&TARGETKEY=${row.TARGETKEY}&ACCOUNT_ID=${row.ACCOUNT_ID}`,
+    );
+    if (response) {
+      yield put(actions.getContentSecurityListBySaga());
+    }
+  } else {
+    console.debug('no data');
+  }
+}
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
@@ -555,4 +582,6 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.GET_INDEX_RELATION_COMPONENT_LIST_SAGA, getInexRelationComponentList);
   yield takeLatest(constantTypes.GET_CONTENT_SECURITY_LIST_SAGA, getContentSecurityList);
   yield takeLatest(constantTypes.GET_SECURITY_SELECT_DATA_SAGA, getSecuritySelectData);
+  yield takeLatest(constantTypes.SAVE_CONTENT_SECURITY_SAGA, saveContentSecurity);
+  yield takeLatest(constantTypes.REMOVE_CONTENT_SECURITY_SAGA, removeContentSecurity);
 }

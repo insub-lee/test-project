@@ -131,7 +131,7 @@ class Tab extends PureComponent {
           flag={removeFlag ? 'noShow' : 'show'}
         ></WriteTabTitle>
       ),
-      TabPanelComponent: <FroalaEditor config={froalaEditorConfig} model={data.board} onModelChange={value => this.handlerBoardChange(value, data.id)} />,
+      TabPanelComponent: <FroalaEditor config={froalaEditorConfig()} model={data.board} onModelChange={value => this.handlerBoardChange(value, data.id)} />,
       disabled: false,
     }));
 

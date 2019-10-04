@@ -94,7 +94,7 @@ const makeTreeSelectData = (list, valueKey, titleKey) => {
   });
 };
 
-const handleSelectData = (acntType, value, node, securityList, targetKey, setSecurityList) => {
+const handleSelectData = (acntType, value, node, securityList, targetKey, setSecurityList, targetFolderKey) => {
   const setList = [...securityList];
   if (acntType === 'U') {
     if (securityList.findIndex(findNode => findNode.ACCOUNT_ID === value) === -1) {
@@ -110,6 +110,7 @@ const handleSelectData = (acntType, value, node, securityList, targetKey, setSec
         ISUPDATE: 'N',
         REGISTEDATE: new Date(),
         TARGETKEY: targetKey,
+        TARGETFOLDERKEY: targetFolderKey,
       };
       setList.push(addNode);
 
@@ -146,6 +147,7 @@ const handleSelectData = (acntType, value, node, securityList, targetKey, setSec
           ISUPDATE: 'N',
           REGISTEDATE: new Date(),
           TARGETKEY: targetKey,
+          TARGETFOLDERKEY: targetFolderKey,
         };
         setList.push(addNode);
       }
@@ -154,7 +156,7 @@ const handleSelectData = (acntType, value, node, securityList, targetKey, setSec
   }
 };
 
-const SecurityManage = ({ listDept, listGrp, listUser, securityList, targetKey, setSecurityList, saveSecurity, removeSecurity }) => (
+const SecurityManage = ({ listDept, listGrp, listUser, securityList, targetKey, setSecurityList, saveSecurity, removeSecurity, targetFolderKey }) => (
   <Styled id="manualSecurityManage">
     <Row>
       <Col span={24}>
@@ -164,7 +166,7 @@ const SecurityManage = ({ listDept, listGrp, listUser, securityList, targetKey, 
             <TreeSelect
               className="securityTreeSelect"
               treeData={makeTreeSelectData(listDept, 'DEPT_ID', 'NAME_KOR')}
-              onChange={(value, node) => handleSelectData('D', value, node, securityList, targetKey, setSecurityList)}
+              onChange={(value, node) => handleSelectData('D', value, node, securityList, targetKey, setSecurityList, targetFolderKey)}
               // treeCheckable
               multiple
               showSearch={false}
@@ -185,7 +187,7 @@ const SecurityManage = ({ listDept, listGrp, listUser, securityList, targetKey, 
             <TreeSelect
               className="securityTreeSelect"
               treeData={makeTreeSelectData(listGrp, 'key', 'NAME_KOR')}
-              onChange={(value, node) => handleSelectData('V', value, node, securityList, targetKey, setSecurityList)}
+              onChange={(value, node) => handleSelectData('V', value, node, securityList, targetKey, setSecurityList, targetFolderKey)}
               // treeCheckable
               multiple
               showSearch={false}
@@ -207,7 +209,7 @@ const SecurityManage = ({ listDept, listGrp, listUser, securityList, targetKey, 
               className="securityTreeSelect"
               placeholder="select me"
               allowClear
-              onChange={(value, node) => handleSelectData('U', value, node, securityList, targetKey, setSecurityList)}
+              onChange={(value, node) => handleSelectData('U', value, node, securityList, targetKey, setSecurityList, targetFolderKey)}
               showSearch
               filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
             >
