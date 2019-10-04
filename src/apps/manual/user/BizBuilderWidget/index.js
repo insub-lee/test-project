@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
-import { Table, Row, Col, Modal } from 'antd';
+import { Table, List, Row, Col, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { fromJS } from 'immutable';
-import ReactDataGrid from 'react-data-grid';
-import Rodal from 'rodal';
+
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ScrollBar from 'react-custom-scrollbars';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import ReactDataGrid from 'components/ReactDataGrid';
+
 import reducer from './reducer';
 import saga from './saga';
-import StyleWiget from './StyleWidgets';
 import selectors from './selectors';
-import 'rodal/lib/rodal.css';
 import * as actions from './actions';
+
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
 import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledModalWrapper from './StyledModalWrapper';
 
 const AntdTable = StyledAntdTable(Table);
@@ -35,10 +34,14 @@ class BizBuilderWidget extends Component {
     getBizBuilderListSettingBySaga(item.id, 'common');
   }
 
+  onRodalClose = () => {
+    this.setState({ visible: false });
+  };
+
   render() {
     const { bizBuilderList, bizBuilderConfigInfo, viewInfo } = this.props;
     const { colsListDesignInfo } = bizBuilderConfigInfo;
-
+    console.debug(this.props);
     const onTitleClick = selectRow => {
       this.setState({ visible: true });
       const { getBizBuilderContentViewBySaga, item } = this.props;
@@ -51,21 +54,6 @@ class BizBuilderWidget extends Component {
       getBizBuilderContentViewBySaga(item.id, vList.item.WORK_SEQ, vList.item.TASK_SEQ);
     };
 
-    // const listCols =
-    //   colsListDesignInfo &&
-    //   colsListDesignInfo.map(item => ({
-    //     title: item.NAME_KOR,
-    //     dataIndex: item.COMP_FIELD,
-    //     key: item.COMP_FIELD,
-    //     render: (text, record) =>
-    //       item.COMP_FIELD === 'TITLE' ? (
-    //         <a styling="link" onClick={() => onTitleClick({ record })}>
-    //           {text}
-    //         </a>
-    //       ) : (
-    //         undefined
-    //       ),
-    //   }));
     const listCols = [
       {
         title: '수신일',
@@ -94,23 +82,31 @@ class BizBuilderWidget extends Component {
         width: 100,
       },
     ];
+
     const { data } = viewInfo;
     const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 5);
-    const onRodalClose = () => {
-      this.setState({ visible: false });
-    };
-
+    console.debug('###listDataSource', listDataSource);
     return (
       <div id="manualBizBuilderWidget">
         <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
+        <List
+          dataSource={listDataSource}
+          size="small"
+          renderItem={item => (
+            <List.Item>
+              [{item.REG_DTTM.substring(0, 10)}] {item.TITLE}
+            </List.Item>
+          )}
+        />
         <AntdModal
           width={1000}
-          height={600}
+          height={500}
           visible={this.state.visible}
-          style={{ top: '50%', transform: 'translateY(-50%)' }}
+          style={{ top: '10%' }}
+          // style={{ top: '50%', transform: 'translateY(-50%)' }}
           getContainer={() => document.querySelector('#manualBizBuilderWidget')}
-          // onClose={onRodalClose.bind(this)}
-          // duration={300}
+          onCancel={this.onRodalClose}
+          footer={null}
         >
           <div>
             <RodalContentStyle className="contentWrapper">
@@ -202,6 +198,8 @@ BizBuilderWidget.propTypes = {
   bizBuilderConfigInfo: PropTypes.object,
   getBizBuilderContentViewBySaga: PropTypes.func,
   viewInfo: PropTypes.object,
+  onRodalClose: PropTypes.func,
+  listDataSource: PropTypes.array,
 };
 
 BizBuilderWidget.defaultProps = {
@@ -211,6 +209,8 @@ BizBuilderWidget.defaultProps = {
   bizBuilderConfigInfo: {},
   getBizBuilderContentViewBySaga: () => false,
   viewInfo: {},
+  onRodalClose: () => false,
+  listDataSource: [],
 };
 
 const mapStateToProps = createStructuredSelector({

@@ -131,7 +131,7 @@ class ManualView extends Component {
         widgetId,
       },
       { key: 'diffView', title: '비교보기', event: undefined },
-      { key: 'viewTopbar2', title: '오류신고2', event: undefined },
+      // { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
     return (
       <Styled id={`#csManualView_${widgetId}`} widgetYn={widgetYn}>

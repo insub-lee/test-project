@@ -8,6 +8,7 @@ import * as actions from './actions';
 
 function* getBizBuilderListBySaga(payload) {
   const { widgetId, data } = payload;
+  console.debug(data);
   const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${data.WORK_SEQ}`);
   yield put(actions.setBizBuilderListByReducr(widgetId, response));
 }
