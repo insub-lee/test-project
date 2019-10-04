@@ -19,7 +19,7 @@ const TopbarBtnWrap = ({ className, data, mualMaster, widgetId, action }) => (
     {data && data.map((item, idx) => <TopbarBtn key={`${item.key}_${idx}`} data={item} />)}
     {mualMaster && mualMaster.get('VERSIONLIST') && mualMaster.get('VERSIONLIST').size > 0 && (
       <Select
-        defaultValue={mualMaster.get('MUAL_IDX')}
+        value={mualMaster.get('MUAL_IDX')}
         className="manualViewTopbarSelect"
         placeholder="이력보기"
         style={{ width: 78 }}

@@ -5,21 +5,21 @@ const makeSelectBizBuilderWidgetState = state => state.get('apps-manual-user-Biz
 const makeSelectBizBuilderList = () =>
   createSelector(
     makeSelectBizBuilderWidgetState,
-    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11541),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11627),
     (state, widgetId) => state.getIn(['BizBuilderWidget', `${widgetId}`, 'bizBuilderList']),
   );
 
 const makeSelectBizBuilderConfigInfo = () =>
   createSelector(
     makeSelectBizBuilderWidgetState,
-    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11541),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11627),
     (state, widgetId) => state.getIn(['BizBuilderWidget', `${widgetId}`, 'ConfigInfo']),
   );
 
 const makeSelectBizBuilderViewInfo = () =>
   createSelector(
     makeSelectBizBuilderWidgetState,
-    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11541),
+    (state, props) => (props && props.item && props.item.id ? props.item.id : (props && props.item && props.item.id) || 11627),
     (state, widgetId) => state.getIn(['BizBuilderWidget', `${widgetId}`, 'viewInfo']),
   );
 export default {

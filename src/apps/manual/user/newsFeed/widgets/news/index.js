@@ -35,13 +35,13 @@ export default class News extends PureComponent {
 
     if (item.length === 0) {
       return (
-        <div className='emptyDataView'>
+        <div className="emptyDataView">
           <p>
             <img src={noDataImg}></img>
             <br />
             등록된 게시물이 없습니다.
           </p>
-          </div>
+        </div>
       );
     }
     return (
@@ -55,8 +55,6 @@ export default class News extends PureComponent {
         headerRowHeight={-1}
       />
     );
-    
-
   }
 }
 
