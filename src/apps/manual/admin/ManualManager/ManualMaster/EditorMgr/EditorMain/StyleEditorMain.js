@@ -254,6 +254,7 @@ const StyleEditorMain = styled.div`
       border: 1px solid #f7f7f7;
       border-bottom: 0;
       padding: 15px 20px;
+      line-height: 1.5;
     }
     .fr-toolbar.fr-bottom {
       border-top: 2px solid #000;

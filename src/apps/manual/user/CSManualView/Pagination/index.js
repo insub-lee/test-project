@@ -19,7 +19,9 @@ const Pagination = ({
   widgetId,
   mualMaster,
 }) => {
-  const selectedIdx = mualHistoryList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx);
+  const selectedIdx = mualHistoryList.findIndex(
+    find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === mualMaster.MUAL_ORG_IDX,
+  );
   const listSize = mualHistoryList.size;
   let nextIdx = 0;
   if (listSize > selectedIdx + 1 && listSize >= selectedIdx + 1) {

@@ -9,7 +9,7 @@ import selectors from '../selectors';
 import * as actions from '../actions';
 import FroalaEditor from '../../../../components/RichTextEditor/FroalaEditor';
 import FroalaEditorView from '../../../../components/RichTextEditor/FroalaEditorView';
-import { froalaEditorConfig } from '../../../../components/RichTextEditor/FroalaEditorConfig';
+import { froalaEditorConfigCompareMgr } from '../../../../components/RichTextEditor/FroalaEditorConfig';
 
 import StyledButton from '../../../../../../components/Button/StyledButton';
 import Styled from './Styled';
@@ -20,7 +20,7 @@ const handleNodeClick = (event, setSelectedIdx, idx) => {
 };
 
 const CompareMgr = ({ manageTemplet, manageData, setCompareManageChangeValue, saveCompareData, defaultMgrMap, selectedIdx, setSelectedIdx }) => (
-  <Styled onClick={e => setSelectedIdx(e, setSelectedIdx, 0)}>
+  <Styled onClick={e => handleNodeClick(e, setSelectedIdx, 0)}>
     <Row>
       <Col span={5} className="templetManageTopTitle">
         상품명
@@ -38,7 +38,7 @@ const CompareMgr = ({ manageTemplet, manageData, setCompareManageChangeValue, sa
           <Col span={19}>
             <div className="templetManageContent" onClick={e => handleNodeClick(e, setSelectedIdx, node.ITEM_IDX)}>
               {selectedIdx === node.ITEM_IDX ? (
-                <FroalaEditor config={froalaEditorConfig} model={node.ITEM_DATA} onModelChange={text => setCompareManageChangeValue(idx, text)} />
+                <FroalaEditor config={froalaEditorConfigCompareMgr()} model={node.ITEM_DATA} onModelChange={text => setCompareManageChangeValue(idx, text)} />
               ) : (
                 <FroalaEditorView model={node.ITEM_DATA} />
               )}

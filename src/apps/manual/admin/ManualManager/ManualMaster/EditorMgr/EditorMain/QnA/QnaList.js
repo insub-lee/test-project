@@ -74,7 +74,7 @@ class QnAList extends Component {
           <div className="qna-dd">
             <span>A</span>
             {isHover ? (
-              <FroalaEditor config={froalaEditorConfig} model={qnaData.ANSWER} onModelChange={text => action.onChangeAnswerModify(qnaData.IDX, text)} />
+              <FroalaEditor config={froalaEditorConfig()} model={qnaData.ANSWER} onModelChange={text => action.onChangeAnswerModify(qnaData.IDX, text)} />
             ) : (
               <div className="text-box" onClick={() => setHover(true)}>
                 <FroalaEditorView model={qnaData.ANSWER} />
