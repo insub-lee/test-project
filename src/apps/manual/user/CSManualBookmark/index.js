@@ -35,6 +35,7 @@ class CSManualBookmarkWidget extends PureComponent {
     const bookmarkWidgetData = {
       appCount,
       widgetYn: true,
+      isTitle: item.user.isTitle,
     };
 
     return (
@@ -62,6 +63,7 @@ CSManualBookmarkWidget.defaultProps = {
   item: {
     WIDGET_ID: 99999,
     data: { selectedBookmark: undefined },
+    user: { isTitle: true },
   },
   viewMualIdx: -1,
   setWidgetInitData: () => false,
