@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import workCard from 'images/bizstore/biz-card-icon.png';
 import Card from '../../../UserStore/components/uielements/card.style';
 
-/* eslint-disable */
 const BizItem = ({ paramType, BIZGRP_ID, title, subTitle }) => (
   <Card className="bizAppCard">
     <div className="BizDivIcons">
@@ -22,6 +21,7 @@ BizItem.propTypes = {
   BIZGRP_ID: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   subTitle: PropTypes.string,
+  paramType: PropTypes.string.isRequired,
 };
 
 BizItem.defaultProps = {

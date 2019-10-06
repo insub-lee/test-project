@@ -54,6 +54,7 @@ export function* moveNode(payload) {
 
 export function* insertNode(payload) {
   /* eslint-disable */
+  console.debug('>>>>>>>payload: ', payload);
   const { rowInfo, treeData, data, history } = payload;
   const { node } = rowInfo;
 

@@ -9,6 +9,7 @@ import injectSaga from 'utils/injectSaga';
 import { fromJS } from 'immutable';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import CSManualView from '../CSManualView';
 import * as viewActions from '../CSManualView/actions';
 
@@ -119,48 +120,50 @@ class CSManualList extends Component {
     ];
 
     return (
-      <div id={`csManualList_${widgetId}`} style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
-        <Topbar data={topBarButton} />
-        {ListItemData.map(category => [
-          <TitleBar key={`TitleBar_${category.get('CATEGORY_IDX')}`} categoryName={category.get('CATEGORY_NAME')} />,
-          <Row key={`Row_${category.get('CATEGORY_IDX')}`} gutter={12}>
-            {category &&
-              category.get('childrenNode') &&
-              category.get('childrenNode').map(manualitem => (
-                <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
-                  <ListItem
-                    data={manualitem.toJS()}
-                    linkItemAction={{ setIsViewContents, setSelectedMualOrgIdx, setCheckManual, checkedManualList, widgetId }}
-                  />
-                </Col>
-              ))}
-          </Row>,
-        ])}
-        <Modal
-          width={1198}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          style={{ top: 42 }}
-          visible={isViewContents && selectedMualIdx > 0}
-          footer={null}
-          onCancel={() => this.handleCloseModal()}
-          closable={false}
-          getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
-        >
-          <CSManualView mualIdx={selectedMualIdx} widgetId={widgetId} />
-        </Modal>
-        <Modal
-          width={1248}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          style={{ top: 42 }}
-          visible={isCompareView}
-          footer={null}
-          onCancel={() => this.handleCompareViewClose()}
-          closable={false}
-          getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
-        >
-          <CompareView compareList={compareList.toJS()} templetData={templetData.toJS()} />
-        </Modal>
-      </div>
+      <ErrorBoundary>
+        <div id={`csManualList_${widgetId}`} style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
+          <Topbar data={topBarButton} />
+          {ListItemData.map(category => [
+            <TitleBar key={`TitleBar_${category.get('CATEGORY_IDX')}`} categoryName={category.get('CATEGORY_NAME')} />,
+            <Row key={`Row_${category.get('CATEGORY_IDX')}`} gutter={12}>
+              {category &&
+                category.get('childrenNode') &&
+                category.get('childrenNode').map(manualitem => (
+                  <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
+                    <ListItem
+                      data={manualitem.toJS()}
+                      linkItemAction={{ setIsViewContents, setSelectedMualOrgIdx, setCheckManual, checkedManualList, widgetId }}
+                    />
+                  </Col>
+                ))}
+            </Row>,
+          ])}
+          <Modal
+            width={1198}
+            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+            style={{ top: 42 }}
+            visible={isViewContents && selectedMualIdx > 0}
+            footer={null}
+            onCancel={() => this.handleCloseModal()}
+            closable={false}
+            getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
+          >
+            <CSManualView mualIdx={selectedMualIdx} widgetId={widgetId} />
+          </Modal>
+          <Modal
+            width={1248}
+            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+            style={{ top: 42 }}
+            visible={isCompareView}
+            footer={null}
+            onCancel={() => this.handleCompareViewClose()}
+            closable={false}
+            getContainer={() => document.querySelector(`#csManualList_${widgetId}`)}
+          >
+            <CompareView compareList={compareList.toJS()} templetData={templetData.toJS()} />
+          </Modal>
+        </div>
+      </ErrorBoundary>
     );
   }
 }

@@ -6,6 +6,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import CSManualView from 'apps/manual/user/CSManualView';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as selectors from './selector';
 import * as actions from './action';
 import saga from './saga';
@@ -39,13 +40,15 @@ class CSManualBookmarkWidget extends PureComponent {
 
     return (
       <StyleWiget appCount={appCount}>
-        {mualCheck ? (
-          <div className="bookmarkWidget_wrap">
-            <CSManualView mualIdx={viewMualIdx} widgetId={item.WIDGET_ID} bookmarkWidgetData={bookmarkWidgetData} />
-          </div>
-        ) : (
-          <div style={{ width: '100%', height: '100%' }}>앱 설정에서 메뉴얼을 선택해 주십시오.</div>
-        )}
+        <ErrorBoundary>
+          {mualCheck ? (
+            <div className="bookmarkWidget_wrap">
+              <CSManualView mualIdx={viewMualIdx} widgetId={item.WIDGET_ID} bookmarkWidgetData={bookmarkWidgetData} />
+            </div>
+          ) : (
+            <div style={{ width: '100%', height: '100%' }}>앱 설정에서 메뉴얼을 선택해 주십시오.</div>
+          )}
+        </ErrorBoundary>
       </StyleWiget>
     );
   }

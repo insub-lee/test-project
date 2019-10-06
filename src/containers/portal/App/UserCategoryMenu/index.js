@@ -12,7 +12,7 @@ import * as authSelectors from 'containers/common/Auth/selectors';
 
 import Styled from './Styled';
 import Tree from './Tree';
-import WorkTimeLine from '../WorkTimeLine';
+// import WorkTimeLine from '../WorkTimeLine';
 
 class UserCategoryMenu extends Component {
   constructor(props) {
@@ -106,11 +106,12 @@ class UserCategoryMenu extends Component {
             history={history}
           />
         </div>
-        <div className="divider" />
+        {/* timeline 기획 확정 후 진행 - 2019.10.06 */}
+        {/* <div className="divider" />
         <div className="timeline-area">
           <div className="area-title">Timeline</div>
           <WorkTimeLine height="calc(100% - 47px)" />
-        </div>
+        </div> */}
         {!isShow && (
           <div className="active-btn">
             {/* <Button type="default" htmlType="button" icon={`vertical-${isShow ? 'right' : 'left'}`} onClick={toggleMenu} /> */}

@@ -25,7 +25,7 @@ class UserMenuCard extends PureComponent {
     return (
       <StyleUserMenuCard className="userSetting">
         <div className="userBizMenuWrapper">
-          <h2 className="pageHeader">업무 폴더 메뉴</h2>
+          <h2 className="pageHeader menuCardClass"></h2>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ minHeight: '100%' }}>
               <AppWrapper style={{ width: '100%' }}>
