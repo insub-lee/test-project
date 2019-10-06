@@ -83,19 +83,22 @@ class ManualList extends Component {
     {
       title: 'Version',
       dataIndex: 'VERSION',
+      align: 'center',
       // key: 'VERSION',
       // width: '10%',
     },
     {
       title: '등록자',
       dataIndex: 'REGISTERNAME',
-      // key: 'REGISTERNAME',
+      align: 'center',
       ...this.getColumnSearchProps('REGISTERNAME'),
+      // key: 'REGISTERNAME',
       // width: '10%',
     },
     {
       title: '배포일',
       dataIndex: 'PUBDATE',
+      align: 'center',
       // key: 'PUBDATE',
       // width: '10%',
     },
@@ -124,14 +127,6 @@ class ManualList extends Component {
 
   renderExpandedRow = record => (
     <div>
-      {/* <ul>
-    <li>카테고리 경로</li>
-    <li>{record.PATH_NAME}</li>
-    <li>담당자</li>
-    <li>{record.MANAGERNAME}</li>
-    <li>화면표시여부</li>
-    <li>{record.ISDISPLAY === 1 ? 'Y' : 'N'}</li>
-  </ul> */}
       <Row>
         <Col span={4}>
           <Icon type="caret-right" />
@@ -151,12 +146,6 @@ class ManualList extends Component {
         </Col>
         <Col span={8}>{record.ISDISPLAY === 1 ? 'Y' : 'N'}</Col>
       </Row>
-      {/* <Row>
-    <Col span={4}>VERSION</Col>
-    <Col span={8}>{record.VERSION}</Col>
-    <Col span={4}>만료일</Col>
-    <Col span={8}>{record.ENDDATE}</Col>
-  </Row> */}
     </div>
   );
 

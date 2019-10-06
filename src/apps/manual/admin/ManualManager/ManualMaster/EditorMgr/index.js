@@ -86,37 +86,53 @@ class EditorMgr extends Component {
                 </div>
               </div>
             </div>
-          </div>
-          <Modal
-            width={854}
-            bodyStyle={{ height: 'calc(100vh - 196px)', padding: '4px' }}
-            style={{ top: 42 }}
-            visible={isIndexRelationModal}
-            footer={null}
-            onCancel={setIsIndexRelationModal}
-            getContainer={() => document.querySelector('#manualMainContentWrapper')}
-            title="관련 목차 선택"
-          >
-            <IndexRelation
-              treeData={treeData}
-              getMualList={getMualList}
-              manualList={manualList}
-              getCompList={getCompList}
-              compList={compList}
-              setSelectedCompItem={setSelectedCompItem}
-              addEditorComponent={addEditorComponent}
-              selectedCompItem={selectedCompItem}
-            />
-          </Modal>
+            <Modal
+              width={854}
+              bodyStyle={{ height: 'calc(100vh - 196px)', padding: '4px' }}
+              style={{ top: 42 }}
+              visible={isIndexRelationModal}
+              footer={null}
+              onCancel={setIsIndexRelationModal}
+              getContainer={() => document.querySelector('#manualMainContentWrapper')}
+              title="관련 목차 선택"
+            >
+              <IndexRelation
+                treeData={treeData}
+                getMualList={getMualList}
+                manualList={manualList}
+                getCompList={getCompList}
+                compList={compList}
+                setSelectedCompItem={setSelectedCompItem}
+                addEditorComponent={addEditorComponent}
+                selectedCompItem={selectedCompItem}
+              />
+            </Modal>
+            <Modal
+              width={728}
+              bodyStyle={{ height: 'calc(100vh - 256px)', padding: '4px' }}
+              style={{ top: 42 }}
+              visible={isParagraphModal}
+              footer={null}
+              onCancel={setParagraphModal}
+              getContainer={() => document.querySelector('#manualMainContentWrapper')}
+              title={this.paragraphModalName(paragraphTypeIdx)}
+            >
+              {paragraphTypeIdx === 30 && <ParagraphLeft addEditorComponent={addEditorComponent} />}
+              {paragraphTypeIdx === 31 && <ParagraphRight addEditorComponent={addEditorComponent} />}
+              {paragraphTypeIdx === 32 && <ParagraphTwo addEditorComponent={addEditorComponent} />}
+              {paragraphTypeIdx === 33 && <ParagraphThree addEditorComponent={addEditorComponent} />}
+              {paragraphTypeIdx === 34 && <ParagraphFour addEditorComponent={addEditorComponent} />}
+              {paragraphTypeIdx === 35 && <ParagraphFirst addEditorComponent={addEditorComponent} />}
+            </Modal>
+          </StyleModal>
           <Modal
             width={1198}
             bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
             style={{ top: 42 }}
             visible={isPreviewModal}
             footer={null}
-            onCancel={setParagraphModal}
-            getContainer={() => document.querySelector('#manualMainContentWrapper')}
-            title={this.paragraphModalName(paragraphTypeIdx)}
+            onCancel={() => setPreviewModal(false)}
+            closable={false}
           >
             <CSManualView mualIdx={manualIndex} widgetId={99999} />
           </Modal>
