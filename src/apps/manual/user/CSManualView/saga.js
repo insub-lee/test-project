@@ -19,55 +19,55 @@ function* getManualView(action) {
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}/${lastVersionYN}/${userId}`);
-    if (response.status === 200) {
-      const { list, historyList, navigationList, defaultMgrMap } = response;
-      const maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO), disabled: false }));
-      yield put(
-        actions.setManualViewInfoByReducr(
-          fromJS(maulTabList || []),
-          fromJS(historyList || []),
-          fromJS(historyList.filter(node => node.ISBOOKMARK === 'Y') || []),
-          fromJS(defaultMgrMap || []),
-          fromJS(navigationList || []),
-          widgetId,
-        ),
-      );
-      mualIdx = defaultMgrMap.MUAL_IDX;
-      let isIndexRelation = false;
-      let indexRelationIdxList = [];
-      // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
-      if (maulTabList.length > 0) {
-        maulTabList.forEach(node => {
-          if (node.MUAL_TABVIEWINFO && node.MUAL_TABVIEWINFO.length > 0) {
-            const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
-            if (tempList.length > 0) {
-              isIndexRelation = true;
-              indexRelationIdxList = indexRelationIdxList.concat(tempList);
-            }
+    // if (response.status === 200) {
+    const { list, historyList, navigationList, defaultMgrMap } = response;
+    const maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO), disabled: false }));
+    yield put(
+      actions.setManualViewInfoByReducr(
+        fromJS(maulTabList || []),
+        fromJS(historyList || []),
+        fromJS(historyList.filter(node => node.ISBOOKMARK === 'Y') || []),
+        fromJS(defaultMgrMap || []),
+        fromJS(navigationList || []),
+        widgetId,
+      ),
+    );
+    mualIdx = defaultMgrMap.MUAL_IDX;
+    let isIndexRelation = false;
+    let indexRelationIdxList = [];
+    // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
+    if (maulTabList.length > 0) {
+      maulTabList.forEach(node => {
+        if (node.MUAL_TABVIEWINFO && node.MUAL_TABVIEWINFO.length > 0) {
+          const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
+          if (tempList.length > 0) {
+            isIndexRelation = true;
+            indexRelationIdxList = indexRelationIdxList.concat(tempList);
           }
-        });
-      }
-      if (isIndexRelation) {
-        const indexRelationParam = [];
-        indexRelationIdxList.forEach(node => {
-          if (node.COMP_OPTION) {
-            const { MUAL_ORG_IDX, MUAL_TABCOMP_OIDX } = node.COMP_OPTION;
-            if (indexRelationParam.findIndex(find => find.MUAL_TABCOMP_OIDX === MUAL_TABCOMP_OIDX) === -1) {
-              indexRelationParam.push({ MUAL_ORG_IDX, MUAL_TABCOMP_OIDX });
-            }
-          }
-        });
-        const responseComp = yield call(Axios.post, `/api/manual/v1/IndexRelationComponetHandler/${mualIdx}`, {
-          paramList: indexRelationParam,
-        });
-        if (responseComp) {
-          yield put(actions.setViewIndexRelationListByReducr(fromJS(responseComp.list || []), widgetId));
         }
-      }
-    } else {
-      error('데이터 조회에 실패했습니다.');
-      console.debug('tab error');
+      });
     }
+    if (isIndexRelation) {
+      const indexRelationParam = [];
+      indexRelationIdxList.forEach(node => {
+        if (node.COMP_OPTION) {
+          const { MUAL_ORG_IDX, MUAL_TABCOMP_OIDX } = node.COMP_OPTION;
+          if (indexRelationParam.findIndex(find => find.MUAL_TABCOMP_OIDX === MUAL_TABCOMP_OIDX) === -1) {
+            indexRelationParam.push({ MUAL_ORG_IDX, MUAL_TABCOMP_OIDX });
+          }
+        }
+      });
+      const responseComp = yield call(Axios.post, `/api/manual/v1/IndexRelationComponetHandler/${mualIdx}`, {
+        paramList: indexRelationParam,
+      });
+      if (responseComp) {
+        yield put(actions.setViewIndexRelationListByReducr(fromJS(responseComp.list || []), widgetId));
+      }
+    }
+    // } else {
+    //   error('데이터 조회에 실패했습니다.');
+    //   console.debug('tab error');
+    // }
     const resRelation = yield call(Axios.get, `/api/manual/v1/CSManualRelationHandler/${mualIdx}`);
     if (resRelation) {
       const { relationList } = resRelation;
