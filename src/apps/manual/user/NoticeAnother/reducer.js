@@ -7,11 +7,11 @@ const appReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CATEGORYMAP_BYREDUCR: {
       const { key, categoryMapList } = action;
-      return state.setIn(['prd', key], categoryMapList);
+      return state.setIn(['notice', key], categoryMapList);
     }
     case actionTypes.SET_FILTERED_DATA_BYREDUCER: {
       const { data } = action;
-      return state.setIn(['prdData'], data);
+      return state.setIn(['noticeData'], data);
     }
     default:
       return state;
