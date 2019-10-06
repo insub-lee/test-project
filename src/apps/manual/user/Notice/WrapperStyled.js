@@ -7,6 +7,9 @@ const Wrapper = styled.div`
   border-radius: 3px;
   .categorie {
     padding-right: 15px;
+    .ant-tree {
+      font-size: 18px;
+    }
   }
   .builderBaseData {
     border-left: 1px solid #e5e5e5;
