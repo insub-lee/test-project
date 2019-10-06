@@ -22,7 +22,7 @@ const Wrapper = styled.div`
         }
         & td.manual-descriptions-item-label {
           background-color: #f3f1f5;
-          color: #000;
+          font-size: 18px;
           text-align: center;
           white-space: nowrap;
           width: 17%;
