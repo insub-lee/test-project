@@ -247,8 +247,8 @@ function* revisionManual() {
     selectedMualIdx: MUAL_IDX,
   });
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = fromJS(selectedUserInfo).map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
   yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
@@ -303,8 +303,8 @@ function* removeManual() {
     selectedMualIdx: defaultMgrMap.SELECTED_MUAL_IDX,
   });
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = fromJS(selectedUserInfo).map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
   yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
@@ -321,8 +321,8 @@ function* getDefaultMgrByVersion(action) {
     selectedMualIdx: defaultMgrMap.SELECTED_MUAL_IDX,
   });
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = fromJS(selectedUserInfo).map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
   yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
