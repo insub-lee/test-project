@@ -24,9 +24,8 @@ class CSManualBookmarkWidgetSetting extends Component {
   }
 
   componentDidMount() {
-    const { getBookmarkBySaga, item } = this.props;
-    const widgetId = item.WIDGET_ID;
-    getBookmarkBySaga(widgetId);
+    const { getBookmarkBySaga } = this.props;
+    getBookmarkBySaga();
   }
 
   onChangeHandler = value => {
@@ -59,8 +58,6 @@ class CSManualBookmarkWidgetSetting extends Component {
 
   bookmarkCheck = (arr, value) => {
     const check = arr.findIndex(arrItem => arrItem.MUAL_ORG_IDX === value);
-    console.log('arr', arr);
-    console.log('value', value);
 
     if (check === -1) {
       return false;
@@ -135,7 +132,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBookmarkBySaga: widgetId => dispatch(actions.getBookmarkBySaga(widgetId)),
+  getBookmarkBySaga: () => dispatch(actions.getBookmarkBySaga()),
   updateBookmarkBySaga: (item, selectedMual, settingType) => dispatch(actions.updateBookmarkBySaga(item, selectedMual, settingType)),
 });
 

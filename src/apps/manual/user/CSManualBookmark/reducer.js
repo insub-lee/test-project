@@ -8,8 +8,8 @@ const initialState = fromJS({
 const CSManualWidgetReducer = (state = initialState, action) => {
   switch (action.type) {
     case constants.SET_BOOKMARK_DATA: {
-      const { widgetId, bookmarkList } = action;
-      return state.setIn(['bookmarkWidget', widgetId, 'bookmarkList'], bookmarkList);
+      const { bookmarkList } = action;
+      return state.setIn(['bookmarkWidget', 'bookmarkList'], bookmarkList);
     }
 
     // 위젯 - INIT DATA SET

@@ -13,8 +13,7 @@ const selectUserProfile = () =>
 const selectBookmarkList = () =>
   createSelector(
     CSManualWidgetData,
-    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : 11437),
-    (state, widgetId) => state.getIn(['bookmarkWidget', widgetId, 'bookmarkList']),
+    state => state.getIn(['bookmarkWidget', 'bookmarkList']),
   );
 
 // 위젯 페이지 이동에 필요한 MUAL_IDX

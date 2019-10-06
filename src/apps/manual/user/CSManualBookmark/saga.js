@@ -7,14 +7,13 @@ import * as constants from './constants';
 import * as actions from './action';
 
 // 유저의 북마크 데이터 가져오기
-function* getBookmarkBySaga(payload) {
-  const { widgetId } = payload;
+function* getBookmarkBySaga() {
   const response = yield call(Axios.get, '/api/manual/v1/ManualBookmarkWidgetHandler');
   if (response.result === 'success') {
     const { bookMarkList } = response;
-    yield put(actions.setBookmarkByReducer(widgetId, bookMarkList));
+    yield put(actions.setBookmarkByReducer(bookMarkList));
   } else {
-    yield put(actions.setBookmarkByReducer(widgetId, []));
+    yield put(actions.setBookmarkByReducer([]));
   }
 }
 
