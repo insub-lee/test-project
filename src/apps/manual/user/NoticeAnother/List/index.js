@@ -89,8 +89,8 @@ export default class NoticeList extends Component {
     if (filteredDataByKey.length > 0) {
       dataSource = getRowTree(filteredDataByKey, viewChange, selectedRecord);
     }
+    console.log(dataSource, '데이터소스 Notice');
     //  const viewField = list && list.filter(item => item.TASK_SEQ === taskSeq);
-    console.log(dataSource, '데이터소스 prdDoc');
     return (
       <Styled className="manual-descriptions-view">
         {(viewType === 'List' && (

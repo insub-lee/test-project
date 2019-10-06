@@ -49,7 +49,7 @@ class Notice extends Component {
       data: false,
       viewType: 'List',
       taskSeq: -1,
-      workSeq: 1251,
+      workSeq: 1190,
       record: {},
       selectedKey: '',
     };
@@ -121,7 +121,7 @@ class Notice extends Component {
           <Col span={18} className="builderBaseData">
             <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
               <BizBuilderBase
-                id="Notice"
+                id="NoticeAnother"
                 categoryData={categoryData}
                 viewType={this.state.viewType}
                 selectedCategorie={this.state.selectedKey}

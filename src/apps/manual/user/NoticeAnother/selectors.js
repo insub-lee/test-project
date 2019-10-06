@@ -12,12 +12,12 @@ const makeSelectProfile = () =>
 const makeSelectCategoryMapList = key =>
   createSelector(
     makeSelectNoticeState,
-    state => state.getIn(['prd', key]),
+    state => state.getIn(['notice', key]),
   );
 const makeSelectedFilteredData = () =>
   createSelector(
     makeSelectNoticeState,
-    state => state.getIn(['prdData']),
+    state => state.getIn(['noticeData']),
   );
 
 export default {

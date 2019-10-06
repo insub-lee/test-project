@@ -12,7 +12,7 @@ function* getCategoryMapList(payload) {
 }
 function* getFilteredData(payload) {
   const { selectedKey } = payload;
-  const response = yield call(Axios.get, `/api/manual/v1/DocNotice?key=${selectedKey}&type=prdDoc`);
+  const response = yield call(Axios.get, `/api/manual/v1/DocNotice?key=${selectedKey}&type=notice`);
   const { data } = response;
   yield put(actions.setFilteredDataByReducer(data));
 }
