@@ -90,14 +90,15 @@ export default class NoticeList extends Component {
     }
     //  const viewField = list && list.filter(item => item.TASK_SEQ === taskSeq);
     return (
-      <Styled>
+      <Styled className="manual-descriptions-view">
         {(viewType === 'List' && (
           <React.Fragment>
             <Table rowSelection={rowSelection} dataSource={dataSource} columns={columns} pagination={{ defaultPageSize: 10, showQuickJumper: true }} />
             <div>
               <span className="totalNumberPage">{dataSource ? dataSource.length : 0} 건</span>
-              <Button>엑셀목록 다운</Button>
               <Button
+                type="button"
+                className="btn-primary"
                 onClick={() => {
                   viewChange('Edit', -1);
                   getTaskSeq(id, workSeq);
@@ -111,33 +112,33 @@ export default class NoticeList extends Component {
         )) ||
           (viewType === 'View' && (
             <React.Fragment>
-              <table className="designedTable">
+              <table>
                 <tbody>
-                  <tr>
-                    <td>분류</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">분류</td>
+                    <td className="manual-descriptions-item-content">
                       <Input style={{ width: 300, marginRight: 10 }} defaultValue={record.categorie} readOnly />
                     </td>
                   </tr>
-                  <tr>
-                    <td>제목</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">제목</td>
+                    <td className="manual-descriptions-item-content">
                       <Input defaultValue={record.title} readOnly />
                     </td>
                   </tr>
-                  <tr>
-                    <td>최종수정자</td>
-                    <td>{record.updUser}</td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">최종수정자</td>
+                    <td className="manual-descriptions-item-content">{record.updUser}</td>
                   </tr>
-                  <tr>
-                    <td>내용</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">내용</td>
+                    <td className="manual-descriptions-item-content">
                       <FroalaEditorView model={formData.CONTENT.length > 0 ? formData.CONTENT[0].DETAIL : formData.CONTENT} />
                     </td>
                   </tr>
-                  <tr>
-                    <td>첨부파일</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">첨부파일</td>
+                    <td className="manual-descriptions-item-content">
                       <Upload
                         saveTempContents={this.onChangeFormData}
                         workSeq={this.props.workSeq}
@@ -151,6 +152,8 @@ export default class NoticeList extends Component {
               </table>
               <div className="EditButtons">
                 <Button
+                  type="button"
+                  className="btn-primary"
                   onClick={() => {
                     viewChange('List', -1);
                   }}
@@ -160,6 +163,8 @@ export default class NoticeList extends Component {
                 {profile.USER_ID === record.updUserId && (
                   <React.Fragment>
                     <Button
+                      type="button"
+                      className="btn-primary"
                       onClick={() => {
                         viewChange('Edit', record.key);
                         record.categorieId && changeFormData(id, 'NODE_ID', record.categorieId);
@@ -167,7 +172,9 @@ export default class NoticeList extends Component {
                     >
                       편집하기
                     </Button>
-                    <Button onClick={this.removeData}>삭제하기</Button>
+                    <Button type="button" className="btn-primary" onClick={this.removeData}>
+                      삭제하기
+                    </Button>
                   </React.Fragment>
                 )}
               </div>
@@ -175,11 +182,11 @@ export default class NoticeList extends Component {
           )) ||
           (viewType === 'Edit' && (
             <React.Fragment>
-              <table className="designedTable editTable">
+              <table>
                 <tbody>
-                  <tr>
-                    <td>분류</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">분류</td>
+                    <td className="manual-descriptions-item-content">
                       <TreeSelect
                         name="categorie"
                         style={{ width: 300, marginRight: 10 }}
@@ -192,28 +199,28 @@ export default class NoticeList extends Component {
                       />
                     </td>
                   </tr>
-                  <tr>
-                    <td>제목</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">제목</td>
+                    <td className="manual-descriptions-item-content">
                       <Input onChange={this.titleChange} defaultValue={record && record.title}></Input>
                     </td>
                   </tr>
-                  <tr>
-                    <td>최종수정자</td>
-                    <td>{profile.NAME_KOR}</td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">최종수정자</td>
+                    <td className="manual-descriptions-item-content">{profile.NAME_KOR}</td>
                   </tr>
-                  <tr>
-                    <td>내용</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">내용</td>
+                    <td className="manual-descriptions-item-content">
                       {' '}
                       {formData.hasOwnProperty('CONTENT') && (
                         <RichTextEditor saveTempContents={this.onChangeRichFormData} defaultValue={formData.CONTENT} config={froalaEditorConfig()} />
                       )}
                     </td>
                   </tr>
-                  <tr>
-                    <td>첨부파일</td>
-                    <td>
+                  <tr className="manual-descriptions-row">
+                    <td className="manual-descriptions-item-label manual-descriptions-item-colon">첨부파일</td>
+                    <td className="manual-descriptions-item-content">
                       <Upload
                         saveTempContents={this.onChangeFormData}
                         workSeq={this.props.workSeq}
@@ -236,6 +243,8 @@ export default class NoticeList extends Component {
                 {Object.prototype.hasOwnProperty.call(record, 'key') ? (
                   <React.Fragment>
                     <Button
+                      type="button"
+                      className="btn-primary"
                       onClick={() => {
                         modifyTask(id, () => {
                           viewChange('View', record.key);
@@ -244,10 +253,14 @@ export default class NoticeList extends Component {
                     >
                       편집완료
                     </Button>
-                    <Button onClick={this.removeData}>삭제하기</Button>
+                    <Button type="button" className="btn-primary" onClick={this.removeData}>
+                      삭제하기
+                    </Button>
                   </React.Fragment>
                 ) : (
                   <Button
+                    type="button"
+                    className="btn-primary"
                     onClick={() => {
                       saveTask(id, id, this.saveEdit);
                     }}

@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import { Icon } from 'antd';
 export const columns = [
   {
     title: '제목',
@@ -35,7 +36,7 @@ export const columns = [
   {
     title: '첨부파일',
     dataIndex: 'file',
-    render: type => (type ? 'O' : 'X'),
+    render: type => (type ? <Icon type="save" style={{ color: '#886ab5', fontSize: '25px' }} /> : ''),
     key: 'file',
   },
 ];

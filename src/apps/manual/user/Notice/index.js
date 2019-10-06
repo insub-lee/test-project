@@ -13,7 +13,7 @@ import selectors from './selectors';
 import * as actions from './actions';
 import BizBuilderBase from '../../components/BizBuilderBase';
 import List from './List';
-
+import Styled from './WrapperStyled';
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
     flatData: flatData.map(item => ({
@@ -105,34 +105,36 @@ class Notice extends Component {
     }
 
     return (
-      <Row>
-        <Col span={4}>
-          <Search
-            placeholder="검색어를 입력해 주세요"
-            onSearch={text => {
-              this.handleChange(text, categoryData);
-            }}
-          ></Search>
-          <Tree showLine defaultExpandAll treeData={data || categoryData} onSelect={this.onSelect}></Tree>
-        </Col>
-        <Col span={18}>
-          <BizBuilderBase
-            id="Notice"
-            viewType={viewType}
-            filteredDataByKey={filteredDataByKey}
-            component={List}
-            profile={profile}
-            selectedCategorie={this.state.selectedKey}
-            taskSeq={taskSeq}
-            categoryData={categoryData}
-            selectedRecord={this.selectedRecord}
-            record={this.state.record}
-            workSeq={workSeq}
-            viewChange={this.handlerViewChange}
-            {...this.props}
-          ></BizBuilderBase>
-        </Col>
-      </Row>
+      <Styled>
+        <Row>
+          <Col span={4} className="categorie">
+            <Search
+              placeholder="검색어를 입력해 주세요"
+              onSearch={text => {
+                this.handleChange(text, categoryData);
+              }}
+            ></Search>
+            <Tree showLine defaultExpandAll treeData={data || categoryData} onSelect={this.onSelect}></Tree>
+          </Col>
+          <Col span={18} className="builderBaseData">
+            <BizBuilderBase
+              id="Notice"
+              viewType={viewType}
+              filteredDataByKey={filteredDataByKey}
+              component={List}
+              profile={profile}
+              selectedCategorie={this.state.selectedKey}
+              taskSeq={taskSeq}
+              categoryData={categoryData}
+              selectedRecord={this.selectedRecord}
+              record={this.state.record}
+              workSeq={workSeq}
+              viewChange={this.handlerViewChange}
+              {...this.props}
+            ></BizBuilderBase>
+          </Col>
+        </Row>
+      </Styled>
     );
   }
 }
