@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { Button, Popover } from 'antd';
 
 import Checkbox from 'components/FormStuff/Checkbox';
 
@@ -12,12 +12,26 @@ const handleListItemClick = (item, linkItemAction) => {
   // , setCheckManual, checkedManualList
 };
 
+const renderContent = handleClickTopBarButton => (
+  <div>
+    <div>
+      <Button onClick={() => handleClickTopBarButton('mualListSetMultiView')}>모아보기</Button>
+    </div>
+    <div>
+      <Button onClick={() => handleClickTopBarButton('mualListCompare')}>상품비교</Button>
+    </div>
+  </div>
+);
+
 const LinkItem = ({ item, linkItemAction }) => (
   <Styled>
-    <Checkbox
-      checked={linkItemAction.checkedManualList.findIndex(find => find.get('mualIdx') === item.MUAL_IDX) > -1}
-      onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX, item.MUAL_ORG_IDX, linkItemAction.widgetId)}
-    />
+    <Popover placement="right" content={renderContent(linkItemAction.handleClickTopBarButton)} trigger="click">
+      <Checkbox
+        checked={linkItemAction.checkedManualList.findIndex(find => find.get('mualIdx') === item.MUAL_IDX) > -1}
+        onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX, item.MUAL_ORG_IDX, linkItemAction.widgetId)}
+      />
+    </Popover>
+
     <Button type="link" onClick={() => handleListItemClick(item, linkItemAction)}>
       <span dangerouslySetInnerHTML={{ __html: item.MUAL_NAME }}></span>
     </Button>

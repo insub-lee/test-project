@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Styled = styled.div`
   position: relative;
   width: 100%;
+  background-color: #ffffff;
 
   .searchInput {
     width: 375px;

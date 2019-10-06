@@ -161,6 +161,12 @@ class DefaultMgr extends Component {
         <table cellPadding="5">
           <tbody>
             <tr>
+              <td>카테고리 경로</td>
+              <td colSpan="3">
+                <Input id="CATEGORY_PATH" value={defaultMgrMap.get('PATH_NAME')} />
+              </td>
+            </tr>
+            <tr>
               <td>매뉴얼명</td>
               <td colSpan="3">
                 <Input id="MUAL_NAME" onChange={e => setDefaultMgrChangeValue('MUAL_NAME', e.target.value)} value={defaultMgrMap.get('MUAL_NAME')} />

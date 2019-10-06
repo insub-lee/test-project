@@ -155,7 +155,7 @@ Tree.propTypes = {
   moveCategory: PropTypes.func,
   setCompareTreeData: PropTypes.func,
   setOnHoverKey: PropTypes.func,
-  treeData: PropTypes.object,
+  treeData: PropTypes.array,
   selectedIndex: PropTypes.number,
   onHoverKey: PropTypes.number,
 };
@@ -180,6 +180,7 @@ const mapDispatchToProps = dispatch => ({
   setViewMode: (node, flag) => dispatch(actions.setCompareTempletViewModeByReducr(node, flag)),
   setOnHoverKey: idx => dispatch(actions.setCompareTampletOnHoverKey(idx)),
   setCompareTreeData: list => dispatch(actions.setCompareTempletListByReducr(list)),
+  removeCategoryInfo: node => dispatch(actions.removeCategoryInfoBySaga(node)),
 });
 
 export default connect(

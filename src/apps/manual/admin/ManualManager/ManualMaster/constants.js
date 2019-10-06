@@ -69,6 +69,7 @@ export const SET_SECURITY_SELECT_DATA_REDUCR = `${prefix}ManualMaster/SET_SECURI
 export const GET_SECURITY_SELECT_DATA_SAGA = `${prefix}ManualMaster/GET_SECURITY_SELECT_DATA_SAGA`;
 export const SAVE_CONTENT_SECURITY_SAGA = `${prefix}ManualMaster/SAVE_CONTENT_SECURITY_SAGA`;
 export const REMOVE_CONTENT_SECURITY_SAGA = `${prefix}ManualMaster/REMOVE_CONTENT_SECURITY_ROW_SAGA`;
+export const REMOVE_CATEGORY_INFO_SAGA = `${prefix}ManualMaster/REMOVE_CONTENT_SECURITY_ROW_SAGA`;
 
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
 export const GET_USERINFO_SAGA = `${prefix}ManualMaster/GET_USERINFO_SAGA`;

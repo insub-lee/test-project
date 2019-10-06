@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Modal } from 'antd';
+import { Row, Col, Modal, Affix } from 'antd';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -88,13 +88,14 @@ class CSManualList extends Component {
     let ListItemData = fromJS([]);
     const categoryIdx = item && item.data && item.data.categoryIdx ? item.data.categoryIdx : 24240;
     const widgetId = item && item.id ? item.id : categoryIdx;
+    let tempItemData = [];
     if (totalManualList.size > 0) {
       const flatData = totalManualList.toJS();
       // ListItemData = fromJS(
       //   getTreeFromFlatData({ flatData, getKey: node => node.CATEGORY_IDX, getParentKey: node => node.CATEGORY_PARENT_IDX, rootKey: 24240 }),
       // );
 
-      const tempItemData = getTreeFromFlatData({
+      tempItemData = getTreeFromFlatData({
         flatData,
         getKey: node => node.CATEGORY_IDX,
         getParentKey: node => node.CATEGORY_PARENT_IDX,
@@ -120,7 +121,13 @@ class CSManualList extends Component {
 
     return (
       <div id={`csManualList_${widgetId}`} style={{ padding: 40, border: '1px solid #eaeaea', borderRadius: 3 }}>
-        <Topbar data={topBarButton} />
+        <Topbar
+          data={topBarButton}
+          tempItemData={tempItemData}
+          setSelectedMualOrgIdx={setSelectedMualOrgIdx}
+          setIsViewContents={setIsViewContents}
+          widgetId={widgetId}
+        />
         {ListItemData.map(category => [
           <TitleBar key={`TitleBar_${category.get('CATEGORY_IDX')}`} categoryName={category.get('CATEGORY_NAME')} />,
           <Row key={`Row_${category.get('CATEGORY_IDX')}`} gutter={12}>
@@ -130,7 +137,14 @@ class CSManualList extends Component {
                 <Col xxl={6} xl={8} md={12} sm={24} key={manualitem.get('CATEGORY_IDX')}>
                   <ListItem
                     data={manualitem.toJS()}
-                    linkItemAction={{ setIsViewContents, setSelectedMualOrgIdx, setCheckManual, checkedManualList, widgetId }}
+                    linkItemAction={{
+                      setIsViewContents,
+                      setSelectedMualOrgIdx,
+                      setCheckManual,
+                      checkedManualList,
+                      widgetId,
+                      handleClickTopBarButton: this.handleClickTopBarButton,
+                    }}
                   />
                 </Col>
               ))}
@@ -150,7 +164,7 @@ class CSManualList extends Component {
         </Modal>
         <Modal
           width={1248}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+          bodyStyle={{ padding: '4px' }}
           style={{ top: 42 }}
           visible={isCompareView}
           footer={null}

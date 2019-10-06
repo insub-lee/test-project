@@ -27,6 +27,7 @@ const CompareView = ({ compareList, templetData }) => (
       dataSource={compareList}
       scroll={templetData.length > 4 ? { x: (templetData.length - 1) * 380 + 100 } : false}
       pagination={false}
+      bordered
     />
   </Styled>
 );

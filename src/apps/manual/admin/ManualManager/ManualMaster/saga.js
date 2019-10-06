@@ -576,6 +576,20 @@ export function* removeContentSecurity({ row }) {
   }
 }
 
+export function* removeManualTypeCategoryInfo({ node }) {
+  // if (node) {
+  //   const response = yield call(
+  //     Axios.delete,
+  //     `/api/manual/v1/ManualContentSecurityHandler?TARGETFOLDERKEY=${row.TARGETFOLDERKEY}&TARGETKEY=${row.TARGETKEY}&ACCOUNT_ID=${row.ACCOUNT_ID}`,
+  //   );
+  //   if (response) {
+  //     yield put(actions.getContentSecurityListBySaga());
+  //   }
+  // } else {
+  //   console.debug('no data');
+  // }
+}
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
@@ -603,4 +617,5 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.GET_SECURITY_SELECT_DATA_SAGA, getSecuritySelectData);
   yield takeLatest(constantTypes.SAVE_CONTENT_SECURITY_SAGA, saveContentSecurity);
   yield takeLatest(constantTypes.REMOVE_CONTENT_SECURITY_SAGA, removeContentSecurity);
+  yield takeLatest(constantTypes.REMOVE_CATEGORY_INFO_SAGA, removeManualTypeCategoryInfo);
 }
