@@ -53,17 +53,10 @@ export const vgroupInfoUpdate = (SITE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN) 
   }
 );
 
-export const vgroupManagerUpdate = (GRP_ID, managerSetMembers) => (
-  {
-    type: constants.UPDATE_VGROUP_MANAGER,
-    GRP_ID,
-    managerSetMembers,
-  }
-);
-
-export const vgroupMemberUpdate = (GRP_ID, managerSetMembers, userSetMembers, deptSetMembers) => (
+export const vgroupMemberUpdate = (SITE_ID, GRP_ID, managerSetMembers, userSetMembers, deptSetMembers) => (
   {
     type: constants.UPDATE_VGROUP_MEMBER,
+    SITE_ID,
     GRP_ID,
     managerSetMembers,
     userSetMembers,
