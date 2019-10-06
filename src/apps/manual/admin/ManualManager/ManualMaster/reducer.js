@@ -72,6 +72,7 @@ const initialState = fromJS({
     listDept: [],
     listGrp: [],
     listUser: [],
+    selectedUserInfo: [],
   },
   previewYn: false, // 에디터 프리뷰
 });

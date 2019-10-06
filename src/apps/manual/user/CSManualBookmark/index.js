@@ -22,7 +22,6 @@ class CSManualBookmarkWidget extends PureComponent {
   render() {
     const { item, viewMualIdx, setWidgetViewIdx, selectedApp } = this.props;
 
-    console.log('selectedApp', selectedApp);
     const appCount = selectedApp.length; // 페이지에 그려지는 앱의 총 갯수
 
     let mualCheck = false;
@@ -36,6 +35,7 @@ class CSManualBookmarkWidget extends PureComponent {
     const bookmarkWidgetData = {
       appCount,
       widgetYn: true,
+      isTitle: item.user.isTitle,
     };
 
     return (
@@ -62,11 +62,12 @@ CSManualBookmarkWidget.propTypes = {
 };
 
 CSManualBookmarkWidget.defaultProps = {
+  viewMualIdx: 27975,
   item: {
-    WIDGET_ID: 99999,
-    data: { selectedBookmark: undefined },
+    WIDGET_ID: 11437,
+    data: { selectedBookmark: 27975 },
+    user: { isTitle: true },
   },
-  viewMualIdx: -1,
   setWidgetInitData: () => false,
   setWidgetViewIdx: () => false,
 };

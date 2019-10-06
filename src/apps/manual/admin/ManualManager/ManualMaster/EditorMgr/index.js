@@ -23,6 +23,7 @@ import ParagraphTwo from './EditorMain/ParagraphTool/ParagraphTwo';
 import ParagraphThree from './EditorMain/ParagraphTool/ParagraphThree';
 import ParagraphFour from './EditorMain/ParagraphTool/ParagraphFour';
 import ParagraphFirst from './EditorMain/ParagraphTool/ParagraphFirst';
+import { modifyTool } from './EditorToolBar/ItemToolData';
 
 class EditorMgr extends Component {
   componentDidMount() {
@@ -34,6 +35,16 @@ class EditorMgr extends Component {
     const { resetManualEditorMgr } = this.props;
     resetManualEditorMgr();
   }
+
+  paragraphModalName = paragraphTypeIdx => {
+    const { menus } = modifyTool;
+    const selectedIdx = menus.findIndex(findNode => findNode.menuId === paragraphTypeIdx);
+    let result = '';
+    if (selectedIdx > -1) {
+      result = `${menus[selectedIdx].menuName} 등록`;
+    }
+    return result;
+  };
 
   render() {
     const {
@@ -75,53 +86,37 @@ class EditorMgr extends Component {
                 </div>
               </div>
             </div>
-            <Modal
-              width={854}
-              bodyStyle={{ height: 'calc(100vh - 196px)', padding: '4px' }}
-              style={{ top: 42 }}
-              visible={isIndexRelationModal}
-              footer={null}
-              onCancel={setIsIndexRelationModal}
-              getContainer={() => document.querySelector('#manualMainContentWrapper')}
-              title="문단 입력"
-            >
-              <IndexRelation
-                treeData={treeData}
-                getMualList={getMualList}
-                manualList={manualList}
-                getCompList={getCompList}
-                compList={compList}
-                setSelectedCompItem={setSelectedCompItem}
-                addEditorComponent={addEditorComponent}
-                selectedCompItem={selectedCompItem}
-              />
-            </Modal>
-            <Modal
-              width={728}
-              bodyStyle={{ height: 'calc(100vh - 256px)', padding: '4px' }}
-              style={{ top: 42 }}
-              visible={isParagraphModal}
-              footer={null}
-              onCancel={setParagraphModal}
-              getContainer={() => document.querySelector('#manualMainContentWrapper')}
-              title="관련 목차 선택"
-            >
-              {paragraphTypeIdx === 30 && <ParagraphLeft addEditorComponent={addEditorComponent} />}
-              {paragraphTypeIdx === 31 && <ParagraphRight addEditorComponent={addEditorComponent} />}
-              {paragraphTypeIdx === 32 && <ParagraphTwo addEditorComponent={addEditorComponent} />}
-              {paragraphTypeIdx === 33 && <ParagraphThree addEditorComponent={addEditorComponent} />}
-              {paragraphTypeIdx === 34 && <ParagraphFour addEditorComponent={addEditorComponent} />}
-              {paragraphTypeIdx === 35 && <ParagraphFirst addEditorComponent={addEditorComponent} />}
-            </Modal>
-          </StyleModal>
+          </div>
+          <Modal
+            width={854}
+            bodyStyle={{ height: 'calc(100vh - 196px)', padding: '4px' }}
+            style={{ top: 42 }}
+            visible={isIndexRelationModal}
+            footer={null}
+            onCancel={setIsIndexRelationModal}
+            getContainer={() => document.querySelector('#manualMainContentWrapper')}
+            title="관련 목차 선택"
+          >
+            <IndexRelation
+              treeData={treeData}
+              getMualList={getMualList}
+              manualList={manualList}
+              getCompList={getCompList}
+              compList={compList}
+              setSelectedCompItem={setSelectedCompItem}
+              addEditorComponent={addEditorComponent}
+              selectedCompItem={selectedCompItem}
+            />
+          </Modal>
           <Modal
             width={1198}
             bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
             style={{ top: 42 }}
             visible={isPreviewModal}
             footer={null}
-            onCancel={() => setPreviewModal(false)}
-            closable={false}
+            onCancel={setParagraphModal}
+            getContainer={() => document.querySelector('#manualMainContentWrapper')}
+            title={this.paragraphModalName(paragraphTypeIdx)}
           >
             <CSManualView mualIdx={manualIndex} widgetId={99999} />
           </Modal>

@@ -19,8 +19,15 @@ const makeSelectPaginationIdx = () =>
     makeSelectManualListState,
     state => state.get('paginationIdx'),
   );
+
+const makeSelectExpandedKeyList = () =>
+  createSelector(
+    makeSelectManualListState,
+    state => state.get('expandedKeyList').toJS(),
+  );
 export default {
   makeSelectManualist,
   makeSelectIsLoading,
   makeSelectPaginationIdx,
+  makeSelectExpandedKeyList,
 };
