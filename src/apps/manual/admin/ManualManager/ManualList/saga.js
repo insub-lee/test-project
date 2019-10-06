@@ -10,9 +10,13 @@ function* getManualList(action) {
   yield put(actions.setListLodingByRedcr(true));
   const { categoryIdx } = action;
   const response = yield call(Axios.get, `/api/manual/v1/ManualListHandler/${categoryIdx}`);
-  const manualList = fromJS(response).get('manualList');
-  console.debug(categoryIdx);
-  yield put(actions.setManualListByReducr(manualList));
+  const { manualList } = response;
+  const rowKeyList = [];
+  manualList.forEach(node => {
+    rowKeyList.push(node.MUAL_IDX);
+  });
+  yield put(actions.setManualListByReducr(fromJS(manualList)));
+  yield put(actions.setExpandedKeyListByReducr(fromJS(rowKeyList)));
 }
 export default function* initManualListSaga() {
   yield takeLatest(constantTypes.GET_MANUALLIST_SAGA, getManualList);

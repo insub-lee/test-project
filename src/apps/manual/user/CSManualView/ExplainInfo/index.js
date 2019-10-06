@@ -28,12 +28,14 @@ ExplainInfo.propTypes = {
   maulTabList: PropTypes.object,
   selectedTabIdx: PropTypes.number,
   setSelectedTabIdx: PropTypes.func,
+  bookmarkWidgetData: PropTypes.object,
 };
 
 ExplainInfo.defaultProps = {
   maulTabList: fromJS([]),
   selectedTabIdx: 0,
   setSelectedTabIdx: () => false,
+  bookmarkWidgetData: { widgetYn: false, appCount: 0 },
 };
 
 export default ExplainInfo;

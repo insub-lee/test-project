@@ -29,7 +29,7 @@ const makeSelectUserInfoList = () =>
 const makeSelectedUserInfo = () =>
   createSelector(
     makeSelectManualMasterState,
-    state => state.getIn(['manualMasterState', 'selectedUserInfo']),
+    state => state.getIn(['manualMasterState', 'selectedUserInfo']).toJS(),
   );
 const makeSelectManualMaster = () =>
   createSelector(

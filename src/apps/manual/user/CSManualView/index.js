@@ -237,7 +237,7 @@ ManualView.defaultProps = {
   relationList: fromJS([]),
   addManualHistory: () => false,
   indexRelationList: fromJS([]),
-  bookmarkWidgetData: { widgetYn: false },
+  bookmarkWidgetData: { widgetYn: false, appCount: 0, isTitle: true },
   setbookmarkWidgetViewIdx: () => false,
   setEditorPreviewModal: () => false,
 };
