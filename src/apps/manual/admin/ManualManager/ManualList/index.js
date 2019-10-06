@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Spin, Input, Icon } from 'antd';
+import { Table, Button, Spin, Input, Icon, Row, Col } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link } from 'react-router-dom';
@@ -83,20 +83,20 @@ class ManualList extends Component {
     {
       title: 'Version',
       dataIndex: 'VERSION',
-      key: 'VERSION',
+      // key: 'VERSION',
       // width: '10%',
     },
     {
-      title: '담당자',
-      dataIndex: 'MANAGERNAME',
-      key: 'MANAGERNAME',
-      ...this.getColumnSearchProps('MANAGERNAME'),
+      title: '등록자',
+      dataIndex: 'REGISTERNAME',
+      // key: 'REGISTERNAME',
+      ...this.getColumnSearchProps('REGISTERNAME'),
       // width: '10%',
     },
     {
       title: '배포일',
       dataIndex: 'PUBDATE',
-      key: 'PUBDATE',
+      // key: 'PUBDATE',
       // width: '10%',
     },
   ];
@@ -122,28 +122,59 @@ class ManualList extends Component {
     }
   }
 
+  renderExpandedRow = record => (
+    <div>
+      {/* <ul>
+    <li>카테고리 경로</li>
+    <li>{record.PATH_NAME}</li>
+    <li>담당자</li>
+    <li>{record.MANAGERNAME}</li>
+    <li>화면표시여부</li>
+    <li>{record.ISDISPLAY === 1 ? 'Y' : 'N'}</li>
+  </ul> */}
+      <Row>
+        <Col span={4}>
+          <Icon type="caret-right" />
+          카테고리 경로
+        </Col>
+        <Col span={20}>{record.PATH_NAME}</Col>
+      </Row>
+      <Row>
+        <Col span={4}>
+          <Icon type="caret-right" />
+          담당자
+        </Col>
+        <Col span={8}>{record.MANAGERNAME}</Col>
+        <Col span={4}>
+          <Icon type="caret-right" />
+          화면표시여부
+        </Col>
+        <Col span={8}>{record.ISDISPLAY === 1 ? 'Y' : 'N'}</Col>
+      </Row>
+      {/* <Row>
+    <Col span={4}>VERSION</Col>
+    <Col span={8}>{record.VERSION}</Col>
+    <Col span={4}>만료일</Col>
+    <Col span={8}>{record.ENDDATE}</Col>
+  </Row> */}
+    </div>
+  );
+
   render() {
-    const { manualList, setManualManage, isLoading, paginationIdx, setPaginationIdx } = this.props;
-    const dataSource = [];
-    manualList.map(item =>
-      dataSource.push({
-        key: `${item.get('MUAL_IDX')}_${item.get('CATEGORY_IDX')}`,
-        MUAL_NAME: item.get('MUAL_NAME'),
-        VERSION: item.get('VERSION'),
-        PUBDATE: item.get('PUBDATE'),
-        MANAGERNAME: item.get('MANAGERNAME'),
-        MUAL_IDX: item.get('MUAL_IDX'),
-        CATEGORY_IDX: item.get('CATEGORY_IDX'),
-      }),
-    );
+    const { manualList, setManualManage, isLoading, paginationIdx, setPaginationIdx, categoryIndex, expandedKeyList, setExpandedRow } = this.props;
     return (
       <StyleManualList>
         <Spin tip="Loading..." spinning={isLoading}>
           <AntdTable
-            dataSource={dataSource}
+            key={`ManualListManage_${categoryIndex}`}
+            dataSource={manualList.toJS()}
             columns={this.columns(setManualManage)}
             pagination={{ current: paginationIdx }}
             onChange={pagination => setPaginationIdx(pagination.current)}
+            expandedRowKeys={expandedKeyList}
+            rowKey={record => record.MUAL_IDX}
+            onExpand={(expanded, record) => setExpandedRow(record.MUAL_IDX)}
+            expandedRowRender={record => this.renderExpandedRow(record)}
           />
         </Spin>
       </StyleManualList>
@@ -157,6 +188,9 @@ ManualList.propTypes = {
   categoryIndex: PropTypes.number,
   isLoading: PropTypes.bool,
   paginationIdx: PropTypes.number,
+  setPaginationIdx: PropTypes.func,
+  expandedKeyList: PropTypes.array,
+  setExpandedRow: PropTypes.func,
 };
 
 ManualList.defaultProps = {
@@ -165,18 +199,23 @@ ManualList.defaultProps = {
   categoryIndex: 0,
   isLoading: false,
   paginationIdx: 1,
+  setPaginationIdx: () => false,
+  expandedKeyList: [],
+  setExpandedRow: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
   manualList: selectors.makeSelectManualist(),
   isLoading: selectors.makeSelectIsLoading(),
   paginationIdx: selectors.makeSelectPaginationIdx(),
+  expandedKeyList: selectors.makeSelectExpandedKeyList(),
 });
 
 const mapDispatchToProps = dispatch => ({
   GetManualList: categoryIdx => dispatch(actions.getManualList(categoryIdx)),
   setManualManage: (pageType, categoryIdx, manualIdx) => dispatch(manageActions.setPageModeByReducr(pageType, categoryIdx, manualIdx)),
   setPaginationIdx: idx => dispatch(actions.setPaginationIdxByReducr(idx)),
+  setExpandedRow: idx => dispatch(actions.setExpandedRowByReducr(idx)),
 });
 
 const withReducer = injectReducer({ key: 'apps-ManualList-reducer', reducer });
