@@ -21,7 +21,6 @@ class CSManualBookmarkWidget extends PureComponent {
   render() {
     const { item, viewMualIdx, setWidgetViewIdx, selectedApp } = this.props;
 
-    console.log('selectedApp', selectedApp);
     const appCount = selectedApp.length; // 페이지에 그려지는 앱의 총 갯수
 
     let mualCheck = false;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, takeEvery } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -37,6 +37,6 @@ function* updateBookmarkBySaga(payload) {
 }
 
 export default function* watcher() {
-  yield takeLatest(constants.GET_BOOKMARK_DATA, getBookmarkBySaga);
-  yield takeLatest(constants.UPT_BOOKMARK_DATA, updateBookmarkBySaga);
+  yield takeEvery(constants.GET_BOOKMARK_DATA, getBookmarkBySaga);
+  yield takeEvery(constants.UPT_BOOKMARK_DATA, updateBookmarkBySaga);
 }
