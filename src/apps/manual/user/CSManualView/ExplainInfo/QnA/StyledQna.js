@@ -17,18 +17,18 @@ const StyleQnA = styled.div`
         margin-bottom: 20px;
         border-bottom: 1px solid #e5e5e5;
       }
-      .btn-wrap {
+      & .btn-wrap {
         text-align: center;
         margin: 0 auto;
         text-align: center;
         padding: 0;
         margin-top: 20px;
       }
-      > div {
+      & > div {
         position: relative;
         padding-left: 60px;
         margin-bottom: 15px;
-        > span {
+        & > span {
           position: absolute;
           left: 0;
           display: block;
@@ -42,14 +42,14 @@ const StyleQnA = styled.div`
         }
       }
       .qna-dt {
-        > span {
+        & > span {
           top: 50%;
           transform: translateY(-50%);
           color: #886ab5;
           background-color: #fff;
           border: 1px solid #e5e5e5;
         }
-        > p {
+        & > p {
           color: #000;
           font-size: 18px;
           font-weight: 600;
@@ -62,7 +62,7 @@ const StyleQnA = styled.div`
           white-space: nowrap;
           overflow: hidden;
           padding-right: 0px;
-          > input {
+          & > input {
             display: block;
             width: 100%;
             background-color: #fff;
@@ -72,12 +72,12 @@ const StyleQnA = styled.div`
             font-weight: 600;
           }
         }
-        > .edit-btn-wrap {
+        & > .edit-btn-wrap {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
           right: 0;
-          > button {
+          & > button {
             margin-right: 10px;
             &:last-child {
               margin-right: 0;
@@ -86,20 +86,20 @@ const StyleQnA = styled.div`
         }
       }
       .qna-dd {
-        > .fr-box {
+        & > .fr-box {
           cursor: auto;
         }
-        > span {
+        & > span {
           top: 0;
           background-color: #886ab5;
           color: #fff;
           border: 1px solid #886ab5;
         }
-        > .text-box {
+        & > .text-box {
           background-color: #f6f6f6;
           padding: 15px;
           line-height: 2;
-          p {
+          & p {
             font-size: 14px;
             color: #666666;
             margin-bottom: 10px;

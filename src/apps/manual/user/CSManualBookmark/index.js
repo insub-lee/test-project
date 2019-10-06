@@ -19,18 +19,29 @@ class CSManualBookmarkWidget extends PureComponent {
   }
 
   render() {
-    const { item, viewMualIdx } = this.props;
+    const { item, viewMualIdx, setWidgetViewIdx, selectedApp } = this.props;
+
+    console.log('selectedApp', selectedApp);
+    const appCount = selectedApp.length; // 페이지에 그려지는 앱의 총 갯수
 
     let mualCheck = false;
     if (viewMualIdx !== undefined && viewMualIdx > -1) {
       mualCheck = true;
+    } else if (item.data.selectedBookmark !== undefined && viewMualIdx === undefined) {
+      mualCheck = true;
+      setWidgetViewIdx(item.WIDGET_ID, item.data.selectedBookmark);
     }
 
+    const bookmarkWidgetData = {
+      appCount,
+      widgetYn: true,
+    };
+
     return (
-      <StyleWiget>
+      <StyleWiget appCount={appCount}>
         {mualCheck ? (
           <div className="bookmarkWidget_wrap">
-            <CSManualView mualIdx={viewMualIdx} widgetId={item.WIDGET_ID} widgetYn />
+            <CSManualView mualIdx={viewMualIdx} widgetId={item.WIDGET_ID} bookmarkWidgetData={bookmarkWidgetData} />
           </div>
         ) : (
           <div style={{ width: '100%', height: '100%' }}>앱 설정에서 메뉴얼을 선택해 주십시오.</div>
@@ -44,6 +55,7 @@ CSManualBookmarkWidget.propTypes = {
   item: PropTypes.object,
   viewMualIdx: PropTypes.number,
   setWidgetInitData: PropTypes.func,
+  setWidgetViewIdx: PropTypes.func,
 };
 
 CSManualBookmarkWidget.defaultProps = {
@@ -53,14 +65,17 @@ CSManualBookmarkWidget.defaultProps = {
   },
   viewMualIdx: -1,
   setWidgetInitData: () => false,
+  setWidgetViewIdx: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
   viewMualIdx: selectors.selectViewMualIdx(),
+  selectedApp: selectors.selectedApp(),
 });
 
 const mapDispatchToProps = dispatch => ({
   setWidgetInitData: item => dispatch(actions.setWidgetInitDataByReducer(item)),
+  setWidgetViewIdx: (widgetId, selectedMual) => dispatch(actions.setWidgetMualIdxByReducer(widgetId, selectedMual)),
 });
 
 const withConnect = connect(

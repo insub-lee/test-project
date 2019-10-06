@@ -8,7 +8,7 @@ const TopbarTitle = ({ mualMaster }) => (
     <li>
       <dl>
         <dt>· 담당자 :&nbsp;</dt>
-        <dd>{mualMaster.USER_INFO}</dd>
+        <dd>{(mualMaster.MANAGERLIST && mualMaster.MANAGERLIST.length > 0 && mualMaster.MANAGERLIST[0].USER_INFO) || 'Admin'}</dd>
       </dl>
     </li>
     <li>

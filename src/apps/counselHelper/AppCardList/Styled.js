@@ -5,8 +5,8 @@ const Styled = styled.div`
   .app-card-list {
     width: 100%;
     overflow: hidden;
-    .app-card {
-      width: 186px;
+    & .app-card {
+      width: 31%;
       margin: 10px 5px 0 5px;
       flex: 0 0 auto;
       float: left;

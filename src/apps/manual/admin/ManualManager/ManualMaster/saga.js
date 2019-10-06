@@ -7,6 +7,7 @@ import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import { success, warning, error, showConfirm } from 'components/Feedback/functions';
+import { makeSelectProfile } from 'containers/common/Auth/selectors';
 
 import * as constantTypes from './constants';
 import * as actions from './actions';
@@ -164,11 +165,11 @@ function* saveEditorInfoSaga() {
       editorComponentList:
         compList.length > 0
           ? compList.map(comp => ({
-            ...comp,
-            COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
+              ...comp,
+              COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
               MUAL_COMPVIEWINFO:
                 comp.MUAL_COMPVIEWINFO && typeof comp.MUAL_COMPVIEWINFO === 'object' ? JSON.stringify(comp.MUAL_COMPVIEWINFO) : comp.MUAL_COMPVIEWINFO,
-          }))
+            }))
           : [],
     };
   });
@@ -498,6 +499,64 @@ const makeRelationCompList = (tabList, componentList) => {
   return resultList;
 };
 
+export function* getContentSecurityList() {
+  const pageMoveType = yield select(selectors.makeSelectMovePageType());
+  const response = yield call(Axios.get, `/api/manual/v1/ManualContentSecurityHandler?TARGETKEY=${pageMoveType.get('selectedMualIdx')}`);
+  if (response && response.list) {
+    yield put(actions.setContentSecurityListByReducr(fromJS(response.list), 'contentSecurityList'));
+    yield put(actions.setContentSecurityListByReducr(fromJS(response.list), 'contentSecurityViewList'));
+  }
+}
+
+export function* getSecuritySelectData() {
+  const responseDept = yield call(Axios.get, '/api/common/v1/account/deptTree', { data: 'temp' });
+  const listDept = JSON.parse(`[${responseDept.result.join('')}]`);
+
+  const responseGrp = yield call(Axios.get, '/api/common/v1/account/grpTree', { data: 'temp' });
+  const listGrp = JSON.parse(`[${responseGrp.result.join('')}]`);
+
+  const profile = yield select(makeSelectProfile());
+  const data = {
+    PARAM: {
+      COMP_CD: profile.COMP_CD || 1000,
+      PAGE_CNT: 100000,
+    },
+  };
+  const responseUser = yield call(Axios.post, `/api/common/v1/account/organizationSearch`, data);
+  let listUser = fromJS(responseUser.list);
+  if (listUser === undefined || listUser.size === 0) {
+    listUser = fromJS([]);
+  }
+  yield put(actions.setSecuritySelectData(fromJS(listDept), fromJS(listGrp), listUser));
+}
+
+export function* saveContentSecurity() {
+  const securityList = yield select(selectors.makeSelectContentSecurityList());
+  if (securityList.length > 0) {
+    console.debug(securityList);
+    const response = yield call(Axios.post, '/api/manual/v1/ManualContentSecurityHandler', { AUTHS: securityList, TARGETKEY: securityList[0].TARGETKEY });
+    if (response) {
+      yield put(actions.getContentSecurityListBySaga());
+    }
+  } else {
+    console.debug('no data');
+  }
+}
+
+export function* removeContentSecurity({ row }) {
+  if (row) {
+    const response = yield call(
+      Axios.delete,
+      `/api/manual/v1/ManualContentSecurityHandler?TARGETFOLDERKEY=${row.TARGETFOLDERKEY}&TARGETKEY=${row.TARGETKEY}&ACCOUNT_ID=${row.ACCOUNT_ID}`,
+    );
+    if (response) {
+      yield put(actions.getContentSecurityListBySaga());
+    }
+  } else {
+    console.debug('no data');
+  }
+}
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
@@ -521,4 +580,8 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SAVE_COMPARE_DATA_SAGA, saveCompareData);
   yield takeLatest(constantTypes.GET_INDEX_RELATION_MANUAL_LIST_SAGA, getIndexRelationManualList);
   yield takeLatest(constantTypes.GET_INDEX_RELATION_COMPONENT_LIST_SAGA, getInexRelationComponentList);
+  yield takeLatest(constantTypes.GET_CONTENT_SECURITY_LIST_SAGA, getContentSecurityList);
+  yield takeLatest(constantTypes.GET_SECURITY_SELECT_DATA_SAGA, getSecuritySelectData);
+  yield takeLatest(constantTypes.SAVE_CONTENT_SECURITY_SAGA, saveContentSecurity);
+  yield takeLatest(constantTypes.REMOVE_CONTENT_SECURITY_SAGA, removeContentSecurity);
 }

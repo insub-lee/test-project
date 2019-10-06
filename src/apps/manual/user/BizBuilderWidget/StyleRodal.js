@@ -28,7 +28,7 @@ const RodalContentStyle = styled.div`
 
     .rodalCustomScrollbar {
       width: calc(100% - 15px) !important;
-      height: calc(100vh - 130px) !important;
+      height: 500px !important;
       background: #ffffff;
 
       @media only screen and (max-width: 1160px) {

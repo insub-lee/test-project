@@ -1,8 +1,5 @@
-import React from 'react';
 import { put, call, select, takeLatest, takeEvery } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import * as constants from './constants';
 import * as actions from './action';
 
@@ -39,11 +36,12 @@ export function* getInitCategoryList() {
 // 선택된 카테고리 저장
 export function* changeCategoryList(payload) {
   const check = payload.selectedCategoryList.length;
-
+  console.log('뉴스피드 세팅타입', payload.settingType);
   if (check === 0) {
     const result = {
-      widget_id: payload.item.WIDGET_ID,
-      item_value: JSON.stringify({
+      settingType: payload.settingType,
+      widgetId: payload.item.WIDGET_ID,
+      itemValue: JSON.stringify({
         size: payload.item.size,
         user: payload.item.user,
         data: { selectedCategory: [] },
@@ -51,12 +49,13 @@ export function* changeCategoryList(payload) {
     };
     const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result);
     if (response.result === 'success') {
-      message.success(<MessageContent>카테고리가 선택되었습니다.</MessageContent>, 2);
+      console.debug(response.result);
     }
   } else {
     const result = {
-      widget_id: payload.item.WIDGET_ID,
-      item_value: JSON.stringify({
+      settingType: payload.settingType,
+      widgetId: payload.item.WIDGET_ID,
+      itemValue: JSON.stringify({
         size: payload.item.size,
         user: payload.item.user,
         data: { selectedCategory: payload.selectedCategoryList },
@@ -64,7 +63,7 @@ export function* changeCategoryList(payload) {
     };
     const response = yield call(Axios.put, '/api/manual/v1/ManualWidgetSettingHandler', result);
     if (response.result === 'success') {
-      message.success(<MessageContent>카테고리가 선택되었습니다.</MessageContent>, 2);
+      console.debug(response.result);
     }
   }
 }

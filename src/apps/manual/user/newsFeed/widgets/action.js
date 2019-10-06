@@ -25,10 +25,11 @@ export const setCategoryList = list => ({
 });
 
 // 카테고리 선택
-export const selectCategoryList = (selectedCategoryList, item) => ({
+export const selectCategoryList = (selectedCategoryList, item, settingType) => ({
   type: constants.CHANGE_SELECTED_CATEGORY,
   selectedCategoryList,
   item,
+  settingType,
 });
 
 export const saveSelectedCategory = () => ({

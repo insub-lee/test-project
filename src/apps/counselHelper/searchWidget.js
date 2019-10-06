@@ -22,7 +22,7 @@ class searchWidget extends Component {
   render() {
     const { onSearch, keyword } = this.props;
     const { text } = this.state;
-    console.debug('keyword in search >> ', keyword);
+
     return (
       <div className="searchInput">
         <InputSearch
@@ -30,14 +30,9 @@ class searchWidget extends Component {
           defaultValue={keyword}
           style={{ width: '100%' }}
           onChange={this.handlerChange}
-          onKeyPress={e => {
-            if (e.key === 'Enter') {
-              onSearch(text);
-            }
+          onSearch={() => {
+            onSearch(text);
           }}
-          // onSearch={() => {
-          //   onSearch(this.state.text);
-          // }}
         />
       </div>
     );

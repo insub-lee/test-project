@@ -36,7 +36,6 @@ class Widget extends Component {
     const { cardList, keyword, chageKeyword, myAppTreeData, item } = this.props;
     const findedData = myAppTreeData.filter(x => x.BIZGRP_ID === categorieID);
     const linkData = findedData.length > 0 ? findedData[0] : {};
-    console.log(linkData);
     return (
       <StyleWidget>
         <HelperWidget

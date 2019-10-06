@@ -222,6 +222,48 @@ const makeSelectIsParagraphModal = () =>
     state => state.getIn(['manualMasterState', 'manualEditorEntity', 'isParagraphModal']),
   );
 
+const makeSelectContentSecurityList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'contentSecurityList']).toJS(),
+  );
+
+const makeSelectContentSecurityViewList = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'contentSecurityViewList']).toJS(),
+  );
+
+const makeSelectIsSecurityModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'isSecurityModal']),
+  );
+
+const makeSelectListDept = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'listDept']).toJS(),
+  );
+
+const makeSelectListGrp = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'listGrp']).toJS(),
+  );
+
+const makeSelectListUser = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'listUser']).toJS(),
+  );
+
+const makeSelectIsPreviewModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.get('previewYn'),
+  );
+
 export default {
   makeSelectChooseRelMual,
   makeSelectManualMaster,
@@ -258,4 +300,11 @@ export default {
   makeSelectIndexRelationList,
   makeSelectParagraphTypeIdx,
   makeSelectIsParagraphModal,
+  makeSelectContentSecurityList,
+  makeSelectContentSecurityViewList,
+  makeSelectIsSecurityModal,
+  makeSelectListDept,
+  makeSelectListGrp,
+  makeSelectListUser,
+  makeSelectIsPreviewModal,
 };

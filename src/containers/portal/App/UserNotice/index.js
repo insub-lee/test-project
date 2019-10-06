@@ -5,6 +5,8 @@ import { Checkbox, Popover } from 'antd';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
+import parse from 'html-react-parser';
+
 import { intlObj, lang } from 'utils/commonUtils';
 import injectSaga from '../../../../utils/injectSaga';
 import { loadAlarm, readAlarm, allReadAlarm, deleteAlarm, deleteAllAlarm, offAlarm } from './actions';
@@ -151,7 +153,7 @@ class AlarmPopover extends Component {
                 <tr>
                   <td rowSpan="2">{alist.READ_YN === 'N' ? '●' : '○'}</td>
                   {/* <td>[<div className="ellipsis">{lang.get('TITLE', alist)}</div>]</td> */}
-                  <td><a className="ellipsis" style={{ color: 'black' }} href={alist.URL} target="_blank" onClick={() => this.onRead(alist.MSG_ID)}>{lang.get('TITLE', alist)}</a></td>
+                  <td><a className="ellipsis" style={{ color: 'black' }} href={alist.URL} target="_blank" onClick={() => this.onRead(alist.MSG_ID)}>{parse(lang.get('TITLE', alist))}</a></td>
                   <td>{alist.REG_DTTM}</td>{/* 형식: 2018-10-02 */}
                   <td>
                   {alist.READ_YN === 'N' ? <Checkbox className="customCheckboxType1" onClick={() => this.onRead(alist.MSG_ID)} checked={this.state.checked} /> :
@@ -162,7 +164,7 @@ class AlarmPopover extends Component {
                 <tr>
                   <td colspan="4">
                     <div class={alist.detail ? "details" : "details two"} > {/* class="details" -> 전체 내용, class="details two" -> 2줄 */}
-                      <p style={{ width: '340px' }}>{lang.get('CONTENT', alist)}</p>
+                      <p style={{ width: '340px' }}>{parse(lang.get('CONTENT', alist))}</p>
                       {alist.detail ? 
                       <button className="less" idx={alist.RNUM} onClick={() => this.noneDoDetail(alist.MSG_ID)}><span>- 닫기</span></button>
                       :

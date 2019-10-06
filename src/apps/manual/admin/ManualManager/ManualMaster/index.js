@@ -70,7 +70,7 @@ class ManualMaster extends Component {
   }
 
   render() {
-    const { isEditorMgr, pageMoveType } = this.props;
+    const { isEditorMgr, pageMoveType, manualIndex } = this.props;
     let viewContents = <DefaultMgr />;
     switch (pageMoveType.get('pageType')) {
       case 'OptionMgr':
@@ -86,7 +86,7 @@ class ManualMaster extends Component {
       <div>
         <MenuMenu />
         {viewContents}
-        {isEditorMgr && <EditorMgr />}
+        {isEditorMgr && <EditorMgr manualIndex={manualIndex} />}
       </div>
     );
   }

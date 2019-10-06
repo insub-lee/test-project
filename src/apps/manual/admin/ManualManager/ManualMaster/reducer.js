@@ -66,7 +66,14 @@ const initialState = fromJS({
         selectedIdx: 0,
       },
     },
+    contentSecurityList: [],
+    contentSecurityViewList: [],
+    isSecurityModal: false,
+    listDept: [],
+    listGrp: [],
+    listUser: [],
   },
+  previewYn: false, // 에디터 프리뷰
 });
 
 const initDefaultMgrMapValue = fromJS({
@@ -496,6 +503,25 @@ const appReducer = (state = initialState, action) => {
         .setIn(['manualMasterState', 'manualEditorEntity', 'paragraphTypeIdx'], idx)
         .setIn(['manualMasterState', 'manualEditorEntity', 'isParagraphModal'], flag);
     }
+    case constantTypes.SET_CONTENT_SECURITY_LIST_REDUCR: {
+      const { list, key } = action;
+      return state.setIn(['manualMasterState', key || 'contentSecurityList'], list);
+    }
+    case constantTypes.SET_IS_SECURITY_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.setIn(['manualMasterState', 'isSecurityModal'], flag);
+    }
+    case constantTypes.SET_SECURITY_SELECT_DATA_REDUCR: {
+      const { listDept, listGrp, listUser } = action;
+      return state
+        .setIn(['manualMasterState', 'listDept'], listDept)
+        .setIn(['manualMasterState', 'listGrp'], listGrp)
+        .setIn(['manualMasterState', 'listUser'], listUser);
+    }
+    case constantTypes.SET_PREVIEW_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.set('previewYn', flag);
+    }
     default:
       return state;
   }
@@ -557,7 +583,7 @@ const addComponentInfo = (state, compType, text) => {
     MUAL_IDX: selectedMualIdx,
     SORT_SQ: sortSQ,
     TYPE: compType,
-    MUAL_COMPVIEWINFO: null, // 이정현 수정
+    MUAL_COMPVIEWINFO: null,
     IS_REMOVE: 'N',
     IS_SAVE: 'N',
   };

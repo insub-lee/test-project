@@ -255,15 +255,19 @@ class appSetting extends Component {
     const {
       widget,
       widgetList,
+      menuFixedYn,
+      match: { path },
     } = this.props;
 
     const {
       WIDGET_ID,
     } = this.state;
 
+    const isPortal = path.toUpperCase().startsWith('/PORTAL');
+    const isMenuFixed = menuFixedYn === 'Y' && isPortal;
     return (
-      <div className="settingsPage" style={{ width: '100vw', height: '100vh', top: 0, left: 0, padding: '45px 96px 0px 96px' }}>
-          <StyleWidgetSetting>
+      <div className="settingsPage" style={{ width: '100vw', height: '100vh'}}>
+          <StyleWidgetSetting isMenuFixed={isMenuFixed} isPortal={isPortal}>
             <div className="userSettingWrapper">
               <h2 className="pageHeader">
               {intlObj.get(messages.widgetSetting)}
@@ -278,7 +282,7 @@ class appSetting extends Component {
                             <div className={Number(w.id) === WIDGET_ID? 'current' : null}>
                               <Link to={`${commonjs.getPreUrl(this.props.match.path, '/widgetsetting')}/${w.PAGE_ID}/${w.id}`}>
                                 {lang.get('NAME', w)}
-                              </Link>
+                          </Link>
                             </div>
                           </li>
                         )
@@ -572,11 +576,13 @@ appSetting.propTypes = {
   getWidgetList: PropTypes.func.isRequired,
   resetCategory: PropTypes.func.isRequired,
   closeModalInit: PropTypes.func.isRequired,
+  menuFixedYn: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
   widget: selectors.makeWidget(),
+  menuFixedYn: selectors.makeMenuFixedYn(),
 });
 
 export function mapDispatchToProps(dispatch) {

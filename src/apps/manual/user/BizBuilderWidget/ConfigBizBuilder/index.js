@@ -112,7 +112,7 @@ class ConfigBizBuilder extends Component {
         );
 
     const workListOpt = [];
-
+    console.debug('workList', workList);
     for (let i = 0; i < workList.length; i += 1) {
       workListOpt.push(
         <Option key={workList[i].WORK_SEQ}>
@@ -129,7 +129,7 @@ class ConfigBizBuilder extends Component {
           <tr>
             <td>업무빌더 선택 : </td>
             <td>
-              <Select onChange={e => this.onChange(e)} placeholder="chooes bizbuilder" style={{ width: '500px' }} value={BizBuilderConfigInfo.WORK_SEQ}>
+              <Select onChange={e => this.onChange(e)} placeholder="chooes bizbuilder" style={{ width: '500px' }} value={BizBuilderConfigInfo.get('WORK_SEQ')}>
                 {workListOpt}
               </Select>
             </td>
@@ -244,9 +244,9 @@ ConfigBizBuilder.propTypes = {
 };
 
 ConfigBizBuilder.defaultProps = {
-  item: { id: '11541' },
+  item: { id: '11627' },
   size: '2X1',
-  sizeArr: ['2X1'],
+  sizeArr: ['1X1', '2X1'],
   user: {
     isTitle: true,
     skin: '1',
@@ -254,7 +254,7 @@ ConfigBizBuilder.defaultProps = {
   data: {},
   setBizBuilderWidgetSettingBySaga: () => false,
   setBizBuilderConfigChangeValueByReducr: () => false,
-  BizBuilderConfigInfo: {},
+  BizBuilderConfigInfo: fromJS({}),
   type: 'common',
   getBizBuilderWidgetSettingBySaga: () => false,
   setBizBuillderWidgetSettingAsJSON: () => false,

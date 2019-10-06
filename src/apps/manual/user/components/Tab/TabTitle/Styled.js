@@ -56,7 +56,7 @@ const Styled = styled.div`
     pointer-events: all;
     width: 100%;
     cursor: pointer;
-    .tab-title {
+    & .tab-title {
       width: 100%;
       text-align: center;
       font-size: 12px;

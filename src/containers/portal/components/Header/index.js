@@ -89,6 +89,13 @@ const Header = ({
                 <UserSearch />
                 {/* 구성원검색 */}
               </li>
+              {hasRoleAdmin === true && (
+                <li>
+                  <Tooltip placement="left" title="ADMIN">
+                    <Link to="/admin" className="icon-setting" target="_blank" />
+                  </Tooltip>
+                </li>
+              )}
               <li>
                 <AlarmPopover />
                 {/* 알림 */}
@@ -112,13 +119,6 @@ const Header = ({
                 <UserProfile execPage={execPage} />
                 {/* 프로필 */}
               </li>
-              {hasRoleAdmin === true && (
-                <li>
-                  <Tooltip placement="left" title="ADMIN">
-                    <Link to="/admin" className="icon-setting" target="_blank" />
-                  </Tooltip>
-                </li>
-              )}
             </ul>
           </li>
         </ul>

@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
 import PropTypes from 'prop-types';
@@ -42,7 +43,7 @@ class SmAppsRouter extends PureComponent {
     const item = selectedApp[0];
     console.log('$$$ appsRouter item', item);
 
-    const param = Loadable({
+    const Comp = Loadable({
       loader: () => import(`apps/${item.legacyPath}`),
       loading: Loading,
     });
@@ -52,23 +53,45 @@ class SmAppsRouter extends PureComponent {
       if (item.SVC_YN === 'C' || item.CATG_ID === '') {
         return (
           <WidgetsWrapper item={item}>
-            <ServiceStop item={item} type={type} />
+            <ErrorBoundary>
+              <ServiceStop item={item} type={type} />
+            </ErrorBoundary>
           </WidgetsWrapper>
         );
       } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
           <div>
-            <Route path={`/${basicPath.SINGLE}/workBuilder/:ID`} component={WorkBuilderViewer} />
-            <Route path={`/${basicPath.SINGLE}/draft/:CATE`} component={Draft} />
-            <Route path={`/${basicPath.SINGLE}/${item.legacyPath}`} component={param} />
+            <Route path={`/${basicPath.SINGLE}/workBuilder/:ID`} 
+              render={props => 
+                <ErrorBoundary>
+                  <WorkBuilderViewer {...props}/>
+                </ErrorBoundary>
+              }
+            />
+            <Route path={`/${basicPath.SINGLE}/draft/:CATE`} 
+              render={props => 
+                <ErrorBoundary>
+                  <Draft {...props}/>
+                </ErrorBoundary>
+              }
+            />
+            <Route path={`/${basicPath.SINGLE}/${item.legacyPath}`} 
+              render={() => 
+                <ErrorBoundary>
+                  <Comp/>
+                </ErrorBoundary>
+              }
+            />
           </div>
         );
       } else if (item.SEC_YN === 'N' && item.CATG_ID !== '') {
         return (
           // 해당 앱에 권한이 없는 경우
           <WidgetsWrapper item={item}>
-            <ApplyWidget item={item} type={type} />
+            <ErrorBoundary>
+              <ApplyWidget item={item} type={type} />
+            </ErrorBoundary>
           </WidgetsWrapper>
         );
       }

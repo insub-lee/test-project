@@ -254,6 +254,7 @@ const StyleEditorMain = styled.div`
       border: 1px solid #f7f7f7;
       border-bottom: 0;
       padding: 15px 20px;
+      line-height: 1.5;
     }
     .fr-toolbar.fr-bottom {
       border-top: 2px solid #000;
@@ -350,18 +351,18 @@ const StyleEditorMain = styled.div`
         margin-bottom: 20px;
         border-bottom: 1px solid #e5e5e5;
       }
-      .btn-wrap {
+      & .btn-wrap {
         text-align: center;
         margin: 0 auto;
         text-align: center;
         padding: 0;
         margin-top: 20px;
       }
-      > div {
+      & > div {
         position: relative;
         padding-left: 60px;
         margin-bottom: 15px;
-        > span {
+        & > span {
           position: absolute;
           left: 0;
           display: block;
@@ -375,14 +376,14 @@ const StyleEditorMain = styled.div`
         }
       }
       .qna-dt {
-        > span {
+        & > span {
           top: 50%;
           transform: translateY(-50%);
           color: #886ab5;
           background-color: #fff;
           border: 1px solid #e5e5e5;
         }
-        > p {
+        & > p {
           color: #000;
           font-size: 18px;
           font-weight: 600;
@@ -395,7 +396,7 @@ const StyleEditorMain = styled.div`
           white-space: nowrap;
           overflow: hidden;
           padding-right: 0px;
-          > input {
+          & > input {
             display: block;
             width: 100%;
             background-color: #fff;
@@ -405,12 +406,12 @@ const StyleEditorMain = styled.div`
             font-weight: 600;
           }
         }
-        > .edit-btn-wrap {
+        & > .edit-btn-wrap {
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
           right: 0;
-          > button {
+          & > button {
             margin-right: 10px;
             &:last-child {
               margin-right: 0;

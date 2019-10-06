@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  width: ${props => (props.widgetYn ? '100%' : '1190px')};
+  width: ${props => (props.bookmarkWidgetData.widgetYn ? '100%' : '1190px')};
+  min-width: 1098px;
   .tab-wrap {
     position: relative;
     .tab-btn-wrap {

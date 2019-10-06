@@ -23,7 +23,7 @@ export default class SingleWidgetsWrapper extends PureComponent {
     };
 
     const skinInfo = item.user && item.user.skin ? `wSkin${item.user.skin}` : '' ;
-    const isFullSize = item.size === 'FullSize';
+    const isFullSize = item.size.toUpperCase() === 'FULLSIZE';
     // 차후 wrapper, header, box 별 bgColor, color이 생기면 if의 조건을 해당 색상으로 변경해줘야함
     if (item.bgColor) {
       wrapperStyle.backgroundColor = item.bgColor;

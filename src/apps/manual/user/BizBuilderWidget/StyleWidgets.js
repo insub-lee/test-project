@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const StyleWidget = styled.div`
   // 위젯 tab 스타일
+
   .ant-tabs {
     margin: 0 10px;
     padding: 0px;
