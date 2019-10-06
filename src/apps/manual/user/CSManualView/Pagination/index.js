@@ -82,7 +82,7 @@ const Pagination = ({
             handleClickNav(mualOrgIdx, widgetId, setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx)
           }
         >
-          {mualBookmarkList.map(node => (
+          {Array.from(new Set(mualBookmarkList)).map(node => (
             <Option key={`mualViewBookmark_${node.get('MUAL_ORG_IDX')}`} value={node.get('MUAL_ORG_IDX')}>
               {node.get('MUAL_NAME')}
             </Option>

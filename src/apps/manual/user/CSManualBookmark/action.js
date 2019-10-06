@@ -1,15 +1,13 @@
 import * as constants from './constants';
 
 // USER의 북마크 데이터 가져오기
-export const getBookmarkBySaga = widgetId => ({
+export const getBookmarkBySaga = () => ({
   type: constants.GET_BOOKMARK_DATA,
-  widgetId,
 });
 
 // USER의 북마크 데이터 리덕스 저장
-export const setBookmarkByReducer = (widgetId, bookmarkList) => ({
+export const setBookmarkByReducer = bookmarkList => ({
   type: constants.SET_BOOKMARK_DATA,
-  widgetId,
   bookmarkList,
 });
 
