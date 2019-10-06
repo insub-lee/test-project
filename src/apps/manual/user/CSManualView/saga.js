@@ -3,6 +3,7 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects';
 
 import { Axios } from 'utils/AxiosFunc';
 import { makeSelectProfile } from 'containers/common/Auth/selectors';
+import { error } from 'components/Feedback/functions';
 
 import * as constantTypes from './constants';
 import * as actions from './actions';
@@ -18,8 +19,7 @@ function* getManualView(action) {
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}/${lastVersionYN}/${userId}`);
-
-    if (response) {
+    if (response.status === 200) {
       const { list, historyList, navigationList, defaultMgrMap } = response;
       const maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO), disabled: false }));
       yield put(
@@ -65,6 +65,7 @@ function* getManualView(action) {
         }
       }
     } else {
+      error('데이터 조회에 실패했습니다.');
       console.debug('tab error');
     }
     const resRelation = yield call(Axios.get, `/api/manual/v1/CSManualRelationHandler/${mualIdx}`);
@@ -73,6 +74,7 @@ function* getManualView(action) {
       yield put(actions.setManualViewRelationListByReducr(fromJS(relationList), widgetId));
     }
   } else {
+    error('데이터 조회에 실패했습니다.');
     console.debug('tab error');
   }
 }

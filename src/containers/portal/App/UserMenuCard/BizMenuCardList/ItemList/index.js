@@ -40,7 +40,7 @@ class ItemList extends Component {
         } else if (nodeType === 'E' && appYn === 'N') {
           // 페이지일 경우
           item = (
-            <PageItem paramType={paramType} PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />
+            <PageItem paramType={paramType} PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.CATG_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />
           );
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y') {
           // 업무폴더일 경우

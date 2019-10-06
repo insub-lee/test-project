@@ -62,7 +62,7 @@ class Notice extends Component {
   }
 
   onSelect = (selectedKeys, info) => {
-    console.log(selectedKeys, '온셀렉트');
+    // console.log(selectedKeys, '온셀렉트');
     const { getFilteredData } = this.props;
     getFilteredData(selectedKeys[0]);
     this.setState({ viewType: 'List', selectedKey: selectedKeys[0], record: {} });
@@ -96,8 +96,7 @@ class Notice extends Component {
   };
 
   render() {
-    const { categoryMapInfo, filteredDataByKey, profile } = this.props;
-    const { data, workSeq, taskSeq, viewType } = this.state;
+    const { categoryMapInfo } = this.props;
     const categoryData = [];
     if (categoryMapInfo && categoryMapInfo.categoryMapList) {
       const source = getCategoryMapListAsTree(categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y'));
@@ -114,22 +113,20 @@ class Notice extends Component {
                 this.handleChange(text, categoryData);
               }}
             ></Search>
-            <Tree showLine defaultExpandAll treeData={data || categoryData} onSelect={this.onSelect}></Tree>
+            <Tree showLine treeData={this.state.data || categoryData} onSelect={this.onSelect}></Tree>
           </Col>
           <Col span={18} className="builderBaseData">
             <BizBuilderBase
               id="Notice"
-              viewType={viewType}
-              filteredDataByKey={filteredDataByKey}
-              component={List}
-              profile={profile}
-              selectedCategorie={this.state.selectedKey}
-              taskSeq={taskSeq}
               categoryData={categoryData}
-              selectedRecord={this.selectedRecord}
+              viewType={this.state.viewType}
+              selectedCategorie={this.state.selectedKey}
+              taskSeq={this.state.taskSeq}
               record={this.state.record}
-              workSeq={workSeq}
+              workSeq={this.state.workSeq}
+              selectedRecord={this.selectedRecord}
               viewChange={this.handlerViewChange}
+              component={List}
               {...this.props}
             ></BizBuilderBase>
           </Col>

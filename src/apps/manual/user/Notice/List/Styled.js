@@ -79,6 +79,19 @@ const Wrapper = styled.div`
     font-size: 16px;
     font-weight: 550;
   }
+  .ant-pagination-item-active {
+    background-color: rgb(136, 106, 181);
+    border-color: rgb(136, 106, 181);
+    & a {
+      color: #fff !important;
+    }
+  }
+  .ant-pagination-item:hover {
+    border-color: rgb(136, 106, 181);
+    & a {
+      color: rgb(136, 106, 181);
+    }
+  }
 `;
 
 export default Wrapper;

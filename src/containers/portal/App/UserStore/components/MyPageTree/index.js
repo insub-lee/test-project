@@ -9,10 +9,10 @@ import { lang, intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 // import 'style/sortable-tree-biz.css';
-import { toggleExpandedForSelected, toggleExpandedForSelectedMyPage } from './tree-data-utils';
+import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
-import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
+import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn, BizGroupBtn } from './StyleMyPageTree';
 /* eslint-disable */
 const replaceSpecialCharacter = str => {
   const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
@@ -75,15 +75,22 @@ class MyPageTree extends Component {
           selectedIndex: nextProps.selectedIndex,
         });
       } else if(this.treeFlatData.get(nextProps.selectedIndex)) {
-        this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
-        this.setState({
-          treeData: toggleExpandedForSelectedMyPage({
+        if(!treeFunc.generateList(fromJS(nextProps.treeData)).get(nextProps.selectedIndex)) {
+          this.setState({
             treeData: nextProps.treeData,
-            expanded: this.treeFlatData.get(nextProps.selectedIndex).expanded || true,
-            // path: this.treeFlatData.get(nextProps.selectedIndex),
-          }),
-          selectedIndex: nextProps.selectedIndex,
-        });
+            selectedIndex: -1,
+          });
+        } else {
+          this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
+          this.setState({
+            selectedIndex: nextProps.selectedIndex,
+            treeData: toggleExpandedForSelected({
+              treeData: nextProps.treeData,
+              path: this.treeFlatData.get(nextProps.selectedIndex).path,
+              // expanded: this.treeFlatData.get(nextProps.selectedIndex).expanded || true,
+            }),
+          });
+        }
       } else {
         this.setState({
           treeData: nextProps.treeData,
@@ -158,12 +165,18 @@ class MyPageTree extends Component {
   onOkCate = (rowInfo, treeData) => {
     const data = this.state.data;
     const NAME_KOR = replaceSpecialCharacter(this.inputKor.input.value);
-    const NAME_ENG = replaceSpecialCharacter(this.inputEng.input.value);
-    const NAME_CHN = replaceSpecialCharacter(this.inputChn.input.value);
+    const NAME_ENG = replaceSpecialCharacter(this.inputKor.input.value);
+    const NAME_CHN = replaceSpecialCharacter(this.inputKor.input.value);
+    // 한글만 입력 하도록 수정 - 2019.10.06
+    // const NAME_ENG = replaceSpecialCharacter(this.inputEng.input.value);
+    // const NAME_CHN = replaceSpecialCharacter(this.inputChn.input.value);
 
     this.inputKor.input.value = NAME_KOR;
-    this.inputEng.input.value = NAME_ENG;
-    this.inputChn.input.value = NAME_CHN;
+    this.inputKor.input.value = NAME_ENG;
+    this.inputKor.input.value = NAME_CHN;
+    // 한글만 입력 하도록 수정 - 2019.10.06
+    // this.inputEng.input.value = NAME_ENG;
+    // this.inputChn.input.value = NAME_CHN;
 
     if (NAME_KOR === '' || NAME_ENG === '' || NAME_CHN === '') {
       // 빈 값 처리
@@ -223,7 +236,7 @@ class MyPageTree extends Component {
             <Input
               placeholder=""
               title={intlObj.get(messages.kor)}
-              maxLength="100"
+              maxLength={100}
               ref={ref => {
                 if (ref) {
                   this.inputKor = ref;
@@ -257,12 +270,12 @@ class MyPageTree extends Component {
               id="l_ko"
             />
           </li>
-          <li>
+          {/* <li>
             <label htmlFor="l_en">{intlObj.get(messages.eng)}</label>
             <Input
               placeholder=""
               title={intlObj.get(messages.eng)}
-              maxLength="100"
+              maxLength={100}
               ref={ref => {
                 if (ref) {
                   this.inputEng = ref;
@@ -277,7 +290,7 @@ class MyPageTree extends Component {
             <Input
               placeholder=""
               title={intlObj.get(messages.chn)}
-              maxLength="100"
+              maxLength={100}
               ref={ref => {
                 if (ref) {
                   this.inputChn = ref;
@@ -286,7 +299,7 @@ class MyPageTree extends Component {
               defaultValue={data.NAME_CHN}
               id="l_ch"
             />
-          </li>
+          </li> */}
         </ul>
         <div className="buttonWrapper">
           <button onClick={() => this.closeModal()}>{intlObj.get(messages.cancle)}</button>
@@ -358,7 +371,9 @@ class MyPageTree extends Component {
         rowHeight={35}
         scaffoldBlockPxWidth={22}
         generateNodeProps={rowInfo => {
+          // console.debug('>>>>>>rowInfo: ', rowInfo);
           const { node } = rowInfo;
+          console.debug('>>>>>>rowInfo node: ', node);
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
 
@@ -381,15 +396,31 @@ class MyPageTree extends Component {
 
           const storeUrl =  (node.key === findRootBizMenuID || node.path[1] === findRootBizMenuID) ? 
             '/portal/store/appMain/myPage/modal/biz/list' : '/portal/store/appMain/myPage/modal/app/list';
+          const regBtnTitle =  (node.key === findRootBizMenuID || node.path[1] === findRootBizMenuID) ?
+            '업무등록' : '앱등록';
+          const bizYn =  (node.key === findRootBizMenuID || node.path[1] === findRootBizMenuID) ? 'Y' : 'N';
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때 , 개인화 홈 메뉴가 아닐 경우
           if (onHoverKey === node.key && !(node.DEFAULT_YN === 'Y' && node.NODE_TYPE === 'E')) {
             buttons = [
+              // 업무카드 등록 버튼
+              // (isFolder && bizYn === 'Y') ? (
+              //   <BizGroupBtn
+              //     key="bizCardRegBtn"
+              //     title={regBtnTitle}
+              //     onClick={() => {
+              //       this.addNode(node.key, 'B');
+              //     }}
+              //   />
+              // ) : (
+              //   ''
+              // ),
+
               // [앱등록 버튼]
               isFolder ? (
                 <AppListBtn
                   key="appListBtn"
-                  title="앱등록"
+                  title={regBtnTitle}
                   onClick={() => {
                     saveData(rowInfo, treeData);
                     history.push(`${storeUrl}`);

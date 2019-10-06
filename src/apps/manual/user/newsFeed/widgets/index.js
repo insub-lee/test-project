@@ -7,6 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import CSManualView from 'apps/manual/user/CSManualView';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import News from './news';
 import * as selectors from './selector';
 import * as actions from './action';
@@ -63,30 +64,32 @@ class NewsFeed extends Component {
 
     return (
       <div>
-        <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
-          <Tabs defaultActiveKey="total">
-            <TabPane tab="전체" key="total">
-              <News dataList={totalList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
-            </TabPane>
-            <TabPane tab="변경" key="update">
-              <News dataList={updateList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
-            </TabPane>
-            <TabPane tab="신규" key="new">
-              <News dataList={newList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
-            </TabPane>
-          </Tabs>
-        </StyleWiget>
-        <Modal
-          width={1198}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          style={{ top: 42 }}
-          visible={modalView}
-          footer={null}
-          onCancel={() => handleCloseModal()}
-          closable={false}
-        >
-          <CSManualView mualIdx={modalIdx} widgetId={widget_id} />
-        </Modal>
+        <ErrorBoundary>
+          <StyleWiget className="board" style={{ width: '100%', height: '100%' }}>
+            <Tabs defaultActiveKey="total">
+              <TabPane tab="전체" key="total">
+                <News dataList={totalList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
+              </TabPane>
+              <TabPane tab="변경" key="update">
+                <News dataList={updateList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
+              </TabPane>
+              <TabPane tab="신규" key="new">
+                <News dataList={newList} handleClick={handleClick} widget_id={widget_id} widgetSize={widgetSize} />
+              </TabPane>
+            </Tabs>
+          </StyleWiget>
+          <Modal
+            width={1198}
+            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+            style={{ top: 42 }}
+            visible={modalView}
+            footer={null}
+            onCancel={() => handleCloseModal()}
+            closable={false}
+          >
+            <CSManualView mualIdx={modalIdx} widgetId={widget_id} />
+          </Modal>
+        </ErrorBoundary>
       </div>
     );
   }

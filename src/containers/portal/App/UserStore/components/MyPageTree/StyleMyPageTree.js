@@ -6,6 +6,7 @@ import iconVisible from 'images/common/icon-visible.png';
 import iconInVisible from 'images/common/icon-invisible.png';
 import iconRemove from 'images/common/icon-delete-white.png';
 import iconEdit from 'images/common/icon-edit-white2.png';
+import iconBizGroup from 'images/common/icon-plus.png';
 
 const StyleMyPageTree = styled.div`
   display: flex;
@@ -196,5 +197,13 @@ const EditBtn = styled.button`
   background: #4b4b4b url(${iconEdit}) no-repeat 50% 50%;
 `;
 
+const BizGroupBtn = styled.button`
+  width: 25px;
+  height: 25px;
+  border: 1px solid #ffffff;
+  border-radius: 3px;
+  background: #ffffff url(${iconBizGroup}) no-repeat 50% 50%;
+`;
+
 export default StyleMyPageTree;
-export { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn };
+export { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn, BizGroupBtn };
