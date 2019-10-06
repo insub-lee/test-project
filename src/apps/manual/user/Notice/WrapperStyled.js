@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     padding-left: 15px;
     .ant-table-thead {
       th {
-        background: #886ab5;
+        background: #6a60b9;
         color: #fff;
         text-align: center;
       }
