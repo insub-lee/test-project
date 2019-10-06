@@ -78,7 +78,7 @@ class CSManualBookmarkWidgetSetting extends Component {
 
     const widgetValue = item.data.selectedBookmark;
     const bookmarkCheckValue = bookmarkCheck(bookmarkList, widgetValue);
-    
+
     return (
       <StyleWidgetSetting>
         <div className="infoText">{profile.NAME_KOR}님의 북마크 매뉴얼 목록입니다.</div>

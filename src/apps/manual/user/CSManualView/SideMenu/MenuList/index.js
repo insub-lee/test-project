@@ -12,7 +12,10 @@ const setScroll = (compIdx, setSelectedCompIdx, scrollComp, widgetId, bookmarkWi
   const scrollTop = scrollComp.getScrollTop();
   const { appCount, widgetYn, isTitle } = bookmarkWidgetData;
 
+<<<<<<< HEAD
   console.log('topPosition', topPosition);
+=======
+>>>>>>> master
   if (widgetYn === true && appCount === 1) {
     {
       isTitle ? scrollComp.scrollTop(scrollTop + topPosition - 191) : scrollComp.scrollTop(scrollTop + topPosition - 146);
