@@ -1,5 +1,5 @@
 import { fromJS } from 'immutable';
-import { takeLatest, call, put, select } from 'redux-saga/effects';
+import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects';
 
 import { Axios } from 'utils/AxiosFunc';
 import { makeSelectProfile } from 'containers/common/Auth/selectors';
@@ -131,8 +131,8 @@ function* getOldVersionManual(action) {
 }
 
 export default function* watcher() {
-  yield takeLatest(constantTypes.GET_MANUAL_VIEW_SAGA, getManualView);
-  yield takeLatest(constantTypes.SET_MANUAL_BOOKMARK_SAGA, setManualBookmark);
-  yield takeLatest(constantTypes.ADD_HISTORY_HISTORY_SAGA, addManualHistory);
-  yield takeLatest(constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, getOldVersionManual);
+  yield takeEvery(constantTypes.GET_MANUAL_VIEW_SAGA, getManualView);
+  yield takeEvery(constantTypes.SET_MANUAL_BOOKMARK_SAGA, setManualBookmark);
+  yield takeEvery(constantTypes.ADD_HISTORY_HISTORY_SAGA, addManualHistory);
+  yield takeEvery(constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, getOldVersionManual);
 }
