@@ -43,21 +43,19 @@ const makeEditorTabList = (tabList, componentList) => {
 function* getSelectedUserInfoSaga() {
   const pageMoveType = yield select(selectors.makeSelectMovePageType());
   const response = yield call(Axios.get, `/api/manual/v1/ManualManagerHandler/${pageMoveType.get('selectedMualIdx')}`);
-  const selectedUserInfo = fromJS(response).get('selectedUserInfo');
-
+  const { selectedUserInfo } = response;
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = selectedUserInfo.map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
 }
 
 function* getDefaultMgrSaga() {
   const pageMoveType = yield select(selectors.makeSelectMovePageType());
   const response = yield call(Axios.get, `/api/manual/v1/ManualMasterHandler/${pageMoveType.get('selectedMualIdx')}`);
-
-  const getDefaultMgrMap = fromJS(response).get('defaultMgrMap');
-  if (getDefaultMgrMap !== undefined && getDefaultMgrMap !== null) {
-    yield put(actions.setDefaultMgrByReduc(getDefaultMgrMap));
+  const { defaultMgrMap } = response;
+  if (defaultMgrMap !== undefined && defaultMgrMap !== null) {
+    yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
   } else {
     const defaultMovePageType = fromJS({
       pageType: 'DefaultMgr',
@@ -78,8 +76,23 @@ function* insertDefaultMgrSaga() {
     defaultMgrMap,
     selectedUserInfo,
   };
-  console.debug('selectedMualIdx', pageMoveType.get('selectedMualIdx'));
+
+  if (defaultMgrMap.get('MUAL_NAME').length === 0) {
+    error('매뉴얼명을 입력해주세요.');
+    return;
+  }
+  if (selectedUserInfo.length === 0) {
+    error('담당자 선택해주세요.');
+    return;
+  }
+
   const response = yield call(Axios.post, `/api/manual/v1/ManualMasterHandler/${pageMoveType.get('selectedMualIdx')}`, { param });
+
+  if (response && response.result && response.result.indexOf('success') > -1) {
+    message.success(<MessageContent>Save</MessageContent>);
+  } else {
+    message.error(<MessageContent>Fail</MessageContent>);
+  }
 
   const { MUAL_IDX } = response;
   const defaultMovePageType = fromJS({
@@ -109,6 +122,12 @@ function* updateDefaultMgrSaga() {
   }
 
   const response = yield call(Axios.put, `/api/manual/v1/ManualMasterHandler/${pageMoveType.get('selectedMualIdx')}`, { param });
+
+  if (response && response.result && response.result.indexOf('success') > -1) {
+    message.success(<MessageContent>Save</MessageContent>);
+  } else {
+    message.error(<MessageContent>Fail</MessageContent>);
+  }
 }
 
 function* getEditorInfoSaga() {
@@ -165,11 +184,11 @@ function* saveEditorInfoSaga() {
       editorComponentList:
         compList.length > 0
           ? compList.map(comp => ({
-              ...comp,
-              COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
-              MUAL_COMPVIEWINFO:
+            ...comp,
+            COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
+            MUAL_COMPVIEWINFO:
                 comp.MUAL_COMPVIEWINFO && typeof comp.MUAL_COMPVIEWINFO === 'object' ? JSON.stringify(comp.MUAL_COMPVIEWINFO) : comp.MUAL_COMPVIEWINFO,
-            }))
+          }))
           : [],
     };
   });

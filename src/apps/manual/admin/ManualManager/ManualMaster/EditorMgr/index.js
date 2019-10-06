@@ -22,6 +22,7 @@ import ParagraphTwo from './EditorMain/ParagraphTool/ParagraphTwo';
 import ParagraphThree from './EditorMain/ParagraphTool/ParagraphThree';
 import ParagraphFour from './EditorMain/ParagraphTool/ParagraphFour';
 import ParagraphFirst from './EditorMain/ParagraphTool/ParagraphFirst';
+import { modifyTool } from './EditorToolBar/ItemToolData';
 
 class EditorMgr extends Component {
   componentDidMount() {
@@ -33,6 +34,16 @@ class EditorMgr extends Component {
     const { resetManualEditorMgr } = this.props;
     resetManualEditorMgr();
   }
+
+  paragraphModalName = paragraphTypeIdx => {
+    const { menus } = modifyTool;
+    const selectedIdx = menus.findIndex(findNode => findNode.menuId === paragraphTypeIdx);
+    let result = '';
+    if (selectedIdx > -1) {
+      result = `${menus[selectedIdx].menuName} 등록`;
+    }
+    return result;
+  };
 
   render() {
     const {
@@ -81,7 +92,7 @@ class EditorMgr extends Component {
             footer={null}
             onCancel={setIsIndexRelationModal}
             getContainer={() => document.querySelector('#manualMainContentWrapper')}
-            title="문단 입력"
+            title="관련 목차 선택"
           >
             <IndexRelation
               treeData={treeData}
@@ -102,7 +113,7 @@ class EditorMgr extends Component {
             footer={null}
             onCancel={setParagraphModal}
             getContainer={() => document.querySelector('#manualMainContentWrapper')}
-            title="관련 목차 선택"
+            title={this.paragraphModalName(paragraphTypeIdx)}
           >
             {paragraphTypeIdx === 30 && <ParagraphLeft addEditorComponent={addEditorComponent} />}
             {paragraphTypeIdx === 31 && <ParagraphRight addEditorComponent={addEditorComponent} />}

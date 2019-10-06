@@ -9,7 +9,7 @@ import Styled from './Styled';
 const ContentBody = ({ componentList, setScrollComponent, widgetId, pagerProps, mualMaster, navList, quickProps, indexRelationList, bookmarkWidgetData }) => (
   <Styled>
     <div className="contentBody-wrap">
-      <SideMenu widgetId={widgetId} bookmarkWidgetData={bookmarkWidgetData}/>
+      <SideMenu widgetId={widgetId} bookmarkWidgetData={bookmarkWidgetData} />
       <ExplainInfo
         componentList={componentList}
         setScrollComponent={setScrollComponent}

@@ -8,6 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import { Input, DatePicker, Checkbox, Button, Select, Spin, Modal, Table, message } from 'antd';
 import locale from 'antd/lib/date-picker/locale/ko_KR';
 import moment from 'moment';
+import { fromJS } from 'immutable';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import selectors from '../selectors';
@@ -70,8 +71,7 @@ class DefaultMgr extends Component {
 
   userHandleChange = selectedUser => {
     const { SetSelectedUserInfo } = this.props;
-    // console.debug('selectedUser', selectedUser);
-    SetSelectedUserInfo(selectedUser);
+    SetSelectedUserInfo(fromJS(selectedUser));
   };
 
   fetchUser = value => {
