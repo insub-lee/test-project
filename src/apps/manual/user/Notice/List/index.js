@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { TreeSelect, Input, Button, Table } from 'antd';
+import PropTypes from 'prop-types';
 import Upload from 'apps/manual/components/xlsxFileUploader';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import FroalaEditorView from 'components/FormStuff/RichTextEditor/FroalaEditorView';
@@ -51,15 +52,15 @@ export default class NoticeList extends Component {
 
   onChangeRichFormData = model => {
     const { id, changeFormData } = this.props;
-    console.log(model, '모델');
+    //   console.log(model, '모델');
     changeFormData(id, 'CONTENT', model);
   };
 
   render() {
-    // select EVENT HANDLER
+    // select EVENT HANDLER 업데이트해야됨
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        //   console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       },
       // getCheckboxProps: record => ({
       //   disabled: record.name === 'Disabled User', // Column configuration not to be checked
@@ -280,4 +281,23 @@ NoticeList.defaultProps = {
   list: [],
   dataSource: [],
   selectedKey: '148',
+};
+NoticeList.propTypes = {
+  changeFormData: PropTypes.func,
+  id: PropTypes.string,
+  selectedRecord: PropTypes.func,
+  record: PropTypes.object,
+  viewChange: PropTypes.func,
+  deleteTask: PropTypes.func,
+  workSeq: PropTypes.number,
+  taskSeq: PropTypes.number,
+  selectedCategorie: PropTypes.string,
+  filteredDataByKey: PropTypes.array,
+  viewType: PropTypes.string,
+  categoryData: PropTypes.array,
+  saveTask: PropTypes.func,
+  modifyTask: PropTypes.func,
+  profile: PropTypes.object,
+  formData: PropTypes.object,
+  getTaskSeq: PropTypes.func,
 };

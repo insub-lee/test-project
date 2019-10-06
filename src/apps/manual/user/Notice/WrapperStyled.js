@@ -14,6 +14,7 @@ const Wrapper = styled.div`
   .builderBaseData {
     border-left: 1px solid #e5e5e5;
     padding-left: 15px;
+    height: 750px;
     .ant-table-thead {
       th {
         background: #6a60b9;

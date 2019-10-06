@@ -83,7 +83,7 @@ const Wrapper = styled.div`
     background-color: rgb(136, 106, 181);
     border-color: rgb(136, 106, 181);
     & a {
-      color: #fff;
+      color: #fff !important;
     }
   }
   .ant-pagination-item:hover {
