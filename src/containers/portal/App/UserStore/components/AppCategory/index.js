@@ -63,7 +63,7 @@ class AppCategory extends Component {
               )} */}
             </TabList>
             <TabPanel />
-            <TabPanel />
+            {/* <TabPanel /> */}
           </Tabs>
         ) : (
           ''

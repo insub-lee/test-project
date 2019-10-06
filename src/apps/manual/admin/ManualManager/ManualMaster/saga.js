@@ -247,8 +247,8 @@ function* revisionManual() {
     selectedMualIdx: MUAL_IDX,
   });
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = fromJS(selectedUserInfo).map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
   yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
@@ -303,8 +303,8 @@ function* removeManual() {
     selectedMualIdx: defaultMgrMap.SELECTED_MUAL_IDX,
   });
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = fromJS(selectedUserInfo).map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
   yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
@@ -321,8 +321,8 @@ function* getDefaultMgrByVersion(action) {
     selectedMualIdx: defaultMgrMap.SELECTED_MUAL_IDX,
   });
   if (selectedUserInfo !== undefined && selectedUserInfo !== null) {
-    const result = fromJS(selectedUserInfo).map(item => ({ key: item.get('USER_ID'), label: item.get('USER_INFO').split(' ') }));
-    yield put(actions.setSelectedUserInfoByReducr(result.toJS()));
+    const result = selectedUserInfo.map(item => ({ key: item.USER_ID, label: item.USER_INFO }));
+    yield put(actions.setSelectedUserInfoByReducr(fromJS(result)));
   }
   yield put(actions.setMovePageTypeReducr(defaultMovePageType));
   yield put(actions.setDefaultMgrByReduc(fromJS(defaultMgrMap)));
@@ -576,6 +576,20 @@ export function* removeContentSecurity({ row }) {
   }
 }
 
+export function* removeManualTypeCategoryInfo({ node }) {
+  // if (node) {
+  //   const response = yield call(
+  //     Axios.delete,
+  //     `/api/manual/v1/ManualContentSecurityHandler?TARGETFOLDERKEY=${row.TARGETFOLDERKEY}&TARGETKEY=${row.TARGETKEY}&ACCOUNT_ID=${row.ACCOUNT_ID}`,
+  //   );
+  //   if (response) {
+  //     yield put(actions.getContentSecurityListBySaga());
+  //   }
+  // } else {
+  //   console.debug('no data');
+  // }
+}
+
 export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.SET_RELATIONMANUALLIST_SAGA, setRelationManualListBySaga);
   yield takeLatest(constantTypes.GET_RELATIONMANUALLIST_SAGA, getRelationManualListBySaga);
@@ -603,4 +617,5 @@ export default function* initManualMangerSaga() {
   yield takeLatest(constantTypes.GET_SECURITY_SELECT_DATA_SAGA, getSecuritySelectData);
   yield takeLatest(constantTypes.SAVE_CONTENT_SECURITY_SAGA, saveContentSecurity);
   yield takeLatest(constantTypes.REMOVE_CONTENT_SECURITY_SAGA, removeContentSecurity);
+  yield takeLatest(constantTypes.REMOVE_CATEGORY_INFO_SAGA, removeManualTypeCategoryInfo);
 }

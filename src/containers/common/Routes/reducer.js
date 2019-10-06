@@ -259,8 +259,7 @@ const windowResizeReducer = (state = initialState, action) => {
       return state.set('commonMenuTreeData', fromJS(commonMenuTreeData));
     }
     case actionTypes.SET_MENU_FIXED_YN:
-      return state
-        .set('menuFixedYn', action.menuFixedYn);
+      return state.set('menuFixedYn', action.menuFixedYn).set('userMenuFixedYn', action.userMenuFixedYn);
     default:
       return state;
   }

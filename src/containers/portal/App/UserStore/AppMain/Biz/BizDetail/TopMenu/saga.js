@@ -1,4 +1,4 @@
-import { takeLatest, put, call } from 'redux-saga/effects';
+import { takeLatest, put, call, select } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import { fromJS } from 'immutable';
 import * as feed from 'components/Feedback/functions';
@@ -27,7 +27,14 @@ export function* registBiz(payload) {
   const { BIZGRP_ID } = payload;
   const langGubun = lang.getLocale();
 
-  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/registbiz', { BIZGRP_ID: Number(BIZGRP_ID), langGubun });
+  const mypage = yield select(state => state.get('mypage'));
+  const parentNodeInfo = mypage.get('tempRowInfo');
+
+  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/registbiz', {
+    BIZGRP_ID: Number(BIZGRP_ID),
+    PARENT_ID: `${parentNodeInfo.node.MENU_ID}`,
+    langGubun,
+  });
 
   const { code } = response;
 

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import ManualManager from '../ManualManager';
 
 import reducer from './reducer';
@@ -42,39 +43,42 @@ class CategoryManage extends Component {
       default:
         break;
     }
+
     return (
       <StyleCategoryManage>
-        <div className="categoryWrapper">
-          <div className="categoryTitleWrapper">
-            <h3 className="pageTitle list">카테고리 관리</h3>
-            <StyledButton className="btn-sm btn-bs-none btn-outline-danger" onClick={() => setIsWaitModal(true)}>
-              미확정 리스트 보기
-            </StyledButton>
-          </div>
-          <div className="categoryManageWrapper">
-            <div className="categoryTreeWrapper">
-              <Tree />
+        <ErrorBoundary>
+          <div className="categoryWrapper">
+            <div className="categoryTitleWrapper">
+              <h3 className="pageTitle list">카테고리 관리</h3>
+              <StyledButton className="btn-sm btn-bs-none btn-outline-danger" onClick={() => setIsWaitModal(true)}>
+                미확정 리스트 보기
+              </StyledButton>
             </div>
-            <div className="categoryContentWrapper">{contentComp}</div>
-            {/* {(mode === 'I' || mode === 'U') && }
-            {!(mode === 'I' || mode === 'U') && (
-              <div className="categoryContentWrapper">
-                <Route path={`${match.url}/ManualMaster/:categoryIdx/:selectedMualIdx`} component={ManualMaster} />
-                <Route path={`${match.url}/ManualList/:categoryIdx`} component={ManualList} />
+            <div className="categoryManageWrapper">
+              <div className="categoryTreeWrapper">
+                <Tree />
               </div>
-            )} */}
+              <div className="categoryContentWrapper">{contentComp}</div>
+              {/* {(mode === 'I' || mode === 'U') && }
+              {!(mode === 'I' || mode === 'U') && (
+                <div className="categoryContentWrapper">
+                  <Route path={`${match.url}/ManualMaster/:categoryIdx/:selectedMualIdx`} component={ManualMaster} />
+                  <Route path={`${match.url}/ManualList/:categoryIdx`} component={ManualList} />
+                </div>
+              )} */}
+            </div>
           </div>
-        </div>
-        <Modal
-          width={800}
-          bodyStyle={{ padding: '49px 8px 10px 8px' }}
-          visible={isWaitModal}
-          footer={null}
-          onCancel={() => setIsWaitModal(false)}
-          destroyOnClose
-        >
-          <WaitManualList />
-        </Modal>
+          <Modal
+            width={800}
+            bodyStyle={{ padding: '49px 8px 10px 8px' }}
+            visible={isWaitModal}
+            footer={null}
+            onCancel={() => setIsWaitModal(false)}
+            destroyOnClose
+          >
+            <WaitManualList />
+          </Modal>
+        </ErrorBoundary>
       </StyleCategoryManage>
     );
   }

@@ -6,7 +6,7 @@ import WidgetBox from './WidgetsBox';
 
 export default class SingleWidgetsWrapper extends PureComponent {
   render() {
-    console.debug('>>>>>>>>>widget props: ', this.props);
+    // console.debug('>>>>>>>>>widget props: ', this.props);
     /* eslint-disable */
     const { width, gutterTop, gutterRight, gutterBottom, gutterLeft, padding, children, item } = this.props;
     /* eslint-disable */

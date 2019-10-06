@@ -13,6 +13,7 @@ const StyleManualList = styled.div`
       overflow: hidden;
       color: #666;
       font-size: 12px;
+      font-weight: bold;
     }
   }
   table > .ant-table-tbody > tr.ant-table-expanded-row > td {

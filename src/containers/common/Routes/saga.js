@@ -272,6 +272,7 @@ export function* getInitialPortalPage(payload) {
   yield put({
     type: actionTypes.SET_MENU_FIXED_YN,
     menuFixedYn: response.menuFixedYn,
+    userMenuFixedYn: response.userMenuFixedYn,
   });  
 
 }

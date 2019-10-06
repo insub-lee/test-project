@@ -74,11 +74,10 @@ class Tree extends Component {
   };
 
   handleClickMenuFolder = node => {
-    event.stopPropagation();
     const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
-    } else if (node.MENU_EXIST_YN === 'Y') {
+    } else if (node.MENU_EXIST_YN === 'Y' || node.NODE_TYPE === 'R') {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.REF_ID}`);
     } else {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.BIZGRP_ID}`);
@@ -86,12 +85,11 @@ class Tree extends Component {
   };
 
   clickEvent = node => {
-    event.stopPropagation();
     const { treeData, execPage, execMenu, onClick, saveData } = this.props;
     if (node.TARGET === 'NEW') {
       window.open(node.URL, node.MENU_ID, features);
       execMenu(node.PAGE_ID, node.TARGET);
-    } else if (node.NODE_TYPE === 'F' && node.APP_YN === 'F') {
+    } else if ((node.NODE_TYPE === 'F' || node.NODE_TYPE === 'R') && node.APP_YN === 'F') {
       // 폴더 클릭 이벤트
       this.handleClickMenuFolder(node);
     } else {
