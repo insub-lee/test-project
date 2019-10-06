@@ -55,6 +55,9 @@ const Wrapper = styled.div`
     }
     width: 105px;
   }
+  .uploadButton {
+    padding: 15px 20px 25px 20px;
+  }
   .EditButtons {
     button {
       float: left !important;

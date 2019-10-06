@@ -5,7 +5,7 @@ import { Upload as AntdUpload, Icon } from 'antd';
 import Button from 'components/Button';
 
 const UploadButton = () => (
-  <Button htmlType="button">
+  <Button htmlType="button" className="uploadButton">
     <Icon type="upload" /> Upload
   </Button>
 );

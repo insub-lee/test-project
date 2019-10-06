@@ -15,6 +15,15 @@ const Wrapper = styled.div`
       th {
         background: #886ab5;
         color: #fff;
+        text-align: center;
+      }
+    }
+    .ant-table-row {
+      td {
+        text-align: center;
+      }
+      td:nth-child(2) {
+        text-align: left !important;
       }
     }
   }
