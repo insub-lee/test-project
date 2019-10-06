@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import CSManualView from 'apps/manual/user/CSManualView';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as actions from '../actions';
 import selectors from '../selectors';
 
@@ -68,19 +69,21 @@ class EditorMgr extends Component {
 
     return (
       <Fragment>
-        <StyleModal className="modalWrapper inPage">
-          <div>
-            <EditorMenu />
-            <EditorToolBar />
-            <div className="manualContentWrapper">
-              <div className="manualMainMenuWrapper">
-                <EditorTab />
-              </div>
-              <div className="manualMainIndexWrapper">
-                <EditorIndex />
-              </div>
-              <div id="manualMainContentWrapper" className="manualMainContentWrapper" onClick={handleChangeCompIdx}>
-                <EditorMain />
+        <ErrorBoundary>
+          <StyleModal className="modalWrapper inPage">
+            <div>
+              <EditorMenu />
+              <EditorToolBar />
+              <div className="manualContentWrapper">
+                <div className="manualMainMenuWrapper">
+                  <EditorTab />
+                </div>
+                <div className="manualMainIndexWrapper">
+                  <EditorIndex />
+                </div>
+                <div id="manualMainContentWrapper" className="manualMainContentWrapper" onClick={handleChangeCompIdx}>
+                  <EditorMain />
+                </div>
               </div>
             </div>
           </div>
@@ -106,34 +109,18 @@ class EditorMgr extends Component {
             />
           </Modal>
           <Modal
-            width={728}
-            bodyStyle={{ height: 'calc(100vh - 256px)', padding: '4px' }}
+            width={1198}
+            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
             style={{ top: 42 }}
-            visible={isParagraphModal}
+            visible={isPreviewModal}
             footer={null}
             onCancel={setParagraphModal}
             getContainer={() => document.querySelector('#manualMainContentWrapper')}
             title={this.paragraphModalName(paragraphTypeIdx)}
           >
-            {paragraphTypeIdx === 30 && <ParagraphLeft addEditorComponent={addEditorComponent} />}
-            {paragraphTypeIdx === 31 && <ParagraphRight addEditorComponent={addEditorComponent} />}
-            {paragraphTypeIdx === 32 && <ParagraphTwo addEditorComponent={addEditorComponent} />}
-            {paragraphTypeIdx === 33 && <ParagraphThree addEditorComponent={addEditorComponent} />}
-            {paragraphTypeIdx === 34 && <ParagraphFour addEditorComponent={addEditorComponent} />}
-            {paragraphTypeIdx === 35 && <ParagraphFirst addEditorComponent={addEditorComponent} />}
+            <CSManualView mualIdx={manualIndex} widgetId={99999} />
           </Modal>
-        </StyleModal>
-        <Modal
-          width={1198}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          style={{ top: 42 }}
-          visible={isPreviewModal}
-          footer={null}
-          onCancel={() => setPreviewModal(false)}
-          closable={false}
-        >
-          <CSManualView mualIdx={manualIndex} widgetId={99999} />
-        </Modal>
+        </ErrorBoundary>
       </Fragment>
     );
   }

@@ -38,6 +38,9 @@ const request = options => {
         cookies.remove('access_token', { path: '/' });
         window.location.href = `/api/common/v1/auth/oauth`;
       }
+      if (error.response.status === 404) {
+        console.error('등록된 페이지가 없습니다.');
+      }
       if (error.response.status === 409) {
         console.error('이미 등록된 정보가 있습니다.');
       }

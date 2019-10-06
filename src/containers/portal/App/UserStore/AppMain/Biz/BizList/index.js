@@ -72,6 +72,8 @@ class BizList extends Component {
       // bizMenuData,
     } = this.props;
 
+    console.debug('>>>>>>this.props: ', this.props);
+
     const handleGetMapListOne = key => {
       changeSearchword('');
       history.push(`/portal/store/appMain/bizStore/biz/list/${key}`);

@@ -358,15 +358,6 @@ export function toggleExpandedForSelected({ treeData, path }) {
   });
 }
 
-export function toggleExpandedForSelectedMyPage({ treeData, expanded }) {
-  return map({
-    treeData,
-    callback: ({ node }) => ({ ...node, expanded }),
-    getNodeKey: ({ treeIndex }) => treeIndex,
-    ignoreCollapsed: false,
-  });
-}
-
 /**
  * Replaces node at path with object, or callback-defined object
  *

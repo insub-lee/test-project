@@ -209,13 +209,14 @@ export function* registerBiz(payload) {
   const langGubun = lang.getLocale();
 
   const mypage = yield select(state => state.get('mypage'));
-
+  const parentNodeInfo = mypage.get('tempRowInfo');
+  console.debug('>>>>>>>parentNodeInfo: ', parentNodeInfo);
   // const PRNT_ID = node ? node.key : -1;
 
   const store = yield select(state => state.get('portal_bizList'));
   const url = '/api/bizstore/v1/mypage/registbiz';
 
-  const response = yield call(Axios.post, url, { BIZGRP_ID: Number(app), langGubun });
+  const response = yield call(Axios.post, url, { BIZGRP_ID: Number(app), PARENT_ID: `${parentNodeInfo.node.MENU_ID}`, langGubun });
   console.debug('>>>>>>>response: ', response);
   const { code, resultCategoryData } = response;
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Table, List, Row, Col, Modal } from 'antd';
+// import { Table, List, Row, Col, Modal } from 'antd';
+import { Table, Row, Col, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -9,7 +10,8 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ScrollBar from 'react-custom-scrollbars';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import ReactDataGrid from 'components/ReactDataGrid';
+// import ReactDataGrid from 'components/ReactDataGrid';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import { fromJS } from 'immutable';
 import reducer from './reducer';
@@ -94,112 +96,114 @@ class BizBuilderWidget extends Component {
     const listDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 4);
     const smallDataSource = bizBuilderList && bizBuilderList.list && bizBuilderList.list.slice(0, 7);
     return (
-      <div id="manualBizBuilderWidget">
-        {item.size === '1X1' ? (
-          <ul style={{ listStyleType: 'disc', marginLeft: '17px', padding: '2px', lineHeight: '29px' }}>
-            {smallDataSource &&
-              smallDataSource.map(item => (
-                <li>
-                  <a onClick={() => this.onSmallTitleClick({ item })}>{item.TITLE}</a>
-                </li>
-              ))}
-          </ul>
-        ) : (
-          <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
-        )}
+      <ErrorBoundary>
+        <div id="manualBizBuilderWidget">
+          {item.size === '1X1' ? (
+            <ul style={{ listStyleType: 'disc', marginLeft: '17px', padding: '2px', lineHeight: '29px' }}>
+              {smallDataSource &&
+                smallDataSource.map(item => (
+                  <li>
+                    <a onClick={() => this.onSmallTitleClick({ item })}>{item.TITLE}</a>
+                  </li>
+                ))}
+            </ul>
+          ) : (
+            <AntdTable pagination={false} columns={listCols} dataSource={listDataSource} />
+          )}
 
-        <AntdModal
-          width={1000}
-          height={600}
-          // bodyStyle={{ padding: '24px' }}
-          //   width={1000}
-          //   height={500}
-          visible={this.state.visible}
-          //  // style={{ top: '10%' }}
-          //    style={{ top: '50%', transform: 'translateY(-50%)' }}
-          // getContainer={() => document.querySelector('#manualBizBuilderWidget')}
-          onCancel={this.onRodalClose}
-          footer={null}
-        >
-          <div>
-            <RodalContentStyle className="contentWrapper">
-              <div className="header" />
-              <Row type="flex" justify="space-between">
-                <Col xs={24} md={24} xl={16} className="leftActivity">
-                  <ScrollBar className="rodalCustomScrollbar">
-                    <div className="content">
-                      {data && data.CONTENT && typeof data.CONTENT === 'string'
-                        ? data.CONTENT
-                        : data && data.CONTENT && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
-                    </div>
-                  </ScrollBar>
-                </Col>
-                <Col xl={8} className="rightActivity">
-                  {/* MobileView에서 숨김 */}
-                  <div className="view">
-                    <DrilldownView>
-                      <div className="rightContent">
-                        <div className="viewTop">
-                          <ScrollBar className="rodalCustomScrollbar">
-                            <div className="contentInfo">
-                              <ul className="empData">
-                                <li>
-                                  <div className="empPicture"></div>
-                                </li>
-                                <li className="name">{data && data.REG_NAME_KOR ? data.REG_NAME_KOR : ''}</li>
-                                <li className="empNo">{data && data.REG_NAME_KOR ? data.REG_NAME_KOR : ''}</li>
-                                <li className="dept"></li>
-                                <li className="position"></li>
-                              </ul>
-                              <div className="writtenDate">{data && data.REG_DTTM ? data.REG_DTTM : ''}</div>
-                              <h1 className="title ellipsis">{data && data.TITLE ? data.TITLE : ''}</h1>
-                            </div>
-
-                            <div className="attachedfiles">
-                              <table>
-                                <tbody>
-                                  <tr>
-                                    <td>
-                                      <p className="iconAttachedfile">
-                                        <span></span>
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <button type="button" className="iconSave" title="저장하기">
-                                        저장
-                                      </button>
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </ScrollBar>
-                        </div>
-                        <div className="viewBottom">
-                          <ScrollBar className="rodalCustomScrollbar">
-                            <ul className="otherListItems">
-                              {bizBuilderList &&
-                                bizBuilderList.list &&
-                                bizBuilderList.list.map(item => (
-                                  <li>
-                                    <button type="button" onClick={() => onViewListClick({ item })} className="ellipsis">
-                                      <span> [{item.REG_DTTM.substring(0, 10)}]</span>
-                                      {item.TITLE}
-                                    </button>
-                                  </li>
-                                ))}
-                            </ul>
-                          </ScrollBar>
-                        </div>
+          <AntdModal
+            width={1000}
+            height={600}
+            // bodyStyle={{ padding: '24px' }}
+            //   width={1000}
+            //   height={500}
+            visible={this.state.visible}
+            //  // style={{ top: '10%' }}
+            //    style={{ top: '50%', transform: 'translateY(-50%)' }}
+            // getContainer={() => document.querySelector('#manualBizBuilderWidget')}
+            onCancel={this.onRodalClose}
+            footer={null}
+          >
+            <div>
+              <RodalContentStyle className="contentWrapper">
+                <div className="header" />
+                <Row type="flex" justify="space-between">
+                  <Col xs={24} md={24} xl={16} className="leftActivity">
+                    <ScrollBar className="rodalCustomScrollbar">
+                      <div className="content">
+                        {data && data.CONTENT && typeof data.CONTENT === 'string'
+                          ? data.CONTENT
+                          : data && data.CONTENT && data.CONTENT.map(item => <FroalaEditorView model={item.DETAIL} />)}
                       </div>
-                    </DrilldownView>
-                  </div>
-                </Col>
-              </Row>
-            </RodalContentStyle>
-          </div>
-        </AntdModal>
-      </div>
+                    </ScrollBar>
+                  </Col>
+                  <Col xl={8} className="rightActivity">
+                    {/* MobileView에서 숨김 */}
+                    <div className="view">
+                      <DrilldownView>
+                        <div className="rightContent">
+                          <div className="viewTop">
+                            <ScrollBar className="rodalCustomScrollbar">
+                              <div className="contentInfo">
+                                <ul className="empData">
+                                  <li>
+                                    <div className="empPicture"></div>
+                                  </li>
+                                  <li className="name">{data && data.REG_NAME_KOR ? data.REG_NAME_KOR : ''}</li>
+                                  <li className="empNo">{data && data.REG_NAME_KOR ? data.REG_NAME_KOR : ''}</li>
+                                  <li className="dept"></li>
+                                  <li className="position"></li>
+                                </ul>
+                                <div className="writtenDate">{data && data.REG_DTTM ? data.REG_DTTM : ''}</div>
+                                <h1 className="title ellipsis">{data && data.TITLE ? data.TITLE : ''}</h1>
+                              </div>
+
+                              <div className="attachedfiles">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <p className="iconAttachedfile">
+                                          <span></span>
+                                        </p>
+                                      </td>
+                                      <td>
+                                        <button type="button" className="iconSave" title="저장하기">
+                                          저장
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </ScrollBar>
+                          </div>
+                          <div className="viewBottom">
+                            <ScrollBar className="rodalCustomScrollbar">
+                              <ul className="otherListItems">
+                                {bizBuilderList &&
+                                  bizBuilderList.list &&
+                                  bizBuilderList.list.map(item => (
+                                    <li>
+                                      <button type="button" onClick={() => onViewListClick({ item })} className="ellipsis">
+                                        <span> [{item.REG_DTTM.substring(0, 10)}]</span>
+                                        {item.TITLE}
+                                      </button>
+                                    </li>
+                                  ))}
+                              </ul>
+                            </ScrollBar>
+                          </div>
+                        </div>
+                      </DrilldownView>
+                    </div>
+                  </Col>
+                </Row>
+              </RodalContentStyle>
+            </div>
+          </AntdModal>
+        </div>
+      </ErrorBoundary>
     );
   }
 }
