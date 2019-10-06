@@ -15,23 +15,23 @@ import selectors from './selectors';
 function* getCategory() {
   const response = yield call(Axios.get, '/api/manual/v1/categoryhandler');
   // const list = JSON.parse(`[${response.list.join('')}]`);
-  console.debug('>>>>>>>Response: ', response);
-  if (response.status === 200) {
-    const { list } = response;
-    let resultList = [...list];
-    let oldTreeData = yield select(selectors.makeSelectTreeData());
-    oldTreeData = oldTreeData.toJS();
-    if (oldTreeData.length > 0) {
-      resultList = list.map(item => {
-        const oldIdx = oldTreeData.findIndex(findItem => findItem.CATEGORY_IDX === item.CATEGORY_IDX);
-        const oldItem = oldTreeData[oldIdx];
-        return { ...item, expanded: oldItem ? oldItem.expanded : false };
-      });
-    }
-    yield put(actions.changeCategoryTreeData(resultList));
-  } else {
-    error(response.result);
+  // console.debug('>>>>>>>Response: ', response.status);
+  // if (response.status === 200) {
+  const { list } = response;
+  let resultList = [...list];
+  let oldTreeData = yield select(selectors.makeSelectTreeData());
+  oldTreeData = oldTreeData.toJS();
+  if (oldTreeData.length > 0) {
+    resultList = list.map(item => {
+      const oldIdx = oldTreeData.findIndex(findItem => findItem.CATEGORY_IDX === item.CATEGORY_IDX);
+      const oldItem = oldTreeData[oldIdx];
+      return { ...item, expanded: oldItem ? oldItem.expanded : false };
+    });
   }
+  yield put(actions.changeCategoryTreeData(resultList));
+  // } else {
+  //   error(response.result);
+  // }
 }
 
 function* saveCategory() {
