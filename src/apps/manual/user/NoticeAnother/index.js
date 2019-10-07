@@ -152,8 +152,8 @@ const mapDispatchToProps = dispatch => ({
   getFilteredData: selectedKey => dispatch(actions.getFilteredData(selectedKey)),
 });
 
-const withReducer = injectReducer({ key: 'apps-mdcs-user-Notice-reducer', reducer });
-const withSaga = injectSaga({ key: 'apps-mdcs-user-Notice-saga', saga });
+const withReducer = injectReducer({ key: 'apps-mdcs-user-NoticeAnother-reducer', reducer });
+const withSaga = injectSaga({ key: 'apps-mdcs-user-NoticeAnother-saga', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,

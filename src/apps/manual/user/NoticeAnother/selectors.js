@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const makeSelectNoticeState = state => state.get('apps-mdcs-user-Notice-reducer');
+const makeSelectNoticeState = state => state.get('apps-mdcs-user-NoticeAnother-reducer');
 
 const auth = state => state.get('auth');
 const makeSelectProfile = () =>

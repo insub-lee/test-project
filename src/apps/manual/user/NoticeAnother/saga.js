@@ -19,5 +19,5 @@ function* getFilteredData(payload) {
 
 export default function* watcher() {
   yield takeEvery(actionTypes.GET_CATEGORYMAP, getCategoryMapList);
-  yield takeLatest(actionTypes.GET_FILTERED_DATA, getFilteredData);
+  yield takeEvery(actionTypes.GET_FILTERED_DATA, getFilteredData);
 }

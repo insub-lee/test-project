@@ -63,7 +63,7 @@ class Notice extends Component {
   }
 
   onSelect = (selectedKeys, info) => {
-    // console.log(selectedKeys, '온셀렉트');
+    console.log(selectedKeys, '온셀렉트');
     if (selectedKeys.length !== 0) {
       const { getFilteredData } = this.props;
       getFilteredData(selectedKeys[0]);
