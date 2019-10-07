@@ -5,7 +5,7 @@ import { DragSource, DropTarget } from 'react-dnd';
 import BadgeDot from 'components/Badge';
 import { Tooltip, Popover } from 'antd';
 import pageIcon from 'images/portal/pageIcon.png';
-import pageIconDnD from 'images/portal/pageIcon60X60.png';
+// import pageIconDnD from 'images/portal/pageIcon60X60.png';
 import pageIconDnDMin from 'images/portal/pageIcon24X24.png';
 import homeIcon from 'images/portal/Home.png';
 
@@ -64,7 +64,8 @@ class DockItem extends React.PureComponent {
   /* eslint-disable */
   setPreviewIcon = props => {
     const imgSize = props.dockIconType === 'MAX' ? '60x60' : '24x24';
-    const previewPageIcon = props.dockIconType === 'MAX' ? pageIconDnD : pageIconDnDMin;
+    // const previewPageIcon = props.dockIconType === 'MAX' ? pageIconDnD : pageIconDnDMin;
+    const previewPageIcon = props.dockIconType === 'MAX' ? pageIcon : pageIconDnDMin;
     const img = new Image();
     img.onload = () => props.connectDragPreview && props.connectDragPreview(img); // eslint-disable-line
     img.src = props.dockItem.ICON !== ' ' ? imgUrl.get(imgSize, props.dockItem.ICON) : previewPageIcon;

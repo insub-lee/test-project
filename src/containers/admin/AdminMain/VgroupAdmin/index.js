@@ -45,7 +45,7 @@ class VgroupAdmin extends React.Component {
       NAME_KOR: '',
       NAME_ENG: '',
       NAME_CHN: '',
-      SITE_ID: 1,
+      SITE_ID: 0,
       showAddMember: false,
     };
     this.props.getVgroupTreeList(this.state.searchKeyword, this.state.SITE_ID);
@@ -59,6 +59,21 @@ class VgroupAdmin extends React.Component {
         userSetMembers: nextProps.setVgroupMemberUList,
         deptSetMembers: nextProps.setVgroupMemberDList,
       });
+      if (this.state.selectedIndex === -1) {
+        const node = nextProps.setVgroupTreeList[0];
+        this.props.getVgroupDtlInfo(node.GRP_ID, this.state.SITE_ID);
+        this.setState({
+          // title: node.title,
+          // GRP_CD: node.GRP_CD,
+          GRP_ID: node.GRP_ID, //eslint-disable-line
+          selectedIndex: node.GRP_ID,
+          PRNT_ID: node.PRNT_ID, //eslint-disable-line
+          NAME_KOR: node.NAME_KOR,
+          NAME_ENG: node.NAME_ENG,
+          NAME_CHN: node.NAME_CHN,
+          showAddMember: false,
+        });
+      }
     }
   }
 
@@ -107,20 +122,9 @@ class VgroupAdmin extends React.Component {
     });
   };
 
-  // // 관리자 갱신
-  // updateManagerList = () => {
-  //   this.props.vgroupManagerUpdate(this.state.GRP_ID, this.state.managerSetMembers);
-  // };
-  // // 멤버 갱신
-  // updateMemberList = () => {
-  //   this.props.vgroupMemberUpdate(
-  //     this.state.GRP_ID,
-  //     this.state.userSetMembers,
-  //     this.state.deptSetMembers,
-  //   );
-  // };
+  // 관리자/멤버 갱신
   updateMember = () => {
-    this.props.vgroupMemberUpdate(this.state.GRP_ID, this.state.managerSetMembers, this.state.userSetMembers, this.state.deptSetMembers);
+    this.props.vgroupMemberUpdate(this.state.SITE_ID, this.state.GRP_ID, this.state.managerSetMembers, this.state.userSetMembers, this.state.deptSetMembers);
   };
 
   render() {
@@ -216,7 +220,7 @@ class VgroupAdmin extends React.Component {
         NAME_KOR: node.NAME_KOR,
         NAME_ENG: node.NAME_ENG,
         NAME_CHN: node.NAME_CHN,
-        showAddMember: true,
+        showAddMember: node.NODE_TYPE !== 'R',
       });
     };
     const returnVgroupInsert = (SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
@@ -227,15 +231,18 @@ class VgroupAdmin extends React.Component {
       this.setState({ selectedIndex: GRP_ID });
       this.props.vgroupInfoUpdate(STIE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN);
     };
-    const returnVgroupDelete = (STIE_ID, GRP_ID) => {
-      const prntID = this.state.PRNT_ID;
+    const returnVgroupDelete = (STIE_ID, GRP_ID, parentNode) => {
       this.setState({
-        selectedIndex: prntID,
-        NAME_KOR: '',
-        NAME_ENG: '',
-        NAME_CHN: '',
-        showAddMember: false,
+        GRP_ID: parentNode.GRP_ID,
+        selectedIndex: parentNode.GRP_ID,
+        PRNT_ID: parentNode.PRNT_ID,
+        NAME_KOR: parentNode.NAME_KOR,
+        NAME_ENG: parentNode.NAME_ENG,
+        NAME_CHN: parentNode.NAME_CHN,
+        showAddMember: parentNode.NODE_TYPE !== 'R',
       });
+      this.props.getVgroupDtlInfo(parentNode.GRP_ID, this.state.SITE_ID);
+
       this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
     };
     const saveButton = () =>
@@ -253,7 +260,7 @@ class VgroupAdmin extends React.Component {
           <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
             <div className="vgroupTreeWrapper">
               <div>
-                <Select defaultValue={1} onChange={this.onChangeSite}>
+                <Select defaultValue={this.state.SITE_ID} onChange={this.onChangeSite}>
                   <Option value={0}>공통</Option>
                   {comboOptions(this.props.setVgroupComboList)}
                 </Select>
@@ -369,7 +376,6 @@ VgroupAdmin.propTypes = {
   vgroupInfoInsert: PropTypes.func, //eslint-disable-line
   vgroupInfoUpdate: PropTypes.func, //eslint-disable-line
   vgroupInfoDelete: PropTypes.func, //eslint-disable-line
-  vgroupManagerUpdate: PropTypes.func, //eslint-disable-line
   vgroupMemberUpdate: PropTypes.func, //eslint-disable-line
 };
 
@@ -384,11 +390,8 @@ const mapDispatchToProps = dispatch => ({
     dispatch(actions.vgroupInfoUpdate(SITE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN));
   },
   vgroupInfoDelete: (SITE_ID, GRP_ID) => dispatch(actions.vgroupInfoDelete(SITE_ID, GRP_ID)),
-  vgroupManagerUpdate: (GRP_ID, managerSetMembers) => {
-    dispatch(actions.vgroupManagerUpdate(GRP_ID, managerSetMembers));
-  },
-  vgroupMemberUpdate: (GRP_ID, managerSetMembers, userSetMembers, deptSetMembers) => {
-    dispatch(actions.vgroupMemberUpdate(GRP_ID, managerSetMembers, userSetMembers, deptSetMembers));
+  vgroupMemberUpdate: (SITE_ID, GRP_ID, managerSetMembers, userSetMembers, deptSetMembers) => {
+    dispatch(actions.vgroupMemberUpdate(SITE_ID, GRP_ID, managerSetMembers, userSetMembers, deptSetMembers));
   },
 });
 

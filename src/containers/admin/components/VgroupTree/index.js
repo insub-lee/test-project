@@ -159,7 +159,11 @@ class VgroupTree extends Component {
         this.state.NAME_ENG,
         this.state.NAME_CHN,
       );
-      this.setState({ show: false });
+      this.setState({ 
+        NAME_KOR: '',
+        NAME_ENG: '',
+        NAME_CHN: '',
+        show: false });
     };
     // 카테고리명 한글
     const onChangeNameKor = (val) => {
@@ -186,7 +190,7 @@ class VgroupTree extends Component {
               title={intlObj.get(messages.kor)}
               maxLength="100"
               onChange={onChangeNameKor}
-              defaultValue={''}
+              value={this.state.NAME_KOR}
               id="l_ko"
             />
           </li>
@@ -199,7 +203,7 @@ class VgroupTree extends Component {
               title={intlObj.get(messages.eng)}
               maxLength="100"
               onChange={onChangeNameEng}
-              defaultValue={''}
+              value={this.state.NAME_ENG}
               id="l_en"
             />
           </li>
@@ -212,7 +216,7 @@ class VgroupTree extends Component {
               title={intlObj.get(messages.chn)}
               maxLength="100"
               onChange={onChangeNameChn}
-              defaultValue={''}
+              value={this.state.NAME_CHN}
               id="l_ch"
             />
           </li>
@@ -271,7 +275,7 @@ class VgroupTree extends Component {
               title={intlObj.get(messages.kor)}
               maxLength="100"
               onChange={onChangeNameKor}
-              defaultValue={this.state.NAME_KOR}
+              value={this.state.NAME_KOR}
               id="l_ko"
             />
           </li>
@@ -284,7 +288,7 @@ class VgroupTree extends Component {
               title={intlObj.get(messages.eng)}
               maxLength="100"
               onChange={onChangeNameEng}
-              defaultValue={this.state.NAME_ENG}
+              value={this.state.NAME_ENG}
               id="l_en"
             />
           </li>
@@ -297,7 +301,7 @@ class VgroupTree extends Component {
               title={intlObj.get(messages.chn)}
               maxLength="100"
               onChange={onChangeNameChn}
-              defaultValue={this.state.NAME_CHN}
+              value={this.state.NAME_CHN}
               id="l_ch"
             />
           </li>
@@ -316,7 +320,7 @@ class VgroupTree extends Component {
       this.setState({
         selectedIndex: rowInfo.node.GRP_ID,
       });
-      this.props.returnVgroupDelete(this.props.SITE_ID, rowInfo.node.GRP_ID);
+      this.props.returnVgroupDelete(this.props.SITE_ID, rowInfo.node.GRP_ID, rowInfo.parentNode);
     };
     return (
       <StyleMyAppTree
@@ -371,7 +375,7 @@ class VgroupTree extends Component {
               }
             }}
             generateNodeProps={(rowInfo) => {
-              const { node } = rowInfo;
+              const { node} = rowInfo;
               // 마우스 오버시 키값 셋, 아이콘 노출
               const handleOnClick = () => {
                 this.setState({
@@ -392,7 +396,8 @@ class VgroupTree extends Component {
 
               const btnCondition4 = node.LVL !== 0;
 
-              const btnCondition3 = node.LVL !== 0;
+              // 최상위가 아니고 삭제 하위 노드가 없을 경우
+              const btnCondition3 = node.LVL !== 0 && !node.children;
 
               // 노드에 마우스 오버했을 때
               if (this.state.onHoverKey === node.key) {

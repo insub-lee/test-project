@@ -64,8 +64,8 @@ export function* getMenuBizGrpID() {
 export function* updateTreeNode(payload) {
   const { key, newNode } = payload;
   const bizmanage = yield select(state => state.get('admin/AdminMain/Menu'));
-  if (bizmanage.get('categoryData').length > 0) {
-    const categoryData = bizmanage.get('categoryData').toJS();
+  const categoryData = bizmanage.get('categoryData') ? bizmanage.get('categoryData').toJS() : [];
+  if (categoryData.length > 0) {
     const categoryFlatData = bizmanage.get('categoryFlatData');
     const node = categoryFlatData.get(key);
     if (node) {

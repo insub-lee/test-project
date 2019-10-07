@@ -72,16 +72,6 @@ export function* vgroupInfoUpdate(payload) {
   }
 }
 
-export function* vgroupManagerUpdate(payload) {
-  const response = yield call(Axios.post, '/api/admin/v1/common/vgroupUpdateManagerList/', payload);
-  const { code } = response;
-  if (code === 200) {
-    message.success(`${intlObj.get(messages.udtComplete)}`, 2);
-  } else {
-    message.success(`${intlObj.get(messages.udtFail)}`, 2);
-  }
-}
-
 export function* vgroupMemberUpdate(payload) {
   const responseM = yield call(Axios.post, '/api/admin/v1/common/vgroupUpdateManagerList/', payload);
   const { codeM } = responseM;
@@ -89,6 +79,7 @@ export function* vgroupMemberUpdate(payload) {
   const { code } = response;
   if (codeM === 200 && code === 200) {
     message.success(`${intlObj.get(messages.udtComplete)}`, 2);
+    yield put({ type: constants.GET_VGROUP_DTL_INFO, grpId: payload.GRP_ID, SITE_ID: payload.SITE_ID });
   } else {
     message.success(`${intlObj.get(messages.udtFail)}`, 2);
   }
@@ -101,6 +92,5 @@ export default function* orgSage() {
   yield takeLatest(constants.INSERT_VGROUP_INFO, vgroupInfoInsert);
   yield takeLatest(constants.DELETE_VGROUP_INFO, vgroupInfoDelete);
   yield takeLatest(constants.UPDATE_VGROUP_INFO, vgroupInfoUpdate);
-  yield takeLatest(constants.UPDATE_VGROUP_MANAGER, vgroupManagerUpdate);
   yield takeLatest(constants.UPDATE_VGROUP_MEMBER, vgroupMemberUpdate);
 }
