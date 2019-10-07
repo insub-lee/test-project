@@ -184,15 +184,17 @@ function* saveEditorInfoSaga() {
       editorComponentList:
         compList.length > 0
           ? compList.map(comp => ({
-            ...comp,
-            COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
-            MUAL_COMPVIEWINFO:
+              ...comp,
+              COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
+              MUAL_COMPVIEWINFO:
                 comp.MUAL_COMPVIEWINFO && typeof comp.MUAL_COMPVIEWINFO === 'object' ? JSON.stringify(comp.MUAL_COMPVIEWINFO) : comp.MUAL_COMPVIEWINFO,
-          }))
+            }))
           : [],
     };
   });
-  const param = { editorTabList, selectedMualIdx: pageMoveType.get('selectedMualIdx') };
+  const selectedMualIdx =
+    typeof pageMoveType.get('selectedMualIdx') === 'string' ? Number(pageMoveType.get('selectedMualIdx')) : pageMoveType.get('selectedMualIdx');
+  const param = { editorTabList, selectedMualIdx };
   const response = yield call(Axios.post, `/api/manual/v1/ManualEditorHandler`, param);
   if (response && response.tabList) {
     const tabList = makeEditorTabList(response.tabList, response.componentList);

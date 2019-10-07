@@ -90,8 +90,9 @@ function* getCompareView(action) {
 }
 
 export default function* initCSManualListSaga() {
+  const arg = arguments[0];
   yield takeLatest(constantTypes.GET_TOTALMANUALIST, getTotalManualList);
-  yield takeLatest(constantTypes.SET_SELECTED_MUAL_ORG_IDX_SAGA, setSelectedMualOrgIdx);
-  yield takeLatest(constantTypes.SET_MULTI_VIEW_SAGA, setMultiView);
+  yield takeLatest(`${constantTypes.SET_SELECTED_MUAL_ORG_IDX_SAGA}_${arg.item.id}`, setSelectedMualOrgIdx);
+  yield takeLatest(`${constantTypes.SET_MULTI_VIEW_SAGA}_${arg.item.id}`, setMultiView);
   yield takeLatest(constantTypes.GET_COMPARE_VIEW_SAGA, getCompareView);
 }

@@ -11,13 +11,13 @@ export const setSelectedMualIdxByReducr = (mualIdx, widgetId) => ({ type: consta
 export const setCheckManualByReducr = (mualIdx, mualOrgIdx, widgetId) => ({ type: constantTypes.SET_CHECK_MANUAL_REDUCR, mualIdx, mualOrgIdx, widgetId });
 
 export const setSelectedMualOrgIdxBySaga = (mualIdx, widgetId, orgIdxList) => ({
-  type: constantTypes.SET_SELECTED_MUAL_ORG_IDX_SAGA,
+  type: `${constantTypes.SET_SELECTED_MUAL_ORG_IDX_SAGA}_${widgetId}`,
   mualIdx,
   widgetId,
   orgIdxList,
 });
 
-export const setMultiViewBySaga = widgetId => ({ type: constantTypes.SET_MULTI_VIEW_SAGA, widgetId });
+export const setMultiViewBySaga = widgetId => ({ type: `${constantTypes.SET_MULTI_VIEW_SAGA}_${widgetId}`, widgetId });
 
 export const resetCheckManualByReducr = widgetId => ({ type: constantTypes.RESET_CHECK_MANUAL_REDUCR, widgetId });
 
