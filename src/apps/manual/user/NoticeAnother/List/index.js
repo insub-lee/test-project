@@ -134,7 +134,9 @@ export default class NoticeList extends Component {
                   <tr className="manual-descriptions-row">
                     <td className="manual-descriptions-item-label manual-descriptions-item-colon">내용</td>
                     <td className="manual-descriptions-item-content">
-                      <FroalaEditorView model={formData.CONTENT.length > 0 ? formData.CONTENT[0].DETAIL : formData.CONTENT} />
+                      {formData.hasOwnProperty('CONTENT') && (
+                        <FroalaEditorView model={formData.CONTENT.length > 0 ? formData.CONTENT[0].DETAIL : formData.CONTENT} />
+                      )}
                     </td>
                   </tr>
                   <tr className="manual-descriptions-row">
