@@ -20,10 +20,7 @@ class PageInfo extends PureComponent {
   componentDidMount() {
     const {
       match: {
-        params: { TYPE },
-      },
-      match: {
-        params: { pageId },
+        params: { TYPE, pageId },
       },
     } = this.props;
     const params = {
@@ -36,10 +33,7 @@ class PageInfo extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const {
       match: {
-        params: { TYPE },
-      },
-      match: {
-        params: { pageId },
+        params: { TYPE, pageId },
       },
     } = nextProps;
     const {
@@ -54,6 +48,8 @@ class PageInfo extends PureComponent {
       PAGE_ID: pageId,
     };
     if (propsPageId && propsPageId !== pageId) {
+      this.props.getWidgetList(params);
+    } else if (!propsPageId) {
       this.props.getWidgetList(params);
     }
   }

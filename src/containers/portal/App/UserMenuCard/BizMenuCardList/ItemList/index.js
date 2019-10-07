@@ -42,9 +42,9 @@ class ItemList extends Component {
           item = (
             <PageItem paramType={paramType} PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.CATG_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />
           );
-        } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y') {
+        } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y' || app.REF_TYPE === 'B') {
           // 업무폴더일 경우
-          item = <BizItem paramType={paramType} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
+          item = <BizItem paramType={'bizMenu'} BIZGRP_ID={app.REF_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'N') {
           // 폴더일 경우
           item = <FolderItem paramType={paramType} BIZGRP_ID={app.BIZGRP_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
@@ -67,8 +67,6 @@ class ItemList extends Component {
 
   render() {
     const { mapList, parentInfo, paramType } = this.props;
-
-    console.debug('@@@@@@@param type: ', paramType);
 
     const { rowStyle, colStyle, gutter } = basicStyle;
 
