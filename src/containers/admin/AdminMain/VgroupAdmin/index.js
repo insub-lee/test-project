@@ -71,7 +71,7 @@ class VgroupAdmin extends React.Component {
           NAME_KOR: node.NAME_KOR,
           NAME_ENG: node.NAME_ENG,
           NAME_CHN: node.NAME_CHN,
-          showAddMember: true,
+          showAddMember: false,
         });
       }
     }
@@ -220,7 +220,7 @@ class VgroupAdmin extends React.Component {
         NAME_KOR: node.NAME_KOR,
         NAME_ENG: node.NAME_ENG,
         NAME_CHN: node.NAME_CHN,
-        showAddMember: true,
+        showAddMember: node.NODE_TYPE !== 'R',
       });
     };
     const returnVgroupInsert = (SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
@@ -231,15 +231,18 @@ class VgroupAdmin extends React.Component {
       this.setState({ selectedIndex: GRP_ID });
       this.props.vgroupInfoUpdate(STIE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN);
     };
-    const returnVgroupDelete = (STIE_ID, GRP_ID) => {
-      const prntID = this.state.PRNT_ID;
+    const returnVgroupDelete = (STIE_ID, GRP_ID, parentNode) => {
       this.setState({
-        selectedIndex: prntID,
-        NAME_KOR: '',
-        NAME_ENG: '',
-        NAME_CHN: '',
-        showAddMember: false,
+        GRP_ID: parentNode.GRP_ID,
+        selectedIndex: parentNode.GRP_ID,
+        PRNT_ID: parentNode.PRNT_ID,
+        NAME_KOR: parentNode.NAME_KOR,
+        NAME_ENG: parentNode.NAME_ENG,
+        NAME_CHN: parentNode.NAME_CHN,
+        showAddMember: parentNode.NODE_TYPE !== 'R',
       });
+      this.props.getVgroupDtlInfo(parentNode.GRP_ID, this.state.SITE_ID);
+
       this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
     };
     const saveButton = () =>
