@@ -92,18 +92,18 @@ export const successSaveTask = id => ({
   id,
 });
 
-
 export const modifyTask = (id, callbackFunc) => ({
   type: `${actionTypes.MODIFY_TASK}_${id}`,
   id,
   callbackFunc,
 });
 
-export const deleteTask = (id, workSeq, taskSeq) => ({
+export const deleteTask = (id, workSeq, taskSeq, callbackFunc) => ({
   type: `${actionTypes.DELETE_TASK}_${id}`,
   id,
   workSeq,
   taskSeq,
+  callbackFunc,
 });
 
 export const initFormData = (id, workSeq, metaList) => ({
