@@ -25,7 +25,7 @@ const renderContent = handleClickTopBarButton => (
 
 const LinkItem = ({ item, linkItemAction }) => (
   <Styled>
-    <Popover placement="right" content={renderContent(linkItemAction.handleClickTopBarButton)} trigger="click">
+    <Popover placement="right" content={renderContent(linkItemAction.handleClickTopBarButton)} trigger="hover">
       <Checkbox
         checked={linkItemAction.checkedManualList.findIndex(find => find.get('mualIdx') === item.MUAL_IDX) > -1}
         onClick={() => linkItemAction.setCheckManual(item.MUAL_IDX, item.MUAL_ORG_IDX, linkItemAction.widgetId)}

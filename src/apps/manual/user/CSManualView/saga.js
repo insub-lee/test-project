@@ -134,8 +134,9 @@ function* getOldVersionManual(action) {
 }
 
 export default function* watcher() {
+  const arg = arguments[0];
   yield takeEvery(constantTypes.GET_MANUAL_VIEW_SAGA, getManualView);
-  yield takeLatest(constantTypes.SET_MANUAL_BOOKMARK_SAGA, setManualBookmark);
-  yield takeLatest(constantTypes.ADD_HISTORY_HISTORY_SAGA, addManualHistory);
+  yield takeLatest(`${constantTypes.SET_MANUAL_BOOKMARK_SAGA}_${arg.widgetId}`, setManualBookmark);
+  yield takeLatest(`${constantTypes.ADD_MANUAL_HISTORY_SAGA}_${arg.widgetId}`, addManualHistory);
   yield takeLatest(constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, getOldVersionManual);
 }
