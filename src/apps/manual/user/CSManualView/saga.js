@@ -3,7 +3,6 @@ import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects';
 
 import { Axios } from 'utils/AxiosFunc';
 import { makeSelectProfile } from 'containers/common/Auth/selectors';
-import { error } from 'components/Feedback/functions';
 
 import * as constantTypes from './constants';
 import * as actions from './actions';
@@ -19,62 +18,64 @@ function* getManualView(action) {
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}/${lastVersionYN}/${userId}`);
-    // if (response.status === 200) {
-    const { list, historyList, navigationList, defaultMgrMap } = response;
-    const maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO), disabled: false }));
-    yield put(
-      actions.setManualViewInfoByReducr(
-        fromJS(maulTabList || []),
-        fromJS(historyList || []),
-        fromJS(historyList.filter(node => node.ISBOOKMARK === 'Y') || []),
-        fromJS(defaultMgrMap || []),
-        fromJS(navigationList || []),
-        widgetId,
-      ),
-    );
-    mualIdx = defaultMgrMap.MUAL_IDX;
-    let isIndexRelation = false;
-    let indexRelationIdxList = [];
-    // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
-    if (maulTabList.length > 0) {
-      maulTabList.forEach(node => {
-        if (node.MUAL_TABVIEWINFO && node.MUAL_TABVIEWINFO.length > 0) {
-          const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
-          if (tempList.length > 0) {
-            isIndexRelation = true;
-            indexRelationIdxList = indexRelationIdxList.concat(tempList);
-          }
-        }
-      });
-    }
-    if (isIndexRelation) {
-      const indexRelationParam = [];
-      indexRelationIdxList.forEach(node => {
-        if (node.COMP_OPTION) {
-          const { MUAL_ORG_IDX, MUAL_TABCOMP_OIDX } = node.COMP_OPTION;
-          if (indexRelationParam.findIndex(find => find.MUAL_TABCOMP_OIDX === MUAL_TABCOMP_OIDX) === -1) {
-            indexRelationParam.push({ MUAL_ORG_IDX, MUAL_TABCOMP_OIDX });
-          }
-        }
-      });
-      const responseComp = yield call(Axios.post, `/api/manual/v1/IndexRelationComponetHandler/${mualIdx}`, {
-        paramList: indexRelationParam,
-      });
-      if (responseComp) {
-        yield put(actions.setViewIndexRelationListByReducr(fromJS(responseComp.list || []), widgetId));
+
+    if (response) {
+      const { list, historyList, navigationList, defaultMgrMap } = response;
+      let maulTabList = [];
+      if (list !== undefined) {
+        maulTabList = list.map(item => ({ ...item, MUAL_TABVIEWINFO: JSON.parse(item.MUAL_TABVIEWINFO), disabled: false }));
       }
+      yield put(
+        actions.setManualViewInfoByReducr(
+          fromJS(maulTabList),
+          fromJS(historyList || []),
+          fromJS(historyList.filter(node => node.ISBOOKMARK === 'Y') || []),
+          fromJS(defaultMgrMap || []),
+          fromJS(navigationList || []),
+          widgetId,
+        ),
+      );
+      mualIdx = defaultMgrMap.MUAL_IDX;
+      let isIndexRelation = false;
+      let indexRelationIdxList = [];
+      // if (response.componentList.findIndex(find => find.TYPE === 'indexRelation') > -1) {
+      if (maulTabList.length > 0) {
+        maulTabList.forEach(node => {
+          if (node.MUAL_TABVIEWINFO && node.MUAL_TABVIEWINFO.length > 0) {
+            const tempList = node.MUAL_TABVIEWINFO.filter(find => find.TYPE === 'indexRelation') || [];
+            if (tempList.length > 0) {
+              isIndexRelation = true;
+              indexRelationIdxList = indexRelationIdxList.concat(tempList);
+            }
+          }
+        });
+      }
+      if (isIndexRelation) {
+        const indexRelationParam = [];
+        indexRelationIdxList.forEach(node => {
+          if (node.COMP_OPTION) {
+            const { MUAL_ORG_IDX, MUAL_TABCOMP_OIDX } = node.COMP_OPTION;
+            if (indexRelationParam.findIndex(find => find.MUAL_TABCOMP_OIDX === MUAL_TABCOMP_OIDX) === -1) {
+              indexRelationParam.push({ MUAL_ORG_IDX, MUAL_TABCOMP_OIDX });
+            }
+          }
+        });
+        const responseComp = yield call(Axios.post, `/api/manual/v1/IndexRelationComponetHandler/${mualIdx}`, {
+          paramList: indexRelationParam,
+        });
+        if (responseComp) {
+          yield put(actions.setViewIndexRelationListByReducr(fromJS(responseComp.list || []), widgetId));
+        }
+      }
+    } else {
+      console.debug('tab error');
     }
-    // } else {
-    //   error('데이터 조회에 실패했습니다.');
-    //   console.debug('tab error');
-    // }
     const resRelation = yield call(Axios.get, `/api/manual/v1/CSManualRelationHandler/${mualIdx}`);
     if (resRelation) {
       const { relationList } = resRelation;
       yield put(actions.setManualViewRelationListByReducr(fromJS(relationList), widgetId));
     }
   } else {
-    error('데이터 조회에 실패했습니다.');
     console.debug('tab error');
   }
 }
@@ -89,7 +90,7 @@ function* setManualBookmark(action) {
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const param = {
-      MUAL_ORG_LIST: [{ MUAL_ORG_IDX }],
+      MUAL_ORG_LIST: [{ MUAL_ORG_IDX: Number(mualIdx) }],
       USER_ID: userId,
       SORTINFO: '',
       ISBOOKMARK: flag,
@@ -135,7 +136,7 @@ function* getOldVersionManual(action) {
 export default function* watcher() {
   const arg = arguments[0];
   yield takeEvery(constantTypes.GET_MANUAL_VIEW_SAGA, getManualView);
-  yield takeEvery(`${constantTypes.SET_MANUAL_BOOKMARK_SAGA}_${arg.widgetId}`, setManualBookmark);
-  yield takeEvery(`${constantTypes.ADD_MANUAL_HISTORY_SAGA}_${arg.widgetId}`, addManualHistory);
-  yield takeEvery(constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, getOldVersionManual);
+  yield takeLatest(`${constantTypes.SET_MANUAL_BOOKMARK_SAGA}_${arg.widgetId}`, setManualBookmark);
+  yield takeLatest(`${constantTypes.ADD_MANUAL_HISTORY_SAGA}_${arg.widgetId}`, addManualHistory);
+  yield takeLatest(constantTypes.GET_OLD_VERSION_MANUAL_BY_SAGA, getOldVersionManual);
 }
