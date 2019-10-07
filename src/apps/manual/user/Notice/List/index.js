@@ -90,7 +90,6 @@ export default class NoticeList extends Component {
       dataSource = getRowTree(filteredDataByKey, viewChange, selectedRecord);
     }
     //  const viewField = list && list.filter(item => item.TASK_SEQ === taskSeq);
-    console.log(dataSource, '데이터소스 prdDoc');
     return (
       <Styled className="manual-descriptions-view">
         {(viewType === 'List' && (
