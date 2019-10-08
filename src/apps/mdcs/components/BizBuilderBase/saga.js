@@ -1,5 +1,5 @@
 import { takeEvery, call, put, select } from 'redux-saga/effects';
-
+import { delay } from 'redux-saga';
 import { Axios } from 'utils/AxiosFunc';
 
 import * as actionTypes from './constants';
@@ -151,8 +151,9 @@ function* modifyTask({ id, callbackFunc }) {
 function* deleteTask({ id, workSeq, taskSeq, callbackFunc }) {
   // 삭제도 saveTask처럼 reloadId 필요한지 확인
   const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`);
-  yield put(actions.getBuilderData(id, workSeq, -1));
 
+  yield call(delay, 500);
+  yield put(actions.getBuilderData(id, workSeq, -1));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id);
   }

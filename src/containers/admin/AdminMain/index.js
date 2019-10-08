@@ -24,6 +24,7 @@ import AppStore from './AppStore';
 import Menu from './Menu';
 import App from './App';
 import Classify from './Classify';
+import Node from './Node';
 
 // const wrap = dragDropContext(HTML5Backend);
 
@@ -66,6 +67,7 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/workbuilder/:ID" component={WorkBuilderDetailPage} />
           <Route path="/admin/adminmain/account" component={UserAdmin} />
           <Route path="/admin/adminmain/classify" component={Classify} />
+          <Route path="/admin/adminmain/node" component={Node} />
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
         </Switch>
       </div>
