@@ -48,6 +48,9 @@ class List extends Component {
   render() {
     const { responseData } = this.props;
     const { list } = responseData;
+
+    console.debug('list >> ', list);
+
     return (
       <Styled>
         <div className="list-btn list-top-btn" style={{ padding: '5px' }}>
@@ -83,6 +86,9 @@ List.propTypes = {
 };
 
 List.defaultProps = {
+  responseData: {
+    list: [],
+  },
   // onChangePage: () => false,
   // onChangeMovePage: () => false,
 };
