@@ -23,8 +23,12 @@ const StyleMyAppList = styled.div`
 
   .searchBox {
     width: 100%;
-    padding: 20px 24px;
-    border: 4px solid #efefef;
+    /* padding: 20px 24px; */
+    /* border: 1px solid #d6d3da; */
+    text-align: right;
+    /* background: #f7f7f7; */
+    /* border-radius: 3px; */
+    margin-bottom: 15px;
 
     .searchWrapper {
       position: relative;
@@ -35,9 +39,9 @@ const StyleMyAppList = styled.div`
       > input {
         position: relative;
         border: 1px solid #e5e5e5;
-        padding: .5rem .875rem;
+        padding: 0.5rem 0.875rem;
         padding-right: 30px;
-        font-size: .8125rem;
+        font-size: 0.8125rem;
         height: calc(1.47em + 1rem + 2px);
       }
 
@@ -51,6 +55,16 @@ const StyleMyAppList = styled.div`
         background: url(${iconSearch}) no-repeat 50% 50%;
         background-size: 50% 50%;
         cursor: pointer;
+      }
+    }
+
+    .ant-select {
+      margin-right: 5px;
+      .ant-select-selection.ant-select-selection--single {
+        height: calc(1.27em + 1rem + 2px);
+        .ant-select-selection__rendered {
+          line-height: calc(1.27em + 1rem + 2px);
+        }
       }
     }
   }

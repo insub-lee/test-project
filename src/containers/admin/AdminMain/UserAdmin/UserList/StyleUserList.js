@@ -29,6 +29,7 @@ const StyleUserList = styled.div`
     text-align: right;
     background: #f7f7f7;
     border-radius: 3px;
+    margin-bottom: 10px;
 
     .init-search {
       padding: 0 0.644rem;
