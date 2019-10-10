@@ -378,7 +378,7 @@ class MyPageTree extends Component {
           node.title = lang.get('NAME', node);
 
           // 버튼 노출 조건(아이콘 별)
-          const isFolder = node.NODE_TYPE !== 'E' && node.REF_TYPE !== 'B'; // 마지막노드X 업무그룹X
+          const isFolder = node.NODE_TYPE !== 'E' && (node.REF_TYPE !== 'B' || (node.NODE_TYPE === 'F' && node.REF_TYPE === 'B')); // 마지막노드X 업무그룹X
           const isRootBizGroup = node.REF_TYPE === 'B' && node.NODE_TYPE === 'R'; // 업무그룹O
           const isEmptyFolder = node.REF_TYPE !== 'B' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
           const canEditName = (node.REF_TYPE !== 'B' && node.NODE_TYPE === 'F') || (node.REF_TYPE === 'M' && node.PAGE_ID !== -1); // 페이지O 폴더O(업무X)
