@@ -7,7 +7,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
 import * as feed from 'components/Feedback/functions';
-import { Radio, Input, Tabs } from 'antd';
+import { Radio, Input, Tabs, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 
 import { injectIntl } from 'react-intl';
@@ -17,6 +17,8 @@ import MessageContent from 'components/Feedback/message.style2';
 import AntRadiobox from 'containers/store/components/uielements/radiobox.style';
 import ModalDrag from 'components/ModalDrag';
 
+import { LinkBtnList, LinkBtnUpdate, BtnGray, BtnDkGray, BtnLgtGray } from 'containers/admin/components/uielements/buttons.style';
+import Modals from 'components/Modal/index';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -24,9 +26,7 @@ import * as actions from './actions';
 
 import StyleMyAppDetail from './StyleMyAppDetail';
 // import StyleStatusTable from './StyleStatusTable';
-import { LinkBtnList, LinkBtnUpdate, BtnGray, BtnDkGray, BtnLgtGray } from 'containers/admin/components/uielements/buttons.style';
 
-import Modals from 'components/Modal/index';
 import ModalStyle from 'containers/admin/components/Modal/StyleModal';
 import WithDirection from 'config/withDirection';
 // import AppDetail from '../AppDetail';
@@ -36,6 +36,7 @@ import AppDetailForm from '../AppDetailForm';
 import AppDetailUserForm from '../AppDetailUserForm';
 import AppExaForm from '../AppExaForm';
 import Footer from 'containers/admin/App/Footer';
+import StyledButton from 'components/Button/StyledButton';
 
 const isoModal = ModalStyle(Modals);
 const Modal = WithDirection(isoModal);
@@ -79,13 +80,7 @@ class MyAppDetail extends React.Component {
 
   serviceStopGo = () => {
     // this.setState({ ModalVisible: true });
-    this.props.serviceStop(
-      this.state.APP_ID,
-      this.state.VER,
-      this.state.stopReason,
-      this.state.reasonText,
-      this.props.history,
-    );
+    this.props.serviceStop(this.state.APP_ID, this.state.VER, this.state.stopReason, this.state.reasonText, this.props.history);
   };
 
   modalHandleChk = () => {
@@ -93,31 +88,21 @@ class MyAppDetail extends React.Component {
   };
 
   modalHandleOk = () => {
-    if (this.state.stopReason === '4'
-      && this.state.reasonText.replace(/(\s*)/g, '').length === 0
-    ) {
-      message.error(
-        <MessageContent>
-          {intlObj.get(messages.stopReasonChk)}
-        </MessageContent>,
-        3,
-      );
+    if (this.state.stopReason === '4' && this.state.reasonText.replace(/(\s*)/g, '').length === 0) {
+      message.error(<MessageContent>{intlObj.get(messages.stopReasonChk)}</MessageContent>, 3);
     } else {
       this.modalHandleChk();
     }
   };
-  handleTabClicks = (activeKey) => {
+
+  handleTabClicks = activeKey => {
     this.setState({
       tabNum: activeKey === '3' ? '1' : activeKey,
     });
-  }
+  };
+
   render() {
-    const {
-      VER,
-      APP_ID,
-      APV_STATUS_CODE,
-      tabNum,
-    } = this.state;
+    const { VER, APP_ID, APV_STATUS_CODE, tabNum } = this.state;
 
     const modalHandleCancel = () => {
       this.setState({ ModalVisible: false });
@@ -140,7 +125,7 @@ class MyAppDetail extends React.Component {
       height: '30px',
       lineHeight: '30px',
     };
-    const onChangeStopReason = (e) => {
+    const onChangeStopReason = e => {
       this.setState({
         stopReason: e.target.value,
       });
@@ -150,29 +135,25 @@ class MyAppDetail extends React.Component {
         });
       }
     };
-    const onChangeReasonText = (val) => {
+    const onChangeReasonText = val => {
       this.setState({ reasonText: val.target.value });
     };
     const loopStopList = data =>
       data.map(item => (
-        <Radio
-          value={item.CODE_CD}
-          key={item.CODE_CD}
-          style={radioStyle}
-        >
+        <Radio value={item.CODE_CD} key={item.CODE_CD} style={radioStyle}>
           {lang.get('NAME', item)}
-          {item.CODE_CD === '4' ?
-            (
-              <TextArea
-                placeholder={intlObj.get(messages.serviceStopMent1)}
-                // readOnly={this.state.stopReason === '4' ? '' : 'readOnly'}
-                disabled={this.state.stopReason === '4' ? '' : true}
-                maxLength="1000"
-                onChange={onChangeReasonText}
-                defaultValue={this.state.reasonText}
-              />
-            ) : ('')
-          }
+          {item.CODE_CD === '4' ? (
+            <TextArea
+              placeholder={intlObj.get(messages.serviceStopMent1)}
+              // readOnly={this.state.stopReason === '4' ? '' : 'readOnly'}
+              disabled={this.state.stopReason === '4' ? '' : true}
+              maxLength="1000"
+              onChange={onChangeReasonText}
+              defaultValue={this.state.reasonText}
+            />
+          ) : (
+            ''
+          )}
         </Radio>
       ));
     return (
@@ -194,28 +175,20 @@ class MyAppDetail extends React.Component {
         <Modal
           visible={this.state.ModalVisible}
           // title={intlObj.get(messages.serviceStopMent2)}
-          title={
-            <ModalDrag
-              title={intlObj.get(messages.serviceStopMent2)}
-              num={0}
-            />
-          }
+          title={<ModalDrag title={intlObj.get(messages.serviceStopMent2)} num={0} />}
           onOk={this.modalHandleOk}
           onCancel={modalHandleCancel}
           maskClosable={false}
           centered
           footer={[
-            <BtnLgtGray
-              key="back"
-              onClick={modalHandleCancel}
-            >
+            <BtnLgtGray key="back" onClick={modalHandleCancel}>
               {intlObj.get(messages.cancel)}
             </BtnLgtGray>,
             <BtnDkGray
               key="submit"
               loading={this.state.loading}
               onClick={this.modalHandleOk}
-            // className={this.state.qnaOn ? '' : 'disabled'}
+              // className={this.state.qnaOn ? '' : 'disabled'}
             >
               {intlObj.get(messages.confirm)}
             </BtnDkGray>,
@@ -228,102 +201,61 @@ class MyAppDetail extends React.Component {
           </p>
           <div className="grayBox">
             <p>{intlObj.get(messages.serviceStopMent4)}</p>
-            <RadioGroup
-              onChange={onChangeStopReason}
-              value={this.state.stopReason}
-              style={{ width: '100%' }}
-            >
+            <RadioGroup onChange={onChangeStopReason} value={this.state.stopReason} style={{ width: '100%' }}>
               {loopStopList(this.props.serviceStopCodeList)}
             </RadioGroup>
           </div>
         </Modal>
         <StyleMyAppDetail>
           {/* 심사완료 */}
-          <div
-            style={{ display: APV_STATUS_CODE === 'NC' ? 'block' : 'none' }}
-          >
+          <div style={{ display: APV_STATUS_CODE === 'NC' ? 'block' : 'none' }}>
             <h1 className="pageTitle">
               {lang.get('NAME', this.props.appinfo)}
-              <span className="currentState">
-                {intlObj.get(messages.appReviewCompleted)}
-              </span>
+              <span className="currentState">{intlObj.get(messages.appReviewCompleted)}</span>
             </h1>
           </div>
           {/* 반려 */}
-          <div
-            style={{ display: APV_STATUS_CODE === 'R' ? 'block' : 'none' }}
-          >
+          <div style={{ display: APV_STATUS_CODE === 'R' ? 'block' : 'none' }}>
             <h1 className="pageTitle">
               {lang.get('NAME', this.props.appinfo)}
-              <span className="currentState">
-                {intlObj.get(messages.searchTypeR)}
-              </span>
+              <span className="currentState">{intlObj.get(messages.searchTypeR)}</span>
             </h1>
           </div>
           {/* 심사 중 */}
-          <div
-            style={{ display: APV_STATUS_CODE === 'P' ? 'block' : 'none' }}
-          >
+          <div style={{ display: APV_STATUS_CODE === 'P' ? 'block' : 'none' }}>
             <h1 className="pageTitle">
               {lang.get('NAME', this.props.appinfo)}
-              <span className="currentState">
-                {intlObj.get(messages.appReview)}
-              </span>
+              <span className="currentState">{intlObj.get(messages.appReview)}</span>
             </h1>
           </div>
           {/* APP 임시저장 */}
-          <div
-            style={{ display: APV_STATUS_CODE === 'N' ? 'block' : 'none' }}
-          >
+          <div style={{ display: APV_STATUS_CODE === 'N' ? 'block' : 'none' }}>
             <h1 className="pageTitle">
               {lang.get('NAME', this.props.appinfo)}
-              <span className="currentState">
-                {intlObj.get(messages.temporarySave)}
-              </span>
+              <span className="currentState">{intlObj.get(messages.temporarySave)}</span>
             </h1>
           </div>
           {/* Service 중 */}
-          <div
-            style={{ display: APV_STATUS_CODE === 'S' ? 'block' : 'none' }}
-          >
+          <div style={{ display: APV_STATUS_CODE === 'S' ? 'block' : 'none' }}>
             <h1 className="pageTitle">
               {lang.get('NAME', this.props.appinfo)}
-              <span className="currentState">
-                {intlObj.get(messages.appService)}
-              </span>
+              <span className="currentState">{intlObj.get(messages.appService)}</span>
             </h1>
           </div>
           {/* 중지 */}
-          <div
-            style={{ display: APV_STATUS_CODE === 'C' ? 'block' : 'none' }}
-          >
+          <div style={{ display: APV_STATUS_CODE === 'C' ? 'block' : 'none' }}>
             <h1 className="pageTitle">
               {lang.get('NAME', this.props.appinfo)}
-              <span className="currentState">
-                {intlObj.get(messages.stopAppService)}
-              </span>
+              <span className="currentState">{intlObj.get(messages.stopAppService)}</span>
             </h1>
           </div>
           {/* App 정보 */}
-          <Tabs
-            defaultActiveKey="1"
-            onTabClick={this.handleTabClicks}
-          >
+          <Tabs defaultActiveKey="1" onTabClick={this.handleTabClicks}>
             <TabPane tab={intlObj.get(messages.tab1)} key="1">
-              <AppDetailForm
-                APP_ID={this.state.APP_ID}
-                VER={this.state.VER}
-                history={this.props.history}
-                mod={1}
-              />
+              <AppDetailForm APP_ID={this.state.APP_ID} VER={this.state.VER} history={this.props.history} mod={1} />
             </TabPane>
             <TabPane tab={intlObj.get(messages.tab2)} key="2">
-              <AppDetailUserForm
-                APP_ID={this.state.APP_ID}
-                VER={this.state.VER}
-                history={this.props.history}
-                mod={1}
-              />
+              <AppDetailUserForm APP_ID={this.state.APP_ID} VER={this.state.VER} history={this.props.history} mod={1} />
             </TabPane>
             {/* <TabPane
               tab={intlObj.get(messages.tab3)}
@@ -338,27 +270,19 @@ class MyAppDetail extends React.Component {
             </TabPane> */}
           </Tabs>
           {/* 반려 */}
-          <div
-            className="buttonsWrapper bottom"
-            style={{ display: APV_STATUS_CODE === 'NC' ? 'block' : 'none' }}
-          >
+          <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'NC' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
-              <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+              <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
           </div>
           {/* 반려 */}
-          <div
-            className="buttonsWrapper bottom"
-            style={{ display: APV_STATUS_CODE === 'R' ? 'block' : 'none' }}
-          >
+          <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'R' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
-              <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+              <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
-                <BtnGray>
-                  {intlObj.get(messages.Modified)}
-                </BtnGray>
+                <StyledButton className="btn-primary">{intlObj.get(messages.Modified)}</StyledButton>
               </Link>
               {/* <BtnDkGray
                 onClick={appExaModalHandleOk}
@@ -368,27 +292,19 @@ class MyAppDetail extends React.Component {
             </div>
           </div>
           {/* 심사 중 */}
-          <div
-            className="buttonsWrapper bottom"
-            style={{ display: APV_STATUS_CODE === 'P' ? 'block' : 'none' }}
-          >
+          <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'P' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
-              <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+              <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
           </div>
           {/* 임시저장 */}
-          <div
-            className="buttonsWrapper bottom"
-            style={{ display: APV_STATUS_CODE === 'N' ? 'block' : 'none' }}
-          >
+          <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'N' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
-              <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+              <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
-                <BtnGray>
-                  {intlObj.get(messages.Modified)}
-                </BtnGray>
+                <StyledButton className="btn-primary">{intlObj.get(messages.Modified)}</StyledButton>
               </Link>
               {/* <BtnDkGray
                 onClick={appExaModalHandleOk}
@@ -398,47 +314,43 @@ class MyAppDetail extends React.Component {
             </div>
           </div>
           {/* Service 중 */}
-          <div
-            className="buttonsWrapper bottom"
-            style={{ display: APV_STATUS_CODE === 'S' ? 'block' : 'none' }}
-          >
+          <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'S' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
-              <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+              <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
             <Link to={`/admin/adminmain/sysapp/appUpdate/V/${APP_ID}/${VER}/1/${APV_STATUS_CODE}`}>
-              <LinkBtnUpdate>
+              <StyledButton className="btn-light">
+                <Icon type="reload" style={{ marginRight: 5 }} />
                 {intlObj.get(messages.verUpdate)}
-              </LinkBtnUpdate>
+              </StyledButton>
             </Link>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
-                <BtnGray>
-                  {intlObj.get(messages.Modified)}
-                </BtnGray>
+                <StyledButton className="btn-primary">{intlObj.get(messages.Modified)}</StyledButton>
               </Link>
-              <BtnDkGray onClick={serviceStopOpen}>{intlObj.get(messages.stop)}</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={serviceStopOpen}>
+                {intlObj.get(messages.stop)}
+              </StyledButton>
             </div>
           </div>
           {/* 중지 */}
-          <div
-            className="buttonsWrapper bottom"
-            style={{ display: APV_STATUS_CODE === 'C' ? 'block' : 'none' }}
-          >
+          <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'C' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
-              <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+              <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
             <Link to={`/admin/adminmain/sysapp/appUpdate/V/${APP_ID}/${VER}/1/${APV_STATUS_CODE}`}>
-              <LinkBtnUpdate>
+              <StyledButton className="btn-light">
+                <Icon type="reload" style={{ marginRight: 5 }} />
                 {intlObj.get(messages.verUpdate)}
-              </LinkBtnUpdate>
+              </StyledButton>
             </Link>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
-                <BtnGray>
-                  {intlObj.get(messages.Modified)}
-                </BtnGray>
+                <BtnGray>{intlObj.get(messages.Modified)}</BtnGray>
               </Link>
-              <BtnDkGray onClick={serviceOpen}>{intlObj.get(messages.serviceOpen)}</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={serviceOpen}>
+                {intlObj.get(messages.serviceOpen)}
+              </StyledButton>
             </div>
           </div>
         </StyleMyAppDetail>
@@ -456,22 +368,19 @@ MyAppDetail.propTypes = {
   serviceStopCodeList: PropTypes.array, //eslint-disable-line
   // serviceStopOk: PropTypes.bool, //eslint-disable-line
   serviceRestart: PropTypes.func, //eslint-disable-line
-
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getMyAppDetail: (APP_ID, VER) => {
-      dispatch(actions.getMyAppDetail(APP_ID, VER));
-    },
-    serviceStop: (stopReason, reasonText, APP_ID, VER, history) => {
-      dispatch(actions.serviceStop(stopReason, reasonText, APP_ID, VER, history));
-    },
-    serviceRestart: (APP_ID, VER, history) => {
-      dispatch(actions.serviceRestart(APP_ID, VER, history));
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getMyAppDetail: (APP_ID, VER) => {
+    dispatch(actions.getMyAppDetail(APP_ID, VER));
+  },
+  serviceStop: (stopReason, reasonText, APP_ID, VER, history) => {
+    dispatch(actions.serviceStop(stopReason, reasonText, APP_ID, VER, history));
+  },
+  serviceRestart: (APP_ID, VER, history) => {
+    dispatch(actions.serviceRestart(APP_ID, VER, history));
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   appinfo: selectors.makeSelectAppinfo(),
@@ -479,12 +388,17 @@ const mapStateToProps = createStructuredSelector({
   // serviceStopOk: selectors.makeSelectServiceServiceStopOk(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppDetail', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppDetail', reducer });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyAppDetail));
+export default injectIntl(
+  compose(
+    withReducer,
+    withSaga,
+    withConnect,
+  )(MyAppDetail),
+);
