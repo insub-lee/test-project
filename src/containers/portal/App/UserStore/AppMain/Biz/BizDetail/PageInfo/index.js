@@ -22,7 +22,7 @@ class PageInfo extends Component {
     this.state = {
       PAGE_ID: props.match.params.pageId,
     };
-    this.props.getWidgetList(Number(this.state.PAGE_ID));
+    this.props.getWidgetList(this.state.PAGE_ID);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -30,19 +30,16 @@ class PageInfo extends Component {
     const { params } = match;
     const { pageId } = params;
 
-    if (pageId
-      && this.state.PAGE_ID !== pageId) {
+    if (pageId && this.state.PAGE_ID !== pageId) {
       this.setState({
         PAGE_ID: pageId,
       });
-      this.props.getWidgetList(Number(pageId));
+      this.props.getWidgetList(pageId);
     }
   }
 
   render() {
-    const {
-      widgetList,
-    } = this.props;
+    const { widgetList } = this.props;
 
     /* widgetList를 미리보기용으로 변경 */
     const cWidgetList = _.clone(widgetList); // 복제
@@ -80,7 +77,10 @@ const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withReducer = injectReducer({ key: 'bizPage', reducer });
 const withSaga = injectSaga({ key: 'bizPage', saga });
 

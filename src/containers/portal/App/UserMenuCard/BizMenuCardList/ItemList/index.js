@@ -42,7 +42,7 @@ class ItemList extends Component {
           item = (
             <PageItem paramType={paramType} PAGE_ID={app.PAGE_ID} BIZGRP_ID={app.CATG_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />
           );
-        } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y' || app.REF_TYPE === 'B') {
+        } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'Y') {
           // 업무폴더일 경우
           item = <BizItem paramType={'bizMenu'} BIZGRP_ID={app.REF_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />;
         } else if (nodeType === 'F' && app.MENU_EXIST_YN === 'N') {
