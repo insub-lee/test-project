@@ -62,6 +62,7 @@ BizBuilderBase.propTypes = {
   deleteTask: PropTypes.func,
   setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
+  revisionTask: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -98,9 +99,10 @@ const mapDispatchToProps = dispatch => ({
   tempSaveTask: (id, callbackFunc) => dispatch(actions.tempSaveTask(id, callbackFunc)),
   saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
   modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
-  deleteTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.deleteTask(id, workSeq, taskSeq, callbackFunc)),
+  deleteTask: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
+  revisionTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.revisionTask(id, workSeq, taskSeq, callbackFunc)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });

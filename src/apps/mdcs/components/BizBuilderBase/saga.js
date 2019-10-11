@@ -1,13 +1,16 @@
-import { takeEvery, call, put, select } from 'redux-saga/effects';
-import { delay } from 'redux-saga';
+/* eslint-disable import/no-unresolved */
+import { takeLatest, takeEvery, call, put, select } from 'redux-saga/effects';
+
 import { Axios } from 'utils/AxiosFunc';
 
 import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
+// BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
+
 function* getBuilderData({ id, workSeq, taskSeq }) {
-  const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`);
+  const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { metaList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
 
@@ -24,9 +27,9 @@ function* getExtraApiData({ id, apiArr }) {
       const apiInfo = apiArr[i];
       if (apiInfo && apiInfo.url && apiInfo.url !== '') {
         if (apiInfo.type === 'GET') {
-          response = yield call(Axios.get, apiInfo.url);
+          response = yield call(Axios.get, apiInfo.url, {}, { BUILDER: 'getExtraApiData' });
         } else if (apiInfo.type === 'POST') {
-          response = yield call(Axios.post, apiInfo.url, apiInfo.params);
+          response = yield call(Axios.post, apiInfo.url, apiInfo.params, { BUILDER: 'getExtraApiData' });
         }
       }
       yield put(actions.setExtraApiData(id, apiInfo.key, response));
@@ -35,12 +38,12 @@ function* getExtraApiData({ id, apiArr }) {
 }
 
 function* getDetailData({ id, workSeq, taskSeq }) {
-  const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`);
+  const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
   yield put(actions.setDetailData(id, response.data));
 }
 
 function* getTaskSeq({ id, workSeq }) {
-  const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {});
+  const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'getTaskSeq' });
   const {
     data: { TASK_SEQ },
   } = response;
@@ -73,14 +76,14 @@ function* tempSaveTask({ id, callbackFunc }) {
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
   // taskSeq 생성
   if (taskSeq === -1) {
-    const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {});
+    const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'tempSaveTaskCreate' });
     const {
       data: { TASK_SEQ },
     } = firstResponse;
     taskSeq = TASK_SEQ;
   }
   // temp저장
-  const tempResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData });
+  const tempResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'tempSaveTask' });
   yield put(actions.successTempSaveTask(id));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id);
@@ -93,7 +96,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
   // taskSeq 생성
   if (taskSeq === -1) {
-    const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {});
+    const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'saveTaskCreate' });
     const {
       data: { TASK_SEQ },
     } = firstResponse;
@@ -101,18 +104,23 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
   // temp저장
   // const secondResponse = yield call(Axios.post, `/api/builder/v1/work/bizbuilderSave/${workSeq}/${taskSeq}`, { PARAM: formData });
-  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData });
+  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'saveTask' });
   // temp -> origin
   // const nextResponse = yield call(Axios.put, `/api/builder/v1/work/bizbuilderSave/${workSeq}/${taskSeq}`, {
-  const nextResponse = yield call(Axios.post, `/api/builder/v1/work/taskComplete`, {
-    PARAM: {
-      ...formData,
-      TASK_SEQ: taskSeq,
-      WORK_SEQ: workSeq,
-      // prcId,
-      // processStep,
+  const nextResponse = yield call(
+    Axios.post,
+    `/api/builder/v1/work/taskComplete`,
+    {
+      PARAM: {
+        ...formData,
+        TASK_SEQ: taskSeq,
+        WORK_SEQ: workSeq,
+        // prcId,
+        // processStep,
+      },
     },
-  });
+    { BUILDER: 'saveTaskComplete' },
+  );
   yield put(actions.successSaveTask(id));
   yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
   // const apiArr = yield select(selectors.makeSelectApiArrById(reloadId || id));
@@ -129,17 +137,22 @@ function* modifyTask({ id, callbackFunc }) {
   const formData = yield select(selectors.makeSelectFormDataById(id));
 
   // temp저장
-  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData });
+  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'modifyTask' });
   // temp -> origin
-  const nextResponse = yield call(Axios.post, `/api/builder/v1/work/taskComplete`, {
-    PARAM: {
-      ...formData,
-      TASK_SEQ: taskSeq,
-      WORK_SEQ: workSeq,
-      // prcId,
-      // processStep,
+  const nextResponse = yield call(
+    Axios.post,
+    `/api/builder/v1/work/taskComplete`,
+    {
+      PARAM: {
+        ...formData,
+        TASK_SEQ: taskSeq,
+        WORK_SEQ: workSeq,
+        // prcId,
+        // processStep,
+      },
     },
-  });
+    { BUILDER: 'modifyTaskComplete' },
+  );
 
   // yield put(actions.successSaveTask(id));
   yield put(actions.getBuilderData(id, workSeq, taskSeq));
@@ -148,21 +161,37 @@ function* modifyTask({ id, callbackFunc }) {
   }
 }
 
-function* deleteTask({ id, workSeq, taskSeq, callbackFunc }) {
+function* deleteTask({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   // 삭제도 saveTask처럼 reloadId 필요한지 확인
-  const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`);
+  const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, {}, { BUILDER: 'deleteTask' });
 
-  yield call(delay, 500);
-  yield put(actions.getBuilderData(id, workSeq, -1));
+  yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
+  // const apiArr = yield select(selectors.makeSelectApiArrById(id));
+  // yield put(actions.getExtraApiData(id, apiArr));
+
   if (typeof callbackFunc === 'function') {
     callbackFunc(id);
   }
-  // const apiArr = yield select(selectors.makeSelectApiArrById(id));
-  // yield put(actions.getExtraApiData(id, apiArr));
 }
 
 function* addNotifyBuilder({ id, workSeq, taskSeq, titleKey, contentKey }) {
-  const response = yield call(Axios.post, `/api/builder/v1/work/builderNotifyAdd`, { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, titleKey, contentKey });
+  const response = yield call(
+    Axios.post,
+    `/api/builder/v1/work/builderNotifyAdd`,
+    { WORK_SEQ: workSeq, TASK_SEQ: taskSeq, titleKey, contentKey },
+    { BUILDER: 'addNotifyBuilder' },
+  );
+}
+
+function* revisionTask({ id, workSeq, taskSeq, callbackFunc }) {
+  const response = yield call(Axios.post, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, {}, { BUILDER: 'revisionTask' });
+
+  const newTaskSeq = response.data.TASK_SEQ;
+  // yield put(actions.setDetailData(id, response.data));
+  // yield put(actions.setTaskSeq(id, newTaskSeq));
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id, workSeq, newTaskSeq);
+  }
 }
 
 export default function* watcher() {
@@ -177,6 +206,7 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.MODIFY_TASK}_${arg.id}`, modifyTask);
   yield takeEvery(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
   yield takeEvery(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
+  yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.id}`, revisionTask);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);
