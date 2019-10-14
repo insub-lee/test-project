@@ -129,6 +129,10 @@ const reducer = (state = initialState, action) => {
 
       return state.setIn(['bizBuilderBase', id, 'taskSeq'], -1).setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}));
     }
+    case actionTypes.REMOVE_REDUX_STATE: {
+      const { id } = action;
+      return state.removeIn(['bizBuilderBase', id]);
+    }
     default:
       return state;
   }

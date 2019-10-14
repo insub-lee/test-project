@@ -137,3 +137,8 @@ export const revisionTask = (id, workSeq, taskSeq, callbackFunc) => ({
   taskSeq,
   callbackFunc,
 });
+
+export const removeReduxState = id => ({
+  type: actionTypes.REMOVE_REDUX_STATE,
+  id,
+});

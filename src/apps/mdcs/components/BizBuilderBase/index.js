@@ -63,6 +63,7 @@ BizBuilderBase.propTypes = {
   setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
   revisionTask: PropTypes.func,
+  removeReduxState: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -103,6 +104,7 @@ const mapDispatchToProps = dispatch => ({
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
   revisionTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.revisionTask(id, workSeq, taskSeq, callbackFunc)),
+  removeReduxState: id => dispatch(actions.removeReduxState(id)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
