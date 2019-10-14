@@ -12,7 +12,7 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
-import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn, BizGroupBtn } from './StyleMyPageTree';
+import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn, BizGroupBtn, BizAppBtn } from './StyleMyPageTree';
 /* eslint-disable */
 const replaceSpecialCharacter = str => {
   const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
@@ -380,8 +380,13 @@ class MyPageTree extends Component {
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE !== 'E' && (node.REF_TYPE !== 'B' || (node.NODE_TYPE === 'F' && node.REF_TYPE === 'B')); // 마지막노드X 업무그룹X
           const isRootBizGroup = node.REF_TYPE === 'B' && node.NODE_TYPE === 'R'; // 업무그룹O
-          const isEmptyFolder = node.REF_TYPE !== 'B' && (!node.children || node.children.length === 0); // 업무그룹X 하위노드존재X
-          const canEditName = (node.REF_TYPE !== 'B' && node.NODE_TYPE === 'F') || (node.REF_TYPE === 'M' && node.PAGE_ID !== -1); // 페이지O 폴더O(업무X)
+          // 업무그룹X 하위노드존재X => 개인 업무메뉴 카드는 삭제 가능하게 추가 - 2019/10/14
+          const isEmptyFolder = (node.REF_TYPE !== 'B' && (!node.children || node.children.length === 0))
+          || (node.REF_TYPE === 'B' && node.NODE_TYPE === 'F' && node.REF_ID === -1 && (!node.children || node.children.length === 0));
+          // 폴더O 페이지O (업무X) => 개인 업무메뉴 카드는 수정 가능하게 추가 - 2019/10/14
+          const canEditName = (node.REF_TYPE !== 'B' && node.NODE_TYPE === 'F')
+            || (node.REF_TYPE === 'M' && node.PAGE_ID !== -1)
+            || (node.REF_TYPE === 'B' && node.NODE_TYPE === 'F' && node.REF_ID === -1);
 
           let title; // 트리 노드 제목
           let buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
@@ -404,17 +409,29 @@ class MyPageTree extends Component {
           if (onHoverKey === node.key && !(node.DEFAULT_YN === 'Y' && node.NODE_TYPE === 'E')) {
             buttons = [
               // 업무카드 등록 버튼
-              // (isFolder && bizYn === 'Y') ? (
-              //   <BizGroupBtn
-              //     key="bizCardRegBtn"
-              //     title={regBtnTitle}
-              //     onClick={() => {
-              //       this.addNode(node.key, 'B');
-              //     }}
-              //   />
-              // ) : (
-              //   ''
-              // ),
+              (isFolder && bizYn === 'Y') ? (
+                <BizGroupBtn
+                  key="bizCardRegBtn"
+                  title="업무카드등록"
+                  onClick={() => {
+                    this.addNode(node.key, 'B');
+                  }}
+                />
+              ) : (
+                ''
+              ),
+              // 업무카드에 등록할 앱 버튼
+              (isFolder && bizYn === 'Y') ? (
+                <BizAppBtn
+                  key="bizCardAppRegBtn"
+                  title="업무카드앱등록"
+                  // onClick={() => {
+                  //   this.addNode(node.key, 'B');
+                  // }}
+                />
+              ) : (
+                ''
+              ),
 
               // [앱등록 버튼]
               isFolder ? (
