@@ -40,3 +40,17 @@ export const successEnableUseWorkFlow = data => ({
 export const successDisableUseWorkFlow = () => ({
   type: actionTypes.SUCCESS_DISABLE_USE_WORK_FLOW,
 });
+
+export const toggleUseRevision = checked => ({
+  type: actionTypes.TOGGLE_USE_REVISION,
+  checked,
+});
+
+export const successEnableUseRevision = data => ({
+  type: actionTypes.SUCCESS_ENABLE_USE_REVISION,
+  data,
+});
+
+export const successDisableUseRevision = () => ({
+  type: actionTypes.SUCCESS_DISABLE_USE_REVISION,
+});
