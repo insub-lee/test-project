@@ -98,9 +98,10 @@ export const modifyTask = (id, callbackFunc) => ({
   callbackFunc,
 });
 
-export const deleteTask = (id, workSeq, taskSeq, callbackFunc) => ({
+export const deleteTask = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
   type: `${actionTypes.DELETE_TASK}_${id}`,
   id,
+  reloadId,
   workSeq,
   taskSeq,
   callbackFunc,
@@ -127,4 +128,12 @@ export const addNotifyBuilder = (id, workSeq, taskSeq, titleKey, contentKey) => 
   taskSeq,
   titleKey,
   contentKey,
+});
+
+export const revisionTask = (id, workSeq, taskSeq, callbackFunc) => ({
+  type: `${actionTypes.REVISION_TASK}_${id}`,
+  id,
+  workSeq,
+  taskSeq,
+  callbackFunc,
 });
