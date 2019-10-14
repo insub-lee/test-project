@@ -7,6 +7,8 @@ const initialState = fromJS({
   useDynamicWorkFlow: false,
   isLoading: true,
   workFlowInfo: {},
+  useRevision: false,
+  revisionInfo: {},
 });
 
 const reducer = (state = initialState, action) => {
@@ -32,10 +34,14 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.SUCCESS_FETCH_DATA: {
       const {
-        data: { workFlow },
+        data: { workFlow, revision },
       } = action;
       // Work Flow Data가 있으면 useWorkFlow
-      return state.set('useWorkFlow', !!workFlow).set('workFlowInfo', fromJS(workFlow || {}));
+      return state
+        .set('useWorkFlow', !!workFlow)
+        .set('workFlowInfo', fromJS(workFlow || {}))
+        .set('useRevision', !!revision)
+        .set('revisionInfo', fromJS(revision || {}));
     }
     case actionTypes.LOADING_ON:
       return state.set('isLoading', true);
@@ -43,6 +49,17 @@ const reducer = (state = initialState, action) => {
       return state.set('isLoading', false);
     case actionTypes.RESET_DATA:
       return initialState;
+    case actionTypes.TOGGLE_USE_REVISION: {
+      const { checked } = action;
+      return state.set('useRevision', checked);
+    }
+    case actionTypes.SUCCESS_ENABLE_USE_REVISION: {
+      const { data } = action;
+      return state.set('useRevision', true).set('revisionInfo', fromJS(data));
+    }
+    case actionTypes.SUCCESS_DISABLE_USE_REVISION: {
+      return state.set('useRevision', false).set('revisionInfo', fromJS({}));
+    }
     case actionTypes.ACTION_TYPES:
     default:
       return state;

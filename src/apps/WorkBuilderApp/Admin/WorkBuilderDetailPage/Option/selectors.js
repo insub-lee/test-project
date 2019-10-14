@@ -31,4 +31,25 @@ const makeSelectWorkFlowInfo = () =>
     selectWorkBuilderDetailOption,
     viewState => viewState.get('workFlowInfo').toJS(),
   );
-export { makeSelectWorkSeq, makeSelectUseWorkFlow, makeSelectUseDynamicWorkFlow, makeSelectIsLoading, makeSelectWorkFlowInfo };
+
+const makeSelectUseRevision = () =>
+  createSelector(
+    selectWorkBuilderDetailOption,
+    viewState => viewState.get('useRevision'),
+  );
+
+const makeSelectRevisionInfo = () =>
+  createSelector(
+    selectWorkBuilderDetailOption,
+    viewState => viewState.get('revisionInfo').toJS(),
+  );
+
+export {
+  makeSelectWorkSeq,
+  makeSelectUseWorkFlow,
+  makeSelectUseDynamicWorkFlow,
+  makeSelectIsLoading,
+  makeSelectWorkFlowInfo,
+  makeSelectUseRevision,
+  makeSelectRevisionInfo,
+};

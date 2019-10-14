@@ -27,7 +27,7 @@ class Option extends Component {
   }
 
   render() {
-    const { useWorkFlow, toggleUseWorkFlow, isLoading } = this.props;
+    const { useWorkFlow, toggleUseWorkFlow, isLoading, useRevision, toggleUseRevision } = this.props;
     return (
       <Wrapper>
         <Preloader spinning={isLoading}>
@@ -42,6 +42,11 @@ class Option extends Component {
                       <Select.Option value="list">리스트</Select.Option>
                       <Select.Option value="grid">Grid</Select.Option>
                     </Select>
+                  </Collapse.Panel>
+                  <Collapse.Panel header="Revision" key="0">
+                    <Checkbox checked={useRevision} onChange={toggleUseRevision}>
+                      Revision 사용
+                    </Checkbox>
                   </Collapse.Panel>
                   <Collapse.Panel header="기타 정의" key="1">
                     준비 중입니다.
@@ -78,6 +83,8 @@ Option.propTypes = {
   fetchData: PropTypes.func,
   isLoading: PropTypes.bool,
   resetData: PropTypes.func,
+  useRevision: PropTypes.bool.isRequired,
+  toggleUseRevision: PropTypes.func,
 };
 
 Option.defaultProps = {
@@ -85,12 +92,14 @@ Option.defaultProps = {
   fetchData: () => console.debug('no bind events'),
   resetData: () => console.debug('no bind events'),
   isLoading: true,
+  toggleUseRevision: () => console.debug('no bind events'),
 };
 
 const mapStateToProps = createStructuredSelector({
   useWorkFlow: selectors.makeSelectUseWorkFlow(),
   useDynamicWorkFlow: selectors.makeSelectUseDynamicWorkFlow(),
   isLoading: selectors.makeSelectIsLoading(),
+  useRevision: selectors.makeSelectUseRevision(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -98,6 +107,7 @@ const mapDispatchToProps = dispatch => ({
   toggleUseDynamicWorkFlow: () => dispatch(actions.toggleUseDynamicWorkFlow()),
   fetchData: id => dispatch(actions.fetchData(id)),
   resetData: () => dispatch(actions.resetData()),
+  toggleUseRevision: e => dispatch(actions.toggleUseRevision(e.target.checked)),
 });
 
 const withReducer = injectReducer({ key: 'work-builder-detail-option', reducer });

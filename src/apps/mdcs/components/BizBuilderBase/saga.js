@@ -187,8 +187,8 @@ function* revisionTask({ id, workSeq, taskSeq, callbackFunc }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, {}, { BUILDER: 'revisionTask' });
 
   const newTaskSeq = response.data.TASK_SEQ;
-  // yield put(actions.setDetailData(id, response.data));
-  // yield put(actions.setTaskSeq(id, newTaskSeq));
+  yield put(actions.setDetailData(id, response.data));
+  yield put(actions.setTaskSeq(id, newTaskSeq));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, workSeq, newTaskSeq);
   }
