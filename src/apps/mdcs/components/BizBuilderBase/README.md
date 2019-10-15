@@ -22,5 +22,6 @@
   - modifyTask: contents 수정 함수
   - deleteTask: contents 삭제 함수
   - changeFormData: 입력(또는 수정)화면에서 필드의 값이 변경될 경우 호출하는 함수
-  - revisionTask: 새버전 (현재 버전의 문서를 새버전으로 임시 저장후 읽어옴)
+  - revisionTask: 새버전 (현재 버전의 문서를 새버전으로 임시테이블에 저장후 읽어옴)
+  - getRevisionHistory: Revision 이력 리스트
   - removeReduxState: 파라미터로 받은 ID 의 Redux State 항목 제거

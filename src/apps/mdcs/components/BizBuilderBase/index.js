@@ -52,6 +52,7 @@ BizBuilderBase.propTypes = {
   extraApiData: PropTypes.object,
   metaList: PropTypes.arrayOf(PropTypes.object),
   formData: PropTypes.object,
+  revisionHistory: PropTypes.array,
   getBuilderData: PropTypes.func,
   getExtraApiData: PropTypes.func,
   getDetailData: PropTypes.func,
@@ -63,6 +64,7 @@ BizBuilderBase.propTypes = {
   setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
   revisionTask: PropTypes.func,
+  getRevisionHistory: PropTypes.func,
   removeReduxState: PropTypes.func,
 };
 
@@ -81,6 +83,7 @@ BizBuilderBase.defaultProps = {
   metaList: [],
   responseData: {},
   extraApiData: {},
+  revisionHistory: [],
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -89,6 +92,7 @@ const mapStateToProps = createStructuredSelector({
   metaList: selectors.makeSelectMetaList(),
   workFlowConfig: selectors.makeSelectWorkFlowConfig(),
   formData: selectors.makeSelectFormData(),
+  revisionHistory: selectors.makeSelectRevisionHistory(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -104,6 +108,7 @@ const mapDispatchToProps = dispatch => ({
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
   revisionTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.revisionTask(id, workSeq, taskSeq, callbackFunc)),
+  getRevisionHistory: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.getRevisionHistory(id, workSeq, taskSeq, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
 });
 
