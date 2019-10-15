@@ -74,7 +74,8 @@ class Tree extends Component {
   };
 
   handleClickMenuFolder = node => {
-    const menuType = node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
+    console.debug('>>>>>> handleClickMenuFolder: ', node);
+    const menuType = (node.REF_ID > 0 && node.REF_TYPE === 'B') ? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
     } else if (node.MENU_EXIST_YN === 'Y' || node.NODE_TYPE === 'R') {

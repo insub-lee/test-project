@@ -425,9 +425,10 @@ class MyPageTree extends Component {
                 <BizAppBtn
                   key="bizCardAppRegBtn"
                   title="업무카드앱등록"
-                  // onClick={() => {
-                  //   this.addNode(node.key, 'B');
-                  // }}
+                  onClick={() => {
+                    saveData(rowInfo, treeData);
+                    history.push('/portal/store/appMain/myPage/modal/app/list');
+                  }}
                 />
               ) : (
                 ''
