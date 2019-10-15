@@ -19,4 +19,6 @@ export const INIT_FORMDATA = `${prefix}INIT_FORMDATA`;
 export const CHANGE_FORMDATA = `${prefix}CHANGE_FORMDATA`;
 export const ADD_NOTIFY_BUILDER = `${prefix}ADD_NOTIFY_BUILDER`;
 export const REVISION_TASK = `${prefix}REVISION_TASK`;
+export const GET_REVISION_HISTORY = `${prefix}GET_REVISION_HISTORY`;
+export const SET_REVISION_HISTORY = `${prefix}SET_REVISION_HISTORY`;
 export const REMOVE_REDUX_STATE = `${prefix}REMOVE_REDUX_STATE`;

@@ -138,6 +138,20 @@ export const revisionTask = (id, workSeq, taskSeq, callbackFunc) => ({
   callbackFunc,
 });
 
+export const getRevisionHistory = (id, workSeq, taskSeq, callbackFunc) => ({
+  type: `${actionTypes.GET_REVISION_HISTORY}_${id}`,
+  id,
+  workSeq,
+  taskSeq,
+  callbackFunc,
+});
+
+export const setRevisionHistory = (id, list) => ({
+  type: actionTypes.SET_REVISION_HISTORY,
+  id,
+  list,
+});
+
 export const removeReduxState = id => ({
   type: actionTypes.REMOVE_REDUX_STATE,
   id,

@@ -133,6 +133,10 @@ const reducer = (state = initialState, action) => {
       const { id } = action;
       return state.removeIn(['bizBuilderBase', id]);
     }
+    case actionTypes.SET_REVISION_HISTORY: {
+      const { id, list } = action;
+      return state.setIn(['bizBuilderBase', id, 'revisionHistory'], fromJS(list));
+    }
     default:
       return state;
   }

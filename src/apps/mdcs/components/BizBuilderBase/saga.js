@@ -194,6 +194,15 @@ function* revisionTask({ id, workSeq, taskSeq, callbackFunc }) {
   }
 }
 
+function* getRevisionHistory({ id, workSeq, taskSeq, callbackFunc }) {
+  const response = yield call(Axios.get, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getRevisionHistory' });
+
+  yield put(actions.setRevisionHistory(id, response.list));
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id, workSeq, taskSeq);
+  }
+}
+
 export default function* watcher() {
   const arg = arguments[0];
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.id}`, getBuilderData);
@@ -207,6 +216,7 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
   yield takeEvery(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
   yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.id}`, revisionTask);
+  yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.id}`, getRevisionHistory);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

@@ -77,6 +77,13 @@ const makeSelectWorkFlowConfig = () =>
     },
   );
 
+const makeSelectRevisionHistory = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'revisionHistory']) !== undefined ? state.getIn(['bizBuilderBase', id, 'revisionHistory']).toJS() : []),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -93,4 +100,5 @@ export {
   // makeSelectBoxes,
   // makeSelectFormStuffs,
   makeSelectWorkFlowConfig,
+  makeSelectRevisionHistory,
 };
