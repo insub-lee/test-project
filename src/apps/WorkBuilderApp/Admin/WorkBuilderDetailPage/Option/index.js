@@ -35,7 +35,7 @@ class Option extends Component {
             <Col span={12}>
               <div className="content-body">
                 <Divider orientation="left">Option</Divider>
-                <Collapse defaultActiveKey={['0']} bordered={false}>
+                <Collapse defaultActiveKey={['0', '1']} bordered={false}>
                   <Collapse.Panel header="목록화면 정의" key="0">
                     <Select defaultValue="table" style={{ width: '100%' }}>
                       <Select.Option value="table">게시판</Select.Option>
@@ -43,12 +43,12 @@ class Option extends Component {
                       <Select.Option value="grid">Grid</Select.Option>
                     </Select>
                   </Collapse.Panel>
-                  <Collapse.Panel header="Revision" key="0">
+                  <Collapse.Panel header="Revision" key="1">
                     <Checkbox checked={useRevision} onChange={toggleUseRevision}>
                       Revision 사용
                     </Checkbox>
                   </Collapse.Panel>
-                  <Collapse.Panel header="기타 정의" key="1">
+                  <Collapse.Panel header="기타 정의" key="2">
                     준비 중입니다.
                   </Collapse.Panel>
                 </Collapse>
