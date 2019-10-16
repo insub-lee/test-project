@@ -131,13 +131,13 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
 }
 
-function* modifyTask({ id, callbackFunc }) {
-  const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
-  const taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
+function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
+  const modifyWorkSeq = workSeq && workSeq > 0 ? workSeq : yield select(selectors.makeSelectWorkSeqById(id));
+  const modifyTaskSeq = taskSeq && taskSeq > 0 ? taskSeq : yield select(selectors.makeSelectTaskSeqById(id));
   const formData = yield select(selectors.makeSelectFormDataById(id));
 
   // temp저장
-  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'modifyTask' });
+  const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${modifyWorkSeq}/${modifyTaskSeq}`, { PARAM: formData }, { BUILDER: 'modifyTask' });
   // temp -> origin
   const nextResponse = yield call(
     Axios.post,
@@ -145,8 +145,8 @@ function* modifyTask({ id, callbackFunc }) {
     {
       PARAM: {
         ...formData,
-        TASK_SEQ: taskSeq,
-        WORK_SEQ: workSeq,
+        TASK_SEQ: modifyTaskSeq,
+        WORK_SEQ: modifyWorkSeq,
         // prcId,
         // processStep,
       },
@@ -155,10 +155,16 @@ function* modifyTask({ id, callbackFunc }) {
   );
 
   // yield put(actions.successSaveTask(id));
-  yield put(actions.getBuilderData(id, workSeq, taskSeq));
+  yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id);
   }
+}
+
+function* modifyTask({ id, callbackFunc }) {
+  const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
+  const taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
+  yield put(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc));
 }
 
 function* deleteTask({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
@@ -213,6 +219,7 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);
   yield takeEvery(`${actionTypes.SAVE_TASK}_${arg.id}`, saveTask);
   yield takeEvery(`${actionTypes.MODIFY_TASK}_${arg.id}`, modifyTask);
+  yield takeEvery(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.id}`, modifyTaskBySeq);
   yield takeEvery(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
   yield takeEvery(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
   yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.id}`, revisionTask);

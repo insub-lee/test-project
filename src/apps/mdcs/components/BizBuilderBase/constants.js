@@ -14,6 +14,7 @@ export const SUCCESS_TEMP_SAVE_TASK = `${prefix}SUCCESS_TEMP_SAVE_TASK`;
 export const SAVE_TASK = `${prefix}SAVE_TASK`;
 export const SUCCESS_SAVE_TASK = `${prefix}SUCCESS_SAVE_TASK`;
 export const MODIFY_TASK = `${prefix}MODIFY_TASK`;
+export const MODIFY_TASK_BY_SEQ = `${prefix}MODIFY_TASK_BY_SEQ`;
 export const DELETE_TASK = `${prefix}DELETE_TASK`;
 export const INIT_FORMDATA = `${prefix}INIT_FORMDATA`;
 export const CHANGE_FORMDATA = `${prefix}CHANGE_FORMDATA`;
