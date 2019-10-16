@@ -12,6 +12,8 @@ import iconReplyOn from 'images/portal/icon-reply-on.png';
 import iconTabs from 'images/portal/icon-tabs.png';
 import iconworkCard from 'images/portal/icon-workCard.png';
 import iconworkFolder from 'images/portal/icon-folder.png';
+import iconMenuApp from 'images/portal/icon-menu-app.png';
+import iconMenuPage from 'images/portal/icon-menu-page.png';
 
 const Styled = styled.i`
   display: inline-block;
@@ -100,6 +102,18 @@ const Styled = styled.i`
   }
   &.icon-workFolder {
     background: url(${iconworkFolder}) no-repeat center;
+    width: 15px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-menuApp {
+    background: url(${iconMenuApp}) no-repeat center;
+    width: 15px;
+    height: 15px;
+    background-size: 100%;
+  }
+  &.icon-menuPage {
+    background: url(${iconMenuPage}) no-repeat center;
     width: 15px;
     height: 15px;
     background-size: 100%;

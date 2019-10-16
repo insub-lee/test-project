@@ -25,6 +25,7 @@ import * as actions from './actions';
 import AntRadiobox from 'containers/admin/components/uielements/radiobox.style';
 import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from 'containers/admin/components/uielements/buttons.style';
 import { StyleAppUpdateForm, Vesions } from './StyleAppUpdateForm';
+import StyledButton from 'components/Button/StyledButton';
 
 const RadioGroup = AntRadiobox(Radio.Group);
 const FormItem = Form.Item;
@@ -258,9 +259,11 @@ class AppUpdateForm extends React.Component {
       MyAppCategoryModalShow: false,
     });
   };
+  
   // managerPop = () => {
   //   feed.success('개발 예정인 기능 입니다.');
   // };
+
   render() {
     const {
       history,
@@ -1409,12 +1412,12 @@ class AppUpdateForm extends React.Component {
             </FormItem>
             <div className="buttonWrapper">
               <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
-                <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+                <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
               </Link>
               <Link to={`/admin/adminmain/sysapp/appDetail/${this.state.APP_ID}/${this.state.VER}`}>
-                <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
+                <StyledButton className="btn-light">{intlObj.get(messages.cancel)}</StyledButton>
               </Link>
-              <BtnDkGray onClick={appInfoSave}>{intlObj.get(messages.save)}</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={appInfoSave}>{intlObj.get(messages.save)}</StyledButton>
             </div>
           </Form>
         </StyleAppUpdateForm>

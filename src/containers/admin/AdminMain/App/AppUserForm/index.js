@@ -20,6 +20,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from 'containers/admin/components/uielements/buttons.style';
 import StyleUserForm from './StyleUserForm';
+import StyledButton from 'components/Button/StyledButton';
 
 const FormItem = Form.Item;
 
@@ -76,12 +77,10 @@ class AppUserForm extends React.Component {
   };
 
   render() {
-    const {
-      history,
-    } = this.props;
+    const { history } = this.props;
 
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganization = (resultObj) => {
+    const getDataFromOrganization = resultObj => {
       const managerSetMembersFromOrganization = resultObj.selectedUsers;
 
       this.setState({
@@ -89,38 +88,38 @@ class AppUserForm extends React.Component {
       });
     };
 
-    const returnManagerList = (resultObj) => {
+    const returnManagerList = resultObj => {
       this.setState({
         managerSetMembers: resultObj,
       });
     };
-    const returnUserList = (resultObj) => {
+    const returnUserList = resultObj => {
       this.setState({
         userSetMembers: resultObj,
       });
     };
-    const returnDutyList = (resultObj) => {
+    const returnDutyList = resultObj => {
       this.setState({
         dutySetMembers: resultObj,
       });
     };
-    const returnPstnList = (resultObj) => {
+    const returnPstnList = resultObj => {
       this.setState({
         pstnSetMembers: resultObj,
       });
     };
-    const returnGrpList = (resultObj) => {
+    const returnGrpList = resultObj => {
       this.setState({
         grpSetMembers: resultObj,
       });
     };
-    const returnDetpList = (resultObj) => {
+    const returnDetpList = resultObj => {
       this.setState({
         deptSetMembers: resultObj,
       });
     };
     // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = (resultObj) => {
+    const getDataFromOrganizationAll = resultObj => {
       // 구성원
       const userSetMembersFromOrganization = resultObj.selectedUsers;
 
@@ -179,8 +178,7 @@ class AppUserForm extends React.Component {
 
     return (
       <div>
-        {
-          this.state.managerOrgShow ?
+        {this.state.managerOrgShow ? (
           // <Organization
           //   show={this.state.managerOrgShow}
           //   closeModal={this.managerOrgClose}
@@ -190,17 +188,17 @@ class AppUserForm extends React.Component {
           //   // 조직도로 가져갈 데이터
           //   selectedUsers={this.state.managerSetMembers.slice()}
           // />
-            <OrganizationRole
-              show={this.state.managerOrgShow}
-              closeModal={this.managerOrgClose}
-              getDataFromOrganization={getDataFromOrganization}
-              // 조직도로 가져갈 데이터
-              selectedUsers={this.state.managerSetMembers.slice()}
-              ROLE_CD="SM"
-            />
-          :
-            ''
-        }
+          <OrganizationRole
+            show={this.state.managerOrgShow}
+            closeModal={this.managerOrgClose}
+            getDataFromOrganization={getDataFromOrganization}
+            // 조직도로 가져갈 데이터
+            selectedUsers={this.state.managerSetMembers.slice()}
+            ROLE_CD="SM"
+          />
+        ) : (
+          ''
+        )}
         <Organization
           show={this.state.allOrgShow}
           closeModal={this.allOrgClose}
@@ -224,24 +222,19 @@ class AppUserForm extends React.Component {
 
             {/* <h3 className="sectionTitle">{intlObj.get(messages.verInfo)}</h3> */}
             <div style={{ minHeight: 'calc(100vh - 310px)' }}>
-              <h4>{intlObj.get(messages.manager)} ({intlObj.get(messages.groupCharge)})</h4>
+              <h4>
+                {intlObj.get(messages.manager)} ({intlObj.get(messages.groupCharge)})
+              </h4>
               <FormItem>
                 <div style={{ position: 'relative' }}>
                   <div className="appManagerListBox">
-                    {
-                      this.state.managerSetMembers.length > 0 ?
-                        (<AppMaNagerList
-                          managerList={this.state.managerSetMembers}
-                          delFlag={true}
-                          returnManagerList={returnManagerList}
-                        />
-                        ) : ('')
-                    }
+                    {this.state.managerSetMembers.length > 0 ? (
+                      <AppMaNagerList managerList={this.state.managerSetMembers} delFlag={true} returnManagerList={returnManagerList} />
+                    ) : (
+                      ''
+                    )}
                   </div>
-                  <Button
-                    className="btnText edit"
-                    onClick={this.managerOrgOpen}
-                  >
+                  <Button className="btnText edit" onClick={this.managerOrgOpen}>
                     {intlObj.get(messages.edit)}
                   </Button>
                 </div>
@@ -274,10 +267,7 @@ class AppUserForm extends React.Component {
                       delFlag={true}
                     />
                   </div>
-                  <Button
-                    className="btnText edit"
-                    onClick={this.allOrgOpen}
-                  >
+                  <Button className="btnText edit" onClick={this.allOrgOpen}>
                     {intlObj.get(messages.edit)}
                   </Button>
                 </div>
@@ -286,12 +276,14 @@ class AppUserForm extends React.Component {
 
             <div className="buttonWrapper">
               <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
-                <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+                <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
               </Link>
               <Link to="/admin/adminmain/sysapp">
-                <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
+                <StyledButton className="btn-light">{intlObj.get(messages.cancel)}</StyledButton>
               </Link>
-              <BtnDkGray onClick={appUserSaveChk}>{intlObj.get(messages.save)}</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={appUserSaveChk}>
+                {intlObj.get(messages.save)}
+              </StyledButton>
             </div>
           </Form>
         </StyleUserForm>
@@ -313,39 +305,15 @@ AppUserForm.propTypes = {
   deptList: PropTypes.array, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getAppUser: (APP_ID, VER, LANG, history) => {
-      dispatch(actions.getAppUser(APP_ID, VER, LANG, history));
-    },
+const mapDispatchToProps = dispatch => ({
+  getAppUser: (APP_ID, VER, LANG, history) => {
+    dispatch(actions.getAppUser(APP_ID, VER, LANG, history));
+  },
 
-    appUserSave: (
-      APP_ID,
-      VER,
-      history,
-      managerSetMembers,
-      userSetMembers,
-      pstnSetMembers,
-      deptSetMembers,
-      dutySetMembers,
-      grpSetMembers,
-      uv,
-    ) => {
-      dispatch(actions.appUserSave(
-        APP_ID,
-        VER,
-        history,
-        managerSetMembers,
-        userSetMembers,
-        pstnSetMembers,
-        deptSetMembers,
-        dutySetMembers,
-        grpSetMembers,
-        uv,
-      ));
-    },
-  }
-);
+  appUserSave: (APP_ID, VER, history, managerSetMembers, userSetMembers, pstnSetMembers, deptSetMembers, dutySetMembers, grpSetMembers, uv) => {
+    dispatch(actions.appUserSave(APP_ID, VER, history, managerSetMembers, userSetMembers, pstnSetMembers, deptSetMembers, dutySetMembers, grpSetMembers, uv));
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   appManagerList: selectors.makeSelectAppManagerList(),
@@ -356,7 +324,10 @@ const mapStateToProps = createStructuredSelector({
   deptList: selectors.makeSelectDeptList(),
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppUserForm', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppUserForm', reducer });
 

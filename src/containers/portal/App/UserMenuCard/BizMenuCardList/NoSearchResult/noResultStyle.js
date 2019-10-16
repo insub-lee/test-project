@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
-
 const noResultStyle = styled.div`
-  width: 600px; 
-  height: 400;
+  width: 600px;
+  height: 400px;
   margin: 15px auto 0;
   padding: 40px;
   border: 4px solid #efefef;
@@ -14,7 +13,7 @@ const noResultStyle = styled.div`
     padding: 20px;
     border: none;
   }
-  
+
   .noResultTitle {
     margin-top: 25px;
     color: #000000;
@@ -49,13 +48,12 @@ const noResultStyle = styled.div`
 
       :before {
         content: '◾';
-        padding-right:4px;
+        padding-right: 4px;
         color: #d8d8d8;
         font-size: 14px;
       }
     }
   }
-
 `;
 
 export default noResultStyle;
