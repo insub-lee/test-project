@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
-
 const noResultStyle = styled.div`
-  width: 600px; 
-  height: 400;
+  width: 100%;
+  height: 100%;
   margin: 15px auto 0;
-  padding: 40px;
-  border: 4px solid #efefef;
+  padding: 100px 0;
+  border: 0;
   text-align: center;
 
   @media only screen and (max-width: 1024px) {
@@ -14,14 +13,14 @@ const noResultStyle = styled.div`
     padding: 20px;
     border: none;
   }
-  
+
   .noResultTitle {
     margin-top: 25px;
     color: #000000;
     font-size: 18px;
 
     strong {
-      color: #f85023;
+      color: #333;
       font-weight: 600;
     }
   }
@@ -49,13 +48,12 @@ const noResultStyle = styled.div`
 
       :before {
         content: '◾';
-        padding-right:4px;
+        padding-right: 4px;
         color: #d8d8d8;
         font-size: 14px;
       }
     }
   }
-
 `;
 
 export default noResultStyle;

@@ -75,7 +75,7 @@ class Tree extends Component {
 
   handleClickMenuFolder = node => {
     console.debug('>>>>>> handleClickMenuFolder: ', node);
-    const menuType = (node.REF_ID > 0 && node.REF_TYPE === 'B') ? 'bizMenu' : 'myMenu';
+    const menuType = node.REF_ID > 0 && node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
     } else if (node.MENU_EXIST_YN === 'Y' || node.NODE_TYPE === 'R') {
@@ -106,12 +106,17 @@ class Tree extends Component {
     const { selectedIndex } = this.props;
     const nodeData = { ...node, active: node.key === selectedIndex };
     let menuIconClassName = 'icon-workCard';
-    if(node.MENU_NODE_TYPE === 'BIZ') { // 업무폴더일 경우
+    if (node.MENU_NODE_TYPE === 'BIZ') {
+      // 업무폴더일 경우
       menuIconClassName = 'icon-workCard';
-    } else if(node.MENU_NODE_TYPE === 'FLD') { // 일반 폴더일 경우
+    } else if (node.MENU_NODE_TYPE === 'FLD') {
+      // 일반 폴더일 경우
       menuIconClassName = 'icon-workFolder';
-    } else { // 그 외
-      menuIconClassName = 'icon-pen';
+    } else {
+      // 그 외
+      menuIconClassName = 'icon-menuApp';
+      // 'icon-menuApp' 앱 아이콘
+      // 'icon-menuPage' 페이지 아이콘
     }
 
     return {

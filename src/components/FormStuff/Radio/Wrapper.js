@@ -17,8 +17,8 @@ const RadioWrapper = ComponentName => styled(ComponentName)`
         &:after {
           width: 8px;
           height: 8px;
-          top: 3px;
-          left: 3px;
+          top: 4px;
+          left: 4px;
           background-color: #7a59ad;
           background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e");
           position: absolute;

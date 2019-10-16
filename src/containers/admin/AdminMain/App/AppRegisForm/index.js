@@ -27,6 +27,8 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import { StyleAppRegisForm, Vesions } from './StyleAppRegisForm';
+import StyledButton from 'components/Button/StyledButton';
+import StyledRadio from 'components/FormStuff/Radio';
 
 const RadioGroup = AntRadiobox(Radio.Group);
 const FormItem = Form.Item;
@@ -1090,19 +1092,21 @@ class AppRegisForm extends React.Component {
             </ul>
             <FormItem style={{ margin: '10px 0 50px 0' }}>
               <RadioGroup className="typeOptions" onChange={onChangeSecReqYn} value={this.state.SEC_REQ_YN}>
-                <Radio value="Y">{intlObj.get(messages.authAppYes)}</Radio>
-                <Radio value="N">{intlObj.get(messages.authAppNo)}</Radio>
+                <StyledRadio value="Y">{intlObj.get(messages.authAppYes)}</StyledRadio>
+                <StyledRadio value="N">{intlObj.get(messages.authAppNo)}</StyledRadio>
               </RadioGroup>
             </FormItem>
 
             <div className="buttonWrapper">
               <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
-                <LinkBtnList>{intlObj.get(messages.list)}</LinkBtnList>
+                <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
               </Link>
               <Link to="/admin/adminmain/sysapp">
-                <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
+                <StyledButton className="btn-light">{intlObj.get(messages.cancel)}</StyledButton>
               </Link>
-              <BtnDkGray onClick={appInfoSave}>{intlObj.get(messages.save)}</BtnDkGray>
+              <StyledButton className="btn-primary" onClick={appInfoSave}>
+                {intlObj.get(messages.save)}
+              </StyledButton>
               {/* <BtnDkGray onClick={appExamodal}>
                 {intlObj.get(messages.examinReq)}
               </BtnDkGray> */}

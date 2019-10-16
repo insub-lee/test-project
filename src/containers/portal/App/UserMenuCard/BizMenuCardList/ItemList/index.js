@@ -58,7 +58,7 @@ class ItemList extends Component {
       });
     } else {
       return (
-        <Col key="noResult" xl={6} md={8} sm={24} className="appBox">
+        <Col key="noResult">
           <NoResult />
         </Col>
       );
