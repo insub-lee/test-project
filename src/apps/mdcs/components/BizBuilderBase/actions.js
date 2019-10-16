@@ -98,6 +98,14 @@ export const modifyTask = (id, callbackFunc) => ({
   callbackFunc,
 });
 
+export const modifyTaskBySeq = (id, workSeq, taskSeq, callbackFunc) => ({
+  type: `${actionTypes.MODIFY_TASK_BY_SEQ}_${id}`,
+  id,
+  workSeq,
+  taskSeq,
+  callbackFunc,
+});
+
 export const deleteTask = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
   type: `${actionTypes.DELETE_TASK}_${id}`,
   id,
