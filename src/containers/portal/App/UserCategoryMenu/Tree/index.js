@@ -75,11 +75,17 @@ class Tree extends Component {
 
   handleClickMenuFolder = node => {
     console.debug('>>>>>> handleClickMenuFolder: ', node);
-    const menuType = node.REF_ID > 0 && node.REF_TYPE === 'B' ? 'bizMenu' : 'myMenu';
+    const menuType = (node.MENU_EXIST_YN === 'Y' && node.REF_TYPE === 'B')
+            || (node.REF_ID > -1 && node.REF_TYPE === 'B')? 'bizMenu' : 'myMenu';
     if (node.LVL === 1) {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/list/${node.MENU_ID}`);
     } else if (node.MENU_EXIST_YN === 'Y' || node.NODE_TYPE === 'R') {
-      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.REF_ID}`);
+      this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.BIZGRP_ID}`);
+      // if (node.REF_ID <= 0) {
+      //   this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.BIZGRP_ID}`);
+      // } else {
+      //   this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.REF_ID}`);
+      // }
     } else {
       this.props.history.push(`/${basicPath.PORTAL}/card/${menuType}/detail/info/${node.BIZGRP_ID}`);
     }
@@ -114,7 +120,11 @@ class Tree extends Component {
       menuIconClassName = 'icon-workFolder';
     } else {
       // 그 외
-      menuIconClassName = 'icon-menuApp';
+      if (node.APP_YN === 'Y') {
+        menuIconClassName = 'icon-menuApp';
+      } else {
+        menuIconClassName = 'icon-menuPage';
+      }
       // 'icon-menuApp' 앱 아이콘
       // 'icon-menuPage' 페이지 아이콘
     }
