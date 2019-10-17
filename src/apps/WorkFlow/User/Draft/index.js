@@ -17,6 +17,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import TitleRenderer from './TitleRenderer';
 import DraftView from './DraftView';
+import ApprovalView from '../../WorkFlowBase/ApprovalView';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -114,7 +115,8 @@ class Draft extends Component {
           <AntdTable columns={columns} dataSource={draftList.map((item, idx) => ({ ...item, key: idx }))} bordered pagination />
         </div>
         {Object.keys(selectedDraft).length !== 0 && (
-          <DraftView selectedDraft={selectedDraft} visible={visibleViewModal} CATE={CATE} setSelectedDraft={this.props.setSelectedDraft} />
+          // <DraftView selectedDraft={selectedDraft} visible={visibleViewModal} CATE={CATE} setSelectedDraft={this.props.setSelectedDraft} />
+          <ApprovalView selectedDraft={selectedDraft} visible={visibleViewModal} CATE={CATE} setSelectedDraft={this.props.setSelectedDraft} />
         )}
       </div>
     );

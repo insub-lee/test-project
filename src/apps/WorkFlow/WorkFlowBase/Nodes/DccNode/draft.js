@@ -1,0 +1,21 @@
+import React, { Component } from 'react';
+import * as ApproveConst from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/approveconst';
+
+class DccNodeDraft extends Component {
+  componentDidMount = () => {
+    const { stepInfo, setDraftStepInfoByApi } = this.props;
+    setDraftStepInfoByApi(stepInfo, {
+      key: 'dccInfo',
+      url: `/api/mdcs/v1/common/DccInfoHandler/${ApproveConst.DCC}`,
+      type: 'get',
+      params: {},
+    });
+  };
+
+  render = () => {
+    console.log('DCC노드 프롭스', this.props);
+    return <div>DCC 노드</div>;
+  };
+}
+
+export default DccNodeDraft;

@@ -86,7 +86,7 @@ function* tempSaveTask({ id, callbackFunc }) {
   const tempResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'tempSaveTask' });
   yield put(actions.successTempSaveTask(id));
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, taskSeq, formData);
   }
 }
 
@@ -127,7 +127,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   // yield put(actions.getExtraApiData(reloadId || id, apiArr));
 
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, taskSeq, formData);
   }
 }
 
@@ -157,7 +157,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
   // yield put(actions.successSaveTask(id));
   yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, modifyTaskSeq, formData);
   }
 }
 
@@ -176,7 +176,7 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   // yield put(actions.getExtraApiData(id, apiArr));
 
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, taskSeq);
   }
 }
 
