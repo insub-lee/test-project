@@ -7,13 +7,13 @@ import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import * as DraftType from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/draftconst';
 import StyledContents from '../../../styled/StyledContents';
 import StyledButton from '../../../styled/StyledButton';
 import BizMicroDevBase from '../../../components/BizMicroDevBase';
 import BizBuilderBase from '../../../components/BizBuilderBase';
 import StyledModalWrapper from '../../../styled/Modals/StyledModalWrapper';
 
-import * as DraftType from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/draftconst';
 
 import DwDoc from '../DwDoc';
 import PmDoc from '../PmDoc';
@@ -324,8 +324,6 @@ class IntroComponent extends Component {
 
   onChangeDraft = e => {
     const { value } = e.target;
-    console.log(value, '값');
-    console.log('목표값', DraftType.AMENDMENT);
     switch (value) {
       case DraftType.ENACTMENT:
         this.setState({ viewType: 'INPUT' });
