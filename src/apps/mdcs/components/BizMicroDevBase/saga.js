@@ -17,7 +17,7 @@ function* getCallDataHandler({ id, apiArys }) {
             response = yield call(Axios.get, apiInfo.url);
             break;
           case 'POST':
-            response = yield call(Axios.get, apiInfo.url);
+            response = yield call(Axios.post, apiInfo.url, apiInfo.params);
             break;
           default:
             break;
