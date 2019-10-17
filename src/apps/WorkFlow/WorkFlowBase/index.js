@@ -169,7 +169,7 @@ class WorkFlowBase extends Component {
                 }),
               )}
           </div>
-          {viewType === 'approval' && contentInfo && (
+          {viewType === 'approval' && contentInfo && contentInfo.WORK_SEQ && contentInfo.TASK_SEQ && (
             <div className="content" style={{ minHeight: '400px' }}>
               <SearchViewer workSeq={contentInfo.WORK_SEQ} taskSeq={contentInfo.TASK_SEQ} closeBtnUseYn={false} />
             </div>
