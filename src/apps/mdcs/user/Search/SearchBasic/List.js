@@ -63,6 +63,11 @@ const initState = {
     taskSeq: -1,
     workSeq: -1,
   },
+  CoverView: {
+    visible: false,
+    taskSeq: -1,
+    workSeq: -1,
+  },
 };
 
 class SearchBasic extends Component {
@@ -73,7 +78,7 @@ class SearchBasic extends Component {
   }
 
   callApi = () => {
-    const { id, getExtraApiData } = this.props;
+    const { id, getCallDataHanlder } = this.props;
     const apiArr = [
       {
         key: 'listData',
@@ -82,7 +87,7 @@ class SearchBasic extends Component {
         params: this.state,
       },
     ];
-    this.props.getExtraApiData(id, apiArr);
+    this.props.getCallDataHanlder(id, apiArr);
   };
 
   onChangeCheckBox = checkedValues => {
@@ -152,10 +157,15 @@ class SearchBasic extends Component {
     });
   };
 
+  clickCoverView = () => {
+    console.log('clickCoverView !!');
+  }
+
   render() {
     const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView } = this.state;
-    const { extraApiData } = this.props;
+    const { result } = this.props;
     const { onClickRow, closeBtnFunc } = this;
+    console.log('this.props : ', this.props);
     return (
       <StyledSearch>
         <div className="searchPage">
@@ -266,31 +276,47 @@ class SearchBasic extends Component {
             }}
             okButtonProps={null}
           >
-            {!SearchView.visible ? (
-              <React.Fragment>
-                <div className="pop_tit">적용 범위 선택</div>
-                <div className="pop_con">
-                  <Table
-                    columns={columns}
-                    size="middle"
-                    dataSource={extraApiData.listData ? extraApiData.listData.arr : []}
-                    className="tableCustom"
-                    onRow={(record, rowIndex) => ({
-                      onClick: event => {
-                        onClickRow(record, rowIndex);
-                      },
-                    })}
-                  />
-                </div>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <div className="pop_tit">선택 내용 보기</div>
-                <div className="pop_con">
-                  <SearchViewer workSeq={SearchView.workSeq} taskSeq={SearchView.taskSeq} closeBtnFunc={closeBtnFunc} />
-                </div>
-              </React.Fragment>
-            )}
+            <React.Fragment>
+              <div className="pop_tit">적용 범위 선택</div>
+              <div className="pop_con">
+                <Table
+                  columns={columns}
+                  size="middle"
+                  dataSource={result.listData ? result.listData.arr : []}
+                  className="tableCustom"
+                  onRow={(record, rowIndex) => ({
+                    onClick: event => {
+                      onClickRow(record, rowIndex);
+                    },
+                  })}
+                />
+              </div>
+            </React.Fragment>
+          </AntdModal>
+          <AntdModal
+            className="modalWrapper modalTechDoc modalCustom"
+            visible={SearchView.visible}
+            footer={null}
+            width={800}
+            onCancel={() => {
+              this.setState({ SearchView: { ...this.state.SearchView, visible: false } });
+            }}
+            onOk={() => {
+              this.setState({ SearchView: { ...this.state.SearchView, visible: false } });
+            }}
+            okButtonProps={null}
+          >
+            <React.Fragment>
+              <div className="pop_tit">선택 내용 보기</div>
+              <div className="pop_con">
+                <SearchViewer
+                  workSeq={SearchView.workSeq}
+                  taskSeq={SearchView.taskSeq}
+                  closeBtnFunc={closeBtnFunc}
+                  clickCoverView={this.clickCoverView}  
+                />
+              </div>
+            </React.Fragment>
           </AntdModal>
         </div>
       </StyledSearch>
@@ -299,11 +325,11 @@ class SearchBasic extends Component {
 }
 
 SearchBasic.propTypes = {
-  extraApiData: PropTypes.objectOf(PropTypes.any).isRequired,
+  result: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 SearchBasic.defaultProps = {
-  extraApiData: {
+  result: {
     listData: {
       arr: [],
     },

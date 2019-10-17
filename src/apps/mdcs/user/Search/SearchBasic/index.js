@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import List from './List';
-import BizBuilderBase from '../../../components/BizBuilderBase';
+// import BizBuilderBase from '../../../components/BizBuilderBase';
+import BizMicroDevBase from '../../../components/BizMicroDevBase';
 
 class SearchBasic extends Component {
   render() {
-    return <BizBuilderBase id="SearchBasic" component={List} {...this.props} viewType="LIST" />;
+    return <BizMicroDevBase id="SearchBasic" component={List} />;
   }
 }
 
