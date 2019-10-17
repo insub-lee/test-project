@@ -41,7 +41,7 @@ const getColumns = (columns, CATE) => {
         title: '결재여부',
         dataIndex: 'APPV_STATUS_NM',
         key: 'appvStatsNm',
-        width: '5%',
+        width: '7%',
       },
       {
         title: '결재일시',
@@ -59,27 +59,52 @@ class Draft extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.setSelectedDraft = this.setSelectedDraft.bind(this);
   }
 
   componentDidMount() {
-    const { match, getDraftList } = this.props;
+    const { match, getDraftList, location } = this.props;
+    const pathname = location && location.pathname ? location.pathname : 'draft/nodata';
     const payload = {
       searchType: match.params.CATE,
     };
-    getDraftList(payload);
+    getDraftList(payload, pathname);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.match.params.CATE !== prevProps.match.params.CATE) {
+      const { location } = this.props;
+      const pathname = location && location.pathname ? location.pathname : 'draft/nodata';
       const payload = {
         searchType: this.props.match.params.CATE,
       };
-      this.props.getDraftList(payload);
+      this.props.getDraftList(payload, pathname);
     }
   }
 
+  setSelectedDraft(draft, visible) {
+    const { setSelectedDraft, location } = this.props;
+    const pathname = location && location.pathname ? location.pathname : 'draft/nodata';
+    setSelectedDraft(draft, visible, pathname);
+  }
+
   render() {
-    const { match, draftList, selectedDraft, visibleViewModal } = this.props;
+    const { match, draftList, selectedDraft, visibleViewModal, location } = this.props;
+    console.debug(draftList, selectedDraft, visibleViewModal);
+    const pathname = location && location.pathname ? location.pathname : 'draft/nodata';
+    let tableData = [];
+    let selectedData = {};
+    let visibleViewData = false;
+    if (draftList) {
+      tableData = draftList[pathname] || [];
+    }
+    if (selectedDraft) {
+      selectedData = selectedDraft[pathname] || {};
+    }
+    if (visibleViewModal) {
+      visibleViewData = visibleViewModal[pathname] || false;
+    }
+    console.debug(tableData, selectedData, visibleViewData);
     const { CATE } = match.params;
     let columns = [
       {
@@ -92,13 +117,16 @@ class Draft extends Component {
         title: 'Title',
         dataIndex: 'TITLE',
         key: 'title',
-        render: (text, record) => <TitleRenderer data={record} value={text} category={CATE} setSelectedDraft={this.props.setSelectedDraft} />,
+        render: (text, record) => (
+          <TitleRenderer data={record} value={text} category={CATE} setSelectedDraft={this.props.setSelectedDraft} pathname={pathname} />
+        ),
+        ellipsis: true,
       },
       {
         title: '상태',
         dataIndex: 'STATUS_NM',
         key: 'statusNm',
-        width: '10%',
+        width: '7%',
       },
       {
         title: '기안자',
@@ -112,11 +140,22 @@ class Draft extends Component {
     return (
       <div style={{ width: '100%', height: '600px', padding: '48px' }}>
         <div style={{ width: '100%', height: '100%' }}>
-          <AntdTable columns={columns} dataSource={draftList.map((item, idx) => ({ ...item, key: idx }))} bordered pagination />
+          <AntdTable
+            key={`${pathname}_list_table`}
+            columns={columns}
+            dataSource={tableData.map((item, idx) => ({
+              ...item,
+              key: idx,
+              DRAFT_DTTM: item.DRAFT_DTTM ? item.DRAFT_DTTM.substr(0, 10) : '',
+              APPV_DTTM: item.APPV_DTTM ? item.APPV_DTTM.substr(0, 10) : '',
+            }))}
+            bordered
+            pagination
+          />
         </div>
-        {Object.keys(selectedDraft).length !== 0 && (
+        {Object.keys(selectedData).length !== 0 && (
           // <DraftView selectedDraft={selectedDraft} visible={visibleViewModal} CATE={CATE} setSelectedDraft={this.props.setSelectedDraft} />
-          <ApprovalView selectedDraft={selectedDraft} visible={visibleViewModal} CATE={CATE} setSelectedDraft={this.props.setSelectedDraft} />
+          <ApprovalView selectedDraft={selectedDraft[pathname]} visible={visibleViewData} CATE={CATE} setSelectedDraft={this.setSelectedDraft} />
         )}
       </div>
     );
@@ -139,8 +178,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getDraftList: payload => dispatch(actions.getDraftList(payload)),
-  setSelectedDraft: (draft, visible) => dispatch(actions.setSelectedDraft(draft, visible)),
+  getDraftList: (payload, pathname) => dispatch(actions.getDraftList(payload, pathname)),
+  setSelectedDraft: (draft, visible, pathname) => dispatch(actions.setSelectedDraft(draft, visible, pathname)),
   initDraftData: () => dispatch(actions.initDraftData()),
 });
 
