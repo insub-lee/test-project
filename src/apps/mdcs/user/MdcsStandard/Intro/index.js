@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Select, Modal, Radio } from 'antd';
+import { Select, Modal, Radio, Input, Table } from 'antd';
 
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledContents from '../../../styled/StyledContents';
 import StyledButton from '../../../styled/StyledButton';
 import BizMicroDevBase from '../../../components/BizMicroDevBase';
@@ -21,6 +22,7 @@ import TechDoc from '../TechDoc';
 
 const { Option } = Select;
 const AntdModal = StyledModalWrapper(Modal);
+const AntdTable = StyledAntdTable(Table);
 
 class IntroComponent extends Component {
   state = {
@@ -35,6 +37,9 @@ class IntroComponent extends Component {
     isShow: false,
     selectedDraft: DraftType.ENACTMENT,
     docNumber: ['M', '', '', '', '-', ''],
+    searchValue: '',
+    taskSeq: -1,
+    viewType: 'INPUT',
     fullPathInfo: [],
   };
 
@@ -104,6 +109,7 @@ class IntroComponent extends Component {
   };
 
   findDocs = (listItem, aryNodesIds) => {
+    console.log(aryNodesIds, '오류찾기');
     const node = aryNodesIds.filter(_node => listItem.NODE_ID.toString() === _node);
     return node.length > 0 ? listItem : false;
   };
@@ -182,8 +188,11 @@ class IntroComponent extends Component {
       selectedValue4: undefined,
       selectedComponent: undefined,
       isShow: false,
+      selectedDraft: 1,
+      searchValue: '',
       selectedDraft: this.state.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
+      taskSeq: -1,
     });
   };
 
@@ -204,20 +213,22 @@ class IntroComponent extends Component {
     });
   };
 
-  onShowDocTemplate = (doctype, docNumber) => {
+  onShowDocTemplate = (doctype, docNumber, taskSeq, viewType) => {
+    console.debug('docNumber', docNumber);
     switch (doctype) {
       case 'BS': {
         return (
           <BizBuilderBase
             id="BizDoc"
             workSeq={913}
+            taskSeq={taskSeq}
             component={BizDoc}
             docNumber={docNumber}
+            onCloseModleHandler={this.onCompleteCloseModal}
+            viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
             draftType={this.state.selectedDraft}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType="INPUT"
           />
         );
       }
@@ -226,13 +237,13 @@ class IntroComponent extends Component {
           <BizBuilderBase
             id="PmDoc"
             workSeq={953}
+            taskSeq={taskSeq}
             component={PmDoc}
             docNumber={docNumber}
+            viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
             draftType={this.state.selectedDraft}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType="INPUT"
           />
         );
       }
@@ -241,13 +252,13 @@ class IntroComponent extends Component {
           <BizBuilderBase
             id="DwDoc"
             workSeq={985}
+            taskSeq={taskSeq}
             component={DwDoc}
             docNumber={docNumber}
+            viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
             draftType={this.state.selectedDraft}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType="INPUT"
           />
         );
       }
@@ -256,13 +267,13 @@ class IntroComponent extends Component {
           <BizBuilderBase
             id="TeachDoc"
             workSeq={913}
+            taskSeq={taskSeq}
             component={TechDoc}
             docNumber={docNumber}
+            viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
             draftType={this.state.selectedDraft}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType="INPUT"
           />
         );
       }
@@ -271,20 +282,69 @@ class IntroComponent extends Component {
           <BizBuilderBase
             id="BizDoc"
             workSeq={913}
+            taskSeq={taskSeq}
             component={BizDoc}
             docNumber={docNumber}
+            viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
             draftType={this.state.selectedDraft}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType="INPUT"
           />
         );
     }
   };
 
+  onSearchRevisionData = selectedNodeId => {
+    const { getCallDataHanlder, id } = this.props;
+    const { searchValue } = this.state;
+
+    const searchApi = [
+      {
+        key: 'listData',
+        url: '/api/mdcs/v1/common/MdcsStandard/search',
+        type: 'POST',
+        params: { nodeIdList: [selectedNodeId || null], docNo: this.state.searchValue },
+      },
+    ];
+    getCallDataHanlder(id, searchApi);
+  };
+
+  onClickRevision = (taskSeq, nodeId) => {
+    const { categoryInfo, docTemplateInfoByCategory, docTemplateInfo } = this.props.result;
+    const myInfo = categoryInfo.categoryMapList.filter(cInfo => cInfo.NODE_ID === nodeId);
+    const aryNodeIds = myInfo && myInfo.length > 0 && myInfo[0].FULLPATH.split('|');
+    const aryDocs = docTemplateInfoByCategory.list.filter(listItem => this.findDocs(listItem, aryNodeIds));
+    const selectedTemplate = this.selectedTemplate(aryDocs, categoryInfo.categoryMapList, docTemplateInfo.categoryMapList);
+    this.setState({
+      isShow: true,
+      selectedComponent: selectedTemplate,
+      taskSeq,
+    });
+  };
+
+  onChangeDraft = e => {
+    const { value } = e.target;
+    console.log(value, '값');
+    console.log('목표값', DraftType.AMENDMENT);
+    switch (value) {
+      case DraftType.ENACTMENT:
+        this.setState({ viewType: 'INPUT' });
+        break;
+      case DraftType.AMENDMENT:
+        this.setState({ viewType: 'MODIFY' });
+        break;
+      case DraftType.ABROGATION:
+        this.setState({ viewType: 'VIEW' });
+        break;
+      default:
+        break;
+    }
+    this.setState({ selectedDraft: value });
+  };
+
   render() {
     const { result } = this.props;
+    const { selectedValue1, selectedValue2, selectedValue3, selectedValue4 } = this.state;
     const _fDepth =
       result &&
       result.categoryInfo &&
@@ -295,8 +355,43 @@ class IntroComponent extends Component {
             {x.NAME_KOR}
           </Option>
         ));
-    const { docNum } = result;
+    console.debug('docNum', docNum, this.props);
 
+    const { docNum } = result;
+    const selectedNodeId =
+      (selectedValue4 !== undefined && selectedValue4) ||
+      (selectedValue3 !== undefined && selectedValue3) ||
+      (selectedValue2 !== undefined && selectedValue2) ||
+      (selectedValue1 !== undefined && selectedValue1);
+
+    const columData = [
+      {
+        dataIndex: 'id',
+        title: '문서번호',
+      },
+      {
+        dataIndex: 'rev',
+        title: 'REV',
+      },
+      {
+        dataIndex: 'title',
+        title: 'Title',
+        render: (text, record) => <a onClick={() => this.onClickRevision(record.taskSeq, record.nodeId)}>{text}</a>,
+      },
+      {
+        dataIndex: 'deptName',
+        title: '기안부서',
+      },
+      {
+        dataIndex: 'name',
+        title: '기안자',
+      },
+      {
+        dataIndex: 'change',
+        title: 'Change',
+        render: text => (text === 1 ? 'Major' : 'Minor'),
+      },
+    ];
     return (
       <StyledContents>
         <div className="contentWrapper">
@@ -321,20 +416,23 @@ class IntroComponent extends Component {
                 <ul>
                   <li>
                     <div className="label-txt">기안구분</div>
-                    <Radio.Group
-                      onChange={e =>
-                        this.setState({
-                          selectedDraft: e.target.value,
-                        })
-                      }
-                      value={this.state.selectedDraft}
-                    >
+                    <Radio.Group value={this.state.selectedDraft} onChange={e => this.onChangeDraft(e)}>
                       <Radio value={DraftType.ENACTMENT}>제정기안</Radio>
                       <Radio value={DraftType.AMENDMENT}>개정기안</Radio>
                       <Radio value={DraftType.ABROGATION}>폐기기안(일반)</Radio>
                       <Radio value={4}>폐기기안(일괄)</Radio>
                     </Radio.Group>
                   </li>
+                  {this.state.selectedDraft === DraftType.AMENDMENT && (
+                    <li>
+                      <div className="label-txt">문서번호검색</div>
+                      <Input
+                        onPressEnter={() => this.onSearchRevisionData(selectedNodeId)}
+                        value={this.state.searchValue}
+                        onChange={e => this.setState({ searchValue: e.target.value })}
+                      ></Input>
+                    </li>
+                  )}
                   <li>
                     <div className="label-txt">대분류</div>
                     <Select placeholder="대분류(문서구분)" onChange={e => this.onChangeByStep1(e, result)} value={this.state.selectedValue1}>
@@ -361,17 +459,33 @@ class IntroComponent extends Component {
                   </li>
                 </ul>
                 <div className="btn-wrap">
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onModalShow()}>
-                    선택완료
-                  </StyledButton>
+                  {this.state.selectedDraft !== DraftType.AMENDMENT && (
+                    <StyledButton className="btn-primary btn-first" onClick={() => this.onModalShow()}>
+                      선택완료
+                    </StyledButton>
+                  )}
+                  {this.state.selectedDraft === DraftType.AMENDMENT && (
+                    <StyledButton className="btn-primary btn-first" onClick={() => this.onSearchRevisionData(selectedNodeId)}>
+                      선택완료
+                    </StyledButton>
+                  )}
                   <StyledButton className="btn-light">다시선택</StyledButton>
                 </div>
+                {this.state.selectedDraft === DraftType.AMENDMENT && result && result.listData && (
+                  <AntdTable columns={columData} dataSource={result.listData.arr || []}></AntdTable>
+                )}
               </div>
             </div>
           </div>
         </div>
+
         <AntdModal destroyOnClose style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()}>
-          {this.onShowDocTemplate(this.state.selectedComponent && this.state.selectedComponent.CODE, docNum && docNum.docNumber)}
+          {this.onShowDocTemplate(
+            this.state.selectedComponent && this.state.selectedComponent.CODE,
+            docNum && docNum.docNumber,
+            this.state.taskSeq,
+            this.state.viewType,
+          )}
         </AntdModal>
       </StyledContents>
     );
