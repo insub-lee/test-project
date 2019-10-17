@@ -8,6 +8,7 @@ import { Redirect } from 'react-router-dom';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import SearchViewer from 'apps/mdcs/user/Search/SearchViewer';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -125,12 +126,17 @@ class WorkFlowBase extends Component {
       stepProps = { setDraftStepInfo, draftStepInfo };
     }
 
+    let contentInfo = {};
+    if (draftDetail && draftDetail.REL_TYPE && draftDetail.REL_TYPE === 1 && draftDetail.REL_KEY && draftDetail.REL_KEY.length > 0) {
+      contentInfo = JSON.parse(draftDetail.REL_KEY);
+    }
+
     return (
       <Styled>
         <div>
-          <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          {/* <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <h1>{draftDetail.TITLE}</h1>
-          </div>
+          </div> */}
           <div className="line_component">
             {/* <SignStep signline={signline} />
               <SignLine signline={signline} /> */}
@@ -163,9 +169,11 @@ class WorkFlowBase extends Component {
                 }),
               )}
           </div>
-          {/* <div className="content" style={{ minHeight: '400px' }}>
-              {draftDetail.VIEW_API}
-            </div> */}
+          {viewType === 'approval' && contentInfo && (
+            <div className="content" style={{ minHeight: '400px' }}>
+              <SearchViewer workSeq={contentInfo.WORK_SEQ} taskSeq={contentInfo.TASK_SEQ} closeBtnUseYn={false} />
+            </div>
+          )}
           {/* <div className="history">
               <HistoryGridData draftHistory={draftHistory} />
             </div> */}
