@@ -305,6 +305,7 @@ class SearchBasic extends Component {
               this.setState({ SearchView: { ...this.state.SearchView, visible: false } });
             }}
             okButtonProps={null}
+            destroyOnClose
           >
             <React.Fragment>
               <div className="pop_tit">선택 내용 보기</div>
