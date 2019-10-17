@@ -8,7 +8,7 @@ class View extends Component {
   componentDidMount() {}
 
   render() {
-    const { formData, metaList, id, workSeq, taskSeq, deleteTask, onDeleteComplete, addNotifyBuilder } = this.props;
+    const { formData, metaList, id, workSeq, taskSeq, deleteTask, onDeleteComplete, addNotifyBuilder, reloadId } = this.props;
     const contentMeta = metaList.filter(meta => meta.COMP_FIELD === 'CONTENT');
     // const attachMeta = metaList.filter(meta => meta.COMP_FIELD === 'ATTACH');
 
@@ -48,7 +48,7 @@ class View extends Component {
           </tbody>
         </table>
         <div style={{ textAlign: 'right', paddingTop: '10px' }}>
-          <Button className="btn-primary" onClick={() => deleteTask(id, workSeq, taskSeq, onDeleteComplete)}>
+          <Button className="btn-primary" onClick={() => deleteTask(id, reloadId, workSeq, taskSeq, onDeleteComplete)}>
             삭제
           </Button>
         </div>
