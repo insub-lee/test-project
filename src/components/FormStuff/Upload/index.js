@@ -5,39 +5,46 @@ import axios from 'axios';
 // import Upload from './Upload';
 import Upload from './FileUploader';
 
+const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
 class DefaultUploader extends Component {
   state = {
     fileList: [],
   };
 
   componentDidMount() {
-    const { defaultValue: { DETAIL: fileList } } = this.props;
+    const {
+      defaultValue: { DETAIL: fileList },
+    } = this.props;
     if (fileList) {
       console.debug('# File List', fileList);
       this.setState({
         fileList: fileList.map(file => ({
           ...file,
           uid: file.seq,
-          url: file.link,
+          url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
           status: 'done',
         })),
       });
     }
   }
 
-  onRemove = (file) => {
+  onRemove = file => {
     console.debug('Removed, file', file);
   };
 
-  getCurrentValueJson = fileList => fileList.filter(fileObj => fileObj.status === 'done').map(fileObj => ({
-    ...fileObj, uid: undefined, thumbUrl: undefined, status: undefined,
-  }));
+  getCurrentValueJson = fileList =>
+    fileList
+      .filter(fileObj => fileObj.status === 'done')
+      .map(fileObj => ({
+        ...fileObj,
+        uid: undefined,
+        thumbUrl: undefined,
+        status: undefined,
+      }));
 
   getCurrentValue = () => {
     const { fileList } = this.state;
-    const {
-      name, workSeq, taskSeq, contSeq,
-    } = this.props;
+    const { name, workSeq, taskSeq, contSeq } = this.props;
     return JSON.stringify({
       WORK_SEQ: workSeq,
       TASK_SEQ: taskSeq,
@@ -45,9 +52,14 @@ class DefaultUploader extends Component {
       FIELD_NM: name,
       ORD: 0,
       TYPE: 'rich-text-editor',
-      DETAIL: fileList.filter(fileObj => fileObj.status === 'done').map(fileObj => ({
-        ...fileObj, uid: undefined, thumbUrl: undefined, status: undefined,
-      })),
+      DETAIL: fileList
+        .filter(fileObj => fileObj.status === 'done')
+        .map(fileObj => ({
+          ...fileObj,
+          uid: undefined,
+          thumbUrl: undefined,
+          status: undefined,
+        })),
     });
   };
 
@@ -86,16 +98,12 @@ class DefaultUploader extends Component {
         }
       });
     }
-
-
   };
 
-  customRequest = ({
-    action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials,
-  }) => {
+  customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
     const formData = new FormData();
     if (data) {
-      Object.keys(data).forEach((key) => {
+      Object.keys(data).forEach(key => {
         formData.append(key, data[key]);
       });
     }
@@ -126,7 +134,14 @@ class DefaultUploader extends Component {
     const { name, readOnly } = this.props;
     return (
       <div>
-        <Upload fileList={fileList} handleChange={this.handleChange} customRequest={this.customRequest} action="/upload" onRemove={this.onRemove} disabled={readOnly} />
+        <Upload
+          fileList={fileList}
+          handleChange={this.handleChange}
+          customRequest={this.customRequest}
+          action="/upload"
+          onRemove={this.onRemove}
+          disabled={readOnly}
+        />
         <input type="hidden" name={name} value={this.getCurrentValue(fileList.filter(file => file.status === 'done'))} data-type="json" />
       </div>
     );
