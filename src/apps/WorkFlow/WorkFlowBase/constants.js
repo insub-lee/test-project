@@ -1,0 +1,16 @@
+const base = 'apps/WorkFlow/User/Draft/DraftBase/';
+export const GET_DRAFT_DETAIL = `${base}GET_DRAFT_DETAIL`;
+export const SET_DRAFT_DETAIL = `${base}SET_DRAFT_DETAIL`;
+export const SET_ISREDIRECT = `${base}SET_ISREDIRECT`;
+export const SET_VISIBLE_OPINION = `${base}SET_VISIBLE_OPINION`;
+export const REQ_APPROVAL = `${base}REQ_APPROVAL`;
+export const INIT_DRAFT_DETAIL = `${base}INIT_DRAFT_DETAIL`;
+export const GET_EXTRA_API_DATA = `${base}GET_EXTRA_API_DATA`;
+export const SET_EXTRA_API_DATA = `${base}SET_EXTRA_API_DATA`;
+export const SET_APPROVAL_PROCESS_QUE_ID_BY_REDUCR = `${base}SET_APPROVAL_PROCESS_QUE_ID_BY_REDUCR`;
+export const SET_DRAFT_STEP_INFO_BY_REDUCR = `${base}SET_DRAFT_STEP_INFO_BY_REDUCR`;
+export const GET_PROCESS_DATA_BY_SAGA = `${base}GET_PROCESS_DATA_BY_SAGA`;
+export const SET_PROCESS_DATA_BY_REDUCR = `${base}SET_PROCESS_DATA_BY_REDUCR`;
+export const ADD_DRAFT_LINE_BY_SAGA = `${base}ADD_DRAFT_LINE_BY_SAGA`;
+export const REQ_REJECT_BY_SAGA = `${base}REQ_REJECT_BY_SAGA`;
+export const GET_DRAFT_STEP_INFO_BY_SAGA = `${base}GET_DRAFT_STEP_INFO_BY_SAGA`;
