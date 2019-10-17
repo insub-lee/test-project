@@ -90,6 +90,7 @@ class GenBoard extends Component {
         >
           <BizBuilderBase
             id={`view${widgetId}`}
+            reloadId={`list${widgetId}`}
             workSeq={this.state.workSeq}
             taskSeq={this.state.taskSeq}
             component={View}
