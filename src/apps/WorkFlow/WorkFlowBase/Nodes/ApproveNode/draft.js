@@ -51,8 +51,7 @@ class ApproveNodeDraft extends Component {
   }
 
   render = () => {
-    console.log('DCC노드 프롭스', this.props);
-    return <div>DCC 노드</div>;
+    return <div>필수심의권자 노드</div>;
   };
 }
 

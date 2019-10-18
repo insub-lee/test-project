@@ -90,7 +90,6 @@ class Draft extends Component {
 
   render() {
     const { match, draftList, selectedDraft, visibleViewModal, location } = this.props;
-    console.debug(draftList, selectedDraft, visibleViewModal);
     const pathname = location && location.pathname ? location.pathname : 'draft/nodata';
     let tableData = [];
     let selectedData = {};
@@ -104,7 +103,6 @@ class Draft extends Component {
     if (visibleViewModal) {
       visibleViewData = visibleViewModal[pathname] || false;
     }
-    console.debug(tableData, selectedData, visibleViewData);
     const { CATE } = match.params;
     let columns = [
       {
@@ -164,9 +162,9 @@ class Draft extends Component {
 
 Draft.propTypes = {
   match: PropTypes.object.isRequired,
-  draftList: PropTypes.array.isRequired,
+  draftList: PropTypes.object.isRequired,
   selectedDraft: PropTypes.object.isRequired,
-  visibleViewModal: PropTypes.bool.isRequired,
+  visibleViewModal: PropTypes.object.isRequired,
   getDraftList: PropTypes.func.isRequired,
   setSelectedDraft: PropTypes.func.isRequired,
 };
