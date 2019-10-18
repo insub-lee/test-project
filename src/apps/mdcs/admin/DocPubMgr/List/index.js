@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Input, Table, Row, Col, Icon, Button, TreeSelect } from 'antd';
+import StyledButton from 'apps/mdcs/styled/StyledButton';
 import PropTypes from 'prop-types';
 
 import message from 'components/Feedback/message';
@@ -259,12 +260,12 @@ class List extends Component {
         align: 'center',
         render: (text, record) => (
           <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Button className="btn-outline-success" type="button" onClick={() => modifyHandle(record)}>
+            <StyledButton className="btn-primary btn-first" onClick={() => modifyHandle(record)}>
               <Icon type="edit" />
-            </Button>
-            <Button className="btn-outline-danger" type="button" onClick={() => deleteHandle(record)}>
+            </StyledButton>
+            <StyledButton className="btn-light" onClick={() => deleteHandle(record)}>
               <Icon type="delete" />
-            </Button>
+            </StyledButton>
           </div>
         ),
       },
@@ -298,9 +299,9 @@ class List extends Component {
           key: `pub_user_delete_${index}`,
           render: record => (
             <React.Fragment>
-              <Button className="btn-outline-danger" type="button" onClick={() => deleteOneUser(record)}>
+              <StyledButton className="btn-light" onClick={() => deleteOneUser(record)}>
                 <Icon type="close" />
-              </Button>
+              </StyledButton>
             </React.Fragment>
           ),
         },
@@ -313,7 +314,7 @@ class List extends Component {
         <Styled className="DocPubMgrListWrap">
           <Row>
             <Col>
-              <Row claaName="editArea" Gutter={5} style={{ borderBottom: '1px solid #e8e8e8', paddingBottom: '10px' }}>
+              <Row claaName="editArea" style={{ borderBottom: '1px solid #e8e8e8', paddingBottom: '10px' }}>
                 <Col span={1} className="titleArea">
                   <span>부서</span>
                 </Col>
@@ -348,37 +349,48 @@ class List extends Component {
                   <div claaName="inputBtnGroup" style={{ display: 'flex' }}>
                     {viewType === 'wait' ? (
                       <React.Fragment>
-                        <Input placeholder="사용자(부서)" disabled value={selectedUserList} onClick={onDeptClick} readOnly />
-                        <Button onClick={() => editTypeViewHandle()}>
-                          <Icon type="save" />
-                          등록하기
-                        </Button>
+                      <div  style={{width: '85%'}}>
+                        <Input
+                          placeholder="사용자(부서)"
+                          disabled
+                          value={selectedUserList}
+                          onClick={onDeptClick}
+                          readOnly
+                        />
+                      </div>
+                      <div style={{width: '25%',  textAlign: 'center'}}>
+                        <StyledButton className="btn-primary btn-first" onClick={() => editTypeViewHandle()}>
+                          <span>등록</span>
+                        </StyledButton>
+                      </div>
                       </React.Fragment>
                     ) : (
-                      <React.Fragment>
-                        <Input placeholder="사용자(부서)" value={selectedUserList} onClick={onDeptClick} readOnly />
+                        <React.Fragment>
+                        <div style={{width: '85%'}}>
+                        <Input placeholder="사용자(부서)" value={selectedUserList} onClick={onDeptClick} readOnly/>
+                        </div>
                         {viewType === 'edit' ? (
-                          <React.Fragment>
-                            <Button onClick={() => onSaveHandle()}>
+                          <div style={{width: '25%',  textAlign: 'center'}}>
+                            <StyledButton className="btn-primary btn-first" onClick={() => onSaveHandle()}>
                               <Icon type="check" />
                               {editBtnName}
-                            </Button>
-                            <Button onClick={() => editCancel()}>
+                            </StyledButton>
+                            <StyledButton className="btn-light" onClick={() => editCancel()}>
                               <Icon type="close" />
-                              취소
-                            </Button>
-                          </React.Fragment>
+                              <span>취소</span>
+                            </StyledButton>
+                          </div>
                         ) : (
-                          <React.Fragment>
-                            <Button onClick={() => onSaveHandle()}>
+                          <div style={{width: '25%',  textAlign: 'center'}}>
+                            <StyledButton className="btn-primary btn-first" onClick={() => onSaveHandle()}>
                               <Icon type="check" />
-                              {editBtnName}
-                            </Button>
-                            <Button onClick={() => editCancel()}>
+                              <span>{editBtnName}</span>
+                            </StyledButton>
+                            <StyledButton className="btn-light" onClick={() => editCancel()}>
                               <Icon type="close" />
-                              취소
-                            </Button>
-                          </React.Fragment>
+                              <span>취소</span>
+                            </StyledButton>
+                          </div>
                         )}
                       </React.Fragment>
                     )}
