@@ -8,6 +8,9 @@ import FileUpload from 'components/FormStuff/Upload';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
+import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+
 import StyledContent from '../../../../styled/Modals/StyledContent';
 import StyledCommonForm from '../../../../styled/CommonStyledElement/StyledCommonForm';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
@@ -28,15 +31,16 @@ class PmDoc extends Component {
     selectedSpec: [],
     dwTemp: [],
     selectedDw: [],
+    isDraftModal: false,
+    taskSeq: -1,
+    formData: {},
+    degree: Degree.MAJOR,
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq, revisionTask, taskSeq, formData } = this.props;
+    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq } = this.props;
     getExtraApiData(id, localApiArr);
-
-    if (formData && formData.SUB_SPEC_SEQ) {
-      console.log(formData, '폼데이터');
-    }
+    getTaskSeq(id, workSeq);
   }
 
   onChangeFormData = (detail, fieldName, compType, contSeq) => {
@@ -169,9 +173,10 @@ class PmDoc extends Component {
     this.setState({ dwTemp: data });
   };
 
-  onChangeNumberHanlder = () => {
-    const { id, changeFormData, docNumber } = this.props;
-    changeFormData(id, 'PM_ID', docNumber);
+  setIsDraftModal = isDraftModal => this.setState({ isDraftModal });
+
+  saveTaskAfter = (id, taskSeq, formData) => {
+    this.setState({ isDraftModal: true, taskSeq, title: formData.TITLE, formData });
   };
 
   render() {
@@ -181,9 +186,13 @@ class PmDoc extends Component {
       id,
       metaList,
       formData,
-      taskSeq,
       changeFormData,
       docNumber,
+      selectedNodeId,
+      sp_rev,
+      workSeq,
+      draftType,
+      fullNodeIds,
     } = this.props;
 
     const editor = metaList.filter(meta => meta.COMP_TAG === 'rich-text-editor');
@@ -215,7 +224,7 @@ class PmDoc extends Component {
                   <div className="rightTable">
                     <Col span={4}>Control Rev</Col>
                     <Col span={8}>
-                      <Input value={'0'} />
+                      <Input value={sp_rev} />
                     </Col>
                   </div>
                 </Row>
@@ -291,7 +300,7 @@ class PmDoc extends Component {
                   <div className="rightTable">
                     <Col span={4}>적용지역</Col>
                     <Col span={8}>
-                      <Select placeholder="select me" onChange={value => changeFormData(id, 'REGION', value)} value={Number(formData.REGION) || undefined}>
+                      <Select placeholder="select me" onChange={value => changeFormData(id, 'REGION', value)} value={formData.REGION || undefined}>
                         {regionList &&
                           regionList.categoryMapList
                             .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
@@ -526,7 +535,7 @@ class PmDoc extends Component {
                 <Row>
                   <div className="w100Table">
                     <Col span={24}>
-                      {editor && editorConfig && editorConfig.REMARK && formData.hasOwnProperty('REMARK') && (
+                      {editorConfig && editorConfig.REMARK && formData.hasOwnProperty('REMARK') && (
                         <RichTextEditor
                           {...editorConfig.REMARK.property.property}
                           saveTempContents={this.onChangeFormData}
@@ -565,7 +574,7 @@ class PmDoc extends Component {
                       </StyledButton>
                     </Col>
                     <Col span={20}>
-                      {editor && editorConfig && editorConfig.REMARK2 && formData.hasOwnProperty('REMARK2') && (
+                      {editorConfig && editorConfig.REMARK2 && formData.hasOwnProperty('REMARK2') && (
                         <RichTextEditor
                           {...editorConfig.REMARK2.property.property}
                           ref={ref => {
@@ -579,16 +588,30 @@ class PmDoc extends Component {
                     </Col>
                   </div>
                 </Row>
+                <Row>
+                  <Col>
+                    <WorkFlowBase
+                      viewType="draft"
+                      isDraftModal={this.state.isDraftModal}
+                      setIsDraftModal={this.setIsDraftModal}
+                      selectedInitDraft={{ REL_TYPE: 1, REL_KEY: { WORK_SEQ: workSeq, TASK_SEQ: this.state.taskSeq }, PRC_ID: 138, TITLE: this.state.title }}
+                      draftCompleteFunc={this.props.onCloseModleHandler}
+                      externalData={{ draftType, fullNodeIds, degree: this.state.degree }}
+                      formData={this.state.formData}
+                    />
+                  </Col>
+                </Row>
               </div>
             </div>
             <div className="sub_form" style={{ textAlign: 'center' }}>
               <StyledButton
                 className="btn-primary"
                 onClick={() => {
-                  changeFormData(id, 'SP_ID', docNumber);
-                  changeFormData(id, 'VERSION', '0');
+                  changeFormData(id, 'NODE_ID', selectedNodeId);
+                  changeFormData(id, 'PM_ID', docNumber);
+                  changeFormData(id, 'SP_REV', sp_rev);
                   this.setState({ selectedDw: [], selectedSpec: [] });
-                  saveTask(id);
+                  saveTask(id, id, this.saveTaskAfter);
                 }}
               >
                 SAVE
@@ -605,6 +628,7 @@ PmDoc.propTypes = {
   extraRes: PropTypes.object.isRequired,
   metaList: PropTypes.arrayOf(PropTypes.object).isRequired,
   docNumber: PropTypes.string,
+  sp_rev: PropTypes.number,
 };
 
 PmDoc.defaultProps = {
@@ -629,6 +653,7 @@ PmDoc.defaultProps = {
     },
   ],
   docNumber: [],
+  sp_rev: 0,
 };
 
 export default PmDoc;

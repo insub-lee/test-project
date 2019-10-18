@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Input, Row, Col, Modal, Select, Radio } from 'antd';
+import { Button, Input, TreeSelect, Row, Col, Modal, Select, Radio } from 'antd';
 import PropTypes from 'prop-types';
+import { getTreeFromFlatData } from 'react-sortable-tree';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
 import StyledContent from 'apps/mdcs/styled/Modals/StyledContent';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import FileUpload from 'components/FormStuff/Upload';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
+
+import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
 
 const AntdModal = StyledModalWrapper(Modal);
 const { Option } = Select;
@@ -33,12 +36,21 @@ class TechDoc extends Component {
     namePkg: '',
     nameModule: '',
     nameCustomer: '',
+    isDraftModal: false,
+    taskSeq: -1,
+    formData: {},
+    degree: Degree.MAJOR,
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq } = this.props;
+    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq, taskSeq, revisionTask } = this.props;
     getExtraApiData(id, localApiArr);
-    // getTaskSeq(id, workSeq);
+    if (taskSeq === -1) {
+      // TaskSeq가 안바뀜..
+      // getTaskSeq(id, workSeq);
+    } else {
+      revisionTask(id, workSeq, taskSeq);
+    }
   }
 
   handlerScopeChange = (key, name) => {
@@ -70,11 +82,6 @@ class TechDoc extends Component {
     } else {
       message.warning(<MessageContent>에러가 발생하였습니다. 관리자에게 문의하세요.</MessageContent>, 3);
     }
-  };
-
-  onChangeNumberHanlder = () => {
-    const { id, changeFormData, docNumber } = this.props;
-    changeFormData(id, 'SP_ID', docNumber);
   };
 
   handlerModalOpen = () => {
@@ -156,20 +163,26 @@ class TechDoc extends Component {
   };
 
   onClickSave = () => {
-    const { changeFormData, id, saveTask, formData, taskSeq, docNumber } = this.props;
+    const { changeFormData, id, sp_rev, saveTask, formData, taskSeq, docNumber } = this.props;
+    changeFormData(id, 'SP_ID', docNumber);
+    changeFormData(id, 'SP_REV', sp_rev);
     if (formData && formData.CHANGE === ' ') {
       changeFormData(id, 'CHANGE', '1');
     }
     if (this.clientValidation()) {
       if (taskSeq === -1) {
-        changeFormData(id, 'VERSION', '0.0');
-        changeFormData(id, 'SP_ID', docNumber);
         message.success(<MessageContent>등록 성공</MessageContent>, 3);
       } else {
         message.success(<MessageContent>변경 성공</MessageContent>, 3);
       }
-      saveTask(id);
+      saveTask(id, id, this.saveTaskAfter);
     }
+  };
+
+  setIsDraftModal = isDraftModal => this.setState({ isDraftModal });
+
+  saveTaskAfter = (id, taskSeq, formData) => {
+    this.setState({ isDraftModal: true, taskSeq, title: formData.TITLE, formData });
   };
 
   render() {
@@ -179,14 +192,14 @@ class TechDoc extends Component {
       formData,
       workSeq,
       taskSeq,
-      metaList,
+      sp_rev,
       changeFormData,
       docNumber,
+      selectedNodeId,
+      fullNodeIds,
+      draftType,
+      saveTask,
     } = this.props;
-
-    console.debug('##this.props', this.props);
-    const contentMeta = metaList.filter(meta => meta.COMP_TAG === 'rich-text-editor');
-    const attachMeta = metaList.filter(meta => meta.COMP_TAG === 'file-upload');
 
     return (
       <StyledContent>
@@ -214,7 +227,7 @@ class TechDoc extends Component {
                   <div className="rightTable">
                     <Col span={4}>Revision</Col>
                     <Col span={8}>
-                      <Input value={'0'} readOnly />
+                      <Input value={sp_rev} readOnly />
                     </Col>
                   </div>
                 </Row>
@@ -521,12 +534,15 @@ class TechDoc extends Component {
                     <Col span={20}>
                       <Radio.Group
                         onChange={e => {
+                          this.setState({
+                            degree: e.target.value,
+                          });
                           changeFormData(id, 'CHANGE', e.target.value);
                         }}
-                        value={formData.CHANGE === ' ' ? '1' : formData.CHANGE}
+                        value={this.state.degree}
                       >
-                        <Radio value="1">Major</Radio>
-                        <Radio value="2">Minor</Radio>
+                        <Radio value={Degree.MAJOR}>Major</Radio>
+                        <Radio value={Degree.MINOR}>Minor</Radio>
                       </Radio.Group>
                     </Col>
                   </div>
@@ -547,41 +563,41 @@ class TechDoc extends Component {
                     </Col>
                   </div>
                 </Row>
-                {contentMeta && contentMeta.length > 0 && formData.hasOwnProperty('REMARK') && (
-                  <Row>
-                    <div className="w100Table">
-                      <Col span={4}> Description of Change(From/To)</Col>
-                      <Col span={20}>
+                <Row>
+                  <div className="w100Table">
+                    <Col span={4}> Description of Change(From/To)</Col>
+                    <Col span={20}>
+                      {formData.hasOwnProperty('REMARK') && (
                         <RichTextEditor
                           name="REMARK"
                           saveTempContents={this.handlerRemarkChange}
                           config={froalaEditorConfig()}
                           defaultValue={formData.REMARK}
                         />
-                      </Col>
-                    </div>
-                  </Row>
-                )}
-                {contentMeta && contentMeta.length > 0 && formData.hasOwnProperty('FMEA_DESC') && (
-                  <Row className={formData && formData.FMEA_FLAG === '2' ? 'show' : 'noShow'}>
-                    <div className="w100Table">
-                      <Col span={4}> Description of FMEA</Col>
-                      <Col span={20}>
+                      )}
+                    </Col>
+                  </div>
+                </Row>
+                <Row className={formData && formData.FMEA_FLAG === '2' ? 'show' : 'noShow'}>
+                  <div className="w100Table">
+                    <Col span={4}> Description of FMEA</Col>
+                    <Col span={20}>
+                      {formData.hasOwnProperty('FMEA_DESC') && (
                         <RichTextEditor
                           name="FMEA_DESC"
                           saveTempContents={this.handlerRemarkChange}
                           config={froalaEditorConfig()}
                           defaultValue={formData.FMEA_DESC}
                         />
-                      </Col>
-                    </div>
-                  </Row>
-                )}
-                {contentMeta && contentMeta.length > 0 && formData.hasOwnProperty('COPY_REMARK') && (
-                  <Row>
-                    <div className="w100Table">
-                      <Col span={4}> 재개정 이력</Col>
-                      <Col span={20}>
+                      )}
+                    </Col>
+                  </div>
+                </Row>
+                <Row>
+                  <div className="w100Table">
+                    <Col span={4}> 재개정 이력</Col>
+                    <Col span={20}>
+                      {formData.hasOwnProperty('COPY_REMARK') && (
                         <RichTextEditor
                           ref={ref => {
                             this.copyMark = ref;
@@ -591,72 +607,31 @@ class TechDoc extends Component {
                           config={froalaEditorConfig()}
                           defaultValue={formData.COPY_REMARK}
                         />
-
-                        <Button onClick={this.handlerCopyDesc}>Copy Description</Button>
-                      </Col>
-                    </div>
-                  </Row>
-                )}
+                      )}
+                      <Button onClick={this.handlerCopyDesc}>Copy Description</Button>
+                    </Col>
+                  </div>
+                </Row>
                 <Row>
                   <div className="w100Table">
                     <Col span={4}>첨부파일</Col>
                     <Col span={20}>
-                      {attachMeta && attachMeta.length > 0 && formData.hasOwnProperty('ATTACH') && (
-                        <Row>
-                          <div className="w100Table">
-                            <Col span={6} className="attachTitle">
-                              별첨#(본문내용)
-                            </Col>
-                            <Col span={18}>
-                              <FileUpload
-                                workSeq={workSeq}
-                                taskSeq={taskSeq}
-                                defaultValue={formData.ATTACH}
-                                saveTempContents={detail => this.handlerAttachChange(detail, 'ATTACH')}
-                                multiple={false}
-                              ></FileUpload>
-                            </Col>
-                          </div>
-                        </Row>
-                      )}
-                      {attachMeta && attachMeta.length > 0 && formData.hasOwnProperty('ATTACH2') && (
-                        <Row>
-                          <div className="w100Table">
-                            <Col span={6} className="attachTitle">
-                              별첨#1(서식지 or 기술자료)
-                            </Col>
-                            <Col span={18}>
-                              <FileUpload
-                                workSeq={workSeq}
-                                taskSeq={taskSeq}
-                                defaultValue={formData.ATTACH2}
-                                saveTempContents={detail => this.handlerAttachChange(detail, 'ATTACH2')}
-                                multiple={false}
-                              ></FileUpload>
-                            </Col>
-                          </div>
-                        </Row>
-                      )}
-                      {attachMeta && attachMeta.length > 0 && formData.hasOwnProperty('ATTACH3') && (
-                        <Row>
-                          <div className="w100Table">
-                            <Col span={6} className="attachTitle">
-                              별첨#2(기술자료)
-                            </Col>
-                            <Col span={18}>
-                              <FileUpload
-                                workSeq={workSeq}
-                                taskSeq={taskSeq}
-                                defaultValue={formData.ATTACH3}
-                                saveTempContents={detail => this.handlerAttachChange(detail, 'ATTACH3')}
-                                multiple={false}
-                              ></FileUpload>
-                            </Col>
-                          </div>
-                        </Row>
-                      )}
+                      {/* <AttachList formData={formData} workSeq={workSeq} taskSeq={taskSeq} handlerAttachChange={this.handlerAttachChange}></AttachList> */}
                     </Col>
                   </div>
+                </Row>
+                <Row>
+                  <Col>
+                    <WorkFlowBase
+                      viewType="draft"
+                      isDraftModal={this.state.isDraftModal}
+                      setIsDraftModal={this.setIsDraftModal}
+                      selectedInitDraft={{ REL_TYPE: 1, REL_KEY: { WORK_SEQ: workSeq, TASK_SEQ: this.state.taskSeq }, PRC_ID: 138, TITLE: this.state.title }}
+                      draftCompleteFunc={this.props.onCloseModleHandler}
+                      externalData={{ draftType, fullNodeIds, degree: this.state.degree }}
+                      formData={this.state.formData}
+                    />
+                  </Col>
                 </Row>
                 <Row>
                   <div className="ButtonWrap">
@@ -670,7 +645,16 @@ class TechDoc extends Component {
                     >
                       닫기
                     </Button>
-                    <Button onClick={this.onClickSave}>상신</Button>
+                    <Button
+                      onClick={() => {
+                        changeFormData(id, 'NODE_ID', selectedNodeId);
+                        changeFormData(id, 'SP_ID', docNumber);
+                        changeFormData(id, 'SP_REV', sp_rev);
+                        saveTask(id, id, this.saveTaskAfter);
+                      }}
+                    >
+                      상신
+                    </Button>
                   </div>
                 </Row>
               </div>
@@ -686,12 +670,14 @@ export default TechDoc;
 TechDoc.propTypes = {
   workSeq: PropTypes.number,
   apiArr: PropTypes.array,
+  sp_id: PropTypes.string,
   sp_rev: PropTypes.number,
   localApiArr: PropTypes.array,
   docNumber: PropTypes.string,
 };
 
 TechDoc.defaultProps = {
+  sp_id: 'test-123',
   sp_rev: 0,
   localApiArr: [
     { key: 'siteList', url: `/api/admin/v1/common/categoryMapList?MAP_ID=16`, type: 'GET' },

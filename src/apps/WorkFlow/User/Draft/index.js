@@ -29,8 +29,29 @@ const getColumns = (columns, CATE) => {
       key: 'draftDttm',
       width: '15%',
     });
+  } else if (CATE === 'unApproval') {
+    columns.push(
+      {
+        title: '결재단계',
+        dataIndex: 'NODE_NAME_KOR',
+        key: 'nodeNameKor',
+        width: '10%',
+      },
+      {
+        title: '결재자',
+        dataIndex: 'APPV_NAME_KOR',
+        key: 'appvNameKor',
+        width: '10%',
+      },
+    );
   } else {
     columns.push(
+      {
+        title: '결재단계',
+        dataIndex: 'NODE_NAME_KOR',
+        key: 'nodeNameKor',
+        width: '10%',
+      },
       {
         title: '결재자',
         dataIndex: 'APPV_NAME_KOR',
