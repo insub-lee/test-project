@@ -110,6 +110,8 @@ const mapDispatchToProps = dispatch => ({
   modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
   modifyTaskBySeq: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc)),
   deleteTask: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, callbackFunc)),
+  deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
+  deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
   revisionTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.revisionTask(id, workSeq, taskSeq, callbackFunc)),
