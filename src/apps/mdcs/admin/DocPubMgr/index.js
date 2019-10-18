@@ -9,7 +9,7 @@ class DocPubMgr extends Component {
     const { workSeq, apiArr, viewType } = this.props;
     return (
       <div style={{ backgroundColor: '#ffffff' }}>
-        <BizBuilderBase id="DocPubMgr" workSeq={workSeq} component={List} viewType={viewType} apiArr={apiArr} />;
+        <BizBuilderBase id="DocPubMgr" workSeq={workSeq} component={List} viewType={viewType} apiArr={apiArr} />
       </div>
     );
   }
