@@ -49,7 +49,7 @@ class WorkFlowBase extends Component {
   }
 
   approvalRequest = (status, opinion, callbackFunc) => {
-    const { draftDetail, requestApproval, setApprovalProcessQueId } = this.props;
+    const { draftDetail, requestApproval, setApprovalProcessQueId, setSelectedDraft } = this.props;
     const payload = {
       action: 'AP',
       QUE_ID: draftDetail.QUE_ID,
@@ -61,10 +61,11 @@ class WorkFlowBase extends Component {
     };
     requestApproval(payload, callbackFunc);
     setApprovalProcessQueId(0);
+    setSelectedDraft({}, false);
   };
 
   rejectRequest = (status, opinion, callbackFunc) => {
-    const { draftDetail, requestApproval, setApprovalProcessQueId } = this.props;
+    const { draftDetail, requestApproval, setApprovalProcessQueId, setSelectedDraft } = this.props;
     const payload = {
       action: 'AP',
       QUE_ID: draftDetail.QUE_ID,
@@ -76,6 +77,7 @@ class WorkFlowBase extends Component {
     };
     requestApproval(payload, callbackFunc);
     setApprovalProcessQueId(0);
+    setSelectedDraft({}, false);
   };
 
   handleCloselModal = () => {
