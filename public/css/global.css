@@ -239,7 +239,7 @@ html a:active {
 .ant-modal-content input,
 .ant-modal-content textarea,
 .ant-modal-content .ant-input {
-  border: 1px solid #cccccc !important;
+  border: 1px solid #cccccc;
   border-radius: 0;
 }
 .ant-modal-content input:hover,
