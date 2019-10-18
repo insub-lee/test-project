@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Select, Button, TreeSelect, Input } from 'antd';
 import PropTypes from 'prop-types';
+import StyledButton from 'apps/mdcs/styled/StyledButton';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
 import { fromJS } from 'immutable';
@@ -18,18 +19,18 @@ const { Option } = Select;
 const getTreeData = categoryMapList =>
   categoryMapList.length > 0
     ? getTreeFromFlatData({
-      flatData: categoryMapList
-        .filter(filterItem => filterItem.USE_YN === 'Y')
-        .map(item => ({
-          title: item.NAME_KOR,
-          value: item.NODE_ID,
-          key: item.NODE_ID,
-          parentValue: item.PARENT_NODE_ID,
-        })),
-      getKey: node => node.key,
-      getParentKey: node => node.parentValue,
-      rootKey: 9,
-    })
+        flatData: categoryMapList
+          .filter(filterItem => filterItem.USE_YN === 'Y')
+          .map(item => ({
+            title: item.NAME_KOR,
+            value: item.NODE_ID,
+            key: item.NODE_ID,
+            parentValue: item.PARENT_NODE_ID,
+          })),
+        getKey: node => node.key,
+        getParentKey: node => node.parentValue,
+        rootKey: 9,
+      })
     : [];
 
 class Edit extends Component {
@@ -231,10 +232,10 @@ class Edit extends Component {
     return (
       <Styled id="docApproverManageWrap">
         <Row className="editRow firstRow">
-          <Col span={4} className="titleCol">
+          <Col span={2} className="titleCol">
             분류
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <TreeSelect
               className="editSelect"
               placeholder="select me"
@@ -244,10 +245,10 @@ class Edit extends Component {
               value={formData.NODE_ID || undefined}
             />
           </Col>
-          <Col span={4} className="titleCol">
+          <Col span={2} className="titleCol">
             기안구분
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <Select
               className="editSelect"
               placeholder="select me"
@@ -267,10 +268,10 @@ class Edit extends Component {
           </Col>
         </Row>
         <Row className="editRow">
-          <Col span={4} className="titleCol">
+          <Col span={2} className="titleCol">
             개정범위
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <Select
               className="editSelect"
               placeholder="select me"
@@ -288,10 +289,10 @@ class Edit extends Component {
                 ))}
             </Select>
           </Col>
-          <Col span={4} className="titleCol">
+          <Col span={2} className="titleCol">
             결재단계
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <Select
               className="editSelect"
               placeholder="select me"
@@ -311,16 +312,16 @@ class Edit extends Component {
           </Col>
         </Row>
         <Row className="editRow">
-          <Col span={4} className="titleCol">
+          <Col span={2} className="titleCol">
             결재자
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <Input readOnly placeholder="select me" value={this.state.displayUserName} onClick={() => this.setState({ isOpenModal: true })} />
           </Col>
-          <Col span={4} className="titleCol">
+          <Col span={2} className="titleCol">
             사용여부
           </Col>
-          <Col span={8}>
+          <Col span={10}>
             <Select
               className="editSelect"
               placeholder="select me"
@@ -337,12 +338,20 @@ class Edit extends Component {
           <Col className="buttonCol">
             {modifyInfo.modifyYn ? (
               <React.Fragment>
-                <Button onClick={() => this.modifySavaBtnHandle()}>SAVE</Button>
-                <Button onClick={() => this.resetBtnHandle()}>RESET</Button>
-                <Button onClick={() => this.cancelBtnHandle()}>CANCEL</Button>
+                <StyledButton className="btn-primary btn-first" onClick={() => this.modifySavaBtnHandle()}>
+                  SAVE
+                </StyledButton>
+                <StyledButton className="btn-light" onClick={() => this.resetBtnHandle()}>
+                  RESET
+                </StyledButton>
+                <StyledButton className="btn-light" onClick={() => this.cancelBtnHandle()}>
+                  CANCEL
+                </StyledButton>
               </React.Fragment>
             ) : (
-              <Button onClick={() => this.saveBtnHandle()}>SAVE</Button>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.saveBtnHandle()}>
+                SAVE
+              </StyledButton>
             )}
           </Col>
         </Row>
