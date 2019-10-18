@@ -156,13 +156,14 @@ class TechDoc extends Component {
   };
 
   onClickSave = () => {
-    const { changeFormData, id, saveTask, formData, taskSeq, docNumber } = this.props;
+    const { changeFormData, id, saveTask, formData, taskSeq, docNumber, selectedNodeId } = this.props;
     if (formData && formData.CHANGE === ' ') {
       changeFormData(id, 'CHANGE', '1');
     }
     if (this.clientValidation()) {
       if (taskSeq === -1) {
         changeFormData(id, 'VERSION', '0.0');
+        changeFormData(id, 'NODE_ID', selectedNodeId);
         changeFormData(id, 'SP_ID', docNumber);
         message.success(<MessageContent>등록 성공</MessageContent>, 3);
       } else {
@@ -182,6 +183,9 @@ class TechDoc extends Component {
       metaList,
       changeFormData,
       docNumber,
+      selectedNodeId,
+      fullNodeIds,
+      draftType,
     } = this.props;
 
     console.debug('##this.props', this.props);
@@ -238,7 +242,7 @@ class TechDoc extends Component {
                     <Col span={10}>
                       <AntdModal
                         className="modalWrapper"
-                        width={1500}
+                        width={1080}
                         visible={this.state.scopeModal}
                         onOk={this.handlerModalOk}
                         onCancel={this.handlerModalCancel}

@@ -184,6 +184,9 @@ class PmDoc extends Component {
       taskSeq,
       changeFormData,
       docNumber,
+      selectedNodeId,
+      fullNodeIds,
+      draftType,
     } = this.props;
 
     const editor = metaList.filter(meta => meta.COMP_TAG === 'rich-text-editor');
@@ -585,6 +588,7 @@ class PmDoc extends Component {
               <StyledButton
                 className="btn-primary"
                 onClick={() => {
+                  changeFormData(id, 'NODE_ID', selectedNodeId);
                   changeFormData(id, 'SP_ID', docNumber);
                   changeFormData(id, 'VERSION', '0');
                   this.setState({ selectedDw: [], selectedSpec: [] });

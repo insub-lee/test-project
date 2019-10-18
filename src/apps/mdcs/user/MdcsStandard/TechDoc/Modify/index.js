@@ -237,7 +237,7 @@ class TechDocModify extends Component {
                     <Col span={10}>
                       <AntdModal
                         className="modalWrapper"
-                        width={1500}
+                        width={1080}
                         visible={this.state.scopeModal}
                         onOk={this.handlerModalOk}
                         onCancel={this.handlerModalCancel}

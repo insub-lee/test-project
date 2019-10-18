@@ -7,13 +7,13 @@ import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import * as DraftType from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/draftconst';
 import StyledContents from '../../../styled/StyledContents';
 import StyledButton from '../../../styled/StyledButton';
 import BizMicroDevBase from '../../../components/BizMicroDevBase';
 import BizBuilderBase from '../../../components/BizBuilderBase';
 import StyledModalWrapper from '../../../styled/Modals/StyledModalWrapper';
 
+import * as DraftType from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/draftconst';
 
 import DwDoc from '../DwDoc';
 import PmDoc from '../PmDoc';
@@ -109,7 +109,6 @@ class IntroComponent extends Component {
   };
 
   findDocs = (listItem, aryNodesIds) => {
-    console.log(aryNodesIds, '오류찾기');
     const node = aryNodesIds.filter(_node => listItem.NODE_ID.toString() === _node);
     return node.length > 0 ? listItem : false;
   };
@@ -240,6 +239,7 @@ class IntroComponent extends Component {
             taskSeq={taskSeq}
             component={PmDoc}
             docNumber={docNumber}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
@@ -255,6 +255,7 @@ class IntroComponent extends Component {
             taskSeq={taskSeq}
             component={DwDoc}
             docNumber={docNumber}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
@@ -270,6 +271,7 @@ class IntroComponent extends Component {
             taskSeq={taskSeq}
             component={TechDoc}
             docNumber={docNumber}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
@@ -285,6 +287,7 @@ class IntroComponent extends Component {
             taskSeq={taskSeq}
             component={BizDoc}
             docNumber={docNumber}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
             fullNodeIds={this.state.fullPathInfo}
@@ -324,6 +327,7 @@ class IntroComponent extends Component {
 
   onChangeDraft = e => {
     const { value } = e.target;
+
     switch (value) {
       case DraftType.ENACTMENT:
         this.setState({ viewType: 'INPUT' });
