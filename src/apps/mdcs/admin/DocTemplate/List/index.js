@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'antd';
+import StyledButton from 'apps/mdcs/styled/StyledButton';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -252,7 +253,7 @@ class List extends Component {
     }
 
     return (
-      <div style={{ padding: '10px' }}>
+      <div style={{ padding: '10px', backgroundColor: 'white', borderRadius: '1px' }}>
         <div style={{ padding: '10px 0' }}>
           <TreeSelect
             name="code1"
@@ -278,14 +279,16 @@ class List extends Component {
             onChange={this.onDocTemplateTreeChange}
             onTreeExpand={this.onDocTemplateExpend}
           />
-          <Button style={{ display: this.state.actionType === 'I' ? 'inline' : 'none', marginRight: 10 }} onClick={this.onSave}>
+          <StyledButton className="btn-primary" style={{ display: this.state.actionType === 'I' ? 'inline' : 'none', marginRight: 10 }} onClick={this.onSave}>
             저장하기
-          </Button>
+          </StyledButton>
 
-          <Button style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>수정</Button>
-          <Button onClick={this.onCancel} style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>
+          <StyledButton className="btn-primary btn-first" style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>
+            수정
+          </StyledButton>
+          <StyledButton className="btn-light" onClick={this.onCancel} style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>
             취소
-          </Button>
+          </StyledButton>
         </div>
 
         <Table rowKey="TASK_SEQ" pagination={false} columns={this.columns} dataSource={totalData} />
