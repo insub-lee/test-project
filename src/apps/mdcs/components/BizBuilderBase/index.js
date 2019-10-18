@@ -15,7 +15,9 @@ import * as actions from './actions';
 class BizBuilderBase extends React.Component {
   componentDidMount() {
     const { id, workSeq, taskSeq } = this.props; // id: widget_id+@
-    this.props.getBuilderData(id, workSeq, taskSeq);
+    if (workSeq !== -1) {
+      this.props.getBuilderData(id, workSeq, taskSeq);
+    }
     if (taskSeq !== -1) {
       this.props.getDetailData(id, workSeq, taskSeq);
     }
@@ -61,6 +63,8 @@ BizBuilderBase.propTypes = {
   tempSaveTask: PropTypes.func,
   saveTask: PropTypes.func,
   deleteTask: PropTypes.func,
+  deleteExtraTask: PropTypes.func,
+  deleteFav: PropTypes.func,
   setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
   revisionTask: PropTypes.func,
@@ -106,6 +110,8 @@ const mapDispatchToProps = dispatch => ({
   modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
   modifyTaskBySeq: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc)),
   deleteTask: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, callbackFunc)),
+  deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
+  deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
   revisionTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.revisionTask(id, workSeq, taskSeq, callbackFunc)),
