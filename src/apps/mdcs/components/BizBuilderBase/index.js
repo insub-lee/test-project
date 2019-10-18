@@ -15,7 +15,9 @@ import * as actions from './actions';
 class BizBuilderBase extends React.Component {
   componentDidMount() {
     const { id, workSeq, taskSeq } = this.props; // id: widget_id+@
-    this.props.getBuilderData(id, workSeq, taskSeq);
+    if (workSeq !== -1) {
+      this.props.getBuilderData(id, workSeq, taskSeq);
+    }
     if (taskSeq !== -1) {
       this.props.getDetailData(id, workSeq, taskSeq);
     }
@@ -61,6 +63,8 @@ BizBuilderBase.propTypes = {
   tempSaveTask: PropTypes.func,
   saveTask: PropTypes.func,
   deleteTask: PropTypes.func,
+  deleteExtraTask: PropTypes.func,
+  deleteFav: PropTypes.func,
   setFormData: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
   revisionTask: PropTypes.func,
