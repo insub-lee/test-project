@@ -476,7 +476,6 @@ class DwDocModify extends Component {
                           if (this.checkValidation()) {
                             changeFormData(id, 'NODE_ID', selectedNodeId);
                             changeFormData(id, 'DW_ID', docNumber);
-                            changeFormData(id, 'VERSION', '0');
                             saveTask(id, id, this.saveTaskAfter);
                           }
                         }}

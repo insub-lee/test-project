@@ -29,8 +29,9 @@ class DwDocInput extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, rapiArr } = this.props;
+    const { getExtraApiData, id, rapiArr, getTaskSeq, workSeq } = this.props;
     getExtraApiData(id, rapiArr);
+    getTaskSeq(id, workSeq);
   }
 
   componentWillUnmount() {
@@ -460,7 +461,7 @@ class DwDocInput extends Component {
                           if (this.checkValidation()) {
                             changeFormData(id, 'NODE_ID', selectedNodeId);
                             changeFormData(id, 'DW_ID', docNumber);
-                            changeFormData(id, 'VERSION', '0');
+                            changeFormData(id, 'VERSION', '0.0');
                             saveTask(id, id, this.saveTaskAfter);
                           }
                         }}

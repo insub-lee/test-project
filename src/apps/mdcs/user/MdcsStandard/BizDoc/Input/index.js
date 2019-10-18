@@ -33,8 +33,9 @@ class BizDocListInput extends Component {
   state = { isDraftModal: false, taskSeq: -1, formData: {}, degree: Degree.MAJOR };
 
   componentDidMount() {
-    const { id, getExtraApiData, localApiArr } = this.props;
+    const { id, getExtraApiData, localApiArr, getTaskSeq, workSeq } = this.props;
     getExtraApiData(id, localApiArr);
+    getTaskSeq(id, workSeq);
   }
 
   componentWillUnmount() {
@@ -287,6 +288,7 @@ class BizDocListInput extends Component {
                         changeFormData(id, 'NODE_ID', selectedNodeId);
                         changeFormData(id, 'SP_ID', docNumber);
                         changeFormData(id, 'VERSION', '0.0');
+                        changeFormData(id, 'SP_REV', '0');
                         saveTask(id, id, this.saveTaskAfter);
                       }}
                     >
