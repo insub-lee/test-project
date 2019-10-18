@@ -26,14 +26,14 @@ class ApprovalView extends Component {
     const { draftDetail, approvalProcessQueId } = this.state;
 
     const btnArr = [
-      <Button key="close" onClick={this.handleCloselModal}>
+      <Button key="ApprovalViewClose" onClick={this.handleCloselModal}>
         닫기
       </Button>,
     ];
 
     if (CATE === 'unApproval' && draftDetail.STATUS !== 9) {
       btnArr.push(
-        <Button type="primary" onClick={this.openOpinionModal}>
+        <Button key="ApprovalViewSummit" type="primary" onClick={this.openOpinionModal}>
           결재
         </Button>,
       );
