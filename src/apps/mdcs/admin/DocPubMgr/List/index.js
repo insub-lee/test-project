@@ -88,7 +88,7 @@ class List extends Component {
         userList.forEach(item => {
           const findUserId = selectedUsers.findIndex(user => user.USER_ID === item.USER_ID);
           if (findUserId === -1) {
-            deleteTask(id, workSeq, item.TASK_SEQ, reloadApiData);
+            deleteTask(id, id, workSeq, item.TASK_SEQ, reloadApiData);
           }
         });
 
@@ -349,28 +349,22 @@ class List extends Component {
                   <div claaName="inputBtnGroup" style={{ display: 'flex' }}>
                     {viewType === 'wait' ? (
                       <React.Fragment>
-                      <div  style={{width: '85%'}}>
-                        <Input
-                          placeholder="사용자(부서)"
-                          disabled
-                          value={selectedUserList}
-                          onClick={onDeptClick}
-                          readOnly
-                        />
-                      </div>
-                      <div style={{width: '25%',  textAlign: 'center'}}>
-                        <StyledButton className="btn-primary btn-first" onClick={() => editTypeViewHandle()}>
-                          <span>등록</span>
-                        </StyledButton>
-                      </div>
+                        <div style={{ width: '85%' }}>
+                          <Input placeholder="사용자(부서)" disabled value={selectedUserList} onClick={onDeptClick} readOnly />
+                        </div>
+                        <div style={{ width: '25%', textAlign: 'center' }}>
+                          <StyledButton className="btn-primary btn-first" onClick={() => editTypeViewHandle()}>
+                            <span>등록</span>
+                          </StyledButton>
+                        </div>
                       </React.Fragment>
                     ) : (
-                        <React.Fragment>
-                        <div style={{width: '85%'}}>
-                        <Input placeholder="사용자(부서)" value={selectedUserList} onClick={onDeptClick} readOnly/>
+                      <React.Fragment>
+                        <div style={{ width: '85%' }}>
+                          <Input placeholder="사용자(부서)" value={selectedUserList} onClick={onDeptClick} readOnly />
                         </div>
                         {viewType === 'edit' ? (
-                          <div style={{width: '25%',  textAlign: 'center'}}>
+                          <div style={{ width: '25%', textAlign: 'center' }}>
                             <StyledButton className="btn-primary btn-first" onClick={() => onSaveHandle()}>
                               <Icon type="check" />
                               {editBtnName}
@@ -381,7 +375,7 @@ class List extends Component {
                             </StyledButton>
                           </div>
                         ) : (
-                          <div style={{width: '25%',  textAlign: 'center'}}>
+                          <div style={{ width: '25%', textAlign: 'center' }}>
                             <StyledButton className="btn-primary btn-first" onClick={() => onSaveHandle()}>
                               <Icon type="check" />
                               <span>{editBtnName}</span>
