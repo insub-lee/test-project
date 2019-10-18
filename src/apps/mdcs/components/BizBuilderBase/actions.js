@@ -115,6 +115,21 @@ export const deleteTask = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
   callbackFunc,
 });
 
+export const deleteExtraTask = (id, url, params, apiArr) => ({
+  type: `${actionTypes.DELETE_EXTRA_TASK}_${id}`,
+  id,
+  url,
+  params,
+  apiArr,
+});
+
+export const deleteFav = (id, apiArr, callbackFunc) => ({
+  type: `${actionTypes.DELETE_FAV}_${id}`,
+  id,
+  apiArr,
+  callbackFunc,
+});
+
 export const initFormData = (id, workSeq, metaList) => ({
   type: actionTypes.INIT_FORMDATA,
   id,
