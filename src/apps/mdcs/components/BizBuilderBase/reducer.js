@@ -40,7 +40,7 @@ const reducer = (state = initialState, action) => {
                 CONT_SEQ: -1,
                 FIELD_NM: item.COMP_FIELD,
                 TYPE: item.COMP_TAG,
-                DETAIL: '',
+                DETAIL: ' ',
               },
             ];
           } else if (item.COMP_TAG === 'file-upload' || item.COMP_TAG === 'work-selector') {
@@ -53,7 +53,7 @@ const reducer = (state = initialState, action) => {
               DETAIL: [],
             };
           } else {
-            formData[item.COMP_FIELD] = '';
+            formData[item.COMP_FIELD] = item.COMP_TAG === 'number' ? 0 : ' ';
           }
         });
       return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}));
