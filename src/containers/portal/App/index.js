@@ -145,7 +145,8 @@ class App extends React.PureComponent {
           }
         });
         console.log('$$$ 2.EXEC_PAGE_IDS', EXEC_PAGE_IDS);
-        handleGetDataForApps(EXEC_PAGE_IDS);
+        // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+        // handleGetDataForApps(EXEC_PAGE_IDS);
         this.isMakingApps = true;
         return;
       }
@@ -201,6 +202,20 @@ class App extends React.PureComponent {
             console.log('$$$ 8-4 독이 실행중인데 독을 고정/고정해제 또는 이미 실행중인 독아이템 실행');
             if (setMyMenuData !== prevProps.setMyMenuData) {
               console.log('$$$ 12. 독에 있던 앱을 메뉴에서 실행');
+              // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+              // 아래 내용 추가
+              this.addNewApps(
+                setMyMenuData,
+                selectedApp,
+                isUnreadCnt,
+                this.execPage,
+                this.execMenu,
+                this.show,
+                this.onReload,
+                this.setIsSpinnerShow,
+                isPreviewPage,
+              );
+              return;
             }
           }
         } else if (prevProps.dockAppList.length > dockAppList.length) {
@@ -504,9 +519,11 @@ class App extends React.PureComponent {
     );
     let test = [];
     if (app.length !== 0) {
-      test = apps.concat(app);
+      // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+      // test = apps.concat(app);
+      test.push(app);
     } else {
-      test = apps;
+      test = [];
     }
 
     const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
