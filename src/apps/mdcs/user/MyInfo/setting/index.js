@@ -13,7 +13,6 @@ import * as actions from '../widget/actions';
 import saga from '../widget/saga';
 import reducer from '../widget/reducer';
 import StyledSetting from './StyledSetting';
-import defaultUserPhoto from './singleImageUploader/sampleImg.jpg';
 
 class MyInfoWidgetSetting extends PureComponent {
   state = {
@@ -33,7 +32,7 @@ class MyInfoWidgetSetting extends PureComponent {
             <table className="myInfoSettingTable" style={{ borderSpacing: '10px', borderCollapse: 'collapse' }}>
               <tr>
                 <td className="settingTd">
-                  <SingleImageUploader defaultUserPhoto={`http://dev.portal.com${profile.PHOTO}`} changeUserInfo={changeUserInfo} />
+                  <SingleImageUploader defaultUserPhoto={profile.PHOTO} changeUserInfo={changeUserInfo} />
                 </td>
                 <td className="settingTd">
                   <Descriptions size="small" bordered column={3}>
@@ -113,6 +112,7 @@ MyInfoWidgetSetting.defaultProps = {
 
 const mapStateToProps = createStructuredSelector({
   settingData: selectors.settingData(),
+  profile: selectors.userProfile(),
 });
 
 const mapDispatchToProps = dispatch => ({

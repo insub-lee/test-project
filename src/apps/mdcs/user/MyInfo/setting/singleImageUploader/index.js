@@ -45,9 +45,9 @@ class ImageUploader extends Component {
       })
       .then(({ data: response }) => {
         onSuccess(response, file);
-        changeUserInfo('PHOTO', response.link.toString());
+        changeUserInfo('PHOTO', response.seq.toString());
         this.setState({
-          previewImage: `http://dev.portal.com${response.link.toString()}`,
+          previewImage: `${response.seq.toString()}`,
         });
       })
       .catch(onError);
@@ -62,14 +62,14 @@ class ImageUploader extends Component {
       <div className="clearfix">
         <Upload
           accept="image/jpeg, image/png"
-          action="http://dev.portal.com/upload"
+          action="/upload"
           listType="picture-card"
           multiple={false}
           fileList={fileList}
           showUploadList={false}
           customRequest={this.customRequest}
         >
-          {previewImage !== null ? <img src={previewImage} style={{ width: '100%' }} /> : <UploadButton />}
+          {previewImage !== null ? <img src={`/img/thumb/200x200/${previewImage}`} style={{ width: '100%' }} /> : <UploadButton />}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{ width: '100%' }} src={previewImage} />
