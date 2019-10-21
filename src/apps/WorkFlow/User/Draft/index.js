@@ -29,8 +29,29 @@ const getColumns = (columns, CATE) => {
       key: 'draftDttm',
       width: '15%',
     });
+  } else if (CATE === 'unApproval') {
+    columns.push(
+      {
+        title: '결재단계',
+        dataIndex: 'NODE_NAME_KOR',
+        key: 'nodeNameKor',
+        width: '10%',
+      },
+      {
+        title: '결재자',
+        dataIndex: 'APPV_NAME_KOR',
+        key: 'appvNameKor',
+        width: '10%',
+      },
+    );
   } else {
     columns.push(
+      {
+        title: '결재단계',
+        dataIndex: 'NODE_NAME_KOR',
+        key: 'nodeNameKor',
+        width: '10%',
+      },
       {
         title: '결재자',
         dataIndex: 'APPV_NAME_KOR',
@@ -90,7 +111,6 @@ class Draft extends Component {
 
   render() {
     const { match, draftList, selectedDraft, visibleViewModal, location } = this.props;
-    console.debug(draftList, selectedDraft, visibleViewModal);
     const pathname = location && location.pathname ? location.pathname : 'draft/nodata';
     let tableData = [];
     let selectedData = {};
@@ -104,7 +124,6 @@ class Draft extends Component {
     if (visibleViewModal) {
       visibleViewData = visibleViewModal[pathname] || false;
     }
-    console.debug(tableData, selectedData, visibleViewData);
     const { CATE } = match.params;
     let columns = [
       {
@@ -164,9 +183,9 @@ class Draft extends Component {
 
 Draft.propTypes = {
   match: PropTypes.object.isRequired,
-  draftList: PropTypes.array.isRequired,
+  draftList: PropTypes.object.isRequired,
   selectedDraft: PropTypes.object.isRequired,
-  visibleViewModal: PropTypes.bool.isRequired,
+  visibleViewModal: PropTypes.object.isRequired,
   getDraftList: PropTypes.func.isRequired,
   setSelectedDraft: PropTypes.func.isRequired,
 };

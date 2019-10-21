@@ -27,7 +27,7 @@ class DocApproverManage extends Component {
     const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : -1;
     const WORK_SEQ = item && item.data && item.data.WORK_SEQ ? item.data.WORK_SEQ : 1030; // 779
     return (
-      <div>
+      <div style={{ padding: '50px', backgroundColor: '#ffffff'  }}>
         <BizBuilderBase
           id={`${widgetId}_Edit`}
           component={Edit}

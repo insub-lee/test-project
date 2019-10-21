@@ -13,7 +13,6 @@ class DccNodeDraft extends Component {
   };
 
   render = () => {
-    console.log('DCC노드 프롭스', this.props);
     return <div>DCC 노드</div>;
   };
 }

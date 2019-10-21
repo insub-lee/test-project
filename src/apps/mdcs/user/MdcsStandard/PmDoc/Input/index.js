@@ -176,7 +176,7 @@ class PmDoc extends Component {
   setIsDraftModal = isDraftModal => this.setState({ isDraftModal });
 
   saveTaskAfter = (id, taskSeq, formData) => {
-    this.setState({ isDraftModal: true, taskSeq, title: formData.PART_DESCRIPTION, formData });
+    this.setState({ isDraftModal: true, taskSeq, title: formData.TITLE, formData });
   };
 
   render() {
@@ -224,7 +224,7 @@ class PmDoc extends Component {
                   <div className="rightTable">
                     <Col span={4}>Control Rev</Col>
                     <Col span={8}>
-                      <Input value="0" readOnly />
+                      <Input value={sp_rev} />
                     </Col>
                   </div>
                 </Row>
@@ -535,7 +535,7 @@ class PmDoc extends Component {
                 <Row>
                   <div className="w100Table">
                     <Col span={24}>
-                      {editor && editorConfig && editorConfig.REMARK && formData.hasOwnProperty('REMARK') && (
+                      {editorConfig && editorConfig.REMARK && formData.hasOwnProperty('REMARK') && (
                         <RichTextEditor
                           {...editorConfig.REMARK.property.property}
                           saveTempContents={this.onChangeFormData}
@@ -574,7 +574,7 @@ class PmDoc extends Component {
                       </StyledButton>
                     </Col>
                     <Col span={20}>
-                      {editor && editorConfig && editorConfig.REMARK2 && formData.hasOwnProperty('REMARK2') && (
+                      {editorConfig && editorConfig.REMARK2 && formData.hasOwnProperty('REMARK2') && (
                         <RichTextEditor
                           {...editorConfig.REMARK2.property.property}
                           ref={ref => {
@@ -610,7 +610,6 @@ class PmDoc extends Component {
                   changeFormData(id, 'NODE_ID', selectedNodeId);
                   changeFormData(id, 'PM_ID', docNumber);
                   changeFormData(id, 'SP_REV', sp_rev);
-                  changeFormData(id, 'VERSION', '0.0');
                   this.setState({ selectedDw: [], selectedSpec: [] });
                   saveTask(id, id, this.saveTaskAfter);
                 }}

@@ -7,7 +7,11 @@ import BizBuilderBase from '../../components/BizBuilderBase';
 class DocPubMgr extends Component {
   render() {
     const { workSeq, apiArr, viewType } = this.props;
-    return <BizBuilderBase id="DocPubMgr" workSeq={workSeq} component={List} viewType={viewType} apiArr={apiArr} />;
+    return (
+      <div style={{ backgroundColor: '#ffffff' }}>
+        <BizBuilderBase id="DocPubMgr" workSeq={workSeq} component={List} viewType={viewType} apiArr={apiArr} />
+      </div>
+    );
   }
 }
 

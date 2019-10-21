@@ -45,7 +45,7 @@ class TechDoc extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq } = this.props;
+    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq, taskSeq, revisionTask } = this.props;
     getExtraApiData(id, localApiArr);
     getTaskSeq(id, workSeq);
   }
@@ -226,7 +226,7 @@ class TechDoc extends Component {
                 <div className="rightTable">
                   <Col span={4}>Revision</Col>
                   <Col span={8}>
-                    <Input value={'0'} readOnly />
+                    <Input value="0" readOnly />
                   </Col>
                 </div>
               </Row>
