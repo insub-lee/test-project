@@ -282,7 +282,6 @@ class List extends Component {
           <StyledButton className="btn-primary" style={{ display: this.state.actionType === 'I' ? 'inline' : 'none', marginRight: 10 }} onClick={this.onSave}>
             저장하기
           </StyledButton>
-
           <StyledButton className="btn-primary btn-first" style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>
             수정
           </StyledButton>

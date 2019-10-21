@@ -9,13 +9,11 @@ import MessageContent from 'components/Feedback/message.style2';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import defaultUserImg from '../setting/singleImageUploader/sampleImg.jpg';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import saga from './saga';
 import reducer from './reducer';
 import StyledProfile from './StyledProfile';
-import UserProfileSetting from '../setting';
 
 class MyInfoWidget extends Component {
   componentDidMount() {}
@@ -32,10 +30,10 @@ class MyInfoWidget extends Component {
         <StyledProfile className="user">
           <div className="user-img">
             <img
-              src={profile.PHOTO === null ? defaultUserImg : `http://dev.portal.com${profile.PHOTO}`}
+              src={`/img/thumb/200x200/${profile.PHOTO}`}
               alt={`${profile.NAME_KOR || 'User'}님의 사진`}
               onError={e => {
-                e.target.src = defaultUserImg;
+                e.target.src = '/no_img_pro.jpg';
               }}
             />
           </div>
@@ -52,7 +50,6 @@ class MyInfoWidget extends Component {
             </span>
           </div>
         </StyledProfile>
-        <UserProfileSetting profile={this.props.profile} />
       </div>
     );
   }
@@ -64,7 +61,9 @@ MyInfoWidget.propTypes = {
 
 MyInfoWidget.defaultProps = {};
 
-const mapStateToProps = createStructuredSelector({});
+const mapStateToProps = createStructuredSelector({
+  profile: selectors.userProfile(),
+});
 
 const mapDispatchToProps = dispatch => ({});
 
