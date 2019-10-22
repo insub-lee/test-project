@@ -371,14 +371,13 @@ class MyPageTree extends Component {
         rowHeight={35}
         scaffoldBlockPxWidth={22}
         generateNodeProps={rowInfo => {
-          // console.debug('>>>>>>rowInfo: ', rowInfo);
           const { node } = rowInfo;
-          console.debug('>>>>>>rowInfo node: ', node);
+          // console.debug('>>>>>>rowInfo node: ', node);
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
 
           // 버튼 노출 조건(아이콘 별)
-          const isFolder = node.NODE_TYPE !== 'E' && (node.REF_TYPE !== 'B' || (node.NODE_TYPE === 'F' && node.REF_TYPE === 'B')); // 마지막노드X 업무그룹X
+          const isFolder = node.NODE_TYPE !== 'E' && (node.REF_TYPE !== 'B' || (node.NODE_TYPE === 'F' && node.REF_TYPE === 'B' && node.REF_ID > 0)); // 마지막노드X 업무그룹X
           const isRootBizGroup = node.REF_TYPE === 'B' && node.NODE_TYPE === 'R'; // 업무그룹O
           // 업무그룹X 하위노드존재X => 개인 업무메뉴 카드는 삭제 가능하게 추가 - 2019/10/14
           const isEmptyFolder = (node.REF_TYPE !== 'B' && (!node.children || node.children.length === 0))
@@ -637,7 +636,7 @@ MyPageTree.propTypes = {
 };
 
 MyPageTree.defaultProps = {
-  onClick: [],
+  onClick: () => {},
   // eslint-disable-next-line react/default-props-match-prop-types
   selectedIndex: -1,
 };

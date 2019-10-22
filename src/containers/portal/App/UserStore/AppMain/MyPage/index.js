@@ -19,7 +19,7 @@ const homeUrl = '/portal/store/appMain/myPage';
 
 function getUrl(node) {
   /* eslint-disable */
-  const { NODE_TYPE, REF_TYPE, REF_ID, APP_ID, PAGE_ID, APP_YN } = node;
+  const { NODE_TYPE, REF_TYPE, REF_ID, APP_ID, PAGE_ID, APP_YN, BIZGRP_ID } = node;
   /* eslint-disable */
 
   let url = homeUrl;
@@ -31,9 +31,12 @@ function getUrl(node) {
     url = `${homeUrl}/page/${PAGE_ID}`;
   } else if (REF_TYPE === 'B') {
     // [업무그룹]
-    if (NODE_TYPE === 'R') {
+    if (NODE_TYPE === 'R' && REF_ID > 0) {
       // 상세
       url = `${homeUrl}/biz/detail/info/${REF_ID}`;
+    } else if (NODE_TYPE === 'R' && REF_ID < 0) {
+      // 상세
+      url = `${homeUrl}/biz/detail/info/${BIZGRP_ID}`;
     } else if (APP_YN === 'Y') {
       // 앱상세
       // 임시
