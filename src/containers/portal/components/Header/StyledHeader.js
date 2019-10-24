@@ -248,7 +248,7 @@ const StyledHeader = styled.header`
             display: inline-block;
             width: 25px;
             height: 25px;
-            margin-top: 1px;
+            margin-top: 3px;
     
             .myPicture {
               display: inline-block;
@@ -261,6 +261,7 @@ const StyledHeader = styled.header`
     
               > img {
                 width: 100%;
+                display: block;
               }
     
               &:after {
