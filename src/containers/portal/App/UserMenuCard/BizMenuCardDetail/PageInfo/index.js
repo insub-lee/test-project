@@ -39,7 +39,7 @@ class PageInfo extends PureComponent {
     const {
       match: {
         params: {
-          pageId: { propsPageId },
+          pageId: propsPageId,
         },
       },
     } = this.props;
