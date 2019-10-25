@@ -52,7 +52,7 @@ const DockItemWrapper = styled.div`
   .dockItemLastExec {
     word-break: break-all;
     /* border: 1px solid #888; */
-    background: #ffffffc8; /* #fff */
+    background: #ddd; /* #fff */
     /* border-radius: 0; */
 
     .dockItemName {
