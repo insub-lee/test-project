@@ -59,10 +59,13 @@ const mobileDockCss = {
   marginLeft: 45,
 };
 
+// REMOVE DOCK - 주석 처리
+/*
 const desktopDockCss = {
   marginLeft: 45,
   marginRight: 70,
 };
+*/
 
 class App extends React.PureComponent {
   constructor(props) {
@@ -126,11 +129,14 @@ class App extends React.PureComponent {
       view,
     } = this.props;
 
-    if (dockAppList.length !== 0) {
+    // REMOVE DOCK - 주석 처리 (dockAppList 조건 제거)
+    // if (dockAppList.length !== 0) {
       if (this.state.isSpinnerShow && apps.length !== prevProps.apps.length) {
         this.setIsSpinnerShow();
       }
 
+      // REMOVE DOCK - 주석 처리
+      /*
       if (apps.length === 0 && !dataForApps && !this.isMakingApps) {
         console.log('$$$ 1.최초 apps 만들기 시작');
         // 최초 apps 만들기
@@ -145,11 +151,12 @@ class App extends React.PureComponent {
           }
         });
         console.log('$$$ 2.EXEC_PAGE_IDS', EXEC_PAGE_IDS);
-        // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+        // REMOVE PORTAL MULTIPLE DIVS
         // handleGetDataForApps(EXEC_PAGE_IDS);
         this.isMakingApps = true;
         return;
       }
+      */
 
       if (apps.length === 0 && dataForApps) {
         console.log('$$$ 4.dataForApps가 들어오고, 최초 apps 만들기', dataForApps);
@@ -172,6 +179,8 @@ class App extends React.PureComponent {
         return;
       }
 
+      // REMOVE DOCK - TODO 필요 없는 부분 찾아서 주석 처리 아니면 제거
+      /*
       if (dockAppList !== prevProps.dockAppList) {
         if (prevProps.dockAppList.length === dockAppList.length) {
           // 독 고정상태에서 독 삭제의 경우 apps에서도 지워줘야함
@@ -202,7 +211,7 @@ class App extends React.PureComponent {
             console.log('$$$ 8-4 독이 실행중인데 독을 고정/고정해제 또는 이미 실행중인 독아이템 실행');
             if (setMyMenuData !== prevProps.setMyMenuData) {
               console.log('$$$ 12. 독에 있던 앱을 메뉴에서 실행');
-              // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+              // REMOVE PORTAL MULTIPLE DIVS
               // 아래 내용 추가
               this.addNewApps(
                 setMyMenuData,
@@ -238,11 +247,31 @@ class App extends React.PureComponent {
           return;
         }
       }
+      */
 
-      if (Object.keys(setMyMenuData).length !== 0 && prevProps.setMyMenuData !== setMyMenuData && setMyMenuData.isCssTarget && apps.length !== 0) {
+      // REMOVE DOCK - 추가
+      if (JSON.stringify(setMyMenuData) !== JSON.stringify(prevProps.setMyMenuData)) {
+        console.log('addNewApps');
+        this.addNewApps(
+          setMyMenuData,
+          selectedApp,
+          isUnreadCnt,
+          this.execPage,
+          this.execMenu,
+          this.show,
+          this.onReload,
+          this.setIsSpinnerShow,
+          isPreviewPage,
+        );           
+      }
+
+      if (Object.keys(setMyMenuData).length !== 0 
+          && setMyMenuData !== prevProps.setMyMenuData
+          && setMyMenuData.isCssTarget && apps.length !== 0) {
         console.log('$$$ 11.setMyMenuData가 새로 들어옴');
-
+        // REMOVE DOCK - TODO 아래 부분 분석후 불필요한 부분 제거 
         const appsCopy = apps.slice();
+
         appsCopy.forEach((o, i) => {
           if (o.children.props.children.props.setMyMenuData.PAGE_ID !== setMyMenuData.PAGE_ID) {
             if (o.containerInfo.children[i + 1]) {
@@ -266,6 +295,7 @@ class App extends React.PureComponent {
             o.containerInfo.children[i + 1].classList.add('activeMenu');
           }
         });
+
 
         const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
         setMyMenuDataCopy.isCssTarget = false;
@@ -298,6 +328,20 @@ class App extends React.PureComponent {
             },
           });
 
+          // console.log('apps');
+          // console.log(apps);
+
+          // console.log('selectedApp');
+          // console.log(selectedApp);
+
+          // console.log('setMyMenuData');
+          // console.log(setMyMenuData);
+
+          // console.log('index', index);
+          // console.log('page id', o.children.props.children.props.setMyMenuData.PAGE_ID);
+          // console.log('setMyMenuData.PAGE_ID', setMyMenuData.PAGE_ID);
+
+
           // 생성된 apps를 스토어에 저장
           handleSaveApps(appsCopy2, setMyMenuData);
         }
@@ -312,7 +356,7 @@ class App extends React.PureComponent {
           this.styleSpinner = styleSpinnerCopy;
         }
       }
-    }
+    // } // REMOVE DOCK - 주석 처리 (dockAppList 조건 제거)
   }
 
   onReload = item => {
@@ -395,10 +439,10 @@ class App extends React.PureComponent {
     this.setState({ isShowUserMenu: value });
   };
 
+  // REMOVE DOCK - 주석 처리 ( TODO 미사용 props function 제거 )
+  /*
   deleteApps = () => {
-    /* eslint-disable */
     const { apps, handleSaveApps, deletedDockPageId, setMyMenuData } = this.props;
-    /* eslint-disable */
 
     let targetApp = -1;
 
@@ -416,6 +460,7 @@ class App extends React.PureComponent {
 
     handleSaveApps(appsCopy, setMyMenuDataCopy);
   };
+  */
 
   addInitialApps = (dataForApps, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
     // const { setMyMenuData } = this.props;
@@ -423,6 +468,7 @@ class App extends React.PureComponent {
       isSpinnerShow: true,
     });
     const apps = [];
+    // REMOVE DOCK - TODO 아래 부분 분석후 불필요한 부분 제거
     Object.keys(dataForApps).forEach(o => {
       const isActive = this.props.setMyMenuData.PAGE_ID === dataForApps[o].setMyMenuData.PAGE_ID;
       const app = ReactDOM.createPortal(
@@ -480,7 +526,7 @@ class App extends React.PureComponent {
     return apps;
   };
 
-  addNewApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
+    addNewApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
     const { handleSaveApps, apps } = this.props;
 
     let app = [];
@@ -519,7 +565,7 @@ class App extends React.PureComponent {
     );
     let test = [];
     if (app.length !== 0) {
-      // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+      // REMOVE PORTAL MULTIPLE DIVS
       // test = apps.concat(app);
       test.push(app);
     } else {
@@ -532,6 +578,7 @@ class App extends React.PureComponent {
     // a = true;
     handleSaveApps(test, setMyMenuDataCopy);
   };
+
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 끝 ******************
   handleClick = () => {
     this.setState(this.state.isFullscreenEnabled ? { isFullscreenEnabled: false } : { isFullscreenEnabled: !false });
@@ -567,8 +614,10 @@ class App extends React.PureComponent {
     console.debug('@@@@ type: ', type);
     const { dockAppList } = this.props;
     if (node === 'common') {
-      const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
-      this.props.history.push(`/${basicPath.PAGE}/${homeApp.PAGE_ID}`);
+      // REMOVE DOCK - 주석 처리, 스토어의  myHomePageId 사용
+      // const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
+      const { myHomePageId } = this.props;
+      this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
       return;
     }
 
@@ -630,7 +679,9 @@ class App extends React.PureComponent {
   };
 
   hideExecApps = () => {
-    const { apps, resetLastExecYn } = this.props;
+    // REMOVE DOCK - resetLastExecYn 미사용 - 해당 props function 제거 (containers\common\Routes\saga.js)
+    // const { apps, resetLastExecYn } = this.props;
+    const { apps } = this.props;
     const appsCopy = apps.slice();
     appsCopy.forEach((o, i) => {
       if (o.containerInfo.children[i + 1]) {
@@ -643,7 +694,8 @@ class App extends React.PureComponent {
       }
     });
     // common.dockAppList 의 LAST_EXEC_YN 값을 'N'으로 변경 - DB는 변경 하지 않음
-    resetLastExecYn();
+    // REMOVE DOCK - resetLastExecYn 미사용 - 해당 props function 제거 (containers\common\Routes\saga.js)
+    // resetLastExecYn();
   };
 
   goStore = () => {
@@ -662,13 +714,15 @@ class App extends React.PureComponent {
     this.props.history.push(`/${basicPath.PORTAL}/store/appMain/myPage/page/${homeId}`);
   };
 
-  goCommonHome = dockHomeItem => {
-    const { commonMenuTreeData } = this.props;
+  goCommonHome = () => {
+    // REMOVE DOCK - 주석 처리 rootPageId, myHomePageId 사용
+    // const { commonMenuTreeData } = this.props;
     /*
      현재공통메뉴 홈을 구분 해 줄수 있는 구분자가 없음
      공통메뉴의 첫번째 메뉴를 임의로 공통메뉴 홈으로 설정
      없을 경우 개인 홈으로 이동
      */
+    /*
     if (commonMenuTreeData && commonMenuTreeData.length > 0) {
       const idx = commonMenuTreeData.findIndex(item => item.extras.APP_YN === 'N');
       if (idx > -1) {
@@ -676,15 +730,25 @@ class App extends React.PureComponent {
         return;
       }
     }
-    this.execPage(dockHomeItem, 'execDock');
+    */
+   const { rootPageId, myHomePageId } = this.props;
+   if(rootPageId && rootPageId > 0) {
+    this.props.history.push(`/${basicPath.PAGE}/${rootPageId}`);
+   } else {
+    this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
+   }
   };
 
+  
   getLayoutMarginRight = () => {
+    // REMOVE DOCK - 주석 처리
     const { dockFixedYn } = this.props;
-    return dockFixedYn === 'Y' ? 70 : 0;
+    // return dockFixedYn === 'Y' ? 70 : 0;
+    return 0;
   };
 
   getLayoutMarginLeft = () => {
+    // REMOVE DOCK - 주석 처리
     const { menuFixedYn } = this.props;
     return open && menuFixedYn === 'Y' ? 335 : 45;
   };
@@ -747,9 +811,12 @@ class App extends React.PureComponent {
       //  path = basicPath.PAGE;
     }
 
+    // REMOVE DOCK - 주석 처리, myHomePageId 사용
+    /*
     const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
-    const dockHomeItem = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
-
+    const myHomePageId = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
+    */
+   const { myHomePageId } = this.props;
     const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size.toUpperCase() === 'FULLSIZE';
     return (
       <ThemeProvider theme={theme}>
@@ -809,17 +876,18 @@ class App extends React.PureComponent {
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="home">
-                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome(dockHomeItem)} />
+                <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="my home">
-                <BtnMyhome onClick={() => this.execPage(dockHomeItem, 'execDock')} />
+                {/* <BtnMyhome onClick={() => this.execPage(myHome, 'execDock')} /> */}
+                <BtnMyhome onClick={() => history.push(`/${basicPath.PAGE}/${myHomePageId}`)} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="home widget">
-                <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(dockHomeItem.PAGE_ID)} />
+                <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(myHomePageId)} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
@@ -839,7 +907,7 @@ class App extends React.PureComponent {
             style={
               isDesktop(view)
                 ? {
-                    ...desktopDockCss,
+                    //...desktopDockCss, // REMOVE DOCK - TODO DOCK 사이즈 관련 확인 해보고 제거 또는 수정 (getLayoutMarginRight)
                     marginLeft: this.getLayoutMarginLeft(),
                     marginRight: this.getLayoutMarginRight(),
                     transition: 'margin-left 0.3s ease-out 0s',
@@ -855,9 +923,9 @@ class App extends React.PureComponent {
                     onChange={this.setIsFullscreenEnabled}
                     dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
                     dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                    exitDockItem={handleExitDockItem}
-                    fixDockItem={handleFixDockItem}
-                    unfixDockItem={handleUnfixDockItem}
+                    exitDockItem={handleExitDockItem} // REMOVE DOCK - 확인후 처리
+                    fixDockItem={handleFixDockItem} // REMOVE DOCK - 확인후 처리
+                    unfixDockItem={handleUnfixDockItem} // REMOVE DOCK - 확인후 처리
                     // 모바일 Dock ContextMenu 플래그 설정
                     view={view}
                     setIsCloseToFalse={this.setIsCloseToFalse}
@@ -963,8 +1031,8 @@ class App extends React.PureComponent {
               </Scrollbars>
             </StyledContainer>
           </Layout>
-
-          <UserDock
+          {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
+          {/* <UserDock
             execPage={this.execPage}
             dockAppList={dockAppList}
             isUnfixDockItem={isUnfixDockItem}
@@ -980,7 +1048,7 @@ class App extends React.PureComponent {
             setIsCloseToTrue={this.setIsCloseToTrue}
             setIsCloseToFalse={this.setIsCloseToFalse}
             history={this.props.history}
-          />
+          /> */}
         </Layout>
       </ThemeProvider>
     );
@@ -1038,6 +1106,9 @@ App.propTypes = {
   commonMenuTreeData: PropTypes.array.isRequired,
   resetLastExecYn: PropTypes.func.isRequired,
   menuFixedYn: PropTypes.string,
+  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  rootPageId: PropTypes.number,
+  myHomePageId: PropTypes.number,
 };
 
 App.defaultProps = {
@@ -1084,6 +1155,9 @@ const mapStateToProps = createStructuredSelector({
   profile: authSelector.makeSelectProfile(),
   commonMenuTreeData: routesSelector.makeCommonMenuTree(),
   menuFixedYn:selectors.makeSelectMenuFixedYn(),
+  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  rootPageId: routesSelector.makeSelectRootPageId(),
+  myHomePageId: routesSelector.makeSelectMyHomePageID(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),

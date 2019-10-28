@@ -261,20 +261,26 @@ export function* getInitialPortalPage(payload) {
 
   const response = yield call(Axios.post, '/api/portal/v1/page/getInitialPortalPage/', { language, PAGE_ID });
   // 로딩 DockAppList
+  // REMOVE DOCK - 주석 처리
   yield put({
     type: actionTypes.COMMON_DOCK_LOADING_UNREADCNT, // to Saga (getDockItemListUnreadCnt)
-    dockAppList: response.result,
-    dockFixedYn: response.dockFixedYn,
-    dockIconType: response.dockIconType,
+    /*
+    dockAppList: response.result, // Dock List
+    dockFixedYn: response.dockFixedYn, // Dock Setting
+    dockIconType: response.dockIconType, // Dock Setting
+    */
     headerTitle: response.headerTitle,
   });
-
   yield put({
     type: actionTypes.SET_MENU_FIXED_YN,
     menuFixedYn: response.menuFixedYn,
-    userMenuFixedYn: response.userMenuFixedYn,
   });  
-
+  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  yield put({
+    type: actionTypes.SET_HOME_ROOT_PAGE,
+    rootPageId: response.rootPageId,
+    myHomePageId: response.myHomePageId,
+  });  
 }
 
 export function* dockSetMyMenuData(payload) {
@@ -1349,13 +1355,25 @@ export function* resetTreeData(payload) {
 // 8-1
 export function* getLoaddata(payload) {
   const { path, param, data } = payload;
-
+  // REMOVE DOCK - 주석 처리 (실행 항목 Dock 등록 및 LAST_EXEC_YN 설정)
+  /*
   if (data && data.node && Object.keys(data.node).length !== 0) {
     const { PAGE_ID, TARGET } = data.node;
     yield call(Axios.post, '/api/portal/v1/page/executeMenu/', { PAGE_ID, TARGET });
   }
+  */
   const nodeData = {};
-  let response = yield call(Axios.post, '/api/portal/v1/page/getLoaddata/', { path, param });
+  // REMOVE DOCK - PAGE_ID가 있을 경우 전달
+  const params = {
+    path,
+    param,
+  };
+
+  if (data && data.node && Object.keys(data.node).length !== 0) {
+    const { PAGE_ID } = data.node;
+    params.PAGE_ID = PAGE_ID;
+  }  
+  let response = yield call(Axios.post, '/api/portal/v1/page/getLoaddata/', params);
   let NEW_PAGE_ID = 0;
 
   // dockSetMyMenu를 통해 setMyMenuData, selectedIndex, menuName, managerInfo 가져옴
@@ -1398,6 +1416,8 @@ export function* getLoaddata(payload) {
 
     console.log('### 1. 메뉴 데이터 목록', setMyMenuData, selectedIndex, managerInfo, menuName);
 
+    
+    
     // dockAppList
     // PAGE_ID로 독아이템 호출
     let dockAppListUpdate = [];
@@ -1405,6 +1425,8 @@ export function* getLoaddata(payload) {
     const myObjectVal = Object.values(myObject);
     const notiVal = JSON.parse(`[${myObjectVal}]`);
     console.log('$$$ data의 유무', data);
+    // REMOVE DOCK - DOCK 관련된 내용.. 주석 처리
+    /*
     if (data && data.node) {
       const loadingDockItemResponse = yield call(Axios.get, '/api/portal/v1/dock/executeDockItem/0');
       dockAppListUpdate = loadingDockItemResponse.dockItemList;
@@ -1462,7 +1484,8 @@ export function* getLoaddata(payload) {
         }
       }
     }
-
+    */
+   
     /*
       selectedApp 가져오기
     */
@@ -1493,6 +1516,8 @@ export function* getLoaddata(payload) {
       selectedApp: resultValue,
     };
 
+    // REMOVE DOCK - 주석 처리
+    /*
     if (data && data.type) {
       switch (data.type) {
         case 'execDock':
@@ -1504,10 +1529,11 @@ export function* getLoaddata(payload) {
           actionObject.deletedDockPageId = data.deletedDockPageId;
       }
     }
-
+    */
     yield put(actionObject);
 
-    yield call(Axios.post, '/api/portal/v1/page/executeDockItem/', { PAGE_ID: NEW_PAGE_ID });
+    // REMOVE DOCK - 주석 처리
+    // yield call(Axios.post, '/api/portal/v1/page/executeDockItem/', { PAGE_ID: NEW_PAGE_ID });
   } else if (response.result === 'error') {
     yield put(push('/error'));
   } else {
@@ -1516,7 +1542,7 @@ export function* getLoaddata(payload) {
     if (srcPath) {
       yield put(push(`/${url}/${srcPath}`));
     } else {
-      yield put(push(`/${url}/${String(response.LAST_DOCKITEM_PAGE_ID)}`));
+      yield put(push(`/${url}/${String(response.PAGE_ID)}`));
     }
   }
 }
@@ -1595,6 +1621,7 @@ export function* getCommonMenuTree() {
   }
 }
 
+// REMOVE DOCK - 미사용?? -> containers\portal\App\index.js 에서 사용
 export function* resetLastExecYn() {
   const dockAppList = yield select(stateParam => stateParam.get('common').get('dockAppList'));
   const index = dockAppList.findIndex(dockApp => dockApp.LAST_EXEC_YN === 'Y');
@@ -1636,7 +1663,8 @@ export default function* appSaga() {
 
   // 1-1 getInitialPortalPage
   yield takeLatest(actionTypes.GET_INITIAL_PORTALPAGE, getInitialPortalPage);
-  yield takeLatest(actionTypes.COMMON_DOCK_LOADING_UNREADCNT, getDockItemListUnreadCnt);
+  // REMOVE DOCK - 주석 처리
+  // yield takeLatest(actionTypes.COMMON_DOCK_LOADING_UNREADCNT, getDockItemListUnreadCnt);
   yield takeLatest(actionTypes.RECEIVE_MYMENU_DATA_SAGA, dockSetMyMenuData);
 
   // 1-2 loadSkin
