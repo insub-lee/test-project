@@ -118,9 +118,22 @@ const makeCommonMenuTree = () =>
 
   const makeSelectMenuFixedYn = () =>
   createSelector(
-    selectRoute,
+    selectCommon,
     portalState => portalState.menuFixedYn,
   );
+
+  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  const makeSelectRootPageId = () =>
+  createSelector(
+    selectCommon,
+    portalState => portalState.get('rootPageId'),
+  );
+
+  const makeSelectMyHomePageID = () =>
+  createSelector(
+    selectCommon,
+    portalState => portalState.get('myHomePageId'),
+  );  
 
 export {
   makeSelectView,
@@ -150,4 +163,7 @@ export {
   makeCommonMenuTree,
 
   makeSelectMenuFixedYn,
+  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  makeSelectRootPageId,
+  makeSelectMyHomePageID,
 };

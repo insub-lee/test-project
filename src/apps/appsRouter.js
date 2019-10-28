@@ -23,7 +23,7 @@ class AppsRouter extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    // 2019.10.21 REMOVE PORTAL MULTIPLE DIVS
+    // REMOVE PORTAL MULTIPLE DIVS
     // if (JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
     if (nextProps.columns && JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
       this.contents = this.getAppsRouter(nextProps.columns);

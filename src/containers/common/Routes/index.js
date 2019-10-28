@@ -80,7 +80,9 @@ class PublicRoutes extends Component {
 
     if (isLoggedIn) {
       if (location.pathname === '/') {
-        getLoaddata('latest');
+        // REMOVE DOCK - 주석처리, 기본 루트로 들어왔을 경우 처리 공통홈으로 이동 처리
+        // getLoaddata('latest');
+        getLoaddata('commonHome');
       } else if (checkPath(pathArray[1], portalPath)) {
         // go to getLoaddata
         const param1 = pathArray[1];
@@ -98,6 +100,7 @@ class PublicRoutes extends Component {
           (execMenu / execDock / exitDock)
           이 세가지의 경우 MDI CSS 작업등의 이유로 PUSH를 할 때 state값을 함께 넘겨준다.
         */
+       // REMOVE DOCK - TODO 아래의 DOCK 관련된 부분 찾아서 제거
         console.log('$$$ history', history.location);
         if (history.location.execInfo) {
           param3.type = history.location.execInfo.type;
@@ -126,7 +129,7 @@ class PublicRoutes extends Component {
 
         const param1 = pathArray[1];
         let param2 = pathArray.slice(2).join('/');
-        if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);        
+        if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
         getSingleModeLoaddata(param1, param2);
       } else if (checkPath(pathArray[1], etcPath)) {
         // eslint-disable-line

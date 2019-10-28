@@ -333,7 +333,9 @@ export function* loadingDockItem(payload) {
   }
 }
 
+// REMOVE DOCK - 업무그룹 확정시 DAEMON 에서 호출 주석처리
 export function* reloadDockItem() {
+  /*
   yield call(Axios.post, '/api/portal/v1/dock/addRootDockItem');
   const loadingDockItemResponse = yield call(Axios.get, '/api/portal/v1/dock/executeDockItem/0');
   const dockAppList = loadingDockItemResponse.dockItemList;
@@ -349,6 +351,7 @@ export function* reloadDockItem() {
   }
 
   yield put({ type: commonActionType.LOADING_DOCKITEM });
+  */
 }
 
 export function* deleteMainDock() {
