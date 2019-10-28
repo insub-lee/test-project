@@ -12,6 +12,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import IflowStyle from './iflowStyle';
 // import TestModal from '../../../components/Rodal';
+import { WIDGET } from 'utils/constants'
 
 const curDate = new Date();
 const pageIndex = 10;
@@ -152,7 +153,7 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 const withSaga = injectSaga({ key: 'Iflow', saga });
-const withReducer = injectReducer({ key: 'Iflow', reducer });
+const withReducer = injectReducer({ key: 'Iflow', reducer, mode: WIDGET });
 
 export default compose(
   withReducer,
