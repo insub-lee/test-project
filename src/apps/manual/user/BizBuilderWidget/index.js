@@ -22,6 +22,7 @@ import * as actions from './actions';
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
 import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
 import StyledModalWrapper from './StyledModalWrapper';
+import { WIDGET } from 'utils/constants'
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
@@ -242,7 +243,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-BizBuilderWidget-reducer', reducer });
-const withSaga = injectSaga({ key: 'apps-manual-user-BizBuilderWidget-saga', saga });
+const withSaga = injectSaga({ key: 'apps-manual-user-BizBuilderWidget-saga', saga, mode: WIDGET });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,

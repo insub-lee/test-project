@@ -15,6 +15,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import BoardsStyle from './boardStyle';
 import ApplyPageStyle from './applyPageStyle.js';
+import { WIDGET } from 'utils/constants'
 
 const TabPane = Tabs.TabPane;
 const pagepernum = 20; // 페이징 단위
@@ -219,7 +220,7 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 const withSaga = injectSaga({ key: 'IfBoard', saga });
-const withReducer = injectReducer({ key: 'IfBoard', reducer });
+const withReducer = injectReducer({ key: 'IfBoard', reducer, mode: WIDGET });
 
 export default compose(
   withReducer,

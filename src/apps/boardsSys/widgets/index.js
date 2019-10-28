@@ -13,6 +13,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import * as constants from './constants';
 import BoardsStyle from './boardStyle';
+import { WIDGET } from 'utils/constants'
 
 const TabPane = Tabs.TabPane;
 let pageNum = 1;
@@ -166,7 +167,7 @@ const mapStateToProps = createStructuredSelector({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'IfBoardSys', saga });
-const withReducer = injectReducer({ key: 'IfBoardSys', reducer });
+const withReducer = injectReducer({ key: 'IfBoardSys', reducer, mode: WIDGET });
 
 export default compose(
   withReducer,
