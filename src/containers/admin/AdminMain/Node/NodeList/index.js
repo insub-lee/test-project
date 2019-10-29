@@ -43,6 +43,11 @@ const columns = [
     dataIndex: 'SRC_PATH',
     key: 'SRC_PATH',
   },
+  {
+    title: '서비스명',
+    dataIndex: 'CLASSNAME',
+    key: 'CLASSNAME',
+  },
 ];
 
 class NodeList extends Component {
