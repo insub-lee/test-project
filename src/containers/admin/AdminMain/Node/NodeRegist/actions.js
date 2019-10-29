@@ -14,3 +14,8 @@ export const saveNode = nodeInfo => ({
   type: actionTypes.SAVE_NODE,
   nodeInfo,
 });
+
+export const updateNode = nodeInfo => ({
+  type: actionTypes.UPDATE_NODE,
+  nodeInfo,
+});

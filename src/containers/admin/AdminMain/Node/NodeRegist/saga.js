@@ -25,7 +25,19 @@ function* saveNode({ nodeInfo }) {
   }
 }
 
+function* updateNode({ nodeInfo }) {
+  const response = yield call(Axios.put, `/api/workflow/v1/common/node/${nodeInfo.NODE_ID}`, { PARAM: { ...nodeInfo } });
+  const { code } = response;
+  if (code !== undefined && code === 200) {
+    message.success(<MessageContent>노드 수정에 성공하였습니다.</MessageContent>, 3);
+    yield put(push(`/admin/adminmain/node/nodeDetail/${nodeInfo.NODE_ID}`));
+  } else {
+    feed.error(`노드 수정에 실패하였습니다.`);
+  }
+}
+
 export default function* watcher() {
   yield takeEvery(constantTypes.GET_NODE_DETAIL, getNodeDetail);
   yield takeLatest(constantTypes.SAVE_NODE, saveNode);
+  yield takeLatest(constantTypes.UPDATE_NODE, updateNode);
 }
