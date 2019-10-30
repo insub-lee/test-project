@@ -19,6 +19,14 @@ const reducer = (state = initialState, action) => {
       const { id, apiKey, response } = action;
       return state.setIn(['bizMicroDevBase', id, 'responseData', apiKey], response);
     }
+    case actionTypes.REMOVE_REDUX_STATE: {
+      const { id } = action;
+      return state.removeIn(['bizMicroDevBase', id]);
+    }
+    case actionTypes.REMOVE_REDUX_STATE_BYKEY: {
+      const { id, key } = action;
+      return state.removeIn(['bizMicroDevBase', id, 'responseData', key]);
+    }
     default:
       return state;
   }
