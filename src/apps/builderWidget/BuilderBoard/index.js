@@ -18,6 +18,7 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import Wrapper from './Wrapper';
+import { WIDGET } from 'utils/constants'
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -315,7 +316,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const withReducer = injectReducer({ key: 'apps.BuilderWidget.BuilderBoard', reducer });
-const withSaga = injectSaga({ key: 'apps.BuilderWidget.BuilderBoard', saga });
+const withSaga = injectSaga({ key: 'apps.BuilderWidget.BuilderBoard', saga, mode: WIDGET });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,

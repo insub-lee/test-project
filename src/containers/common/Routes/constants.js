@@ -164,3 +164,5 @@ export const RESET_LAST_EXEC_YN = 'containers/common/Routes/RESET_LAST_EXEC_YN';
 
 export const UPDATE_MENU_FIXED_YN = 'containers/common/Routes/UPDATE_MENU_FIXED_YN';
 export const SET_MENU_FIXED_YN = 'containers/common/Routes/SET_MENU_FIXED_YN';
+// REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+export const SET_HOME_ROOT_PAGE = 'containers/common/Routes/SET_HOME_ROOT_PAGE';

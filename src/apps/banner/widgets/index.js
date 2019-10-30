@@ -18,6 +18,7 @@ import saga from './saga';
 import * as selectors from './selectors';
 
 import messages from '../../../components/Page/messages';
+import { WIDGET } from 'utils/constants'
 
 const Carousel = props => (
   <CarouselWrapper>
@@ -238,7 +239,7 @@ const withConnect = connect(
   mapDispatchToProps,
 );
 const withReducer = injectReducer({ key: 'banner', reducer });
-const withSaga = injectSaga({ key: 'banner', saga });
+const withSaga = injectSaga({ key: 'banner', saga, mode: WIDGET });
 
 export default compose(
   withReducer,

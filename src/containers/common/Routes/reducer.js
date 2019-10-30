@@ -39,6 +39,10 @@ const initialState = fromJS({
   deletedDockPageId: undefined,
   executedDockPageId: undefined,
   menuFixedYn: 'N',
+  
+  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  rootPageId: -1,
+  myHomePageId: -1,
 });
 
 const windowResizeReducer = (state = initialState, action) => {
@@ -259,7 +263,10 @@ const windowResizeReducer = (state = initialState, action) => {
       return state.set('commonMenuTreeData', fromJS(commonMenuTreeData));
     }
     case actionTypes.SET_MENU_FIXED_YN:
-      return state.set('menuFixedYn', action.menuFixedYn).set('userMenuFixedYn', action.userMenuFixedYn);
+      return state.set('menuFixedYn', action.menuFixedYn);
+    // REMOVE DOCK - 공통홈, 개인홈 페이지 ID      
+    case actionTypes.SET_HOME_ROOT_PAGE:
+      return state.set('rootPageId', action.rootPageId).set('myHomePageId', action.myHomePageId);
     default:
       return state;
   }
