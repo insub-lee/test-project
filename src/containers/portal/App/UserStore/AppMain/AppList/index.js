@@ -56,6 +56,8 @@ class AppList extends Component {
       loadingOn,
       handleGetMapAppListSearch,
       handleGetMapListOne,
+      handleGetMapListAll,
+      initType,
     } = this.props;
     const {
       match: {
@@ -68,6 +70,9 @@ class AppList extends Component {
     } else if (currentCtagId && Number(prevCtagId) !== -1 && prevCtagId !== currentCtagId) {
       loadingOn();
       handleGetMapListOne(Number(currentCtagId));
+    } else if (!currentCtagId && !currentSearchWord && initType !== 'ALL') {
+      loadingOn();
+      handleGetMapListAll();
     }
   }
   /* eslint-disable */
@@ -112,12 +117,17 @@ class AppList extends Component {
       },
     } = this.props;
 
+
     return (
       <div className="appListWrapper">
         <BackTop />
         <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
         <ErrorBoundary>
-          <AppCategory handleOnClick={node => handleOnClick(node, history)} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
+          <AppCategory 
+            handleOnClick={node => handleOnClick(node, history)} 
+            selectedIndex={Number(CATG_ID)} 
+            preUrl="/portal/store/appMain/bizStore" 
+          />
         </ErrorBoundary>
         <NavList className="navTabs">
           <NavListItem>
@@ -196,6 +206,7 @@ AppList.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   handleInitPage: (initType, param) => dispatch(actions.initPage(initType, param)),
+  handleGetMapListAll: key=> dispatch(actions.getMapListAll()),
   handleGetMapListOne: key => dispatch(actions.getMapListOne(key)),
   handleGetMapAppListMore: key => dispatch(actions.getMapListMore(key)),
   handleRegistApp: (APP_ID, CATG_ID) => dispatch(actions.registApp(APP_ID, CATG_ID)),
