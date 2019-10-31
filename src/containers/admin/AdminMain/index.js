@@ -70,6 +70,7 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/account" component={UserAdmin} />
           <Route path="/admin/adminmain/classify" component={Classify} />
           <Route path="/admin/adminmain/node" component={Node} />
+          {/* Route 추가시 아래의 Route 위에 추가 하세요 */}
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
         </Switch>
       </div>
