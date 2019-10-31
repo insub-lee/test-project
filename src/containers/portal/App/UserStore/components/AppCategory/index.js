@@ -41,14 +41,15 @@ class AppCategory extends Component {
     const preUrlLast = preUrlSplitArr[preUrlSplitArr.length - 1];
     // const isAppStore = preUrlLast === 'bizStore';
     const appStyleModify = preUrlLast !== 'bizStore' ? `0px` : '0px';
-
+    
     return (
       <StyledTabList className="treeWrapper" style={{ left: appStyleModify }}>
         {showTabs && (currentView !== 'Mobile' && currentView !== 'Tablet') ? (
           <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
               <Tab style={{ width: '100%' }}>
-                <Link to={'/portal/store/appMain/myPage/modal/app/list'} onClick={resetSearchword}>
+                {/* <Link to={'/portal/store/appMain/myPage/modal/app/list'} onClick={resetSearchword}> */}
+                <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>

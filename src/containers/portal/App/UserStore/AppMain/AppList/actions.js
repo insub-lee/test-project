@@ -7,6 +7,11 @@ export const initPage = (initType, param) => ({
   param,
 });
 
+export const getMapListAll = key => ({
+  type: constants.GET_MAPLIST_ALL,
+  key,
+});
+
 export const getMapListOne = key => ({
   type: constants.GET_MAPLIST_ONE,
   key,
