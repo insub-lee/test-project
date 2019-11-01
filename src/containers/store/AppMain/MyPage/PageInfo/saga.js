@@ -17,15 +17,14 @@ export function* getWidgetList(payload) {
 }
 
 export function* resetWidgetList(payload) {
-  const { widgetList } = payload;
+  const { widgetList, PAGE_ID } = payload;
   if (widgetList) {
     const newWidgetList = JSON.parse(widgetList);
     const pageInfo = yield select(state => state.get('pageInfo'));
     const oldWidgetList = pageInfo.get('widgetList').toJS();
-    if (oldWidgetList.length > 0) {
+    if (oldWidgetList && oldWidgetList.length > 0) {
       const oldPageId = oldWidgetList[0].PAGE_ID;
-      const newPageId = newWidgetList[0].PAGE_ID;
-
+      const newPageId = newWidgetList.length > 0 ? newWidgetList[0].PAGE_ID : PAGE_ID;
       if (oldPageId === newPageId) {
         yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(newWidgetList) });
       }
