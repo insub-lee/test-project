@@ -14,11 +14,11 @@ import * as actionType from './constants';
 export function* resetPageApps(payload) {
   const resultValue = JSON.parse(payload.widgetList);
   const setMyMenuThisData = yield select(stateParam => stateParam.get('common').get('setMyMenuData'));
-
+  
   const apps = yield select(stateParam => stateParam.get('common').get('apps'));
   const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === payload.PAGE_ID);
   // 현재 실행중인 페이지가 변경된 경우
-  if (resultValue.length > 0 && payload.PAGE_ID === setMyMenuThisData.PAGE_ID) {
+  if (resultValue.length > 0 && setMyMenuThisData && setMyMenuThisData.PAGE_ID === payload.PAGE_ID) {
     const myObject = yield select(state => state.get('auth').get('UNREAD_CNT'));
     const myObjectVal = Object.values(myObject);
     const notiVal = JSON.parse(`[${myObjectVal}]`);
