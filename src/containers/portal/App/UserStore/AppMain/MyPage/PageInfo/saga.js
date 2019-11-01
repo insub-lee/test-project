@@ -10,10 +10,13 @@ import * as constants from './constants';
 
 export function* getWidgetList(payload) {
   const { PAGE_ID } = payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/widgetList', { PAGE_ID });
+  // MyPage 에서 호출 할 경우 자기 PO_MYMENU 에 등록된 자신의 메뉴만 조회 하여 수정
+  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/widgetList', { PAGE_ID, isMyMenu: true });
   const { widgetList } = response;
   if (widgetList) {
     yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(JSON.parse(widgetList)) });
+  }else {
+    yield put(push('/error'));
   }
 }
 
