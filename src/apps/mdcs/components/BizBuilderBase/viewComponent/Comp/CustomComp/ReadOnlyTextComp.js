@@ -11,15 +11,13 @@ class ReadOnlyTextComp extends PureComponent {
     }
     if (initValue !== undefined && initValue.trim() === '') {
       if (valueType === 'props') {
+        changeValidationData(id, CONFIG.property.COMP_FIELD, true, '');
         const propsText = compProps[`${valueKey}`];
-
-        changeValidationData(id, CONFIG.property.COMP_FIELD, propsText !== ' ', `${CONFIG.property.NAME_KOR}항목은 필수 입력입니다.`);
-
         changeFormData(id, CONFIG.property.COMP_FIELD, propsText);
       }
       if (valueType === 'default') {
         const defaultText = defaultValue;
-        changeValidationData(id, CONFIG.property.COMP_FIELD, defaultText !== ' ', `${CONFIG.property.NAME_KOR}항목은 필수 입력입니다.`);
+        changeValidationData(id, CONFIG.property.COMP_FIELD, true, '');
         changeFormData(id, CONFIG.property.COMP_FIELD, defaultText);
       }
     }
@@ -52,6 +50,7 @@ ReadOnlyTextComp.propTypes = {
   changeFormData: PropTypes.func,
   CONFIG: PropTypes.object,
   compProps: PropTypes.object,
+  changeValidationData: PropTypes.func,
 };
 ReadOnlyTextComp.defaultProps = {
   CONFIG: {

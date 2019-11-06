@@ -1,13 +1,32 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
 import Loadable from 'react-loadable';
 
 import { isJSON } from 'utils/helpers';
+import WorkProcess from 'apps/WorkFlow/WorkProcess';
 import { CompInfo } from '../../CompInfo';
 
 import Styled from './Styled';
 
 class InputPage extends Component {
+  componentDidMount() {
+    const { id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
+    const {
+      info: { PRC_ID },
+    } = workFlowConfig;
+
+    if (PRC_ID !== -1) {
+      const payload = {
+        PRC_ID,
+        DRAFT_DATA: {
+          ...workPrcProps,
+        },
+      };
+      getProcessRule(id, payload);
+    }
+  }
+
   saveTask = (id, reloadId, callbackFunc) => {
     const { saveTask } = this.props;
     saveTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
@@ -64,15 +83,21 @@ class InputPage extends Component {
   };
 
   render = () => {
-    const { viewLayer, formData } = this.props;
+    const { id, viewLayer, formData, workFlowConfig, processRule, setProcessStep } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerList = JSON.parse(viewLayer[0].CONFIG).property.layer || [];
+
+      const {
+        info: { PRC_ID },
+      } = workFlowConfig;
+
       return (
         <Styled>
           <div className="pop_tit">업무표준</div>
           <div className="pop_con">
             <div className="sub_form">
               <div className="tableBody">
+                {PRC_ID !== -1 && <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessStep={setProcessStep} />}
                 {viewLayerList.length > 0 &&
                   viewLayerList.map((row, rowIdx) => (
                     <Row key={`BizBuilderBaseRow_${rowIdx}`}>
@@ -98,5 +123,26 @@ class InputPage extends Component {
     return '';
   };
 }
+
+InputPage.propTypes = {
+  id: PropTypes.string,
+  workFlowConfig: PropTypes.object,
+  workPrcProps: PropTypes.object,
+  viewLayer: PropTypes.array,
+  formData: PropTypes.object,
+  processRule: PropTypes.object,
+  getProcessRule: PropTypes.func,
+  onCloseModleHandler: PropTypes.func,
+  saveTask: PropTypes.func,
+  setProcessStep: PropTypes.func,
+};
+
+InputPage.defaultProps = {
+  workFlowConfig: {
+    info: {
+      PRC_ID: -1,
+    },
+  },
+};
 
 export default InputPage;

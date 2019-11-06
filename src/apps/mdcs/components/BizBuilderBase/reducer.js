@@ -12,6 +12,7 @@ const initialState = fromJS({
   // workFlow: {},
   // formData: {},
   // extraApiData: {},
+  // processRule: {},
 });
 
 const reducer = (state = initialState, action) => {
@@ -26,6 +27,14 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'responseData'], fromJS(response))
         .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
         .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}));
+    }
+    case actionTypes.SET_PROCESS_RULE: {
+      const { id, processRule } = action;
+      return state.setIn(['bizBuilderBase', id, 'processRule'], fromJS(processRule));
+    }
+    case actionTypes.SET_PROCESS_STEP: {
+      const { id, processStep } = action;
+      return state.setIn(['bizBuilderBase', id, 'processRule', 'DRAFT_PROCESS_STEP'], fromJS(processStep));
     }
     case actionTypes.INIT_FORMDATA: {
       const { id, workSeq, metaList } = action;

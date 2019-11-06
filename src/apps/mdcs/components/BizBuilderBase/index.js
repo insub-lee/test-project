@@ -111,6 +111,8 @@ BizBuilderBase.propTypes = {
   metaList: PropTypes.arrayOf(PropTypes.object),
   formData: PropTypes.object,
   revisionHistory: PropTypes.array,
+  workFlowConfig: PropTypes.object,
+  processRule: PropTypes.object,
   getBuilderData: PropTypes.func,
   getExtraApiData: PropTypes.func,
   getDetailData: PropTypes.func,
@@ -127,6 +129,8 @@ BizBuilderBase.propTypes = {
   getRevisionHistory: PropTypes.func,
   removeReduxState: PropTypes.func,
   changeValidationData: PropTypes.func.isRequired,
+  getProcessRule: PropTypes.func,
+  setProcessStep: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -158,6 +162,7 @@ const mapStateToProps = createStructuredSelector({
   workFlowConfig: selectors.makeSelectWorkFlowConfig(),
   formData: selectors.makeSelectFormData(),
   revisionHistory: selectors.makeSelectRevisionHistory(),
+  processRule: selectors.makeSelectProcessRule(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -179,6 +184,8 @@ const mapDispatchToProps = dispatch => ({
   getRevisionHistory: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.getRevisionHistory(id, workSeq, taskSeq, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
+  getProcessRule: (id, payload) => dispatch(actions.getProcessRule(id, payload)),
+  setProcessStep: (id, processStep) => dispatch(actions.setProcessStep(id, processStep)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
