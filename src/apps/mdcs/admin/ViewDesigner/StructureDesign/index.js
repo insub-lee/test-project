@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import JSONInput from 'react-json-editor-ajrm';
+// import JSONInput from 'react-json-editor-ajrm';
 import { Divider, Drawer } from 'antd';
 import styled from 'styled-components';
 
@@ -52,9 +52,9 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action 
         </ActionButton>
       </div>
       <div className="button--group--right">
-        <ActionButton type="button" onClick={() => action.openJsonCodeEditor()}>
+        {/* <ActionButton type="button" onClick={() => action.openJsonCodeEditor()}>
           Open Json Editor
-        </ActionButton>
+        </ActionButton> */}
       </div>
     </StyledActionBar>
     <hr />
@@ -105,7 +105,7 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action 
         </Group>
       ))}
     </Sketch>
-    <Drawer
+    {/* <Drawer
       title="JSON Editor"
       placement="right"
       width={640}
@@ -128,7 +128,7 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action 
         height="100%"
         width="100%"
       />
-    </Drawer>
+    </Drawer> */}
   </div>
 );
 

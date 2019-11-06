@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import JSONInput from 'react-json-editor-ajrm';
+// import JSONInput from 'react-json-editor-ajrm';
 import { Drawer } from 'antd';
 import styled from 'styled-components';
 
@@ -49,9 +49,9 @@ const StyleDesign = ({ isShowEditor, groups, selectedKeys, action, bodyStyle }) 
         />
       </div>
       <div className="button--group--right">
-        <ActionButton type="button" onClick={() => action.openJsonCodeEditor()}>
+        {/* <ActionButton type="button" onClick={() => action.openJsonCodeEditor()}>
           Open Json Editor
-        </ActionButton>
+        </ActionButton> */}
       </div>
     </StyledActionBar>
     <hr />
@@ -91,7 +91,7 @@ const StyleDesign = ({ isShowEditor, groups, selectedKeys, action, bodyStyle }) 
         </Group>
       ))}
     </Sketch>
-    <Drawer
+    {/* <Drawer
       title="JSON Editor"
       placement="right"
       width={640}
@@ -114,7 +114,7 @@ const StyleDesign = ({ isShowEditor, groups, selectedKeys, action, bodyStyle }) 
         height="100%"
         width="100%"
       />
-    </Drawer>
+    </Drawer> */}
   </div>
 );
 
