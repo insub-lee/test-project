@@ -179,3 +179,11 @@ export const removeReduxState = id => ({
   type: actionTypes.REMOVE_REDUX_STATE,
   id,
 });
+
+export const changeValidationDataByReducr = (id, key, flag, msg) => ({
+  type: actionTypes.CHANGE_VALIDATIONDATA_REDUCR,
+  id,
+  key,
+  flag,
+  msg,
+});

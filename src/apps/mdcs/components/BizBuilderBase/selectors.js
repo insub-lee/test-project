@@ -84,6 +84,12 @@ const makeSelectRevisionHistory = () =>
     (state, id) => (state.getIn(['bizBuilderBase', id, 'revisionHistory']) !== undefined ? state.getIn(['bizBuilderBase', id, 'revisionHistory']).toJS() : []),
   );
 
+const makeSelectValidationDataById = id =>
+  createSelector(
+    selectorBizBuilderBase,
+    state => (state.getIn(['bizBuilderBase', id, 'validationData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'validationData']).toJS() : {}),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -101,4 +107,5 @@ export {
   // makeSelectFormStuffs,
   makeSelectWorkFlowConfig,
   makeSelectRevisionHistory,
+  makeSelectValidationDataById,
 };
