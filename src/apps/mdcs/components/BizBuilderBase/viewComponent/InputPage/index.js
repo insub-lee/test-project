@@ -14,10 +14,10 @@ class InputPage extends Component {
   };
 
   // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
+  componentWillUnmount() {
+    const { removeReduxState, id } = this.props;
+    removeReduxState(id);
+  }
 
   saveTaskAfter = (id, taskSeq, formData) => {
     const { onCloseModleHandler } = this.props;
