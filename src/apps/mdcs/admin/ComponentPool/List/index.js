@@ -6,8 +6,6 @@ import { Table, Icon, Modal } from 'antd';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import ComponentPoolEdit from 'apps/mdcs/admin/ComponentPool';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 import CompDetail from './compDetail';
 import StyledPool from './StyledPool';
 

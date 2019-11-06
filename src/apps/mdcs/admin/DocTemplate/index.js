@@ -8,11 +8,7 @@ class DocTemplate extends Component {
   componentDidMount() {}
 
   render() {
-    return (
-      <div style={{ backgroundColor: 'white' }}>
-        <BizBuilderBase id="DocTemplate" component={List} viewType="LIST" {...this.props} />
-      </div>
-    );
+    return <BizBuilderBase id="DocTemplate" component={List} viewType="LIST" {...this.props} />;
   }
 }
 

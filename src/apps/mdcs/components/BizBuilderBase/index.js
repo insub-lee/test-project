@@ -11,6 +11,9 @@ import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
+import InputPage from './viewComponent/InputPage';
+import ModifyPage from './viewComponent/ModifyPage';
+import ViewPage from './viewComponent/ViewPage';
 
 class BizBuilderBase extends React.Component {
   componentDidMount() {
@@ -34,12 +37,65 @@ class BizBuilderBase extends React.Component {
   }
 
   render() {
-    const { component: Component } = this.props;
-    return (
-      <div>
-        <Component {...this.props} />
-      </div>
-    );
+    const { component: Component, viewType, metaList, id, isCustom } = this.props;
+    const viewLayer = metaList.filter(filterNode => filterNode.COMP_TYPE === 'VIEW' && filterNode.COMP_TAG === viewType && filterNode.COMP_FIELD === id);
+    switch (viewType.toUpperCase()) {
+      case 'INPUT':
+        if (metaList && metaList.length > 0 && viewLayer.length > 0) {
+          return <InputPage {...this.props} viewLayer={viewLayer} />;
+        }
+        if (isCustom && typeof Component === 'function') {
+          return (
+            <div>
+              <Component {...this.props} />
+            </div>
+          );
+        }
+        return '';
+      case 'MODIFY':
+        if (metaList && metaList.length > 0 && viewLayer.length > 0) {
+          return <ModifyPage {...this.props} viewLayer={viewLayer} />;
+        }
+        if (isCustom && typeof Component === 'function') {
+          return (
+            <div>
+              <Component {...this.props} />
+            </div>
+          );
+        }
+        return '';
+      case 'VIEW':
+        if (metaList && metaList.length > 0 && viewLayer.length > 0) {
+          return <ViewPage {...this.props} viewLayer={viewLayer} />;
+        }
+        if (isCustom && typeof Component === 'function') {
+          return (
+            <div>
+              <Component {...this.props} />
+            </div>
+          );
+        }
+        return '';
+      case 'LIST':
+        if (isCustom && typeof Component === 'function') {
+          return (
+            <div>
+              <Component {...this.props} />
+            </div>
+          );
+        }
+        return '';
+      case 'CUSTOM':
+      default:
+        if (typeof Component === 'function') {
+          return (
+            <div>
+              <Component {...this.props} />
+            </div>
+          );
+        }
+        return '';
+    }
   }
 }
 
@@ -70,6 +126,7 @@ BizBuilderBase.propTypes = {
   revisionTask: PropTypes.func,
   getRevisionHistory: PropTypes.func,
   removeReduxState: PropTypes.func,
+  changeValidationData: PropTypes.func.isRequired,
 };
 
 BizBuilderBase.defaultProps = {
@@ -88,6 +145,10 @@ BizBuilderBase.defaultProps = {
   responseData: {},
   extraApiData: {},
   revisionHistory: [],
+  viewID: 'BizDoc',
+  // viewID: 'TechDoc',
+  // viewID: 'DwDoc',
+  isCustom: false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -117,6 +178,7 @@ const mapDispatchToProps = dispatch => ({
   revisionTask: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.revisionTask(id, workSeq, taskSeq, callbackFunc)),
   getRevisionHistory: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.getRevisionHistory(id, workSeq, taskSeq, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
+  changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
