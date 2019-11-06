@@ -7,6 +7,7 @@ import TextComp from './viewComponent/Comp/TextComp';
 import EditorComp from './viewComponent/Comp/EditorComp';
 import CustomEditorComp from './viewComponent/Comp/CustomComp/CustomEditorComp';
 import InsertBtnComp from './viewComponent/Comp/InsertBtnComp';
+import ModalInsertBtnComp from './viewComponent/Comp/ModalInsertBtnComp';
 import AttachComp from './viewComponent/Comp/AttachComp';
 import TreeSelectComp from './viewComponent/Comp/TreeSelectComp';
 import SelectComp from './viewComponent/Comp/SelectComp';
@@ -25,6 +26,7 @@ export const CompInfo = {
   EditorComp: { renderer: property => <EditorComp {...property} /> },
   CustomEditorComp: { renderer: property => <CustomEditorComp {...property} /> },
   InsertBtnComp: { renderer: property => <InsertBtnComp {...property} /> },
+  ModalInsertBtnComp: { renderer: property => <ModalInsertBtnComp {...property} /> },
   AttachComp: { renderer: property => <AttachComp {...property} /> },
   TreeSelectComp: { renderer: property => <TreeSelectComp {...property} /> },
   SelectComp: { renderer: property => <SelectComp {...property} /> },
