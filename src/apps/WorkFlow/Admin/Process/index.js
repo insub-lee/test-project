@@ -82,15 +82,12 @@ class Process extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.debug('##### componentDidUpdate #####');
-    console.debug('prevProps', prevProps);
-    console.debug('this.props', this.props);
-    // if (prevProps.processInfo.PRC_ID !== this.props.processInfo.PRC_ID) {
-
-    // }
+    if (prevProps.processInfo.PRC_ID !== this.props.processInfo.PRC_ID) {
+      this.props.processCallbackFunc(this.props.processInfo.PRC_ID);
+    }
   }
 
-  onDragEnd = dropResult => {
+  onDragEnd = (dropResult) => {
     if (!dropResult.destination) {
       return;
     }
@@ -101,14 +98,14 @@ class Process extends Component {
     this.initStepData();
   };
 
-  removeItem = itemIdx => {
+  removeItem = (itemIdx) => {
     const { processStep, setProcessStep } = this.props;
     processStep.splice(itemIdx, 1);
     setProcessStep(processStep.map((item, index) => ({ ...item, STEP: index + 1 })));
     this.initStepData();
   };
 
-  changeGubun = val => {
+  changeGubun = (val) => {
     const isAgree = val === '2' || val === '3';
     this.setState({ isAgree });
   };
@@ -139,7 +136,7 @@ class Process extends Component {
   //   });
   // };
 
-  onAddStep = e => {
+  onAddStep = (e) => {
     e.preventDefault();
     const { processInfo, processStep, setProcessStep } = this.props;
     const info = {
@@ -206,27 +203,27 @@ class Process extends Component {
   };
 
   // 조직도로부터 데이터 가져오는 함수
-  getDataFromOrganizationAll = resultObj => {
+  getDataFromOrganizationAll = (resultObj) => {
     const stepUsers = [];
 
     let stepUsersName = '';
-    resultObj.selectedUsers.forEach(item => {
+    resultObj.selectedUsers.forEach((item) => {
       stepUsersName += createStepUsersName(item, 'U');
       stepUsers.push({ ...item, ID: item.USER_ID });
     });
-    resultObj.checkedPstn.forEach(item => {
+    resultObj.checkedPstn.forEach((item) => {
       stepUsersName += createStepUsersName(item, 'P');
       stepUsers.push({ ...item, ID: item.id });
     });
-    resultObj.checkedDept.forEach(item => {
+    resultObj.checkedDept.forEach((item) => {
       stepUsersName += createStepUsersName(item, 'D');
       stepUsers.push({ ...item, ID: item.id });
     });
-    resultObj.checkedDuty.forEach(item => {
+    resultObj.checkedDuty.forEach((item) => {
       stepUsersName += createStepUsersName(item, 'T');
       stepUsers.push({ ...item, ID: item.id });
     });
-    resultObj.checkedGrp.forEach(item => {
+    resultObj.checkedGrp.forEach((item) => {
       stepUsersName += createStepUsersName(item, 'V');
       stepUsers.push({ ...item, ID: item.id });
     });
@@ -255,7 +252,7 @@ class Process extends Component {
     setModalVisible(true);
   };
 
-  onSaveProcess = e => {
+  onSaveProcess = (e) => {
     e.preventDefault();
     const { processStep, saveProcessInfo, setSpinning } = this.props;
 
@@ -277,9 +274,11 @@ class Process extends Component {
     saveProcessInfo(prcData);
   };
 
-  onUpdateProcess = e => {
+  onUpdateProcess = (e) => {
     e.preventDefault();
-    const { processInfo, processStep, updateProcessInfo, setSpinning } = this.props;
+    const {
+      processInfo, processStep, updateProcessInfo, setSpinning,
+    } = this.props;
     const prcName = this.props.form.getFieldValue('prcName');
     const prcData = {
       PRC_ID: processInfo.PRC_ID,
@@ -293,7 +292,7 @@ class Process extends Component {
     updateProcessInfo(prcData);
   };
 
-  onDeleteProcess = e => {
+  onDeleteProcess = (e) => {
     e.preventDefault();
     const { processInfo, deleteProcessInfo } = this.props;
     const prcData = {
@@ -302,8 +301,8 @@ class Process extends Component {
     deleteProcessInfo(prcData);
   };
 
-  onActiveStep = stepInfo => {
-    this.setState(prevState => {
+  onActiveStep = (stepInfo) => {
+    this.setState((prevState) => {
       const { activeStep } = prevState;
       const isDupStep = activeStep === stepInfo.STEP;
       return {
@@ -325,9 +324,13 @@ class Process extends Component {
   };
 
   render() {
-    const { stepInfo, isAgree, stepUsersName, activeStep } = this.state;
+    const {
+      stepInfo, isAgree, stepUsersName, activeStep,
+    } = this.state;
     const { getFieldDecorator } = this.props.form;
-    const { prcId, processInfo, processStep, processCallbackFunc, modalVisible, spinning, setSpinning } = this.props;
+    const {
+      prcId, processInfo, processStep, processCallbackFunc, modalVisible, spinning, setSpinning,
+    } = this.props;
     const formItemLayout = {
       labelCol: {
         xs: { span: 28 },
@@ -403,25 +406,21 @@ class Process extends Component {
                     <Form.Item label="유형">
                       {getFieldDecorator('stepType', {
                         initialValue: stepInfo.STEP_TYPE,
-                      })(
-                        <Select style={{ width: 120 }}>
-                          <Option value="U">사용자</Option>
-                          <Option value="D">부서</Option>
-                          <Option value="V">그룹</Option>
-                        </Select>,
-                      )}
+                      })(<Select style={{ width: 120 }}>
+                        <Option value="U">사용자</Option>
+                        <Option value="D">부서</Option>
+                        <Option value="V">그룹</Option>
+                      </Select>)}
                     </Form.Item>
                     <Form.Item label="결재구분">
                       {getFieldDecorator('gubun', {
                         initialValue: stepInfo.GUBUN !== undefined ? stepInfo.GUBUN.toString() : '',
-                      })(
-                        <Select style={{ width: 120 }} onChange={val => this.changeGubun(val)}>
-                          <Option value="1">결재</Option>
-                          <Option value="2">합의(개인)</Option>
-                          <Option value="3">합의(부서)</Option>
-                          <Option value="4">전결</Option>
-                        </Select>,
-                      )}
+                      })(<Select style={{ width: 120 }} onChange={val => this.changeGubun(val)}>
+                        <Option value="1">결재</Option>
+                        <Option value="2">합의(개인)</Option>
+                        <Option value="3">합의(부서)</Option>
+                        <Option value="4">전결</Option>
+                      </Select>)}
                     </Form.Item>
                     <Form.Item label="승인자">
                       <React.Fragment>
@@ -441,12 +440,10 @@ class Process extends Component {
                     <Form.Item label="합의구분">
                       {getFieldDecorator('agreeType', {
                         initialValue: stepInfo.AGREE_TYPE,
-                      })(
-                        <Radio.Group disabled={!isAgree}>
-                          <Radio value="SE">순차합의</Radio>
-                          <Radio value="PA">병렬합의</Radio>
-                        </Radio.Group>,
-                      )}
+                      })(<Radio.Group disabled={!isAgree}>
+                        <Radio value="SE">순차합의</Radio>
+                        <Radio value="PA">병렬합의</Radio>
+                      </Radio.Group>)}
                     </Form.Item>
                     <Form.Item
                       wrapperCol={{
@@ -486,17 +483,17 @@ class Process extends Component {
               </Button>
             ) : (
               <React.Fragment>
-                <Button type="primary" onClick={e => this.onConfirm(e, 'D')}>
+                <Button type="primary" onClick={e => this.onDeleteProcess(e)}>
                   삭제
                 </Button>
                 <Button type="primary" onClick={e => this.onConfirm(e, 'U')} style={{ marginLeft: '8px' }}>
                   수정
                 </Button>
-                {prcId === -1 && (
+                {/* {prcId === -1 && (
                   <Button type="primary" htmlType="button" onClick={() => processCallbackFunc(processInfo.PRC_ID)} style={{ marginLeft: '8px' }}>
                     빌더적용
                   </Button>
-                )}
+                )} */}
               </React.Fragment>
             )}
           </Col>
@@ -527,7 +524,7 @@ Process.propTypes = {
 };
 
 Process.defaultProps = {
-  prcId: 16,
+  prcId: -1,
   processCallbackFunc: () => {},
 };
 
