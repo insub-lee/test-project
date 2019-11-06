@@ -7,6 +7,7 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 function* submitHadnlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
+  console.debug('submitHadnlerBySaga');
   const httpMethodInfo = httpMethod.toUpperCase === 'GET' ? Axios.get : Axios.post;
 
   const response = yield call(httpMethodInfo, apiUrl, submitData);
