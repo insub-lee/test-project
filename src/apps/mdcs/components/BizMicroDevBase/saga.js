@@ -6,7 +6,7 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* getCallDataHandler({ id, apiArys }) {
+function* getCallDataHandler({ id, apiArys, callbackFunc }) {
   if (apiArys && apiArys.length > 0) {
     for (let i = 0; i < apiArys.length; i += 1) {
       let response = {};
@@ -19,12 +19,22 @@ function* getCallDataHandler({ id, apiArys }) {
           case 'POST':
             response = yield call(Axios.post, apiInfo.url, apiInfo.params);
             break;
+          case 'PUT':
+            response = yield call(Axios.put, apiInfo.url, apiInfo.params);
+            break;
+          case 'DELETE':
+            response = yield call(Axios.delete, apiInfo.url, apiInfo.params);
+            break;
           default:
             break;
         }
       }
       yield put(actions.setCallDataHandler(id, apiInfo.key, response));
     }
+  }
+
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id);
   }
 }
 

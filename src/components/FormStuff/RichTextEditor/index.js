@@ -11,10 +11,15 @@ class RichTextEditor extends Component {
 
   componentDidMount() {
     const { defaultValue, contSeq, name } = this.props;
-    console.debug('Rich Text Editor ', defaultValue, this.props, name);
     if (defaultValue && defaultValue.length > 0) {
       const { DETAIL: model } = defaultValue[0];
       this.setState({ model });
+    }
+
+    if (typeof defaultValue === 'string') {
+      this.setState({
+        model: defaultValue,
+      });
     }
   }
 
@@ -26,6 +31,12 @@ class RichTextEditor extends Component {
         const { DETAIL: model } = defaultValue[0];
         this.setState({ model });
       }
+    }
+
+    if (defaultValue !== prevValue && typeof defaultValue === 'string') {
+      this.setState({
+        model: defaultValue,
+      });
     }
   }
 
@@ -53,6 +64,7 @@ class RichTextEditor extends Component {
   render() {
     const { config, name, readOnly } = this.props;
     const { model } = this.state;
+
     return (
       <div>
         {readOnly ? (

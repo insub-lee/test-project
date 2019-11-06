@@ -28,7 +28,6 @@
     "fecha": "^3.0.3",
     "file-loader": "1.1.5",
     "file-saver": "^2.0.2",
-    "filesize": "^5.0.3",
     "font-awesome": "^4.7.0",
     "froala-editor": "^3.0.3",
     "fs-extra": "3.0.1",

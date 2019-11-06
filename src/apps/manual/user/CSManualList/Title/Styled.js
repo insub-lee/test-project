@@ -9,9 +9,8 @@ const Styled = styled.div`
   padding: 12px 90px 12px 15px;
 
   & .board_header__title {
-    display: inline-block;
     color: #fff;
-    font-size: 18px;
+    font-size: 14px;
     margin: 0;
     line-height: normal;
     text-overflow: ellipsis;
