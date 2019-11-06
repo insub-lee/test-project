@@ -257,7 +257,7 @@ class CheckboxComp extends PureComponent {
     const dataKey = `checkBoxData_${META_SEQ}`;
     let checkboxData = [];
     if (extraApiData && extraApiData[dataKey] && extraApiData[dataKey].categoryMapList) {
-      checkboxData = extraApiData[dataKey].categoryMapList;
+      checkboxData = extraApiData[dataKey].categoryMapList.filter(x => x.LVL > 0 && x.USE_YN === 'Y');
       setInitState(checkboxData);
     }
 
