@@ -6,7 +6,6 @@ class CheckboxComp extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      init: true,
       checkValue: undefined,
       etcValue: '',
     };
@@ -185,24 +184,17 @@ class CheckboxComp extends PureComponent {
     );
   };
 
+  // changeFormData(id, etcField, this.state.etcValue)
+
   // 기타 (INPUT태그 사용시)
-  etcInputTag = readOnly => {
+  etcInputTag = () => {
     const { id, CONFIG, changeFormData, extraApiData } = this.props;
     const { etcIndex, returnType, etcField, valueKey, META_SEQ } = CONFIG.property;
-    const { checkValue } = this.state;
-    const { etcInputFormDataChange } = this;
+    const { checkValue, etcValue } = this.state;
 
     let checkboxData = [];
     if (extraApiData && extraApiData[`checkBoxData_${META_SEQ}`] && extraApiData[`checkBoxData_${META_SEQ}`].categoryMapList) {
       checkboxData = extraApiData[`checkBoxData_${META_SEQ}`].categoryMapList;
-    }
-
-    if (readOnly) {
-      return (
-        <div style={{ width: '300px', display: 'inline-block' }}>
-          <Input value={this.state.etcValue} readOnly></Input>
-        </div>
-      );
     }
 
     if (returnType === 'StringNum' || returnType === 'ArrayNum') {
@@ -212,13 +204,9 @@ class CheckboxComp extends PureComponent {
       }
       const checkYn = tempvalue.charAt(etcIndex) === '0';
       if (checkYn) {
-        changeFormData(id, etcField, ' '); // 체크해제시 etcField 초기화
+        changeFormData(id, etcField, ''); // 체크해제시 etcField 초기화
       }
-      return (
-        <div style={{ width: '300px', display: 'inline-block' }}>
-          <Input value={this.state.etcValue} onChange={e => etcInputFormDataChange(e.target.value, etcField)} disabled={checkYn}></Input>
-        </div>
-      );
+      return checkYn;
     }
 
     if (returnType === 'StringValue' || returnType === 'ArrayValue') {
@@ -234,13 +222,9 @@ class CheckboxComp extends PureComponent {
           disableYn = checkValue.includes(etcTargetValue);
         }
         if (!disableYn) {
-          changeFormData(id, etcField, ' '); // 체크해제시 etcField 초기화
+          changeFormData(id, etcField, ''); // 체크해제시 etcField 초기화
         }
-        return (
-          <div style={{ width: '300px', display: 'inline-block' }}>
-            <Input value={this.state.etcValue} onChange={e => etcInputFormDataChange(e.target.value, etcField)} disabled={!disableYn}></Input>
-          </div>
-        );
+        return !disableYn;
       }
 
       if (typeof dataType === 'string' || typeof dataType === 'number') {
@@ -250,23 +234,19 @@ class CheckboxComp extends PureComponent {
           disableYn = checkValue.includes(etcTargetValue);
         }
         if (!disableYn) {
-          changeFormData(id, etcField, ' '); // 체크해제시 etcField 초기화
+          changeFormData(id, etcField, ''); // 체크해제시 etcField 초기화
         }
-        return (
-          <div style={{ width: '300px', display: 'inline-block' }}>
-            <Input value={this.state.etcValue} onChange={e => etcInputFormDataChange(e.target.value, etcField)} disabled={!disableYn}></Input>
-          </div>
-        );
+        return !disableYn;
       }
     }
 
-    return '';
+    return true;
   };
 
   render() {
-    const { CONFIG, readOnly, extraApiData } = this.props;
-    const { returnType, etcIndex, META_SEQ } = CONFIG.property;
-    const { checkValue, init } = this.state;
+    const { id, CONFIG, readOnly, extraApiData, changeFormData, formData } = this.props;
+    const { returnType, etcIndex, META_SEQ, etcField } = CONFIG.property;
+    const { checkValue } = this.state;
     const { onChangeValue, etcInputTag, setInitState } = this;
 
     let view = false;
@@ -279,6 +259,10 @@ class CheckboxComp extends PureComponent {
     if (extraApiData && extraApiData[dataKey] && extraApiData[dataKey].categoryMapList) {
       checkboxData = extraApiData[dataKey].categoryMapList;
       setInitState(checkboxData);
+    }
+
+    if (formData && formData[etcField] && formData[etcField] === ' ') {
+      changeFormData(id, etcField, undefined);
     }
 
     return (
@@ -356,7 +340,16 @@ class CheckboxComp extends PureComponent {
         ) : (
           <div>체크박스 컴포넌트에 사용될 데이터가 없습니다.</div>
         )}
-        {checkboxData.length - 1 >= etcIndex && etcInputTag(view)}
+        {checkboxData.length - 1 >= etcIndex && (
+          <div style={{ width: '300px', display: 'inline-block' }}>
+            <Input
+              value={this.props.formData[etcField]}
+              onChange={e => changeFormData(id, etcField, e.target.value)}
+              disabled={etcInputTag()}
+              readOnly={this.props.readOnly}
+            ></Input>
+          </div>
+        )}
       </React.Fragment>
     );
   }
