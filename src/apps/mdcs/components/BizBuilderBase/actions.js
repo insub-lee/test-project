@@ -41,6 +41,24 @@ export const setDetailData = (id, data) => ({
   data,
 });
 
+export const getProcessRule = (id, payload) => ({
+  type: `${actionTypes.GET_PROCESS_RULE}_${id}`,
+  id,
+  payload,
+});
+
+export const setProcessRule = (id, processRule) => ({
+  type: actionTypes.SET_PROCESS_RULE,
+  id,
+  processRule,
+});
+
+export const setProcessStep = (id, processStep) => ({
+  type: actionTypes.SET_PROCESS_STEP,
+  id,
+  processStep,
+});
+
 export const getTaskSeq = (id, workSeq) => ({
   type: `${actionTypes.GET_TASK_SEQ}_${id}`,
   id,

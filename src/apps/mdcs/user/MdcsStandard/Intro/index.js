@@ -161,11 +161,18 @@ class IntroComponent extends Component {
     });
     getCallDataHanlder(id, apiArys);
 
+    const fullPathArr = [];
+    fullPathArr.push(this.state.selectedValue1);
+    fullPathArr.push(this.state.selectedValue2);
+    fullPathArr.push(this.state.selectedValue3);
+    fullPathArr.push(value);
+
     this.setState({
       selectedValue4: value,
       selectedFullPath: fullPath,
       selectedComponent: selectedTemplate,
-      fullPathInfo: fullPath.split('|'),
+      // fullPathInfo: fullPath.split('|'),
+      fullPathInfo: fullPathArr,
     });
   };
 
@@ -176,7 +183,7 @@ class IntroComponent extends Component {
   };
 
   onCloseModal = () => {
-    this.setState({
+    this.setState(prevState => ({
       optAry2: [],
       optAry3: [],
       optAry4: [],
@@ -188,15 +195,15 @@ class IntroComponent extends Component {
       isShow: false,
       selectedDraft: 1,
       searchValue: '',
-      selectedDraft: this.state.selectedDraft,
+      selectedDraft: prevState.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
       taskSeq: -1,
-    });
+    }));
   };
 
   onCompleteCloseModal = () => {
     message.success('Save Complete', 1);
-    this.setState({
+    this.setState(prevState => ({
       optAry2: [],
       optAry3: [],
       optAry4: [],
@@ -206,12 +213,18 @@ class IntroComponent extends Component {
       selectedValue4: undefined,
       selectedComponent: undefined,
       isShow: false,
-      selectedDraft: this.state.selectedDraft,
+      selectedDraft: prevState.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
-    });
+    }));
   };
 
   onShowDocTemplate = (doctype, docNumber, taskSeq, viewType) => {
+    const workPrcProps = {
+      draftType: this.state.selectedDraft,
+      nodeIds: this.state.fullPathInfo,
+      degreeFlag: 88,
+    };
+
     switch (doctype) {
       case 'BS': {
         return (
@@ -224,8 +237,9 @@ class IntroComponent extends Component {
             onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -240,8 +254,9 @@ class IntroComponent extends Component {
             onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -256,8 +271,9 @@ class IntroComponent extends Component {
             onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -272,8 +288,9 @@ class IntroComponent extends Component {
             onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -288,8 +305,9 @@ class IntroComponent extends Component {
             onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
     }

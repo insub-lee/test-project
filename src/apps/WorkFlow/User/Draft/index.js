@@ -23,54 +23,62 @@ const AntdTable = StyledAntdTable(Table);
 
 const getColumns = (columns, CATE) => {
   if (CATE === 'draft') {
-    columns.push({
-      title: '기안일',
-      dataIndex: 'DRAFT_DTTM',
-      key: 'draftDttm',
-      width: '15%',
-    });
-  } else if (CATE === 'unApproval') {
     columns.push(
       {
-        title: '결재단계',
-        dataIndex: 'NODE_NAME_KOR',
-        key: 'nodeNameKor',
-        width: '10%',
+        title: '기안일',
+        dataIndex: 'REG_DTTM',
+        key: 'draftDttm',
+        width: '15%',
       },
       {
-        title: '결재자',
-        dataIndex: 'APPV_NAME_KOR',
-        key: 'appvNameKor',
-        width: '10%',
-      },
-    );
-  } else {
-    columns.push(
-      {
-        title: '결재단계',
-        dataIndex: 'NODE_NAME_KOR',
-        key: 'nodeNameKor',
-        width: '10%',
-      },
-      {
-        title: '결재자',
-        dataIndex: 'APPV_NAME_KOR',
-        key: 'appvNameKor',
-        width: '10%',
-      },
-      {
-        title: '결재여부',
-        dataIndex: 'APPV_STATUS_NM',
-        key: 'appvStatsNm',
+        title: '상태',
+        dataIndex: 'STATUS_NM',
+        key: 'statusNm',
         width: '7%',
       },
-      {
-        title: '결재일시',
-        dataIndex: 'APPV_DTTM',
-        key: 'appvDttm',
-        width: '10%',
-      },
     );
+  } else if (CATE === 'unApproval') {
+    // columns.push(
+    //   {
+    //     title: '결재단계',
+    //     dataIndex: 'NODE_NAME_KOR',
+    //     key: 'nodeNameKor',
+    //     width: '10%',
+    //   },
+    //   {
+    //     title: '결재자',
+    //     dataIndex: 'APPV_NAME_KOR',
+    //     key: 'appvNameKor',
+    //     width: '10%',
+    //   },
+    // );
+  } else {
+    // columns.push(
+    //   {
+    //     title: '결재단계',
+    //     dataIndex: 'NODE_NAME_KOR',
+    //     key: 'nodeNameKor',
+    //     width: '10%',
+    //   },
+    //   {
+    //     title: '결재자',
+    //     dataIndex: 'APPV_NAME_KOR',
+    //     key: 'appvNameKor',
+    //     width: '10%',
+    //   },
+    //   {
+    //     title: '결재여부',
+    //     dataIndex: 'APPV_STATUS_NM',
+    //     key: 'appvStatsNm',
+    //     width: '7%',
+    //   },
+    //   {
+    //     title: '결재일시',
+    //     dataIndex: 'APPV_DTTM',
+    //     key: 'appvDttm',
+    //     width: '10%',
+    //   },
+    // );
   }
 
   return columns;
@@ -134,18 +142,12 @@ class Draft extends Component {
       },
       {
         title: 'Title',
-        dataIndex: 'TITLE',
+        dataIndex: 'DRAFT_TITLE',
         key: 'title',
         render: (text, record) => (
           <TitleRenderer data={record} value={text} category={CATE} setSelectedDraft={this.props.setSelectedDraft} pathname={pathname} />
         ),
         ellipsis: true,
-      },
-      {
-        title: '상태',
-        dataIndex: 'STATUS_NM',
-        key: 'statusNm',
-        width: '7%',
       },
       {
         title: '기안자',
