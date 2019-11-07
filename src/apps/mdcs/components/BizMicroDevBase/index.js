@@ -27,6 +27,7 @@ class BizMicroDevBase extends React.Component {
 BizMicroDevBase.propTypes = {
   result: PropTypes.object,
   getCallDataHanlder: PropTypes.func,
+  removeReduxState: PropTypes.func,
 };
 
 BizMicroDevBase.defaultProps = {
@@ -39,7 +40,9 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCallDataHanlder: (id, apiAry) => dispatch(actions.getCallDataHandler(id, apiAry)),
+  getCallDataHanlder: (id, apiAry, callbackFunc) => dispatch(actions.getCallDataHandler(id, apiAry, callbackFunc)),
+  removeReduxState: id => dispatch(actions.removeReduxState(id)),
+  removeReduxStateByKey: (id, key) => dispatch(actions.removeReduxStateByKey(id, key)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });

@@ -1,5 +1,6 @@
 import { takeLatest, put, call, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
+import { push } from 'react-router-redux';
 import { intlObj } from 'utils/commonUtils';
 import message from 'components/Feedback/message';
 import { Axios } from 'utils/AxiosFunc';
@@ -9,23 +10,25 @@ import * as constants from './constants';
 
 export function* getWidgetList(payload) {
   const { PAGE_ID } = payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/widgetList', { PAGE_ID });
+  // MyPage 에서 호출 할 경우 자기 PO_MYMENU 에 등록된 자신의 메뉴만 조회 하여 수정
+  const response = yield call(Axios.post, '/api/bizstore/v1/mypage/widgetList', { PAGE_ID, isMyMenu: true });
   const { widgetList } = response;
   if (widgetList) {
     yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(JSON.parse(widgetList)) });
+  }else {
+    yield put(push('/error'));
   }
 }
 
 export function* resetWidgetList(payload) {
-  const { widgetList } = payload;
+  const { widgetList, PAGE_ID } = payload;
   if (widgetList) {
     const newWidgetList = JSON.parse(widgetList);
     const pageInfo = yield select(state => state.get('pageInfo'));
     const oldWidgetList = pageInfo.get('widgetList').toJS();
-    if (oldWidgetList.length > 0) {
+    if (oldWidgetList && oldWidgetList.length > 0) {
       const oldPageId = oldWidgetList[0].PAGE_ID;
-      const newPageId = newWidgetList[0].PAGE_ID;
-
+      const newPageId = newWidgetList.length > 0 ? newWidgetList[0].PAGE_ID : PAGE_ID;
       if (oldPageId === newPageId) {
         yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(newWidgetList) });
       }

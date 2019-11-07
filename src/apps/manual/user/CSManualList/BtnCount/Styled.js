@@ -11,10 +11,9 @@ const Styled = styled.div`
     padding: 0px 15px;
     background: #fff;
     color: #7a59ad;
-    font-size: 14px;
+    font-size: 12px;
     border-radius: 15px;
     height: auto;
-    margin-right: 10px;
     vertical-align: middle;
   }
   i:before {

@@ -26,13 +26,23 @@ class NodeRegist extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const data = new FormData(e.target);
-    const payload = {};
-    data.forEach((value, key) => {
-      payload[key] = value;
-    });
 
-    this.props.saveNode(payload);
+    const { NODE_ID } = this.props.match.params;
+    const data = new FormData(e.target);
+    let payload = {};
+
+    if (NODE_ID !== '-1') {
+      payload = { NODE_ID };
+      data.forEach((value, key) => {
+        payload[key] = value;
+      });
+      this.props.updateNode(payload);
+    } else {
+      data.forEach((value, key) => {
+        payload[key] = value;
+      });
+      this.props.saveNode(payload);
+    }
   };
 
   render() {
@@ -82,6 +92,14 @@ class NodeRegist extends Component {
                     </tr>
                     <tr>
                       <th>
+                        <label htmlFor="v2">서비스명</label>
+                      </th>
+                      <td>
+                        <Input name="CLASSNAME" defaultValue={node.CLASSNAME} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
                         <label htmlFor="v2">노드옵션</label>
                       </th>
                       <td>
@@ -125,6 +143,7 @@ NodeRegist.propTypes = {
   node: PropTypes.object,
   getNodeDetail: PropTypes.func,
   saveNode: PropTypes.func,
+  updateNode: PropTypes.func,
 };
 
 NodeRegist.defaultProps = {
@@ -143,6 +162,7 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   getNodeDetail: nodeId => dispatch(actions.getNodeDetail(nodeId)),
   saveNode: nodeInfo => dispatch(actions.saveNode(nodeInfo)),
+  updateNode: nodeInfo => dispatch(actions.updateNode(nodeInfo)),
 });
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Node.NodeRegist', reducer });

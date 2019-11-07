@@ -9,3 +9,8 @@ export const setNodeDetail = node => ({
   type: actionTypes.SET_NODE_DETAIL,
   node,
 });
+
+export const deleteNode = nodeInfo => ({
+  type: actionTypes.DELETE_NODE,
+  nodeInfo,
+});

@@ -53,7 +53,7 @@ const RenderSearchHistoryView = (props, t) => {
                                   <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
                                   <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
                                   <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-                                  <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li>
+                                  {/* <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
                                 </ul>
                                 : <div />
                               }

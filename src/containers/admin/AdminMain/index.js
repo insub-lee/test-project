@@ -7,6 +7,7 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import WorkBuilderDetailPage from 'apps/WorkBuilderApp/Admin/WorkBuilderDetailPage';
 import WorkBuilderListPage from 'apps/WorkBuilderApp/Admin/WorkBuilderListPage';
 import WorkBuilderToAppPage from 'apps/WorkBuilderApp/Admin/WorkBuilderToAppPage';
+import FileManager from 'apps/FileManager';
 
 import CodeAdmin from './CodeAdmin';
 import SiteAdmin from './SiteAdmin';
@@ -49,6 +50,7 @@ class wrap extends PureComponent {
       <div>
         {/* 어드민 메인 콘텐츠 */}
         <Switch>
+          <Route path="/admin/adminmain/filemanager" component={FileManager} />
           <Route path="/admin/adminmain/sysapp" component={App} />
           <Route path="/admin/adminmain/codeadmin" component={CodeAdmin} />
           <Route path="/admin/adminmain/siteadmin" component={SiteAdmin} />
@@ -68,6 +70,7 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/account" component={UserAdmin} />
           <Route path="/admin/adminmain/classify" component={Classify} />
           <Route path="/admin/adminmain/node" component={Node} />
+          {/* Route 추가시 아래의 Route 위에 추가 하세요 */}
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
         </Switch>
       </div>
