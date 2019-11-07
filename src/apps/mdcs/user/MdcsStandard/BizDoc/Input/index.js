@@ -33,8 +33,9 @@ class BizDocListInput extends Component {
   state = { isDraftModal: false, taskSeq: -1, formData: {}, degree: Degree.MAJOR };
 
   componentDidMount() {
-    const { id, getExtraApiData, localApiArr } = this.props;
+    const { id, getExtraApiData, localApiArr, getTaskSeq, workSeq } = this.props;
     getExtraApiData(id, localApiArr);
+    getTaskSeq(id, workSeq);
   }
 
   componentWillUnmount() {
@@ -124,7 +125,7 @@ class BizDocListInput extends Component {
                   <div className="rightTable">
                     <Col span={4}>Revision</Col>
                     <Col span={8}>
-                      <Input value={sp_rev} readOnly />
+                      <Input value={'0'} readOnly />
                     </Col>
                   </div>
                 </Row>
@@ -286,7 +287,8 @@ class BizDocListInput extends Component {
                       onClick={() => {
                         changeFormData(id, 'NODE_ID', selectedNodeId);
                         changeFormData(id, 'SP_ID', docNumber);
-                        changeFormData(id, 'SP_REV', sp_rev);
+                        changeFormData(id, 'VERSION', '0.0');
+                        changeFormData(id, 'SP_REV', '0');
                         saveTask(id, id, this.saveTaskAfter);
                       }}
                     >

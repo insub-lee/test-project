@@ -159,9 +159,9 @@ class singleView extends PureComponent {
                     <li>
                         <button className="icon todo" onClick={() => this.onClick('todo')}>{intlObj.get(messages.registerTodo)}</button>
                     </li>
-                    <li>
+                    {/* <li>
                         <button className="icon hithanks" onClick={() => this.onClick('hithanks')}>{intlObj.get(messages.HyThanks)}</button>
-                    </li>
+                    </li> */}
                 </ul>
                 <div className="userInfoDetails">
                     <table>

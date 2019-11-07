@@ -8,6 +8,7 @@ import Edit from './Edit';
 class ComponentPool extends PureComponent {
   render() {
     const { viewType, match } = this.props;
+
     const typeValue = viewType || match.params.viewType;
 
     switch (typeValue) {

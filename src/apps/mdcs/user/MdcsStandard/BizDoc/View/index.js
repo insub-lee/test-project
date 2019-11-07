@@ -107,7 +107,7 @@ class BizDocListModify extends Component {
                   <div className="leftTable">
                     <Col span={4}>문서번호</Col>
                     <Col span={8}>
-                      <Input value={docNumber} readOnly />
+                      <Input value={formData.SP_ID} readOnly />
                     </Col>
                   </div>
                   <div className="rightTable">
@@ -258,17 +258,6 @@ class BizDocListModify extends Component {
                       }}
                     >
                       닫기
-                    </StyledButton>
-                    <StyledButton
-                      className="btn-primary"
-                      onClick={() => {
-                        changeFormData(id, 'NODE_ID', selectedNodeId);
-                        changeFormData(id, 'SP_ID', docNumber);
-                        changeFormData(id, 'SP_REV', sp_rev);
-                        saveTask(id, id, this.saveTaskAfter);
-                      }}
-                    >
-                      상신
                     </StyledButton>
                   </div>
                 </Row>

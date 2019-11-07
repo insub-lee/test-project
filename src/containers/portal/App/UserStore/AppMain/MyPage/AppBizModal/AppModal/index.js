@@ -63,7 +63,11 @@ class AppModal extends PureComponent {
     return (
       <StyleAppBizModal>
         <ErrorBoundary>
-          <AppCategory handleOnClick={handleOnClick} selectedIndex={selectedCategoryId} preUrl={preUrl} />
+          <AppCategory 
+            handleOnClick={handleOnClick} 
+            selectedIndex={selectedCategoryId} 
+            preUrl={preUrl} 
+          />
         </ErrorBoundary>
         <div className="topPart">
           <div className="searchInput">

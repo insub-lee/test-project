@@ -7,12 +7,12 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 
 const StyleUserSetting = styled.div`
-  position: absolute;
+  /* position: absolute; */ /* IE11 풀스크린에서 화면 짤림 */
   top: 0;
   left: 0; // 커스텀 스크롤바 숨기기
   width: 100%;
   height: 100vh;
-  padding: 45px;
+  /* padding: 45px; */ /* IE11 풀스크린에서 화면 짤림 */
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 

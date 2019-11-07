@@ -19,7 +19,6 @@ class BizDoc extends Component {
 
   render() {
     const { viewType } = this.props;
-    console.log(viewType, '뷰타입..');
 
     return this.selectViewComponent(viewType);
   }

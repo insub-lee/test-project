@@ -14,7 +14,6 @@ import BizMicroDevBase from '../../../components/BizMicroDevBase';
 import BizBuilderBase from '../../../components/BizBuilderBase';
 import StyledModalWrapper from '../../../styled/Modals/StyledModalWrapper';
 
-
 import DwDoc from '../DwDoc';
 import PmDoc from '../PmDoc';
 import BizDoc from '../BizDoc';
@@ -109,7 +108,6 @@ class IntroComponent extends Component {
   };
 
   findDocs = (listItem, aryNodesIds) => {
-    console.log(aryNodesIds, '오류찾기');
     const node = aryNodesIds.filter(_node => listItem.NODE_ID.toString() === _node);
     return node.length > 0 ? listItem : false;
   };
@@ -163,11 +161,18 @@ class IntroComponent extends Component {
     });
     getCallDataHanlder(id, apiArys);
 
+    const fullPathArr = [];
+    fullPathArr.push(this.state.selectedValue1);
+    fullPathArr.push(this.state.selectedValue2);
+    fullPathArr.push(this.state.selectedValue3);
+    fullPathArr.push(value);
+
     this.setState({
       selectedValue4: value,
       selectedFullPath: fullPath,
       selectedComponent: selectedTemplate,
-      fullPathInfo: fullPath.split('|'),
+      // fullPathInfo: fullPath.split('|'),
+      fullPathInfo: fullPathArr,
     });
   };
 
@@ -178,7 +183,7 @@ class IntroComponent extends Component {
   };
 
   onCloseModal = () => {
-    this.setState({
+    this.setState(prevState => ({
       optAry2: [],
       optAry3: [],
       optAry4: [],
@@ -190,15 +195,15 @@ class IntroComponent extends Component {
       isShow: false,
       selectedDraft: 1,
       searchValue: '',
-      selectedDraft: this.state.selectedDraft,
+      selectedDraft: prevState.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
       taskSeq: -1,
-    });
+    }));
   };
 
   onCompleteCloseModal = () => {
     message.success('Save Complete', 1);
-    this.setState({
+    this.setState(prevState => ({
       optAry2: [],
       optAry3: [],
       optAry4: [],
@@ -208,13 +213,18 @@ class IntroComponent extends Component {
       selectedValue4: undefined,
       selectedComponent: undefined,
       isShow: false,
-      selectedDraft: this.state.selectedDraft,
+      selectedDraft: prevState.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
-    });
+    }));
   };
 
   onShowDocTemplate = (doctype, docNumber, taskSeq, viewType) => {
-    console.debug('docNumber', docNumber);
+    const workPrcProps = {
+      draftType: this.state.selectedDraft,
+      nodeIds: this.state.fullPathInfo,
+      degreeFlag: 88,
+    };
+
     switch (doctype) {
       case 'BS': {
         return (
@@ -223,12 +233,13 @@ class IntroComponent extends Component {
             workSeq={913}
             taskSeq={taskSeq}
             component={BizDoc}
-            docNumber={docNumber}
+            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
             onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -239,11 +250,13 @@ class IntroComponent extends Component {
             workSeq={953}
             taskSeq={taskSeq}
             component={PmDoc}
-            docNumber={docNumber}
+            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -254,26 +267,30 @@ class IntroComponent extends Component {
             workSeq={985}
             taskSeq={taskSeq}
             component={DwDoc}
-            docNumber={docNumber}
+            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
       case 'TS': {
         return (
           <BizBuilderBase
-            id="TeachDoc"
+            id="TechDoc"
             workSeq={913}
             taskSeq={taskSeq}
             component={TechDoc}
-            docNumber={docNumber}
+            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
       }
@@ -284,11 +301,13 @@ class IntroComponent extends Component {
             workSeq={913}
             taskSeq={taskSeq}
             component={BizDoc}
-            docNumber={docNumber}
+            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
+            onCloseModleHandler={this.onCompleteCloseModal}
             viewType={viewType}
             selectedNodeId={this.state.selectedValue4}
-            fullNodeIds={this.state.fullPathInfo}
-            draftType={this.state.selectedDraft}
+            workPrcProps={workPrcProps}
+            // fullNodeIds={this.state.fullPathInfo}
+            // draftType={this.state.selectedDraft}
           />
         );
     }
@@ -324,6 +343,7 @@ class IntroComponent extends Component {
 
   onChangeDraft = e => {
     const { value } = e.target;
+
     switch (value) {
       case DraftType.ENACTMENT:
         this.setState({ viewType: 'INPUT' });
@@ -353,7 +373,6 @@ class IntroComponent extends Component {
             {x.NAME_KOR}
           </Option>
         ));
-    console.debug('docNum', docNum, this.props);
 
     const { docNum } = result;
     const selectedNodeId =
@@ -366,10 +385,12 @@ class IntroComponent extends Component {
       {
         dataIndex: 'id',
         title: '문서번호',
+        render: (text, record) => <a onClick={() => this.onClickRevision(record.taskSeq, record.nodeId)}>{text}</a>,
       },
       {
         dataIndex: 'rev',
         title: 'REV',
+        render: (text, record) => <a onClick={() => this.onClickRevision(record.taskSeq, record.nodeId)}>{text && text.split('.')[0]}</a>,
       },
       {
         dataIndex: 'title',
@@ -379,15 +400,17 @@ class IntroComponent extends Component {
       {
         dataIndex: 'deptName',
         title: '기안부서',
+        render: (text, record) => <a onClick={() => this.onClickRevision(record.taskSeq, record.nodeId)}>{text}</a>,
       },
       {
         dataIndex: 'name',
         title: '기안자',
+        render: (text, record) => <a onClick={() => this.onClickRevision(record.taskSeq, record.nodeId)}>{text}</a>,
       },
       {
         dataIndex: 'change',
         title: 'Change',
-        render: text => (text === 1 ? 'Major' : 'Minor'),
+        render: (text, record) => <a onClick={() => this.onClickRevision(record.taskSeq, record.nodeId)}>{text === 88 ? 'Major' : 'Minor'}</a>,
       },
     ];
     return (
@@ -477,7 +500,7 @@ class IntroComponent extends Component {
           </div>
         </div>
 
-        <AntdModal destroyOnClose style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()}>
+        <AntdModal destroyOnClose style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()} footer={null}>
           {this.onShowDocTemplate(
             this.state.selectedComponent && this.state.selectedComponent.CODE,
             docNum && docNum.docNumber,
