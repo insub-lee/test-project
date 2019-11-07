@@ -237,7 +237,7 @@ class PmDocModify extends Component {
                   <div className="leftTable">
                     <Col span={4}>Control No</Col>
                     <Col span={8}>
-                      <Input value={docNumber} />
+                      <Input value={formData.SP_ID} />
                     </Col>
                   </div>
                   <div className="rightTable">

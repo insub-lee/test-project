@@ -1,0 +1,25 @@
+const prefix = '/apps/ViewDesigner';
+
+export const OPEN_JSON_CODE_EDITOR = `${prefix}/OPEN_JSON_CODE_EDITOR`;
+export const CLOSE_JSON_CODE_EDITOR = `${prefix}/CLOSE_JSON_CODE_EDITOR`;
+export const UPDATE_JSON_CODE = `${prefix}/UPDATE_JSON_CODE`;
+export const ADD_ROW = `${prefix}/ADD_ROW`;
+export const REMOVE_ROW = `${prefix}/REMOVE_ROW`;
+export const MERGE_CELL = `${prefix}/MERGE_CELL`;
+export const DIVIDE_CELL = `${prefix}/DIVIDE_CELL`;
+export const SELECT_CELL = `${prefix}/SELECT_CELL`;
+export const UPDATE_STYLE_WIDTH = `${prefix}/UPDATE_STYLE_WIDTH`;
+export const UPDATE_STYLE_HEIGHT = `${prefix}/UPDATE_STYLE_HEIGHT`;
+export const UPDATE_STYLE_SIZE = `${prefix}/UPDATE_STYLE_SIZE`;
+export const UPDATE_STYLE_ROW_HEIGHT = `${prefix}/UPDATE_STYLE_ROW_HEIGHT`;
+export const UPDATE_BODY_STYLE = `${prefix}/UPDATE_BODY_STYLE`;
+export const SELECT_STYLE_CELL = `${prefix}/SELECT_STYLE_CELL`;
+export const CHANGE_ACTIVE_TAB = `${prefix}/CHANGE_ACTIVE_TAB`;
+export const ADD_GROUP = `${prefix}/ADD_GROUP`;
+export const CHANGE_GROUP_TITLE = `${prefix}/CHANGE_GROUP_TITLE`;
+export const CHANGE_USE_GROUP_TITLE = `${prefix}/CHANGE_USE_GROUP_TITLE`;
+export const GET_METADATA_BY_SAGA = `${prefix}/GET_METADATA_BY_SAGA`;
+export const SET_SELECT_TOOLBAR_ITEM_REDUCER = `${prefix}/SET_SELECT_TOOLBAR_ITEM_REDUCER`;
+export const CHANGE_COMPDATA_REDUCER = `${prefix}/CHANGE_COMPDATA_REDUCER`;
+export const ADD_METADATA_BY_SAGA = `${prefix}/ADD_METADATA_BY_SAGA`;
+export const SET_WORK_INFO_REDUCER = `${prefix}/SET_WORK_INFO_REDUCER`;

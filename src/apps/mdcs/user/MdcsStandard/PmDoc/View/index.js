@@ -97,7 +97,7 @@ class PmDocView extends Component {
                   <div className="leftTable">
                     <Col span={4}>Control No</Col>
                     <Col span={8}>
-                      <Input value={docNumber} readOnly />
+                      <Input value={formData.SP_ID} readOnly />
                     </Col>
                   </div>
                   <div className="rightTable">
@@ -216,19 +216,13 @@ class PmDocView extends Component {
                   <div className="leftTable">
                     <Col span={4}>제품승인원</Col>
                     <Col span={8}>
-                      {formData && formData.PRODUCT_APPROVAL && (
-                        <FileUpload
-                          {...this.props}
-                          defaultValue={formData.PRODUCT_APPROVAL}
-                          saveTempContents={detail => this.handlerAttachChange(detail, 'PRODUCT_APPROVAL')}
-                        ></FileUpload>
-                      )}
+                      {formData && formData.PRODUCT_APPROVAL && <FileUpload {...this.props} defaultValue={formData.PRODUCT_APPROVAL} readOnly></FileUpload>}
                     </Col>
                   </div>
                   <div className="rightTable">
                     <Col span={4}>시료수량</Col>
                     <Col span={8}>
-                      <Input value={formData.SAMPLE_CNT} onChange={e => changeFormData(id, 'SAMPLE_CNT', e.target.value)} />
+                      <Input value={formData.SAMPLE_CNT} readOnly />
                     </Col>
                   </div>
                 </Row>

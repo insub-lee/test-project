@@ -1,6 +1,9 @@
 import { takeEvery, call, put, select, takeLatest } from 'redux-saga/effects';
+import React from 'react';
 
 import { Axios } from 'utils/AxiosFunc';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import * as actionTypes from './constants';
 import * as actions from './actions';
@@ -39,6 +42,13 @@ function* getExtraApiData({ id, apiArr }) {
 function* getDetailData({ id, workSeq, taskSeq }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
   yield put(actions.setDetailData(id, response.data));
+}
+
+// processRule  조회
+function* getProcessRule({ id, payload }) {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder`, { PARAM: { ...payload } });
+  const { DRAFT_PROCESS } = response;
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
 }
 
 function* getTaskSeq({ id, workSeq }) {
@@ -93,6 +103,28 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
   const formData = yield select(selectors.makeSelectFormDataById(id));
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
+  const validationData = yield select(selectors.makeSelectValidationDataById(id));
+  const processRule = yield select(selectors.makeSelectProcessRuleById(id));
+
+  if (validationData) {
+    const validKeyList = Object.keys(validationData);
+    if (validKeyList && validKeyList.length > 0) {
+      let validFlag = true;
+      let validMsg = '';
+
+      validKeyList.forEach(node => {
+        if (!validationData[node].flag) {
+          validFlag = validationData[node].flag;
+          validMsg = validationData[node].msg;
+        }
+      });
+
+      if (!validFlag) {
+        message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        return;
+      }
+    }
+  }
 
   // taskSeq 생성
   if (taskSeq === -1) {
@@ -104,10 +136,8 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
 
   // temp저장
-  // const secondResponse = yield call(Axios.post, `/api/builder/v1/work/bizbuilderSave/${workSeq}/${taskSeq}`, { PARAM: formData });
   const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'saveTask' });
   // temp -> origin
-  // const nextResponse = yield call(Axios.put, `/api/builder/v1/work/bizbuilderSave/${workSeq}/${taskSeq}`, {
   const nextResponse = yield call(
     Axios.post,
     `/api/builder/v1/work/taskComplete`,
@@ -116,12 +146,21 @@ function* saveTask({ id, reloadId, callbackFunc }) {
         ...formData,
         TASK_SEQ: taskSeq,
         WORK_SEQ: workSeq,
-        // prcId,
-        // processStep,
       },
     },
     { BUILDER: 'saveTaskComplete' },
   );
+  // 결재 저장
+  const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
+    DRAFT_PROCESS: {
+      ...processRule,
+      DRAFT_TITLE: formData.TITLE,
+      WORK_SEQ: workSeq,
+      TASK_SEQ: taskSeq,
+      REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+    },
+  });
+
   yield put(actions.successSaveTask(id));
   yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
   // const apiArr = yield select(selectors.makeSelectApiArrById(reloadId || id));
@@ -136,6 +175,27 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
   const modifyWorkSeq = workSeq && workSeq > 0 ? workSeq : yield select(selectors.makeSelectWorkSeqById(id));
   const modifyTaskSeq = taskSeq && taskSeq > 0 ? taskSeq : yield select(selectors.makeSelectTaskSeqById(id));
   const formData = yield select(selectors.makeSelectFormDataById(id));
+  const validationData = yield select(selectors.makeSelectValidationDataById(id));
+
+  if (validationData) {
+    const validKeyList = Object.keys(validationData);
+    if (validKeyList && validKeyList.length > 0) {
+      let validFlag = true;
+      let validMsg = '';
+
+      validKeyList.forEach(node => {
+        if (!validationData[node].flag) {
+          validFlag = validationData[node].flag;
+          validMsg = validationData[node].msg;
+        }
+      });
+
+      if (!validFlag) {
+        message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        return;
+      }
+    }
+  }
 
   // temp저장
   const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${modifyWorkSeq}/${modifyTaskSeq}`, { PARAM: formData }, { BUILDER: 'modifyTask' });
@@ -173,6 +233,7 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, {}, { BUILDER: 'deleteTask' });
 
   yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
+
   // const apiArr = yield select(selectors.makeSelectApiArrById(id));
   // yield put(actions.getExtraApiData(id, apiArr));
 
@@ -229,6 +290,7 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.id}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.id}`, getExtraApiData);
   yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.id}`, getDetailData);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.id}`, getProcessRule);
   yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.id}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
   yield takeEvery(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);

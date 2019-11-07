@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import { isJSON } from 'utils/helpers';
 import * as actionTypes from './constants';
 
 const initialState = fromJS({
@@ -11,6 +12,7 @@ const initialState = fromJS({
   // workFlow: {},
   // formData: {},
   // extraApiData: {},
+  // processRule: {},
 });
 
 const reducer = (state = initialState, action) => {
@@ -26,9 +28,19 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
         .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}));
     }
+    case actionTypes.SET_PROCESS_RULE: {
+      const { id, processRule } = action;
+      return state.setIn(['bizBuilderBase', id, 'processRule'], fromJS(processRule));
+    }
+    case actionTypes.SET_PROCESS_STEP: {
+      const { id, processStep } = action;
+      return state.setIn(['bizBuilderBase', id, 'processRule', 'DRAFT_PROCESS_STEP'], fromJS(processStep));
+    }
     case actionTypes.INIT_FORMDATA: {
       const { id, workSeq, metaList } = action;
       const formData = {};
+      const validationData = {};
+
       metaList
         .filter(meta => meta.COMP_TYPE === 'FIELD')
         .forEach(item => {
@@ -55,8 +67,21 @@ const reducer = (state = initialState, action) => {
           } else {
             formData[item.COMP_FIELD] = item.COMP_TAG === 'number' ? 0 : ' ';
           }
+
+          let flag = true;
+          let msg = '';
+          if (item.CONFIG && item.CONFIG.length > 0 && isJSON(item.CONFIG)) {
+            const config = JSON.parse(item.CONFIG);
+            if (config.property && config.property.isRequired) {
+              flag = false;
+              msg = `${config.property.NAME_KOR}항목은 필수 입력입니다.`;
+            }
+          }
+          validationData[item.COMP_FIELD] = { flag, msg };
         });
-      return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}));
+      return state
+        .setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}))
+        .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData || {}));
     }
     case actionTypes.GET_EXTRA_API_DATA: {
       const { id, apiArr } = action;
@@ -110,6 +135,8 @@ const reducer = (state = initialState, action) => {
       const workSeq = state.getIn(['bizBuilderBase', id, 'workSeq']);
       const metaList = state.getIn(['bizBuilderBase', id, 'metaList']).toJS();
       const formData = {};
+      const validationData = {};
+
       metaList
         .filter(meta => meta.COMP_TYPE === 'FIELD')
         .forEach(item => {
@@ -125,9 +152,24 @@ const reducer = (state = initialState, action) => {
           } else {
             formData[item.COMP_FIELD] = '';
           }
+
+          let flag = true;
+          let msg = '';
+
+          if (item.CONFIG && item.CONFIG.length > 0 && isJSON(item.CONFIG)) {
+            const config = JSON.parse(item.CONFIG);
+            if (config.property && config.property.isRequired) {
+              flag = false;
+              msg = `${config.property.NAME_KOR}항목은 필수 입력입니다.`;
+            }
+          }
+          validationData[item.COMP_FIELD] = { flag, msg };
         });
 
-      return state.setIn(['bizBuilderBase', id, 'taskSeq'], -1).setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}));
+      return state
+        .setIn(['bizBuilderBase', id, 'taskSeq'], -1)
+        .setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}))
+        .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData || {}));
     }
     case actionTypes.REMOVE_REDUX_STATE: {
       const { id } = action;
@@ -136,6 +178,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_REVISION_HISTORY: {
       const { id, list } = action;
       return state.setIn(['bizBuilderBase', id, 'revisionHistory'], fromJS(list));
+    }
+    case actionTypes.CHANGE_VALIDATIONDATA_REDUCR: {
+      const { id, key, flag, msg } = action;
+      return state.setIn(['bizBuilderBase', id, 'validationData', key], { flag, msg });
     }
     default:
       return state;

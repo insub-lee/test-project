@@ -71,8 +71,9 @@ const makeSelectApiArrById = id =>
 const makeSelectWorkFlowConfig = () =>
   createSelector(
     selectorBizBuilderBase,
-    state => {
-      const config = state.getIn(['workFlow', 'CONFIG']);
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => {
+      const config = state.getIn(['bizBuilderBase', id, 'workFlow', 'CONFIG']);
       return config ? JSON.parse(config) : { info: {} };
     },
   );
@@ -82,6 +83,25 @@ const makeSelectRevisionHistory = () =>
     selectorBizBuilderBase,
     (state, props) => (props && props.id ? props.id : -1),
     (state, id) => (state.getIn(['bizBuilderBase', id, 'revisionHistory']) !== undefined ? state.getIn(['bizBuilderBase', id, 'revisionHistory']).toJS() : []),
+  );
+
+const makeSelectValidationDataById = id =>
+  createSelector(
+    selectorBizBuilderBase,
+    state => (state.getIn(['bizBuilderBase', id, 'validationData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'validationData']).toJS() : {}),
+  );
+
+const makeSelectProcessRule = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'processRule']) !== undefined ? state.getIn(['bizBuilderBase', id, 'processRule']).toJS() : {}),
+  );
+
+const makeSelectProcessRuleById = id =>
+  createSelector(
+    selectorBizBuilderBase,
+    state => (state.getIn(['bizBuilderBase', id, 'processRule']) !== undefined ? state.getIn(['bizBuilderBase', id, 'processRule']).toJS() : {}),
   );
 
 export {
@@ -101,4 +121,7 @@ export {
   // makeSelectFormStuffs,
   makeSelectWorkFlowConfig,
   makeSelectRevisionHistory,
+  makeSelectValidationDataById,
+  makeSelectProcessRule,
+  makeSelectProcessRuleById,
 };
