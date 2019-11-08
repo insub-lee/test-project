@@ -60,7 +60,7 @@ function getUrl(node) {
 
 class AppStore extends Component {
   componentWillMount() {
-    // this.props.getCategoryComboList();
+    this.props.getCategoryComboList();
     this.props.getCategoryData(0);
   }
 
@@ -99,10 +99,11 @@ class AppStore extends Component {
     */
   }
 
-  onChangeSite = (siteId) => {
-    // this.props.getCategoryData(siteId);
-    this.props.getCategoryData(0);
-  }
+  onChangeSite = siteId => {
+    this.props.getCategoryData(siteId);
+    this.props.history.push('/admin/adminmain/appstore');
+    // this.props.getCategoryData(0);
+  };
 
   render() {
     const {
@@ -117,9 +118,10 @@ class AppStore extends Component {
       moveNode,
       deleteNode,
       updateMymenuDisp,
+      siteId,
     } = this.props;
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);
       const url = getUrl(node);
       history.push(url);
@@ -135,18 +137,18 @@ class AppStore extends Component {
             <div className="appstoreTreeWrapper">
               <div>
                 <ErrorBoundary>
-                  {/* <Select defaultValue={1} onChange={this.onChangeSite}>
+                  <Select value={siteId} onChange={this.onChangeSite}>
                     {this.props.categoryComboList.map(item => (
                       <Option value={item.SITE_ID} key={item.SITE_ID}>
                         {item.NAME_KOR}
                       </Option>
                     ))}
-                  </Select> */}
+                  </Select>
                   <AppStoreTree
                     treeData={categoryData}
                     selectedIndex={selectedIndex}
                     onClick={handleTreeOnClick}
-                    canDrag={true}
+                    canDrag
                     canDrop={false}
                     insertNode={insertNode}
                     updateNode={updateNode}
@@ -196,8 +198,8 @@ class AppStore extends Component {
 }
 
 AppStore.propTypes = {
-  // categoryComboList: PropTypes.array.isRequired,
-  // getCategoryComboList: PropTypes.func.isRequired,
+  categoryComboList: PropTypes.array.isRequired,
+  getCategoryComboList: PropTypes.func.isRequired,
   selectedIndex: PropTypes.string.isRequired,
   categoryData: PropTypes.array.isRequired,
   getCategoryData: PropTypes.func.isRequired,
@@ -209,6 +211,7 @@ AppStore.propTypes = {
   deleteNode: PropTypes.func.isRequired,
   updateMymenuDisp: PropTypes.func.isRequired,
   history: PropTypes.object.isRequired,
+  siteId: PropTypes.number.isRequired,
 };
 
 AppStore.defaultProps = {
@@ -219,17 +222,13 @@ export function mapDispatchToProps(dispatch) {
     // 카테고리
     getCategoryComboList: () => dispatch(actions.getCategoryComboList()),
     getCategoryData: siteId => dispatch(actions.getCategoryData(siteId)),
-    changeSelectedIndex: selectedIndex =>
-      dispatch(actions.changeSelectedIndex(selectedIndex)),
+    changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
     moveNode: (siteId, treeData) => dispatch(actions.moveNode(siteId, treeData)),
-    deleteNode: (rowInfo, categoryData, history) =>
-      dispatch(actions.deleteNode(rowInfo, categoryData, history)),
+    deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateMymenuDisp: () => dispatch(actions.updateMymenuDisp()),
-    insertNode: (rowInfo, treeData, data, history) =>
-      dispatch(actions.insertNode(rowInfo, treeData, data, history)),
-    updateNode: (rowInfo, treeData, data, history) =>
-      dispatch(actions.updateNode(rowInfo, treeData, data, history)),
+    insertNode: (rowInfo, treeData, data, history) => dispatch(actions.insertNode(rowInfo, treeData, data, history)),
+    updateNode: (rowInfo, treeData, data, history) => dispatch(actions.updateNode(rowInfo, treeData, data, history)),
   };
 }
 
@@ -238,6 +237,7 @@ const mapStateToProps = createStructuredSelector({
   categoryComboList: selectors.makeCategoryComboList(),
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
+  siteId: selectors.makeSiteId(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
