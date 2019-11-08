@@ -94,15 +94,18 @@ export function* getMapListOne(payload) {
   const { key } = payload;
   const CATG_ID = Number(key);
 
-  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
-  const categoryFlatData = store.get('categoryFlatData');
+  const appList = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore'));
+  const siteId = store.get('siteId');
+  const categoryFlatData = appList.get('categoryFlatData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: 'ONE',
     CATG_ID,
     SITE_ID: -1,
+    C_SITE_ID: siteId,
     LIMIT: appBlockSize,
-    isAdminStore: 'Y',
+    isAdmin: 'Y',
   });
   const { result, total } = response;
 
@@ -128,12 +131,14 @@ export function* getMapListMore(payload) {
   const { key } = payload;
   const CATG_ID = Number(key);
 
-  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
-  const initType = store.get('initType'); // ONE, SEARCH
-  const searchword = store.get('searchword'); // 검색어
+  const appList = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore'));
+  const siteId = store.get('siteId');
+  const initType = appList.get('initType'); // ONE, SEARCH
+  const searchword = appList.get('searchword'); // 검색어
 
   // 기존 리스트개수 + 추가 블럭 개수
-  let mapList = store.get('mapList');
+  let mapList = appList.get('mapList');
   const matchMap = mapList.filter(map => map.get('CATG_ID') === CATG_ID).get(0);
   const limit = matchMap.get('appList').size + appBlockSize;
 
@@ -141,9 +146,10 @@ export function* getMapListMore(payload) {
     TYPE: initType,
     CATG_ID,
     SITE_ID: -1,
+    C_SITE_ID: siteId,
     LIMIT: limit,
     searchword,
-    isAdminStore: 'Y',
+    isAdmin: 'Y',
   });
   const { result, total } = response;
 
@@ -165,14 +171,18 @@ export function* getMapListMore(payload) {
 
 /* 앱리스트 ALL - 카테고리별 앱 8개씩 */
 export function* getMapListAll() {
-  const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
-  const categoryData = store.get('categoryData');
+  const applist = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
+  const store = yield select(state => state.get('admin/AdminMain/AppStore'));
+
+  const siteId = store.get('siteId');
+  const categoryData = applist.get('categoryData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: 'ALL',
     SITE_ID: -1,
+    C_SITE_ID: siteId,
     LIMIT: appBlockSizeAll,
-    isAdminStore: 'Y',
+    isAdmin: 'Y',
   });
 
   // 데이터형태: 리스트. CATG_ID 값으로 GROUP BY -> 각 map에 appList push
@@ -197,19 +207,22 @@ export function* getMapListAll() {
 /* 앱리스트 SEARCH - 검색결과 앱리스트 */
 export function* getMapListSearch(payload) {
   const { searchword } = payload;
+  const store = yield select(state => state.get('admin/AdminMain/AppStore'));
+  const siteId = store.get('siteId');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist', {
     TYPE: 'SEARCH',
     SITE_ID: -1,
+    C_SITE_ID: siteId,
     searchword: payload.searchword,
     LIMIT: appBlockSize,
-    isAdminStore: 'Y',
+    isAdmin: 'Y',
   });
   const { result } = response;
 
   if (result) {
-    const store = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
-    const categoryFlatData = store.get('categoryFlatData');
+    const appList = yield select(state => state.get('admin/AdminMain/AppStore/AppModal/AppList'));
+    const categoryFlatData = appList.get('categoryFlatData');
 
     const appListMap = _.groupBy(result, 'CATG_ID');
     let mapList = fromJS([]);
