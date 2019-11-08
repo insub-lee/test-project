@@ -67,6 +67,7 @@ export function* getMapListOne(payload) {
     CATG_ID,
     LIMIT: appBlockSize,
     BIZGRP_ID,
+    isAdmin: 'Y',
   });
   const { result, total } = response;
 
@@ -111,6 +112,7 @@ export function* getMapListMore(payload) {
     LIMIT: limit,
     searchword,
     BIZGRP_ID,
+    isAdmin: 'Y',
   });
   const { result, total } = response;
 
@@ -144,6 +146,7 @@ export function* getMapListAll() {
     TYPE: 'ALL',
     LIMIT: appBlockSizeAll,
     BIZGRP_ID,
+    isAdmin: 'Y',
   });
   const { result } = response;
 
@@ -182,6 +185,7 @@ export function* getMapListSearch(payload) {
     searchword: payload.searchword,
     LIMIT: appBlockSize,
     BIZGRP_ID,
+    isAdmin: 'Y',
   });
   const { result } = response;
 

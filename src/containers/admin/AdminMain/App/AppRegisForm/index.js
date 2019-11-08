@@ -510,8 +510,8 @@ class AppRegisForm extends React.Component {
     return (
       <div>
         <MyAppCategoryModal show={this.state.MyAppCategoryModalShow} closeModal={this.MyAppCategoryModalClose} returnGateId={returnGateId} type="app" />
-        <AppSelector show={this.state.appPlus1} closeModal={closeAppPlus1Modal} addList={addList1} style={{ marginTop: 570 }} type="all" />
-        <AppSelector show={this.state.appPlus2} closeModal={closeAppPlus2Modal} addList={addList2} style={{ marginTop: 570 }} type="all" />
+        <AppSelector show={this.state.appPlus1} isAdmin={true} closeModal={closeAppPlus1Modal} addList={addList1} style={{ marginTop: 570 }} type="all" />
+        <AppSelector show={this.state.appPlus2} isAdmin={true} closeModal={closeAppPlus2Modal} addList={addList2} style={{ marginTop: 570 }} type="all" />
         <StyleAppRegisForm>
           <Form>
             {/* <h2 className="pageTitle">{intlObj.get(messages.appRegisTitle)}</h2> */}

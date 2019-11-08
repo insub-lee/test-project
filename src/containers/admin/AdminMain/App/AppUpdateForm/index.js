@@ -555,6 +555,7 @@ class AppUpdateForm extends React.Component {
         />
         <AppSelector
           show={this.state.appPlus1}
+          isAdmin={true}
           closeModal={closeAppPlus1Modal}
           addList={addList1}
           style={{ marginTop: 570 }}
@@ -562,6 +563,7 @@ class AppUpdateForm extends React.Component {
         />
         <AppSelector
           show={this.state.appPlus2}
+          isAdmin={true}
           closeModal={closeAppPlus2Modal}
           addList={addList2}
           style={{ marginTop: 570 }}

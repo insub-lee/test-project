@@ -140,7 +140,7 @@ class PageInfo extends Component {
 
         {bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
           <ErrorBoundary>
-            <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
+            <AppSelector type="widget" isAdmin={true} show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>
         ) : (
           ''
