@@ -27,12 +27,12 @@ class EditorActionPanel extends Component {
     /*
       2) nodes에 step 선택 여부 체크
     */
-    const idx = _.findIndex(nodes, n => !n.step);
-    console.log('idx : ', idx);
-    if (idx > -1) {
-      message.warning(<MessageContent>step 을 선택해 주세요</MessageContent>, 3);
-      return false;
-    }
+    // const idx = _.findIndex(nodes, n => !n.step);
+    // console.log('idx : ', idx);
+    // if (idx > -1) {
+    //   message.warning(<MessageContent>step 을 선택해 주세요</MessageContent>, 3);
+    //   return false;
+    // }
 
     return true;
   };
@@ -44,7 +44,7 @@ class EditorActionPanel extends Component {
     const result = nodes.map(node => ({
       id: node.id,
       nodeId: node.NODE_ID,
-      step: node.step,
+      // step: node.step,
       stepType: node.stepType, // GOURP, USER , parallel
       gubun: node.gubun,
       agreeType: node.agreeType,

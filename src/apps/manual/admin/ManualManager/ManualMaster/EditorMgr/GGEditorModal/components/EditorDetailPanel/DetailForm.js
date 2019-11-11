@@ -22,7 +22,7 @@ class DetailForm extends React.Component {
     return propsAPI.getSelected()[0];
   }
 
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     if (e && e.preventDefault) {
       e.preventDefault();
     }
@@ -52,59 +52,53 @@ class DetailForm extends React.Component {
     }, 0);
   };
 
-  handleProcessSubmit = (e) => {
+  handleProcessSubmit = e => {
     const { propsAPI } = this.props;
     const { getSelected, update } = propsAPI;
     const item = getSelected()[0];
     update(item, {
       process: e,
     });
-  }
+  };
 
-  handleStepSubmit = (e) => {
+  handleStepSubmit = e => {
     const { propsAPI } = this.props;
     const { getSelected, update } = propsAPI;
     const item = getSelected()[0];
     update(item, {
       step: e,
     });
-  }
-
-  renderEdgeShapeSelect = () => {
-    return (
-      <Select onChange={this.handleSubmit}>
-        <Option value="flow-smooth">Smooth</Option>
-        <Option value="flow-polyline">Polyline</Option>
-        <Option value="flow-polyline-round">Polyline Round</Option>
-      </Select>
-    );
   };
 
-  renderProcessSelect = () => {
-    return (
-      <Select onChange={this.handleProcessSubmit}>
-        <Option value="reject">반려</Option>
-        <Option value="approval">승인</Option>
-      </Select>
-    );
-  };
+  renderEdgeShapeSelect = () => (
+    <Select onChange={this.handleSubmit}>
+      <Option value="flow-smooth">Smooth</Option>
+      <Option value="flow-polyline">Polyline</Option>
+      <Option value="flow-polyline-round">Polyline Round</Option>
+    </Select>
+  );
 
-  renderStepSelect = () => {
-    return (
-      <Select onChange={this.handleStepSubmit}>
-        <Option value={1}>1</Option>
-        <Option value={2}>2</Option>
-        <Option value={3}>3</Option>
-        <Option value={4}>4</Option>
-        <Option value={5}>5</Option>
-        <Option value={6}>6</Option>
-        <Option value={7}>7</Option>
-        <Option value={8}>8</Option>
-        <Option value={9}>9</Option>
-        <Option value={10}>10</Option>
-      </Select>
-    );
-  };
+  renderProcessSelect = () => (
+    <Select onChange={this.handleProcessSubmit}>
+      <Option value="reject">반려</Option>
+      <Option value="approval">승인</Option>
+    </Select>
+  );
+
+  renderStepSelect = () => (
+    <Select onChange={this.handleStepSubmit}>
+      <Option value={1}>1</Option>
+      <Option value={2}>2</Option>
+      <Option value={3}>3</Option>
+      <Option value={4}>4</Option>
+      <Option value={5}>5</Option>
+      <Option value={6}>6</Option>
+      <Option value={7}>7</Option>
+      <Option value={8}>8</Option>
+      <Option value={9}>9</Option>
+      <Option value={10}>10</Option>
+    </Select>
+  );
 
   renderNodeDetail = () => {
     const { form } = this.props;
@@ -117,11 +111,13 @@ class DetailForm extends React.Component {
             initialValue: label,
           })(<Input onBlur={this.handleSubmit} />)}
         </Item>
+        {/*
         <Item label="Step" {...inlineFormItemLayout}>
           {form.getFieldDecorator('step', {
             initialValue: step,
           })(this.renderStepSelect())}
         </Item>
+      */}
       </Fragment>
     );
   };
@@ -137,11 +133,13 @@ class DetailForm extends React.Component {
             initialValue: label,
           })(<Input onBlur={this.handleSubmit} />)}
         </Item>
+        {/*
         <Item label="Process" {...inlineFormItemLayout}>
           {form.getFieldDecorator('process', {
             initialValue: process,
           })(this.renderProcessSelect())}
         </Item>
+        */}
       </Fragment>
     );
   };

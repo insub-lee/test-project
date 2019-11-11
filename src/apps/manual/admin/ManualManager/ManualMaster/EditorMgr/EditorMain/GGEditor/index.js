@@ -17,7 +17,7 @@ export default class FlowViewer extends Component {
     }
 
     return (
-      <div style={{ height: '500px', border: '1px solid black' }}>
+      <div style={{ height: '400px' }}>
         <GGEditor className={styles.editor}>
           <Flow data={parseData.data} className={styles.flow} graph={{ mode: 'readOnly', edgeDefaultShape: 'flow-polyline' }} />
         </GGEditor>
