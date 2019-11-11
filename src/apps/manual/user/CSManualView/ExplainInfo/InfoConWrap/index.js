@@ -6,7 +6,7 @@ import InfoCon from '../InfoCon';
 import QnA from '../QnA';
 import Tab from '../Tab';
 import Styled from './Styled';
-
+import GGEditor from '../GGEditor';
 const InfoConWrap = ({ componentList, indexRelationList }) => (
   <Styled>
     {componentList &&
@@ -48,6 +48,11 @@ const InfoConWrap = ({ componentList, indexRelationList }) => (
           case 'tab':
             const tabData = isJSON(item.MUAL_COMPVIEWINFO) ? JSON.parse(item.MUAL_COMPVIEWINFO) : [];
             return <Tab key={`manualViewIndexComp_title_${item.MUAL_TABCOMP_IDX}`} tabData={tabData} keyName="id"></Tab>;
+          case 'ggEditor':
+            const data = isJSON(item.MUAL_COMPVIEWINFO) ? JSON.parse(item.MUAL_COMPVIEWINFO) : {};
+
+            return <GGEditor parseData={data} />;
+
           default:
             return '';
         }
