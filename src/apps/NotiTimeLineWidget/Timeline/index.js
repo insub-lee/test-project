@@ -127,7 +127,7 @@ class Timeline extends Component {
           onCancel={() => this.onCancel('VIEW')}
           destroyOnClose
         >
-          <BizBuilderBase id="notifyView" workSeq={workSeq} taskSeq={taskSeq} component={View} viewType="VIEW" {...this.props} />
+          <BizBuilderBase id="notifyView" workSeq={workSeq} taskSeq={taskSeq} component={View} viewType="VIEW" {...this.props} isCustom />
         </Modal>
       </Styled>
     );

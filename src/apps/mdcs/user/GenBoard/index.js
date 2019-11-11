@@ -54,7 +54,7 @@ class GenBoard extends Component {
 
     return (
       <div style={{ padding: '48px' }}>
-        <BizBuilderBase id={`list${widgetId}`} component={List} onChangeMovePageHandler={this.onChangeMovePage} viewType="LIST" {...this.props} />
+        <BizBuilderBase id={`list${widgetId}`} component={List} onChangeMovePageHandler={this.onChangeMovePage} viewType="LIST" {...this.props} isCustom />
         <Modal
           visible={this.state.isEditModal}
           width={800}
@@ -76,6 +76,7 @@ class GenBoard extends Component {
               onChangeMovePageHandler={this.onChangeMovePage}
               viewType="EDIT"
               {...this.props}
+              isCustom
             />
           )}
         </Modal>
@@ -99,6 +100,7 @@ class GenBoard extends Component {
             viewType="VIEW"
             {...this.props}
             key={this.state.taskSeq}
+            isCustom
           />
         </Modal>
       </div>
