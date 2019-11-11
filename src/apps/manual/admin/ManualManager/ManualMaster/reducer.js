@@ -301,6 +301,10 @@ const appReducer = (state = initialState, action) => {
           .setIn(['manualMasterState', 'manualEditorEntity', 'isIndexRelationModal'], true)
           .setIn(['manualMasterState', 'manualEditorEntity', 'indexRelationComponetList'], fromJS([]));
       }
+      if (compType === 'ggEditorPopup') {
+        return state.setIn(['manualMasterState', 'manualEditorEntity', 'isGGEditorModal'], true);
+      }
+
       return addComponentInfo(state, compType, text);
     }
     case constantTypes.SET_EDITOR_COMPONENT_VALUE_REDUCR: {
@@ -523,6 +527,10 @@ const appReducer = (state = initialState, action) => {
       const { flag } = action;
       return state.set('previewYn', flag);
     }
+    case constantTypes.SET_GGEDITOR_MODAL_REDUCR: {
+      const { flag } = action;
+      return state.setIn(['manualMasterState', 'manualEditorEntity', 'isGGEditorModal'], flag);
+    }
     default:
       return state;
   }
@@ -556,7 +564,7 @@ const addTabInfo = state => {
 };
 
 const addComponentInfo = (state, compType, text) => {
-  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna', 'indexRelation', 'tab'];
+  const addType = ['editor', 'index', 'indexLink', 'indexFile', 'qna', 'indexRelation', 'tab', 'ggEditor'];
   if (addType.findIndex(item => item === compType) === -1) {
     console.debug('type error');
     return state;
@@ -614,6 +622,12 @@ const addComponentInfo = (state, compType, text) => {
     });
     newComp.MUAL_COMPVIEWINFO = selectedCompOrgItem.get('title');
   }
+
+  if (compType === 'ggEditor') {
+    const tempJson = { data: text.DESIGN_DATA };
+    newComp.MUAL_COMPVIEWINFO = JSON.stringify(tempJson);
+  }
+
   editorComponentList = editorComponentList.push(fromJS(newComp));
   if (compType === 'index') {
     const indexComp = {
