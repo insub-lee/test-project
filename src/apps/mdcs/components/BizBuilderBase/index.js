@@ -41,7 +41,7 @@ class BizBuilderBase extends React.Component {
     const viewLayer = metaList.filter(filterNode => filterNode.COMP_TYPE === 'VIEW' && filterNode.COMP_TAG === viewType && filterNode.COMP_FIELD === id);
     switch (viewType.toUpperCase()) {
       case 'INPUT':
-        if (metaList && metaList.length > 0 && viewLayer.length > 0) {
+        if (!isCustom && metaList && metaList.length > 0 && viewLayer.length > 0) {
           return <InputPage {...this.props} viewLayer={viewLayer} />;
         }
         if (isCustom && typeof Component === 'function') {
@@ -53,7 +53,7 @@ class BizBuilderBase extends React.Component {
         }
         return '';
       case 'MODIFY':
-        if (metaList && metaList.length > 0 && viewLayer.length > 0) {
+        if (!isCustom && metaList && metaList.length > 0 && viewLayer.length > 0) {
           return <ModifyPage {...this.props} viewLayer={viewLayer} />;
         }
         if (isCustom && typeof Component === 'function') {
@@ -65,7 +65,7 @@ class BizBuilderBase extends React.Component {
         }
         return '';
       case 'VIEW':
-        if (metaList && metaList.length > 0 && viewLayer.length > 0) {
+        if (!isCustom && metaList && metaList.length > 0 && viewLayer.length > 0) {
           return <ViewPage {...this.props} viewLayer={viewLayer} />;
         }
         if (isCustom && typeof Component === 'function') {
