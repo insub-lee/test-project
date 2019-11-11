@@ -127,7 +127,7 @@ class EditorMgr extends Component {
           </Modal>
           <Modal
             width={1198}
-            bodyStyle={{ height: '100vh', padding: '4px' }}
+            bodyStyle={{ height: '400px', padding: '4px' }}
             style={{ top: 42 }}
             visible={isGGEditorModal}
             footer={null}

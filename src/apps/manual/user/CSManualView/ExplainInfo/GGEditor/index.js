@@ -1,20 +1,13 @@
 import React, { Component } from 'react';
 import GGEditor, { Flow } from 'gg-editor';
 import { isJSON } from 'utils/helpers';
-import styles from '../../GGEditorModal/index.module.scss';
+import styles from './index.module.scss';
 
 export default class FlowViewer extends Component {
   componentDidMount() {}
 
   render() {
-    const {
-      item: { MUAL_COMPVIEWINFO },
-    } = this.props;
-
-    let parseData = '';
-    if (isJSON(MUAL_COMPVIEWINFO)) {
-      parseData = JSON.parse(MUAL_COMPVIEWINFO);
-    }
+    const { parseData } = this.props;
 
     return (
       <div style={{ height: '400px' }}>
