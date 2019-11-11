@@ -70,7 +70,7 @@ export const GET_SECURITY_SELECT_DATA_SAGA = `${prefix}ManualMaster/GET_SECURITY
 export const SAVE_CONTENT_SECURITY_SAGA = `${prefix}ManualMaster/SAVE_CONTENT_SECURITY_SAGA`;
 export const REMOVE_CONTENT_SECURITY_SAGA = `${prefix}ManualMaster/REMOVE_CONTENT_SECURITY_ROW_SAGA`;
 export const REMOVE_CATEGORY_INFO_SAGA = `${prefix}ManualMaster/REMOVE_CONTENT_SECURITY_ROW_SAGA`;
-
+export const SET_GGEDITOR_MODAL_REDUCR = `${prefix}ManualMaster/SET_GGEDITOR_MODAL_REDUCR`;
 // :::::::::::::::::::::::: 사용자정보 Constants :::::::::::::::::::::::::::::::
 export const GET_USERINFO_SAGA = `${prefix}ManualMaster/GET_USERINFO_SAGA`;
 export const SET_USERINFO_REDUCR = `${prefix}ManualMaster/SET_USERINFO_REDUCR`;

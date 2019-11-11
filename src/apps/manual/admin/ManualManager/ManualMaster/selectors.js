@@ -263,6 +263,11 @@ const makeSelectIsPreviewModal = () =>
     makeSelectManualMasterState,
     state => state.get('previewYn'),
   );
+const makeSelectIsGGEditorModal = () =>
+  createSelector(
+    makeSelectManualMasterState,
+    state => state.getIn(['manualMasterState', 'manualEditorEntity', 'isGGEditorModal']),
+  );
 
 export default {
   makeSelectChooseRelMual,
@@ -307,4 +312,5 @@ export default {
   makeSelectListGrp,
   makeSelectListUser,
   makeSelectIsPreviewModal,
+  makeSelectIsGGEditorModal,
 };
