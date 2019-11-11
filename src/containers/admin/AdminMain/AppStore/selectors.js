@@ -17,9 +17,15 @@ const makeSelectedIndex = () => createSelector(
   appStoreState => appStoreState.get('selectedIndex'),
 );
 
+const makeSiteId = () => createSelector(
+  selectAppStore,
+  appStoreState => appStoreState.get('siteId'),
+);
+
 export {
   selectAppStore,
   makeCategoryComboList,
   makeCategoryData,
   makeSelectedIndex,
+  makeSiteId,
 };

@@ -6,7 +6,7 @@ import { /* intlObj, */ lang } from 'utils/commonUtils';
 class MenuItem extends Component {
   constructor(props) {
     super(props);
-    this.state = { isOpen: true };
+    this.state = { isOpen: false };
   }
 
   handleClick = item => {
@@ -28,7 +28,12 @@ class MenuItem extends Component {
   };
 
   subMenuOpen = item => {
-    return item.child && this.state.isOpen;
+    const { classString } = this.props;
+    if (item.child) {
+      return this.state.isOpen || item.child.filter(s => classString(s.URL) === 'active').length > 0;
+    }
+    return false;
+
     /*
     const { openMenuCode } = this.props;
     return item.child && openMenuCode === item.SCR_CD;

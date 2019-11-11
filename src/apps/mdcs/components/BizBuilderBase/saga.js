@@ -44,6 +44,13 @@ function* getDetailData({ id, workSeq, taskSeq }) {
   yield put(actions.setDetailData(id, response.data));
 }
 
+// processRule  조회
+function* getProcessRule({ id, payload }) {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/defaultPrcRuleHanlder`, { PARAM: { ...payload } });
+  const { DRAFT_PROCESS } = response;
+  yield put(actions.setProcessRule(id, DRAFT_PROCESS));
+}
+
 function* getTaskSeq({ id, workSeq }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'getTaskSeq' });
   const {
@@ -97,6 +104,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   const formData = yield select(selectors.makeSelectFormDataById(id));
   let taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
+  const processRule = yield select(selectors.makeSelectProcessRuleById(id));
 
   if (validationData) {
     const validKeyList = Object.keys(validationData);
@@ -128,11 +136,8 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
 
   // temp저장
-  // const secondResponse = yield call(Axios.post, `/api/builder/v1/work/bizbuilderSave/${workSeq}/${taskSeq}`, { PARAM: formData });
   const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: formData }, { BUILDER: 'saveTask' });
   // temp -> origin
-  // const nextResponse = yield call(Axios.put, `/api/builder/v1/work/bizbuilderSave/${workSeq}/${taskSeq}`, {
-
   const nextResponse = yield call(
     Axios.post,
     `/api/builder/v1/work/taskComplete`,
@@ -141,12 +146,21 @@ function* saveTask({ id, reloadId, callbackFunc }) {
         ...formData,
         TASK_SEQ: taskSeq,
         WORK_SEQ: workSeq,
-        // prcId,
-        // processStep,
       },
     },
     { BUILDER: 'saveTaskComplete' },
   );
+  // 결재 저장
+  const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
+    DRAFT_PROCESS: {
+      ...processRule,
+      DRAFT_TITLE: formData.TITLE,
+      WORK_SEQ: workSeq,
+      TASK_SEQ: taskSeq,
+      REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+    },
+  });
+
   yield put(actions.successSaveTask(id));
   yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
   // const apiArr = yield select(selectors.makeSelectApiArrById(reloadId || id));
@@ -276,6 +290,7 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.id}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.id}`, getExtraApiData);
   yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.id}`, getDetailData);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.id}`, getProcessRule);
   yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.id}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
   yield takeEvery(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);

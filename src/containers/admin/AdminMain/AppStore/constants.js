@@ -16,3 +16,4 @@ export const MOVE_NODE = 'admin/AdminMain/AppStore/MOVE_NODE';
 
 export const DELETE_NODE = 'admin/AdminMain/AppStore/DELETE_NODE';
 export const UPDATE_MYMENU_DISP = 'admin/AdminMain/AppStore/UPDATE_MYMENU_DISP';
+export const SET_SITE_ID = 'admin/AdminMain/AppStore/SET_SITE_ID';

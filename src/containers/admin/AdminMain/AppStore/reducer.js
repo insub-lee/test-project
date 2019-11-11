@@ -8,6 +8,7 @@ const initialState = fromJS({
   selectedIndex: '',
   categoryData: [],
   tempRowInfo: {},
+  // siteId: -1,
   // titleModalVisible: false,
 });
 
@@ -26,6 +27,8 @@ const orgReducer = (state = initialState, action) => {
     //   return state.set('titleModalVisible', action.titleModalVisible);
     case constants.SAVE_DATA:
       return state.set('categoryData', action.categoryData).set('tempRowInfo', action.tempRowInfo);
+    case constants.SET_SITE_ID:
+      return state.set('siteId', action.payload);
     default:
       return state;
   }

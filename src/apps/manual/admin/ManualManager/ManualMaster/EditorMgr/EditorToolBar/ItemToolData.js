@@ -9,6 +9,7 @@ export const writingTool = {
     { menuId: 5, menuName: '파일링크', menuIcon: 'toolIcon tiIndex', menuType: 'indexFile' },
     { menuId: 6, menuName: 'QnA', menuIcon: 'toolIcon tiIndex', menuType: 'qna' },
     { menuId: 7, menuName: 'Tab', menuIcon: 'toolIcon tiCoding', menuType: 'tab' },
+    { menuId: 8, menuName: 'GG-Editor', menuIcon: 'toolIcon tiAgenda', menuType: 'ggEditorPopup' },
     // { menuId: 6, menuName: 'Image slide', menuIcon: 'toolIcon tiIslide' },
     // { menuId: 7, menuName: 'Video', menuIcon: 'toolIcon tiVideo' },
     // { menuId: 1, menuName: 'ToDo', menuIcon: 'toolIcon tiTodo' },
