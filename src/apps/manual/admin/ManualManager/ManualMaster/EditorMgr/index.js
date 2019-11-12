@@ -216,7 +216,7 @@ const mapStateToProps = createStructuredSelector({
   paragraphTypeIdx: selectors.makeSelectParagraphTypeIdx(),
   isParagraphModal: selectors.makeSelectIsParagraphModal(),
   isPreviewModal: selectors.makeSelectIsPreviewModal(),
-  isGGEditorModal: selectors.makeSelectIsGGEditorModal(),,
+  isGGEditorModal: selectors.makeSelectIsGGEditorModal(),
 });
 
 const mapDispatchToProps = dispatch => ({
