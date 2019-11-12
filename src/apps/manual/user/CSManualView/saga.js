@@ -12,13 +12,11 @@ function* getManualView(action) {
   const { flag, widgetId } = action;
   let mualIdx = yield select(selectors.makeSelectedMualIdxByWidgetId(widgetId));
   const lastVersionYN = flag ? flag.toUpperCase() : yield select(selectors.makeSelectIsLastVersionByWidgetId(widgetId)) || 'Y';
-
   if (mualIdx && mualIdx > 0) {
     yield put(actions.resetManualViewByReducr(widgetId));
     const profile = yield select(makeSelectProfile());
     const userId = profile && profile.USER_ID ? profile.USER_ID : 0;
     const response = yield call(Axios.get, `/api/manual/v1/ManualViewHandler/${mualIdx}/${lastVersionYN}/${userId}`);
-
     if (response) {
       const { list, historyList, navigationList, defaultMgrMap } = response;
       let maulTabList = [];

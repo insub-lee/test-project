@@ -46,6 +46,7 @@ export const setViewIndexRelationListByReducr = (list, widgetId) => ({ type: con
 export const setOldVersionManualByReducr = (list, widgetId) => ({ type: constantTypes.SET_OLD_VERSION_MANUAL_BY_REDUCR, list, widgetId });
 
 // remove
+export const removeReduxState = widgetId => ({ type: constantTypes.REMOVE_REDUX_STATE, widgetId });
 
 // etc
 export const resetManualViewByReducr = widgetId => ({ type: constantTypes.RESET_MANUAL_VIEW_REDUCR, widgetId });

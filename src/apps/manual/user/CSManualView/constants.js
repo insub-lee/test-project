@@ -22,6 +22,7 @@ export const SET_VIEW_INDEX_RELATION_LIST_REDUCR = `${prefix}SET_VIEW_INDEX_RELA
 export const SET_OLD_VERSION_MANUAL_BY_REDUCR = `${prefix}SET_OLD_VERSION_MANUAL_BY_REDUCR`;
 
 // remove
+export const REMOVE_REDUX_STATE = `${prefix}REMOVE_REDUX_STATE`;
 
 // etc
 export const RESET_MANUAL_VIEW_REDUCR = `${prefix}RESET_MANUAL_VIEW_REDUCR`;

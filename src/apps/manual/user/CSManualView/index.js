@@ -8,7 +8,7 @@ import { Modal } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import ErrorBoundary from 'containers/common/ErrorBoundary';
+import PreviewSelectors from 'apps/manual/admin/ManualManager/ManualMaster/selectors';
 import * as newsfeedAction from '../newsFeed/widgets/action';
 import Tab from '../components/Tab';
 import TabTitle from '../components/Tab/TabTitle';
@@ -33,8 +33,13 @@ class ManualView extends Component {
     this.handleClickTopBarButton = this.handleClickTopBarButton.bind(this);
   }
 
+  componentWillUnmount() {
+    const { removeReduxState } = this.props;
+    removeReduxState('preview');
+  }
+
   componentDidMount() {
-    const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx, match, widgetId } = this.props;
+    const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx, match, widgetId, isPreviewModal } = this.props;
     if (match && match.params && match.params.mualIdx) {
       setSelectedMualIdx(match.params.mualIdx, widgetId);
       getManualView(widgetId, match.params.lastVersionYN || 'Y');
@@ -148,61 +153,59 @@ class ManualView extends Component {
     ];
 
     return (
-      <ErrorBoundary>
-        <Styled id={`#csManualView_${widgetId}`} bookmarkWidgetData={bookmarkWidgetData}>
-          <div className="tab-wrap">
-            <Tab
-              tabs={this.getTabData(
-                maulTabList.toJS(),
-                setScrollComponent,
-                widgetId,
-                bookmarkWidgetData,
-                {
-                  mualHistoryList,
-                  selectedMualIdx,
-                  setSelectedMualIdx,
-                  setListSelectedMualIdx,
-                  mualBookmarkList,
-                  setNewsfeedModalIdx,
-                  setbookmarkWidgetViewIdx,
-                },
-                mualMaster.toJS(),
-                navList.toJS(),
-                { relationList: relationList.toJS(), widgetId, addManualHistory, setListSelectedMualIdx },
-                indexRelationList.toJS(),
-              )}
-              keyName="MUAL_TAB_IDX"
-              selectedTabIdx={selectedTabIdx}
-              setSelectedTabIdx={setSelectedTabIdx}
-              widgetId={widgetId}
-            />
-            <TopbarBtnWrap
-              className="tab-btn-wrap"
-              data={topBarButton}
-              mualMaster={mualMaster}
-              action={{ setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx }}
-              widgetId={widgetId}
-            />
-            {!bookmarkWidgetData.widgetYn && (
-              <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
-                <IconCollection className="icon-close" />
-              </button>
+      <Styled id={`#csManualView_${widgetId}`} bookmarkWidgetData={bookmarkWidgetData}>
+        <div className="tab-wrap">
+          <Tab
+            tabs={this.getTabData(
+              maulTabList.toJS(),
+              setScrollComponent,
+              widgetId,
+              bookmarkWidgetData,
+              {
+                mualHistoryList,
+                selectedMualIdx,
+                setSelectedMualIdx,
+                setListSelectedMualIdx,
+                mualBookmarkList,
+                setNewsfeedModalIdx,
+                setbookmarkWidgetViewIdx,
+              },
+              mualMaster.toJS(),
+              navList.toJS(),
+              { relationList: relationList.toJS(), widgetId, addManualHistory, setListSelectedMualIdx },
+              indexRelationList.toJS(),
             )}
-          </div>
-          {/* <Modal
-            width={1198}
-            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-            style={{ top: 42 }}
-            visible
-            footer={null}
-            // onCancel={() => this.handleCloseModal()}
-            closable={false}
-            // getContainer={() => document.querySelector(`#csManualView_${widgetId}`)}
-          >
-            <CSDiffView widgetId={widgetId} maulTabList={maulTabList.toJS()} />
-          </Modal> */}
-        </Styled>
-      </ErrorBoundary>
+            keyName="MUAL_TAB_IDX"
+            selectedTabIdx={selectedTabIdx}
+            setSelectedTabIdx={setSelectedTabIdx}
+            widgetId={widgetId}
+          />
+          <TopbarBtnWrap
+            className="tab-btn-wrap"
+            data={topBarButton}
+            mualMaster={mualMaster}
+            action={{ setSelectedMualIdx, setListSelectedMualIdx, setNewsfeedModalIdx, setbookmarkWidgetViewIdx }}
+            widgetId={widgetId}
+          />
+          {!bookmarkWidgetData.widgetYn && (
+            <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
+              <IconCollection className="icon-close" />
+            </button>
+          )}
+        </div>
+        {/* <Modal
+          width={1198}
+          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+          style={{ top: 42 }}
+          visible
+          footer={null}
+          // onCancel={() => this.handleCloseModal()}
+          closable={false}
+          // getContainer={() => document.querySelector(`#csManualView_${widgetId}`)}
+        >
+          <CSDiffView widgetId={widgetId} maulTabList={maulTabList.toJS()} />
+        </Modal> */}
+      </Styled>
     );
   }
 }
@@ -256,6 +259,7 @@ const mapStateToProps = createStructuredSelector({
   relationList: selectors.makeSelectManualViewRelationList(),
   indexRelationList: selectors.makeSelectManualViewIndexRelationList(),
   oldVerMual: selectors.makeSelectOldVersionManual(),
+  isPreviewModal: PreviewSelectors.makeSelectIsPreviewModal(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -273,6 +277,7 @@ const mapDispatchToProps = dispatch => ({
   setbookmarkWidgetViewIdx: (widgetId, selectedMual) => dispatch(bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)),
   setEditorPreviewModal: flag => dispatch(editorActions.setPreviewModalByReducr(flag)),
   getOldVerManual: (widgetId, mualIdx) => dispatch(actions.getOldVersionManualBySaga(widgetId, mualIdx)),
+  removeReduxState: widgetId => dispatch(actions.removeReduxState(widgetId)),
 });
 
 const withReducer = injectReducer({ key: 'apps-manual-user-ManualView-reducer', reducer });

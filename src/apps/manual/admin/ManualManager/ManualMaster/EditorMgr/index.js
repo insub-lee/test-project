@@ -127,7 +127,7 @@ class EditorMgr extends Component {
           </Modal>
           <Modal
             width={1198}
-            bodyStyle={{ height: '400px', padding: '4px' }}
+            bodyStyle={{ height: '100vh', padding: '4px' }}
             style={{ top: 42 }}
             visible={isGGEditorModal}
             footer={null}
@@ -138,17 +138,21 @@ class EditorMgr extends Component {
             <GGEditorModal setGGEditorModal={setGGEditorModal} addEditorComponent={addEditorComponent} />
           </Modal>
         </StyleModal>
-        <Modal
-          width={1198}
-          bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
-          style={{ top: 42 }}
-          visible={isPreviewModal}
-          footer={null}
-          onCancel={() => setPreviewModal(false)}
-          closable={false}
-        >
-          <CSManualView mualIdx={manualIndex} widgetId={99999} />
-        </Modal>
+        {isPreviewModal ? (
+          <Modal
+            width={1198}
+            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
+            style={{ top: 42 }}
+            visible={isPreviewModal}
+            footer={null}
+            onCancel={() => setPreviewModal(false)}
+            closable={false}
+          >
+            <CSManualView mualIdx={manualIndex} widgetId="preview" />
+          </Modal>
+        ) : (
+          ''
+        )}
       </Fragment>
     );
   }
