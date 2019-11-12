@@ -83,6 +83,10 @@ const appReducer = (state = initialState, action) => {
       const { list, widgetId } = action;
       return state.setIn(['manualViewMap', widgetId, 'oldVersionManual'], list);
     }
+    case constantTypes.REMOVE_REDUX_STATE: {
+      const { widgetId } = action;
+      return state.removeIn(['manualViewMap', widgetId]);
+    }
     default:
       return state;
   }

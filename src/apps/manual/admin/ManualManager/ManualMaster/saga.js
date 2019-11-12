@@ -184,14 +184,15 @@ function* saveEditorInfoSaga() {
       editorComponentList:
         compList.length > 0
           ? compList.map(comp => ({
-              ...comp,
-              COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
-              MUAL_COMPVIEWINFO:
+            ...comp,
+            COMP_OPTION: JSON.stringify(comp.COMP_OPTION),
+            MUAL_COMPVIEWINFO:
                 comp.MUAL_COMPVIEWINFO && typeof comp.MUAL_COMPVIEWINFO === 'object' ? JSON.stringify(comp.MUAL_COMPVIEWINFO) : comp.MUAL_COMPVIEWINFO,
-            }))
+          }))
           : [],
     };
   });
+
   const selectedMualIdx =
     typeof pageMoveType.get('selectedMualIdx') === 'string' ? Number(pageMoveType.get('selectedMualIdx')) : pageMoveType.get('selectedMualIdx');
   const param = { editorTabList, selectedMualIdx };
@@ -219,11 +220,13 @@ const hierarhySort = (hashArr, key, result) => {
 const setEditorTabViewInfo = (compList, compIdx) => {
   const resultList = [];
   if (!compList || compList.length === 0) return resultList;
-  compList.forEach(item => {
-    const { MUAL_COMPVIEWINFO, MUAL_TABCOMP_IDX, MUAL_TABCOMP_PIDX, TYPE, COMP_OPTION } = item;
-    const tempObj = { MUAL_COMPVIEWINFO, MUAL_TABCOMP_IDX, MUAL_TABCOMP_PIDX, TYPE, COMP_OPTION };
-    resultList.push(tempObj);
-  });
+  compList
+    .filter(item => item.IS_REMOVE !== 'Y')
+    .forEach(item => {
+      const { MUAL_COMPVIEWINFO, MUAL_TABCOMP_IDX, MUAL_TABCOMP_PIDX, TYPE, COMP_OPTION } = item;
+      const tempObj = { MUAL_COMPVIEWINFO, MUAL_TABCOMP_IDX, MUAL_TABCOMP_PIDX, TYPE, COMP_OPTION };
+      resultList.push(tempObj);
+    });
   // const filterList = compList.filter(item => item.MUAL_TABCOMP_PIDX === compIdx);
   // if (filterList.length > 0) {
   //   filterList.forEach(item => {
