@@ -1,29 +1,29 @@
-import React, { Component, Fragment } from "react";
-import { Modal } from "antd";
-import { fromJS } from "immutable";
-import { createStructuredSelector } from "reselect";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
+import React, { Component, Fragment } from 'react';
+import { Modal } from 'antd';
+import { fromJS } from 'immutable';
+import { createStructuredSelector } from 'reselect';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import CSManualView from "apps/manual/user/CSManualView";
+import CSManualView from 'apps/manual/user/CSManualView';
 
-import * as actions from "../actions";
-import selectors from "../selectors";
-import StyleModal from "./StyleModal";
-import EditorToolBar from "./EditorToolBar";
-import EditorMenu from "./EditorMenu";
-import EditorTab from "./EditorTab";
-import EditorMain from "./EditorMain";
-import EditorIndex from "./EditorIndex";
-import IndexRelation from "./IndexRelation";
-import ParagraphLeft from "./EditorMain/ParagraphTool/ParagraphLeft";
-import ParagraphRight from "./EditorMain/ParagraphTool/ParagraphRight";
-import ParagraphTwo from "./EditorMain/ParagraphTool/ParagraphTwo";
-import ParagraphThree from "./EditorMain/ParagraphTool/ParagraphThree";
-import ParagraphFour from "./EditorMain/ParagraphTool/ParagraphFour";
-import ParagraphFirst from "./EditorMain/ParagraphTool/ParagraphFirst";
-import { modifyTool } from "./EditorToolBar/ItemToolData";
-import GGEditorModal from "./GGEditorModal";
+import * as actions from '../actions';
+import selectors from '../selectors';
+import StyleModal from './StyleModal';
+import EditorToolBar from './EditorToolBar';
+import EditorMenu from './EditorMenu';
+import EditorTab from './EditorTab';
+import EditorMain from './EditorMain';
+import EditorIndex from './EditorIndex';
+import IndexRelation from './IndexRelation';
+import ParagraphLeft from './EditorMain/ParagraphTool/ParagraphLeft';
+import ParagraphRight from './EditorMain/ParagraphTool/ParagraphRight';
+import ParagraphTwo from './EditorMain/ParagraphTool/ParagraphTwo';
+import ParagraphThree from './EditorMain/ParagraphTool/ParagraphThree';
+import ParagraphFour from './EditorMain/ParagraphTool/ParagraphFour';
+import ParagraphFirst from './EditorMain/ParagraphTool/ParagraphFirst';
+import { modifyTool } from './EditorToolBar/ItemToolData';
+import GGEditorModal from './GGEditorModal';
 
 class EditorMgr extends Component {
   componentDidMount() {
@@ -38,10 +38,8 @@ class EditorMgr extends Component {
 
   paragraphModalName = paragraphTypeIdx => {
     const { menus } = modifyTool;
-    const selectedIdx = menus.findIndex(
-      findNode => findNode.menuId === paragraphTypeIdx
-    );
-    let result = "";
+    const selectedIdx = menus.findIndex(findNode => findNode.menuId === paragraphTypeIdx);
+    let result = '';
     if (selectedIdx > -1) {
       result = `${menus[selectedIdx].menuName} 등록`;
     }
@@ -68,7 +66,7 @@ class EditorMgr extends Component {
       setPreviewModal,
       manualIndex,
       isGGEditorModal,
-      setGGEditorModal
+      setGGEditorModal,
     } = this.props;
 
     return (
@@ -84,25 +82,19 @@ class EditorMgr extends Component {
               <div className="manualMainIndexWrapper">
                 <EditorIndex />
               </div>
-              <div
-                id="manualMainContentWrapper"
-                className="manualMainContentWrapper"
-                onClick={handleChangeCompIdx}
-              >
+              <div id="manualMainContentWrapper" className="manualMainContentWrapper" onClick={handleChangeCompIdx}>
                 <EditorMain />
               </div>
             </div>
           </div>
           <Modal
             width={854}
-            bodyStyle={{ height: "calc(100vh - 196px)", padding: "4px" }}
+            bodyStyle={{ height: 'calc(100vh - 196px)', padding: '4px' }}
             style={{ top: 42 }}
             visible={isIndexRelationModal}
             footer={null}
             onCancel={setIsIndexRelationModal}
-            getContainer={() =>
-              document.querySelector("#manualMainContentWrapper")
-            }
+            getContainer={() => document.querySelector('#manualMainContentWrapper')}
             title="관련 목차 선택"
           >
             <IndexRelation
@@ -118,38 +110,24 @@ class EditorMgr extends Component {
           </Modal>
           <Modal
             width={728}
-            bodyStyle={{ height: "calc(100vh - 256px)", padding: "4px" }}
+            bodyStyle={{ height: 'calc(100vh - 256px)', padding: '4px' }}
             style={{ top: 42 }}
             visible={isParagraphModal}
             footer={null}
             onCancel={setParagraphModal}
-            getContainer={() =>
-              document.querySelector("#manualMainContentWrapper")
-            }
+            getContainer={() => document.querySelector('#manualMainContentWrapper')}
             title={this.paragraphModalName(paragraphTypeIdx)}
           >
-            {paragraphTypeIdx === 30 && (
-              <ParagraphLeft addEditorComponent={addEditorComponent} />
-            )}
-            {paragraphTypeIdx === 31 && (
-              <ParagraphRight addEditorComponent={addEditorComponent} />
-            )}
-            {paragraphTypeIdx === 32 && (
-              <ParagraphTwo addEditorComponent={addEditorComponent} />
-            )}
-            {paragraphTypeIdx === 33 && (
-              <ParagraphThree addEditorComponent={addEditorComponent} />
-            )}
-            {paragraphTypeIdx === 34 && (
-              <ParagraphFour addEditorComponent={addEditorComponent} />
-            )}
-            {paragraphTypeIdx === 35 && (
-              <ParagraphFirst addEditorComponent={addEditorComponent} />
-            )}
+            {paragraphTypeIdx === 30 && <ParagraphLeft addEditorComponent={addEditorComponent} />}
+            {paragraphTypeIdx === 31 && <ParagraphRight addEditorComponent={addEditorComponent} />}
+            {paragraphTypeIdx === 32 && <ParagraphTwo addEditorComponent={addEditorComponent} />}
+            {paragraphTypeIdx === 33 && <ParagraphThree addEditorComponent={addEditorComponent} />}
+            {paragraphTypeIdx === 34 && <ParagraphFour addEditorComponent={addEditorComponent} />}
+            {paragraphTypeIdx === 35 && <ParagraphFirst addEditorComponent={addEditorComponent} />}
           </Modal>
           <Modal
             width={1198}
-            bodyStyle={{ height: "100vh", padding: "4px" }}
+            bodyStyle={{ height: '800px', padding: '4px' }}
             style={{ top: 42 }}
             visible={isGGEditorModal}
             footer={null}
@@ -157,16 +135,13 @@ class EditorMgr extends Component {
             closable={false}
             destroyOnClose
           >
-            <GGEditorModal
-              setGGEditorModal={setGGEditorModal}
-              addEditorComponent={addEditorComponent}
-            />
+            <GGEditorModal setGGEditorModal={setGGEditorModal} addEditorComponent={addEditorComponent} />
           </Modal>
         </StyleModal>
         {isPreviewModal ? (
           <Modal
             width={1198}
-            bodyStyle={{ height: "calc(100vh - 66px)", padding: "4px" }}
+            bodyStyle={{ height: 'calc(100vh - 66px)', padding: '4px' }}
             style={{ top: 42 }}
             visible={isPreviewModal}
             footer={null}
@@ -177,7 +152,7 @@ class EditorMgr extends Component {
             <CSManualView mualIdx={manualIndex} widgetId="preview" />
           </Modal>
         ) : (
-          ""
+          ''
         )}
       </Fragment>
     );
@@ -205,7 +180,7 @@ EditorMgr.propTypes = {
   isGGEditorModal: PropTypes.bool,
   setGGEditorModal: PropTypes.func,
   setPreviewModal: PropTypes.func,
-  manualIndex: PropTypes.number
+  manualIndex: PropTypes.number,
 };
 
 EditorMgr.defaultProps = {
@@ -229,7 +204,7 @@ EditorMgr.defaultProps = {
   setPreviewModal: () => false,
   isGGEditorModal: false,
   setGGEditorModal: () => false,
-  manualIndex: 0
+  manualIndex: 0,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -241,32 +216,27 @@ const mapStateToProps = createStructuredSelector({
   paragraphTypeIdx: selectors.makeSelectParagraphTypeIdx(),
   isParagraphModal: selectors.makeSelectIsParagraphModal(),
   isPreviewModal: selectors.makeSelectIsPreviewModal(),
-  isGGEditorModal: selectors.makeSelectIsGGEditorModal()
+  isGGEditorModal: selectors.makeSelectIsGGEditorModal(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getManualEditorMgr: () => dispatch(actions.getManualEditorMgrBySaga()),
   resetManualEditorMgr: () => dispatch(actions.resetEditorMgrByReduc()),
-  handleChangeCompIdx: () =>
-    dispatch(actions.setEditorComponentIndexByReduc(0)),
-  setIsIndexRelationModal: () =>
-    dispatch(actions.setIsIndexRelationModalByReducr(false)),
+  handleChangeCompIdx: () => dispatch(actions.setEditorComponentIndexByReduc(0)),
+  setIsIndexRelationModal: () => dispatch(actions.setIsIndexRelationModalByReducr(false)),
   getMualList: idx => dispatch(actions.getIndexRelationManualListBySaga(idx)),
   getCompList: idx => dispatch(actions.getIndexRelationComponetListBySaga(idx)),
-  setSelectedCompItem: item =>
-    dispatch(actions.setIndexRelationComponetIitemByReducr(item)),
+  setSelectedCompItem: item => dispatch(actions.setIndexRelationComponetIitemByReducr(item)),
   addEditorComponent: (compType, text) => {
     dispatch(actions.addEditorComponentByReduc(compType, text));
-    if (compType === "editor")
-      dispatch(actions.setEditorParagraphByReducr(0, false));
+    if (compType === 'editor') dispatch(actions.setEditorParagraphByReducr(0, false));
   },
-  setParagraphModal: () =>
-    dispatch(actions.setEditorParagraphByReducr(0, false)),
+  setParagraphModal: () => dispatch(actions.setEditorParagraphByReducr(0, false)),
   setPreviewModal: flag => dispatch(actions.setPreviewModalByReducr(flag)),
-  setGGEditorModal: flag => dispatch(actions.setGGEditorModalByReducr(flag))
+  setGGEditorModal: flag => dispatch(actions.setGGEditorModalByReducr(flag)),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(EditorMgr);

@@ -10,7 +10,7 @@ const FlowItemPanel = props => {
       <Card bordered={false}>
         <Item
           type="node"
-          size="200*48"
+          size="88*56"
           shape="flow-rect"
           model={{
             color: '#1890FF',
@@ -31,7 +31,7 @@ const FlowItemPanel = props => {
         />
         <Item
           type="node"
-          size="200*48"
+          size="88*56"
           shape="flow-capsule"
           model={{
             color: '#722ED1',

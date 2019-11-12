@@ -19,7 +19,7 @@ class FlowPage extends Component {
 
   render() {
     return (
-      <div style={{ height: '400px' }}>
+      <div style={{ height: '100%' }}>
         <GGEditor className={styles.editor}>
           <Row type="flex" className={styles.editorHd}>
             <Col span={24}>
