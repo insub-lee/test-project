@@ -46,7 +46,8 @@ export function* deleteAppList(payload) {
 }
 
 export function* loadTree(payload) {
-  const SITE_ID = payload.isAdmin ? -1 : 0;
+  // const SITE_ID = payload.isAdmin ? -1 : 0;
+  const SITE_ID = 0;
   const response = yield call(Axios.post, '/api/bizstore/v1/store/appTree', { SITE_ID });
   const { result, rootId } = response;
   let categoryData = treeFunc.setFlatDataKey(result, 'CATG_ID');
@@ -56,16 +57,14 @@ export function* loadTree(payload) {
 }
 
 export function* loadCategoryList(payload) {
-  console.log(payload);
-  console.log(payload);
-  console.log(payload);
-
   const data = {
     PARAM: {
       CATEGORYID: payload.payload.node,
       TYPE: payload.payload.type,
       NUM: payload.payload.num,
-      SITE_ID: payload.payload.isAdmin ? -1 : 0,
+      // SITE_ID: payload.payload.isAdmin ? -1 : 0,
+      SITE_ID: 0,
+      isAdmin: payload.payload.isAdmin ? 'Y' : 'N',
     },
   };
 
@@ -80,7 +79,9 @@ export function* searchCategory(payload) {
     PARAM: {
       TYPE: payload.payload.type,
       NUM: payload.payload.num,
-      SITE_ID: payload.payload.isAdmin ? -1 : 0,
+      // SITE_ID: payload.payload.isAdmin ? -1 : 0,
+      SITE_ID: 0,
+      isAdmin: payload.payload.isAdmin ? 'Y' : 'N',
     },
   };
 

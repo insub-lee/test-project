@@ -25,6 +25,9 @@ function getIdByUrl(url, history) {
 
 export function* getCategoryComboList() {
   const response = yield call(Axios.get, '/api/common/v1/account/organizationGrpList', { data: 'temp' });
+  const { siteId } = response;
+  
+  yield put({ type: constants.SET_SITE_ID, payload: siteId });
   if (response.list.length > 0) {
     yield put({ type: constants.SET_CATEGORY_COMBO_LIST, payload: fromJS(response.list) });
   }
@@ -32,13 +35,18 @@ export function* getCategoryComboList() {
 
 export function* getTreeData(payload) {
   const { siteId } = payload;
+
   const index = payload.selectedIndex && payload.selectedIndex !== '' ? payload.selectedIndex : '';
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/getAppListWithCategory', { SITE_ID: siteId });
   // const response = yield call(Axios.get, '/api/bizstore/v1/mypage/myTree', { data: 'temp' });
+  if (siteId != 0) {
+    yield put({ type: constants.SET_SITE_ID, payload: siteId });
+  }
   const result = JSON.parse(`[${response.result.join('')}]`);
   if (result) {
     // const categoryData = result.get(0).get('children');
     const selectedIndex = index !== '' ? index : result[0].key;
+
     yield put({
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(result),

@@ -153,9 +153,12 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        use: [styleLoader, cssLoader(true), postcssLoader, 'sass-loader'],
+        use: ExtractTextPlugin.extract({
+          fallback: styleLoader,
+          use: [cssLoader(true), postcssLoader, 'sass-loader'],
+        }),
         exclude: path.join(__dirname, 'node_modules'),
-      },
+      },      
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall

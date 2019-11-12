@@ -259,3 +259,5 @@ export const removeContentSecurityBySaga = row => ({ type: constantTypes.REMOVE_
 export const setPreviewModalByReducr = flag => ({ type: constantTypes.SET_PREVIEW_MODAL_REDUCR, flag });
 
 export const removeCategoryInfoBySaga = node => ({ type: constantTypes.REMOVE_CATEGORY_INFO_SAGA, node });
+
+export const setGGEditorModalByReducr = flag => ({ type: constantTypes.SET_GGEDITOR_MODAL_REDUCR, flag });

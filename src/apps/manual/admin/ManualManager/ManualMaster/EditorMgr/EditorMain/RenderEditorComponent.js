@@ -2,6 +2,7 @@ import React from 'react';
 
 import QnA from './QnA';
 import Tab from './Tab';
+import GGEditor from './GGEditor';
 import IndexLink from './IndexLink';
 import IndexFile from './IndexFile';
 import Editor from './Editor';
@@ -14,16 +15,16 @@ const onClickComponent = (e, selectItem, selectedComponentIdx, handleChangeCompI
 };
 
 const RenderEditorComponent = ({
-                                 item,
-                                 handleChangeCompValue,
-                                 handleChangeCompIdx,
-                                 selectedComponentIdx,
-                                 focusComponetIdx,
-                                 addAreaIdx,
-                                 handlePushCompValue,
-                                 handleRemoveCompValue,
-                                 indexRelationList,
-                               }) => {
+  item,
+  handleChangeCompValue,
+  handleChangeCompIdx,
+  selectedComponentIdx,
+  focusComponetIdx,
+  addAreaIdx,
+  handlePushCompValue,
+  handleRemoveCompValue,
+  indexRelationList,
+}) => {
   let innerContent = '';
   switch (item.TYPE) {
     case 'editor':
@@ -61,6 +62,9 @@ const RenderEditorComponent = ({
       break;
     case 'tab':
       innerContent = <Tab item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
+      break;
+    case 'ggEditor':
+      innerContent = <GGEditor item={item} selectedComponentIdx={selectedComponentIdx} handleChangeCompValue={handleChangeCompValue} />;
       break;
     default:
       break;
