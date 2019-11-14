@@ -44,6 +44,7 @@ class Dept extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.deptTreeData.length > 0) {
       const rootSelectedIndex = nextProps.deptTreeData[0].DEPT_ID;
+      console.log('1', rootSelectedIndex);
       if (this.state.selectedIndex === -1) {
         this.setState({
           DEPT_ID: nextProps.deptTreeData[0].DEPT_ID,
@@ -57,17 +58,21 @@ class Dept extends React.Component {
           selectedIndex: rootSelectedIndex,
           mode: 'D',
         });
+        console.log('2', rootSelectedIndex);
       }
       if (this.state.selectedDept === 0) {
         this.setState({
           selectedDept: nextProps.selectedDept,
         });
       }
-    }
-    if (nextProps.selectedIndex !== this.state.selectedIndex) {
-      this.setState({
-        selectedIndex: nextProps.selectedIndex,
-      });
+      /*
+      if (nextProps.selectedIndex !== this.state.selectedIndex) {
+        this.setState({
+          selectedIndex: nextProps.selectedIndex,
+        });
+        console.log('3', nextProps.selectedIndex);
+      }
+      */
     }
   }
 
@@ -96,6 +101,7 @@ class Dept extends React.Component {
       this.textKor.focus();
     }
     this.props.getChangeDeptTreeData(val);
+    console.log('5', -1);
   };
 
   /* 추가 작업
