@@ -103,8 +103,8 @@ export function* updateDept(payload) {
     } else {
       yield put({
         type: actionType.GET_CHANGE_DEPT_DATA,
-        DEPT_ID,
-      });      
+        DEPT_ID: selectedDept,
+      });
     }
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,

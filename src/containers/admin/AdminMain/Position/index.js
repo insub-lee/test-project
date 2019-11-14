@@ -63,11 +63,13 @@ class Position extends React.Component {
           selectedDept: nextProps.selectedDept,
         });
       }
-    }
-    if (nextProps.selectedIndex !== this.state.selectedIndex) {
-      this.setState({
-        selectedIndex: nextProps.selectedIndex,
-      });
+      /*
+      if (nextProps.selectedIndex !== this.state.selectedIndex) {
+        this.setState({
+          selectedIndex: nextProps.selectedIndex,
+        });
+      }
+      */
     }
   }
 
