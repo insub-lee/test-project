@@ -258,7 +258,7 @@ class AppRating extends React.Component {
       <StyleAppRating>
         <div>
           <h2 className="adTitle">{intlObj.get(messages.userReview)}</h2>
-          {this.props.myAppRating.POINT > 0 ? updatePop : registPop}
+          {/* {this.props.myAppRating.POINT > 0 ? updatePop : registPop} */}
         </div>
         <Row style={rowStyle} gutter={gutter} className="ratingAvgChart">
           <Col span={8} style={colStyle}>
