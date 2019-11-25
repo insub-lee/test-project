@@ -162,7 +162,7 @@ const RenderSearchView = (props, t) => {
                               <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'talk')} type="button" className="icon-talk"><FormattedMessage {...messages.sendToCube} /></Button></li>
                               <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'mail')} type="button" className="icon-mail"><FormattedMessage {...messages.sendToMail} /></Button></li>
                               <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'todo')} type="button" className="icon-todo"><FormattedMessage {...messages.todoRegist} /></Button></li>
-                              <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li>
+                              {/* <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
                             </ul>
                           )}
                           trigger="hover"
