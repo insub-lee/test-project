@@ -19,3 +19,9 @@ export const updateNode = nodeInfo => ({
   type: actionTypes.UPDATE_NODE,
   nodeInfo,
 });
+
+export const changeNodeData = (key, val) => ({
+  type: actionTypes.CHANGE_NODE_DATA,
+  key,
+  val,
+});
