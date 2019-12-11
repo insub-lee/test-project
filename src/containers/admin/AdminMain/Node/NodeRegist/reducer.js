@@ -11,6 +11,10 @@ const appReducer = (state = initialState, action) => {
       const { node } = action;
       return state.set('node', fromJS(node));
     }
+    case actionTypes.CHANGE_NODE_DATA: {
+      const { key, val } = action;
+      return state.setIn(['node', key], val);
+    }
     default:
       return state;
   }
