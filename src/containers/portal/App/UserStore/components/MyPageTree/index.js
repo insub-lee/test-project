@@ -222,7 +222,8 @@ class MyPageTree extends Component {
     } = this.props;
 
     // 조건 DEFAULT_YN 조건으로 변경하기 - daemon 쿼리 변경 후
-    const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, SORT_SQ: 2 });
+    // const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, SORT_SQ: 2 });
+    const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, NAME_ENG : 'Personal Biz' }); // TODO 임시로 조건 변경
     const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
 
     const rootRowInfo = {};
