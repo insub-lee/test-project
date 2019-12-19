@@ -463,9 +463,9 @@ class MyAppTree extends Component {
               // 1. 카테고리 추가는 전부 노출
               const btnCondition1 = true; // 마지막노드X 업무그룹X
               // 2. 카테고리 수정는 자신 것만, 최상위는 제외
-              const btnCondition4 = node.MYCATE === '1' && node.LVL !== 0;
+              const btnCondition4 = node.MYCATE === 1 && node.LVL !== 0;
               // 3. 카테고리 삭제는 자신 것만, 사용하는 앱이 없고, 하위 카테고리가 없는 것만 삭제 가능 , 최상위는 제외
-              const btnCondition3 = node.MYCATE === '1' && node.APPCNT === '0' && node.CATGCNT === '0' && node.LVL !== 0;
+              const btnCondition3 = node.MYCATE === 1 && node.APPCNT === 0 && node.CATGCNT === 0 && node.LVL !== 0;
 
               // 노드에 마우스 오버했을 때
               if (this.state.onHoverKey === node.key) {
