@@ -331,3 +331,4 @@ sketch
 
 # End of https://www.gitignore.io/api/node,react,maven,eclipse,webstorm+all,intellij+all
 /yarn.lock
+build
