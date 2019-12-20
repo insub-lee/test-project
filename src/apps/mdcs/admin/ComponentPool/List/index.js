@@ -156,7 +156,7 @@ class ComponentPoolListComponent extends Component {
             this.setState({ editVisible: false, addVisible: false });
           }}
         >
-          <React.Fragment>
+          <>
             <div className="pop_tit">ComponentPool Editor</div>
             <div className="pop_con">
               {addVisible ? (
@@ -165,7 +165,7 @@ class ComponentPoolListComponent extends Component {
                 <ComponentPoolEdit viewData={viewData} viewType="edit" closeBtnHandle={this.onCloseEdit} />
               )}
             </div>
-          </React.Fragment>
+          </>
         </AntdModal>
         <AntdModal
           className="modalWrapper  modalCustom"
@@ -176,12 +176,12 @@ class ComponentPoolListComponent extends Component {
             this.setState({ detailVisible: false });
           }}
         >
-          <React.Fragment>
+          <>
             <div className="pop_tit">ComponentPool Detail</div>
             <div className="pop_con">
               <CompDetail viewData={viewData} />
             </div>
-          </React.Fragment>
+          </>
         </AntdModal>
       </StyledPool>
     );

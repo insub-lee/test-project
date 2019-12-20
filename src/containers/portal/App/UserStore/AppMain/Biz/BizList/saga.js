@@ -34,11 +34,14 @@ export function* initPage(payload) {
     });
   }
 
-  if (initType.indexOf('ONE') > -1) { // ONE. 단일 리스트
+  if (initType.indexOf('ONE') > -1) {
+    // ONE. 단일 리스트
     yield put({ type: constants.GET_MAPLIST_ONE, key: param });
-  } else if (initType.indexOf('SEARCH') > -1) { // SEARCH. 검색 결과 리스트
+  } else if (initType.indexOf('SEARCH') > -1) {
+    // SEARCH. 검색 결과 리스트
     yield put({ type: constants.GET_MAPLIST_SEARCH, searchword: param });
-  } else { // ALL. 전체 리스트
+  } else {
+    // ALL. 전체 리스트
     yield put({ type: constants.GET_MAPLIST_ALL });
   }
 }
@@ -93,7 +96,10 @@ export function* getMapListMore(payload) {
   const limit = matchMap.get('bizList').size + appBlockSize;
 
   const response = yield call(Axios.post, url, {
-    TYPE: initType, BIZGRP_ID, LIMIT: limit, searchword,
+    TYPE: initType,
+    BIZGRP_ID,
+    LIMIT: limit,
+    searchword,
   });
   const { result, total } = response;
 
@@ -126,7 +132,7 @@ export function* getMapListAll() {
 
   let mapList = fromJS([]);
 
-  categoryData.forEach((data) => {
+  categoryData.forEach(data => {
     let newData = data;
     const categoryKey = data.get('key');
 

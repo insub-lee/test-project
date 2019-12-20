@@ -8,26 +8,18 @@ module.exports = {
     node: true,
     es6: true,
   },
+  settings: {
+    'import/resolver': {
+      node: {
+        paths: ['src']
+      }
+    },
+  },
   parserOptions: {
     ecmaVersion: 6,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true,
-    },
-  },
-  settings: {
-    'import/resolver': {
-      alias: {
-        map: [
-          ['components', './src/components/'],
-          ['utils', './src/utils/'],
-          ['containers', './src/containers/'],
-          ['images', './src/images/'],
-          ['apps', './src/apps/'],
-          ['style', './src/style/'],
-        ],
-        extensions: ['.js'],
-      },
     },
   },
   rules: {
@@ -54,7 +46,7 @@ module.exports = {
     'import/no-webpack-loader-syntax': 0,
     'import/prefer-default-export': 0,
     indent: [
-      'error',
+      2,
       2,
       {
         SwitchCase: 1,

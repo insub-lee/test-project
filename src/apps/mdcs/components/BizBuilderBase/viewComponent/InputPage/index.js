@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col } from 'antd';
+import { Row, Col, Spin } from 'antd';
 import Loadable from 'react-loadable';
 
 import { isJSON } from 'utils/helpers';
-import WorkProcess from 'apps/WorkFlow/WorkProcess';
+import WorkProcess from 'apps/Workflow/WorkProcess';
 import { CompInfo } from '../../CompInfo';
 
 import Styled from './Styled';
 
 class InputPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initLoading: true,
+    };
+  }
+
   componentDidMount() {
     const { id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
     const {
@@ -83,7 +90,7 @@ class InputPage extends Component {
   };
 
   render = () => {
-    const { id, viewLayer, formData, workFlowConfig, processRule, setProcessStep } = this.props;
+    const { id, viewLayer, formData, workFlowConfig, processRule, setProcessRule, loadingComplete } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerList = JSON.parse(viewLayer[0].CONFIG).property.layer || [];
 
@@ -91,13 +98,22 @@ class InputPage extends Component {
         info: { PRC_ID },
       } = workFlowConfig;
 
+      // 로딩
+      if (this.props.isLoading === false && this.state.initLoading) {
+        this.setState(
+          {
+            initLoading: false,
+          },
+          () => loadingComplete(),
+        );
+      }
+
       return (
         <Styled>
-          <div className="pop_tit">업무표준</div>
           <div className="pop_con">
             <div className="sub_form">
               <div className="tableBody">
-                {PRC_ID !== -1 && <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessStep={setProcessStep} />}
+                {PRC_ID !== -1 && <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />}
                 {viewLayerList.length > 0 &&
                   viewLayerList.map((row, rowIdx) => (
                     <Row key={`BizBuilderBaseRow_${rowIdx}`}>
@@ -134,7 +150,9 @@ InputPage.propTypes = {
   getProcessRule: PropTypes.func,
   onCloseModleHandler: PropTypes.func,
   saveTask: PropTypes.func,
-  setProcessStep: PropTypes.func,
+  setProcessRule: PropTypes.func,
+  isLoading: PropTypes.bool,
+  loadingComplete: PropTypes.func,
 };
 
 InputPage.defaultProps = {

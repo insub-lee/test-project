@@ -38,8 +38,8 @@ export function* execMenu(payload) {
               if (dockList[a].WIDGET_LIST) {
                 const appIdArr = dockList[a].WIDGET_LIST.split(',');
                 let sum = 0;
-                notiVal.forEach((notiValue) => {
-                  appIdArr.forEach((i) => {
+                notiVal.forEach(notiValue => {
+                  appIdArr.forEach(i => {
                     if (notiValue.APP_ID === Number(i)) {
                       sum += notiValue.UNREAD_CNT;
                     }
@@ -208,7 +208,7 @@ export function* dndChangePosition() {
 
   const updateArr = [];
   dockAppList.forEach((dockApp, index) => {
-    const result = Object.assign({}, dockApp);
+    const result = { ...dockApp };
     result.SORT_SQ = index + 1;
     updateArr.push(result);
   });
@@ -266,7 +266,7 @@ export function* exitDockItem(payload) {
   if (data === 'success') {
     let dockAppListUpdate = dockAppList.map((app, i) => {
       if (i === index) {
-        const appCopy = Object.assign({}, app);
+        const appCopy = { ...app };
         appCopy.EXEC_YN = 'N';
         appCopy.LAST_EXEC_YN = 'N';
         return appCopy;
@@ -280,7 +280,7 @@ export function* exitDockItem(payload) {
 
       const updateArr = [];
       dockAppListUpdate.forEach((dockApp, i) => {
-        const result = Object.assign({}, dockApp);
+        const result = { ...dockApp };
         result.SORT_SQ = i + 1;
         updateArr.push(result);
       });
@@ -298,7 +298,7 @@ export function* exitDockItem(payload) {
       const node = {};
       const dockAppListUpdate2 = dockAppListUpdate.map((app, i) => {
         if (i === index2) {
-          const appCopy = Object.assign({}, app);
+          const appCopy = { ...app };
           appCopy.LAST_EXEC_YN = 'Y';
 
           // node 데이터 만들기
@@ -405,9 +405,7 @@ export function* unfixDockItem(payload) {
 }
 
 export function* dockSetMyMenuData(payload) {
-  const {
-    isHome,
-  } = payload;
+  const { isHome } = payload;
 
   const data = {
     PARAM: {
@@ -421,13 +419,14 @@ export function* dockSetMyMenuData(payload) {
   if (isHome === 'Y') {
     response = yield call(Axios.post, '/api/portal/v1/dock/dockSetMyMenuDataHome/', data);
     dataList = response.list;
-
     // dock Api의 getMyMenuDataHome 쿼리에서 Home 앱의 INTL_TYPE, SRC_PATH값을 가져올 수 없어서
     // Home 앱 정보를 가져온 후 saga에서 넣어준다.
     dataList.INTL_TYPE = 'N';
     dataList.SRC_PATH = 'Home';
   } else {
     response = yield call(Axios.post, '/api/portal/v1/dock/dockSetMyMenuData/', data);
+    // Todo - when response.list is fail or isUnknown is true,,,,
+
     dataList = response.list;
   }
 
@@ -469,8 +468,8 @@ export function* getDockItemList(payload) {
             if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -553,7 +552,7 @@ export function* loadingDockItem() {
     // page 실행을 위한 node 데이터 생성
     dockList2 = dockList.map((app, i) => {
       if (i === index) {
-        const appCopy = Object.assign({}, app);
+        const appCopy = { ...app };
         appCopy.LAST_EXEC_YN = 'Y';
 
         // node 데이터 만들기
@@ -590,8 +589,8 @@ export function* loadingDockItem() {
             if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -645,8 +644,8 @@ export function* getDockItemListUnreadCnt(payload) {
             if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -686,7 +685,12 @@ export function* resetHomepage(payload) {
   const resultPageId = JSON.parse(payload.SITE_ID);
   const resultWidgetList = JSON.parse(payload.widgetList);
   const setMyMenuThisData = yield select(stateParam => stateParam.get('app').get('setMyMenuData'));
-  const setMySiteIdData = yield select(stateParam => stateParam.get('auth').get('profile').get('SITE_ID'));
+  const setMySiteIdData = yield select(stateParam =>
+    stateParam
+      .get('auth')
+      .get('profile')
+      .get('SITE_ID'),
+  );
 
   if (resultPageId === setMyMenuThisData.PAGE_ID && resultSiteId === setMySiteIdData) {
     // 캐쉬 업데이트

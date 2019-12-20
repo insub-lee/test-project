@@ -6,5 +6,4 @@ export const ADD_WIDGETS = 'portal/container/MyPage/PageInfo/ADD_WIDGETS';
 export const MOVE_MYWIDGET = 'portal/container/MyPage/PageInfo/MOVE_MYWIDGET';
 export const UPDATE_WIDGET = 'portal/container/MyPage/PageInfo/UPDATE_WIDGET';
 
-
 // export const SET_TITLE_MODAL_VISIBLE = 'portal/container/MyPageCategory/SET_TITLE_MODAL_VISIBLE';

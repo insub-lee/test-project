@@ -1,12 +1,10 @@
 import * as constants from './constants';
 
-export const getBizInfo = (BIZGRP_ID, PAGE_ID) => (
-  {
-    type: constants.GET_BIZ_INFO,
-    BIZGRP_ID,
-    PAGE_ID,
-  }
-);
+export const getBizInfo = (BIZGRP_ID, PAGE_ID) => ({
+  type: constants.GET_BIZ_INFO,
+  BIZGRP_ID,
+  PAGE_ID,
+});
 
 export const getWidgetList = (BIZGRP_ID, PAGE_ID) => ({
   type: constants.GET_WIDGET_LIST,
@@ -31,10 +29,8 @@ export const moveMyWidget = (PAGE_ID, layout) => ({
   layout,
 });
 
-export const updateWidget = (WIDGET_ID, data) => (
-  {
-    type: constants.UPDATE_WIDGET,
-    WIDGET_ID,
-    data,
-  }
-);
+export const updateWidget = (WIDGET_ID, data) => ({
+  type: constants.UPDATE_WIDGET,
+  WIDGET_ID,
+  data,
+});

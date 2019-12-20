@@ -22,6 +22,7 @@ class AppCategory extends Component {
   componentWillMount() {
     this.props.handleInitCategoryData();
   }
+
   render() {
     const {
       // data
@@ -40,38 +41,31 @@ class AppCategory extends Component {
 
     return (
       <StyledTabList className="treeWrapper">
-        {showTabs && (currentView !== 'Mobile' && currentView !== 'Tablet') ? (
-          <Tabs
-            onSelect={() => { }}
-            selectedIndex={0}
-          >
+        {showTabs && currentView !== 'Mobile' && currentView !== 'Tablet' ? (
+          <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
               <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
-              {
-                !isBizManage ? (
-                  <Tab>
-                    <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
-                      <FormattedMessage {...messages.bizGroup} />
-                    </Link>
-                  </Tab>
-                ) : ''
-              }
+              {!isBizManage ? (
+                <Tab>
+                  <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
+                    <FormattedMessage {...messages.bizGroup} />
+                  </Link>
+                </Tab>
+              ) : (
+                ''
+              )}
             </TabList>
             <TabPanel />
             <TabPanel />
           </Tabs>
-        ) : ''}
-        <Tree
-          type="app"
-          treeData={categoryData}
-          handleOnClick={handleOnClick}
-          selectedIndex={selectedIndex}
-          updateTreeData={updateTreeData}
-        />
+        ) : (
+          ''
+        )}
+        <Tree type="app" treeData={categoryData} handleOnClick={handleOnClick} selectedIndex={selectedIndex} updateTreeData={updateTreeData} />
       </StyledTabList>
     );
   }
@@ -91,7 +85,6 @@ AppCategory.defaultProps = {
   showTabs: true,
   selectedIndex: -1,
 };
-
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -113,8 +106,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'appcategory', reducer });
 const withSaga = injectSaga({ key: 'appcategory', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppCategory));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AppCategory));

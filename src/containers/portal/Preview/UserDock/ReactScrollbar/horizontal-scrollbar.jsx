@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class HorizontalScrollbar extends React.Component {
-
   constructor() {
     super();
     this.state = {
@@ -26,8 +25,7 @@ class HorizontalScrollbar extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.wrapper.width !== this.props.wrapper.width ||
-        nextProps.area.width !== this.props.area.width) this.calculateSize(nextProps);
+    if (nextProps.wrapper.width !== this.props.wrapper.width || nextProps.area.width !== this.props.area.width) this.calculateSize(nextProps);
   }
 
   componentWillUnmount() {
@@ -92,8 +90,8 @@ class HorizontalScrollbar extends React.Component {
 
       // Calculate the horizontal Movement
       const xMovement = e.clientX - position.left;
-      const centerize = (this.state.width / 2);
-      const xMovementPercentage = ((xMovement / this.props.wrapper.width) * 100) - centerize;
+      const centerize = this.state.width / 2;
+      const xMovementPercentage = (xMovement / this.props.wrapper.width) * 100 - centerize;
 
       // Update the last e.clientX
       this.setState({ start: e.clientX }, () => {
@@ -113,38 +111,23 @@ class HorizontalScrollbar extends React.Component {
 
   render() {
     const className = (base, name, pos, act, isAct) =>
-      [
-        base + name,
-        base + name + pos,
-        isAct ? base + name + act : '',
-        isAct ? base + name + pos + act : '',
-      ].join(' ');
+      [base + name, base + name + pos, isAct ? base + name + act : '', isAct ? base + name + pos + act : ''].join(' ');
 
     if (this.state.width < 100) {
       return (
         <div
-          className={
-            className(
-              '-reactjs-scrollbar',
-              '-track', ':horizontal',
-              ':dragging',
-              this.state.dragging || this.props.draggingFromParent,
-            )}
-          ref={(c) => { this.container = c; }}
+          className={className('-reactjs-scrollbar', '-track', ':horizontal', ':dragging', this.state.dragging || this.props.draggingFromParent)}
+          ref={c => {
+            this.container = c;
+          }}
           onClick={this.jump}
           style={{ position: 'absolute' }}
         >
-
           <div
-            className={
-              className(
-                '-reactjs-scrollbar',
-                '-thumb',
-                ':horizontal',
-                ':dragging',
-                this.state.dragging || this.props.draggingFromParent,
-              )}
-            ref={(c) => { this.scrollbar = c; }}
+            className={className('-reactjs-scrollbar', '-thumb', ':horizontal', ':dragging', this.state.dragging || this.props.draggingFromParent)}
+            ref={c => {
+              this.scrollbar = c;
+            }}
             onTouchStart={this.startDrag}
             onMouseDown={this.startDrag}
             style={{
@@ -153,15 +136,12 @@ class HorizontalScrollbar extends React.Component {
               left: `${this.props.scrolling}%`,
             }}
           />
-
         </div>
       );
     }
     return null;
   }
-
 }
-
 
 // The Props
 HorizontalScrollbar.propTypes = {

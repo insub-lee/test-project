@@ -209,13 +209,15 @@ class Tree extends Component {
                       style={{
                         overflow: 'hidden',
                       }}
+                      canDrag={false}
+                      canDrop={false}
                       // style={{
                       //   display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
                       // }}
                       isVirtualized={false}
                       generateNodeProps={this.generateNodeProps}
                       rowHeight={35}
-                      scaffoldBlockPxWidth={22}
+                      scaffoldBlockPxWidth={20}
                       className="sortableTreeWrapper sidebar CustomSCRB"
                       ref={ref => {
                         this.tree = ref;

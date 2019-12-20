@@ -21,7 +21,7 @@ const AttachComp = ({ CONFIG, colData, changeFormData, id, changeValidationData,
   }
 
   return (
-    <React.Fragment>
+    <>
       <FileUpload
         defaultValue={defaultAttachValue}
         multiple={CONFIG.property.multiple || true}
@@ -30,7 +30,7 @@ const AttachComp = ({ CONFIG, colData, changeFormData, id, changeValidationData,
           handlerAttachChange(detail, CONFIG, id, changeFormData, changeValidationData);
         }}
       ></FileUpload>
-    </React.Fragment>
+    </>
   );
 };
 

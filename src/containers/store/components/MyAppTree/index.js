@@ -9,21 +9,21 @@ import * as feed from 'components/Feedback/functions';
 import ScrollBar from 'react-custom-scrollbars';
 // import 'style/sortable-tree-biz.css';
 import messages from './messages';
-import * as makeTreeData from '../../components/MyAppTree/makeTreeData';
+import * as makeTreeData from './makeTreeData';
 // import './app.css';
 import { toggleExpandedForSelected } from './tree-data-utils';
 
 import CustomTheme from './theme';
-import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn } from '../../components/MyAppTree/StyleMyAppTree';
+import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn } from './StyleMyAppTree';
 
-const replaceSpecialCharacter = (str) => {
-  var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-  return str.replace(regExp, "");
-}
+const replaceSpecialCharacter = str => {
+  const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  return str.replace(regExp, '');
+};
 
 let flatData = fromJS({});
 let count = 0;
-const generateList = (data) => {
+const generateList = data => {
   for (let i = 0; i < data.size; i += 1) {
     const node = data.get(i);
     const nodeObject = node.toJS();
@@ -76,7 +76,6 @@ class MyAppTree extends Component {
       NAME_KOR: '',
       NAME_ENG: '',
       NAME_CHN: '',
-
     };
 
     this.updateTreeData = this.updateTreeData.bind(this);
@@ -148,7 +147,7 @@ class MyAppTree extends Component {
     rootRowInfo.node = { key: -1 };
 
     // 카테고리 추가
-    const cateInsert = (rowInfo) => {
+    const cateInsert = rowInfo => {
       this.setState({
         selectedIndex: rowInfo.node.CATG_ID,
         showInsert: true,
@@ -167,116 +166,99 @@ class MyAppTree extends Component {
       const NAME_KOR = replaceSpecialCharacter(this.inputKor.input.value);
       const NAME_ENG = replaceSpecialCharacter(this.inputEng.input.value);
       const NAME_CHN = replaceSpecialCharacter(this.inputChn.input.value);
-      this.props.returnGateInfo(
-        this.state.selectedIndex,
-        NAME_KOR,
-        NAME_ENG,
-        NAME_CHN,
-      );
+      this.props.returnGateInfo(this.state.selectedIndex, NAME_KOR, NAME_ENG, NAME_CHN);
       this.setState({ showInsert: false });
     };
 
     // 등록 popover
-    const insertContent = () => {
-      return (
-        <div>
-          <ul className="entryName">
-            <li>
-              <label htmlFor="l_ko">
-                {intlObj.get(messages.kor)}
-              </label>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.kor)}
-                maxLength="100"
-                defaultValue={this.state.NAME_KOR}
-                // ref={ref => {
-                //   if (ref) {
-                //     this.inputKor = ref;
-                //   }
-                // }}
-                ref={ref => {
-                  if (ref) {
-                    this.inputKor = ref;
-                    // console.log(ref);
-                    ref.input.value = this.state.NAME_KOR;
+    const insertContent = () => (
+      <div>
+        <ul className="entryName">
+          <li>
+            <label htmlFor="l_ko">{intlObj.get(messages.kor)}</label>
+            <Input
+              placeholder=""
+              title={intlObj.get(messages.kor)}
+              maxLength="100"
+              defaultValue={this.state.NAME_KOR}
+              // ref={ref => {
+              //   if (ref) {
+              //     this.inputKor = ref;
+              //   }
+              // }}
+              ref={ref => {
+                if (ref) {
+                  this.inputKor = ref;
+                  // console.log(ref);
+                  ref.input.value = this.state.NAME_KOR;
 
-                    setTimeout(() => {
-                      const input = ref.input;
-                      if (input) {
-                        if ('selectionStart' in input) {
-                          // Standard-compliant browsers
-                          input.focus();
-                          input.selectionStart = this.state.NAME_KOR.length;
-                        } else if (document.selection) {
-                          // IE
-                          input.focus();
-                          var sel = document.selection.createRange();
-                          var selLen = document.selection.createRange().text.length;
-                          sel.moveStart('character', -input.value.length);
-                        }
+                  setTimeout(() => {
+                    const { input } = ref;
+                    if (input) {
+                      if ('selectionStart' in input) {
+                        // Standard-compliant browsers
+                        input.focus();
+                        input.selectionStart = this.state.NAME_KOR.length;
+                      } else if (document.selection) {
+                        // IE
+                        input.focus();
+                        const sel = document.selection.createRange();
+                        const selLen = document.selection.createRange().text.length;
+                        sel.moveStart('character', -input.value.length);
                       }
-                    }, 100);
+                    }
+                  }, 100);
 
-                    // setTimeout(() => {
-                    //   if (this.inputKor) {
-                    //     this.inputKor.focus();
-                    //   }
-                    // }, 200);
-                  }
-                }}
-                id="l_ko"
-              />
-            </li>
-            <li>
-              <label htmlFor="l_en">
-                {intlObj.get(messages.eng)}
-              </label>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.eng)}
-                maxLength="100"
-                defaultValue={this.state.NAME_ENG}
-                ref={ref => {
-                  if (ref) {
-                    this.inputEng = ref;
-                  }
-                }}
-                id="l_en"
-              />
-            </li>
-            <li>
-              <label htmlFor="l_ch">
-                {intlObj.get(messages.chn)}
-              </label>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.chn)}
-                maxLength="100"
-                defaultValue={this.state.NAME_CHN}
-                ref={ref => {
-                  if (ref) {
-                    this.inputChn = ref;
-                  }
-                }}
-                id="l_ch"
-              />
-            </li>
-          </ul>
-          <div className="buttonWrapper">
-            <button onClick={closeModal}>
-              {intlObj.get(messages.cancle)}
-            </button>
-            <button onClick={onOkCate}>
-              {intlObj.get(messages.save)}
-            </button>
-          </div>
+                  // setTimeout(() => {
+                  //   if (this.inputKor) {
+                  //     this.inputKor.focus();
+                  //   }
+                  // }, 200);
+                }
+              }}
+              id="l_ko"
+            />
+          </li>
+          <li>
+            <label htmlFor="l_en">{intlObj.get(messages.eng)}</label>
+            <Input
+              placeholder=""
+              title={intlObj.get(messages.eng)}
+              maxLength="100"
+              defaultValue={this.state.NAME_ENG}
+              ref={ref => {
+                if (ref) {
+                  this.inputEng = ref;
+                }
+              }}
+              id="l_en"
+            />
+          </li>
+          <li>
+            <label htmlFor="l_ch">{intlObj.get(messages.chn)}</label>
+            <Input
+              placeholder=""
+              title={intlObj.get(messages.chn)}
+              maxLength="100"
+              defaultValue={this.state.NAME_CHN}
+              ref={ref => {
+                if (ref) {
+                  this.inputChn = ref;
+                }
+              }}
+              id="l_ch"
+            />
+          </li>
+        </ul>
+        <div className="buttonWrapper">
+          <button onClick={closeModal}>{intlObj.get(messages.cancle)}</button>
+          <button onClick={onOkCate}>{intlObj.get(messages.save)}</button>
         </div>
-      );
-    };
+      </div>
+    );
 
     // 카테고리 수정
-    const cateUpdate = (rowInfo) => {
+    const cateUpdate = rowInfo => {
       this.setState({
         selectedIndex: rowInfo.node.CATG_ID,
         showUpdate: true,
@@ -295,120 +277,103 @@ class MyAppTree extends Component {
       const NAME_KOR = replaceSpecialCharacter(this.inputKor.input.value);
       const NAME_ENG = replaceSpecialCharacter(this.inputEng.input.value);
       const NAME_CHN = replaceSpecialCharacter(this.inputChn.input.value);
-      this.props.returnGateUpdate(
-        this.state.selectedIndex,
+      this.props.returnGateUpdate(this.state.selectedIndex, NAME_KOR, NAME_ENG, NAME_CHN);
+      this.setState({
+        showUpdate: false,
         NAME_KOR,
         NAME_ENG,
         NAME_CHN,
-      );
-      this.setState({
-        showUpdate: false,
-        NAME_KOR: NAME_KOR,
-        NAME_ENG: NAME_ENG,
-        NAME_CHN: NAME_CHN,
       });
     };
 
     // 수정 popover
-    const updateContent = () => {
-      return (
-        <div>
-          <ul className="entryName">
-            <li>
-              <label htmlFor="l_ko">
-                {intlObj.get(messages.kor)}
-              </label>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.kor)}
-                maxLength="100"
-                defaultValue={this.state.NAME_KOR}
-                // ref={ref => {
-                //   if (ref) {
-                //     this.inputKor = ref;
-                //   }
-                // }}
-                ref={ref => {
-                  if (ref) {
-                    this.inputKor = ref;
-                    // console.log(ref);
-                    ref.input.value = this.state.NAME_KOR;
+    const updateContent = () => (
+      <div>
+        <ul className="entryName">
+          <li>
+            <label htmlFor="l_ko">{intlObj.get(messages.kor)}</label>
+            <Input
+              placeholder=""
+              title={intlObj.get(messages.kor)}
+              maxLength="100"
+              defaultValue={this.state.NAME_KOR}
+              // ref={ref => {
+              //   if (ref) {
+              //     this.inputKor = ref;
+              //   }
+              // }}
+              ref={ref => {
+                if (ref) {
+                  this.inputKor = ref;
+                  // console.log(ref);
+                  ref.input.value = this.state.NAME_KOR;
 
-                    setTimeout(() => {
-                      const input = ref.input;
-                      if (input) {
-                        if ('selectionStart' in input) {
-                          // Standard-compliant browsers
-                          input.focus();
-                          input.selectionStart = this.state.NAME_KOR.length;
-                        } else if (document.selection) {
-                          // IE
-                          input.focus();
-                          var sel = document.selection.createRange();
-                          var selLen = document.selection.createRange().text.length;
-                          sel.moveStart('character', -input.value.length);
-                        }
+                  setTimeout(() => {
+                    const { input } = ref;
+                    if (input) {
+                      if ('selectionStart' in input) {
+                        // Standard-compliant browsers
+                        input.focus();
+                        input.selectionStart = this.state.NAME_KOR.length;
+                      } else if (document.selection) {
+                        // IE
+                        input.focus();
+                        const sel = document.selection.createRange();
+                        const selLen = document.selection.createRange().text.length;
+                        sel.moveStart('character', -input.value.length);
                       }
-                    }, 100);
+                    }
+                  }, 100);
 
-                    // setTimeout(() => {
-                    //   if (this.inputKor) {
-                    //     this.inputKor.focus();
-                    //   }
-                    // }, 200);
-                  }
-                }}
-                id="l_ko"
-              />
-            </li>
-            <li>
-              <label htmlFor="l_en">
-                {intlObj.get(messages.eng)}
-              </label>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.eng)}
-                maxLength="100"
-                defaultValue={this.state.NAME_ENG}
-                ref={ref => {
-                  if (ref) {
-                    this.inputEng = ref;
-                  }
-                }}
-                id="l_en"
-              />
-            </li>
-            <li>
-              <label htmlFor="l_ch">
-                {intlObj.get(messages.chn)}
-              </label>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.chn)}
-                maxLength="100"
-                defaultValue={this.state.NAME_CHN}
-                ref={ref => {
-                  if (ref) {
-                    this.inputChn = ref;
-                  }
-                }}
-                id="l_ch"
-              />
-            </li>
-          </ul>
-          <div className="buttonWrapper">
-            <button onClick={closeModalUpdate}>
-              {intlObj.get(messages.cancle)}
-            </button>
-            <button onClick={onOkCateUpdate}>
-              {intlObj.get(messages.save)}
-            </button>
-          </div>
+                  // setTimeout(() => {
+                  //   if (this.inputKor) {
+                  //     this.inputKor.focus();
+                  //   }
+                  // }, 200);
+                }
+              }}
+              id="l_ko"
+            />
+          </li>
+          <li>
+            <label htmlFor="l_en">{intlObj.get(messages.eng)}</label>
+            <Input
+              placeholder=""
+              title={intlObj.get(messages.eng)}
+              maxLength="100"
+              defaultValue={this.state.NAME_ENG}
+              ref={ref => {
+                if (ref) {
+                  this.inputEng = ref;
+                }
+              }}
+              id="l_en"
+            />
+          </li>
+          <li>
+            <label htmlFor="l_ch">{intlObj.get(messages.chn)}</label>
+            <Input
+              placeholder=""
+              title={intlObj.get(messages.chn)}
+              maxLength="100"
+              defaultValue={this.state.NAME_CHN}
+              ref={ref => {
+                if (ref) {
+                  this.inputChn = ref;
+                }
+              }}
+              id="l_ch"
+            />
+          </li>
+        </ul>
+        <div className="buttonWrapper">
+          <button onClick={closeModalUpdate}>{intlObj.get(messages.cancle)}</button>
+          <button onClick={onOkCateUpdate}>{intlObj.get(messages.save)}</button>
         </div>
-      );
-    }
+      </div>
+    );
 
-    const cateDelete = (rowInfo) => {
+    const cateDelete = rowInfo => {
       this.setState({
         selectedIndex: rowInfo.node.CATG_ID,
       });
@@ -417,9 +382,13 @@ class MyAppTree extends Component {
     return (
       <StyleMyAppTree
         style={{
-          display: 'flex', flex: '1 0 50%', padding: '0',
-          flexDirection: 'column', height: 'calc(100vh - 167px)',
-          maxHeight: 500, width: '100%',
+          display: 'flex',
+          flex: '1 0 50%',
+          padding: '0',
+          flexDirection: 'column',
+          height: 'calc(100vh - 167px)',
+          maxHeight: 500,
+          width: '100%',
         }}
       >
         <ScrollBar>
@@ -428,39 +397,40 @@ class MyAppTree extends Component {
             treeData={treeData}
             onChange={this.updateTreeData}
             rowHeight={35}
-            scaffoldBlockPxWidth={22}
+            scaffoldBlockPxWidth={20}
             style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
             isVirtualized={false}
-            canDrag={({ node }) => {
+            canDrag={({ node }) =>
               // [ 노드 드래그 가능 여부 ]
-              return canDrag
-            }}
-            canDrop={({ nextParent }) => {
+              canDrag
+            }
+            canDrop={({ nextParent }) =>
               // [ 노드 드롭 가능 여부 ]
               // 조건 : 최하위 노드 하위에 이동불가
-              return nextParent
-            }}
+              nextParent
+            }
             onMoveNode={({ treeData, node, nextParentNode }) => {
               if (node.LVL !== 0) {
                 // [ 노드 드래그 이동 후 실행됨 ]
                 // 이동 후 변경된 treeData를 재귀함수돌며 sort, lvl값을 재정렬하고, 트리데이터를 파라미터로 전달
-                const CATG_ID = node.CATG_ID;
+                const { CATG_ID } = node;
                 let PRNT_ID = -1; // 최상위 루트
 
-                if (nextParentNode) { // 부모가 있는 경우 PRNT_ID지정
+                if (nextParentNode) {
+                  // 부모가 있는 경우 PRNT_ID지정
                   PRNT_ID = nextParentNode.CATG_ID;
                 }
 
                 const resortTreeData = (data, lvl) => {
                   for (let i = 0; i < data.length; i += 1) {
                     const node = data[i];
-                    node['SORT_SQ'] = i + 1;
-                    node['LVL'] = lvl;
-                    if (node['CATG_ID'] === CATG_ID) {
-                      node['PRNT_ID'] = PRNT_ID;
+                    node.SORT_SQ = i + 1;
+                    node.LVL = lvl;
+                    if (node.CATG_ID === CATG_ID) {
+                      node.PRNT_ID = PRNT_ID;
                     }
-                    if (node['children']) {
-                      resortTreeData(node['children'], lvl + 1);
+                    if (node.children) {
+                      resortTreeData(node.children, lvl + 1);
                     }
                   }
                 };
@@ -469,7 +439,7 @@ class MyAppTree extends Component {
                 moveMymenu(generateList(fromJS(treeData)));
               }
             }}
-            generateNodeProps={(rowInfo) => {
+            generateNodeProps={rowInfo => {
               const { node } = rowInfo;
               // 마우스 오버시 키값 셋, 아이콘 노출
               const handleOnClick = () => {
@@ -497,62 +467,69 @@ class MyAppTree extends Component {
               if (this.state.onHoverKey === node.key) {
                 buttons = [
                   // [카테고리 추가]
-                  btnCondition1 ?
-                    <li>
-                      <AddCtgBtn
-                        onClick={() => cateInsert(rowInfo)}
-                      />
-                    </li> : '',
+                  btnCondition1 ? (
+                    <li key="btnCondition1">
+                      <AddCtgBtn onClick={() => cateInsert(rowInfo)} />
+                    </li>
+                  ) : (
+                    ''
+                  ),
                   // [카테고리 수정]
-                  btnCondition4 ?
-                    <li>
-                      <EditCtgBtn
-                        onClick={() => cateUpdate(rowInfo)}
-                      />
-
-                    </li> : '',
+                  btnCondition4 ? (
+                    <li key="btnCondition4">
+                      <EditCtgBtn onClick={() => cateUpdate(rowInfo)} />
+                    </li>
+                  ) : (
+                    ''
+                  ),
                   // [카테고리 삭제]
-                  btnCondition3 ?
-                    <li>
+                  btnCondition3 ? (
+                    <li key="btnCondition3">
                       <DeleteCtgBtn
                         onClick={() => {
                           feed.showConfirm(`${lang.get('NAME', rowInfo.node)} ${intlObj.get(messages.cateDel)}`, '', () => cateDelete(rowInfo));
                         }}
                       />
-                    </li> : '',
+                    </li>
+                  ) : (
+                    ''
+                  ),
                 ];
 
                 // div 감쌈
-                buttons = (<ul className="btnsWrapper">{buttons}</ul>);
+                buttons = <ul className="btnsWrapper">{buttons}</ul>;
               }
               const insertContentTrigger = this.state.showInsert && node.key === selectedIndex ? insertContent() : '';
               const updateContentTrigger = this.state.showUpdate && node.key === selectedIndex ? updateContent() : '';
 
               return {
-                title: this.props.type === 'bizgroup' ? (
-                  <button
-                    className={`${node.key === selectedIndex ? 'active' : ''}`}
-                    onClick={handleOnClick}
-                    onMouseOver={() => this.onHover(node.key)}
-                    // onMouseOut={() => this.onHover(-1)}
-                    style={{ cursor: 'pointer' }}>
-                    {titleInner}
-                  </button>
-                ) : (
+                title:
+                  this.props.type === 'bizgroup' ? (
+                    <button
+                      className={`${node.key === selectedIndex ? 'active' : ''}`}
+                      onClick={handleOnClick}
+                      onMouseOver={() => this.onHover(node.key)}
+                      // onMouseOut={() => this.onHover(-1)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {titleInner}
+                    </button>
+                  ) : (
                     <div>
                       <Popover
                         placement="right"
                         content={buttons}
                         trigger="hover"
                         overlayClassName="myappTreePopupMenu"
-                      // onMouseLeave={this.popoverClose}
+                        // onMouseLeave={this.popoverClose}
                       >
                         <button
                           className={`${node.key === selectedIndex ? 'active' : ''}`}
                           onClick={handleOnClick}
                           onMouseOver={() => this.onHover(node.key)}
                           // onMouseOut={() => this.onHover(-1)}
-                          style={{ cursor: 'pointer' }}>
+                          style={{ cursor: 'pointer' }}
+                        >
                           {titleInner}
                         </button>
                       </Popover>

@@ -16,10 +16,10 @@ import messages from './messages';
 import CustomTheme from './theme';
 import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
 
-const replaceSpecialCharacter = (str) => {
-  var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-  return str.replace(regExp, "");
-}
+const replaceSpecialCharacter = str => {
+  const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  return str.replace(regExp, '');
+};
 
 class BizMenuTree extends Component {
   constructor(props) {
@@ -56,7 +56,7 @@ class BizMenuTree extends Component {
         NAME_CHN: '',
         NAME_JPN: '',
         NAME_ETC: '',
-      }
+      },
     };
 
     this.updateTreeData = this.updateTreeData.bind(this);
@@ -100,7 +100,7 @@ class BizMenuTree extends Component {
   onHoverTreeNode(key) {
     this.setState({
       onHoverKey: key,
-      data : {
+      data: {
         NAME_KOR: '',
         NAME_ENG: '',
         NAME_CHN: '',
@@ -112,23 +112,25 @@ class BizMenuTree extends Component {
     this.setState({ treeData });
   }
 
-   // 팝업닫기
-   closeModal = () => {
+  // 팝업닫기
+  closeModal = () => {
     this.setState({
       showInsert: false,
       showEdit: false,
     });
   };
-  changeShowInsert = (visible) => {
+
+  changeShowInsert = visible => {
     this.setState({ showInsert: visible });
   };
-  changeShowEdit = (visible) => {
+
+  changeShowEdit = visible => {
     this.setState({ showEdit: visible });
   };
 
   // 팝업저장
   onOkCate = (rowInfo, treeData) => {
-    const data = this.state.data;
+    const { data } = this.state;
     const NAME_KOR = this.inputKor.input.value;
     const NAME_ENG = this.inputEng.input.value;
     const NAME_CHN = this.inputChn.input.value;
@@ -149,15 +151,15 @@ class BizMenuTree extends Component {
     }
   };
 
-  // // 카테고리명 한글 
+  // // 카테고리명 한글
   // onChangeNameKor = (val) => {
   //   this.onChangeData({ NAME_KOR: replaceSpecialCharacter(val.target.value) });
   // };
-  // // 카테고리명 영어 
+  // // 카테고리명 영어
   // onChangeNameEng = (val) => {
   //   this.onChangeData({ NAME_ENG: replaceSpecialCharacter(val.target.value) });
   // };
-  // // 카테고리명 중문 
+  // // 카테고리명 중문
   // onChangeNameChn = (val) => {
   //   this.onChangeData({ NAME_CHN: replaceSpecialCharacter(val.target.value) });
   // };
@@ -183,65 +185,68 @@ class BizMenuTree extends Component {
       saveData, // 임시데이터 저장 func(treeData, rowInfo)
       moveNode, // 메뉴 드래그 이동 func(treeData)
       deleteNode, // 메뉴 삭제 func(rowInfo, treeData)
-      
+
       bizGroupInfo,
     } = this.props;
 
-    const BIZGRP_ID = bizGroupInfo.BIZGRP_ID;
+    const { BIZGRP_ID } = bizGroupInfo;
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1, BIZGRP_ID };
 
     return (
       <StyleMyPageTree
         style={{
-          display: 'flex', flex: '1 0 50%', padding: '10px 0 0 0',
-          flexDirection: 'column', height: '100%', width: '100%',
+          display: 'flex',
+          flex: '1 0 50%',
+          padding: '10px 0 0 0',
+          flexDirection: 'column',
+          height: '100%',
+          width: '100%',
         }}
       >
-        <h2>
-          {lang.get('NAME', bizGroupInfo)}
-        </h2>
+        <h2>{lang.get('NAME', bizGroupInfo)}</h2>
         <SortableTree
           theme={CustomTheme}
           treeData={treeData}
           onChange={this.updateTreeData}
           searchQuery={searchString}
           searchFocusOffset={searchFocusIndex}
-          canDrag={({ node }) => {
+          canDrag={({ node }) =>
             // [ 노드 드래그 가능 여부 ]
             // 조건 : 드래그가능 && 업무그룹 하위를 제외한 모든경우 && 폴더/페이지명 수정중이지 않을때
-            return canDrag && !(node.REF_TYPE === 'B' && node.NODE_TYPE !== 'R')
-          }}
-          canDrop={({ nextParent }) => {
+            canDrag && !(node.REF_TYPE === 'B' && node.NODE_TYPE !== 'R')
+          }
+          canDrop={({ nextParent }) =>
             // [ 노드 드롭 가능 여부 ]
             // 조건 : 최하위 노드 하위에 이동불가 && 업무그룹폴더 하위에 이동불가
-            return !nextParent || nextParent.NODE_TYPE !== 'E' && !(nextParent.NODE_TYPE === 'R' && nextParent.REF_TYPE === 'B')
-          }}
+            !nextParent || (nextParent.NODE_TYPE !== 'E' && !(nextParent.NODE_TYPE === 'R' && nextParent.REF_TYPE === 'B'))
+          }
           onMoveNode={({ treeData, node, nextParentNode }) => {
             // [ 노드 드래그 이동 후 실행됨 ]
             // 이동 후 변경된 treeData를 재귀함수돌며 sort, lvl값을 재정렬하고, 트리데이터를 파라미터로 전달
-            const MENU_ID = node.MENU_ID;
+            const { MENU_ID } = node;
             let PRNT_ID = -1; // 최상위 루트
             const ROOT_ID = node.path[0];
 
-            if (nextParentNode) { // 부모가 있는 경우 PRNT_ID지정
-      
+            if (nextParentNode) {
+              // 부모가 있는 경우 PRNT_ID지정
+
               PRNT_ID = nextParentNode.MENU_ID;
             }
 
             const resortTreeData = (data, lvl, pathArr) => {
               for (let i = 0; i < data.length; i += 1) {
                 const node = data[i];
-                const path = [ ...pathArr, node.key];
+                const path = [...pathArr, node.key];
 
-                node['SORT_SQ'] = i + 1;
-                node['LVL'] = lvl;
-                node['path'] = path;
-                if (node['MENU_ID'] === MENU_ID) {
-                  node['PRNT_ID'] = PRNT_ID;
+                node.SORT_SQ = i + 1;
+                node.LVL = lvl;
+                node.path = path;
+                if (node.MENU_ID === MENU_ID) {
+                  node.PRNT_ID = PRNT_ID;
                 }
-                if (node['children']) {
-                  resortTreeData(node['children'], lvl + 1, path);
+                if (node.children) {
+                  resortTreeData(node.children, lvl + 1, path);
                 }
               }
             };
@@ -252,14 +257,14 @@ class BizMenuTree extends Component {
             moveNode(BIZGRP_ID, treeFunc.generateList(fromJS(treeData)));
           }}
           rowHeight={35}
-          scaffoldBlockPxWidth={22}
-          generateNodeProps={(rowInfo) => {
+          scaffoldBlockPxWidth={20}
+          generateNodeProps={rowInfo => {
             const { node } = rowInfo;
             node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
             node.title = lang.get('NAME', node);
 
             let title; // 트리 노드 제목
-            let buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
+            const buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
 
             const handleTreeOnClick = () => {
               this.setState({
@@ -272,12 +277,9 @@ class BizMenuTree extends Component {
 
             title = (
               <div>
-                  <button
-                    className={`${node.key === selectedIndex ? 'bizIcon active' : 'bizIcon'}`}
-                    onClick={handleTreeOnClick}
-                    style={{ cursor: 'pointer' }}>
-                    {node.title}
-                  </button>
+                <button className={`${node.key === selectedIndex ? 'bizIcon active' : 'bizIcon'}`} onClick={handleTreeOnClick} style={{ cursor: 'pointer' }}>
+                  {node.title}
+                </button>
               </div>
             );
 

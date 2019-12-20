@@ -86,9 +86,7 @@ class OpposePage extends Component {
     };
 
     return (
-      <Draggable
-        handle="h2.modalTitle"
-      >
+      <Draggable handle="h2.modalTitle">
         <StyleModal
           style={{
             width: 840,
@@ -96,7 +94,9 @@ class OpposePage extends Component {
             marginTop: '-235px',
             marginLeft: '-420px',
           }}
-        > {/* 모달창 크기와 위치 개별적용, App권한승인 화면과 유사 */}
+        >
+          {' '}
+          {/* 모달창 크기와 위치 개별적용, App권한승인 화면과 유사 */}
           <h2 className="modalTitle" style={{ cursor: 'move' }}>
             {intlObj.get(messages.appOppo)}
             <Button className="modalClose" onClick={this.props.closeModal} title={intlObj.get(messages.close)} />
@@ -111,20 +111,16 @@ class OpposePage extends Component {
                       <th>{intlObj.get(messages.oppinionUser)}</th>
                     </tr>
                   </thead>
-                  <ScrollBar
-                    autoHide
-                    autoHideTimeout={1000}
-                    style={{ width: '100%', height: 300, top: 35 }}
-                  >
+                  <ScrollBar autoHide autoHideTimeout={1000} style={{ width: '100%', height: 300, top: 35 }}>
                     <tbody>
-                      {
-                        selectedApp.map(app => (
-                          <tr>
-                            <td>{app[1]}</td>
-                            <td>{app[2]}({app[5]})</td>
-                          </tr>
-                        ))
-                      }
+                      {selectedApp.map(app => (
+                        <tr>
+                          <td>{app[1]}</td>
+                          <td>
+                            {app[2]}({app[5]})
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </ScrollBar>
                 </table>
@@ -137,17 +133,9 @@ class OpposePage extends Component {
                       {/* {intlObj.get(messages.selectReason)} : <br /> */}
                       {intlObj.get(messages.selectOne)}
                     </p>
-                    <RadioGroup
-                      onChange={this.onChange}
-                      value={this.state.value}
-                      style={{ width: '100%' }}
-                    >
+                    <RadioGroup onChange={this.onChange} value={this.state.value} style={{ width: '100%' }}>
                       {this.props.radioList.map(list => (
-                        <Radio
-                          value={list.CODE_CD}
-                          key={list.CODE_CD}
-                          style={radioStyle}
-                        >
+                        <Radio value={list.CODE_CD} key={list.CODE_CD} style={radioStyle}>
                           {lang.get('NAME', list)}
                         </Radio>
                       ))}
@@ -165,9 +153,7 @@ class OpposePage extends Component {
             </Row>
           </div>
           <div className="modalFooter">
-            <BtnLgtGray onClick={this.props.closeModal}>
-              {intlObj.get(messages.cancel)}
-            </BtnLgtGray>
+            <BtnLgtGray onClick={this.props.closeModal}>{intlObj.get(messages.cancel)}</BtnLgtGray>
             <BtnDkGray onClick={this.onSaveOppo}>{intlObj.get(messages.confirmBtn)}</BtnDkGray>
           </div>
         </StyleModal>
@@ -189,17 +175,11 @@ export function mapDispatchToProps(dispatch) {
   };
 }
 
-const mapStateToProps = createStructuredSelector({
-
-});
+const mapStateToProps = createStructuredSelector({});
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'oppoList', reducer });
 const withSaga = injectSaga({ key: 'oppoList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(OpposePage);
+export default compose(withReducer, withSaga, withConnect)(OpposePage);

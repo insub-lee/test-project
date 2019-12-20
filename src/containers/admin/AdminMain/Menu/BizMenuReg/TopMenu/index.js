@@ -46,16 +46,7 @@ class TopMenu extends React.Component {
 
   render() {
     const { BIZGRP_ID } = this.state;
-
-    const {
-      bizInfo,
-
-      confirmBizGroup,
-
-      history,
-      pageID,
-      userRole,
-    } = this.props;
+    const { bizInfo, confirmBizGroup, history, pageID, userRole } = this.props;
     const pathArr = history.location.pathname.split('/');
     const type = pathArr[3];
     const linkto = `/preview/page/${pageID}`;
@@ -68,24 +59,20 @@ class TopMenu extends React.Component {
               <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
             </Col>
             <Col sm={24} lg={8} style={{ textAlign: 'right' }}>
-              {history.location.pathname.indexOf('page') > -1 ? (
+              {history.location.pathname.indexOf('page') > -1 && (
                 <Link to={linkto} target="appPreview">
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
-              ) : (
-                ''
               )}
-              {bizInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
+              {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
                     history.push(`/admin/adminmain/${type}/authSetting/${BIZGRP_ID}`);
                   }}
                 />
-              ) : (
-                ''
               )}
-              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') ? (
+              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
                 <BtnPrimary
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {
@@ -94,8 +81,6 @@ class TopMenu extends React.Component {
                 >
                   확정
                 </BtnPrimary>
-              ) : (
-                ''
               )}
             </Col>
           </Row>
@@ -133,16 +118,9 @@ const mapStateToProps = createStructuredSelector({
   setMyMenuData: selectors.makeSelectMyMenuData(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/TopMenu', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/TopMenu', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(TopMenu);
+export default compose(withReducer, withSaga, withConnect)(TopMenu);

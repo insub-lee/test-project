@@ -11,6 +11,7 @@ import ModalDrag from 'components/ModalDrag';
 import * as feed from 'components/Feedback/functions';
 
 import { intlObj, lang } from 'utils/commonUtils';
+import WithDirection from 'config/withDirection';
 import messages from '../messages';
 
 import * as selectors from './selectors';
@@ -20,7 +21,6 @@ import saga from './saga';
 
 import Modals from '../../../../../../../components/Modal/index';
 import ModalStyle from '../../../components/Modal/StyleModal';
-import WithDirection from 'config/withDirection';
 
 import { BtnDkGray, BtnLgtGray } from '../../../components/uielements/buttons.style';
 import MyAppTree from '../../../components/MyAppTree';
@@ -47,44 +47,48 @@ class MyAppCategoryModal extends React.Component {
     this.setState({ selectedIndex: nextProps.selectedIndex });
   }
 
+  handleTreeOnClick = node => {
+    this.setState({
+      CATG_ID: node.CATG_ID,
+      APP_NAME: lang.get('NAME', node),
+      selectedIndex: node.CATG_ID,
+      PRNT_ID: node.PRNT_ID,
+    });
+  };
+
+  onOk = () => {
+    if (this.state.PRNT_ID === -1) {
+      feed.error(`${intlObj.get(messages.topcateno)}`);
+    } else {
+      this.props.returnGateId(this.state.CATG_ID, this.state.APP_NAME);
+      this.props.closeModal();
+      // this.setState({ show: false });
+    }
+  };
+
+  returnGateInfo = (resultObj1, resultObj2, resultObj3, resultObj4) => {
+    this.setState({ selectedIndex: resultObj1 });
+    this.props.cateinsert(resultObj1, resultObj2, resultObj3, resultObj4);
+  };
+
+  returnGateUpdate = (resultObj1, resultObj2, resultObj3, resultObj4) => {
+    this.props.cateUpdate(resultObj1, resultObj2, resultObj3, resultObj4);
+  };
+
+  returnGateDelete = (resultObj1, resultObj2) => {
+    // alert(resultObj1 + resultObj2);
+    this.props.cateDelete(resultObj1, resultObj2);
+  };
+
   render() {
     const { type } = this.props;
-
-    const handleTreeOnClick = (node) => {
-      this.setState({
-        CATG_ID: node.CATG_ID,
-        APP_NAME: lang.get('NAME', node),
-        selectedIndex: node.CATG_ID,
-        PRNT_ID: node.PRNT_ID,
-      });
-    };
-    const onOk = () => {
-      if (this.state.PRNT_ID === -1) {
-        feed.error(`${intlObj.get(messages.topcateno)}`);
-      } else {
-        this.props.returnGateId(this.state.CATG_ID, this.state.APP_NAME);
-        this.props.closeModal();
-        // this.setState({ show: false });
-      }
-    };
-    const returnGateInfo = (resultObj1, resultObj2, resultObj3, resultObj4) => {
-      this.setState({ selectedIndex: resultObj1 });
-      this.props.cateinsert(resultObj1, resultObj2, resultObj3, resultObj4);
-    };
-    const returnGateUpdate = (resultObj1, resultObj2, resultObj3, resultObj4) => {
-      this.props.cateUpdate(resultObj1, resultObj2, resultObj3, resultObj4);
-    };
-    const returnGateDelete = (resultObj1, resultObj2) => {
-      // alert(resultObj1 + resultObj2);
-      this.props.cateDelete(resultObj1, resultObj2);
-    };
 
     return (
       <div>
         <Modal
           visible={this.props.show}
           onCancel={this.props.closeModal}
-          onOk={onOk}
+          onOk={this.onOk}
           maskClosable={false}
           width={350}
           wrapClassName="vertical-center-modal"
@@ -98,7 +102,7 @@ class MyAppCategoryModal extends React.Component {
             <BtnDkGray
               key="submit"
               loading={this.state.loading}
-              onClick={onOk}
+              onClick={this.onOk}
               // className={this.state.qnaOn ? '' : 'disabled'}
             >
               {intlObj.get(messages.confirm)}
@@ -110,14 +114,14 @@ class MyAppCategoryModal extends React.Component {
             <MyAppTree
               type={type}
               treeData={this.props.categoryData}
-              onClick={handleTreeOnClick}
-              returnGateInfo={returnGateInfo}
-              returnGateUpdate={returnGateUpdate}
-              returnGateDelete={returnGateDelete}
+              onClick={this.handleTreeOnClick}
+              returnGateInfo={this.returnGateInfo}
+              returnGateUpdate={this.returnGateUpdate}
+              returnGateDelete={this.returnGateDelete}
               history={this.props.history}
               selectedIndex={this.state.selectedIndex}
-              canDrag={true}
-              canDrop={true}
+              canDrag
+              canDrop
               moveMymenu={this.props.moveMymenu}
             />
           </div>
@@ -166,10 +170,7 @@ const mapStateToProps = createStructuredSelector({
   titleModalVisible: selectors.makeModalVisible(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'myapp', reducer });
 const withSaga = injectSaga({ key: 'myapp', saga });
 /* eslint-disable */

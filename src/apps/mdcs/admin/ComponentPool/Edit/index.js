@@ -302,7 +302,7 @@ class CompPoolEditComponent extends Component {
               저장
             </StyledButton>
           ) : (
-            <React.Fragment>
+            <>
               <StyledButton className="btn-primary btn-first" onClick={() => onSaveHandle()}>
                 수정
               </StyledButton>
@@ -312,7 +312,7 @@ class CompPoolEditComponent extends Component {
               <StyledButton className="btn-light btn-first" onClick={() => closeBtnHandle()}>
                 닫기
               </StyledButton>
-            </React.Fragment>
+            </>
           )}
         </div>
       </StyledPool>

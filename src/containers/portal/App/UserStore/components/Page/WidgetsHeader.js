@@ -16,6 +16,7 @@ export default class WidgetsHeader extends PureComponent {
       show: false,
     };
   }
+
   onModal = () => {
     this.setState({ show: true });
   };

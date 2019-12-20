@@ -6,9 +6,9 @@ const { TabPane } = Tabs;
 class App extends React.Component {
   state = { size: 'small' };
 
-  onChange = (e) => {
+  onChange = e => {
     this.setState({ size: e.target.value });
-  }
+  };
 
   render() {
     const { size } = this.state;
@@ -20,9 +20,15 @@ class App extends React.Component {
           <Radio.Button value="large">Large</Radio.Button>
         </Radio.Group>
         <Tabs defaultActiveKey="1" size={size}>
-          <TabPane tab="Tab 1" key="1">Content of tab 1</TabPane>
-          <TabPane tab="Tab 2" key="2">Content of tab 2</TabPane>
-          <TabPane tab="Tab 3" key="3">Content of tab 3</TabPane>
+          <TabPane tab="Tab 1" key="1">
+            Content of tab 1
+          </TabPane>
+          <TabPane tab="Tab 2" key="2">
+            Content of tab 2
+          </TabPane>
+          <TabPane tab="Tab 3" key="3">
+            Content of tab 3
+          </TabPane>
         </Tabs>
       </div>
     );

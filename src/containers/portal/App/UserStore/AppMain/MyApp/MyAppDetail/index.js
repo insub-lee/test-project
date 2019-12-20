@@ -17,6 +17,7 @@ import MessageContent from 'components/Feedback/message.style2';
 import AntRadiobox from 'containers/store/components/uielements/radiobox.style';
 import ModalDrag from 'components/ModalDrag';
 
+import WithDirection from 'config/withDirection';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -28,7 +29,6 @@ import { LinkBtnList, LinkBtnUpdate, BtnGray, BtnDkGray, BtnLgtGray } from '../.
 
 import Modals from '../../../../../../../components/Modal';
 import ModalStyle from '../../../components/Modal/StyleModal';
-import WithDirection from 'config/withDirection';
 // import AppDetail from '../AppDetail';
 // import AppExaModal from '../AppExaModal';
 import messages from '../messages';

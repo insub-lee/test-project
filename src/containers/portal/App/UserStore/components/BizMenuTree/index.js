@@ -343,7 +343,7 @@ class BizMenuTree extends Component {
           moveNode(BIZGRP_ID, treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..

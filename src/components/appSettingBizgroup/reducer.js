@@ -11,7 +11,10 @@ const initialState = fromJS({
 const widgetReducer = (state = initialState, action) => {
   switch (action.type) {
     case constants.SET_WIDGET_SETTING:
-      return state.set('widgetList', action.widgetList).set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID')).set('widget', action.widget);
+      return state
+        .set('widgetList', action.widgetList)
+        .set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID'))
+        .set('widget', action.widget);
     case constants.SET_WIDGET_LIST:
       return state.set('widgetList', action.widgetList).set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID'));
     case constants.SET_WIDGET:

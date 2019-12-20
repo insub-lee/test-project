@@ -9,7 +9,7 @@ import messages from './messages';
 export function* getVgroupTreeList(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/vgroupAdminTreeList/', payload);
   let tStr = response.vgroupTreeList.join('').replace('}{', '},{');
-  if (tStr.length > 0 && (tStr.charAt(tStr.length - 1) !== '}')) {
+  if (tStr.length > 0 && tStr.charAt(tStr.length - 1) !== '}') {
     tStr = tStr.concat('}');
   }
   const result = fromJS(JSON.parse(`[${tStr}]`));

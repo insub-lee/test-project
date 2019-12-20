@@ -13,12 +13,7 @@ const cookies = new Cookies();
 const LASTUSER = cookies.get('LASTUSER');
 
 export function* initQnaList(payload) {
-  const {
-    page,
-    pagepernum,
-    t2,
-    t3,
-  } = payload.payload;
+  const { page, pagepernum, t2, t3 } = payload.payload;
 
   const qnaResult = yield call(IflowApi.get, 'qnaList', payload.payload);
 
@@ -79,13 +74,7 @@ export function* initQnaList(payload) {
 }
 
 export function* getQnaList(payload) {
-  const {
-    page,
-    pagepernum,
-    qnaList,
-    t2,
-    t3,
-  } = payload.payload;
+  const { page, pagepernum, qnaList, t2, t3 } = payload.payload;
 
   const qnaParam = {
     page,
@@ -96,7 +85,7 @@ export function* getQnaList(payload) {
   const qnaResult = yield call(IflowApi.get, 'qnaList', qnaParam);
 
   if (qnaResult.totalCount > 0) {
-    qnaResult.articles.map(item => (
+    qnaResult.articles.map(item =>
       qnaList.push({
         key: item.key,
         APP_ID: item.APP_ID,
@@ -111,8 +100,8 @@ export function* getQnaList(payload) {
         t1: item.t1,
         empnoRegist: item.empnoRegist,
         arSeq: item.arSeq,
-      })
-    ));
+      }),
+    );
     yield put({ type: constants.SET_QNA_LIST, payload: fromJS(qnaList) });
     yield put({ type: constants.QNA_TOT_COUNT, payload: qnaResult.totalCount });
   } else {
@@ -127,7 +116,7 @@ export function* getFaqList(payload) {
   const faqResult = yield call(IflowApi.get, 'faqList', faqParam);
 
   if (faqResult.totalCount > 0) {
-    faqResult.articles.map(item => (
+    faqResult.articles.map(item =>
       faqList.push({
         key: item.key,
         APP_ID: item.APP_ID,
@@ -139,8 +128,8 @@ export function* getFaqList(payload) {
         positionName: item.positionName,
         regDt: item.regDt,
         arSeq: item.arSeq,
-      })
-    ));
+      }),
+    );
     yield put({ type: constants.SET_FAQ_LIST, payload: fromJS(faqList) });
     yield put({ type: constants.FAQ_TOT_COUNT, payload: faqResult.totalCount });
   } else {
@@ -150,13 +139,7 @@ export function* getFaqList(payload) {
 }
 
 export function* getMyqnaList(payload) {
-  const {
-    page,
-    pagepernum,
-    myqnaList,
-    t2,
-    t3,
-  } = payload.payload;
+  const { page, pagepernum, myqnaList, t2, t3 } = payload.payload;
 
   const myqnaParam = {
     page,
@@ -168,7 +151,7 @@ export function* getMyqnaList(payload) {
   const myqnaResult = yield call(IflowApi.get, 'qnaList', myqnaParam);
 
   if (myqnaResult.totalCount > 0) {
-    myqnaResult.articles.map(item => (
+    myqnaResult.articles.map(item =>
       myqnaList.push({
         key: item.key,
         APP_ID: item.APP_ID,
@@ -183,8 +166,8 @@ export function* getMyqnaList(payload) {
         t1: item.t1,
         arSeq: item.arSeq,
         empnoRegist: item.empnoRegist,
-      })
-    ));
+      }),
+    );
     yield put({ type: constants.SET_MYQNA_LIST, payload: fromJS(myqnaList) });
     yield put({ type: constants.MYQNA_TOT_COUNT, payload: myqnaResult.totalCount });
   } else {
@@ -203,7 +186,6 @@ export function* commonNotification(action) {
   yield call(delay, 2000);
   yield put({ type: constants.INIT_QNA_LIST, payload: param });
 }
-
 
 export default function* orgSage() {
   yield takeLatest(constants.INIT_QNA_LIST, initQnaList);

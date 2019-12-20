@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'antd';
 
 const CounselItem = (itemClass, itemTit, itemTxt, itemNo, pushCounselHelperKeyword) => (
-  <React.Fragment>
+  <>
     <div className={`item ${itemClass}`}>
       <a href="#none">
         <span className="item-deco">
@@ -15,7 +15,7 @@ const CounselItem = (itemClass, itemTit, itemTxt, itemNo, pushCounselHelperKeywo
         </span>
       </a>
     </div>
-  </React.Fragment>
+  </>
 );
 
 export default CounselItem;

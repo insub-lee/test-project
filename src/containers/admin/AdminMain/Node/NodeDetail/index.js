@@ -145,19 +145,12 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getNodeDetail: nodeId => dispatch(actions.getNodeDetail(nodeId)),
-  setNodeDetail: nodeInfo => dispaatch(actions.setNodeDetail(nodeInfo)),
+  setNodeDetail: nodeInfo => dispatch(actions.setNodeDetail(nodeInfo)),
   deleteNode: nodeInfo => dispatch(actions.deleteNode(nodeInfo)),
 });
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Node.NodeDetail', reducer });
 const withSaga = injectSaga({ key: 'containers.admin.AdminMain.Node.NodeDetail', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(NodeDetail);
+export default compose(withSaga, withReducer, withConnect)(NodeDetail);

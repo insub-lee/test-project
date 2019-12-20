@@ -6,10 +6,10 @@ import { createStructuredSelector } from 'reselect';
 import _ from 'lodash';
 import update from 'react-addons-update';
 import { Radio } from 'antd';
-import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
-import { BtnIconAdd } from '../../../components/uielements/styles/buttons.style';
 import { BtnDkGray } from 'containers/portal/components/uielements/buttons.style';
 import { intlObj } from 'utils/commonUtils';
+import AntRadiobox from '../../../containers/store/components/uielements/radiobox.style';
+import { BtnIconAdd } from '../../../components/uielements/styles/buttons.style';
 import messages from '../../../components/Page/messages';
 import WidgetSettingStyle from './widgetSettingStyle';
 import BannerListChild from './bannerListChild';
@@ -39,7 +39,7 @@ class WidgetSetting extends PureComponent {
       }
       this.state = {
         itemList: item,
-        bannerList: bannerList,
+        bannerList,
         deletedBannerIndex: [],
         isWidgetDragged: false,
         viewType: item.user.viewType,
@@ -49,7 +49,7 @@ class WidgetSetting extends PureComponent {
       };
     } else {
       const content = [];
-      let emptyContent = new Object();
+      const emptyContent = new Object();
       emptyContent.SEQNO = `${0}`;
       emptyContent.TITLE = '';
       emptyContent.URL = '';
@@ -114,10 +114,10 @@ class WidgetSetting extends PureComponent {
     const index = bannerList.findIndex(i => i.SEQNO === seqNo);
     const afterIndex = bannerList.findIndex(i => i.SEQNO === afterSeqNo);
 
-    let temp = bannerList[index];
-    let temp2 = bannerList[afterIndex];
+    const temp = bannerList[index];
+    const temp2 = bannerList[afterIndex];
 
-    let bannerListCopy = bannerList.slice();
+    const bannerListCopy = bannerList.slice();
 
     bannerListCopy.splice(index, 1, temp2);
     bannerListCopy.splice(afterIndex, 1, temp);
@@ -146,7 +146,7 @@ class WidgetSetting extends PureComponent {
   setDeletedBannerIndex = SEQNO => {
     const { bannerList, deletedBannerIndex } = this.state;
     const index = bannerList.findIndex(bannerList => bannerList.SEQNO === SEQNO);
-    let bannerListCopy = update(bannerList, {
+    const bannerListCopy = update(bannerList, {
       [index]: {
         isShow: {
           $set: false,
@@ -191,7 +191,7 @@ class WidgetSetting extends PureComponent {
     if (type === 'mypage') {
       handleSaveSettingBanners(item, widgetId, pageId);
     } else {
-      //업무그룹
+      // 업무그룹
       handleSaveSettingBizBanners(item, widgetId, pageId);
       // 업무 그룹 변화 감지 함수
       updateBizGroupChgYn();
@@ -330,13 +330,6 @@ export function mapDispatchToProps(dispatch) {
 
 const withReducer = injectReducer({ key: 'bannerSetting', reducer });
 const withSaga = injectSaga({ key: 'bannerSetting', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(WidgetSetting);
+export default compose(withReducer, withSaga, withConnect)(WidgetSetting);

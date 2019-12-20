@@ -194,13 +194,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Classify.RootMap', reducer });
 const withSaga = injectSaga({ key: 'containers.admin.AdminMain.Classify.RootMap', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(RootMap);
+export default compose(withSaga, withReducer, withConnect)(RootMap);

@@ -12,7 +12,7 @@ class SignStep extends Component {
 
     let currStep = 0;
     const stepArr = [];
-    signline.forEach((item) => {
+    signline.forEach(item => {
       if (item.APPV_STATUS === 1) {
         currStep = item.STEP;
       }

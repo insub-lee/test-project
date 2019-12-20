@@ -22,32 +22,26 @@ class NotificationBoard extends Component {
     super(props);
 
     this.onChangeMovePage = this.onChangeMovePage.bind(this);
+    this.onSaveComplete = this.onSaveComplete.bind(this);
   }
 
   onChangeMovePage = (movePageType, workSeq, taskSeq) => {
     this.setState({
       movePageType,
-      isEditModal: movePageType === 'EDIT',
+      isEditModal: movePageType === 'EDIT' || movePageType === 'MODIFY',
       isViewModal: movePageType === 'VIEW',
       workSeq,
       taskSeq,
-      // editMode: mode,
     });
   };
 
-  onSaveComplete = id => {
+  onSaveComplete = () => {
     this.setState({
       isEditModal: false,
     });
   };
 
-  onModifyComplete = id => {
-    this.setState({
-      isEditModal: false,
-    });
-  };
-
-  onDeleteComplete = id => {
+  onDeleteComplete = () => {
     this.setState({
       isViewModal: false,
     });
@@ -62,11 +56,10 @@ class NotificationBoard extends Component {
   };
 
   render() {
-    // console.log('this.state.editMode: ', this.state.editMode);
-
-    const { item } = this.props;
-    const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : -1;
+    // const { item } = this.props;
+    // const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : 2723;
     // const workSeq = item && item.data && item.data.WORK_SEQ ? item.data.WORK_SEQ : 1064; // 779
+    const { widgetId } = this.props;
     return (
       <div>
         <BizBuilderBase id={`list${widgetId}`} component={List} onChangeMovePageHandler={this.onChangeMovePage} viewType="LIST" {...this.props} />
@@ -86,12 +79,10 @@ class NotificationBoard extends Component {
               workSeq={this.state.workSeq}
               taskSeq={this.state.taskSeq}
               reloadId={`list${widgetId}`}
-              onSaveComplete={this.onSaveComplete}
-              onModifyComplete={this.onModifyComplete}
               component={Edit}
               onChangeMovePageHandler={this.onChangeMovePage}
+              onSaveComplete={this.onSaveComplete}
               viewType="EDIT"
-              // editMode={this.state.editMode}
               {...this.props}
             />
           )}
@@ -150,35 +141,3 @@ NotificationBoard.defaultProps = {
 };
 
 export default NotificationBoard;
-
-// import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
-
-// import List from './List';
-// import BizBuilderBase from '../../components/BizBuilderBase';
-
-// class NotificationBoard extends Component {
-//   componentDidMount() {}
-
-//   render() {
-//     return <BizBuilderBase id="NotificationBoard" component={List} {...this.props} viewType="LIST" />;
-//   }
-// }
-
-// NotificationBoard.propTypes = {
-//   workSeq: PropTypes.number,
-//   taskSeq: PropTypes.number,
-//   // apiInfo: PropTypes.object,
-// };
-
-// NotificationBoard.defaultProps = {
-//   workSeq: 1064,
-//   taskSeq: -1,
-//   // apiInfo: {
-//   //   url: '/api/mdcs/v1/common/DocCategoryTemplHandler',
-//   //   type: 'GET',
-//   //   params: {},
-//   // },
-// };
-
-// export default NotificationBoard;

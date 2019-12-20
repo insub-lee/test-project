@@ -9,7 +9,7 @@ const StyleDataGrid = styled.div`
 
     .react-grid-Grid {
       border: 0;
-      
+
       // Header 영역
       .react-grid-Header {
         height: 51px !important;
@@ -50,7 +50,7 @@ const StyleDataGrid = styled.div`
 
         .react-grid-Row {
           height: 60px !important;
-          
+
           &:not(:last-child) {
             border-bottom-color: #dadbdb;
           }
@@ -70,7 +70,7 @@ const StyleDataGrid = styled.div`
             }
           }
 
-          &.row-context-menu .react-grid-Cell, 
+          &.row-context-menu .react-grid-Cell,
           &:hover .react-grid-Cell {
             background-color: #f5f5f5;
           }
@@ -118,7 +118,8 @@ const StyleDataGrid = styled.div`
               }
             }
 
-            &.react-grid-Cell--locked, &:nth-child(7) {
+            &.react-grid-Cell--locked,
+            &:nth-child(7) {
               .react-grid-Cell__value {
                 padding: 0;
                 border: none;
@@ -130,14 +131,11 @@ const StyleDataGrid = styled.div`
             .drag-handle {
               display: none;
             }
-
           }
         }
       }
-
     }
   }
-
 `;
 
 export default StyleDataGrid;

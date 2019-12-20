@@ -51,9 +51,7 @@ const listOfB = [
     id: 2,
     hasChild: 1,
     title: '일반',
-    children: [
-      { title: 'Button', keyUrl: 'Button' },
-    ],
+    children: [{ title: 'Button', keyUrl: 'Button' }],
   },
   {
     id: 3,

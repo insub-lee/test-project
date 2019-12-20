@@ -19,7 +19,7 @@ function* getIflowUrl() {
       qnaGrseq: 1501,
       qnaCtseq: 8882,
       faqCtseq: 18821,
-    }
+    };
   } else if (uInfo.iflowUrl === 'http://dev.board.com') {
     getIflowUrlArr = {
       iflowUrl: uInfo.iflowUrl,
@@ -27,7 +27,7 @@ function* getIflowUrl() {
       qnaGrseq: 1501,
       qnaCtseq: 8882,
       faqCtseq: 18821,
-    }
+    };
   }
   return getIflowUrlArr;
 }
@@ -39,11 +39,12 @@ function* makeRequestHeader() {
 }
 
 function* errorAxiosProcess(error) {
+  const uInfo = yield select(state => state.get('auth').get('profile'));
   if (error.response.status === 401) {
     if (uInfo.iflowUrl === 'http://125.141.68.18:12081') {
-      window.location.href = `http://125.141.68.18:12081?initpage=${error.response.data.url}`;
+      // window.location.href = `http://125.141.68.18:12081?initpage=${error.response.data.url}`;
     } else if (uInfo.iflowUrl === 'http://dev.board.com') {
-      window.location.href = `http://dev.board.com?initpage=${error.response.data.url}`;
+      // window.location.href = `http://dev.board.com?initpage=${error.response.data.url}`;
     }
   } else {
     console.log(error);
@@ -73,18 +74,19 @@ function* getAxios(gubun, payload) {
 
     // param setting
     let params = '';
-    for (let key in payload) {
+    for (const key in payload) {
       params += `&${key}=${payload[key]}`;
     }
     fullUrl += params;
 
-
-    const response = yield Promise.resolve(axios({
-      method: 'get',
-      url: fullUrl,
-      param: { ...payload },
-      headers: { META: yield makeRequestHeader() },
-    }));
+    const response = yield Promise.resolve(
+      axios({
+        method: 'get',
+        url: fullUrl,
+        param: { ...payload },
+        headers: { META: yield makeRequestHeader() },
+      }),
+    );
 
     if (response.statusText !== 'OK') {
       return Promise.reject(response.data);
@@ -112,17 +114,19 @@ function* getTimelineAxios(gubun, empno, payload) {
 
     // param setting
     let params = '';
-    for (let key in payload) {
+    for (const key in payload) {
       params += `&${key}=${payload[key]}`;
     }
     fullUrl += params;
 
-    const response = yield Promise.resolve(axios({
-      method: 'get',
-      url: fullUrl,
-      param: { ...payload },
-      headers: { META: yield makeRequestHeader() },
-    }));
+    const response = yield Promise.resolve(
+      axios({
+        method: 'get',
+        url: fullUrl,
+        param: { ...payload },
+        headers: { META: yield makeRequestHeader() },
+      }),
+    );
 
     if (response.statusText !== 'OK') {
       return Promise.reject(response.data);
@@ -143,7 +147,7 @@ function* getUrlReturn(cate, appId, gubun) {
       url += `/writer/banpo/qna/${uInfo.qnaGrseq}/${uInfo.qnaCtseq}?t1=suggestion&t2=${appId}&t3=${gubun}&token=${uInfo.IFLOW_TOKEN}`;
     } else if (cate === 'faq') {
       url += `/writer/banpo/faq/${uInfo.qnaGrseq}/${uInfo.faqCtseq}?t1=suggestion&t2=${appId}&t3=${gubun}&token=${uInfo.IFLOW_TOKEN}`;
-    } else if (cate === 'qnaEdit'){
+    } else if (cate === 'qnaEdit') {
       url += `/edit/banpo/qna/${uInfo.qnaGrseq}`;
     }
 
@@ -151,7 +155,7 @@ function* getUrlReturn(cate, appId, gubun) {
   } catch (error) {
     yield errorAxiosProcess(error);
   }
-  return "";
+  return '';
 }
 
 function* getDetail(gubun, arseq, payload) {
@@ -169,17 +173,19 @@ function* getDetail(gubun, arseq, payload) {
 
     // param setting
     let params = '';
-    for (let key in payload) {
+    for (const key in payload) {
       params += `&${key}=${payload[key]}`;
     }
     fullUrl += params;
 
-    const response = yield Promise.resolve(axios({
-      method: 'get',
-      url: fullUrl,
-      param: { ...payload },
-      headers: { META: yield makeRequestHeader() },
-    }));
+    const response = yield Promise.resolve(
+      axios({
+        method: 'get',
+        url: fullUrl,
+        param: { ...payload },
+        headers: { META: yield makeRequestHeader() },
+      }),
+    );
 
     if (response.statusText !== 'OK') {
       return Promise.reject(response.data);

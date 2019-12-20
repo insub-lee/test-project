@@ -14,10 +14,7 @@ import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
-import update from 'react-addons-update';
 import Rodal from 'rodal';
-import 'rodal/lib/rodal.css';
-// import { isEqual } from 'utils/helpers';
 
 import Fullscreen from 'components/Fullscreen';
 import * as routesAction from 'containers/common/Routes/actions';
@@ -29,16 +26,15 @@ import { BtnMyhome } from './UserStore/components/uielements/buttons.style';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
 import * as selectors from './selectors';
-// import Fullscreen from './fullscreen';
 import themes from '../../../config/themes/index';
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
 // import Footer from '../components/Footer';
-import './global.css';
+// import './global.css';
 import * as actions from './actions';
 import saga from './saga';
 import reducer from './reducer';
-import UserDock from './UserDock';
+// import UserDock from './UserDock';
 // import UserMenu from './UserMenu';
 import UserMenuCard from './UserMenuCard';
 import UserSetting from './UserSetting';
@@ -75,7 +71,7 @@ class App extends React.PureComponent {
 
     this.state = {
       // UserMenu open flag
-      open: menuFixedYn === 'Y' ? true : false,      
+      open: menuFixedYn === 'Y',
       // MenuCategory open flag
       headerMenuOpen: false,
       // FullScreen
@@ -114,249 +110,17 @@ class App extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      isUnreadCnt,
-      isPreviewPage,
-      handleGetDataForApps,
-      setMyMenuData,
-      selectedApp,
-      handleSaveApps,
-      apps,
-      dockAppList,
-      dataForApps,
-      deletedDockPageId,
-      executedDockPageId,
-      view,
-    } = this.props;
+    const { view } = this.props;
 
-    // REMOVE DOCK - 주석 처리 (dockAppList 조건 제거)
-    // if (dockAppList.length !== 0) {
-      if (this.state.isSpinnerShow && apps.length !== prevProps.apps.length) {
-        this.setIsSpinnerShow();
+    if (view !== prevProps.view) {
+      if (view === 'Mobile' || view === 'Tablet') {
+        const styleSpinnerCopy = { ...this.styleSpinner };
+        styleSpinnerCopy.height = '100vh';
+        styleSpinnerCopy.paddingTop = '70%';
+
+        this.styleSpinner = styleSpinnerCopy;
       }
-
-      // REMOVE DOCK - 주석 처리
-      /*
-      if (apps.length === 0 && !dataForApps && !this.isMakingApps) {
-        console.log('$$$ 1.최초 apps 만들기 시작');
-        // 최초 apps 만들기
-        const EXEC_PAGE_IDS = [];
-        dockAppList.forEach(o => {
-          // if ((o.EXEC_YN === 'Y' && o.SRC_PATH !== 'legacySVC' && o.TARGET !== 'NEW')
-          //   || o.LAST_EXEC_YN === 'Y') {
-          //   EXEC_PAGE_IDS.push(o.PAGE_ID);
-          // }
-          if (o.HOME_YN === 'Y' || (o.LAST_EXEC_YN === 'Y' && o.TARGET !== 'NEW')) {
-            EXEC_PAGE_IDS.push(o.PAGE_ID);
-          }
-        });
-        console.log('$$$ 2.EXEC_PAGE_IDS', EXEC_PAGE_IDS);
-        // REMOVE PORTAL MULTIPLE DIVS
-        // handleGetDataForApps(EXEC_PAGE_IDS);
-        this.isMakingApps = true;
-        return;
-      }
-      */
-
-      if (apps.length === 0 && dataForApps) {
-        console.log('$$$ 4.dataForApps가 들어오고, 최초 apps 만들기', dataForApps);
-        const applist = this.addInitialApps(
-          dataForApps,
-          isUnreadCnt,
-          this.execPage,
-          this.execMenu,
-          this.show,
-          this.onReload,
-          this.setIsSpinnerShow,
-          isPreviewPage,
-        );
-
-        // apps 생성 후 DOM에는 아직 생성이 되지 않아 css는 수정할 수 없다.
-
-        // 생성된 apps를 스토어에 저장
-        // 저장 후, dataForApps를 undefined로 변경해 줘야, 한번 apss가 생성되고 난 후 이곳에 다시 들어오지 않는다.
-        handleSaveApps(applist, setMyMenuData);
-        return;
-      }
-
-      // REMOVE DOCK - TODO 필요 없는 부분 찾아서 주석 처리 아니면 제거
-      /*
-      if (dockAppList !== prevProps.dockAppList) {
-        if (prevProps.dockAppList.length === dockAppList.length) {
-          // 독 고정상태에서 독 삭제의 경우 apps에서도 지워줘야함
-          if (deletedDockPageId && deletedDockPageId !== prevProps.deletedDockPageId) {
-            console.log('$$$ 8-3 독 고정상태에서 독 삭제');
-            this.deleteApps();
-            return;
-          }
-          if (executedDockPageId && executedDockPageId !== prevProps.executedDockPageId) {
-            const index = Object.keys(apps).findIndex(o => apps[o].children.props.children.props.setMyMenuData.PAGE_ID === executedDockPageId);
-
-            if (index === -1) {
-              console.log('$$$ 8-5 현재 독에 고정되어있으면서 미실행인 독아이템을 실행');
-              this.addNewApps(
-                setMyMenuData,
-                selectedApp,
-                isUnreadCnt,
-                this.execPage,
-                this.execMenu,
-                this.show,
-                this.onReload,
-                this.setIsSpinnerShow,
-                isPreviewPage,
-              );
-              return;
-            }
-          } else {
-            console.log('$$$ 8-4 독이 실행중인데 독을 고정/고정해제 또는 이미 실행중인 독아이템 실행');
-            if (setMyMenuData !== prevProps.setMyMenuData) {
-              console.log('$$$ 12. 독에 있던 앱을 메뉴에서 실행');
-              // REMOVE PORTAL MULTIPLE DIVS
-              // 아래 내용 추가
-              this.addNewApps(
-                setMyMenuData,
-                selectedApp,
-                isUnreadCnt,
-                this.execPage,
-                this.execMenu,
-                this.show,
-                this.onReload,
-                this.setIsSpinnerShow,
-                isPreviewPage,
-              );
-              return;
-            }
-          }
-        } else if (prevProps.dockAppList.length > dockAppList.length) {
-          console.log('$$$ 8-2 독 삭제');
-          this.deleteApps();
-          return;
-        } else {
-          console.log('$$$ 8-1 독 추가');
-          this.addNewApps(
-            setMyMenuData,
-            selectedApp,
-            isUnreadCnt,
-            this.execPage,
-            this.execMenu,
-            this.show,
-            this.onReload,
-            this.setIsSpinnerShow,
-            isPreviewPage,
-          );
-          return;
-        }
-      }
-      */
-
-      // REMOVE DOCK - 추가
-      if (JSON.stringify(setMyMenuData) !== JSON.stringify(prevProps.setMyMenuData)) {
-        console.log('addNewApps');
-        this.addNewApps(
-          setMyMenuData,
-          selectedApp,
-          isUnreadCnt,
-          this.execPage,
-          this.execMenu,
-          this.show,
-          this.onReload,
-          this.setIsSpinnerShow,
-          isPreviewPage,
-        );           
-      }
-
-      if (Object.keys(setMyMenuData).length !== 0 
-          && setMyMenuData !== prevProps.setMyMenuData
-          && setMyMenuData.isCssTarget && apps.length !== 0) {
-        console.log('$$$ 11.setMyMenuData가 새로 들어옴');
-        // REMOVE DOCK - TODO 아래 부분 분석후 불필요한 부분 제거 
-        const appsCopy = apps.slice();
-
-        appsCopy.forEach((o, i) => {
-          if (o.children.props.children.props.setMyMenuData.PAGE_ID !== setMyMenuData.PAGE_ID) {
-            if (o.containerInfo.children[i + 1]) {
-              Object.assign(o.containerInfo.children[i + 1].style, {
-                // position: 'absolute',
-                position: 'relative',
-                // left: '-200%',
-                width: 0,
-                display: 'none',
-              });
-              o.containerInfo.children[i + 1].classList.remove('activeMenu');
-            }
-          } else if (o.containerInfo.children[i + 1]) {
-            Object.assign(o.containerInfo.children[i + 1].style, {
-              // position: 'absolute',
-              position: 'relative',
-              // left: 0,
-              width: '100%',
-              display: 'block',
-            });
-            o.containerInfo.children[i + 1].classList.add('activeMenu');
-          }
-        });
-
-
-        const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
-        setMyMenuDataCopy.isCssTarget = false;
-
-        const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === setMyMenuData.PAGE_ID);
-        if (index > -1) {
-          const appsCopy2 = update(appsCopy, {
-            [index]: {
-              children: {
-                props: {
-                  children: {
-                    props: {
-                      columns: {
-                        $set: selectedApp,
-                      },
-                      /*
-                        포탈에 처음 들어왔을때 만들어진 apps의 경우
-                        dataForApps의 selectedApp과 setMyMenuData를 바라보고 있어
-                        새로 앱을 실행했어도 여전히 dataForApps를 바라본다.
-                        그래서 this.props와 nextProps의 데이터가 같아 scu에서 render를 막는다.
-                        이를 해결하기 위해 새로운 setMyMenuData를 넣어준다. (데이터는 동일)
-                      */
-                      setMyMenuData: {
-                        $set: setMyMenuDataCopy,
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          });
-
-          // console.log('apps');
-          // console.log(apps);
-
-          // console.log('selectedApp');
-          // console.log(selectedApp);
-
-          // console.log('setMyMenuData');
-          // console.log(setMyMenuData);
-
-          // console.log('index', index);
-          // console.log('page id', o.children.props.children.props.setMyMenuData.PAGE_ID);
-          // console.log('setMyMenuData.PAGE_ID', setMyMenuData.PAGE_ID);
-
-
-          // 생성된 apps를 스토어에 저장
-          handleSaveApps(appsCopy2, setMyMenuData);
-        }
-      }
-
-      if (view !== prevProps.view) {
-        if (view === 'Mobile' || view === 'Tablet') {
-          const styleSpinnerCopy = Object.assign({}, this.styleSpinner);
-          styleSpinnerCopy.height = '100vh';
-          styleSpinnerCopy.paddingTop = '70%';
-
-          this.styleSpinner = styleSpinnerCopy;
-        }
-      }
-    // } // REMOVE DOCK - 주석 처리 (dockAppList 조건 제거)
+    }
   }
 
   onReload = item => {
@@ -364,14 +128,6 @@ class App extends React.PureComponent {
     handleReload(item);
   };
 
-  // ****************** 메뉴 관련 함수 ******************
-  /*
-  onSetOpen = open => {
-    this.setState({ open: open }); //eslint-disable-line
-    event.preventDefault();
-  };
-  */
-  /* eslint-disable */
   setIsSpinnerShow = () => {
     this.setState({
       isSpinnerShow: false,
@@ -380,14 +136,13 @@ class App extends React.PureComponent {
 
   setOpen = () => {
     this.setState({
-        open: true,
-      });
-    event.preventDefault();
+      open: true,
+    });
   };
 
   setFixedOpenMenu = () => {
-    const { handleUpdateMenuFixedYn, menuFixedYn} = this.props;
-    const isMenuFixed = menuFixedYn === 'Y' ? true : false;
+    const { handleUpdateMenuFixedYn, menuFixedYn } = this.props;
+    const isMenuFixed = menuFixedYn === 'Y';
     handleUpdateMenuFixedYn(isMenuFixed ? 'N' : 'Y');
   };
 
@@ -395,12 +150,10 @@ class App extends React.PureComponent {
     this.setState(prevState => ({
       headerMenuOpen: !prevState.headerMenuOpen,
     }));
-    event.preventDefault();
   };
 
   setClose = () => {
     this.setState({ visible: false });
-    event.preventDefault();
   };
 
   setMenuClose = () => {
@@ -415,18 +168,18 @@ class App extends React.PureComponent {
     this.setState({
       headerMenuOpen: false,
     });
-    event.preventDefault();
   };
 
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 ******************
   setIsCloseToTrue = DOCK_ID => {
     const { isClose } = this.state;
-    const isCloseCopy = Object.assign({}, isClose);
+    const isCloseCopy = { ...isClose };
     isCloseCopy[DOCK_ID] = true;
     this.setState({
       isClose: isCloseCopy,
     });
   };
+
   setIsCloseToFalse = () => {
     this.setState({
       isClose: {},
@@ -435,65 +188,91 @@ class App extends React.PureComponent {
 
   setIsFullscreenEnabled = isFullscreenEnabled => this.setState({ isFullscreenEnabled });
 
-  setIsShowUserMenu = value => {
-    this.setState({ isShowUserMenu: value });
-  };
+  renderApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => (
+    <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
+      {setMyMenuData.INTL_TYPE === 'Y' ? (
+        <AppsRouter
+          id={setMyMenuData.PAGE_ID}
+          selectedApp={selectedApp}
+          setMyMenuData={setMyMenuData}
+          setIsSpinnerShow={setIsSpinnerShow}
+          isPreviewPage={isPreviewPage}
+          isUnreadCnt={isUnreadCnt}
+          execPage={execPage}
+          execMenu={execMenu}
+          show={show}
+          onReload={onReload}
+        />
+      ) : (
+        <Page
+          columns={selectedApp}
+          setMyMenuData={setMyMenuData}
+          setIsSpinnerShow={setIsSpinnerShow}
+          isPreviewPage={isPreviewPage}
+          isUnreadCnt={isUnreadCnt}
+          execPage={execPage}
+          execMenu={execMenu}
+          show={show}
+          onReload={onReload}
+        />
+      )}
+    </div>
+  );
+  // const targetNode = document.getElementById('child');
+  // let app = [];
+  //
+  // if (targetNode) {
+  //   return ReactDOM.createPortal(
+  //     <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
+  //       {setMyMenuData.INTL_TYPE === 'Y' ? (
+  //         <AppsRouter
+  //           id={setMyMenuData.PAGE_ID}
+  //           selectedApp={selectedApp}
+  //           setMyMenuData={setMyMenuData}
+  //           setIsSpinnerShow={setIsSpinnerShow}
+  //           isPreviewPage={isPreviewPage}
+  //           isUnreadCnt={isUnreadCnt}
+  //           execPage={execPage}
+  //           execMenu={execMenu}
+  //           show={show}
+  //           onReload={onReload}
+  //         />
+  //       ) : (
+  //         <Page
+  //           columns={selectedApp}
+  //           setMyMenuData={setMyMenuData}
+  //           setIsSpinnerShow={setIsSpinnerShow}
+  //           isPreviewPage={isPreviewPage}
+  //           isUnreadCnt={isUnreadCnt}
+  //           execPage={execPage}
+  //           execMenu={execMenu}
+  //           show={show}
+  //           onReload={onReload}
+  //         />
+  //       )}
+  //     </div>,
+  //     targetNode,
+  //   );
+  // }
+  // return null;
 
-  // REMOVE DOCK - 주석 처리 ( TODO 미사용 props function 제거 )
-  /*
-  deleteApps = () => {
-    const { apps, handleSaveApps, deletedDockPageId, setMyMenuData } = this.props;
+  addNewApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
+    const { handleSaveApps, apps } = this.props;
 
-    let targetApp = -1;
+    const targetNode = document.getElementById('child');
+    let app = [];
 
-    Object.keys(apps).forEach(o => {
-      if (apps[o].children.props.children.props.setMyMenuData.PAGE_ID === deletedDockPageId) {
-        targetApp = o;
-      }
-    });
+    if (targetNode) {
+      console.debug('####', setMyMenuData.INTL_TYPE);
 
-    delete apps[targetApp];
-
-    const appsCopy = apps.filter(o => o != null);
-    const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
-    setMyMenuDataCopy.isCssTarget = true;
-
-    handleSaveApps(appsCopy, setMyMenuDataCopy);
-  };
-  */
-
-  addInitialApps = (dataForApps, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
-    // const { setMyMenuData } = this.props;
-    this.setState({
-      isSpinnerShow: true,
-    });
-    const apps = [];
-    // REMOVE DOCK - TODO 아래 부분 분석후 불필요한 부분 제거
-    Object.keys(dataForApps).forEach(o => {
-      const isActive = this.props.setMyMenuData.PAGE_ID === dataForApps[o].setMyMenuData.PAGE_ID;
-      const app = ReactDOM.createPortal(
-        <div
-          id={dataForApps[o].setMyMenuData.PAGE_ID}
-          className={`${dataForApps[o].setMyMenuData.PAGE_ID}${isActive ? ' activeMenu' : ''}`}
-          style={
-            isActive
-              ? {
-                  position: 'relative',
-                  width: '100%',
-                  display: 'block',
-                }
-              : {
-                  position: 'relative',
-                  width: 0,
-                  display: 'none',
-                  // position: 'absolute',
-                }
-          }
-        >
-          {dataForApps[o].setMyMenuData.INTL_TYPE === 'Y' ? (
+      // Need some simple way to distinquish the different dialogs.
+      app = ReactDOM.createPortal(
+        <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
+          {setMyMenuData.INTL_TYPE === 'Y' ? (
             <AppsRouter
-              selectedApp={dataForApps[o].selectedApp}
-              setMyMenuData={dataForApps[o].setMyMenuData}
+              id={setMyMenuData.PAGE_ID}
+              selectedApp={selectedApp}
+              setMyMenuData={setMyMenuData}
               setIsSpinnerShow={setIsSpinnerShow}
               isPreviewPage={isPreviewPage}
               isUnreadCnt={isUnreadCnt}
@@ -504,8 +283,8 @@ class App extends React.PureComponent {
             />
           ) : (
             <Page
-              columns={dataForApps[o].selectedApp}
-              setMyMenuData={dataForApps[o].setMyMenuData}
+              columns={selectedApp}
+              setMyMenuData={setMyMenuData}
               setIsSpinnerShow={setIsSpinnerShow}
               isPreviewPage={isPreviewPage}
               isUnreadCnt={isUnreadCnt}
@@ -516,78 +295,67 @@ class App extends React.PureComponent {
             />
           )}
         </div>,
-        window.document.getElementById('child'),
+        targetNode,
       );
-      apps.push(app);
-    });
+      // app = (
+      //   <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
+      //     {setMyMenuData.INTL_TYPE === 'Y' ? (
+      //       <AppsRouter
+      //         id={setMyMenuData.PAGE_ID}
+      //         selectedApp={selectedApp}
+      //         setMyMenuData={setMyMenuData}
+      //         setIsSpinnerShow={setIsSpinnerShow}
+      //         isPreviewPage={isPreviewPage}
+      //         isUnreadCnt={isUnreadCnt}
+      //         execPage={execPage}
+      //         execMenu={execMenu}
+      //         show={show}
+      //         onReload={onReload}
+      //       />
+      //     ) : (
+      //       <Page
+      //         columns={selectedApp}
+      //         setMyMenuData={setMyMenuData}
+      //         setIsSpinnerShow={setIsSpinnerShow}
+      //         isPreviewPage={isPreviewPage}
+      //         isUnreadCnt={isUnreadCnt}
+      //         execPage={execPage}
+      //         execMenu={execMenu}
+      //         show={show}
+      //         onReload={onReload}
+      //       />
+      //     )}
+      //   </div>
+      // );
+      // const test = app ? [app] : [];
+      // let test = [];
+      // if (app.length !== 0) {
+      //   // REMOVE PORTAL MULTIPLE DIVS
+      //   // test = apps.concat(app);
+      //   test.push(app);
+      // } else {
+      //   test = [];
+      // }
 
-    console.log('$$$ 5.apps값', apps);
+      // const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
+      // setMyMenuDataCopy.isCssTarget = true;
 
-    return apps;
-  };
-
-    addNewApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
-    const { handleSaveApps, apps } = this.props;
-
-    let app = [];
-
-    // Need some simple way to distinquish the different dialogs.
-    app = ReactDOM.createPortal(
-      <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
-        {setMyMenuData.INTL_TYPE === 'Y' ? (
-          <AppsRouter
-            id={setMyMenuData.PAGE_ID}
-            selectedApp={selectedApp}
-            setMyMenuData={setMyMenuData}
-            setIsSpinnerShow={setIsSpinnerShow}
-            isPreviewPage={isPreviewPage}
-            isUnreadCnt={isUnreadCnt}
-            execPage={execPage}
-            execMenu={execMenu}
-            show={show}
-            onReload={onReload}
-          />
-        ) : (
-          <Page
-            columns={selectedApp}
-            setMyMenuData={setMyMenuData}
-            setIsSpinnerShow={setIsSpinnerShow}
-            isPreviewPage={isPreviewPage}
-            isUnreadCnt={isUnreadCnt}
-            execPage={execPage}
-            execMenu={execMenu}
-            show={show}
-            onReload={onReload}
-          />
-        )}
-      </div>,
-      window.document.getElementById('child'),
-    );
-    let test = [];
-    if (app.length !== 0) {
-      // REMOVE PORTAL MULTIPLE DIVS
-      // test = apps.concat(app);
-      test.push(app);
-    } else {
-      test = [];
+      // a = true;
+      // handleSaveApps(test, setMyMenuDataCopy);
     }
-
-    const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
-    setMyMenuDataCopy.isCssTarget = true;
-
-    // a = true;
-    handleSaveApps(test, setMyMenuDataCopy);
   };
 
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 끝 ******************
   handleClick = () => {
     this.setState(this.state.isFullscreenEnabled ? { isFullscreenEnabled: false } : { isFullscreenEnabled: !false });
   };
+
   // ****************** 스킨 설정 함수 ******************
   applySkin = () => {
     const { handleLoadSkin } = this.props;
     handleLoadSkin();
   };
+
   // ****************** 스킨 설정 함수 끝 ******************
   hideMenuButtonClick = () => {
     // this.onSetOpen(false);
@@ -595,6 +363,7 @@ class App extends React.PureComponent {
 
   execMenu = (PAGE_ID, TARGET, node) => {
     const { handleExecMenu } = this.props;
+
     handleExecMenu(PAGE_ID, TARGET, node);
 
     if (this.props.view !== 'Mobile') {
@@ -613,52 +382,59 @@ class App extends React.PureComponent {
     console.debug('@@@@ node: ', node);
     console.debug('@@@@ type: ', type);
     const { dockAppList } = this.props;
-    if (node === 'common') {
-      // REMOVE DOCK - 주석 처리, 스토어의  myHomePageId 사용
-      // const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
-      const { myHomePageId } = this.props;
-      this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
-      return;
-    }
 
-    if (node === 'set') {
-      // this.props.deleteDock();
-      this.props.history.push(`/${basicPath.PORTAL}/settings`);
-      if (this.props.view === 'Mobile') {
-        this.setState({ open: false });
+    switch (node) {
+      case 'common': {
+        // REMOVE DOCK - 주석 처리, 스토어의  myHomePageId 사용
+        // const homeApp = dockAppList[dockAppList.findIndex(item => item.HOME_YN === 'Y')];
+        const { myHomePageId } = this.props;
+        this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
+        break;
       }
+      case 'set': {
+        // this.props.deleteDock();
+        this.props.history.push(`/${basicPath.PORTAL}/settings`);
+        if (this.props.view === 'Mobile') {
+          this.setState({ open: false });
+        }
+        break;
+      }
+      default: {
+        // 1. 내부서비스 /apps/SRC_PATH ex) 회의실예약, 명함신청
+        // 2. 외부서비스 /apps/PAGE_ID ex) 큐브
+        // 3. 페이지 /page/PAGE_ID
+        if (node) {
+          const state = {
+            type,
+            node,
+            executedDockPageId: node.PAGE_ID,
+          };
 
-      return;
-    }
-
-    // 1. 내부서비스 /apps/SRC_PATH ex) 회의실예약, 명함신청
-    // 2. 외부서비스 /apps/PAGE_ID ex) 큐브
-    // 3. 페이지 /page/PAGE_ID
-    if (node) {
-      const state = {
-        type,
-        node,
-        executedDockPageId: node.PAGE_ID,
-      };
-
-      if (node.INTL_TYPE === 'Y') {
-        // console.log('!!!!!!!!!!!!!! INTL TYPE !!!!!!!!!!', node);
-        this.props.history.push({
-          pathname: `/${basicPath.APPS}/${node.SRC_PATH}`,
-          execInfo: state,
-        });
-      } else if (node.SRC_PATH === 'legacySVC') {
-        // console.log('!!!!!!!!!!!!!! INTL TYPE2 !!!!!!!!!', node);
-        this.props.history.push({
-          pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
-          execInfo: state,
-        });
-      } else {
-        // console.log('!!!!!!!!!!!!!! INTL TYPE3 !!!!!!!!!!', node);
-        this.props.history.push({
-          pathname: `/${basicPath.PAGE}/${node.PAGE_ID}`,
-          execInfo: state,
-        });
+          if (node.INTL_TYPE === 'Y') {
+            // console.log('!!!!!!!!!!!!!! INTL TYPE !!!!!!!!!!', node);
+            this.props.history.push({
+              pathname: `/${basicPath.APPS}/${node.SRC_PATH}`,
+              execInfo: state,
+            });
+          } else if (node.SRC_PATH === 'legacySVC') {
+            // console.log('!!!!!!!!!!!!!! INTL TYPE2 !!!!!!!!!', node);
+            if (node.TARGET.toUpperCase() === 'NEW') {
+              window.open(node.URL, node.NAME_KOR, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
+            } else {
+              this.props.history.push({
+                pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
+                execInfo: state,
+              });
+            }
+          } else {
+            // console.log('!!!!!!!!!!!!!! INTL TYPE3 !!!!!!!!!!', node);
+            this.props.history.push({
+              pathname: `/${basicPath.PAGE}/${node.PAGE_ID}`,
+              execInfo: state,
+            });
+          }
+        }
+        break;
       }
     }
   };
@@ -731,15 +507,16 @@ class App extends React.PureComponent {
       }
     }
     */
-   const { rootPageId, myHomePageId } = this.props;
-   if(rootPageId && rootPageId > 0) {
-    this.props.history.push(`/${basicPath.PAGE}/${rootPageId}`);
-   } else {
-    this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
-   }
+    const { rootPageId, rootAppYn, myHomePageId } = this.props;
+    console.debug('@@@ props', this.props);
+
+    if (rootPageId && rootPageId > 0) {
+      this.props.history.push(`/${rootAppYn === 'Y' ? basicPath.APPS : basicPath.PAGE}/${rootPageId}`);
+    } else {
+      this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
+    }
   };
 
-  
   getLayoutMarginRight = () => {
     // REMOVE DOCK - 주석 처리
     const { dockFixedYn } = this.props;
@@ -749,12 +526,24 @@ class App extends React.PureComponent {
 
   getLayoutMarginLeft = () => {
     // REMOVE DOCK - 주석 처리
+    const { open } = this.state;
     const { menuFixedYn } = this.props;
     return open && menuFixedYn === 'Y' ? 335 : 45;
   };
 
+  getLayoutStyle = desktopMode => {
+    if (desktopMode) {
+      return {
+        marginLeft: this.getLayoutMarginLeft(),
+        marginRight: this.getLayoutMarginRight(),
+        transition: 'margin-left 0.3s ease-out 0s',
+      };
+    }
+    return mobileDockCss;
+  };
+
   render() {
-    const { open, isClose, isSpinnerShow, headerMenuOpen } = this.state;
+    const { open, isSpinnerShow, headerMenuOpen } = this.state;
     const {
       mySkin,
       myHNotiCnt,
@@ -762,61 +551,31 @@ class App extends React.PureComponent {
       myMNotiList,
       setMyMenuData,
       managerInfo,
-      dockAppList,
-      isUnfixDockItem,
-      setMyMenuNodeData,
       selectedIndex,
       menuName,
       handleSetMenuNameSelectedIndex,
       view,
-      // Dock Data
-      handleDndChangePosition,
-      handleDndChangePositionSaga,
       handleExitDockItem,
       handleFixDockItem,
       handleUnfixDockItem,
-      handleSetIsUnfixDockItem,
-      handleDockSetMyMenuData,
       dockFixedYn,
-      handleSetDockFixedYn,
       dockIconType,
-      handleSetDockIconType,
       hasRoleAdmin,
       selectedApp,
       history,
       headerTitle,
       profile,
-      resetLastExecYn,
       menuFixedYn,
+      isUnreadCnt,
+      isPreviewPage,
     } = this.props;
-    console.debug('$$$$my App Tree: ', this.props);
-    const dockCallbacks = {
-      handleDndChangePosition,
-      handleDndChangePositionSaga,
-      // DockItem 종료시 이전 실행한 앱을 띄워주기 전에 잠시 Spinner 표시
-      // handleExitDockItem: (DOCK_ID) => { this.setState({ isSpinnerShow: true }, () => { handleExitDockItem(DOCK_ID); }); },
-      handleExitDockItem,
-      handleFixDockItem,
-      handleUnfixDockItem,
-      handleSetIsUnfixDockItem,
-      handleDockSetMyMenuData,
-    };
+
     let theme = themes.skin1;
     if (mySkin !== undefined) {
       theme = themes[`skin${mySkin}`];
     }
-    // 라우팅 시 외부서비스나 페이지의 라우팅 경로 설정
-    // let path = basicPath.APPS;
-    if (setMyMenuData.INTL_TYPE === 'N' && setMyMenuData.SRC_PATH !== 'legacySVC') {
-      //  path = basicPath.PAGE;
-    }
 
-    // REMOVE DOCK - 주석 처리, myHomePageId 사용
-    /*
-    const dockHomeItemIndex = _.findIndex(dockAppList, ['HOME_YN', 'Y']);
-    const myHomePageId = dockHomeItemIndex > -1 ? dockAppList[dockHomeItemIndex] : '';
-    */
-   const { myHomePageId } = this.props;
+    const { myHomePageId } = this.props;
     const isFullSize = selectedApp && selectedApp.length === 1 && selectedApp[0].size.toUpperCase() === 'FULLSIZE';
     return (
       <ThemeProvider theme={theme}>
@@ -828,7 +587,6 @@ class App extends React.PureComponent {
             execPage={this.execPage}
             handleClick={this.handleClick}
             setMyMenuData={setMyMenuData}
-            // UserSetting으로 전달될 콜백
             location={history.location}
             myHNotiCnt={myHNotiCnt}
             managerInfo={managerInfo}
@@ -855,7 +613,6 @@ class App extends React.PureComponent {
           />
           <UserCategoryMenu
             isShow={open}
-            // toggleMenu={open ? this.setMenuClose : this.setOpen}
             setOpen={this.setOpen}
             setFixedOpenMenu={this.setFixedOpenMenu}
             execMenu={this.execMenu}
@@ -871,7 +628,7 @@ class App extends React.PureComponent {
             setMenuClose={this.setMenuClose}
             view={view}
             history={this.props.history}
-            fixedMenu={menuFixedYn === 'Y' ? true : false}
+            fixedMenu={menuFixedYn === 'Y'}
           />
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
@@ -881,7 +638,6 @@ class App extends React.PureComponent {
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="my home">
-                {/* <BtnMyhome onClick={() => this.execPage(myHome, 'execDock')} /> */}
                 <BtnMyhome onClick={() => history.push(`/${basicPath.PAGE}/${myHomePageId}`)} />
               </Tooltip>
             </div>
@@ -895,26 +651,8 @@ class App extends React.PureComponent {
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
             </div>
-            {/* 환경설정 주석 처리 2019-08-28
-            <div className="iconPositon" style={{ marginTop: '20px' }}>
-
-              <Tooltip placement="right" title="환경설정">
-                <Icon type="setting" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goSettings} />
-              </Tooltip>
-            </div> */}
           </SideMenu>
-          <Layout
-            style={
-              isDesktop(view)
-                ? {
-                    //...desktopDockCss, // REMOVE DOCK - TODO DOCK 사이즈 관련 확인 해보고 제거 또는 수정 (getLayoutMarginRight)
-                    marginLeft: this.getLayoutMarginLeft(),
-                    marginRight: this.getLayoutMarginRight(),
-                    transition: 'margin-left 0.3s ease-out 0s',
-                  }
-                : mobileDockCss
-            }
-          >
+          <Layout style={this.getLayoutStyle(isDesktop(view))}>
             <StyledContainer>
               <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
                 <AppWrapper style={{ width: '100%', backgroundColor: '#f7f8f9' }}>
@@ -945,8 +683,20 @@ class App extends React.PureComponent {
                           flexShrink: '0',
                         }}
                       >
-                        <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow} />
-                        {this.props.apps}
+                        <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow}>
+                          {this.renderApps(
+                            setMyMenuData,
+                            selectedApp,
+                            isUnreadCnt,
+                            this.execPage,
+                            this.execMenu,
+                            this.show,
+                            this.onReload,
+                            this.setIsSpinnerShow,
+                            isPreviewPage,
+                          )}
+                        </Spin>
+                        {/* {this.props.apps} */}
                       </Content>
                       <Switch>
                         <Route
@@ -1108,6 +858,7 @@ App.propTypes = {
   menuFixedYn: PropTypes.string,
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
   rootPageId: PropTypes.number,
+  rootAppYn: PropTypes.string,
   myHomePageId: PropTypes.number,
 };
 
@@ -1124,6 +875,7 @@ App.defaultProps = {
   isPreviewPage: false,
   hasRoleAdmin: false,
   headerTitle: '',
+  rootAppYn: 'N',
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -1154,9 +906,10 @@ const mapStateToProps = createStructuredSelector({
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
   commonMenuTreeData: routesSelector.makeCommonMenuTree(),
-  menuFixedYn:selectors.makeSelectMenuFixedYn(),
+  menuFixedYn: selectors.makeSelectMenuFixedYn(),
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
   rootPageId: routesSelector.makeSelectRootPageId(),
+  rootAppYn: routesSelector.makeSelectRootAppYn(),
   myHomePageId: routesSelector.makeSelectMyHomePageID(),
 });
 const mapDispatchToProps = dispatch => ({
@@ -1183,14 +936,7 @@ const mapDispatchToProps = dispatch => ({
   resetLastExecYn: () => dispatch(routesAction.resetLastExecYn()),
   handleUpdateMenuFixedYn: menuFixedYn => dispatch(routesAction.updateMenuFixedYn(menuFixedYn)),
 });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'app', reducer });
 const withSaga = injectSaga({ key: 'app', saga });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(wrap(App));
+export default compose(withReducer, withSaga, withConnect)(wrap(App));

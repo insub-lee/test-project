@@ -33,7 +33,6 @@ const App = () => {
   );
 };
 
-
 const code = `import { Input, Col, Select, InputNumber, DatePicker, AutoComplete, Cascader } from '../../../Abstraction/portalComponents';
 
 const InputGroup = Input.Group;

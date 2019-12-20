@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, Radio } from '../../../Abstraction/portalComponents';
 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -9,9 +8,11 @@ class App extends React.Component {
       size: 'large',
     };
   }
-  handleSizeChange = e => this.setState({
-    size: e.target.value,
-  });
+
+  handleSizeChange = e =>
+    this.setState({
+      size: e.target.value,
+    });
 
   render() {
     return (
@@ -21,11 +22,18 @@ class App extends React.Component {
           <Radio.Button value="default">Default</Radio.Button>
           <Radio.Button value="small">Small</Radio.Button>
         </Radio.Group>
-        <br /><br />
-        <Button type="primary" size={this.state.size}>Primary</Button>
+        <br />
+        <br />
+        <Button type="primary" size={this.state.size}>
+          Primary
+        </Button>
         <Button size={this.state.size}>Normal</Button>
-        <Button type="dashed" size={this.state.size}>Dashed</Button>
-        <Button type="danger" size={this.state.size}>Danger</Button>
+        <Button type="dashed" size={this.state.size}>
+          Dashed
+        </Button>
+        <Button type="danger" size={this.state.size}>
+          Danger
+        </Button>
       </div>
     );
   }

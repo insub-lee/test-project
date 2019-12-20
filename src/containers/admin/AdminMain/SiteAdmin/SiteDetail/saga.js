@@ -111,12 +111,7 @@ export function* updateSite(payload) {
 
   if (response.code === 200) {
     // 성공
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.udtComplete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.udtComplete)}</MessageContent>, 3);
 
     // yield put({
     //   type: constants.SET_SITE_UPDATE,
@@ -131,12 +126,7 @@ export function* delSite(payload) {
   if (response.code === 200) {
     history.push('/admin/adminmain/siteadmin');
     // 성공
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.delComplete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.delComplete)}</MessageContent>, 3);
   }
 }
 

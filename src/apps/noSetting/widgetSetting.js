@@ -4,15 +4,11 @@ import PropTypes from 'prop-types';
 class WidgetSetting extends Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
-    return (
-      <div>
-      </div>
-    );
+    return <div></div>;
   }
 }
 

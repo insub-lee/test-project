@@ -1,7 +1,6 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
-import * as actionType from './constants';
-
 import { Axios } from 'utils/AxiosFunc';
+import * as actionType from './constants';
 
 export function* getOpinionData(payload) {
   const data = {

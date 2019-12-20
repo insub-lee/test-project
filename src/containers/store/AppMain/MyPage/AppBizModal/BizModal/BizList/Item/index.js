@@ -11,31 +11,23 @@ import messages from '../messages';
 
 class Item extends PureComponent {
   render() {
-    const {
-      selectedBizgrpId,
-      BIZGRP_ID,
-      title,
-      subTitle,
-      registed,
-      registApp,
-    } = this.props;
+    const { selectedBizgrpId, BIZGRP_ID, title, subTitle, registed, registApp } = this.props;
 
     return (
       <Card className={`bizAppCard ${selectedBizgrpId === BIZGRP_ID ? 'mark' : ''}`}>
-        {registed === 'false' ?
-          (
-            <div className="hoverCtgIcons">
-              <Button className="btnMenuRgt" title={intlObj.get(messages.registBiz)} onClick={registApp}>
-                <img src={menuRgtIcon} alt={intlObj.get(messages.registBiz)} />
-              </Button>
+        {registed === 'false' ? (
+          <div className="hoverCtgIcons">
+            <Button className="btnMenuRgt" title={intlObj.get(messages.registBiz)} onClick={registApp}>
+              <img src={menuRgtIcon} alt={intlObj.get(messages.registBiz)} />
+            </Button>
+          </div>
+        ) : (
+          <div className="displayCtgIcons">
+            <div className="infoRgt" title={intlObj.get(messages.apping)}>
+              {intlObj.get(messages.apping)}
             </div>
-          ) :
-          (
-            <div className="displayCtgIcons">
-              <div className="infoRgt" title={intlObj.get(messages.apping)}>{intlObj.get(messages.apping)}</div>
-            </div>
-          )
-        }
+          </div>
+        )}
         <div className="BizDivIcons">
           <img src={bizAppIcon} alt={title} style={{ position: 'absolute', top: 0, left: 0 }} />
         </div>

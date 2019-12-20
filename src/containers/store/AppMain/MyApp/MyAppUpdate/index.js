@@ -22,7 +22,6 @@ class MyAppUpdate extends React.Component {
       uv: prop.match.params.uv,
       tabNum: prop.match.params.tabNum,
       svcyn: prop.match.params.svcyn,
-
     };
     window.scrollTo(0, 0);
   }
@@ -30,13 +29,7 @@ class MyAppUpdate extends React.Component {
   componentWillReceiveProps(nextProps) {
     const { match } = nextProps;
     const { params } = match;
-    const {
-      APP_ID,
-      tabNum,
-      svcyn,
-      uv,
-      VER,
-    } = params;
+    const { APP_ID, tabNum, svcyn, uv, VER } = params;
     this.setState({
       APP_ID,
       tabNum,
@@ -45,11 +38,13 @@ class MyAppUpdate extends React.Component {
       VER,
     });
   }
-  handleTabClicks = (activeKey) => {
+
+  handleTabClicks = activeKey => {
     this.setState({
       tabNum: activeKey,
     });
-  }
+  };
+
   render() {
     return (
       <div
@@ -61,30 +56,12 @@ class MyAppUpdate extends React.Component {
         }}
       >
         <StyleMyAppUpdate>
-          <Tabs
-            defaultActiveKey="1"
-            activeKey={this.state.tabNum}
-            onTabClick={this.handleTabClicks}
-          >
+          <Tabs defaultActiveKey="1" activeKey={this.state.tabNum} onTabClick={this.handleTabClicks}>
             <TabPane tab={intlObj.get(messages.tab1)} key="1">
-              <AppUpdateForm
-                APP_ID={this.state.APP_ID}
-                VER={this.state.VER}
-                uv={this.state.uv}
-                history={this.props.history}
-              />
+              <AppUpdateForm APP_ID={this.state.APP_ID} VER={this.state.VER} uv={this.state.uv} history={this.props.history} />
             </TabPane>
-            <TabPane
-              tab={intlObj.get(messages.tab2)}
-              key="2"
-              disabled={this.state.uv === 'V'}
-            >
-              <AppUserForm
-                APP_ID={this.state.APP_ID}
-                VER={this.state.VER}
-                uv={this.state.uv}
-                history={this.props.history}
-              />
+            <TabPane tab={intlObj.get(messages.tab2)} key="2" disabled={this.state.uv === 'V'}>
+              <AppUserForm APP_ID={this.state.APP_ID} VER={this.state.VER} uv={this.state.uv} history={this.props.history} />
             </TabPane>
             {/* <TabPane
               tab={intlObj.get(messages.tab3)}

@@ -2,10 +2,10 @@ import styled from 'styled-components';
 import { borderRadius } from '../../config/style-util';
 
 const UserProfileStyle = styled.div`
-height: 20px;
-display: inline-block;
+  height: 20px;
+  display: inline-block;
 
-.userInfo {
+  .userInfo {
     min-width: 270px;
     height: 100%;
     float: left;
@@ -19,7 +19,7 @@ display: inline-block;
       float: left;
       margin-right: 8px;
       ${borderRadius('15px')};
-      overflow:hidden;
+      overflow: hidden;
 
       > img {
         width: 100%;
@@ -27,7 +27,7 @@ display: inline-block;
       }
 
       &:after {
-        content: "";
+        content: '';
         display: table;
         clear: both;
       }

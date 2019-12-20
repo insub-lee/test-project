@@ -17,7 +17,7 @@ class WidgetSettingModal extends PureComponent {
     this.props.closeModal();
   };
 
-  createComponents = (item) => {
+  createComponents = item => {
     const { closeModal } = this.props;
     const param = {
       loader: () => import(`apps/${item.settingPath}`),
@@ -26,6 +26,7 @@ class WidgetSettingModal extends PureComponent {
     const COMP = Loadable(param);
     return <COMP item={item} closeModal={closeModal} />;
   };
+
   render() {
     const {
       // actions,

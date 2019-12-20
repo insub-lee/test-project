@@ -67,7 +67,4 @@ const mapDispatchToProps = dispatch => ({
   moveCtContentItem: dropResult => dispatch(actions.moveCompareTempletContentItemByReducr(dropResult)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AddManualType);
+export default connect(mapStateToProps, mapDispatchToProps)(AddManualType);

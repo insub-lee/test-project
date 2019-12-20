@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Button, Modal, Input, Select } from 'antd';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/Table/StyledAntdTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledModal from 'commonStyled/Modal/StyledModal';
 import BizMicroDevBase from 'components/BizMicroDevBase';
+import ProcessInput from './ProcessInput';
 import FlowChart from '../FlowChart';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledModal(Modal);
 const { Option } = Select;
 
 class ProcessMgr extends Component {
   state = {
-    prcId: 1,
-    isShow: false,
+    prcId: -1,
+    isFlowShow: false,
+    isInputShow: false,
     actionType: 'I',
+    NAME_KOR: '',
+    PROCESS_SVRNAME: '',
   };
 
   componentDidMount() {
@@ -21,10 +28,20 @@ class ProcessMgr extends Component {
   }
 
   onTitleClick = record => {
+    this.setState({
+      isInputShow: true,
+      actionType: 'U',
+      prcId: record.PRC_ID,
+      NAME_KOR: record.NAME_KOR,
+      PROCESS_SVRNAME: record.PROCESS_SVRNAME,
+    });
+  };
+
+  onProcessSetting = record => {
     const { getCallDataHanlder, apiArray, id } = this.props;
     this.setState({
       prcId: record.PRC_ID,
-      isShow: true,
+      isFlowShow: true,
     });
 
     const designInfo = {
@@ -62,7 +79,6 @@ class ProcessMgr extends Component {
         DESIGN_DATA: result.DESIGN_DATA,
       },
     };
-    console.debug('submitData', id, submitData, this.props);
     submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/workprocess/AddDefaultPrcRuleHandler', submitData, this.onSaveComplete);
   };
 
@@ -71,17 +87,54 @@ class ProcessMgr extends Component {
     getCallDataHanlder(id, apiArray);
   };
 
-  onUpdate = prcId => {
-    const { getCallDataHanlder, apiArray, id } = this.props;
-    const processInfo = {
-      key: 'processInfo',
-      url: `/api/workflow/v1/common/getWorkflowProcesHandler/${prcId}`,
-      type: 'GET',
+  onSaveProcess = () => {
+    const { submitHadnlerBySaga, id } = this.props;
+    const { NAME_KOR, PROCESS_SVRNAME } = this.state;
+    const submitData = {
+      PARAM: {
+        PRC_ID: -1,
+        NAME_KOR,
+        PROCESS_SVRNAME,
+      },
     };
-    apiArray.push(processInfo);
-    getCallDataHanlder(id, apiArray);
+    submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/process', submitData, this.onSaveComplete);
     this.setState({
-      actionType: 'M',
+      isInputShow: false,
+    });
+  };
+
+  onUpdateProcess = () => {
+    const { submitHadnlerBySaga, id } = this.props;
+    const { NAME_KOR, PROCESS_SVRNAME } = this.state;
+    const submitData = {
+      PARAM: {
+        PRC_ID: this.state.prcId,
+        NAME_KOR,
+        PROCESS_SVRNAME,
+      },
+    };
+    submitHadnlerBySaga(id, 'PUT', '/api/workflow/v1/common/process', submitData, this.onSaveComplete);
+    this.setState({
+      isInputShow: false,
+    });
+  };
+
+  onDeleteProcess = record => {
+    const { submitHadnlerBySaga, id } = this.props;
+
+    const submitData = {
+      PARAM: {
+        PRC_ID: record.PRC_ID,
+        NAME_KOR: '',
+        PROCESS_SVRNAME: '',
+      },
+    };
+
+    console.debug('submitData', submitData);
+
+    submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/deleteprocess', submitData, this.onSaveComplete);
+    this.setState({
+      isInputShow: false,
     });
   };
 
@@ -109,14 +162,16 @@ class ProcessMgr extends Component {
       dataIndex: 'config',
       key: 'config',
       align: 'center',
-      render: (text, record) => {
-        return (
-          <div>
-            {/* <Button onClick={() => this.onUpdate(record.PRC_ID)}>수정</Button> */}
-            <Button>삭제</Button>
-          </div>
-        );
-      },
+      render: (text, record) => (
+        <div>
+          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onProcessSetting(record)}>
+            프로세스설정
+          </StyledButton>
+          <StyledButton className="btn-light btn-sm" onClick={() => this.onDeleteProcess(record)}>
+            삭제
+          </StyledButton>
+        </div>
+      ),
     },
   ];
 
@@ -125,27 +180,61 @@ class ProcessMgr extends Component {
     getCallDataHanlder(id, apiArray);
   };
 
+  onInputClick = () => {
+    this.setState({ prcId: -1, isFlowShow: false, isInputShow: true, actionType: 'I', NAME_KOR: '', PROCESS_SVRNAME: '' });
+  };
+
+  onChangeValue = (id, value) => {
+    const retObj = {};
+    retObj[id] = value;
+
+    this.setState(retObj);
+  };
+
   render() {
     const { result } = this.props;
-    console.debug('props!!', this.props);
+    console.debug('index state!!', this.state);
     const prcList = result && result.prcList && result.prcList.processList;
     return (
       <div>
         <div>프로세스 관리</div>
-        <AntdTable dataSource={prcList} columns={this.columns}></AntdTable>
-        <Modal
+        <div style={{ margin: '10px', textAlign: 'right' }}>
+          <StyledButton className="btn-primary" onClick={this.onInputClick}>
+            프로세스등록
+          </StyledButton>
+        </div>
+
+        <AntdTable dataSource={prcList} columns={this.columns} rowKey="PRC_ID"></AntdTable>
+        <AntdModal
+          width="40%"
+          style={{ height: '300px' }}
+          visible={this.state.isInputShow}
+          onCancel={() => {
+            this.setState({ isInputShow: false });
+          }}
+          destroyOnClose
+          footer={null}
+        >
+          <ProcessInput
+            processInfo={this.state}
+            onUpdateProcess={this.onUpdateProcess}
+            onSaveProcess={this.onSaveProcess}
+            onChangeValue={this.onChangeValue}
+          ></ProcessInput>
+        </AntdModal>
+        <AntdModal
           style={{ top: '50px' }}
-          visible={this.state.isShow}
+          visible={this.state.isFlowShow}
           width="90%"
           maskClosable={false}
           onCancel={() => {
-            this.setState({ isShow: false });
+            this.setState({ isFlowShow: false });
           }}
           destroyOnClose
           footer={null}
         >
           <FlowChart id="processMgr" onFlowChartSave={this.onFlowChartSave} result={result}></FlowChart>
-        </Modal>
+        </AntdModal>
       </div>
     );
   }

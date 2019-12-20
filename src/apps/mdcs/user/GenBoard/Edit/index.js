@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
+import FileUpload from 'components/FormStuff/Upload';
 import Styled from './Styled';
 import Button from '../../../styled/StyledButton';
 
@@ -14,11 +15,15 @@ class Edit extends Component {
     changeFormData(id, name, model);
   };
 
+  handlerAttachChange = (detail, name) => {
+    const { id, changeFormData } = this.props;
+    changeFormData(id, name, detail);
+  };
+
   render() {
-    const { id, reloadId, metaList, formData } = this.props;
+    const { id, reloadId, workSeq, taskSeq, metaList, formData, saveTask } = this.props;
     const contentMeta = metaList.filter(meta => meta.COMP_FIELD === 'CONTENT');
     const attachMeta = metaList.filter(meta => meta.COMP_FIELD === 'ATTACH');
-
     return (
       <Styled className="manual-descriptions-view">
         <table>
@@ -28,7 +33,7 @@ class Edit extends Component {
                 제목
               </th>
               <td className="manual-descriptions-item-content" colSpan="3">
-                <Input onChange={e => this.props.changeFormData(id, 'TITLE', e.target.value)}></Input>
+                <Input onChange={e => this.props.changeFormData(id, 'TITLE', e.target.value)} value={formData.TITLE}></Input>
               </td>
             </tr>
             <tr className="manual-descriptions-row">
@@ -50,7 +55,7 @@ class Edit extends Component {
           </tbody>
         </table>
         <div className="list-btn list-top-btn" style={{ padding: '5px' }}>
-          <Button type="button" className="btn-primary" style={{ float: 'right' }} onClick={() => this.props.saveTask(id, reloadId, this.props.onSaveComplete)}>
+          <Button type="button" className="btn-primary" style={{ float: 'right' }} onClick={() => saveTask(id, reloadId, this.props.onSaveComplete)}>
             글쓰기
           </Button>
         </div>

@@ -7,9 +7,7 @@ import UserReg from './UserDetail';
 class UserAdmin extends React.Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   render() {

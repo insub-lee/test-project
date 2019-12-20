@@ -16,5 +16,4 @@ const ArticleTab = () => (
   </div>
 );
 
-
 export default ArticleTab;

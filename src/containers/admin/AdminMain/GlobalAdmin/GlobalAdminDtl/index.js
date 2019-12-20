@@ -146,20 +146,20 @@ class GlobalAdminDtl extends React.Component {
       if (mode === 'I') {
         // 등록
         return (
-          <React.Fragment>
+          <>
             <StyledButton className="btn-light btn-cancel">
               <Link to="../GlobalAdmin/">취소</Link>
             </StyledButton>
             <StyledButton className="btn-primary" onClick={this.regGlobalMsg}>
               등록
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       if (mode === 'D') {
         // 상세
         return (
-          <React.Fragment>
+          <>
             <div style={{ float: 'left' }}>
               <StyledButton className="btn-light" onClick={this.delConfirm}>
                 삭제
@@ -182,13 +182,13 @@ class GlobalAdminDtl extends React.Component {
             >
               수정
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       if (mode === 'U') {
         // 수정
         return (
-          <React.Fragment>
+          <>
             <div style={{ float: 'left' }}>
               <Link to="../GlobalAdmin/">
                 <StyledButton className="btn-light">목록으로</StyledButton>
@@ -211,7 +211,7 @@ class GlobalAdminDtl extends React.Component {
             <StyledButton className="btn-primary" onClick={this.udtConfirm}>
               저장
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       return '';
@@ -347,15 +347,8 @@ const mapStateToProps = createStructuredSelector({
   globalMsgRes: selectors.makeSelectGlobalMsg(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'GlobalAdminDtl', saga });
 const withReducer = injectReducer({ key: 'GlobalAdminDtl', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(GlobalAdminDtl);
+export default compose(withReducer, withSaga, withConnect)(GlobalAdminDtl);

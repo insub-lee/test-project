@@ -54,7 +54,4 @@ const mapDispatchToProps = dispatch => ({
   setSelectedCompIdx: (idx, widgetId) => dispatch(actions.setSelectedCompIdxByReducr(idx, widgetId)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SideMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(SideMenu);

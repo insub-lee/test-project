@@ -8,7 +8,9 @@ const App = () => (
     <Select defaultValue="lucy" style={{ width: 120 }}>
       <Option value="jack">Jack</Option>
       <Option value="lucy">Lucy</Option>
-      <Option value="disabled" disabled>Disabled</Option>
+      <Option value="disabled" disabled>
+        Disabled
+      </Option>
       <Option value="Yiminghe">yiminghe</Option>
     </Select>
     <Select defaultValue="lucy" style={{ width: 120 }} disabled>
@@ -19,7 +21,6 @@ const App = () => (
     </Select>
   </div>
 );
-
 
 const code = `
 import { Select } from '../../../Abstraction/portalComponents';

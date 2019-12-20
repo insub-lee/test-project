@@ -7,15 +7,10 @@ class Articles extends PureComponent {
   componentDidUpdate() {
     window.scrollTo(0, 0);
   }
+
   render() {
     const { keyUrl } = this.props;
-    return (
-      <JsxParser
-        components={{ Article }}
-        renderInWrapper={false}
-        jsx={`<Article.${keyUrl}/>`}
-      />
-    );
+    return <JsxParser components={{ Article }} renderInWrapper={false} jsx={`<Article.${keyUrl}/>`} />;
   }
 }
 

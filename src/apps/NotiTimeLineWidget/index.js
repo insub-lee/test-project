@@ -64,13 +64,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.NotiTimeLineWidget', reducer });
 const withSaga = injectSaga({ key: 'apps.NotiTimeLineWidget', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(NotiTimeLineWidget);
+export default compose(withSaga, withReducer, withConnect)(NotiTimeLineWidget);

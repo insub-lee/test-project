@@ -11,23 +11,13 @@ import StyledTableWrapper from './StyledTableWrapper';
 
 const Contents = ({ myMNotiList, onClickItem }) => (
   <div style={{ paddingTop: 13 }}>
-    <Scrollbars
-      className="custom-scrollbar"
-      autoHide
-      autoHideTimeout={1000}
-      autoHideDuration={100}
-      autoHeight
-      autoHeightMin={0}
-      autoHeightMax={290}
-    >
+    <Scrollbars className="custom-scrollbar" autoHide autoHideTimeout={1000} autoHideDuration={100} autoHeight autoHeightMin={0} autoHeightMax={290}>
       <StyledTableWrapper>
         <Table size="small" style={{ width: '100%' }}>
           <Table.Body>
             {myMNotiList.map(noti => (
               <Table.Row key={noti.MENU_ID}>
-                <Table.Cell
-                  onClick={() => onClickItem(noti)}
-                >
+                <Table.Cell onClick={() => onClickItem(noti)}>
                   {noti.SEC_YN === 'Y' ? <p>{lang.get('NAME', noti)}</p> : <p style={{ color: 'lightgray' }}>{lang.get('NAME', noti)}</p>}
                 </Table.Cell>
                 <Table.Cell>

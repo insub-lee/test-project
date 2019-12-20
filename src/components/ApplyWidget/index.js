@@ -51,7 +51,7 @@ class testPage extends Component {
 
   notApplyConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.DoCancel)}`, '', () => this.notApply());
-  }
+  };
 
   render() {
     const { item, type } = this.props;
@@ -66,7 +66,7 @@ class testPage extends Component {
       },
     };
 
-    const RenderSappView = (item) => {
+    const RenderSappView = item => {
       if (item.SEC_REQ_YN === 'Y') {
         return (
           <div className="widgetContent bgImgApplyPage">
@@ -85,16 +85,15 @@ class testPage extends Component {
             </Button>
           </div>
         );
-      } else if (item.SEC_REQ_YN === 'N') {
+      }
+      if (item.SEC_REQ_YN === 'N') {
         return (
           <div className="widgetContent bgOnApplying">
             <p className="informTxt">
               <span>
                 <i className="emp">{lang.get('NAME', item)}</i>
               </span>
-              <span>
-                {intlObj.get(messages.saveApply)}
-              </span>
+              <span>{intlObj.get(messages.saveApply)}</span>
             </p>
             <Button onClick={this.notApplyConfirm} className="btnBRadius gray">
               {intlObj.get(messages.cancelApply)}
@@ -104,7 +103,7 @@ class testPage extends Component {
       }
     };
 
-    const RenderAppView = (item) => {
+    const RenderAppView = item => {
       if (item.SEC_REQ_YN === 'Y') {
         return (
           <div className="widgetContent bgImgApplyPage">
@@ -123,7 +122,8 @@ class testPage extends Component {
             </Button>
           </div>
         );
-      } else if (item.SEC_REQ_YN === 'N') {
+      }
+      if (item.SEC_REQ_YN === 'N') {
         return (
           <div className="widgetContent bgOnApplying">
             <p className="informTxt">
@@ -131,9 +131,7 @@ class testPage extends Component {
                 <i className="emp">{lang.get('NAME', item)}</i>
               </span>
 
-              <span>
-                {intlObj.get(messages.saveApply)}
-              </span>
+              <span>{intlObj.get(messages.saveApply)}</span>
             </p>
             <Button onClick={this.notApplyConfirm} className="btnBRadius gray">
               {intlObj.get(messages.cancelApply)}
@@ -146,15 +144,13 @@ class testPage extends Component {
     return (
       <ApplyPageStyle>
         <div className="applyPageWrapper">
-          {type === 'swidget' ?
-            <div className="singleWidget">
-              {RenderSappView(item)}
-            </div>
-            :
+          {type === 'swidget' ? (
+            <div className="singleWidget">{RenderSappView(item)}</div>
+          ) : (
             <div className="portalMainWidget" style={{ display: 'table', width: '100%', height: '100%' }}>
               {RenderAppView(item)}
             </div>
-          }
+          )}
           <Modal
             isOpen={this.state.show}
             closeModal={this.onClose}
@@ -173,8 +169,7 @@ class testPage extends Component {
   }
 }
 
-const mapStateToProps = createStructuredSelector({
-});
+const mapStateToProps = createStructuredSelector({});
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -187,8 +182,4 @@ const withReducer = injectReducer({ key: 'menuapplypage', reducer });
 const withSaga = injectSaga({ key: 'menuapplypage', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(testPage);
+export default compose(withReducer, withSaga, withConnect)(testPage);

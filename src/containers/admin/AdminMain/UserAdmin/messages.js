@@ -232,7 +232,7 @@ export default defineMessages({
   nameKor: {
     id: 'admin.AdminMain.UserAdmin.nameKor',
     defaultMessage: '이름(KOR)',
-  },  
+  },
   initSearch: {
     id: 'admin.AdminMain.UserAdmin.initSearch',
     defaultMessage: '검색조건초기화',
@@ -240,5 +240,5 @@ export default defineMessages({
   userManage: {
     id: 'admin.AdminMain.UserAdmin.userManage',
     defaultMessage: '사용자관리',
-  },      
+  },
 });

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Input, TreeSelect, Row, Col, Modal, Select, Radio } from 'antd';
+import { Button, Input, Row, Col, Modal, Select, Radio } from 'antd';
 import PropTypes from 'prop-types';
-import { getTreeFromFlatData } from 'react-sortable-tree';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
 import FileUpload from 'components/FormStuff/Upload';
@@ -10,14 +9,14 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
-
-import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
+import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
+import CheckSelectList from '../../../../components/CheckSelectList/selectable';
 
 const AntdModal = StyledModalWrapper(Modal);
 const { Option } = Select;
 
-class TechDoc extends Component {
+class TechDocModify extends Component {
   state = {
     scopeModal: false,
     prevRegion: '',
@@ -29,15 +28,15 @@ class TechDoc extends Component {
     prevPkg: '',
     prevModule: '',
     prevCustomer: '',
-    nameRegion: '',
-    nameFab: '',
-    nameProduct: '',
-    nameTech: '',
-    nameGen: '',
-    nameDensity: '',
-    namePkg: '',
-    nameModule: '',
-    nameCustomer: '',
+    REGION: '',
+    FAB: '',
+    PRODUCT: '',
+    TECH: '',
+    GEN: '',
+    DENSITY: '',
+    PKG: '',
+    MODULE: '',
+    CUSTOMER: '',
     isDraftModal: false,
     taskSeq: -1,
     formData: {},
@@ -45,14 +44,17 @@ class TechDoc extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq } = this.props;
+    const { getExtraApiData, id, localApiArr, workSeq, revisionTask, taskSeq } = this.props;
     getExtraApiData(id, localApiArr);
-    getTaskSeq(id, workSeq);
+    revisionTask(id, workSeq, taskSeq);
   }
 
-  handlerScopeChange = (key, name) => {
+  onChangeScopeHandler = item => {
     const { changeFormData, id } = this.props;
-    changeFormData(id, name, key);
+    const { selectedText, selectedItems } = item;
+    const { groupKey, selectedValue } = selectedItems;
+    changeFormData(id, groupKey, selectedValue);
+    this.setState({ [groupKey]: selectedText });
   };
 
   handlerRemarkChange = (model, name) => {
@@ -81,6 +83,11 @@ class TechDoc extends Component {
     }
   };
 
+  onChangeNumberHanlder = () => {
+    const { id, changeFormData, docNumber } = this.props;
+    changeFormData(id, 'SP_ID', docNumber);
+  };
+
   handlerModalOpen = () => {
     const { REGION, FAB, PRODUCT, TECH, GEN, DENSITY, PKG, MODULE, CUSTOMER } = this.props.formData;
     this.setState({
@@ -94,21 +101,12 @@ class TechDoc extends Component {
       prevPkg: PKG,
       prevModule: MODULE,
       prevCustomer: CUSTOMER,
-      nameRegion: '',
-      nameFab: '',
-      nameProduct: '',
-      nameTech: '',
-      nameGen: '',
-      nameDensity: '',
-      namePkg: '',
-      nameModule: '',
-      nameCustomer: '',
     });
   };
 
   handlerModalOk = () => {
-    const { formData } = this.props;
-    const { nameRegion, nameFab, nameProduct, nameTech, nameGen, nameDensity, namePkg, nameModule, nameCustomer } = this.state;
+    const { formData, changeFormData, id } = this.props;
+    const { REGION, FAB, PRODUCT, TECH, GEN, DENSITY, PKG, MODULE, CUSTOMER } = this.state;
 
     if (formData.FAB && formData.FAB === ' ') {
       message.warning(<MessageContent>적용Line/Site는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
@@ -118,8 +116,8 @@ class TechDoc extends Component {
       message.warning(<MessageContent>적용Product는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
       return;
     }
-    const nameScope = `SITE:${nameRegion} | FAB:${nameFab} | Tech:${nameTech} | Generation:${nameGen} | Density:${nameDensity} | PKG Type:${namePkg} | Product:${nameProduct} | Module:${nameModule} | Customer:${nameCustomer}`;
-    this.handlerScopeChange(nameScope, 'SCOPE');
+    const nameScope = `SITE:${REGION} | FAB:${FAB} | Tech:${TECH} | Generation:${GEN} | Density:${DENSITY} | PKG Type:${PKG} | Product:${PRODUCT} |  Module:${MODULE} | Customer:${CUSTOMER} `;
+    changeFormData(id, 'SCOPE', nameScope);
 
     this.setState({ scopeModal: false });
   };
@@ -130,7 +128,7 @@ class TechDoc extends Component {
     const resetValue = [prevRegion, prevFab, prevProduct, prevTech, prevGen, prevDensity, prevPkg, prevModule, prevCustomer];
     const resetKey = ['REGION', 'FAB', 'PRODUCT', 'TECH', 'GEN', 'DENSITY', 'PKG', 'MODULE', 'CUSTOMER'];
     resetKey.forEach((key, index) => changeFormData(id, key, resetValue[index]));
-    this.setState({ scopeModal: false });
+    this.setState({ scopeModal: false, REGION: '', FAB: '', PRODUCT: '', TECH: '', GEN: '', DENSITY: '', PKG: '', MODULE: '', CUSTOMER: '' });
   };
 
   clientValidation = () => {
@@ -160,20 +158,14 @@ class TechDoc extends Component {
   };
 
   onClickSave = () => {
-    const { changeFormData, id, sp_rev, saveTask, formData, taskSeq, docNumber } = this.props;
-    changeFormData(id, 'SP_ID', docNumber);
-    changeFormData(id, 'SP_REV', sp_rev);
+    const { changeFormData, id, saveTask, formData } = this.props;
     if (formData && formData.CHANGE === ' ') {
-      changeFormData(id, 'CHANGE', '1');
+      changeFormData(id, 'CHANGE', this.state.degree);
     }
     if (this.clientValidation()) {
-      if (taskSeq === -1) {
-        message.success(<MessageContent>등록 성공</MessageContent>, 3);
-      } else {
-        message.success(<MessageContent>변경 성공</MessageContent>, 3);
-      }
-      saveTask(id, id, this.saveTaskAfter);
+      message.success(<MessageContent>변경 성공</MessageContent>, 3);
     }
+    saveTask(id, id, this.saveTaskAfter);
   };
 
   setIsDraftModal = isDraftModal => this.setState({ isDraftModal });
@@ -189,18 +181,14 @@ class TechDoc extends Component {
       formData,
       workSeq,
       taskSeq,
-      sp_rev,
       metaList,
       changeFormData,
       docNumber,
-      selectedNodeId,
-      fullNodeIds,
-      draftType,
-      saveTask,
     } = this.props;
 
     const contentMeta = metaList.filter(meta => meta.COMP_TAG === 'rich-text-editor');
     const attachMeta = metaList.filter(meta => meta.COMP_TAG === 'file-upload');
+
     return (
       <StyledContent>
         <div>
@@ -220,13 +208,13 @@ class TechDoc extends Component {
                 <div className="leftTable">
                   <Col span={4}>문서번호</Col>
                   <Col span={8}>
-                    <Input value={docNumber} readOnly />
+                    <Input value={formData && formData.SP_ID} readOnly />
                   </Col>
                 </div>
                 <div className="rightTable">
                   <Col span={4}>Revision</Col>
                   <Col span={8}>
-                    <Input value={'0'} readOnly />
+                    <Input value={formData && formData.VERSION && formData.VERSION.split('.')[0]} readOnly />
                   </Col>
                 </div>
               </Row>
@@ -250,278 +238,71 @@ class TechDoc extends Component {
                   <Col span={10}>
                     <AntdModal
                       className="modalWrapper"
-                      width={1500}
+                      width={1280}
                       visible={this.state.scopeModal}
                       onOk={this.handlerModalOk}
                       onCancel={this.handlerModalCancel}
+                      destroyOnClose
                     >
-                      <Row className="modalLabel">
-                        <Col span={2}>Site</Col>
-                        <Col span={2}>Line/Site</Col>
-                        <Col span={2}>Product</Col>
-                        <Col span={2}>Tech.</Col>
-                        <Col span={2}>Generation</Col>
-                        <Col span={2}>Memory Density</Col>
-                        <Col span={2}>PKG</Col>
-                        <Col span={2}>Module</Col>
-                        <Col span={2}>Customer</Col>
-                      </Row>
-                      <Row>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'REGION', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'FAB', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'PRODUCT', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'TECH', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'GEN', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'DENSITY', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'PKG', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'MODULE', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                        <Col span={2}>
-                          <Button
-                            onClick={() => {
-                              changeFormData(id, 'CUSTOMER', ' ');
-                            }}
-                          >
-                            Clear
-                          </Button>
-                        </Col>
-                      </Row>
-                      <Row className="modalSelect">
-                        <Col span={2}>
-                          <Select
-                            placeholder="Site"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'REGION');
-                              this.setState({ nameRegion: opt.props.children });
-                            }}
-                            value={(formData.REGION !== ' ' && Number(formData.REGION)) || undefined}
-                          >
-                            {siteList &&
-                              siteList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`siteList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Line/Site"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'FAB');
-                              this.setState({ nameFab: opt.props.children });
-                            }}
-                            value={(formData.FAB !== ' ' && Number(formData.FAB)) || undefined}
-                          >
-                            {lineSiteList &&
-                              lineSiteList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`lineSiteList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Product"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'PRODUCT');
-                              this.setState({ nameProduct: opt.props.children });
-                            }}
-                            value={(formData.PRODUCT !== ' ' && Number(formData.PRODUCT)) || undefined}
-                          >
-                            {productList &&
-                              productList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`productList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Tech."
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'TECH');
-                              this.setState({ nameTech: opt.props.children });
-                            }}
-                            value={(formData.TECH !== ' ' && Number(formData.TECH)) || undefined}
-                          >
-                            {techList &&
-                              techList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`techList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Generation"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'GEN');
-                              this.setState({ nameGen: opt.props.children });
-                            }}
-                            value={(formData.GEN !== ' ' && Number(formData.GEN)) || undefined}
-                          >
-                            {generationList &&
-                              generationList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`generationList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Memory Density"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'DENSITY');
-                              this.setState({ nameDensity: opt.props.children });
-                            }}
-                            value={(formData.DENSITY !== ' ' && Number(formData.DENSITY)) || undefined}
-                          >
-                            {densityList &&
-                              densityList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`densityList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="PKG"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'PKG');
-                              this.setState({ namePkg: opt.props.children });
-                            }}
-                            value={(formData.PKG !== ' ' && Number(formData.PKG)) || undefined}
-                          >
-                            {pkgList &&
-                              pkgList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`pkgList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Module"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'MODULE');
-                              this.setState({ nameModule: opt.props.children });
-                            }}
-                            value={(formData.MODULE !== ' ' && Number(formData.MODULE)) || undefined}
-                          >
-                            {moduleList &&
-                              moduleList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`moduleList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                        <Col span={2}>
-                          <Select
-                            placeholder="Customer"
-                            onChange={(value, opt) => {
-                              this.handlerScopeChange(value, 'CUSTOMER');
-                              this.setState({ nameCustomer: opt.props.children });
-                            }}
-                            value={(formData.CUSTOMER !== ' ' && Number(formData.CUSTOMER)) || undefined}
-                          >
-                            {customerList &&
-                              customerList.categoryMapList
-                                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                                .map(node => (
-                                  <Option key={`customerList_${node.NODE_ID}`} value={node.NODE_ID}>
-                                    {node.NAME_KOR}
-                                  </Option>
-                                ))}
-                          </Select>
-                        </Col>
-                      </Row>
+                      <CheckSelectList
+                        onChange={this.onChangeScopeHandler}
+                        sourceData={[
+                          {
+                            groupName: 'Site',
+                            groupKey: 'REGION',
+                            dataSet: siteList && siteList.categoryMapList ? siteList.categoryMapList : [],
+                            defaultSelected: formData && formData.REGION,
+                          },
+                          {
+                            groupName: 'Line/Site',
+                            groupKey: 'FAB',
+                            dataSet: lineSiteList && lineSiteList.categoryMapList ? lineSiteList.categoryMapList : [],
+                            defaultSelected: formData && formData.FAB,
+                          },
+                          {
+                            groupName: 'Product',
+                            groupKey: 'PRODUCT',
+                            dataSet: productList && productList.categoryMapList ? productList.categoryMapList : [],
+                            defaultSelected: formData && formData.PRODUCT,
+                          },
+                          {
+                            groupName: 'Tech.',
+                            groupKey: 'TECH',
+                            dataSet: techList && techList.categoryMapList ? techList.categoryMapList : [],
+                            defaultSelected: formData && formData.TECH,
+                          },
+                          {
+                            groupName: 'Generation',
+                            groupKey: 'GEN',
+                            dataSet: generationList && generationList.categoryMapList ? generationList.categoryMapList : [],
+                            defaultSelected: formData && formData.GEN,
+                          },
+                          {
+                            groupName: 'Memory Density',
+                            groupKey: 'DENSITY',
+                            dataSet: densityList && densityList.categoryMapList ? densityList.categoryMapList : [],
+                            defaultSelected: formData && formData.DENSITY,
+                          },
+                          {
+                            groupName: 'PKG',
+                            groupKey: 'PKG',
+                            dataSet: pkgList && pkgList.categoryMapList ? pkgList.categoryMapList : [],
+                            defaultSelected: formData && formData.PKG,
+                          },
+                          {
+                            groupName: 'Module',
+                            groupKey: 'MODULE',
+                            dataSet: moduleList && moduleList.categoryMapList ? moduleList.categoryMapList : [],
+                            defaultSelected: formData && formData.MODULE,
+                          },
+                          {
+                            groupName: 'Customer',
+                            groupKey: 'CUSTOMER',
+                            dataSet: customerList && customerList.categoryMapList ? customerList.categoryMapList : [],
+                            defaultSelected: formData && formData.CUSTOMER,
+                          },
+                        ]}
+                      ></CheckSelectList>
                     </AntdModal>
                     <Button onClick={() => this.handlerModalOpen()}>적용범위 선택</Button>
                   </Col>
@@ -538,7 +319,7 @@ class TechDoc extends Component {
                         });
                         changeFormData(id, 'CHANGE', e.target.value);
                       }}
-                      value={this.state.degree}
+                      value={formData && Number(formData.CHANGE)}
                     >
                       <Radio value={Degree.MAJOR}>Major</Radio>
                       <Radio value={Degree.MINOR}>Minor</Radio>
@@ -592,6 +373,7 @@ class TechDoc extends Component {
                 <Row>
                   <div className="w100Table">
                     <Col span={4}>
+                      {' '}
                       재개정 이력
                       <StyledButton className="btn-gray btn-xs" onClick={this.handlerCopyDesc}>
                         Copy Description
@@ -673,19 +455,6 @@ class TechDoc extends Component {
                 </div>
               </Row>
               <Row>
-                <Col>
-                  <WorkFlowBase
-                    viewType="draft"
-                    isDraftModal={this.state.isDraftModal}
-                    setIsDraftModal={this.setIsDraftModal}
-                    selectedInitDraft={{ REL_TYPE: 1, REL_KEY: { WORK_SEQ: workSeq, TASK_SEQ: this.state.taskSeq }, PRC_ID: 138, TITLE: this.state.title }}
-                    draftCompleteFunc={this.props.onCloseModleHandler}
-                    externalData={{ draftType, fullNodeIds, degree: this.state.degree }}
-                    formData={this.state.formData}
-                  />
-                </Col>
-              </Row>
-              <Row>
                 <div className="btn-wrap">
                   <Button onClick={this.handlerTempSave} style={{ display: 'none' }}>
                     임시저장
@@ -698,16 +467,7 @@ class TechDoc extends Component {
                   >
                     닫기
                   </StyledButton>
-                  <StyledButton
-                    className="btn-primary"
-                    onClick={() => {
-                      changeFormData(id, 'NODE_ID', selectedNodeId);
-                      changeFormData(id, 'SP_ID', docNumber);
-                      changeFormData(id, 'SP_REV', sp_rev);
-                      changeFormData(id, 'VERSION', '0.0');
-                      saveTask(id, id, this.saveTaskAfter);
-                    }}
-                  >
+                  <StyledButton className="btn-primary" onClick={this.onClickSave}>
                     상신
                   </StyledButton>
                 </div>
@@ -719,19 +479,17 @@ class TechDoc extends Component {
     );
   }
 }
-export default TechDoc;
+export default TechDocModify;
 
-TechDoc.propTypes = {
+TechDocModify.propTypes = {
   workSeq: PropTypes.number,
   apiArr: PropTypes.array,
-  sp_id: PropTypes.string,
   sp_rev: PropTypes.number,
   localApiArr: PropTypes.array,
   docNumber: PropTypes.string,
 };
 
-TechDoc.defaultProps = {
-  sp_id: 'test-123',
+TechDocModify.defaultProps = {
   sp_rev: 0,
   localApiArr: [
     { key: 'siteList', url: `/api/admin/v1/common/categoryMapList?MAP_ID=16`, type: 'GET' },

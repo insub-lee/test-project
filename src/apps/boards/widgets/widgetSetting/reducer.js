@@ -15,13 +15,19 @@ const ifBoardConfReducer = (state = initialState, action) => {
     case constants.SET_IFBOARD_CFG_GRP_LIST:
       return state.set('getIfBoardCfgGrpList', action.payload);
     case constants.SET_IFBOARD_CFG_CATE_LIST:
-      return state.set('getIfBoardCfgCateList', action.payload);      
+      return state.set('getIfBoardCfgCateList', action.payload);
     case constants.UPDATE_GRID_DATA:
       return state.set('getIfBoardCfgDataList', action.payload);
     case constants.SET_IFBOARD_CFG:
-      return state.set('item', action.item).set('widgetId', action.widgetId).set('pageId', action.pageId);
+      return state
+        .set('item', action.item)
+        .set('widgetId', action.widgetId)
+        .set('pageId', action.pageId);
     case constants.SET_BIZIFBOARD_CFG:
-      return state.set('item', action.item).set('widgetId', action.widgetId).set('pageId', action.pageId);
+      return state
+        .set('item', action.item)
+        .set('widgetId', action.widgetId)
+        .set('pageId', action.pageId);
     case constants.SET_GR_SEQ:
       return state.set('grSeq', action.payload);
     default:

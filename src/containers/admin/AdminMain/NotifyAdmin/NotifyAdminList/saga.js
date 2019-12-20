@@ -10,7 +10,7 @@ export function* getNotifyList(payload) {
   const { notifyList: prevList } = payload.payload;
   const param = payload.payload;
   delete param.notifyList;
-  
+
   const response = yield call(Axios.post, '/api/admin/v1/common/notifyadminlist', param);
   const notifyList = prevList.length > 0 ? prevList.concat(response.notifyList) : response.notifyList;
 

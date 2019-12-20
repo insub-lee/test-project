@@ -5,11 +5,11 @@ import Block from '../Block';
 import { defaultFormStuffs } from '../../../../config';
 
 const FormBlock = ({ onClick }) => (
-  <React.Fragment>
+  <>
     {Object.keys(defaultFormStuffs).map(key => (
       <Block key={key} label={defaultFormStuffs[key].label} icon={defaultFormStuffs[key].icon} onClick={() => onClick(key)} />
     ))}
-  </React.Fragment>
+  </>
 );
 
 FormBlock.propTypes = {

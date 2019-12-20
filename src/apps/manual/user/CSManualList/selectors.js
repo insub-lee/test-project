@@ -30,10 +30,7 @@ const makeCheckedManualList = () =>
   );
 
 const makeCheckedManualListByWidgetId = widgetId =>
-  createSelector(
-    makeSelectStateCSManualList,
-    state => state.getIn(['manualListMap', widgetId, 'checkedMualList']),
-  );
+  createSelector(makeSelectStateCSManualList, state => state.getIn(['manualListMap', widgetId, 'checkedMualList']));
 
 const makeSelectCompareViewList = () =>
   createSelector(

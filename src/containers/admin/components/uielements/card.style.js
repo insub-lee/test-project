@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Cards from './card';
 import Mark from 'images/bizstore/mark.png';
 import CheckedIcon from 'images/bizstore/icon-using.png';
+import Cards from './card';
 
 const CardComp = props => <Cards {...props} />;
 

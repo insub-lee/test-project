@@ -21,7 +21,7 @@ class NotifyImgChild extends PureComponent {
     }
   }
 
-  onFileUploaded = (file) => {
+  onFileUploaded = file => {
     const tmpArr = fromJS(this.state.uploadFiles).toJS();
     // one file upload 최신 파일만 업로드 되게
     tmpArr.splice(0, 0, file);
@@ -30,31 +30,28 @@ class NotifyImgChild extends PureComponent {
     });
     // 변경 작업(seq만 저장되도록)
     this.handleChangeImage(tmpArr[0].seq);
-  }
+  };
 
-  handleChangeTitle = (e) => {
+  handleChangeTitle = e => {
     const copyImgList = this.state.imgList;
     copyImgList.TITLE = e.target.value;
     this.setState({ imgList: copyImgList, value: copyImgList.TITLE }); // eslint-disable-line
-  }
+  };
 
-  handleChangeUrl = (e) => {
+  handleChangeUrl = e => {
     const copyImgList = this.state.imgList;
     copyImgList.URL = e.target.value;
     this.setState({ imgList: copyImgList, value: copyImgList.URL }); // eslint-disable-line
-  }
+  };
 
-  handleChangeImage = (e) => {
+  handleChangeImage = e => {
     const copyImgList = this.state.imgList;
     copyImgList.IMAGE = e;
     this.setState({ imgList: copyImgList, value: copyImgList.IMAGE }); // eslint-disable-line
-  }
+  };
 
   render() {
-    const {
-      index,
-      setDeletedImgIndex,
-    } = this.props;
+    const { index, setDeletedImgIndex } = this.props;
 
     const { imgList, uploadFiles } = this.state;
 
@@ -73,30 +70,20 @@ class NotifyImgChild extends PureComponent {
                     height={100}
                     borderStyle="none"
                   >
-                    {imgList.IMAGE === '' ?
+                    {imgList.IMAGE === '' ? (
                       <div style={{ width: '100%', height: '100%' }}>
                         <p />
                         <ul>
-                          {
-                            uploadFiles.map(f => (
-                              <img
-                                src={`/img/thumb/200x200/${f.seq}`}
-                                alt={f.fileName}
-                                style={{ width: '100%', maxHeight: 100 }}
-                              />
-                            ))
-                          }
+                          {uploadFiles.map(f => (
+                            <img src={`/img/thumb/200x200/${f.seq}`} alt={f.fileName} style={{ width: '100%', maxHeight: 100 }} />
+                          ))}
                         </ul>
                       </div>
-                        :
+                    ) : (
                       <div style={{ width: '100%', height: '100%' }}>
-                        <img
-                          src={bannerImgUrl.get('320x240', imgList.IMAGE)}
-                          style={{ width: '100%', maxHeight: 100 }}
-                          alt="defualtImg"
-                        />
+                        <img src={bannerImgUrl.get('320x240', imgList.IMAGE)} style={{ width: '100%', maxHeight: 100 }} alt="defualtImg" />
                       </div>
-                    }
+                    )}
                   </Upload>
                 </td>
                 <td className="up">
@@ -104,13 +91,7 @@ class NotifyImgChild extends PureComponent {
                     {/* {intlObj.get(messages.bannerName)} */}
                     TITLE
                   </label>
-                  <Input
-                    id="subject"
-                    name="TITLE"
-                    type="text"
-                    value={imgList.TITLE}
-                    onChange={this.handleChangeTitle}
-                  />
+                  <Input id="subject" name="TITLE" type="text" value={imgList.TITLE} onChange={this.handleChangeTitle} />
                 </td>
               </tr>
               <tr>
@@ -119,19 +100,19 @@ class NotifyImgChild extends PureComponent {
                     {/* {intlObj.get(messages.bannerName)} */}
                     URL
                   </label>
-                  <Input
-                    placeholder="URL은 http:// 로 시작해주십시오."
-                    id="url"
-                    name="url"
-                    type="text"
-                    value={imgList.URL}
-                    onChange={this.handleChangeUrl}
-                  />
+                  <Input placeholder="URL은 http:// 로 시작해주십시오." id="url" name="url" type="text" value={imgList.URL} onChange={this.handleChangeUrl} />
                 </td>
               </tr>
             </tbody>
           </table>
-          <BtnIconWidgetDel className="delete" title="delete" onClick={() => { setDeletedImgIndex(imgList.SEQNO); }} style={{ display: 'inline-block' }} />
+          <BtnIconWidgetDel
+            className="delete"
+            title="delete"
+            onClick={() => {
+              setDeletedImgIndex(imgList.SEQNO);
+            }}
+            style={{ display: 'inline-block' }}
+          />
         </div>
       </div>  // eslint-disable-line
     );
@@ -145,4 +126,3 @@ NotifyImgChild.propTypes = {
 };
 
 export default NotifyImgChild;
-

@@ -53,9 +53,7 @@ class Grid extends Component {
             } = this.props;
 
             const scrollTop = Math.floor(this.grid.base.viewport.canvas.getScroll().scrollTop);
-            const startLoadingValue =
-              this.grid.base.viewport.canvas.canvas.scrollHeight -
-              this.grid.base.viewport.canvas.canvas.offsetHeight;
+            const startLoadingValue = this.grid.base.viewport.canvas.canvas.scrollHeight - this.grid.base.viewport.canvas.canvas.offsetHeight;
             // rowNum을 구할 때 필요한 40은 Grid의 Row의 높이값임
             const rowNum = Math.floor(this.grid.base.viewport.canvas.canvas.scrollHeight / 40);
             const EmptyRowsView = emptyRowsView;
@@ -99,12 +97,7 @@ class Grid extends Component {
                 }
               }
 
-              loadingGridDataFunctions.loadingOrganizationUser(
-                keywordSearched,
-                loadingCountSearch + 1,
-                compCdSearched,
-                tabType[selected],
-              );
+              loadingGridDataFunctions.loadingOrganizationUser(keywordSearched, loadingCountSearch + 1, compCdSearched, tabType[selected]);
               loadingGridDataFunctions.updateLoadingCount(selected, type);
             }
             setScrollTop(scrollTop, selected);
@@ -121,9 +114,7 @@ class Grid extends Component {
   getSnapshotBeforeUpdate(prevProps) {
     const { users } = this.props;
     // 추가 데이터 로딩 중일때 막아 두었던 전체 체크 박스를 다시 활성화 시켜주는 작업
-    if (prevProps.users !== users &&
-          this.grid && this.grid.selectAllCheckbox &&
-          this.grid.selectAllCheckbox.nextSibling) {
+    if (prevProps.users !== users && this.grid && this.grid.selectAllCheckbox && this.grid.selectAllCheckbox.nextSibling) {
       this.grid.selectAllCheckbox.removeAttribute('disabled');
       this.grid.selectAllCheckbox.nextSibling.removeAttribute('style');
       return null;
@@ -132,15 +123,9 @@ class Grid extends Component {
   }
 
   render() {
-    let {
-      users,
-    } = this.props;
+    let { users } = this.props;
 
-    const {
-      scrollTop,
-      setScrollTop,
-      selected,
-    } = this.props;
+    const { scrollTop, setScrollTop, selected } = this.props;
 
     const {
       organizationSearchResult,
@@ -186,15 +171,10 @@ class Grid extends Component {
       loadingGridDataFunctions.backScrollTopFlag(gridType);
     }
 
-    const rowGetter = (i) => {
+    const rowGetter = i => {
       if (users[i] !== undefined) {
         const content = {
-          GRID_DATA: [
-            <UserProfile
-              userProfile={users[i]}
-              key={users[i].EMP_NO}
-            />,
-          ],
+          GRID_DATA: [<UserProfile userProfile={users[i]} key={users[i].EMP_NO} />],
           users: users[i],
         };
         return content;
@@ -209,7 +189,7 @@ class Grid extends Component {
     };
 
     // ****************** 조직도 선택목록 연동 ******************
-    const onRowsSelected = (rows) => {
+    const onRowsSelected = rows => {
       this.setState({
         selectedIndexes: selectedIndexes.concat(rows.map(r => r.rowIdx)),
       });
@@ -219,7 +199,7 @@ class Grid extends Component {
       loadSelected(selectedUsers);
     };
 
-    const onRowsDeselected = (rows) => {
+    const onRowsDeselected = rows => {
       const rowIndexes = rows.map(r => r.rowIdx);
       const empNoArr = rows.map(r => r.row.users.EMP_NO);
       this.setState({
@@ -234,7 +214,7 @@ class Grid extends Component {
     // ****************** 조직도 선택목록 연동 끝 ******************
 
     // ****************** 조직도 프로필 연동 ******************
-    const onRowClick = (rows) => {
+    const onRowClick = rows => {
       loadProfileData(users[rows].USER_ID);
       loadSelectedUser(users[rows]);
     };
@@ -243,14 +223,16 @@ class Grid extends Component {
     return (
       <ReactDataGridWrapper gridHeight={isTab ? 393 : 436}>
         <ReactDataGrid
-          ref={(node) => { this.grid = node; }}
+          ref={node => {
+            this.grid = node;
+          }}
           rowKey="EMP_NO"
           columns={getColumns()}
           rowGetter={rowGetter}
           rowsCount={users.length}
           onRowClick={isProfile ? onRowClick : false}
           enableRowSelect={!isProfile}
-          enableCellSelect={true}
+          enableCellSelect
           rowSelection={{
             showCheckbox: !isProfile,
             enableShiftSelect: true,

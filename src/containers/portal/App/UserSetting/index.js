@@ -239,13 +239,6 @@ export function mapDispatchToProps(dispatch) {
 
 const withReducer = injectReducer({ key: 'messagetab', reducer });
 const withSaga = injectSaga({ key: 'messagetab', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(SettingsPopover);
+export default compose(withReducer, withSaga, withConnect)(SettingsPopover);

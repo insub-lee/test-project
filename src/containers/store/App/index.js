@@ -43,11 +43,7 @@ import storeHome from '../../../images/bizstore/home-appstore.png';
 import AppCategory from '../components/AppCategory';
 import BizCategory from '../components/BizCategory';
 
-const {
-  Header,
-  Content,
-  Sider,
-} = Layout;
+const { Header, Content, Sider } = Layout;
 
 class App extends Component {
   constructor(props) {
@@ -81,7 +77,7 @@ class App extends Component {
       const paths = pathname.split('/');
       if (paths.length > 3) {
         const menu = paths[3]; // /store/appMain/bizStore/*biz*
-        menuList.forEach((m) => {
+        menuList.forEach(m => {
           const newMenuName = lang.get('NAME', m);
           if (m.URL.split('/')[3] === menu && this.props.menuName !== newMenuName) {
             this.props.changeMenuName(newMenuName);
@@ -102,11 +98,11 @@ class App extends Component {
     this.setState({ visible });
   }
 
-  searchEnter = (e) => {
+  searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
-  }
+  };
 
   search = () => {
     const searchword = this.searchInput.input.value;
@@ -116,44 +112,42 @@ class App extends Component {
 
     if (searchword.trim() === '') {
       this.props.history.push(`/store/appMain/bizStore/${type}/list`);
-    } else if (this.props.searchword !== searchword || (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet')) {
+    } else if (this.props.searchword !== searchword || this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') {
       this.props.history.push(`/store/appMain/bizStore/${type}/search/${searchword}`);
     }
-  }
+  };
 
   hide = () => {
     this.setState({
       visible: false,
     });
-  }
+  };
 
   makeMenu = menuList => (
     <ul>
-      {
-        menuList.map(m => (
-          <li key={`SCR_CD_${m.SCR_CD}`}>
-            <Link
-              to={m.URL}
-              title={lang.get('NAME', m)}
-              onClick={() => {
-                this.onClickMenu();
-                this.props.changeSearchword('');
-              }}
-            >
-              {lang.get('NAME', m)}
-            </Link>
-          </li>
-        ))
-      }
+      {menuList.map(m => (
+        <li key={`SCR_CD_${m.SCR_CD}`}>
+          <Link
+            to={m.URL}
+            title={lang.get('NAME', m)}
+            onClick={() => {
+              this.onClickMenu();
+              this.props.changeSearchword('');
+            }}
+          >
+            {lang.get('NAME', m)}
+          </Link>
+        </li>
+      ))}
     </ul>
   );
 
-  handleOnClick = (node) => {
+  handleOnClick = node => {
     this.props.history.push(`/store/appMain/bizStore/app/list/${node.key}`);
     this.setState({ visible: false });
-  }
+  };
 
-  handleTreeOnClick = (node) => {
+  handleTreeOnClick = node => {
     if (node.children || node.MENU_EXIST_YN === 'N') {
       this.props.history.push(`/store/appMain/bizStore/biz/list/${node.key}`);
     } else {
@@ -164,19 +158,11 @@ class App extends Component {
 
   makecate = appbizGubun => (
     <div>
-      {
-        appbizGubun === 0 ?
-          <AppCategory
-            handleOnClick={this.handleOnClick}
-            menuNum={0}
-            selectedIndex={-1}
-            preUrl="/store/appMain/bizStore"
-          /> :
-          <BizCategory
-            handleOnClick={this.handleTreeOnClick}
-            preUrl="/store/appMain/bizStore"
-          />
-      }
+      {appbizGubun === 0 ? (
+        <AppCategory handleOnClick={this.handleOnClick} menuNum={0} selectedIndex={-1} preUrl="/store/appMain/bizStore" />
+      ) : (
+        <BizCategory handleOnClick={this.handleTreeOnClick} preUrl="/store/appMain/bizStore" />
+      )}
     </div>
   );
 
@@ -191,9 +177,7 @@ class App extends Component {
       appbizGubun,
     } = this.props;
 
-    const {
-      mobileSearchVisible,
-    } = this.state;
+    const { mobileSearchVisible } = this.state;
 
     const mobileSearch = () => {
       if (mobileSearchVisible) {
@@ -210,29 +194,17 @@ class App extends Component {
 
     return (
       <ThemeProvider theme={themes.themedefault}>
-        <Layout
-          className="storeLayout"
-          style={{ minHeight: '100vh' }}
-        >
-          <Sider
-            trigger={null}
-            collapsible
-            collapsed={collapsed}
-            className="siderLayout"
-          />
+        <Layout className="storeLayout" style={{ minHeight: '100vh' }}>
+          <Sider trigger={null} collapsible collapsed={collapsed} className="siderLayout" />
           <AppWrapper style={{ width: '100%' }}>
             <Header className="storeHeader">
               <Trigger className="triggerSider">
-                <Icon
-                  className="trigger"
-                  type={collapsed ? 'sider-unfold' : 'sider-fold'}
-                  onClick={() => toggleCollapseSidebar()}
-                />
+                <Icon className="trigger" type={collapsed ? 'sider-unfold' : 'sider-fold'} onClick={() => toggleCollapseSidebar()} />
               </Trigger>
-              {(appbizGubun === 0 || appbizGubun === 1) || (currentView !== 'Mobile' && currentView !== 'Tablet') ?
+              {appbizGubun === 0 || appbizGubun === 1 || (currentView !== 'Mobile' && currentView !== 'Tablet') ? (
                 <Popover
                   placement="bottomLeft"
-                  content={(currentView === 'Mobile' || currentView === 'Tablet') ? this.makecate(appbizGubun) : this.makeMenu(menuList)}
+                  content={currentView === 'Mobile' || currentView === 'Tablet' ? this.makecate(appbizGubun) : this.makeMenu(menuList)}
                   // content={hamburgerMenu}
                   overlayClassName="storeSubmenu"
                   trigger="click"
@@ -243,17 +215,15 @@ class App extends Component {
                     <span className="icon icon-menu" />
                   </Button>
                 </Popover>
-                : ''}
-              {(appbizGubun === 3 || appbizGubun === 4) && (currentView === 'Mobile' || currentView === 'Tablet') ?
-                <Button
-                  onClick={() => history.goBack()}
-                  className="goBack"
-                  title={intlObj.get(messages.goBack)}
-                />
-                : ''}
-              <h2 className="pageHeader">
-                {this.props.menuName}
-              </h2>
+              ) : (
+                ''
+              )}
+              {(appbizGubun === 3 || appbizGubun === 4) && (currentView === 'Mobile' || currentView === 'Tablet') ? (
+                <Button onClick={() => history.goBack()} className="goBack" title={intlObj.get(messages.goBack)} />
+              ) : (
+                ''
+              )}
+              <h2 className="pageHeader">{this.props.menuName}</h2>
               <div className="onCenter">
                 <h1 className="siteHeader">
                   <Link to="/store">
@@ -262,8 +232,8 @@ class App extends Component {
                 </h1>
                 <Button className="headerMenu bizLogo" title={intlObj.get(messages.menu)} />
               </div>
-              {(currentView === 'Mobile' || currentView === 'Tablet') ?
-                <div className={mobileSearchVisible ? 'onRight mobile active' : 'onRight mobile'} >
+              {currentView === 'Mobile' || currentView === 'Tablet' ? (
+                <div className={mobileSearchVisible ? 'onRight mobile active' : 'onRight mobile'}>
                   <button
                     title={intlObj.get(messages.close)}
                     style={{
@@ -282,26 +252,28 @@ class App extends Component {
                       placeholder={intlObj.get(messages.enterSearchword)}
                       title={intlObj.get(messages.searchBizStore)}
                       onKeyPress={this.searchEnter}
-                      ref={(ref) => { this.searchInput = ref; }}
+                      ref={ref => {
+                        this.searchInput = ref;
+                      }}
                     />
                   </div>
-                  <button
-                    title={intlObj.get(messages.search)}
-                    onClick={mobileSearch}
-                    className="searchButton"
-                  />
-                </div> :
+                  <button title={intlObj.get(messages.search)} onClick={mobileSearch} className="searchButton" />
+                </div>
+              ) : (
                 <div className="onRight">
                   <div className="searchInput store">
                     <Input
                       placeholder=""
                       title={intlObj.get(messages.searchBizStore)}
                       onKeyPress={this.searchEnter}
-                      ref={(ref) => { this.searchInput = ref; }}
+                      ref={ref => {
+                        this.searchInput = ref;
+                      }}
                     />
                     <button className="searchButton" title={intlObj.get(messages.search)} onClick={this.search} />
                   </div>
-                </div>}
+                </div>
+              )}
             </Header>
 
             <Content className="storeContent">
@@ -333,16 +305,14 @@ App.propTypes = {
   appbizGubun: PropTypes.number.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    toggleCollapseSidebar: () => dispatch(actions.toggleCollapseSidebar()),
-    historyPush: url => dispatch(push(url)),
-    changeSearchword: searchword => dispatch(actions.changeSearchword(searchword)),
-    changeMenuName: menuName => dispatch(actions.changeMenuName(menuName)),
-    getMenu: SCRGRP_CD => dispatch(actions.getMenu(SCRGRP_CD)),
-    menuAuthChk: (pathname, history, SCRGRP_CD) => dispatch(actions.menuAuthChk(pathname, history, SCRGRP_CD)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  toggleCollapseSidebar: () => dispatch(actions.toggleCollapseSidebar()),
+  historyPush: url => dispatch(push(url)),
+  changeSearchword: searchword => dispatch(actions.changeSearchword(searchword)),
+  changeMenuName: menuName => dispatch(actions.changeMenuName(menuName)),
+  getMenu: SCRGRP_CD => dispatch(actions.getMenu(SCRGRP_CD)),
+  menuAuthChk: (pathname, history, SCRGRP_CD) => dispatch(actions.menuAuthChk(pathname, history, SCRGRP_CD)),
+});
 
 const mapStateToProps = createStructuredSelector({
   menus: selectors.makeSelectMenus(),

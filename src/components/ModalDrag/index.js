@@ -6,9 +6,11 @@ class BuildTitle extends React.Component {
   componentDidMount() {
     this.modalDom = document.getElementsByClassName('ant-modal-wrap')[this.props.num];
   }
-  updateTransform = (transformStr) => {
+
+  updateTransform = transformStr => {
     this.modalDom.style.transform = transformStr;
   };
+
   render() {
     const { title } = this.props;
     return (

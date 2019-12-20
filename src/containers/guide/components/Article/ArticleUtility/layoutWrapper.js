@@ -3,10 +3,7 @@ import PropTypes from 'prop-types';
 import LayoutContentWrapper from './layoutWrapper.style';
 
 const LayoutWrapper = props => (
-  <LayoutContentWrapper
-    className="devGuideLayoutContentWrapper"
-    {...props}
-  >
+  <LayoutContentWrapper className="devGuideLayoutContentWrapper" {...props}>
     {props.children}
   </LayoutContentWrapper>
 );

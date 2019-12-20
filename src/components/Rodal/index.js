@@ -7,23 +7,19 @@ import { createStructuredSelector } from 'reselect';
 import ScrollBar from 'react-custom-scrollbars';
 import * as selectors from '../../apps/boards/widgets/selectors';
 
-import {RodalContentStyle, DrilldownView} from './StyleRodal';
+import { RodalContentStyle, DrilldownView } from './StyleRodal';
 
 class testModal extends Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-
-    };
+    this.state = {};
 
     this.onClick = this.onClick.bind(this);
     this.comma = this.comma.bind(this);
   }
 
   shouldComponentUpdate(nextProps) {
-    const {
-      getDetailBoardData,
-    } = nextProps;
+    const { getDetailBoardData } = nextProps;
 
     if (getDetailBoardData.articleDetail !== undefined) {
       return true;
@@ -35,81 +31,86 @@ class testModal extends Component {
     window.open(url);
   }
 
-  comma(num){
-    var len, point, str;  
-       
-    num = num + "";  
-    point = num.length % 3 ;
-    len = num.length;  
-   
-    str = num.substring(0, point);  
-    while (point < len) {  
-        if (str != "") str += ".";  
-        str += num.substring(point, point + 3);  
-        point += 3;  
-    }  
-     
+  comma(num) {
+    let len;
+    let point;
+    let str;
+
+    num += '';
+    point = num.length % 3;
+    len = num.length;
+
+    str = num.substring(0, point);
+    while (point < len) {
+      if (str != '') str += '.';
+      str += num.substring(point, point + 3);
+      point += 3;
+    }
+
     return str;
- 
-}
+  }
 
   render() {
     const { getDetailBoardData } = this.props;
 
-    const RenderView = (detailView) => {
+    const RenderView = detailView => {
       const Detail = detailView.articleDetail.arDetail;
 
-      const c = Detail.replace(/\\/ig, '').replace(/"/ig, '');
-      const a = c.indexOf("html:");
-      //const b = c.lastIndexOf("addDiv");
-      const b = c.indexOf("addDiv");
+      const c = Detail.replace(/\\/gi, '').replace(/"/gi, '');
+      const a = c.indexOf('html:');
+      // const b = c.lastIndexOf("addDiv");
+      const b = c.indexOf('addDiv');
 
       const result = c.substring(a + 5, b - 1);
 
-      return (
-        <div dangerouslySetInnerHTML= { {__html: result } } />
-      );
+      return <div dangerouslySetInnerHTML={{ __html: result }} />;
     };
 
-    const RenderList = (list) => {
+    const RenderList = list => {
       if (this.props.tabNum === '1') {
-        return (
-          this.props.setIfBoardDataList[0].map(list => 
-            <li onClick={() => {this.props.show(list, this.props.tabNum)}} >
+        return this.props.setIfBoardDataList[0].map(list => (
+          <li
+            onClick={() => {
+              this.props.show(list, this.props.tabNum);
+            }}
+          >
             <button className="ellipsis">
               <span>· [전사]</span>
               {list.arTitle}
             </button>
           </li>
-          )
-        )
-      } else if (this.props.tabNum === '2') {
-        return (
-          this.props.setIfBoardDataList[1].map(list => 
-            <li onClick={() => {this.props.show(list, this.props.tabNum)}} >
-            <button className="ellipsis">
-              <span>· [전사]</span>
-              {list.arTitle}
-            </button>
-          </li>
-          )
-        )
-      } else {
-        return (
-          this.props.setIfBoardDataList[2].map(list => 
-            <li onClick={() => {this.props.show(list, this.props.tabNum)}} >
-            <button className="ellipsis">
-              <span>· [전사]</span>
-              {list.arTitle}
-            </button>
-          </li>
-          )
-        )
+        ));
       }
-    }
+      if (this.props.tabNum === '2') {
+        return this.props.setIfBoardDataList[1].map(list => (
+          <li
+            onClick={() => {
+              this.props.show(list, this.props.tabNum);
+            }}
+          >
+            <button className="ellipsis">
+              <span>· [전사]</span>
+              {list.arTitle}
+            </button>
+          </li>
+        ));
+      }
+      return this.props.setIfBoardDataList[2].map(list => (
+        <li
+          onClick={() => {
+            this.props.show(list, this.props.tabNum);
+          }}
+        >
+          <button className="ellipsis">
+            <span>· [전사]</span>
+            {list.arTitle}
+          </button>
+        </li>
+      ));
+    };
 
-    const RenderRightView = (view) => {
-      const article = view.article;
+    const RenderRightView = view => {
+      const { article } = view;
       const files = view.articleFiles;
 
       const { tabNum } = this.props;
@@ -125,51 +126,51 @@ class testModal extends Component {
                       <img
                         src={`/portalWeb/uploadfile/pictures/${article.empnoRegist}.jpg`}
                         alt={article.empnoRegist}
-                        onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+                        onError={e => {
+                          e.target.src = '/no_img_pro.jpg';
+                        }}
                       />
                     </div>
                   </li>
-                  <li className="name">
-                    {article.empName}
-                  </li>
-                  <li className="empNo">
-                    ({article.empnoRegist})
-                  </li>
-                  <li className="dept">
-                    {article.deptName}
-                  </li>
-                  <li className="position">
-                    {article.positionName}
-                  </li>
+                  <li className="name">{article.empName}</li>
+                  <li className="empNo">({article.empnoRegist})</li>
+                  <li className="dept">{article.deptName}</li>
+                  <li className="position">{article.positionName}</li>
                 </ul>
                 <div className="writtenDate">{article.regDt}</div>
                 <h1 className="title ellipsis">{article.arTitle}</h1>
               </div>
-              {files.length > 0 ?
-              <div className="attachedfiles">
-                <div className="saveAll">
-                  <button title="모두 저장">
-                    {/* <span>모두 저장</span> */}
-                  </button>
+              {files.length > 0 && (
+                <div className="attachedfiles">
+                  <div className="saveAll">
+                    <button title="모두 저장">{/* <span>모두 저장</span> */}</button>
+                  </div>
+                  <table>
+                    <tbody>
+                      {files.map(list => (
+                        <tr>
+                          <td>
+                            <p className="iconAttachedfile">
+                              {list.fileName} <span>({`${this.comma(list.fileSize)}KB`})</span>
+                            </p>
+                          </td>
+                          <td>
+                            <button
+                              className="iconSave"
+                              title="저장하기"
+                              onClick={() => {
+                                this.onClick(list.fileUrl);
+                              }}
+                            >
+                              저장
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <table>
-                  <tbody>
-                    {files.map(list =>
-                      <tr>
-                      <td>
-                        <p className="iconAttachedfile">{list.fileName} <span>({`${(this.comma(list.fileSize))}KB`})</span></p>
-                      </td>
-                      <td>
-                        <button className="iconSave" title="저장하기" onClick={() =>{this.onClick(list.fileUrl)}}>저장</button>
-                      </td>
-                    </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-              :
-              false
-              }
+              )}
             </ScrollBar>
           </div>
           <div className="viewBottom">
@@ -197,24 +198,13 @@ class testModal extends Component {
         <Row type="flex" justify="space-between">
           <Col xs={24} md={24} xl={16} className="leftActivity">
             <ScrollBar className="rodalCustomScrollbar">
-              <div className="content">
-                {getDetailBoardData.articleDetail !== undefined ?
-                RenderView(getDetailBoardData)
-                :
-                <div />
-                }
-              </div>
+              <div className="content">{getDetailBoardData.articleDetail !== undefined ? RenderView(getDetailBoardData) : <div />}</div>
             </ScrollBar>
           </Col>
-          <Col xl={8} className="rightActivity">{/* MobileView에서 숨김 */}
+          <Col xl={8} className="rightActivity">
+            {/* MobileView에서 숨김 */}
             <div className="view">
-              <DrilldownView>
-                {getDetailBoardData.article !== undefined ?
-                  RenderRightView(getDetailBoardData)
-                  :
-                  <div />
-                }
-              </DrilldownView>
+              <DrilldownView>{getDetailBoardData.article !== undefined ? RenderRightView(getDetailBoardData) : <div />}</DrilldownView>
             </div>
           </Col>
         </Row>

@@ -5,29 +5,18 @@ import invariant from 'invariant';
 import conformsTo from 'lodash/conformsTo';
 
 import checkStore from './checkStore';
-import {
-  DAEMON,
-  ONCE_TILL_UNMOUNT,
-  RESTART_ON_REMOUNT,
-  WIDGET,
-} from './constants';
+import { DAEMON, ONCE_TILL_UNMOUNT, RESTART_ON_REMOUNT, WIDGET } from './constants';
 
 const allowedModes = [RESTART_ON_REMOUNT, DAEMON, ONCE_TILL_UNMOUNT, WIDGET];
 
-const checkKey = key => invariant(
-  isString(key) && !isEmpty(key),
-  '(app/utils...) injectSaga: Expected `key` to be a non empty string',
-);
+const checkKey = key => invariant(isString(key) && !isEmpty(key), '(app/utils...) injectSaga: Expected `key` to be a non empty string');
 
-const checkDescriptor = (descriptor) => {
+const checkDescriptor = descriptor => {
   const shape = {
     saga: isFunction,
     mode: mode => isString(mode) && allowedModes.includes(mode),
   };
-  invariant(
-    conformsTo(descriptor, shape),
-    '(app/utils...) injectSaga: Expected a valid saga descriptor',
-  );
+  invariant(conformsTo(descriptor, shape), '(app/utils...) injectSaga: Expected a valid saga descriptor');
 };
 
 export function injectSagaFactory(store, isValid) {
@@ -51,13 +40,14 @@ export function injectSagaFactory(store, isValid) {
       }
     }
 
-    if(mode === WIDGET) {
+    if (mode === WIDGET) {
       if (!hasSaga || oldDescriptor === 'done' || oldDescriptor.task.isCancelled()) hasSaga = false;
     }
 
     if (!hasSaga || mode === RESTART_ON_REMOUNT) {
       console.debug('>>> inject saga', key);
-      store.injectedSagas[key] = { // eslint-disable-line no-param-reassign
+      store.injectedSagas[key] = {
+        // eslint-disable-line no-param-reassign
         ...newDescriptor,
         task: store.runSaga(saga, args),
       };

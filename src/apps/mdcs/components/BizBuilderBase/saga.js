@@ -150,16 +150,19 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     },
     { BUILDER: 'saveTaskComplete' },
   );
-  // 결재 저장
-  const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
-    DRAFT_PROCESS: {
-      ...processRule,
-      DRAFT_TITLE: formData.TITLE,
-      WORK_SEQ: workSeq,
-      TASK_SEQ: taskSeq,
-      REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
-    },
-  });
+
+  if (Object.keys(processRule).length !== 0) {
+    // 결재 저장
+    const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
+      DRAFT_PROCESS: {
+        ...processRule,
+        DRAFT_TITLE: formData.TITLE,
+        WORK_SEQ: workSeq,
+        TASK_SEQ: taskSeq,
+        REL_TYPE: 1, // 고정(사용안하게 되면 삭제필요)
+      },
+    });
+  }
 
   yield put(actions.successSaveTask(id));
   yield put(actions.getBuilderData(reloadId || id, workSeq, -1));
@@ -285,6 +288,12 @@ function* deleteFav({ id, apiArr, callbackFunc }) {
   }
 }
 
+function* getDraftProcess({ id, draftId }) {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draftprocess`, { PARAM: { DRAFT_ID: draftId } });
+  const { draftProcess } = response;
+  yield put(actions.setDraftProcess(id, draftProcess));
+}
+
 export default function* watcher() {
   const arg = arguments[0];
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.id}`, getBuilderData);
@@ -293,16 +302,17 @@ export default function* watcher() {
   yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.id}`, getProcessRule);
   yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.id}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
-  yield takeEvery(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);
-  yield takeEvery(`${actionTypes.SAVE_TASK}_${arg.id}`, saveTask);
-  yield takeEvery(`${actionTypes.MODIFY_TASK}_${arg.id}`, modifyTask);
-  yield takeEvery(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.id}`, modifyTaskBySeq);
-  yield takeEvery(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
-  yield takeEvery(`${actionTypes.DELETE_EXTRA_TASK}_${arg.id}`, deleteExtraTask);
-  yield takeEvery(`${actionTypes.DELETE_FAV}_${arg.id}`, deleteFav);
-  yield takeEvery(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
+  yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);
+  yield takeLatest(`${actionTypes.SAVE_TASK}_${arg.id}`, saveTask);
+  yield takeLatest(`${actionTypes.MODIFY_TASK}_${arg.id}`, modifyTask);
+  yield takeLatest(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.id}`, modifyTaskBySeq);
+  yield takeLatest(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
+  yield takeLatest(`${actionTypes.DELETE_EXTRA_TASK}_${arg.id}`, deleteExtraTask);
+  yield takeLatest(`${actionTypes.DELETE_FAV}_${arg.id}`, deleteFav);
+  yield takeLatest(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
   yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.id}`, revisionTask);
   yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.id}`, getRevisionHistory);
+  yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.id}`, getDraftProcess);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

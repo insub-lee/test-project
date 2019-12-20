@@ -8,39 +8,39 @@ class MouseOverIcons extends React.Component {
     const { exitDockItem } = this.props;
 
     exitDockItem(dockId);
-  }
+  };
 
   fixDockItem = () => {
     const { dockId } = this.props;
     const { fixDockItem } = this.props;
 
     fixDockItem(dockId);
-  }
+  };
 
   unfixDockItem = () => {
     const { dockId } = this.props;
     const { unfixDockItem } = this.props;
 
     unfixDockItem(dockId);
-  }
+  };
 
   checker = () => {
     const { dockYn, execYn } = this.props;
 
     if (dockYn === 'Y' && execYn === 'Y') {
       return 'YY';
-    } else if (dockYn === 'Y' && execYn === 'N') {
+    }
+    if (dockYn === 'Y' && execYn === 'N') {
       return 'YN';
-    } else if (dockYn === 'N' && execYn === 'Y') {
+    }
+    if (dockYn === 'N' && execYn === 'Y') {
       return 'NY';
     }
     return 'NN';
-  }
+  };
 
   render() {
-    const {
-      isMouseOver,
-    } = this.props;
+    const { isMouseOver } = this.props;
 
     let result = [];
     const content = {
@@ -50,9 +50,7 @@ class MouseOverIcons extends React.Component {
         <div className="mouseOverIcons exitDockItemBtn" onClick={this.exitDockItem} role="button" tabIndex="0" onKeyDown={() => {}} key={2} />,
       ],
       // dock 고정, 실행 중 아님
-      YN: [
-        <div className="mouseOverIcons removeDockItemBtn fullWidth" onClick={this.unfixDockItem} onKeyDown={() => {}} role="button" tabIndex="0" key={1} />,
-      ],
+      YN: [<div className="mouseOverIcons removeDockItemBtn fullWidth" onClick={this.unfixDockItem} onKeyDown={() => {}} role="button" tabIndex="0" key={1} />],
       // dock 고정 아님, 실행 중
       NY: [
         <div className="mouseOverIcons addDockItemBtn" onClick={this.fixDockItem} onKeyDown={() => {}} role="button" tabIndex="0" key={1} />,
@@ -69,13 +67,7 @@ class MouseOverIcons extends React.Component {
       btnStyle.display = 'none';
     }
 
-    return (
-      <StyledMouseOverIcons
-        style={btnStyle}
-      >
-        {result}
-      </StyledMouseOverIcons>
-    );
+    return <StyledMouseOverIcons style={btnStyle}>{result}</StyledMouseOverIcons>;
   }
 }
 

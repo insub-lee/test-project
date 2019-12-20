@@ -2,25 +2,22 @@ import React from 'react';
 import { Spin, Alert, Switch } from '../../../Abstraction/portalComponents';
 
 class App extends React.Component {
-  state = { loading: false }
+  state = { loading: false };
 
-  toggle = (value) => {
+  toggle = value => {
     this.setState({ loading: value });
-  }
+  };
 
   render() {
-    const container = (
-      <Alert
-        message="Alert message title"
-        description="Further details about the context of this alert."
-        type="info"
-      />
-    );
+    const container = <Alert message="Alert message title" description="Further details about the context of this alert." type="info" />;
     return (
       <div>
-        <Spin spinning={this.state.loading} delay={10}>{container}</Spin>
+        <Spin spinning={this.state.loading} delay={10}>
+          {container}
+        </Spin>
         <div style={{ marginTop: 16 }}>
-          Loading state：<Switch checked={this.state.loading} onChange={this.toggle} />
+          Loading state：
+          <Switch checked={this.state.loading} onChange={this.toggle} />
         </div>
       </div>
     );

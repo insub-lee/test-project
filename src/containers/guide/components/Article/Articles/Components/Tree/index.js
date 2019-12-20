@@ -11,5 +11,4 @@ const ArticleTree = () => (
   </div>
 );
 
-
 export default ArticleTree;

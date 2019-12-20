@@ -11,9 +11,9 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledContent from 'apps/mdcs/styled/Modals/StyledContent';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
+import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
 
-import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({

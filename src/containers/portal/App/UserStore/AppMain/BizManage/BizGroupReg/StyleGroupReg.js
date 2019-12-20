@@ -71,22 +71,33 @@ const StyleGroupReg = styled.div`
         &.top {
           vertical-align: top;
 
-          .num2, .num5, .num15 {
+          .num2,
+          .num5,
+          .num15 {
             display: block;
             padding-top: 6px;
           }
 
-          .num3, .num4, .num6, .num7, .num9, .num10,
-          .num11, .num12, .num13, .num14, .num16 {
+          .num3,
+          .num4,
+          .num6,
+          .num7,
+          .num9,
+          .num10,
+          .num11,
+          .num12,
+          .num13,
+          .num14,
+          .num16 {
             display: block;
             line-height: 34px;
           }
 
-          .num8, .num17 {
+          .num8,
+          .num17 {
             display: block;
             padding-top: 0;
           }
-
         }
 
         .num1 {
@@ -116,7 +127,7 @@ const StyleGroupReg = styled.div`
         padding-left: 12px;
 
         &:before {
-          content:url(${IconRequired});
+          content: url(${IconRequired});
           position: absolute;
           top: -2px;
           left: 0;
@@ -154,12 +165,14 @@ const StyleGroupReg = styled.div`
           top: 0;
         }
 
-        .ant-form-item-children-icon {display: none;}
+        .ant-form-item-children-icon {
+          display: none;
+        }
       }
     }
   }
 
-  // 향후 삭제 
+  // 향후 삭제
   .temp {
     display: block;
     padding: 0 10px;
@@ -182,7 +195,7 @@ const StyleGroupReg = styled.div`
         line-height: 1;
 
         &:after {
-          content: "";
+          content: '';
         }
       }
     }
@@ -255,7 +268,6 @@ const StyleGroupReg = styled.div`
         line-height: 23px;
       }
     }
-
   }
 
   //색상 선택
@@ -291,7 +303,6 @@ const StyleGroupReg = styled.div`
         > span > div {
           border-color: #000000 !important;
         }
-
       }
 
       > span > div {
@@ -299,9 +310,8 @@ const StyleGroupReg = styled.div`
         line-height: 35px;
         border: 2px solid transparent;
       }
-
     }
-  } 
+  }
 
   //회색 영역
   .subFormArea {
@@ -321,7 +331,6 @@ const StyleGroupReg = styled.div`
         }
       }
     }
-
   }
 
   // 안내(info) 목록
@@ -376,11 +385,11 @@ const StyleGroupReg = styled.div`
     vertical-align: top;
 
     // 커스터마이징
-    
+
     .resultsTableWrapper {
       width: calc(100% - 17px);
       padding: 5px;
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         margin-bottom: 20px;
       }
@@ -425,7 +434,6 @@ const StyleGroupReg = styled.div`
         }
       }
     }
-
   }
 
   // 파일 업로드
@@ -438,9 +446,8 @@ const StyleGroupReg = styled.div`
     background: #f3f3f3;
 
     .dropzone > div:hover {
-      
     }
-    
+
     .readyToUpload {
       width: 120px;
       height: 120px;
@@ -455,7 +462,8 @@ const StyleGroupReg = styled.div`
     }
   }
 
-  .deleteIconWrapper, .deleteScreenshots {
+  .deleteIconWrapper,
+  .deleteScreenshots {
     position: absolute;
     width: 15px;
     height: 15px;
@@ -508,7 +516,7 @@ const StyleGroupReg = styled.div`
         // IE11 이슈 해결
         max-width: 646px;
         padding: 0 !important;
-        margin: 0 !important;                
+        margin: 0 !important;
 
         > div {
           position: relative;
@@ -535,17 +543,15 @@ const StyleGroupReg = styled.div`
             border: 1px dashed #a4a4a4;
             background: url(${IconFileUpload}) no-repeat 50% 50%;
             cursor: pointer;
-    
+
             &:hover {
               border-color: #222222;
               background-image: url(${IconFileUploadHover});
             }
           }
         }
-
       }
-
-   }
+    }
   }
 
   //앱추가
@@ -591,7 +597,6 @@ const StyleGroupReg = styled.div`
         background-image: url(${IconFileUploadHover});
       }
     }
-
   }
 `;
 
@@ -612,7 +617,7 @@ const Vesions = styled.div`
       padding-right: 10px;
 
       &:after {
-        content:" . ";
+        content: ' . ';
         position: absolute;
         display: inline-block;
         width: 10px;

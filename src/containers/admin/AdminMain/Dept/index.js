@@ -191,74 +191,75 @@ class Dept extends React.Component {
     return false;
   };
 
-  render() {
-    // const {
-    //   type,
-    // } = this.props;
-    const type = '';
-    const comboOptions = comboList => comboList.map(item => <Option value={item.DEPT_ID}>{item.NAME_KOR}</Option>);
-    const handleTreeOnClick = node => {
-      this.setState({
-        DEPT_ID: node.DEPT_ID,
-        DEPT_NAME: lang.get('NAME', node),
-        DEPT_CD: node.DEPT_CD,
-        selectedIndex: node.DEPT_ID,
-        PRNT_ID: node.PRNT_ID,
-        NAME_KOR: node.NAME_KOR,
-        NAME_ENG: node.NAME_ENG,
-        NAME_CHN: node.NAME_CHN,
-        NAME_JPN: node.NAME_JPN,
-        NAME_ETC: node.NAME_ETC,
-        COMP_CD: node.COMP_CD,
-        // REG_USER_NAME: node.REG_USER_NAME,
-        // REG_DTTM: node.REG_DTTM,
-        // UPD_USER_NAME: node.UPD_USER_NAME,
-        // UPD_DTTM: node.UPD_DTTM,
-        mode: 'D',
-      });
-    };
+  comboOptions = comboList =>
+    comboList.map(item => (
+      <Option key={item.DEPT_ID} value={item.DEPT_ID}>
+        {item.NAME_KOR}
+      </Option>
+    ));
 
-    const onOk = () => {
-      if (this.state.PRNT_ID === -1) {
-        // feed.error(`${intlObj.get(messages.topcateno)}`);
-        feed.error('에러');
-      } else {
-        this.props.returnGateId(this.state.DEPT_ID, this.state.DEPT_NAME);
-      }
-    };
+  handleTreeOnClick = node => {
+    this.setState({
+      DEPT_ID: node.DEPT_ID,
+      DEPT_NAME: lang.get('NAME', node),
+      DEPT_CD: node.DEPT_CD,
+      selectedIndex: node.DEPT_ID,
+      PRNT_ID: node.PRNT_ID,
+      NAME_KOR: node.NAME_KOR,
+      NAME_ENG: node.NAME_ENG,
+      NAME_CHN: node.NAME_CHN,
+      NAME_JPN: node.NAME_JPN,
+      NAME_ETC: node.NAME_ETC,
+      COMP_CD: node.COMP_CD,
+      // REG_USER_NAME: node.REG_USER_NAME,
+      // REG_DTTM: node.REG_DTTM,
+      // UPD_USER_NAME: node.UPD_USER_NAME,
+      // UPD_DTTM: node.UPD_DTTM,
+      mode: 'D',
+    });
+  };
 
-    const returnGateInfo = node => {
-      this.setState({
-        mode: 'I',
-        DEPT_CD: '',
-        PRNT_ID: node.DEPT_ID,
-        NAME_KOR: '',
-        NAME_ENG: '',
-        NAME_CHN: '',
-        NAME_JPN: '',
-        NAME_ETC: '',
-        COMP_CD: node.COMP_CD,
-        selectedIndex: node.DEPT_ID,
-      });
-      // this.props.insertDept(DEPT_CD, this.state.DEPT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD);
-      this.textKor.focus();
-    };
+  onOk = () => {
+    if (this.state.PRNT_ID === -1) {
+      // feed.error(`${intlObj.get(messages.topcateno)}`);
+      feed.error('에러');
+    } else {
+      this.props.returnGateId(this.state.DEPT_ID, this.state.DEPT_NAME);
+    }
+  };
 
-    const returnGateDelete = (DEPT_ID, PRNT_ID, SORT_SQ) => {
-      // alert(resultObj1 + resultObj2);
-      this.props.deleteDept(DEPT_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
-    };
+  returnGateInfo = node => {
+    this.setState({
+      mode: 'I',
+      DEPT_CD: '',
+      PRNT_ID: node.DEPT_ID,
+      NAME_KOR: '',
+      NAME_ENG: '',
+      NAME_CHN: '',
+      NAME_JPN: '',
+      NAME_ETC: '',
+      COMP_CD: node.COMP_CD,
+      selectedIndex: node.DEPT_ID,
+    });
+    // this.props.insertDept(DEPT_CD, this.state.DEPT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD);
+    this.textKor.focus();
+  };
 
-    const moveDept = treeData => {
-      this.props.moveDept(this.state.selectedDept, treeData);
-    };
+  returnGateDelete = (DEPT_ID, PRNT_ID, SORT_SQ) => {
+    // alert(resultObj1 + resultObj2);
+    this.props.deleteDept(DEPT_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
+  };
 
-    const botBtn = mode => {
-      if (mode === 'I') {
-        // 등록
-        return (
-          <React.Fragment>
-            {/* <LinkBtnLgtGray onClick={() => {
+  moveDept = treeData => {
+    this.props.moveDept(this.state.selectedDept, treeData);
+  };
+
+  botBtn = mode => {
+    if (mode === 'I') {
+      // 등록
+      return (
+        <>
+          {/* <LinkBtnLgtGray onClick={() => {
                 this.setState({
                   mode: 'D',
                 });
@@ -266,68 +267,75 @@ class Dept extends React.Component {
             }}
             >취소
             </LinkBtnLgtGray> */}
-            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
-              저장
-            </StyledButton>
-          </React.Fragment>
-        );
-      }
-      if (mode === 'D') {
-        // 상세
-        return (
-          <React.Fragment>
-            {/* <div style={{ float: 'left' }}> */}
-            {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
-            {/* </div> */}
-            <StyledButton
-              className="btn-primary"
-              style={{ float: 'rigth' }}
-              onClick={() =>
-                this.setState({
-                  mode: 'U',
-                  orgNameKor: this.state.NAME_KOR,
-                  orgNameEng: this.state.NAME_ENG,
-                  orgNameChn: this.state.NAME_CHN,
-                  orgNameJpn: this.state.NAME_JPN,
-                  orgNameEtc: this.state.NAME_ETC,
-                  orgCompCd: this.state.COMP_CD,
-                  orgDeptCd: this.state.DEPT_CD,
-                })
-              }
-            >
-              수정
-            </StyledButton>
-          </React.Fragment>
-        );
-      } if (mode === 'U') {
-        // 수정
-        return (
-          <React.Fragment>
-            <StyledButton
-              className="btn-light"
-              onClick={() =>
-                this.setState({
-                  mode: 'D',
-                  NAME_KOR: this.state.orgNameKor,
-                  NAME_ENG: this.state.orgNameEng,
-                  NAME_CHN: this.state.orgNameChn,
-                  NAME_JPN: this.state.orgNameJpn,
-                  NAME_ETC: this.state.orgNameEtc,
-                  COMP_CD: this.state.orgCompCd,
-                  DEPT_CD: this.state.orgDeptCd,
-                })
-              }
-            >
-              취소
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
-              저장
-            </StyledButton>
-          </React.Fragment>
-        );
-      }
-      return '';
-    };
+          <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+            저장
+          </StyledButton>
+        </>
+      );
+    }
+    if (mode === 'D') {
+      // 상세
+      return (
+        <>
+          {/* <div style={{ float: 'left' }}> */}
+          {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
+          {/* </div> */}
+          <StyledButton
+            className="btn-primary"
+            style={{ float: 'rigth' }}
+            onClick={() =>
+              this.setState(prevState => ({
+                mode: 'U',
+                orgNameKor: prevState.NAME_KOR,
+                orgNameEng: prevState.NAME_ENG,
+                orgNameChn: prevState.NAME_CHN,
+                orgNameJpn: prevState.NAME_JPN,
+                orgNameEtc: prevState.NAME_ETC,
+                orgCompCd: prevState.COMP_CD,
+                orgDeptCd: prevState.DEPT_CD,
+              }))
+            }
+          >
+            수정
+          </StyledButton>
+        </>
+      );
+    }
+    if (mode === 'U') {
+      // 수정
+      return (
+        <>
+          <StyledButton
+            className="btn-light"
+            onClick={() =>
+              this.setState(prevState => ({
+                mode: 'D',
+                NAME_KOR: prevState.orgNameKor,
+                NAME_ENG: prevState.orgNameEng,
+                NAME_CHN: prevState.orgNameChn,
+                NAME_JPN: prevState.orgNameJpn,
+                NAME_ETC: prevState.orgNameEtc,
+                COMP_CD: prevState.orgCompCd,
+                DEPT_CD: prevState.orgDeptCd,
+              }))
+            }
+          >
+            취소
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+            저장
+          </StyledButton>
+        </>
+      );
+    }
+    return '';
+  };
+
+  render() {
+    // const {
+    //   type,
+    // } = this.props;
+    const type = '';
 
     return (
       <div>
@@ -339,22 +347,22 @@ class Dept extends React.Component {
               <div>
                 <Select value={this.props.selectedDept} onChange={this.onChangeDept}>
                   {/* <Option value={0}>공통</Option> */}
-                  {comboOptions(this.props.setDeptComboList)}
+                  {this.comboOptions(this.props.setDeptComboList)}
                   <Option value={0}>+그룹추가</Option>
                 </Select>
                 <AdminOrgTree
                   type={type}
                   treeData={this.props.deptTreeData}
-                  onClick={handleTreeOnClick}
-                  returnGateInfo={returnGateInfo}
-                  returnGateDelete={returnGateDelete}
+                  onClick={this.handleTreeOnClick}
+                  returnGateInfo={this.returnGateInfo}
+                  returnGateDelete={this.returnGateDelete}
                   history={this.props.history}
                   selectedIndex={this.state.selectedIndex}
                   canDrag
                   canDropOut={false}
                   canDrop={false}
-                  moveNode={moveDept}
-                  onOk={onOk}
+                  moveNode={this.moveDept}
+                  onOk={this.onOk}
                 />
               </div>
             </div>
@@ -466,7 +474,7 @@ class Dept extends React.Component {
                 </table>
               </StyleCategoryForm>
             </div>
-            <div className="buttonWrapper">{botBtn(this.state.mode)}</div>
+            <div className="buttonWrapper">{this.botBtn(this.state.mode)}</div>
           </div>
           <Footer />
         </StyleCategory>
@@ -477,22 +485,41 @@ class Dept extends React.Component {
 
 Dept.propTypes = {
   // type: PropTypes.string.isRequired,
-  show: PropTypes.bool, //eslint-disable-line
-  onCancel: PropTypes.func, //eslint-disable-line
-  getDeptTreeData: PropTypes.func, //eslint-disable-line
-  getChangeDeptTreeData: PropTypes.func, //eslint-disable-line
-  deptTreeData: PropTypes.array, //eslint-disable-line
-  selectedIndex: PropTypes.number, //eslint-disable-line
-  titleModalVisible: PropTypes.bool, //eslint-disable-line
-  history: PropTypes.object, //eslint-disable-line
-  returnGateId: PropTypes.func.isRequired, //eslint-disable-line
-  insertDept: PropTypes.func, //eslint-disable-line
-  updateDept: PropTypes.func, //eslint-disable-line
-  deleteDept: PropTypes.func, //eslint-disable-line
-  moveDept: PropTypes.func, //eslint-disable-line
-  getDeptComboList: PropTypes.func, //eslint-disable-line
-  setDeptComboList: PropTypes.array, //eslint-disable-line
+  show: PropTypes.bool,
+  onCancel: PropTypes.func,
+  getDeptTreeData: PropTypes.func,
+  getChangeDeptTreeData: PropTypes.func,
+  deptTreeData: PropTypes.array,
+  selectedIndex: PropTypes.number,
+  titleModalVisible: PropTypes.bool,
+  history: PropTypes.object,
+  returnGateId: PropTypes.func,
+  insertDept: PropTypes.func,
+  updateDept: PropTypes.func,
+  deleteDept: PropTypes.func,
+  moveDept: PropTypes.func,
+  getDeptComboList: PropTypes.func,
+  setDeptComboList: PropTypes.array,
   selectedDept: PropTypes.number.isRequired,
+};
+
+Dept.defaultProps = {
+  // type: PropTypes.string.isRequired,
+  show: false,
+  onCancel: () => {},
+  getDeptTreeData: () => {},
+  getChangeDeptTreeData: () => {},
+  deptTreeData: [],
+  selectedIndex: 0,
+  titleModalVisible: false,
+  history: PropTypes.object,
+  returnGateId: () => {},
+  insertDept: () => {},
+  updateDept: () => {},
+  deleteDept: () => {},
+  moveDept: () => {},
+  getDeptComboList: () => {},
+  setDeptComboList: [],
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -520,15 +547,8 @@ const mapStateToProps = createStructuredSelector({
   selectedIndex: selectors.makeSelectedIndex(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'Dept', saga });
 const withReducer = injectReducer({ key: 'Dept', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Dept);
+export default compose(withReducer, withSaga, withConnect)(Dept);

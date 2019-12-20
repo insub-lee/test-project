@@ -1,4 +1,4 @@
-const base = 'apps/WorkFlow/User/Draft';
+const base = 'apps/Workflow/User/Draft';
 export const GET_DRAFT_LIST = `${base}/GET_DRAFT_LIST`;
 export const SET_DRAFT_LIST = `${base}/SET_DRAFT_LIST`;
 export const SET_SELECTED_DRAFT = `${base}/SET_SELECTED_DRAFT`;

@@ -11,6 +11,8 @@ import Organization from 'containers/portal/components/Organization';
 import * as Feed from 'components/Feedback/functions';
 import cancelBtn from 'images/bizstore/cancel_button.png';
 import reasonBtn from 'images/bizstore/reason_button.png';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import Select, { SelectOption } from '../../../../../../components/Select';
 import messages from './messages';
 import StyleDataGrid from '../../components/uielements/dataGrid.style';
@@ -18,9 +20,6 @@ import StyleApp from './StyleAppOpinion';
 import Footer from '../../Footer';
 import { BtnDkGray, BtnLgtGray } from '../../components/uielements/buttons.style';
 import OpposeModal from './OpinionModal';
-
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -75,7 +74,7 @@ class AppSec extends Component {
     const { selectedIndexes } = this.state;
 
     if (appSecList && prevProps.appSecList && prevProps.appSecList.length !== appSecList.length) {
-      selectedIndexes.map((i) => {
+      selectedIndexes.map(i => {
         if (appSecList[i - 1]) {
           appSecList[i - 1].check = 'true';
           return appSecList[i - 1];
@@ -110,7 +109,7 @@ class AppSec extends Component {
     });
   };
 
-  onRowsSelected = (rows) => {
+  onRowsSelected = rows => {
     const { selectedIndexes, selectedApp } = this.state;
 
     const { appSecList } = this.props;
@@ -121,7 +120,7 @@ class AppSec extends Component {
     });
   };
 
-  onRowsDeselected = (rows) => {
+  onRowsDeselected = rows => {
     const { selectedIndexes, selectedApp } = this.state;
 
     let index = selectedIndexes.findIndex(i => i === rows.RNUM);

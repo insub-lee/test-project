@@ -165,7 +165,7 @@ class AppQna extends React.Component {
               <BtnWhiteWrite
                 onClick={() => qEdit(item.arSeq)}
                 style={{
-                  display: item.replyList.length === 0 && (this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ? 'block' : 'none',
+                  display: item.replyList.length === 0 && this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? 'block' : 'none',
                 }}
                 className="edit"
               >
@@ -427,15 +427,8 @@ const mapStateToProps = createStructuredSelector({
   qnaEditUrl: selectors.makeSelectQnaEditUrl(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppQna', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppQna', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppQna);
+export default compose(withReducer, withSaga, withConnect)(AppQna);

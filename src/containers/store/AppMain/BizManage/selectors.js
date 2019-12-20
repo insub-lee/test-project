@@ -2,15 +2,9 @@ import { createSelector } from 'reselect';
 
 const selectOrg = state => state.get('bizmanage');
 
-const makeCategoryData = () => createSelector(
-  selectOrg,
-  org => org.get('categoryData').toJS(),
-);
+const makeCategoryData = () => createSelector(selectOrg, org => org.get('categoryData').toJS());
 
-const makeSelectedIndex = () => createSelector(
-  selectOrg,
-  org => org.get('selectedIndex'),
-);
+const makeSelectedIndex = () => createSelector(selectOrg, org => org.get('selectedIndex'));
 
 // const makeModalVisible = () => createSelector(
 //   selectOrg,

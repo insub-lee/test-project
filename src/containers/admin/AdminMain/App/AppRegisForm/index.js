@@ -19,6 +19,8 @@ import MessageContent from 'components/Feedback/message.style2';
 
 import AntRadiobox from 'containers/admin/components/uielements/radiobox.style';
 import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from 'containers/admin/components/uielements/buttons.style';
+import StyledButton from 'components/Button/StyledButton';
+import StyledRadio from 'components/FormStuff/Radio';
 import messages from '../messages';
 
 import MyAppCategoryModal from '../AppCategoryModal';
@@ -27,8 +29,6 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import { StyleAppRegisForm, Vesions } from './StyleAppRegisForm';
-import StyledButton from 'components/Button/StyledButton';
-import StyledRadio from 'components/FormStuff/Radio';
 
 const RadioGroup = AntRadiobox(Radio.Group);
 const FormItem = Form.Item;
@@ -510,8 +510,8 @@ class AppRegisForm extends React.Component {
     return (
       <div>
         <MyAppCategoryModal show={this.state.MyAppCategoryModalShow} closeModal={this.MyAppCategoryModalClose} returnGateId={returnGateId} type="app" />
-        <AppSelector show={this.state.appPlus1} isAdmin={true} closeModal={closeAppPlus1Modal} addList={addList1} style={{ marginTop: 570 }} type="all" />
-        <AppSelector show={this.state.appPlus2} isAdmin={true} closeModal={closeAppPlus2Modal} addList={addList2} style={{ marginTop: 570 }} type="all" />
+        <AppSelector show={this.state.appPlus1} isAdmin closeModal={closeAppPlus1Modal} addList={addList1} style={{ marginTop: 570 }} type="all" />
+        <AppSelector show={this.state.appPlus2} isAdmin closeModal={closeAppPlus2Modal} addList={addList2} style={{ marginTop: 570 }} type="all" />
         <StyleAppRegisForm>
           <Form>
             {/* <h2 className="pageTitle">{intlObj.get(messages.appRegisTitle)}</h2> */}
@@ -1228,15 +1228,8 @@ const mapStateToProps = createStructuredSelector({
   wedgetColorList: selectors.makeSelectWedgetColorList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppRegisForm', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppRegisForm', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppRegisForm);
+export default compose(withReducer, withSaga, withConnect)(AppRegisForm);

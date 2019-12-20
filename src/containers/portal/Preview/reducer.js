@@ -19,7 +19,8 @@ const portalReducer = (state = initialState, action) => {
     case actionType.EXEC_APPS_SUCCESS:
       return state.set('selectedApp', action.resultValue).set('setMyMenuData', action.node);
     case actionType.RECEIVE_MYMENU_DATA_SUCCESS: {
-      return state.set('setMyMenuNodeData', action.payload)
+      return state
+        .set('setMyMenuNodeData', action.payload)
         .set('selectedIndex', action.selectedIndex)
         .set('menuName', action.menuName)
         .set('managerInfo', action.managerInfo);

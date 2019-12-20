@@ -62,9 +62,7 @@ export function* moveNode(payload) {
 }
 
 export function* insertNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
   const { node } = rowInfo;
   const { BIZGRP_ID } = node;
 
@@ -114,9 +112,7 @@ export function* insertNode(payload) {
 }
 
 export function* updateNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
   const langGubun = lang.getLocale();
 
   const { node } = rowInfo;
@@ -127,7 +123,9 @@ export function* updateNode(payload) {
 
   if (code === 200) {
     const newNode = {
-      ...node, ...bizMenu, title: lang.get('NAME', bizMenu),
+      ...node,
+      ...bizMenu,
+      title: lang.get('NAME', bizMenu),
     }; // 병합
     const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
     const newCategoryData = treeFunc.editNodeByKey(rowInfoN, treeData);

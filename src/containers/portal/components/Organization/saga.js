@@ -7,7 +7,6 @@ import * as actionType from './constants';
 // 그리드에 한번에 보여줄 사용자의 수
 const PAGE_CNT = 20;
 
-
 export function* getTreeData() {
   const response = yield call(Axios.get, '/api/common/v1/account/deptTree', { data: 'temp' });
   const list = JSON.parse(`[${response.result.join('')}]`);
@@ -375,7 +374,8 @@ export function* loadProfileData(payload) {
   const result = response.profile[0];
 
   yield put({
-    type: actionType.SET_PROFILE_DATA, result,
+    type: actionType.SET_PROFILE_DATA,
+    result,
     // selectedIndex: result.DEPT_ID
   });
 }

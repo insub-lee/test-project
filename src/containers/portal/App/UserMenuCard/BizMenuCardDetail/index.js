@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { Route, Switch } from 'react-router-dom';
+import { Icon, Spin } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -26,6 +27,8 @@ import StyleBizDetailContent from './StyleBizDetailContent';
 
 import BizMenuTree from '../../UserStore/components/Tree';
 import Footer from '../../UserStore/Footer';
+
+const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 class BizMenuCardDetail extends Component {
   componentDidMount() {
@@ -93,6 +96,7 @@ class BizMenuCardDetail extends Component {
       match: {
         params: { BIZGRP_ID },
       },
+      loading,
     } = this.props;
 
     return (
@@ -104,36 +108,38 @@ class BizMenuCardDetail extends Component {
         }}
       >
         <StyleBizDetail>
-          <TopMenu history={history} match={match} BIZGRP_ID={Number(BIZGRP_ID)} execMenu={execMenu} execPage={execPage}/>
-          <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }}>
-            <ul className="bizDetailContentWrapper">
-              <li className="leftContent inPage">
-                <h2>
-                  <button
-                    onClick={() => history.push(`${buttonPreUrl}/detail/info/${BIZGRP_ID}`)}
-                    className="ellipsis"
-                    style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
-                  >
-                    {lang.get('NAME', bizMenuData)}
-                  </button>
-                </h2>
-                {bizMenuData.children ? '' : <p style={{ paddingLeft: 12 }}>{intlObj.get(messages.noMenu)}</p>}
-                <BizMenuTree
-                  treeData={bizMenuData.children ? bizMenuData.children : []}
-                  onClick={this.handleTreeOnClick}
-                  selectedIndex={history.location.pathname.indexOf('/info') > -1 ? -1 : selectedIndex}
-                  generateNodeProps={() => ({})}
-                />
-              </li>
-              <li className="rightContent">
-                <Switch>
-                  <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
-                  <Route path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`} render={ props => (<AppInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
-                  <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} render={ props => (<PageInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
-                </Switch>
-              </li>
-            </ul>
-          </StyleBizDetailContent>
+          <Spin size="large" indicator={antIcon} spinning={loading}>
+            <TopMenu history={history} match={match} BIZGRP_ID={Number(BIZGRP_ID)} execMenu={execMenu} execPage={execPage}/>
+            <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }}>
+              <ul className="bizDetailContentWrapper">
+                <li className="leftContent inPage">
+                  <h2>
+                    <button
+                      onClick={() => history.push(`${buttonPreUrl}/detail/info/${BIZGRP_ID}`)}
+                      className="ellipsis"
+                      style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
+                    >
+                      {lang.get('NAME', bizMenuData)}
+                    </button>
+                  </h2>
+                  {bizMenuData.children ? '' : <p style={{ paddingLeft: 12 }}>{intlObj.get(messages.noMenu)}</p>}
+                  <BizMenuTree
+                    treeData={bizMenuData.children ? bizMenuData.children : []}
+                    onClick={this.handleTreeOnClick}
+                    selectedIndex={history.location.pathname.indexOf('/info') > -1 ? -1 : selectedIndex}
+                    generateNodeProps={() => ({})}
+                  />
+                </li>
+                <li className="rightContent">
+                  <Switch>
+                    <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
+                    <Route path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`} render={ props => (<AppInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
+                    <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} render={ props => (<PageInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
+                  </Switch>
+                </li>
+              </ul>
+            </StyleBizDetailContent>
+          </Spin>
         </StyleBizDetail>
         {preUrl.indexOf('myPage') > -1 ? '' : <Footer />}
       </div>
@@ -149,6 +155,7 @@ BizMenuCardDetail.propTypes = {
   handleGetBizMenu: PropTypes.func.isRequired,
   handleChangeSelectedIndex: PropTypes.func.isRequired,
   appBizGubun: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -162,6 +169,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   bizMenuData: selectors.makgeBizMenuData(),
   selectedIndex: selectors.makeSelectedIndex(),
+  loading: selectors.makeSelectLoading(),
 });
 
 const withConnect = connect(

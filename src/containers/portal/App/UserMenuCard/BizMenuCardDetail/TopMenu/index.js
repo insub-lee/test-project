@@ -1,11 +1,10 @@
+import Organization from 'containers/portal/components/Organization';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Popover, Row, Col, Button } from 'antd';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import * as feed from 'components/Feedback/functions';
+import { Popover, Row, Col } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -18,10 +17,18 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import StyleTopMenu from './StyleTopMenu';
-import { BtnWhiteArr, BtnIconShare } from '../../../UserStore/components/uielements/buttons.style';
-import AppMaNagerList from '../../../UserStore/components/AppManagerList';
+import { BtnWhiteArr } from '../../../UserStore/components/uielements/buttons.style';
+import AppManagerList from '../../../UserStore/components/AppManagerList';
 
 class TopMenu extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userinfo: null,
+      orgShow: false,
+    };
+  }
+
   componentDidMount() {
     const {
       BIZGRP_ID,
@@ -50,19 +57,26 @@ class TopMenu extends React.Component {
     }
   }
 
+  userProfile = (userinfo, orgShow) => {
+    this.setState({ orgShow, userinfo });
+  };
+
+  closeModal = () => this.setState({ orgShow: false });
+
   render() {
     /* eslint-disable */
     const { bizInfo, bizManagerList } = this.props;
     return (
       <div>
         <StyleTopMenu>
+          <Organization isModal show={this.state.orgShow} closeModal={this.closeModal} userProfile={this.state.userinfo} isProfile orgName="구성원검색" />
           <Row>
             <Col sm={24} xl={9}>
               <Popover
                 placement="bottomLeft"
                 content={
                   bizManagerList.length > 0 ? (
-                    <AppMaNagerList managerList={bizManagerList} currentView={this.props.currentView} />
+                    <AppManagerList managerList={bizManagerList} userProfile={this.userProfile} currentView={this.props.currentView} />
                   ) : (
                     `${intlObj.get(messages.noManager)}`
                   )

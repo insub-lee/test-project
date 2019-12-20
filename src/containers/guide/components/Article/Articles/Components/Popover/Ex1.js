@@ -9,7 +9,8 @@ class App extends React.Component {
         <p>Content</p>
       </div>
     ),
-  }
+  };
+
   render() {
     return (
       <Popover content={this.state.content} title="Title">

@@ -5,4 +5,3 @@ export const SERVICE_STOP = 'admin/AdminMain/App/AppDetail/SERVICE_STOP';
 export const SERVICE_STOP_CODE_LIST = 'admin/AdminMain/App/AppDetail/SERVICE_STOP_CODE_LIST';
 export const SERVICE_STOP_OK = 'admin/AdminMain/App/AppDetail/SERVICE_STOP_OK';
 export const SERVICE_RESTART = 'admin/AdminMain/App/AppDetail/SERVICE_RESTART';
-

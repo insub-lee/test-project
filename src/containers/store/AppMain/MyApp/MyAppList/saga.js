@@ -10,7 +10,7 @@ export function* getMyAppList(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myapplist/', params);
 
   if (response.myappList.length > 0) {
-    response.myappList.map(item => (
+    response.myappList.map(item =>
       setMyAppList.push({
         RNUM: item.RNUM,
         APP_ID: item.APP_ID,
@@ -33,8 +33,8 @@ export function* getMyAppList(payload) {
         APV_STATUS_CODE: item.APV_STATUS_CODE,
         APV_STATUS_ORDERBY: item.APV_STATUS_ORDERBY,
         UPD_DTTM: item.UPD_DTTM,
-      })
-    ));
+      }),
+    );
   }
 
   yield put({ type: constants.SET_MY_APP_LIST, payload: fromJS(setMyAppList) });

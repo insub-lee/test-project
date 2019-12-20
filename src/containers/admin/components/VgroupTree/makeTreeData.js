@@ -4,45 +4,43 @@ import { addNodeUnderParent, getNodeAtPath, removeNode, changeNodeAtPath } from 
 const keyFromTreeIndex = ({ node }) => node.key;
 
 const addNode = (rowInfo, newNode, treeData) => {
-  let { path } = rowInfo;
-  let parentNode = getNodeAtPath({
+  const { path } = rowInfo;
+  const parentNode = getNodeAtPath({
     treeData,
-    path: path,
+    path,
     getNodeKey: ({ treeIndex }) => treeIndex,
-    ignoreCollapsed: true
+    ignoreCollapsed: true,
   });
-  let getNodeKey = ({ treeIndex: number }) => {
-    return number;
-  };
+  const getNodeKey = ({ treeIndex: number }) => number;
   let parentKey = getNodeKey(parentNode);
   if (parentKey == -1) {
     parentKey = null;
   }
-  let newTree = addNodeUnderParent({
+  const newTree = addNodeUnderParent({
     treeData,
     newNode,
     expandParent: true,
     parentKey,
-    getNodeKey: ({ treeIndex }) => treeIndex
+    getNodeKey: ({ treeIndex }) => treeIndex,
   });
 
   return newTree.treeData;
 };
 
 const deleteNode = (rowInfo, treeData) => {
-  let { node, treeIndex, path } = rowInfo;
-  let newTree = removeNode({
+  const { node, treeIndex, path } = rowInfo;
+  const newTree = removeNode({
     treeData,
     path,
-    getNodeKey: ({ treeIndex }) => treeIndex
+    getNodeKey: ({ treeIndex }) => treeIndex,
   });
 
   return newTree.treeData;
 };
 
 const deleteNodeByKey = (rowInfo, treeData) => {
-  let { path } = rowInfo;
-  let newTree = removeNode({
+  const { path } = rowInfo;
+  const newTree = removeNode({
     treeData,
     path,
     getNodeKey: keyFromTreeIndex,
@@ -52,14 +50,14 @@ const deleteNodeByKey = (rowInfo, treeData) => {
 };
 
 const editNodeByKey = (rowInfo, treeData) => {
-  let { node, path } = rowInfo;
+  const { node, path } = rowInfo;
 
-  let newTree = changeNodeAtPath({
+  const newTree = changeNodeAtPath({
     treeData,
     path,
     newNode: node,
     getNodeKey: keyFromTreeIndex,
-  })
+  });
 
   // let newTree = changeNodeAtPath({
   //   treeData,
@@ -72,7 +70,7 @@ const editNodeByKey = (rowInfo, treeData) => {
 };
 
 const existNodeByKey = (rowInfo, treeData) => {
-  let { node, path } = rowInfo;
+  const { node, path } = rowInfo;
 
   const result = getNodeAtPath({
     treeData,
@@ -81,12 +79,10 @@ const existNodeByKey = (rowInfo, treeData) => {
   });
 
   return result;
-}
+};
 
 // 1#2#3#4#5# -> [1,2,3,4,5]
-const convertPathStringToArray = path => {
-  return _.compact(path.split('#').map(Number));
-};
+const convertPathStringToArray = path => _.compact(path.split('#').map(Number));
 
 const mergeArray = (newArray, oldArray) => {
   for (let i = 0; i < newArray.length; i += 1) {
@@ -105,12 +101,4 @@ const mergeArray = (newArray, oldArray) => {
   }
 };
 
-export {
-  addNode,
-  editNodeByKey,
-  deleteNode,
-  deleteNodeByKey,
-  existNodeByKey,
-  convertPathStringToArray,
-  mergeArray,
-};
+export { addNode, editNodeByKey, deleteNode, deleteNodeByKey, existNodeByKey, convertPathStringToArray, mergeArray };

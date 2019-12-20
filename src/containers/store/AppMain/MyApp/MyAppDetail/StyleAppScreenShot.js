@@ -45,7 +45,7 @@ const AppsRequired = styled.div`
       text-align: center;
 
       &:after {
-        content: "";
+        content: '';
         display: table;
         clear: both;
       }
@@ -127,7 +127,7 @@ const AppsRecommended = styled.div`
       text-align: center;
 
       &:after {
-        content: "";
+        content: '';
         display: table;
         clear: both;
       }
@@ -181,7 +181,6 @@ const AppDetailPart5 = styled.div`
 `;
 
 const WDGridListViewWrapper = styled.div`
-
   &.GridView {
     display: -webkit-box;
     display: -moz-box;
@@ -238,8 +237,7 @@ const WDGridListViewWrapper = styled.div`
           ${transition()};
 
           i {
-            margin: ${props =>
-    (props['data-rtl'] === 'rtl' ? '0 0 0 10px' : '0 10px 0 0')};
+            margin: ${props => (props['data-rtl'] === 'rtl' ? '0 0 0 10px' : '0 10px 0 0')};
             font-size: 14px;
           }
 
@@ -249,8 +247,7 @@ const WDGridListViewWrapper = styled.div`
 
           &.ant-btn-loading {
             i:not(.anticon-loading) {
-              margin: ${props =>
-    (props['data-rtl'] === 'rtl' ? '0 10px 0 0' : '0 0 0 10px')};
+              margin: ${props => (props['data-rtl'] === 'rtl' ? '0 10px 0 0' : '0 0 0 10px')};
             }
           }
         }
@@ -398,8 +395,7 @@ const WDGridListViewWrapper = styled.div`
         ${transition()};
 
         i {
-          margin: ${props =>
-    (props['data-rtl'] === 'rtl' ? '0 0 0 10px' : '0 10px 0 0')};
+          margin: ${props => (props['data-rtl'] === 'rtl' ? '0 0 0 10px' : '0 10px 0 0')};
           font-size: 14px;
         }
 
@@ -490,10 +486,4 @@ const WDGridListViewWrapper = styled.div`
 
 const GridListViewWrapper = WithDirection(WDGridListViewWrapper);
 
-export {
-  AppIntroduction,
-  AppsRequired,
-  AppsRecommended,
-  AppDetailPart5,
-  GridListViewWrapper,
-};
+export { AppIntroduction, AppsRequired, AppsRecommended, AppDetailPart5, GridListViewWrapper };

@@ -16,6 +16,7 @@ class DatePickerExample extends Component {
     this.onDateChange1 = this.onDateChange1.bind(this);
     this.onDateChange2 = this.onDateChange2.bind(this);
   }
+
   onDateChange1 = (value, valueString) => {
     if (moment.duration(value[1] - value[0]).as('months') > 3) {
       feed.error('조회기간은 세 달을 초과할 수 없습니다. ');
@@ -25,7 +26,8 @@ class DatePickerExample extends Component {
       searchFromDate1: valueString[0],
       searchToDate1: valueString[1],
     });
-  }
+  };
+
   onDateChange2 = (value, valueString) => {
     // if (moment.duration(value[1] - value[0]).as('months') > 3) {
     //   feed.error('조회기간은 세 달을 초과할 수 없습니다. ');
@@ -35,7 +37,8 @@ class DatePickerExample extends Component {
       searchFromDate2: valueString[0],
       searchToDate2: valueString[1],
     });
-  }
+  };
+
   render() {
     return (
       <Row>

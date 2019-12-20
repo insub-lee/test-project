@@ -36,7 +36,7 @@ const App = () => (
         <Button>LB</Button>
       </Popover>
     </div>
-    <div style={{ width: buttonWidth, marginLeft: (buttonWidth * 4) + 24 }}>
+    <div style={{ width: buttonWidth, marginLeft: buttonWidth * 4 + 24 }}>
       <Popover placement="rightTop" title={text} content={content} trigger="click">
         <Button>RT</Button>
       </Popover>
@@ -60,7 +60,6 @@ const App = () => (
     </div>
   </div>
 );
-
 
 const code = `import { Popover, Button } from '../../../Abstraction/portalComponents';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { intlObj } from 'utils/commonUtils';
+import noResultImage from 'images/bizstore/no-result.png';
 import messages from './messages';
 import NoResultBox from './noResultStyle';
-import noResultImage from 'images/bizstore/no-result.png';
 
 const NoResult = () => (
   <NoResultBox>

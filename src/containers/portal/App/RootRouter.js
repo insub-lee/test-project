@@ -6,19 +6,7 @@ import Page from '../../../components/Page';
 
 const { Content } = Layout;
 
-const RootRouter = ({
-  setMyMenuData,
-  selectedApp,
-  isUnreadCnt,
-  isSpinnerShow,
-  execPage,
-  execMenu,
-  show,
-  onReload,
-  setIsSpinnerShow,
-  view,
-  isPreviewPage,
-}) => {
+const RootRouter = ({ setMyMenuData, selectedApp, isUnreadCnt, isSpinnerShow, execPage, execMenu, show, onReload, setIsSpinnerShow, view, isPreviewPage }) => {
   const styleSpinner = { margin: 'auto', width: '100%', padding: '20%', position: 'absolute', zIndex: '100' };
   if (view === 'Mobile' || view === 'Tablet') {
     styleSpinner.height = '100vh';
@@ -29,9 +17,7 @@ const RootRouter = ({
     <div>
       <div
         className={`${
-          (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize
-            ? ''
-            : 'gridWrapper'
+          (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize ? '' : 'gridWrapper'
         }`}
       >
         <Content
@@ -40,19 +26,19 @@ const RootRouter = ({
             flexShrink: '0',
           }}
         >
-          <Spin size="large" style={styleSpinner} spinning={isSpinnerShow} />
-          <Page
-            columns={selectedApp}
-            setMyMenuData={setMyMenuData}
-            setIsSpinnerShow={setIsSpinnerShow}
-            isPreviewPage={isPreviewPage}
-
-            isUnreadCnt={isUnreadCnt}
-            execPage={execPage}
-            execMenu={execMenu}
-            show={show}
-            onReload={onReload}
-          />
+          <Spin size="large" style={styleSpinner} spinning={isSpinnerShow}>
+            <Page
+              columns={selectedApp}
+              setMyMenuData={setMyMenuData}
+              setIsSpinnerShow={setIsSpinnerShow}
+              isPreviewPage={isPreviewPage}
+              isUnreadCnt={isUnreadCnt}
+              execPage={execPage}
+              execMenu={execMenu}
+              show={show}
+              onReload={onReload}
+            />
+          </Spin>
         </Content>
       </div>
     </div>
@@ -80,4 +66,4 @@ RootRouter.defaultProps = {
   view: '',
 };
 
-export default RootRouter
+export default RootRouter;

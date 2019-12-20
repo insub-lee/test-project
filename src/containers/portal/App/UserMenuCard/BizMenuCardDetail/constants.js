@@ -26,3 +26,6 @@ export const SET_BIZMENU_DATA = `${baseUrl}/SET_BIZMENU_DATA`;
 export const GET_BIZMENU = `${baseUrl}/GET_BIZMENU`;
 
 export const SET_SELECTED_INDEX = `${baseUrl}/SET_SELECTED_INDEX`;
+
+export const ENABLE_LOADING = `${baseUrl}/ENABLE_LOADING`;
+export const DISABLE_LOADING = `${baseUrl}/DISABLE_LOADING`;

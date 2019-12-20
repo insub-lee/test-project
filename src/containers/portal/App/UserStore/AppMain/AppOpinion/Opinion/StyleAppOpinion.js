@@ -62,12 +62,12 @@ const StyleAppOpinion = styled.div`
       .ant-calendar-picker-input {
         height: 30px;
       }
-     
+
       .ant-calendar-picker-icon {
-        background:url(${iconCalendar}) no-repeat 50% 50%;
-        
+        background: url(${iconCalendar}) no-repeat 50% 50%;
+
         &:after {
-          content: "";
+          content: '';
         }
       }
 

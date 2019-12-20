@@ -36,7 +36,7 @@ class FormModal extends Component {
               <Descriptions.Item label="물리 테이블명">
                 <Form.Item hasFeedback>
                   {getFieldDecorator('WORK_ID', {
-                    rules: [{ required: true, message: 'Please input table name', whitespace: true }],
+                    rules: [{ required: true, message: 'Please input table name', whitespace: true, pattern: /[0-9A-Z_][0-9A-Z]+$/ }],
                   })(<Input name="WORK_ID" />)}
                 </Form.Item>
               </Descriptions.Item>

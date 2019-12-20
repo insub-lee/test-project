@@ -10,9 +10,7 @@ import StyledNotification from './StyledNotification';
 import Contents from './Contents';
 import EmptyContents from './EmptyContents';
 
-const Notification = ({
-  myMNotiCnt, myMNotiList, view, execPage, onNoneClick, visible, onClick, onClickNotiButton, showNoti,
-}) => (
+const Notification = ({ myMNotiCnt, myMNotiList, view, execPage, onNoneClick, visible, onClick, onClickNotiButton, showNoti }) => (
   <div>
     {myMNotiCnt > 0 && (
       <StyledNotification>
@@ -20,25 +18,24 @@ const Notification = ({
           <Popover
             placement="rightBottom"
             title="미등록 App 알림 수신함"
-            content={myMNotiCnt.length !== 0 ? (
-              <Contents
-                myMNotiList={myMNotiList}
-                onClickItem={(key) => {
-                  execPage(key, 'execMenu');
-                  onNoneClick();
-                }}
-              />) : <EmptyContents />
+            content={
+              myMNotiCnt.length !== 0 ? (
+                <Contents
+                  myMNotiList={myMNotiList}
+                  onClickItem={key => {
+                    execPage(key, 'execMenu');
+                    onNoneClick();
+                  }}
+                />
+              ) : (
+                <EmptyContents />
+              )
             }
             trigger="click"
             overlayClassName="userMenuNotification"
             visible={visible}
           >
-            <div
-              onClick={onClick}
-              onKeyPress={() => { }}
-              role="button"
-              tabIndex="0"
-            >
+            <div onClick={onClick} onKeyPress={() => {}} role="button" tabIndex="0">
               <p className="unreadTotalNumTxt">
                 <img src={iconNotify} alt="알림" />
                 <button className="registNotNoti">미등록 앱 알림 수신</button>
@@ -49,12 +46,7 @@ const Notification = ({
             </div>
           </Popover>
         ) : (
-          <div
-            onClick={onClickNotiButton}
-            onKeyPress={() => { }}
-            role="button"
-            tabIndex="0"
-          >
+          <div onClick={onClickNotiButton} onKeyPress={() => {}} role="button" tabIndex="0">
             <p className="unreadTotalNumTxt">
               <img src={iconNotify} alt="알림" />
               <button className="registNotNoti">미등록 앱 알림 수신</button>
@@ -63,14 +55,13 @@ const Notification = ({
               <Link to="/" className="badgeLink" />
             </Badge>
           </div>
-        )
-        }
+        )}
       </StyledNotification>
     )}
     {showNoti && (
       <Contents
         myMNotiList={myMNotiList}
-        onClickItem={(key) => {
+        onClickItem={key => {
           execPage(key, 'execMenu');
           onNoneClick();
         }}

@@ -47,7 +47,10 @@ export function* updateBizGroup(payload) {
   if (code === 200) {
     if (node) {
       const newNode = {
-        ...node, ...data, title: lang.get('NAME', data), CHG_YN: 'Y',
+        ...node,
+        ...data,
+        title: lang.get('NAME', data),
+        CHG_YN: 'Y',
       }; // 병합
       const rowInfo = { node: newNode, path: _.drop(node.path, 1) };
       const newCategoryData = treeFunc.editNodeByKey(rowInfo, bizmanage.get('categoryData').toJS());

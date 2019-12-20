@@ -117,13 +117,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Node.NodeList', reducer });
 const withSaga = injectSaga({ key: 'containers.admin.AdminMain.Node.NodeList', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(NodeList);
+export default compose(withSaga, withReducer, withConnect)(NodeList);

@@ -14,6 +14,8 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
 import { intlObj, lang } from 'utils/commonUtils';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import messages from './messages';
 
 import Select, { SelectOption } from '../../../../../../../components/Select';
@@ -22,9 +24,6 @@ import StyleApp from './StyleAppOpinion';
 import Footer from '../../../Footer';
 import { BtnDkGray, BtnLgtGray } from '../../../components/uielements/buttons.style';
 import OpposeModal from '../OpinionModal';
-
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
 
 import reducer from './reducer';
 import saga from './saga';

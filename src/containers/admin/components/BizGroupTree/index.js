@@ -10,12 +10,12 @@ import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 import ScrollBar from 'react-custom-scrollbars';
 // import 'style/sortable-tree-biz.css';
-import { toggleExpandedForSelected } from './tree-data-utils';
-import messages from './messages';
 
 import iconBizDelete from 'images/common/icon-biz-delete.png';
 import iconBizConfirm from 'images/common/icon-biz-confirm.png';
 import iconBizTree from 'images/common/icon-biz-tree.png';
+import messages from './messages';
+import { toggleExpandedForSelected } from './tree-data-utils';
 
 // import './app.css';
 import CustomTheme from './theme';
@@ -155,8 +155,9 @@ class BizGroupTree extends Component {
     <EditBtn
       title="폴더 수정"
       onClick={() => {
-        this.props.saveData(rowInfo, treeData);
+        this.props.saveData(rowInfo, this.state.treeData);
         const pathArr = this.props.history.location.pathname.split('/');
+        const type = pathArr[3];
         this.props.history.push(`/admin/adminmain/${type}/bizGroupReg/${rowInfo.node.key}`);
         // this.props.history.push(`/store/appMain/bizManage/bizGroupReg/${rowInfo.node.key}`);
       }}
@@ -237,7 +238,7 @@ class BizGroupTree extends Component {
         onMoveNode={({ treeData, node, nextParentNode }) => {
           // [ 노드 드래그 이동 후 실행됨 ]
           // 이동 후 변경된 treeData를 재귀함수돌며 sort, lvl값을 재정렬하고, 트리데이터를 파라미터로 전달
-          const BIZGRP_ID = node.BIZGRP_ID;
+          const { BIZGRP_ID } = node;
           const ROOT_ID = node.path[0];
           let PRNT_ID = ROOT_ID; // 최상위 루트
 
@@ -269,7 +270,7 @@ class BizGroupTree extends Component {
           moveNode(treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..

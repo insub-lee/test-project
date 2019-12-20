@@ -7,7 +7,6 @@ const App = () => (
   </Tooltip>
 );
 
-
 const code = `import { Tooltip } from '../../../Abstraction/portalComponents';
 
 ReactDOM.render(

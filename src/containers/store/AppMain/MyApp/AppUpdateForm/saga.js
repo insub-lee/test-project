@@ -14,21 +14,11 @@ export function* insertAppInfo(payload) {
   const { history } = payload.payload;
   const params = { ...payload.payload, SITE_ID: -1 };
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatemyapp/', params);
-  const {
-    code,
-    appId,
-    ver,
-    SVC_YN,
-  } = response;
+  const { code, appId, ver, SVC_YN } = response;
 
   if (code === 200) {
     // history.push('/store/appMain/MyApp');
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.appUpdateOk)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.appUpdateOk)}</MessageContent>, 3);
     // history.push(`/store/appMain/MyApp/MyAppDetail/${appId}/${ver}`);
     if (SVC_YN === 'N') {
       history.push(`/store/appMain/MyApp/MyAppUpdate/U/${appId}/${ver}/2/N`);
@@ -125,9 +115,7 @@ export function* getMyAppDetail(payload) {
     }
 
     const screenshotList = [];
-    response.screenshotList.map(item => (
-      screenshotList.push({ seq: item.FILE_PATH })
-    ));
+    response.screenshotList.map(item => screenshotList.push({ seq: item.FILE_PATH }));
 
     yield put({ type: constants.SCREENSHOT_LIST, payload: fromJS(screenshotList) });
     yield put({ type: constants.RES_APP_LIST, payload: fromJS(response.reqAppList) });

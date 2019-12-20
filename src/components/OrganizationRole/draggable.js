@@ -17,10 +17,7 @@ const DeleteItem = styled.button`
 
 const DraggableDragSpec = {
   beginDrag(props) {
-    const {
-      user,
-      setIsDragged,
-    } = props;
+    const { user, setIsDragged } = props;
 
     setIsDragged();
     return {
@@ -28,10 +25,7 @@ const DraggableDragSpec = {
     };
   },
   endDrag(props) {
-    const {
-      dndChangePositionCallback,
-      setIsDraggedEnd,
-    } = props;
+    const { dndChangePositionCallback, setIsDraggedEnd } = props;
 
     setIsDraggedEnd();
     dndChangePositionCallback();
@@ -50,15 +44,7 @@ const collectDrop = connect => ({ connectDropTarget: connect.dropTarget() });
 
 class Draggable extends Component {
   deleteItem = () => {
-    const {
-      type,
-      user,
-      dept,
-      pstn,
-      duty,
-      grp,
-      deleteCallback,
-    } = this.props;
+    const { type, user, dept, pstn, duty, grp, deleteCallback } = this.props;
 
     let id = '';
 
@@ -84,12 +70,10 @@ class Draggable extends Component {
 
     // 콜백 함수 호출
     deleteCallback(id, type);
-  }
+  };
+
   render() {
-    const {
-      connectDragSource,
-      connectDropTarget,
-    } = this.props;
+    const { connectDragSource, connectDropTarget } = this.props;
 
     /* eslint-disable */
     return connectDropTarget(connectDragSource(

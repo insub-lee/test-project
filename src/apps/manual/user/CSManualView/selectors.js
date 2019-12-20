@@ -46,10 +46,7 @@ const makeSelectScrollComp = () =>
   );
 
 const makeSelectedMualIdxByWidgetId = widgetId =>
-  createSelector(
-    makeSelectManualViewState,
-    state => state.getIn(['manualViewMap', widgetId, 'selectedMualIdx']),
-  );
+  createSelector(makeSelectManualViewState, state => state.getIn(['manualViewMap', widgetId, 'selectedMualIdx']));
 
 const makeSelectHistoryList = () =>
   createSelector(
@@ -58,11 +55,7 @@ const makeSelectHistoryList = () =>
     (state, widgetId) => state.getIn(['manualViewMap', widgetId, 'historyList']),
   );
 
-const makeSelectHistoryListByWidgetId = widgetId =>
-  createSelector(
-    makeSelectManualViewState,
-    state => state.getIn(['manualViewMap', widgetId, 'historyList']),
-  );
+const makeSelectHistoryListByWidgetId = widgetId => createSelector(makeSelectManualViewState, state => state.getIn(['manualViewMap', widgetId, 'historyList']));
 
 const makeSelectBookmarkList = () =>
   createSelector(
@@ -72,10 +65,7 @@ const makeSelectBookmarkList = () =>
   );
 
 const makeSelectBookmarkListByWidgetId = widgetId =>
-  createSelector(
-    makeSelectManualViewState,
-    state => state.getIn(['manualViewMap', widgetId, 'bookmarkList']),
-  );
+  createSelector(makeSelectManualViewState, state => state.getIn(['manualViewMap', widgetId, 'bookmarkList']));
 
 const makeSelectManualMaster = () =>
   createSelector(
@@ -99,10 +89,7 @@ const makeSelectManualViewRelationList = () =>
   );
 
 const makeSelectIsLastVersionByWidgetId = widgetId =>
-  createSelector(
-    makeSelectManualViewState,
-    state => state.getIn(['manualViewMap', widgetId, 'isLastVersion']),
-  );
+  createSelector(makeSelectManualViewState, state => state.getIn(['manualViewMap', widgetId, 'isLastVersion']));
 
 const makeSelectManualViewIndexRelationList = () =>
   createSelector(

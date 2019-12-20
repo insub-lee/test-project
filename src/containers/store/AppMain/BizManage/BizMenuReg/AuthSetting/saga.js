@@ -9,9 +9,7 @@ export function* getTreeData(payload) {
   const { BIZGRP_ID } = payload;
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizmenuList', { BIZGRP_ID });
-  const {
-    categoryData, bizGroupInfo, authArr, bizMenuSecKeyList,
-  } = response;
+  const { categoryData, bizGroupInfo, authArr, bizMenuSecKeyList } = response;
 
   if (bizGroupInfo) {
     yield put({

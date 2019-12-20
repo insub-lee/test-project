@@ -69,8 +69,6 @@ const ExtraMenus = styled.nav`
       color: ${props => props.theme.header.iconSettingColor};
     }
   }
-
 `;
-
 
 export default ExtraMenus;

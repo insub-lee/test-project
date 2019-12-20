@@ -14,7 +14,7 @@ class ComponentConfig extends Component {
   componentDidMount() {}
 
   onClickSave = () => {
-    console.log(lableValue);
+    // console.log(lableValue);
   };
 
   render() {

@@ -678,9 +678,6 @@ const mapStateToProps = createStructuredSelector({
   view: makeSelectView(),
 });
 const mapDispatchToProps = () => ({});
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UserDock);

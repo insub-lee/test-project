@@ -5,11 +5,11 @@ import { createStructuredSelector } from 'reselect';
 import ReactDataGrid from 'react-data-grid';
 import PropTypes from 'prop-types';
 
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import LayoutWrapper from '../../components/utility/layoutWrapper';
 
-import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
-import injectSaga from 'utils/injectSaga';
 import saga from './saga';
 
 import Tree from './tree';
@@ -138,16 +138,9 @@ const mapStateToProps = createStructuredSelector({
   user: makeUser(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'org', reducer });
 const withSaga = injectSaga({ key: 'org', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Organization);
+export default compose(withReducer, withSaga, withConnect)(Organization);

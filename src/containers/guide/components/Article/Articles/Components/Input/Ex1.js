@@ -33,7 +33,6 @@ const App = () => {
   );
 };
 
-
 const code = `import { Input, Select, Icon } from '../../../Abstraction/portalComponents';
 
 const Option = Select.Option;

@@ -135,16 +135,9 @@ const mapDispatchToProps = dispatch => ({
   selectCategoryList: (selectedCategoryList, item, settingType) => dispatch(actions.selectCategoryList(selectedCategoryList, item, settingType)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'NewsFeed', saga });
 const withReducer = injectReducer({ key: 'NewsFeed', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(NewsfeedSetting);
+export default compose(withReducer, withSaga, withConnect)(NewsfeedSetting);

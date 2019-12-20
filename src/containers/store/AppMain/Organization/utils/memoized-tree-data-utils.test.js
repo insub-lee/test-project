@@ -20,9 +20,6 @@ describe('insertNode', () => {
     secondCall = memoizedInsertNode(params);
     expect(firstCall === secondCall).toEqual(true);
 
-    expect(
-      memoizedInsertNode(params) ===
-        memoizedInsertNode({ ...params, treeData: [{}] })
-    ).toEqual(false);
+    expect(memoizedInsertNode(params) === memoizedInsertNode({ ...params, treeData: [{}] })).toEqual(false);
   });
 });

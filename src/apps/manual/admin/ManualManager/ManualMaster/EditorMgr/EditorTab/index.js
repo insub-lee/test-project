@@ -122,7 +122,4 @@ const mapDispatchToProps = dispatch => ({
   handleChangeTabName: (tabName, tabIdx) => dispatch(actions.setTabNameByReduc(tabName, tabIdx)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ManualTab);
+export default connect(mapStateToProps, mapDispatchToProps)(ManualTab);

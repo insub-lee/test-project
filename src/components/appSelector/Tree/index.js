@@ -34,37 +34,33 @@ class Tree extends Component {
   }
 
   render() {
-    const {
-      treeData,
-      selectedIndex,
-    } = this.state;
+    const { treeData, selectedIndex } = this.state;
 
     return (
       <div
         style={{
-          display: 'flex', flexDirection: 'column', height: 'calc(100% - 115px)', width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'calc(100% - 115px)',
+          width: '100%',
         }}
       >
         <div
           className="treeBox"
           style={{
-            flex: '1 0 50%', padding: '20px 0 0 10px',
+            flex: '1 0 50%',
+            padding: '20px 0 0 10px',
           }}
         >
-          <ScrollBar
-            style={{ width: 280, height: '100%' }}
-            autoHide
-            autoHideTimeout={1000}
-            autoHideDuration={200}
-          >
+          <ScrollBar style={{ width: 280, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
             <SortableTree
               theme={CustomTheme}
               treeData={treeData}
               onChange={this.updateTreeData}
-              canDrag={() => this.props.canDrag ? true : false}
-              canDrop={() => this.props.canDrop ? true : false}
+              canDrag={() => !!this.props.canDrag}
+              canDrop={() => !!this.props.canDrop}
               rowHeight={35}
-              scaffoldBlockPxWidth={22}
+              scaffoldBlockPxWidth={20}
               style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
               isVirtualized={false}
               generateNodeProps={({ node }) => {
@@ -80,7 +76,11 @@ class Tree extends Component {
                 const customNodeProps = this.props.getCustomNodeProps ? this.props.getCustomNodeProps(node) : {};
 
                 return {
-                  title: (<button className={`${node.key === selectedIndex ? 'active' : ''}`} onClick={handleOnClick} style={{ cursor: 'pointer' }}>{lang.get('NAME', node)}</button>),
+                  title: (
+                    <button className={`${node.key === selectedIndex ? 'active' : ''}`} onClick={handleOnClick} style={{ cursor: 'pointer' }}>
+                      {lang.get('NAME', node)}
+                    </button>
+                  ),
                   ...customNodeProps,
                 };
               }}

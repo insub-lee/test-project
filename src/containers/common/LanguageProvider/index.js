@@ -36,7 +36,4 @@ const mapDispatchToProps = dispatch => ({
   changeLocale: languageLocale => dispatch(changeLocale(languageLocale)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LanguageProvider);
+export default connect(mapStateToProps, mapDispatchToProps)(LanguageProvider);

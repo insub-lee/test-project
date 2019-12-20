@@ -98,5 +98,3 @@ export const openRodal = () => ({
 export const closeRodal = () => ({
   type: actionTypes.CLOSE_RODAL,
 });
-
-

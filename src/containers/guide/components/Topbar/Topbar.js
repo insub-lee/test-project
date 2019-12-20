@@ -7,9 +7,9 @@ const { Header } = Layout;
 // const { firstLevelSelected } = appActions;
 
 class Topbar extends Component {
-  handleClick = (e) => {
+  handleClick = e => {
     this.props.firstLevelSelected(e.key);
-  }
+  };
 
   render() {
     const styling = {
@@ -25,28 +25,12 @@ class Topbar extends Component {
 
     return (
       <TopbarWrapper>
-        <Header
-          style={styling}
-          className="devguideTopbar"
-        >
-          <Menu
-            onClick={this.handleClick}
-            defaultSelectedKeys={['1']}
-            mode="horizontal"
-            style={styling2}
-          >
-            <Menu.Item key="1">
-              개발자 가이드
-            </Menu.Item>
-            <Menu.Item key="2">
-              컴포넌트
-            </Menu.Item>
-            <Menu.Item key="3">
-              API
-            </Menu.Item>
-            <Menu.Item key="4">
-              TEST
-            </Menu.Item>
+        <Header style={styling} className="devguideTopbar">
+          <Menu onClick={this.handleClick} defaultSelectedKeys={['1']} mode="horizontal" style={styling2}>
+            <Menu.Item key="1">개발자 가이드</Menu.Item>
+            <Menu.Item key="2">컴포넌트</Menu.Item>
+            <Menu.Item key="3">API</Menu.Item>
+            <Menu.Item key="4">TEST</Menu.Item>
           </Menu>
         </Header>
       </TopbarWrapper>

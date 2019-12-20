@@ -8,7 +8,9 @@ const handleOnClick = (mualIdx, mualOrgIdx, widgetId, addManualHistory, setListS
 };
 
 const LinkItem = ({ node, widgetId, addManualHistory, setListSelectedMualIdx }) => (
-  <Styled>{<a onClick={() => handleOnClick(node.MUAL_IDX, node.MUAL_ORG_IDX, widgetId, addManualHistory, setListSelectedMualIdx)}>{node.MUAL_NAME}</a>}</Styled>
+  <Styled>
+    <a onClick={() => handleOnClick(node.MUAL_IDX, node.MUAL_ORG_IDX, widgetId, addManualHistory, setListSelectedMualIdx)}>{node.MUAL_NAME}</a>
+  </Styled>
 );
 
 export default LinkItem;

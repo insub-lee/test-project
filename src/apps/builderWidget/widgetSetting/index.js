@@ -18,8 +18,9 @@ const { Option } = Select;
 class BuilderWidgetSetting extends Component {
   componentDidMount() {
     const { item, type } = this.props;
+    const widgetId = item.WIDGET_ID ? item.WIDGET_ID : 11144;
     const payload = {
-      widgetId: item.WIDGET_ID,
+      widgetId,
       type: type || 'bizgroup',
     };
     this.props.getWorkList();
@@ -28,18 +29,17 @@ class BuilderWidgetSetting extends Component {
 
   onSaveWidgetConfig = () => {
     const { item, type, updateBizGroupChgYn, saveBuilderWidgetConfig, ITEM_VALUE } = this.props;
+    const widgetId = item.WIDGET_ID ? item.WIDGET_ID : 11144;
     const result = {
-      WIDGETID: item.WIDGET_ID,
+      WIDGETID: widgetId,
       ITEM_VALUE: JSON.stringify({
         ...ITEM_VALUE,
       }),
-      type,
+      type: type || 'bizgroup',
     };
 
     saveBuilderWidgetConfig(result);
-    if (type && type === 'bizgroup') {
-      updateBizGroupChgYn();
-    }
+    updateBizGroupChgYn();
   };
 
   onChangeBuilder = val => {
@@ -61,7 +61,6 @@ class BuilderWidgetSetting extends Component {
               </td>
               <td>
                 <Select
-                  placeholder="Select builder"
                   value={ITEM_VALUE && ITEM_VALUE.data && ITEM_VALUE.data.WORK_SEQ ? ITEM_VALUE.data.WORK_SEQ : ''}
                   style={{ width: '300px', marginLeft: '20px' }}
                   onChange={val => this.onChangeBuilder(val)}

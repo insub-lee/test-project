@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-const primaryColor = '#6a60b9';
-const primaryColor2 = '#886ab5';
+const primaryColor = '#886ab5';
+const primaryColor2 = '#6a60b9';
 const reversePrimaryColor = '#c1b2d9';
 
 const StyledAntdTable = Component => styled(Component)`

@@ -8,6 +8,7 @@ class ErrorPage extends React.Component {
 
     this.state = {};
   }
+
   render() {
     return (
       <div>

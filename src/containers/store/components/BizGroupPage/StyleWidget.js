@@ -55,7 +55,8 @@ const WidgetHeader = styled.div`
       > li {
         float: left;
 
-        .setupWidget, .deleteWidget {
+        .setupWidget,
+        .deleteWidget {
           display: inline-block;
           width: 28px;
           height: 28px;
@@ -125,6 +126,8 @@ const WidgetBox = styled.div`
   }
 `;
 
-const WidgetColumn = styled.div`align-content: flex-start;`;
+const WidgetColumn = styled.div`
+  align-content: flex-start;
+`;
 
 export { WidgetWrapper, WidgetBox, WidgetHeader, WidgetColumn };

@@ -200,16 +200,9 @@ const mapStateToProps = createStructuredSelector({
   categoryComboData: selectors.makeCategoryComboData(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppStore/AppModal/AppList', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore/AppModal/AppList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppList);
+export default compose(withReducer, withSaga, withConnect)(AppList);

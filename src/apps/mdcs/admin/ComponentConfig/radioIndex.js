@@ -49,126 +49,95 @@ class ComponentConfig extends Component {
     getCallDataHanlder(id, apiArray);
   };
 
-  resetDataSource = () => {
-    this.setState({ dataSource: [], radioValue: undefined, defaultValue: undefined });
-  };
-
-  onClickSave = () => {
-    // 필요한 사항 defaultValue,apiArray,,
-    console.log(JSON.stringify(this.state.apiArray));
-    console.log(JSON.stringify(this.state.defaultValue));
-  };
-
   render() {
     const {
-      result,
       result: { rootMap },
+      changeCompData,
+      groupIndex,
+      rowIndex,
+      colIndex,
+      configInfo,
     } = this.props;
-    if (this.state.apiFlag && result && result[`radioMapInfo${this.state.rootMapValue}`]) {
-      this.setState({ dataSource: makeDataSource(result[`radioMapInfo${this.state.rootMapValue}`]), apiFlag: false });
-    }
+
+    // if (this.state.apiFlag && result && result[`radioMapInfo${this.state.rootMapValue}`]) {
+    //   this.setState({ dataSource: makeDataSource(result[`radioMapInfo${this.state.rootMapValue}`]), apiFlag: false });
+    // }
     return (
-      <StyledContent>
-        <div>
+      <div>
+        <Row>
+          <div>
+            <Col span={6}>분류체계 설정</Col>
+            <Col span={18}>
+              <Select
+                style={{ width: '100%' }}
+                placeholder="분류체계를 설정해주세요"
+                value={(configInfo && configInfo.mapId) || undefined}
+                onChange={value => {
+                  // this.getCategorieMapList(value);
+                  changeCompData(groupIndex, rowIndex, colIndex, 'mapId', value);
+                }}
+              >
+                {rootMap &&
+                  rootMap.rootMapList &&
+                  rootMap.rootMapList
+                    .filter(x => x.USE_YN === 'Y' && x.CHILDREN_CNT === 0)
+                    .map(item => (
+                      <Option key={`RootMap_${item.MAP_ID}`} value={item.MAP_ID}>
+                        {item.NAME_KOR}
+                      </Option>
+                    ))}
+              </Select>
+            </Col>
+          </div>
+        </Row>
+        {/*
+        <Row>
+          <div className="w100Table">
+            <Col span={6}>기본값 설정여부</Col>
+            <Col span={18}>
+              <Radio.Group
+                value={this.state.defaultFlag}
+                onChange={e => {
+                  this.setState({ defaultFlag: e.target.value, defaultValue: undefined });
+                }}
+              >
+                <Radio value={1}>가능</Radio>
+                <Radio value={2}>불가능</Radio>
+              </Radio.Group>
+            </Col>
+          </div>
+        </Row>
+        {this.state.defaultFlag === 1 && (
           <Row>
-            <div className="pop_tit" style={{ background: 'white', color: 'black' }}>
-              컴포넌트 설정
+            <div className="w100Table">
+              <Col span={6}>기본값 설정</Col>
+              <Col span={18}>
+                <RadioButton
+                  value={this.state.defaultValue}
+                  onChange={e => this.setState({ defaultValue: e.target.value })}
+                  dataSource={this.state.dataSource}
+                ></RadioButton>
+              </Col>
             </div>
           </Row>
-          <div className="pop_con">
-            <div className="sub_form">
-              <Row>
-                <div className="w100Table">
-                  <Col span={3}>분류체계 설정</Col>
-                  <Col span={21}>
-                    <Select
-                      style={{ width: 300, marginRight: 10 }}
-                      placeholder="분류체계를 설정해주세요"
-                      value={this.state.rootMapValue}
-                      onChange={value => {
-                        this.getCategorieMapList(value);
-                      }}
-                    >
-                      {rootMap &&
-                        rootMap.rootMapList &&
-                        rootMap.rootMapList
-                          .filter(x => x.USE_YN === 'Y' && x.CHILDREN_CNT === 0)
-                          .map(item => (
-                            <Option key={`RootMap_${item.MAP_ID}`} value={item.MAP_ID}>
-                              {item.NAME_KOR}
-                            </Option>
-                          ))}
-                    </Select>
-                  </Col>
-                </div>
-              </Row>
-
-              <Row>
-                <div className="w100Table">
-                  <Col span={3}>기본값 설정여부</Col>
-                  <Col span={21}>
-                    <Radio.Group
-                      value={this.state.defaultFlag}
-                      onChange={e => {
-                        this.setState({ defaultFlag: e.target.value, defaultValue: undefined });
-                      }}
-                    >
-                      <Radio value={1}>가능</Radio>
-                      <Radio value={2}>불가능</Radio>
-                    </Radio.Group>
-                  </Col>
-                </div>
-              </Row>
-              {this.state.defaultFlag === 1 && (
-                <Row>
-                  <div className="w100Table">
-                    <Col span={3}>기본값 설정</Col>
-                    <Col span={21}>
-                      <RadioButton
-                        value={this.state.defaultValue}
-                        onChange={e => this.setState({ defaultValue: e.target.value })}
-                        dataSource={this.state.dataSource}
-                      ></RadioButton>
-                    </Col>
-                  </div>
-                </Row>
-              )}
-
-              <Row>
-                <div className="w100Table">
-                  <Col span={3}>PreView</Col>
-                  <Col span={21}>
-                    <RadioButton
-                      defaultValue={this.state.defaultValue}
-                      value={this.state.radioValue}
-                      onChange={e => this.setState({ radioValue: e.target.value })}
-                      dataSource={this.state.dataSource}
-                    ></RadioButton>
-                  </Col>
-                </div>
-              </Row>
-
-              <Row>
-                <div className="btn-wrap">
-                  <StyledButton
-                    className="btn-primary"
-                    onClick={() => {
-                      this.onClickSave();
-                    }}
-                  >
-                    등록
-                  </StyledButton>
-                </div>
-              </Row>
-            </div>
-          </div>
-        </div>
-      </StyledContent>
+        )}
+        */}
+      </div>
     );
   }
 }
-const configer = () => <BizMicroDevBase id="componentConfig" component={ComponentConfig}></BizMicroDevBase>;
 
+const configer = ({ changeCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
+  <BizMicroDevBase
+    id="componentConfig"
+    changeCompData={changeCompData}
+    groupIndex={groupIndex}
+    rowIndex={rowIndex}
+    colIndex={colIndex}
+    configInfo={configInfo}
+    component={ComponentConfig}
+  ></BizMicroDevBase>
+);
 ComponentConfig.defaultProps = {};
 export default configer;
 

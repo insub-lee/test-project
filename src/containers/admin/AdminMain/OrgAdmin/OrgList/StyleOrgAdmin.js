@@ -29,7 +29,10 @@ const StyleOrgAdmin = styled.div`
         width: auto;
         height: calc(100vh - 249px);
 
-        .members, .pstn, .duty, .grp {
+        .members,
+        .pstn,
+        .duty,
+        .grp {
           > div:not(.userGridResult) {
             width: calc(100% - 416px) !important;
             height: calc(100vh - 251px) !important;
@@ -63,7 +66,9 @@ const StyleOrgAdmin = styled.div`
               .react-grid-Grid {
                 height: calc(100vh - 309px) !important;
 
-                .react-grid-Header, .react-grid-HeaderRow, .react-grid-HeaderCell {
+                .react-grid-Header,
+                .react-grid-HeaderRow,
+                .react-grid-HeaderCell {
                   height: 10px !important;
                 }
 
@@ -75,10 +80,11 @@ const StyleOrgAdmin = styled.div`
                   top: 10px !important;
                   height: calc(100vh - 319px);
 
-                  .react-grid-Cell:first-child {width: 100% !important;}
+                  .react-grid-Cell:first-child {
+                    width: 100% !important;
+                  }
                 }
               }
-
             }
           }
         }

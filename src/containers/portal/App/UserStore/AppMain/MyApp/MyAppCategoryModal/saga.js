@@ -6,9 +6,9 @@ import MessageContent from 'components/Feedback/message.style2';
 import * as feed from 'components/Feedback/functions';
 
 import { intlObj } from 'utils/commonUtils';
+import { Axios } from 'utils/AxiosFunc';
 import messages from '../messages';
 
-import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
 
 export function* getTreeData() {

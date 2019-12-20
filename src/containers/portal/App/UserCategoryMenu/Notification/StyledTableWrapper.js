@@ -4,7 +4,9 @@ const StyledTableWrapper = styled.div`
   width: 230px;
   padding-bottom: 20px;
 
-  @media only screen and (max-width: 320px) {padding-bottom: 0;}
+  @media only screen and (max-width: 320px) {
+    padding-bottom: 0;
+  }
 
   tr {
     cursor: pointer;
@@ -36,12 +38,9 @@ const StyledTableWrapper = styled.div`
             box-shadow: none;
           }
         }
-
       }
     }
-
   }
-
 `;
 
 export default StyledTableWrapper;

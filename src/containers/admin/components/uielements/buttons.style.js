@@ -22,7 +22,7 @@ import SettingsIcon from 'images/common/icon-settings.png';
 // Gray Tone 버튼
 const BtnBlack = styled.button``;
 
-//BtnDkGray = Dark Gray (검정색에 가까운 회색)
+// BtnDkGray = Dark Gray (검정색에 가까운 회색)
 const BtnPrimary = styled.button`
   font-weight: 400;
   text-align: center;
@@ -56,7 +56,7 @@ const BtnPrimary = styled.button`
   }
 `;
 
-//BtnDkGray = Dark Gray (검정색에 가까운 회색)
+// BtnDkGray = Dark Gray (검정색에 가까운 회색)
 const BtnDkGray = styled.button`
   min-width: 90px;
   height: 30px;
@@ -220,7 +220,7 @@ const BtnLgtGrayRegisted = styled.button`
   }
 `;
 
-/***** 메인 컬러(붉은 계열) 버튼들 *****/
+/** *** 메인 컬러(붉은 계열) 버튼들 **** */
 /* 카테고리 등록 */
 const BtnRedCgrRegist = styled.button`
   min-width: 130px;
@@ -286,7 +286,7 @@ const BtnRedShare = styled.button`
   }
 `;
 
-/***** 흰색 버튼들 *****/
+/** *** 흰색 버튼들 **** */
 /* 화살표 아이콘 */
 const BtnWhiteArr = styled.button`
   min-width: 80px;
@@ -410,7 +410,7 @@ const LinkBtnUpdate = styled.span`
   cursor: pointer;
 `;
 
-/***** 아이콘 버튼들 (Localization 영향 받지 않음) *****/
+/** *** 아이콘 버튼들 (Localization 영향 받지 않음) **** */
 /* 아이콘 > 공유 */
 const BtnIconShare = styled.button`
   width: 50px;
@@ -520,8 +520,6 @@ export {
   BtnWhiteAdd,
   BtnIconShare,
   BtnIconRegist,
-  BtnIconMnRegist,
-  BtnIconCgrRegist,
   BtnSeeMore,
   BtnDelete,
   LinkBtnList,

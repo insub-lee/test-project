@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const WidgetSkin = styled.div`
-
   &.wSkin1 {
     background: #ffffff;
     border-color: #cccccc;
@@ -31,13 +30,13 @@ const WidgetSkin = styled.div`
     border-color: #0999e5;
     color: #ffffff;
   }
-  
+
   &.wSkin6 {
     background: #435cce;
     border-color: #435cce;
     color: #ffffff;
   }
-    
+
   &.wSkin7 {
     background: #fa6800;
     border-color: #fa6800;

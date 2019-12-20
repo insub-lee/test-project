@@ -8,7 +8,7 @@ import Upload from 'components/FormStuff/Upload';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-import SignLine from 'apps/WorkFlow/Admin/SignLine';
+import SignLine from 'apps/Workflow/Admin/SignLine';
 
 class Edit extends Component {
   componentDidMount() {}
@@ -81,14 +81,14 @@ class Edit extends Component {
             수정
           </Button>
         ) : (
-          <React.Fragment>
+          <>
             <Button onClick={this.onTempSave} type="primary" style={{ marginRight: '10px' }}>
               임시저장
             </Button>
             <Button onClick={this.onSave} type="primary">
               등록
             </Button>
-          </React.Fragment>
+          </>
         )}
       </div>
     );

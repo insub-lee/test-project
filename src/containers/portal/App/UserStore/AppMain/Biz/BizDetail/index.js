@@ -170,16 +170,9 @@ const mapStateToProps = createStructuredSelector({
   selectedIndex: selectors.makeSelectedIndex(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'bizDetail', reducer });
 const withSaga = injectSaga({ key: 'bizDetail', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizDetail);
+export default compose(withReducer, withSaga, withConnect)(BizDetail);

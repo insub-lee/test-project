@@ -2,21 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { WidgetBox } from './StyleWidget';
 
-const WidgetsBox = ({
-  children, item,
-}) => {
+const WidgetsBox = ({ children, item }) => {
   const boxStyle = {
-    backgroundColor: item.bgColor, color: item.color,
+    backgroundColor: item.bgColor,
+    color: item.color,
   };
   const sizeWInfo = item.position[2];
   const sizeHInfo = item.position[3];
-  const selectSize = item.user && item.user.isTitle ?
-    `widgetBody sizeW${sizeWInfo} sizeH${sizeHInfo}` : `widgetBody fullHeight sizeW${sizeWInfo} sizeH${sizeHInfo}`;
+  const selectSize =
+    item.user && item.user.isTitle ? `widgetBody sizeW${sizeWInfo} sizeH${sizeHInfo}` : `widgetBody fullHeight sizeW${sizeWInfo} sizeH${sizeHInfo}`;
   return (
-    <WidgetBox
-      className={selectSize}
-      style={boxStyle}
-    >
+    <WidgetBox className={selectSize} style={boxStyle}>
       {children}
     </WidgetBox>
   );

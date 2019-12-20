@@ -11,7 +11,8 @@ class Profile extends PureComponent {
       selectedUser: {},
     };
   }
-  onClick = (type) => {
+
+  onClick = type => {
     console.log(type);
     alert('준비중입니다.');
     /*
@@ -35,23 +36,17 @@ class Profile extends PureComponent {
       default:
     }
     */
-  }
+  };
 
-  handleOnClick = (item) => {
+  handleOnClick = item => {
     const fPath = this.props.loadProfile.FULL_PATH.split('|');
     this.props.selectedProfileTree(item.target.id, item.target.value, fPath[0]);
-  }
-
+  };
 
   render() {
-    const {
-      selectedUser,
-    } = this.state;
+    const { selectedUser } = this.state;
 
-    const {
-      officetel,
-      loadProfile,
-    } = this.props;
+    const { officetel, loadProfile } = this.props;
 
     const foottable = {
       width: 105,
@@ -81,69 +76,62 @@ class Profile extends PureComponent {
       <div style={{ marginTop: 8 }}>
         <div className="userBasicInfo" style={{ marginBottom: 8 }}>
           <div className="picWrapper">
-            {selectedUser.length ?
+            {selectedUser.length ? (
               <img
                 src={`/img/thumb/200x200/${selectedUser.PHOTO}`}
                 alt={selectedUser.EMP_NO}
-                onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
-              /> :
-
+                onError={e => {
+                  e.target.src = '/no_img_pro.jpg';
+                }}
+              />
+            ) : (
               <img
                 src={`/img/thumb/200x200/${loadProfile.PHOTO}`}
                 alt={loadProfile.EMP_NO}
-                onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+                onError={e => {
+                  e.target.src = '/no_img_pro.jpg';
+                }}
               />
-            }
+            )}
           </div>
           <ul className="userInfoList">
-            {selectedUser.length ?
+            {selectedUser.length ? (
               <li className="name">
                 {lang.get('NAME', selectedUser)}({selectedUser.EMP_NO}) {lang.get('DEPT_NAME', selectedUser)} {lang.get('PSTN_NAME', selectedUser)}
               </li>
-              :
+            ) : (
               <li className="name">
                 {lang.get('NAME', loadProfile)}({loadProfile.EMP_NO}) {lang.get('DEPT_NAME', loadProfile)} {lang.get('PSTN_NAME', loadProfile)}
               </li>
-            }
+            )}
             <li className="dept">
               {np.map(list => (
                 <div style={{ display: 'inline-block', float: 'left' }} key={list.name}>
-                  <button
-                    onClick={this.handleOnClick}
-                    id={list.name}
-                    value={list.path}
-                    className="treePathElement"
-                  >
+                  <button onClick={this.handleOnClick} id={list.name} value={list.path} className="treePathElement">
                     {list.name}
                   </button>
-                  <span
-                    className="bracket"
-                  >
-                    {list.direc}
-                  </span>
+                  <span className="bracket">{list.direc}</span>
                 </div>
               ))}
             </li>
-            {selectedUser.length ?
-              <li className="phone">
-                {selectedUser.MOBILE_TEL_NO}
-              </li>
-              :
-              <li className="phone">
-                {loadProfile.MOBILE_TEL_NO}
-              </li>
-            }
+            {selectedUser.length ? <li className="phone">{selectedUser.MOBILE_TEL_NO}</li> : <li className="phone">{loadProfile.MOBILE_TEL_NO}</li>}
           </ul>
         </div>
         <ul className="buttonWrapper">
           <li>
-            <button className="icon talk" onClick={() => this.onClick('talk')} >{intlObj.get(messages.conversation)}</button>
+            <button className="icon talk" onClick={() => this.onClick('talk')}>
+              {intlObj.get(messages.conversation)}
+            </button>
           </li>
           <li>
-            <button className="icon mail" onClick={() => this.onClick('mail')}>{intlObj.get(messages.mail)}</button>
+            <button className="icon mail" onClick={() => this.onClick('mail')}>
+              {intlObj.get(messages.mail)}
+            </button>
           </li>
           <li>
-            <button className="icon todo" onClick={() => this.onClick('todo')}>{intlObj.get(messages.registerTodo)}</button>
+            <button className="icon todo" onClick={() => this.onClick('todo')}>
+              {intlObj.get(messages.registerTodo)}
+            </button>
           </li>
           {/* <li>
             <button className="icon hithanks" onClick={() => this.onClick('hithanks')}>{intlObj.get(messages.HyThanks)}</button>
@@ -171,29 +159,17 @@ class Profile extends PureComponent {
                 <td style={foottable}>{intlObj.get(messages.inHousePhone)}</td>
                 {officetel ? <td style={note}>{officetel}</td> : <td style={note} />}
               </tr>
-              {selectedUser.length ?
+              {selectedUser.length ? (
                 <tr>
                   <td style={foottable}>{intlObj.get(messages.mobilePhone)}</td>
-                  {
-                    selectedUser.MOBILE_TEL_NO
-                    ?
-                      <td style={note}>{selectedUser.MOBILE_TEL_NO}</td>
-                    :
-                      <td style={note} />
-                  }
+                  {selectedUser.MOBILE_TEL_NO ? <td style={note}>{selectedUser.MOBILE_TEL_NO}</td> : <td style={note} />}
                 </tr>
-                :
+              ) : (
                 <tr>
                   <td style={foottable}>{intlObj.get(messages.mobilePhone)}</td>
-                  {
-                    loadProfile.MOBILE_TEL_NO
-                    ?
-                      <td style={note}>{loadProfile.MOBILE_TEL_NO}</td>
-                    :
-                      <td style={note} />
-                  }
+                  {loadProfile.MOBILE_TEL_NO ? <td style={note}>{loadProfile.MOBILE_TEL_NO}</td> : <td style={note} />}
                 </tr>
-              }
+              )}
             </tbody>
           </table>
         </div>

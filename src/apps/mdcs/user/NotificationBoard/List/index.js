@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Table, Input } from 'antd';
 import PropTypes from 'prop-types';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
@@ -9,6 +9,7 @@ import Button from '../../../styled/StyledButton';
 import Styled from './Styled';
 
 const AntdTable = StyledAntdTable(Table);
+const { Search } = Input;
 
 class List extends Component {
   rowClick = item => {
@@ -52,6 +53,7 @@ class List extends Component {
     return (
       <Styled>
         <div className="list-btn list-top-btn" style={{ padding: '5px' }}>
+          <Search placeholder="input search text" onSearch={value => console.log(value)} style={{ width: 200 }} />
           <Button type="button" className="btn-primary" onClick={() => this.props.onChangeMovePageHandler('EDIT', -1, -1)}>
             글쓰기
           </Button>

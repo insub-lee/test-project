@@ -10,7 +10,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '테스트메세지',
     msgENG: 'Test Message',
     msgCHN: '测试消息',
-  }, {
+  },
+  {
     id: 2,
     key: '2',
     siteNm: 'Test site 01',
@@ -18,7 +19,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '안녕하세요',
     msgENG: 'Hello',
     msgCHN: '你好',
-  }, {
+  },
+  {
     id: 3,
     key: '3',
     siteNm: 'Test site 02',
@@ -26,7 +28,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 4,
     key: '4',
     siteNm: '차세대 반응형 포탈',
@@ -34,7 +37,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '확인',
     msgENG: 'OK',
     msgCHN: '确认',
-  }, {
+  },
+  {
     id: 5,
     key: '5',
     siteNm: 'Test site 02',
@@ -42,7 +46,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '643 병살',
     msgENG: '643 double play',
     msgCHN: '643 双杀',
-  }, {
+  },
+  {
     id: 6,
     key: '6',
     siteNm: 'Test site 02',
@@ -50,7 +55,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 7,
     key: '7',
     siteNm: 'Test site 02',
@@ -58,7 +64,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 8,
     key: '8',
     siteNm: 'Test site 02',
@@ -66,7 +73,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 9,
     key: '9',
     siteNm: 'Test site 02',
@@ -74,7 +82,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 10,
     key: '10',
     siteNm: 'Test site 02',
@@ -82,7 +91,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 11,
     key: '11',
     siteNm: 'Test site 02',
@@ -90,7 +100,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 12,
     key: '12',
     siteNm: 'Test site 02',
@@ -98,7 +109,8 @@ const fakeDataList1 = fromJS([
     msgKOR: '돈',
     msgENG: 'Money',
     msgCHN: '钱',
-  }, {
+  },
+  {
     id: 13,
     key: '13',
     siteNm: 'Test site 02',

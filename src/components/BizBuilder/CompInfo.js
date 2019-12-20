@@ -1,0 +1,71 @@
+import React from 'react';
+
+import LabelComp from 'components/BizBuilder/Field/LabelComp';
+import CustomLabelComp from 'components/BizBuilder/Field/CustomLabelComp';
+import LabelWithCopyComp from 'components/BizBuilder/Field/LabelWithCopyComp';
+import TextComp from 'components/BizBuilder/Field/TextComp';
+import EditorComp from 'components/BizBuilder/Field/EditorComp';
+import CustomEditorComp from 'components/BizBuilder/Field/CustomEditorComp';
+import InsertBtnComp from 'components/BizBuilder/Field/InsertBtnComp';
+import ModalInsertBtnComp from 'components/BizBuilder/Field/ModalInsertBtnComp';
+import AttachComp from 'components/BizBuilder/Field/AttachComp';
+import DragUploadComp from 'components/BizBuilder/Field/DragUploadComp';
+import TreeSelectComp from 'components/BizBuilder/Field/TreeSelectComp';
+import SelectComp from 'components/BizBuilder/Field/SelectComp';
+import ReadOnlyTextComp from 'components/BizBuilder/Field/ReadOnlyTextComp';
+import CheckboxComp from 'components/BizBuilder/Field/CheckboxComp';
+import RadioComp from 'components/BizBuilder/Field/RadioComp';
+import RadioYnComp from 'components/BizBuilder/Field/RadioYnComp';
+import DocSelectComp from 'components/BizBuilder/Field/DocSelectComp';
+import CustomCheckListComp from 'components/BizBuilder/Field/CustomCheckListComp';
+import CheckListComp from 'components/BizBuilder/Field/CheckListComp';
+import DwCheckListComp from 'components/BizBuilder/Field/DwCheckListComp';
+import TitleComp from 'components/BizBuilder/Field/TitleComp';
+import LabelViewComp from 'components/BizBuilder/Field/LabelViewComp';
+import LabelVersion from 'components/BizBuilder/Field/LabelVersion';
+import Label from 'components/BizBuilder/Field/Label';
+import DocNumberComp from 'components/BizBuilder/Field/DocNumberComp';
+import LabelDate from 'components/BizBuilder/Field/LabelDate';
+import LabelNumber from 'components/BizBuilder/Field/LabelNumber';
+import DocStatusLabel from 'components/BizBuilder/Field/DocStatusLabel';
+import UserInfoComp from 'components/BizBuilder/Field/UserInfoComp';
+import SummerNoteEditorComp from 'components/BizBuilder/Field/SummerNoteEditor';
+import TextareaComp from 'components/BizBuilder/Field/TextareaComp';
+import NumberComp from 'components/BizBuilder/Field/NumberComp';
+import NodeIdComp from 'components/BizBuilder/Field/NodeIdComp';
+
+export const CompInfo = {
+  'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
+  'components/BizBuilder/Field/CustomLabelComp': { renderer: property => <CustomLabelComp {...property} /> },
+  'components/BizBuilder/Field/LabelWithCopyComp': { renderer: property => <LabelWithCopyComp {...property} /> },
+  'components/BizBuilder/Field/TextComp': { renderer: property => <TextComp {...property} /> },
+  'components/BizBuilder/Field/EditorComp': { renderer: property => <EditorComp {...property} /> },
+  'components/BizBuilder/Field/CustomEditorComp': { renderer: property => <CustomEditorComp {...property} /> },
+  'components/BizBuilder/Field/InsertBtnComp': { renderer: property => <InsertBtnComp {...property} /> },
+  'components/BizBuilder/Field/ModalInsertBtnComp': { renderer: property => <ModalInsertBtnComp {...property} /> },
+  'components/BizBuilder/Field/AttachComp': { renderer: property => <AttachComp {...property} /> },
+  'components/BizBuilder/Field/DragUploadComp': { renderer: property => <DragUploadComp {...property} /> },
+  'components/BizBuilder/Field/TreeSelectComp': { renderer: property => <TreeSelectComp {...property} /> },
+  'components/BizBuilder/Field/SelectComp': { renderer: property => <SelectComp {...property} /> },
+  'components/BizBuilder/Field/ReadOnlyTextComp': { renderer: property => <ReadOnlyTextComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxComp': { renderer: property => <CheckboxComp {...property} /> },
+  'components/BizBuilder/Field/RadioComp': { renderer: property => <RadioComp {...property} /> },
+  'components/BizBuilder/Field/RadioYnComp': { renderer: property => <RadioYnComp {...property} /> },
+  'components/BizBuilder/Field/DocSelectComp': { renderer: property => <DocSelectComp {...property} /> },
+  'components/BizBuilder/Field/CustomCheckListComp': { renderer: property => <CustomCheckListComp {...property} /> },
+  'components/BizBuilder/Field/CheckListComp': { renderer: property => <CheckListComp {...property} /> },
+  'components/BizBuilder/Field/DwCheckListComp': { renderer: property => <DwCheckListComp {...property} /> },
+  'components/BizBuilder/Field/TitleComp': { renderer: property => <TitleComp {...property} /> },
+  'components/BizBuilder/Field/LabelViewComp': { renderer: property => <LabelViewComp {...property} /> },
+  'components/BizBuilder/Field/LabelVersion': { renderer: property => <LabelVersion {...property} /> },
+  'components/BizBuilder/Field/Label': { renderer: property => <Label {...property} /> },
+  'components/BizBuilder/Field/DocNumberComp': { renderer: property => <DocNumberComp {...property} /> },
+  'components/BizBuilder/Field/LabelDate': { renderer: property => <LabelDate {...property} /> },
+  'components/BizBuilder/Field/LabelNumber': { renderer: property => <LabelNumber {...property} /> },
+  'components/BizBuilder/Field/DocStatusLabel': { renderer: property => <DocStatusLabel {...property} /> },
+  'components/BizBuilder/Field/UserInfoComp': { renderer: property => <UserInfoComp {...property} /> },
+  'components/BizBuilder/Field/SummerNoteEditorComp': { renderer: property => <SummerNoteEditorComp {...property} /> },
+  'components/BizBuilder/Field/TextareaComp': { renderer: property => <TextareaComp {...property} /> },
+  'components/BizBuilder/Field/NumberComp': { renderer: property => <NumberComp {...property} /> },
+  'components/BizBuilder/Field/NodeIdComp': { renderer: property => <NodeIdComp {...property} /> },
+};

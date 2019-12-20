@@ -17,7 +17,7 @@ const makeSelectedDraft = () =>
 const makeVisibleViewModal = () =>
   createSelector(
     selectDraf,
-    state => state.get('visibleViewModal').toJS(),
+    state => state.get('visibleViewModal'),
   );
 
 export { makeDraftList, makeSelectedDraft, makeVisibleViewModal };

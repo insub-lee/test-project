@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { intlObj, imgUrl } from 'utils/commonUtils';
 import menuRgtIcon from 'images/bizstore/icon-menu-rgt.png';
 
+import moreMenu from 'images/bizstore/icon-more-menu.png';
 import messages from './messages';
 import Card from '../../../components/uielements/card.style';
-import moreMenu from 'images/bizstore/icon-more-menu.png';
 
 class ItemBiz extends PureComponent {
   /* eslint-disable */

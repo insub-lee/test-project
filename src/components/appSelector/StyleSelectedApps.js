@@ -4,7 +4,7 @@ const SelectedUser = styled.div`
   padding: 0 10px 0 9px;
   border: 2px solid #c1c1c1;
 
-  // 선택목록 
+  // 선택목록
   .SUTitle {
     position: relative;
     height: 33px;
@@ -33,7 +33,7 @@ const SelectedUser = styled.div`
       line-height: 29px;
     }
   }
-  
+
   // 테이블
   .SUTable {
     // IE에서 table 안에 체크박스가 있을 때, border로 제작된 checked 표시가 눈에 보이지 않는 버그가 있음.
@@ -42,20 +42,20 @@ const SelectedUser = styled.div`
     margin-top: 5px;
 
     .listDivImg {
-      position:relative;
-      display:inline-block;
-      vertical-align:middle;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
       width: 25px;
       height: 25px;
-      margin-right:10px;
+      margin-right: 10px;
       border-radius: 50%;
-      overflow:hidden;
+      overflow: hidden;
 
       .listImg {
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
       }
     }
 
@@ -68,7 +68,7 @@ const SelectedUser = styled.div`
         height: 33px;
         padding: 0 0 0 6px;
         color: #707070;
-      
+
         & > span:not(.ant-checkbox) {
           position: relative;
           display: block;
@@ -99,7 +99,6 @@ const SelectedUser = styled.div`
         .ant-checkbox-inner:after {
           left: 2.571429px;
         }
-
       }
     }
 
@@ -134,10 +133,8 @@ const SelectedUser = styled.div`
           }
         }
       }
-
     }
   }
-
 `;
 
 export default SelectedUser;

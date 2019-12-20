@@ -16,12 +16,7 @@ export function* appExamine(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/appExamine/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.appExaInsert)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.appExaInsert)}</MessageContent>, 3);
     history.push('/admin/adminmain/sysapp');
     // yield put({ type: constants.APP_EXAMINE_OK, payload: true });
   } else if (code === 201) {

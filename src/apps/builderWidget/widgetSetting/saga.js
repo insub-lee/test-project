@@ -3,6 +3,7 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import * as feed from 'components/Feedback/functions';
 import * as actionTypes from './constants';
 import * as actions from './actions';
 

@@ -4,8 +4,7 @@ import IconRequired from 'images/common/icon-required.png';
 import DelListItem from 'images/common/widget-icon-delete.png';
 
 const StyleUserForm = styled.div`
-
-  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     /* IE10+ specific styles go here */
     line-height: 1 !important;
   }
@@ -20,7 +19,7 @@ const StyleUserForm = styled.div`
     letter-spacing: -0.5px;
 
     &:before {
-      content:url(${IconOption});
+      content: url(${IconOption});
       position: absolute;
       top: -3px;
       left: 0;
@@ -30,7 +29,7 @@ const StyleUserForm = styled.div`
 
     //필수입력 표시
     &.required:before {
-      content:url(${IconRequired});
+      content: url(${IconRequired});
     }
   }
 
@@ -58,7 +57,8 @@ const StyleUserForm = styled.div`
       padding-left: 0;
     }
 
-    &.attachFile, &.edit {
+    &.attachFile,
+    &.edit {
       position: absolute;
       right: 0;
 
@@ -89,7 +89,6 @@ const StyleUserForm = styled.div`
     }
   }
 
-
   //담당자, 대상 목록 (StyleSiteAdminForm.js 소스 참조)
   .appManagerListBox {
     display: inline-block;
@@ -103,7 +102,7 @@ const StyleUserForm = styled.div`
     .resultsTableWrapper {
       width: calc(100% - 17px);
       padding: 5px;
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         margin-bottom: 20px;
       }
@@ -148,7 +147,6 @@ const StyleUserForm = styled.div`
         }
       }
     }
-
   }
 `;
 

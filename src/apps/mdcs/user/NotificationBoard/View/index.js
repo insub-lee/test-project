@@ -26,7 +26,7 @@ class View extends Component {
         >
           <a>삭제</a>
         </Popconfirm>
-        <Button className="btn-primary" onClick={() => this.props.onChangeMovePageHandler('EDIT', workSeq, taskSeq, 'MODIFY')}>
+        <Button className="btn-primary" onClick={() => this.props.onChangeMovePageHandler('MODIFY', workSeq, taskSeq)}>
           수정
         </Button>
         <table>

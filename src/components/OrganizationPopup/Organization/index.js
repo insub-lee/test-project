@@ -88,7 +88,6 @@ class Organization extends Component {
     const tabType = {};
     let tabIndex = 0;
 
-
     if (!isTab) {
       handleGetTreeDataForProfile(Number(deptId));
       handleGetOrganizationData();
@@ -243,24 +242,16 @@ class Organization extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const {
-      treeData,
-      pstnTreeData,
-      dutyTreeData,
-      grpTreeData,
-      organizationData,
-      organizationPstnData,
-      organizationDutyData,
-      isProfile,
-      profile,
-    } = nextProps;
+    const { treeData, pstnTreeData, dutyTreeData, grpTreeData, organizationData, organizationPstnData, organizationDutyData, isProfile, profile } = nextProps;
 
     // 생성자에서 각 탭별 treeData를 가져오는 액션을 발행하는데, 이 액션들의 결과 값들이 하나하나 속성에
     // 전달될 때 마다 리랜더링이 일어남. 이를 최적화 하기 위해 모두 들어왔을 때 렌더링 실행
-    if ((treeData.length !== 0 && organizationData.length !== 0) ||
-        (pstnTreeData.length !== 0 && organizationPstnData.length !== 0)
-        || (dutyTreeData.length !== 0 && organizationDutyData.length !== 0)
-        || grpTreeData.length !== 0) {
+    if (
+      (treeData.length !== 0 && organizationData.length !== 0) ||
+      (pstnTreeData.length !== 0 && organizationPstnData.length !== 0) ||
+      (dutyTreeData.length !== 0 && organizationDutyData.length !== 0) ||
+      grpTreeData.length !== 0
+    ) {
       if (!isProfile) {
         return true;
       }
@@ -405,7 +396,6 @@ class Organization extends Component {
             isTreeCheckbox={isProfile ? false : isTreeCheckbox}
             reset={reset}
             setSearchString={this.setSearchString}
-
             treeData={treeData}
             getUsers={handleGetUsers}
             loadSelected={this.loadSelectedDept}
@@ -418,7 +408,6 @@ class Organization extends Component {
             searchString={searchString}
             isTab={isTab}
             handleSetSelectedUserDeptName={handleSetSelectedUserDeptName}
-
             // isProfile = true 일 경우
             isProfile={isProfile}
             selectedUserDeptName={isProfile ? selectedUserDeptName : undefined}
@@ -673,7 +662,7 @@ class Organization extends Component {
       );
     }
     return content;
-  }
+  };
 
   getSearchSet = (selected) => {
     const {
@@ -707,27 +696,27 @@ class Organization extends Component {
       keyword: keywordForDuty,
       keywordSearched: keywordSearchedForDuty,
     };
-  }
+  };
 
   getSaveTree = (treeData, selectedIndex) => {
     const { handleGetSaveTree } = this.props;
     handleGetSaveTree(treeData, selectedIndex);
-  }
+  };
 
   getSaveGrpTree = (treeData, selectedIndex) => {
     const { handleGetSaveGrpTree } = this.props;
     handleGetSaveGrpTree(treeData, selectedIndex);
-  }
+  };
 
   getSavePstnTree = (treeData, selectedIndex) => {
     const { handleGetSavePstnTree } = this.props;
     handleGetSavePstnTree(treeData, selectedIndex);
-  }
+  };
 
   getSaveDutyTree = (treeData, selectedIndex) => {
     const { handleGetSaveDutyTree } = this.props;
     handleGetSaveDutyTree(treeData, selectedIndex);
-  }
+  };
 
   // 탭 변경 시 Grid 스크롤바 높이 유지
   setScrollTop = (scrollTop, selected) => {
@@ -742,7 +731,7 @@ class Organization extends Component {
     this.setState({
       [scrollTopNames[tabType[selected]]]: scrollTop,
     });
-  }
+  };
 
   // 탭변경
   handleSelect = (key, label) => {
@@ -774,7 +763,7 @@ class Organization extends Component {
     grpList = [];
     pstnList = [];
     dutyList = [];
-  }
+  };
 
   setSearchInput = (selected) => {
     const {
@@ -789,7 +778,7 @@ class Organization extends Component {
         this.searchInputUser.firstChild.value = keywordSearched;
         break;
       case 'pstn':
-        this.searchInputPstn.firstChild.value = keywordSearchedForPstn
+        this.searchInputPstn.firstChild.value = keywordSearchedForPstn;
         break;
       case 'duty':
         this.searchInputDuty.firstChild.value = keywordSearchedForDuty;
@@ -798,7 +787,7 @@ class Organization extends Component {
         this.searchInputGrp.firstChild.value = '';
         break;
     }
-  }
+  };
 
   sendAdd = () => {
     const { addCallback, isModal, item } = this.props;
@@ -873,7 +862,7 @@ class Organization extends Component {
 
     this.props.resetCheckbox();
     this.resetUsers();
-  }
+  };
 
   resetUsers = () => {
     this.setState({
@@ -884,7 +873,7 @@ class Organization extends Component {
       checkduty: [],
       reset: true,
     });
-  }
+  };
 
   deleteAll = () => {
     const {
@@ -908,7 +897,7 @@ class Organization extends Component {
         }
       }
     });
-  }
+  };
 
   sendDelete = (id, type) => {
     const {
@@ -1008,7 +997,7 @@ class Organization extends Component {
         }
       });
     }
-  }
+  };
 
   dndChangePositionUser = (draggedEmpNo, EmpNo) => {
     const {
@@ -1029,7 +1018,7 @@ class Organization extends Component {
     this.setState({
       selectedusers: selectedusersCopy,
     });
-  }
+  };
 
   dndChangePositionCallback = () => {
     const {
@@ -1062,7 +1051,7 @@ class Organization extends Component {
         grp: selectedGrp,
       });
     }
-  }
+  };
 
   onSave = () => {
     const {
@@ -1095,7 +1084,7 @@ class Organization extends Component {
     this.initializeSelectedList();
     this.props.closeModalInit();
     this.props.closeModal();
-  }
+  };
 
   initializeSelectedList = () => {
     this.setState({
@@ -1115,7 +1104,7 @@ class Organization extends Component {
     grpList = [];
     pstnList = [];
     dutyList = [];
-  }
+  };
 
   closeModal = () => {
     deptList = [];
@@ -1143,7 +1132,7 @@ class Organization extends Component {
       this.props.closeModalInit();
       this.props.closeModal();
     });
-  }
+  };
 
   initializeSearchInput = (type) => {
     switch (type) {
@@ -1157,7 +1146,7 @@ class Organization extends Component {
         this.searchInputUser.firstChild.value = '';
         break;
     }
-  }
+  };
 
   setIsDragged = () => {
     const {
@@ -1167,7 +1156,7 @@ class Organization extends Component {
     this.setState({
       isDragged: true,
     });
-  }
+  };
 
   setIsDraggedEnd = () => {
     const {
@@ -1177,7 +1166,7 @@ class Organization extends Component {
     this.setState({
       isDraggedEnd: false,
     });
-  }
+  };
 
   // Grid의 무한 스크롤링을 위한 함수들
   setSelectedIdAndCount = (id, type) => {
@@ -1218,7 +1207,7 @@ class Organization extends Component {
         });
       }
     }
-  }
+  };
   backScrollTopFlag = (type) => {
     switch (type) {
       case 'duty': {
@@ -1245,7 +1234,7 @@ class Organization extends Component {
         });
       }
     }
-  }
+  };
   updateLoadingCount = (selected, type) => {
     const { tabType } = this.state;
     if (type === constantsType.TREE) {
@@ -1281,7 +1270,7 @@ class Organization extends Component {
         [loadingCountSearchNames[tabType[selected]]]: loadingCountSearchs[tabType[selected]] + 1,
       });
     }
-  }
+  };
 
   // Input 태그의 경우 Tab 변경 후 Input 태그가 렌더링 되므로, handleSelect 함수에서 아래의 작업을 할 수 없다. 
   componentDidUpdate(prevProps) {
@@ -1385,7 +1374,7 @@ class Organization extends Component {
     });
 
     return true;
-  }
+  };
 
   // 트리에서 검색어 onChange 호출 시 불리는 함수
   setSearchString = (searchString, treeType) => {
@@ -1411,7 +1400,7 @@ class Organization extends Component {
         });
         break;
     }
-  }
+  };
 
   // 조직도 우측 사용자 프로필 화면에서 프로필사진 옆의 부서 클릭 시 트리를 변경시켜 줄 콜백 함수
   selectedProfileTree = (name, path, fpath) => {
@@ -1423,12 +1412,12 @@ class Organization extends Component {
     } = this.props;
 
     handleSetSelectedProfile({ name, path, fpath });
-  }
+  };
 
   initializeCheckbox = () => {
     const { handleInitializeCheckbox } = this.props;
     handleInitializeCheckbox();
-  }
+  };
 
   // 그리드에서 구성원 클릭 시 해당 구성원의 부서명을 이용해 선택 목록에 들어갈 데이터를 생성
   loadSelected = (users) => {
@@ -1442,7 +1431,7 @@ class Organization extends Component {
     } else if (users.length > 0) {
       this.setState({ users });
     }
-  }
+  };
 
   // 조직도 그리드의 한 구성원을 선택했을 때, 조직도 우측에 선택한 구성원의 정보를 표시해줌
   // isProfile = true 일 때 사용됨
@@ -1450,7 +1439,7 @@ class Organization extends Component {
     this.setState({
       selectedUser,
     });
-  }
+  };
 
   loadSelectedDept = (dept, name) => {
     const {
@@ -1486,7 +1475,7 @@ class Organization extends Component {
       }
       this.setState({ checkDept: deptList, reload: false, reset: false });
     }
-  }
+  };
 
   loadSelectedGrp = (grp) => {
     const {
@@ -1519,7 +1508,7 @@ class Organization extends Component {
       }
       this.setState({ checkgrp: grpList, reload: false, reset: false });
     }
-  }
+  };
 
   loadSelectedPstn = (pstn, name) => {
     const {
@@ -1555,7 +1544,7 @@ class Organization extends Component {
       }
       this.setState({ checkpstn: pstnList, reload: false, reset: false });
     }
-  }
+  };
 
   loadSelectedDuty = (duty, name) => {
     const {
@@ -1591,7 +1580,7 @@ class Organization extends Component {
       }
       this.setState({ checkduty: dutyList, reload: false, reset: false });
     }
-  }
+  };
 
   // changeGrpTreeData = (grpId) => {
   //   const { handleGetChangeGrpTreeData } = this.props;
@@ -1607,7 +1596,7 @@ class Organization extends Component {
       compCdForPstn: compCd,
     });
     handleGetChangePstnTreeData(pstnId);
-  }
+  };
 
   changeDutyTreeData = (data) => {
     const { handleGetChangeDutyTreeData, organizationDutyData } = this.props;
@@ -1618,7 +1607,7 @@ class Organization extends Component {
       compCdForDuty: compCd,
     });
     handleGetChangeDutyTreeData(dutyId);
-  }
+  };
 
   changeTreeData = (data) => {
     const { handleGetChangeTreeData, organizationData } = this.props;
@@ -1629,7 +1618,7 @@ class Organization extends Component {
       compCd: compCd,
     });
     handleGetChangeTreeData(deptId);
-  }
+  };
 
   changeGrpTreeData = (data) => {
     const { handleGetChangeGrpTreeData } = this.props;
@@ -1638,7 +1627,7 @@ class Organization extends Component {
       selectedGrpDept: siteId,
     });
     handleGetChangeGrpTreeData(siteId);
-  }
+  };
 
   changeInputKeyword = (e) => {
     const { handleGetOrganizationUser, organizationData, selectedDept } = this.props;
@@ -1685,7 +1674,7 @@ class Organization extends Component {
         [getKeywordNames[tabType[selected]]]: e.target.value,
       });
     }
-  }
+  };
 
   organizationUserSearch = () => {
     const { selected, tabType } = this.state;
@@ -1722,7 +1711,7 @@ class Organization extends Component {
       scrollTopFlagForGrp: true,
       scrollTopFlagForPstn: true,
     });
-  }
+  };
 
   render() {
     const customstyle = {
@@ -1838,7 +1827,7 @@ class Organization extends Component {
             :
             ''
         }
-      </StyleModal>
+      </StyleModal>;
 
     if (isModal) {
       common = e(Modal, modalProperty, common);
@@ -1921,7 +1910,6 @@ Organization.propTypes = {
   handleGetChangeGrpTreeData: PropTypes.func.isRequired,
   handleGetChangePstnTreeData: PropTypes.func.isRequired,
   handleGetChangeDutyTreeData: PropTypes.func.isRequired,
-  handleGetChangeGrpTreeData: PropTypes.func.isRequired,
   handleGetUser: PropTypes.func.isRequired,
   handleGetOrganizationUser: PropTypes.func.isRequired,
   handleInitializeCheckbox: PropTypes.func.isRequired,
@@ -1934,8 +1922,7 @@ Organization.propTypes = {
   handleGetSaveGrpTree: PropTypes.func.isRequired,
   handleGetSavePstnTree: PropTypes.func.isRequired,
   handleGetSaveDutyTree: PropTypes.func.isRequired,
-  handleGetUser: PropTypes.func.isRequired,
-  
+
   // 탭 플래그
   isTab: PropTypes.bool,
   userTab: PropTypes.bool,
@@ -2054,7 +2041,6 @@ export function mapDispatchToProps(dispatch) {
     handleGetChangeGrpTreeData: grpId => dispatch(actions.getChangeGrpTreeData(grpId)),
     handleGetChangePstnTreeData: pstnId => dispatch(actions.getChangePstnTreeData(pstnId)),
     handleGetChangeDutyTreeData: dutyId => dispatch(actions.getChangeDutyTreeData(dutyId)),
-    handleGetChangeGrpTreeData: dutyId => dispatch(actions.getChangeGrpTreeData(dutyId)),
 
     // 가상그룹
     handleGetGrpTreeData: () => dispatch(actions.getGrpTreeData()),

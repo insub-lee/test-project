@@ -16,14 +16,14 @@ class App extends PureComponent {
     };
   }
 
-  onFileUploaded = (file) => {
+  onFileUploaded = file => {
     const { uploadFiles } = this.state;
     const tmpArr = fromJS(uploadFiles).toJS();
     tmpArr.push(file);
     this.setState({
       uploadFiles: tmpArr,
     });
-  }
+  };
 
   UploadFilesDel = (e, index) => {
     const tmpArr = fromJS(this.state.uploadFiles).toJS();
@@ -59,38 +59,24 @@ class App extends PureComponent {
             borderStyle="none"
           >
             <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-              {uploadFiles.length !== 0 ?
-                <Row
-                  style={rowStyle}
-                  gutter={gutter}
-                  justify="start"
-                >
-                  {
-                    uploadFiles.map((f, index) => (
-                      <Col key={f.seq} md={6} sm={12} xs={24} style={colStyle}>
-                        <img
-                          src={`/img/thumb/200x200/${f.seq}`}
-                          alt={f.fileName}
-                          style={{ width: '100%', maxHeight: 100 }}
-                        />
-                        <li key={f.fileName}>{f.fileName} - {f.fileSize} bytes</li>
-                        <button
-                          className="deleteScreenshots"
-                          onClick={e => this.UploadFilesDel(e, index)}
-                          title={f.fileName}
-                        />
-                      </Col>
-                    ))
-                  }
+              {uploadFiles.length !== 0 ? (
+                <Row style={rowStyle} gutter={gutter} justify="start">
+                  {uploadFiles.map((f, index) => (
+                    <Col key={f.seq} md={6} sm={12} xs={24} style={colStyle}>
+                      <img src={`/img/thumb/200x200/${f.seq}`} alt={f.fileName} style={{ width: '100%', maxHeight: 100 }} />
+                      <li key={f.fileName}>
+                        {f.fileName} - {f.fileSize} bytes
+                      </li>
+                      <button className="deleteScreenshots" onClick={e => this.UploadFilesDel(e, index)} title={f.fileName} />
+                    </Col>
+                  ))}
                   <Col>
                     <div className="readyToUpload" />
                   </Col>
                 </Row>
-                :
-                <div>
-                  Drop files here, or click to select files
-                </div>
-              }
+              ) : (
+                <div>Drop files here, or click to select files</div>
+              )}
             </div>
           </Upload>
         </StyleAppRegisForm>

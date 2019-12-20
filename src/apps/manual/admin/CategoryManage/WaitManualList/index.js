@@ -124,7 +124,4 @@ const mapDispatchToProps = dispatch => ({
   setIsWaitModal: flag => dispatch(actions.setIsWaitModalByReducr(flag)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(WaitManualList);
+export default connect(mapStateToProps, mapDispatchToProps)(WaitManualList);

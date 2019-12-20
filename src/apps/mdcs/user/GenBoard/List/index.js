@@ -46,14 +46,15 @@ class List extends Component {
   componentDidMount() {}
 
   render() {
-    const { responseData } = this.props;
+    const { id, workSeq, responseData, revisionTask, onRevisionComplete } = this.props;
     const { list } = responseData;
-
-    console.debug('list >> ', list);
 
     return (
       <Styled>
         <div className="list-btn list-top-btn" style={{ padding: '5px' }}>
+          <Button className="btn-primary" onClick={() => revisionTask(id, workSeq, 10395, onRevisionComplete)} style={{ marginRight: '10px' }}>
+            REVISION
+          </Button>
           <Button type="button" className="btn-primary" onClick={() => this.props.onChangeMovePageHandler('EDIT', -1, -1)}>
             글쓰기
           </Button>

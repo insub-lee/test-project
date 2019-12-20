@@ -13,7 +13,7 @@ const StyleMyPageTree = styled.div`
   display: flex;
   flex: 1 0 50%;
   padding: 0;
-  flexDirection: column;
+  flexdirection: column;
   height: 100%;
   width: 100%;
 

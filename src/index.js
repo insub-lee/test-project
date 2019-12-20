@@ -1,5 +1,12 @@
-import 'babel-polyfill';
-import 'raf/polyfill';
+import 'react-app-polyfill/ie11';
+import 'react-app-polyfill/stable';
+import 'console-polyfill';
+
+// Needed for redux-saga es6 generator support
+// import '@babel/polyfill';
+import 'core-js';
+import 'regenerator-runtime/runtime';
+import 'formdata-polyfill';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -9,9 +16,9 @@ import { ConnectedRouter } from 'react-router-redux';
 // import createHistory from 'history/createBrowserHistory';
 import globalConfigs from 'utils/globalConfigs';
 import { createBrowserHistory as createHistory } from 'history';
-import 'antd/dist/antd.css';
-import 'xeicon/xeicon.min.css';
-import 'font-awesome/css/font-awesome.min.css';
+
+import './include';
+import GlobalStyle from './theme/GlobalStyle';
 
 import Routes from './containers/common/Routes';
 import LanguageProvider from './containers/common/LanguageProvider';
@@ -35,7 +42,10 @@ const render = messages => {
     <Provider store={store}>
       <LanguageProvider messages={messages}>
         <ConnectedRouter history={history}>
-          <NonBlockApp />
+          <div>
+            <GlobalStyle />
+            <NonBlockApp />
+          </div>
         </ConnectedRouter>
       </LanguageProvider>
     </Provider>,

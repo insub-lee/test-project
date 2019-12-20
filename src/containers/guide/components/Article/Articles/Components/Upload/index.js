@@ -16,5 +16,4 @@ const ArticleUpload = () => (
   </div>
 );
 
-
 export default ArticleUpload;

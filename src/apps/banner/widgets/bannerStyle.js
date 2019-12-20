@@ -4,7 +4,6 @@ import { transition, borderRadius } from '../../../config/style-util';
 import WithDirection from '../../../config/withDirection';
 
 const BannerWrapper = styled.div`
-
   .carouselWrapper {
     display: block;
   }
@@ -28,7 +27,7 @@ const BannerWrapper = styled.div`
       width: 100%;
       height: 80px;
       padding: 10px 10px 40px 10px;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0, 0, 0, 0.5);
       text-align: center;
       z-index: 1;
 

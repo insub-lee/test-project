@@ -8,7 +8,7 @@ export function* getTreeData() {
   const response = yield call(Axios.get, '/api/portal/v1/account/deptTree', { data: 'temp' });
   const list = JSON.parse(`[${response.result.join('')}]`);
 
-  yield put({ type: SET_TREE_DATA, treeData: fromJS(list) }); 
+  yield put({ type: SET_TREE_DATA, treeData: fromJS(list) });
 }
 
 export function* getUsers(payload) {
@@ -37,7 +37,7 @@ export function* getUser(payload) {
     const user = data.data;
     yield put({ type: SET_USER, user });
   } else {
-  // yield put({ type: AUTH_REQUEST_ERROR });
+    // yield put({ type: AUTH_REQUEST_ERROR });
   }
 }
 

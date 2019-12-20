@@ -39,9 +39,10 @@ const initialState = fromJS({
   deletedDockPageId: undefined,
   executedDockPageId: undefined,
   menuFixedYn: 'N',
-  
+
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
   rootPageId: -1,
+  rootAppYn: 'N',
   myHomePageId: -1,
 });
 
@@ -85,7 +86,6 @@ const windowResizeReducer = (state = initialState, action) => {
         .set('myMNotiCnt', action.unreadS)
         .set('isUnreadCnt', []);
     // 포탈로 접속시 로딩에 필요한 액션 끝 ******************
-
     // 2. 독 실행/고정/이동 관련 액션 ******************
     // 2-1
     case actionTypes.EXEC_DOCKITEM:
@@ -132,7 +132,10 @@ const windowResizeReducer = (state = initialState, action) => {
         const afterIndex = state.get('dockAppList').findIndex(app2 => app2.DOCK_ID === afterDockId);
         const result = update(state.toJS(), {
           dockAppList: {
-            $splice: [[appIndex, 1], [afterIndex, 0, app]],
+            $splice: [
+              [appIndex, 1],
+              [afterIndex, 0, app],
+            ],
           },
         });
         return state.set('dockAppList', result.dockAppList);
@@ -148,7 +151,6 @@ const windowResizeReducer = (state = initialState, action) => {
     case actionTypes.SET_ISUNFIXDOCKITEM:
       return state.set('isUnfixDockItem', false);
     // 2. 독 실행/고정/이동 관련 액션 끝 ******************
-
     // 3. 메뉴 실행 관련 액션 ******************
     // 3-1
     case actionTypes.SET_MANAGERINFO:
@@ -178,7 +180,6 @@ const windowResizeReducer = (state = initialState, action) => {
         .set('isUnreadCnt', action.isUnreadCnt)
         .set('apps', action.apps);
     // 6. 서버 푸시(공통) 끝 ******************
-
     // 7. 마이 메뉴 관련 액션 ******************
     // 7-1
     case actionTypes.SET_MYAPP_TREE_NOTI:
@@ -210,17 +211,7 @@ const windowResizeReducer = (state = initialState, action) => {
       return state.set('dataForApps', action.dataForApps);
     case actionTypes.SET_MENU_AND_DOCK_DATA: {
       console.log('### 2.메뉴 및 독 데이터 저장', action);
-      const {
-        executedDockPageId,
-        deletedDockPageId,
-        setMyMenuData,
-        menuName,
-        selectedIndex,
-        managerInfo,
-        dockAppList,
-        selectedApp,
-        // eslint-disable-next-line indent
-      } = action;
+      const { executedDockPageId, deletedDockPageId, setMyMenuData, menuName, selectedIndex, managerInfo, dockAppList, selectedApp } = action;
       if (executedDockPageId) {
         return state
           .set('setMyMenuData', setMyMenuData)
@@ -264,9 +255,12 @@ const windowResizeReducer = (state = initialState, action) => {
     }
     case actionTypes.SET_MENU_FIXED_YN:
       return state.set('menuFixedYn', action.menuFixedYn);
-    // REMOVE DOCK - 공통홈, 개인홈 페이지 ID      
+    // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
     case actionTypes.SET_HOME_ROOT_PAGE:
-      return state.set('rootPageId', action.rootPageId).set('myHomePageId', action.myHomePageId);
+      return state
+        .set('rootPageId', action.rootPageId)
+        .set('rootAppYn', action.rootAppYn)
+        .set('myHomePageId', action.myHomePageId);
     default:
       return state;
   }

@@ -1,16 +1,33 @@
 import React, { Component } from 'react';
 import { Row, Col } from 'antd';
 import Loadable from 'react-loadable';
-
 import { isJSON } from 'utils/helpers';
 import { CompInfo } from '../../CompInfo';
 
 import Styled from './Styled';
 
 class ModifyPage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      initLoading: true,
+    };
+  }
+
+  componentDidMount() {
+    const { revisionTask, id, workSeq, taskSeq } = this.props;
+    revisionTask(id, workSeq, taskSeq);
+  }
+
+  // state값 reset테스트
+  componentWillUnmount() {
+    const { removeReduxState, id } = this.props;
+    removeReduxState(id);
+  }
+
   saveTask = (id, reloadId, callbackFunc) => {
-    const { modifyTask } = this.props;
-    modifyTask(id, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    const { saveTask } = this.props;
+    saveTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
   saveTaskAfter = (id, taskSeq, formData) => {
@@ -59,12 +76,22 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    const { viewLayer, formData } = this.props;
+    const { viewLayer, formData, loadingComplete } = this.props;
+
+    // 로딩
+    if (this.props.isLoading === false && this.state.initLoading) {
+      this.setState(
+        {
+          initLoading: false,
+        },
+        () => loadingComplete(),
+      );
+    }
+
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG) && formData) {
       const viewLayerList = JSON.parse(viewLayer[0].CONFIG).property.layer || [];
       return (
         <Styled>
-          <div className="pop_tit">업무표준</div>
           <div className="pop_con">
             <div className="sub_form">
               <div className="tableBody">

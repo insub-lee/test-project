@@ -29,32 +29,22 @@ class ApplyPage extends Component {
     const { note } = this.state;
 
     if (note.length > 9) {
-      message.success(
-        <MessageContent>
-          {intlObj.get(messages.successApply)}
-        </MessageContent>,
-        3,
-      );
+      message.success(<MessageContent>{intlObj.get(messages.successApply)}</MessageContent>, 3);
 
       this.props.sendApply(item.APP_ID, item.PAGE_ID, note);
       this.props.onClose();
     } else {
-      message.error(
-        <MessageContent>
-          {intlObj.get(messages.ReasonErr)}
-        </MessageContent>,
-        3,
-      );
+      message.error(<MessageContent>{intlObj.get(messages.ReasonErr)}</MessageContent>, 3);
     }
   }
 
-  changeInputKeyword = (e) => {
+  changeInputKeyword = e => {
     if (e.target.value.length > 9) {
       this.setState({ note: e.target.value, disabled: '' });
     } else {
       this.setState({ note: e.target.value, disabled: 'disabled' });
     }
-  }
+  };
 
   render() {
     const modalSize = {
@@ -63,12 +53,10 @@ class ApplyPage extends Component {
       height: 240,
       marginTop: '-120px',
       marginLeft: '-250px',
-    }
+    };
 
     return (
-      <Draggable
-        handle="h2.modalTitle"
-      >
+      <Draggable handle="h2.modalTitle">
         <StyleModal style={modalSize}>
           <h2 className="modalTitle">
             {intlObj.get(messages.AppUsed)}

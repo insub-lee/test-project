@@ -6,4 +6,3 @@ export const DUTY_LIST = 'nrp/containers/MyApp/AppDetailUserForm/DUTY_LIST';
 export const PSTN_LIST = 'nrp/containers/MyApp/AppDetailUserForm/PSTN_LIST';
 export const GRP_LIST = 'nrp/containers/MyApp/AppDetailUserForm/GRP_LIST';
 export const DEPT_LIST = 'nrp/containers/MyApp/AppDetailUserForm/DEPT_LIST';
-

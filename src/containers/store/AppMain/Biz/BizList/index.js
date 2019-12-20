@@ -41,24 +41,22 @@ class BizList extends Component {
 
     this.props.appBizGubun(1);
   }
+
   componentWillReceiveProps(nextProps) {
     const { match, loadingOn } = nextProps;
     const { params } = match;
     const { BIZGRP_ID, searchword } = params;
-    if (searchword
-      && searchword !== ''
-      && this.searchword !== searchword) {
+    if (searchword && searchword !== '' && this.searchword !== searchword) {
       this.searchword = searchword;
       loadingOn();
       this.props.handleGetMapListSearch(searchword);
-    } else if (BIZGRP_ID
-      && BIZGRP_ID !== ''
-      && this.BIZGRP_ID !== Number(BIZGRP_ID)) {
+    } else if (BIZGRP_ID && BIZGRP_ID !== '' && this.BIZGRP_ID !== Number(BIZGRP_ID)) {
       this.BIZGRP_ID = Number(BIZGRP_ID);
       loadingOn();
       this.props.handleGetMapListOne(this.BIZGRP_ID);
     }
   }
+
   render() {
     const {
       initType,
@@ -73,7 +71,7 @@ class BizList extends Component {
       // bizMenuData,
     } = this.props;
 
-    const handleGetMapListOne = (key) => {
+    const handleGetMapListOne = key => {
       changeSearchword('');
       history.push(`/store/appMain/bizStore/biz/list/${key}`);
     };
@@ -88,12 +86,12 @@ class BizList extends Component {
         <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
         <NavList className="navTabs">
           <NavListItem>
-            <NavLink to="/store/appMain/bizStore/app/list">
-              {intlObj.get(messages.category)}
-            </NavLink>
+            <NavLink to="/store/appMain/bizStore/app/list">{intlObj.get(messages.category)}</NavLink>
           </NavListItem>
           <NavListItem>
-            <NavLink to="/store/appMain/bizStore/biz/list" className="current"> {/* 현재 활성화된 상태에 current 클래스 적용 */}
+            <NavLink to="/store/appMain/bizStore/biz/list" className="current">
+              {' '}
+              {/* 현재 활성화된 상태에 current 클래스 적용 */}
               {intlObj.get(messages.bizGroup)}
             </NavLink>
           </NavListItem>
@@ -103,7 +101,7 @@ class BizList extends Component {
           mapList={mapList}
           searchword={searchword}
           getMapListOne={handleGetMapListOne}
-          getMapListMore={(key) => {
+          getMapListMore={key => {
             loadingOn();
             handleGetMapListMore(key);
           }}
@@ -159,8 +157,4 @@ const mapStateToProps = createStructuredSelector({
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizList', reducer });
 const withSaga = injectSaga({ key: 'bizList', saga });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizList);
+export default compose(withReducer, withSaga, withConnect)(BizList);

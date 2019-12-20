@@ -12,15 +12,8 @@ import SelectedUser from './StyleSelectedUser';
 let deleteusers = [];
 
 class selecteduser extends React.Component {
-  onChange = (list) => {
-    const {
-      complete,
-      selectedUsers,
-      deptList,
-      grpList,
-      pstnList,
-      dutyList,
-    } = this.props;
+  onChange = list => {
+    const { complete, selectedUsers, deptList, grpList, pstnList, dutyList } = this.props;
 
     const uidx = selectedUsers.findIndex(t => t.EMP_NO === list.target.value);
     const didx = deptList.findIndex(t => t.id === list.target.value);
@@ -68,15 +61,10 @@ class selecteduser extends React.Component {
       }
     }
     this.props.deleteList(deleteusers);
-  }
-  onChangeAll = (e) => {
-    const {
-      selectedUsers,
-      deptList,
-      grpList,
-      pstnList,
-      dutyList,
-    } = this.props;
+  };
+
+  onChangeAll = e => {
+    const { selectedUsers, deptList, grpList, pstnList, dutyList } = this.props;
 
     deleteusers = [];
 
@@ -122,7 +110,8 @@ class selecteduser extends React.Component {
       deleteusers = [];
       this.props.deleteList('nall');
     }
-  }
+  };
+
   render() {
     const {
       selectedUsers,
@@ -143,120 +132,119 @@ class selecteduser extends React.Component {
         <div className="SUTitle">
           <h3>
             {intlObj.get(messages.selectionList)}
-            <button className="deleteAll" onClick={deleteAll}>전체삭제</button>
+            <button className="deleteAll" onClick={deleteAll}>
+              전체삭제
+            </button>
           </h3>
         </div>
         <ScrollBar style={{ height: 455 }}>
-          <div className="marginForIE"> {/* IE에서의 목록 하단 짤림 방지 */}
-            {(deptList && grpList && pstnList && dutyList && selectedUsers && deptList.length === 0 && grpList.length === 0 &&
-              pstnList.length === 0 && dutyList.length === 0 && selectedUsers.length === 0) &&
-              <div className="noUserSelected">{intlObj.get(messages.noSelection)}</div>}
-            {(deptList !== undefined && deptList.length > 0) && <div className="SUSubTitle">{intlObj.get(messages.department)}</div>}
-            {(deptList !== undefined && deptList.length > 0) &&
+          <div className="marginForIE">
+            {' '}
+            {/* IE에서의 목록 하단 짤림 방지 */}
+            {deptList &&
+              grpList &&
+              pstnList &&
+              dutyList &&
+              selectedUsers &&
+              deptList.length === 0 &&
+              grpList.length === 0 &&
+              pstnList.length === 0 &&
+              dutyList.length === 0 &&
+              selectedUsers.length === 0 && <div className="noUserSelected">{intlObj.get(messages.noSelection)}</div>}
+            {deptList !== undefined && deptList.length > 0 && <div className="SUSubTitle">{intlObj.get(messages.department)}</div>}
+            {deptList !== undefined && deptList.length > 0 && (
               <Table size="small" className="SUTable" style={{ width: '100%' }}>
                 <Table.Body>
-                  {
-                    deptList.map(dept => (
-                      <Table.Row key={dept.title}>
-                        <Table.Cell textAlign="left" title={`${lang.get('NAME', dept)}`} className="SUTableCell">
-                          <NotDraggable dept={dept} deleteCallback={deleteCallback} type="dept">
-                            {lang.get('NAME', dept)}
+                  {deptList.map(dept => (
+                    <Table.Row key={dept.title}>
+                      <Table.Cell textAlign="left" title={`${lang.get('NAME', dept)}`} className="SUTableCell">
+                        <NotDraggable dept={dept} deleteCallback={deleteCallback} type="dept">
+                          {lang.get('NAME', dept)}
+                        </NotDraggable>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            )}
+            {grpList !== undefined && grpList.length > 0 && <div className="SUSubTitle">{intlObj.get(messages.virtualGroup)}</div>}
+            {grpList !== undefined && (
+              <Table size="small" className="SUTable" style={{ width: '100%' }}>
+                <Table.Body>
+                  {grpList.map(grp => (
+                    <Table.Row key={grp.title}>
+                      <Table.Cell textAlign="left" title={`${lang.get('NAME', grp)}`} className="SUTableCell grpItem">
+                        <NotDraggable grp={grp} deleteCallback={deleteCallback} type="grp">
+                          {lang.get('NAME', grp)}
+                        </NotDraggable>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            )}
+            {pstnList !== undefined && pstnList.length > 0 && <div className="SUSubTitle">{intlObj.get(messages.position)}</div>}
+            {pstnList !== undefined && (
+              <Table size="small" className="SUTable" style={{ width: '100%' }}>
+                <Table.Body>
+                  {pstnList.map(pstn => (
+                    <Table.Row key={pstn.title}>
+                      <Table.Cell textAlign="left" title={`${lang.get('NAME', pstn)}`} className="SUTableCell">
+                        <NotDraggable pstn={pstn} deleteCallback={deleteCallback} type="pstn">
+                          {lang.get('NAME', pstn)}
+                        </NotDraggable>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            )}
+            {dutyList !== undefined && dutyList.length > 0 && <div className="SUSubTitle">{intlObj.get(messages.duty)}</div>}
+            {dutyList !== undefined && (
+              <Table size="small" className="SUTable" style={{ width: '100%' }}>
+                <Table.Body>
+                  {dutyList.map(duty => (
+                    <Table.Row key={duty.title}>
+                      <Table.Cell textAlign="left" title={`${lang.get('NAME', duty)}`} className="SUTableCell">
+                        <NotDraggable duty={duty} deleteCallback={deleteCallback} type="duty">
+                          {lang.get('NAME', duty)}
+                        </NotDraggable>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            )}
+            {selectedUsers !== undefined && selectedUsers.length > 0 && <div className="SUSubTitle">{intlObj.get(messages.member)}</div>}
+            {selectedUsers !== undefined && (
+              <Table size="small" className="SUTable" style={{ width: '100%' }}>
+                <Table.Body>
+                  {selectedUsers.map(users => (
+                    <Table.Row key={users.EMP_NO}>
+                      <Table.Cell textAlign="left" title={`${users.NAME_KOR} (${users.EMP_NO}) / ${users.DEPT_NAME_KOR} / ${users.PSTN_NAME_KOR}`}>
+                        {isDraggable ? (
+                          <Draggable
+                            user={users}
+                            deleteCallback={deleteCallback}
+                            type="user"
+                            dndChangePosition={dndChangePositionUser}
+                            dndChangePositionCallback={dndChangePositionCallback}
+                            setIsDragged={setIsDragged}
+                            setIsDraggedEnd={setIsDraggedEnd}
+                          >
+                            <UserProfile userProfile={users} />
+                          </Draggable>
+                        ) : (
+                          <NotDraggable user={users} deleteCallback={deleteCallback} type="user">
+                            <UserProfile userProfile={users} />
                           </NotDraggable>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  }
+                        )}
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
                 </Table.Body>
               </Table>
-            }
-            {(grpList !== undefined && grpList.length > 0) && <div className="SUSubTitle">{intlObj.get(messages.virtualGroup)}</div>}
-            {grpList !== undefined &&
-              <Table size="small" className="SUTable" style={{ width: '100%' }}>
-                <Table.Body>
-                  {
-                    grpList.map(grp => (
-                      <Table.Row key={grp.title}>
-                        <Table.Cell textAlign="left" title={`${lang.get('NAME', grp)}`} className="SUTableCell grpItem">
-                          <NotDraggable grp={grp} deleteCallback={deleteCallback} type="grp">
-                            {lang.get('NAME', grp)}
-                          </NotDraggable>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  }
-                </Table.Body>
-              </Table>
-            }
-            {(pstnList !== undefined && pstnList.length > 0) && <div className="SUSubTitle">{intlObj.get(messages.position)}</div>}
-            {pstnList !== undefined &&
-              <Table size="small" className="SUTable" style={{ width: '100%' }}>
-                <Table.Body>
-                  {
-                    pstnList.map(pstn => (
-                      <Table.Row key={pstn.title}>
-                        <Table.Cell textAlign="left" title={`${lang.get('NAME', pstn)}`} className="SUTableCell">
-                          <NotDraggable pstn={pstn} deleteCallback={deleteCallback} type="pstn">
-                            {lang.get('NAME', pstn)}
-                          </NotDraggable>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  }
-                </Table.Body>
-              </Table>
-            }
-            {(dutyList !== undefined && dutyList.length > 0) && <div className="SUSubTitle">{intlObj.get(messages.duty)}</div>}
-            {dutyList !== undefined &&
-              <Table size="small" className="SUTable" style={{ width: '100%' }}>
-                <Table.Body>
-                  {
-                    dutyList.map(duty => (
-                      <Table.Row key={duty.title}>
-                        <Table.Cell textAlign="left" title={`${lang.get('NAME', duty)}`} className="SUTableCell">
-                          <NotDraggable duty={duty} deleteCallback={deleteCallback} type="duty">
-                            {lang.get('NAME', duty)}
-                          </NotDraggable>
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  }
-                </Table.Body>
-              </Table>
-            }
-            {(selectedUsers !== undefined && selectedUsers.length > 0) && <div className="SUSubTitle">{intlObj.get(messages.member)}</div>}
-            {selectedUsers !== undefined &&
-              <Table size="small" className="SUTable" style={{ width: '100%' }}>
-                <Table.Body>
-                  {
-                    selectedUsers.map(users => (
-                      <Table.Row key={users.EMP_NO}>
-                        <Table.Cell textAlign="left" title={`${users.NAME_KOR} (${users.EMP_NO}) / ${users.DEPT_NAME_KOR} / ${users.PSTN_NAME_KOR}`} >
-                          {
-                            isDraggable
-                            ?
-                              <Draggable
-                                user={users}
-                                deleteCallback={deleteCallback}
-                                type="user"
-                                dndChangePosition={dndChangePositionUser}
-                                dndChangePositionCallback={dndChangePositionCallback}
-                                setIsDragged={setIsDragged}
-                                setIsDraggedEnd={setIsDraggedEnd}
-                              >
-                                <UserProfile userProfile={users} />
-                              </Draggable>
-                            :
-                              <NotDraggable user={users} deleteCallback={deleteCallback} type="user">
-                                <UserProfile userProfile={users} />
-                              </NotDraggable>
-                          }
-                        </Table.Cell>
-                      </Table.Row>
-                    ))
-                  }
-                </Table.Body>
-              </Table>
-            }
+            )}
           </div>
         </ScrollBar>
       </SelectedUser>

@@ -495,14 +495,14 @@ class NotifyAdminReg extends React.Component {
     return (
       <div>
         <Organization
-          isDeptSelectbox={true}
-          isTreeCheckbox={true}
+          isDeptSelectbox
+          isTreeCheckbox
           show={this.state.allOrgShow}
           closeModal={this.allOrgClose}
-          userTab={true}
-          pstnTab={true}
-          dutyTab={true}
-          grpTab={true}
+          userTab
+          pstnTab
+          dutyTab
+          grpTab
           getDataFromOrganization={getDataFromOrganizationAll}
           // 조직도로 가져갈 데이터
           selectedUsers={this.state.userSetMembers.slice()}
@@ -583,7 +583,7 @@ class NotifyAdminReg extends React.Component {
                             'This Month': [moment(), moment().endOf('month')],
                           }}
                           onChange={this.onPeriodChange}
-                          showToday={true}
+                          showToday
                           value={this.state.periodDates !== '' ? this.state.periodDates : null}
                           id="n4"
                         />
@@ -639,7 +639,7 @@ class NotifyAdminReg extends React.Component {
                       <FormItem {...formItemLayout}>
                         <div className="authorityList">
                           <NotifyManagerList
-                            isDeptSelectbox={true}
+                            isDeptSelectbox
                             userList={this.state.userSetMembers}
                             pstnList={this.state.pstnSetMembers}
                             deptList={this.state.deptSetMembers}
@@ -650,7 +650,7 @@ class NotifyAdminReg extends React.Component {
                             returnPstnList={returnPstnList}
                             returnGrpList={returnGrpList}
                             returnDetpList={returnDetpList}
-                            delFlag={true}
+                            delFlag
                             siteIdParam={this.state.siteParam}
                           />
                         </div>
@@ -716,7 +716,7 @@ class NotifyAdminReg extends React.Component {
             </Form>
           </StyleNotifyAdminForm>
           <div className="buttonWrapper">
-            <React.Fragment>
+            <>
               <div style={{ float: 'left' }}>
                 <StyledButton className="btn-light" onClick={this.onClickToList}>
                   {intlObj.get(messages.toList)}
@@ -725,7 +725,7 @@ class NotifyAdminReg extends React.Component {
               <StyledButton className="btn-primary" onClick={this.saveConfirm}>
                 저장
               </StyledButton>
-            </React.Fragment>
+            </>
           </div>
         </StyleNotifyAdminReg>
       </div>
@@ -792,15 +792,8 @@ const mapStateToProps = createStructuredSelector({
   siteCombo: selectors.makeSelectSiteCombo(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'NotifyAdminReg', saga });
 const withReducer = injectReducer({ key: 'NotifyAdminReg', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(NotifyAdminReg);
+export default compose(withReducer, withSaga, withConnect)(NotifyAdminReg);

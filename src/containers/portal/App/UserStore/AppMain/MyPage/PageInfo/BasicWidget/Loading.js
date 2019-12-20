@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 export default function Loading({ isLoading, pastDelay, error }) {
   if (isLoading && pastDelay) {
     return <p>Loading...</p>;
-  } else if (error && !isLoading) {
+  }
+  if (error && !isLoading) {
     return <p>Error!</p>;
   }
   return null;

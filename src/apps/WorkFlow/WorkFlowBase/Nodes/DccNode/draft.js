@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as ApproveConst from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/approveconst';
+import * as ApproveConst from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
 
 class DccNodeDraft extends Component {
   componentDidMount = () => {
@@ -12,9 +12,7 @@ class DccNodeDraft extends Component {
     });
   };
 
-  render = () => {
-    return <div>DCC 노드</div>;
-  };
+  render = () => <div>DCC 노드</div>;
 }
 
 export default DccNodeDraft;

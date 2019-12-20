@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 // import GridLayout from 'react-grid-layout';
-import RGL, { WidthProvider } from "react-grid-layout";
+import RGL, { WidthProvider } from 'react-grid-layout';
 import Loadable from 'react-loadable';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
@@ -22,9 +22,7 @@ function createComponents(item) {
   return (
     <div key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
       <WidgetsWrapper item={item}>
-        <COMP
-          item={item}
-        />
+        <COMP item={item} />
       </WidgetsWrapper>
     </div>
   );
@@ -69,7 +67,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   const layout = [];
   const arrH = [];
 
-  items.sort((a, b) => (a.ord - b.ord));
+  items.sort((a, b) => a.ord - b.ord);
 
   for (let i = 0; i < Math.ceil(items.length / layoutConfig.col) + 10; i += 1) {
     arrH.push([]);
@@ -79,7 +77,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   let cH = 0;
   let cHH = 0;
   let cH2 = 0;
-  items.forEach((item) => {
+  items.forEach(item => {
     let w = item.position[2];
     const h = item.position[3];
 
@@ -132,7 +130,7 @@ function changeLayoutConfig(layoutConfig, view, items) {
   const layout = [];
   const arrH = [];
 
-  items.sort(function (a, b) {
+  items.sort(function(a, b) {
     if (a.y == b.y) return a.x - b.x;
     return a.y - b.y || a.x - b.x;
   });
@@ -148,14 +146,14 @@ function changeLayoutConfig(layoutConfig, view, items) {
 
   let count = 1;
   items.forEach((item, i) => {
-    let w = item.w;
+    let { w } = item;
 
     if (item.ow > layoutConfig.col) {
       w = layoutConfig.col;
     } else {
       w = item.ow;
     }
-    const h = item.h;
+    const { h } = item;
     cW2 = cW;
     cH2 = cH;
     while (cW2 + (w - 1) >= layoutConfig.col) {
@@ -275,12 +273,7 @@ class BizStorePage extends PureComponent {
   }
 
   render() {
-    const {
-      layout,
-      layoutConfig,
-      columns,
-      currentView,
-    } = this.state;
+    const { layout, layoutConfig, columns, currentView } = this.state;
 
     return (
       <WidgetGridWrapper>

@@ -77,15 +77,8 @@ const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizPage', reducer });
 const withSaga = injectSaga({ key: 'bizPage', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PageInfo);
+export default compose(withReducer, withSaga, withConnect)(PageInfo);

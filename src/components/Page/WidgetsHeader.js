@@ -13,27 +13,28 @@ export default class WidgetsHeader extends PureComponent {
       show: false,
     };
   }
-  onReload = (item) => {
+
+  onReload = item => {
     console.log(item, 'reloadTest');
     // 콜백 함수
     item.onReload(item, this);
-  }
+  };
+
   onModal = () => {
     this.setState({ show: true });
-  }
+  };
+
   onModalButton = () => {
     this.setState({ show: true });
-  }
+  };
+
   closeModal = () => {
     this.setState({ show: false });
-  }
+  };
+
   render() {
-    const {
-      item,
-    } = this.props;
-    const {
-      managerInfo,
-    } = item;
+    const { item } = this.props;
+    const { managerInfo } = item;
     const headerStyle = {};
     if (item.bgColor) {
       headerStyle.backgroundColor = item.bgColor;
@@ -46,10 +47,7 @@ export default class WidgetsHeader extends PureComponent {
       functions = [];
     }
     return (
-      <WidgetHeader
-        style={headerStyle}
-        className={item.user && item.user.isTitle ? 'widgetHeader' : 'widgetHeader noTitle'}
-      >
+      <WidgetHeader style={headerStyle} className={item.user && item.user.isTitle ? 'widgetHeader' : 'widgetHeader noTitle'}>
         <h2>
           <BtnIconNotify
             title="새 알림"
@@ -58,46 +56,26 @@ export default class WidgetsHeader extends PureComponent {
             // style={{ display: 'block' }}
           />
           {lang.get('NAME', item)}
-          {
-            (functions.length === 0 && !managerInfo) || (functions.length === 0 && JSON.parse(managerInfo).length === 0)
-              ?
-                ''
-              :
-                <div className="iconsWrapper">
-                  <ul>
-                    <li
-                      style={functions.includes('settings') ? { display: 'block' } : { display: 'none' }}
-                    >
-                      <BtnIconSettings
-                        title="환경설정"
-                        onClick={this.onModal}
-                      />
-                    </li>
-                    <li
-                      style={functions.includes('reload') ? { display: 'block' } : { display: 'none' }}
-                    >
-                      <BtnIconReload
-                        title="새로고침"
-                        onClick={() => this.onReload(item)}
-                      />
-                    </li>
-                    <li
-                      style={functions.includes('more') ? { display: 'block' } : { display: 'none' }}
-                    >
-                      <BtnIconSeeDetails
-                        title="더보기"
-                      />
-                    </li>
-                    <li
-                      style={managerInfo && JSON.parse(managerInfo).length > 0 ? { display: 'block' } : { display: 'none' }}
-                    >
-                      <ManagerInfo
-                        managerInfo={managerInfo ? JSON.parse(managerInfo) : undefined}
-                      />
-                    </li>
-                  </ul>
-                </div>
-          }
+          {(functions.length === 0 && !managerInfo) || (functions.length === 0 && JSON.parse(managerInfo).length === 0) ? (
+            ''
+          ) : (
+            <div className="iconsWrapper">
+              <ul>
+                <li style={functions.includes('settings') ? { display: 'block' } : { display: 'none' }}>
+                  <BtnIconSettings title="환경설정" onClick={this.onModal} />
+                </li>
+                <li style={functions.includes('reload') ? { display: 'block' } : { display: 'none' }}>
+                  <BtnIconReload title="새로고침" onClick={() => this.onReload(item)} />
+                </li>
+                <li style={functions.includes('more') ? { display: 'block' } : { display: 'none' }}>
+                  <BtnIconSeeDetails title="더보기" />
+                </li>
+                <li style={managerInfo && JSON.parse(managerInfo).length > 0 ? { display: 'block' } : { display: 'none' }}>
+                  <ManagerInfo managerInfo={managerInfo ? JSON.parse(managerInfo) : undefined} />
+                </li>
+              </ul>
+            </div>
+          )}
         </h2>
         <WidgetSettingModal show={this.state.show} closeModal={this.closeModal} item={item} />
       </WidgetHeader>

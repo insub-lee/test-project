@@ -9,7 +9,6 @@ import * as constantsMyPage from 'containers/store/AppMain/MyPage/constants';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as constants from './constants';
 
-
 // ONE - 단일 앱리스트(mapList key - 선택된 CATG_ID)
 // ALL - 전체 앱리스트 (mapList key - 각 CATG_ID)
 // SEARCH - 검색 앱리스트 (mapList key - 0)
@@ -79,9 +78,11 @@ export function* initPage(payload) {
   // ONE. 단일 앱리스트
   if (initType.indexOf('ONE') > -1) {
     yield put({ type: constants.GET_MAPLIST_ONE, key: param });
-  } else if (initType.indexOf('SEARCH') > -1) { // SEARCH. 검색 결과 앱리스트
+  } else if (initType.indexOf('SEARCH') > -1) {
+    // SEARCH. 검색 결과 앱리스트
     yield put({ type: constants.GET_MAPLIST_SEARCH, searchword: param });
-  } else { // ALL. 전체 앱리스트
+  } else {
+    // ALL. 전체 앱리스트
     yield put({ type: constants.GET_MAPLIST_ALL });
   }
 }
@@ -171,7 +172,7 @@ export function* getMapListAll() {
 
   const newResult = _.groupBy(result, 'CATG_ID');
   let mapList = fromJS([]);
-  categoryData.forEach((data) => {
+  categoryData.forEach(data => {
     let newData = data;
     const categoryKey = data.get('CATG_ID');
     newData = newData.set('showReadMoreBtn', false);
@@ -204,7 +205,7 @@ export function* getMapListSearch(payload) {
     const appListMap = _.groupBy(result, 'CATG_ID');
     let mapList = fromJS([]);
 
-    Object.keys(appListMap).map((CATG_ID) => {
+    Object.keys(appListMap).map(CATG_ID => {
       let newData = fromJS(categoryFlatData.get(Number(CATG_ID)));
       newData = newData.set('showReadMoreBtn', false);
       newData = newData.set('searchword', searchword);
@@ -414,7 +415,9 @@ export function* registBizModal(payload) {
   const PRNT_ID = node && node.MENU_ID ? node.MENU_ID : -1;
 
   const response = yield call(Axios.post, url, {
-    BIZGRP_ID: Number(APP_ID), PRNT_ID, langGubun,
+    BIZGRP_ID: Number(APP_ID),
+    PRNT_ID,
+    langGubun,
   });
   const { code, resultCategoryData } = response;
 

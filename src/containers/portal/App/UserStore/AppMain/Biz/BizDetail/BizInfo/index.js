@@ -20,15 +20,31 @@ import AppQna from '../../../AppDetail/AppQna/index';
 
 class BizInfo extends Component {
   componentDidMount() {
-    const { match: { params: { BIZGRP_ID } }, handleGetBizInfo, handleGetBizFeedBackList } = this.props;
+    const {
+      match: {
+        params: { BIZGRP_ID },
+      },
+      handleGetBizInfo,
+      handleGetBizFeedBackList,
+    } = this.props;
     handleGetBizInfo(BIZGRP_ID);
     handleGetBizFeedBackList(BIZGRP_ID, 'F');
     handleGetBizFeedBackList(BIZGRP_ID, 'Q');
   }
 
   componentDidUpdate(prevProps) {
-    const { match: { params: { BIZGRP_ID: prevBizgrpId } } } = prevProps;
-    const { match: { params: { BIZGRP_ID: currentBizgrpId } }, handleGetBizInfo, handleGetBizFeedBackList } = this.props;
+    const {
+      match: {
+        params: { BIZGRP_ID: prevBizgrpId },
+      },
+    } = prevProps;
+    const {
+      match: {
+        params: { BIZGRP_ID: currentBizgrpId },
+      },
+      handleGetBizInfo,
+      handleGetBizFeedBackList,
+    } = this.props;
     if (currentBizgrpId && currentBizgrpId !== prevBizgrpId) {
       handleGetBizInfo(currentBizgrpId);
       handleGetBizFeedBackList(currentBizgrpId, 'F');
@@ -37,25 +53,19 @@ class BizInfo extends Component {
   }
 
   render() {
-    const { match: { params: { BIZGRP_ID } }, bizInfo } = this.props;
+    const {
+      match: {
+        params: { BIZGRP_ID },
+      },
+      bizInfo,
+    } = this.props;
     return (
       <div>
-        <AppIntroduction
-          style={{ padding: '0 0 20px 0', border: 'none' }}
-        >
-          <h2
-            className="adTitle"
-          >
-            {intlObj.get(messages.appdscr)}
-          </h2>
-          <div className="dscr">
-            {lang.get('DSCR', bizInfo)}
-          </div>
+        <AppIntroduction style={{ padding: '0 0 20px 0', border: 'none' }}>
+          <h2 className="adTitle">{intlObj.get(messages.appdscr)}</h2>
+          <div className="dscr">{lang.get('DSCR', bizInfo)}</div>
         </AppIntroduction>
-        <AppQna
-          appId={BIZGRP_ID}
-          gubun="b"
-        />
+        <AppQna appId={BIZGRP_ID} gubun="b" />
       </div>
     );
   }
@@ -71,8 +81,7 @@ BizInfo.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   handleGetBizInfo: BIZGRP_ID => dispatch(actions.getBizInfo(BIZGRP_ID)),
-  handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) =>
-    dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
+  handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) => dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
 });
 
 const mapStateToProps = createStructuredSelector({
@@ -84,9 +93,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizInfo', reducer });
 const withSaga = injectSaga({ key: 'bizInfo', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizInfo);
-
+export default compose(withReducer, withSaga, withConnect)(BizInfo);

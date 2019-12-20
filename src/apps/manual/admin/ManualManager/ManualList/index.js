@@ -75,7 +75,7 @@ class ManualList extends Component {
       ...this.getColumnSearchProps('MUAL_NAME'),
       render: (text, record) => (
         <Button className="manualListTitle" type="link" onClick={() => setManualManage('view', record.CATEGORY_IDX, record.MUAL_IDX)}>
-          {<span dangerouslySetInnerHTML={{ __html: record.MUAL_NAME }} />}
+          <span dangerouslySetInnerHTML={{ __html: record.MUAL_NAME }} />
         </Button>
       ),
       width: '60%',
@@ -209,13 +209,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-ManualList-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-ManualList-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(ManualList);
+export default compose(withReducer, withSaga, withConnect)(ManualList);

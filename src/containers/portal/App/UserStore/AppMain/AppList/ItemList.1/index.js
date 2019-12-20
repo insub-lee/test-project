@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 import { intlObj, lang } from 'utils/commonUtils';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 // import _ from 'lodash';
+import Button from 'components/Button';
+import noResultImageSm from 'images/bizstore/no-result_sm.png';
 import Box from '../../../components/utility/box';
 import LayoutWrapper from '../../../components/utility/layoutWrapper';
 import ContentHolder from '../../../components/utility/contentHolder';
-import Button from 'components/Button';
 import Item from '../Item';
 import ItemBiz from '../ItemBiz';
 import messages from './messages';
 import basicStyle from './basicStyle';
 import NoSearchResult from '../NoSearchResult';
-import noResultImageSm from 'images/bizstore/no-result_sm.png';
 
 class ItemList extends Component {
   /*
@@ -65,29 +65,20 @@ class ItemList extends Component {
       if (appList.length > 0) {
         jsx = (
           <div className="storeListTitle">
-            <h3>
-              {lang.get('NAME', map)}
-            </h3>
-            {type !== 'ONE' ?
-              <Button type="button" className="arrowGoToPage" onClick={handleGetMapListOne} />
-              : ''
-            }
+            <h3>{lang.get('NAME', map)}</h3>
+            {type !== 'ONE' ? <Button type="button" className="arrowGoToPage" onClick={handleGetMapListOne} /> : ''}
           </div>
         );
       } else if (appList.length === 0 && type === 'ONE') {
         // 빈화면
         jsx = (
           <div className="storeListTitle" style={{ height: 'auto', borderBottom: 'none' }}>
-            <h3>
-              {lang.get('NAME', map)}
-            </h3>
+            <h3>{lang.get('NAME', map)}</h3>
             <div className="noAppNotification">
               <ul>
                 <li>
                   <img src={noResultImageSm} alt={intlObj.get(messages.alarm)} />
-                  <h4>
-                    {intlObj.get(messages.noRegistApp)}
-                  </h4>
+                  <h4>{intlObj.get(messages.noRegistApp)}</h4>
                 </li>
               </ul>
             </div>
@@ -101,11 +92,12 @@ class ItemList extends Component {
       let result = '';
 
       if (appList.length > 0) {
-        result = appList.map((app) => {
+        result = appList.map(app => {
           const registed = app.WG_COUNT > 0 ? 'true' : 'false';
           const appColkey = `appCol${app.APP_ID}`;
 
-          if (app.APP_TYPE === 'A') { // A - 앱
+          if (app.APP_TYPE === 'A') {
+            // A - 앱
             const handleRegistApp = () => registApp(app.APP_ID, app.CATG_ID);
             const handleRegistCategory = () => registCategory(app.APP_ID, app.CATG_ID);
             return (
@@ -166,33 +158,20 @@ class ItemList extends Component {
       <Box key={boxkey}>
         {renderTitle()}
 
-        <Row>
-          {renderAppList()}
-        </Row>
+        <Row>{renderAppList()}</Row>
 
-        {
-          /* appList more */
-          type === 'ONE' && appList.length > 0 ? (
-            <div className="showReadMore">
-              {showReadMoreBtn ?
-                <Button type="button" className="showMoreBtn" onClick={handleReadMore} />
-                : ''}
-            </div>
-          ) : ''
-        }
-
+        {type === 'ONE' && appList.length > 0 && (
+          <div className="showReadMore">{showReadMoreBtn ? <Button type="button" className="showMoreBtn" onClick={handleReadMore} /> : ''}</div>
+        )}
         <Row key={key}>
           <ContentHolder style={{ overflow: 'hidden' }}>
-            {
-              /* child category list */
-              childList ? childList.map(child => (
-                <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
-                  <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
-                    {lang.get('NAME', child)}
-                  </Button>
-                </Col>
-              )) : ''
-            }
+            {childList.map(child => (
+              <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
+                <Button type="button" className="goSubmenuBtn" onClick={() => getMapListOne(child.key)}>
+                  {lang.get('NAME', child)}
+                </Button>
+              </Col>
+            ))}
           </ContentHolder>
         </Row>
       </Box>
@@ -200,12 +179,7 @@ class ItemList extends Component {
   }
 
   render() {
-    const {
-      mapList,
-      type,
-      searchword,
-      goBack,
-    } = this.props;
+    const { mapList, type, searchword, goBack } = this.props;
 
     const { rowStyle, colStyle, gutter } = basicStyle;
 
@@ -213,17 +187,13 @@ class ItemList extends Component {
       <LayoutWrapper>
         <Row style={rowStyle} gutter={gutter} justify="start">
           <Col span={24} style={colStyle}>
-            {mapList.length > 0 ? (
-              mapList.map((map) => {
-                if (map.appList) {
-                  return this.renderMap(map);
-                }
-                return '';
-              })
-            ) : (
-                ''
-              )}
-            {mapList.length === 0 && type === 'SEARCH' ? (
+            {mapList.map(map => {
+              if (map.appList) {
+                return this.renderMap(map);
+              }
+              return '';
+            })}
+            {mapList.length === 0 && type === 'SEARCH' && (
               <Box key="searchBox">
                 <div className="storeListTitle" style={{ textAlign: 'center' }}>
                   <Button type="button" className="arrowGoBack" onClick={goBack} />
@@ -234,7 +204,7 @@ class ItemList extends Component {
                   </Col>
                 </Row>
               </Box>
-            ) : ''}
+            )}
           </Col>
         </Row>
       </LayoutWrapper>
@@ -243,7 +213,7 @@ class ItemList extends Component {
 }
 
 ItemList.propTypes = {
-  mapList: PropTypes.array.isRequired,
+  mapList: PropTypes.array,
   type: PropTypes.string.isRequired,
   getMapListOne: PropTypes.func.isRequired,
   getMapListMore: PropTypes.func.isRequired,
@@ -251,9 +221,12 @@ ItemList.propTypes = {
   registCategory: PropTypes.func.isRequired,
   registBiz: PropTypes.func.isRequired,
   searchword: PropTypes.string.isRequired,
-
   goBack: PropTypes.func.isRequired,
   currentView: PropTypes.string.isRequired,
+};
+
+ItemList.defaultProps = {
+  mapList: [],
 };
 
 export default ItemList;

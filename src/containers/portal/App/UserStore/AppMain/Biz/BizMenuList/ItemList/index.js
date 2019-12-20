@@ -18,18 +18,14 @@ class ItemList extends Component {
       appList, // 카테고리에 등록된 앱 리스트
     } = map;
 
-    const {
-      match,
-      registApp,
-      registCategory,
-    } = this.props;
+    const { match, registApp, registCategory } = this.props;
     // const childBlocks = makeBlockList(childList, 2);
 
     const renderAppList = () => {
       let result = '';
 
       if (appList.length > 0) {
-        result = appList.map((app) => {
+        result = appList.map(app => {
           const registed = app.WG_COUNT > 0 ? 'true' : 'false';
           // const appColkey = `appCol${app.APP_ID}`;
           const handleRegistApp = () => registApp(app.APP_ID);
@@ -37,31 +33,23 @@ class ItemList extends Component {
           return (
             <Col key={app.MENU_ID} xl={6} md={8} sm={24} className="appBox gridMode">
               <ErrorBoundary>
-                {
-                  app.APP_ID !== -1 ? (
-                    <Item
-                      match={match}
-                      appId={app.APP_ID}
-                      bizgrpId={app.BIZGRP_ID}
-                      appIcon={app.ICON}
-                      title={lang.get('NAME', app)}
-                      subTitle={lang.get('DSCR', app)}
-                      starPoint={app.STARPOINT}
-                      starTotal={app.TOTCNT}
-                      registed={registed}
-                      registApp={handleRegistApp}
-                      registCategory={handleRegistCategory}
-                    />
-                  ) : (
-                    <ItemPage
-                      match={match}
-                      bizgrpId={app.BIZGRP_ID}
-                      pageId={app.PAGE_ID}
-                      title={lang.get('NAME', app)}
-                      subTitle={lang.get('DSCR', app)}
-                    />
-                  )
-                }
+                {app.APP_ID > -1 ? (
+                  <Item
+                    match={match}
+                    appId={app.APP_ID}
+                    bizgrpId={app.BIZGRP_ID}
+                    appIcon={app.ICON}
+                    title={lang.get('NAME', app)}
+                    subTitle={lang.get('DSCR', app)}
+                    starPoint={app.STARPOINT}
+                    starTotal={app.TOTCNT}
+                    registed={registed}
+                    registApp={handleRegistApp}
+                    registCategory={handleRegistCategory}
+                  />
+                ) : (
+                  <ItemPage match={match} bizgrpId={app.BIZGRP_ID} pageId={app.PAGE_ID} title={lang.get('NAME', app)} subTitle={lang.get('DSCR', app)} />
+                )}
               </ErrorBoundary>
             </Col>
           );
@@ -74,39 +62,21 @@ class ItemList extends Component {
 
     return (
       <Box key={boxkey}>
-        <Row>
-          {renderAppList()}
-        </Row>
+        <Row>{renderAppList()}</Row>
       </Box>
     );
   }
 
   render() {
-    const {
-      mapList,
-    } = this.props;
+    const { mapList } = this.props;
 
-    const {
-      rowStyle,
-      colStyle,
-      gutter,
-      gridModeStyle,
-    } = basicStyle;
+    const { rowStyle, colStyle, gutter, gridModeStyle } = basicStyle;
 
     return (
       <LayoutWrapper style={gridModeStyle}>
         <Row style={rowStyle} gutter={gutter} justify="start">
           <Col span={24} style={colStyle} className="gridMode">
-            {mapList.length > 0 ? (
-              mapList.map((map) => {
-                if (map.appList) {
-                  return this.renderMap(map);
-                }
-                return '';
-              })
-            ) : (
-                ''
-              )}
+            {mapList.length > 0 && mapList.map(map => (map.appList ? this.renderMap(map) : ''))}
           </Col>
         </Row>
       </LayoutWrapper>

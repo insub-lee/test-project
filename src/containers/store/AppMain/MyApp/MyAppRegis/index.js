@@ -14,8 +14,7 @@ const { TabPane } = Tabs;
 class MyAppRegis extends React.Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
@@ -31,11 +30,11 @@ class MyAppRegis extends React.Component {
         <StyleMyAppRegis>
           <Tabs defaultActiveKey="1">
             <TabPane tab={intlObj.get(messages.tab1)} key="1">
-              <AppRegisForm
-                history={this.props.history}
-              />
+              <AppRegisForm history={this.props.history} />
             </TabPane>
-            <TabPane tab={intlObj.get(messages.tab2)} key="2" disabled >{intlObj.get(messages.tab2)}</TabPane>
+            <TabPane tab={intlObj.get(messages.tab2)} key="2" disabled>
+              {intlObj.get(messages.tab2)}
+            </TabPane>
             {/* <TabPane tab={intlObj.get(messages.tab3)} key="3" disabled >{intlObj.get(messages.tab3)}</TabPane> */}
           </Tabs>
         </StyleMyAppRegis>

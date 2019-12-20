@@ -9,14 +9,16 @@ class EmptyViewTree extends React.Component {
 
     this.getType = this.getType.bind(this);
   }
+
   getType = () => constantsType.TREE;
+
   render() {
     const style = {
       width: '100%',
       textAlign: 'center',
     };
 
-    return (<div style={style}>{intlObj.get(messages.noSelection)}</div>);
+    return <div style={style}>{intlObj.get(messages.noSelection)}</div>;
   }
 }
 

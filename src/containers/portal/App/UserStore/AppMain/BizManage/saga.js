@@ -28,17 +28,15 @@ export function* getTreeData() {
 }
 
 export function* updateTreeNode(payload) {
-  const {
-    key,
-    newNode,
-  } = payload;
+  const { key, newNode } = payload;
   const bizmanage = yield select(state => state.get('bizmanage'));
   const categoryData = bizmanage.get('categoryData').toJS();
   const categoryFlatData = bizmanage.get('categoryFlatData');
   const node = categoryFlatData.get(key);
 
   const mergedNode = {
-    ...node, ...newNode,
+    ...node,
+    ...newNode,
   }; // 병합
   const rowInfoN = { node: mergedNode, path: _.drop(node.path, 1) };
   const newCategoryData = treeFunc.editNodeByKey(rowInfoN, categoryData);
@@ -62,9 +60,7 @@ export function* moveNode(payload) {
 }
 
 export function* addEmptyNode(payload) {
-  const {
-    rowInfo, data, categoryData, history,
-  } = payload;
+  const { rowInfo, data, categoryData, history } = payload;
   const { node } = rowInfo;
 
   // data : {
@@ -136,7 +132,9 @@ export function* deleteNode(payload) {
       newCategoryData = treeFunc.deleteNode(rowInfo, categoryData);
     } else {
       const newNode = {
-        ...node, DEL_YN: 'Y', CHG_YN: 'Y',
+        ...node,
+        DEL_YN: 'Y',
+        CHG_YN: 'Y',
       }; // 병합
       const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
       newCategoryData = treeFunc.editNodeByKey(rowInfoN, categoryData);
@@ -176,7 +174,9 @@ export function* deleteNode(payload) {
 
 export function* updateBizGroupDelYn(payload) {
   const {
-    rowInfo, categoryData, data, // history,
+    rowInfo,
+    categoryData,
+    data, // history,
   } = payload;
   const { node } = rowInfo;
 
@@ -190,7 +190,8 @@ export function* updateBizGroupDelYn(payload) {
 
   if (code === 200) {
     const newNode = {
-      ...node, ...data,
+      ...node,
+      ...data,
     }; // 병합
     const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
     const newCategoryData = treeFunc.editNodeByKey(rowInfoN, categoryData);

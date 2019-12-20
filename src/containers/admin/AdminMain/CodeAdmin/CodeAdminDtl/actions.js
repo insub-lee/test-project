@@ -13,15 +13,7 @@ export const updateGrid = rows => ({
   payload: fromJS(rows),
 });
 
-export const registerCodeAdmin = (
-  codeGrpCd,
-  codeNameKor,
-  codeNameEng,
-  codeNameChn,
-  codeNameJpn,
-  codeNameEtc,
-  codeList,
-) => ({
+export const registerCodeAdmin = (codeGrpCd, codeNameKor, codeNameEng, codeNameChn, codeNameJpn, codeNameEtc, codeList) => ({
   type: constants.REGISTER_CODE_ADMIN,
   codeGrpCd,
   codeNameKor,
@@ -39,17 +31,7 @@ export const delCodeAdmin = (delGrpCode, delCode, history) => ({
   history,
 });
 
-export const udtCodeAdmin = (
-  codeGrpCd,
-  codeNameKor,
-  codeNameEng,
-  codeNameChn,
-  codeNameJpn,
-  codeNameEtc,
-  codeList,
-  keywordType,
-  keyword,
-) => ({
+export const udtCodeAdmin = (codeGrpCd, codeNameKor, codeNameEng, codeNameChn, codeNameJpn, codeNameEtc, codeList, keywordType, keyword) => ({
   type: constants.UDT_CODE_ADMIN,
   codeGrpCd,
   codeNameKor,

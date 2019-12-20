@@ -43,7 +43,7 @@ const MyPageMainStyle = styled.div`
     height: 100px;
     padding-top: 60px;
     color: #707070;
-    font-size: 16px;    
+    font-size: 16px;
   }
 
   .menu {
@@ -53,7 +53,12 @@ const MyPageMainStyle = styled.div`
     text-align: center;
     border-top: 1px solid #222222;
 
-    &.sec01, &.sec02, &.sec03, &.sec04, &.sec05, &.sec06 {
+    &.sec01,
+    &.sec02,
+    &.sec03,
+    &.sec04,
+    &.sec05,
+    &.sec06 {
       background-repeat: no-repeat;
       background-position: 50% 70px;
     }
@@ -88,8 +93,6 @@ const MyPageMainStyle = styled.div`
       font-size: 14px;
     }
   }
-
- 
 `;
 
 class PageInfo extends Component {
@@ -111,47 +114,54 @@ class PageInfo extends Component {
           <Col xl={4} sm={8} xs={12} className="menu sec01">
             <h2>앱 등록</h2>
             <p className="desc">
-            앱/업무그룹을 선택하여,<br />
-            나만의 메뉴를 등록할 수 있습니다.
+              앱/업무그룹을 선택하여,
+              <br />
+              나만의 메뉴를 등록할 수 있습니다.
             </p>
           </Col>
           <Col xl={4} sm={8} xs={12} className="menu sec02">
             <h2>폴더 추가</h2>
             <p className="desc">
-            폴더 메뉴를 이용해서,<br />
-            메뉴를 분류할 수 있습니다.
-
+              폴더 메뉴를 이용해서,
+              <br />
+              메뉴를 분류할 수 있습니다.
             </p>
           </Col>
           <Col xl={4} sm={8} xs={12} className="menu sec03">
             <h2>페이지 추가</h2>
             <p className="desc">
-            앱에서 제공하는 위젯을<br />
-            활용하여 나만의 페이지를<br />
-            만들 수 있습니다.
+              앱에서 제공하는 위젯을
+              <br />
+              활용하여 나만의 페이지를
+              <br />
+              만들 수 있습니다.
             </p>
           </Col>
           <Col xl={4} sm={8} xs={12} className="menu sec04">
             <h2>메뉴 노출</h2>
             <p className="desc">
-            보고 싶지 않은 메뉴는<br />
-            잠시 꺼 두실 수 있습니다.
+              보고 싶지 않은 메뉴는
+              <br />
+              잠시 꺼 두실 수 있습니다.
             </p>
           </Col>
           <Col xl={4} sm={8} xs={12} className="menu sec05">
             <h2>메뉴 삭제</h2>
             <p className="desc">
-            필요 없는 메뉴는 삭제할 수<br />
-            있어요. 물론 메뉴 등록을<br />
-            이용해서, 다시 등록할 수도<br />
-            있습니다.
+              필요 없는 메뉴는 삭제할 수<br />
+              있어요. 물론 메뉴 등록을
+              <br />
+              이용해서, 다시 등록할 수도
+              <br />
+              있습니다.
             </p>
           </Col>
           <Col xl={4} sm={8} xs={12} className="menu sec06">
             <h2>편집</h2>
             <p className="desc">
-            폴더명, 페이지메뉴 명을<br />
-            변경 할 수 있습니다.
+              폴더명, 페이지메뉴 명을
+              <br />
+              변경 할 수 있습니다.
             </p>
           </Col>
         </Row>

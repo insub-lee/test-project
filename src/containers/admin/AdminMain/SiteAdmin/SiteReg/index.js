@@ -145,10 +145,12 @@ class SiteReg extends React.Component {
     if (e.target.value === '' && lang === 'NAME_KOR') {
       this.setState({ nameValid_Kor: false });
       return;
-    } else if (e.target.value === '' && lang === 'NAME_CHN') {
+    }
+    if (e.target.value === '' && lang === 'NAME_CHN') {
       this.setState({ nameValid_Chn: false });
       return;
-    } else if (e.target.value === '' && lang === 'NAME_ENG') {
+    }
+    if (e.target.value === '' && lang === 'NAME_ENG') {
       this.setState({ nameValid_Eng: false });
       return;
     }
@@ -295,17 +297,20 @@ class SiteReg extends React.Component {
       managerOrgShow: true,
     });
   };
+
   managerOrgClose = () => {
     this.setState({
       managerOrgShow: false,
     });
   };
+
   allOrgOpen = () => {
     // alert(`this.state.grpSetMembers >>> ${this.state.grpSetMembers[0].toString()}`);
     this.setState({
       allOrgShow: true,
     });
   };
+
   allOrgClose = () => {
     this.setState({
       allOrgShow: false,
@@ -486,14 +491,14 @@ class SiteReg extends React.Component {
         )}
         <ErrorBoundary>
           <Organization
-            isDeptSelectbox={true}
-            isTreeCheckbox={true}
+            isDeptSelectbox
+            isTreeCheckbox
             show={this.state.allOrgShow}
             closeModal={this.allOrgClose}
-            userTab={true}
-            pstnTab={true}
-            dutyTab={true}
-            grpTab={true}
+            userTab
+            pstnTab
+            dutyTab
+            grpTab
             getDataFromOrganization={getDataFromOrganizationAll}
             // 조직도로 가져갈 데이터
             selectedUsers={this.state.userSetMembers.slice()}
@@ -613,7 +618,7 @@ class SiteReg extends React.Component {
                       <div className="authorityList">
                         {/* // 리턴 뷰 사용 */}
                         <ErrorBoundary>
-                          <SiteManagerList managerList={this.state.managerSetMembers} delFlag={true} returnManagerList={returnManagerList} />
+                          <SiteManagerList managerList={this.state.managerSetMembers} delFlag returnManagerList={returnManagerList} />
                         </ErrorBoundary>
                       </div>
                       <button onClick={this.managerOrgOpen} className="textLinkBtn">
@@ -631,7 +636,7 @@ class SiteReg extends React.Component {
                       <div className="authorityList">
                         <ErrorBoundary>
                           <SiteManagerList
-                            isDeptSelectbox={true}
+                            isDeptSelectbox
                             userList={this.state.userSetMembers}
                             pstnList={this.state.pstnSetMembers}
                             deptList={this.state.deptSetMembers}
@@ -642,7 +647,7 @@ class SiteReg extends React.Component {
                             returnPstnList={returnPstnList}
                             returnGrpList={returnGrpList}
                             returnDetpList={returnDetpList}
-                            delFlag={true}
+                            delFlag
                             siteIdParam={this.state.siteParam}
                           />
                         </ErrorBoundary>
@@ -798,15 +803,8 @@ const mapStateToProps = createStructuredSelector({
   getDefault: selectors.makeDefaultList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'SiteReg', saga });
 const withReducer = injectReducer({ key: 'SiteReg', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(SiteReg);
+export default compose(withReducer, withSaga, withConnect)(SiteReg);

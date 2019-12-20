@@ -13,19 +13,12 @@ class ReactDataGridCustom extends Component {
     const { scrollTop, scrollHeight, clientHeight } = values;
     const pad = clientHeight / 1.2; // 100px of the bottom
     // t will be greater than 1 if we are about to reach the bottom
-    const t = ((scrollTop + pad) / (scrollHeight - clientHeight));
+    const t = (scrollTop + pad) / (scrollHeight - clientHeight);
     if (t > 1 || scrollTop === scrollHeight - clientHeight) this.props.readMore();
   }
 
   render() {
-    const {
-      columns,
-      rowGetter,
-      onGridSort,
-      rowsCount,
-      rowHeight,
-      emptyRowsView,
-    } = this.props;
+    const { columns, rowGetter, onGridSort, rowsCount, rowHeight, emptyRowsView } = this.props;
     return (
       <StyleDataGrid className="globalLang" style={{ height: 'calc(100vh - 317px)' }}>
         <div className="header">
@@ -52,7 +45,7 @@ class ReactDataGridCustom extends Component {
             rowsCount={rowsCount}
             emptyRowsView={emptyRowsView}
             headerRowHeight={-1}
-            minHeight={(rowHeight * rowsCount)}
+            minHeight={rowHeight * rowsCount}
           />
         </ScrollBar>
       </StyleDataGrid>

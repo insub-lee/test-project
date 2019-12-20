@@ -6,8 +6,10 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 import { Axios } from 'utils/AxiosFunc';
 import * as constantsTree from 'containers/store/components/BizCategory/constants';
 import * as constants from './constants';
+import * as actions from './actions';
 
 export function* getBizMenu(payload) {
+  yield put(actions.enableLoading());
   const {
     key,
     history: {
@@ -55,6 +57,7 @@ export function* getBizMenu(payload) {
     type: constantsTree.SET_SELECTED_INDEX,
     selectedIndex: key,
   });
+  yield put(actions.disableLoading());
 }
 
 export function registerBiz() {

@@ -40,8 +40,7 @@ class TreeNode extends Component {
           // |  +--+
           // |  |  |
           // +--+--+
-          lineClass =
-            'rst__lineHalfHorizontalRight rst__lineHalfVerticalBottom';
+          lineClass = 'rst__lineHalfHorizontalRight rst__lineHalfVerticalBottom';
         } else if (i === scaffoldBlockCount - 1) {
           // Last scaffold block in the row, right before the row content
           // +--+--+

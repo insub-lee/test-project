@@ -4,7 +4,7 @@ import upperFirst from 'lodash/upperFirst';
 import IconFont from '../../IconFont';
 import styles from './index.module.scss';
 
-const MenuItem = (props) => {
+const MenuItem = props => {
   const { command, icon, text } = props;
 
   return (

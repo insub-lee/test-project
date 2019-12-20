@@ -13,21 +13,11 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 export function* appUserSave(payload) {
   const { history } = payload.payload;
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/appUserSave/', payload.payload);
-  const {
-    code,
-    appId,
-    ver,
-    appinfo,
-  } = response;
+  const { code, appId, ver, appinfo } = response;
 
   if (code === 200) {
     // history.push('/store/appMain/MyApp');
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.appUpdateOk)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.appUpdateOk)}</MessageContent>, 3);
     if (appinfo.APV_STATUS_CODE === 'S' || appinfo.APV_STATUS_CODE === 'C') {
       history.push(`/admin/adminmain/sysapp/appDetail/${appId}/${ver}`);
     } else {
@@ -71,66 +61,76 @@ export function* getAppUser(payload) {
     const grpList = [];
     const deptList = [];
 
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'U' ? userList.push({
-        USER_ID: item.ACNT_ID,
-        EMP_NO: item.EMP_NO,
-        NAME_KOR: item.NAME_KOR,
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-        DEPT_NAME_KOR: item.DEPT_NAME_KOR,
-        DEPT_NAME_ENG: item.DEPT_NAME_ENG,
-        DEPT_NAME_CHN: item.DEPT_NAME_CHN,
-        DEPT_NAME_JPN: item.DEPT_NAME_JPN,
-        DEPT_NAME_ETC: item.DEPT_NAME_ETC,
-        PSTN_NAME_KOR: item.PSTN_NAME_KOR,
-        PSTN_NAME_ENG: item.PSTN_NAME_ENG,
-        PSTN_NAME_CHN: item.PSTN_NAME_CHN,
-        PSTN_NAME_JPN: item.PSTN_NAME_JPN,
-        PSTN_NAME_ETC: item.PSTN_NAME_ETC,
-      }) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'T' ? dutyList.push({
-        id: item.ACNT_ID.toString(),
-        NAME_KOR: item.NAME_KOR,
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-      }) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'P' ? pstnList.push({
-        id: item.ACNT_ID.toString(),
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-      }) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'V' ? grpList.push({
-        id: item.ACNT_ID.toString(),
-        NAME_KOR: item.NAME_KOR,
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-      }) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'D' ? deptList.push({
-        id: item.ACNT_ID.toString(),
-        NAME_KOR: item.NAME_KOR,
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-      }) : ''
-    ));
+    response.appSecList.map(item =>
+      item.ACNT_TYPE === 'U'
+        ? userList.push({
+          USER_ID: item.ACNT_ID,
+          EMP_NO: item.EMP_NO,
+          NAME_KOR: item.NAME_KOR,
+          NAME_ENG: item.NAME_ENG,
+          NAME_CHN: item.NAME_CHN,
+          NAME_JPN: item.NAME_JPN,
+          NAME_ETC: item.NAME_ETC,
+          DEPT_NAME_KOR: item.DEPT_NAME_KOR,
+          DEPT_NAME_ENG: item.DEPT_NAME_ENG,
+          DEPT_NAME_CHN: item.DEPT_NAME_CHN,
+          DEPT_NAME_JPN: item.DEPT_NAME_JPN,
+          DEPT_NAME_ETC: item.DEPT_NAME_ETC,
+          PSTN_NAME_KOR: item.PSTN_NAME_KOR,
+          PSTN_NAME_ENG: item.PSTN_NAME_ENG,
+          PSTN_NAME_CHN: item.PSTN_NAME_CHN,
+          PSTN_NAME_JPN: item.PSTN_NAME_JPN,
+          PSTN_NAME_ETC: item.PSTN_NAME_ETC,
+        })
+        : '',
+    );
+    response.appSecList.map(item =>
+      item.ACNT_TYPE === 'T'
+        ? dutyList.push({
+          id: item.ACNT_ID.toString(),
+          NAME_KOR: item.NAME_KOR,
+          NAME_ENG: item.NAME_ENG,
+          NAME_CHN: item.NAME_CHN,
+          NAME_JPN: item.NAME_JPN,
+          NAME_ETC: item.NAME_ETC,
+        })
+        : '',
+    );
+    response.appSecList.map(item =>
+      item.ACNT_TYPE === 'P'
+        ? pstnList.push({
+          id: item.ACNT_ID.toString(),
+          NAME_ENG: item.NAME_ENG,
+          NAME_CHN: item.NAME_CHN,
+          NAME_JPN: item.NAME_JPN,
+          NAME_ETC: item.NAME_ETC,
+        })
+        : '',
+    );
+    response.appSecList.map(item =>
+      item.ACNT_TYPE === 'V'
+        ? grpList.push({
+          id: item.ACNT_ID.toString(),
+          NAME_KOR: item.NAME_KOR,
+          NAME_ENG: item.NAME_ENG,
+          NAME_CHN: item.NAME_CHN,
+          NAME_JPN: item.NAME_JPN,
+          NAME_ETC: item.NAME_ETC,
+        })
+        : '',
+    );
+    response.appSecList.map(item =>
+      item.ACNT_TYPE === 'D'
+        ? deptList.push({
+          id: item.ACNT_ID.toString(),
+          NAME_KOR: item.NAME_KOR,
+          NAME_ENG: item.NAME_ENG,
+          NAME_CHN: item.NAME_CHN,
+          NAME_JPN: item.NAME_JPN,
+          NAME_ETC: item.NAME_ETC,
+        })
+        : '',
+    );
     yield put({ type: constants.USER_LIST, payload: fromJS(userList) });
     yield put({ type: constants.DUTY_LIST, payload: fromJS(dutyList) });
     yield put({ type: constants.PSTN_LIST, payload: fromJS(pstnList) });

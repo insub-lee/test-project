@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Icon, Upload } from "antd";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Icon, Upload } from 'antd';
 
 const getBase64 = file =>
   new Promise((resolve, reject) => {
@@ -30,15 +30,7 @@ class ImageUploader extends Component {
           customRequest={customRequest}
           showUploadList={false}
         >
-          {fileData && fileData.link ? (
-            <img
-              src={`/img/thumb/0x0/${fileData.seq}`}
-              alt="avatar"
-              style={{ width: "100%" }}
-            />
-          ) : (
-            <UploadButton />
-          )}
+          {fileData && fileData.link ? <img src={`/img/thumb/0x0/${fileData.seq}`} alt="avatar" style={{ width: '100%' }} /> : <UploadButton />}
         </Upload>
       </div>
     );
@@ -49,13 +41,13 @@ ImageUploader.propTypes = {
   action: PropTypes.string.isRequired,
   handleChange: PropTypes.func,
   customRequest: PropTypes.func,
-  fileList: PropTypes.arrayOf(PropTypes.object)
+  fileList: PropTypes.arrayOf(PropTypes.object),
 };
 
 ImageUploader.defaultProps = {
   fileList: [],
   handleChange: () => {},
-  customRequest: () => {}
+  customRequest: () => {},
 };
 
 export default ImageUploader;

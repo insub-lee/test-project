@@ -94,16 +94,9 @@ const mapStateToProps = createStructuredSelector({
   leftMenuList: selectors.makeMenuList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'adminMenu', saga });
 const withReducer = injectReducer({ key: 'adminMenu', reducer });
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(App);
+export default compose(withSaga, withReducer, withConnect)(App);

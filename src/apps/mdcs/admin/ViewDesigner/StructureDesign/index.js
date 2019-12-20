@@ -75,12 +75,12 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action 
                   <i className="fa fa-plus" />
                 </CircleActionButton>
                 {group.rows.length > 1 && (
-                  <React.Fragment>
+                  <>
                     <br />
                     <CircleActionButton type="button" onClick={() => action.removeRow(groupIndex, rowIndex)}>
                       <i className="fa fa-minus" />
                     </CircleActionButton>
-                  </React.Fragment>
+                  </>
                 )}
               </div>
               <Row key={row.key} gutter={row.gutter || [0, 0]} type="flex">

@@ -54,29 +54,21 @@ class ItemList extends Component {
       if (appList.length > 0) {
         return (
           <div className="storeListTitle">
-            <h3>
-              {lang.get('NAME', map)}
-            </h3>
-            {type !== 'ONE' ?
-              <Button type="button" className="arrowGoToPage" onClick={handleGetMapListOne} />
-              : ''
-            }
+            <h3>{lang.get('NAME', map)}</h3>
+            {type !== 'ONE' ? <Button type="button" className="arrowGoToPage" onClick={handleGetMapListOne} /> : ''}
           </div>
         );
-      } else if (appList.length === 0 && type === 'ONE') {
+      }
+      if (appList.length === 0 && type === 'ONE') {
         // 빈화면
         return (
           <div className="storeListTitle" style={{ height: 'auto', borderBottom: 'none' }}>
-            <h3>
-              {lang.get('NAME', map)}
-            </h3>
+            <h3>{lang.get('NAME', map)}</h3>
             <div className="noAppNotification">
               <ul>
                 <li>
                   <img src={noResultImageSm} alt={intlObj.get(messages.alarm)} />
-                  <h4>
-                    {intlObj.get(messages.noRegistApp)}
-                  </h4>
+                  <h4>{intlObj.get(messages.noRegistApp)}</h4>
                 </li>
               </ul>
             </div>
@@ -88,7 +80,7 @@ class ItemList extends Component {
 
     const renderAppList = () => {
       if (appList.length > 0) {
-        return appList.map((app) => {
+        return appList.map(app => {
           const handleRegistApp = () => registApp(app.APP_ID, app.CATG_ID, history);
           const handleRegistCategory = () => registCategory(app.APP_ID, app.CATG_ID, history);
           // const itemOnclick = () =>
@@ -130,33 +122,24 @@ class ItemList extends Component {
       <Box key={boxkey}>
         {renderTitle()}
 
-        <Row>
-          {renderAppList()}
-        </Row>
+        <Row>{renderAppList()}</Row>
 
-        {
-          /* appList more */
+        {/* appList more */
           type === 'ONE' && appList.length > 0 && (
-            <div className="showReadMore">
-              {showReadMoreBtn ?
-                <Button type="button" className="showMoreBtn" onClick={handleReadMore} />
-                : ''}
-            </div>
-          )
-        }
+            <div className="showReadMore">{showReadMoreBtn ? <Button type="button" className="showMoreBtn" onClick={handleReadMore} /> : ''}</div>
+          )}
 
         <Row key={key}>
           <ContentHolder style={{ overflow: 'hidden' }}>
-            {
-              /* child category list */
-              childList && childList.map(child => (
+            {/* child category list */
+              childList &&
+              childList.map(child => (
                 <Col key={child.key} xl={6} md={8} sm={24} className="storeRenderChildBlock">
                   <Button type="button" className="goSubmenuBtn" onClick={() => handleGetMapListChildOne(child.key)}>
                     {lang.get('NAME', child)}
                   </Button>
                 </Col>
-              ))
-            }
+              ))}
           </ContentHolder>
         </Row>
       </Box>
@@ -164,12 +147,7 @@ class ItemList extends Component {
   }
 
   render() {
-    const {
-      mapList,
-      type,
-      searchword,
-      goBack,
-    } = this.props;
+    const { mapList, type, searchword, goBack } = this.props;
 
     const { rowStyle, colStyle, gutter } = basicStyle;
 
@@ -177,7 +155,7 @@ class ItemList extends Component {
       <LayoutWrapper>
         <Row style={rowStyle} gutter={gutter} justify="start">
           <Col span={24} style={colStyle}>
-            {mapList.length > 0 && (mapList.map(map => (map.appList ? this.renderMap(map) : '')))}
+            {mapList.length > 0 && mapList.map(map => (map.appList ? this.renderMap(map) : ''))}
             {mapList.length === 0 && type === 'SEARCH' && (
               <Box key="searchBox">
                 <div className="storeListTitle" style={{ textAlign: 'center' }}>

@@ -6,13 +6,13 @@ const RadioGroup = Radio.Group;
 class App extends React.Component {
   state = {
     value: 1,
-  }
+  };
 
-  onChange = (e) => {
+  onChange = e => {
     this.setState({
       value: e.target.value,
     });
-  }
+  };
 
   render() {
     const radioStyle = {
@@ -22,9 +22,15 @@ class App extends React.Component {
     };
     return (
       <RadioGroup onChange={this.onChange} value={this.state.value}>
-        <Radio style={radioStyle} value={1}>Option A</Radio>
-        <Radio style={radioStyle} value={2}>Option B</Radio>
-        <Radio style={radioStyle} value={3}>Option C</Radio>
+        <Radio style={radioStyle} value={1}>
+          Option A
+        </Radio>
+        <Radio style={radioStyle} value={2}>
+          Option B
+        </Radio>
+        <Radio style={radioStyle} value={3}>
+          Option C
+        </Radio>
         <Radio style={radioStyle} value={4}>
           More...
           {this.state.value === 4 ? <Input style={{ width: 100, marginLeft: 10 }} /> : null}
@@ -75,6 +81,6 @@ ReactDOM.render(<App />, mountNode);
 
 const title = '-수직 라디오그룹';
 
-const details = '수직 라디오그룹과 \'More\' 버튼의 예시입니다.';
+const details = "수직 라디오그룹과 'More' 버튼의 예시입니다.";
 
 export { App, code, title, details };

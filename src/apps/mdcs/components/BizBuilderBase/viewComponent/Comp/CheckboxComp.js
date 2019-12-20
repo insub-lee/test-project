@@ -13,15 +13,19 @@ class CheckboxComp extends PureComponent {
 
   componentDidMount() {
     const { id, CONFIG, getExtraApiData } = this.props;
-    const { mapId, META_SEQ } = CONFIG.property;
-    const apiArray = [{ key: `checkBoxData_${META_SEQ}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
+    const { mapId } = CONFIG.property;
+    const apiArray = [{ key: `checkBoxData_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
     getExtraApiData(id, apiArray);
   }
 
   setInitState = checkboxData => {
     const { CONFIG, colData, formData } = this.props;
     const { returnType, etcIndex, etcField } = CONFIG.property;
-    const retrunTypeUpper = returnType.toUpperCase();
+    let returnTypeStr = 'StringNum';
+    if (returnType !== undefined) {
+      returnTypeStr = returnType;
+    }
+    const retrunTypeUpper = returnTypeStr.toUpperCase();
 
     if (retrunTypeUpper === 'STRINGNUM' || retrunTypeUpper === 'ARRAYNUM') {
       let dfaultInitValue = '';
@@ -189,12 +193,12 @@ class CheckboxComp extends PureComponent {
   // 기타 (INPUT태그 사용시)
   etcInputTag = () => {
     const { id, CONFIG, changeFormData, extraApiData } = this.props;
-    const { etcIndex, returnType, etcField, valueKey, META_SEQ } = CONFIG.property;
+    const { etcIndex, returnType, etcField, valueKey, mapId } = CONFIG.property;
     const { checkValue, etcValue } = this.state;
 
     let checkboxData = [];
-    if (extraApiData && extraApiData[`checkBoxData_${META_SEQ}`] && extraApiData[`checkBoxData_${META_SEQ}`].categoryMapList) {
-      checkboxData = extraApiData[`checkBoxData_${META_SEQ}`].categoryMapList;
+    if (extraApiData && extraApiData[`checkBoxData_${mapId}`] && extraApiData[`checkBoxData_${mapId}`].categoryMapList) {
+      checkboxData = extraApiData[`checkBoxData_${mapId}`].categoryMapList;
     }
 
     if (returnType === 'StringNum' || returnType === 'ArrayNum') {
@@ -244,21 +248,37 @@ class CheckboxComp extends PureComponent {
   };
 
   render() {
-    const { id, CONFIG, readOnly, extraApiData, changeFormData, formData } = this.props;
-    const { returnType, etcIndex, META_SEQ, etcField } = CONFIG.property;
+    const { id, CONFIG, readOnly, extraApiData, changeFormData, formData, colData } = this.props;
+    const { etcIndex, mapId, etcField } = CONFIG.property;
     const { checkValue } = this.state;
     const { onChangeValue, etcInputTag, setInitState } = this;
+
+    console.debug('전체 프롭스', this.props);
 
     let view = false;
     if (readOnly !== undefined && readOnly) {
       view = readOnly;
     }
 
-    const dataKey = `checkBoxData_${META_SEQ}`;
+    const dataKey = `checkBoxData_${mapId}`;
     let checkboxData = [];
     if (extraApiData && extraApiData[dataKey] && extraApiData[dataKey].categoryMapList) {
       checkboxData = extraApiData[dataKey].categoryMapList.filter(x => x.LVL > 0 && x.USE_YN === 'Y');
       setInitState(checkboxData);
+    }
+
+    if (colData === undefined) {
+      checkboxData = [
+        { NAME_KOR: '선택1', NODE_ID: 1 },
+        { NAME_KOR: '선택2', NODE_ID: 2 },
+        { NAME_KOR: '선택3', NODE_ID: 3 },
+      ];
+      setInitState(checkboxData);
+    }
+
+    let returnType = 'StringNum';
+    if (CONFIG.property && CONFIG.property.returnType) {
+      returnType = CONFIG.property.returnType;
     }
 
     if (formData && formData[etcField] && formData[etcField] === ' ') {
@@ -266,12 +286,17 @@ class CheckboxComp extends PureComponent {
     }
 
     return (
-      <React.Fragment>
+      <>
         {checkboxData && checkboxData.length > 0 ? (
           checkboxData.map((item, index) => {
             if (typeof item === 'object') {
               if (returnType.toUpperCase() === 'STRINGNUM' || returnType.toUpperCase() === 'ARRAYNUM' || returnType === undefined || returnType === '') {
-                if (CONFIG.property.labelKey !== '' && CONFIG.property.valueKey !== '') {
+                if (
+                  CONFIG.property.labelKey !== '' &&
+                  CONFIG.property.valueKey !== '' &&
+                  CONFIG.property.labelKey !== undefined &&
+                  CONFIG.property.valueKey !== undefined
+                ) {
                   const checked = String(checkValue).charAt(index);
                   return (
                     <Checkbox value={item[`${CONFIG.property.valueKey}`]} checked={checked === '1'} onChange={() => onChangeValue(index)} disabled={view}>
@@ -350,7 +375,7 @@ class CheckboxComp extends PureComponent {
             ></Input>
           </div>
         )}
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -369,7 +394,6 @@ CheckboxComp.propTypes = {
 
 CheckboxComp.defaultProps = {
   readOnly: false,
-  colData: '',
   id: 'checkbox_testComp',
   changeFormData: () => false,
   changeValidationData: () => false,

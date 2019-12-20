@@ -110,13 +110,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-CategoryManage-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-CategoryManage-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(CategoryManage);
+export default compose(withSaga, withReducer, withConnect)(CategoryManage);

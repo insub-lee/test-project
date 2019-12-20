@@ -38,11 +38,13 @@ class MyAppUpdate extends React.Component {
       VER,
     });
   }
-  handleTabClicks = (activeKey) => {
+
+  handleTabClicks = activeKey => {
     this.setState({
       tabNum: activeKey,
     });
   };
+
   render() {
     return (
       <div

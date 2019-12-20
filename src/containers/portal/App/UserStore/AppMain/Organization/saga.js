@@ -1,8 +1,7 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import { SET_TREE_DATA, GET_TREE_DATA, SET_USERS, GET_USERS, SET_USER, GET_USER } from './constants';
-
 import { Axios } from 'utils/AxiosFunc';
+import { SET_TREE_DATA, GET_TREE_DATA, SET_USERS, GET_USERS, SET_USER, GET_USER } from './constants';
 
 export function* getTreeData() {
   const response = yield call(Axios.get, '/api/portal/v1/account/deptTree', { data: 'temp' });

@@ -8,8 +8,8 @@ import FileUpload from 'components/FormStuff/Upload';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
-import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
+import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 
 import StyledContent from '../../../../styled/Modals/StyledContent';
 import StyledCommonForm from '../../../../styled/CommonStyledElement/StyledCommonForm';
@@ -40,7 +40,12 @@ class PmDoc extends Component {
   componentDidMount() {
     const { getExtraApiData, id, localApiArr, getTaskSeq, workSeq } = this.props;
     getExtraApiData(id, localApiArr);
-    getTaskSeq(id, workSeq);
+    // getTaskSeq(id, workSeq);
+  }
+
+  componentWillUnmount() {
+    const { removeReduxState, id } = this.props;
+    removeReduxState(id);
   }
 
   onChangeFormData = (detail, fieldName, compType, contSeq) => {
@@ -106,6 +111,7 @@ class PmDoc extends Component {
     const specApi = [
       {
         key: 'specList',
+
         url: `/api/mdcs/v1/common/MdcsStandard/${type}/${keyword}`,
         type: 'GET',
         params: {},
@@ -176,7 +182,7 @@ class PmDoc extends Component {
   setIsDraftModal = isDraftModal => this.setState({ isDraftModal });
 
   saveTaskAfter = (id, taskSeq, formData) => {
-    this.setState({ isDraftModal: true, taskSeq, title: formData.TITLE, formData });
+    this.setState({ isDraftModal: true, taskSeq, title: formData.PART_DESCRIPTION, formData });
   };
 
   render() {
@@ -224,7 +230,7 @@ class PmDoc extends Component {
                   <div className="rightTable">
                     <Col span={4}>Control Rev</Col>
                     <Col span={8}>
-                      <Input value={sp_rev} />
+                      <Input value="0" readOnly />
                     </Col>
                   </div>
                 </Row>
@@ -535,7 +541,7 @@ class PmDoc extends Component {
                 <Row>
                   <div className="w100Table">
                     <Col span={24}>
-                      {editorConfig && editorConfig.REMARK && formData.hasOwnProperty('REMARK') && (
+                      {editor && editorConfig && editorConfig.REMARK && formData.hasOwnProperty('REMARK') && (
                         <RichTextEditor
                           {...editorConfig.REMARK.property.property}
                           saveTempContents={this.onChangeFormData}
@@ -574,7 +580,7 @@ class PmDoc extends Component {
                       </StyledButton>
                     </Col>
                     <Col span={20}>
-                      {editorConfig && editorConfig.REMARK2 && formData.hasOwnProperty('REMARK2') && (
+                      {editor && editorConfig && editorConfig.REMARK2 && formData.hasOwnProperty('REMARK2') && (
                         <RichTextEditor
                           {...editorConfig.REMARK2.property.property}
                           ref={ref => {
@@ -610,6 +616,7 @@ class PmDoc extends Component {
                   changeFormData(id, 'NODE_ID', selectedNodeId);
                   changeFormData(id, 'PM_ID', docNumber);
                   changeFormData(id, 'SP_REV', sp_rev);
+                  changeFormData(id, 'VERSION', '0.0');
                   this.setState({ selectedDw: [], selectedSpec: [] });
                   saveTask(id, id, this.saveTaskAfter);
                 }}

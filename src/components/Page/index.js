@@ -14,10 +14,7 @@ import SingleWidgetsWrapper from './SingleWidgetsWrapper';
 import Loading from './Loading';
 import * as selectors from './selectors';
 
-
 function createComponents(item) {
-  console.log(item, 'createComponents');
-
   const param = {
     loader: () => import(`apps/${item.basic.path}`),
     loading: Loading,
@@ -66,8 +63,6 @@ function createComponents(item) {
 }
 
 function createSingleComponents(item, isFullSize) {
-  console.log('@@@@@@@@@@@items: ', item);
-  console.log(item, 'createSingleComponents');
   // Object.assign(item.basic, { path: item.legacyPath }); //eslint-disable-line
 
   const param = {
@@ -229,28 +224,8 @@ class Page extends Component {
   componentDidUpdate() {
     this.props.setIsSpinnerShow();
   }
-  render() {
-    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, menuFixedYn} = this.props;
 
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].onReload = onReload;
-    }
-
-    // 위젯의 더보기 기능을 위해 메뉴 실행 함수를 넣어줌
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].execMenu = execMenu;
-    }
-
-    // 퀵메뉴 실행을 위해 execPage
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].execPage = execPage;
-    }
-
-    // 게시판 위젯에서 쓰이는 show 함수
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].show = show;
-    }
-
+  getLayoutConfig = (currentView, menuFixedYn) => {
     const layoutConfig = {
       col: 5,
       width: window.innerWidth,
@@ -278,7 +253,34 @@ class Page extends Component {
         // 모바일 디자인 적용하면서 값 조정
         layoutConfig.col = 1;
         layoutConfig.width = window.innerWidth;
+        break;
     }
+    return layoutConfig;
+  };
+
+  render() {
+    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, menuFixedYn} = this.props;
+
+    for (let i = 0; i < columns.length; i += 1) {
+      columns[i].onReload = onReload;
+    }
+
+    // 위젯의 더보기 기능을 위해 메뉴 실행 함수를 넣어줌
+    for (let i = 0; i < columns.length; i += 1) {
+      columns[i].execMenu = execMenu;
+    }
+
+    // 퀵메뉴 실행을 위해 execPage
+    for (let i = 0; i < columns.length; i += 1) {
+      columns[i].execPage = execPage;
+    }
+
+    // 게시판 위젯에서 쓰이는 show 함수
+    for (let i = 0; i < columns.length; i += 1) {
+      columns[i].show = show;
+    }
+
+    const layoutConfig = this.getLayoutConfig(currentView, menuFixedYn);
     // const columns2 = Object.values(this.props.columns);
     const layout = createLayoutConfig(layoutConfig, currentView, columns);
     const isFullSize = columns.length === 1 && columns[0].size.toUpperCase() === 'FULLSIZE';
@@ -292,7 +294,7 @@ class Page extends Component {
           <div>
             {isPreviewPage === false ? (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' 
+                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N'
                 && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
                   <div>
                     { (setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( //TODO 임시 풀사이즈 위젯 처리
@@ -316,7 +318,7 @@ class Page extends Component {
               </div>
             ) : (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N' 
+                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N'
                 && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
                   <div>
                     { (setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( //TODO 임시 풀사이즈 위젯 처리

@@ -51,28 +51,23 @@ class Grid extends PureComponent {
   // }
 
   render() {
-    const {
-      pmSheetDataList,
-      pinnedTopRowData,
-      onSelectionChanged,
-      onPinnedRowTopCount,
-    } = this.props;
+    const { pmSheetDataList, pinnedTopRowData, onSelectionChanged, onPinnedRowTopCount } = this.props;
     return (
       <div
         className="ag-theme-balham"
         style={{
-        height: '500px',
-        width: '1500px',
-      }}
+          height: '500px',
+          width: '1500px',
+        }}
       >
         <AgGridReact
           rowSelection="multiple"
-          enableSorting={true}
-          enableFilter={true}
+          enableSorting
+          enableFilter
           columnDefs={this.state.columnDefs}
           rowData={pmSheetDataList}
           defaultColDef={this.state.defaultColDef}
-          suppressDragLeaveHidesColumns={true}
+          suppressDragLeaveHidesColumns
           pinnedTopRowData={pinnedTopRowData}
           // onSelectionChanged={this.onSelectionChanged}
           onSelectionChanged={onSelectionChanged}

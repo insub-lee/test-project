@@ -30,6 +30,13 @@ const pageIndex = 20; // 페이징 단위
 let pageSNum = 1; // 페이징 시작 변수
 let pageENum = 20; // 페이징 종료 변수
 
+// 검색결과 없을 때 표시(임시)
+const EmptyData = () => (
+  <div style={{ textAlign: 'center', fontSize: 15, fontWeight: 800, padding: 15 }}>
+    <span>{intlObj.get(messages.noSearch)}</span>
+  </div>
+);
+
 class GlobalAdminList extends React.Component {
   constructor(prop) {
     super(prop);
@@ -215,14 +222,7 @@ class GlobalAdminList extends React.Component {
   };
 
   render() {
-    // 검색결과 없을 때 표시(임시)
-    const EmptyData = () => (
-      <div>
-        <td colSpan="5">
-          <font size="5">검색결과 없음</font>
-        </td>
-      </div>
-    );
+
     const bInfo = {
       MSG_KEY: '',
       DSCR_KOR: '',
@@ -348,15 +348,8 @@ const mapStateToProps = createStructuredSelector({
   // delGlobalMsgList: selectors.makeDeleteGlobalMsg(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'GlobalAdmin', saga });
 const withReducer = injectReducer({ key: 'GlobalAdmin', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(GlobalAdminList);
+export default compose(withReducer, withSaga, withConnect)(GlobalAdminList);

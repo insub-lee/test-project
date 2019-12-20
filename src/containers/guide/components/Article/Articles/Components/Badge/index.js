@@ -16,5 +16,4 @@ const ArticleBadge = () => (
   </div>
 );
 
-
 export default ArticleBadge;

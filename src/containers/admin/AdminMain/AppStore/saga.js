@@ -15,7 +15,6 @@ import messages from './messages';
 import * as constantsAppList from './AppModal/AppList/constants';
 import * as constants from './constants';
 
-
 function getIdByUrl(url, history) {
   const path = history.location.pathname;
   const index = history.location.pathname.indexOf(url);
@@ -26,7 +25,7 @@ function getIdByUrl(url, history) {
 export function* getCategoryComboList() {
   const response = yield call(Axios.get, '/api/common/v1/account/organizationGrpList', { data: 'temp' });
   const { siteId } = response;
-  
+
   yield put({ type: constants.SET_SITE_ID, payload: siteId });
   if (response.list.length > 0) {
     yield put({ type: constants.SET_CATEGORY_COMBO_LIST, payload: fromJS(response.list) });
@@ -78,46 +77,35 @@ export function* moveNode(payload) {
   const { code } = response;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.cateUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.cateUpdate)}</MessageContent>, 3);
     yield put({
       type: constants.GET_CATEGORY_DATA,
       siteId,
       // selectedIndex: `F-${CATG_ID}`,
-    });    
+    });
   } else {
     feed.error(`${intlObj.get(messages.cateInsertFail)}`);
   }
 }
 
-
 export function* insertNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
   const { node } = rowInfo;
 
-  const {
-    SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN,
-  } = data;
+  const { SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN } = data;
 
   if (data.NODE_TYPE === 'F') {
     const param = {
-      SITE_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN,
+      SITE_ID,
+      PRNT_ID,
+      NAME_KOR,
+      NAME_ENG,
+      NAME_CHN,
     };
     const response = yield call(Axios.post, '/api/admin/v1/common/regiscategory', param);
     const { code, catgId } = response;
     if (code === 200) {
-      message.success(
-        <MessageContent>
-          {intlObj.get(messages.cateInsert)}
-        </MessageContent>,
-        3,
-      );
+      message.success(<MessageContent>{intlObj.get(messages.cateInsert)}</MessageContent>, 3);
       yield put({
         type: constants.GET_CATEGORY_DATA,
         siteId: SITE_ID,
@@ -126,14 +114,17 @@ export function* insertNode(payload) {
     } else {
       feed.error(`${intlObj.get(messages.cateInsertFail)}`);
     }
-  } else if (data.NODE_TYPE === 'P') { // 페이지 추가
+  } else if (data.NODE_TYPE === 'P') {
+    // 페이지 추가
     const param = {
-      SITE_ID, NAME_KOR, NAME_ENG, NAME_CHN, CATG_ID: PRNT_ID,
+      SITE_ID,
+      NAME_KOR,
+      NAME_ENG,
+      NAME_CHN,
+      CATG_ID: PRNT_ID,
     };
     const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/registPageApp', { param });
-    const {
-      code, resultCategoryData, pageId, appId,
-    } = response;
+    const { code, resultCategoryData, pageId, appId } = response;
 
     if (code === 200) {
       message.success('앱 등록에 성공 하였습니다.', 3);
@@ -166,30 +157,25 @@ export function* insertNode(payload) {
 }
 
 export function* updateNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
 
   // const { node } = rowInfo;
 
-  const {
-    SITE_ID, NAME_KOR, NAME_ENG, NAME_CHN, CATG_ID, APP_ID,
-  } = data;
+  const { SITE_ID, NAME_KOR, NAME_ENG, NAME_CHN, CATG_ID, APP_ID } = data;
 
   // 앱 카테고리 수정
   if (data.NODE_TYPE === 'F') {
     const param = {
-      SITE_ID, CATG_ID, NAME_KOR, NAME_ENG, NAME_CHN,
+      SITE_ID,
+      CATG_ID,
+      NAME_KOR,
+      NAME_ENG,
+      NAME_CHN,
     };
     const response = yield call(Axios.post, '/api/admin/v1/common/updatecategory', param);
     const { code } = response;
     if (code === 200) {
-      message.success(
-        <MessageContent>
-          {intlObj.get(messages.cateUpdate)}
-        </MessageContent>,
-        3,
-      );
+      message.success(<MessageContent>{intlObj.get(messages.cateUpdate)}</MessageContent>, 3);
       yield put({
         type: constants.GET_CATEGORY_DATA,
         siteId: SITE_ID,
@@ -198,7 +184,8 @@ export function* updateNode(payload) {
     } else {
       feed.error(`${intlObj.get(messages.cateUpdateFail)}`);
     }
-  } else if (data.NODE_TYPE === 'P') { // 페이지 (앱은 수정이 없음)
+  } else if (data.NODE_TYPE === 'P') {
+    // 페이지 (앱은 수정이 없음)
     // const { node } = rowInfo;
 
     const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/updatePageApp', { data });
@@ -223,7 +210,6 @@ export function* updateNode(payload) {
         siteId: SITE_ID,
         selectedIndex: `P-${APP_ID}`,
       });
-      
     } else {
       feed.error('앱 정보 수정에 실패 하였습니다.');
     }
@@ -240,21 +226,16 @@ export function* deleteNode(payload) {
 
   if (node.NODE_TYPE === 'F') {
     // 카테고리 삭제 (등록된 앱이 없을 경우에만 가능)
-    const {
-      CATG_ID, SORT_SQ, SITE_ID, LVL, PRNT_ID,
-    } = node;
+    const { CATG_ID, SORT_SQ, SITE_ID, LVL, PRNT_ID } = node;
     const param = {
-      CATG_ID, SORT_SQ, SITE_ID,
+      CATG_ID,
+      SORT_SQ,
+      SITE_ID,
     };
     const response = yield call(Axios.post, '/api/admin/v1/common/deletecategory', param);
     const { code } = response;
     if (code === 200) {
-      message.success(
-        <MessageContent>
-          {intlObj.get(messages.cateDelete)}
-        </MessageContent>,
-        3,
-      );
+      message.success(<MessageContent>{intlObj.get(messages.cateDelete)}</MessageContent>, 3);
       yield put({
         type: constants.GET_CATEGORY_DATA,
         siteId: SITE_ID,

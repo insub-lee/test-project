@@ -6,4 +6,3 @@ export const DUTY_LIST = 'admin/AdminMain/App/AppDetailUserForm/DUTY_LIST';
 export const PSTN_LIST = 'admin/AdminMain/App/AppDetailUserForm/PSTN_LIST';
 export const GRP_LIST = 'admin/AdminMain/App/AppDetailUserForm/GRP_LIST';
 export const DEPT_LIST = 'admin/AdminMain/App/AppDetailUserForm/DEPT_LIST';
-

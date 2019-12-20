@@ -136,7 +136,7 @@ const StyleUserTree = styled.div`
     left: 0;
 
     .rstcustom__ordinaryButton {
-      left: -16px !important;
+      left: -13px !important;
       top: calc(50% - 3px);
       width: 8px;
       height: 8px;
@@ -186,7 +186,7 @@ const StyleUserTree = styled.div`
   .orgTreeWrapper .rst__lineFullVertical::after, 
   .orgTreeWrapper .rst__lineHalfVerticalTop::after, 
   .orgTreeWrapper .rst__lineHalfVerticalBottom::after {
-    left: calc(50% - 3px) !important;
+    //left: calc(50% - 3px) !important;
     width: 2px;
     background-color: #dedede;
     // height: 0 !important;
@@ -194,7 +194,7 @@ const StyleUserTree = styled.div`
   
   .orgTreeWrapper .rstcustom__expandButton,
   .orgTreeWrapper .rstcustom__collapseButton {
-    left: -12px !important;
+    left: -9px !important;
     top: calc(50% + 2px);
   }
   

@@ -79,26 +79,51 @@ const orgReducer = (state = initialState, action) => {
       }
       return state.set('treeData', action.treeData);
     case actionType.SET_GRP_TREE_DATA:
-      return state.set('grpTreeData', action.grpTreeData).set('selectedGrpIndex', '').set('siteId', action.siteId);
+      return state
+        .set('grpTreeData', action.grpTreeData)
+        .set('selectedGrpIndex', '')
+        .set('siteId', action.siteId);
     case actionType.SET_PSTN_TREE_DATA:
       return state.set('pstnTreeData', action.pstnTreeData).set('selectedPstnIndex', '');
     case actionType.SET_DUTY_TREE_DATA:
       return state.set('dutyTreeData', action.dutyTreeData).set('selectedDutyIndex', '');
     case actionType.SET_USERS:
-      return state.set('users', action.users).set('selectedIndexes', action.selectedIndexes).set('organizationSearchResult', fromJS([])).set('emptyRowsView', EmptyRowsViewTree);
+      return state
+        .set('users', action.users)
+        .set('selectedIndexes', action.selectedIndexes)
+        .set('organizationSearchResult', fromJS([]))
+        .set('emptyRowsView', EmptyRowsViewTree);
     case actionType.SET_GRP_USERS:
-      return state.set('grpUsers', action.grpUsers).set('selectedIndexes4', action.selectedIndexes4).set('emptyRowsViewForGrp', EmptyRowsViewTree);
+      return state
+        .set('grpUsers', action.grpUsers)
+        .set('selectedIndexes4', action.selectedIndexes4)
+        .set('emptyRowsViewForGrp', EmptyRowsViewTree);
     case actionType.SET_PSTN_USERS:
-      return state.set('pstnUsers', action.pstnUsers).set('selectedIndexes2', action.selectedIndexes2).set('organizationSearchResultForPstn', fromJS([])).set('emptyRowsViewForPstn', EmptyRowsViewTree);
+      return state
+        .set('pstnUsers', action.pstnUsers)
+        .set('selectedIndexes2', action.selectedIndexes2)
+        .set('organizationSearchResultForPstn', fromJS([]))
+        .set('emptyRowsViewForPstn', EmptyRowsViewTree);
     case actionType.SET_DUTY_USERS:
-      return state.set('dutyUsers', action.dutyUsers).set('selectedIndexes3', action.selectedIndexes3).set('organizationSearchResultForDuty', fromJS([])).set('emptyRowsViewForDuty', EmptyRowsViewTree);
+      return state
+        .set('dutyUsers', action.dutyUsers)
+        .set('selectedIndexes3', action.selectedIndexes3)
+        .set('organizationSearchResultForDuty', fromJS([]))
+        .set('emptyRowsViewForDuty', EmptyRowsViewTree);
     case actionType.SET_USER:
       return state.set('user', action.user);
     case actionType.GET_ORGANIZATION_USER: {
       if (action.result.size === 0) {
-        return state.set(organizationSearchResultNames[action.aType], action.result).set('users', fromJS([])).set('checkboxInitialize', true).set(emptyRowsViewNames[action.aType], EmptyRowsViewSearch);
+        return state
+          .set(organizationSearchResultNames[action.aType], action.result)
+          .set('users', fromJS([]))
+          .set('checkboxInitialize', true)
+          .set(emptyRowsViewNames[action.aType], EmptyRowsViewSearch);
       }
-      return state.set(organizationSearchResultNames[action.aType], action.result).set('checkboxInitialize', true).set(emptyRowsViewNames[action.aType], EmptyRowsViewSearch);
+      return state
+        .set(organizationSearchResultNames[action.aType], action.result)
+        .set('checkboxInitialize', true)
+        .set(emptyRowsViewNames[action.aType], EmptyRowsViewSearch);
     }
     case actionType.SET_ORGANIZATION_DATA:
       return state.set('organizationData', action.organizationData).set('selectedDept', action.selectedDept);
@@ -121,8 +146,7 @@ const orgReducer = (state = initialState, action) => {
     case actionType.RESET_CHECKBOX:
       return state.set('checkboxInitialize', true);
     case actionType.CLOSE_MODAL:
-      return state.set('groupMemberData', [])
-        .set('searchResultData', []);
+      return state.set('groupMemberData', []).set('searchResultData', []);
     case actionType.GET_SAVE_TREE:
       return state.set('treeData', fromJS(action.treeData)).set('selectedIndex', action.selectedIndex);
     case actionType.GET_SAVE_GRP_TREE:
@@ -142,7 +166,8 @@ const orgReducer = (state = initialState, action) => {
     case actionType.SET_PROFILE_DATA:
       return state.set('profile', action.result);
     case actionType.SET_PROFILE:
-      return state.set('profile', action.result)
+      return state
+        .set('profile', action.result)
         .set('selectedDept', action.selectedDept)
         .set('selectedIndex', action.selectedIndex)
         .set('selectedUserDeptName', action.selectedUserDeptName)
@@ -158,13 +183,18 @@ const orgReducer = (state = initialState, action) => {
     case actionType.SET_SELECTEDUSERDEPTNAME:
       return state.set('selectedUserDeptName', action.selectedUserDeptName);
     case actionType.SET_SELECTEDPROFILE:
-      return state.set('treeData', action.treeData)
+      return state
+        .set('treeData', action.treeData)
         .set('users', action.users)
         .set('selectedIndex', action.selectedIndex)
         .set('selectedDept', action.selectedDept)
         .set('selectedUserDeptName', action.selectedUserDeptName);
     case actionType.INITIALIZE_UNMOUNT:
-      return state.set('treeData', fromJS([])).set('selectedIndex', '').set('profile', undefined).set('selectedUserDeptName', undefined);
+      return state
+        .set('treeData', fromJS([]))
+        .set('selectedIndex', '')
+        .set('profile', undefined)
+        .set('selectedUserDeptName', undefined);
     case actionType.GET_TREE_DATA_PROFILE:
       if (state.get('selectedIndex') === '') {
         return state.set('treeData', action.treeData).set('selectedIndex', '');

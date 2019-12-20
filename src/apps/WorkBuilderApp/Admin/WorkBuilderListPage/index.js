@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Button } from 'antd';
+import { Button, Modal } from 'antd';
 import ReactDataGrid from 'react-data-grid';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import WorkBuilderDetailPage from '../WorkBuilderDetailPage'
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -19,6 +20,10 @@ import Wrapper from './Wrapper';
 import FormModal from './FormModal';
 
 const columns = [
+  {
+    name: 'WORK_SEQ',
+    key: 'WORK_SEQ',
+  },
   {
     name: '업무빌더ID',
     key: 'WORK_ID',
@@ -53,6 +58,11 @@ const columns = [
 ];
 
 class WorkBuilderListPage extends Component {
+  state = {
+    isShow: false,
+    workSeq: 0,
+  }
+
   componentDidMount() {
     const { getList } = this.props;
     getList();
@@ -87,7 +97,8 @@ class WorkBuilderListPage extends Component {
           rowGetter={i => list[i]}
           rowsCount={list.length}
           minHeight={500}
-          onRowClick={i => history.push(`/admin/adminmain/workBuilder/${list[i].WORK_SEQ}`)}
+          // onRowClick={i => history.push(`/admin/adminmain/workBuilder/${list[i].WORK_SEQ}`)}
+          onRowClick={i => this.setState({ isShow: true, workSeq: list[i].WORK_SEQ })}
           enableCellAutoFocus={false}
         />
         <FormModal
@@ -97,6 +108,20 @@ class WorkBuilderListPage extends Component {
           handleOk={() => postWorkBuilder(this.formRef.props)}
           handleCancel={() => toggleModalVisible('formModal', false)}
         />
+        <Modal
+          style={{ top: '10px' }}
+          visible={this.state.isShow}
+          width="95%"
+          maskClosable={false}
+          onCancel={() => {
+            this.setState({ isShow: false, workSeq: 0 });
+          }}
+          destroyOnClose
+          footer={null}
+          zIndex={106}
+        >
+          <WorkBuilderDetailPage workSeq={this.state.workSeq} />
+        </Modal>
       </Wrapper>
     );
   }

@@ -7,7 +7,7 @@ import { split } from 'lodash';
 import { lang } from 'utils/commonUtils';
 import HyundaiLogo from 'images/Hyundai-Logo.png';
 
-import Badge from '../../../../components/Badge/StyleBadge';
+// import Badge from '../../../../components/Badge/StyleBadge';
 import UserSearch from '../../App/UserSearch';
 import UserProfile from '../../App/UserProfile';
 import AlarmPopover from '../../App/UserNotice';
@@ -89,7 +89,7 @@ const Header = ({
                 <UserSearch />
                 {/* 구성원검색 */}
               </li>
-              {hasRoleAdmin === true && (
+              {hasRoleAdmin && (
                 <li>
                   <Tooltip placement="left" title="ADMIN">
                     <Link to="/admin" className="icon-setting" target="_blank" />

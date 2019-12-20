@@ -15,7 +15,7 @@ import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import Organization from 'containers/portal/components/Organization';
-import * as commonjs from 'containers/common/functions/common';
+// import * as commonjs from 'containers/common/functions/common';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -32,7 +32,6 @@ const PSTN = 'P';
 const DUTY = 'T';
 const GRP = 'V';
 
-/* eslint-disable */
 class AuthSetting extends Component {
   constructor(props) {
     super(props);
@@ -227,8 +226,7 @@ class AuthSetting extends Component {
         <Table.Row key={left.MENU_ID}>
           <Table.Cell>{`${blank}${title}`}</Table.Cell>
           <Table.Cell>
-            {/* Left HeaderCell */
-            left.NODE_TYPE !== 'F' ? (
+            {left.NODE_TYPE !== 'F' && (
               <Checkbox
                 key={`left/${left.MENU_ID}`}
                 checked={left.checked}
@@ -236,15 +234,13 @@ class AuthSetting extends Component {
                   this.checkLeftAll(leftArr, mapList, i, e.target.checked);
                 }}
               />
-            ) : (
-              ''
             )}
           </Table.Cell>
           {Object.keys(map).map(key => {
             const data = map[key];
             return (
               <Table.Cell>
-                {data.NODE_TYPE !== 'F' ? (
+                {data.NODE_TYPE !== 'F' && (
                   <Checkbox
                     key={`${data.id}`}
                     checked={data.checked}
@@ -252,8 +248,6 @@ class AuthSetting extends Component {
                       this.check(mapList, leftArr, topArr, data, e.target.checked);
                     }}
                   />
-                ) : (
-                  ''
                 )}
               </Table.Cell>
             );
@@ -279,9 +273,7 @@ class AuthSetting extends Component {
     });
   };
 
-  getOrgData = (data, ACNT_TYPE) => {
-    return data.filter(o => o.ACNT_TYPE === ACNT_TYPE);
-  };
+  getOrgData = (data, ACNT_TYPE) => data.filter(o => o.ACNT_TYPE === ACNT_TYPE);
 
   getDataFromOrganization = result => {
     const { checkedDept, checkedDuty, checkedGrp, checkedPstn, selectedUsers } = result;
@@ -298,18 +290,21 @@ class AuthSetting extends Component {
   };
 
   initMapList = topArr => {
+    const nextTopArr = topArr.map(top => ({
+      ...top,
+      checked: top.checked || false,
+    }));
     const { leftArr, bizMenuSecKeyList } = this.props;
     const { BIZGRP_ID, SEC_TYPE } = this.state;
-    if (leftArr.length > 0 && topArr.length > 0) {
+    if (leftArr.length > 0 && nextTopArr.length > 0) {
       const mapList = [];
 
       leftArr.forEach((left, i) => {
         const map = {};
 
-        topArr.forEach((top, j) => {
+        nextTopArr.forEach((top, j) => {
           const id = `${top.ACNT_TYPE}_${top.ACNT_ID}`;
           const key = `${left.MENU_ID}_${top.ACNT_ID}_${SEC_TYPE}_${top.ACNT_TYPE}`;
-          top.checked = top.checked === undefined ? false : top.checked;
 
           map[id] = {
             id,
@@ -329,21 +324,21 @@ class AuthSetting extends Component {
       });
 
       this.setState({
-        topArr,
+        topArr: nextTopArr,
         mapList,
         data: {
           V: {
-            users: topArr.filter(top => top.ACNT_TYPE === USER),
-            depts: topArr.filter(top => top.ACNT_TYPE === DEPT),
-            pstns: topArr.filter(top => top.ACNT_TYPE === PSTN),
-            dutys: topArr.filter(top => top.ACNT_TYPE === DUTY),
-            grps: topArr.filter(top => top.ACNT_TYPE === GRP),
+            users: nextTopArr.filter(top => top.ACNT_TYPE === USER),
+            depts: nextTopArr.filter(top => top.ACNT_TYPE === DEPT),
+            pstns: nextTopArr.filter(top => top.ACNT_TYPE === PSTN),
+            dutys: nextTopArr.filter(top => top.ACNT_TYPE === DUTY),
+            grps: nextTopArr.filter(top => top.ACNT_TYPE === GRP),
           },
         },
       });
 
-      //todo
-      //새로 추가된 부서 또는 사용자 DB저장
+      // todo
+      // 새로 추가된 부서 또는 사용자 DB저장
       this.props.insertBizGroupAuth(topArr);
     }
   };
@@ -391,10 +386,10 @@ class AuthSetting extends Component {
         <Organization
           show={this.state.orgShow}
           closeModal={this.orgClose}
-          userTab={true}
-          pstnTab={true}
-          dutyTab={true}
-          grpTab={true}
+          userTab
+          pstnTab
+          dutyTab
+          grpTab
           // 조직도 모달창으로 가져갈 데이터
           selectedUsers={oldUsers.slice()}
           checkedDept={oldDepts.slice()}
@@ -426,27 +421,26 @@ class AuthSetting extends Component {
                 <Table size="small" className="BizAuthTable" collapsing>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell style={{ textAlign: 'left' }}>{lang.get('NAME', bizGroupInfo)}</Table.HeaderCell>
+                      <Table.HeaderCell style={{ textAlign: 'left' }}>
+                        {lang.get('NAME', bizGroupInfo)}
+                      </Table.HeaderCell>
                       <Table.HeaderCell />
-                      {/* Top HeaderCell */
-                      topArr &&
-                        topArr.map((top, j) => {
-                          const id = `${top.ACNT_TYPE}_${top.ACNT_ID}`;
-                          return (
-                            <Table.HeaderCell>
-                              <div>
-                                <p title={top.NAME_KOR}>{top.NAME_KOR}</p>
-                              </div>
-                              <Checkbox
-                                key={`top/${id}`}
-                                checked={top.checked}
-                                onChange={e => {
-                                  this.checkTopAll(topArr, mapList, j, id, e.target.checked);
-                                }}
-                              />
-                            </Table.HeaderCell>
-                          );
-                        })}
+                      {topArr.map((top, j) => (
+                        <Table.HeaderCell key={`${top.ACNT_TYPE}_${top.ACNT_ID}`}>
+                          <div>
+                            <p title={top.NAME_KOR}>{top.NAME_KOR}</p>
+                          </div>
+                          <div style={{ minHeight: 30, height: 30 }}>
+                            <Checkbox
+                              key={`top/${top.ACNT_TYPE}_${top.ACNT_ID}`}
+                              checked={top.checked}
+                              onChange={e => {
+                                this.checkTopAll(topArr, mapList, j, `${top.ACNT_TYPE}_${top.ACNT_ID}`, e.target.checked);
+                              }}
+                            />
+                          </div>
+                        </Table.HeaderCell>
+                      ))}
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>{leftArr.length > 0 && mapList.length > 0 ? this.makeTableBody(mapList, leftArr, topArr) : ''}</Table.Body>
@@ -492,18 +486,9 @@ const mapStateToProps = createStructuredSelector({
   bizMenuSecKeyList: selectors.makeBizMenuSecKeyList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/AuthSetting', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AuthSetting', saga });
 
-export default injectIntl(
-  compose(
-    withReducer,
-  withSaga,
-  withConnect,
-  )(AuthSetting),
-);
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AuthSetting));

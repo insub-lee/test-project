@@ -46,7 +46,6 @@ const StyleMyAppRegis = styled.div`
       }
     }
   }
-
 `;
 
 export default StyleMyAppRegis;

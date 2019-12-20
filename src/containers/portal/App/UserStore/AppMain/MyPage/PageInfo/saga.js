@@ -15,7 +15,7 @@ export function* getWidgetList(payload) {
   const { widgetList } = response;
   if (widgetList) {
     yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(JSON.parse(widgetList)) });
-  }else {
+  } else {
     yield put(push('/error'));
   }
 }

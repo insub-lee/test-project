@@ -193,7 +193,6 @@ export {
   existNodeByKey,
   mergeArray,
   generateList,
-  initGenerateList,
   generateListBiz,
   generateListBizManage,
   getTreeFromFlatTreeData,

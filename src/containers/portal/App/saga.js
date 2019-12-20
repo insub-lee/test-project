@@ -14,7 +14,7 @@ import * as actionType from './constants';
 export function* resetPageApps(payload) {
   const resultValue = JSON.parse(payload.widgetList);
   const setMyMenuThisData = yield select(stateParam => stateParam.get('common').get('setMyMenuData'));
-  
+
   const apps = yield select(stateParam => stateParam.get('common').get('apps'));
   const index = apps.findIndex(o => o.children.props.children.props.setMyMenuData.PAGE_ID === payload.PAGE_ID);
   // 현재 실행중인 페이지가 변경된 경우
@@ -208,8 +208,8 @@ export function* getDockItemList(payload) {
             if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -255,9 +255,9 @@ export function* loadingDockItem(payload) {
   let lastDockItem = '';
 
   // page 실행을 위한 node 데이터 생성
-  dockList2 = dockList.map((app) => {
+  dockList2 = dockList.map(app => {
     if (app.LAST_EXEC_YN === 'Y') {
-      const appCopy = Object.assign({}, app);
+      const appCopy = { ...app };
 
       // node 데이터 만들기
       node.NODE_TYPE = appCopy.NODE_TYPE;
@@ -297,8 +297,8 @@ export function* loadingDockItem(payload) {
             if (dockList[a].WIDGET_LIST) {
               const appIdArr = dockList[a].WIDGET_LIST.split(',');
               let sum = 0;
-              notiVal.forEach((notiValue) => {
-                appIdArr.forEach((i) => {
+              notiVal.forEach(notiValue => {
+                appIdArr.forEach(i => {
                   if (notiValue.APP_ID === Number(i)) {
                     sum += notiValue.UNREAD_CNT;
                   }
@@ -314,20 +314,26 @@ export function* loadingDockItem(payload) {
       }
 
       if (lastDockItem.INTL_TYPE === 'Y') {
-        yield put(push({
-          pathname: `/apps/${lastDockItem.SRC_PATH}`,
-          execInfo: state,
-        }));
+        yield put(
+          push({
+            pathname: `/apps/${lastDockItem.SRC_PATH}`,
+            execInfo: state,
+          }),
+        );
       } else if (lastDockItem.SRC_PATH === 'legacySVC') {
-        yield put(push({
-          pathname: `/apps/${lastDockItem.SRC_PATH}`,
-          execInfo: state,
-        }));
+        yield put(
+          push({
+            pathname: `/apps/${lastDockItem.SRC_PATH}`,
+            execInfo: state,
+          }),
+        );
       } else {
-        yield put(push({
-          pathname: `/page/${lastDockItem.PAGE_ID}`,
-          execInfo: state,
-        }));
+        yield put(
+          push({
+            pathname: `/page/${lastDockItem.PAGE_ID}`,
+            execInfo: state,
+          }),
+        );
       }
     }
   }
@@ -391,10 +397,7 @@ export function* resetHomepageSec(payload) {
 }
 
 export function* resetDockItemForCommonBiz(payload) {
-  const {
-    PAGE_IDS,
-    SITE_ID,
-  } = payload;
+  const { PAGE_IDS, SITE_ID } = payload;
 
   const response = yield call(Axios.post, '/api/portal/v1/dock/deleteDockItemCommonBiz', { PAGE_IDS, SITE_ID });
   const { result } = response;

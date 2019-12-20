@@ -27,5 +27,4 @@ export const SET_HOME = 'nrp-admin/containers/Site/SET_HOME';
 export const GET_SKIN = 'nrp-admin/containers/Site/GET_SKIN';
 export const SET_SKIN = 'nrp-admin/containers/Site/SET_SKIN';
 
-
 export const TEST = 'nrp-admin/containers/Site/TEST';

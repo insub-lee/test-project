@@ -38,9 +38,7 @@ export const changeSelectedIndex = selectedIndex => ({
   selectedIndex,
 });
 
-export const appBizGubun = gubun => (
-  {
-    type: appConstants.APP_BIZ_GUBUN,
-    gubun,
-  }
-);
+export const appBizGubun = gubun => ({
+  type: appConstants.APP_BIZ_GUBUN,
+  gubun,
+});

@@ -16,16 +16,16 @@ import * as feed from 'components/Feedback/functions';
 import { intlObj, lang, imgUrl } from 'utils/commonUtils';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import AntRadiobox from 'containers/admin/components/uielements/radiobox.style';
+import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from 'containers/admin/components/uielements/buttons.style';
+import StyledButton from 'components/Button/StyledButton';
 import messages from '../messages';
 import MyAppCategoryModal from '../AppCategoryModal';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
-import AntRadiobox from 'containers/admin/components/uielements/radiobox.style';
-import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from 'containers/admin/components/uielements/buttons.style';
 import { StyleAppUpdateForm, Vesions } from './StyleAppUpdateForm';
-import StyledButton from 'components/Button/StyledButton';
 
 const RadioGroup = AntRadiobox(Radio.Group);
 const FormItem = Form.Item;
@@ -101,6 +101,7 @@ class AppUpdateForm extends React.Component {
     this.props.getInitInfo();
     this.props.getMyAppDetail(this.state.APP_ID, this.state.VER, lang.getLocale(), prop.history);
   }
+
   // componentDidUpdate(prevProps, prevState) { //eslint-disable-line
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -196,6 +197,7 @@ class AppUpdateForm extends React.Component {
       }
     }
   }
+
   onFileUploadedIcon(file) {
     this.setState({
       UploadFilesIcon: [],
@@ -206,6 +208,7 @@ class AppUpdateForm extends React.Component {
       UploadFilesIcon: tmpArr,
     });
   }
+
   onFileUploadedWork(file) {
     this.setState({
       UploadFilesWork: [],
@@ -216,6 +219,7 @@ class AppUpdateForm extends React.Component {
       UploadFilesWork: tmpArr,
     });
   }
+
   onFileUploadedManual(file) {
     this.setState({
       UploadFilesManual: [],
@@ -226,6 +230,7 @@ class AppUpdateForm extends React.Component {
       UploadFilesManual: tmpArr,
     });
   }
+
   onFileUploadedScreenshot(file) {
     // this.setState({
     //   UploadFilesScreenshot: [],
@@ -236,11 +241,13 @@ class AppUpdateForm extends React.Component {
       UploadFilesScreenshot: tmpArr,
     });
   }
+
   UploadFilesIconDel = () => {
     this.setState({
       UploadFilesIcon: [],
     });
   };
+
   UploadFilesScreenDel = (e, index) => {
     const tmpArr = fromJS(this.state.UploadFilesScreenshot).toJS();
     tmpArr.splice(index, 1);
@@ -249,53 +256,57 @@ class AppUpdateForm extends React.Component {
     });
     e.stopPropagation();
   };
+
   MyAppCategoryModalOpen = () => {
     this.setState({
       MyAppCategoryModalShow: true,
     });
   };
+
   MyAppCategoryModalClose = () => {
     this.setState({
       MyAppCategoryModalShow: false,
     });
   };
-  
+
   // managerPop = () => {
   //   feed.success('개발 예정인 기능 입니다.');
   // };
 
   render() {
-    const {
-      history,
-    } = this.props;
+    const { history } = this.props;
     // const onChangeDfltskin = (val) => {
     //   this.setState({ DFLT_SKIN: val.target.value });
     // };
-    const onChangeWorkstep = (val) => {
+    const onChangeWorkstep = val => {
       this.setState({ Workstep: val.target.value });
     };
-    const onChangeAppManual = (val) => {
+    const onChangeAppManual = val => {
       this.setState({ AppManual: val.target.value });
     };
     // const onChangeIntlYn = (val) => {
     //   this.setState({ INTL_YN: val.target.value });
     // };
-    const onChangeLinkType = (val) => {
+    const onChangeLinkType = val => {
       this.setState({ linkType: val.target.value });
     };
-    const onChangeMethod = (val) => {
+    const onChangeMethod = val => {
       this.setState({ LINK_METHOD: val.target.value });
     };
-    const onChangeSecReqYn = (val) => {
+    const onChangeSecReqYn = val => {
       this.setState({ SEC_REQ_YN: val.target.value });
     };
     const loopLinkType = data =>
       data.map(item => (
-        <Radio value={item.CODE_CD} key={item.CODE_CD}>{lang.get('NAME', item)}</Radio>
+        <Radio value={item.CODE_CD} key={item.CODE_CD}>
+          {lang.get('NAME', item)}
+        </Radio>
       ));
     const loopMethod = data =>
       data.map(item => (
-        <Radio value={item.CODE_CD} key={item.CODE_CD}>{lang.get('NAME', item)}</Radio>
+        <Radio value={item.CODE_CD} key={item.CODE_CD}>
+          {lang.get('NAME', item)}
+        </Radio>
       ));
     // const loopWidgetColor = data =>
     //   data.map(item => (
@@ -312,11 +323,11 @@ class AppUpdateForm extends React.Component {
     const closeAppPlus1Modal = () => {
       this.setState({ appPlus1: false });
     };
-    const addList1 = (app) => {
+    const addList1 = app => {
       const { appList1 } = this.state;
       const appList1Copy = appList1.slice();
       const appList1CopyFromAppselector = app;
-      appList1CopyFromAppselector.map((obj) => {
+      appList1CopyFromAppselector.map(obj => {
         if (appList1.findIndex(o => o.APP_ID === obj.APP_ID) === -1) {
           appList1Copy.push(obj);
         }
@@ -326,7 +337,7 @@ class AppUpdateForm extends React.Component {
         appList1: appList1Copy,
       });
     };
-    const appList1Del = (index) => {
+    const appList1Del = index => {
       const tmpArr = fromJS(this.state.appList1).toJS();
       tmpArr.splice(index, 1);
       this.setState({
@@ -340,11 +351,11 @@ class AppUpdateForm extends React.Component {
     const closeAppPlus2Modal = () => {
       this.setState({ appPlus2: false });
     };
-    const addList2 = (app) => {
+    const addList2 = app => {
       const { appList2 } = this.state;
       const appList2Copy = appList2.slice();
       const appList2CopyFromAppselector = app;
-      appList2CopyFromAppselector.map((obj) => {
+      appList2CopyFromAppselector.map(obj => {
         if (appList2.findIndex(o => o.APP_ID === obj.APP_ID) === -1) {
           appList2Copy.push(obj);
         }
@@ -354,7 +365,7 @@ class AppUpdateForm extends React.Component {
         appList2: appList2Copy,
       });
     };
-    const appList2Del = (index) => {
+    const appList2Del = index => {
       const tmpArr = fromJS(this.state.appList2).toJS();
       tmpArr.splice(index, 1);
       this.setState({
@@ -423,36 +434,37 @@ class AppUpdateForm extends React.Component {
       feed.showConfirm(`${intlObj.get(messages.updateGoing)}`, '', appInfoSaveOn);
     };
     const appInfoSave = () => {
-      if (this.state.NAME_KOR_CHK && this.state.APP_ABBR_KOR_CHK
+      if (
+        this.state.NAME_KOR_CHK &&
+        this.state.APP_ABBR_KOR_CHK &&
         // && this.state.NAME_ENG_CHK && this.state.APP_ABBR_ENG_CHK
         // && this.state.NAME_CHN_CHK && this.state.APP_ABBR_CHN_CHK
-        && this.state.CATG_ID_CHK
-        && this.state.LANG_LIST.length > 0 && this.state.CLIENT_TYPE.length > 0
-        && this.state.INTL_YN === 'Y' && this.state.SERVICE_FORM.indexOf('WY') > -1 ? (this.state.ITEM_VALUE ? true : false) : true
+        this.state.CATG_ID_CHK &&
+        this.state.LANG_LIST.length > 0 &&
+        this.state.CLIENT_TYPE.length > 0 &&
+        this.state.INTL_YN === 'Y' &&
+        this.state.SERVICE_FORM.indexOf('WY') > -1
+          ? !!this.state.ITEM_VALUE
+          : true
       ) {
         this.setState({
           NAME_ENG: this.state.NAME_ENG ? this.state.NAME_ENG : this.state.NAME_KOR,
           APP_ABBR_ENG: this.state.APP_ABBR_ENG ? this.state.APP_ABBR_ENG : this.state.APP_ABBR_KOR,
           NAME_CHN: this.state.NAME_CHN ? this.state.NAME_CHN : this.state.NAME_KOR,
           APP_ABBR_CHN: this.state.APP_ABBR_CHN ? this.state.APP_ABBR_CHN : this.state.APP_ABBR_KOR,
-        });        
+        });
         appInfoSaveChk();
       } else {
-        message.error(
-          <MessageContent>
-            {intlObj.get(messages.reqValFail)}
-          </MessageContent>,
-          3,
-        );
+        message.error(<MessageContent>{intlObj.get(messages.reqValFail)}</MessageContent>, 3);
       }
     };
-    const onChangeClientType = (val) => {
+    const onChangeClientType = val => {
       this.setState({ CLIENT_TYPE: val });
     };
-    const onChangeLangList = (val) => {
+    const onChangeLangList = val => {
       this.setState({ LANG_LIST: val });
     };
-    const onChangeNameKor = (val) => {
+    const onChangeNameKor = val => {
       this.setState({ NAME_KOR: val.target.value });
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
         this.setState({ NAME_KOR_CHK: true });
@@ -460,7 +472,7 @@ class AppUpdateForm extends React.Component {
         this.setState({ NAME_KOR_CHK: false });
       }
     };
-    const onChangeAppAbbrKor = (val) => {
+    const onChangeAppAbbrKor = val => {
       this.setState({ APP_ABBR_KOR: val.target.value });
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
         this.setState({ APP_ABBR_KOR_CHK: true });
@@ -468,10 +480,10 @@ class AppUpdateForm extends React.Component {
         this.setState({ APP_ABBR_KOR_CHK: false });
       }
     };
-    const onChangeDscrKor = (val) => {
+    const onChangeDscrKor = val => {
       this.setState({ DSCR_KOR: val.target.value });
     };
-    const onChangeNameEng = (val) => {
+    const onChangeNameEng = val => {
       this.setState({ NAME_ENG: val.target.value });
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
         this.setState({ NAME_ENG_CHK: true });
@@ -479,7 +491,7 @@ class AppUpdateForm extends React.Component {
         this.setState({ NAME_ENG_CHK: false });
       }
     };
-    const onChangeAppAbbrEng = (val) => {
+    const onChangeAppAbbrEng = val => {
       this.setState({ APP_ABBR_ENG: val.target.value });
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
         this.setState({ APP_ABBR_ENG_CHK: true });
@@ -487,10 +499,10 @@ class AppUpdateForm extends React.Component {
         this.setState({ APP_ABBR_ENG_CHK: false });
       }
     };
-    const onChangeDscrEng = (val) => {
+    const onChangeDscrEng = val => {
       this.setState({ DSCR_ENG: val.target.value });
     };
-    const onChangeNameChn = (val) => {
+    const onChangeNameChn = val => {
       this.setState({ NAME_CHN: val.target.value });
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
         this.setState({ NAME_CHN_CHK: true });
@@ -498,7 +510,7 @@ class AppUpdateForm extends React.Component {
         this.setState({ NAME_CHN_CHK: false });
       }
     };
-    const onChangeAppAbbrChn = (val) => {
+    const onChangeAppAbbrChn = val => {
       this.setState({ APP_ABBR_CHN: val.target.value });
       if (val.target.value.replace(/(\s*)/g, '').length > 0) {
         this.setState({ APP_ABBR_CHN_CHK: true });
@@ -506,69 +518,50 @@ class AppUpdateForm extends React.Component {
         this.setState({ APP_ABBR_CHN_CHK: false });
       }
     };
-    const onChangeDscrChn = (val) => {
+    const onChangeDscrChn = val => {
       this.setState({ DSCR_CHN: val.target.value });
     };
     // const onChangeOriginAppId = (val) => {
     //   this.setState({ ORIGIN_APP_ID: val.target.value });
     // };
-    const onChangeVer1 = (val) => {
+    const onChangeVer1 = val => {
       this.setState({ VER_1: val.target.value });
     };
-    const onChangeVer2 = (val) => {
+    const onChangeVer2 = val => {
       this.setState({ VER_2: val.target.value });
     };
-    const onChangeVer3 = (val) => {
+    const onChangeVer3 = val => {
       this.setState({ VER_3: val.target.value });
     };
-    const onChangeWorkstepUrl = (val) => {
+    const onChangeWorkstepUrl = val => {
       this.setState({ WORK_STEP_URL: val.target.value });
     };
-    const onChangeAppManualUrl = (val) => {
+    const onChangeAppManualUrl = val => {
       this.setState({ APP_MANUAL_URL: val.target.value });
     };
-    const onChangeKeyword = (val) => {
+    const onChangeKeyword = val => {
       this.setState({ KEYWORD: val.target.value });
     };
-    const onChangeLinkurl = (val) => {
+    const onChangeLinkurl = val => {
       this.setState({ LINK_URL: val.target.value });
     };
-    const onChangeParam = (val) => {
+    const onChangeParam = val => {
       this.setState({ LINK_PARAM: val.target.value });
     };
-    const imgClick = (e) => {
+    const imgClick = e => {
       e.stopPropagation();
     };
-    const onChangeServiceForm = (val) => {
+    const onChangeServiceForm = val => {
       this.setState({ SERVICE_FORM: val });
     };
-    const onChangeItemValue = (val) => {
+    const onChangeItemValue = val => {
       this.setState({ ITEM_VALUE: val.target.value });
-    };    
+    };
     return (
       <div>
-        <MyAppCategoryModal
-          show={this.state.MyAppCategoryModalShow}
-          closeModal={this.MyAppCategoryModalClose}
-          returnGateId={returnGateId}
-          type="app"
-        />
-        <AppSelector
-          show={this.state.appPlus1}
-          isAdmin={true}
-          closeModal={closeAppPlus1Modal}
-          addList={addList1}
-          style={{ marginTop: 570 }}
-          type="all"
-        />
-        <AppSelector
-          show={this.state.appPlus2}
-          isAdmin={true}
-          closeModal={closeAppPlus2Modal}
-          addList={addList2}
-          style={{ marginTop: 570 }}
-          type="all"
-        />
+        <MyAppCategoryModal show={this.state.MyAppCategoryModalShow} closeModal={this.MyAppCategoryModalClose} returnGateId={returnGateId} type="app" />
+        <AppSelector show={this.state.appPlus1} isAdmin closeModal={closeAppPlus1Modal} addList={addList1} style={{ marginTop: 570 }} type="all" />
+        <AppSelector show={this.state.appPlus2} isAdmin closeModal={closeAppPlus2Modal} addList={addList2} style={{ marginTop: 570 }} type="all" />
         <StyleAppUpdateForm>
           <Form>
             {/* <h2 className="pageTitle">{intlObj.get(messages.appUpdateTitle)}</h2> */}
@@ -580,7 +573,7 @@ class AppUpdateForm extends React.Component {
                 style={{ width: 290 }}
                 onChange={onChangeClientType}
                 value={this.state.CLIENT_TYPE}
-              // value={}
+                // value={}
               >
                 <Row>
                   <Col span={8}>
@@ -603,7 +596,7 @@ class AppUpdateForm extends React.Component {
                 style={{ width: 290 }}
                 onChange={onChangeLangList}
                 value={this.state.LANG_LIST}
-              // value={}
+                // value={}
               >
                 <Row>
                   <Col span={8}>
@@ -628,16 +621,10 @@ class AppUpdateForm extends React.Component {
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
                   className="required"
-                  hasFeedback={true}
+                  hasFeedback
                   validateStatus={this.state.NAME_KOR_CHK ? 'success' : 'error'}
                 >
-                  <Input
-                    placeholder=""
-                    title={intlObj.get(messages.appNameKor)}
-                    maxLength="100"
-                    onChange={onChangeNameKor}
-                    value={this.state.NAME_KOR}
-                  />
+                  <Input placeholder="" title={intlObj.get(messages.appNameKor)} maxLength="100" onChange={onChangeNameKor} value={this.state.NAME_KOR} />
                   {/* <p className="errMsg">* App 정식명칭을 기입해주세요.</p> */}
                 </FormItem>
               </Col>
@@ -647,7 +634,7 @@ class AppUpdateForm extends React.Component {
                   labelCol={{ width: '100%' }}
                   wrapperCol={{ width: '100%' }}
                   className="required"
-                  hasFeedback={true}
+                  hasFeedback
                   validateStatus={this.state.APP_ABBR_KOR_CHK ? 'success' : 'error'}
                 >
                   <Input
@@ -689,13 +676,7 @@ class AppUpdateForm extends React.Component {
                   // hasFeedback={true}
                   // validateStatus={this.state.NAME_ENG_CHK ? 'success' : 'error'}
                 >
-                  <Input
-                    placeholder=""
-                    title={intlObj.get(messages.appNameEng)}
-                    maxLength="100"
-                    onChange={onChangeNameEng}
-                    value={this.state.NAME_ENG}
-                  />
+                  <Input placeholder="" title={intlObj.get(messages.appNameEng)} maxLength="100" onChange={onChangeNameEng} value={this.state.NAME_ENG} />
                   {/* <p className="errMsg">* App 정식명칭을 기입해주세요.</p> */}
                 </FormItem>
               </Col>
@@ -747,13 +728,7 @@ class AppUpdateForm extends React.Component {
                   // hasFeedback={true}
                   // validateStatus={this.state.NAME_CHN_CHK ? 'success' : 'error'}
                 >
-                  <Input
-                    placeholder=""
-                    title={intlObj.get(messages.appNameChn)}
-                    maxLength="100"
-                    onChange={onChangeNameChn}
-                    value={this.state.NAME_CHN}
-                  />
+                  <Input placeholder="" title={intlObj.get(messages.appNameChn)} maxLength="100" onChange={onChangeNameChn} value={this.state.NAME_CHN} />
                   {/* <p className="errMsg">* App 정식명칭을 기입해주세요.</p> */}
                 </FormItem>
               </Col>
@@ -796,24 +771,10 @@ class AppUpdateForm extends React.Component {
               </Col>
             </Row>
             {/* 4. 카테고리 */}
-            <h4 className="required">
-              {intlObj.get(messages.category)}
-            </h4>
-            <FormItem
-              hasFeedback={true}
-              validateStatus={this.state.CATG_ID_CHK ? 'success' : 'error'}
-              className="required"
-              style={{ marginBottom: 30 }}
-            >
-              <Input
-                placeholder=""
-                readOnly="readOnly"
-                value={this.state.CATG_ID > 0 ? this.state.CATG_NAME : ''}
-              />
-              <Button
-                className="btnText edit"
-                onClick={this.MyAppCategoryModalOpen}
-              >
+            <h4 className="required">{intlObj.get(messages.category)}</h4>
+            <FormItem hasFeedback validateStatus={this.state.CATG_ID_CHK ? 'success' : 'error'} className="required" style={{ marginBottom: 30 }}>
+              <Input placeholder="" readOnly="readOnly" value={this.state.CATG_ID > 0 ? this.state.CATG_NAME : ''} />
+              <Button className="btnText edit" onClick={this.MyAppCategoryModalOpen}>
                 {intlObj.get(messages.edit)}
               </Button>
               {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
@@ -822,15 +783,10 @@ class AppUpdateForm extends React.Component {
             {/* <h4 className="required">App ID</h4> */}
             <h4 className="required">SRC PATH [앱경로]</h4>
             <p style={{ paddingLeft: 10 }}>{this.state.SRC_PATH}</p>
-            <h3
-              className="sectionTitle"
-              style={{ padding: '33px 0 20px' }}
-            >
+            <h3 className="sectionTitle" style={{ padding: '33px 0 20px' }}>
               {intlObj.get(messages.serviceGubun)}
             </h3>
-            <div
-              style={{ display: !((this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U') ? 'block' : 'none' }}
-            >
+            <div style={{ display: !((this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U') ? 'block' : 'none' }}>
               <h4>{intlObj.get(messages.serviceGubun)}</h4>
               <FormItem>
                 <div>
@@ -840,45 +796,19 @@ class AppUpdateForm extends React.Component {
                     value={this.state.INTL_YN}
                     readOnly
                   >
-                    <Radio value="Y">
-                      {intlObj.get(messages.insideService)}
-                    </Radio>
-                    <Radio value="N">
-                      {intlObj.get(messages.outService)}
-                    </Radio>
+                    <Radio value="Y">{intlObj.get(messages.insideService)}</Radio>
+                    <Radio value="N">{intlObj.get(messages.outService)}</Radio>
                   </RadioGroup>
                 </div>
               </FormItem>
-              <div
-                className="subFormArea"
-                style={{ display: this.state.INTL_YN === 'Y' ? 'none' : 'block' }}
-              >
-                <FormItem
-                  label={intlObj.get(messages.display)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangeLinkType}
-                    value={this.state.linkType}
-                  >
+              <div className="subFormArea" style={{ display: this.state.INTL_YN === 'Y' ? 'none' : 'block' }}>
+                <FormItem label={intlObj.get(messages.display)} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+                  <RadioGroup className="typeOptions" onChange={onChangeLinkType} value={this.state.linkType}>
                     {loopLinkType(this.props.linkTypeList)}
                   </RadioGroup>
                 </FormItem>
-                <FormItem
-                  label="URL"
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <Input
-                    placeholder=""
-                    title="URL"
-                    style={{ width: 350 }}
-                    maxLength="500"
-                    onChange={onChangeLinkurl}
-                    value={this.state.LINK_URL}
-                  />
+                <FormItem label="URL" labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+                  <Input placeholder="" title="URL" style={{ width: 350 }} maxLength="500" onChange={onChangeLinkurl} value={this.state.LINK_URL} />
                 </FormItem>
                 {/* <FormItem
                   label="창 크기 (pixel)"
@@ -905,24 +835,12 @@ class AppUpdateForm extends React.Component {
                     <Radio value="d3">우상단</Radio>
                   </RadioGroup>
                 </FormItem> */}
-                <FormItem
-                  label={intlObj.get(messages.protocol)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangeMethod}
-                    value={this.state.LINK_METHOD}
-                  >
+                <FormItem label={intlObj.get(messages.protocol)} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
+                  <RadioGroup className="typeOptions" onChange={onChangeMethod} value={this.state.LINK_METHOD}>
                     {loopMethod(this.props.methodList)}
                   </RadioGroup>
                 </FormItem>
-                <FormItem
-                  label={intlObj.get(messages.variable)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
+                <FormItem label={intlObj.get(messages.variable)} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
                   <Input
                     placeholder=""
                     title={intlObj.get(messages.variable)}
@@ -941,20 +859,13 @@ class AppUpdateForm extends React.Component {
                   </div>
                 </FormItem>
               </div>
-              <div
-                className="subFormArea"
-                style={{ display: this.state.INTL_YN === 'N' ? 'none' : 'block' }}
-              >
-                <FormItem
-                  label={intlObj.get(messages.serviceForm)}
-                  labelCol={{ span: 6 }}
-                  wrapperCol={{ span: 16 }}
-                >
+              <div className="subFormArea" style={{ display: this.state.INTL_YN === 'N' ? 'none' : 'block' }}>
+                <FormItem label={intlObj.get(messages.serviceForm)} labelCol={{ span: 6 }} wrapperCol={{ span: 16 }}>
                   <Checkbox.Group
                     style={{ width: 290 }}
                     onChange={onChangeServiceForm}
                     value={this.state.SERVICE_FORM}
-                  // value={}
+                    // value={}
                   >
                     <Row>
                       <Col span={8}>
@@ -966,13 +877,18 @@ class AppUpdateForm extends React.Component {
                     </Row>
                   </Checkbox.Group>
                 </FormItem>
-                <Row style={{ marginTop: 10, display: this.state.uv === 'V' && this.state.SERVICE_FORM && this.state.SERVICE_FORM.indexOf('WY') > -1 ? 'block' : 'none' }}>
+                <Row
+                  style={{
+                    marginTop: 10,
+                    display: this.state.uv === 'V' && this.state.SERVICE_FORM && this.state.SERVICE_FORM.indexOf('WY') > -1 ? 'block' : 'none',
+                  }}
+                >
                   <Col sm={24}>
                     <FormItem
                       label="위젯설정"
                       labelCol={{ span: 6 }}
                       wrapperCol={{ span: 16 }}
-                      hasFeedback={true}
+                      hasFeedback
                       validateStatus={this.state.ITEM_VALUE ? 'success' : 'error'}
                       className="ta_feedback"
                     >
@@ -986,7 +902,7 @@ class AppUpdateForm extends React.Component {
                       />
                     </FormItem>
                   </Col>
-                </Row>                
+                </Row>
               </div>
             </div>
             <div
@@ -1006,9 +922,7 @@ class AppUpdateForm extends React.Component {
                   {this.state.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
                 </p>
                 <h4>{intlObj.get(messages.display)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {lang.get('TARGET', this.props.systemLink)}
-                </p>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>{lang.get('TARGET', this.props.systemLink)}</p>
                 <h4>URL</h4>
                 <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
                   <a href={this.props.systemLink.URL} target="_blank" rel="noopener noreferrer">
@@ -1016,13 +930,9 @@ class AppUpdateForm extends React.Component {
                   </a>
                 </p>
                 <h4>{intlObj.get(messages.protocol)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.props.systemLink.METHOD}
-                </p>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>{this.props.systemLink.METHOD}</p>
                 <h4>{intlObj.get(messages.variable)}</h4>
-                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>
-                  {this.props.systemLink.PARAM}
-                </p>
+                <p style={{ paddingLeft: 10, paddingBottom: 30 }}>{this.props.systemLink.PARAM}</p>
               </div>
               <div style={{ display: this.state.INTL_YN === 'Y' ? 'block' : 'none' }}>
                 <h4>{intlObj.get(messages.serviceGubun)}</h4>
@@ -1037,7 +947,7 @@ class AppUpdateForm extends React.Component {
                   {this.state.MENU_SVC_YN === 'Y' ? intlObj.get(messages.menuYn) : ''}
                 </p>
               </div>
-            </div>            
+            </div>
             <h3 className="sectionTitle">{intlObj.get(messages.verInfo)}</h3>
             {/* 6. 아이콘 */}
             <h4>{intlObj.get(messages.icon)}</h4>
@@ -1051,59 +961,34 @@ class AppUpdateForm extends React.Component {
                 borderStyle="none"
               >
                 <div>
-                  <div
-                    style={{ display: this.state.UploadFilesIcon.length < 1 ? 'block' : 'none' }}
-                  >
+                  <div style={{ display: this.state.UploadFilesIcon.length < 1 ? 'block' : 'none' }}>
                     <div className="readyToUpload" />
                   </div>
-                  <div
-                    style={{ display: this.state.UploadFilesIcon.length > 0 ? 'block' : 'none' }}
-                  >
+                  <div style={{ display: this.state.UploadFilesIcon.length > 0 ? 'block' : 'none' }}>
                     <button
                       onClick={imgClick}
-                    // onKeyPress={imgClick}
-                    // role="presentation"
+                      // onKeyPress={imgClick}
+                      // role="presentation"
                     >
-                      {
-                        this.state.UploadFilesIcon.map(f => (
-                          <img
-                            key={f.seq}
-                            src={imgUrl.get('120x120', f.seq)}
-                            alt={f.fileName}
-                          />
-                        ))
-                      }
+                      {this.state.UploadFilesIcon.map(f => (
+                        <img key={f.seq} src={imgUrl.get('120x120', f.seq)} alt={f.fileName} />
+                      ))}
                     </button>
                   </div>
                 </div>
               </Upload>
-              <div
-                className="deleteIconWrapper"
-                style={{ display: this.state.UploadFilesIcon.length > 0 ? 'block' : 'none' }}
-              >
-                <button
-                  className="deleteAppIcon"
-                  onClick={this.UploadFilesIconDel}
-                  title={intlObj.get(messages.appIconDel)}
-                />
+              <div className="deleteIconWrapper" style={{ display: this.state.UploadFilesIcon.length > 0 ? 'block' : 'none' }}>
+                <button className="deleteAppIcon" onClick={this.UploadFilesIconDel} title={intlObj.get(messages.appIconDel)} />
               </div>
             </section>
             {/* 7. 버전 */}
             <h4>{intlObj.get(messages.ver)}</h4>
-            <div
-              style={{ display: !((this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U') ? 'block' : 'none' }}
-            >
+            <div style={{ display: !((this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U') ? 'block' : 'none' }}>
               <FormItem>
                 <div style={{ paddingBottom: 30 }}>
                   <Vesions>
                     <div className="mark">
-                      <Input
-                        placeholder=""
-                        title={intlObj.get(messages.majorVer)}
-                        maxLength="3"
-                        onChange={onChangeVer1}
-                        value={this.state.VER_1}
-                      />
+                      <Input placeholder="" title={intlObj.get(messages.majorVer)} maxLength="3" onChange={onChangeVer1} value={this.state.VER_1} />
                     </div>
                     <div className="mark">
                       <Input
@@ -1116,20 +1001,18 @@ class AppUpdateForm extends React.Component {
                       />
                     </div>
                     <div>
-                      <Input
-                        placeholder=""
-                        title={intlObj.get(messages.buildVer)}
-                        maxLength="3"
-                        onChange={onChangeVer3}
-                        value={this.state.VER_3}
-                      />
+                      <Input placeholder="" title={intlObj.get(messages.buildVer)} maxLength="3" onChange={onChangeVer3} value={this.state.VER_3} />
                     </div>
                   </Vesions>
                 </div>
               </FormItem>
             </div>
             <div
-              style={{ display: (this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U' ? 'block' : 'none', paddingLeft: 10, paddingBottom: 30 }}
+              style={{
+                display: (this.state.SVC_YN === 'Y' || this.state.SVC_YN === 'C') && this.state.uv === 'U' ? 'block' : 'none',
+                paddingLeft: 10,
+                paddingBottom: 30,
+              }}
             >
               {this.state.VER}
             </div>
@@ -1138,18 +1021,14 @@ class AppUpdateForm extends React.Component {
             <FormItem>
               <div style={{ position: 'relative', paddingBottom: 30 }}>
                 <div>
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangeWorkstep}
-                    value={this.state.Workstep !== undefined ? this.state.Workstep : 'L'}
-                  >
+                  <RadioGroup className="typeOptions" onChange={onChangeWorkstep} value={this.state.Workstep !== undefined ? this.state.Workstep : 'L'}>
                     <Radio value="L">{intlObj.get(messages.webside)}</Radio>
-                    <Radio value="F" style={{ width: 295 }}>{intlObj.get(messages.documentation)}</Radio>
+                    <Radio value="F" style={{ width: 295 }}>
+                      {intlObj.get(messages.documentation)}
+                    </Radio>
                   </RadioGroup>
                 </div>
-                <div
-                  style={{ display: this.state.Workstep !== 'F' ? 'block' : 'none', marginTop: 10 }}
-                >
+                <div style={{ display: this.state.Workstep !== 'F' ? 'block' : 'none', marginTop: 10 }}>
                   <Input
                     placeholder=""
                     title={intlObj.get(messages.webside)}
@@ -1159,9 +1038,7 @@ class AppUpdateForm extends React.Component {
                     value={this.state.WORK_STEP_URL}
                   />
                 </div>
-                <div
-                  style={{ display: this.state.Workstep === 'F' ? 'block' : 'none', marginTop: 10 }}
-                >
+                <div style={{ display: this.state.Workstep === 'F' ? 'block' : 'none', marginTop: 10 }}>
                   {this.state.UploadFilesWork.length > 0 ? (
                     this.state.UploadFilesWork.map(f => (
                       <Input
@@ -1172,14 +1049,10 @@ class AppUpdateForm extends React.Component {
                         readOnly="readOnly"
                         key={f.fileName}
                       />
-                    ))) : (
-                      <Input
-                        placeholder=""
-                        title={intlObj.get(messages.documentation)}
-                        style={{ verticalAlign: 'middle' }}
-                      />
-                    )
-                  }
+                    ))
+                  ) : (
+                    <Input placeholder="" title={intlObj.get(messages.documentation)} style={{ verticalAlign: 'middle' }} />
+                  )}
                   <section className="btnText attachFile">
                     <Upload
                       // accept="image/jpeg, image/png" // default ALL
@@ -1189,9 +1062,7 @@ class AppUpdateForm extends React.Component {
                       // height={123}
                       borderStyle="none"
                     >
-                      <span>
-                        {intlObj.get(messages.attachment)}
-                      </span>
+                      <span>{intlObj.get(messages.attachment)}</span>
                     </Upload>
                   </section>
                 </div>
@@ -1202,18 +1073,14 @@ class AppUpdateForm extends React.Component {
             <FormItem>
               <div style={{ position: 'relative' }}>
                 <div>
-                  <RadioGroup
-                    className="typeOptions"
-                    onChange={onChangeAppManual}
-                    value={this.state.AppManual !== undefined ? this.state.AppManual : 'L'}
-                  >
+                  <RadioGroup className="typeOptions" onChange={onChangeAppManual} value={this.state.AppManual !== undefined ? this.state.AppManual : 'L'}>
                     <Radio value="L">{intlObj.get(messages.webside)}</Radio>
-                    <Radio value="F" style={{ width: 295 }}>{intlObj.get(messages.documentation)}</Radio>
+                    <Radio value="F" style={{ width: 295 }}>
+                      {intlObj.get(messages.documentation)}
+                    </Radio>
                   </RadioGroup>
                 </div>
-                <div
-                  style={{ display: this.state.AppManual !== 'F' ? 'block' : 'none', marginTop: 10 }}
-                >
+                <div style={{ display: this.state.AppManual !== 'F' ? 'block' : 'none', marginTop: 10 }}>
                   <Input
                     placeholder=""
                     title={intlObj.get(messages.webside)}
@@ -1223,9 +1090,7 @@ class AppUpdateForm extends React.Component {
                     value={this.state.APP_MANUAL_URL}
                   />
                 </div>
-                <div
-                  style={{ display: this.state.AppManual === 'F' ? 'block' : 'none', marginTop: 10 }}
-                >
+                <div style={{ display: this.state.AppManual === 'F' ? 'block' : 'none', marginTop: 10 }}>
                   {this.state.UploadFilesManual.length > 0 ? (
                     this.state.UploadFilesManual.map(f => (
                       <Input
@@ -1236,14 +1101,10 @@ class AppUpdateForm extends React.Component {
                         readOnly="readOnly"
                         key={f.fileName}
                       />
-                    ))) : (
-                      <Input
-                        placeholder=""
-                        title={intlObj.get(messages.documentation)}
-                        style={{ verticalAlign: 'middle' }}
-                      />
-                    )
-                  }
+                    ))
+                  ) : (
+                    <Input placeholder="" title={intlObj.get(messages.documentation)} style={{ verticalAlign: 'middle' }} />
+                  )}
                   <section className="btnText attachFile">
                     <Upload
                       // accept="image/jpeg, image/png" // default ALL
@@ -1253,9 +1114,7 @@ class AppUpdateForm extends React.Component {
                       // height={123}
                       borderStyle="none"
                     >
-                      <span>
-                        {intlObj.get(messages.attachment)}
-                      </span>
+                      <span>{intlObj.get(messages.attachment)}</span>
                     </Upload>
                   </section>
                 </div>
@@ -1265,41 +1124,22 @@ class AppUpdateForm extends React.Component {
             {/* 10. 스크린샷 */}
             <h4>{intlObj.get(messages.screenShot)}</h4>
             <section className="screenshotUploadArea" style={{ marginBottom: 30 }}>
-              <div className="defaultGuideTxt">
-                {intlObj.get(messages.screenShotDrag)}
-              </div>
+              <div className="defaultGuideTxt">{intlObj.get(messages.screenShotDrag)}</div>
               <Upload
                 accept="image/jpeg, image/png" // default ALL
                 onFileUploaded={this.onFileUploadedScreenshot}
-                multiple={true} // default true
+                multiple // default true
                 borderStyle="none"
               >
-                <Row
-                  style={rowStyle}
-                  gutter={gutter}
-                  justify="start"
-                >
-                  {
-                    this.state.UploadFilesScreenshot.map((f, index) => (
-                      <Col key={f.seq} md={6} sm={12} xs={24} style={colStyle}>
-                        <span
-                          onClick={imgClick}
-                          onKeyPress={imgClick}
-                          role="presentation"
-                        >
-                          <img
-                            src={imgUrl.get('190x140', f.seq)}
-                            alt={f.seq}
-                          />
-                        </span>
-                        <button
-                          className="deleteScreenshots"
-                          onClick={e => this.UploadFilesScreenDel(e, index)}
-                          title={intlObj.get(messages.screenShotDel)}
-                        />
-                      </Col>
-                    ))
-                  }
+                <Row style={rowStyle} gutter={gutter} justify="start">
+                  {this.state.UploadFilesScreenshot.map((f, index) => (
+                    <Col key={f.seq} md={6} sm={12} xs={24} style={colStyle}>
+                      <span onClick={imgClick} onKeyPress={imgClick} role="presentation">
+                        <img src={imgUrl.get('190x140', f.seq)} alt={f.seq} />
+                      </span>
+                      <button className="deleteScreenshots" onClick={e => this.UploadFilesScreenDel(e, index)} title={intlObj.get(messages.screenShotDel)} />
+                    </Col>
+                  ))}
                   <Col>
                     <div className="readyToUpload" />
                   </Col>
@@ -1309,107 +1149,76 @@ class AppUpdateForm extends React.Component {
             {/* 11. 키워드 */}
             <h4>{intlObj.get(messages.keyword)}</h4>
             <FormItem style={{ paddingBottom: 30 }}>
-              <Input
-                placeholder=""
-                title={intlObj.get(messages.keyword)}
-                maxLength="120"
-                onChange={onChangeKeyword}
-                value={this.state.KEYWORD}
-              />
+              <Input placeholder="" title={intlObj.get(messages.keyword)} maxLength="120" onChange={onChangeKeyword} value={this.state.KEYWORD} />
             </FormItem>
             {/* 12. 필수 App */}
             <h4>{intlObj.get(messages.requiredApp)}</h4>
-            <section
-              className="quickmenuAppUploadArea"
-              style={{ paddingBottom: 20 }}
-            >
-              <Row
-                style={rowStyle}
-                gutter={gutter}
-                justify="start"
-              >
-                {
-                  this.state.appList1.map((f, index) => (
-                    <Col key={f.APP_ID} md={6} sm={12} xs={24} style={colStyle}>
-                      <div className="borderRadius">
-                        <img
-                          src={imgUrl.get('120x120', f.ICON)}
-                          alt={lang.get('NAME', f)}
-                          onError={(e) => { e.target.src = '/app_icon/icon_no_image.png'; }}
-                        />
-                        {/* <p className="appName">{lang.get('NAME', f)}</p> */}
-                        <button
-                          className="deleteScreenshots"
-                          // onClick={UploadFilesScreenDel(f.seq)}
-                          onClick={() => appList1Del(index)}
-                          title={intlObj.get(messages.screenShotDel)}
-                        />
-                      </div>
-                    </Col>
-                  ))
-                }
+            <section className="quickmenuAppUploadArea" style={{ paddingBottom: 20 }}>
+              <Row style={rowStyle} gutter={gutter} justify="start">
+                {this.state.appList1.map((f, index) => (
+                  <Col key={f.APP_ID} md={6} sm={12} xs={24} style={colStyle}>
+                    <div className="borderRadius">
+                      <img
+                        src={imgUrl.get('120x120', f.ICON)}
+                        alt={lang.get('NAME', f)}
+                        onError={e => {
+                          e.target.src = '/app_icon/icon_no_image.png';
+                        }}
+                      />
+                      {/* <p className="appName">{lang.get('NAME', f)}</p> */}
+                      <button
+                        className="deleteScreenshots"
+                        // onClick={UploadFilesScreenDel(f.seq)}
+                        onClick={() => appList1Del(index)}
+                        title={intlObj.get(messages.screenShotDel)}
+                      />
+                    </div>
+                  </Col>
+                ))}
                 <Col>
-                  <button
-                    onClick={openAppPlus1Modal}
-                    title={intlObj.get(messages.appAdd)}
-                    className="readyToUpload"
-                  />
+                  <button onClick={openAppPlus1Modal} title={intlObj.get(messages.appAdd)} className="readyToUpload" />
                 </Col>
               </Row>
             </section>
             {/* 13. 추천 App */}
             <h4>{intlObj.get(messages.recommApp)}</h4>
             <section className="quickmenuAppUploadArea">
-              <Row
-                style={rowStyle}
-                gutter={gutter}
-                justify="start"
-              >
-                {
-                  this.state.appList2.map((f, index) => (
-                    <Col key={f.APP_ID} md={6} sm={12} xs={24} style={colStyle}>
-                      <img
-                        src={imgUrl.get('120x120', f.ICON)}
-                        alt={lang.get('NAME', f)}
-                        onError={(e) => { e.target.src = '/app_icon/icon_no_image.png'; }}
-                      />
-                      {/* <p className="appName">{lang.get('NAME', f)}</p> */}
-                      <button
-                        className="deleteScreenshots"
-                        // onClick={UploadFilesScreenDel(f.seq)}
-                        onClick={() => appList2Del(index)}
-                        title={intlObj.get(messages.screenShotDel)}
-                      />
-                    </Col>
-                  ))
-                }
+              <Row style={rowStyle} gutter={gutter} justify="start">
+                {this.state.appList2.map((f, index) => (
+                  <Col key={f.APP_ID} md={6} sm={12} xs={24} style={colStyle}>
+                    <img
+                      src={imgUrl.get('120x120', f.ICON)}
+                      alt={lang.get('NAME', f)}
+                      onError={e => {
+                        e.target.src = '/app_icon/icon_no_image.png';
+                      }}
+                    />
+                    {/* <p className="appName">{lang.get('NAME', f)}</p> */}
+                    <button
+                      className="deleteScreenshots"
+                      // onClick={UploadFilesScreenDel(f.seq)}
+                      onClick={() => appList2Del(index)}
+                      title={intlObj.get(messages.screenShotDel)}
+                    />
+                  </Col>
+                ))}
                 <Col>
-                  <button
-                    onClick={openAppPlus2Modal}
-                    title={intlObj.get(messages.appAdd)}
-                    className="readyToUpload"
-                  />
+                  <button onClick={openAppPlus2Modal} title={intlObj.get(messages.appAdd)} className="readyToUpload" />
                 </Col>
               </Row>
             </section>
             <h3 className="sectionTitle">{intlObj.get(messages.permissions)}</h3>
-            <h4>{intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}</h4>
+            <h4>
+              {intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}
+            </h4>
             <ul className="infoAuthList">
               <li>{intlObj.get(messages.authAppMemt1)}</li>
               <li>{intlObj.get(messages.authAppMemt2)}</li>
             </ul>
             <FormItem style={{ margin: '10px 0 50px 0' }}>
-              <RadioGroup
-                className="typeOptions"
-                onChange={onChangeSecReqYn}
-                value={this.state.SEC_REQ_YN}
-              >
-                <Radio value="Y">
-                  {intlObj.get(messages.authAppYes)}
-                </Radio>
-                <Radio value="N">
-                  {intlObj.get(messages.authAppNo)}
-                </Radio>
+              <RadioGroup className="typeOptions" onChange={onChangeSecReqYn} value={this.state.SEC_REQ_YN}>
+                <Radio value="Y">{intlObj.get(messages.authAppYes)}</Radio>
+                <Radio value="N">{intlObj.get(messages.authAppNo)}</Radio>
               </RadioGroup>
             </FormItem>
             <div className="buttonWrapper">
@@ -1419,7 +1228,9 @@ class AppUpdateForm extends React.Component {
               <Link to={`/admin/adminmain/sysapp/appDetail/${this.state.APP_ID}/${this.state.VER}`}>
                 <StyledButton className="btn-light">{intlObj.get(messages.cancel)}</StyledButton>
               </Link>
-              <StyledButton className="btn-primary" onClick={appInfoSave}>{intlObj.get(messages.save)}</StyledButton>
+              <StyledButton className="btn-primary" onClick={appInfoSave}>
+                {intlObj.get(messages.save)}
+              </StyledButton>
             </div>
           </Form>
         </StyleAppUpdateForm>
@@ -1447,57 +1258,57 @@ AppUpdateForm.propTypes = {
   appWorkArr: PropTypes.array, //eslint-disable-line
   appManualArr: PropTypes.array, //eslint-disable-line
 };
-const mapDispatchToProps = dispatch => (
-  {
-    getInitInfo: () => dispatch(actions.getInitInfo()),
-    getMyAppDetail: (APP_ID, VER, LANG, history) => {
-      dispatch(actions.getMyAppDetail(APP_ID, VER, LANG, history));
-    },
-    appInfoSave: (
-      APP_ID,
-      VER,
-      CLIENT_TYPE,
-      LANG_LIST,
-      NAME_KOR,
-      APP_ABBR_KOR,
-      DSCR_KOR,
-      NAME_ENG,
-      APP_ABBR_ENG,
-      DSCR_ENG,
-      NAME_CHN,
-      APP_ABBR_CHN,
-      DSCR_CHN,
-      CATG_ID,
-      // ORIGIN_APP_ID,
-      history,
-      UploadFilesIcon,
-      VER_1,
-      VER_2,
-      VER_3,
-      Workstep,
-      WORK_STEP_URL,
-      UploadFilesWork,
-      AppManual,
-      APP_MANUAL_URL,
-      UploadFilesManual,
-      UploadFilesScreenshot,
-      KEYWORD,
-      INTL_YN,
-      linkType,
-      LINK_URL,
-      // WIDTH,
-      // HEIGHT,
-      LINK_METHOD,
-      LINK_PARAM,
-      SEC_REQ_YN,
-      appList1,
-      appList2,
-      // DFLT_SKIN,
-      SERVICE_FORM,
-      uv,
-      ITEM_VALUE,
-    ) => {
-      dispatch(actions.insertAppInfo(
+const mapDispatchToProps = dispatch => ({
+  getInitInfo: () => dispatch(actions.getInitInfo()),
+  getMyAppDetail: (APP_ID, VER, LANG, history) => {
+    dispatch(actions.getMyAppDetail(APP_ID, VER, LANG, history));
+  },
+  appInfoSave: (
+    APP_ID,
+    VER,
+    CLIENT_TYPE,
+    LANG_LIST,
+    NAME_KOR,
+    APP_ABBR_KOR,
+    DSCR_KOR,
+    NAME_ENG,
+    APP_ABBR_ENG,
+    DSCR_ENG,
+    NAME_CHN,
+    APP_ABBR_CHN,
+    DSCR_CHN,
+    CATG_ID,
+    // ORIGIN_APP_ID,
+    history,
+    UploadFilesIcon,
+    VER_1,
+    VER_2,
+    VER_3,
+    Workstep,
+    WORK_STEP_URL,
+    UploadFilesWork,
+    AppManual,
+    APP_MANUAL_URL,
+    UploadFilesManual,
+    UploadFilesScreenshot,
+    KEYWORD,
+    INTL_YN,
+    linkType,
+    LINK_URL,
+    // WIDTH,
+    // HEIGHT,
+    LINK_METHOD,
+    LINK_PARAM,
+    SEC_REQ_YN,
+    appList1,
+    appList2,
+    // DFLT_SKIN,
+    SERVICE_FORM,
+    uv,
+    ITEM_VALUE,
+  ) => {
+    dispatch(
+      actions.insertAppInfo(
         APP_ID,
         VER,
         CLIENT_TYPE,
@@ -1540,10 +1351,10 @@ const mapDispatchToProps = dispatch => (
         SERVICE_FORM,
         uv,
         ITEM_VALUE,
-      ));
-    },
-  }
-);
+      ),
+    );
+  },
+});
 const mapStateToProps = createStructuredSelector({
   linkTypeList: selectors.makeSelectLinkTypeList(),
   methodList: selectors.makeSelectMethodList(),
@@ -1563,8 +1374,4 @@ const mapStateToProps = createStructuredSelector({
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppUpdateForm', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppUpdateForm', reducer });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppUpdateForm);
+export default compose(withReducer, withSaga, withConnect)(AppUpdateForm);

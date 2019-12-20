@@ -16,7 +16,6 @@ const StyleAdminList = styled.div`
   }
 
   .pageTitle {
-
     .searchBox {
       display: inline-block;
       float: right;
@@ -29,9 +28,9 @@ const StyleAdminList = styled.div`
         float: left;
 
         &:after {
-          content: " ";
+          content: ' ';
           display: block;
-          clear:both;
+          clear: both;
         }
       }
 
@@ -64,15 +63,16 @@ const StyleAdminList = styled.div`
     }
   }
 
-  //테이블 헤더 체크박스 
+  //테이블 헤더 체크박스
   .react-grid-HeaderCell {
-    .react-grid-HeaderCell-sortable { text-align: left; }
+    .react-grid-HeaderCell-sortable {
+      text-align: left;
+    }
 
     &.react-grid-HeaderCell--locked {
       padding-left: 0 !important;
     }
   }
-
 
   //테이블 높이
   .react-grid-Container {

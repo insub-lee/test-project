@@ -12,7 +12,7 @@ class Swagger extends React.PureComponent {
     const pathNmArr = window.location.pathname.split('/');
     const portalUrl = window.location.origin;
     return `${portalUrl}/files/Swagger_${pathNmArr[2]}.json`;
-  }
+  };
 
   render() {
     const url = this.getUrl();

@@ -27,30 +27,18 @@ export function* getMyAppDetail(payload) {
     const clientTypeArr = clientType.split('|');
     const clientTypeArr2 = [];
 
-    clientTypeArr.map(item => (
-      item === 'W' ? clientTypeArr2.push(intlObj.get(messages.web)) : ''
-    ));
-    clientTypeArr.map(item => (
-      item === 'P' ? clientTypeArr2.push(intlObj.get(messages.pc)) : ''
-    ));
-    clientTypeArr.map(item => (
-      item === 'M' ? clientTypeArr2.push(intlObj.get(messages.mobile)) : ''
-    ));
+    clientTypeArr.map(item => (item === 'W' ? clientTypeArr2.push(intlObj.get(messages.web)) : ''));
+    clientTypeArr.map(item => (item === 'P' ? clientTypeArr2.push(intlObj.get(messages.pc)) : ''));
+    clientTypeArr.map(item => (item === 'M' ? clientTypeArr2.push(intlObj.get(messages.mobile)) : ''));
     appinfo.CLIENT_TYPE = clientTypeArr2.join('/');
 
     const langList = appinfo.LANG_LIST;
     const langListArr = langList.split('|');
     const langListArr2 = [];
 
-    langListArr.map(item => (
-      item === 'KOR' ? langListArr2.push(intlObj.get(messages.kor)) : ''
-    ));
-    langListArr.map(item => (
-      item === 'ENG' ? langListArr2.push(intlObj.get(messages.eng)) : ''
-    ));
-    langListArr.map(item => (
-      item === 'CHN' ? langListArr2.push(intlObj.get(messages.chn)) : ''
-    ));
+    langListArr.map(item => (item === 'KOR' ? langListArr2.push(intlObj.get(messages.kor)) : ''));
+    langListArr.map(item => (item === 'ENG' ? langListArr2.push(intlObj.get(messages.eng)) : ''));
+    langListArr.map(item => (item === 'CHN' ? langListArr2.push(intlObj.get(messages.chn)) : ''));
     appinfo.LANG_LIST = langListArr2.join('/');
 
     yield put({ type: constants.SET_MY_APP_DETAIL, payload: appinfo });

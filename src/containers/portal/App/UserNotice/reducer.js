@@ -15,8 +15,7 @@ const noticeReducer = (state = initState, action) => {
     case RESET_ALARM:
       return state.set('alarm', []);
     case RECEIVE_ALARM:
-      return state.set('alarmData', action.payload)
-        .set('isNotify', '1');
+      return state.set('alarmData', action.payload).set('isNotify', '1');
     case SET_ISNOTIFY:
       return state.set('isNotify', action.isNoti);
     case SET_NOTIFY:

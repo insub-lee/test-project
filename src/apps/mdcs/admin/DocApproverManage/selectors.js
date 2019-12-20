@@ -3,35 +3,15 @@ import { fromJS } from 'immutable';
 
 const makeSelectDocApproverState = state => state.get('apps-mdcs-admin-DocApproverManage-reducer');
 
-const makeSelectCategoryMapList = () =>
-  createSelector(
-    makeSelectDocApproverState,
-    state => state.get('categoryMapList'),
-  );
+const makeSelectCategoryMapList = () => createSelector(makeSelectDocApproverState, state => state.get('categoryMapList'));
 
-const makeSelectDraftMapList = () =>
-  createSelector(
-    makeSelectDocApproverState,
-    state => state.get('draftMapList'),
-  );
+const makeSelectDraftMapList = () => createSelector(makeSelectDocApproverState, state => state.get('draftMapList'));
 
-const makeSelectDegreeMapList = () =>
-  createSelector(
-    makeSelectDocApproverState,
-    state => state.get('degreeMapList'),
-  );
+const makeSelectDegreeMapList = () => createSelector(makeSelectDocApproverState, state => state.get('degreeMapList'));
 
-const makeSelectApproverMapList = () =>
-  createSelector(
-    makeSelectDocApproverState,
-    state => state.get('approverMapList'),
-  );
+const makeSelectApproverMapList = () => createSelector(makeSelectDocApproverState, state => state.get('approverMapList'));
 
-const makeSelectedTaskSeq = () =>
-  createSelector(
-    makeSelectDocApproverState,
-    state => state.get('selectedTaskSeq'),
-  );
+const makeSelectedTaskSeq = () => createSelector(makeSelectDocApproverState, state => state.get('selectedTaskSeq'));
 
 export default {
   makeSelectCategoryMapList,

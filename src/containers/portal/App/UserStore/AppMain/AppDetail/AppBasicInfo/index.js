@@ -35,7 +35,7 @@ class AppBasicInfo extends React.Component {
       popUpVisible: false,
       popUpUrl: '',
       popUpTitle: '',
-      userinfo: [],
+      userinfo: {},
       orgShow: false,
     };
     // prop.reqAppBasicInfo(this.state.appId);

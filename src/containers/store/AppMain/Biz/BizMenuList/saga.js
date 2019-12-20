@@ -14,7 +14,6 @@ export function* getMapList(payload) {
   const { key } = payload;
   const BIZGRP_ID = Number(key);
 
-
   const response = yield call(Axios.post, '/api/bizstore/v1/store/bizmenuList', {
     BIZGRP_ID,
   });

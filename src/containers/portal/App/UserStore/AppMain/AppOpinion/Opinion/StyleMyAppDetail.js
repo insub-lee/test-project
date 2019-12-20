@@ -16,7 +16,7 @@ const StyleMyAppDetail = styled.div`
     font-size: 17px;
     line-height: 59px;
     border-bottom: 1px solid #222222;
-  } 
+  }
 
   h4 {
     position: relative;
@@ -28,7 +28,7 @@ const StyleMyAppDetail = styled.div`
     letter-spacing: -0.5px;
 
     &:before {
-      content:url(${IconOption});
+      content: url(${IconOption});
       position: absolute;
       top: -3px;
       left: 0;
@@ -38,7 +38,7 @@ const StyleMyAppDetail = styled.div`
 
     //필수입력 표시
     &.required:before {
-      content:url(${IconRequired});
+      content: url(${IconRequired});
     }
   }
 
@@ -49,7 +49,6 @@ const StyleMyAppDetail = styled.div`
     font-size: 14px;
 
     . {
-
     }
   }
 
@@ -72,7 +71,7 @@ const StyleMyAppDetail = styled.div`
       margin-left: 5px;
     }
   }
-  
+
   // main navigation tabs
   .ant-tabs {
     min-height: calc(100vh - 250px);
@@ -80,39 +79,39 @@ const StyleMyAppDetail = styled.div`
     .ant-tabs-bar {
       margin-bottom: 0;
       border-bottom-color: #d3d3d3;
-  
+
       .ant-tabs-nav-container {
         height: 60px;
         color: #909090;
         font-size: 16px;
-  
+
         // 좌우 스크롤 이동 화살표 숨기기
         &.ant-tabs-nav-container-scrolling {
           padding-left: 0;
           padding-right: 0;
-  
+
           .ant-tabs-tab-arrow-show {
             display: none;
           }
         }
-  
+
         .ant-tabs-tab {
           width: 286px;
           height: 61px;
           margin-right: 0;
           padding-top: 20px;
           text-align: center;
-  
+
           &:hover {
             color: #222222;
           }
-  
+
           &.ant-tabs-tab-active {
             color: #222222;
             cursor: default;
           }
         }
-  
+
         .ant-tabs-ink-bar {
           background-color: #222222;
         }

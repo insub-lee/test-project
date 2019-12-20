@@ -8,15 +8,55 @@ export const getCallDataHandler = (id, apiArys, callbackFunc) => ({
 });
 
 export const setCallDataHandler = (id, apiKey, response) => ({
-  type: actionTypes.SET_CALLDATA_SAGA,
+  type: `${actionTypes.SET_CALLDATA_SAGA}_${id}`,
   id,
   apiKey,
   response,
 });
 
-export const removeReduxState = id => ({
-  type: actionTypes.REMOVE_REDUX_STATE,
+export const submitHadnlerBySaga = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
+  type: `${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${id}`,
   id,
+  httpMethod,
+  apiUrl,
+  submitData,
+  callbackFunc,
+});
+
+export const changeFormData = (id, key, val) => ({
+  type: `${actionTypes.CHANGE_FORMDATA}_${id}`,
+  id,
+  key,
+  val,
+});
+
+export const setFormData = (id, obj) => ({
+  type: `${actionTypes.SET_FORMDATA}_${id}`,
+  id,
+  obj,
+});
+
+export const removeReduxState = id => ({
+  type: `${actionTypes.REMOVE_REDUX_STATE}_${id}`,
+  id,
+});
+
+export const removeStorageReduxState = (id, storage) => ({
+  type: `${actionTypes.REMOVE_ID_BYSTORAGE}_${id}`,
+  id,
+  storage,
+});
+
+export const removeResponseDataReduxStateByKey = (id, key) => ({
+  type: `${actionTypes.REMOVE_RESPONSE_REDUX_STATE_BYKEY}_${id}`,
+  id,
+  key,
+});
+
+export const removeFormDataReduxStateByKey = (id, key) => ({
+  type: `${actionTypes.REMOVE_FORMDATA_REDUX_STATE_BYKEY}_${id}`,
+  id,
+  key,
 });
 
 export const removeReduxStateByKey = (id, key) => ({

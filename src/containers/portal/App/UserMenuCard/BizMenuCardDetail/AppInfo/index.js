@@ -8,10 +8,7 @@ import AppRating from '../../../UserStore/AppMain/AppDetail/AppRating/index';
 
 const AppInfo = ({
   match: {
-    params: { appId },
-  },
-  match: {
-    params: { BIZGRP_ID },
+    params: { appId, BIZGRP_ID },
   },
   history,
   execMenu,

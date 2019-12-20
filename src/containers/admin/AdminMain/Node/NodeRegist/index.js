@@ -152,7 +152,7 @@ class NodeRegist extends Component {
                 <StyledButton className="btn-light">목록으로</StyledButton>
               </Link>
               {NODE_ID !== '-1' ? (
-                <React.Fragment>
+                <>
                   <Link to={`/admin/adminmain/node/nodeDetail/${node.NODE_ID}`}>
                     <StyledButton className="btn-dark" style={{ marginLeft: '8px' }}>
                       취소
@@ -161,7 +161,7 @@ class NodeRegist extends Component {
                   <StyledButton className="btn-primary" htmlType="button" onClick={e => this.onUpdateNode(e)}>
                     저장
                   </StyledButton>
-                </React.Fragment>
+                </>
               ) : (
                 <StyledButton className="btn-primary" type="button" onClick={e => this.onSaveNode(e)}>
                   등록
@@ -208,13 +208,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Node.NodeRegist', reducer });
 const withSaga = injectSaga({ key: 'containers.admin.AdminMain.Node.NodeRegist', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(NodeRegist);
+export default compose(withSaga, withReducer, withConnect)(NodeRegist);

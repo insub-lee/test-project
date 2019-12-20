@@ -48,15 +48,13 @@ class BizDetail extends Component {
     const { params } = match;
     const { BIZGRP_ID } = params;
 
-    if (BIZGRP_ID
-      && this.state.BIZGRP_ID !== Number(BIZGRP_ID)) {
+    if (BIZGRP_ID && this.state.BIZGRP_ID !== Number(BIZGRP_ID)) {
       this.setState({
         BIZGRP_ID: Number(BIZGRP_ID),
       });
       this.props.handleGetBizMenu(Number(BIZGRP_ID), history);
     }
   }
-
 
   render() {
     const {
@@ -72,7 +70,7 @@ class BizDetail extends Component {
     // /store/appMain/bizStore/biz/detail
     const preUrl = match.path.substr(0, match.path.indexOf('/:'));
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       handleChangeSelectedIndex(node.MENU_ID);
       if (node.TYPE === 'Y') {
         history.push(`${preUrl}/app/${node.BIZGRP_ID}/${node.APP_ID}`);
@@ -94,11 +92,7 @@ class BizDetail extends Component {
         }}
       >
         <StyleBizDetail>
-          <TopMenu
-            history={history}
-            match={match}
-            BIZGRP_ID={this.state.BIZGRP_ID}
-          />
+          <TopMenu history={history} match={match} BIZGRP_ID={this.state.BIZGRP_ID} />
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }}>
             <ul className="bizDetailContentWrapper">
               <li className="leftContent inPage">
@@ -112,9 +106,7 @@ class BizDetail extends Component {
                     {lang.get('NAME', bizMenuData)}
                   </button>
                 </h2>
-                {
-                  bizMenuData.children ? '' : <p style={{ paddingLeft: 12 }}>{intlObj.get(messages.noMenu)}</p>
-                }
+                {bizMenuData.children ? '' : <p style={{ paddingLeft: 12 }}>{intlObj.get(messages.noMenu)}</p>}
                 <BizMenuTree
                   treeData={bizMenuData.children ? bizMenuData.children : []}
                   onClick={handleTreeOnClick}
@@ -123,8 +115,7 @@ class BizDetail extends Component {
                   //   const node = node2;
                   //   node.IS_FOLDER = node.NODE_TYPE === 'F';
                   // }}
-                  generateNodeProps={() => ({
-                  })}
+                  generateNodeProps={() => ({})}
                 />
               </li>
               <li className="rightContent">
@@ -137,9 +128,7 @@ class BizDetail extends Component {
             </ul>
           </StyleBizDetailContent>
         </StyleBizDetail>
-        {
-          preUrl.indexOf('myPage') > -1 ? '' : <Footer />
-        }
+        {preUrl.indexOf('myPage') > -1 ? '' : <Footer />}
       </div>
     );
   }
@@ -162,8 +151,7 @@ export function mapDispatchToProps(dispatch) {
   return {
     // 테스트
     handleGetBizMenu: (key, history) => dispatch(actions.getBizMenu(key, history)),
-    handleChangeSelectedIndex: selectedIndex =>
-      dispatch(actions.changeSelectedIndex(selectedIndex)),
+    handleChangeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),
   };
 }
@@ -179,8 +167,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizDetail', reducer });
 const withSaga = injectSaga({ key: 'bizDetail', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizDetail);
+export default compose(withReducer, withSaga, withConnect)(BizDetail);

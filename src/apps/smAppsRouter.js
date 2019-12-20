@@ -9,7 +9,7 @@ import Loadable from 'react-loadable';
 import Loading from './Loading';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
-import Draft from './WorkFlow/User/Draft';
+import Draft from './Workflow/User/Draft';
 
 // import PMSheetList from './hypm_pmSheetList';
 // import PmSheetTablet from './hypm_pmSheetTablet';
@@ -32,11 +32,11 @@ class SmAppsRouter extends PureComponent {
     this.setContents(contents);
   }
 
-  setContents = (contents) => {
+  setContents = contents => {
     this.setState({
       contents,
     });
-  }
+  };
 
   getAppsRouter = (selectedApp) => { // eslint-disable-line
     const type = 'swidget';
@@ -58,34 +58,39 @@ class SmAppsRouter extends PureComponent {
             </ErrorBoundary>
           </WidgetsWrapper>
         );
-      } else if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
+      }
+      if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
           <div>
-            <Route path={`/${basicPath.SINGLE}/workBuilder/:ID`} 
-              render={props => 
+            <Route
+              path={`/${basicPath.SINGLE}/workBuilder/:ID`}
+              render={props => (
                 <ErrorBoundary>
-                  <WorkBuilderViewer {...props}/>
+                  <WorkBuilderViewer {...props} />
                 </ErrorBoundary>
-              }
+              )}
             />
-            <Route path={`/${basicPath.SINGLE}/draft/:CATE`} 
-              render={props => 
+            <Route
+              path={`/${basicPath.SINGLE}/draft/:CATE`}
+              render={props => (
                 <ErrorBoundary>
-                  <Draft {...props}/>
+                  <Draft {...props} />
                 </ErrorBoundary>
-              }
+              )}
             />
-            <Route path={`/${basicPath.SINGLE}/${item.legacyPath}`} 
-              render={() => 
+            <Route
+              path={`/${basicPath.SINGLE}/${item.legacyPath}`}
+              render={() => (
                 <ErrorBoundary>
-                  <Comp/>
+                  <Comp />
                 </ErrorBoundary>
-              }
+              )}
             />
           </div>
         );
-      } else if (item.SEC_YN === 'N' && item.CATG_ID !== '') {
+      }
+      if (item.SEC_YN === 'N' && item.CATG_ID !== '') {
         return (
           // 해당 앱에 권한이 없는 경우
           <WidgetsWrapper item={item}>
@@ -96,17 +101,13 @@ class SmAppsRouter extends PureComponent {
         );
       }
     } else {
-      return (
-        <div />
-      );
+      return <div />;
     }
-  }
+  };
 
   render() {
     console.log('$$$ smRouter render()');
-    return (
-      <div className="appsRoute">{this.state.contents}</div>
-    );
+    return <div className="appsRoute">{this.state.contents}</div>;
   }
 }
 

@@ -1,28 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Prism from './prism';
-import './prism.css';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism.css';
 
-const ArticleText = props => (
-  <p className="text mb30">{props.txt}</p>
-);
-const ArticleHead = props => (
-  <h2 className="mb30">{props.txt}</h2>
-);
+const ArticleText = props => <p className="text mb30">{props.txt}</p>;
+const ArticleHead = props => <h2 className="mb30">{props.txt}</h2>;
 const ArticleImg = props => (
-  <p><img src={`${props.txt}`} alt="guideimg" /></p>
+  <p>
+    <img src={`${props.txt}`} alt="guideimg" />
+  </p>
 );
 class ArticleCode extends React.Component {
   componentDidMount() {
     Prism.highlightAll();
   }
+
   render() {
     return (
       <div className="highlight">
         <pre>
-          <code className="language-jsx">
-            {this.props.code}
-          </code>
+          <code className="language-jsx">{this.props.code}</code>
         </pre>
       </div>
     );

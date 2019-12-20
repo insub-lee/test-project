@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const FooterStyle = styled.div`
   position: relative;
-  bottom: 0;  
+  bottom: 0;
   display: block;
   width: 100%;
   height: 55px;
@@ -12,16 +12,11 @@ const FooterStyle = styled.div`
   color: #909090;
   font-size: 12px;
 
-  > img  {
+  > img {
     margin-right: 10px;
   }
 `;
 
-const Footer = () => (
-  <FooterStyle>
-    Copyright &copy;
-  </FooterStyle>
-);
+const Footer = () => <FooterStyle>Copyright &copy;</FooterStyle>;
 
 export default Footer;
-

@@ -11,12 +11,13 @@ const StyleAuthSettingContent = styled.div`
     border-spacing: 0;
     overflow: hidden;
 
-    tr{
+    tr {
       &:hover {
         background-color: #f7f7f7;
       }
 
-      th, td {
+      th,
+      td {
         position: relative;
       }
 
@@ -33,7 +34,7 @@ const StyleAuthSettingContent = styled.div`
         text-align: center;
 
         &:hover::after {
-          content: "";
+          content: '';
           position: absolute;
           background-color: #f7f7f7;
           left: 0;
@@ -66,7 +67,7 @@ const StyleAuthSettingContent = styled.div`
           width: 50px;
         }
       }
-  
+
       td {
         height: 50px;
         padding: 0 10px;
@@ -75,7 +76,7 @@ const StyleAuthSettingContent = styled.div`
         // background: #ffffff;
 
         &:hover::after {
-          content: "";
+          content: '';
           position: absolute;
           background-color: #f7f7f7;
           left: 0;
@@ -95,10 +96,7 @@ const StyleAuthSettingContent = styled.div`
         }
       }
     }
-
-    
   }
-
 `;
 
 export default StyleAuthSettingContent;

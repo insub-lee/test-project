@@ -5,33 +5,16 @@ import Organization from './Organization';
 
 class App extends React.Component {
   componentDidMount() {}
-  render() {
-    const {
-      profile,
-    } = this.props;
 
+  render() {
+    const { profile } = this.props;
     // query string
-    const {
-      lang,
-      deptId,
-      userId,
-    } = this.props.match.params;
+    const { lang, deptId, userId } = this.props.match.params;
 
     const WrappingRoute = ({ component: Component, ...rest }) => (
       <Route
         {...rest}
-        render={props => (
-          <Component
-            {...props}
-            show={true}
-            isModal={false}
-            userProfile={profile}
-            isProfile={true}
-            lang={lang}
-            deptId={deptId}
-            userId={userId}
-          />
-        )}
+        render={props => <Component {...props} show isModal={false} userProfile={profile} isProfile lang={lang} deptId={deptId} userId={userId} />}
       />
     );
 

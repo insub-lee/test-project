@@ -37,7 +37,7 @@ const StyleBizDetail = styled.div`
   }
 
   @media only screen and (max-width: 1280px) {
-    width: calc(100vw - 345px);  // Tree너비 + 양옆 12px 씩 + 스크롤바 너비
+    width: calc(100vw - 345px); // Tree너비 + 양옆 12px 씩 + 스크롤바 너비
     margin: 20px auto 0;
   }
 
@@ -48,7 +48,6 @@ const StyleBizDetail = styled.div`
     padding: 20px 10px 0 10px;
     border: none;
   }
-
 `;
 
 export default StyleBizDetail;

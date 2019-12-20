@@ -46,7 +46,7 @@ const GRP = 'V';
 
 // 각 ACNT_TYPE 별 id가 다름.
 function convertOrgData(newarr, ACNT_ID, SEC_TYPE, ACNT_TYPE) {
-  return newarr.map((m) => {
+  return newarr.map(m => {
     const m2 = m;
     m2.ACNT_ID = m2[ACNT_ID] !== undefined ? m2[ACNT_ID] : m2[ACNT_ID.toUpperCase()];
     m2.SEC_TYPE = SEC_TYPE;
@@ -56,7 +56,7 @@ function convertOrgData(newarr, ACNT_ID, SEC_TYPE, ACNT_TYPE) {
 }
 
 function acntIdStringtoInteger(list) {
-  return list.map((m) => {
+  return list.map(m => {
     const m2 = m;
     m2.ACNT_ID = Number(m2.ACNT_ID);
     return m2;
@@ -130,8 +130,7 @@ class BizGroupReg extends Component {
 
     const { data } = this.state;
 
-    if (BIZGRP_ID
-      && Number(this.state.BIZGRP_ID) !== Number(BIZGRP_ID)) {
+    if (BIZGRP_ID && Number(this.state.BIZGRP_ID) !== Number(BIZGRP_ID)) {
       this.setState({
         BIZGRP_ID: Number(BIZGRP_ID),
       });
@@ -141,7 +140,8 @@ class BizGroupReg extends Component {
 
     if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
       let mData = { ...data, ...dataP };
-      if (dataP.I) { // 관리자 권한
+      if (dataP.I) {
+        // 관리자 권한
         mData = {
           ...mData,
           I: {
@@ -153,7 +153,8 @@ class BizGroupReg extends Component {
           },
         };
       }
-      if (dataP.V) { // 조회 권한
+      if (dataP.V) {
+        // 조회 권한
         mData = {
           ...mData,
           V: {
@@ -165,13 +166,15 @@ class BizGroupReg extends Component {
           },
         };
       }
-      if (dataP.catgPaths) { // 카테고리
+      if (dataP.catgPaths) {
+        // 카테고리
         mData = {
           ...mData,
           CATG_NAME: lang.get('NAME', dataP.catgPaths),
         };
       }
-      if (dataP.ICON && dataP.ICON.trim() !== '') { // 아이콘
+      if (dataP.ICON && dataP.ICON.trim() !== '') {
+        // 아이콘
         const iconArr = [];
         iconArr.push({ seq: dataP.ICON });
         mData = {
@@ -204,18 +207,18 @@ class BizGroupReg extends Component {
     this.onChangeData({ UploadFilesIcon: [] });
   };
 
-  managerOrgOpen = (type) => {
+  managerOrgOpen = type => {
     this.setState({
       orgShow: true,
       SEC_TYPE: type,
     });
-  }
+  };
 
   orgClose = () => {
     this.setState({
       orgShow: false,
     });
-  }
+  };
 
   deleteAppCategory = () => {
     this.onChangeData({
@@ -228,6 +231,7 @@ class BizGroupReg extends Component {
       MyAppCategoryModalShow: true,
     });
   };
+
   MyAppCategoryModalClose = () => {
     this.setState({
       MyAppCategoryModalShow: false,
@@ -245,7 +249,7 @@ class BizGroupReg extends Component {
     const oldDutys = data[SEC_TYPE].dutys.length > 0 ? data[SEC_TYPE].dutys : [];
     const oldGrps = data[SEC_TYPE].grps.length > 0 ? data[SEC_TYPE].grps : [];
 
-    const imgClick = (e) => {
+    const imgClick = e => {
       e.stopPropagation();
     };
 
@@ -269,16 +273,14 @@ class BizGroupReg extends Component {
           <OrganizationRole
             show={this.state.orgShow}
             closeModal={this.orgClose}
-
             // 조직도 모달창으로 가져갈 데이터
             selectedUsers={oldUsers.slice()}
             checkedDept={oldDepts.slice()}
             checkedPstn={oldPstns.slice()}
             checkedDuty={oldDutys.slice()}
             checkedGrp={oldGrps.slice()}
-
             // 조직도 모달창으로부터 데이터 가져오는 함수
-            getDataFromOrganization={(result) => {
+            getDataFromOrganization={result => {
               const mData = {
                 users: convertOrgData(result.selectedUsers, 'USER_ID', SEC_TYPE, USER),
                 pstns: convertOrgData(result.checkedDept, 'id', SEC_TYPE, DEPT),
@@ -297,21 +299,18 @@ class BizGroupReg extends Component {
           <Organization
             show={this.state.orgShow}
             closeModal={this.orgClose}
-
-            userTab={true}
-            pstnTab={true}
-            dutyTab={true}
-            grpTab={true}
-
+            userTab
+            pstnTab
+            dutyTab
+            grpTab
             // 조직도 모달창으로 가져갈 데이터
             selectedUsers={oldUsers.slice()}
             checkedDept={oldDepts.slice()}
             checkedPstn={oldPstns.slice()}
             checkedDuty={oldDutys.slice()}
             checkedGrp={oldGrps.slice()}
-
             // 조직도 모달창으로부터 데이터 가져오는 함수
-            getDataFromOrganization={(result) => {
+            getDataFromOrganization={result => {
               const mData = {
                 users: convertOrgData(result.selectedUsers, 'USER_ID', SEC_TYPE, USER),
                 pstns: convertOrgData(result.checkedDept, 'id', SEC_TYPE, DEPT),
@@ -329,44 +328,29 @@ class BizGroupReg extends Component {
 
     return (
       <div>
-        {
-          orgObj
-        }
-        <MyAppCategoryModal
-          show={this.state.MyAppCategoryModalShow}
-          closeModal={this.MyAppCategoryModalClose}
-          returnGateId={returnGateId}
-          type="bizgroup"
-        />
+        {orgObj}
+        <MyAppCategoryModal show={this.state.MyAppCategoryModalShow} closeModal={this.MyAppCategoryModalClose} returnGateId={returnGateId} type="bizgroup" />
         <StyleGroupReg>
           <Form>
-            <h2 className="pageTitle">
-              {
-                data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroup) : intlObj.get(messages.bizFolder)
-              } 등록정보 입력
-            </h2>
+            <h2 className="pageTitle">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroup) : intlObj.get(messages.bizFolder)} 등록정보 입력</h2>
             <div className="formTable">
               <table>
                 <tbody>
                   <tr>
                     <th className="top required">
-                      <span className="">
-                        {
-                          data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupNameKor) : intlObj.get(messages.folderNameKor)
-                        }
-                      </span>
+                      <span className="">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupNameKor) : intlObj.get(messages.folderNameKor)}</span>
                     </th>
                     <td>
                       <FormItem>
-                        <div style={{ }}>
+                        <div style={{}}>
                           <Input
-                            style={{ }}
+                            style={{}}
                             maxLength="50"
-                            onChange={(e) => {
+                            onChange={e => {
                               this.onChangeData({ NAME_KOR: replaceSpecialCharacter(e.target.value) });
                             }}
                             value={data.NAME_KOR}
-                            ref={(ref) => {
+                            ref={ref => {
                               if (ref) {
                                 this.inputKor = ref;
                               }
@@ -379,22 +363,15 @@ class BizGroupReg extends Component {
                   </tr>
                   <tr>
                     <th className="top required">
-                      <span className="">
-                        {
-                          data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupDscrKor) : intlObj.get(messages.folderDscrKor)
-                        }
-                      </span>
+                      <span className="">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupDscrKor) : intlObj.get(messages.folderDscrKor)}</span>
                     </th>
                     <td>
-                      <FormItem
-                        labelCol={{ width: '100%' }}
-                        wrapperCol={{ width: '100%' }}
-                      >
+                      <FormItem labelCol={{ width: '100%' }} wrapperCol={{ width: '100%' }}>
                         <textarea
                           row="5"
                           placeholder=""
                           maxLength="1000"
-                          onChange={(e) => {
+                          onChange={e => {
                             this.onChangeData({ DSCR_KOR: e.target.value });
                           }}
                           value={data.DSCR_KOR}
@@ -404,19 +381,15 @@ class BizGroupReg extends Component {
                   </tr>
                   <tr>
                     <th className="top required">
-                      <span className="">
-                        {
-                          data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupNameEng) : intlObj.get(messages.folderNameEng)
-                        }
-                      </span>
+                      <span className="">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupNameEng) : intlObj.get(messages.folderNameEng)}</span>
                     </th>
                     <td>
                       <FormItem>
-                        <div style={{ }}>
+                        <div style={{}}>
                           <Input
-                            style={{ }}
+                            style={{}}
                             maxLength="50"
-                            onChange={(e) => {
+                            onChange={e => {
                               this.onChangeData({ NAME_ENG: replaceSpecialCharacter(e.target.value) });
                             }}
                             value={data.NAME_ENG}
@@ -427,22 +400,15 @@ class BizGroupReg extends Component {
                   </tr>
                   <tr>
                     <th className="top required">
-                      <span className="">
-                        {
-                          data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupDscrEng) : intlObj.get(messages.folderDscrEng)
-                        }
-                      </span>
+                      <span className="">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupDscrEng) : intlObj.get(messages.folderDscrEng)}</span>
                     </th>
                     <td>
-                      <FormItem
-                        labelCol={{ width: '100%' }}
-                        wrapperCol={{ width: '100%' }}
-                      >
+                      <FormItem labelCol={{ width: '100%' }} wrapperCol={{ width: '100%' }}>
                         <textarea
                           row="5"
                           placeholder=""
                           maxLength="1000"
-                          onChange={(e) => {
+                          onChange={e => {
                             this.onChangeData({ DSCR_ENG: e.target.value });
                           }}
                           value={data.DSCR_ENG}
@@ -452,19 +418,15 @@ class BizGroupReg extends Component {
                   </tr>
                   <tr>
                     <th className="top required">
-                      <span className="">
-                        {
-                          data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupNameChn) : intlObj.get(messages.folderNameChn)
-                        }
-                      </span>
+                      <span className="">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupNameChn) : intlObj.get(messages.folderNameChn)}</span>
                     </th>
                     <td>
                       <FormItem>
-                        <div style={{ }}>
+                        <div style={{}}>
                           <Input
-                            style={{ }}
+                            style={{}}
                             maxLength="50"
-                            onChange={(e) => {
+                            onChange={e => {
                               this.onChangeData({ NAME_CHN: replaceSpecialCharacter(e.target.value) });
                             }}
                             value={data.NAME_CHN}
@@ -475,22 +437,15 @@ class BizGroupReg extends Component {
                   </tr>
                   <tr>
                     <th className="top required">
-                      <span className="">
-                        {
-                          data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupDscrChn) : intlObj.get(messages.folderDscrChn)
-                        }
-                      </span>
+                      <span className="">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroupDscrChn) : intlObj.get(messages.folderDscrChn)}</span>
                     </th>
                     <td>
-                      <FormItem
-                        labelCol={{ width: '100%' }}
-                        wrapperCol={{ width: '100%' }}
-                      >
+                      <FormItem labelCol={{ width: '100%' }} wrapperCol={{ width: '100%' }}>
                         <textarea
                           row="5"
                           placeholder=""
                           maxLength="1000"
-                          onChange={(e) => {
+                          onChange={e => {
                             this.onChangeData({ DSCR_CHN: e.target.value });
                           }}
                           value={data.DSCR_CHN}
@@ -513,41 +468,20 @@ class BizGroupReg extends Component {
                           borderStyle="none"
                         >
                           <div>
-                            <div
-                              style={{ display: data.UploadFilesIcon.length < 1 ? 'block' : 'none' }}
-                            >
+                            <div style={{ display: data.UploadFilesIcon.length < 1 ? 'block' : 'none' }}>
                               <div className="readyToUpload" />
                             </div>
-                            <div
-                              style={{ display: data.UploadFilesIcon.length > 0 ? 'block' : 'none' }}
-                            >
-                              <span
-                                onClick={imgClick}
-                                onKeyPress={imgClick}
-                                role="presentation"
-                                className="appShape"
-                              >
-                                {
-                                  data.UploadFilesIcon.map(f => (
-                                    <img
-                                      src={imgUrl.get('120x120', f.seq)}
-                                      alt={f.fileName}
-                                    />
-                                  ))
-                                }
+                            <div style={{ display: data.UploadFilesIcon.length > 0 ? 'block' : 'none' }}>
+                              <span onClick={imgClick} onKeyPress={imgClick} role="presentation" className="appShape">
+                                {data.UploadFilesIcon.map(f => (
+                                  <img src={imgUrl.get('120x120', f.seq)} alt={f.fileName} />
+                                ))}
                               </span>
                             </div>
                           </div>
                         </Upload>
-                        <div
-                          className="deleteIconWrapper"
-                          style={{ display: data.UploadFilesIcon.length > 0 ? 'block' : 'none' }}
-                        >
-                          <button
-                            className="deleteAppIcon"
-                            onClick={this.UploadFilesIconDel}
-                            title={intlObj.get(messages.appIconDel)}
-                          />
+                        <div className="deleteIconWrapper" style={{ display: data.UploadFilesIcon.length > 0 ? 'block' : 'none' }}>
+                          <button className="deleteAppIcon" onClick={this.UploadFilesIconDel} title={intlObj.get(messages.appIconDel)} />
                         </div>
                       </section>
                     </td>
@@ -557,26 +491,10 @@ class BizGroupReg extends Component {
                       <span className="">{intlObj.get(messages.category)}</span>
                     </th>
                     <td>
-                      <FormItem
-                        hasFeedback={true}
-                        validateStatus={this.state.CATG_ID_CHK ? 'success' : 'error'}
-                        className="required categorySelect"
-                      >
-                        <Input
-                          placeholder=""
-                          readOnly="readOnly"
-                          value={data.CATG_ID > 0 ? data.CATG_NAME : ''}
-                          disabled
-                        />
-                        <Button
-                          className="deleteValue"
-                          title="삭제"
-                          onClick={this.deleteAppCategory}
-                        />
-                        <Button
-                          className="btnText edit"
-                          onClick={this.myAppCategoryModalOpen}
-                        >
+                      <FormItem hasFeedback validateStatus={this.state.CATG_ID_CHK ? 'success' : 'error'} className="required categorySelect">
+                        <Input placeholder="" readOnly="readOnly" value={data.CATG_ID > 0 ? data.CATG_NAME : ''} disabled />
+                        <Button className="deleteValue" title="삭제" onClick={this.deleteAppCategory} />
+                        <Button className="btnText edit" onClick={this.myAppCategoryModalOpen}>
                           {intlObj.get(messages.edit)}
                         </Button>
                         {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
@@ -589,55 +507,53 @@ class BizGroupReg extends Component {
                     </th>
                     <td>
                       <FormItem>
-                        <div style={{ }}>
+                        <div style={{}}>
                           <div className="appManagerListBox">
-                            {
-                              data.I ?
-                                // (<AppMaNagerList
-                                //   managerList={data.I}
-                                //   delFlag={true}
-                                //   returnManagerList={(result) => {
-                                //     this.onChangeData({ I: result });
-                                //   }}
-                                // />
-                                // )
-                                (
-                                  <AppMaNagerList
-                                    userList={data.I.users}
-                                    pstnList={data.I.pstns}
-                                    deptList={data.I.depts}
-                                    dutyList={data.I.dutys}
-                                    grpList={data.I.grps}
-                                    returnUserList={(result) => {
-                                      const nData = { ...data.I };
-                                      delete nData.users;
-                                      this.onChangeData({ I: { ...nData, users: result } });
-                                    }}
-                                    returnPstnList={(result) => {
-                                      const nData = { ...data.I };
-                                      delete nData.pstns;
-                                      this.onChangeData({ I: { ...nData, pstns: result } });
-                                    }}
-                                    returnDetpList={(result) => {
-                                      const nData = { ...data.I };
-                                      delete nData.depts;
-                                      this.onChangeData({ I: { ...nData, depts: result } });
-                                    }}
-                                    returnDutyList={(result) => {
-                                      const nData = { ...data.I };
-                                      delete nData.dutys;
-                                      this.onChangeData({ I: { ...nData, dutys: result } });
-                                    }}
-                                    returnGrpList={(result) => {
-                                      const nData = { ...data.I };
-                                      delete nData.grps;
-                                      this.onChangeData({ I: { ...nData, grps: result } });
-                                    }}
-                                    delFlag={true}
-                                  />
-                                )
-                                : ('')
-                            }
+                            {data.I ? (
+                              // (<AppMaNagerList
+                              //   managerList={data.I}
+                              //   delFlag={true}
+                              //   returnManagerList={(result) => {
+                              //     this.onChangeData({ I: result });
+                              //   }}
+                              // />
+                              // )
+                              <AppMaNagerList
+                                userList={data.I.users}
+                                pstnList={data.I.pstns}
+                                deptList={data.I.depts}
+                                dutyList={data.I.dutys}
+                                grpList={data.I.grps}
+                                returnUserList={result => {
+                                  const nData = { ...data.I };
+                                  delete nData.users;
+                                  this.onChangeData({ I: { ...nData, users: result } });
+                                }}
+                                returnPstnList={result => {
+                                  const nData = { ...data.I };
+                                  delete nData.pstns;
+                                  this.onChangeData({ I: { ...nData, pstns: result } });
+                                }}
+                                returnDetpList={result => {
+                                  const nData = { ...data.I };
+                                  delete nData.depts;
+                                  this.onChangeData({ I: { ...nData, depts: result } });
+                                }}
+                                returnDutyList={result => {
+                                  const nData = { ...data.I };
+                                  delete nData.dutys;
+                                  this.onChangeData({ I: { ...nData, dutys: result } });
+                                }}
+                                returnGrpList={result => {
+                                  const nData = { ...data.I };
+                                  delete nData.grps;
+                                  this.onChangeData({ I: { ...nData, grps: result } });
+                                }}
+                                delFlag
+                              />
+                            ) : (
+                              ''
+                            )}
                           </div>
                           <Button
                             className="btnText"
@@ -658,55 +574,53 @@ class BizGroupReg extends Component {
                     </th>
                     <td>
                       <FormItem>
-                        <div style={{ }}>
+                        <div style={{}}>
                           <div className="appManagerListBox">
-                            {
-                              data.V ?
-                                // (<AppMaNagerList
-                                //   managerList={data.V}
-                                //   delFlag={true}
-                                //   returnManagerList={(result) => {
-                                //     this.onChangeData({ V: result });
-                                //   }}
-                                // />
-                                // )
-                                (
-                                  <AppMaNagerList
-                                    userList={data.V.users}
-                                    pstnList={data.V.pstns}
-                                    deptList={data.V.depts}
-                                    dutyList={data.V.dutys}
-                                    grpList={data.V.grps}
-                                    returnUserList={(result) => {
-                                      const nData = { ...data.V };
-                                      delete nData.users;
-                                      this.onChangeData({ V: { ...nData, users: result } });
-                                    }}
-                                    returnPstnList={(result) => {
-                                      const nData = { ...data.V };
-                                      delete nData.pstns;
-                                      this.onChangeData({ V: { ...nData, pstns: result } });
-                                    }}
-                                    returnDetpList={(result) => {
-                                      const nData = { ...data.V };
-                                      delete nData.depts;
-                                      this.onChangeData({ V: { ...nData, depts: result } });
-                                    }}
-                                    returnDutyList={(result) => {
-                                      const nData = { ...data.V };
-                                      delete nData.dutys;
-                                      this.onChangeData({ V: { ...nData, dutys: result } });
-                                    }}
-                                    returnGrpList={(result) => {
-                                      const nData = { ...data.V };
-                                      delete nData.grps;
-                                      this.onChangeData({ V: { ...nData, grps: result } });
-                                    }}
-                                    delFlag={true}
-                                  />
-                                )
-                                : ('')
-                            }
+                            {data.V ? (
+                              // (<AppMaNagerList
+                              //   managerList={data.V}
+                              //   delFlag={true}
+                              //   returnManagerList={(result) => {
+                              //     this.onChangeData({ V: result });
+                              //   }}
+                              // />
+                              // )
+                              <AppMaNagerList
+                                userList={data.V.users}
+                                pstnList={data.V.pstns}
+                                deptList={data.V.depts}
+                                dutyList={data.V.dutys}
+                                grpList={data.V.grps}
+                                returnUserList={result => {
+                                  const nData = { ...data.V };
+                                  delete nData.users;
+                                  this.onChangeData({ V: { ...nData, users: result } });
+                                }}
+                                returnPstnList={result => {
+                                  const nData = { ...data.V };
+                                  delete nData.pstns;
+                                  this.onChangeData({ V: { ...nData, pstns: result } });
+                                }}
+                                returnDetpList={result => {
+                                  const nData = { ...data.V };
+                                  delete nData.depts;
+                                  this.onChangeData({ V: { ...nData, depts: result } });
+                                }}
+                                returnDutyList={result => {
+                                  const nData = { ...data.V };
+                                  delete nData.dutys;
+                                  this.onChangeData({ V: { ...nData, dutys: result } });
+                                }}
+                                returnGrpList={result => {
+                                  const nData = { ...data.V };
+                                  delete nData.grps;
+                                  this.onChangeData({ V: { ...nData, grps: result } });
+                                }}
+                                delFlag
+                              />
+                            ) : (
+                              ''
+                            )}
                           </div>
                           <Button
                             className="btnText"
@@ -721,7 +635,7 @@ class BizGroupReg extends Component {
                       </FormItem>
                     </td>
                   </tr>
-                  { data.LVL !== 1 ? (
+                  {data.LVL !== 1 && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupParentAuthYn)}</span>
@@ -730,7 +644,7 @@ class BizGroupReg extends Component {
                         <FormItem>
                           <Checkbox.Group
                             style={{ width: '50%' }}
-                            onChange={(arr) => {
+                            onChange={arr => {
                               this.onChangeData({ INHERIT_YN: arr.includes('Y') ? 'Y' : 'N' });
                             }}
                             value={data.INHERIT_YN}
@@ -740,9 +654,8 @@ class BizGroupReg extends Component {
                         </FormItem>
                       </td>
                     </tr>
-                    ) : ''
-                  }
-                  { data.LVL === 1 || data.PARENT_SYS_YN === 'Y' ? (
+                  )}
+                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupSystem)}</span>
@@ -750,21 +663,24 @@ class BizGroupReg extends Component {
                       <td>
                         <RadioGroup
                           className="typeOptions"
-                          onChange={(e) => {
+                          onChange={e => {
                             this.onChangeData({ SYS_YN: e.target.value });
                           }}
                           value={data.SYS_YN === 'X' ? 'N' : data.SYS_YN}
                         >
-                          <Radio value="Y" disabled={true}>{intlObj.get(messages.yes)}</Radio>
-                          <Radio value="N" disabled={true} style={{ width: 295 }}>{intlObj.get(messages.no)}</Radio>
+                          <Radio value="Y" disabled>
+                            {intlObj.get(messages.yes)}
+                          </Radio>
+                          <Radio value="N" disabled style={{ width: 295 }}>
+                            {intlObj.get(messages.no)}
+                          </Radio>
                           {/* <Radio value="Y" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'}>{intlObj.get(messages.yes)}</Radio>
                           <Radio value="N" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'} style={{ width: 295 }}>{intlObj.get(messages.no)}</Radio> */}
                         </RadioGroup>
                       </td>
                     </tr>
-                    ) : ''
-                  }
-                  { (data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' ? (
+                  )}
+                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupHomeYn)}</span>
@@ -772,75 +688,69 @@ class BizGroupReg extends Component {
                       <td>
                         <RadioGroup
                           className="typeOptions"
-                          onChange={(e) => {
+                          onChange={e => {
                             this.onChangeData({ HOME_YN: e.target.value });
                           }}
                           value={data.HOME_YN}
                         >
                           <Radio value="Y">{intlObj.get(messages.yes)}</Radio>
-                          <Radio value="N" style={{ width: 295 }}>{intlObj.get(messages.no)}</Radio>
+                          <Radio value="N" style={{ width: 295 }}>
+                            {intlObj.get(messages.no)}
+                          </Radio>
                         </RadioGroup>
                       </td>
                     </tr>
-                    ) : ''
-                  }
+                  )}
                 </tbody>
               </table>
             </div>
-            {
-              data.SEC_YN === 'Y' ? (
-                <div className="buttonWrapper">
-                  {
-                    data.MENU_EXIST_YN === 'Y' ? (
-                      <Link to={`/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`}>
-                        <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
-                      </Link>
-                    ) : ''
-                  }
+            {data.SEC_YN === 'Y' ? (
+              <div className="buttonWrapper">
+                {data.MENU_EXIST_YN === 'Y' ? (
+                  <Link to={`/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`}>
+                    <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
+                  </Link>
+                ) : (
+                  ''
+                )}
 
-                  <BtnDkGray onClick={() => {
-                      feed.showConfirm(intlObj.get(messages.saveConfirm), '', () => {
-                        const { I, V } = dataP;
-                        const delList = [];
-                        const newI = [
-                          ...data.I.users, ...data.I.pstns, ...data.I.depts,
-                          ...data.I.dutys, ...data.I.grps,
-                        ]; // object to Array
-                        const newV = [
-                          ...data.V.users, ...data.V.pstns, ...data.V.depts,
-                          ...data.V.dutys, ...data.V.grps,
-                        ]; // object to Array
-                        I.forEach((m) => {
-                          if (newI.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID)
-                            && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
-                            delList.push(m);
-                          }
-                        });
-
-                        V.forEach((m) => {
-                          if (newV.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID)
-                            && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
-                            delList.push(m);
-                          }
-                        });
-
-                        if (data.SYS_YN === 'X') {
-                          data.SYS_YN = 'N';
+                <BtnDkGray
+                  onClick={() => {
+                    feed.showConfirm(intlObj.get(messages.saveConfirm), '', () => {
+                      const { I, V } = dataP;
+                      const delList = [];
+                      const newI = [...data.I.users, ...data.I.pstns, ...data.I.depts, ...data.I.dutys, ...data.I.grps]; // object to Array
+                      const newV = [...data.V.users, ...data.V.pstns, ...data.V.depts, ...data.V.dutys, ...data.V.grps]; // object to Array
+                      I.forEach(m => {
+                        if (newI.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID) && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
+                          delList.push(m);
                         }
-                        const resultData = { ...data };
-                        resultData.delList = acntIdStringtoInteger(delList);
-                        resultData.I = acntIdStringtoInteger(newI);
-                        resultData.V = acntIdStringtoInteger(newV);
-
-                        updateBizGroup(resultData, history);
                       });
-                    }}
-                  >
-                    {intlObj.get(messages.save)}
-                  </BtnDkGray>
-                </div>
-              ) : ''
-            }
+
+                      V.forEach(m => {
+                        if (newV.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID) && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
+                          delList.push(m);
+                        }
+                      });
+
+                      if (data.SYS_YN === 'X') {
+                        data.SYS_YN = 'N';
+                      }
+                      const resultData = { ...data };
+                      resultData.delList = acntIdStringtoInteger(delList);
+                      resultData.I = acntIdStringtoInteger(newI);
+                      resultData.V = acntIdStringtoInteger(newV);
+
+                      updateBizGroup(resultData, history);
+                    });
+                  }}
+                >
+                  {intlObj.get(messages.save)}
+                </BtnDkGray>
+              </div>
+            ) : (
+              ''
+            )}
           </Form>
         </StyleGroupReg>
         <Footer />
@@ -859,9 +769,7 @@ BizGroupReg.propTypes = {
   loadingOn: PropTypes.func.isRequired,
 };
 
-BizGroupReg.defaultProps = {
-
-};
+BizGroupReg.defaultProps = {};
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -882,8 +790,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizGroupReg', reducer });
 const withSaga = injectSaga({ key: 'bizGroupReg', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizGroupReg));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(BizGroupReg));

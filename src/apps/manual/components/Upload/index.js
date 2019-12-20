@@ -1,37 +1,27 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import axios from "axios";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 
-import Upload from "./ImageUploader";
+import Upload from './ImageUploader';
 
 class DefaultUploader extends Component {
   state = {
-    fileData: {}
+    fileData: {},
   };
 
   onRemove = file => {
-    console.debug("Removed, file", file);
+    console.debug('Removed, file', file);
   };
 
   handleChange = ({ file, fileList }) => {
-    console.debug("# change~~~~~", file, fileList);
+    console.debug('# change~~~~~', file, fileList);
     const { response } = file;
     if (response && response.code === 300) {
       this.setState({ fileData: response });
     }
   };
 
-  customRequest = ({
-    action,
-    data,
-    file,
-    filename,
-    headers,
-    onError,
-    onProgress,
-    onSuccess,
-    withCredentials
-  }) => {
+  customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
     const formData = new FormData();
     if (data) {
       Object.keys(data).forEach(key => {
@@ -45,11 +35,8 @@ class DefaultUploader extends Component {
         withCredentials,
         headers,
         onUploadProgress: ({ total, loaded }) => {
-          onProgress(
-            { percent: Number(Math.round((loaded / total) * 100).toFixed(2)) },
-            file
-          );
-        }
+          onProgress({ percent: Number(Math.round((loaded / total) * 100).toFixed(2)) }, file);
+        },
       })
       .then(({ data: response }) => {
         onSuccess(response, file);
@@ -58,8 +45,8 @@ class DefaultUploader extends Component {
 
     return {
       abort() {
-        console.log("upload progress is aborted.");
-      }
+        console.log('upload progress is aborted.');
+      },
     };
   };
 
@@ -76,11 +63,7 @@ class DefaultUploader extends Component {
           onRemove={this.onRemove}
           disabled={readOnly}
         />
-        <input
-          type="hidden"
-          name={name}
-          value={`/img/thumb/0x0/${fileData.seq}`}
-        />
+        <input type="hidden" name={name} value={`/img/thumb/0x0/${fileData.seq}`} />
       </div>
     );
   }
@@ -88,12 +71,12 @@ class DefaultUploader extends Component {
 
 DefaultUploader.propTypes = {
   name: PropTypes.string,
-  readOnly: PropTypes.bool
+  readOnly: PropTypes.bool,
 };
 
 DefaultUploader.defaultProps = {
-  name: "",
-  readOnly: false
+  name: '',
+  readOnly: false,
 };
 
 export default DefaultUploader;

@@ -6,7 +6,7 @@
 /* eslint-disable comma-dangle */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import styles from './node-content-renderer.scss';
+import styles from './node-content-renderer.module.scss';
 
 function isDescendant(older, younger) {
   return !!older.children && typeof older.children !== 'function' && older.children.some(child => child === younger || isDescendant(child, younger));
@@ -54,23 +54,20 @@ class CustomThemeNodeContentRenderer extends Component {
 
     const dragPreview = (
       <div
-        className={
-          styles.row +
-          (isLandingPadActive ? ` ${styles.rowLandingPad}` : '') +
-          (isLandingPadActive && !canDrop ? ` ${styles.rowCancelPad}` : '') +
-          (isSearchMatch ? ` ${styles.rowSearchMatch}` : '') +
-          (isSearchFocus ? ` ${styles.rowSearchFocus}` : '') +
-          (className ? ` ${className}` : '')
-        }
+        className={`${styles.row} rstcustom__row ${isLandingPadActive ? ` ${styles.rowLandingPad} rstcustom__rowLandingPad` : ''} ${
+          isLandingPadActive && !canDrop ? ` ${styles.rowCancelPad} rstcustom__rowCancelPad` : ''
+        } ${isSearchMatch ? ` ${styles.rowSearchMatch} rstcustom__rowSearchMatch` : ''} ${
+          isSearchFocus ? ` ${styles.rowSearchFocus} rstcustom__rowSearchFocus` : ''
+        } ${className ? ` ${className}` : ''}`}
         style={{
           opacity: isDraggedDescendant ? 0.5 : 1,
           ...style,
         }}
       >
-        <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')}>
-          <div className={styles.rowLabel}>
+        <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled} rstcustom__rowContentsDragDisabled` : '')}>
+          <div className={`${styles.rowLabel} rstcustom__rowLabel`}>
             <span
-              className={styles.rowTitle + (node.subtitle ? ` ${styles.rowTitleWithSubtitle}` : '')}
+              className={`${styles.rowTitle} rstcustom__rowTitle${node.subtitle ? ` ${styles.rowTitleWithSubtitle} rstcustom__rowTitleWithSubtitle` : ''}`}
               // onClick={() => toggleChildrenVisibility({
               //   node,
               //   path,
@@ -87,7 +84,7 @@ class CustomThemeNodeContentRenderer extends Component {
             </span>
 
             {nodeSubtitle && (
-              <span className={styles.rowSubtitle}>
+              <span className={`${styles.rowSubtitle} rstcustom__rowSubtitle`}>
                 {typeof nodeSubtitle === 'function'
                   ? nodeSubtitle({
                       node,
@@ -99,7 +96,7 @@ class CustomThemeNodeContentRenderer extends Component {
             )}
           </div>
 
-          <div className={styles.rowToolbar}>
+          <div className={`${styles.rowToolbar} rstcustom__rowToolbar`}>
             {buttons.map((btn, index) => (
               <div
                 key={index} // eslint-disable-line react/no-array-index-key
@@ -132,7 +129,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 // 클릭 시 글자와 버튼 모두 같이 색상 변경
                 type="button"
                 aria-label={node.expanded ? 'Collapse' : 'Expand'}
-                className={node.expanded ? styles.collapseButton : styles.expandButton}
+                className={node.expanded ? `${styles.collapseButton} rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
                 onClick={() =>
                   toggleChildrenVisibility({
@@ -158,7 +155,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label="ordinary"
                 // className={styles.ordinaryButton}
-                className={`${styles.ordinaryButton} ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
+                className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
               />
             </div>

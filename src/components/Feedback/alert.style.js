@@ -25,10 +25,7 @@ const Alerts = styled(AntAlert)`
   }
 
   &&.ant-alert-with-description {
-    padding: ${props => (
-    props['data-rtl'] === 'rtl'
-      ? '16px 60px 16px 16px'
-      : '16px 16px 16px 60px')};
+    padding: ${props => (props['data-rtl'] === 'rtl' ? '16px 60px 16px 16px' : '16px 16px 16px 60px')};
     .ant-alert-message {
       font-weight: 500;
       color: ${palette('text', 0)};
@@ -45,10 +42,7 @@ const Alerts = styled(AntAlert)`
       right: ${props => (props['data-rtl'] === 'rtl' ? '20px' : 'inherit')};
     }
     &&.ant-alert-no-icon {
-      padding: ${props => (
-    props['data-rtl'] === 'rtl'
-      ? '12px 16px 12px 48px'
-      : '12px 48px 12px 16px')};
+      padding: ${props => (props['data-rtl'] === 'rtl' ? '12px 16px 12px 48px' : '12px 48px 12px 16px')};
     }
     .ant-alert-close-icon {
       right: ${props => (props['data-rtl'] === 'rtl' ? 'inherit' : '16px')};
@@ -56,10 +50,7 @@ const Alerts = styled(AntAlert)`
     }
   }
   &&.ant-alert-no-icon {
-    padding: ${props => (
-    props['data-rtl'] === 'rtl'
-      ? '12px 16px 12px 48px'
-      : '12px 48px 12px 16px')};
+    padding: ${props => (props['data-rtl'] === 'rtl' ? '12px 16px 12px 48px' : '12px 48px 12px 16px')};
   }
   .ant-alert-close-icon {
     right: ${props => (props['data-rtl'] === 'rtl' ? 'inherit' : '16px')};

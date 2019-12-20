@@ -29,18 +29,15 @@ class BizList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
+
   componentWillReceiveProps(nextProps) {
     const { match } = nextProps;
     const { params } = match;
     const { BIZGRP_ID, searchword } = params;
-    if (searchword
-      && searchword !== ''
-      && this.searchword !== searchword) {
+    if (searchword && searchword !== '' && this.searchword !== searchword) {
       this.searchword = searchword;
       this.props.handleGetMapListSearch(searchword);
-    } else if (BIZGRP_ID
-      && BIZGRP_ID !== ''
-      && this.BIZGRP_ID !== BIZGRP_ID) {
+    } else if (BIZGRP_ID && BIZGRP_ID !== '' && this.BIZGRP_ID !== BIZGRP_ID) {
       this.BIZGRP_ID = BIZGRP_ID;
       this.props.handleGetMapListOne(BIZGRP_ID);
     }
@@ -103,8 +100,7 @@ export function mapDispatchToProps(dispatch) {
     handleGetMapListOne: key => dispatch(actions.getMapListOne(key)),
     handleGetMapListMore: key => dispatch(actions.getMapListMore(key)),
     handleGetMapListSearch: searchword => dispatch(actions.getMapListSearch(searchword)),
-    handleRegisterBiz: (BIZGRP_ID, CATG_ID, history) =>
-      dispatch(actions.registBizModal(BIZGRP_ID, CATG_ID, history)),
+    handleRegisterBiz: (BIZGRP_ID, CATG_ID, history) => dispatch(actions.registBizModal(BIZGRP_ID, CATG_ID, history)),
     changeSearchword: searchword => dispatch(actions.changeSearchword(searchword)),
     // 테스트
     // handleOnClick: key => dispatch(actions.getBizMenu(key)),
@@ -121,8 +117,4 @@ const mapStateToProps = createStructuredSelector({
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizList', reducer });
 const withSaga = injectSaga({ key: 'bizList', saga });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizList);
+export default compose(withReducer, withSaga, withConnect)(BizList);

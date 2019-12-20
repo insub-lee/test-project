@@ -8,11 +8,11 @@ export default defineMessages({
   boardGroup: {
     id: 'apps.boards.widgets.widgetSetting.boardGroup',
     defaultMessage: '@게시판 그룹',
-  }, 
+  },
   boardList: {
     id: 'apps.boards.widgets.widgetSetting.boardList',
     defaultMessage: '@게시판 목록',
-  },  
+  },
   search: {
     id: 'apps.boards.widgets.widgetSetting.search',
     defaultMessage: '@검색',
@@ -20,5 +20,5 @@ export default defineMessages({
   selectBoard: {
     id: 'apps.boards.widgets.widgetSetting.selectBoard',
     defaultMessage: '@선택 게시판',
-  }, 
+  },
 });

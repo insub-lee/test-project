@@ -35,6 +35,7 @@ class AppList extends Component {
     this.state = {};
     this.props.appBizGubun(0);
   }
+
   componentDidMount() {
     // param - ALL / ONE
     const { match, loadingOn } = this.props;
@@ -86,12 +87,12 @@ class AppList extends Component {
       currentView,
     } = this.props;
 
-    const handleOnClick = (node) => {
+    const handleOnClick = node => {
       this.props.history.push(`/store/appMain/bizStore/app/list/${node.key}`);
       changeSearchword('');
       window.scrollTo(0, 0);
     };
-    const handleGetMapListOne = (key) => {
+    const handleGetMapListOne = key => {
       this.props.history.push(`/store/appMain/bizStore/app/list/${key}`);
       changeSearchword('');
       window.scrollTo(0, 0);
@@ -128,7 +129,7 @@ class AppList extends Component {
             mapList={mapList}
             searchword={searchword}
             getMapListOne={handleGetMapListOne}
-            getMapListMore={(key) => {
+            getMapListMore={key => {
               loadingOn();
               handleGetMapAppListMore(key);
             }}
@@ -196,16 +197,9 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'appList', reducer });
 const withSaga = injectSaga({ key: 'appList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppList);
+export default compose(withReducer, withSaga, withConnect)(AppList);

@@ -13,9 +13,13 @@ import injectReducer from '../../../../utils/injectReducer';
 import { makeSelectSearch, makeSearchProfile } from './selectors';
 import reducer from './reducer';
 import {
-  handleUserSearch, handleDisableSearchResultView, handleUserSearchHistory,
-  handleClickToHistoryDelete, handleClickToHistoryDeleteAll,
-  handleClickToHistoryInsert, handleGetProfileData,
+  handleUserSearch,
+  handleDisableSearchResultView,
+  handleUserSearchHistory,
+  handleClickToHistoryDelete,
+  handleClickToHistoryDeleteAll,
+  handleClickToHistoryInsert,
+  handleGetProfileData,
 } from './actions';
 import injectSaga from '../../../../utils/injectSaga';
 import saga from './saga';
@@ -39,81 +43,85 @@ const RenderSearchHistoryView = (props, t) => {
           <div className="historyTableWrapper">
             <Table size="small" style={{ width: '100%' }}>
               <Table.Body>
-                {
-                  props.search.searchedUserHistory.map(history => (
-                    <Table.Row key={history.EMP_NO} style={{ cursor: 'pointer' }}>
-                      <Table.Cell style={{ width: 25 }}>
-                        <Popover
-                          placement="rightTop"
-                          content={(
-                            <div>
-                              {props.search.searchedUserHistory !== '' ?
-                                <ul className="userProfileMenuList">
-                                  <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'org')} type="button" className="highlight icon-info">{intlObj.get(messages.userProfile)}</Button></li>
-                                  <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
-                                  <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
-                                  <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
-                                  {/* <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
-                                </ul>
-                                : <div />
-                              }
-                            </div>
-                          )}
-                          trigger="hover"
-                          overlayClassName="userProfileMenu"
-                        >
-                          <div
-                            className="listDivImg"
-                            role="presentation"
-                            onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
-                          >
-                            <img
-                              className="listImg"
-                              src={`/img/thumb/200x200/${history.PHOTO}`}
-                              alt={lang.get('NAME', history)}
-                            />
+                {props.search.searchedUserHistory.map(history => (
+                  <Table.Row key={history.EMP_NO} style={{ cursor: 'pointer' }}>
+                    <Table.Cell style={{ width: 25 }}>
+                      <Popover
+                        placement="rightTop"
+                        content={
+                          <div>
+                            {props.search.searchedUserHistory !== '' ? (
+                              <ul className="userProfileMenuList">
+                                <li>
+                                  <Button onClick={() => props.handleClickToMoveToSite(history, t, 'org')} type="button" className="highlight icon-info">
+                                    {intlObj.get(messages.userProfile)}
+                                  </Button>
+                                </li>
+                                <li>
+                                  <Button onClick={() => props.handleClickToMoveToSite(history, t, 'talk')} type="button" className="icon-talk">
+                                    {intlObj.get(messages.sendToCube)}
+                                  </Button>
+                                </li>
+                                <li>
+                                  <Button onClick={() => props.handleClickToMoveToSite(history, t, 'mail')} type="button" className="icon-mail">
+                                    {intlObj.get(messages.sendToMail)}
+                                  </Button>
+                                </li>
+                                <li>
+                                  <Button onClick={() => props.handleClickToMoveToSite(history, t, 'todo')} type="button" className="icon-todo">
+                                    {intlObj.get(messages.todoRegist)}
+                                  </Button>
+                                </li>
+                                {/* <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
+                              </ul>
+                            ) : (
+                              <div />
+                            )}
                           </div>
-                        </Popover>
-                      </Table.Cell>
-                      <Table.Cell style={{ width: 180, paddingLeft: 10, paddingTop: 6 }} textAlign="left" className="ellipsis" onClick={() => props.handleClickToMoveToSite(history, t, 'org')} >
-                        {lang.get('NAME', history)}({history.EMP_NO})<br />
-                        {lang.get('DEPT_NAME', history)}&nbsp;/&nbsp;
-                        {lang.get('PSTN_NAME', history)}
-                      </Table.Cell>
-                      <Table.Cell textAlign="left" >
-                        {history.REG_DTTM}
-                      </Table.Cell>
-                      <Table.Cell textAlign="right" >
-                        <Button
-                          type="button"
-                          className="delRow"
-                          onClick={() => props.handleClickToHistoryDelete(history)}
+                        }
+                        trigger="hover"
+                        overlayClassName="userProfileMenu"
+                      >
+                        <div
+                          className="listDivImg"
+                          role="presentation"
+                          onError={e => {
+                            e.target.src = '/no_img_pro.jpg';
+                          }}
                         >
-                          <img src={deleteIcon} className="deleteIcon" alt={intlObj.get(messages.delete)} />
-                        </Button>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                }
+                          <img className="listImg" src={`/img/thumb/200x200/${history.PHOTO}`} alt={lang.get('NAME', history)} />
+                        </div>
+                      </Popover>
+                    </Table.Cell>
+                    <Table.Cell
+                      style={{ width: 180, paddingLeft: 10, paddingTop: 6 }}
+                      textAlign="left"
+                      className="ellipsis"
+                      onClick={() => props.handleClickToMoveToSite(history, t, 'org')}
+                    >
+                      {lang.get('NAME', history)}({history.EMP_NO})<br />
+                      {lang.get('DEPT_NAME', history)}&nbsp;/&nbsp;
+                      {lang.get('PSTN_NAME', history)}
+                    </Table.Cell>
+                    <Table.Cell textAlign="left">{history.REG_DTTM}</Table.Cell>
+                    <Table.Cell textAlign="right">
+                      <Button type="button" className="delRow" onClick={() => props.handleClickToHistoryDelete(history)}>
+                        <img src={deleteIcon} className="deleteIcon" alt={intlObj.get(messages.delete)} />
+                      </Button>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
               </Table.Body>
             </Table>
           </div>
         </Scrollbars>
 
         <div align="right" className="controlBtns">
-          <Button
-            className="deleteHistoryAllBtn"
-            onClick={() => props.handleClickToHistoryDeleteAll()}
-            type="button"
-          >
+          <Button className="deleteHistoryAllBtn" onClick={() => props.handleClickToHistoryDeleteAll()} type="button">
             <FormattedMessage {...messages.userSearchDelete} />
           </Button>
           <span className="divBar">|</span>
-          <Button
-            className="closeBtn"
-            onClick={() => props.handleOnClose(t)}
-            type="button"
-          >
+          <Button className="closeBtn" onClick={() => props.handleOnClose(t)} type="button">
             <FormattedMessage {...messages.close} />
           </Button>
         </div>
@@ -139,74 +147,80 @@ const RenderSearchView = (props, t) => {
   if (props.search.searchedUser.length > 0) {
     return (
       <div className="message">
-        <Scrollbars
-          className="custom-scrollbar"
-          autoHide
-          autoHideTimeout={1000}
-          autoHideDuration={200}
-          autoHeight
-          autoHeightMax={342}
-        >
+        <Scrollbars className="custom-scrollbar" autoHide autoHideTimeout={1000} autoHideDuration={200} autoHeight autoHeightMax={342}>
           <div className="resultsTableWrapper">
             <Table size="small" style={{ width: '100%' }}>
               <Table.Body>
-                {
-                  props.search.searchedUser.map(user => (
-                    <Table.Row key={user.EMP_NO} style={{ cursor: 'pointer' }}>
-                      <Table.Cell style={{ width: 25 }}>
-                        <Popover
-                          placement="rightTop"
-                          content={(
-                            <ul className="userProfileMenuList">
-                              <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'org')} type="button" className="highlight icon-info"><FormattedMessage {...messages.userProfile} /></Button></li>
-                              <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'talk')} type="button" className="icon-talk"><FormattedMessage {...messages.sendToCube} /></Button></li>
-                              <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'mail')} type="button" className="icon-mail"><FormattedMessage {...messages.sendToMail} /></Button></li>
-                              <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'todo')} type="button" className="icon-todo"><FormattedMessage {...messages.todoRegist} /></Button></li>
-                              {/* <li><Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
-                            </ul>
-                          )}
-                          trigger="hover"
-                          overlayClassName="userProfileMenu"
+                {props.search.searchedUser.map(user => (
+                  <Table.Row key={user.EMP_NO} style={{ cursor: 'pointer' }}>
+                    <Table.Cell style={{ width: 25 }}>
+                      <Popover
+                        placement="rightTop"
+                        content={
+                          <ul className="userProfileMenuList">
+                            <li>
+                              <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'org')} type="button" className="highlight icon-info">
+                                <FormattedMessage {...messages.userProfile} />
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'talk')} type="button" className="icon-talk">
+                                <FormattedMessage {...messages.sendToCube} />
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'mail')} type="button" className="icon-mail">
+                                <FormattedMessage {...messages.sendToMail} />
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'todo')} type="button" className="icon-todo">
+                                <FormattedMessage {...messages.todoRegist} />
+                              </Button>
+                            </li>
+                            <li>
+                              <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks">
+                                <FormattedMessage {...messages.hyThanks} />
+                              </Button>
+                            </li>
+                          </ul>
+                        }
+                        trigger="hover"
+                        overlayClassName="userProfileMenu"
+                      >
+                        <div
+                          className="listDivImg"
+                          role="presentation"
+                          onError={e => {
+                            e.target.src = '/no_img_pro.jpg';
+                          }}
                         >
-                          <div
-                            className="listDivImg"
-                            role="presentation"
-                            onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
-                          >
-                            <img
-                              className="listImg"
-                              src={`/img/thumb/200x200/${user.PHOTO}`}
-                              alt={lang.get('NAME', user)}
-                            />
-                          </div>
-                        </Popover>
-                      </Table.Cell>
-                      <Table.Cell textAlign="left" onClick={() => props.handleClickToHistoryInsert(user, t, 'org')}>
-                        <p style={{ width: 250, marginLeft: 10 }} className="ellipsis">
-                          {lang.get('NAME', user)}({user.EMP_NO})<br />
-                          {lang.get('DEPT_NAME', user)}&nbsp;/&nbsp;
-                          {lang.get('PSTN_NAME', user)}
-                        </p>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                }
+                          <img className="listImg" src={`/img/thumb/200x200/${user.PHOTO}`} alt={lang.get('NAME', user)} />
+                        </div>
+                      </Popover>
+                    </Table.Cell>
+                    <Table.Cell textAlign="left" onClick={() => props.handleClickToHistoryInsert(user, t, 'org')}>
+                      <p style={{ width: 250, marginLeft: 10 }} className="ellipsis">
+                        {lang.get('NAME', user)}({user.EMP_NO})<br />
+                        {lang.get('DEPT_NAME', user)}&nbsp;/&nbsp;
+                        {lang.get('PSTN_NAME', user)}
+                      </p>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
               </Table.Body>
             </Table>
           </div>
         </Scrollbars>
         <div align="right" className="controlBtns">
-          <Button
-            type="button"
-            className="closeBtn"
-            onClick={() => props.handleOnClose(t)}
-          >
+          <Button type="button" className="closeBtn" onClick={() => props.handleOnClose(t)}>
             <FormattedMessage {...messages.close} />
           </Button>
         </div>
       </div>
     );
-  } return false;
+  }
+  return false;
 };
 
 class UserSearch extends Component {
@@ -223,39 +237,41 @@ class UserSearch extends Component {
     this.setState({
       show: true,
     });
-  }
+  };
 
   onModalButton = () => {
     this.setState({ show: true });
-  }
+  };
 
   onSearchButton = () => {
     const { inputBoxShow } = this.state;
-    this.setState({
-      inputBoxShow: !inputBoxShow,
-    }, function () {
-      if (this.state.inputBoxShow === false) {
-        this.props.handleFocusOut();
-      } else {
-        this.focusInput.focus();
-      }
-    });
+    this.setState(
+      {
+        inputBoxShow: !inputBoxShow,
+      },
+      function() {
+        if (this.state.inputBoxShow === false) {
+          this.props.handleFocusOut();
+        } else {
+          this.focusInput.focus();
+        }
+      },
+    );
 
     this.closeAll();
-  }
+  };
 
-  setUserProfile = (user) => {
+  setUserProfile = user => {
     this.setState({
       userProfile: user,
     });
-  }
+  };
 
   closeAll = () => {
     if (this.state.inputBoxShow === false) {
       this.props.handleFocusOut();
     }
-  }
-
+  };
 
   moveToSite = (user, type) => { //eslint-disable-line
     switch (type) {
@@ -275,15 +291,15 @@ class UserSearch extends Component {
         alert('준비중입니다.');
         return false;
     }
-  }
+  };
 
   valueClear = () => {
     this.searchInputUser.firstChild.value = '';
-  }
+  };
 
   closeModal = () => {
     this.setState({ show: false });
-  }
+  };
 
   render() {
     const { userProfile, show } = this.state;
@@ -315,39 +331,24 @@ class UserSearch extends Component {
               </Button>
             </div>
             <div
-              className={(this.props.search.isShow) ? 'results transition visible' : 'results transition'}
-              style={
-                {
-                  display: this.props.search.isShow ? 'block' : 'none',
-                }
-              }
+              className={this.props.search.isShow ? 'results transition visible' : 'results transition'}
+              style={{
+                display: this.props.search.isShow ? 'block' : 'none',
+              }}
             >
-              {
-                RenderSearchView(this.props, this)
-              }
+              {RenderSearchView(this.props, this)}
             </div>
             <div
-              className={(this.props.search.isHistoryShow) ? 'history transition visible' : 'history results transition'}
-              style={
-                {
-                  display: this.props.search.isHistoryShow ? 'block' : 'none',
-                }
-              }
+              className={this.props.search.isHistoryShow ? 'history transition visible' : 'history results transition'}
+              style={{
+                display: this.props.search.isHistoryShow ? 'block' : 'none',
+              }}
             >
-              {
-                RenderSearchHistoryView(this.props, this)
-              }
+              {RenderSearchHistoryView(this.props, this)}
             </div>
           </div>
         </UserSearchWrapper>
-        <Organization
-          isModal={true}
-          show={show}
-          closeModal={this.closeModal}
-          userProfile={userProfile}
-          isProfile={true}
-          orgName="구성원검색"
-        />
+        <Organization isModal show={show} closeModal={this.closeModal} userProfile={userProfile} isProfile orgName="구성원검색" searchOnly />
       </div>
     );
   }
@@ -379,8 +380,7 @@ UserSearch.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-
-  handleUserSearch: (value) => {
+  handleUserSearch: value => {
     if (value.trim().length === 0) {
       dispatch(handleDisableSearchResultView());
       dispatch(handleUserSearchHistory());
@@ -392,18 +392,18 @@ const mapDispatchToProps = dispatch => ({
       dispatch(handleUserSearch(value));
     }
   },
-  handleFocusOn: (value) => {
+  handleFocusOn: value => {
     if (value.trim().length === 0) {
       dispatch(handleUserSearchHistory());
     }
   },
-  handleFocusOut: (value) => {
+  handleFocusOut: value => {
     dispatch(handleDisableSearchResultView(value));
   },
-  handleClickToHistoryDelete: (history) => {
+  handleClickToHistoryDelete: history => {
     dispatch(handleClickToHistoryDelete(history));
   },
-  handleClickToHistoryDeleteAll: (history) => {
+  handleClickToHistoryDeleteAll: history => {
     dispatch(handleClickToHistoryDeleteAll(history));
   },
   handleClickToHistoryInsert: (user, t, type) => {
@@ -417,7 +417,7 @@ const mapDispatchToProps = dispatch => ({
     t.moveToSite(history, type);
     t.setUserProfile(history);
   },
-  handleOnClose: (t) => {
+  handleOnClose: t => {
     dispatch(handleDisableSearchResultView());
     t.valueClear();
   },
@@ -434,8 +434,4 @@ const withReducer = injectReducer({ key: 'userSearch', reducer });
 
 const withSaga = injectSaga({ key: 'userSearch', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(UserSearch);
+export default compose(withReducer, withSaga, withConnect)(UserSearch);

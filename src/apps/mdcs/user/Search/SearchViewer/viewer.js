@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Descriptions, Icon, Popconfirm } from 'antd';
+import { Descriptions, Icon, Popconfirm, Button } from 'antd';
 import StyledSearchViewer from 'apps/mdcs/styled/StyledSearchViewer';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import View from '../../Favorite/List/View';
@@ -54,22 +54,25 @@ class Viewer extends Component {
     return (
       <StyledSearchViewer>
         <div className="viewer_header" style={{ textAlign: 'right', marginBottom: '10px' }}>
-          <a onClick={() => alert('서비스 준비중')}>
+          <StyledButton className="btn-primary" onClick={() => alert('서비스 준비중')}>
             <Icon type="download" /> 파일 다운로드 신청
-          </a>
+          </StyledButton>
         </div>
         <Descriptions bordered column={1} size="small">
           <Descriptions.Item label="문서종류">{typeName}</Descriptions.Item>
           <Descriptions.Item label="문서번호">{formData.SP_ID}</Descriptions.Item>
           <Descriptions.Item label="개정번호">{formData.VERSION && formData.VERSION.split('.')[0]}</Descriptions.Item>
           <Descriptions.Item label="제목">{formData.TITLE}</Descriptions.Item>
+          <Descriptions.Item label="표지보기">
+            <Button onClick={this.props.clickCoverView}>표지보기</Button>
+          </Descriptions.Item>
           {attachDetailList.length > 0 && attachDataLine(attachDetailList)}
           <Descriptions.Item label="표준 관리실">SAMPLE DATA</Descriptions.Item>
         </Descriptions>
         {closeBtnUseYn && (
           <div className="viewer_bottom" style={{ textAlign: 'center', marginTop: '20px' }}>
             <StyledButton className="btn-light" onClick={() => closeBtnFunc()}>
-              목록보기
+              닫기
             </StyledButton>
           </div>
         )}

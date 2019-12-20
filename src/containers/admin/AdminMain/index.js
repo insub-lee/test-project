@@ -9,7 +9,7 @@ import WorkBuilderListPage from 'apps/WorkBuilderApp/Admin/WorkBuilderListPage';
 import WorkBuilderToAppPage from 'apps/WorkBuilderApp/Admin/WorkBuilderToAppPage';
 import FileManager from 'apps/FileManager';
 import ViewDesigner from 'apps/mdcs/admin/ViewDesigner';
-import ProcessMgr from 'apps/WorkFlow/Admin/ProcessMgr';
+import ProcessMgr from 'apps/Workflow/Admin/ProcessMgr';
 
 import CodeAdmin from './CodeAdmin';
 import SiteAdmin from './SiteAdmin';

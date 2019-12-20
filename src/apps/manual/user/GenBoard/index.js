@@ -59,7 +59,7 @@ class GenBoard extends Component {
           onCancel={this.onCancel}
           destroyOnClose
         >
-          <React.Fragment>
+          <>
             <BizBuilderBase
               visible={this.state.movePageType === 'EDIT'}
               movePageType={this.state.movePageType}
@@ -84,7 +84,7 @@ class GenBoard extends Component {
               {...this.props}
               key={this.state.taskSeq}
             />
-          </React.Fragment>
+          </>
         </Modal>
       </div>
     );

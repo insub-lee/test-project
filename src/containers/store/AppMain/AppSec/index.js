@@ -56,15 +56,7 @@ class AppSec extends Component {
       SEARCH_TEXT: '',
     };
 
-    handleGetAppSecList(
-      PAGE,
-      PAGE_CNT,
-      this.state.SORT_COLUMN,
-      this.state.SORT_DIRECTION,
-      this.state.APP_ID,
-      this.state.REQ_STATUS_CD,
-      this.state.SEARCH_TEXT,
-    );
+    handleGetAppSecList(PAGE, PAGE_CNT, this.state.SORT_COLUMN, this.state.SORT_DIRECTION, this.state.APP_ID, this.state.REQ_STATUS_CD, this.state.SEARCH_TEXT);
   }
 
   shouldComponentUpdate(nextProps) {
@@ -78,16 +70,12 @@ class AppSec extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      appSecList,
-    } = this.props;
+    const { appSecList } = this.props;
 
-    const {
-      selectedIndexes,
-    } = this.state;
+    const { selectedIndexes } = this.state;
 
     if (appSecList && prevProps.appSecList && prevProps.appSecList.length !== appSecList.length) {
-      selectedIndexes.map((i) => {
+      selectedIndexes.map(i => {
         if (appSecList[i - 1]) {
           appSecList[i - 1].check = 'true';
           return appSecList[i - 1];
@@ -114,39 +102,27 @@ class AppSec extends Component {
         type,
       });
     }
-  }
+  };
 
   onModal = () => {
     this.setState({
       organizationShow: true,
     });
-  }
+  };
 
-  onRowsSelected = (rows) => {
-    const {
-      selectedIndexes,
-      selectedApp,
-    } = this.state;
+  onRowsSelected = rows => {
+    const { selectedIndexes, selectedApp } = this.state;
 
-    const {
-      appSecList,
-    } = this.props;
+    const { appSecList } = this.props;
 
     this.setState({
-      selectedIndexes:
-        selectedIndexes.findIndex(i => i === rows.RNUM) === -1 ?
-          selectedIndexes.concat(rows.RNUM) : selectedIndexes,
-      selectedApp:
-        selectedApp.findIndex(i => i.SEC_REQ_ID === rows.SEC_REQ_ID) === -1 ?
-          selectedApp.concat(appSecList[rows.RNUM - 1]) : selectedApp,
+      selectedIndexes: selectedIndexes.findIndex(i => i === rows.RNUM) === -1 ? selectedIndexes.concat(rows.RNUM) : selectedIndexes,
+      selectedApp: selectedApp.findIndex(i => i.SEC_REQ_ID === rows.SEC_REQ_ID) === -1 ? selectedApp.concat(appSecList[rows.RNUM - 1]) : selectedApp,
     });
   };
 
-  onRowsDeselected = (rows) => {
-    const {
-      selectedIndexes,
-      selectedApp,
-    } = this.state;
+  onRowsDeselected = rows => {
+    const { selectedIndexes, selectedApp } = this.state;
 
     let index = selectedIndexes.findIndex(i => i === rows.RNUM);
     const selectedIndexesCopy = selectedIndexes.slice();

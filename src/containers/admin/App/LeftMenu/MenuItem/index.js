@@ -44,20 +44,20 @@ class MenuItem extends Component {
     const { menuItem, classString, classChange, setIcon } = this.props;
     /* eslint-disable jsx-a11y/anchor-is-valid, jsx-a11y/no-static-element-interactions */
     return (
-      <li className={`${classString(menuItem.URL)}${this.subMenuOpen(menuItem) ? ' open' : ''}`}>
+      <li key={menuItem.SCR_CD} className={`${classString(menuItem.URL)}${this.subMenuOpen(menuItem) ? ' open' : ''}`}>
         <a onClick={() => this.handleClick(menuItem)} onKeyPress={() => this.handleClick(menuItem)}>
           <Icon type={setIcon(menuItem.SCR_CD)} />
           <span className="nav-link-text">{lang.get('NAME', menuItem)}</span>
           {menuItem.child && (
             <b className="collapse-sign">
-              <em className={`fa${this.subMenuOpen(menuItem) ? ' fa-angle-down' : ' fa-angle-up'}`}></em>
+              <em className={`fa${this.subMenuOpen(menuItem) ? ' fa-angle-down' : ' fa-angle-up'}`} />
             </b>
           )}
         </a>
         {menuItem.child && (
           <ul>
             {menuItem.child.map(s => (
-              <li className={classString(s.URL)}>
+              <li key={s.SCR_CD} className={classString(s.URL)}>
                 <a onClick={() => classChange(s.URL)} onKeyPress={() => classChange(s.URL)}>
                   <span className="nav-link-text">{lang.get('NAME', s)}</span>
                 </a>

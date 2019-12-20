@@ -13,7 +13,9 @@ const WidgetWrapper = styled.div`
   background: #ffffff;
 
   // IE에서 위젯 이동시 제목 사라짐 해결
-  *::selection {color: #333333;}
+  *::selection {
+    color: #333333;
+  }
 
   @media only screen and (max-width: 767) {
     margin-right: 0 !important;
@@ -71,7 +73,8 @@ const WidgetHeader = styled.div`
       > li {
         float: left;
 
-        .setupWidget, .deleteWidget {
+        .setupWidget,
+        .deleteWidget {
           display: inline-block;
           width: 28px;
           height: 28px;
@@ -141,6 +144,8 @@ const WidgetBox = styled.div`
   }
 `;
 
-const WidgetColumn = styled.div`align-content: flex-start;`;
+const WidgetColumn = styled.div`
+  align-content: flex-start;
+`;
 
 export { WidgetWrapper, WidgetBox, WidgetHeader, WidgetColumn };

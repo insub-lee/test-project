@@ -6,11 +6,10 @@ import { throttle } from 'lodash/throttle';
 import VerticalScrollbar from './vertical-scrollbar';
 import HorizontalScrollbar from './horizontal-scrollbar';
 
-import './style_default.scss';
+import './style_default.module.scss';
 // import './style_custom2.scss';
 
 class ScrollWrapper extends React.Component {
-
   constructor() {
     super();
     this.state = {
@@ -26,7 +25,7 @@ class ScrollWrapper extends React.Component {
       verticalHeight: null,
       vMovement: 0,
       hMovement: 0,
-      dragging: false,  // note: dragging - fake pseudo class
+      dragging: false, // note: dragging - fake pseudo class
       scrolling: false, // changes: scrolling (new fake pseudo class)
       reset: false, // changes: change state without rendering
       start: { y: 0, x: 0 },
@@ -55,12 +54,12 @@ class ScrollWrapper extends React.Component {
     // document.addEventListener('wheel', () => { this.handleScrollbarDragging() });
   }
 
-// changes: update scrollbars when parent resizing
+  // changes: update scrollbars when parent resizing
   componentWillReceiveProps() {
     this.updateSize();
   }
 
-// changes: reset settings without rerendering (need for scrolling state)
+  // changes: reset settings without rerendering (need for scrolling state)
   shouldComponentUpdate(nextProps, nextState) {
     if (nextState.reset) {
       this.setState({ reset: false });
@@ -68,7 +67,6 @@ class ScrollWrapper extends React.Component {
     }
     return true;
   }
-
 
   componentWillUnmount() {
     // Remove Event
@@ -149,7 +147,6 @@ class ScrollWrapper extends React.Component {
     this.normalizeHorizontal(val);
   }
 
-
   normalizeVertical(nextPos, nextState) {
     // Vertical Scrolling
     const lowerEnd = this.state.scrollAreaHeight - this.state.scrollWrapperHeight;
@@ -157,17 +154,23 @@ class ScrollWrapper extends React.Component {
     // Max Scroll Down
     // Max Scroll Up
     const trim = (max, min, val) => {
-      const tmax = (val > max) ? max : val;
-      const tmin = (tmax < min) ? min : tmax;
+      const tmax = val > max ? max : val;
+      const tmin = tmax < min ? min : tmax;
       return tmin;
     };
     const next = trim(lowerEnd, 0, nextPos);
 
     // Update the Vertical Value
-    this.setState({
-      top: next,
-      vMovement: (next / this.state.scrollAreaHeight) * 100,
-    }, () => this.setState({ ...nextState }, () => { this.monitorDockScrollbar(true);})); // changes: update state after operation
+    this.setState(
+      {
+        top: next,
+        vMovement: (next / this.state.scrollAreaHeight) * 100,
+      },
+      () =>
+        this.setState({ ...nextState }, () => {
+          this.monitorDockScrollbar(true);
+        }),
+    ); // changes: update state after operation
   }
 
   normalizeHorizontal(nextPos, nextState) {
@@ -177,17 +180,20 @@ class ScrollWrapper extends React.Component {
     // Max Scroll Right
     // Max Scroll Right
     const trim = (max, min, val) => {
-      const tmax = (val > max) ? max : val;
-      const tmin = (tmax < min) ? min : tmax;
+      const tmax = val > max ? max : val;
+      const tmin = tmax < min ? min : tmax;
       return tmin;
     };
     const next = trim(rightEnd, 0, nextPos);
 
     // Update the Horizontal Value
-    this.setState({
-      left: next,
-      hMovement: (next / this.state.scrollAreaWidth) * 100,
-    }, () => this.setState({ ...nextState })); // changes: update state after operation
+    this.setState(
+      {
+        left: next,
+        hMovement: (next / this.state.scrollAreaWidth) * 100,
+      },
+      () => this.setState({ ...nextState }),
+    ); // changes: update state after operation
   }
 
   handleChangePosition(movement, orientation) {
@@ -216,7 +222,7 @@ class ScrollWrapper extends React.Component {
   monitorDockScrollbar = (pagingBtn = false) => {
     const { makeDisabledPaging } = this.props;
 
-    const e = (this.state.scrollWrapperHeight / this.state.scrollAreaHeight * 100) - (100 - this.state.vMovement);
+    const e = (this.state.scrollWrapperHeight / this.state.scrollAreaHeight) * 100 - (100 - this.state.vMovement);
 
     if (this.state.top === 0) {
       makeDisabledPaging('UP', true, pagingBtn);
@@ -225,17 +231,16 @@ class ScrollWrapper extends React.Component {
     } else {
       makeDisabledPaging('UP', false, pagingBtn);
     }
-  }
+  };
 
   updateSize() {
     const elementSize = this.getSize();
 
-    
     let topValue = 0;
-    if(!this.state.checkVerticalResult) {
+    if (!this.state.checkVerticalResult) {
       const newScrollWrapperHeight = elementSize.scrollWrapperHeight + 0;
       const oldScrollWrapperHeight = this.state.scrollWrapperHeight + 0;
-      
+
       if (newScrollWrapperHeight <= oldScrollWrapperHeight || oldScrollWrapperHeight === 0) {
         topValue = 0;
       } else {
@@ -243,13 +248,14 @@ class ScrollWrapper extends React.Component {
       }
     }
 
-    if (elementSize.scrollWrapperHeight !== this.state.scrollWrapperHeight ||
-        elementSize.scrollWrapperWidth !== this.state.scrollWrapperWidth ||
-        elementSize.scrollAreaHeight !== this.state.scrollAreaHeight ||
-        elementSize.scrollAreaWidth !== this.state.scrollAreaWidth) {
+    if (
+      elementSize.scrollWrapperHeight !== this.state.scrollWrapperHeight ||
+      elementSize.scrollWrapperWidth !== this.state.scrollWrapperWidth ||
+      elementSize.scrollAreaHeight !== this.state.scrollAreaHeight ||
+      elementSize.scrollAreaWidth !== this.state.scrollAreaWidth
+    ) {
       // Set the State!
       this.setState({
-
         // Scroll Area Height and Width
         scrollAreaHeight: elementSize.scrollAreaHeight,
         scrollAreaWidth: elementSize.scrollAreaWidth,
@@ -267,41 +273,44 @@ class ScrollWrapper extends React.Component {
 
   // Dock 스크롤바의 top 값이 50 이상이면 checkVerticalResult가 false 이므로 updateSize에서 top 값을 변경하지 않도록 설정
   checkVerticalScrollbarHalf(scrolling) {
-    if(scrolling > 50) {
-      if(this.state.checkVerticalResult === true) {
+    if (scrolling > 50) {
+      if (this.state.checkVerticalResult === true) {
         this.setState({
           checkVerticalResult: false,
         });
       }
-    }else {
-      if(this.state.checkVerticalResult === false) {
-        this.setState({
-          checkVerticalResult: true,
-        });
-      }
+    } else if (this.state.checkVerticalResult === false) {
+      this.setState({
+        checkVerticalResult: true,
+      });
     }
   }
 
   calculateSize(cb) {
     const elementSize = this.getSize();
 
-    if (elementSize.scrollWrapperHeight !== this.state.scrollWrapperHeight ||
-        elementSize.scrollWrapperWidth !== this.state.scrollWrapperWidth ||
-        elementSize.scrollAreaHeight !== this.state.scrollAreaHeight ||
-        elementSize.scrollAreaWidth !== this.state.scrollAreaWidth) {
+    if (
+      elementSize.scrollWrapperHeight !== this.state.scrollWrapperHeight ||
+      elementSize.scrollWrapperWidth !== this.state.scrollWrapperWidth ||
+      elementSize.scrollAreaHeight !== this.state.scrollAreaHeight ||
+      elementSize.scrollAreaWidth !== this.state.scrollAreaWidth
+    ) {
       // Set the State!
-      this.setState({
-        // Scroll Area Height and Width
-        scrollAreaHeight: elementSize.scrollAreaHeight,
-        scrollAreaWidth: elementSize.scrollAreaWidth,
+      this.setState(
+        {
+          // Scroll Area Height and Width
+          scrollAreaHeight: elementSize.scrollAreaHeight,
+          scrollAreaWidth: elementSize.scrollAreaWidth,
 
-        // Scroll Wrapper Height and Width
-        scrollWrapperHeight: elementSize.scrollWrapperHeight,
-        scrollWrapperWidth: elementSize.scrollWrapperWidth,
+          // Scroll Wrapper Height and Width
+          scrollWrapperHeight: elementSize.scrollWrapperHeight,
+          scrollWrapperWidth: elementSize.scrollWrapperWidth,
 
-        // Make sure The wrapper is Ready, then render the scrollbar
-        ready: true,
-      }, cb);
+          // Make sure The wrapper is Ready, then render the scrollbar
+          ready: true,
+        },
+        cb,
+      );
     } else cb();
   }
 
@@ -335,11 +344,11 @@ class ScrollWrapper extends React.Component {
 
       // DOM events
       const shifted = e.shiftKey;
-      const scrollY = e.deltaY > 0 ? num : -(num);
-      let scrollX = e.deltaX > 0 ? num : -(num);
+      const scrollY = e.deltaY > 0 ? num : -num;
+      let scrollX = e.deltaX > 0 ? num : -num;
 
       // Fix Mozilla Shifted Wheel~
-      if (shifted && e.deltaX === 0) scrollX = e.deltaY > 0 ? num : -(num);
+      if (shifted && e.deltaX === 0) scrollX = e.deltaY > 0 ? num : -num;
 
       // Next Value
       const nextY = this.state.top + scrollY;
@@ -376,32 +385,34 @@ class ScrollWrapper extends React.Component {
         top: this.state.top - dockItemHeight,
       });
     }
-  }
+  };
 
   render() {
-    const className = (base, name, pos, isDrg, isScr) => [
-      base + name,
-      base + name + pos,
-      isDrg ? `${base + name}:dragging` : '',
-      isDrg ? `${base + name + pos}:dragging` : '',
-      isScr ? `${base + name}:scrolling` : '',
-      isScr ? `${base + name + pos}:scrolling` : '',
-    ].join(' ');
+    const className = (base, name, pos, isDrg, isScr) =>
+      [
+        base + name,
+        base + name + pos,
+        isDrg ? `${base + name}:dragging` : '',
+        isDrg ? `${base + name + pos}:dragging` : '',
+        isScr ? `${base + name}:scrolling` : '',
+        isScr ? `${base + name + pos}:scrolling` : '',
+      ].join(' ');
     this.monitorDockScrollbar();
 
     return (
       <div
         onClick={this.updateSize}
         className={this.props.className}
-        ref={(c) => { this.scrollWrapper = c; }}
+        ref={c => {
+          this.scrollWrapper = c;
+        }}
         style={{ ...this.props.style, overflow: 'hidden', position: 'relative' }}
       >
-
         <div
-          className={
-            className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling)
-          }
-          ref={(c) => { this.scrollArea = c; }}
+          className={className('-reactjs-scrollbar', '-area', '', this.state.dragging, this.state.scrolling)}
+          ref={c => {
+            this.scrollArea = c;
+          }}
           onWheel={this.scroll}
           onTouchStart={this.startDrag}
           onTouchMove={this.onDrag}
@@ -409,11 +420,9 @@ class ScrollWrapper extends React.Component {
           onChange={this.updateSize}
           style={{ marginTop: `${this.state.top * -1}px`, marginLeft: `${this.state.left * -1}px`, width: '100%' }}
         >
+          {this.props.children}
 
-          { this.props.children }
-
-          { this.state.ready ?
-
+          {this.state.ready ? (
             <VerticalScrollbar
               area={{ height: this.state.scrollAreaHeight }}
               wrapper={{ height: this.state.scrollWrapperHeight }}
@@ -426,12 +435,9 @@ class ScrollWrapper extends React.Component {
               top={this.state.top}
               onCheckVerticalScrollbarHalf={this.checkVerticalScrollbarHalf}
             />
+          ) : null}
 
-          : null }
-
-
-          { this.state.ready ?
-
+          {this.state.ready ? (
             <HorizontalScrollbar
               area={{ width: this.state.scrollAreaWidth }}
               wrapper={{ width: this.state.scrollWrapperWidth }}
@@ -441,15 +447,11 @@ class ScrollWrapper extends React.Component {
               onDragging={this.handleScrollbarDragging}
               onStopDrag={this.handleScrollbarStopDrag}
             />
-
-          : null }
-
+          ) : null}
         </div>
       </div>
-
     );
   }
-
 }
 
 // The Props
@@ -465,7 +467,7 @@ ScrollWrapper.propTypes = {
 ScrollWrapper.defaultProps = {
   speed: 53,
   className: 'react-scrollbar-default',
-  style: { },
+  style: {},
   children: null,
 };
 

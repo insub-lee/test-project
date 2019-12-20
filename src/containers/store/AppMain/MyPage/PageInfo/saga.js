@@ -41,7 +41,7 @@ export function* deleteWidget(payload) {
   if (code === 200) {
     const pageInfo = yield select(state => state.get('pageInfo'));
     const widgetList = pageInfo.get('widgetList');
-    const nWidgetList = widgetList.filter((o) => {
+    const nWidgetList = widgetList.filter(o => {
       if (Number(o.get('id')) === WIDGET_ID) {
         return false;
       }
@@ -103,7 +103,6 @@ export function* updateWidget(payload) {
   //   // yield put({ type: constants.SET_WIDGET_LIST, widgetList: fromJS(widgetList) });
   // }
 }
-
 
 export default function* rootSaga() {
   yield takeLatest(constants.GET_WIDGET_LIST, getWidgetList);

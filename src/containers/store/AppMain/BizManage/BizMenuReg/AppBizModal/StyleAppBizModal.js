@@ -86,7 +86,6 @@ const StyleAppBizModal = styled.div`
       padding-top: 0 !important;
     }
   }
-
 `;
 
 export default StyleAppBizModal;

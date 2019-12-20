@@ -9,13 +9,13 @@ import * as authActions from './actions';
 
 class SignIn extends Component {
   componentDidMount() {
-    console.log('didmount signin', this.props.isLoggedIn);
-    console.log('!@@@@@@@@@@@@@@', this.props.location);
+    // console.log('didmount signin', this.props.isLoggedIn);
+    // console.log('!@@@@@@@@@@@@@@', this.props.location);
     const loc = this.props.location;
     const url = loc.state ? loc.state.from.pathname : '/';
     const search = loc.state ? loc.state.from.search : '';
     const { pathname } = loc;
-    console.log('LOCQ!!!!!!!!!!!!!!:', loc);
+    // console.log('LOCQ!!!!!!!!!!!!!!:', loc);
     this.props.boot(url + search, pathname);
   }
 
@@ -40,7 +40,4 @@ const mapStateToProps = createStructuredSelector({
   isLoggedIn: selectors.makeSelectIdToken(),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SignIn);
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

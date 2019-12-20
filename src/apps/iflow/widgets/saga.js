@@ -26,7 +26,7 @@ export function* getIflowDataList(payload) {
         empName: item.empName,
         positionName: item.positionName,
         modDt: item.modDt,
-      })
+      }),
     );
   }
   yield put({ type: constants.SET_IFLOW_DATA_LIST, payload: fromJS(dataList) });

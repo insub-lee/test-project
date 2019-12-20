@@ -32,7 +32,7 @@ class InformNote extends PureComponent {
     this.props.handleLoadingFactoryParam();
   }
 
-  handleFactoryChange = (event) => {
+  handleFactoryChange = event => {
     const { handleLoadingParam } = this.props;
     handleLoadingParam(event);
     this.setState({
@@ -40,39 +40,39 @@ class InformNote extends PureComponent {
       sdpt: undefined,
       model: undefined,
     });
-  }
+  };
 
-  handleSdptChange = (event) => {
+  handleSdptChange = event => {
     const { handleLoadingSdptParam } = this.props;
     handleLoadingSdptParam(event);
     this.setState({
       sdpt: event,
       model: undefined,
     });
-  }
+  };
 
-  handleModelChange = (event) => {
+  handleModelChange = event => {
     this.setState({
       model: event,
     });
-  }
+  };
 
-  handleVersionChange = (event) => {
+  handleVersionChange = event => {
     this.setState({
       version: event,
     });
-  }
+  };
 
-  handleSignStatusChange = (event) => {
+  handleSignStatusChange = event => {
     this.setState({
       signStatus: event,
     });
-  }
+  };
 
   handleSearch = () => {
     const { handlePmSheetSearch } = this.props;
     handlePmSheetSearch();
-  }
+  };
 
   render() {
     const {
@@ -85,33 +85,28 @@ class InformNote extends PureComponent {
       signStatus,
     } = this.state;
 
-    const {
-      factoryList,
-      sdptList,
-      modelList,
-      versionList,
-      signStatusList,
-      pmSheetDataList,
-    } = this.props;
+    const { factoryList, sdptList, modelList, versionList, signStatusList, pmSheetDataList } = this.props;
 
     const factoryOptions = factoryList !== undefined ? factoryList.map(factoryKey => <Options key={factoryKey.CODE_CD}>{factoryKey.NAME_KOR}</Options>) : '';
     // const detailfactoryOption = detailFactory !== undefined ? detailFactory.map(detailFactoryKey => <Options value={detailFactoryKey.CODE_CD}>{detailFactoryKey.NAME_KOR}</Options> : '') : '';
     const sdptOptions = sdptList !== undefined ? sdptList.map(sdptKey => <Options value={sdptKey.CODE_CD}>{sdptKey.NAME_KOR}</Options>) : '';
     const modelOptions = modelList !== undefined ? modelList.map(modelKey => <Options value={modelKey.CODE_CD}>{modelKey.NAME_KOR}</Options>) : '';
     const versionOptions = versionList !== undefined ? versionList.map(versionKey => <Options value={versionKey.CODE_CD}>{versionKey.NAME_KOR}</Options>) : '';
-    const signStatusOptions = signStatusList !== undefined ? signStatusList.map(signStatusKey => <Options value={signStatusKey.CODE_CD}>{signStatusKey.NAME_KOR}</Options>) : '';
+    const signStatusOptions =
+      signStatusList !== undefined ? signStatusList.map(signStatusKey => <Options value={signStatusKey.CODE_CD}>{signStatusKey.NAME_KOR}</Options>) : '';
 
     return (
       <div>
         <div className="PMSheetTitle">
-          <h2>Inform Note 관리</h2><br />
+          <h2>Inform Note 관리</h2>
+          <br />
         </div>
         <div>
           <div className="SearchBox">
             <table>
               <tbody>
                 <tr>
-                  <th style={{ width: 55 }} >FAB</th>
+                  <th style={{ width: 55 }}>FAB</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -139,7 +134,7 @@ class InformNote extends PureComponent {
                       {detailfactoryOption}
                     </Select>
                   </td> */}
-                  <th style={{ width: 55 }} >SDPT</th>
+                  <th style={{ width: 55 }}>SDPT</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -153,7 +148,7 @@ class InformNote extends PureComponent {
                       {sdptOptions}
                     </Select>
                   </td>
-                  <th style={{ width: 55 }} >Model</th>
+                  <th style={{ width: 55 }}>Model</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={this.state.defaultBox}
@@ -183,18 +178,14 @@ class InformNote extends PureComponent {
                   </td> */}
                   <tr>
                     <td rowSpan="2" style={{ width: 300, alignContent: 'center', paddingLeft: 20 }}>
-                      <BtnSearchDkGray
-                        title="조회"
-                        className="searchBtn"
-                        onClick={this.handleSearch}
-                      >
-                      조회
+                      <BtnSearchDkGray title="조회" className="searchBtn" onClick={this.handleSearch}>
+                        조회
                       </BtnSearchDkGray>
                     </td>
                   </tr>
                 </tr>
                 <tr>
-                  <th style={{ width: 55 }} >Down</th>
+                  <th style={{ width: 55 }}>Down</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -208,7 +199,7 @@ class InformNote extends PureComponent {
                       {versionOptions}
                     </Select>
                   </td>
-                  <th style={{ width: 60 }} >DownType</th>
+                  <th style={{ width: 60 }}>DownType</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -230,9 +221,7 @@ class InformNote extends PureComponent {
         <br />
         <br />
         <div>
-          <InformTbl
-            pmSheetDataList={pmSheetDataList}
-          />
+          <InformTbl pmSheetDataList={pmSheetDataList} />
         </div>
       </div>
     );
@@ -280,8 +269,4 @@ const withReducer = injectReducer({ key: 'informNote', reducer });
 const withSaga = injectSaga({ key: 'informNote', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(InformNote);
+export default compose(withReducer, withSaga, withConnect)(InformNote);

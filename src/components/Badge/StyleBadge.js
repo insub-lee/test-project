@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { font } from 'styled-theme';
 import { borderRadius, boxShadow } from '../../config/style-util';
 import WithDirection from '../../config/withDirection';
-import Badges from '../Badge/index';
+import Badges from './index';
 
 const AntBadge = props => <Badges {...props} />;
 
@@ -32,7 +32,7 @@ const Badge = styled(AntBadge)`
     //   padding: 0 5px;
     // }
   }
-  
+
   .ant-badge-status-text {
     margin-left: ${props => (props['data-rtl'] === 'rtl' ? 'inherit' : '8px')};
     margin-right: ${props => (props['data-rtl'] === 'rtl' ? '8px' : 'inherit')};

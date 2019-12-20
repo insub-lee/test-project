@@ -11,6 +11,11 @@ import ModalDrag from 'components/ModalDrag';
 import * as feed from 'components/Feedback/functions';
 
 import { intlObj, lang } from 'utils/commonUtils';
+import Modals from 'components/Modal/index';
+import ModalStyle from 'containers/admin/components/Modal/StyleModal';
+import WithDirection from 'config/withDirection';
+import { BtnDkGray, BtnLgtGray } from 'containers/admin/components/uielements/buttons.style';
+import MyAppTree from 'containers/admin/components/MyAppTree';
 import messages from '../messages';
 
 import * as selectors from './selectors';
@@ -18,17 +23,10 @@ import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
-import Modals from 'components/Modal/index';
-import ModalStyle from 'containers/admin/components/Modal/StyleModal';
-import WithDirection from 'config/withDirection';
-
-import { BtnDkGray, BtnLgtGray } from 'containers/admin/components/uielements/buttons.style';
-import MyAppTree from 'containers/admin/components/MyAppTree';
-
 const isoModal = ModalStyle(Modals);
 const Modal = WithDirection(isoModal);
 
-class MyAppCategoryModal extends React.Component {
+class AppCategoryModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,16 +41,23 @@ class MyAppCategoryModal extends React.Component {
   //   this.props.initCategoryData();
   // }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({ selectedIndex: nextProps.selectedIndex });
+  componentDidUpdate(prevProps) {
+    const { selectedIndex: prevSelectedIndex } = prevProps;
+    const { selectedIndex } = this.props;
+    if (prevSelectedIndex !== selectedIndex) {
+      this.setState({ selectedIndex });
+    }
   }
 
-  render() {
-    const {
-      type,
-    } = this.props;
+  // componentDidUpdate(prevProps) {
+  //
+  //   this.setState({ selectedIndex: nextProps.selectedIndex });
+  // }
 
-    const handleTreeOnClick = (node) => {
+  render() {
+    const { type } = this.props;
+
+    const handleTreeOnClick = node => {
       this.setState({
         CATG_ID: node.CATG_ID,
         APP_NAME: lang.get('NAME', node),
@@ -92,24 +97,16 @@ class MyAppCategoryModal extends React.Component {
           wrapClassName="vertical-center-modal"
           bodyStyle={{ maxHeight: 500 }}
           // title="카테고리 선택"
-          title={
-            <ModalDrag
-              title="카테고리 선택"
-              num={0}
-            />
-          }
+          title={<ModalDrag title="카테고리 선택" num={0} />}
           footer={[
-            <BtnLgtGray
-              key="back"
-              onClick={this.props.closeModal}
-            >
+            <BtnLgtGray key="back" onClick={this.props.closeModal}>
               {intlObj.get(messages.cancel)}
             </BtnLgtGray>,
             <BtnDkGray
               key="submit"
               loading={this.state.loading}
               onClick={onOk}
-            // className={this.state.qnaOn ? '' : 'disabled'}
+              // className={this.state.qnaOn ? '' : 'disabled'}
             >
               {intlObj.get(messages.confirm)}
             </BtnDkGray>,
@@ -126,8 +123,8 @@ class MyAppCategoryModal extends React.Component {
               returnGateDelete={returnGateDelete}
               history={this.props.history}
               selectedIndex={this.state.selectedIndex}
-              canDrag={true}
-              canDrop={true}
+              canDrag
+              canDrop
               moveMymenu={this.props.moveMymenu}
               shape="modal"
             />
@@ -137,7 +134,7 @@ class MyAppCategoryModal extends React.Component {
     );
   }
 }
-MyAppCategoryModal.propTypes = {
+AppCategoryModal.propTypes = {
   type: PropTypes.string.isRequired,
   show: PropTypes.bool,  //eslint-disable-line
   onCancel: PropTypes.func,  //eslint-disable-line
@@ -181,8 +178,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppCategoryModal', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppCategoryModal', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyAppCategoryModal));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AppCategoryModal));

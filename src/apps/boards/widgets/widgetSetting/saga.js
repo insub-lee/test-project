@@ -1,18 +1,18 @@
 import React from 'react';
 import { put, takeLatest, call, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import * as constants from './constants';
-import { Axios } from '../../../../utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import { IflowApi } from 'utils/IflowFunc';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 import { intlObj } from 'utils/commonUtils';
+import { Axios } from '../../../../utils/AxiosFunc';
+import * as constants from './constants';
 import messages from './messages';
 
 export function* getIfBoardCfgGrpList(payload) {
   const uInfo = yield select(state => state.get('auth').get('profile'));
-  const param = {empno: uInfo.EMP_NO, keyword: encodeURIComponent(payload.grKeyword)};
+  const param = { empno: uInfo.EMP_NO, keyword: encodeURIComponent(payload.grKeyword) };
   const response = yield call(IflowApi.get, 'groupList', param);
 
   yield put({ type: constants.SET_IFBOARD_CFG_GRP_LIST, payload: fromJS(response.groups) });
@@ -21,7 +21,7 @@ export function* getIfBoardCfgGrpList(payload) {
 export function* getIfBoardCfgCateList(payload) {
   const uInfo = yield select(state => state.get('auth').get('profile'));
   const param = { grseq: payload.grSeq, empno: uInfo.EMP_NO, keyword: encodeURIComponent(payload.ctKeyword) };
-  const ctData = yield call(IflowApi.get,'cateList', param);
+  const ctData = yield call(IflowApi.get, 'cateList', param);
 
   const ctArr = [];
   ctArr.push({
@@ -34,7 +34,7 @@ export function* getIfBoardCfgCateList(payload) {
     // expanded: false,
   });
   ctData.categories.map(item => {
-    if(item.ctSeq !== -99) {
+    if (item.ctSeq !== -99) {
       ctArr.push({
         ctSeq: item.ctSeq,
         grSeq: item.grSeq,
@@ -42,9 +42,9 @@ export function* getIfBoardCfgCateList(payload) {
         LVL: item.ctLevel + 1,
         PRNT_ID: item.upCtSeq === -1 ? 1 : item.upCtSeq,
         SORT_SQ: item.ctOrd,
-        // expanded: false,      
-      })
-    };
+        // expanded: false,
+      });
+    }
   });
 
   let categoryData = treeFunc.setFlatDataKey(ctArr, 'ctSeq');
@@ -69,7 +69,7 @@ export function* deleteIfBoardCfg(payload) {
     const resultValue = response.resultValue.ITEM_VALUE;
     message.success(
       <MessageContent>
-        {intlObj.get(messages.boardSaveOk)} 
+        {intlObj.get(messages.boardSaveOk)}
         {/* {'게시판 목록이 저장되었습니다.'} */}
       </MessageContent>,
       2,
@@ -92,7 +92,7 @@ export function* deleteBizifBoardCfg(payload) {
     const resultValue = response.resultValue.ITEM_VALUE;
     message.success(
       <MessageContent>
-        {intlObj.get(messages.boardSaveOk)} 
+        {intlObj.get(messages.boardSaveOk)}
         {/* {'게시판 목록이 저장되었습니다.'} */}
       </MessageContent>,
       2,

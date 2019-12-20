@@ -3,7 +3,6 @@ import WithDirection from '../../../../../config/withDirection';
 import iconPrev from '../../../../../images/bizstore/icon-prev.png';
 import iconNext from '../../../../../images/bizstore/icon-next.png';
 
-
 const CarouselStyleWrapper = styled.div`
   .ant-carousel {
     .slick-slider {

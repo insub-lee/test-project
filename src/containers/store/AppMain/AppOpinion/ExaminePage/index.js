@@ -77,12 +77,7 @@ class ExaminePage extends Component {
 
     this.props.acceptApps(id, appID, ver, chageDate);
 
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.doAccept)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.doAccept)}</MessageContent>, 3);
   }
 
   onOppose() {
@@ -95,11 +90,11 @@ class ExaminePage extends Component {
 
   applyConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.checkApply)}`, '', () => this.onAccept());
-  }
+  };
 
   opposeConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.checkOppo)}`, '', () => this.onOppose());
-  }
+  };
 
   render() {
     let value = {};
@@ -111,15 +106,7 @@ class ExaminePage extends Component {
 
       ID = value.APP_ID.toString();
 
-      list.push([
-        value.APV_REQ_ID,
-        value.APP_NAME_KOR,
-        value.NAME_KOR,
-        value.VER,
-        value.SVC_REQ_DT,
-        value.NAME_ENG,
-        value.APP_ID,
-      ]);
+      list.push([value.APV_REQ_ID, value.APP_NAME_KOR, value.NAME_KOR, value.VER, value.SVC_REQ_DT, value.NAME_ENG, value.APP_ID]);
     }
 
     // const onBack = () => {
@@ -154,111 +141,91 @@ class ExaminePage extends Component {
         }}
       >
         <StyleMyAppDetail>
-          {status === 'P' ?
+          {status === 'P' ? (
             <div>
               <h1 className="pageTitle">{intlObj.get(messages.appApply)}</h1>
               <StyleStatusTable>
                 <h4>{intlObj.get(messages.testPage)}</h4>
-                <p className="textValue">
-                  {result.CONTENT}
-                </p>
+                <p className="textValue">{result.CONTENT}</p>
               </StyleStatusTable>
             </div>
-            :
+          ) : (
             false
-          }
-          {status === 'R' ?
+          )}
+          {status === 'R' ? (
             <div>
               <h1 className="pageTitle">{intlObj.get(messages.appOppo)}</h1>
               <StyleStatusTable>
                 <h4>Comments</h4>
                 <p className="textValue">
-                  {result.NAME_KOR} {result.EMP_NO}<br />
+                  {result.NAME_KOR} {result.EMP_NO}
+                  <br />
                   <span className="mainColor">{result.COMNT}</span>
                 </p>
               </StyleStatusTable>
             </div>
-            :
+          ) : (
             false
-          }
-          {status === 'C' ?
+          )}
+          {status === 'C' ? (
             <div>
               <h1 className="pageTitle">{intlObj.get(messages.completeApply)}</h1>
               <StyleStatusTable>
                 <h4>{intlObj.get(messages.testPage)}</h4>
-                <p className="textValue">
-                  {result.CONTENT}
-                </p>
+                <p className="textValue">{result.CONTENT}</p>
                 <h4>Comments</h4>
                 <p className="textValue">
-                  {result.NAME_KOR} {result.EMP_NO}<br />
+                  {result.NAME_KOR} {result.EMP_NO}
+                  <br />
                   <span className="mainColor">{result.COMNT === ' ' ? intlObj.get(messages.completeApply) : result.COMNT}</span>
                 </p>
               </StyleStatusTable>
             </div>
-            :
+          ) : (
             false
-          }
+          )}
           <div className="buttonsWrapper top">
-            <Link to="/store/appMain/AppOpinion" style={{ float: 'left' }} >
+            <Link to="/store/appMain/AppOpinion" style={{ float: 'left' }}>
               <LinkBtnList>{intlObj.get(messages.toList)}</LinkBtnList>
             </Link>
             {/* <BtnLgtGray onClick={onBack}>{intlObj.get(messages.toList)}</BtnLgtGray> */}
-            {status === 'P' ?
+            {status === 'P' ? (
               <div className="alignRight">
-                <BtnLgtGray onClick={this.opposeConfirm}>
-                  {intlObj.get(messages.doOppo)}
-                </BtnLgtGray>
-                <BtnDkGray onClick={this.applyConfirm}>
-                  {intlObj.get(messages.confirm)}
-                </BtnDkGray>
+                <BtnLgtGray onClick={this.opposeConfirm}>{intlObj.get(messages.doOppo)}</BtnLgtGray>
+                <BtnDkGray onClick={this.applyConfirm}>{intlObj.get(messages.confirm)}</BtnDkGray>
               </div>
-              :
+            ) : (
               false
-            }
+            )}
           </div>
           <div className="appDetail">
-            {this.props.location.state ?
+            {this.props.location.state ? (
               // <AppDetail APP_ID={ID} VER={value.VER} />
               <Tabs defaultActiveKey="1">
                 <TabPane tab={intlObj.get(messages.tab1)} key="1">
-                  <AppDetailForm
-                    APP_ID={ID}
-                    VER={value.VER}
-                    history={this.props.history}
-                    mod={2}
-                  />
+                  <AppDetailForm APP_ID={ID} VER={value.VER} history={this.props.history} mod={2} />
                 </TabPane>
                 <TabPane tab={intlObj.get(messages.tab2)} key="2">
-                  <AppDetailUserForm
-                    APP_ID={ID}
-                    VER={value.VER}
-                    history={this.props.history}
-                    mod={2}
-                  />
+                  <AppDetailUserForm APP_ID={ID} VER={value.VER} history={this.props.history} mod={2} />
                 </TabPane>
               </Tabs>
-              :
+            ) : (
               false
-            }
+            )}
           </div>
           <div className="buttonsWrapper bottom">
-            <Link to="/store/appMain/AppOpinion" style={{ float: 'left' }} >
+            <Link to="/store/appMain/AppOpinion" style={{ float: 'left' }}>
               <LinkBtnList>{intlObj.get(messages.toList)}</LinkBtnList>
             </Link>
             {/* <BtnLgtGray onClick={onBack}>{intlObj.get(messages.toList)}</BtnLgtGray> */}
-            {status === 'P' ?
+            {status === 'P' ? (
               <div className="alignRight">
-                <BtnLgtGray onClick={this.opposeConfirm}>
-                  {intlObj.get(messages.doOppo)}
-                </BtnLgtGray>
-                <BtnDkGray onClick={this.applyConfirm}>
-                  {intlObj.get(messages.confirm)}
-                </BtnDkGray>
+                <BtnLgtGray onClick={this.opposeConfirm}>{intlObj.get(messages.doOppo)}</BtnLgtGray>
+                <BtnDkGray onClick={this.applyConfirm}>{intlObj.get(messages.confirm)}</BtnDkGray>
               </div>
-              :
+            ) : (
               false
-            }
+            )}
           </div>
           <Modal
             isOpen={this.state.show}
@@ -268,12 +235,9 @@ class ExaminePage extends Component {
             shouldCloseOnOverlayClick={false}
             ariaHideApp={false}
             portalClassName="CommonModal"
-          >{/* 비즈스토어 react-modal에서 portalClassName은 'CommonModal'입니다. */}
-            <OpposeModal
-              selectedApp={list}
-              closeModal={this.unOppose}
-              radioList={data.oppoList}
-            />
+          >
+            {/* 비즈스토어 react-modal에서 portalClassName은 'CommonModal'입니다. */}
+            <OpposeModal selectedApp={list} closeModal={this.unOppose} radioList={data.oppoList} />
           </Modal>
         </StyleMyAppDetail>
       </div>
@@ -305,8 +269,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'examinePage', reducer });
 const withSaga = injectSaga({ key: 'examinePage', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(ExaminePage);
+export default compose(withReducer, withSaga, withConnect)(ExaminePage);

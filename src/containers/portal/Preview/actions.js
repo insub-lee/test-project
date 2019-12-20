@@ -1,18 +1,14 @@
 import * as actionType from './constants';
 
-export const loadSkin = () => (
-  {
-    type: actionType.LOAD_SKIN_SAGA,
-  }
-);
+export const loadSkin = () => ({
+  type: actionType.LOAD_SKIN_SAGA,
+});
 
-export const execApps = (pageID, node) => (
-  {
-    type: actionType.EXEC_APPS_SAGA,
-    pageID,
-    node,
-  }
-);
+export const execApps = (pageID, node) => ({
+  type: actionType.EXEC_APPS_SAGA,
+  pageID,
+  node,
+});
 
 // Dock Data
 export const getInitialPortalPage = PAGE_ID => ({
@@ -20,9 +16,6 @@ export const getInitialPortalPage = PAGE_ID => ({
   PAGE_ID,
 });
 
-export const getNotify = () => (
-  {
-    type: actionType.GET_ISNOTIFY,
-  }
-);
-
+export const getNotify = () => ({
+  type: actionType.GET_ISNOTIFY,
+});

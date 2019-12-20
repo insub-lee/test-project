@@ -43,8 +43,7 @@ function* postData({ widgetId, payload, prcId, processStep }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqByWidgetId(widgetId));
   const taskSeq = yield select(selectors.makeSelectTaskSeqByWidgetId(widgetId));
   const response = yield call(Axios.post, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, { PARAM: payload });
-  // if (prcId && processStep && processStep.some(process => !process.STEP_USERS || process.STEP_USERS.length === 0)) {
-  if (prcId && processStep && processStep.some(process => !process.IS_STEP_USERS && process.STEP_USERS.length === 0)) {
+  if (prcId && processStep && processStep.some(process => !process.STEP_USERS || process.STEP_USERS.length === 0)) {
     window.alert('결재선의 각 단계는 필수값입니다.');
   } else {
     const nextResponse = yield call(Axios.post, '/api/builder/v1/work/taskComplete', {

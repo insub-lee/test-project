@@ -13,15 +13,9 @@ class StickerWidget extends Component {
       text: prop.text,
     };
   }
+
   render() {
-    const {
-      fontColor,
-      bgColor,
-      widthnum,
-      icon,
-      number,
-      text,
-    } = this.state;
+    const { fontColor, bgColor, widthnum, icon, number, text } = this.state;
 
     const textColor = {
       color: fontColor,
@@ -36,23 +30,14 @@ class StickerWidget extends Component {
 
     return (
       <StickerWidgetWrapper className="isoStickerWidget" style={widgetStyle}>
-        <div
-          className="isoIconWrapper"
-          style={{ display: icon ? 'block' : 'none' }}
-        >
+        <div className="isoIconWrapper" style={{ display: icon ? 'block' : 'none' }}>
           <i className={icon} style={iconStyle} />
         </div>
         <div className="isoContentWrapper">
-          <h3
-            className="isoStatNumber"
-            style={{ textColor, display: number ? 'block' : 'none' }}
-          >
+          <h3 className="isoStatNumber" style={{ textColor, display: number ? 'block' : 'none' }}>
             {number}
           </h3>
-          <span
-            className="isoLabel"
-            style={{ textColor, display: text ? 'block' : 'none' }}
-          >
+          <span className="isoLabel" style={{ textColor, display: text ? 'block' : 'none' }}>
             {text}
           </span>
         </div>

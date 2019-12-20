@@ -40,8 +40,7 @@ class TreeNode extends Component {
           // |  +--+
           // |  |  |
           // +--+--+
-          lineClass =
-            'rst__lineHalfHorizontalRight rst__lineHalfVerticalBottom';
+          lineClass = 'rst__lineHalfHorizontalRight rst__lineHalfVerticalBottom';
         } else if (i === scaffoldBlockCount - 1) {
           // Last scaffold block in the row, right before the row content
           // +--+--+
@@ -77,13 +76,7 @@ class TreeNode extends Component {
         lineClass = 'rst__lineHalfVerticalTop rst__lineHalfHorizontalRight';
       }
 
-      scaffold.push(
-        <div
-          key={`pre_${1 + i}`}
-          style={{ width: scaffoldBlockPxWidth }}
-          className={`${'rst__lineBlock'} ${lineClass}`}
-        />
-      );
+      scaffold.push(<div key={`pre_${1 + i}`} style={{ width: scaffoldBlockPxWidth }} className={`${'rst__lineBlock'} ${lineClass}`} />);
 
       if (treeIndex !== listIndex && i === swapDepth) {
         // This row has been shifted, and is at the depth of
@@ -111,7 +104,7 @@ class TreeNode extends Component {
               left: scaffoldBlockPxWidth * i,
             }}
             className={classnames('rst__absoluteLineBlock', highlightLineClass)}
-          />
+          />,
         );
       }
     });
@@ -120,19 +113,16 @@ class TreeNode extends Component {
       <div {...otherProps} className="rst__node">
         {scaffold}
 
-        <div
-          className="rst__nodeContent"
-          style={{ left: scaffoldBlockPxWidth * scaffoldBlockCount }}
-        >
+        <div className="rst__nodeContent" style={{ left: scaffoldBlockPxWidth * scaffoldBlockCount }}>
           {Children.map(children, child =>
             cloneElement(child, {
               isOver,
               canDrop,
               draggedNode,
-            })
+            }),
           )}
         </div>
-      </div>
+      </div>,
     );
   }
 }
@@ -166,9 +156,7 @@ TreeNode.propTypes = {
   // used in dndManager
   getPrevRow: PropTypes.func.isRequired,
   node: PropTypes.shape({}).isRequired,
-  path: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  ).isRequired,
+  path: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
 };
 
 export default TreeNode;

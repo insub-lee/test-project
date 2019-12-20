@@ -35,10 +35,12 @@ const WidgetSettingStyle = styled.div`
       display: inline-block;
       width: 100%;
 
-      .dndTBody, tr, td {
+      .dndTBody,
+      tr,
+      td {
         display: inline-block;
         width: 100%;
-  
+
         .dndItem {
           position: relative;
           height: 40px;
@@ -50,7 +52,7 @@ const WidgetSettingStyle = styled.div`
             position: absolute;
             top: 0;
             right: 0;
-            @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+            @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
               /* IE10+ specific styles go here */
               right: 10px;
             }

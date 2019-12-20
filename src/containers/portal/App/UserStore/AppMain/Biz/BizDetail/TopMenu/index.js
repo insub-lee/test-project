@@ -40,27 +40,27 @@ class TopMenu extends React.Component {
     }
   }
 
+  registBizs = () => {
+    const { BIZGRP_ID } = this.state;
+    this.props.registBiz(BIZGRP_ID);
+  };
+
+  handleRegistBiz = () => {
+    const { bizInfo } = this.props;
+    if (bizInfo.MCNT > 0) {
+      feed.showConfirm(`${lang.get('NAME', bizInfo)} ${intlObj.get(messages.registBizs)}`, '', this.registBizs);
+    } else {
+      feed.error(`${intlObj.get(messages.menuNotReg)}`);
+    }
+  };
+
   render() {
     const { BIZGRP_ID } = this.state;
-
     const { history, bizInfo, bizManagerList } = this.props;
-
     const { location } = history;
-
     const { pathname } = location;
-
-    console.debug('>>>>>>>bizInfo: ', bizInfo);
-
     const menu = pathname.indexOf('/menulist') > -1 ? 'grid' : 'tree';
 
-    const registBizs = () => this.props.registBiz(BIZGRP_ID);
-    const handleRegistBiz = () => {
-      if (bizInfo.MCNT > 0) {
-        feed.showConfirm(`${lang.get('NAME', bizInfo)} ${intlObj.get(messages.registBizs)}`, '', registBizs);
-      } else {
-        feed.error(`${intlObj.get(messages.menuNotReg)}`);
-      }
-    };
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/biz/');
 
     return (
@@ -85,7 +85,7 @@ class TopMenu extends React.Component {
               <p className="openDate">
                 {intlObj.get(messages.openDate)}: {bizInfo.OPEN_DTTM}
               </p>
-              {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
+              {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' && (
                 <div className="viewMode">
                   <Button
                     className={`view treeIcon ${menu === 'tree' ? 'current' : ''}`}
@@ -100,8 +100,6 @@ class TopMenu extends React.Component {
                   {/* <Icon type="smile" theme="outlined" onClick={() => history.push(`${preUrl}/detail/info/${BIZGRP_ID}`)} /> */}
                   {/* <Icon type="appstore" theme="outlined" onClick={() => history.push(`${preUrl}/menulist/${BIZGRP_ID}`)} /> */}
                 </div>
-              ) : (
-                ''
               )}
             </Col>
             <Col sm={24} xl={8}>
@@ -115,7 +113,7 @@ class TopMenu extends React.Component {
               {bizInfo.WG_COUNT > 0 ? (
                 <BtnLgtGrayRegisted title={intlObj.get(messages.apping)}>{intlObj.get(messages.apping)}</BtnLgtGrayRegisted>
               ) : (
-                <BtnIconRegist title={intlObj.get(messages.registBiz)} onClick={handleRegistBiz} />
+                <BtnIconRegist title={intlObj.get(messages.registBiz)} onClick={this.handleRegistBiz} />
               )}
             </Col>
           </Row>
@@ -149,16 +147,9 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'topMenu', reducer });
 const withSaga = injectSaga({ key: 'topMenu', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(TopMenu);
+export default compose(withReducer, withSaga, withConnect)(TopMenu);

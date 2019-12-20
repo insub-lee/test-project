@@ -32,15 +32,15 @@ class Favorite extends Component {
   };
 
   onCancel = viewType => {
-    switch(viewType){
-    case 'LIST':
+    switch (viewType) {
+      case 'LIST':
         this.setState({ isViewModal: false });
         // console.log('this.favoriteListComp : ', this.favoriteListComp);
         this.favoriteListComp.callListApi();
-      break;
-    default:
+        break;
+      default:
         this.setState({ isViewModal: false });
-      break;
+        break;
     }
   };
 
@@ -56,14 +56,18 @@ class Favorite extends Component {
           onChangeMovePageHandler={this.onChangeMovePage}
           {...this.props}
           viewType="LIST"
-          workSeq={this.state.workSeq} />
+          workSeq={this.state.workSeq}
+          isCustom
+        />
         <Modal
           visible={this.state.isViewModal}
           width={800}
           height={450}
           bodyStyle={{ padding: '49px 8px 10px 8px' }}
           footer={[]}
-          onCancel={() => { this.onCancel('VIEW'); }}
+          onCancel={() => {
+            this.onCancel('VIEW');
+          }}
           destroyOnClose
         >
           <BizBuilderBase
@@ -73,9 +77,12 @@ class Favorite extends Component {
             taskSeq={this.state.taskSeq}
             favSeq={this.state.favSeq}
             component={View}
-            onChangeMovePageHandler={() => { this.onCancel('LIST'); }}
+            onChangeMovePageHandler={() => {
+              this.onCancel('LIST');
+            }}
             viewType="VIEW"
             key={this.state.taskSeq}
+            isCustom
           />
         </Modal>
       </div>

@@ -128,22 +128,27 @@ class CustomCheckListComp extends Component {
       ];
       this.setState({ apiFlag: false });
     }
-
     return (
-      <div>
-        {colData}
-        <Modal
-          className="modalWrapper"
-          width={1280}
-          visible={this.state.openModal}
-          onOk={this.onOkHandler}
-          onCancel={() => this.setState({ openModal: false })}
-          destroyOnClose
-        >
-          <CheckList dataSource={dataSource} onClear={this.onClearHandler} onChange={this.onChangeHandler} props={this.state}></CheckList>
-        </Modal>
-        {!readOnly && <Button onClick={() => this.onOpenHandler()}>적용범위 선택</Button>}
-      </div>
+      <>
+        {colData === 'preView' ? (
+          <CheckList dataSource={this.props.dataSource} props={this.props.stateProps}></CheckList>
+        ) : (
+          <div>
+            {colData}
+            <Modal
+              className="modalWrapper"
+              width={1280}
+              visible={this.state.openModal}
+              onOk={this.onOkHandler}
+              onCancel={() => this.setState({ openModal: false })}
+              destroyOnClose
+            >
+              <CheckList dataSource={dataSource} onClear={this.onClearHandler} onChange={this.onChangeHandler} props={this.state}></CheckList>
+            </Modal>
+            {!readOnly && <Button onClick={() => this.onOpenHandler()}>적용범위 선택</Button>}
+          </div>
+        )}
+      </>
     );
   }
 }
@@ -152,11 +157,25 @@ export default CustomCheckListComp;
 
 CustomCheckListComp.defaultProps = {
   CONFIG: { property: {} },
-  colData: '',
+  colData: 'preView',
   changeFormData: () => false,
   changeValidationData: () => false,
   readOnly: false,
   formData: {},
+  dataSource: [
+    {
+      groupName: 'customList1',
+      groupKey: 'checkList1',
+    },
+    {
+      groupName: 'customList2',
+      groupKey: 'checkList2',
+    },
+  ],
+  stateProps: {
+    checkList1: { value: ' ' },
+    checkList2: { value: ' ' },
+  },
   apiArray: [
     { key: 'REGION', url: `/api/admin/v1/common/categoryMapList?MAP_ID=16`, type: 'GET' },
     { key: 'FAB', url: `/api/admin/v1/common/categoryMapList?MAP_ID=11`, type: 'GET' },

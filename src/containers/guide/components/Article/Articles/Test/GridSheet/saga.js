@@ -4,7 +4,8 @@ import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
 
 export function* loadingFabParam() {
-  const dataFab = { // FAB
+  const dataFab = {
+    // FAB
     PARAM_MENU: 'FAB',
     comboType: 'COMBO_PLANT_SECTION',
   };
@@ -20,19 +21,22 @@ export function* loadingFabParam() {
 }
 
 export function* loadingParam(payload) {
-  const dataTeam = { // TEAM
+  const dataTeam = {
+    // TEAM
     comboType: 'COMBO_LOCATION',
     PARAM_BEBER: payload.value,
   };
   const resTeam = yield call(Axios.post, '/api/gipms/v1/common/commonCombo', dataTeam);
 
-  const dataSdtp = { // SDPT
+  const dataSdtp = {
+    // SDPT
     comboType: 'COMBO_WORK_CENTER',
     PARAM_BEBER: payload.value,
   };
   const resSdtp = yield call(Axios.post, '/api/gipms/v1/common/commonCombo', dataSdtp);
 
-  const dataFl = { // F/L
+  const dataFl = {
+    // F/L
     comboType: 'COMBO_FUNCTIONAL_LOCATION',
     PARAM_BEBER: payload.value,
   };
@@ -49,13 +53,15 @@ export function* loadingParam(payload) {
 }
 
 export function* loadingTeamParam(payload) {
-  const dataSdtp = { // SDPT
+  const dataSdtp = {
+    // SDPT
     comboType: 'COMBO_WORK_CENTER',
     PARAM_STAND: payload.value,
   };
   const resSdtp = yield call(Axios.post, '/api/gipms/v1/common/commonCombo', dataSdtp);
 
-  const dataFl = { // F/L
+  const dataFl = {
+    // F/L
     comboType: 'COMBO_FUNCTIONAL_LOCATION',
     PARAM_STAND: payload.value,
   };
@@ -69,9 +75,9 @@ export function* loadingTeamParam(payload) {
   });
 }
 
-
 export function* loadingSdptParam(payload) {
-  const dataModel = { // MODEL
+  const dataModel = {
+    // MODEL
     comboType: 'COMBO_OBJECT_TYPE',
     PARAM_ARBPL: payload.value,
   };

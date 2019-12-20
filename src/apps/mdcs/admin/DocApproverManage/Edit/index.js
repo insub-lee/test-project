@@ -1,234 +1,92 @@
 import React, { Component } from 'react';
-import { Row, Col, Select, Button, TreeSelect, Input } from 'antd';
-import PropTypes from 'prop-types';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import { createStructuredSelector } from 'reselect';
-import { connect } from 'react-redux';
-import { fromJS } from 'immutable';
-import { getTreeFromFlatData } from 'react-sortable-tree';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
+import { Row, Col, Select, Modal, TreeSelect, Input } from 'antd';
 
-import Organization from '../../../../../containers/portal/components/Organization';
-import selectors from '../selectors';
+import { getTreeFromFlatData } from 'react-sortable-tree';
+
+import StyledButton from 'apps/mdcs/styled/StyledButton';
+import UserSelect from 'components/UserSelect';
+// import Organization from '../../../../../containers/portal/components/Organization';
 
 import Styled from './Styled';
 
 const { Option } = Select;
 
-const getTreeData = categoryMapList =>
+const getTreeData = (categoryMapList, rootId) =>
   categoryMapList.length > 0
     ? getTreeFromFlatData({
-        flatData: categoryMapList
-          .filter(filterItem => filterItem.USE_YN === 'Y')
-          .map(item => ({
-            title: item.NAME_KOR,
-            value: item.NODE_ID,
-            key: item.NODE_ID,
-            parentValue: item.PARENT_NODE_ID,
-          })),
-        getKey: node => node.key,
-        getParentKey: node => node.parentValue,
-        rootKey: 9,
-      })
+      flatData: categoryMapList
+        .filter(filterItem => filterItem.USE_YN === 'Y')
+        .map(item => ({
+          title: item.NAME_KOR,
+          value: item.NODE_ID,
+          key: item.NODE_ID,
+          parentValue: item.PARENT_NODE_ID,
+        })),
+      getKey: node => node.key,
+      getParentKey: node => node.parentValue,
+      rootKey: rootId,
+    })
     : [];
 
 class Edit extends Component {
   state = {
-    modifyInfo: {
-      modifyYn: false,
-      taskSeq: -1,
-      tempData: {},
-    },
     isOpenModal: false,
-    selectedUsers: [],
-    displayUserName: '',
   };
 
-  componentWillMount() {
-    const { getExtraApiData, id, localApiArr } = this.props;
-    getExtraApiData(id, localApiArr);
-  }
+  componentDidMount() {}
 
-  setSelectedUser = (type, selectedUsers) => {
-    const { changeFormData, id } = this.props;
-    let userId = '';
-    let displayUserName = '';
-    if (selectedUsers.length > 0) {
-      userId = selectedUsers[0].USER_ID;
-      displayUserName = `${selectedUsers[0].NAME_KOR}(${selectedUsers[0].EMP_NO} ${selectedUsers[0].DEPT_NAME_KOR}/${selectedUsers[0].PSTN_NAME_KOR}/${selectedUsers[0].DUTY_NAME_KOR})`;
+  onUserSelect = result => {
+    console.debug(result);
+  };
+
+  onUserSelectedComplete = result => {
+    const { id, changeFormData } = this.props;
+    console.debug(result);
+    console.debug('onUserSelectedComplete', this.props);
+    if (result.length > 0) {
+      changeFormData(id, 'APPROVER_ID', result[0].USER_ID);
+      changeFormData(id, 'APPROVER_NAME', result[0].NAME_KOR);
+      changeFormData(id, 'APPROVER_INFO', result);
     }
-    if (type === 'modify') {
-      this.setState({ selectedUsers, displayUserName });
-    } else {
-      this.setState({ selectedUsers, displayUserName }, () => changeFormData(id, 'APPROVER_ID', userId));
-    }
+    result.length > 0 &&
+      this.setState({
+        isOpenModal: false,
+      });
   };
 
-  // 리스트에서 수정버튼 눌렀을시 input에 값 대입 및 수정상태 flag 설정
-  setModifyInfo = USERD_YN => {
-    const { extraApiData, formData, getDetailData, workSeq, id } = this.props;
-    const approverList = extraApiData.listData.list;
-
-    let approverInfo;
-
-    approverInfo = approverList.find(
-      item =>
-        item.NODE_ID === formData.NODE_ID &&
-        item.APPROVER_ID === formData.APPROVER_ID &&
-        item.DEGREE_FLAG === formData.DEGREE_FLAG &&
-        item.DRAFT_TYPE === formData.DRAFT_TYPE &&
-        item.USED_YN === USERD_YN &&
-        item.APPROVER_TYPE === formData.APPROVER_TYPE,
-    );
-
-    this.setState(
-      {
-        modifyInfo: {
-          modifyYn: true,
-          taskSeq: approverInfo.TASK_SEQ,
-          tempData: approverInfo,
-        },
-      },
-      () => getDetailData(id, workSeq, this.state.modifyInfo.taskSeq),
-    );
-
-    this.setSelectedUser('modify', [approverInfo.APPROVER_INFO]);
+  onChangeValue = (key, val) => {
+    console.debug(this.props);
+    const { id, changeFormData } = this.props;
+    changeFormData(id, key, val);
   };
 
-  // 수정모드 리셋버튼 : 기존값으로 form데이터 변경
-  resetBtnHandle = () => {
-    const { changeFormData, id } = this.props;
-    const { modifyInfo } = this.state;
-    changeFormData(id, 'NODE_ID', modifyInfo.tempData.NODE_ID);
-    changeFormData(id, 'APPROVER_ID', modifyInfo.tempData.APPROVER_ID);
-    changeFormData(id, 'DEGREE_FLAG', modifyInfo.tempData.DEGREE_FLAG);
-    changeFormData(id, 'DRAFT_TYPE', modifyInfo.tempData.DRAFT_TYPE);
-    changeFormData(id, 'USED_YN', modifyInfo.tempData.USED_YN);
-    changeFormData(id, 'APPROVER_TYPE', modifyInfo.tempData.APPROVER_TYPE);
-    this.setSelectedUser('modify', [modifyInfo.tempData.APPROVER_INFO]);
+  onSave = () => {
+    const { id, submitHadnlerBySaga, formData } = this.props;
+    const submitData = {
+      PARAM: { formData },
+    };
+    submitHadnlerBySaga(id, 'POST', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
   };
 
-  // 수정모드 취소
-  cancelBtnHandle = () => {
-    const { changeFormData, id } = this.props;
-    changeFormData(id, 'NODE_ID', 0);
-    changeFormData(id, 'APPROVER_ID', 0);
-    changeFormData(id, 'DEGREE_FLAG', 0);
-    changeFormData(id, 'DRAFT_TYPE', 0);
-    changeFormData(id, 'USED_YN', 0);
-    changeFormData(id, 'APPROVER_TYPE', 0);
+  onSaveComplete = id => {
+    const { getCallDataHanlder, apiAry, removeStorageReduxState } = this.props;
+    removeStorageReduxState(id, 'result');
+    getCallDataHanlder(id, apiAry);
     this.setState({
-      modifyInfo: {
-        modifyYn: false,
-        taskSeq: -1,
-        tempData: {},
-      },
-      selectedUsers: [],
-      displayUserName: '',
+      displayUserName: undefined,
     });
+    removeStorageReduxState(id, 'formData');
   };
 
-  // 수정완료
-  modifySavaBtnHandle = () => {
-    const { id, workSeq, modifyTaskBySeq, extraApiData, formData } = this.props;
-    const { modifyInfo } = this.state;
-    const { dataReloadCallbackFunc } = this;
-
-    const orgTaskList = extraApiData.listData.list; // 기존 taskList
-    const overlapYn = orgTaskList.find(
-      item =>
-        item.NODE_ID === formData.NODE_ID &&
-        item.APPROVER_ID === formData.APPROVER_ID &&
-        item.DEGREE_FLAG === formData.DEGREE_FLAG &&
-        item.DRAFT_TYPE === formData.DRAFT_TYPE &&
-        item.USED_YN === formData.USED_YN &&
-        item.APPROVER_TYPE === formData.APPROVER_TYPE,
-    );
-
-    if (overlapYn === undefined) {
-      modifyTaskBySeq(id, workSeq, modifyInfo.taskSeq, dataReloadCallbackFunc);
-      this.setState(
-        {
-          modifyInfo: {
-            modifyYn: false,
-            taskSeq: -1,
-            tempData: {},
-          },
-          selectedUsers: [],
-          displayUserName: '',
-        },
-        () => message.success(<MessageContent>내용을 수정하였습니다.</MessageContent>, 2),
-      );
-    } else {
-      message.error(<MessageContent>동일한 내용이 이미 등록되어있습니다.</MessageContent>, 2);
-    }
+  onCancel = () => {
+    const { id, removeStorageReduxState, changeFormData } = this.props;
+    removeStorageReduxState(id, 'formData');
+    changeFormData(id, 'actionType', 'I');
   };
-
-  // 동일한 레코드 유무 검사 후 저장
-  saveBtnHandle = () => {
-    const { id, reload_id, saveTask, extraApiData, formData } = this.props;
-    const { dataReloadCallbackFunc } = this;
-    const orgTaskList = extraApiData.listData.list; // 기존 taskList
-    const overlapYn = orgTaskList.find(
-      item =>
-        item.NODE_ID === formData.NODE_ID &&
-        item.APPROVER_ID === formData.APPROVER_ID &&
-        item.DEGREE_FLAG === formData.DEGREE_FLAG &&
-        item.DRAFT_TYPE === formData.DRAFT_TYPE &&
-        item.USED_YN === formData.USED_YN &&
-        item.APPROVER_TYPE === formData.APPROVER_TYPE,
-    );
-
-    if (overlapYn === undefined) {
-      this.setState({ selectedUsers: [], displayUserName: '' }, () => saveTask(id, reload_id, dataReloadCallbackFunc));
-      message.success(<MessageContent>신규 결재자를 등록하였습니다.</MessageContent>, 2);
-    } else {
-      message.error(<MessageContent>동일한 내용이 이미 등록되어있습니다.</MessageContent>, 2);
-    }
-  };
-
-  dataReloadCallbackFunc = id => {
-    const { getExtraApiData, localApiArr, reload_id } = this.props;
-    getExtraApiData(id, localApiArr); // 에딧쪽 리로드
-    getExtraApiData(reload_id, localApiArr); // 리스트쪽 리로드
-  };
-  // componentDidUpdate() {
-  //   const { formData } = this.props;
-  //   const { selectedUsers } = this.state;
-  //   if (!formData.APPROVER_ID && selectedUsers.length > 0) {
-  //     this.setState({ selectedUsers: [], displayUserName: '' });
-  //   }
-  // }
 
   render() {
-    const {
-      responseData,
-      metaList,
-      changeFormData,
-      saveTask,
-      id,
-      categoryMapInfo,
-      draftMapInfo,
-      degreeMapInfo,
-      approverMapInfo,
-      reload_id,
-      formData,
-      extraApiData,
-      modifyTaskBySeq,
-    } = this.props;
-
-    const { displayUserName, selectedUsers, modifyInfo } = this.state;
-
-    if (Object.prototype.hasOwnProperty.call(formData, 'USED_YN')) {
-      const checkModify = String(formData.USED_YN);
-      if (checkModify.includes('_modify')) {
-        const USERD_YN = Number(checkModify.substring(0, 1));
-        changeFormData(id, 'USED_YN', USERD_YN);
-        this.setModifyInfo(USERD_YN);
-      }
-    }
-
+    const { id, result, formData, actionType } = this.props;
+    console.debug('edit props!!!! : ', this.props);
     return (
       <Styled id="docApproverManageWrap">
         <Row className="editRow firstRow">
@@ -238,11 +96,15 @@ class Edit extends Component {
           <Col span={10}>
             <TreeSelect
               className="editSelect"
+              treeData={
+                result.categoryList &&
+                result.categoryList.categoryMapList &&
+                getTreeData(result.categoryList.categoryMapList, result.categoryList.categoryMapList[0].ROOT_ID)
+              }
               placeholder="select me"
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={getTreeData(categoryMapInfo.toJS())}
-              onChange={value => changeFormData(id, 'NODE_ID', value)}
-              value={formData.NODE_ID || undefined}
+              onChange={val => this.props.changeFormData(id, 'NODE_ID', val)}
+              value={formData && formData.NODE_ID}
             />
           </Col>
           <Col span={2} className="titleCol">
@@ -250,20 +112,16 @@ class Edit extends Component {
           </Col>
           <Col span={10}>
             <Select
+              value={formData && formData.DRAFT_TYPE}
+              onChange={val => this.props.changeFormData(id, 'DRAFT_TYPE', val)}
               className="editSelect"
               placeholder="select me"
-              dropdownStyle={{ width: '100px' }}
-              onChange={value => changeFormData(id, 'DRAFT_TYPE', value)}
-              value={formData.DRAFT_TYPE || undefined}
             >
-              {draftMapInfo
-                .toJS()
-                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                .map(node => (
-                  <Option key={`DRAFT_TYPE_${node.NODE_ID}`} value={node.NODE_ID}>
-                    {node.NAME_KOR}
-                  </Option>
-                ))}
+              {result.draftTypes &&
+                result.draftTypes.categoryMapList &&
+                result.draftTypes.categoryMapList
+                  .filter(x => x.PARENT_NODE_ID !== 0)
+                  .map(draftType => <Option value={draftType.NODE_ID}>{draftType.NAME_KOR}</Option>)}
             </Select>
           </Col>
         </Row>
@@ -273,20 +131,17 @@ class Edit extends Component {
           </Col>
           <Col span={10}>
             <Select
+              value={formData && formData.DEGREE_FLAG}
+              onChange={val => this.props.changeFormData(id, 'DEGREE_FLAG', val)}
               className="editSelect"
               placeholder="select me"
               dropdownStyle={{ width: '100px' }}
-              onChange={value => changeFormData(id, 'DEGREE_FLAG', value)}
-              value={formData.DEGREE_FLAG || undefined}
             >
-              {degreeMapInfo
-                .toJS()
-                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                .map(node => (
-                  <Option key={`DEGREE_FLAG${node.NODE_ID}`} value={node.NODE_ID}>
-                    {node.NAME_KOR}
-                  </Option>
-                ))}
+              {result.dgreeTypes &&
+                result.dgreeTypes.categoryMapList &&
+                result.dgreeTypes.categoryMapList
+                  .filter(x => x.PARENT_NODE_ID !== 0)
+                  .map(dgreeType => <Option value={dgreeType.NODE_ID}>{dgreeType.NAME_KOR}</Option>)}
             </Select>
           </Col>
           <Col span={2} className="titleCol">
@@ -294,20 +149,17 @@ class Edit extends Component {
           </Col>
           <Col span={10}>
             <Select
+              value={formData && formData.APPROVER_TYPE}
+              onChange={val => this.props.changeFormData(id, 'APPROVER_TYPE', val)}
               className="editSelect"
               placeholder="select me"
               dropdownStyle={{ width: '100px' }}
-              onChange={value => changeFormData(id, 'APPROVER_TYPE', value)}
-              value={formData.APPROVER_TYPE || undefined}
             >
-              {approverMapInfo
-                .toJS()
-                .filter(filterItem => filterItem.LVL > 0 && filterItem.USE_YN === 'Y')
-                .map(node => (
-                  <Option key={`APPROVER_TYPE${node.NODE_ID}`} value={node.NODE_ID}>
-                    {node.NAME_KOR}
-                  </Option>
-                ))}
+              {result.appvSteps &&
+                result.appvSteps.categoryMapList &&
+                result.appvSteps.categoryMapList
+                  .filter(x => x.PARENT_NODE_ID !== 0)
+                  .map(appvStep => <Option value={appvStep.NODE_ID}>{appvStep.NAME_KOR}</Option>)}
             </Select>
           </Col>
         </Row>
@@ -316,18 +168,21 @@ class Edit extends Component {
             결재자
           </Col>
           <Col span={10}>
-            <Input readOnly placeholder="select me" value={this.state.displayUserName} onClick={() => this.setState({ isOpenModal: true })} />
+            <Input readOnly placeholder="select me" value={formData && formData.APPROVER_NAME} onClick={() => this.setState({ isOpenModal: true })} />
+            <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose>
+              <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onUserSelectedComplete}></UserSelect>
+            </Modal>
           </Col>
           <Col span={2} className="titleCol">
             사용여부
           </Col>
           <Col span={10}>
             <Select
+              value={formData && formData.USED_YN}
+              onChange={val => this.props.changeFormData(id, 'USED_YN', val)}
               className="editSelect"
               placeholder="select me"
               dropdownStyle={{ width: '100px' }}
-              onChange={value => changeFormData(id, 'USED_YN', value)}
-              value={formData.USED_YN || formData.USED_YN === 0 ? formData.USED_YN : undefined}
             >
               <Option value={1}>Y</Option>
               <Option value={0}>N</Option>
@@ -336,65 +191,25 @@ class Edit extends Component {
         </Row>
         <Row className="editRow">
           <Col className="buttonCol">
-            {modifyInfo.modifyYn ? (
-              <React.Fragment>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.modifySavaBtnHandle()}>
-                  SAVE
+            <>
+              {formData && formData.actionType === 'I' ? (
+                <StyledButton className="btn-primary btn-first" onClick={() => this.onSave()}>
+                  저장
                 </StyledButton>
-                <StyledButton className="btn-light" onClick={() => this.resetBtnHandle()}>
-                  RESET
+              ) : (
+                <StyledButton className="btn-primary btn-first" onClick={() => this.onUpdate()}>
+                  수정
                 </StyledButton>
-                <StyledButton className="btn-light" onClick={() => this.cancelBtnHandle()}>
-                  CANCEL
-                </StyledButton>
-              </React.Fragment>
-            ) : (
-              <StyledButton className="btn-primary btn-first" onClick={() => this.saveBtnHandle()}>
-                SAVE
+              )}
+              <StyledButton className="btn-light" onClick={() => this.onCancel()}>
+                CANCEL
               </StyledButton>
-            )}
+            </>
           </Col>
         </Row>
-        <Organization
-          show={this.state.isOpenModal}
-          userTab
-          selectedUsers={this.state.selectedUsers}
-          checkedDept={[]}
-          checkedPstn={[]}
-          checkedDuty={[]}
-          checkedGrp={[]}
-          onlyUser
-          selectSingleUser
-          closeModal={() => this.setState({ isOpenModal: false })}
-          getDataFromOrganization={result => this.setSelectedUser('insert', result.selectedUsers)}
-        />
       </Styled>
     );
   }
 }
-
-Edit.propTypes = {
-  responseData: PropTypes.object.isRequired,
-  metaList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  categoryMapInfo: PropTypes.object,
-  draftMapInfo: PropTypes.object,
-  degreeMapInfo: PropTypes.object,
-  approverMapInfo: PropTypes.object,
-};
-
-Edit.defaultProps = {
-  categoryMapInfo: fromJS([]),
-  draftMapInfo: fromJS([]),
-  degreeMapInfo: fromJS([]),
-  approverMapInfo: fromJS([]),
-  localApiArr: [
-    {
-      key: 'listData',
-      url: '/api/mdcs/v1/common/DocApproverManageList',
-      type: 'GET',
-      params: {},
-    },
-  ],
-};
 
 export default Edit;

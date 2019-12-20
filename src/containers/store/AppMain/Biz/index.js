@@ -8,12 +8,9 @@ import BizCategory from '../../components/BizCategory';
 
 class Biz extends PureComponent {
   render() {
-    const {
-      history,
-      match,
-    } = this.props;
+    const { history, match } = this.props;
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       if (node.children || node.MENU_EXIST_YN === 'N') {
         history.push(`/store/appMain/bizStore/biz/list/${node.key}`);
       } else {
@@ -24,10 +21,7 @@ class Biz extends PureComponent {
 
     return (
       <div className="appBizWrapper">
-        <BizCategory
-          handleOnClick={handleTreeOnClick}
-          preUrl="/store/appMain/bizStore"
-        />
+        <BizCategory handleOnClick={handleTreeOnClick} preUrl="/store/appMain/bizStore" />
         <Switch>
           <Route path={`${match.path}/list/:BIZGRP_ID`} component={BizList} exact />
           <Route path={`${match.path}/list`} component={BizList} exact />

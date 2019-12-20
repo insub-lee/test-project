@@ -10,9 +10,10 @@ class SelectComp extends Component {
       getExtraApiData,
       id,
       CONFIG: {
-        property: { apiArray },
+        property: { mapId },
       },
     } = this.props;
+    const apiArray = [{ key: `select_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
     getExtraApiData(id, apiArray);
   }
 
@@ -36,33 +37,39 @@ class SelectComp extends Component {
     const {
       CONFIG,
       CONFIG: {
-        property: { apiKey, defaultValue, placeholder },
+        property: { mapId, defaultValue, placeholder },
       },
       extraApiData,
       colData,
       readOnly,
     } = this.props;
-    const apiData = extraApiData[apiKey];
+    const apiData = extraApiData[`select_${mapId}`];
     return (
-      <Select
-        value={colData === ' ' || colData === 0 ? undefined : Number(colData)}
-        placeholder={placeholder}
-        style={{ width: 300, marginRight: 10 }}
-        onChange={value => {
-          this.onChangeHandler(value);
-        }}
-        disabled={readOnly || CONFIG.property.readOnly}
-      >
-        {apiData &&
-          apiData.categoryMapList &&
-          apiData.categoryMapList
-            .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
-            .map(item => (
-              <Option key={`CategorieMap_${item.NODE_ID}`} value={item.NODE_ID}>
-                {item.NAME_KOR}
-              </Option>
-            ))}
-      </Select>
+      <>
+        {colData !== undefined ? (
+          <Select
+            value={colData === ' ' || colData === 0 ? undefined : Number(colData)}
+            placeholder={placeholder}
+            style={{ width: 300, marginRight: 10 }}
+            onChange={value => {
+              this.onChangeHandler(value);
+            }}
+            disabled={readOnly || CONFIG.property.readOnly}
+          >
+            {apiData &&
+              apiData.categoryMapList &&
+              apiData.categoryMapList
+                .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
+                .map(item => (
+                  <Option key={`selectMap_${item.NODE_ID}`} value={item.NODE_ID}>
+                    {item.NAME_KOR}
+                  </Option>
+                ))}
+          </Select>
+        ) : (
+          <Select value={undefined} placeholder="Select" style={{ width: '100%' }} />
+        )}
+      </>
     );
   }
 }

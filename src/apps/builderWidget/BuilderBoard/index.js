@@ -8,7 +8,7 @@ import { Table, Button, Modal } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import SignLine from 'apps/WorkFlow/Admin/SignLine';
+import SignLine from 'apps/Workflow/Admin/SignLine';
 import { allFormStuffs } from 'components/WorkBuilder/config';
 
 import View from './View';
@@ -18,7 +18,6 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import Wrapper from './Wrapper';
-import { WIDGET } from 'utils/constants'
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -31,7 +30,7 @@ class BuilderBoard extends Component {
   componentDidMount() {
     const { getView, item } = this.props;
     const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : -1;
-    const WORK_SEQ = item && item.data && item.data.WORK_SEQ ? item.data.WORK_SEQ : -1;
+    const WORK_SEQ = item && item.data && item.data.WORK_SEQ ? item.data.WORK_SEQ : 779; // 779
     getView(widgetId, WORK_SEQ);
   }
 
@@ -101,6 +100,8 @@ class BuilderBoard extends Component {
     } = this.props;
 
     const widgetId = item && item.WIDGET_ID ? item.WIDGET_ID : -1;
+
+    console.debug('formStuffs', formStuffs);
 
     const defaultColumns = [];
     const tempFun = () => {};
@@ -240,7 +241,7 @@ BuilderBoard.propTypes = {
 };
 
 BuilderBoard.defaultProps = {
-  // WORK_SEQ: 668, // 668
+  // WORK_SEQ: 779, // 779
   columns: [],
   list: [],
   boxes: [],
@@ -316,7 +317,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const withReducer = injectReducer({ key: 'apps.BuilderWidget.BuilderBoard', reducer });
-const withSaga = injectSaga({ key: 'apps.BuilderWidget.BuilderBoard', saga, mode: WIDGET });
+const withSaga = injectSaga({ key: 'apps.BuilderWidget.BuilderBoard', saga });
 const withConnect = connect(
   mapStateToProps,
   mapDispatchToProps,

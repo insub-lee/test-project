@@ -66,7 +66,7 @@ class Tree extends Component {
     // this.props.updateTreeData(treeData);
   }
 
-  handleOnTreeNodeClick = (node) => {
+  handleOnTreeNodeClick = node => {
     this.setState({
       selectedIndex: node.key,
     });
@@ -75,11 +75,7 @@ class Tree extends Component {
   };
 
   render() {
-    const {
-      treeData,
-      searchFocusIndex,
-      selectedIndex,
-    } = this.state;
+    const { treeData, searchFocusIndex, selectedIndex } = this.state;
 
     const {
       rowHeight,
@@ -112,20 +108,23 @@ class Tree extends Component {
         }}
         innerStyle={{ ...innerStyle }}
         isVirtualized={false}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         onMoveNode={onMoveNode}
         // onVisibilityToggle={({ treeData: treeData2 }) => {
         //   this.props.updateTreeData(treeData2);
         // }}
         onDragStateChanged={onDragStateChanged}
-        generateNodeProps={({
-          node, path, treeIndex, lowerSiblingCounts, isSearchMatch, isSearchFocus,
-        }) => {
+        generateNodeProps={({ node, path, treeIndex, lowerSiblingCounts, isSearchMatch, isSearchFocus }) => {
           let parentsGenerateNodeProps = {};
           let className = '';
           if (generateNodeProps) {
             parentsGenerateNodeProps = generateNodeProps({
-              node, path, treeIndex, lowerSiblingCounts, isSearchMatch, isSearchFocus,
+              node,
+              path,
+              treeIndex,
+              lowerSiblingCounts,
+              isSearchMatch,
+              isSearchFocus,
             });
             className = node.className ? node.className : '';
           }
@@ -138,7 +137,8 @@ class Tree extends Component {
                 style={{ cursor: 'pointer' }}
               >
                 {lang.get('NAME', node)}
-              </button>),
+              </button>
+            ),
             ...parentsGenerateNodeProps,
           };
         }}
@@ -152,18 +152,13 @@ class Tree extends Component {
           ...wrapperStyle,
         }}
       >
-        {
-          treeData.length > 0 ? (
-            <ScrollBar
-              style={{ width: '100%', height: '100%' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              {treeJsx}
-            </ScrollBar>
-          ) : treeJsx
-        }
+        {treeData.length > 0 ? (
+          <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            {treeJsx}
+          </ScrollBar>
+        ) : (
+          treeJsx
+        )}
       </StyleTree>
     );
   }

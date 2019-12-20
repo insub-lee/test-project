@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '../../../Abstraction/portalComponents';
 
-
 const App = () => (
   <div className="guideComponentWrapper">
     <Button type="primary">Primary</Button>
@@ -10,7 +9,6 @@ const App = () => (
     <Button type="danger">Danger</Button>
   </div>
 );
-
 
 const code = `import { Button } from '../../../Abstraction/portalComponents';
 

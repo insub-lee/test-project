@@ -46,8 +46,7 @@ class BizInfo extends Component {
     const { params } = match;
     const { BIZGRP_ID } = params;
 
-    if (BIZGRP_ID
-      && this.state.BIZGRP_ID !== BIZGRP_ID) {
+    if (BIZGRP_ID && this.state.BIZGRP_ID !== BIZGRP_ID) {
       this.props.handleGetBizInfo(BIZGRP_ID);
       this.props.handleGetBizFeedBackList(BIZGRP_ID, 'F');
       this.props.handleGetBizFeedBackList(BIZGRP_ID, 'Q');
@@ -58,33 +57,17 @@ class BizInfo extends Component {
   }
 
   render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
+    const { BIZGRP_ID } = this.state;
 
-    const {
-      bizInfo,
-    } = this.props;
+    const { bizInfo } = this.props;
 
     return (
       <div>
-        <AppIntroduction
-          style={{ padding: '0 0 20px 0', border: 'none' }}
-        >
-          <h2
-            className="adTitle"
-          >
-            {intlObj.get(messages.appdscr)}
-          </h2>
-          <div className="dscr">
-            {lang.get('DSCR', bizInfo)}
-          </div>
+        <AppIntroduction style={{ padding: '0 0 20px 0', border: 'none' }}>
+          <h2 className="adTitle">{intlObj.get(messages.appdscr)}</h2>
+          <div className="dscr">{lang.get('DSCR', bizInfo)}</div>
         </AppIntroduction>
-        <AppQna
-          appId={BIZGRP_ID}
-          gubun="b"
-        />
-
+        <AppQna appId={BIZGRP_ID} gubun="b" />
       </div>
     );
   }
@@ -101,8 +84,7 @@ BizInfo.propTypes = {
 export function mapDispatchToProps(dispatch) {
   return {
     handleGetBizInfo: BIZGRP_ID => dispatch(actions.getBizInfo(BIZGRP_ID)),
-    handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) =>
-      dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
+    handleGetBizFeedBackList: (BIZGRP_ID, BOARD_TYPE) => dispatch(actions.getBizFeedBackList(BIZGRP_ID, BOARD_TYPE)),
   };
 }
 
@@ -116,9 +98,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizInfo', reducer });
 const withSaga = injectSaga({ key: 'bizInfo', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizInfo);
-
+export default compose(withReducer, withSaga, withConnect)(BizInfo);

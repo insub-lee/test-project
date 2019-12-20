@@ -28,13 +28,7 @@ class List extends Component {
           onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
           style={{ width: 188, marginBottom: 8, display: 'block' }}
         />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
+        <Button type="primary" onClick={() => this.handleSearch(selectedKeys, confirm)} icon="search" size="small" style={{ width: 90, marginRight: 8 }}>
           Search
         </Button>
         <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
@@ -42,9 +36,7 @@ class List extends Component {
         </Button>
       </div>
     ),
-    filterIcon: filtered => (
-      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-    ),
+    filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
     onFilter: (value, record) =>
       record[dataIndex]
         .toString()
@@ -75,7 +67,7 @@ class List extends Component {
     this.setState({ searchText: '' });
   };
 
-  onSelectChange = (selectedRowKeys) => {
+  onSelectChange = selectedRowKeys => {
     this.setState({ selectedRowKeys });
   };
 
@@ -90,7 +82,7 @@ class List extends Component {
       },
     ];
     this.props.getExtraApiData(id, apiArr);
-  }
+  };
 
   componentDidMount() {
     this.props.favoriteListComp(this);
@@ -111,7 +103,7 @@ class List extends Component {
     this.props.favoriteListComp(null);
   }
 
-  delFavorite = (data) => {
+  delFavorite = data => {
     const { id } = this.props;
     const url = '/api/mdcs/v1/common/FavoriteDelete';
     const params = { favList: this.state.selectedRowKeys };
@@ -126,12 +118,13 @@ class List extends Component {
     this.props.deleteExtraTask(id, url, params, apiArr);
   };
 
-  viewFavorite = (data) =>{
+  viewFavorite = data => {
     const { onChangeMovePageHandler } = this.props;
     onChangeMovePageHandler('VIEW', data.WORK_SEQ, data.TASK_SEQ, data.FAV_SEQ);
-  }
-  
+  };
+
   render() {
+    console.log('calll!!!!!!!!!!!!');
     /*
     A.FAV_SEQ AS "key", A.FAV_SEQ, A.WORK_SEQ, A.WORK_ID, A.TASK_SEQ,
             B.TITLE, B.STATUS, B.VERSION, B.SP_ID, B.SP_REV,
@@ -156,13 +149,11 @@ class List extends Component {
         title: '제목',
         dataIndex: 'TITLES',
         key: 'TITLES',
-        sorter: (a, b) => {
+        sorter: (a, b) =>
           // return a.TITLES.localeCompare(b.TITLES);
-          return +(a.TITLES > b.TITLES) || +(a.TITLES === b.TITLES) - 1;
-        },
+          +(a.TITLES > b.TITLES) || +(a.TITLES === b.TITLES) - 1,
         ...this.getColumnSearchProps('TITLES', '제목'),
-        render: (text, record) => {
-          return (
+        render: (text, record) => (
           <a
             onClick={() => {
               this.viewFavorite(record);
@@ -170,8 +161,7 @@ class List extends Component {
           >
             {text}
           </a>
-          );
-        },
+        ),
       },
       {
         title: '기안부서',
@@ -196,14 +186,14 @@ class List extends Component {
       onChange: this.onSelectChange,
     };
     const hasSelected = selectedRowKeys.length > 0;
-    
+
     return (
       <div>
         <Table
           rowSelection={rowSelection}
           dataSource={Favorite ? Favorite.list : []}
           columns={columns}
-          footer={() => <Footer delFavorite={ this.delFavorite } />}
+          footer={() => <Footer delFavorite={this.delFavorite} />}
         />
         {/* <FavoriteModal
           visible={visible}

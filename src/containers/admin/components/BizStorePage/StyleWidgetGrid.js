@@ -5,9 +5,7 @@ const StyleWidgetGrid = styled.div`
   width: 850px;
   margin: 0 auto;
 
-  @media on
-
-  @media only screen and (max-width: 1490px) {
+  @media on @media only screen and (max-width: 1490px) {
     width: 690px;
   }
 

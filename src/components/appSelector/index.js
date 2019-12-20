@@ -4,31 +4,9 @@ import AppSelector from './appSelector';
 
 class AppSelectorWrapper extends React.PureComponent {
   render() {
-    const {
-      addList,
-      closeModal,
-      show,
-      type,
-      isAdmin,
-    } = this.props;
+    const { addList, closeModal, show, type, isAdmin } = this.props;
 
-    return (
-      <div>
-      {
-        show
-          ?
-            <AppSelector
-              addList={addList}
-              closeModal={closeModal}
-              show={show}
-              type={type}
-              isAdmin={isAdmin}
-            />
-          :
-          ''
-      }
-      </div>
-    );
+    return <div>{show ? <AppSelector addList={addList} closeModal={closeModal} show={show} type={type} isAdmin={isAdmin} /> : ''}</div>;
   }
 }
 

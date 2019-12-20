@@ -38,15 +38,10 @@ const showConfirm = (title, content, callback) => {
     onOk() {
       callback();
     },
-    onCancel() { },
+    onCancel() {},
     okText: `${intlObj.get(messages.ok)}`,
     cancelText: `${intlObj.get(messages.cancel)}`,
   });
 };
 
-export {
-  success,
-  warning,
-  error,
-  showConfirm,
-};
+export { success, warning, error, showConfirm };

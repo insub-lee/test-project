@@ -4,9 +4,7 @@ import { lang } from 'utils/commonUtils';
 import { Badge } from 'antd';
 import { fromJS } from 'immutable';
 import * as treeFunc from 'containers/common/functions/treeFunc';
-import {
-  SortableTreeWithoutDndContext as SortableTree,
-} from '../../../components/Organization/resource/react-sortable-tree';
+import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 import CustomTheme from './theme';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import './app.css';
@@ -20,19 +18,19 @@ class Tree extends Component {
       isShow: false,
     };
   }
+
   componentWillReceiveProps(nextProps) {
     // if (this.props.treeData !== nextProps.treeData) {
     //   this.setState({ treeData: nextProps.treeData });
     // }
     if (nextProps.treeData && nextProps.treeData.length > 0) {
       // 2 === 홈
-      if (nextProps.selectedIndex === "-1" || nextProps.selectedIndex === 2) {
+      if (nextProps.selectedIndex === '-1' || nextProps.selectedIndex === 2) {
         this.setState({
           treeData: nextProps.treeData,
           selectedIndex: nextProps.selectedIndex,
         });
       } else {
-
         this.treeFlatData = treeFunc.generateList(fromJS(nextProps.treeData));
         const idx = nextProps.treeData.findIndex(i => i.key === nextProps.selectedIndex);
         if (idx !== -1) {
@@ -51,20 +49,21 @@ class Tree extends Component {
       });
     }
   }
-  updateTreeData = (treeData) => {
+
+  updateTreeData = treeData => {
     this.setState({ treeData });
     this.props.saveData(null, treeData);
-  }
+  };
+
   handleOnNotiClick = () => {
     const { isShow } = this.state;
     this.setState({
       isShow: !isShow,
-    })
-  }
+    });
+  };
+
   render() {
-    const {
-      treeData,
-    } = this.state;
+    const { treeData } = this.state;
 
     const {
       execMenu,
@@ -78,31 +77,36 @@ class Tree extends Component {
 
     const customSearchMethod = ({ node, searchQuery }) =>
       searchQuery &&
-      lang.get('NAME', node).toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
-
-
+      lang
+        .get('NAME', node)
+        .toLowerCase()
+        .indexOf(searchQuery.toLowerCase()) > -1;
 
     return (
       <div
         style={{
-          display: 'flex', flexDirection: 'column', height: 'calc(100vh - 45px)', width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'calc(100vh - 45px)',
+          width: '100%',
         }}
       >
         <div
           className="treeBox"
           style={{
-            flex: '1 0 50%', padding: '10px 0 0 10px',
+            flex: '1 0 50%',
+            padding: '10px 0 0 10px',
           }}
         >
           <SortableTree
             theme={CustomTheme}
             // ref={c => { this.togg = c }}
             treeData={treeData}
-            onChange={(treeData) => this.updateTreeData(treeData)}
-            canDrag={() => this.props.canDrag ? true : false}
-            canDrop={() => this.props.canDrop ? true : false}
+            onChange={treeData => this.updateTreeData(treeData)}
+            canDrag={() => !!this.props.canDrag}
+            canDrop={() => !!this.props.canDrop}
             rowHeight={35}
-            scaffoldBlockPxWidth={22}
+            scaffoldBlockPxWidth={20}
             searchQuery={menuName}
             searchMethod={customSearchMethod}
             generateNodeProps={({ node }) => {
@@ -122,13 +126,11 @@ class Tree extends Component {
               };
               return {
                 title: (
-                  <button
-                    className={`${node.key === selectedIndex ? 'active' : ''}`}
-                    onClick={handleOnClick}
-                    style={{ cursor: 'pointer' }}>
+                  <button className={`${node.key === selectedIndex ? 'active' : ''}`} onClick={handleOnClick} style={{ cursor: 'pointer' }}>
                     {lang.get('NAME', node)}
                     <Badge count={node.UNREAD_CNT !== undefined ? node.UNREAD_CNT : ''} overflowCount={99} className="inTree" />
-                  </button>),
+                  </button>
+                ),
               };
             }}
             className="sortableTreeWrapper sidebar"

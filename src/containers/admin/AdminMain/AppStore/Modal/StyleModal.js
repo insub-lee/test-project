@@ -131,9 +131,7 @@ const Modals = ComponentName => styled(ComponentName)`
   }
 `;
 
-const ModalContent = styled.div`
-  
-`;
+const ModalContent = styled.div``;
 
 export default Modals;
 export { ModalContent };

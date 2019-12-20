@@ -16,6 +16,7 @@ class MasterFncLoc extends Component {
   componentWillMount() {
     this.props.handleInitCategoryData();
   }
+
   render() {
     const {
       // data
@@ -25,15 +26,7 @@ class MasterFncLoc extends Component {
       updateTreeData,
     } = this.props;
 
-    return (
-      <Tree
-        type="app"
-        treeData={categoryData}
-        handleOnClick={handleOnClick}
-        selectedIndex={selectedIndex}
-        updateTreeData={updateTreeData}
-      />
-    );
+    return <Tree type="app" treeData={categoryData} handleOnClick={handleOnClick} selectedIndex={selectedIndex} updateTreeData={updateTreeData} />;
   }
 }
 
@@ -49,7 +42,6 @@ MasterFncLoc.defaultProps = {
   categoryData: [],
   selectedIndex: -1,
 };
-
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -69,8 +61,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'masterFncloc', reducer });
 const withSaga = injectSaga({ key: 'masterFncloc', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MasterFncLoc));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(MasterFncLoc));

@@ -5,12 +5,18 @@ import { Menu, Icon } from 'antd';
 const { SubMenu } = Menu;
 
 const SubMenuItem = props => (
-  <SubMenu key={props.key} title={<span><Icon type="user" /><span>{props.title}</span></span>}>
-    {
-      props.subs.map(sub => (
-        <Menu.Item key={sub.key}>sub.name</Menu.Item>
-      ))
+  <SubMenu
+    key={props.key}
+    title={
+      <span>
+        <Icon type="user" />
+        <span>{props.title}</span>
+      </span>
     }
+  >
+    {props.subs.map(sub => (
+      <Menu.Item key={sub.key}>sub.name</Menu.Item>
+    ))}
   </SubMenu>
 );
 

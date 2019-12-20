@@ -13,7 +13,9 @@ const StyleSiteAdminForm = styled.div`
       // URL input 안에서 validation 표시
       &.urlForm {
         .ant-form-item .ant-form-item-control-wrapper .ant-form-item-control .ant-form-item-children {
-          .ant-form-item-children-icon { left: 304px; }
+          .ant-form-item-children-icon {
+            left: 304px;
+          }
           .ant-input {
             padding-right: 30px;
           }
@@ -52,7 +54,7 @@ const StyleSiteAdminForm = styled.div`
                 .resultsTableWrapper {
                   width: calc(100% - 17px);
                   padding: 5px;
-                  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+                  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
                     /* IE10+ specific styles go here */
                     margin-bottom: 20px;
                   }
@@ -118,21 +120,23 @@ const StyleSiteAdminForm = styled.div`
 
                 .skinOptions {
                   width: 180px;
-  
+
                   label {
                     width: 100%;
-  
-                    .ant-radio, .ant-radio + span {
+
+                    .ant-radio,
+                    .ant-radio + span {
                       display: inline-block;
                       width: 100%;
                       float: left;
                       padding: 0;
                     }
-  
+
                     .ant-radio {
                       padding: 15px 30px 10px 0;
 
-                      input.ant-radio-input, .ant-radio-inner {
+                      input.ant-radio-input,
+                      .ant-radio-inner {
                         top: 0;
                         left: 50%;
                         margin-left: -8px;
@@ -151,20 +155,19 @@ const StyleSiteAdminForm = styled.div`
                         animation-fill-mode: none;
                       }
                     }
-  
+
                     .skinItem {
                       display: inline-block;
                       width: 150px;
                       height: 80px;
                       background: #dadada;
-  
+
                       > img {
                         width: 100%;
                       }
                     }
                   }
                 }
-
               }
             }
           }

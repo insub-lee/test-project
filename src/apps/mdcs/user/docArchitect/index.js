@@ -67,7 +67,7 @@ class docArchitect extends Component {
     return (
       <Styled style={{ backgroundColor: '#798ea4' }} className="main_banner">
         {settingOk ? (
-          <React.Fragment>
+          <>
             <MainBanner num={num} list={docList} modalOpenHandler={this.modalOpenHandler} data={item.data} />
             <Modal
               maskClosable={false}
@@ -86,11 +86,13 @@ class docArchitect extends Component {
             >
               <ModalContent handleClose={this.handleClose} data={item.data} />
             </Modal>
-          </React.Fragment>
+          </>
         ) : (
           <div className="big">
             {' '}
-            분류체계를<br></br>선택해 주세요
+            분류체계를
+            <br />
+            선택해 주세요
           </div>
         )}
       </Styled>
@@ -137,12 +139,5 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-mdcs-user-docArchitect-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-mdcs-user-docArchitect-reducer', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(docArchitect);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default compose(withReducer, withSaga, withConnect)(docArchitect);

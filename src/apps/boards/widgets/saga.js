@@ -1,8 +1,8 @@
 import { put, takeLatest, call, select, takeEvery } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
+import { IflowApi } from 'utils/IflowFunc';
 import * as constants from './constants';
 import { Axios } from '../../../utils/AxiosFunc';
-import { IflowApi } from 'utils/IflowFunc';
 
 export function* getIflBoardDataList(payload) {
   /* eslint-disabled */
@@ -47,8 +47,8 @@ export function* getIfDetailBoardList(payload) {
 
 export function* boardListPageing(payload) {
   const bArray = payload.boardDataList;
-  const page = payload.catePageList[payload.index].page;
-  const pagepernum = payload.pagepernum;
+  const { page } = payload.catePageList[payload.index];
+  const { pagepernum } = payload;
   const grseq = payload.catePageList[payload.index].grSeq;
   const ctseq = payload.catePageList[payload.index].ctSeq;
 

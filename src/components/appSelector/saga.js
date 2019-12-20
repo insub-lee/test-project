@@ -1,7 +1,16 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 import * as treeFunc from 'containers/common/functions/treeFunc';
-import { LOAD_APPLIST_SAGA, SET_APPLIST, DELETE_APPLIST_SAGA, LOAD_APP_TREE, SET_TREE_DATA, LOAD_CATEGORY_LIST_SAGA, SET_CATEGORY_LIST, SEARCH_CATEGORY_LSIT_SAGA } from './constants';
+import {
+  LOAD_APPLIST_SAGA,
+  SET_APPLIST,
+  DELETE_APPLIST_SAGA,
+  LOAD_APP_TREE,
+  SET_TREE_DATA,
+  LOAD_CATEGORY_LIST_SAGA,
+  SET_CATEGORY_LIST,
+  SEARCH_CATEGORY_LSIT_SAGA,
+} from './constants';
 import { Axios } from '../../utils/AxiosFunc';
 
 export function* getAppList(payload) {

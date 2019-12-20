@@ -1567,6 +1567,7 @@ const WidgetBox = styled.div`
 
   .noWidgetWrapper {
     top: 0;
+    left: 0;
     .noWCIcon {
       margin-top: 4px;
     }

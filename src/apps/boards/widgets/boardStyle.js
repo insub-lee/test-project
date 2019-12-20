@@ -159,7 +159,7 @@ const boardStyle = styled.div`
                 }
 
                 .empInfo {
-                  // 임시로 Display: 
+                  // 임시로 Display:
                   display: none;
                   margin-top: -2px;
                   line-height: 12px;

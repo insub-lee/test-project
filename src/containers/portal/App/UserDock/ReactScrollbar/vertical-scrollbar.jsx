@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class VerticalScrollbar extends React.Component {
-
   constructor() {
     super();
     this.state = {
@@ -18,19 +17,18 @@ class VerticalScrollbar extends React.Component {
 
   componentDidMount() {
     this.calculateSize(this.props);
-    
+
     // Put the Listener
     document.addEventListener('mousemove', this.onDrag.bind(this));
     document.addEventListener('touchmove', this.onDrag.bind(this));
     document.addEventListener('mouseup', this.stopDrag.bind(this));
     document.addEventListener('touchend', this.stopDrag.bind(this));
   }
-  
+
   componentWillReceiveProps(nextProps) {
     this.props.onCheckVerticalScrollbarHalf(this.props.scrolling);
-  
-    if (nextProps.wrapper.height !== this.props.wrapper.height ||
-        nextProps.area.height !== this.props.area.height) this.calculateSize(nextProps);
+
+    if (nextProps.wrapper.height !== this.props.wrapper.height || nextProps.area.height !== this.props.area.height) this.calculateSize(nextProps);
   }
 
   componentWillUnmount() {
@@ -116,8 +114,8 @@ class VerticalScrollbar extends React.Component {
 
       // Calculate the vertical Movement
       const yMovement = e.clientY - position.top;
-      const centerize = (this.state.height / 2);
-      const yMovementPercentage = ((yMovement / this.props.wrapper.height) * 100) - centerize;
+      const centerize = this.state.height / 2;
+      const yMovementPercentage = (yMovement / this.props.wrapper.height) * 100 - centerize;
 
       // Update the last e.clientY
       this.setState({ start: e.clientY }, () => {
@@ -137,37 +135,23 @@ class VerticalScrollbar extends React.Component {
 
   render() {
     const className = (base, name, pos, act, isAct) =>
-      [
-        base + name,
-        base + name + pos,
-        isAct ? base + name + act : '',
-        isAct ? base + name + pos + act : '',
-      ].join(' ');
+      [base + name, base + name + pos, isAct ? base + name + act : '', isAct ? base + name + pos + act : ''].join(' ');
 
     if (this.state.height < 100) {
       return (
         <div
-          className={
-            className(
-              '-reactjs-scrollbar',
-              '-track', ':vertical',
-              ':dragging',
-              this.state.dragging || this.props.draggingFromParent,
-          )}
-          ref={(c) => { this.container = c; }}
+          className={className('-reactjs-scrollbar', '-track', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent)}
+          ref={c => {
+            this.container = c;
+          }}
           onClick={this.jump}
           style={{ position: 'absolute' }}
         >
-
           <div
-            className={
-              className(
-                '-reactjs-scrollbar',
-                '-thumb', ':vertical',
-                ':dragging',
-                this.state.dragging || this.props.draggingFromParent,
-              )}
-            ref={(c) => { this.scrollbar = c; }}
+            className={className('-reactjs-scrollbar', '-thumb', ':vertical', ':dragging', this.state.dragging || this.props.draggingFromParent)}
+            ref={c => {
+              this.scrollbar = c;
+            }}
             onTouchStart={this.startDrag}
             onMouseDown={this.startDrag}
             style={{
@@ -177,15 +161,12 @@ class VerticalScrollbar extends React.Component {
               // top: `${100 - this.state.height}%`,
             }}
           />
-
         </div>
       );
     }
     return null;
   }
-
 }
-
 
 // The Props
 VerticalScrollbar.propTypes = {

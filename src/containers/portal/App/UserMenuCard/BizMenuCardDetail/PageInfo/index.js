@@ -38,9 +38,7 @@ class PageInfo extends PureComponent {
     } = nextProps;
     const {
       match: {
-        params: {
-          pageId: propsPageId,
-        },
+        params: { pageId: propsPageId },
       },
     } = this.props;
     const params = {
@@ -96,15 +94,8 @@ const mapStateToProps = createStructuredSelector({
   pageInfoData: selectors.makePageInfoData(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'portal_bizMenuCard_PageInfo', reducer });
 const withSaga = injectSaga({ key: 'portal_bizMenuCard_PageInfo', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PageInfo);
+export default compose(withReducer, withSaga, withConnect)(PageInfo);

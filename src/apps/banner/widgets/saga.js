@@ -1,5 +1,5 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { fromJS } from 'immutable';
+// import { fromJS } from 'immutable';
 import * as actionType from './constants';
 import * as constantsCommon from '../../../containers/common/constants';
 import { Axios } from '../../../utils/AxiosFunc';
@@ -33,7 +33,7 @@ export function* getBannerList(payload) {
     yield put({
       type: actionType.SET_BANNERLIST,
       resultValue,
-      result
+      result,
     });
   }
 }

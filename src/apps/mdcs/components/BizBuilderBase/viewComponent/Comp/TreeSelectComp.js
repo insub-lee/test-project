@@ -19,8 +19,15 @@ const getCategoryMapListAsTree = (flatData, flag) =>
 
 class TreeSelectComp extends Component {
   componentDidMount() {
-    const { getExtraApiData, id, CONFIG } = this.props;
-    getExtraApiData(id, CONFIG.property.apiArray);
+    const {
+      getExtraApiData,
+      id,
+      CONFIG: {
+        property: { mapId },
+      },
+    } = this.props;
+    const apiArray = [{ key: `treeSelect_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
+    getExtraApiData(id, apiArray);
   }
 
   onChangeHandler = value => {
@@ -37,27 +44,36 @@ class TreeSelectComp extends Component {
     const {
       CONFIG,
       CONFIG: {
-        property: { apiKey, selectParent, defaultValue, placeholder },
+        property: { mapId, selectParent, placeholder },
       },
       colData,
       extraApiData,
       readOnly,
     } = this.props;
-    const apiData = extraApiData[apiKey];
+    const apiData = extraApiData[`treeSelect_${mapId}`];
     const categoryData =
       apiData && apiData.categoryMapList && getCategoryMapListAsTree(apiData.categoryMapList.filter(x => x.USE_YN === 'Y')).length > 0
-        ? getCategoryMapListAsTree(apiData.categoryMapList.filter(x => x.USE_YN === 'Y'), selectParent)[0]
+        ? getCategoryMapListAsTree(
+          apiData.categoryMapList.filter(x => x.USE_YN === 'Y'),
+          selectParent,
+        )[0]
         : [];
     return (
-      <TreeSelect
-        style={{ width: 300, marginRight: 10 }}
-        value={colData === ' ' || colData === 0 ? undefined : colData}
-        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-        treeData={categoryData.children}
-        disabled={readOnly || CONFIG.property.readOnly}
-        onChange={value => this.onChangeHandler(value)}
-        placeholder={placeholder}
-      />
+      <>
+        {colData !== undefined ? (
+          <TreeSelect
+            style={{ width: '100%' }}
+            value={colData === ' ' || colData === 0 ? undefined : colData}
+            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+            treeData={categoryData.children}
+            disabled={readOnly || CONFIG.property.readOnly}
+            onChange={value => this.onChangeHandler(value)}
+            placeholder={placeholder}
+          />
+        ) : (
+          <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect"></TreeSelect>
+        )}
+      </>
     );
   }
 }

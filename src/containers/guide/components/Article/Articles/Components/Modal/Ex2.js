@@ -53,9 +53,7 @@ function showPropsConfirm() {
 
 const App = () => (
   <div>
-    <Button onClick={showConfirm}>
-      Confirm
-    </Button>
+    <Button onClick={showConfirm}>Confirm</Button>
     <Button onClick={showDeleteConfirm} type="dashed">
       Delete
     </Button>

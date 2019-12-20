@@ -18,29 +18,24 @@ class ManagerInfo extends React.Component {
       userProfile: {},
     };
   }
+
   componentDidMount() {}
 
-  onExecOrg = (profile) => {
+  onExecOrg = profile => {
     this.setState({
       userProfile: profile,
       show: true,
     });
-  }
+  };
 
   closeModal = () => {
     this.setState({ show: false });
-  }
+  };
 
   render() {
-    const {
-      managerInfo,
-      trigger,
-    } = this.props;
+    const { managerInfo, trigger } = this.props;
 
-    const {
-      show,
-      userProfile,
-    } = this.state;
+    const { show, userProfile } = this.state;
 
     let managers = [];
 
@@ -52,24 +47,22 @@ class ManagerInfo extends React.Component {
             marginBottom: '6px',
             width: '300px',
           }}
-          isPopover={true}
+          isPopover
           onExecOrg={this.onExecOrg}
           key={o.USER_ID}
         />
       ));
 
       if (managers.length === 0) {
-        managers.push(<div key="noManagers">담당자가 선정되어 있지 않습니다.</div>);
+        managers.push(<div>담당자가 선정되어 있지 않습니다.</div>);
       }
     } else {
-      managers.push(<div key="noManagers">담당자가 선정되어 있지 않습니다.</div>);
+      managers.push(<div>담당자가 선정되어 있지 않습니다.</div>);
     }
 
     const managerInfoContent = (
       <StyleManagerModal>
-        <div className="popoverTitle">
-          담당자 정보
-        </div>
+        <div className="popoverTitle">담당자 정보</div>
         <Scrollbars
           className="custom-scrollbar"
           style={{ width: 'auto' }}
@@ -79,9 +72,7 @@ class ManagerInfo extends React.Component {
           autoHeight
           autoHeightMax={240}
         >
-          <div className="popoverBody">
-            {managers}
-          </div>
+          <div className="popoverBody">{managers}</div>
         </Scrollbars>
       </StyleManagerModal>
     );
@@ -93,23 +84,18 @@ class ManagerInfo extends React.Component {
           overlayClassName="managerPopover"
           trigger={trigger === 'click' || trigger === 'hover' ? trigger : 'hover'}
         >
-          <Button style={{
-            width: '24px',
-            height: '24px',
-            background: `url(${IconManager}) no-repeat 50% 2px`,
-            verticalAlign: 'middle',
-            // opacity: '0.8',
-          }}
+          <Button
+            style={{
+              width: '24px',
+              height: '24px',
+              background: `url(${IconManager}) no-repeat 50% 2px`,
+              verticalAlign: 'middle',
+              // opacity: '0.8',
+            }}
           />
         </Popover>
 
-        <Organization
-          isModal={true}
-          show={show}
-          closeModal={this.closeModal}
-          userProfile={userProfile}
-          isProfile={true}
-        />
+        <Organization isModal show={show} closeModal={this.closeModal} userProfile={userProfile} isProfile />
       </StyleManagerInfo>
     );
   }

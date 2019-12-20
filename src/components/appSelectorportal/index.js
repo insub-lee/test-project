@@ -7,11 +7,11 @@ import { Button, Row, Col } from 'antd';
 import { createStructuredSelector } from 'reselect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import messages from '../../components/Page/messages';
+import messages from '../Page/messages';
 import StyleModal from '../../containers/portal/components/Modal/StyleModal';
 import StyleQuickmenuContent from './StyleModalQuickmenu';
 import StyleSelectedApps from './StyleSelectedApps';
-import Input from '../../components/Input';
+import Input from '../Input';
 import basicStyle from '../../config/basicStyle';
 import Tree from './Tree';
 import CategoryGrid from './categoryGrid';
@@ -19,7 +19,17 @@ import SelectedCategory from './selectedCategory';
 import injectSaga from '../../utils/injectSaga';
 import injectReducer from '../../utils/injectReducer';
 import { makeCheckBoxStat, makeAppTree, makeAppCategoryList, makeAppList } from './selectors';
-import { loadTree, resetCheckbox, searchCategory, resetCategory, loadCategoryList, deleteAppList, onLoadBAppList, deleteAppBizList, onLoadBizAppList } from './actions';
+import {
+  loadTree,
+  resetCheckbox,
+  searchCategory,
+  resetCategory,
+  loadCategoryList,
+  deleteAppList,
+  onLoadBAppList,
+  deleteAppBizList,
+  onLoadBizAppList,
+} from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -29,8 +39,7 @@ let categoryList = [];
 let pageNum = 20;
 const pageIndex = 10;
 
-class AppTreePortal extends Component {  
-
+class AppTreePortal extends Component {
   constructor(props) {
     super(props);
 
@@ -38,12 +47,11 @@ class AppTreePortal extends Component {
 
     this.props.loadTree();
 
-    if(type === "mypage") {
+    if (type === 'mypage') {
       this.props.onLoadBAppList(Number(item.WIDGET_ID));
     } else {
       this.props.onLoadBizAppList(Number(item.WIDGET_ID));
     }
-    
 
     this.state = {
       selectedCategory: [],
@@ -66,18 +74,12 @@ class AppTreePortal extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    const {
-      appList,
-      categoryList,
-      appTree
-    } = nextProps;
+    const { appList, categoryList, appTree } = nextProps;
 
-    if ((appList.length !== undefined) ||
-    (categoryList.length !== undefined)) {
+    if (appList.length !== undefined || categoryList.length !== undefined) {
       return true;
-    } else {
-      return false;
-    }  
+    }
+    return false;
   }
 
   onClickNode(node) {
@@ -87,9 +89,7 @@ class AppTreePortal extends Component {
 
     this.setState({ nodeKey: node.key });
 
-    if (this.state.selectedCategory.length > 0
-      && this.state.nodeKey !== node.key
-      && this.state.checkGrid.length > 0) {
+    if (this.state.selectedCategory.length > 0 && this.state.nodeKey !== node.key && this.state.checkGrid.length > 0) {
       this.props.resetCheckbox(true);
       this.state.selectedCategory = [];
     }
@@ -102,8 +102,7 @@ class AppTreePortal extends Component {
       if (this.state.saveCategoryList.length > 0) {
         this.state.categoryList = this.state.saveCategoryList.slice();
         for (let i = 0; i < selectedList.length; i += 1) {
-          const idx = this.state.saveCategoryList
-            .findIndex(a => a.APP_ID === selectedList[i].APP_ID);
+          const idx = this.state.saveCategoryList.findIndex(a => a.APP_ID === selectedList[i].APP_ID);
 
           if (idx === -1) {
             this.state.categoryList.push(selectedList[i]);
@@ -161,13 +160,12 @@ class AppTreePortal extends Component {
 
     const item = JSON.stringify(result);
 
-    if (type === "mypage") {
+    if (type === 'mypage') {
       this.props.deleteAppList(item, widgetID, pageID);
     } else {
       this.props.deleteAppBizList(item, widgetID, pageID);
       this.props.updateBizGroupChgYn();
     }
-    
 
     this.setState({ saveCategoryList: saveList, selectedCategory: [], de: true });
   }
@@ -184,7 +182,7 @@ class AppTreePortal extends Component {
 
   initializeSearchInput = () => {
     this.searchInputCategory.firstChild.value = '';
-  }
+  };
 
   addCategory() {
     let saveList = [];
@@ -194,9 +192,9 @@ class AppTreePortal extends Component {
       this.props.resetCheckbox(false);
     } else {
       saveList = this.state.selectedCategory.slice();
-      for(let i = 0; i < this.props.appList.length; i += 1) {
-        let idx = saveList.findIndex(t => t.APP_ID === this.props.appList[i].APP_ID);
-        if(idx === -1) {
+      for (let i = 0; i < this.props.appList.length; i += 1) {
+        const idx = saveList.findIndex(t => t.APP_ID === this.props.appList[i].APP_ID);
+        if (idx === -1) {
           saveList.push(this.props.appList[i]);
         }
       }
@@ -208,20 +206,10 @@ class AppTreePortal extends Component {
 
     this.onSaveCategory(saveList);
 
-    if(this.state.selectedCategory.length > 0) {
-      message.success(
-        <MessageContent>
-          추가하였습니다.
-        </MessageContent>,
-        3,
-      );
+    if (this.state.selectedCategory.length > 0) {
+      message.success(<MessageContent>추가하였습니다.</MessageContent>, 3);
     } else {
-      message.error(
-        <MessageContent>
-          선택된 앱이 없습니다.
-        </MessageContent>,
-        3,
-      );
+      message.error(<MessageContent>선택된 앱이 없습니다.</MessageContent>, 3);
     }
   }
 
@@ -233,9 +221,10 @@ class AppTreePortal extends Component {
       categoryList = this.state.saveCategoryList.slice();
 
       this.setState({
-        saveCategoryList: categoryList, complete: true,
+        saveCategoryList: categoryList,
+        complete: true,
       });
-    } else if(this.state.saveCategoryList.length === 0 && deleteCategory !== 'ALL') {
+    } else if (this.state.saveCategoryList.length === 0 && deleteCategory !== 'ALL') {
       const pList = this.props.appList.slice();
       const idx = pList.findIndex(a => a.APP_ID === deleteCategory);
       pList.splice(idx, 1);
@@ -243,7 +232,8 @@ class AppTreePortal extends Component {
       categoryList = pList.slice();
 
       this.setState({
-        saveCategoryList: categoryList, complete: true,
+        saveCategoryList: categoryList,
+        complete: true,
       });
     }
 
@@ -251,7 +241,8 @@ class AppTreePortal extends Component {
       // categoryList: [];
 
       this.setState({
-        saveCategoryList: [], complete: true,
+        saveCategoryList: [],
+        complete: true,
       });
     }
     if (this.state.selectedCategory.length > 0) {
@@ -278,7 +269,7 @@ class AppTreePortal extends Component {
       alignItems: 'center',
     };
 
-    const RenderCategoryView = (categoryList) => {
+    const RenderCategoryView = categoryList => {
       if (categoryList.size === undefined || categoryList.length !== undefined) {
         if (categoryList.length !== 0) {
           return (
@@ -291,7 +282,8 @@ class AppTreePortal extends Component {
               paging={this.paging}
             />
           );
-        } else if (categoryList.length === 0) {
+        }
+        if (categoryList.length === 0) {
           return (
             <div style={style} className="noContentWrapper">
               <span>
@@ -312,15 +304,16 @@ class AppTreePortal extends Component {
               <Col xl={16} style={colStyle} className="leftActivity">
                 <div className="treeWrapper">
                   <h3 className="secTitle">{intlObj.get(messages.categoryList)}</h3>
-                  <Tree
-                    treeData={this.props.appTree}
-                    onClick={this.onClickNode}
-                    initializeSearchInput={this.initializeSearchInput}
-                  />
+                  <Tree treeData={this.props.appTree} onClick={this.onClickNode} initializeSearchInput={this.initializeSearchInput} />
                 </div>
                 <div className="userGridResult">
                   <div className="userSearch">
-                    <div className="inputWrapper" ref={(ref) => { this.searchInputCategory = ref; }}>
+                    <div
+                      className="inputWrapper"
+                      ref={ref => {
+                        this.searchInputCategory = ref;
+                      }}
+                    >
                       <Input
                         placeholder={intlObj.get(messages.seacrhText)}
                         onKeyUp={this.changeInputKeyword}
@@ -334,19 +327,19 @@ class AppTreePortal extends Component {
                 <Button className="inBtn" onClick={this.addCategory} />
                 {/* <Button className="outBtn" onClick={this.deleteCategory} /> */}
               </Col>
-              <Col xl={8} style={colStyle} className="rightActivity" >
+              <Col xl={8} style={colStyle} className="rightActivity">
                 <StyleSelectedApps>
                   {/* {appList.size === undefined ? */}
-                    <SelectedCategory
-                      selectedList={this.state.saveCategoryList}
-                      deleteCategoryList={this.deleteCategoryList}
-                      complete={this.state.complete}
-                      appList={appList}
-                      comList={this.comList}
-                      de={this.state.de}
-                      onSaveCategory={this.onSaveCategory}
-                    />
-                    {/* :
+                  <SelectedCategory
+                    selectedList={this.state.saveCategoryList}
+                    deleteCategoryList={this.deleteCategoryList}
+                    complete={this.state.complete}
+                    appList={appList}
+                    comList={this.comList}
+                    de={this.state.de}
+                    onSaveCategory={this.onSaveCategory}
+                  />
+                  {/* :
                     false
                   } */}
                 </StyleSelectedApps>
@@ -398,8 +391,4 @@ const withReducer = injectReducer({ key: 'atreeportal', reducer });
 const withSaga = injectSaga({ key: 'atreeportal', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppTreePortal);
+export default compose(withReducer, withSaga, withConnect)(AppTreePortal);

@@ -16,40 +16,42 @@ import messages from './messages';
 // import { toggleExpandedForSelected } from './tree-data-utils';
 
 import CustomTheme from './theme';
-import StyleAdminOrgTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn } from '../../components/AdminOrgTree/StyleAdminOrgTree';
+import StyleAdminOrgTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn } from './StyleAdminOrgTree';
 
-const replaceSpecialCharacter = (str) => {
-  var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
-  return str.replace(regExp, "");
-}
+const replaceSpecialCharacter = str => {
+  const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  return str.replace(regExp, '');
+};
 
 class AdminOrgTree extends Component {
   constructor(props) {
     super(props);
-
-    let treeData = [];
-
-    if (props.treeData && props.treeData.length > 0) {
-      if (props.selectedIndex !== -1) {
-        treeData = toggleExpandedForSelected({
-          treeData: props.treeData,
-          selectedIndex: props.selectedIndex,
-        });
-      } else {
-        const { treeData: treeData2 } = props;
-        treeData = treeData2;
-      }
-    }
+    //
+    // let treeData = [];
+    //
+    // if (props.treeData && props.treeData.length > 0) {
+    //   if (props.selectedIndex !== -1) {
+    //     treeData = toggleExpandedForSelected({
+    //       treeData: props.treeData,
+    //       selectedIndex: props.selectedIndex,
+    //     });
+    //   } else {
+    //     const { treeData: treeData2 } = props;
+    //     treeData = treeData2;
+    //   }
+    // }
 
     this.state = {
       selectedIndex: -1,
-      treeData,
+      treeData: [],
       onHoverKey: -1,
       // start
     };
+  }
 
-    this.updateTreeData = this.updateTreeData.bind(this);
-    this.onHover = this.onHover.bind(this);
+  componentDidMount() {
+    const { treeData, selectedIndex } = this.props;
+    this.setInitTreeData(treeData, selectedIndex);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,17 +78,24 @@ class AdminOrgTree extends Component {
     }
   }
 
+  setInitTreeData = (treeData, selectedIndex) => {
+    const nextTreeData = selectedIndex > -1 ? toggleExpandedForSelected({ treeData, selectedIndex }) : treeData;
+    this.setState({
+      treeData: nextTreeData,
+    });
+  };
+
   // 트리 클릭 시 하위 트리 노출
-  updateTreeData(treeData) {
+  updateTreeData = treeData => {
     this.setState({ treeData });
-  }
+  };
 
   // 마우스 오버
-  onHover(key) {
+  onHover = key => {
     this.setState({
       onHoverKey: key,
     });
-  }
+  };
 
   nodeDelete(rowInfo) {
     const { node } = rowInfo;
@@ -96,12 +105,8 @@ class AdminOrgTree extends Component {
     this.props.returnGateDelete(node.key, node.PRNT_ID, node.SORT_SQ);
   }
 
-
   render() {
-    const {
-      treeData,
-      selectedIndex,
-    } = this.state;
+    const { treeData, selectedIndex } = this.state;
 
     const {
       onClick, // 트리 클릭 func
@@ -114,7 +119,6 @@ class AdminOrgTree extends Component {
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
 
-
     return (
       // <StyleAdminOrgTree
       //   style={{
@@ -125,9 +129,13 @@ class AdminOrgTree extends Component {
       // >
       <StyleAdminOrgTree
         style={{
-          display: 'flex', flex: '1 0 50%', padding: '0',
-          flexDirection: 'column', height: 'calc(100vh - 200px)',
-          maxHeight: 'calc(100vh - 200px)', width: '100%',
+          display: 'flex',
+          flex: '1 0 50%',
+          padding: '0',
+          flexDirection: 'column',
+          height: 'calc(100vh - 200px)',
+          maxHeight: 'calc(100vh - 200px)',
+          width: '100%',
         }}
       >
         <ScrollBar>
@@ -136,13 +144,10 @@ class AdminOrgTree extends Component {
             treeData={treeData}
             onChange={this.updateTreeData}
             rowHeight={35}
-            scaffoldBlockPxWidth={22}
+            scaffoldBlockPxWidth={20}
             style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
             isVirtualized={false}
-            canDrag={({ node }) => {
-              // [ 노드 드래그 가능 여부 ]
-              return canDrag
-            }}
+            canDrag={canDrag}
             canDrop={({ prevParent, nextParent }) => {
               // [ 노드 드롭 가능 여부 ]
               // 조건 : 최하위 노드 하위에 이동불가
@@ -158,20 +163,21 @@ class AdminOrgTree extends Component {
                 const NODE_ID = node.key;
                 let PRNT_ID = -1; // 최상위 루트
 
-                if (nextParentNode) { // 부모가 있는 경우 PRNT_ID지정
+                if (nextParentNode) {
+                  // 부모가 있는 경우 PRNT_ID지정
                   PRNT_ID = nextParentNode.key;
                 }
 
                 const resortTreeData = (data, lvl) => {
                   for (let i = 0; i < data.length; i += 1) {
                     const node = data[i];
-                    node['SORT_SQ'] = i + 1;
-                    node['LVL'] = lvl;
-                    if (node['key'] === NODE_ID) {
-                      node['PRNT_ID'] = PRNT_ID;
+                    node.SORT_SQ = i + 1;
+                    node.LVL = lvl;
+                    if (node.key === NODE_ID) {
+                      node.PRNT_ID = PRNT_ID;
                     }
-                    if (node['children']) {
-                      resortTreeData(node['children'], lvl + 1);
+                    if (node.children) {
+                      resortTreeData(node.children, lvl + 1);
                     }
                   }
                 };
@@ -180,7 +186,7 @@ class AdminOrgTree extends Component {
                 moveNode(treeFunc.generateList(fromJS(treeData)));
               }
             }}
-            generateNodeProps={(rowInfo) => {
+            generateNodeProps={rowInfo => {
               const { node } = rowInfo;
               // 마우스 오버시 키값 셋, 아이콘 노출
               const handleOnClick = () => {
@@ -198,12 +204,10 @@ class AdminOrgTree extends Component {
                 returnGateInfo(node);
               };
 
-
-              let titleInner; // 트리 노드 제목
-              let buttons = []; // 트리 노드 마우스 오버시 노출 될 버튼
+              const titleInner = lang.get('NAME', node); // 트리 노드 제목
+              const buttons = []; // 트리 노드 마우스 오버시 노출 될 버튼
 
               // 트리 노드 타이틀
-              titleInner = lang.get('NAME', node);
 
               // 버튼 노출 조건(아이콘 별)
               const btnCondition1 = true; // 마지막노드X 업무그룹X
@@ -212,52 +216,53 @@ class AdminOrgTree extends Component {
 
               // 노드에 마우스 오버했을 때
               if (this.state.onHoverKey === node.key) {
-                buttons = [
-                  // [추가]
-                  btnCondition1 ?
-                    <li>
-                      <AddCtgBtn
-                        onClick={nodeInsert}
-                      />
-                    </li> : '',
-                  btnCondition3 ?
-                    <li>
+                if (btnCondition1)
+                  buttons.push(
+                    <li key="btn-1">
+                      <AddCtgBtn onClick={nodeInsert} />
+                    </li>,
+                  );
+                if (btnCondition3)
+                  buttons.push(
+                    <li key="btn-3">
                       <DeleteCtgBtn
                         onClick={() => {
                           feed.showConfirm(`${lang.get('NAME', rowInfo.node)} ${intlObj.get(messages.del)}`, '', () => this.nodeDelete(rowInfo));
                         }}
                       />
-                    </li> : '',
-                ];
-
-                // div 감쌈
-                buttons = (<ul className="btnsWrapper">{buttons}</ul>);
+                    </li>,
+                  );
               }
               return {
-                title: this.props.type === 'bizgroup' ? (
-                  <button
-                    className={`${node.key === selectedIndex ? 'active' : ''}`}
-                    onClick={handleOnClick}
-                    onMouseOver={() => this.onHover(node.key)}
-                    // onMouseOut={() => this.onHover(-1)}
-                    style={{ cursor: 'pointer' }}>
-                    {titleInner}
-                  </button>
-                ) : (
+                title:
+                  this.props.type === 'bizgroup' ? (
+                    <button
+                      type="button"
+                      className={`${node.key === selectedIndex ? 'active' : ''}`}
+                      onClick={handleOnClick}
+                      onMouseOver={() => this.onHover(node.key)}
+                      // onMouseOut={() => this.onHover(-1)}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {titleInner}
+                    </button>
+                  ) : (
                     <div>
                       <Popover
                         placement="right"
-                        content={buttons}
+                        content={<ul className="btnsWrapper">{buttons}</ul>}
                         trigger="hover"
                         overlayClassName="myappTreePopupMenu"
-                      // onMouseLeave={this.popoverClose}
+                        // onMouseLeave={this.popoverClose}
                       >
                         <button
+                          type="button"
                           className={`${node.key === selectedIndex ? 'active' : ''}`}
                           onClick={handleOnClick}
                           onMouseOver={() => this.onHover(node.key)}
                           // onMouseOut={() => this.onHover(-1)}
-                          style={{ cursor: 'pointer' }}>
+                          style={{ cursor: 'pointer' }}
+                        >
                           {titleInner}
                         </button>
                       </Popover>

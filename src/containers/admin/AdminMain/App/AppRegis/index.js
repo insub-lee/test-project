@@ -3,19 +3,18 @@ import PropTypes from 'prop-types';
 import { Tabs } from 'antd';
 
 import { intlObj } from 'utils/commonUtils';
+import Footer from 'containers/admin/App/Footer';
 import messages from '../messages';
 
 import AppRegisForm from '../AppRegisForm';
 import StyleMyAppRegis from './StyleMyAppRegis';
-import Footer from 'containers/admin/App/Footer';
 
 const { TabPane } = Tabs;
 
 class MyAppRegis extends React.Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-    };
+    this.state = {};
   }
 
   render() {
@@ -31,11 +30,11 @@ class MyAppRegis extends React.Component {
         <StyleMyAppRegis>
           <Tabs defaultActiveKey="1">
             <TabPane tab={intlObj.get(messages.tab1)} key="1">
-              <AppRegisForm
-                history={this.props.history}
-              />
+              <AppRegisForm history={this.props.history} />
             </TabPane>
-            <TabPane tab={intlObj.get(messages.tab2)} key="2" disabled >{intlObj.get(messages.tab2)}</TabPane>
+            <TabPane tab={intlObj.get(messages.tab2)} key="2" disabled>
+              {intlObj.get(messages.tab2)}
+            </TabPane>
             {/* <TabPane tab={intlObj.get(messages.tab3)} key="3" disabled >{intlObj.get(messages.tab3)}</TabPane> */}
           </Tabs>
         </StyleMyAppRegis>

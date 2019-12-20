@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
+
+// For Rev , DocNumber 전용 커스텀 Comp
 class ReadOnlyTextComp extends PureComponent {
   componentDidUpdate() {
     const { colData, CONFIG, compProps, id, changeFormData, changeValidationData } = this.props;
@@ -13,6 +15,7 @@ class ReadOnlyTextComp extends PureComponent {
       if (valueType === 'props') {
         changeValidationData(id, CONFIG.property.COMP_FIELD, true, '');
         const propsText = compProps[`${valueKey}`];
+        changeValidationData(id, CONFIG.property.COMP_FIELD, propsText !== ' ', `${CONFIG.property.NAME_KOR}항목은 필수 입력입니다.`);
         changeFormData(id, CONFIG.property.COMP_FIELD, propsText);
       }
       if (valueType === 'default') {
@@ -41,7 +44,15 @@ class ReadOnlyTextComp extends PureComponent {
     if (valueType === 'default' && initValue.trim() === '') {
       initValue = defaultValue;
     }
-    return <Input value={initValue} readOnly />;
+    return (
+      <>
+        {colData === undefined ? (
+          <Input placeholder={(valueType === 'props' && '문서번호') || (valueType === 'default' && 'version')} readOnly />
+        ) : (
+          <Input value={initValue} readOnly />
+        )}
+      </>
+    );
   }
 }
 ReadOnlyTextComp.propTypes = {

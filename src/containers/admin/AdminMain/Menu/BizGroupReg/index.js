@@ -193,12 +193,12 @@ class BizGroupReg extends Component {
       // 사용자 매뉴얼 초기값 초기값 설정
       const { MANUAL_TYPE, MANUAL_PATH } = mData;
       mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
-      const manualPath = !!MANUAL_PATH ? MANUAL_PATH.trim() : '';
+      const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
 
       this.setState({
         data: mData,
-        manualUrl: !!MANUAL_TYPE && MANUAL_TYPE  === 'L' ? manualPath : '',
-        manualLink: !!MANUAL_TYPE && MANUAL_TYPE  === 'F' ? manualPath : '',
+        manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
+        manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
       });
       this.inputKor.focus();
     }
@@ -846,7 +846,7 @@ class BizGroupReg extends Component {
                         data.SYS_YN = 'N';
                       }
 
-                      //사용자 매뉴얼 파일 세팅
+                      // 사용자 매뉴얼 파일 세팅
                       data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl.trim() : manualLink.trim();
 
                       const resultData = { ...data };
@@ -900,18 +900,9 @@ const mapStateToProps = createStructuredSelector({
   userRole: menuSelectors.makeUserRole(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizGroupReg', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizGroupReg', saga });
 
-export default injectIntl(
-  compose(
-    withReducer,
-    withSaga,
-    withConnect,
-  )(BizGroupReg),
-);
+export default injectIntl(compose(withReducer, withSaga, withConnect)(BizGroupReg));

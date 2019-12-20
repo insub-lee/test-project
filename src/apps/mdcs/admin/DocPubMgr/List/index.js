@@ -298,11 +298,11 @@ class List extends Component {
           align: 'center',
           key: `pub_user_delete_${index}`,
           render: record => (
-            <React.Fragment>
+            <>
               <StyledButton className="btn-light" onClick={() => deleteOneUser(record)}>
                 <Icon type="close" />
               </StyledButton>
-            </React.Fragment>
+            </>
           ),
         },
       ];
@@ -348,7 +348,7 @@ class List extends Component {
                 <Col span={16} className="inputArea">
                   <div claaName="inputBtnGroup" style={{ display: 'flex' }}>
                     {viewType === 'wait' ? (
-                      <React.Fragment>
+                      <>
                         <div style={{ width: '85%' }}>
                           <Input placeholder="사용자(부서)" disabled value={selectedUserList} onClick={onDeptClick} readOnly />
                         </div>
@@ -357,9 +357,9 @@ class List extends Component {
                             <span>등록</span>
                           </StyledButton>
                         </div>
-                      </React.Fragment>
+                      </>
                     ) : (
-                      <React.Fragment>
+                      <>
                         <div style={{ width: '85%' }}>
                           <Input placeholder="사용자(부서)" value={selectedUserList} onClick={onDeptClick} readOnly />
                         </div>
@@ -386,7 +386,7 @@ class List extends Component {
                             </StyledButton>
                           </div>
                         )}
-                      </React.Fragment>
+                      </>
                     )}
                   </div>
                 </Col>

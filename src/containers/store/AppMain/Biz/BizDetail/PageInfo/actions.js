@@ -9,4 +9,3 @@ export const test = pageId => ({
   type: constants.TEST,
   pageId,
 });
-

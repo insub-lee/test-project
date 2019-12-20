@@ -9,7 +9,9 @@ class EmptyViewTree extends React.Component {
 
     this.getType = this.getType.bind(this);
   }
+
   getType = () => constantsType.TREE;
+
   render() {
     const style = {
       display: 'flex',

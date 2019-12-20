@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import * as ApproveConst from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/approveconst';
-import * as DraftType from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/draftconst';
+import * as ApproveConst from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
+import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 
 class ReviewerNodeDraft extends Component {
   componentDidMount = () => {

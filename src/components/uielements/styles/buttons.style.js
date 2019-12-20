@@ -23,21 +23,21 @@ const BtnIconNotify = styled.button`
 const BtnIconSettings = styled.button`
   width: 32px;
   height: 35px;
-  background:  url(${settings}) no-repeat 8px 11px;
+  background: url(${settings}) no-repeat 8px 11px;
 `;
 
 const BtnIconReload = styled.button`
   display: inline-block;
   width: 32px;
   height: 35px;
-  background:  url(${reload}) no-repeat 8px 11px;
+  background: url(${reload}) no-repeat 8px 11px;
 `;
 
 const BtnIconSeeDetails = styled.button`
   display: inline-block;
   width: 33px;
   height: 35px;
-  background:  url(${popup}) no-repeat 8px 11px;
+  background: url(${popup}) no-repeat 8px 11px;
 `;
 
 const BtnIconFind = styled.button`
@@ -83,5 +83,4 @@ const BtnIconWidgetDel = styled.button`
   background: url(${widgetElmtDel}) no-repeat 50% 50%;
 `;
 
-export { BtnIconNotify, BtnIconSettings, BtnIconReload, BtnIconSeeDetails,
-  BtnIconFind, BtnIconAdd, BtnIconDragSymbol, BtnIconWidgetDel, BtnIconDragSymbol2 };
+export { BtnIconNotify, BtnIconSettings, BtnIconReload, BtnIconSeeDetails, BtnIconFind, BtnIconAdd, BtnIconDragSymbol, BtnIconWidgetDel, BtnIconDragSymbol2 };

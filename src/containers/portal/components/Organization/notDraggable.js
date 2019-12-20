@@ -16,15 +16,7 @@ const DeleteItem = styled.button`
 
 class NotDraggable extends Component {
   deleteItem = () => {
-    const {
-      type,
-      user,
-      dept,
-      pstn,
-      duty,
-      grp,
-      deleteCallback,
-    } = this.props;
+    const { type, user, dept, pstn, duty, grp, deleteCallback } = this.props;
 
     let id = '';
 
@@ -50,13 +42,12 @@ class NotDraggable extends Component {
 
     // 콜백 함수 호출
     deleteCallback(id, type);
-  }
+  };
+
   render() {
     return (
       <div>
-        <div style={{ width: 'calc(100% - 30px)', float: 'left', paddingLeft: 10 }}>
-          {this.props.children}
-        </div>
+        <div style={{ width: 'calc(100% - 30px)', float: 'left', paddingLeft: 10 }}>{this.props.children}</div>
         <div style={{ width: 20, float: 'left' }}>
           <DeleteItem onClick={this.deleteItem} />
         </div>

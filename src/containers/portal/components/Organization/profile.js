@@ -1,10 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ScrollBar from 'react-custom-scrollbars';
 import { lang, intlObj } from 'utils/commonUtils';
 import messages from './messages';
-import { BtnDkGray } from '../uielements/buttons.style';
 
 class Profile extends PureComponent {
   constructor(props) {
@@ -13,7 +11,8 @@ class Profile extends PureComponent {
       selectedUser: {},
     };
   }
-  onClick = (type) => {
+
+  onClick = type => {
     // const {
     //   selectedUser,
     // } = this.state;
@@ -21,36 +20,29 @@ class Profile extends PureComponent {
     // const empNo = selectedUser ? selectedUser.EMP_NO : this.props.loadProfile.EMP_NO;
     // const eMail = selectedUser ? selectedUser.EMAIL : this.props.loadProfile.EMAIL;
     switch (type) {
-    // case 'talk':
-    //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
-    //   return;
-    // case 'mail':
-    //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
-    //   return;
-    // case 'todo':
-    //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
-    //   return;
+      // case 'talk':
+      //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
+      //   return;
+      // case 'mail':
+      //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
+      //   return;
+      // case 'todo':
+      //   window.open(`http://www.kb-sys.co.kr/solutions#solutions-link-4`);
+      //   return;
       default:
         alert('준비중입니다.');
     }
-  }
+  };
 
-  handleOnClick = (item) => {
+  handleOnClick = item => {
     const fPath = this.props.loadProfile.FULL_PATH.split('|');
     this.props.selectedProfileTree(item.target.id, item.target.value, fPath[0]);
-  }
-
+  };
 
   render() {
-    const {
-      selectedUser,
-    } = this.state;
+    const { selectedUser } = this.state;
 
-    const {
-      officetel,
-      loadProfile,
-      userSetting,
-    } = this.props;
+    const { officetel, loadProfile, userSetting } = this.props;
 
     const foottable = {
       width: 105,
@@ -80,58 +72,45 @@ class Profile extends PureComponent {
       <div style={{ marginTop: 8 }}>
         <div className="userBasicInfo" style={{ marginBottom: 8 }}>
           <div className="picWrapper">
-            {selectedUser.length ?
+            {selectedUser.length ? (
               <img
                 src={`/img/thumb/200x200/${selectedUser.PHOTO}`}
                 alt={selectedUser.EMP_NO}
-                onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
-              /> :
-
+                onError={e => {
+                  e.target.src = '/no_img_pro.jpg';
+                }}
+              />
+            ) : (
               <img
                 src={`/img/thumb/200x200/${loadProfile.PHOTO}`}
                 alt={loadProfile.EMP_NO}
-                onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+                onError={e => {
+                  e.target.src = '/no_img_pro.jpg';
+                }}
               />
-            }
+            )}
           </div>
           <ul className="userInfoList">
-            {selectedUser.length ?
+            {selectedUser.length ? (
               <li className="name">
                 {lang.get('NAME', selectedUser)}({selectedUser.EMP_NO}) {lang.get('DEPT_NAME', selectedUser)} {lang.get('PSTN_NAME', selectedUser)}
               </li>
-              :
+            ) : (
               <li className="name">
                 {lang.get('NAME', loadProfile)}({loadProfile.EMP_NO}) {lang.get('DEPT_NAME', loadProfile)} {lang.get('PSTN_NAME', loadProfile)}
               </li>
-            }
+            )}
             <li className="dept">
               {np.map(list => (
                 <div style={{ display: 'inline-block', float: 'left' }} key={list.name}>
-                  <button
-                    onClick={this.handleOnClick}
-                    id={list.name}
-                    value={list.path}
-                    className="treePathElement"
-                  >
+                  <button type="button" onClick={this.handleOnClick} id={list.name} value={list.path} className="treePathElement">
                     {list.name}
                   </button>
-                  <span
-                    className="bracket"
-                  >
-                    {list.direc}
-                  </span>
+                  <span className="bracket">{list.direc}</span>
                 </div>
               ))}
             </li>
-            {selectedUser.length ?
-              <li className="phone">
-                {selectedUser.MOBILE_TEL_NO}
-              </li>
-              :
-              <li className="phone">
-                {loadProfile.MOBILE_TEL_NO}
-              </li>
-            }
+            {selectedUser.length ? <li className="phone">{selectedUser.MOBILE_TEL_NO}</li> : <li className="phone">{loadProfile.MOBILE_TEL_NO}</li>}
           </ul>
         </div>
         <ul className="buttonWrapper" style={{ height: 'auto' }}>
@@ -174,29 +153,17 @@ class Profile extends PureComponent {
                 <td style={foottable}>{intlObj.get(messages.inHousePhone)}</td>
                 {officetel ? <td style={note}>{officetel}</td> : <td style={note} />}
               </tr>
-              {selectedUser.length ?
+              {selectedUser.length ? (
                 <tr>
                   <td style={foottable}>{intlObj.get(messages.mobilePhone)}</td>
-                  {
-                    selectedUser.MOBILE_TEL_NO
-                    ?
-                      <td style={note}>{selectedUser.MOBILE_TEL_NO}</td>
-                    :
-                      <td style={note} />
-                  }
+                  {selectedUser.MOBILE_TEL_NO ? <td style={note}>{selectedUser.MOBILE_TEL_NO}</td> : <td style={note} />}
                 </tr>
-                :
+              ) : (
                 <tr>
                   <td style={foottable}>{intlObj.get(messages.mobilePhone)}</td>
-                  {
-                    loadProfile.MOBILE_TEL_NO
-                    ?
-                      <td style={note}>{loadProfile.MOBILE_TEL_NO}</td>
-                    :
-                      <td style={note} />
-                  }
+                  {loadProfile.MOBILE_TEL_NO ? <td style={note}>{loadProfile.MOBILE_TEL_NO}</td> : <td style={note} />}
                 </tr>
-              }
+              )}
               {/* {userSetting &&
                 <tr>
                   <td colSpan="2" style={{ float: 'right' }}>
@@ -218,7 +185,6 @@ Profile.propTypes = {
   loadProfile: PropTypes.object.isRequired,
   selectedProfileTree: PropTypes.func.isRequired,
   // eslint-disable-next-line react/no-unused-prop-types
-  history: PropTypes.object.isRequired,
   officetel: PropTypes.string,
   userSetting: PropTypes.bool,
 };

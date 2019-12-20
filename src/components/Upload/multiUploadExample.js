@@ -17,14 +17,14 @@ class multiUploadExample extends PureComponent {
     };
   }
 
-  onFileUploaded = (file) => {
+  onFileUploaded = file => {
     const { uploadFiles } = this.state;
     const tmpArr = fromJS(uploadFiles).toJS();
     tmpArr.push(file);
     this.setState({
       uploadFiles: tmpArr,
     });
-  }
+  };
 
   UploadFilesDel = (e, index) => {
     const tmpArr = fromJS(this.state.uploadFiles).toJS();
@@ -54,7 +54,7 @@ class multiUploadExample extends PureComponent {
           <Upload
             accept="image/jpeg, image/png" // default ALL
             onFileUploaded={this.onFileUploaded}
-            multiple={true} // default true
+            multiple // default true
             width={250}
             height={120}
             borderStyle="none"
@@ -62,38 +62,24 @@ class multiUploadExample extends PureComponent {
             serviceKey="KEY"
           >
             <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-              {uploadFiles.length !== 0 ?
-                <Row
-                  style={rowStyle}
-                  gutter={gutter}
-                  justify="start"
-                >
-                  {
-                    uploadFiles.map((f, index) => (
-                      <Col key={f.seq} md={6} sm={12} xs={24} style={colStyle}>
-                        <img
-                          src={`${f.link}`}
-                          alt={f.fileName}
-                          style={{ width: '100%', maxHeight: 100 }}
-                        />
-                        <li key={f.fileName}>{f.fileName} - {f.fileSize} bytes</li>
-                        <button
-                          className="deleteScreenshots"
-                          onClick={e => this.UploadFilesDel(e, index)}
-                          title={f.fileName}
-                        />
-                      </Col>
-                    ))
-                  }
+              {uploadFiles.length !== 0 ? (
+                <Row style={rowStyle} gutter={gutter} justify="start">
+                  {uploadFiles.map((f, index) => (
+                    <Col key={f.seq} md={6} sm={12} xs={24} style={colStyle}>
+                      <img src={`${f.link}`} alt={f.fileName} style={{ width: '100%', maxHeight: 100 }} />
+                      <li key={f.fileName}>
+                        {f.fileName} - {f.fileSize} bytes
+                      </li>
+                      <button className="deleteScreenshots" onClick={e => this.UploadFilesDel(e, index)} title={f.fileName} />
+                    </Col>
+                  ))}
                   <Col>
                     <div className="readyToUpload" />
                   </Col>
                 </Row>
-                :
-                <div>
-                  Drop files here, or click to select files
-                </div>
-              }
+              ) : (
+                <div>Drop files here, or click to select files</div>
+              )}
             </div>
           </Upload>
         </StyleAppRegisForm>

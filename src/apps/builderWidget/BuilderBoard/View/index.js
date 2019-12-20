@@ -82,9 +82,6 @@ View.propTypes = {
   submitData: PropTypes.func,
   saveTempContents: PropTypes.func,
   viewType: PropTypes.string,
-  workSeq: PropTypes.number,
-  taskSeq: PropTypes.number,
-  deleteTask: PropTypes.func,
 };
 
 View.defaultProps = {

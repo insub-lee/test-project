@@ -77,7 +77,7 @@ const Settings = ({
         )}
         {/* work-selector 에 대한 스타일 지정 */}
         {target.type === 'work-selector' && (
-          <React.Fragment>
+          <>
             <div className="trt-trait">
               <div className="label" title="Box Type">
                 Work
@@ -139,7 +139,7 @@ const Settings = ({
                 </div>
               </div>
             </div>
-          </React.Fragment>
+          </>
         )}
         {boxType === 'table' && (
           <div className="trt-trait">

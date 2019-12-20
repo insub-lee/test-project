@@ -10,7 +10,9 @@ class Popup extends PureComponent {
     return (
       <div className="popup-backdrop">
         <div className="popup">
-          <button className="popup-close" onClick={this.props.onClose}>✖</button>
+          <button className="popup-close" onClick={this.props.onClose}>
+            ✖
+          </button>
           {this.props.children}
         </div>
       </div>

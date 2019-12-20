@@ -16,7 +16,6 @@ const StyleAdminList = styled.div`
   }
 
   .pageTitle {
-
     .searchBox {
       display: inline-block;
       float: right;
@@ -29,9 +28,9 @@ const StyleAdminList = styled.div`
         float: left;
 
         &:after {
-          content: " ";
+          content: ' ';
           display: block;
-          clear:both;
+          clear: both;
         }
       }
 
@@ -66,7 +65,8 @@ const StyleAdminList = styled.div`
   }
 
   // 텍스트 좌측 정렬
-  .react-grid-HeaderCell-sortable, .react-grid-Cell__value {
+  .react-grid-HeaderCell-sortable,
+  .react-grid-Cell__value {
     text-align: left;
   }
 
@@ -80,7 +80,7 @@ const StyleAdminList = styled.div`
     font-size: 10px;
   }
 
-  //테이블 헤더 체크박스 
+  //테이블 헤더 체크박스
   .react-grid-HeaderCell.react-grid-HeaderCell--locked {
     padding-left: 0 !important;
 

@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox } from 'antd';
 import styled from 'styled-components';
+import { debounce } from 'lodash';
 
 const Styled = styled.div`
   display: -webkit-box;
@@ -56,24 +57,44 @@ const Styled = styled.div`
   }
 `;
 
-const GroupTitle = ({ title, onChange, onChangeUseTitle, useOption, useTitle }) => (
-  <Styled>
-    {useOption ? (
-      <h2>
-        <input type="text" className="input-title" defaultValue={title} onChange={e => onChange(e.target.value)} placeholder="Insert Title..." />
-      </h2>
-    ) : (
-      <h2>{title}</h2>
-    )}
-    {useOption && (
-      <div className="group-title-options">
-        <Checkbox defaultChecked={useTitle} onChange={e => onChangeUseTitle(e.target.checked)}>
-          Use Title
-        </Checkbox>
-      </div>
-    )}
-  </Styled>
-);
+class GroupTitle extends Component {
+  constructor(props) {
+    super(props);
+    this.handleChangeTitle = debounce(this.handleChangeTitle, 300);
+  }
+
+  handleChangeTitle = value => {
+    this.props.onChange(value);
+  };
+
+  render() {
+    const { title, onChange, onChangeUseTitle, useOption, useTitle } = this.props;
+    return (
+      <Styled>
+        <h2>
+          {useOption ? (
+            <input
+              type="text"
+              className="input-title"
+              defaultValue={title}
+              onChange={e => this.handleChangeTitle(e.target.value)}
+              placeholder="Insert Title..."
+            />
+          ) : (
+            { title }
+          )}
+        </h2>
+        {useOption && (
+          <div className="group-title-options">
+            <Checkbox defaultChecked={useTitle} onChange={e => onChangeUseTitle(e.target.checked)}>
+              Use Title
+            </Checkbox>
+          </div>
+        )}
+      </Styled>
+    );
+  }
+}
 
 GroupTitle.propTypes = {
   title: PropTypes.string,

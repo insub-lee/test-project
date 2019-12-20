@@ -40,7 +40,7 @@ class StyleGuide extends Component {
   onChangeWidthValue = e => {
     const { value } = e.target;
     const reg = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
-    if ((Number(value) >= 10 && (!isNaN(value) && reg.test(value))) || (value !== '' && !isNaN(Number(value)))) {
+    if ((Number(value) >= 10 && !isNaN(value) && reg.test(value)) || (value !== '' && !isNaN(Number(value)))) {
       const { widthType, maxWidth } = this.state;
       const widthValue = widthType === '%' && Number(value) > maxWidth ? `${maxWidth}` : value;
       e.target.value = widthValue;

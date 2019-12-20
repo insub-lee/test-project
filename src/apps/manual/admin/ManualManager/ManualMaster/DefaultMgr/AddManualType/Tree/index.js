@@ -138,7 +138,7 @@ const Tree = ({ treeData, selectedIndex, setViewMode, removeCategoryInfo, onHove
         treeData={getTreeData(treeData)}
         onChange={setData => setTreeData(setData, setCompareTreeData)}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
         isVirtualized={false}
         generateNodeProps={rowInfo => renderNode(rowInfo, setViewMode, removeCategoryInfo, selectedIndex, onHoverKey, setOnHoverKey)}
@@ -183,7 +183,4 @@ const mapDispatchToProps = dispatch => ({
   removeCategoryInfo: node => dispatch(actions.removeCategoryInfoBySaga(node)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Tree);
+export default connect(mapStateToProps, mapDispatchToProps)(Tree);

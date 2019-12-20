@@ -173,15 +173,7 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.manual.admin.Classify', reducer });
 const withSaga = injectSaga({ key: 'apps.manual.admin.Classify', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const ClassifyForm = Form.create({ name: 'frm' });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-  ClassifyForm,
-)(Classify);
+export default compose(withReducer, withSaga, withConnect, ClassifyForm)(Classify);

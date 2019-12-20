@@ -41,7 +41,4 @@ const mapStateToProps = createStructuredSelector({
 const withReducer = injectReducer({ key: 'apps-ManualManager-reducer', reducer });
 const withConnect = connect(mapStateToProps);
 
-export default compose(
-  withReducer,
-  withConnect,
-)(ManualManager);
+export default compose(withReducer, withConnect)(ManualManager);

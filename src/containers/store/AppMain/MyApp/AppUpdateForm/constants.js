@@ -15,4 +15,3 @@ export const SYSTEM_LINK = 'nrp/containers/MyApp/AppUpdateForm/AppUPdate/SYSTEM_
 export const APP_ICON_ARR = 'nrp/containers/MyApp/AppUpdateForm/AppUPdate/APP_ICON_ARR';
 export const APP_PROCESS_ARR = 'nrp/containers/MyApp/AppUpdateForm/AppUPdate/APP_PROCESS_ARR';
 export const APP_MANUAL_ARR = 'nrp/containers/MyApp/AppUpdateForm/AppUPdate/APP_MANUAL_ARR';
-

@@ -114,13 +114,6 @@ const mapDispatchToProps = dispatch => ({
 const withSaga = injectSaga({ key: 'apps.manual.user.Counsel', saga });
 const withReducer = injectReducer({ key: 'apps.manual.user.Counsel', reducer });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(Counsel);
+export default compose(withSaga, withReducer, withConnect)(Counsel);

@@ -11,6 +11,7 @@ import { intlObj } from 'utils/commonUtils';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
+import Upload from 'components/Upload';
 import * as actions from './actions';
 
 import reducer from './reducer';
@@ -22,7 +23,6 @@ import { LinkBtnList } from '../../../../store/components/uielements/buttons.sty
 import messages from '../messages';
 import UserRegTree from '../../../components/UserRegTree';
 import StyledButton from '../../../../../components/Button/StyledButton';
-import Upload from 'components/Upload';
 
 const FormItem = Form.Item;
 const Option = Select.Option; // eslint-disable-line
@@ -300,7 +300,7 @@ class UserReg extends React.Component {
 
   onSaveSuccess = () => {
     this.setState({ mode: 'D' });
-  }  
+  };
 
   handleOk = () => {
     this.setState({
@@ -331,33 +331,33 @@ class UserReg extends React.Component {
     }
     return '';
   };
-  
+
   userPhoto = () => {
     const { photo, mode } = this.state;
     const comp = (
-      <div style={{ width: '100px', height: '100px', cursor: mode !== 'D' ? "pointer" : '' }}>
-      <img
-        src={photo ? `/img/thumb/100x100/${photo}` : '/no_img_pro.jpg'}
-        style={{ width: '100%', maxHeight: 100 }}
-        onError={e => {
-          e.target.src = '/no_img_pro.jpg';
-        }}
-      />
-    </div>      
+      <div style={{ width: '100px', height: '100px', cursor: mode !== 'D' ? 'pointer' : '' }}>
+        <img
+          src={photo ? `/img/thumb/100x100/${photo}` : '/no_img_pro.jpg'}
+          style={{ width: '100%', maxHeight: 100 }}
+          onError={e => {
+            e.target.src = '/no_img_pro.jpg';
+          }}
+        />
+      </div>
     );
     if (mode !== 'D') {
       return (
         <Upload
-        accept="image/jpeg, image/png" // default ALL
-        onFileUploaded={file => this.setState({ photo: file.seq })}
-        multiple={false} // default true
-        width={100}
-        height={100}
-        borderStyle="none"
-      >
-      {comp}
-      </Upload>        
-      )
+          accept="image/jpeg, image/png" // default ALL
+          onFileUploaded={file => this.setState({ photo: file.seq })}
+          multiple={false} // default true
+          width={100}
+          height={100}
+          borderStyle="none"
+        >
+          {comp}
+        </Upload>
+      );
     }
     return comp;
   };
@@ -407,7 +407,7 @@ class UserReg extends React.Component {
         </StyledButton>
       </ErrorBoundary>
     );
-  };  
+  };
 
   render() {
     const formItemLayout = {
@@ -539,13 +539,11 @@ class UserReg extends React.Component {
                   </th>
                   <td>
                     <FormItem {...formItemLayout}>
-                      <ErrorBoundary>
-                        {this.userPhoto()}
-                      </ErrorBoundary>
+                      <ErrorBoundary>{this.userPhoto()}</ErrorBoundary>
                       <span className="tipText" />
                     </FormItem>
                   </td>
-                </tr>                
+                </tr>
                 <tr>
                   <th className="required">
                     <label htmlFor="s5">EMAIL</label>
@@ -800,16 +798,9 @@ const mapStateToProps = createStructuredSelector({
   userInfo: selectors.makeUserInfo(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'UserReg', saga });
 const withReducer = injectReducer({ key: 'UserReg', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(UserReg);
+export default compose(withReducer, withSaga, withConnect)(UserReg);

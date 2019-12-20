@@ -38,20 +38,20 @@ function getUrl(node) {
   console.log('getUrl');
   console.log(node);
 
-  const {
-    NODE_TYPE, APP_ID, PAGE_ID, CATG_ID,
-  } = node;
+  const { NODE_TYPE, APP_ID, PAGE_ID, CATG_ID } = node;
 
   let url = homeUrl;
 
-  if (NODE_TYPE === 'A' && APP_ID > 0) { // [앱] 상세
+  if (NODE_TYPE === 'A' && APP_ID > 0) {
+    // [앱] 상세
     url = `${homeUrl}/app/${APP_ID}`;
-  } else if (NODE_TYPE === 'P' && PAGE_ID > 0) { // [페이지] 상세
+  } else if (NODE_TYPE === 'P' && PAGE_ID > 0) {
+    // [페이지] 상세
     url = `${homeUrl}/page/${PAGE_ID}`;
-  // } else if (NODE_TYPE === 'R' && CATG_ID > 0) { // 현재사이트의 앱리스트
-  //   url = `${homeUrl}/modal/app/list`;
-  // } else if (NODE_TYPE === 'F' && CATG_ID > 0) { // 현재사이트의 카테고리 앱리스트
-  //   url = `${homeUrl}/modal/app/list/${CATG_ID}`;
+    // } else if (NODE_TYPE === 'R' && CATG_ID > 0) { // 현재사이트의 앱리스트
+    //   url = `${homeUrl}/modal/app/list`;
+    // } else if (NODE_TYPE === 'F' && CATG_ID > 0) { // 현재사이트의 카테고리 앱리스트
+    //   url = `${homeUrl}/modal/app/list/${CATG_ID}`;
   } else {
     url = '/admin/adminmain/appstore';
   }
@@ -214,8 +214,7 @@ AppStore.propTypes = {
   siteId: PropTypes.number.isRequired,
 };
 
-AppStore.defaultProps = {
-};
+AppStore.defaultProps = {};
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -245,8 +244,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppStore', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppStore', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppStore));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AppStore));

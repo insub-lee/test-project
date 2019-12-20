@@ -6,13 +6,13 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ReactDataGrid from 'containers/portal/components/ReactDataGrid';
+import { WIDGET } from 'utils/constants';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import IflowStyle from './iflowStyle';
 // import TestModal from '../../../components/Rodal';
-import { WIDGET } from 'utils/constants'
 
 const curDate = new Date();
 const pageIndex = 10;
@@ -148,15 +148,8 @@ const mapStateToProps = createStructuredSelector({
   iflowUrl: selectors.makeSelectIflowUrl(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'Iflow', saga });
 const withReducer = injectReducer({ key: 'Iflow', reducer, mode: WIDGET });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Iflow);
+export default compose(withReducer, withSaga, withConnect)(Iflow);

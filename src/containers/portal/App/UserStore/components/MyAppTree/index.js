@@ -9,12 +9,12 @@ import * as feed from 'components/Feedback/functions';
 import ScrollBar from 'react-custom-scrollbars';
 // import 'style/sortable-tree-biz.css';
 import messages from './messages';
-import * as makeTreeData from '../../components/MyAppTree/makeTreeData';
+import * as makeTreeData from './makeTreeData';
 // import './app.css';
 import { toggleExpandedForSelected } from './tree-data-utils';
 
 import CustomTheme from './theme';
-import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn } from '../../components/MyAppTree/StyleMyAppTree';
+import StyleMyAppTree, { AddCtgBtn, EditCtgBtn, DeleteCtgBtn } from './StyleMyAppTree';
 /* eslint-disable */
 const replaceSpecialCharacter = str => {
   var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
@@ -401,7 +401,7 @@ class MyAppTree extends Component {
             treeData={treeData}
             onChange={this.updateTreeData}
             rowHeight={35}
-            scaffoldBlockPxWidth={22}
+            scaffoldBlockPxWidth={20}
             style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
             isVirtualized={false}
             canDrag={({ node }) => {

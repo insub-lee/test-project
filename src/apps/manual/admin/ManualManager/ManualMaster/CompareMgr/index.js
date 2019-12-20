@@ -89,7 +89,4 @@ const mapDispatchToProps = dispatch => ({
   setSelectedIdx: idx => dispatch(actions.setSelectedCompareManageIdx(idx)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CompareMgr);
+export default connect(mapStateToProps, mapDispatchToProps)(CompareMgr);

@@ -97,7 +97,4 @@ const mapDispatchToProps = dispatch => ({
   addParagraph: idx => dispatch(actions.setEditorParagraphByReducr(idx, true)),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(ItemToolBar);
+export default connect(null, mapDispatchToProps)(ItemToolBar);

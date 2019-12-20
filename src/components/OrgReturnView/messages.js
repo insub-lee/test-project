@@ -26,4 +26,3 @@ export default defineMessages({
     defaultMessage: '구성원',
   },
 });
-

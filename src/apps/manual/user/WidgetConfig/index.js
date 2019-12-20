@@ -133,13 +133,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-manual-user-WigetConfig-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-manual-user-WigetConfig-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(WidgetConfig);
+export default compose(withSaga, withReducer, withConnect)(WidgetConfig);

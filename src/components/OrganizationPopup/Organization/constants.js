@@ -92,7 +92,6 @@ export const SET_SELECTEDPROFILE = 'components/OrganizationPopup/SET_SELECTEDPRO
 // 트리 데이터 초기화
 export const INITIALIZE_UNMOUNT = 'components/OrganizationPopup/INITIALIZE_UNMOUNT';
 
-
 // 조직도 팝업용에서 query string에 deptId만 들어온 경우
 export const GET_FIRST_DEPTUSER = 'components/OrganizationPopup/GET_FIRST_DEPTUSER';
 export const NO_USER_ID = 'components/OrganizationPopup/NO_USER_ID';

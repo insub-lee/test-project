@@ -74,24 +74,24 @@ const StyleQuickmenuContent = styled.div`
       right: 40px;
       width: 336px;
       height: calc(100% - 30px);
-  
+
       .userSearch {
         width: 100%;
         height: 58px;
         padding-top: 14px;
         background: #f5f5f5;
-  
+
         .inputWrapper {
           position: relative;
           width: 260px;
           height: 30px;
           margin: auto;
-  
+
           .ant-input {
             height: 30px;
             border-color: #c1c1c1;
           }
-  
+
           .searchButton {
             position: absolute;
             top: 0;
@@ -109,7 +109,7 @@ const StyleQuickmenuContent = styled.div`
       .noContentWrapper {
         span {
           display: inline-block;
-          
+
           .noContentIcon {
             width: 100%;
             height: 16px;
@@ -117,9 +117,8 @@ const StyleQuickmenuContent = styled.div`
           }
         }
       }
-      
-      .react-grid-Container {
 
+      .react-grid-Container {
         .react-grid-Grid {
           min-height: 439px !important;
           height: 439px !important;
@@ -137,7 +136,7 @@ const StyleQuickmenuContent = styled.div`
           }
           .react-grid-Viewport {
             height: 399px !important;
-            
+
             .react-grid-Row {
               .react-grid-Cell:first-child {
                 .listDivImg {
@@ -150,13 +149,11 @@ const StyleQuickmenuContent = styled.div`
             }
           }
         }
-
       }
     }
-
-
   }
-  .inBtn, .outBtn {
+  .inBtn,
+  .outBtn {
     position: absolute;
     top: 50%;
     right: 5px;

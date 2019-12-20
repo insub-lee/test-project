@@ -38,47 +38,37 @@ class UserMenu extends React.Component {
 
   onClick = () => {
     this.setState({ visible: !this.state.visible });
-  }
+  };
 
   onNoneClick = () => {
     this.setState({ visible: false });
     this.props.setMenuClose();
-  }
+  };
 
   onMenuClick = () => {
     this.setState({ visible: false });
-  }
+  };
 
-  onClickNode = () => {
-  }
+  onClickNode = () => {};
 
   onMouseEnter = () => {
     this.setState({ visible: !this.state.visible });
-  }
+  };
 
   getNotiList = () => { //eslint-disable-line
-    const {
-      execMenu,
-      execPage,
-      myMNotiCnt,
-      myHNotiCnt,
-      myMNotiList,
-      selectedIndex,
-      menuName,
-      handleSetMenuNameSelectedIndex,
-    } = this.props;
+    const { execMenu, execPage, myMNotiCnt, myHNotiCnt, myMNotiList, selectedIndex, menuName, handleSetMenuNameSelectedIndex } = this.props;
     return (
       <div>
         <ExtraMenus>
           <ul className="extraMenusList">
             <li>
               {/* <Link to="" className="storeLink" title={intlObj.get(messages.linkToBizStore)}> */}
-                <span className="icon-app" />
+              <span className="icon-app" />
               {/* </Link> */}
             </li>
             <li>
               {/* <button className="homeLink" title="포털 메인페이지"> */}
-                <span className="icon-home" />
+              <span className="icon-home" />
               {/* </button> */}
             </li>
             <li>
@@ -86,7 +76,7 @@ class UserMenu extends React.Component {
                 <span className="icon-setting" />
               </Link> */}
               {/* <button title="환경세팅"> */}
-                <span className="icon-setting" />
+              <span className="icon-setting" />
               {/* </button> */}
             </li>
           </ul>
@@ -117,12 +107,13 @@ class UserMenu extends React.Component {
         />
       </div>
     );
-  }
+  };
 
   gotoHome = () => {
     const { execPage } = this.props;
     execPage('common');
-  }
+  };
+
   render() {
     const sidebarContent = this.getNotiList();
     const styleObj = {
@@ -221,8 +212,4 @@ export function mapDispatchToProps(dispatch) {
 const withReducer = injectReducer({ key: 'previewMenu', reducer });
 const withSaga = injectSaga({ key: 'previewMenu', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(UserMenu);
+export default compose(withReducer, withSaga, withConnect)(UserMenu);

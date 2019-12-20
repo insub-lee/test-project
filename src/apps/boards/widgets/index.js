@@ -8,6 +8,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ReactDataGrid from 'containers/portal/components/ReactDataGrid';
 import { intlObj } from 'utils/commonUtils';
+import { WIDGET } from 'utils/constants';
 import messages from './messages';
 import reducer from './reducer';
 import saga from './saga';
@@ -15,9 +16,8 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 import BoardsStyle from './boardStyle';
 import ApplyPageStyle from './applyPageStyle.js';
-import { WIDGET } from 'utils/constants'
 
-const TabPane = Tabs.TabPane;
+const { TabPane } = Tabs;
 const pagepernum = 20; // 페이징 단위
 
 class IfBoard extends PureComponent {
@@ -38,7 +38,7 @@ class IfBoard extends PureComponent {
     if (boardSet.cateList !== undefined) {
       this.state = {
         itemList: item,
-        boardSet: boardSet,
+        boardSet,
         cateList: item.data.cateList,
         tabNum: '1',
         boardDataList: [],
@@ -47,7 +47,7 @@ class IfBoard extends PureComponent {
       };
       this.props.getIfBoardDataList(boardSet.cateList, 1, pagepernum, this.state.widgetId);
     } else {
-      let defContents = new Object();
+      const defContents = new Object();
       defContents.cateList = [];
       this.state = {
         itemList: item,
@@ -125,9 +125,11 @@ class IfBoard extends PureComponent {
       </div>
     );
   };
+
   handleTabClicks = num => {
     this.setState({ tabNum: num });
   };
+
   render() {
     const { catePageList } = this.state;
     const EmptyData = () => (
@@ -215,15 +217,8 @@ const mapStateToProps = createStructuredSelector({
   catePageList: selectors.makeCatePageList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'IfBoard', saga });
 const withReducer = injectReducer({ key: 'IfBoard', reducer, mode: WIDGET });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(IfBoard);
+export default compose(withReducer, withSaga, withConnect)(IfBoard);

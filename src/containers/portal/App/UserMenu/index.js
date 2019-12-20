@@ -181,6 +181,7 @@ class UserMenu extends React.Component {
     const { execPage } = this.props;
     execPage('common');
   };
+
   render() {
     const sidebarContent = this.getNotiList();
     const styleObj = {
@@ -240,7 +241,7 @@ class UserMenu extends React.Component {
     const { open } = this.props;
     return (
       <div onMouseLeave={this.onNoneClick} onMouseEnter={this.onMenuClick}>
-        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch={true} shadow={true}>
+        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch shadow>
           <p style={{ dispaly: 'none' }}>remove children undefined error</p>
         </Sidebar>
       </div>
@@ -290,8 +291,5 @@ export function mapDispatchToProps(dispatch) {
     updateMymenuDisp: node => dispatch(routeActions.updateMymenuDisp(node)),
   };
 }
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 export default compose(withConnect)(UserMenu);

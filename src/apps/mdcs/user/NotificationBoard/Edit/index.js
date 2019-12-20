@@ -15,7 +15,8 @@ class Edit extends Component {
   };
 
   render() {
-    const { id, reloadId, metaList, formData } = this.props;
+    console.log('@@@Edit this.props : ', this.props);
+    const { id, reloadId, metaList, formData, movePageType } = this.props;
     const contentMeta = metaList.filter(meta => meta.COMP_FIELD === 'CONTENT');
     const attachMeta = metaList.filter(meta => meta.COMP_FIELD === 'ATTACH');
 
@@ -28,22 +29,16 @@ class Edit extends Component {
                 제목
               </th>
               <td className="manual-descriptions-item-content" colSpan="3">
-                <Input value={formData.TITLE} onChange={e => this.props.changeFormData(id, 'TITLE', e.target.value)}></Input>
+                <Input onChange={e => this.props.changeFormData(id, 'TITLE', e.target.value)}></Input>
               </td>
             </tr>
             <tr className="manual-descriptions-row">
               <td className="manual-descriptions-item-content" colSpan="4">
                 {contentMeta && contentMeta.length > 0 && formData.hasOwnProperty('CONTENT') && (
-                  // <RichTextEditor
-                  //   {...JSON.parse(contentMeta[0].CONFIG).property.property}
-                  //   saveTempContents={this.onChangeFormData}
-                  //   value={formData.CONTENT}
-                  //   config={froalaEditorConfig()}
-                  // />
                   <RichTextEditor
                     {...JSON.parse(contentMeta[0].CONFIG).property.property}
                     saveTempContents={this.onChangeFormData}
-                    value={formData.CONTENT}
+                    defaultValue={formData.CONTENT}
                     config={froalaEditorConfig()}
                   />
                 )}
@@ -56,18 +51,20 @@ class Edit extends Component {
           </tbody>
         </table>
         <div className="list-btn list-top-btn" style={{ padding: '5px' }}>
-          <Button type="button" className="btn-primary" style={{ float: 'right' }} onClick={() => this.props.saveTask(id, this.props.onSaveComplete)}>
-            글쓰기
-          </Button>
-          {/* {editMode === 'INSERT' ? (
-            <Button type="button" className="btn-primary" style={{ float: 'right' }} onClick={() => this.props.saveTask(id, this.props.onSaveComplete)}>
-              글쓰기
+          {movePageType === 'MODIFY' ? (
+            <Button type="button" className="btn-primary" style={{ float: 'right' }} onClick={() => this.props.modifyTask(id, this.props.onSaveComplete)}>
+              수정완료
             </Button>
           ) : (
-            <Button type="button" className="btn-primary" style={{ float: 'right' }} onClick={() => this.props.modifyTask(id, this.props.onModifyComplete)}>
-              수정 완료
+            <Button
+              type="button"
+              className="btn-primary"
+              style={{ float: 'right' }}
+              onClick={() => this.props.saveTask(id, reloadId, this.props.onSaveComplete)}
+            >
+              글쓰기
             </Button>
-          )} */}
+          )}
         </div>
       </Styled>
     );
@@ -76,13 +73,11 @@ class Edit extends Component {
 Edit.propTypes = {
   froalaEditorConfig: PropTypes.object,
   changeFormData: PropTypes.func,
-  // editMode: PropTypes.string,
-  onSaveComplete: PropTypes.func,
-  onModifyComplete: PropTypes.func,
+  onSaveComplete: PropTypes.func.isRequired,
+  movePageType: PropTypes.string,
 };
 
 Edit.defaultProps = {
   froalaEditorConfig: {},
-  // editMode: 'INSERT',
 };
 export default Edit;

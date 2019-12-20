@@ -20,14 +20,15 @@ const App = () => {
   return (
     <div>
       <CheckboxGroup options={plainOptions} defaultValue={['Apple']} onChange={onChange} />
-      <br /><br />
+      <br />
+      <br />
       <CheckboxGroup options={options} defaultValue={['Pear']} onChange={onChange} />
-      <br /><br />
+      <br />
+      <br />
       <CheckboxGroup options={optionsWithDisabled} disabled defaultValue={['Apple']} onChange={onChange} />
     </div>
   );
 };
-
 
 const code = `import { Checkbox } from '../../../Abstraction/portalComponents';
 

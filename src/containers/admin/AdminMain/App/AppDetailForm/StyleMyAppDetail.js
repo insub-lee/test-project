@@ -31,8 +31,8 @@ const StyleMyAppDetail = styled.div`
       margin-left: 5px;
     }
   }
-  
-  // 향후 삭제 
+
+  // 향후 삭제
   .temp {
     display: block;
     padding: 0 10px;

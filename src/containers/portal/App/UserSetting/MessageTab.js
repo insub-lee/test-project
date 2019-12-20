@@ -13,11 +13,11 @@ import { makeCheckList } from './selectors';
 import messages from './messages';
 import reducer from './reducer';
 
-let appList = [];// DB에 있는 해당 사용자의 APPList의 NAME
-let appDetail = [];// DB에 있는 해당 사용자의 APpList의 NAME과 ID
-let CopySelectedList = [];// 선택된 List의 Copy
-let SelectedApp = [];// 선택된 List
-let AppYN = [];// App의 YN 값
+let appList = []; // DB에 있는 해당 사용자의 APPList의 NAME
+let appDetail = []; // DB에 있는 해당 사용자의 APpList의 NAME과 ID
+let CopySelectedList = []; // 선택된 List의 Copy
+let SelectedApp = []; // 선택된 List
+let AppYN = []; // App의 YN 값
 
 class MessageTab extends Component {
   constructor(props) {
@@ -90,14 +90,23 @@ class MessageTab extends Component {
     }
     if (copy.indexOf(selectedList) === -1) {
       // selectedList//Y인 item
-      { this.checkList(selectedList, 'Y'); }
-      { this.props.message(selectedList, true) }
-    } else { // N인 item
+      {
+        this.checkList(selectedList, 'Y');
+      }
+      {
+        this.props.message(selectedList, true);
+      }
+    } else {
+      // N인 item
       for (let i = 0; i < copy.length; i++) {
         if (checkedList.indexOf(copy[i]) === -1) {
           const unChecked = copy[i];
-          { this.checkList(unChecked, 'N'); }
-          { this.props.message(unChecked, false) }
+          {
+            this.checkList(unChecked, 'N');
+          }
+          {
+            this.props.message(unChecked, false);
+          }
         }
       }
     }
@@ -116,8 +125,12 @@ class MessageTab extends Component {
     for (let i = 0; i < appDetail.length; i++) {
       allCheck.push(appDetail[i][1]);
     }
-    { e.target.checked ? this.props.onSaveMessageALL(allCheck, 'ALL') : this.props.onSaveMessageALL(allCheck, 'NALL'); }
-    { e.target.checked ? this.props.message('all', true) : this.props.message('all', false); }
+    {
+      e.target.checked ? this.props.onSaveMessageALL(allCheck, 'ALL') : this.props.onSaveMessageALL(allCheck, 'NALL');
+    }
+    {
+      e.target.checked ? this.props.message('all', true) : this.props.message('all', false);
+    }
   }
 
   checkList(selectedItem, stat) {
@@ -134,46 +147,41 @@ class MessageTab extends Component {
   }
 
   render() {
-
     const { currentView } = this.props;
-    let className = "";
+    let className = '';
     let minHeight;
     switch (currentView) {
       case 'DesktopWide':
-      className = "msgBoxWrapper";
-      minHeight = 480;
+        className = 'msgBoxWrapper';
+        minHeight = 480;
         break;
       case 'Desktop':
-      className = "msgBoxWrapper";
+        className = 'msgBoxWrapper';
         break;
       case 'DesktopNarrow':
-      className = "msgBoxWrapper";
+        className = 'msgBoxWrapper';
         break;
       case 'Tablet':
-      className = "msgBoxWrapper";
+        className = 'msgBoxWrapper';
         break;
       default:
-      className = "msgBoxWrapperMobile";
-      minHeight = 350;
+        className = 'msgBoxWrapperMobile';
+        minHeight = 350;
     }
 
     return (
-      <div className="msgBoxWrapper" >
-        <ScrollBar style={{ width: '100%', minHeight: {minHeight} }}>
+      <div className="msgBoxWrapper">
+        <ScrollBar style={{ width: '100%', minHeight: { minHeight } }}>
           <div className="totalCheckbox">
-            <Checkbox
-              onChange={(e) => this.onCheckAllChange(e)}
-              checked={this.state.checkAll}
-              className="selectAll"
-            >
+            <Checkbox onChange={e => this.onCheckAllChange(e)} checked={this.state.checkAll} className="selectAll">
               {intlObj.get(messages.allSelect)}
             </Checkbox>
           </div>
           <Checkbox.Group
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             options={appList}
             value={this.state.checkedList}
-            onChange={(e) => this.onChangeList(e)}
+            onChange={e => this.onChangeList(e)}
             className="eachCheckbox"
           />
         </ScrollBar>
@@ -198,7 +206,4 @@ export function mapDispatchToProps(dispatch) {
 }
 const withReducer = injectReducer({ key: 'messagetab', reducer });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default compose(
-  withReducer,
-  withConnect,
-)(MessageTab);
+export default compose(withReducer, withConnect)(MessageTab);

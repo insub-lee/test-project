@@ -11,9 +11,9 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledContent from 'apps/mdcs/styled/Modals/StyledContent';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
+import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
 
-import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
@@ -75,6 +75,15 @@ class BizDocListInput extends Component {
     this.setState({ isDraftModal: true, taskSeq, title: formData.TITLE, formData });
   };
 
+  onClickSave = () => {
+    const { changeFormData, id, selectedNodeId, docNumber, saveTask } = this.props;
+    changeFormData(id, 'NODE_ID', selectedNodeId);
+    changeFormData(id, 'SP_ID', docNumber);
+    changeFormData(id, 'VERSION', '0.0');
+    changeFormData(id, 'SP_REV', '0');
+    saveTask(id, id, this.saveTaskAfter);
+  };
+
   render() {
     const {
       saveTask,
@@ -125,7 +134,7 @@ class BizDocListInput extends Component {
                   <div className="rightTable">
                     <Col span={4}>Revision</Col>
                     <Col span={8}>
-                      <Input value={'0'} readOnly />
+                      <Input value="0" readOnly />
                     </Col>
                   </div>
                 </Row>
@@ -285,11 +294,7 @@ class BizDocListInput extends Component {
                     <StyledButton
                       className="btn-primary"
                       onClick={() => {
-                        changeFormData(id, 'NODE_ID', selectedNodeId);
-                        changeFormData(id, 'SP_ID', docNumber);
-                        changeFormData(id, 'VERSION', '0.0');
-                        changeFormData(id, 'SP_REV', '0');
-                        saveTask(id, id, this.saveTaskAfter);
+                        this.onClickSave();
                       }}
                     >
                       상신

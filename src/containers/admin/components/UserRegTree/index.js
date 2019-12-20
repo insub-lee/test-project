@@ -22,7 +22,7 @@ class UserRegTree extends Component {
     }
   }
 
-  handleOnClick = (node) => {
+  handleOnClick = node => {
     // node - 선택한 트리 노드의 데이터 object
     this.setState({
       selectedIndex: node.key,
@@ -31,17 +31,9 @@ class UserRegTree extends Component {
   };
 
   render() {
+    const { selectedIndex } = this.state;
 
-    const {
-      selectedIndex,
-    } = this.state;
-
-    const {
-      getSelectDept,
-      treeType,
-      comboData,
-      isLoading,
-    } = this.props;
+    const { getSelectDept, treeType, comboData, isLoading } = this.props;
 
     return (
       <div
@@ -50,40 +42,41 @@ class UserRegTree extends Component {
           maxHeight: 400,
         }}
       >
-        { isLoading
-          ?
-            <Spin
-              size="large"
-              style={{
-                margin: 'auto',
-                width: '100%',
-                padding: '20%',
-              }}
+        {isLoading ? (
+          <Spin
+            size="large"
+            style={{
+              margin: 'auto',
+              width: '100%',
+              padding: '20%',
+            }}
+          />
+        ) : (
+          <div
+            style={{
+              display: 'flex',
+              flex: '1 0 50%',
+              padding: '0',
+              flexDirection: 'column',
+              width: '100%',
+              height: 'calc(100vh - 167px)',
+              maxHeight: 400,
+            }}
+          >
+            <Select value={this.state.selectedDept} onChange={e => getSelectDept(e)}>
+              {comboData.map((item, idx) => (
+                <Option value={item[`${treeType.toUpperCase()}_ID`]} key={idx}>
+                  {item.NAME_KOR}
+                </Option>
+              ))}
+            </Select>
+            <Tree
+              treeData={this.props.treeData} // 트리데이터
+              handleOnClick={this.handleOnClick} // onClick 이벤트
+              selectedIndex={selectedIndex} // 선택한 트리노드 KEY
             />
-          :
-            <div
-              style={{
-                display: 'flex',
-                flex: '1 0 50%',
-                padding: '0',
-                flexDirection: 'column',
-                width: '100%',
-                height: 'calc(100vh - 167px)',
-                maxHeight: 400,
-              }}
-            >
-              <Select value={this.state.selectedDept} onChange={e => getSelectDept(e)}>
-                {comboData.map((item, idx) => (
-                  <Option value={item[`${treeType.toUpperCase()}_ID`]} key={idx}>{item.NAME_KOR}</Option>
-                ))}
-              </Select>
-              <Tree
-                treeData={this.props.treeData} // 트리데이터
-                handleOnClick={this.handleOnClick} // onClick 이벤트
-                selectedIndex={selectedIndex} // 선택한 트리노드 KEY
-              />
-            </div>
-        }
+          </div>
+        )}
       </div>
     );
   }

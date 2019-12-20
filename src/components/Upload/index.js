@@ -15,16 +15,15 @@ class Upload extends React.Component {
     };
   }
 
-  onDropFiles = (accepted, rejected) => (
+  onDropFiles = (accepted, rejected) =>
     new Promise(() => {
       if (accepted.length > 0) {
-        accepted.forEach((item) => {
+        accepted.forEach(item => {
           this.sendFileDirect(item);
         });
       }
       console.log('REJECTED FILES', rejected);
-    })
-  );
+    });
 
   onDragEnter = () => {
     this.setState({
@@ -38,7 +37,7 @@ class Upload extends React.Component {
     });
   };
 
-  sendFileDirect = (fileObj) => {
+  sendFileDirect = fileObj => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
 
@@ -57,7 +56,7 @@ class Upload extends React.Component {
         const data = JSON.parse(xhr.response);
         // console.log(data);
         const agent = navigator.userAgent.toLowerCase();
-        if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || (agent.indexOf('msie') !== -1)) {
+        if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || agent.indexOf('msie') !== -1) {
           const tmpFileForIE = data.fileName.split('\\');
           // console.log(tmpFileForIE);
           const localFileName = tmpFileForIE[tmpFileForIE.length - 1];
@@ -97,35 +96,26 @@ class Upload extends React.Component {
     }
   };
 
-  handleCallback = (obj) => {
+  handleCallback = obj => {
     this.props.onFileUploaded(obj);
-    this.setState({
-      progressBarShow: false,
-    }, function start() {
-      if (this.state.status === 'success') {
-        message.success('Uploading finished', 2.5);
-        this.setState({
-          percent: 0,
-        });
-      }
-    });
+    this.setState(
+      {
+        progressBarShow: false,
+      },
+      function start() {
+        if (this.state.status === 'success') {
+          message.success('Uploading finished', 2.5);
+          this.setState({
+            percent: 0,
+          });
+        }
+      },
+    );
   };
 
   render() {
-    const {
-      children,
-      accept,
-      multiple,
-      width,
-      height,
-      borderWidth,
-      borderColor,
-      borderRadius,
-      borderStyle,
-    } = this.props;
-    const {
-      dropzoneActive, progressBarShow, status, percent,
-    } = this.state;
+    const { children, accept, multiple, width, height, borderWidth, borderColor, borderRadius, borderStyle } = this.props;
+    const { dropzoneActive, progressBarShow, status, percent } = this.state;
     const style = {
       width,
       height,
@@ -166,17 +156,10 @@ class Upload extends React.Component {
             onDragLeave={this.onDragLeave}
             multiple={multiple && true}
           >
-            { dropzoneActive && <div style={overlayStyle}>Drop files...</div> }
+            {dropzoneActive && <div style={overlayStyle}>Drop files...</div>}
             {children}
           </Dropzone>
-          <Progress
-            type="line"
-            percent={percent}
-            status={status}
-            size="small"
-            showInfo={false}
-            style={{ display: (progressBarShow) ? 'block' : 'none' }}
-          />
+          <Progress type="line" percent={percent} status={status} size="small" showInfo={false} style={{ display: progressBarShow ? 'block' : 'none' }} />
         </div>
       </section>
     );
@@ -187,14 +170,8 @@ Upload.propTypes = {
   borderWidth: PropTypes.number,
   borderStyle: PropTypes.string,
   borderRadius: PropTypes.number,
-  width: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
-  height: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   children: PropTypes.object.isRequired,
   multiple: PropTypes.bool, // eslint-disable-line
   accept: PropTypes.string, // eslint-disable-line

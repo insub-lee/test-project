@@ -22,7 +22,7 @@ class categoryGrid extends Component {
     this.state = {
       selectedIndexes: [],
       selectedCategory: [],
-    //   isAddedScrollEvent: false,
+      //   isAddedScrollEvent: false,
     };
   }
 
@@ -32,7 +32,7 @@ class categoryGrid extends Component {
     const { selectedCategory } = this.state;
 
     if (checkBoxStat) {
-    // 전체 체크박스 초기화
+      // 전체 체크박스 초기화
       this.grid.selectAllCheckbox.checked = false;
 
       this.setState({
@@ -42,7 +42,7 @@ class categoryGrid extends Component {
       resetCheckbox(false);
     }
 
-    const rowGetter = (i) => {
+    const rowGetter = i => {
       if (categoryList[i] !== undefined) {
         const content = {
           GRID_DATA: [
@@ -52,21 +52,24 @@ class categoryGrid extends Component {
                   className="listImg"
                   style={{ height: '100%', width: '100%' }}
                   src={imgUrl.get('120x120', categoryList[i].ICON)}
-                  onError={(e) => { e.target.src = '/app_icon/icon_no_image.png'; }}
+                  onError={e => {
+                    e.target.src = '/app_icon/icon_no_image.png';
+                  }}
                   alt="app icon"
                 />
               </div>
               <div
                 style={{
-                    display: 'inline-block',
-                    width: 245,
-                    fontSize: 12,
-                    lineHeight: '1.3em',
-                    verticalAlign: 'middle',
-                    }}
+                  display: 'inline-block',
+                  width: 245,
+                  fontSize: 12,
+                  lineHeight: '1.3em',
+                  verticalAlign: 'middle',
+                }}
                 className="contents"
               >
-                {categoryList[i].NAME_KOR}<br />
+                {categoryList[i].NAME_KOR}
+                <br />
                 <div className="ellipsis" style={{ width: 245 }}>
                   {categoryList[i].DSCR_KOR}
                 </div>
@@ -76,7 +79,7 @@ class categoryGrid extends Component {
           categoryList: categoryList[i],
         };
         if (i === this.props.pageNum - 1) {
-          this.props.paging()
+          this.props.paging();
         }
         return content;
       }
@@ -88,7 +91,7 @@ class categoryGrid extends Component {
       return clonedColumns;
     };
 
-    const onRowsSelected = (rows) => {
+    const onRowsSelected = rows => {
       this.setState({
         selectedIndexes: this.state.selectedIndexes.concat(rows.map(r => r.rowIdx)),
       });
@@ -98,7 +101,7 @@ class categoryGrid extends Component {
       this.props.onLoadCategory(selectedCategory);
     };
 
-    const onRowsDeselected = (rows) => {
+    const onRowsDeselected = rows => {
       const rowIndexes = rows.map(r => r.rowIdx);
       const caID = rows.map(r => r.row.categoryList.APP_ID);
       this.setState({
@@ -114,20 +117,22 @@ class categoryGrid extends Component {
     return (
       <ReactDataGridWrapper>
         <ReactDataGrid
-          ref={(node) => { this.grid = node; }}
+          ref={node => {
+            this.grid = node;
+          }}
           rowKey="CATG_ID"
           columns={getColumns()}
           rowGetter={rowGetter}
           rowsCount={categoryList.length}
           rowSelection={{
-                        showCheckbox: true,
-                        enableShiftSelect: true,
-                        onRowsSelected,
-                        onRowsDeselected,
-                        selectBy: {
-                            indexes: this.state.selectedIndexes,
-                        },
-                    }}
+            showCheckbox: true,
+            enableShiftSelect: true,
+            onRowsSelected,
+            onRowsDeselected,
+            selectBy: {
+              indexes: this.state.selectedIndexes,
+            },
+          }}
           rowHeight={45}
         />
       </ReactDataGridWrapper>

@@ -73,7 +73,7 @@ class IfBoardCfg extends PureComponent {
     if (boardSet.cateList !== undefined) {
       this.state = {
         itemList: item,
-        boardSet: boardSet,
+        boardSet,
         viewType: item.viewType,
         widgetId: item.WIDGET_ID,
         pageId: item.PAGE_ID,
@@ -88,7 +88,7 @@ class IfBoardCfg extends PureComponent {
         selectGrSeq: 0,
       };
     } else {
-      let defContents = new Object();
+      const defContents = new Object();
 
       defContents.cateList = [];
 
@@ -121,26 +121,16 @@ class IfBoardCfg extends PureComponent {
         boardSet: nextItem.data,
         viewType: nextItem.user.viewType,
         // widgetId: nextWidgetId,
-        // pageId: nextPageId,  
-        treeData: nextProps.setIfBoardCfgCateList,     
+        // pageId: nextPageId,
+        treeData: nextProps.setIfBoardCfgCateList,
         grSeq: nextProps.grSeq,
       });
     }
   }
 
-  setBoardList = (rows) => {
-    const {
-      itemList,
-      viewType,
-      widgetId,
-      pageId,
-    } = this.state;
-    const {
-      deleteIfBoardCfg,
-      deleteBizIfBoardCfg,
-      updateBizGroupChgYn,
-      type,
-    } = this.props;
+  setBoardList = rows => {
+    const { itemList, viewType, widgetId, pageId } = this.state;
+    const { deleteIfBoardCfg, deleteBizIfBoardCfg, updateBizGroupChgYn, type } = this.props;
 
     const result = {};
     result.size = itemList.size;
@@ -149,44 +139,40 @@ class IfBoardCfg extends PureComponent {
     result.user.isTitle = itemList.user.isTitle;
     result.user.skin = itemList.user.skin;
     result.user.viewType = viewType;
-    let emptyContent = new Object();
+    const emptyContent = new Object();
     emptyContent.cateList = rows;
     result.data = emptyContent;
 
     const item = JSON.stringify(result);
 
-    if (type === "mypage") {
+    if (type === 'mypage') {
       deleteIfBoardCfg(item, widgetId, pageId);
     } else {
-      //업무그룹
+      // 업무그룹
       deleteBizIfBoardCfg(item, widgetId, pageId);
       // 업무 그룹 변화 감지 함수
       updateBizGroupChgYn();
     }
-  }
+  };
 
-  xMarkFormatter = (val) => {
-    return (
-      <button onClick={() => this.deleteRows(val.dependentValues.SORT_SQ)} className="delApp" />
-    );
-  }
+  xMarkFormatter = val => <button onClick={() => this.deleteRows(val.dependentValues.SORT_SQ)} className="delApp" />;
 
-  deleteRows = (seq) => {
+  deleteRows = seq => {
     this.setState({ count: this.state.cateList.length + 1 });
     let rows = this.state.cateList.slice();
     rows = rows.filter(row => row.SORT_SQ !== seq);
     this.keyRearrange(rows);
     this.setState({ count: rows.length + 1, cateList: rows });
     this.setBoardList(rows);
-  }
+  };
 
-  keyRearrange = (rows) => {
+  keyRearrange = rows => {
     const rowData = rows;
     for (let i = 0; i < rowData.length; i += 1) {
       rowData[i].SORT_SQ = i + 1;
     }
     this.setBoardList(rowData);
-  }
+  };
 
   // Grid data udpate
   handleGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -207,28 +193,27 @@ class IfBoardCfg extends PureComponent {
     return false;
   };
 
-  reorderRows = (e) => {
+  reorderRows = e => {
     if (this.state.cateList.length > 1) {
       const selectedRows = e.rowSource.idx;
-      const draggedRows = this.isDraggedRowSelected(selectedRows, e.rowSource) ?
-        selectedRows : [e.rowSource.data];
+      const draggedRows = this.isDraggedRowSelected(selectedRows, e.rowSource) ? selectedRows : [e.rowSource.data];
       const undraggedRows = this.state.cateList.filter(r => draggedRows.indexOf(r) === -1);
       const args = [e.rowTarget.idx, 0].concat(draggedRows);
       Array.prototype.splice.apply(undraggedRows, args);
       this.keyRearrange(undraggedRows);
       this.setState({ cateList: undraggedRows });
     }
-  }
+  };
 
   /* 사용하는 펑션 */
-  handleOnClickGrp = (grSeq) => {
+  handleOnClickGrp = grSeq => {
     this.props.getIfBoardCfgCateList(grSeq, '');
     this.setState({
       selectGrSeq: grSeq,
       selectedRow: [],
       checkedList: [],
-   });
-  }
+    });
+  };
 
   onCheckChange = (e, node) => {
     let deptIdArr = [];
@@ -241,14 +226,12 @@ class IfBoardCfg extends PureComponent {
         ctSeq: node.ctSeq,
         grSeq: node.grSeq,
         ctName: node.title,
-        SORT_SQ: node.SORT_SQ
-      })
+        SORT_SQ: node.SORT_SQ,
+      });
     } else {
       /* 삭제 */
       let mapIndex = -1;
-      this.state.selectedRow.map((item, index) => (
-        item.ctSeq === node.ctSeq ? mapIndex = index : ''
-      ));
+      this.state.selectedRow.map((item, index) => (item.ctSeq === node.ctSeq ? (mapIndex = index) : ''));
       if (mapIndex !== -1) {
         const tmpArr = fromJS(this.state.selectedRow).toJS();
         tmpArr.splice(mapIndex, 1);
@@ -262,14 +245,13 @@ class IfBoardCfg extends PureComponent {
         });
       }
     }
-  }
+  };
 
   addRow = () => {
     let rows = this.state.cateList.slice();
     const count = this.state.cateList.length;
     let rowUpdateCnt = 0;
     this.state.selectedRow.map((item, index) => {
-
       let setFlog = true;
       this.state.cateList.map(itemBoard => {
         if (item.grSeq === itemBoard.grSeq && item.ctSeq === itemBoard.ctSeq) {
@@ -286,48 +268,39 @@ class IfBoardCfg extends PureComponent {
         };
         rows = update(rows, { $push: [newRow] });
         rowUpdateCnt = 1;
-      }      
+      }
     });
 
     if (rowUpdateCnt > 0) {
       this.props.updateGridData(rows);
       this.setState({ cateList: rows });
-  
+
       this.setBoardList(rows);
     }
-  }
+  };
 
   render() {
-    const grList = () => {
-      return this.props.setIfBoardCfgGrpList.map(item => (
-        <li
-          onClick={() => this.handleOnClickGrp(item.grSeq)}
-          style={{ cursor:'pointer' }}
-          key={item.grSeq}
-        >
-          <div
-          style={{ color:item.grSeq === this.state.selectGrSeq ? '#f85023' : '' }}
-          >
-            {item.grName}
-          </div>
+    const grList = () =>
+      this.props.setIfBoardCfgGrpList.map(item => (
+        <li onClick={() => this.handleOnClickGrp(item.grSeq)} style={{ cursor: 'pointer' }} key={item.grSeq}>
+          <div style={{ color: item.grSeq === this.state.selectGrSeq ? '#f85023' : '' }}>{item.grName}</div>
         </li>
-      ))
-    }
+      ));
     const handleOnClickGrSearch = () => {
       this.props.getIfBoardCfgGrpList(this.state.grKeyword);
-    }
-    const onChangeGrSearch = (val) => {
+    };
+    const onChangeGrSearch = val => {
       this.setState({ grKeyword: val.target.value });
-    }
-    const handleKeyPressGrSearch = (val) => {
+    };
+    const handleKeyPressGrSearch = val => {
       if (val.key === 'Enter') {
         this.setState({ grKeyword: val.target.value });
         this.props.getIfBoardCfgGrpList(val.target.value);
       }
     };
-    const onChangeCtSearch = (val) => {
+    const onChangeCtSearch = val => {
       this.setState({ ctKeyword: val.target.value });
-    }
+    };
     return (
       <div>
         <StyleModal className="modalWrapper inPage">
@@ -339,29 +312,18 @@ class IfBoardCfg extends PureComponent {
                   {/* 검색 */}
                   <div className="userSearch">
                     <div className="inputWrapper">
-                      <Input
-                        placeholder={intlObj.get(messages.search)}
-                        onChange={onChangeGrSearch}
-                        onKeyPress={handleKeyPressGrSearch}
-                      />
-                      <Button
-                        className="searchButton"
-                        onClick={handleOnClickGrSearch}
-                      />
+                      <Input placeholder={intlObj.get(messages.search)} onChange={onChangeGrSearch} onKeyPress={handleKeyPressGrSearch} />
+                      <Button className="searchButton" onClick={handleOnClickGrSearch} />
                     </div>
                   </div>
-                  <ul>
-                    {grList()}
-                  </ul>
+                  <ul>{grList()}</ul>
                 </div>
                 <div className="boardList">
                   <h3 className="secTitle noBorder">{intlObj.get(messages.boardList)}</h3>
                   {/* 검색 */}
                   <div className="userSearch">
                     <div className="inputWrapper">
-                      <Input placeholder={intlObj.get(messages.search)}
-                        onChange={onChangeCtSearch}
-                      />
+                      <Input placeholder={intlObj.get(messages.search)} onChange={onChangeCtSearch} />
                     </div>
                   </div>
                   <StyleBoardTree>
@@ -370,15 +332,12 @@ class IfBoardCfg extends PureComponent {
                       ctKeyword={this.state.ctKeyword}
                       returnChkChange={this.onCheckChange}
                       grSeq={this.state.grSeq}
-                    />                    
+                    />
                   </StyleBoardTree>
                 </div>
-                <Button
-                  className="inBtn"
-                  onClick={this.addRow}
-                />
+                <Button className="inBtn" onClick={this.addRow} />
               </Col>
-              <Col xl={8} style={colStyle} className="rightActivity" >
+              <Col xl={8} style={colStyle} className="rightActivity">
                 <StyleSelectedApps>
                   <div className="SUTitle">
                     <h3>{intlObj.get(messages.selectBoard)}</h3>
@@ -389,7 +348,7 @@ class IfBoardCfg extends PureComponent {
                   <div className="selectedBoardList">
                     <ReactDataGrid
                       columns={this.columns.filter(column => column.visible === true)}
-                      rowGetter={(i) => { return this.state.cateList[i] }}
+                      rowGetter={i => this.state.cateList[i]}
                       rowsCount={this.state.cateList.length}
                       headerRowHeight={-1}
                       // minWidth={285}
@@ -418,12 +377,12 @@ IfBoardCfg.propTypes = {
   deleteIfBoardCfg: PropTypes.func, //eslint-disable-line
   deleteBizIfBoardCfg: PropTypes.func, //eslint-disable-line
   grSeq: PropTypes.number, //eslint-disable-line
-}
+};
 
 const mapDispatchToProps = dispatch => ({
-  getIfBoardCfgGrpList: (grKeyword) => dispatch(actions.getIfBoardCfgGrpList(grKeyword)),
+  getIfBoardCfgGrpList: grKeyword => dispatch(actions.getIfBoardCfgGrpList(grKeyword)),
   getIfBoardCfgCateList: (grSeq, ctKeyword) => dispatch(actions.getIfBoardCfgCateList(grSeq, ctKeyword)),
-  updateGridData: (data) => dispatch(actions.updateGridData(data)),
+  updateGridData: data => dispatch(actions.updateGridData(data)),
   deleteIfBoardCfg: (item, widgetId, pageId) => dispatch(actions.deleteIfBoardCfg(item, widgetId, pageId)),
   deleteBizIfBoardCfg: (item, widgetId, pageId) => dispatch(actions.deleteBizIfBoardCfg(item, widgetId, pageId)),
 });
@@ -438,8 +397,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'IfBoardCfg', saga });
 const withReducer = injectReducer({ key: 'IfBoardCfg', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(IfBoardCfg);
+export default compose(withReducer, withSaga, withConnect)(IfBoardCfg);

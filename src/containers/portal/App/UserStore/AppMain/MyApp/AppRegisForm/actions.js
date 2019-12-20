@@ -1,10 +1,8 @@
 import * as constants from './constants';
 
-export const getInitInfo = () => (
-  {
-    type: constants.GET_INIT_INFO,
-  }
-);
+export const getInitInfo = () => ({
+  type: constants.GET_INIT_INFO,
+});
 
 export const insertAppInfo = (
   CLIENT_TYPE,

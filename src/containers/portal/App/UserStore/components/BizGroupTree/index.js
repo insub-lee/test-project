@@ -10,12 +10,12 @@ import * as feed from 'components/Feedback/functions';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 import ScrollBar from 'react-custom-scrollbars';
 // import 'style/sortable-tree-biz.css';
-import { toggleExpandedForSelected } from './tree-data-utils';
-import messages from './messages';
 
 import iconBizDelete from 'images/common/icon-biz-delete.png';
 import iconBizConfirm from 'images/common/icon-biz-confirm.png';
 import iconBizTree from 'images/common/icon-biz-tree.png';
+import messages from './messages';
+import { toggleExpandedForSelected } from './tree-data-utils';
 
 // import './app.css';
 import CustomTheme from './theme';
@@ -152,7 +152,7 @@ class BizGroupTree extends Component {
     <EditBtn
       title="폴더 수정"
       onClick={() => {
-        this.props.saveData(rowInfo, treeData);
+        this.props.saveData(rowInfo, this.state.treeData);
         this.props.history.push(`/store/appMain/bizManage/bizGroupReg/${rowInfo.node.key}`);
       }}
     />
@@ -242,7 +242,7 @@ class BizGroupTree extends Component {
           moveNode(treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..

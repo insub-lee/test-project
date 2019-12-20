@@ -17,12 +17,9 @@ class Example extends Component {
   }
 
   render() {
-    const {
-      treeData,
-      selectedIndex,
-    } = this.state;
+    const { treeData, selectedIndex } = this.state;
 
-    const handleOnClick = (node) => {
+    const handleOnClick = node => {
       // node - 선택한 트리 노드의 데이터 object
       this.setState({
         selectedIndex: node.key,

@@ -37,9 +37,7 @@ const StyleWidgetGrid = styled.div`
     }
   }
 
-  @media on
-
-  @media only screen and (max-width: 1490px) {
+  @media on @media only screen and (max-width: 1490px) {
     width: 690px;
   }
 

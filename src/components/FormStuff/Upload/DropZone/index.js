@@ -3,8 +3,8 @@ import { Upload, Icon } from 'antd';
 
 const { Dragger } = Upload;
 
-const DropZone = props => (
-  <Dragger {...props}>
+const DropZone = ({ handleChange, fileList, customRequest, action, limit, disabled, onRemove }) => (
+  <Dragger action={action} fileList={fileList} onChange={handleChange} onRemove={onRemove} customRequest={customRequest}>
     <p className="ant-upload-drag-icon">
       <Icon type="inbox" />
     </p>

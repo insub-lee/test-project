@@ -41,9 +41,7 @@ class BizMenuList extends Component {
     const { params } = match;
     const { BIZGRP_ID } = params;
 
-    if (BIZGRP_ID
-      && this.state.BIZGRP_ID !== -1
-      && this.state.BIZGRP_ID !== Number(BIZGRP_ID)) {
+    if (BIZGRP_ID && this.state.BIZGRP_ID !== -1 && this.state.BIZGRP_ID !== Number(BIZGRP_ID)) {
       this.setState({
         BIZGRP_ID: Number(BIZGRP_ID),
       });
@@ -71,19 +69,10 @@ class BizMenuList extends Component {
         }}
       >
         <StyleBizDetail>
-          <TopMenu
-            history={history}
-            match={match}
-            BIZGRP_ID={Number(this.state.BIZGRP_ID)}
-          />
+          <TopMenu history={history} match={match} BIZGRP_ID={Number(this.state.BIZGRP_ID)} />
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }} className="gridMode">
             <ErrorBoundary>
-              <ItemList
-                mapList={mapList}
-                registApp={handleRegistApp}
-                registCategory={handleRegistCategory}
-                match={match}
-              />
+              <ItemList mapList={mapList} registApp={handleRegistApp} registCategory={handleRegistCategory} match={match} />
             </ErrorBoundary>
           </StyleBizDetailContent>
         </StyleBizDetail>
@@ -122,8 +111,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmenuList', reducer });
 const withSaga = injectSaga({ key: 'bizmenuList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizMenuList);
+export default compose(withReducer, withSaga, withConnect)(BizMenuList);

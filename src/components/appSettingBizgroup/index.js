@@ -42,7 +42,7 @@ class appSetting extends Component {
 
     this.state = {
       show: false,
-      title: "",
+      title: '',
       isTitle: true,
       widgetSkin: 1,
       dispSize: '1X1',
@@ -50,9 +50,9 @@ class appSetting extends Component {
       BIZGRP_ID: Number(BIZGRP_ID),
       PAGE_ID: Number(PAGE_ID),
       WIDGET_ID: Number(WIDGET_ID),
-      widgetSettingJsx : '',
+      widgetSettingJsx: '',
     };
-    
+
     this.closeModal = this.closeModal.bind(this);
     this.onChangeTitle = this.onChangeTitle.bind(this);
     this.onKeyPressTitle = this.onKeyPressTitle.bind(this);
@@ -72,8 +72,7 @@ class appSetting extends Component {
     const { params } = match;
     const { BIZGRP_ID, PAGE_ID, WIDGET_ID } = params;
 
-    if (WIDGET_ID
-      && this.state.WIDGET_ID !== Number(WIDGET_ID)) {
+    if (WIDGET_ID && this.state.WIDGET_ID !== Number(WIDGET_ID)) {
       this.setState({
         WIDGET_ID: Number(WIDGET_ID),
       });
@@ -81,8 +80,7 @@ class appSetting extends Component {
       this.props.resetCategory();
     }
 
-    if (PAGE_ID
-      && this.state.PAGE_ID !== Number(PAGE_ID)) {
+    if (PAGE_ID && this.state.PAGE_ID !== Number(PAGE_ID)) {
       this.setState({
         PAGE_ID: Number(PAGE_ID),
         BIZGRP_ID: Number(BIZGRP_ID),
@@ -90,15 +88,16 @@ class appSetting extends Component {
       this.props.getWidgetList(Number(BIZGRP_ID), Number(PAGE_ID));
     }
 
-    if (Object.keys(widget).length !== 0
-        && (widget.WIDGET_ID !== this.props.widget.WIDGET_ID || this.state.title === '')
-        // && (
-        //   widget.WIDGET_ID !== this.props.widget.WIDGET_ID
-        //   || lang.get('NAME', this.props.widget) !== widget.title
-        //   || this.props.widget.DISP_TITLE_YN !== widget.DISP_TITLE_YN
-        //   || this.props.widget.WIDGET_SKIN !== widget.WIDGET_SKIN
-        //   || this.props.widget.DISP_SIZE !== widget.DISP_SIZE)
-      ) {
+    if (
+      Object.keys(widget).length !== 0 &&
+      (widget.WIDGET_ID !== this.props.widget.WIDGET_ID || this.state.title === '')
+      // && (
+      //   widget.WIDGET_ID !== this.props.widget.WIDGET_ID
+      //   || lang.get('NAME', this.props.widget) !== widget.title
+      //   || this.props.widget.DISP_TITLE_YN !== widget.DISP_TITLE_YN
+      //   || this.props.widget.WIDGET_SKIN !== widget.WIDGET_SKIN
+      //   || this.props.widget.DISP_SIZE !== widget.DISP_SIZE)
+    ) {
       this.setState({
         title: lang.get('NAME', widget),
         isTitle: widget.user.isTitle,
@@ -108,7 +107,7 @@ class appSetting extends Component {
       });
     }
 
-    if(this.props.widgetList.length !== nextProps.widgetList.length) {
+    if (this.props.widgetList.length !== nextProps.widgetList.length) {
       this.setState({
         widgetSettingJsx: this.createComponents(nextProps.widgetList),
       });
@@ -123,14 +122,14 @@ class appSetting extends Component {
 
   onKeyPressTitle(e) {
     if (e.key === 'Enter') {
-      const data = { NAME : this.state.title };
+      const data = { NAME: this.state.title };
       this.props.updateWidget(this.state.WIDGET_ID, data);
     }
   }
 
   onBlurTitle() {
     if (lang.get('NAME', this.props.widget) !== this.state.title) {
-      const data = { NAME : this.state.title };
+      const data = { NAME: this.state.title };
       this.props.updateWidget(this.state.WIDGET_ID, data);
     }
   }
@@ -139,7 +138,7 @@ class appSetting extends Component {
     this.setState({
       isTitle: e.target.value,
     });
-    const data = { isTitle : e.target.value };
+    const data = { isTitle: e.target.value };
     this.props.updateWidget(this.state.WIDGET_ID, data);
   }
 
@@ -147,7 +146,7 @@ class appSetting extends Component {
     this.setState({
       widgetSkin: e.target.value,
     });
-    const data = { skin : e.target.value };
+    const data = { skin: e.target.value };
     this.props.updateWidget(this.state.WIDGET_ID, data);
   }
 
@@ -155,14 +154,14 @@ class appSetting extends Component {
     this.setState({
       dispSize: e.target.value,
     });
-    const data = { DISP_SIZE : e.target.value };
+    const data = { DISP_SIZE: e.target.value };
     this.props.updateWidget(this.state.WIDGET_ID, data);
   }
 
   closeModal() {
     this.props.resetCategory();
     this.props.getWidgetListBizManage(Number(this.state.PAGE_ID));
-    //this.props.history.push(`/store/appMain/bizManage/bizMenuReg/page/${this.state.BIZGRP_ID}/${this.state.PAGE_ID}`);
+    // this.props.history.push(`/store/appMain/bizManage/bizMenuReg/page/${this.state.BIZGRP_ID}/${this.state.PAGE_ID}`);
     const preUrl = this.props.match.url.substr(0, this.props.match.url.indexOf('/widgetsetting'));
     this.props.history.push(`${preUrl}/page/${this.state.BIZGRP_ID}/${this.state.PAGE_ID}`);
   }
@@ -178,15 +177,17 @@ class appSetting extends Component {
   createComponents(item) {
     let idx = '';
 
-    if(item !== undefined) {
+    if (item !== undefined) {
       idx = item.findIndex(i => Number(i.WIDGET_ID) === this.state.WIDGET_ID);
-    } else if(this.props.widgetList.length > 0) {
+    } else if (this.props.widgetList.length > 0) {
       idx = this.props.widgetList.findIndex(i => Number(i.WIDGET_ID) === this.state.WIDGET_ID);
     }
     let param = {};
 
-    if(item !== undefined) {
-      if(item[idx].basic.settingPath !== undefined) {
+    console.debug('@@@@ item : ', item);
+
+    if (item !== undefined) {
+      if (item[idx].basic.settingPath !== undefined) {
         settingPath = true;
 
         param = {
@@ -201,7 +202,6 @@ class appSetting extends Component {
           loading: Loading,
         };
       }
-      
     } else {
       param = {
         loader: () => import(item),
@@ -209,8 +209,8 @@ class appSetting extends Component {
       };
     }
 
-    if(this.props.widgetList.length > 0 && idx !== -1 && item === undefined) {
-      if(this.props.widgetList[idx].basic.settingPath !== '') {
+    if (this.props.widgetList.length > 0 && idx !== -1 && item === undefined) {
+      if (this.props.widgetList[idx].basic.settingPath !== '') {
         settingPath = true;
 
         param = {
@@ -225,12 +225,12 @@ class appSetting extends Component {
           loading: Loading,
         };
       }
-    } 
+    }
 
     const COMP = Loadable(param);
     return (
-      <div key={'id'}>
-        {item !== undefined ?
+      <div key="id">
+        {item !== undefined ? (
           <COMP
             item={item[idx]}
             widgetID={this.props.match.params.WIDGET_ID}
@@ -238,7 +238,7 @@ class appSetting extends Component {
             updateBizGroupChgYn={this.props.updateBizGroupChgYn}
             type="bizgroup"
           />
-          :
+        ) : (
           <COMP
             item={this.props.widgetList[idx]}
             widgetID={this.props.match.params.WIDGET_ID}
@@ -246,82 +246,76 @@ class appSetting extends Component {
             updateBizGroupChgYn={this.props.updateBizGroupChgYn}
             type="bizgroup"
           />
-        }
+        )}
       </div>
     );
   }
 
   render() {
-
     const {
       widget,
       widgetList,
       match: { url },
     } = this.props;
 
-    const {
-      WIDGET_ID,
-    } = this.state;
+    const { WIDGET_ID } = this.state;
 
     const preUrl = url.substr(0, url.indexOf('/widgetsetting'));
     return (
       <div className="settingsPage" style={{ width: '100vw', height: '100vh', top: 0, left: 0 }}>
-          <StyleWidgetSetting>
-            <div className="userSettingWrapper">
-              <h2 className="pageHeader">
+        <StyleWidgetSetting>
+          <div className="userSettingWrapper">
+            <h2 className="pageHeader">
               {intlObj.get(messages.widgetSetting)}
-                <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
-              </h2>
-              <Row>
-                <Col xl={8} className="navigation">
-                  <nav>
-                    <ul>
-                      {widgetList.map(w => (
-                          <li>
-                            <div className={Number(w.id) === WIDGET_ID? 'current' : null}>
-                              <Link to={`${preUrl}/widgetsetting/${w.BIZGRP_ID}/${w.PAGE_ID}/${w.id}`}>
-                                {lang.get('NAME', w)}
-                              </Link>
-                            </div>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </nav>
-                </Col>
-                <Col xl={16} className="navContent" ><Scrollbars
+              <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
+            </h2>
+            <Row>
+              <Col xl={8} className="navigation">
+                <nav>
+                  <ul>
+                    {widgetList.map(w => (
+                      <li>
+                        <div className={Number(w.id) === WIDGET_ID ? 'current' : null}>
+                          <Link to={`${preUrl}/widgetsetting/${w.BIZGRP_ID}/${w.PAGE_ID}/${w.id}`}>{lang.get('NAME', w)}</Link>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </Col>
+              <Col xl={16} className="navContent">
+                <Scrollbars
                   className="custom-scrollbar"
                   style={{ width: 'calc(100% + 20px)', height: 'calc(100vh - 105px)' }}
                   autoHide
                   autoHideTimeout={1000}
                   autoHideDuration={200}
                 >
-                  <h3 className='title commonWidget'>
-                  {intlObj.get(messages.basicWidgetSetting)}
-                    {this.state.display === 'none' ?
+                  <h3 className="title commonWidget">
+                    {intlObj.get(messages.basicWidgetSetting)}
+                    {this.state.display === 'none' ? (
                       <a className="accordion unfold" title={intlObj.get(messages.unFolding)} onClick={this.unfolding} />
-                      :
+                    ) : (
                       <a className="accordion fold" title={intlObj.get(messages.folding)} onClick={this.folding} />
-                      }
-                    </h3>
+                    )}
+                  </h3>
                   <div className="commonPage" style={{ display: this.state.display }}>
                     <div className="basicSettingTable">
                       <table>
                         <tbody>
                           <tr>
                             <th>
-                              <label className="subtitle" htmlFor="wSubject">{intlObj.get(messages.title)}</label>
+                              <label className="subtitle" htmlFor="wSubject">
+                                {intlObj.get(messages.title)}
+                              </label>
                             </th>
                             <td>
                               <span>{intlObj.get(messages.onTitle)}</span>
                               <div className="radioWrapper">
-                                <RadioGroup
-                                  onChange={this.onChangeDispTitleYn}
-                                  value={this.state.isTitle}
-                                >
+                                <RadioGroup onChange={this.onChangeDispTitleYn} value={this.state.isTitle}>
                                   <ul className="goPublicYN">
                                     <li key="Y">
-                                      <Radio value={true}>{intlObj.get(messages.view)}</Radio>
+                                      <Radio value>{intlObj.get(messages.view)}</Radio>
                                     </li>
                                     <li key="N">
                                       <Radio value={false}>{intlObj.get(messages.unView)}</Radio>
@@ -347,11 +341,7 @@ class appSetting extends Component {
                             <th>{intlObj.get(messages.widgetColor)}</th>
                             <td>
                               <FormItem style={{ marginBottom: 0 }}>
-                                <RadioGroup
-                                  className="colorOptions"
-                                  onChange={this.onChangeWidgetSkin}
-                                  value={this.state.widgetSkin}
-                                >
+                                <RadioGroup className="colorOptions" onChange={this.onChangeWidgetSkin} value={this.state.widgetSkin}>
                                   <Radio.Button value="1">
                                     <div
                                       style={{
@@ -360,7 +350,7 @@ class appSetting extends Component {
                                         color: '#222222',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="2">
@@ -371,7 +361,7 @@ class appSetting extends Component {
                                         color: '#222222',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="3">
@@ -382,7 +372,7 @@ class appSetting extends Component {
                                         color: '#222222',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="4">
@@ -393,7 +383,7 @@ class appSetting extends Component {
                                         color: '#ffffff',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="5">
@@ -404,7 +394,7 @@ class appSetting extends Component {
                                         color: '#ffffff',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="6">
@@ -415,7 +405,7 @@ class appSetting extends Component {
                                         color: '#ffffff',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="7">
@@ -426,7 +416,7 @@ class appSetting extends Component {
                                         color: '#ffffff',
                                       }}
                                     >
-                                    abc
+                                      abc
                                     </div>
                                   </Radio.Button>
                                   <Radio.Button value="8">
@@ -438,7 +428,7 @@ class appSetting extends Component {
                                       }}
                                     >
                                       abc
-                                      </div>
+                                    </div>
                                   </Radio.Button>
                                   {/* <Radio.Button value="9">
                                     <div
@@ -524,26 +514,23 @@ class appSetting extends Component {
                           <tr>
                             <th>{intlObj.get(messages.widgetSize)}</th>
                             <td>
-                              <div className='widgetSize'>
-                                <RadioGroup
-                                  onChange={this.onChangeDispSize}
-                                  value={this.state.dispSize}
-                                >
-                                  {
-                                    widget.sizeArr ? widget.sizeArr.map((s) => (
+                              <div className="widgetSize">
+                                <RadioGroup onChange={this.onChangeDispSize} value={this.state.dispSize}>
+                                  {widget.sizeArr ? (
+                                    widget.sizeArr.map(s => (
                                       <Radio.Button value={s}>
                                         <div className={`rbox w${s}`}>
                                           <p>{s}</p>
                                         </div>
                                       </Radio.Button>
-                                    )) : (
-                                      <Radio.Button value="1X1">
-                                        <div className="rbox w1X1">
-                                          <p>1x1</p>
-                                        </div>
-                                      </Radio.Button>
-                                    )
-                                  }
+                                    ))
+                                  ) : (
+                                    <Radio.Button value="1X1">
+                                      <div className="rbox w1X1">
+                                        <p>1x1</p>
+                                      </div>
+                                    </Radio.Button>
+                                  )}
                                 </RadioGroup>
                               </div>
                             </td>
@@ -553,19 +540,15 @@ class appSetting extends Component {
                     </div>
                   </div>
                   <div className="contentByMenu">
-                    {settingPath === true ?
-                      <h3 className="title">{intlObj.get(messages.widgetsSetting)}</h3>
-                      :
-                      false
-                    }
-                      {this.state.widgetSettingJsx}
+                    {settingPath === true ? <h3 className="title">{intlObj.get(messages.widgetsSetting)}</h3> : false}
+                    {this.state.widgetSettingJsx}
                   </div>
                 </Scrollbars>
-                </Col>
-              </Row>
-            </div>
-            {/* <button onClick={this.props.updateBizGroupChgYn}>test</button> */}
-          </StyleWidgetSetting>
+              </Col>
+            </Row>
+          </div>
+          {/* <button onClick={this.props.updateBizGroupChgYn}>test</button> */}
+        </StyleWidgetSetting>
       </div>
     );
   }
@@ -598,9 +581,4 @@ export function mapDispatchToProps(dispatch) {
 const withReducer = injectReducer({ key: 'appsettingbizgroup', reducer });
 const withSaga = injectSaga({ key: 'appsettingbizgroup', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(appSetting);
-
+export default compose(withReducer, withSaga, withConnect)(appSetting);

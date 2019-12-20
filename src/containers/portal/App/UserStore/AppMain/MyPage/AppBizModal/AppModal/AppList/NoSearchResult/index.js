@@ -13,7 +13,8 @@ class NoSearchResult extends PureComponent {
       <NoResultBox>
         <img src={noResultImage} alt={intlObj.get(messages.alarm)} />
         <h4 className="noResultTitle">
-          <strong>`{searchword}`</strong>{intlObj.get(messages.noSearchResult)}
+          <strong>`{searchword}`</strong>
+          {intlObj.get(messages.noSearchResult)}
         </h4>
         <ul className="searchGuideList">
           <li>{intlObj.get(messages.checkSpelling)}</li>

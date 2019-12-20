@@ -42,6 +42,8 @@ export function* getInitialPortalPage(payload) {
   const selectedIndex = dataList.MENU_ID;
   const menuName = lang.get('NAME', dataList);
 
+  // Todo - when response.list is fail or isUnknown is true,,,,
+
   if (response.list !== 'fail') {
     yield put({
       type: actionType.RECEIVE_MYMENU_DATA_SUCCESS,

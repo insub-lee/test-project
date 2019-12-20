@@ -22,13 +22,13 @@ const onCopyHandler = (CONFIG, changeFormData, formData, id) => {
 };
 
 const LabelComp = ({ CONFIG, changeFormData, formData, id, readOnly }) => (
-  <React.Fragment>
+  <>
     <span>{CONFIG.property.NAME_KOR}</span>
-    {CONFIG && CONFIG.property && CONFIG.property.OPTION_BUTTON && !readOnly && (
+    {CONFIG && CONFIG.property && CONFIG.property.optionCopyKey && CONFIG.property.optionCompKey && !readOnly && (
       <StyledButton className="btn-gray btn-xs" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
         Copy Description
       </StyledButton>
     )}
-  </React.Fragment>
+  </>
 );
 export default LabelComp;

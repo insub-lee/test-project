@@ -9,15 +9,14 @@ import { intlObj, lang } from 'utils/commonUtils';
 import StyleModal from 'containers/portal/components/Modal/StyleModal';
 import Draggable from 'react-draggable';
 
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import messages from '../Opinion/messages';
 import reducer from '../Opinion/reducer';
 import saga from '../Opinion/saga';
 
 // import * as selectors from '../selectors';
 import * as actions from '../Opinion/actions';
-
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
 
 import AntRadiobox from '../../../components/uielements/radiobox.style';
 import { BtnDkGray, BtnLgtGray } from '../../../components/uielements/buttons.style';
@@ -177,16 +176,9 @@ export function mapDispatchToProps(dispatch) {
 
 const mapStateToProps = createStructuredSelector({});
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'oppoList', reducer });
 const withSaga = injectSaga({ key: 'oppoList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(OpposePage);
+export default compose(withReducer, withSaga, withConnect)(OpposePage);
