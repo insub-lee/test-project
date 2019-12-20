@@ -194,7 +194,7 @@ class AppUserForm extends React.Component {
             getDataFromOrganization={getDataFromOrganization}
             // 조직도로 가져갈 데이터
             selectedUsers={this.state.managerSetMembers.slice()}
-            ROLE_CD="SM"
+            ROLE_CD="SA" // 시스템 앱으로 변경 관리 구성원 SM -> SA 로 변경
           />
         ) : (
           ''
