@@ -396,8 +396,8 @@ class VgroupTree extends Component {
 
               const btnCondition4 = node.LVL !== 0;
 
-              // 최상위가 아니고 삭제 하위 노드가 없을 경우
-              const btnCondition3 = node.LVL !== 0 && !node.children;
+              // 최상위가 아니고 삭제 하위 노드가 없을 경우 + 시스템 여부 'N'
+              const btnCondition3 = node.LVL !== 0 && !node.children && node.SYS_YN !== 'Y';
 
               // 노드에 마우스 오버했을 때
               if (this.state.onHoverKey === node.key) {
