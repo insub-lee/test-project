@@ -218,136 +218,10 @@ class App extends React.PureComponent {
       )}
     </div>
   );
-  // const targetNode = document.getElementById('child');
-  // let app = [];
-  //
-  // if (targetNode) {
-  //   return ReactDOM.createPortal(
-  //     <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
-  //       {setMyMenuData.INTL_TYPE === 'Y' ? (
-  //         <AppsRouter
-  //           id={setMyMenuData.PAGE_ID}
-  //           selectedApp={selectedApp}
-  //           setMyMenuData={setMyMenuData}
-  //           setIsSpinnerShow={setIsSpinnerShow}
-  //           isPreviewPage={isPreviewPage}
-  //           isUnreadCnt={isUnreadCnt}
-  //           execPage={execPage}
-  //           execMenu={execMenu}
-  //           show={show}
-  //           onReload={onReload}
-  //         />
-  //       ) : (
-  //         <Page
-  //           columns={selectedApp}
-  //           setMyMenuData={setMyMenuData}
-  //           setIsSpinnerShow={setIsSpinnerShow}
-  //           isPreviewPage={isPreviewPage}
-  //           isUnreadCnt={isUnreadCnt}
-  //           execPage={execPage}
-  //           execMenu={execMenu}
-  //           show={show}
-  //           onReload={onReload}
-  //         />
-  //       )}
-  //     </div>,
-  //     targetNode,
-  //   );
-  // }
-  // return null;
-
-  addNewApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => {
-    const { handleSaveApps, apps } = this.props;
-
-    const targetNode = document.getElementById('child');
-    let app = [];
-
-    if (targetNode) {
-      console.debug('####', setMyMenuData.INTL_TYPE);
-
-      // Need some simple way to distinquish the different dialogs.
-      app = ReactDOM.createPortal(
-        <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
-          {setMyMenuData.INTL_TYPE === 'Y' ? (
-            <AppsRouter
-              id={setMyMenuData.PAGE_ID}
-              selectedApp={selectedApp}
-              setMyMenuData={setMyMenuData}
-              setIsSpinnerShow={setIsSpinnerShow}
-              isPreviewPage={isPreviewPage}
-              isUnreadCnt={isUnreadCnt}
-              execPage={execPage}
-              execMenu={execMenu}
-              show={show}
-              onReload={onReload}
-            />
-          ) : (
-            <Page
-              columns={selectedApp}
-              setMyMenuData={setMyMenuData}
-              setIsSpinnerShow={setIsSpinnerShow}
-              isPreviewPage={isPreviewPage}
-              isUnreadCnt={isUnreadCnt}
-              execPage={execPage}
-              execMenu={execMenu}
-              show={show}
-              onReload={onReload}
-            />
-          )}
-        </div>,
-        targetNode,
-      );
-      // app = (
-      //   <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
-      //     {setMyMenuData.INTL_TYPE === 'Y' ? (
-      //       <AppsRouter
-      //         id={setMyMenuData.PAGE_ID}
-      //         selectedApp={selectedApp}
-      //         setMyMenuData={setMyMenuData}
-      //         setIsSpinnerShow={setIsSpinnerShow}
-      //         isPreviewPage={isPreviewPage}
-      //         isUnreadCnt={isUnreadCnt}
-      //         execPage={execPage}
-      //         execMenu={execMenu}
-      //         show={show}
-      //         onReload={onReload}
-      //       />
-      //     ) : (
-      //       <Page
-      //         columns={selectedApp}
-      //         setMyMenuData={setMyMenuData}
-      //         setIsSpinnerShow={setIsSpinnerShow}
-      //         isPreviewPage={isPreviewPage}
-      //         isUnreadCnt={isUnreadCnt}
-      //         execPage={execPage}
-      //         execMenu={execMenu}
-      //         show={show}
-      //         onReload={onReload}
-      //       />
-      //     )}
-      //   </div>
-      // );
-      // const test = app ? [app] : [];
-      // let test = [];
-      // if (app.length !== 0) {
-      //   // REMOVE PORTAL MULTIPLE DIVS
-      //   // test = apps.concat(app);
-      //   test.push(app);
-      // } else {
-      //   test = [];
-      // }
-
-      // const setMyMenuDataCopy = Object.assign({}, setMyMenuData);
-      // setMyMenuDataCopy.isCssTarget = true;
-
-      // a = true;
-      // handleSaveApps(test, setMyMenuDataCopy);
-    }
-  };
 
   // ****************** 모바일 Dock ContextMenu 플래그 설정 콜백 함수 끝 ******************
   handleClick = () => {
-    this.setState(this.state.isFullscreenEnabled ? { isFullscreenEnabled: false } : { isFullscreenEnabled: !false });
+    this.setState(prevState => ({ isFullscreenEnabled: !prevState.isFullscreenEnabled }));
   };
 
   // ****************** 스킨 설정 함수 ******************
@@ -508,7 +382,6 @@ class App extends React.PureComponent {
     }
     */
     const { rootPageId, rootAppYn, myHomePageId } = this.props;
-    console.debug('@@@ props', this.props);
 
     if (rootPageId && rootPageId > 0) {
       this.props.history.push(`/${rootAppYn === 'Y' ? basicPath.APPS : basicPath.PAGE}/${rootPageId}`);
@@ -519,7 +392,7 @@ class App extends React.PureComponent {
 
   getLayoutMarginRight = () => {
     // REMOVE DOCK - 주석 처리
-    const { dockFixedYn } = this.props;
+    // const { dockFixedYn } = this.props;
     // return dockFixedYn === 'Y' ? 70 : 0;
     return 0;
   };
