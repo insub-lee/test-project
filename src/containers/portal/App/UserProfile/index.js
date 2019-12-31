@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { intlObj } from 'utils/commonUtils';
 import { Button, Popover } from 'antd';
 import { createStructuredSelector } from 'reselect';
+
 import Organization from 'containers/portal/components/Organization';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
