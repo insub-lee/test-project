@@ -549,6 +549,7 @@ class App extends React.PureComponent {
                           : 'gridWrapper'
                       }`}
                     >
+                      {console.debug('history : ', this.props.history)}
                       <Content
                         className="portalContent"
                         style={{

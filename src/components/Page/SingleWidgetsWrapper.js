@@ -39,7 +39,7 @@ export default class SingleWidgetsWrapper extends PureComponent {
           position: 'relative',
           top: 0,
           left: 0,
-          width: 'calc(100% - 8px)',
+          // width: 'calc(100% - 8px)',
         }}
       >
         <SingleStyleWidget className={`isoSingleWidgetsWrapper ${skinInfo !== '' && isFullSize ? skinInfo : ''}`} style={wrapperStyle}>
