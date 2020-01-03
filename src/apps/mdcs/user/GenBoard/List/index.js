@@ -52,7 +52,7 @@ class List extends Component {
     return (
       <Styled>
         <div className="list-btn list-top-btn" style={{ padding: '5px' }}>
-          <Button className="btn-primary" onClick={() => revisionTask(id, workSeq, 10395, onRevisionComplete)} style={{ marginRight: '10px' }}>
+        <Button className="btn-primary" onClick={() => revisionTask(id, workSeq, 10395, onRevisionComplete)} style={{ marginRight: '10px' }}>
             REVISION
           </Button>
           <Button type="button" className="btn-primary" onClick={() => this.props.onChangeMovePageHandler('EDIT', -1, -1)}>

@@ -16,6 +16,7 @@ CoverViewer.propTypes = {
   apiInfo: PropTypes.object,
 };
 
-CoverViewer.defaultProps = {};
+CoverViewer.defaultProps = {
+};
 
 export default CoverViewer;

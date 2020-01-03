@@ -149,7 +149,7 @@ class IntroComponent extends Component {
         return 0;
       });
 
-    const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];
+    const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];    
 
     const { id, getCallDataHanlder, apiArys } = this.props;
     apiArys.push({
@@ -315,7 +315,7 @@ class IntroComponent extends Component {
     this.setState({ selectedDraft: value });
   };
 
-  render() {
+  render() {    
     const { result } = this.props;
     const { selectedValue1, selectedValue2, selectedValue3, selectedValue4, isLoading } = this.state;
     const _fDepth =

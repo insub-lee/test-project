@@ -11,13 +11,13 @@ class View extends Component {
   };
 
   componentDidMount() {}
-
-  viewFavorite = data => {
+  
+  viewFavorite = (data) =>{
     const { onChangeMovePageHandler } = this.props;
     onChangeMovePageHandler('LIST');
-  };
+  }
 
-  delFavorite = data => {
+  delFavorite = (data) => {
     const { favSeq } = this.props;
     const { id } = this.props;
     const apiArr = {
@@ -47,9 +47,7 @@ class View extends Component {
           </tbody>
           <tfoot>
             <tr>
-              <th colSpan="4">
-                <Footer delFavorite={this.delFavorite} {...this.props} favSeq={favSeq} />
-              </th>
+              <th colSpan="4">{ <Footer delFavorite={ this.delFavorite } {...this.props} favSeq={favSeq} /> }</th>
             </tr>
           </tfoot>
         </table>
