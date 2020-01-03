@@ -608,12 +608,16 @@ html {
 
 /* iframe : 스크롤바 생기지 않고 화면에 꽉 차게, dock 고정 | 고정해제 적용 */
 .legacy {
+  /* legacy iframe 사이즈 조절 */
+  /*
   position: absolute !important;
   top: 0;
   left: 5px;
   bottom: 0;
   width: calc(100% - 5px) !important;
-  border-width: 1px 0px 0px 0px;
+  */
+  width: 100%; /* */
+  border-width: 1px 0 0 0;
   border-color: #ffffff;
   height: calc(100vh - 42px) !important;
   background: #ffffff;
