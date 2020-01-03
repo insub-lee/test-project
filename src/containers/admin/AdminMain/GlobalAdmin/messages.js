@@ -5,6 +5,10 @@ export default defineMessages({
     id: 'admin.AdminMain.GlobalAdmin.emptySelection',
     defaultMessage: '선택 항목이 없습니다.',
   },
+  noSearch: {
+    id: 'admin.AdminMain.GlobalAdmin.noSearch',
+    defaultMessage: '검색결과없음',
+  },
   chkInput: {
     id: 'admin.AdminMain.GlobalAdmin.regComplete',
     defaultMessage: '필수 입력값을 확인하십시오.',
