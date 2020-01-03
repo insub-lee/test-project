@@ -3,11 +3,13 @@ import PropTypes from 'prop-types';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-import List from './List';
+import BizStd from './BizStd';
+import Search from './Search';
 
 class SearchDetail extends Component {
   render() {
-    return <BizMicroDevBase id="SearchDetail" component={List} />;
+    const { workSeq } = this.props;
+    return <BizMicroDevBase id="SearchDetail" workSeq={workSeq} component={Search} />;
   }
 }
 
@@ -16,6 +18,8 @@ SearchDetail.propTypes = {
   apiInfo: PropTypes.object,
 };
 
-SearchDetail.defaultProps = {};
+SearchDetail.defaultProps = {
+  workSeq: 202,
+};
 
 export default SearchDetail;

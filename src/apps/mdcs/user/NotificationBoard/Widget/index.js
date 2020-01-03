@@ -90,6 +90,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-mdcs-user-NotificationBoard-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-mdcs-user-NotificationBoard-saga', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(List);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(List);

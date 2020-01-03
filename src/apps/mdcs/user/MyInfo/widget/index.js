@@ -67,9 +67,16 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({});
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
 const withSaga = injectSaga({ key: 'MyInfoWidget', saga });
 const withReducer = injectReducer({ key: 'MyInfoWidget', reducer });
 
-export default compose(withReducer, withSaga, withConnect)(MyInfoWidget);
+export default compose(
+  withReducer,
+  withSaga,
+  withConnect,
+)(MyInfoWidget);

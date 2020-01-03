@@ -81,14 +81,14 @@ class Edit extends Component {
             수정
           </Button>
         ) : (
-          <>
+          <React.Fragment>
             <Button onClick={this.onTempSave} type="primary" style={{ marginRight: '10px' }}>
               임시저장
             </Button>
             <Button onClick={this.onSave} type="primary">
               등록
             </Button>
-          </>
+          </React.Fragment>
         )}
       </div>
     );
