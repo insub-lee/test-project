@@ -99,6 +99,42 @@ class SettingsPopover extends Component {
     }
   };
 
+  renderSettingView = () => {
+    if (this.state.app === 'all') {
+      if (this.state.stat) {
+        return (
+          <p className="responseTxt">
+            {intlObj.get(messages.all)} {intlObj.get(messages.activate)}
+          </p>
+        );
+      }
+      if (!this.state.stat) {
+        return (
+          <p className="responseTxt">
+            {intlObj.get(messages.all)} {intlObj.get(messages.activate)}
+          </p>
+        );
+      }
+    }
+    if (this.state.app !== 'all') {
+      if (this.state.stat) {
+        return (
+          <p className="responseTxt">
+            {this.state.app} {intlObj.get(messages.activate)}
+          </p>
+        );
+      }
+      if (!this.state.stat) {
+        return (
+          <p className="responseTxt">
+            {this.state.app} {intlObj.get(messages.inactivate)}
+          </p>
+        );
+      }
+    }
+    return null;
+  };
+
   render() {
     const { currentView } = this.props;
     let className = '';
@@ -119,44 +155,6 @@ class SettingsPopover extends Component {
       default:
         className = 'navContentMobile';
     }
-
-    const RenderSettingView = () => {
-      if (this.state.app) {
-        if (this.state.app === 'all') {
-          if (this.state.stat) {
-            return (
-              <p className="responseTxt">
-                {intlObj.get(messages.all)} {intlObj.get(messages.activate)}
-              </p>
-            );
-          }
-          if (!this.state.stat) {
-            return (
-              <p className="responseTxt">
-                {intlObj.get(messages.all)} {intlObj.get(messages.activate)}
-              </p>
-            );
-          }
-        } else if (this.state.app !== 'all') {
-          if (this.state.stat) {
-            return (
-              <p className="responseTxt">
-                {this.state.app} {intlObj.get(messages.activate)}
-              </p>
-            );
-          }
-          if (!this.state.stat) {
-            return (
-              <p className="responseTxt">
-                {this.state.app} {intlObj.get(messages.inactivate)}
-              </p>
-            );
-          }
-        }
-      } else if (!this.state.app) {
-        return false;
-      }
-    };
 
     return (
       <StyleUserSetting className="userSetting">
@@ -185,22 +183,16 @@ class SettingsPopover extends Component {
               </nav>
             </Col>
             <Col xl={16} className={className}>
-              {this.state.selected === 'toast' ? (
+              {this.state.selected === 'toast' && (
                 <MessageTab onClose={this.props.closeSetting} message={this.setMessage} list={this.state.list} currentView={this.props.currentView} />
-              ) : (
-                false
               )}
               {/* 언어별 적용 방법에 대한 고려 필요 */}
-              {RenderSettingView()}
+              {this.renderSettingView()}
               {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
               {this.state.selected === 'skin' ? <SkinTab onClose={this.closeModal} setSkin={this.setSkin} currentView={this.props.currentView} /> : false}
               {this.state.skin ? <p className="responseTxt">{this.state.skin}테마가 활성화 되었습니다.</p> : false}
               {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
-              {this.state.selected === 'language' ? (
-                <LanguageTab onClose={this.closeModal} setLang={this.setLang} currentView={this.props.currentView} />
-              ) : (
-                false
-              )}
+              {this.state.selected === 'language' && <LanguageTab onClose={this.closeModal} setLang={this.setLang} currentView={this.props.currentView} />}
               {this.state.lang ? <p className="responseTxt">{intlObj.get(messages.selectLanguage)}</p> : false}
               {/* <BtnDkGray className="InTab" onClick={() => this.props.closeSetting()}>{intlObj.get(messages.close)}</BtnDkGray> */}
             </Col>

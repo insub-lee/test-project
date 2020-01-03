@@ -8,8 +8,8 @@ import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserSetting = styled.div`
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100vh;
   padding: 42px 0 45px 0;
