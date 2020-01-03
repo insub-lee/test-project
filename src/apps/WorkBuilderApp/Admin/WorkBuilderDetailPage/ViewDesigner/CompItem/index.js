@@ -107,7 +107,6 @@ class CompItem extends React.Component {
     const {
       col: { comp },
     } = this.props;
-
     return (
       <div>
         <div>
@@ -126,11 +125,13 @@ class CompItem extends React.Component {
             defaultValue={configProps.comp.CONFIG.property.COMP_SRC}
             onChange={value => this.handleChangeViewConfig('COMP_SRC', value, 'property')}
           >
-            {configProps.compPoolList.map(node => (
-              <Option key={node.COMP_SRC} value={node.COMP_SRC}>
-                {node.COMP_NAME}
-              </Option>
-            ))}
+            {configProps.compPoolList
+              .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')
+              .map(node => (
+                <Option key={node.COMP_SRC} value={node.COMP_SRC}>
+                  {node.COMP_NAME}
+                </Option>
+              ))}
           </Select>
         </div>
         {ConfigInfo[configType] && <div>{ConfigInfo[configType].renderer(configProps)}</div>}

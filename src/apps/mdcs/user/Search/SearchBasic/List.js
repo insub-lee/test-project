@@ -285,7 +285,7 @@ class SearchBasic extends Component {
             }}
             okButtonProps={null}
           >
-            <>
+            <React.Fragment>
               <div className="pop_tit">적용 범위 선택</div>
               <div className="pop_con">
                 <Table
@@ -300,7 +300,7 @@ class SearchBasic extends Component {
                   })}
                 />
               </div>
-            </>
+            </React.Fragment>
           </AntdModal>
           <AntdModal
             className="modalWrapper modalTechDoc modalCustom"
@@ -312,12 +312,12 @@ class SearchBasic extends Component {
             okButtonProps={null}
             destroyOnClose
           >
-            <>
+            <React.Fragment>
               <div className="pop_tit">선택 내용 보기</div>
               <div className="pop_con">
                 <SearchViewer workSeq={SearchView.workSeq} taskSeq={SearchView.taskSeq} closeBtnFunc={closeBtnFunc} clickCoverView={this.clickCoverView} />
               </div>
-            </>
+            </React.Fragment>
           </AntdModal>
           <AntdModal
             className="modalWrapper modalTechDoc modalCustom"
@@ -333,12 +333,12 @@ class SearchBasic extends Component {
             okButtonProps={null}
             destroyOnClose
           >
-            <>
+            <React.Fragment>
               <div className="pop_tit">선택 내용 보기</div>
               <div className="pop_con">
                 <CoverViewer nodeId={SearchView.nodeId} taskSeq={SearchView.taskSeq} workSeq={SearchView.workSeq} />
               </div>
-            </>
+            </React.Fragment>
           </AntdModal>
         </div>
       </StyledSearch>
