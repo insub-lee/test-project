@@ -35,12 +35,12 @@ export default class SingleWidgetsWrapper extends PureComponent {
 
     return (
       <div
-        style={{
-          position: 'relative',
-          top: 0,
-          left: 0,
-          // width: 'calc(100% - 8px)',
-        }}
+        // style={{
+        //   position: 'relative',
+        //   top: 0,
+        //   left: 0,
+        //   // width: 'calc(100% - 8px)',
+        // }}
       >
         <SingleStyleWidget className={`isoSingleWidgetsWrapper ${skinInfo !== '' && isFullSize ? skinInfo : ''}`} style={wrapperStyle}>
           {isFullSize && <WidgetHeader item={item} />}
