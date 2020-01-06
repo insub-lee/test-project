@@ -48,12 +48,12 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
           Divide
         </ActionButton>
         {viewType !== 'LIST' && (
-          <React.Fragment>
+          <>
             <Divider type="vertical" />
             <ActionButton type="button" onClick={action.addGroup}>
               Add Group
             </ActionButton>
-          </React.Fragment>
+          </>
         )}
       </div>
       <div className="button--group--right">
@@ -87,12 +87,12 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
                         <i className="fa fa-plus" />
                       </CircleActionButton>
                       {group.rows.length > 1 && (
-                        <React.Fragment>
+                        <>
                           <br />
                           <CircleActionButton type="button" onClick={() => action.removeRow(groupIndex, rowIndex)}>
                             <i className="fa fa-minus" />
                           </CircleActionButton>
-                        </React.Fragment>
+                        </>
                       )}
                     </div>
                   )}
@@ -146,7 +146,7 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
           >
             <Row key="heiddenFieldRow" gutter={[0, 0]} type="flex" style={{ width: '100%' }}>
               {hiddenField.map((node, index) => (
-                <Col key="heiddenFieldCol" span={8}>
+                <Col key={`heiddenFieldCol_${index}`} className="heiddenFieldCol" span={8}>
                   <HiddenComp key={`heiddenFieldComp_${index}`} compItem={node} compIndex={index} removeHiddenComp={action.removeHiddenComp} />
                 </Col>
               ))}

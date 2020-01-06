@@ -74,7 +74,11 @@ export const getDefaultFormProperty = (type, id) => {
         style: { ...defaultFormProperty.style },
         label: 'Label',
         id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
+        options: [
+          { label: 'label 1', value: 'label 1' },
+          { label: 'label 2', value: 'label 2' },
+          { label: 'label 3', value: 'label 3' },
+        ],
         defaultValue: [],
       };
     case 'radio':
@@ -83,7 +87,11 @@ export const getDefaultFormProperty = (type, id) => {
         style: { ...defaultFormProperty.style },
         label: 'Label',
         id,
-        options: [{ label: 'label 1', value: 'label 1' }, { label: 'label 2', value: 'label 2' }, { label: 'label 3', value: 'label 3' }],
+        options: [
+          { label: 'label 1', value: 'label 1' },
+          { label: 'label 2', value: 'label 2' },
+          { label: 'label 3', value: 'label 3' },
+        ],
       };
     default:
       return {
