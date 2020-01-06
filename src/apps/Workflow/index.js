@@ -94,7 +94,7 @@ class Workflow extends Component {
               {/* <WorkflowLineComponent /> */}
               {/* <SignLine signline={signline} /> */}
               <Switch>
-                {/*<Route path="/apps/workflow/component/view/line" component={WorkflowLineComponent} />*/}
+                {/* <Route path="/apps/workflow/component/view/line" component={WorkflowLineComponent} /> */}
                 <Route path="/apps/workflow/component/view/process" component={Process} />
                 <Route path="/apps/workflow/component/view/signline" component={SignLine} />
                 <Route path="/apps/WorkFlow/User/Draft/:CATE" component={Draft} />
@@ -125,9 +125,6 @@ const mapDispatchToProps = dispatch => ({
   historyPush: url => dispatch(push(url)),
 });
 
-const withConnect = connect(
-  null,
-  mapDispatchToProps,
-);
+const withConnect = connect(null, mapDispatchToProps);
 
 export default compose(withConnect)(Workflow);

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Input } from 'antd';
 
-import StyledButton from 'components/CommonStyled/StyledButton';
+import StyledButton from 'apps/mdcs/styled/StyledButton';
 
 import WorkProcessModal from './WorkProcessModal';
 import StyledWorkProcess from './StyledWorkProcess';
@@ -39,7 +39,7 @@ class WorkProcess extends Component {
     let colSpan = 6;
     let filterRule = [];
     let filterItem = [];
-    if (DRAFT_PROCESS_STEP !== undefined) {
+    if (DRAFT_PROCESS_STEP !== undefined && DRAFT_PROCESS_STEP !== null) {
       filterRule = DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
       filterItem = DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
       colSpan = Math.floor(24 / filterRule.length);
@@ -49,7 +49,7 @@ class WorkProcess extends Component {
       <StyledWorkProcess>
         <div className="signLineWrapper">
           {filterRule !== undefined && filterRule.length > 0 && (
-            <React.Fragment>
+            <>
               <Row gutter={0}>
                 {filterRule.map(item => (
                   <Col span={colSpan} key={`headCol_${item.NODE_ID}`}>
@@ -74,7 +74,7 @@ class WorkProcess extends Component {
                   </Col>
                 ))}
               </Row>
-            </React.Fragment>
+            </>
           )}
         </div>
         {filterItem.map(item => (

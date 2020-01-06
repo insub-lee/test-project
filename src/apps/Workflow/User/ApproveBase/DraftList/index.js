@@ -9,7 +9,7 @@ import ApproveView from '../ApproveView';
 
 const AntdTable = StyledAntdTable(Table);
 
-class ApproveList extends Component {
+class DraftList extends Component {
   componentDidMount() {
     // const { category, getApproveList } = this.props;
     // getApproveList({ searchType: category });
@@ -31,9 +31,16 @@ class ApproveList extends Component {
       align: 'center',
     },
     {
-      title: '유형',
-      dataIndex: 'NODETYPE',
-      key: 'NODETYPE',
+      title: '프로세스상태',
+      dataIndex: 'STATUS_NM',
+      key: 'STATUS_NM',
+      width: '10%',
+      align: 'center',
+    },
+    {
+      title: '결재상태',
+      dataIndex: 'PROC_STATUS_NM',
+      key: 'PROC_STATUS_NM',
       width: '10%',
       align: 'center',
     },
@@ -43,20 +50,7 @@ class ApproveList extends Component {
       key: 'title',
       ellipsis: true,
     },
-    {
-      title: '결재상태',
-      dataIndex: 'APPV_STATUS_NM',
-      key: 'APPV_STATUS_NM',
-      width: '10%',
-      align: 'center',
-    },
-    {
-      title: '기안자',
-      dataIndex: 'NAME_KOR',
-      key: 'nameKor',
-      width: '10%',
-      align: 'center',
-    },
+
     {
       title: '기안일',
       dataIndex: 'REG_DTTM',
@@ -79,7 +73,10 @@ class ApproveList extends Component {
       <div>
         <AntdTable
           columns={this.getTableColumns()}
-          dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
+          dataSource={approveList.map(item => ({
+            ...item,
+            key: `approveList_${item.RNUM}`,
+          }))}
           onRow={(record, rowIndex) => ({
             onClick: e => this.onRowClick(record, rowIndex, e),
           })}
@@ -91,7 +88,7 @@ class ApproveList extends Component {
   }
 }
 
-ApproveList.propTypes = {
+DraftList.propTypes = {
   category: PropTypes.string,
   approveList: PropTypes.array,
   getApproveList: PropTypes.func,
@@ -100,10 +97,10 @@ ApproveList.propTypes = {
   setViewVisible: PropTypes.func,
 };
 
-ApproveList.defaultProps = {
+DraftList.defaultProps = {
   category: 'draft',
   approveList: [],
   selectedRow: {},
 };
 
-export default ApproveList;
+export default DraftList;

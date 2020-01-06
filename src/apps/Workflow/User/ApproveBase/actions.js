@@ -34,3 +34,19 @@ export const reqApprove = appvStatus => ({
   type: actionTypes.REQ_APPROVE,
   appvStatus,
 });
+
+export const setBizFormData = formData => ({
+  type: actionTypes.SET_BIZFORMDATA,
+  formData,
+});
+
+export const getUserInfo = (userInfo, callBack) => ({
+  type: actionTypes.GET_USERINFO,
+  userInfo,
+  callBack,
+});
+
+export const setUserInfo = userInfo => ({
+  type: actionTypes.SET_USERINFO,
+  userInfo,
+});

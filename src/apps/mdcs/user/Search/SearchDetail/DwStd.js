@@ -49,12 +49,12 @@ class DwStd extends Component {
     this.callApi(apiArr);
     setSearchParam({
       ...searchParam,
-      dwType: { key: 'WBT.DW_TYPE', condition: '=', value: 0, type: 'INT' },
-      product: { key: 'WBT.PRODUCT', condition: '=', value: 0, type: 'INT' },
-      pkg: { key: 'WBT.PKG', condition: '=', value: 0, type: 'INT' },
-      fab: { key: 'WBT.FAB', condition: '=', value: 0, type: 'INT' },
-      lead: { key: 'WBT.LEAD', condition: '=', value: 0, type: 'INT' },
-      ball: { key: 'WBT.BALL', condition: '=', value: 0, type: 'INT' },
+      dwType: { key: 'TBD.DW_TYPE', condition: '=', value: 0, type: 'INT' },
+      product: { key: 'TBD.PRODUCT', condition: '=', value: 0, type: 'INT' },
+      pkg: { key: 'TBD.PKG', condition: '=', value: 0, type: 'INT' },
+      fab: { key: 'TBD.FAB', condition: '=', value: 0, type: 'INT' },
+      lead: { key: 'TBD.LEAD', condition: '=', value: 0, type: 'INT' },
+      ball: { key: 'TBD.BALL', condition: '=', value: 0, type: 'INT' },
     });
   }
 

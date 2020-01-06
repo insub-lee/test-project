@@ -105,13 +105,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.Workflow.SignLienModal', reducer });
 const withSaga = injectSaga({ key: 'apps.Workflow.SignLienModal', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(SignLineModal);
+export default compose(withSaga, withReducer, withConnect)(SignLineModal);

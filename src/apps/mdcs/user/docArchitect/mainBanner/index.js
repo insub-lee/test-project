@@ -19,7 +19,7 @@ const mainBanner = ({ num, modalOpenHandler, list, data }) => {
   const type = getType(data.FULLPATH);
   const link = '/apps/mdcs/user/test';
   return (
-    <React.Fragment>
+    <>
       <span className={`icon icon_main${type}`}></span>
       <span className="big">{data.NAME_KOR}</span>
       <span className="small">{data.NAME_ENG}</span>
@@ -33,24 +33,24 @@ const mainBanner = ({ num, modalOpenHandler, list, data }) => {
             <ul>
               {num > 5
                 ? list.slice(0, 5).map((item, index) => (
-                  <li key={item.id}>
-                    <a role="button" onClick={modalOpenHandler}>
-                      {index + 1}.{item.TITLE}
-                    </a>
-                  </li>
-                ))
+                    <li key={item.id}>
+                      <a role="button" onClick={modalOpenHandler}>
+                        {index + 1}.{item.TITLE}
+                      </a>
+                    </li>
+                  ))
                 : list.map((item, index) => (
-                  <li key={item.id}>
-                    <a role="button" onClick={modalOpenHandler}>
-                      {index + 1}.{item.TITLE}
-                    </a>
-                  </li>
-                ))}
+                    <li key={item.id}>
+                      <a role="button" onClick={modalOpenHandler}>
+                        {index + 1}.{item.TITLE}
+                      </a>
+                    </li>
+                  ))}
             </ul>
           </dd>
         </dl>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 export default mainBanner;

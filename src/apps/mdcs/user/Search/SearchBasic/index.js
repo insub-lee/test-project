@@ -16,7 +16,6 @@ SearchBasic.propTypes = {
   apiInfo: PropTypes.object,
 };
 
-SearchBasic.defaultProps = {
-};
+SearchBasic.defaultProps = {};
 
 export default SearchBasic;
