@@ -299,10 +299,10 @@ upstream manual-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10500;
 }
 upstream portal-download {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10106;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40033;
 }
 upstream portal-upload {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10105;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:40032;
 }
 upstream thumbor {
     server dev-biz-thumbor.marathon.l4lb.thisdcos.directory:8000;
