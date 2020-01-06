@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Button, Modal } from 'antd';
-import ReactDataGrid from 'react-data-grid';
-import { Link } from 'react-router-dom';
+import { Button, Modal, Popconfirm, Table } from 'antd';
+// import ReactDataGrid from 'react-data-grid';
+// import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import WorkBuilderDetailPage from '../WorkBuilderDetailPage'
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import WorkBuilderDetailPage from '../WorkBuilderDetailPage';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -19,49 +20,13 @@ import saga from './saga';
 import Wrapper from './Wrapper';
 import FormModal from './FormModal';
 
-const columns = [
-  {
-    name: 'WORK_SEQ',
-    key: 'WORK_SEQ',
-  },
-  {
-    name: '업무빌더ID',
-    key: 'WORK_ID',
-  },
-  {
-    name: '업무빌더명',
-    key: 'NAME_KOR',
-  },
-  {
-    name: '설명',
-    key: 'DSCR',
-  },
-  {
-    name: '등록일',
-    key: 'REG_DTTM',
-    formatter: ({ value }) => moment(value).format('YYYY-MM-DD'),
-  },
-  {
-    name: '상태',
-    key: 'STATUS',
-    formatter: ({ value }) => {
-      switch (value) {
-        case 0:
-          return '디자인중';
-        case 1:
-          return '생성됨';
-        default:
-          return '';
-      }
-    },
-  },
-];
+const AntdTable = StyledAntdTable(Table);
 
 class WorkBuilderListPage extends Component {
   state = {
     isShow: false,
     workSeq: 0,
-  }
+  };
 
   componentDidMount() {
     const { getList } = this.props;
@@ -72,6 +37,60 @@ class WorkBuilderListPage extends Component {
     this.formRef = formRef;
   };
 
+  columns = [
+    {
+      title: 'WORK_SEQ',
+      dataIndex: 'WORK_SEQ',
+      key: 'WORK_SEQ',
+    },
+    {
+      title: '업무빌더ID',
+      dataIndex: 'WORK_ID',
+      key: 'WORK_ID',
+      onCell: ({ WORK_SEQ }) => ({
+        onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
+      }),
+    },
+    {
+      title: '업무빌더명',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
+      onCell: ({ WORK_SEQ }) => ({
+        onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
+      }),
+    },
+    {
+      title: '등록일',
+      dataIndex: 'REG_DTTM',
+      key: 'REG_DTTM',
+      render: text => moment(text).format('YYYY-MM-DD'),
+    },
+    {
+      title: '상태',
+      dataIndex: 'STATUS',
+      key: 'STATUS',
+      render: text => {
+        switch (text) {
+          case 0:
+            return '디자인중';
+          case 1:
+            return '생성됨';
+          default:
+            return '';
+        }
+      },
+    },
+    {
+      title: '',
+      key: 'action',
+      render: record => (
+        <Popconfirm title="Are you sure delete this Builder?" onConfirm={() => this.props.removeWorkBuilder(record)} okText="Yes" cancelText="No">
+          <Button>Delete</Button>
+        </Popconfirm>
+      ),
+    },
+  ];
+
   render() {
     const {
       list,
@@ -80,6 +99,7 @@ class WorkBuilderListPage extends Component {
       toggleModalVisible,
       postWorkBuilder,
       history,
+      removeWorkBuilder,
     } = this.props;
     return (
       <Wrapper>
@@ -92,14 +112,23 @@ class WorkBuilderListPage extends Component {
           </div>
         </div>
         <hr />
-        <ReactDataGrid
-          columns={columns}
+        {/* <ReactDataGrid
+          columns={columns(removeWorkBuilder)}
           rowGetter={i => list[i]}
           rowsCount={list.length}
           minHeight={500}
           // onRowClick={i => history.push(`/admin/adminmain/workBuilder/${list[i].WORK_SEQ}`)}
           onRowClick={i => this.setState({ isShow: true, workSeq: list[i].WORK_SEQ })}
           enableCellAutoFocus={false}
+        /> */}
+        <AntdTable
+          rowKey="WORK_SEQ"
+          className="workBuilderList"
+          columns={this.columns}
+          dataSource={list}
+          // onRow={({WORK_SEQ}) => ({
+          //   onClick: event => event.target.tagName === "BUTTON" ? false : this.setState({ isShow: true, workSeq: WORK_SEQ }),
+          // })}
         />
         <FormModal
           wrappedComponentRef={this.registerFormRef}
@@ -134,6 +163,7 @@ WorkBuilderListPage.propTypes = {
   toggleModalVisible: PropTypes.func,
   postWorkBuilder: PropTypes.func,
   getList: PropTypes.func,
+  removeWorkBuilder: PropTypes.func,
 };
 
 WorkBuilderListPage.defaultProps = {
@@ -141,6 +171,7 @@ WorkBuilderListPage.defaultProps = {
   toggleModalVisible: () => console.debug('no bind events'),
   postWorkBuilder: () => console.debug('no bind events'),
   getList: () => console.debug('no bind events'),
+  removeWorkBuilder: () => console.debug('no bind events'),
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -162,17 +193,11 @@ const mapDispatchToProps = dispatch => ({
     });
   },
   getList: () => dispatch(actions.getList()),
+  removeWorkBuilder: rowData => dispatch(actions.removeWorkBuilderBySaga(rowData)),
 });
 
 const withReducer = injectReducer({ key: 'work-builder-detail-page', reducer });
 const withSaga = injectSaga({ key: 'work-builder-detail-page', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(WorkBuilderListPage);
+export default compose(withReducer, withSaga, withConnect)(WorkBuilderListPage);

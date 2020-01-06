@@ -112,13 +112,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'work-builder-detail-option', reducer });
 const withSaga = injectSaga({ key: 'work-builder-detail-option', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Option);
+export default compose(withReducer, withSaga, withConnect)(Option);

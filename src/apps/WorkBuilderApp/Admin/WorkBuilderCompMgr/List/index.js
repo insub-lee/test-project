@@ -152,12 +152,12 @@ class List extends Component {
           }}
           destroyOnClose
         >
-          <React.Fragment>
+          <>
             <div className="pop_tit">ComponentPool Editor</div>
             <div className="pop_con">
               <Edit {...this.props} onCompSave={this.onCompSave} onModifySave={this.onModifySave} actionType={this.state.actionType} />
             </div>
-          </React.Fragment>
+          </>
         </AntdModal>
         <AntdModal
           className="modalWrapper  modalCustom"
@@ -168,12 +168,12 @@ class List extends Component {
             this.setState({ detailVisible: false });
           }}
         >
-          <React.Fragment>
+          <>
             <div className="pop_tit">ComponentPool Detail</div>
             <div className="pop_con">
               <CompDetail {...this.props} />
             </div>
-          </React.Fragment>
+          </>
         </AntdModal>
       </StyledPool>
     );

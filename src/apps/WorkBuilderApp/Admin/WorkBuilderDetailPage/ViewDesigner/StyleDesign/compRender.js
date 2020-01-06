@@ -14,6 +14,8 @@ const CompRender = ({ comp }) => {
       extraApiData: [],
       formData: {},
       compProps: {},
+      visible: true,
+      isManage: true,
     });
   }
   return <div />;

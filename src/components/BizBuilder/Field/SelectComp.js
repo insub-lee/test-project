@@ -48,7 +48,7 @@ class SelectComp extends Component {
     } = this.props;
     const apiData = extraApiData[`select_${mapId}`];
     return visible ? (
-      <React.Fragment>
+      <>
         {colData !== undefined ? (
           <Select
             value={colData === ' ' || colData === 0 ? undefined : Number(colData)}
@@ -72,7 +72,7 @@ class SelectComp extends Component {
         ) : (
           <Select value={undefined} placeholder="Select" style={{ width: '100%' }} />
         )}
-      </React.Fragment>
+      </>
     ) : (
       ''
     );

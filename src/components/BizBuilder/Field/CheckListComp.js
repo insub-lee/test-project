@@ -107,7 +107,7 @@ class CheckListComp extends Component {
       }
     }
     return visible ? (
-      <React.Fragment>
+      <>
         {readOnly ? (
           <Input value={this.state.selectedText} readOnly></Input>
         ) : (
@@ -140,7 +140,7 @@ class CheckListComp extends Component {
             isCustom={isCustom}
           ></CheckSelectList>
         </Modal>
-      </React.Fragment>
+      </>
     ) : (
       ''
     );

@@ -19,7 +19,7 @@ const makeDataSource = apiData => {
   return tempData;
 };
 
-class RadioComp extends Component {
+class RadioCharComp extends Component {
   state = {
     dataSource: [],
     dataFlag: true,
@@ -86,11 +86,11 @@ class RadioComp extends Component {
   }
 }
 
-export default RadioComp;
-
-RadioComp.defaultProps = {
+RadioCharComp.defaultProps = {
   defaultDataSource: [
     { value: 1, NAME_KOR: '라디오버튼' },
     { value: 2, NAME_KOR: '라디오버튼' },
   ],
 };
+
+export default RadioCharComp;

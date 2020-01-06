@@ -2,92 +2,37 @@ import { createSelector } from 'reselect';
 
 const selectWorkBuilderDetailPage = state => state.get('work-builder-viewer');
 
-const makeSelectColumns = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('columns').toJS(),
-  );
+const makeSelectColumns = () => createSelector(selectWorkBuilderDetailPage, state => state.get('columns').toJS());
 
-const makeSelectList = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('list').toJS(),
-  );
+const makeSelectList = () => createSelector(selectWorkBuilderDetailPage, state => state.get('list').toJS());
 
-const makeSelectBoxes = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('boxes').toJS(),
-  );
+const makeSelectBoxes = () => createSelector(selectWorkBuilderDetailPage, state => state.get('boxes').toJS());
 
-const makeSelectFormStuffs = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('formStuffs').toJS(),
-  );
+const makeSelectFormStuffs = () => createSelector(selectWorkBuilderDetailPage, state => state.get('formStuffs').toJS());
 
-const makeSelectWorkFlow = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('workFlow').toJS(),
-  );
+const makeSelectWorkFlow = () => createSelector(selectWorkBuilderDetailPage, state => state.get('workFlow').toJS());
 
 const makeSelectWorkFlowConfig = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => {
-      const config = state.getIn(['workFlow', 'CONFIG']);
-      return config ? JSON.parse(config) : { info: {} };
-    },
-  );
+  createSelector(selectWorkBuilderDetailPage, state => {
+    const config = state.getIn(['workFlow', 'CONFIG']);
+    return config ? JSON.parse(config) : { info: {} };
+  });
 
-const makeSelectIsOpenFormModal = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('isOpenFormModal'),
-  );
+const makeSelectIsOpenFormModal = () => createSelector(selectWorkBuilderDetailPage, state => state.get('isOpenFormModal'));
 
-const makeSelectIsOpenEditModal = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('isOpenEditModal'),
-  );
+const makeSelectIsOpenEditModal = () => createSelector(selectWorkBuilderDetailPage, state => state.get('isOpenEditModal'));
 
-const makeSelectWorkSeq = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('workSeq'),
-  );
+const makeSelectWorkSeq = () => createSelector(selectWorkBuilderDetailPage, state => state.get('workSeq'));
 
-const makeSelectTaskSeq = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('taskSeq'),
-  );
+const makeSelectTaskSeq = () => createSelector(selectWorkBuilderDetailPage, state => state.get('taskSeq'));
 
-const makeSelectResultFormStuffs = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('resultFormStuffs').toJS(),
-  );
+const makeSelectResultFormStuffs = () => createSelector(selectWorkBuilderDetailPage, state => state.get('resultFormStuffs').toJS());
 
-const makeSelectSignLineInfo = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('signLineInfo').toJS(),
-  );
+const makeSelectSignLineInfo = () => createSelector(selectWorkBuilderDetailPage, state => state.get('signLineInfo').toJS());
 
-const makeSelectIsLoading = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('isLoading'),
-  );
+const makeSelectIsLoading = () => createSelector(selectWorkBuilderDetailPage, state => state.get('isLoading'));
 
-const makeSelectIsModalLoading = () =>
-  createSelector(
-    selectWorkBuilderDetailPage,
-    state => state.get('isModalLoading').toJS(),
-  );
+const makeSelectIsModalLoading = () => createSelector(selectWorkBuilderDetailPage, state => state.get('isModalLoading').toJS());
 
 export {
   makeSelectColumns,

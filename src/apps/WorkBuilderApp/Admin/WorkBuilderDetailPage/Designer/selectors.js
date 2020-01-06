@@ -3,27 +3,47 @@ import { createSelector } from 'reselect';
 const selectWorkBuilderDetailDesigner = state => state.get('work-builder-detail-designer');
 
 const makeSelectCanvasProperty = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => {
-      const { boxes, groups, formStuffs, viewTargetId, useSignLine, signLine } = state.toJS();
-      return {
+  createSelector(selectWorkBuilderDetailDesigner, state => {
+    const { boxes, groups, formStuffs, viewTargetId, useSignLine, signLine } = state.toJS();
+    return {
+      boxes,
+      groups,
+      formStuffs,
+      viewTargetId,
+      useSignLine,
+      signLine,
+    };
+  });
+
+const makeSelectPanelsProperty = () =>
+  createSelector(selectWorkBuilderDetailDesigner, state => {
+    const { boxes, groups, formStuffs, tabId, viewTargetId, viewTargetType, useSignLine, signLine, blockOpenStatus } = state.toJS();
+    return {
+      boxes,
+      groups,
+      formStuffs,
+      tabId,
+      viewTargetId,
+      viewTargetType,
+      useSignLine,
+      signLine,
+      blockOpenStatus,
+    };
+  });
+
+const makeSelectProperty = () =>
+  createSelector(selectWorkBuilderDetailDesigner, state => {
+    const { boxes, groups, formStuffs, tabId, viewTargetId, viewTargetType, useSignLine, signLine, blockOpenStatus, tableList } = state.toJS();
+    return {
+      canvasProperty: {
         boxes,
         groups,
         formStuffs,
         viewTargetId,
         useSignLine,
         signLine,
-      };
-    },
-  );
-
-const makeSelectPanelsProperty = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => {
-      const { boxes, groups, formStuffs, tabId, viewTargetId, viewTargetType, useSignLine, signLine, blockOpenStatus } = state.toJS();
-      return {
+      },
+      panelsProperty: {
         boxes,
         groups,
         formStuffs,
@@ -33,72 +53,24 @@ const makeSelectPanelsProperty = () =>
         useSignLine,
         signLine,
         blockOpenStatus,
-      };
-    },
-  );
-
-const makeSelectProperty = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => {
-      const { boxes, groups, formStuffs, tabId, viewTargetId, viewTargetType, useSignLine, signLine, blockOpenStatus, tableList } = state.toJS();
-      return {
-        canvasProperty: {
-          boxes,
-          groups,
-          formStuffs,
-          viewTargetId,
-          useSignLine,
-          signLine,
-        },
-        panelsProperty: {
-          boxes,
-          groups,
-          formStuffs,
-          tabId,
-          viewTargetId,
-          viewTargetType,
-          useSignLine,
-          signLine,
-          blockOpenStatus,
-          works: tableList,
-        },
-      };
-    },
-  );
+        works: tableList,
+      },
+    };
+  });
 
 const makeSelectLayers = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => ({
-      boxes: state.get('boxes').toJS(),
-      formStuffs: state.get('formStuffs').toJS(),
-    }),
-  );
+  createSelector(selectWorkBuilderDetailDesigner, state => ({
+    boxes: state.get('boxes').toJS(),
+    formStuffs: state.get('formStuffs').toJS(),
+  }));
 
-const makeSelectOnPreview = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => state.get('onPreview'),
-  );
+const makeSelectOnPreview = () => createSelector(selectWorkBuilderDetailDesigner, state => state.get('onPreview'));
 
-const makeSelectWorkSeq = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => state.get('workSeq'),
-  );
+const makeSelectWorkSeq = () => createSelector(selectWorkBuilderDetailDesigner, state => state.get('workSeq'));
 
-const makeSelectIsLoading = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => state.get('isLoading'),
-  );
+const makeSelectIsLoading = () => createSelector(selectWorkBuilderDetailDesigner, state => state.get('isLoading'));
 
-const makeSelectTableList = () =>
-  createSelector(
-    selectWorkBuilderDetailDesigner,
-    state => state.get('tableSelect'),
-  );
+const makeSelectTableList = () => createSelector(selectWorkBuilderDetailDesigner, state => state.get('tableSelect'));
 
 export {
   makeSelectCanvasProperty,

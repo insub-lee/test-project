@@ -139,9 +139,11 @@ const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configIn
     component={ComponentConfig}
   ></BizMicroDevBase>
 );
+
 ComponentConfig.defaultProps = {};
-export default configer;
 
 ComponentConfig.defaultProps = {
   apiArray: [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }],
 };
+
+export default configer;

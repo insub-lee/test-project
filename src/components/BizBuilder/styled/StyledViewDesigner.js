@@ -51,6 +51,9 @@ const StyledViewDesigner = styled.div`
               background-color: rgba(68, 69, 123, 0.6);
               cursor: pointer;
             }
+            .categoryBody.hide {
+              display: none;
+            }
             .categoryBody > button {
               color: rgba(255, 255, 255, 0.65);
               border: 0px solid #3f2b5c;
