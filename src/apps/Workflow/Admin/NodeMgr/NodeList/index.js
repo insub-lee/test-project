@@ -46,9 +46,9 @@ class NodeList extends Component {
       title: '편집',
       dataIndex: 'edit',
       render: (text, record) => (
-        <React.Fragment>
+        <>
           <Button onClick={() => this.onUpdate(record)}>수정</Button>
-        </React.Fragment>
+        </>
       ),
     },
   ];

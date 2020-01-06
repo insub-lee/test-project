@@ -27,6 +27,7 @@ const appReducer = (state = initialState, action) => {
     }
     case actionTypes.SET_SELECTED_ROW: {
       const { row } = action;
+      console.debug(row);
       return state.set('selectedRow', fromJS(row));
     }
     case actionTypes.SET_VIEW_VISIBLE: {
@@ -40,6 +41,10 @@ const appReducer = (state = initialState, action) => {
     case actionTypes.SET_OPINION: {
       const { opinion } = action;
       return state.set('opinion', opinion);
+    }
+    case actionTypes.SET_BIZFORMDATA: {
+      const { formData } = action;
+      return state.set('formData', formData);
     }
     default:
       return state;

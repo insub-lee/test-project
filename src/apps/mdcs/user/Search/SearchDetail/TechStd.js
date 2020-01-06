@@ -70,16 +70,16 @@ class TechStd extends Component {
     setSearchParam({
       ...searchParam,
       nodeIds: { key: 'TBD.NODE_ID', condition: 'IN', value: [], type: 'INT' },
-      region: { key: 'WBT.REGION', condition: '=', value: 0, type: 'INT' },
-      fab: { key: 'WBT.FAB', condition: '=', value: 0, type: 'INT' },
-      tech: { key: 'WBT.TECH', condition: '=', value: 0, type: 'INT' },
-      generation: { key: 'WBT.GENERATION', condition: '=', value: 0, type: 'INT' },
-      density: { key: 'WBT.DENSITY', condition: '=', value: 0, type: 'INT' },
-      pkg: { key: 'WBT.PKG', condition: '=', value: 0, type: 'INT' },
-      product: { key: 'WBT.PRODUCT', condition: '=', value: 0, type: 'INT' },
-      module: { key: 'WBT.MODULE', condition: '=', value: 0, type: 'INT' },
-      customer: { key: 'WBT.CUSTOMER', condition: '=', value: 0, type: 'INT' },
-      fmea: { key: 'WBT.FMEA', condition: 'IN', value: [], type: 'INT' },
+      region: { key: 'TBD.REGION', condition: '=', value: 0, type: 'INT' },
+      fab: { key: 'TBD.FAB', condition: '=', value: 0, type: 'INT' },
+      tech: { key: 'TBD.TECH', condition: '=', value: 0, type: 'INT' },
+      generation: { key: 'TBD.GENERATION', condition: '=', value: 0, type: 'INT' },
+      density: { key: 'TBD.DENSITY', condition: '=', value: 0, type: 'INT' },
+      pkg: { key: 'TBD.PKG', condition: '=', value: 0, type: 'INT' },
+      product: { key: 'TBD.PRODUCT', condition: '=', value: 0, type: 'INT' },
+      module: { key: 'TBD.MODULE', condition: '=', value: 0, type: 'INT' },
+      customer: { key: 'TBD.CUSTOMER', condition: '=', value: 0, type: 'INT' },
+      fmea: { key: 'TBD.FMEA', condition: 'IN', value: [], type: 'INT' },
     });
   }
 

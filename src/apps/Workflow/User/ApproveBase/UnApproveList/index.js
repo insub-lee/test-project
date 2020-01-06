@@ -9,7 +9,7 @@ import ApproveView from '../ApproveView';
 
 const AntdTable = StyledAntdTable(Table);
 
-class ApproveList extends Component {
+class UnApproveList extends Component {
   componentDidMount() {
     // const { category, getApproveList } = this.props;
     // getApproveList({ searchType: category });
@@ -43,13 +43,7 @@ class ApproveList extends Component {
       key: 'title',
       ellipsis: true,
     },
-    {
-      title: '결재상태',
-      dataIndex: 'APPV_STATUS_NM',
-      key: 'APPV_STATUS_NM',
-      width: '10%',
-      align: 'center',
-    },
+
     {
       title: '기안자',
       dataIndex: 'NAME_KOR',
@@ -91,7 +85,7 @@ class ApproveList extends Component {
   }
 }
 
-ApproveList.propTypes = {
+UnApproveList.propTypes = {
   category: PropTypes.string,
   approveList: PropTypes.array,
   getApproveList: PropTypes.func,
@@ -100,10 +94,10 @@ ApproveList.propTypes = {
   setViewVisible: PropTypes.func,
 };
 
-ApproveList.defaultProps = {
+UnApproveList.defaultProps = {
   category: 'draft',
   approveList: [],
   selectedRow: {},
 };
 
-export default ApproveList;
+export default UnApproveList;

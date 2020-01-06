@@ -7,11 +7,10 @@ import StyledButton from 'components/CommonStyled/StyledButton';
 const { TextArea } = Input;
 
 class OpinionModal extends Component {
-  componentDidMount() {}
-
   handleReqApprove = (e, appvStatus) => {
     e.preventDefault();
     this.props.reqApprove(appvStatus);
+    this.props.setOpinionVisible(false);
   };
 
   handleCloseOpinionModal = () => {
@@ -20,33 +19,13 @@ class OpinionModal extends Component {
   };
 
   render() {
-    const { opinionVisible, opinion } = this.props;
-
+    const { opinion, CustomActionView } = this.props;
     return (
-      <Modal
-        title="결재"
-        visible={opinionVisible}
-        onOk={this.handleOkModal}
-        onCancel={this.handleCloseOpinionModal}
-        width="500px"
-        style={{ top: 100 }}
-        footer={[
-          <StyledButton key="close" className="btn-light" onClick={this.handleCloseOpinionModal}>
-            닫기
-          </StyledButton>,
-          <StyledButton key="back" className="btn-gray" onClick={e => this.handleReqApprove(e, 9)}>
-            반려
-          </StyledButton>,
-          <StyledButton key="ok" className="btn-primary" onClick={e => this.handleReqApprove(e, 1)}>
-            승인
-          </StyledButton>,
-        ]}
-      >
-        <div>
-          <p>의견</p>
-          <TextArea rows={8} value={opinion} onChange={e => this.props.setOpinion(e.target.value)} />
-        </div>
-      </Modal>
+      <div>
+        {typeof CustomActionView === 'function' && <CustomActionView {...this.props} />}
+        <p>의견</p>
+        <TextArea rows={8} value={opinion} onChange={e => this.props.setOpinion(e.target.value)} />
+      </div>
     );
   }
 }
