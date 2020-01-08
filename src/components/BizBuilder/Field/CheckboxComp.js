@@ -286,7 +286,7 @@ class CheckboxComp extends PureComponent {
     }
 
     return visible ? (
-      <React.Fragment>
+      <>
         {checkboxData && checkboxData.length > 0 ? (
           checkboxData.map((item, index) => {
             if (typeof item === 'object') {
@@ -375,7 +375,7 @@ class CheckboxComp extends PureComponent {
             ></Input>
           </div>
         )}
-      </React.Fragment>
+      </>
     ) : (
       ''
     );

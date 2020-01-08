@@ -3,7 +3,6 @@ import { Row, Col, Select, Input, Radio } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-
 const { Option } = Select;
 
 const makeDataSource = apiData => {

@@ -60,6 +60,11 @@ class SignLine extends Component {
     }
   }
 
+  componentDidUpdate() {
+    const { onChangeCallback, processStep } = this.props;
+    onChangeCallback(processStep);
+  }
+
   componentWillUnmount() {
     this.props.initProcessData();
   }
@@ -121,9 +126,7 @@ class SignLine extends Component {
   };
 
   // 부모에서 데이터 조회시 호출할 함수
-  getProcessDataCall = () => {
-    return this.props.processStep;
-  };
+  getProcessDataCall = () => this.props.processStep;
 
   render() {
     const { processStep } = this.props;
@@ -203,11 +206,13 @@ SignLine.propTypes = {
   getProcessData: PropTypes.func.isRequired,
   initProcessData: PropTypes.func.isRequired,
   changeStepInfo: PropTypes.func.isRequired,
+  onChangeCallback: PropTypes.func,
 };
 
 SignLine.defaultProps = {
   prcId: 44,
   processStep: [],
+  onChangeCallback: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -223,13 +228,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.WorkFlow.Admin.SignLine', reducer });
 const withSaga = injectSaga({ key: 'apps.WorkFlow.Admin.SignLine', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(SignLine);
+export default compose(withSaga, withReducer, withConnect)(SignLine);

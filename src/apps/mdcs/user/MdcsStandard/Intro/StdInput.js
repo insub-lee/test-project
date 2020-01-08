@@ -17,13 +17,15 @@ class StdInput extends Component {
   }
 
   componentDidMount() {
-    const { id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
-    const {
-      info: { PRC_ID },
-    } = workFlowConfig;
-    if (PRC_ID !== -1) {
+    const { id, getProcessRule, workInfo, workPrcProps } = this.props;
+
+    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 0) !== -1);
+    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === 0);
+    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
+
+    if (isWorkflowUsed && prcId !== -1) {
       const payload = {
-        PRC_ID,
+        PRC_ID: Number(prcId),
         DRAFT_DATA: {
           ...workPrcProps,
         },
@@ -48,15 +50,15 @@ class StdInput extends Component {
   };
 
   render = () => {
-    const { id, viewLayer, workFlowConfig, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, workInfo, onCloseModal } = this.props;
+    const { id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
     // Work Process 사용여부
+
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 0) !== -1);
+    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === 0);
+    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-      const {
-        info: { PRC_ID },
-      } = workFlowConfig;
 
       // 로딩
       if (this.props.isLoading === false && this.state.initLoading) {
@@ -70,7 +72,7 @@ class StdInput extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed && PRC_ID !== -1 && <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />}
+            {isWorkflowUsed && prcId !== -1 && <WorkProcess id={id} PRC_ID={prcId} processRule={processRule} setProcessRule={setProcessRule} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>

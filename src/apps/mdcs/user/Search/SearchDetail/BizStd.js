@@ -21,7 +21,7 @@ class BizStd extends Component {
     this.callApi(apiArr);
     setSearchParam({
       ...searchParam,
-      scope: { key: 'WBT.SCOPE', condition: '=', value: 0, type: 'INT' },
+      scope: { key: 'TBD.SCOPE', condition: '=', value: 0, type: 'INT' },
       nodeIds: { key: 'TBD.NODE_ID', condition: 'IN', value: [], type: 'INT' },
     });
   }

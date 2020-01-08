@@ -114,7 +114,7 @@ const initialState = fromJS({
               ],
             },
           ],
-          hiddenField :[],
+          hiddenField: [],
         },
         bodyStyle: {
           width: '100%',
@@ -789,6 +789,6 @@ const addHiddenComp = (state, compItem) => {
       .setIn(['compData', compDataIdx], fromJS(compItem));
   }
   return state;
-}
+};
 
 export default reducer;

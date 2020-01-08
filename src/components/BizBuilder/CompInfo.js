@@ -1,11 +1,11 @@
 import React from 'react';
 
 import LabelComp from 'components/BizBuilder/Field/LabelComp';
-import CustomLabelComp from 'components/BizBuilder/Field/CustomLabelComp';
+import FmeaLabelComp from 'components/BizBuilder/Field/FmeaLabelComp';
 import LabelWithCopyComp from 'components/BizBuilder/Field/LabelWithCopyComp';
 import TextComp from 'components/BizBuilder/Field/TextComp';
 import EditorComp from 'components/BizBuilder/Field/EditorComp';
-import CustomEditorComp from 'components/BizBuilder/Field/CustomEditorComp';
+import FmeaTextareaComp from 'components/BizBuilder/Field/FmeaTextareaComp';
 import InsertBtnComp from 'components/BizBuilder/Field/InsertBtnComp';
 import ModalInsertBtnComp from 'components/BizBuilder/Field/ModalInsertBtnComp';
 import AttachComp from 'components/BizBuilder/Field/AttachComp';
@@ -33,14 +33,19 @@ import SummerNoteEditorComp from 'components/BizBuilder/Field/SummerNoteEditor';
 import TextareaComp from 'components/BizBuilder/Field/TextareaComp';
 import NumberComp from 'components/BizBuilder/Field/NumberComp';
 import NodeIdComp from 'components/BizBuilder/Field/NodeIdComp';
+import RadioCharComp from 'components/BizBuilder/Field/RadioCharComp';
+import FmeaFlagLabelComp from 'components/BizBuilder/Field/FmeaFlagLabelComp';
+import FmeaFlagRadioCharComp from 'components/BizBuilder/Field/FmeaFlagRadioCharComp';
+import IFoundryLabelComp from 'components/BizBuilder/Field/IFoundryLabelComp';
+import IFoundryTextareaComp from 'components/BizBuilder/Field/IFoundryTextareaComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
-  'components/BizBuilder/Field/CustomLabelComp': { renderer: property => <CustomLabelComp {...property} /> },
+  'components/BizBuilder/Field/FmeaLabelComp': { renderer: property => <FmeaLabelComp {...property} /> },
   'components/BizBuilder/Field/LabelWithCopyComp': { renderer: property => <LabelWithCopyComp {...property} /> },
   'components/BizBuilder/Field/TextComp': { renderer: property => <TextComp {...property} /> },
   'components/BizBuilder/Field/EditorComp': { renderer: property => <EditorComp {...property} /> },
-  'components/BizBuilder/Field/CustomEditorComp': { renderer: property => <CustomEditorComp {...property} /> },
+  'components/BizBuilder/Field/FmeaTextareaComp': { renderer: property => <FmeaTextareaComp {...property} /> },
   'components/BizBuilder/Field/InsertBtnComp': { renderer: property => <InsertBtnComp {...property} /> },
   'components/BizBuilder/Field/ModalInsertBtnComp': { renderer: property => <ModalInsertBtnComp {...property} /> },
   'components/BizBuilder/Field/AttachComp': { renderer: property => <AttachComp {...property} /> },
@@ -68,4 +73,9 @@ export const CompInfo = {
   'components/BizBuilder/Field/TextareaComp': { renderer: property => <TextareaComp {...property} /> },
   'components/BizBuilder/Field/NumberComp': { renderer: property => <NumberComp {...property} /> },
   'components/BizBuilder/Field/NodeIdComp': { renderer: property => <NodeIdComp {...property} /> },
+  'components/BizBuilder/Field/RadioCharComp': { renderer: property => <RadioCharComp {...property} /> },
+  'components/BizBuilder/Field/FmeaFlagLabelComp': { renderer: property => <FmeaFlagLabelComp {...property} /> },
+  'components/BizBuilder/Field/FmeaFlagRadioCharComp': { renderer: property => <FmeaFlagRadioCharComp {...property} /> },
+  'components/BizBuilder/Field/IFoundryLabelComp': { renderer: property => <IFoundryLabelComp {...property} /> },
+  'components/BizBuilder/Field/IFoundryTextareaComp': { renderer: property => <IFoundryTextareaComp {...property} /> },
 };

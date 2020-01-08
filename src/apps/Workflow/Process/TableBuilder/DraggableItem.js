@@ -15,11 +15,11 @@ const getStepTypeNm = stepType => {
 const DraggableItem = ({ item, isDragging, provided, dropId, itemIndex, activeStep, action }) => (
   <DraggableStyled className={item.STEP === activeStep ? 'active' : ''} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
     {dropId === 'process' && (
-      <React.Fragment>
+      <>
         <button type="button" style={{ position: 'absolute', background: '#fff', right: '10px' }} onClick={() => action.removeItem(itemIndex)}>
           X
         </button>
-      </React.Fragment>
+      </>
     )}
     <button type="button" style={{ background: '#fff' }} onClick={() => action.onActiveStep(item)}>
       <span>

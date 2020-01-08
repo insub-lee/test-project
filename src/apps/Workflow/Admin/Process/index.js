@@ -82,12 +82,9 @@ class Process extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.debug('##### componentDidUpdate #####');
-    console.debug('prevProps', prevProps);
-    console.debug('this.props', this.props);
-    // if (prevProps.processInfo.PRC_ID !== this.props.processInfo.PRC_ID) {
-
-    // }
+    if (prevProps.processInfo.PRC_ID !== this.props.processInfo.PRC_ID) {
+      this.props.processCallbackFunc(this.props.processInfo.PRC_ID);
+    }
   }
 
   onDragEnd = dropResult => {
@@ -424,14 +421,14 @@ class Process extends Component {
                       )}
                     </Form.Item>
                     <Form.Item label="승인자">
-                      <React.Fragment>
+                      <>
                         {getFieldDecorator('stepUsers', {
                           initialValue: stepUsersName,
                         })(<Input style={{ width: '70%' }} readOnly />)}
                         <Button size="small" type="primary" style={{ right: '-8px' }} onClick={this.openOrganizationPopup}>
                           선택
                         </Button>
-                      </React.Fragment>
+                      </>
                     </Form.Item>
                     <Form.Item label="권한">
                       {getFieldDecorator('appvAuth', {
@@ -485,19 +482,19 @@ class Process extends Component {
                 저장
               </Button>
             ) : (
-              <React.Fragment>
-                <Button type="primary" onClick={e => this.onConfirm(e, 'D')}>
+              <>
+                <Button type="primary" onClick={e => this.onDeleteProcess(e)}>
                   삭제
                 </Button>
                 <Button type="primary" onClick={e => this.onConfirm(e, 'U')} style={{ marginLeft: '8px' }}>
                   수정
                 </Button>
-                {prcId === -1 && (
+                {/* {prcId === -1 && (
                   <Button type="primary" htmlType="button" onClick={() => processCallbackFunc(processInfo.PRC_ID)} style={{ marginLeft: '8px' }}>
                     빌더적용
                   </Button>
-                )}
-              </React.Fragment>
+                )} */}
+              </>
             )}
           </Col>
         </Row>
@@ -527,7 +524,7 @@ Process.propTypes = {
 };
 
 Process.defaultProps = {
-  prcId: 16,
+  prcId: -1,
   processCallbackFunc: () => {},
 };
 
@@ -553,16 +550,8 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.WorkFlow.Admin.Process', reducer });
 const withSaga = injectSaga({ key: 'apps.WorkFlow.Admin.Process', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const PrcForm = Form.create({ name: 'prcForm' });
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-  PrcForm,
-)(Process);
+export default compose(withSaga, withReducer, withConnect, PrcForm)(Process);

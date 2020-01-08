@@ -33,7 +33,7 @@ class NodeRegist extends Component {
               <td>
                 {console.debug(formData.NODE_TYPE)}
                 <Select
-                  value={ formData.NODE_TYPE}
+                  value={formData.NODE_TYPE}
                   onChange={val => this.props.changeFormData(id, 'NODE_TYPE', val)}
                   style={{ width: '300px' }}
                   placeholder="노드유형을 선택해주세요"

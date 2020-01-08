@@ -6,6 +6,7 @@ import message from 'components/Feedback/message';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
+import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import BizBuilderBase from 'components/BizBuilderBase';
 import BizMicroDevBase from 'components/BizMicroDevBase';
@@ -13,11 +14,6 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledContents from '../../../styled/StyledContents';
 import StyledButton from '../../../styled/StyledButton';
 import StyledModalWrapper from '../../../styled/Modals/StyledModalWrapper';
-
-import DwDoc from '../DwDoc';
-import PmDoc from '../PmDoc';
-import BizDoc from '../BizDoc';
-import TechDoc from '../TechDoc';
 
 import StdView from './StdView';
 import StdInput from './StdInput';
@@ -149,9 +145,10 @@ class IntroComponent extends Component {
         return 0;
       });
 
-    const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];    
+    const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];
 
     const { id, getCallDataHanlder, apiArys } = this.props;
+
     apiArys.push({
       key: 'docNum',
       url: `/api/mdcs/v1/common/DocNumberHanlder/${docNumber.join('')}`,
@@ -239,10 +236,8 @@ class IntroComponent extends Component {
     const workPrcProps = {
       draftType: this.state.selectedDraft,
       nodeIds: this.state.fullPathInfo,
-      degreeFlag: 88,
+      degreeFlag: ModifyType.MAJOR,
     };
-
-    console.debug(doctype, docNumber, taskSeq, viewType);
 
     let workSeq = -1;
     switch (doctype) {
@@ -252,6 +247,7 @@ class IntroComponent extends Component {
       default:
         workSeq = 201;
     }
+
     return (
       <BizBuilderBase
         id="BizDoc"
@@ -315,7 +311,8 @@ class IntroComponent extends Component {
     this.setState({ selectedDraft: value });
   };
 
-  render() {    
+  render() {
+    console.debug('intro', this.props);
     const { result } = this.props;
     const { selectedValue1, selectedValue2, selectedValue3, selectedValue4, isLoading } = this.state;
     const _fDepth =
@@ -406,7 +403,7 @@ class IntroComponent extends Component {
                         onPressEnter={() => this.onSearchRevisionData(selectedNodeId)}
                         value={this.state.searchValue}
                         onChange={e => this.setState({ searchValue: e.target.value })}
-                      ></Input>
+                      />
                     </li>
                   )}
                   <li>
@@ -448,7 +445,7 @@ class IntroComponent extends Component {
                   <StyledButton className="btn-light">다시선택</StyledButton>
                 </div>
                 {this.state.selectedDraft === DraftType.AMENDMENT && result && result.listData && (
-                  <AntdTable columns={columData} dataSource={result.listData.arr || []}></AntdTable>
+                  <AntdTable columns={columData} dataSource={result.listData.arr || []} />
                 )}
               </div>
             </div>
