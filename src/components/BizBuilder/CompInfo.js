@@ -38,6 +38,10 @@ import FmeaFlagLabelComp from 'components/BizBuilder/Field/FmeaFlagLabelComp';
 import FmeaFlagRadioCharComp from 'components/BizBuilder/Field/FmeaFlagRadioCharComp';
 import IFoundryLabelComp from 'components/BizBuilder/Field/IFoundryLabelComp';
 import IFoundryTextareaComp from 'components/BizBuilder/Field/IFoundryTextareaComp';
+import DCRBLabelComp from 'components/BizBuilder/Field/DCRBLabelComp';
+import DCRBTextComp from 'components/BizBuilder/Field/DCRBTextComp';
+import DwSelectLabelComp from 'components/BizBuilder/Field/DwSelectLabelComp';
+import DwSelectComp from 'components/BizBuilder/Field/DwSelectComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -78,4 +82,8 @@ export const CompInfo = {
   'components/BizBuilder/Field/FmeaFlagRadioCharComp': { renderer: property => <FmeaFlagRadioCharComp {...property} /> },
   'components/BizBuilder/Field/IFoundryLabelComp': { renderer: property => <IFoundryLabelComp {...property} /> },
   'components/BizBuilder/Field/IFoundryTextareaComp': { renderer: property => <IFoundryTextareaComp {...property} /> },
+  'components/BizBuilder/Field/DCRBLabelComp': { renderer: property => <DCRBLabelComp {...property} /> },
+  'components/BizBuilder/Field/DCRBTextComp': { renderer: property => <DCRBTextComp {...property} /> },
+  'components/BizBuilder/Field/DwSelectLabelComp': { renderer: property => <DwSelectLabelComp {...property} /> },
+  'components/BizBuilder/Field/DwSelectComp': { renderer: property => <DwSelectComp {...property} /> },
 };

@@ -68,7 +68,7 @@ class RadioComp extends Component {
     }
 
     return visible ? (
-      <>
+      <React.Fragment>
         {colData !== undefined ? (
           <RadioGroup
             value={colData !== ' ' ? Number(colData) : undefined}
@@ -79,7 +79,7 @@ class RadioComp extends Component {
         ) : (
           <RadioGroup value={1} dataSource={this.props.defaultDataSource} />
         )}
-      </>
+      </React.Fragment>
     ) : (
       ''
     );

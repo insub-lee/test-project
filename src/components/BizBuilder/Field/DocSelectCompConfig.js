@@ -26,7 +26,7 @@ class DocSelectCompConfig extends Component {
 
   render() {
     const { configInfo } = this.props;
-    const selectedValue = (configInfo && configInfo.property && configInfo.property.selectedValue) || undefined;
+    const selectedValue = configInfo && configInfo.property && configInfo.property.selectedValue || undefined;
     return (
       <div>
         <Row>

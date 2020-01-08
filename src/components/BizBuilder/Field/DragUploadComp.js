@@ -251,7 +251,7 @@ class DragUploadComp extends Component {
     return visible ? (
       <StyledDragger>
         {!view && (
-          <>
+          <React.Fragment>
             <div className="btnTypeUploader" style={{ marginBottom: '10px' }}>
               <Upload
                 action="/upload"
@@ -278,14 +278,14 @@ class DragUploadComp extends Component {
                 openFileDialogOnClick={false}
                 multiple
               >
-                <>
+                <React.Fragment>
                   {fileList.length === 0 && (
-                    <>
+                    <React.Fragment>
                       <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                       </p>
                       <p className="ant-upload-text">drag file to this area to upload</p>
-                    </>
+                    </React.Fragment>
                   )}
                   {fileList.length > 0 && (
                     <div className="uploadList" style={{ margin: '-10px 0px -10px' }}>
@@ -304,7 +304,7 @@ class DragUploadComp extends Component {
                               </StyledButton>
                             </div>
                           ) : (
-                            <>
+                            <React.Fragment>
                               {file.status === 'error' ? (
                                 <div className="uploadFileStatus" style={{ position: 'absolute', top: 4, right: 10 }}>
                                   <sapn style={{ color: 'red' }}>업로드 실패</sapn>
@@ -318,16 +318,16 @@ class DragUploadComp extends Component {
                                   <Progress percent={this.state.percent} status="active" />
                                 </div>
                               )}
-                            </>
+                            </React.Fragment>
                           )}
                         </div>
                       ))}
                     </div>
                   )}
-                </>
+                </React.Fragment>
               </Dragger>
             </div>
-          </>
+          </React.Fragment>
         )}
         {view && (
           <div className="uploadFileList">

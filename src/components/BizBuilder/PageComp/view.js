@@ -26,7 +26,7 @@ class View extends Component {
         layer: { groups, hiddenField },
       } = viewLayerData;
       return (
-        <>
+        <React.Fragment>
           {groups.map((group, groupIndex) => (
             <div key={group.key}>
               {group.useTitle && <GroupTitle title={group.title} />}
@@ -54,7 +54,7 @@ class View extends Component {
             </div>
           ))}
           {hiddenField && hiddenField.length > 0 && hiddenField.map(node => this.renderComp(node, node.COMP_FIELD ? formData[node.COMP_FIELD] : '', false))}
-        </>
+        </React.Fragment>
       );
     }
     return '';

@@ -120,10 +120,10 @@ class WorkBuilderViewerPage extends Component {
         />
         <Modal title="등록" visible={isOpenFormModal} footer={null} onCancel={() => toggleFormModal(false)} destroyOnClose width="100%" maskClosable={false}>
           {PRC_ID && (
-            <>
+            <React.Fragment>
               <SignLine prcId={PRC_ID} onChangeCallback={this.getSignLineInfo} />
               <br />
-            </>
+            </React.Fragment>
           )}
           <View
             boxes={boxes}
@@ -256,6 +256,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'work-builder-viewer', reducer });
 const withSaga = injectSaga({ key: 'work-builder-viewer', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withReducer, withSaga, withConnect)(WorkBuilderViewerPage);
+export default compose(
+  withReducer,
+  withSaga,
+  withConnect,
+)(WorkBuilderViewerPage);

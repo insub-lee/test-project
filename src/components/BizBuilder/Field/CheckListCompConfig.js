@@ -4,6 +4,7 @@ import { Row, Col, Select, Button, Tag } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
+
 const { Option } = Select;
 
 class ComponentConfig extends Component {
@@ -25,7 +26,7 @@ class ComponentConfig extends Component {
     const mapId = (configInfo && configInfo.property && configInfo.property.mapId) || [];
     const tempName = [];
     const rootMapList = (result && result.rootMap && result.rootMap.rootMapList) || [];
-    if (mapId.length > 0) {
+    if(mapId.length > 0){
       const list = rootMapList.filter(map => mapId.indexOf(map.MAP_ID) > -1);
       list.map(map => tempName.push(map.NAME_KOR));
       this.setState({ selected: tempName });
@@ -38,7 +39,7 @@ class ComponentConfig extends Component {
     const mapId = (configInfo && configInfo.property && configInfo.property.mapId) || [];
     if (mapId.findIndex(x => x === rootMapValue) === -1) {
       const tempData = mapId;
-      const tempName = selected || [];
+      const tempName = selected ? selected : [];
       tempData.push(rootMapValue);
       tempName.push(rootMapName);
       configInfo.property.mapId = tempData;
@@ -53,7 +54,7 @@ class ComponentConfig extends Component {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     configInfo.property.mapId = [];
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
-    this.setState({ selected: undefined });
+    this.setState({selected: undefined});
   };
 
   render() {
