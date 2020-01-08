@@ -25,9 +25,12 @@ class TreeSelectComp extends Component {
       CONFIG: {
         property: { mapId },
       },
+      viewType,
+      colData,
     } = this.props;
     const apiArray = [{ key: `treeSelect_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    getExtraApiData(id, apiArray);
+    if (colData && colData.length > 0) getExtraApiData(id, apiArray);
+    else if (viewType !== 'VIEW') getExtraApiData(id, apiArray);
   }
 
   onChangeHandler = value => {

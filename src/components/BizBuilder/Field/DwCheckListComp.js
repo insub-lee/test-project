@@ -15,8 +15,8 @@ class DwCheckListComp extends Component {
   };
 
   render() {
-    const { visible } = this.props;
-    return visible ? (
+    const { visible, isManage, formData } = this.props;
+    return isManage || (visible && formData.DOCNUMBER && formData.DOCNUMBER.substr(0, 4) !== 'MBKH') ? (
       <CheckListComp
         {...this.props}
         isCustom

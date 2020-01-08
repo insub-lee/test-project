@@ -5,7 +5,7 @@ const Styled = styled.div`
   text-align: right;
   > button {
     background: transparent;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255,255,255,0.7);
     border: 0;
     padding: 0 8px;
     &:focus,

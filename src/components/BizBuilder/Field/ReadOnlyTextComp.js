@@ -45,13 +45,13 @@ class ReadOnlyTextComp extends PureComponent {
       initValue = defaultValue;
     }
     return visible ? (
-      <>
+      <React.Fragment>
         {colData === undefined ? (
           <Input placeholder={(valueType === 'props' && '문서번호') || (valueType === 'default' && 'version')} readOnly />
         ) : (
           <Input value={initValue} readOnly />
         )}
-      </>
+      </React.Fragment>
     ) : (
       ''
     );

@@ -147,8 +147,6 @@ class CustomCheckListComp extends Component {
   }
 }
 
-export default CustomCheckListComp;
-
 CustomCheckListComp.defaultProps = {
   CONFIG: { property: {} },
   colData: '',
@@ -184,3 +182,5 @@ CustomCheckListComp.defaultProps = {
   extraApiData: {},
   compGroupKeys: ['REGION', 'FAB', 'PRODUCT', 'TECH', 'GEN', 'DENSITY', 'PKG', 'MODULE', 'CUSTOMER'],
 };
+
+export default CustomCheckListComp;
