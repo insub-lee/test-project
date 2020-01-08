@@ -258,7 +258,7 @@ class AuthSetting extends Component {
               <Button
                 className="modalClose"
                 onClick={() => {
-                  history.push(`/store/appMain/bizManage/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
+                  history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
                 }}
                 title=""
               />

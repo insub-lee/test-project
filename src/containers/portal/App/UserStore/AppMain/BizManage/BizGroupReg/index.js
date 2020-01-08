@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Input, Button, Radio, Checkbox } from 'antd';
+import { Form, Input, Button, Radio, Checkbox, Icon } from 'antd';
 import { intlObj, imgUrl, lang } from 'utils/commonUtils';
 import AppMaNagerList from 'components/OrgReturnView';
 import Organization from 'containers/portal/components/Organization';
@@ -22,6 +22,7 @@ import injectSaga from 'utils/injectSaga';
 import Footer from 'containers/store/App/Footer';
 import * as selectors from './selectors';
 import * as actions from './actions';
+import * as bizGrpSelectors from '../selectors';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -68,7 +69,8 @@ function getOrgData(data, ACNT_TYPE) {
 }
 
 function replaceSpecialCharacter(str) {
-  const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //eslint-disable-line
+  // const regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi; //eslint-disable-line
+  const regExp = /[\{\}?.,;:|\)*~`!^\+<>\#$%&\\\=\(\'\"]/gi; //eslint-disable-line
   return str.replace(regExp, '');
 }
 
@@ -108,12 +110,16 @@ class BizGroupReg extends Component {
           dutys: [],
           grps: [],
         },
+        MANUAL_TYPE: 'L',
+        MANUAL_PATH: '',
       },
 
       orgShow: false,
       CATG_ID_CHK: false,
       MyAppCategoryModalShow: false,
       SEC_TYPE: MANAGER,
+      manualUrl: '',
+      manualLink: '',
     };
 
     this.onChangeData = this.onChangeData.bind(this);
@@ -183,8 +189,15 @@ class BizGroupReg extends Component {
         };
       }
 
+      // 사용자 매뉴얼 초기값 초기값 설정
+      const { MANUAL_TYPE, MANUAL_PATH } = mData;
+      mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
+      const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
+
       this.setState({
         data: mData,
+        manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
+        manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
       });
       this.inputKor.focus();
     }
@@ -238,10 +251,18 @@ class BizGroupReg extends Component {
     });
   };
 
-  render() {
-    const { data, SEC_TYPE } = this.state;
+  onChangeUserManual = val => {
+    this.onChangeData({ MANUAL_TYPE: val.target.value });
+  };
 
-    const { dataP, updateBizGroup, history } = this.props;
+  onChangeUserManualUrl = val => {
+    this.setState({ manualUrl: val.target.value });
+  };
+
+  render() {
+    const { data, SEC_TYPE, manualUrl, manualLink } = this.state;
+
+    const { dataP, updateBizGroup, history, userRole } = this.props;
 
     const oldUsers = data[SEC_TYPE].users.length > 0 ? data[SEC_TYPE].users : [];
     const oldDepts = data[SEC_TYPE].depts.length > 0 ? data[SEC_TYPE].depts : [];
@@ -486,21 +507,82 @@ class BizGroupReg extends Component {
                       </section>
                     </td>
                   </tr>
+                  {/* 매뉴얼 업로드 업무카드 폴더에서 필요 없을 경우 조건부 블럭 처리 */}
                   <tr>
+                    <th className="top">
+                      <span className="">{intlObj.get(messages.userManual)}</span>
+                    </th>
+                    <td>
+                      <FormItem>
+                        <div style={{ position: 'relative' }}>
+                          <div>
+                            <RadioGroup className="typeOptions" onChange={this.onChangeUserManual} value={data.MANUAL_TYPE}>
+                              <Radio value="L">{intlObj.get(messages.webside)}</Radio>
+                              <Radio value="F" style={{ width: 295 }}>
+                                {intlObj.get(messages.documentation)}
+                              </Radio>
+                            </RadioGroup>
+                          </div>
+                          <div style={{ display: data.MANUAL_TYPE === 'L' ? 'block' : 'none', marginTop: 10 }}>
+                            <Input
+                              placeholder=""
+                              title={intlObj.get(messages.webside)}
+                              style={{ verticalAlign: 'middle' }}
+                              maxLength="1000"
+                              onChange={this.onChangeUserManualUrl}
+                              value={manualUrl}
+                            />
+                          </div>
+                          <div style={{ display: data.MANUAL_TYPE === 'F' ? 'block' : 'none', marginTop: 10 }}>
+                            <Input placeholder="" title={intlObj.get(messages.documentation)} style={{ verticalAlign: 'middle' }} value={manualLink} />
+                            <section className="btnText attachFile">
+                              <Upload
+                                // accept="image/jpeg, image/png" // default ALL
+                                onFileUploaded={file => this.setState({ manualLink: file.down })}
+                                multiple={false} // default true
+                                // width={123}
+                                // height={123}
+                                borderStyle="none"
+                              >
+                                <span>{intlObj.get(messages.attachment)}</span>
+                              </Upload>
+                            </section>
+                          </div>
+                        </div>
+                      </FormItem>
+                    </td>
+                  </tr>
+                  {/* <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.category)}</span>
                     </th>
                     <td>
-                      <FormItem hasFeedback validateStatus={this.state.CATG_ID_CHK ? 'success' : 'error'} className="required categorySelect">
-                        <Input placeholder="" readOnly="readOnly" value={data.CATG_ID > 0 ? data.CATG_NAME : ''} disabled />
-                        <Button className="deleteValue" title="삭제" onClick={this.deleteAppCategory} />
-                        <Button className="btnText edit" onClick={this.myAppCategoryModalOpen}>
+                      <FormItem
+                        hasFeedback={true}
+                        validateStatus={this.state.CATG_ID_CHK ? 'success' : 'error'}
+                        className="required categorySelect"
+                      >
+                        <Input
+                          placeholder=""
+                          readOnly="readOnly"
+                          value={data.CATG_ID > 0 ? data.CATG_NAME : ''}
+                          disabled
+                        />
+                        <Button
+                          className="deleteValue"
+                          title="삭제"
+                          onClick={this.deleteAppCategory}
+                        />
+                        <Button
+                          className="btnText edit"
+                          onClick={this.myAppCategoryModalOpen}
+                        >
                           {intlObj.get(messages.edit)}
-                        </Button>
-                        {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
-                      </FormItem>
+                        </Button> */}
+                  {/* <p className="errMsg">* App 카테고리를 선택해 주세요</p> */}
+                  {/* </FormItem>
                     </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
@@ -635,7 +717,7 @@ class BizGroupReg extends Component {
                       </FormItem>
                     </td>
                   </tr>
-                  {data.LVL !== 1 && (
+                  {data.LVL !== 1 ? (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupParentAuthYn)}</span>
@@ -654,8 +736,10 @@ class BizGroupReg extends Component {
                         </FormItem>
                       </td>
                     </tr>
+                  ) : (
+                    ''
                   )}
-                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && (
+                  {data.LVL === 1 || data.PARENT_SYS_YN === 'Y' ? (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupSystem)}</span>
@@ -679,8 +763,10 @@ class BizGroupReg extends Component {
                         </RadioGroup>
                       </td>
                     </tr>
+                  ) : (
+                    ''
                   )}
-                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' && (
+                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' ? (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupHomeYn)}</span>
@@ -700,11 +786,13 @@ class BizGroupReg extends Component {
                         </RadioGroup>
                       </td>
                     </tr>
+                  ) : (
+                    ''
                   )}
                 </tbody>
               </table>
             </div>
-            {data.SEC_YN === 'Y' ? (
+            {data.SEC_YN === 'Y' || userRole === 'SA' ? (
               <div className="buttonWrapper">
                 {data.MENU_EXIST_YN === 'Y' ? (
                   <Link to={`/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`}>
@@ -736,6 +824,10 @@ class BizGroupReg extends Component {
                       if (data.SYS_YN === 'X') {
                         data.SYS_YN = 'N';
                       }
+
+                      // 사용자 매뉴얼 파일 세팅
+                      data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl.trim() : manualLink.trim();
+
                       const resultData = { ...data };
                       resultData.delList = acntIdStringtoInteger(delList);
                       resultData.I = acntIdStringtoInteger(newI);
@@ -767,6 +859,7 @@ BizGroupReg.propTypes = {
   history: PropTypes.object.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 BizGroupReg.defaultProps = {};
@@ -783,6 +876,7 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   // 카테고리
   dataP: selectors.makeData(),
+  userRole: bizGrpSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

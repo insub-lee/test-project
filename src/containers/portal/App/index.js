@@ -356,7 +356,7 @@ class App extends React.PureComponent {
   };
 
   goBusinessReg = () => {
-    this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`);
+    this.props.history.push(`/${basicPath.PORTAL}/store/appMain/bizManage`);
   };
 
   goHomeWidget = homeId => {
@@ -433,6 +433,7 @@ class App extends React.PureComponent {
       dockFixedYn,
       dockIconType,
       hasRoleAdmin,
+      hasRoleBizMng,
       selectedApp,
       history,
       headerTitle,
@@ -504,25 +505,33 @@ class App extends React.PureComponent {
           />
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="home">
+              <Tooltip placement="right" title="Home">
                 <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="my home">
+              <Tooltip placement="right" title="My Home">
                 <BtnMyhome onClick={() => history.push(`/${basicPath.PAGE}/${myHomePageId}`)} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="home widget">
+              <Tooltip placement="right" title="Home Widget">
                 <Icon type="qrcode" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goHomeWidget(myHomePageId)} />
               </Tooltip>
             </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
-              <Tooltip placement="right" title="app-store">
+              <Tooltip placement="right" title="App Store">
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
             </div>
+            {/* SA BM 권한이 있을 경우에만 노출 되도록 */}
+            {(hasRoleAdmin || hasRoleBizMng) && (
+              <div className="iconPositon" style={{ marginTop: '20px' }}>
+                <Tooltip placement="right" title="Biz Card">
+                  <Icon type="profile" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
+                </Tooltip>
+              </div>
+            )}
           </SideMenu>
           <Layout style={this.getLayoutStyle(isDesktop(view))}>
             <StyledContainer>
@@ -582,7 +591,7 @@ class App extends React.PureComponent {
                         />
                         <Route
                           exact
-                          path={`/${basicPath.PORTAL}/store/appMain/bizManage/bizMenuReg/info/1`}
+                          path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
                           render={props => (
                             <UserStore //eslint-disable-line
                               {...props}
@@ -722,6 +731,7 @@ App.propTypes = {
   deletedDockPageId: PropTypes.number,
   executedDockPageId: PropTypes.number,
   hasRoleAdmin: PropTypes.bool,
+  hasRoleBizMng: PropTypes.bool,
   headerTitle: PropTypes.string,
   profile: PropTypes.object.isRequired,
   handleMenuShow: PropTypes.func,
@@ -746,6 +756,7 @@ App.defaultProps = {
   dataForApps: undefined,
   isPreviewPage: false,
   hasRoleAdmin: false,
+  hasRoleBizMng: false,
   headerTitle: '',
   rootAppYn: 'N',
 };
@@ -775,6 +786,7 @@ const mapStateToProps = createStructuredSelector({
   deletedDockPageId: selectors.makeSelectDeletedDockPageId(),
   executedDockPageId: selectors.makeSelectExecutedDockPageId(),
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
+  hasRoleBizMng: selectors.makeSelectRoleBizMng(),
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
   commonMenuTreeData: routesSelector.makeCommonMenuTree(),
