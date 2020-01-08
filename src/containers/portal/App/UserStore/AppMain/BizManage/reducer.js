@@ -8,7 +8,8 @@ const initialState = fromJS({
   selectedIndex: -1,
   categoryData: [],
   tempRowInfo: {},
-
+  menuBizGrpId: -1,
+  userRole: '',
   // data: {},
   // titleModalVisible: false,
 });
@@ -25,6 +26,10 @@ const orgReducer = (state = initialState, action) => {
       return state.set('selectedIndex', action.selectedIndex);
     case constants.SAVE_DATA:
       return state.set('categoryData', action.categoryData).set('tempRowInfo', action.tempRowInfo);
+    case constants.SET_MENUBIZGRP_ID:
+      return state.set('menuBizGrpId', action.menuBizGrpId);
+    case constants.SET_USER_ROLE:
+      return state.set('userRole', action.userRole);
     // case constants.SET_DATA:
     //   return state.set('data', action.data);
     default:

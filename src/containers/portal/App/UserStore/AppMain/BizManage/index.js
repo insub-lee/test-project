@@ -27,7 +27,8 @@ import AuthSetting from './BizMenuReg/AuthSetting';
 const homeUrl = '/portal/store/appMain/bizManage';
 
 class BizManage extends Component {
-  componentWillMount() {
+  componentDidMount() {
+    this.props.getUserRole();
     this.props.initCategoryData();
   }
   /* eslint-disable */
@@ -67,15 +68,17 @@ class BizManage extends Component {
     const {
       // data
       history,
+      location,
       categoryData,
       selectedIndex,
       changeSelectedIndex,
 
       saveData,
       addEmptyNode,
-      // moveNode,
+      moveNode,
       deleteNode,
       updateBizGroupDelYn,
+      userRole,
     } = this.props;
 
     const handleTreeOnClick = node => {
@@ -104,6 +107,7 @@ class BizManage extends Component {
               deleteNode={deleteNode}
               updateBizGroupDelYn={updateBizGroupDelYn}
               history={history}
+              userRole={userRole}
             />
           </ErrorBoundary>
         </StyledTabList>
@@ -131,7 +135,8 @@ class BizManage extends Component {
 
 BizManage.propTypes = {
   history: PropTypes.object.isRequired,
-
+  location: PropTypes.object.isRequired,
+  match: PropTypes.object.isRequired,
   categoryData: PropTypes.array.isRequired,
   initCategoryData: PropTypes.func.isRequired,
   selectedIndex: PropTypes.number.isRequired,
@@ -139,22 +144,29 @@ BizManage.propTypes = {
 
   saveData: PropTypes.func.isRequired,
   addEmptyNode: PropTypes.func.isRequired,
-  // moveNode: PropTypes.func.isRequired,
+  moveNode: PropTypes.func.isRequired,
   deleteNode: PropTypes.func.isRequired,
   updateBizGroupDelYn: PropTypes.func.isRequired,
+
+  getUserRole: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,  
 };
 
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
     initCategoryData: () => dispatch(actions.initCategoryData()),
+    getMenuBizGrpID: () => dispatch(actions.getMenuBizGrpID()),
+
     changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
     addEmptyNode: (rowInfo, data, categoryData, history) => dispatch(actions.addEmptyNode(rowInfo, data, categoryData, history)),
-    // moveNode: treeData => dispatch(actions.moveNode(treeData)),
+    moveNode: treeData => dispatch(actions.moveNode(treeData)),
     deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateBizGroupDelYn: (rowInfo, categoryData, data, history) => dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
+
+    getUserRole: () => dispatch(actions.getUserRole()),
   };
 }
 
@@ -162,6 +174,7 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
+  userRole: selectors.makeUserRole(),
 });
 
 const withConnect = connect(

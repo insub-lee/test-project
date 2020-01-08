@@ -143,7 +143,7 @@ class BizGroupTree extends Component {
       title="업무그룹 수정"
       onClick={() => {
         this.props.saveData(rowInfo, this.state.treeData);
-        this.props.history.push(`/store/appMain/bizManage/bizGroupReg/${rowInfo.node.key}`);
+        this.props.history.push(`/portal/store/appMain/bizManage/bizGroupReg/${rowInfo.node.key}`);
       }}
     />
   );
@@ -153,7 +153,7 @@ class BizGroupTree extends Component {
       title="폴더 수정"
       onClick={() => {
         this.props.saveData(rowInfo, this.state.treeData);
-        this.props.history.push(`/store/appMain/bizManage/bizGroupReg/${rowInfo.node.key}`);
+        this.props.history.push(`/portal/store/appMain/bizManage/bizGroupReg/${rowInfo.node.key}`);
       }}
     />
   );

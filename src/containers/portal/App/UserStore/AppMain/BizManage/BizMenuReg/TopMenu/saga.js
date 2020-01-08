@@ -51,7 +51,7 @@ export function* confirmBizGroup(payload) {
         });
       }
 
-      history.push('/store/appMain/bizManage');
+      history.push('/portal/store/appMain/bizManage');
     } else {
       yield put({
         type: constantsBizManage.UPDATE_TREENODE,

@@ -11,6 +11,7 @@ import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppSelector from 'components/appSelector/index';
 import Page from 'containers/store/components/BizGroupPage';
+import * as bizSelectors from '../../selectors';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
@@ -54,6 +55,7 @@ class PageInfo extends Component {
       moveMyWidget,
       updateWidget,
       bizGroupInfo,
+      userRole,
       // history,
     } = this.props;
 
@@ -82,11 +84,11 @@ class PageInfo extends Component {
       cWidgetList[i].fixed = false;
       cWidgetList[i].updateWidget = updateWidget;
       cWidgetList[i].deleteWidget = deleteWidget;
-      if (bizGroupInfo.SEC_YN === 'Y') {
+      if (bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA') {
         cWidgetList[i].basic.functions.push('settings');
         cWidgetList[i].basic.functions.push('delete');
       }
-      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN;
+      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? 'Y' : 'N';
       cWidgetList[i].basic.path = 'AppMain/BizManage/BizMenuReg/PageInfo/BasicWidget/index';
 
       if (i === length - 1) {
@@ -94,7 +96,7 @@ class PageInfo extends Component {
       }
     }
     // 2. 마지막 순서에 addWidgets Component 추가
-    if (bizGroupInfo.SEC_YN === 'Y') {
+    if (bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA') {
       cWidgetList[length] = {
         PAGE_ID,
         title: '',
@@ -133,7 +135,7 @@ class PageInfo extends Component {
           <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} />
         </ErrorBoundary>
 
-        {bizGroupInfo.SEC_YN === 'Y' ? (
+        {bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
           <ErrorBoundary>
             <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>
@@ -155,6 +157,7 @@ PageInfo.propTypes = {
   moveMyWidget: PropTypes.func.isRequired,
   updateWidget: PropTypes.func.isRequired,
   handleGetBizInfo: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 PageInfo.defaultProps = {
@@ -176,6 +179,7 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   bizGroupInfo: selectors.makeBizGroupInfo(),
   widgetList: selectors.makeWidgetList(),
+  userRole: bizSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
