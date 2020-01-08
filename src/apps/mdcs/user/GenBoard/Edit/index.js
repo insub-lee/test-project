@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
+import FileUpload from 'components/FormStuff/Upload';
 import Styled from './Styled';
 import Button from '../../../styled/StyledButton';
-import FileUpload from 'components/FormStuff/Upload';
 
 class Edit extends Component {
   componentDidMount() {}

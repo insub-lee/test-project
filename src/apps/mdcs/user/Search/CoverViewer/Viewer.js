@@ -6,7 +6,6 @@ import PmDoc from '../../MdcsStandard/PmDoc';
 import TechDoc from '../../MdcsStandard/TechDoc';
 import BizBuilderBase from '../../../components/BizBuilderBase';
 
-
 class Viewer extends Component {
   constructor(props) {
     super(props);
@@ -57,7 +56,7 @@ class Viewer extends Component {
     const { categoryInfo, docTemplateInfoByCategory, docTemplateInfo } = this.props.extraApiData;
     console.log('this.props.extraApiData : ', this.props.extraApiData);
     const myInfo = categoryInfo.categoryMapList.filter(cInfo => cInfo.NODE_ID === nodeId);
-    if (!myInfo || myInfo.length === 0) return null; 
+    if (!myInfo || myInfo.length === 0) return null;
     console.log('myInfo : ', myInfo);
     const aryNodeIds = myInfo[0].FULLPATH.split('|');
     console.log('aryNodeIds : ', aryNodeIds);
@@ -69,7 +68,7 @@ class Viewer extends Component {
   };
 
   render() {
-    console.log('this.props : ' , this.props);
+    console.log('this.props : ', this.props);
     const { categoryInfo, docTemplateInfoByCategory, docTemplateInfo } = this.props.extraApiData;
     let selectedTemplate = null;
     if (categoryInfo && docTemplateInfoByCategory && docTemplateInfo) {
@@ -78,14 +77,20 @@ class Viewer extends Component {
 
     if (selectedTemplate != null && selectedTemplate) {
       const { CODE } = selectedTemplate;
-      if (CODE === 'BS') { // ok
-        return <BizDoc {...this.props} viewType="VIEW" />
-      } else if (CODE === 'TS') { // ok
-        return <TechDoc {...this.props} viewType="VIEW" />
-      } else if (CODE === 'DW') {
-        return <DwDoc {...this.props} viewType="VIEW" />
-      } else if (CODE === 'PM') { // ok
-        return <PmDoc {...this.props} viewType="VIEW" />
+      if (CODE === 'BS') {
+        // ok
+        return <BizDoc {...this.props} viewType="VIEW" />;
+      }
+      if (CODE === 'TS') {
+        // ok
+        return <TechDoc {...this.props} viewType="VIEW" />;
+      }
+      if (CODE === 'DW') {
+        return <DwDoc {...this.props} viewType="VIEW" />;
+      }
+      if (CODE === 'PM') {
+        // ok
+        return <PmDoc {...this.props} viewType="VIEW" />;
       }
     }
     return <div>123</div>;

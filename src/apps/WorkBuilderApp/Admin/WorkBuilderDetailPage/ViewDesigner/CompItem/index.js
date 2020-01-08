@@ -103,6 +103,24 @@ class CompItem extends React.Component {
     changeCompData(groupIndex, rowIndex, colIndex, 'NAME_KOR', value);
   };
 
+  handleChangeCompSetting = value => {
+    const {
+      col: {
+        comp: { CONFIG },
+      },
+      groupIndex,
+      rowIndex,
+      colIndex,
+      action: { changeViewCompData },
+      compPoolList,
+    } = this.props;
+    const compIdx = compPoolList.findIndex(iNode => iNode.COMP_SRC === value);
+    const nextConfig = JSON.parse(JSON.stringify(CONFIG));
+    nextConfig.property.COMP_SRC = value;
+    nextConfig.property.COMP_SETTING_SRC = compPoolList[compIdx].COMP_SETTING_SRC;
+    changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
+  };
+
   renderCompConfig = (configType, configProps) => {
     const {
       col: { comp },
@@ -123,7 +141,7 @@ class CompItem extends React.Component {
             style={{ width: '200px' }}
             placeholder="Select component"
             defaultValue={configProps.comp.CONFIG.property.COMP_SRC}
-            onChange={value => this.handleChangeViewConfig('COMP_SRC', value, 'property')}
+            onChange={value => this.handleChangeCompSetting(value)}
           >
             {configProps.compPoolList
               .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')

@@ -13,6 +13,8 @@ import * as selectors from './selectors';
 import * as actions from './actions';
 
 import ApproveList from './ApproveList';
+import UnApproveList from './UnApproveList';
+import DraftList from './DraftList';
 
 class ApproveBase extends Component {
   componentDidMount() {
@@ -31,10 +33,15 @@ class ApproveBase extends Component {
 
   render() {
     const category = this.props.match.params.CATE || 'draft';
-
     return (
       <div style={{ width: '100%', height: '600px', padding: '48px' }}>
-        <ApproveList {...this.props} category={category} />
+        {category === 'draft' ? (
+          <DraftList {...this.props} category={category} />
+        ) : category === 'approval' ? (
+          <ApproveList {...this.props} category={category} />
+        ) : (
+          <UnApproveList {...this.props} category={category} />
+        )}
       </div>
     );
   }
@@ -53,6 +60,9 @@ ApproveBase.propTypes = {
   opinion: PropTypes.string,
   setOpinion: PropTypes.func,
   reqApprove: PropTypes.func,
+  setBizFormData: PropTypes.func,
+  formData: PropTypes.object,
+  getUserInfo: PropTypes.func,
 };
 
 ApproveBase.defaultProps = {
@@ -63,6 +73,9 @@ ApproveBase.defaultProps = {
   viewVisible: false,
   opinionVisible: false,
   opinion: '',
+  setBizFormData: () => {},
+  formData: {},
+  getUserInfo: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -71,6 +84,7 @@ const mapStateToProps = createStructuredSelector({
   viewVisible: selectors.makeSelectViewVisible(),
   opinionVisible: selectors.makeSelectOpinionVisible(),
   opinion: selectors.makeSelectOpinion(),
+  formData: selectors.makeSelectFormData(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -79,7 +93,9 @@ const mapDispatchToProps = dispatch => ({
   setViewVisible: visible => dispatch(actions.setViewVisible(visible)),
   setOpinionVisible: visible => dispatch(actions.setOpinionVisible(visible)),
   setOpinion: opinion => dispatch(actions.setOpinion(opinion)),
+  setBizFormData: formData => dispatch(actions.setBizFormData(formData)),
   reqApprove: appvStatus => dispatch(actions.reqApprove(appvStatus)),
+  getUserInfo: (userInfo, callBack) => dispatch(actions.getUserInfo(userInfo, callBack)),
 });
 
 const withReducer = injectReducer({
@@ -92,13 +108,6 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(ApproveBase);
+export default compose(withSaga, withReducer, withConnect)(ApproveBase);

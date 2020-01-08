@@ -19,7 +19,7 @@ SearchDetail.propTypes = {
 };
 
 SearchDetail.defaultProps = {
-  workSeq: 202,
+  workSeq: 201,
 };
 
 export default SearchDetail;

@@ -4,18 +4,19 @@ import { Button, Modal } from 'antd';
 import WorkFlowBase from '../index';
 
 class ApprovalView extends Component {
-  state = { draftDetail: {}, approvalProcessQueId: 0 };
-
-  openOpinionModal = this.openOpinionModal.bind(this);
+  state = {
+    draftDetail: {},
+    approvalProcessQueId: 0,
+  };
 
   handleCloselModal = () => {
     this.props.setSelectedDraft({}, false);
   };
 
-  openOpinionModal() {
+  openOpinionModal = () => {
     const { selectedDraft } = this.props;
     this.setState({ approvalProcessQueId: selectedDraft.QUE_ID });
-  }
+  };
 
   setDraftDetail = draftDetail => this.setState({ draftDetail });
 
@@ -39,8 +40,10 @@ class ApprovalView extends Component {
       );
     }
 
+    console.debug('@@@@ ApprovalView @@@', this.props);
+
     return (
-      <Modal title={draftDetail.TITLE} visible={visible} onCancel={this.handleCloselModal} width="1200PX" style={{ top: 60 }} footer={btnArr} destroyOnClose>
+      <Modal title={draftDetail.TITLE} visible={visible} onCancel={this.handleCloselModal} width="1200px" style={{ top: 60 }} footer={btnArr} destroyOnClose>
         <WorkFlowBase
           {...this.props}
           setDraftDetail={this.setDraftDetail}
@@ -53,8 +56,21 @@ class ApprovalView extends Component {
   }
 }
 
-ApprovalView.propTypes = { selectedDraft: PropTypes.object, setSelectedDraft: PropTypes.func, visible: PropTypes.bool, CATE: PropTypes.string };
+ApprovalView.propTypes = {
+  selectedDraft: PropTypes.object,
+  setSelectedDraft: PropTypes.func,
+  visible: PropTypes.bool,
+  CATE: PropTypes.string,
+};
 
-ApprovalView.defaultProps = { selectedDraft: { DRAFT_ID: 117, QUE_ID: 182 }, setSelectedDraft: () => false, visible: true, CATE: 'unApproval' };
+ApprovalView.defaultProps = {
+  selectedDraft: {
+    DRAFT_ID: 117,
+    QUE_ID: 182,
+  },
+  setSelectedDraft: () => false,
+  visible: true,
+  CATE: 'unApproval',
+};
 
 export default ApprovalView;

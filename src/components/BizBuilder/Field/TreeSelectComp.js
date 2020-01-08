@@ -62,7 +62,7 @@ class TreeSelectComp extends Component {
       [];
     const categoryData = tempData.length > 0 ? tempData[0] : [];
     return visible ? (
-      <React.Fragment>
+      <>
         {colData !== undefined ? (
           <TreeSelect
             style={{ width: '100%' }}
@@ -76,7 +76,7 @@ class TreeSelectComp extends Component {
         ) : (
           <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect"></TreeSelect>
         )}
-      </React.Fragment>
+      </>
     ) : (
       ''
     );

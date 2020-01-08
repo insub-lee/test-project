@@ -75,7 +75,7 @@ class docSetting extends Component {
       source[0].children.map(x => categoryData.push(x));
     }
     return (
-      <React.Fragment>
+      <>
         <Row>
           <Col span={5}>
             <TreeSelect
@@ -95,7 +95,7 @@ class docSetting extends Component {
             </StyledButton>
           </Col>
         </Row>
-      </React.Fragment>
+      </>
     );
   }
 }
@@ -125,13 +125,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-mdcs-user-docArchitect-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-mdcs-user-docArchitect-reducer', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(docSetting);
+export default compose(withSaga, withReducer, withConnect)(docSetting);

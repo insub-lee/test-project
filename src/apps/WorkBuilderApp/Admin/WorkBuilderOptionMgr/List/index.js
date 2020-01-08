@@ -125,7 +125,9 @@ class List extends Component {
     const { result } = this.props;
     return (
       <div>
-        <StyledButton style={{textAlign:'right'}} onClick={() => this.onRegOption()}>옵션등록</StyledButton>
+        <StyledButton style={{ textAlign: 'right' }} onClick={() => this.onRegOption()}>
+          옵션등록
+        </StyledButton>
         <BzmTable rowKey="OPT_SEQ" pagination={false} columns={this.columns} dataSource={result.workOptMataList && result.workOptMataList.list}></BzmTable>
         <BzmModal
           width={700}

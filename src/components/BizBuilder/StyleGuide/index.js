@@ -25,7 +25,7 @@ const getNodeAndValue = ref => {
   };
 };
 const isInvalidWidth = stringValue =>
-  (Number(stringValue) >= 10 && (!Number.isNaN(stringValue) && REG_NUMBER.test(stringValue))) || (stringValue !== '' && !Number.isNaN(Number(stringValue)));
+  (Number(stringValue) >= 10 && !Number.isNaN(stringValue) && REG_NUMBER.test(stringValue)) || (stringValue !== '' && !Number.isNaN(Number(stringValue)));
 const isInvalidHeight = stringValue =>
   (!Number.isNaN(stringValue) && REG_NUMBER.test(stringValue)) || (stringValue !== '' && !Number.isNaN(Number(stringValue)));
 

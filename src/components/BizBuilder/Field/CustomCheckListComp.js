@@ -121,7 +121,7 @@ class CustomCheckListComp extends Component {
       this.setState({ apiFlag: false });
     }
     return visible ? (
-      <React.Fragment>
+      <>
         {colData === 'preView' ? (
           <CheckList dataSource={this.props.dataSource} props={this.props.stateProps}></CheckList>
         ) : (
@@ -140,7 +140,7 @@ class CustomCheckListComp extends Component {
             {!readOnly && <Button onClick={() => this.onOpenHandler()}>적용범위 선택</Button>}
           </div>
         )}
-      </React.Fragment>
+      </>
     ) : (
       ''
     );
@@ -151,7 +151,7 @@ export default CustomCheckListComp;
 
 CustomCheckListComp.defaultProps = {
   CONFIG: { property: {} },
-  colData: 'preView',
+  colData: '',
   changeFormData: () => false,
   changeValidationData: () => false,
   readOnly: false,
@@ -171,15 +171,15 @@ CustomCheckListComp.defaultProps = {
     checkList2: { value: ' ' },
   },
   apiArray: [
-    { key: 'REGION', url: `/api/admin/v1/common/categoryMapList?MAP_ID=16`, type: 'GET' },
+    { key: 'REGION', url: `/api/admin/v1/common/categoryMapList?MAP_ID=10`, type: 'GET' },
     { key: 'FAB', url: `/api/admin/v1/common/categoryMapList?MAP_ID=11`, type: 'GET' },
-    { key: 'PRODUCT', url: `/api/admin/v1/common/categoryMapList?MAP_ID=9`, type: 'GET' },
-    { key: 'TECH', url: `/api/admin/v1/common/categoryMapList?MAP_ID=18`, type: 'GET' },
-    { key: 'GEN', url: `/api/admin/v1/common/categoryMapList?MAP_ID=19`, type: 'GET' },
-    { key: 'DENSITY', url: `/api/admin/v1/common/categoryMapList?MAP_ID=20`, type: 'GET' },
-    { key: 'PKG', url: `/api/admin/v1/common/categoryMapList?MAP_ID=10`, type: 'GET' },
-    { key: 'MODULE', url: `/api/admin/v1/common/categoryMapList?MAP_ID=21`, type: 'GET' },
-    { key: 'CUSTOMER', url: `/api/admin/v1/common/categoryMapList?MAP_ID=22`, type: 'GET' },
+    { key: 'PRODUCT', url: `/api/admin/v1/common/categoryMapList?MAP_ID=16`, type: 'GET' },
+    { key: 'TECH', url: `/api/admin/v1/common/categoryMapList?MAP_ID=12`, type: 'GET' },
+    { key: 'GEN', url: `/api/admin/v1/common/categoryMapList?MAP_ID=13`, type: 'GET' },
+    { key: 'DENSITY', url: `/api/admin/v1/common/categoryMapList?MAP_ID=14`, type: 'GET' },
+    { key: 'PKG', url: `/api/admin/v1/common/categoryMapList?MAP_ID=15`, type: 'GET' },
+    { key: 'MODULE', url: `/api/admin/v1/common/categoryMapList?MAP_ID=17`, type: 'GET' },
+    { key: 'CUSTOMER', url: `/api/admin/v1/common/categoryMapList?MAP_ID=18`, type: 'GET' },
   ],
   extraApiData: {},
   compGroupKeys: ['REGION', 'FAB', 'PRODUCT', 'TECH', 'GEN', 'DENSITY', 'PKG', 'MODULE', 'CUSTOMER'],

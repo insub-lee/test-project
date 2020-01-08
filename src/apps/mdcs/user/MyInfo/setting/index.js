@@ -120,16 +120,9 @@ const mapDispatchToProps = dispatch => ({
   updateUserInfo: (userId, settingData) => dispatch(actions.updateUserInfo(userId, settingData)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'MyInfoWidget', saga });
 const withReducer = injectReducer({ key: 'MyInfoWidget', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyInfoWidgetSetting);
+export default compose(withReducer, withSaga, withConnect)(MyInfoWidgetSetting);

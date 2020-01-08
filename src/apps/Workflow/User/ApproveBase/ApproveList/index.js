@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
+import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
@@ -20,6 +21,21 @@ class ApproveList extends Component {
       dataIndex: 'RNUM',
       key: 'rnum',
       width: '5%',
+      align: 'center',
+    },
+    {
+      title: '구분',
+      dataIndex: 'APPVGUBUN',
+      key: 'APPVGUBUN',
+      width: '10%',
+      align: 'center',
+    },
+    {
+      title: '유형',
+      dataIndex: 'NODETYPE',
+      key: 'NODETYPE',
+      width: '10%',
+      align: 'center',
     },
     {
       title: 'Title',
@@ -28,16 +44,26 @@ class ApproveList extends Component {
       ellipsis: true,
     },
     {
+      title: '결재상태',
+      dataIndex: 'APPV_STATUS_NM',
+      key: 'APPV_STATUS_NM',
+      width: '10%',
+      align: 'center',
+    },
+    {
       title: '기안자',
       dataIndex: 'NAME_KOR',
       key: 'nameKor',
       width: '10%',
+      align: 'center',
     },
     {
       title: '기안일',
       dataIndex: 'REG_DTTM',
       key: 'regDttm',
       width: '10%',
+      align: 'center',
+      render: (text, record) => moment(text).format('YYYY-MM-DD'),
     },
   ];
 

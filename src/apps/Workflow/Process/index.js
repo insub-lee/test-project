@@ -357,14 +357,14 @@ class Process extends Component {
                       )}
                     </Form.Item>
                     <Form.Item label="승인자">
-                      <React.Fragment>
+                      <>
                         {getFieldDecorator('stepUsers', {
                           initialValue: stepUsersName,
                         })(<Input style={{ width: '70%' }} readOnly />)}
                         <Button size="small" type="primary" style={{ right: '-8px' }} onClick={this.openOrganizationPopup}>
                           선택
                         </Button>
-                      </React.Fragment>
+                      </>
                     </Form.Item>
                     <Form.Item label="권한">
                       {getFieldDecorator('appvAuth', {
@@ -392,14 +392,14 @@ class Process extends Component {
                           적용
                         </Button>
                       ) : (
-                        <React.Fragment>
+                        <>
                           <Button type="default" htmlType="button" onClick={this.initStepData}>
                             초기화
                           </Button>
                           <Button type="primary" htmlType="submit" style={{ marginLeft: 8 }}>
                             추가
                           </Button>
-                        </React.Fragment>
+                        </>
                       )}
                     </Form.Item>
                   </div>
@@ -415,7 +415,7 @@ class Process extends Component {
                 저장
               </Button>
             ) : (
-              <React.Fragment>
+              <>
                 <Button type="primary" onClick={e => this.onUpdateProcess(e)}>
                   수정
                 </Button>
@@ -424,7 +424,7 @@ class Process extends Component {
                     빌더적용
                   </Button>
                 )}
-              </React.Fragment>
+              </>
             )}
           </Col>
         </Row>
@@ -467,16 +467,8 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.Workflow.Process', reducer });
 const withSaga = injectSaga({ key: 'apps.Workflow.Process', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const PrcForm = Form.create({ name: 'prcForm' });
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-  PrcForm,
-)(Process);
+export default compose(withSaga, withReducer, withConnect, PrcForm)(Process);

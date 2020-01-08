@@ -107,7 +107,7 @@ class DetailForm extends React.Component {
     const { label, step, SRC_PATH, stepType, agreeType } = this.item.getModel();
 
     return (
-      <Fragment>
+      <>
         <Item label="Label" {...inlineFormItemLayout}>
           {form.getFieldDecorator('label', {
             initialValue: label,
@@ -163,7 +163,7 @@ class DetailForm extends React.Component {
             </Select>,
           )}
         </Item>
-      </Fragment>
+      </>
     );
   };
 
@@ -172,7 +172,7 @@ class DetailForm extends React.Component {
     const { process } = this.state;
     const edgeName = process === 'approval' ? '승인' : '반려';
     return (
-      <Fragment>
+      <>
         <Item style={{ display: 'none' }} label="Label" {...inlineFormItemLayout}>
           {form.getFieldDecorator('label', {
             initialValue: edgeName,
@@ -188,7 +188,7 @@ class DetailForm extends React.Component {
             </Select>,
           )}
         </Item>
-      </Fragment>
+      </>
     );
   };
 
