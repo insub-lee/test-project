@@ -49,10 +49,10 @@ const customstyle = {
     transform: 'translate(-50%, -50%)',
   },
 };
+
 class Organization extends Component {
   constructor(props) {
     super(props);
-    console.log(props.orgName, 'constructor******');
     const {
       userTab,
       pstnTab,
