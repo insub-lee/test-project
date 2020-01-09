@@ -201,7 +201,7 @@ const orgReducer = (state = initialState, action) => {
       }
       return state.set('treeData', action.treeData);
     case actionType.GET_GROUP_DATA:
-      return state.set('groupData', action.groupData);
+      return state.set('groupData', fromJS(action.groupData));
     case actionType.GET_GROUP_MEMBER_DATA:
       return state.set('groupMemberData', action.groupMemberData).set('searchResultData', []);
     case actionType.GET_SEARCH_RESULT_DATA:

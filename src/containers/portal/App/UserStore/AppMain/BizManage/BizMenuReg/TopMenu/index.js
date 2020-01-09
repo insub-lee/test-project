@@ -35,6 +35,12 @@ class TopMenu extends React.Component {
     // this.onClose = this.onClose.bind(this);
   }
 
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+  //   if (prevState.BIZGRP_ID !== this.props.BIZGRP_ID) {
+  //     this.set
+  //   }
+  // }
+
   componentWillReceiveProps(nextProps) {
     if (this.state.BIZGRP_ID !== nextProps.BIZGRP_ID) {
       this.setState({
@@ -59,24 +65,20 @@ class TopMenu extends React.Component {
               <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
             </Col>
             <Col sm={24} lg={8} style={{ textAlign: 'right' }}>
-              {history.location.pathname.indexOf('page') > -1 ? (
+              {history.location.pathname.indexOf('page') > -1 && (
                 <Link to={linkto} target="appPreview">
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
-              ) : (
-                ''
               )}
-              {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') === 'Y' ? (
+              {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
                     history.push(`/portal/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
                   }}
                 />
-              ) : (
-                ''
               )}
-              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') ? (
+              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
                 <BtnDkGray
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {
@@ -85,8 +87,6 @@ class TopMenu extends React.Component {
                 >
                   확정
                 </BtnDkGray>
-              ) : (
-                ''
               )}
             </Col>
           </Row>
@@ -103,11 +103,12 @@ TopMenu.propTypes = {
   BIZGRP_ID: PropTypes.number.isRequired,
   bizInfo: PropTypes.object.isRequired,
   pageID: PropTypes.number,
-  userRole: PropTypes.string.isRequired,
+  userRole: PropTypes.string,
 };
 
 TopMenu.defaultProps = {
   pageID: -1,
+  userRole: '',
 };
 
 export function mapDispatchToProps(dispatch) {

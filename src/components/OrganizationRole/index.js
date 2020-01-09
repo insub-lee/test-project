@@ -12,7 +12,7 @@ import injectReducer from 'utils/injectReducer';
 import basicStyle from 'config/basicStyle';
 import StyleModal from 'containers/portal/components/Modal/StyleModal';
 import Input from 'components/Input';
-import { BtnDkGray, BtnLgtGray } from 'containers/portal/components/uielements/buttons.style';
+// import { BtnDkGray, BtnLgtGray } from 'containers/portal/components/uielements/buttons.style';
 import Draggable from 'react-draggable';
 import GroupData from 'components/OrganizationRole/groupData';
 import StyledButton from '../Button/StyledButton';
@@ -38,9 +38,7 @@ class Organization extends Component {
     super(props);
     console.log(props.orgName, 'constructor******');
 
-    const { ROLE_CD, handleGetGroupData } = props;
 
-    handleGetGroupData(ROLE_CD);
 
     this.state = {
       // 현재 선택된 탭 (구성원: 0, 직위: 1, 직책: 2, 가상그룹: 3)
@@ -71,8 +69,14 @@ class Organization extends Component {
       gridFlag: true,
     };
   }
+
+  componentDidMount() {
+    const { ROLE_CD, handleGetGroupData } = this.props;
+
+    handleGetGroupData(ROLE_CD);
+  }
+
   // Input 태그의 경우 Tab 변경 후 Input 태그가 렌더링 되므로, handleSelect 함수에서 아래의 작업을 할 수 없다.
-  /* eslint-disable */
   componentDidUpdate(prevProps) {
     const { isDragged, isDraggedEnd } = this.state;
     const { show, closeModalInit, selectedUsers, checkedDept, checkedPstn, checkedDuty, checkedGrp } = this.props;
@@ -107,7 +111,7 @@ class Organization extends Component {
       closeModalInit();
     }
   }
-  /* eslint-disable */
+
   onSave = () => {
     const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
     const { getDataFromOrganization } = this.props;
@@ -125,6 +129,7 @@ class Organization extends Component {
     this.props.closeModalInit();
     this.props.closeModal();
   };
+
   dndChangePositionUser = (draggedEmpNo, EmpNo) => {
     const { selectedusers } = this.state;
     const index = selectedusers.findIndex(i => i.EMP_NO === draggedEmpNo);
@@ -138,6 +143,7 @@ class Organization extends Component {
       selectedusers: selectedusersCopy,
     });
   };
+
   dndChangePositionCallback = () => {
     const { dndChangePositionCallback, item } = this.props;
     const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
@@ -162,6 +168,7 @@ class Organization extends Component {
       });
     }
   };
+
   getTab = () => {
     const {
       checkboxInitialize,
@@ -174,10 +181,9 @@ class Organization extends Component {
       handleGetGroupMemberData,
     } = this.props;
     const { gridFlag } = this.state;
-    const content = [];
-    /* eslint-disable */
-    content.push(
-      <div className="members" key={content.length}>
+
+    return (
+      <div className="members">
         <GroupData groupData={groupData} getGroupMemberData={handleGetGroupMemberData} ROLE_CD={ROLE_CD} setGridFlag={this.setGridFlag} />
 
         <div className="userGridResult">
@@ -198,11 +204,10 @@ class Organization extends Component {
             gridFlag={gridFlag}
           />
         </div>
-      </div>,
+      </div>
     );
-    /* eslint-disable */
-    return content;
   };
+
   initializeSelectedList = () => {
     this.setState({
       users: [],
@@ -221,6 +226,7 @@ class Organization extends Component {
     pstnList = [];
     dutyList = [];
   };
+
   closeModal = () => {
     deptList = [];
     grpList = [];
@@ -248,6 +254,7 @@ class Organization extends Component {
       },
     );
   };
+
   initializeSearchInput = type => {
     switch (type) {
       case 'pstn':
@@ -261,42 +268,48 @@ class Organization extends Component {
         break;
     }
   };
+
   setIsDragged = () => {
-    const { isDragged } = this.state;
     this.setState({
       isDragged: true,
     });
   };
+
   setIsDraggedEnd = () => {
-    const { isDraggedEnd } = this.state;
     this.setState({
       isDraggedEnd: false,
     });
   };
+
   isEqual = (arr1, arr2) => {
     if (arr1.length !== arr2.length) {
       return false;
     }
-    arr1.forEach(v => {
-      arr2.forEach(v2 => {
-        if (v.USER_ID !== v2.USER_ID) {
-          return false;
-        }
-      });
-    });
-    return true;
+
+    return !arr1.some(v => arr2.some(v1 => v.USER_ID !== v1.USER_ID));
+
+    // arr1.forEach(v => {
+    //   arr2.forEach(v2 => {
+    //     if (v.USER_ID !== v2.USER_ID) {
+    //       return false;
+    //     }
+    //   });
+    // });
+    // return true;
   };
+
   setGridFlag = () => {
-    this.setState({
-      gridFlag: !this.state.gridFlag,
-    });
+    this.setState(prevState => ({
+      gridFlag: !prevState.gridFlag,
+    }));
   };
+
   // 트리에서 검색어 onChange 호출 시 불리는 함수
   setSearchString = (searchString, treeType) => {
     switch (treeType) {
       case 'user':
         this.setState({
-          searchString: searchString,
+          searchString,
         });
         break;
       case 'pstn':
@@ -314,94 +327,126 @@ class Organization extends Component {
           searchStringGrp: searchString,
         });
         break;
+      default:
+        break;
     }
   };
+
   sendDelete = (id, type) => {
-    const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
+    // const { selectedusers, checkedDept, checkedPstn, checkedDuty, selectedGrp } = this.state;
     const { deleteCallback, isModal, item } = this.props;
-    let deletedData = '';
-    if (type === 'user') {
-      deletedData = selectedusers.splice(selectedusers.findIndex(user => user.USER_ID === id), 1);
-      this.setState(
-        {
-          selectedusers,
-        },
-        () => {
-          if (!isModal) {
-            if (item) {
-              deleteCallback(deletedData, item);
-            } else {
-              deleteCallback(deletedData);
+    let deletedData = [];
+    switch (type) {
+      case 'user':
+        this.setState(
+          prevState => {
+            const { selectedusers } = prevState;
+            const target = selectedusers.find(user => user.USER_ID === id);
+            deletedData = target ? [target] : [];
+            return {
+              selectedusers: selectedusers.filter(user => user.USER_ID !== id),
+            };
+          },
+          () => {
+            if (!isModal) {
+              if (item) {
+                deleteCallback(deletedData, item);
+              } else {
+                deleteCallback(deletedData);
+              }
             }
-          }
-        },
-      );
-    } else if (type === 'dept') {
-      deletedData = checkedDept.splice(checkedDept.findIndex(dept => dept.id === id), 1);
-      this.setState(
-        {
-          checkedDept,
-        },
-        () => {
-          if (!isModal) {
-            if (item) {
-              deleteCallback(deletedData, item);
-            } else {
-              deleteCallback(deletedData);
+          },
+        );
+        break;
+      case 'dept':
+        this.setState(
+          prevState => {
+            const { checkedDept } = prevState;
+            const target = checkedDept.find(dept => dept.id === id);
+            deletedData = target ? [target] : [];
+            return {
+              checkedDept: checkedDept.filter(dept => dept.id !== id),
+            };
+          },
+          () => {
+            if (!isModal) {
+              if (item) {
+                deleteCallback(deletedData, item);
+              } else {
+                deleteCallback(deletedData);
+              }
             }
-          }
-        },
-      );
-    } else if (type === 'pstn') {
-      deletedData = checkedPstn.splice(checkedPstn.findIndex(pstn => pstn.id === id), 1);
-      this.setState(
-        {
-          checkedPstn,
-        },
-        () => {
-          if (!isModal) {
-            if (item) {
-              deleteCallback(deletedData, item);
-            } else {
-              deleteCallback(deletedData);
+          },
+        );
+        break;
+      case 'pstn':
+        this.setState(
+          prevState => {
+            const { checkedPstn } = prevState;
+            const target = checkedPstn.find(pstn => pstn.id === id);
+            deletedData = target ? [target] : [];
+            return {
+              checkedPstn: checkedPstn.filter(pstn => pstn.id !== id),
+            };
+          },
+          () => {
+            if (!isModal) {
+              if (item) {
+                deleteCallback(deletedData, item);
+              } else {
+                deleteCallback(deletedData);
+              }
             }
-          }
-        },
-      );
-    } else if (type === 'duty') {
-      deletedData = checkedDuty.splice(checkedDuty.findIndex(duty => duty.id === id), 1);
-      this.setState(
-        {
-          checkedDuty,
-        },
-        () => {
-          if (!isModal) {
-            if (item) {
-              deleteCallback(deletedData, item);
-            } else {
-              deleteCallback(deletedData);
+          },
+        );
+        break;
+      case 'duty':
+        this.setState(
+          prevState => {
+            const { checkedDuty } = prevState;
+            const target = checkedDuty.find(duty => duty.id === id);
+            deletedData = target ? [target] : [];
+            return {
+              checkedDuty: checkedDuty.filter(duty => duty.id !== id),
+            };
+          },
+          () => {
+            if (!isModal) {
+              if (item) {
+                deleteCallback(deletedData, item);
+              } else {
+                deleteCallback(deletedData);
+              }
             }
-          }
-        },
-      );
-    } else if (type === 'grp') {
-      deletedData = selectedGrp.splice(selectedGrp.findIndex(grp => grp.id === id), 1);
-      this.setState(
-        {
-          selectedGrp,
-        },
-        () => {
-          if (!isModal) {
-            if (item) {
-              deleteCallback(deletedData, item);
-            } else {
-              deleteCallback(deletedData);
+          },
+        );
+        break;
+      case 'grp':
+        this.setState(
+          prevState => {
+            const { selectedGrp } = prevState;
+            const target = selectedGrp.find(grp => grp.id === id);
+            deletedData = target ? [target] : [];
+            return {
+              selectedGrp: selectedGrp.filter(grp => grp.id !== id),
+            };
+          },
+          () => {
+            if (!isModal) {
+              if (item) {
+                deleteCallback(deletedData, item);
+              } else {
+                deleteCallback(deletedData);
+              }
             }
-          }
-        },
-      );
+          },
+        );
+        break;
+      default:
+        break;
     }
   };
+
   deleteAll = () => {
     const { deleteAllCallback, isModal, item } = this.props;
     this.setState(
@@ -423,6 +468,7 @@ class Organization extends Component {
       },
     );
   };
+
   resetUsers = () => {
     this.setState({
       users: [],
@@ -433,17 +479,19 @@ class Organization extends Component {
       reset: true,
     });
   };
+
   sendAdd = () => {
+    const { users, selectedusers, checkDept, checkgrp, checkpstn, checkduty } = this.state;
     const { addCallback, isModal, item } = this.props;
-    let copyusers = this.state.users.slice();
-    let list = this.state.selectedusers.size === 0 ? [] : this.state.selectedusers;
-    let copyselectedusers = this.state.selectedusers.slice();
-    let checklist = [];
-    let comparelist = [];
-    let selectedDept = this.state.checkDept;
-    let selectedGrp = this.state.checkgrp;
-    let selectedPstn = this.state.checkpstn;
-    let selectedDuty = this.state.checkduty;
+    const copyusers = users.slice();
+    const list = selectedusers || [];
+    const copyselectedusers = selectedusers.slice();
+    const checklist = [];
+    const comparelist = [];
+    const selectedDept = checkDept;
+    const selectedGrp = checkgrp;
+    const selectedPstn = checkpstn;
+    const selectedDuty = checkduty;
     let copyselectedDept = '';
     let copyselectedPstn = '';
     let copyselectedDuty = '';
@@ -453,7 +501,7 @@ class Organization extends Component {
     list.map(l => checklist.push(l.EMP_NO));
     if (checklist.length > 0) {
       for (let i = 0; i < copyselectedusers.length; i++) {
-        var idx = copyusers.findIndex(t => t.EMP_NO === checklist[i]);
+        const idx = copyusers.findIndex(t => t.EMP_NO === checklist[i]);
         if (idx !== -1) {
           copyusers.splice(idx, 1);
           comparelist.splice(idx, 1);
@@ -466,20 +514,20 @@ class Organization extends Component {
       }
       this.setState({ selectedusers: list, checkAll: false });
     }
-    if (selectedDept !== undefined && selectedDept.length !== 0) {
-      copyselectedDept = this.state.checkDept.slice(); // Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
+    if (selectedDept && selectedDept.length > 0) {
+      copyselectedDept = checkDept.slice(); // Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
       this.setState({ checkedDept: copyselectedDept, checkAll: false, checkDept: [] });
     }
-    if (selectedPstn !== undefined && selectedPstn.length !== 0) {
-      copyselectedPstn = this.state.checkpstn.slice();
+    if (selectedPstn && selectedPstn.length > 0) {
+      copyselectedPstn = checkpstn.slice();
       this.setState({ checkedPstn: copyselectedPstn, checkAll: false });
     }
-    if (selectedDuty !== undefined && selectedDuty.length !== 0) {
-      copyselectedDuty = this.state.checkduty.slice();
+    if (selectedDuty && selectedDuty.length > 0) {
+      copyselectedDuty = checkduty.slice();
       this.setState({ checkedDuty: copyselectedDuty, checkAll: false });
     }
-    if (selectedGrp !== undefined && selectedGrp.length !== 0) {
-      copyselectedGrp = this.state.checkgrp.slice();
+    if (selectedGrp && selectedGrp.length > 0) {
+      copyselectedGrp = checkgrp.slice();
       this.setState({ selectedGrp: copyselectedGrp, checkAll: false });
     }
     if (!isModal) {
@@ -493,50 +541,58 @@ class Organization extends Component {
     this.props.resetCheckbox();
     this.resetUsers();
   };
+
   // 탭변경
   handleSelect = (key, label) => {
-    const { tabArr, tabType } = this.state;
-    let i = 0;
-    tabArr.map((la, index) =>
-      la.map(l => {
-        if (l === label) {
-          i = index;
-          this.setState({ selected: index });
-        }
-      }),
-    );
-    const type = tabType[i];
-    this.setState({
-      users: [],
-      checkDept: [],
-      checkgrp: [],
-      checkpstn: [],
-      checkduty: [],
-      typeTabChange: type,
-      reset: true,
+    this.setState(prevState => {
+      const { tabArr, tabType } = prevState;
+      let i = 0;
+      tabArr.some((la, index) =>
+        la.some(l => {
+          if (l === label) {
+            i = index;
+            return true;
+          }
+          return false;
+        }),
+      );
+      const type = tabType[i];
+      return {
+        selected: i,
+        users: [],
+        checkDept: [],
+        checkgrp: [],
+        checkpstn: [],
+        checkduty: [],
+        typeTabChange: type,
+        reset: true,
+      };
     });
     deptList = [];
     grpList = [];
     pstnList = [];
     dutyList = [];
   };
+
   initializeCheckbox = () => {
     const { handleInitializeCheckbox } = this.props;
     handleInitializeCheckbox();
   };
+
   // 그리드에서 구성원 클릭 시 해당 구성원의 부서명을 이용해 선택 목록에 들어갈 데이터를 생성
   loadSelected = users => {
     if (users.length > 0 && users[0].ACNT_TYPE === 'D') {
-      users[0]['checked'] = true;
-      users[0]['title'] = users[0].NAME_KOR;
-      users[0]['id'] = users[0].USER_ID;
-      let deptname = users[0].DEPT_NAME_KOR;
+      users[0].checked = true;
+      users[0].title = users[0].NAME_KOR;
+      users[0].id = users[0].USER_ID;
+      const deptname = users[0].DEPT_NAME_KOR;
       deptList = this.state.checkedDept.slice();
       this.loadSelectedDept(users[0], deptname);
     } else if (users.length > 0) {
       this.setState({ users });
     }
   };
+
   loadSelectedDept = (dept, name) => {
     const { checkedDept } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
@@ -547,7 +603,7 @@ class Organization extends Component {
       }
       if (dept.checked === true) {
         if (idx === -1) {
-          let obj = {
+          const obj = {
             id: dept.id,
             NAME_KOR: dept.node.NAME_KOR,
             NAME_ENG: dept.node.NAME_ENG,
@@ -556,12 +612,12 @@ class Organization extends Component {
             NAME_ETC: dept.node.NAME_ETC,
           };
           if (name !== undefined) {
-            obj['deptName'] = name;
+            obj.deptName = name;
           }
           deptList.push(obj);
         }
       } else if (dept.checked === false) {
-        let listcheck = this.state.checkedDept.findIndex(t => t.id === dept.id);
+        const listcheck = this.state.checkedDept.findIndex(t => t.id === dept.id);
         if (listcheck === -1) {
           deptList.splice(idx, 1);
         }
@@ -569,6 +625,7 @@ class Organization extends Component {
       this.setState({ checkDept: deptList, reload: false, reset: false });
     }
   };
+
   loadSelectedGrp = grp => {
     const { selectedGrp } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
@@ -590,7 +647,7 @@ class Organization extends Component {
           grpList.push(obj);
         }
       } else if (grp.checked === false) {
-        let listcheck = this.state.selectedGrp.findIndex(t => t.id === grp.id);
+        const listcheck = this.state.selectedGrp.findIndex(t => t.id === grp.id);
         if (listcheck === -1) {
           grpList.splice(idx, 1);
         }
@@ -598,17 +655,18 @@ class Organization extends Component {
       this.setState({ checkgrp: grpList, reload: false, reset: false });
     }
   };
+
   loadSelectedPstn = (pstn, name) => {
     const { checkedPstn } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
     if (checkedPstn.findIndex(item => item.id === pstn.id) === -1) {
-      let idx = pstnList.findIndex(t => t.id === pstn.id);
+      const idx = pstnList.findIndex(t => t.id === pstn.id);
       if (pstnList.length === 0) {
         pstnList = this.state.checkedPstn.slice();
       }
       if (pstn.checked === true) {
         if (idx === -1) {
-          let obj = {
+          const obj = {
             id: pstn.id,
             NAME_KOR: pstn.node.NAME_KOR,
             NAME_ENG: pstn.node.NAME_ENG,
@@ -617,12 +675,12 @@ class Organization extends Component {
             NAME_ETC: pstn.node.NAME_ETC,
           };
           if (name !== undefined) {
-            obj['deptName'] = name;
+            obj.deptName = name;
           }
           pstnList.push(obj);
         }
       } else if (pstn.checked === false) {
-        let listcheck = this.state.checkedPstn.findIndex(t => t.id === pstn.id);
+        const listcheck = this.state.checkedPstn.findIndex(t => t.id === pstn.id);
         if (listcheck === -1) {
           pstnList.splice(idx, 1);
         }
@@ -630,6 +688,7 @@ class Organization extends Component {
       this.setState({ checkpstn: pstnList, reload: false, reset: false });
     }
   };
+
   loadSelectedDuty = (duty, name) => {
     const { checkedDuty } = this.state;
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
@@ -640,7 +699,7 @@ class Organization extends Component {
       }
       if (duty.checked === true) {
         if (idx === -1) {
-          let obj = {
+          const obj = {
             id: duty.id,
             NAME_KOR: duty.node.NAME_KOR,
             NAME_ENG: duty.node.NAME_ENG,
@@ -649,12 +708,12 @@ class Organization extends Component {
             NAME_ETC: duty.node.NAME_ETC,
           };
           if (name !== undefined) {
-            obj['deptName'] = name;
+            obj.deptName = name;
           }
           dutyList.push(obj);
         }
       } else if (duty.checked === false) {
-        let listcheck = this.state.checkedDuty.findIndex(t => t.id === duty.id);
+        const listcheck = this.state.checkedDuty.findIndex(t => t.id === duty.id);
         if (listcheck === -1) {
           dutyList.splice(idx, 1);
         }
@@ -674,6 +733,7 @@ class Organization extends Component {
       });
     }
   };
+
   /* 구성원 검색 (검색 버튼을 마우스로 클릭 했을 경우) */
   organizationUserSearch = () => {
     const { keyword } = this.state;
@@ -681,6 +741,7 @@ class Organization extends Component {
 
     handleGetSearchResultData('SM', keyword);
   };
+
   render() {
     const customstyle = {
       content: {
@@ -735,20 +796,16 @@ class Organization extends Component {
     let common = (
       <Draggable handle="h2.modalTitle">
         <StyleModal className={modalWrapperClass} style={styleModalObject}>
-          {isModal ? (
+          {isModal && (
             <h2 className="modalTitle" style={{ cursor: 'move' }}>
               {intlObj.get(messages.organization)}
               <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
             </h2>
-          ) : (
-            ''
           )}
           <div className="modalContents orgAcivityBody">
             <Row style={rowStyle} gutter={gutter} className="orgActivityInnerBody">
-              {// 탭이나 모바일일 경우, 프로필만 보여야 한다
-              view === 'Tablet' || view === 'Mobile' ? (
-                ''
-              ) : (
+              {/* 탭이나 모바일일 경우, 프로필만 보여야 한다 */}
+              {!(view === 'Tablet' || view === 'Mobile') && (
                 <Col xl={16} style={colStyle} className="leftActivity">
                   <Tabs selected={this.state.selected} onSelect={this.handleSelect}>
                     <Tab label="ROLE">{content}</Tab>
@@ -776,21 +833,17 @@ class Organization extends Component {
               </Col>
             </Row>
           </div>
-          {isModal ? (
+          {isModal && (
             <div className="modalFooter">
-              {isDesktop(view) ? (
+              {isDesktop(view) && (
                 <StyledButton className="btn-light" onClick={this.closeModal}>
                   {intlObj.get(messages.cancel)}
                 </StyledButton>
-              ) : (
-                ''
               )}
               <StyledButton className="btn-primary" onClick={this.onSave}>
                 {intlObj.get(messages.confirm)}
               </StyledButton>
             </div>
-          ) : (
-            ''
           )}
         </StyleModal>
       </Draggable>
@@ -898,14 +951,7 @@ const mapStateToProps = createStructuredSelector({
   groupMemberData: selectors.makeSelectGroupMemberData(),
   searchResultData: selectors.makeSelectSearchResultData(),
 });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'orgRole', reducer });
 const withSaga = injectSaga({ key: 'orgRole', saga });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Organization);
+export default compose(withReducer, withSaga, withConnect)(Organization);
