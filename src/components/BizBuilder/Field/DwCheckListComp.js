@@ -9,7 +9,7 @@ class DwCheckListComp extends Component {
   };
 
   onOkHandler = () => {
-    const { changeFormData, id } = this.props;
+    const { changeFormData, sagaKey: id } = this.props;
     const { type } = this.state;
     changeFormData(id, 'LB_TYPE', type);
   };

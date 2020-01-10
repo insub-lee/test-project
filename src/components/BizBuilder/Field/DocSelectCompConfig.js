@@ -26,7 +26,7 @@ class DocSelectCompConfig extends Component {
 
   render() {
     const { configInfo } = this.props;
-    const selectedValue = configInfo && configInfo.property && configInfo.property.selectedValue || undefined;
+    const selectedValue = (configInfo && configInfo.property && configInfo.property.selectedValue) || undefined;
     return (
       <div>
         <Row>
@@ -44,7 +44,7 @@ class DocSelectCompConfig extends Component {
 }
 const SetDocSelectComp = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="DocSelectCompConfig"
     component={DocSelectCompConfig}
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}

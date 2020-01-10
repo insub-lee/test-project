@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class DocNumberComp extends Component {
   componentDidMount() {
-    const { id, COMP_FIELD, changeFormData } = this.props;
+    const { sagaKey: id, COMP_FIELD, changeFormData } = this.props;
     changeFormData(id, COMP_FIELD, this.props.compProps && this.props.compProps.docNumber);
   }
 

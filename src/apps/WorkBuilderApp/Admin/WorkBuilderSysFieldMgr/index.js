@@ -20,7 +20,7 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray, initData, setFormData } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArray, initData, setFormData } = this.props;
     getCallDataHanlder(id, apiArray);
     setFormData(id, initData);
   }
@@ -33,7 +33,7 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onSaveDo = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
     const param = {
       PARAM: formData,
     };
@@ -46,7 +46,7 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onCancel = () => {
-    const { id, removeStorageReduxState, initData, setFormData } = this.props;
+    const { sagaKey: id, removeStorageReduxState, initData, setFormData } = this.props;
     this.setState({
       isWriteMode: false,
     });
@@ -55,14 +55,14 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onSaveComplete = rid => {
-    const { getCallDataHanlder, id, apiArray, removeStorageReduxState, initData, setFormData } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArray, removeStorageReduxState, initData, setFormData } = this.props;
     getCallDataHanlder(id, apiArray);
     removeStorageReduxState(id, 'formData');
     setFormData(id, initData);
   };
 
   onModify = record => {
-    const { id, setFormData } = this.props;
+    const { sagaKey: id, setFormData } = this.props;
     setFormData(id, record);
     this.setState({
       actionType: 'U',
@@ -71,7 +71,7 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onModifyDo = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
     const param = {
       PARAM: formData,
     };
@@ -83,7 +83,7 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onDBApply = record => {
-    const { id, submitHadnlerBySaga } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga } = this.props;
     const param = {
       PARAM: record,
     };
@@ -163,7 +163,6 @@ class WorkBuilderSysFieldMgr extends Component {
   ];
 
   render() {
-    console.debug('prop!!!!', this.props);
     const { result } = this.props;
     const dataSource = result && result.sysWorkMeta && result.sysWorkMeta.list.map(item => ({ ...item, fieldInfo: result.sysFieldInfo }));
 
@@ -255,6 +254,6 @@ WorkBuilderSysFieldMgr.defaultProps = {
   },
 };
 
-const WorkBuilderSysFieldMgrBase = () => <BizMicroDevBase id="workBuilderSysFieldMgrBase" component={WorkBuilderSysFieldMgr}></BizMicroDevBase>;
+const WorkBuilderSysFieldMgrBase = () => <BizMicroDevBase sagaKey="workBuilderSysFieldMgrBase" component={WorkBuilderSysFieldMgr}></BizMicroDevBase>;
 
 export default WorkBuilderSysFieldMgrBase;
