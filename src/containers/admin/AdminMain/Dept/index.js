@@ -293,7 +293,8 @@ class Dept extends React.Component {
             </StyledButton>
           </React.Fragment>
         );
-      } if (mode === 'U') {
+      }
+      if (mode === 'U') {
         // 수정
         return (
           <React.Fragment>

@@ -1,12 +1,16 @@
 import styled from 'styled-components';
 
 const StyledWorkProcess = styled.div`
-  .ant-col {
-    border: 1px solid rgb(217, 224, 231);
-    text-align: center;
+  margin-bottom: 30px;
 
-    span {
-      font-size: 14px;
+  .signLineWrapper {
+    .ant-col {
+      border: 1px solid rgb(217, 224, 231);
+      text-align: center;
+
+      span {
+        font-size: 14px;
+      }
     }
   }
 

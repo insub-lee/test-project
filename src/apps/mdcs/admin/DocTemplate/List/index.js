@@ -1,44 +1,7 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-
-const getCategoryMapListAsTree = flatData =>
-  getTreeFromFlatData({
-    flatData: flatData.map(item => ({
-      title: item.NAME_KOR,
-      value: item.NODE_ID,
-      key: item.NODE_ID,
-      parentValue: item.PARENT_NODE_ID,
-    })),
-
-    getKey: node => node.key,
-    getParentKey: node => node.parentValue,
-    rootKey: 0,
-  });
-
-const onMakeFullPath = (fullPath, item) => {
-  let fullPathName = '';
-  item &&
-    item.CATEGORYFULLPATH.split('|')
-      .filter(c => c !== '9')
-      .map(nodeId => {
-        const pathinfo = fullPath && fullPath.filter(obj => obj.NODE_ID === Number(nodeId));
-        fullPathName += ` > ${pathinfo && pathinfo.map(path => path.NAME_KOR)}`;
-      });
-  return fullPathName.substring(0);
-};
-
-const onMakeFullCode = (fullPath, item) => {
-  let codeFormat = '####-####';
-  item &&
-    item.CATEGORYFULLPATH.split('|').map(nodeId => {
-      const pathinfo = fullPath && fullPath.filter(obj => obj.NODE_ID === Number(nodeId));
-      codeFormat = codeFormat.replace('#', pathinfo && pathinfo.map(path => path.CODE)[0]);
-    });
-  return codeFormat;
-};
 
 class List extends Component {
   state = {
@@ -52,14 +15,125 @@ class List extends Component {
     isValidation: false,
   };
 
-  handleSearch = (selectedKeys, confirm) => {
-    confirm();
-    this.setState({ searchText: selectedKeys[0] });
+  componentDidMount() {
+    const { id, getCallDataHanlder, apiAry } = this.props;
+    getCallDataHanlder(id, apiAry);
+  }
+
+  onSaveComplete = id => {
+    const { getCallDataHanlder, apiAry, removeStorageReduxState } = this.props;
+    getCallDataHanlder(id, apiAry);
+    removeStorageReduxState(id, 'formData');
+    this.setState({
+      searchText: '',
+      actionType: 'I',
+      taskSeq: 0,
+      categoryNodeId: undefined,
+      categoryNodeFullPath: [],
+      docTemplateNodeId: undefined,
+      docTemplateNodeFullPath: [],
+      isValidation: false,
+    });
   };
 
-  handleReset = clearFilters => {
-    clearFilters();
-    this.setState({ searchText: '' });
+  getCategoryMapListAsTree = flatData =>
+    getTreeFromFlatData({
+      flatData: flatData.map(item => ({
+        title: item.NAME_KOR,
+        value: item.NODE_ID,
+        key: item.NODE_ID,
+        parentValue: item.PARENT_NODE_ID,
+      })),
+
+      getKey: node => node.key,
+      getParentKey: node => node.parentValue,
+      rootKey: 0,
+    });
+
+  onMakeFullPath = (fullPath, item) => {
+    let fullPathName = '';
+    item &&
+      item.CATEGORYFULLPATH.split('|')
+        .filter(c => c !== '9')
+        .map(nodeId => {
+          const pathinfo = fullPath && fullPath.filter(obj => obj.NODE_ID === Number(nodeId));
+          fullPathName += ` > ${pathinfo && pathinfo.map(path => path.NAME_KOR)}`;
+        });
+    return fullPathName.substring(0);
+  };
+
+  onMakeFullCode = (fullPath, item) => {
+    let codeFormat = '####-####';
+    item &&
+      item.CATEGORYFULLPATH.split('|').map(nodeId => {
+        const pathinfo = fullPath && fullPath.filter(obj => obj.NODE_ID === Number(nodeId));
+        codeFormat = codeFormat.replace('#', pathinfo && pathinfo.map(path => path.CODE)[0]);
+      });
+    return codeFormat;
+  };
+
+  onCategoryTreeChange = categoryNodeId => {
+    const { id, changeFormData, result } = this.props;
+
+    const fidx =
+      result.docCategoryTempListExtra &&
+      result.docCategoryTempListExtra.docCategoryTempList &&
+      result.docCategoryTempListExtra.docCategoryTempList.findIndex(cidx => cidx.CATEGORYNODEID === categoryNodeId);
+    if (fidx && fidx !== -1) {
+      this.setState({
+        actionType: 'U',
+      });
+    } else {
+      this.setState({
+        actionType: 'I',
+      });
+    }
+    this.setState(
+      {
+        categoryNodeId,
+      },
+      () => changeFormData(id, 'NODE_ID', categoryNodeId),
+    );
+  };
+
+  onCategoryExpend = keys => {
+    this.setState({
+      categoryNodeFullPath: keys,
+    });
+  };
+
+  onDocTemplateTreeChange = docTemplateNodeId => {
+    const { id, changeFormData } = this.props;
+    this.setState(
+      {
+        docTemplateNodeId,
+      },
+      () => changeFormData(id, 'DOC_CODE', docTemplateNodeId),
+    );
+  };
+
+  onDocTemplateExpend = keys => {
+    this.setState({
+      docTemplateNodeFullPath: keys,
+    });
+  };
+
+  onSave = () => {
+    const { id, formData, submitHadnlerBySaga } = this.props;
+    const { NODE_ID, DOC_CODE } = formData;
+
+    if (NODE_ID !== undefined && DOC_CODE !== '') {
+      message.success('success!!', 0.5);
+      const apiUrl = '/api/mdcs/v1/common/DocCategoryTemplHandler';
+      const submitData = {
+        PARAM: {
+          formData,
+        },
+      };
+      submitHadnlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
+    } else {
+      message.error('분류체계를 선택해주세요!!', 0.5);
+    }
   };
 
   getColumnSearchProps = dataIndex => ({
@@ -95,10 +169,6 @@ class List extends Component {
       }
     },
   });
-
-  // ##################################
-  // #      Table Search sm.lee
-  // ##################################
 
   columns = [
     {
@@ -147,58 +217,9 @@ class List extends Component {
     },
   ];
 
-  onEditEvent = rowItem => {
-    this.setState({
-      actionType: 'E',
-      taskSeq: rowItem.TASK_SEQ,
-      categoryNodeId: rowItem.CATEGORYNODEID,
-      categoryNodeFullPath: rowItem.CATEGORYFULLPATH.split('|'),
-      docTemplateNodeId: rowItem.DOCTEMPLATENODEID,
-      docTemplateNodeFullPath: rowItem.DOCTEMPLATEFULLPATH.split('|'),
-    });
-  };
-
-  onDeleteEvent = rowItem => {
-    const { id, deleteTask } = this.props;
-    deleteTask(id, rowItem.WORK_SEQ, rowItem.TASK_SEQ);
-  };
-
-  onCategoryTreeChange = categoryNodeId => {
-    const { id, changeFormData } = this.props;
-    this.setState(
-      {
-        categoryNodeId,
-      },
-      () => changeFormData(id, 'NODE_ID', categoryNodeId),
-    );
-  };
-
-  onCategoryExpend = keys => {
-    this.setState({
-      categoryNodeFullPath: keys,
-    });
-  };
-
-  onDocTemplateTreeChange = docTemplateNodeId => {
-    const { id, changeFormData } = this.props;
-    this.setState(
-      {
-        docTemplateNodeId,
-      },
-      () => changeFormData(id, 'DOC_CODE', docTemplateNodeId),
-    );
-  };
-
-  onDocTemplateExpend = keys => {
-    this.setState({
-      docTemplateNodeFullPath: keys,
-    });
-  };
-
   onCancel = () => {
     this.setState({
       actionType: 'I',
-      taskSeq: 0,
       categoryNodeId: undefined,
       categoryNodeFullPath: [],
       docTemplateNodeId: undefined,
@@ -206,51 +227,82 @@ class List extends Component {
     });
   };
 
-  onSave = () => {
-    const { id, formData, saveTask } = this.props;
-    const { NODE_ID, DOC_CODE } = formData;
+  onEditEvent = rowItem => {
+    const { id, changeFormData } = this.props;
+    this.setState(
+      {
+        actionType: 'U',
+        categoryNodeId: rowItem.CATEGORYNODEID,
+        categoryNodeFullPath: rowItem.CATEGORYFULLPATH.split('|'),
+        docTemplateNodeId: rowItem.DOCTEMPLATENODEID,
+        docTemplateNodeFullPath: rowItem.DOCTEMPLATEFULLPATH.split('|'),
+      },
+      () => {
+        changeFormData(id, 'NODE_ID', rowItem.CATEGORYNODEID);
+        changeFormData(id, 'DOC_CODE', rowItem.DOCTEMPLATENODEID);
+      },
+    );
+  };
 
+  onUpdate = () => {
+    const { id, formData, submitHadnlerBySaga } = this.props;
+    const { NODE_ID, DOC_CODE } = formData;
     if (NODE_ID !== undefined && DOC_CODE !== '') {
-      saveTask(id);
       message.success('success!!', 0.5);
+      const apiUrl = '/api/mdcs/v1/common/DocCategoryTemplHandler';
+      const submitData = {
+        PARAM: {
+          formData,
+        },
+      };
+
+      submitHadnlerBySaga(id, 'PUT', apiUrl, submitData, this.onSaveComplete);
     } else {
       message.error('분류체계를 선택해주세요!!', 0.5);
     }
   };
 
-  componentDidMount() {
-    const { id, getExtraApiData, apiArr } = this.props;
-    getExtraApiData(id, apiArr);
-  }
+  onDeleteEvent = rowitem => {
+    const { id, formData, submitHadnlerBySaga } = this.props;
+    const apiUrl = '/api/mdcs/v1/common/DocCategoryTemplDeleteHandler';
+    const submitData = {
+      PARAM: {
+        formData: {
+          NODE_ID: rowitem.CATEGORYNODEID,
+        },
+      },
+    };
+    submitHadnlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
+  };
 
   render() {
-    const { extraApiData } = this.props;
-    const { docCategoryTempListExtra, categoryMapInfoExtra, docMapInfoExtra } = extraApiData;
-    console.debug('##this.props', this.props);
+    console.debug('props!!!! : ', this.props);
+    const { result } = this.props;
+    const { docCategoryTempListExtra, categoryMapInfoExtra, docMapInfoExtra } = result;
 
     const categoryData = [];
     if (categoryMapInfoExtra && categoryMapInfoExtra.categoryMapList) {
-      const source = getCategoryMapListAsTree(categoryMapInfoExtra.categoryMapList.filter(x => x.USE_YN === 'Y'));
-      source[0].children.map(x => categoryData.push(x));
+      const source = this.getCategoryMapListAsTree(categoryMapInfoExtra.categoryMapList.filter(x => x.USE_YN === 'Y'));
+      source.length > 0 && source[0].children.map(x => categoryData.push(x));
     }
 
     const docData = [];
     if (docMapInfoExtra && docMapInfoExtra.categoryMapList) {
-      const source = getCategoryMapListAsTree(docMapInfoExtra.categoryMapList.filter(x => x.USE_YN === 'Y'));
-      source[0].children.map(x => docData.push(x));
+      const source = this.getCategoryMapListAsTree(docMapInfoExtra.categoryMapList.filter(x => x.USE_YN === 'Y'));
+      source.length > 0 && source[0].children.map(x => docData.push(x));
     }
 
     const totalData = [];
-    if (docCategoryTempListExtra && docCategoryTempListExtra.docCategoryTempList) {
-      docCategoryTempListExtra.docCategoryTempList.map(item => {
+    if (docCategoryTempListExtra && docCategoryTempListExtra.list) {
+      docCategoryTempListExtra.list.map(item => {
         totalData.push({
           ...item,
-          CATEGORYFULLNAMEPATH: onMakeFullPath(categoryMapInfoExtra && categoryMapInfoExtra.categoryMapList, item),
-          CATEGORYFULLCODEPATH: onMakeFullCode(categoryMapInfoExtra && categoryMapInfoExtra.categoryMapList, item),
+          CATEGORYFULLNAMEPATH: this.onMakeFullPath(categoryMapInfoExtra && categoryMapInfoExtra.categoryMapList, item),
+          CATEGORYFULLCODEPATH: this.onMakeFullCode(categoryMapInfoExtra && categoryMapInfoExtra.categoryMapList, item),
         });
       });
     }
-
+    console.debug('docCategoryTempListExtra', docCategoryTempListExtra);
     return (
       <div style={{ padding: '10px', backgroundColor: 'white' }}>
         <div style={{ padding: '10px 0' }}>
@@ -282,35 +334,43 @@ class List extends Component {
             저장하기
           </Button>
 
-          <Button style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>수정</Button>
+          <Button style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }} onClick={this.onUpdate}>
+            수정
+          </Button>
           <Button onClick={this.onCancel} style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }}>
             취소
           </Button>
         </div>
 
-        <Table rowKey="TASK_SEQ" pagination={false} columns={this.columns} dataSource={totalData} />
+        <Table rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
       </div>
     );
   }
 }
 
-List.propTypes = {
-  workSeq: PropTypes.number,
-  categoryMapId: PropTypes.number,
-  docMapId: PropTypes.number,
-  categoryMapInfo: PropTypes.object,
-  docMapInfo: PropTypes.object,
-  getCategoryMapListBySaga: PropTypes.func,
-  responseData: PropTypes.object,
-  extraRes: PropTypes.object,
-};
+List.propTypes = {};
 
 List.defaultProps = {
-  workSeq: 1011,
-  categoryMapId: 3,
-  docMapId: 2,
-  categoryMapInfo: {},
-  getCategoryMapListBySaga: () => false,
+  apiAry: [
+    {
+      key: 'docCategoryTempListExtra',
+      url: '/api/mdcs/v1/common/DocCategoryTemplHandler',
+      type: 'GET',
+      params: {},
+    },
+    {
+      key: 'categoryMapInfoExtra',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1',
+      type: 'GET',
+      params: {},
+    },
+    {
+      key: 'docMapInfoExtra',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=2',
+      type: 'GET',
+      params: {},
+    },
+  ],
 };
 
 export default List;
