@@ -8,6 +8,7 @@ import StyledButton from 'components/CommonStyled/StyledButton';
 import OpinionModal from './OpinionModal';
 
 import AppvView from './appvView';
+
 import AppvActionComp from './appvActionComp';
 import HoldRelease from './holdRelease';
 
@@ -102,7 +103,7 @@ class ApproveView extends Component {
     console.debug('selectedRow', selectedRow);
     console.debug('selectedRow.APPV_STATUS', selectedRow.APPV_STATUS);
     return (
-      <>
+      <React.Fragment>
         <Modal
           title={selectedRow.DRAFT_TITLE}
           visible={viewVisible}
@@ -112,7 +113,7 @@ class ApproveView extends Component {
           footer={this.getButtons(category, selectedRow.STATUS, selectedRow.PROC_STATUS)}
         >
           <BizBuilderBase
-            id="approveBase_approveView"
+            sagaKey="approveBase_approveView"
             viewType="VIEW"
             CustomViewPage={AppvView}
             workSeq={selectedRow.WORK_SEQ}
@@ -134,7 +135,7 @@ class ApproveView extends Component {
         >
           <OpinionModal {...this.props} CustomActionView={selectedRow.APPV_STATUS === 4 ? HoldRelease : AppvActionComp} />
         </Modal>
-      </>
+      </React.Fragment>
     );
   }
 }

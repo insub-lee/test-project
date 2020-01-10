@@ -16,6 +16,7 @@ import ApproveList from './ApproveList';
 import UnApproveList from './UnApproveList';
 import DraftList from './DraftList';
 
+
 class ApproveBase extends Component {
   componentDidMount() {
     const { match, getApproveList } = this.props;
@@ -35,13 +36,7 @@ class ApproveBase extends Component {
     const category = this.props.match.params.CATE || 'draft';
     return (
       <div style={{ width: '100%', height: '600px', padding: '48px' }}>
-        {category === 'draft' ? (
-          <DraftList {...this.props} category={category} />
-        ) : category === 'approval' ? (
-          <ApproveList {...this.props} category={category} />
-        ) : (
-          <UnApproveList {...this.props} category={category} />
-        )}
+        {category === 'draft' ? <DraftList {...this.props} category={category} /> : category === 'approval' ? <ApproveList {...this.props} category={category} /> : <UnApproveList {...this.props} category={category} />}
       </div>
     );
   }
@@ -108,6 +103,13 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(ApproveBase);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(ApproveBase);

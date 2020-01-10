@@ -6,6 +6,7 @@ import moment from 'moment';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
 import ApproveView from '../ApproveView';
+import MdcsAppvView from '../MdcsAppvView';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -85,7 +86,7 @@ class ApproveList extends Component {
           })}
           bordered
         />
-        {Object.keys(selectedRow).length > 0 && <ApproveView {...this.props} />}
+        {Object.keys(selectedRow).length > 0 && <MdcsAppvView {...this.props} />}
       </div>
     );
   }

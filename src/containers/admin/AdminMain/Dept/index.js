@@ -267,6 +267,71 @@ class Dept extends React.Component {
             }}
             >취소
             </LinkBtnLgtGray> */}
+<<<<<<< HEAD
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              저장
+            </StyledButton>
+          </React.Fragment>
+        );
+      }
+      if (mode === 'D') {
+        // 상세
+        return (
+          <React.Fragment>
+            {/* <div style={{ float: 'left' }}> */}
+            {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
+            {/* </div> */}
+            <StyledButton
+              className="btn-primary"
+              style={{ float: 'rigth' }}
+              onClick={() =>
+                this.setState({
+                  mode: 'U',
+                  orgNameKor: this.state.NAME_KOR,
+                  orgNameEng: this.state.NAME_ENG,
+                  orgNameChn: this.state.NAME_CHN,
+                  orgNameJpn: this.state.NAME_JPN,
+                  orgNameEtc: this.state.NAME_ETC,
+                  orgCompCd: this.state.COMP_CD,
+                  orgDeptCd: this.state.DEPT_CD,
+                })
+              }
+            >
+              수정
+            </StyledButton>
+          </React.Fragment>
+        );
+      }
+      if (mode === 'U') {
+        // 수정
+        return (
+          <React.Fragment>
+            <StyledButton
+              className="btn-light"
+              onClick={() =>
+                this.setState({
+                  mode: 'D',
+                  NAME_KOR: this.state.orgNameKor,
+                  NAME_ENG: this.state.orgNameEng,
+                  NAME_CHN: this.state.orgNameChn,
+                  NAME_JPN: this.state.orgNameJpn,
+                  NAME_ETC: this.state.orgNameEtc,
+                  COMP_CD: this.state.orgCompCd,
+                  DEPT_CD: this.state.orgDeptCd,
+                })
+              }
+            >
+              취소
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              저장
+            </StyledButton>
+          </React.Fragment>
+        );
+      }
+      return '';
+    };
+=======
           <StyledButton className="btn-primary" onClick={this.udtConfirm}>
             저장
           </StyledButton>
@@ -336,6 +401,7 @@ class Dept extends React.Component {
     //   type,
     // } = this.props;
     const type = '';
+>>>>>>> origin/master
 
     return (
       <div>

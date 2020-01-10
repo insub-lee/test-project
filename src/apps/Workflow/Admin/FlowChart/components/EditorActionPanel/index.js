@@ -43,6 +43,7 @@ class EditorActionPanel extends React.Component {
       ruleConfig: node.ruleConfig,
       parentId: '0',
       rejectId: '0',
+      appvMethod: 1,
     }));
 
     edges.forEach(e => {
@@ -53,15 +54,21 @@ class EditorActionPanel extends React.Component {
       //   return;
       // }
 
-      if (e.process === 'approval') {
+      if (e.process === 'approve') {
         // 승인 일 때, target 인 데이터에 parentId = source
         const idx = _.findIndex(result, r => r.id === e.target);
         result[idx].parentId = e.source;
+        result[idx].appvMethod = 1;
       }
       if (e.process === 'reject') {
         // 거절 일 때, source 인 데이터에 rejectId = target
         const idx = _.findIndex(result, r => r.id === e.source);
         result[idx].rejectId = e.target;
+        result[idx].appvMethod = 1;
+      }
+      if (e.process === 'review') {        const idx = _.findIndex(result, r => r.id === e.target);
+        result[idx].parentId = e.source;
+        result[idx].appvMethod = 99;
       }
     });
     return result;

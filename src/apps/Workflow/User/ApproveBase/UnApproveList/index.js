@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Modal } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-
+import StyledButton from 'components/CommonStyled/StyledButton';
 import ApproveView from '../ApproveView';
+import MdcsAppvView from '../MdcsAppvView';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -64,11 +65,48 @@ class UnApproveList extends Component {
   onRowClick = (record, rowIndex, e) => {
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
+    console.debug('rowclick');
+  };
+
+  onModalClose = () => {
+    this.props.setViewVisible(false);
+  };
+
+  handleReqApprove = (e, appvStatus) => {
+    e.preventDefault();
+    this.props.reqApprove(appvStatus);
+    this.props.setOpinionVisible(false);
+  };
+
+  getApproveButtons = selectedRow => {
+    const btnAry = [];
+    btnAry.push(
+      <StyledButton key="close" className="btn-light" onClick={this.onModalClose}>
+        닫기
+      </StyledButton>,
+    );
+    if (selectedRow.APPV_STATUS === 4) {
+      btnAry.push(
+        <StyledButton key="ok" className="btn-primary" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
+          승인
+        </StyledButton>,
+      );
+    } else {
+      btnAry.push(
+        <StyledButton key="back" className="btn-gray" onClick={e => this.handleReqApprove(e, 9)}>
+          반려
+        </StyledButton>,
+        <StyledButton key="ok" className="btn-primary" onClick={e => this.handleReqApprove(e, 2)}>
+          승인
+        </StyledButton>,
+      );
+    }
+    console.debug(btnAry);
+    return btnAry;
   };
 
   render() {
     const { approveList, selectedRow } = this.props;
-
     return (
       <div>
         <AntdTable
@@ -79,7 +117,9 @@ class UnApproveList extends Component {
           })}
           bordered
         />
-        {Object.keys(selectedRow).length > 0 && <ApproveView {...this.props} />}
+        <Modal visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={this.getApproveButtons(selectedRow)}>
+          <MdcsAppvView {...this.props} />
+        </Modal>
       </div>
     );
   }

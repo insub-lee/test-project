@@ -34,7 +34,7 @@ class ApproveHistory extends Component {
             <Timeline.Item
               key={`history_${item.HISTORY_ID}`}
               dot={
-                item.APPV_STATUS === 2 ? (
+                item.APPV_STATUS === 1 ? (
                   <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
                 ) : (
                   <Icon type="close-circle" theme="twoTone" twoToneColor="#ff1212" />
