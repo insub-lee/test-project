@@ -89,7 +89,7 @@ class BizMenuReg extends Component {
 
       if (NODE_TYPE !== 'F') {
         // 폴더 X
-        const preUrl = '/store/appMain/bizManage/bizMenuReg';
+        const preUrl = '/portal/store/appMain/bizManage/bizMenuReg';
 
         if (REF_TYPE === 'A' && APP_ID !== -1) {
           // [앱] 상세

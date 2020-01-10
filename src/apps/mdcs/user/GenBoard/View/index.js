@@ -7,8 +7,28 @@ import Button from '../../../styled/StyledButton';
 class View extends Component {
   componentDidMount() {}
 
+  onRevisionHistoryLoadComplete = (id, workSeq, taskSeq) => {
+    const { revisionHistory } = this.props;
+    console.log(revisionHistory);
+    alert(`Revision History Count : ${revisionHistory.length} 건`);
+  };
+
   render() {
-    const { formData, metaList, id, workSeq, taskSeq, deleteTask, onDeleteComplete, addNotifyBuilder, reloadId } = this.props;
+    const {
+      formData,
+      metaList,
+      id,
+      reloadId,
+      workSeq,
+      taskSeq,
+      deleteTask,
+      onDeleteComplete,
+      addNotifyBuilder,
+      revisionTask,
+      onRevisionComplete,
+      removeReduxState,
+      getRevisionHistory,
+    } = this.props;
     const contentMeta = metaList.filter(meta => meta.COMP_FIELD === 'CONTENT');
     // const attachMeta = metaList.filter(meta => meta.COMP_FIELD === 'ATTACH');
 
@@ -21,7 +41,7 @@ class View extends Component {
                 공지알림
               </th>
               <td className="manual-descriptions-item-content" colSpan="3">
-                <Button className="btn-primary" onClick={() => addNotifyBuilder(id, workSeq, taskSeq, 'TITLE', 'CONTENT')}>
+                <Button className="btn-primary btn-xs" onClick={() => addNotifyBuilder(id, workSeq, taskSeq, 'TITLE', 'CONTENT')}>
                   알람보내기
                 </Button>
               </td>
@@ -48,6 +68,19 @@ class View extends Component {
           </tbody>
         </table>
         <div style={{ textAlign: 'right', paddingTop: '10px' }}>
+          <Button
+            className="btn-primary"
+            onClick={() => getRevisionHistory(id, workSeq, taskSeq, this.onRevisionHistoryLoadComplete)}
+            style={{ marginRight: '10px' }}
+          >
+            REVISION HISTORY
+          </Button>
+          <Button className="btn-primary" onClick={() => removeReduxState(id)} style={{ marginRight: '10px' }}>
+            REMOVE REDUX STATE
+          </Button>
+          <Button className="btn-primary" onClick={() => revisionTask(id, workSeq, taskSeq, onRevisionComplete)} style={{ marginRight: '10px' }}>
+            REVISION
+          </Button>
           <Button className="btn-primary" onClick={() => deleteTask(id, reloadId, workSeq, taskSeq, onDeleteComplete)}>
             삭제
           </Button>
@@ -59,13 +92,18 @@ class View extends Component {
 
 View.propTypes = {
   id: PropTypes.string,
+  reloadId: PropTypes.string,
   workSeq: PropTypes.number,
   taskSeq: PropTypes.number,
   formData: PropTypes.object,
   metaList: PropTypes.array,
   deleteTask: PropTypes.func,
+  revisionTask: PropTypes.func,
   onDeleteComplete: PropTypes.func,
+  onRevisionComplete: PropTypes.func,
   addNotifyBuilder: PropTypes.func,
+  removeReduxState: PropTypes.func,
+  getRevisionHistory: PropTypes.func,
 };
 
 export default View;

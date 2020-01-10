@@ -1,8 +1,4 @@
-import {
-  DragDropContext as dragDropContext,
-  DragSource as dragSource,
-  DropTarget as dropTarget,
-} from 'react-dnd';
+import { DragDropContext as dragDropContext, DragSource as dragSource, DropTarget as dropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { findDOMNode } from 'react-dom';
 import { getDepth } from './tree-data-utils';
@@ -63,10 +59,7 @@ export default class DndManager {
     const rowAbove = dropTargetProps.getPrevRow();
     if (rowAbove) {
       // Limit the length of the path to the deepest possible
-      dropTargetDepth = Math.min(
-        rowAbove.path.length,
-        dropTargetProps.path.length,
-      );
+      dropTargetDepth = Math.min(rowAbove.path.length, dropTargetProps.path.length);
     }
 
     let blocksOffset;
@@ -79,32 +72,23 @@ export default class DndManager {
 
       if (component) {
         const relativePosition = findDOMNode(component).getBoundingClientRect(); // eslint-disable-line
-        const leftShift =
-          monitor.getSourceClientOffset().x - relativePosition.left;
+        const leftShift = monitor.getSourceClientOffset().x - relativePosition.left;
         blocksOffset = Math.round(leftShift / dropTargetProps.scaffoldBlockPxWidth);
       } else {
         blocksOffset = dropTargetProps.path.length;
       }
     } else {
-      blocksOffset =
-        Math.round(monitor.getDifferenceFromInitialOffset().x /
-          dropTargetProps.scaffoldBlockPxWidth);
+      blocksOffset = Math.round(monitor.getDifferenceFromInitialOffset().x / dropTargetProps.scaffoldBlockPxWidth);
     }
 
-    let targetDepth = Math.min(
-      dropTargetDepth,
-      Math.max(0, (dragSourceInitialDepth + blocksOffset) - 1),
-    );
+    let targetDepth = Math.min(dropTargetDepth, Math.max(0, dragSourceInitialDepth + blocksOffset - 1));
 
     // If a maxDepth is defined, constrain the target depth
     if (typeof this.maxDepth !== 'undefined' && this.maxDepth !== null) {
       const draggedNode = monitor.getItem().node;
       const draggedChildDepth = getDepth(draggedNode);
 
-      targetDepth = Math.max(
-        0,
-        Math.min(targetDepth, this.maxDepth - draggedChildDepth - 1),
-      );
+      targetDepth = Math.max(0, Math.min(targetDepth, this.maxDepth - draggedChildDepth - 1));
     }
 
     return targetDepth;
@@ -122,10 +106,7 @@ export default class DndManager {
 
     // Cannot drop if we're adding to the children of the row above and
     //  the row above is a function
-    if (
-      targetDepth >= abovePath.length &&
-      typeof aboveNode.children === 'function'
-    ) {
+    if (targetDepth >= abovePath.length && typeof aboveNode.children === 'function') {
       return false;
     }
 
@@ -156,7 +137,7 @@ export default class DndManager {
 
   wrapSource(el) {
     const nodeDragSource = {
-      beginDrag: (props) => {
+      beginDrag: props => {
         this.startDrag(props);
 
         return {
@@ -189,11 +170,7 @@ export default class DndManager {
       };
     }
 
-    return dragSource(
-      this.dndType,
-      nodeDragSource,
-      nodeDragSourcePropInjection,
-    )(el);
+    return dragSource(this.dndType, nodeDragSource, nodeDragSourcePropInjection)(el);
   }
 
   wrapTarget(el) {
@@ -214,11 +191,7 @@ export default class DndManager {
       },
 
       hover: (dropTargetProps, monitor, component) => {
-        const targetDepth = this.getTargetDepth(
-          dropTargetProps,
-          monitor,
-          component,
-        );
+        const targetDepth = this.getTargetDepth(dropTargetProps, monitor, component);
         const draggedNode = monitor.getItem().node;
         const needsRedraw =
           // Redraw if hovered above different nodes
@@ -251,11 +224,7 @@ export default class DndManager {
       };
     }
 
-    return dropTarget(
-      this.dndType,
-      nodeDropTarget,
-      nodeDropTargetPropInjection,
-    )(el);
+    return dropTarget(this.dndType, nodeDropTarget, nodeDropTargetPropInjection)(el);
   }
 
   wrapPlaceholder(el) {
@@ -287,10 +256,6 @@ export default class DndManager {
       };
     }
 
-    return dropTarget(
-      this.dndType,
-      placeholderDropTarget,
-      placeholderPropInjection,
-    )(el);
+    return dropTarget(this.dndType, placeholderDropTarget, placeholderPropInjection)(el);
   }
 }

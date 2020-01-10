@@ -136,16 +136,9 @@ const mapDispatchToProps = dispatch => ({
   updateBookmarkBySaga: (item, selectedMual, settingType) => dispatch(actions.updateBookmarkBySaga(item, selectedMual, settingType)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'CSManual-Bookmark-Widget', saga });
 const withReducer = injectReducer({ key: 'CSManual-Bookmark-Widget', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(CSManualBookmarkWidgetSetting);
+export default compose(withReducer, withSaga, withConnect)(CSManualBookmarkWidgetSetting);

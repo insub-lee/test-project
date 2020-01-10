@@ -300,14 +300,14 @@ class DefaultMgr extends Component {
                   </StyledButton>
                 )}
                 {pageMoveType.get('selectedMualIdx') !== 0 && defaultMgrMap.get('MUAL_STATE') === 'WAIT' && (
-                  <React.Fragment>
+                  <>
                     <StyledButton className="btn-success btn-bs-none" key="ConfirmDefaultMgrBySaga" onClick={ConfirmDefaultMgrBySaga}>
                       확정
                     </StyledButton>
                     <StyledButton className="btn-dark btn-bs-none" key="RemoveManualBySaga" onClick={RemoveManualBySaga}>
                       삭제
                     </StyledButton>
-                  </React.Fragment>
+                  </>
                 )}
                 {IsMaxVersion && defaultMgrMap.get('VERSIONLIST').size > 1 && defaultMgrMap.get('MUAL_STATE') === 'PUBS' && (
                   <StyledButton className="btn-dark btn-bs-none" onClick={ResetDefaultMgrBySaga}>
@@ -429,7 +429,4 @@ const mapDispatchToProps = dispatch => ({
   removeContentSecurity: row => dispatch(actions.removeContentSecurityBySaga(row)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(DefaultMgr);
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultMgr);

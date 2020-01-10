@@ -20,4 +20,3 @@ const BizStore = () => (
 
 // export default wrap(AppMain);
 export default BizStore;
-

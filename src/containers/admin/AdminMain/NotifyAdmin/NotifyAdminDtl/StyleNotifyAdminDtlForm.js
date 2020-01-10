@@ -47,7 +47,7 @@ const StyleNotifyAdminDtlForm = styled.div`
               .resultsTableWrapper {
                 width: calc(100% - 17px);
                 padding: 5px;
-                @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+                @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
                   /* IE10+ specific styles go here */
                   margin-bottom: 20px;
                 }

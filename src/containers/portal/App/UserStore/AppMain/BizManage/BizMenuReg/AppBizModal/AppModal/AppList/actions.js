@@ -35,9 +35,7 @@ export const registCategoryModal = (APP_ID, CATG_ID, history) => ({
   history,
 });
 
-export const changeSearchword = searchword => (
-  {
-    type: constants.CHANGE_SEARCHWORD,
-    searchword,
-  }
-);
+export const changeSearchword = searchword => ({
+  type: constants.CHANGE_SEARCHWORD,
+  searchword,
+});

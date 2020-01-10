@@ -63,11 +63,13 @@ class Duty extends React.Component {
           selectedDept: nextProps.selectedDept,
         });
       }
-    }
-    if (nextProps.selectedIndex !== this.state.selectedIndex) {
-      this.setState({
-        selectedIndex: nextProps.selectedIndex,
-      });
+      /*
+      if (nextProps.selectedIndex !== this.state.selectedIndex) {
+        this.setState({
+          selectedIndex: nextProps.selectedIndex,
+        });
+      }
+      */
     }
   }
 
@@ -185,74 +187,75 @@ class Duty extends React.Component {
     return false;
   };
 
-  render() {
-    // const {
-    //   type,
-    // } = this.props;
-    const type = '';
-    const comboOptions = comboList => comboList.map(item => <Option value={item.DUTY_ID}>{item.NAME_KOR}</Option>);
-    const handleTreeOnClick = node => {
-      this.setState({
-        DUTY_ID: node.DUTY_ID,
-        DUTY_NAME: lang.get('NAME', node),
-        DUTY_CD: node.DUTY_CD,
-        selectedIndex: node.DUTY_ID,
-        PRNT_ID: node.PRNT_ID,
-        NAME_KOR: node.NAME_KOR,
-        NAME_ENG: node.NAME_ENG,
-        NAME_CHN: node.NAME_CHN,
-        NAME_JPN: node.NAME_JPN,
-        NAME_ETC: node.NAME_ETC,
-        COMP_CD: node.COMP_CD,
-        // REG_USER_NAME: node.REG_USER_NAME,
-        // REG_DTTM: node.REG_DTTM,
-        // UPD_USER_NAME: node.UPD_USER_NAME,
-        // UPD_DTTM: node.UPD_DTTM,
-        mode: 'D',
-      });
-    };
+  comboOptions = comboList =>
+    comboList.map(item => (
+      <Option key={item.DUTY_ID} value={item.DUTY_ID}>
+        {item.NAME_KOR}
+      </Option>
+    ));
 
-    const onOk = () => {
-      if (this.state.PRNT_ID === -1) {
-        // feed.error(`${intlObj.get(messages.topcateno)}`);
-        feed.error('에러');
-      } else {
-        this.props.returnGateId(this.state.DUTY_ID, this.state.DUTY_NAME);
-      }
-    };
+  handleTreeOnClick = node => {
+    this.setState({
+      DUTY_ID: node.DUTY_ID,
+      DUTY_NAME: lang.get('NAME', node),
+      DUTY_CD: node.DUTY_CD,
+      selectedIndex: node.DUTY_ID,
+      PRNT_ID: node.PRNT_ID,
+      NAME_KOR: node.NAME_KOR,
+      NAME_ENG: node.NAME_ENG,
+      NAME_CHN: node.NAME_CHN,
+      NAME_JPN: node.NAME_JPN,
+      NAME_ETC: node.NAME_ETC,
+      COMP_CD: node.COMP_CD,
+      // REG_USER_NAME: node.REG_USER_NAME,
+      // REG_DTTM: node.REG_DTTM,
+      // UPD_USER_NAME: node.UPD_USER_NAME,
+      // UPD_DTTM: node.UPD_DTTM,
+      mode: 'D',
+    });
+  };
 
-    const returnGateInfo = node => {
-      this.setState({
-        mode: 'I',
-        DUTY_CD: '',
-        PRNT_ID: node.DUTY_ID,
-        NAME_KOR: '',
-        NAME_ENG: '',
-        NAME_CHN: '',
-        NAME_JPN: '',
-        NAME_ETC: '',
-        COMP_CD: node.COMP_CD,
-        selectedIndex: node.DUTY_ID,
-      });
-      // this.props.insertDuty(DUTY_CD, this.state.DUTY_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD);
-      this.textKor.focus();
-    };
+  onOk = () => {
+    if (this.state.PRNT_ID === -1) {
+      // feed.error(`${intlObj.get(messages.topcateno)}`);
+      feed.error('에러');
+    } else {
+      this.props.returnGateId(this.state.DUTY_ID, this.state.DUTY_NAME);
+    }
+  };
 
-    const returnGateDelete = (DUTY_ID, PRNT_ID, SORT_SQ) => {
-      // alert(resultObj1 + resultObj2);
-      this.props.deleteDuty(DUTY_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
-    };
+  returnGateInfo = node => {
+    this.setState({
+      mode: 'I',
+      DUTY_CD: '',
+      PRNT_ID: node.DUTY_ID,
+      NAME_KOR: '',
+      NAME_ENG: '',
+      NAME_CHN: '',
+      NAME_JPN: '',
+      NAME_ETC: '',
+      COMP_CD: node.COMP_CD,
+      selectedIndex: node.DUTY_ID,
+    });
+    // this.props.insertDuty(DUTY_CD, this.state.DUTY_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD);
+    this.textKor.focus();
+  };
 
-    const moveDuty = treeData => {
-      this.props.moveDuty(this.state.selectedDept, treeData);
-    };
+  returnGateDelete = (DUTY_ID, PRNT_ID, SORT_SQ) => {
+    // alert(resultObj1 + resultObj2);
+    this.props.deleteDuty(DUTY_ID, PRNT_ID, SORT_SQ, this.state.selectedDept);
+  };
 
-    const botBtn = mode => {
-      if (mode === 'I') {
-        // 등록
-        return (
-          <React.Fragment>
-            {/* <LinkBtnLgtGray onClick={() => {
+  moveDuty = treeData => {
+    this.props.moveDuty(this.state.selectedDept, treeData);
+  };
+
+  botBtn = mode => {
+    if (mode === 'I') {
+      // 등록
+      return (
+        <>
+          {/* <LinkBtnLgtGray onClick={() => {
                 this.setState({
                   mode: 'D',
                 });
@@ -260,69 +263,75 @@ class Duty extends React.Component {
             }}
             >취소
             </LinkBtnLgtGray> */}
-            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
-              저장
-            </StyledButton>
-          </React.Fragment>
-        );
-      }
-      if (mode === 'D') {
-        // 상세
-        return (
-          <React.Fragment>
-            {/* <div style={{ float: 'left' }}> */}
-            {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
-            {/* </div> */}
-            <StyledButton
-              className="btn-primary"
-              style={{ float: 'right' }}
-              onClick={() =>
-                this.setState({
-                  mode: 'U',
-                  orgNameKor: this.state.NAME_KOR,
-                  orgNameEng: this.state.NAME_ENG,
-                  orgNameChn: this.state.NAME_CHN,
-                  orgNameJpn: this.state.NAME_JPN,
-                  orgNameEtc: this.state.NAME_ETC,
-                  orgCompCd: this.state.COMP_CD,
-                  orgDutyCd: this.state.DUTY_CD,
-                })
-              }
-            >
-              수정
-            </StyledButton>
-          </React.Fragment>
-        );
-      }
-      if (mode === 'U') {
-        // 수정
-        return (
-          <React.Fragment>
-            <StyledButton
-              className="btn-light"
-              onClick={() =>
-                this.setState({
-                  mode: 'D',
-                  NAME_KOR: this.state.orgNameKor,
-                  NAME_ENG: this.state.orgNameEng,
-                  NAME_CHN: this.state.orgNameChn,
-                  NAME_JPN: this.state.orgNameJpn,
-                  NAME_ETC: this.state.orgNameEtc,
-                  COMP_CD: this.state.orgCompCd,
-                  DUTY_CD: this.state.orgDutyCd,
-                })
-              }
-            >
-              취소
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
-              저장
-            </StyledButton>
-          </React.Fragment>
-        );
-      }
-      return '';
-    };
+          <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+            저장
+          </StyledButton>
+        </>
+      );
+    }
+    if (mode === 'D') {
+      // 상세
+      return (
+        <>
+          {/* <div style={{ float: 'left' }}> */}
+          {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
+          {/* </div> */}
+          <StyledButton
+            className="btn-primary"
+            style={{ float: 'right' }}
+            onClick={() =>
+              this.setState(prevState => ({
+                mode: 'U',
+                orgNameKor: prevState.NAME_KOR,
+                orgNameEng: prevState.NAME_ENG,
+                orgNameChn: prevState.NAME_CHN,
+                orgNameJpn: prevState.NAME_JPN,
+                orgNameEtc: prevState.NAME_ETC,
+                orgCompCd: prevState.COMP_CD,
+                orgDutyCd: prevState.DUTY_CD,
+              }))
+            }
+          >
+            수정
+          </StyledButton>
+        </>
+      );
+    }
+    if (mode === 'U') {
+      // 수정
+      return (
+        <>
+          <StyledButton
+            className="btn-light"
+            onClick={() =>
+              this.setState(prevState => ({
+                mode: 'D',
+                NAME_KOR: prevState.orgNameKor,
+                NAME_ENG: prevState.orgNameEng,
+                NAME_CHN: prevState.orgNameChn,
+                NAME_JPN: prevState.orgNameJpn,
+                NAME_ETC: prevState.orgNameEtc,
+                COMP_CD: prevState.orgCompCd,
+                DUTY_CD: prevState.orgDutyCd,
+              }))
+            }
+          >
+            취소
+          </StyledButton>
+          <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+            저장
+          </StyledButton>
+        </>
+      );
+    }
+    return '';
+  };
+
+  render() {
+    // const {
+    //   type,
+    // } = this.props;
+    const type = '';
 
     return (
       <div>
@@ -334,22 +343,22 @@ class Duty extends React.Component {
               <div>
                 <Select value={this.props.selectedDept} onChange={this.onChangeDept}>
                   {/* <Option value={0}>공통</Option> */}
-                  {comboOptions(this.props.setDutyComboList)}
+                  {this.comboOptions(this.props.setDutyComboList)}
                   <Option value={0}>+그룹추가</Option>
                 </Select>
                 <AdminOrgTree
                   type={type}
                   treeData={this.props.dutyTreeData}
-                  onClick={handleTreeOnClick}
-                  returnGateInfo={returnGateInfo}
-                  returnGateDelete={returnGateDelete}
+                  onClick={this.handleTreeOnClick}
+                  returnGateInfo={this.returnGateInfo}
+                  returnGateDelete={this.returnGateDelete}
                   history={this.props.history}
                   selectedIndex={this.state.selectedIndex}
                   canDrag
                   canDropOut={false}
                   canDrop
-                  moveNode={moveDuty}
-                  onOk={onOk}
+                  moveNode={this.moveDuty}
+                  onOk={this.onOk}
                 />
               </div>
             </div>
@@ -461,7 +470,7 @@ class Duty extends React.Component {
                 </table>
               </StyleCategoryForm>
             </div>
-            <div className="buttonWrapper">{botBtn(this.state.mode)}</div>
+            <div className="buttonWrapper">{this.botBtn(this.state.mode)}</div>
           </div>
           <Footer />
         </StyleCategory>
@@ -472,22 +481,40 @@ class Duty extends React.Component {
 
 Duty.propTypes = {
   // type: PropTypes.string.isRequired,
-  show: PropTypes.bool, //eslint-disable-line
-  onCancel: PropTypes.func, //eslint-disable-line
-  getDutyTreeData: PropTypes.func, //eslint-disable-line
-  getChangeDutyTreeData: PropTypes.func, //eslint-disable-line
-  dutyTreeData: PropTypes.array, //eslint-disable-line
-  selectedIndex: PropTypes.number, //eslint-disable-line
-  titleModalVisible: PropTypes.bool, //eslint-disable-line
-  history: PropTypes.object, //eslint-disable-line
-  returnGateId: PropTypes.func.isRequired, //eslint-disable-line
-  insertDuty: PropTypes.func, //eslint-disable-line
-  updateDuty: PropTypes.func, //eslint-disable-line
-  deleteDuty: PropTypes.func, //eslint-disable-line
-  moveDuty: PropTypes.func, //eslint-disable-line
-  getDutyComboList: PropTypes.func, //eslint-disable-line
-  setDutyComboList: PropTypes.array, //eslint-disable-line
+  show: PropTypes.bool,
+  onCancel: PropTypes.func,
+  getDutyTreeData: PropTypes.func,
+  getChangeDutyTreeData: PropTypes.func,
+  dutyTreeData: PropTypes.array,
+  selectedIndex: PropTypes.number,
+  titleModalVisible: PropTypes.bool,
+  history: PropTypes.object,
+  returnGateId: PropTypes.func,
+  insertDuty: PropTypes.func,
+  updateDuty: PropTypes.func,
+  deleteDuty: PropTypes.func,
+  moveDuty: PropTypes.func,
+  getDutyComboList: PropTypes.func,
+  setDutyComboList: PropTypes.array,
   selectedDept: PropTypes.number.isRequired,
+};
+
+Duty.defaultProps = {
+  show: false,
+  onCancel: () => {},
+  getDutyTreeData: () => {},
+  getChangeDutyTreeData: () => {},
+  dutyTreeData: [],
+  selectedIndex: 0,
+  titleModalVisible: false,
+  history: {},
+  returnGateId: () => {},
+  insertDuty: () => {},
+  updateDuty: () => {},
+  deleteDuty: () => {},
+  moveDuty: () => {},
+  getDutyComboList: () => {},
+  setDutyComboList: [],
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -515,15 +542,8 @@ const mapStateToProps = createStructuredSelector({
   selectedIndex: selectors.makeSelectedIndex(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'Duty', saga });
 const withReducer = injectReducer({ key: 'Duty', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Duty);
+export default compose(withReducer, withSaga, withConnect)(Duty);

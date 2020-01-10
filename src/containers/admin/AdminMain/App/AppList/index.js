@@ -12,6 +12,10 @@ import { Link } from 'react-router-dom';
 
 import { intlObj, lang } from 'utils/commonUtils';
 import Select, { SelectOption } from 'components/Select';
+import { LinkBtnDkGray } from 'containers/admin/components/uielements/buttons.style';
+import StyleDataGrid from 'containers/admin/components/uielements/dataGrid.style';
+import Footer from 'containers/admin/App/Footer';
+import StyledButton from 'components/Button/StyledButton';
 import messages from '../messages';
 
 import reducer from './reducer';
@@ -19,11 +23,7 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-import { LinkBtnDkGray } from 'containers/admin/components/uielements/buttons.style';
 import StyleMyAppList from './StyleMyAppList';
-import StyleDataGrid from 'containers/admin/components/uielements/dataGrid.style';
-import Footer from 'containers/admin/App/Footer';
-import StyledButton from 'components/Button/StyledButton';
 
 const Option = SelectOption;
 // let pageNum = 20;
@@ -278,15 +278,8 @@ const mapStateToProps = createStructuredSelector({
   searchTypeList: selectors.makeSelectSearchTypeList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppList', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppList', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyAppList);
+export default compose(withReducer, withSaga, withConnect)(MyAppList);

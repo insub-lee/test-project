@@ -2,8 +2,8 @@ import { call, put, takeLatest, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 // import * as constantsTopMenu from 'containers/store/AppMain/BizManage/BizMenuReg/TopMenu/constants';
 // import * as constantsBizManage from 'containers/store/AppMain/BizManage/constants';
-import * as adminBizManageTopMenuActionTypes from 'containers/admin/AdminMain/Menu/BizMenuReg/TopMenu/constants'
-import * as adminBizManageActionTypes from 'containers/admin/AdminMain/Menu/constants'
+import * as adminBizManageTopMenuActionTypes from 'containers/admin/AdminMain/Menu/BizMenuReg/TopMenu/constants';
+import * as adminBizManageActionTypes from 'containers/admin/AdminMain/Menu/constants';
 import * as constants from './constants';
 import { Axios } from '../../utils/AxiosFunc';
 
@@ -15,7 +15,7 @@ export function* initWidgetSetting(payload) {
 
   const response2 = yield call(Axios.post, '/api/bizstore/v1/bizgroup/widgetList', { PAGE_ID });
   const { widgetList } = response2;
-  
+
   yield put({
     type: constants.SET_WIDGET_SETTING,
     widget: fromJS(JSON.parse(widget)),
@@ -67,7 +67,6 @@ export function* updateWidget(payload) {
       BIZGRP_ID,
     });
 
-    
     yield put({
       type: adminBizManageActionTypes.UPDATE_TREENODE,
       key: BIZGRP_ID,

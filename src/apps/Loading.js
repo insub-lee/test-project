@@ -18,7 +18,8 @@ export default function Loading({ isLoading, pastDelay, error }) {
         <LoadingIndicator style={{ margin: 'auto', width: '100%', padding: '20%' }} />
       </div>
     ); // <p>Loading...</p>;
-  } else if (error && !isLoading) {
+  }
+  if (error && !isLoading) {
     return (
       <div style={{ display: 'table', width: '100%', height: '100%' }}>
         <div
@@ -32,11 +33,10 @@ export default function Loading({ isLoading, pastDelay, error }) {
           }}
         >
           <Icon type="frown" theme="outlined" />
-          <h4>
-            해당 앱을 사용할 수 없습니다.
-          </h4>
+          <h4>해당 앱을 사용할 수 없습니다.</h4>
         </div>
-      </div>);
+      </div>
+    );
   }
   return null;
 }

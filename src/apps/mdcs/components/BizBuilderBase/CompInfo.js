@@ -9,6 +9,7 @@ import CustomEditorComp from './viewComponent/Comp/CustomComp/CustomEditorComp';
 import InsertBtnComp from './viewComponent/Comp/InsertBtnComp';
 import ModalInsertBtnComp from './viewComponent/Comp/ModalInsertBtnComp';
 import AttachComp from './viewComponent/Comp/AttachComp';
+import DragUploadComp from './viewComponent/Comp/DragUploadComp';
 import TreeSelectComp from './viewComponent/Comp/TreeSelectComp';
 import SelectComp from './viewComponent/Comp/SelectComp';
 import ReadOnlyTextComp from './viewComponent/Comp/CustomComp/ReadOnlyTextComp';
@@ -19,6 +20,7 @@ import DocSelectComp from './viewComponent/Comp/CustomComp/DocSelectComp';
 import CustomCheckListComp from './viewComponent/Comp/CustomComp/CustomCheckListComp';
 import CheckListComp from './viewComponent/Comp/CheckListComp';
 import DwCheckListComp from './viewComponent/Comp/CustomComp/DwCheckListComp';
+
 export const CompInfo = {
   LabelComp: { renderer: property => <LabelComp {...property} /> },
   CustomLabelComp: { renderer: property => <CustomLabelComp {...property} /> },
@@ -28,6 +30,7 @@ export const CompInfo = {
   InsertBtnComp: { renderer: property => <InsertBtnComp {...property} /> },
   ModalInsertBtnComp: { renderer: property => <ModalInsertBtnComp {...property} /> },
   AttachComp: { renderer: property => <AttachComp {...property} /> },
+  DragUploadComp: { renderer: property => <DragUploadComp {...property} /> },
   TreeSelectComp: { renderer: property => <TreeSelectComp {...property} /> },
   SelectComp: { renderer: property => <SelectComp {...property} /> },
   LabelWithCopyComp: { renderer: property => <LabelWithCopyComp {...property} /> },

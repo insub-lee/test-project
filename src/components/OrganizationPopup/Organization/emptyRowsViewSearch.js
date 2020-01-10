@@ -9,14 +9,16 @@ class EmptyViewSearch extends React.Component {
 
     this.getType = this.getType.bind(this);
   }
+
   getType = () => constantsType.SEARCH;
+
   render() {
     const style = {
       width: '100%',
       textAlign: 'center',
     };
 
-    return (<div style={style}>{intlObj.get(messages.noMember)}</div>);
+    return <div style={style}>{intlObj.get(messages.noMember)}</div>;
   }
 }
 

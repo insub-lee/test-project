@@ -22,7 +22,8 @@ class MasterPmBomTree extends Component {
       visible: false,
       tempList: [],
     };
-    const param = { // 임의 파라미터
+    const param = {
+      // 임의 파라미터
       equnr: 'IM0000198567',
       swerk: '1010',
     };
@@ -33,36 +34,31 @@ class MasterPmBomTree extends Component {
     this.setState({
       visible: true,
     });
-  }
+  };
 
   handleOnCancel = () => {
     this.setState({
       visible: false,
     });
-  }
-  handleOnClick = (node) => {
-    if (node.MTART === 'ERSA') { // IBAU-폴더, ERSA-품목
+  };
+
+  handleOnClick = node => {
+    if (node.MTART === 'ERSA') {
+      // IBAU-폴더, ERSA-품목
       this.setState({
         tempList: _.unionBy(this.state.tempList, [{ ...node }], 'key'),
       });
     }
-  }
+  };
 
   render() {
-    const {
-      pmBomTreeList,
-    } = this.props;
+    const { pmBomTreeList } = this.props;
 
-    const {
-      tempList,
-    } = this.state;
+    const { tempList } = this.state;
 
     return (
       <div>
-        <Button
-          title="Bom트리팝업"
-          onClick={this.showModal}
-        >
+        <Button title="Bom트리팝업" onClick={this.showModal}>
           Bom트리팝업
         </Button>
 
@@ -74,10 +70,7 @@ class MasterPmBomTree extends Component {
             style: { display: 'none' },
           }}
         >
-          <Tree
-            treeData={pmBomTreeList}
-            handleOnClick={this.handleOnClick}
-          />
+          <Tree treeData={pmBomTreeList} handleOnClick={this.handleOnClick} />
         </Modal>
 
         <div>
@@ -115,8 +108,4 @@ const withReducer = injectReducer({ key: 'masterBom', reducer });
 const withSaga = injectSaga({ key: 'masterBom', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MasterPmBomTree);
+export default compose(withReducer, withSaga, withConnect)(MasterPmBomTree);

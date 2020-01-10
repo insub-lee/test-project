@@ -144,13 +144,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-mdcs-admin-ViewDesigner-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-mdcs-admin-ViewDesigner-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(ViewDesigner);
+export default compose(withSaga, withReducer, withConnect)(ViewDesigner);

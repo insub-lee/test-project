@@ -30,7 +30,6 @@ const StyleCodeAdminForm = styled.div`
       }
     }
   }
-
 `;
 
 export default StyleCodeAdminForm;

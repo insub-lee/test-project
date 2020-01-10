@@ -11,6 +11,15 @@ const makeSelectResponseData = () =>
     },
   );
 
+const makeSelectFormData = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => {      
+      return state.getIn(['bizMicroDevBase', id, 'formData']) !== undefined ? state.getIn(['bizMicroDevBase', id, 'formData']).toJS() : {};
+    },
+);
+
 const makeSelectFormDataByReduxId = () =>
   createSelector(
     selectorBizBuilderBase,
@@ -19,4 +28,4 @@ const makeSelectFormDataByReduxId = () =>
       state.getIn(['bizMicroDevBase', id, 'formData', reduxId]) !== undefined ? state.getIn(['bizMicroDevBase', id, 'formData', reduxId]).toJS() : {},
   );
 
-export { makeSelectResponseData, makeSelectFormDataByReduxId };
+export { makeSelectResponseData, makeSelectFormData, makeSelectFormDataByReduxId };

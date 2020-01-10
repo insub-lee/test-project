@@ -1,6 +1,21 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { Axios } from '../../../../utils/AxiosFunc';
-import { LOAD_ALARM, SET_ALARM, READ_ALARM_SAGA, ALL_READ_SAGA, READ_ALARM_SUCCESS, READ_ALL_ALARM_SUCCESS, DELETE_ALARM_SAGA, DELETE_ALARM_SUCCESS, DELETE_ALL_ALARM_SUCCESS, DELETE_ALL_ALARM_SAGA, RESET_ALARM, RECEIVE_ALARM, ALARM_OFF, SET_NOTIFY } from './constants';
+import {
+  LOAD_ALARM,
+  SET_ALARM,
+  READ_ALARM_SAGA,
+  ALL_READ_SAGA,
+  READ_ALARM_SUCCESS,
+  READ_ALL_ALARM_SUCCESS,
+  DELETE_ALARM_SAGA,
+  DELETE_ALARM_SUCCESS,
+  DELETE_ALL_ALARM_SUCCESS,
+  DELETE_ALL_ALARM_SAGA,
+  RESET_ALARM,
+  RECEIVE_ALARM,
+  ALARM_OFF,
+  SET_NOTIFY,
+} from './constants';
 
 export function* loadAlarm(payload) {
   const data = {

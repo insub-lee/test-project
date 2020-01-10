@@ -22,65 +22,44 @@ class ComponentConfig extends Component {
   };
 
   render() {
+    const { changeCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     return (
-      <StyledContent>
-        <div>
-          <Row>
-            <div className="pop_tit" style={{ background: 'white', color: 'black' }}>
-              컴포넌트 설정
-            </div>
-          </Row>
-          <div className="pop_con">
-            <div className="sub_form">
+      <div>
+        <Row>
+          <div className="w100Table">
+            <Col span={6}>Copy옵션 정의 </Col>
+            <Col span={18}>
               <Row>
-                <div className="w100Table">
-                  <Col span={3}>Lable명</Col>
-                  <Col span={21}>
-                    <Input value={this.state.lableValue} onChange={e => this.setState({ lableValue: e.target.value })}></Input>
-                  </Col>
-                </div>
+                CopyKey컬럼명:
+                <Input
+                  value={(configInfo && configInfo.optionCopyKey) || ''}
+                  onChange={e => changeCompData(groupIndex, rowIndex, colIndex, 'optionCopyKey', e.target.value)}
+                ></Input>
               </Row>
               <Row>
-                <div className="w100Table">
-                  <Col span={3}>Copy옵션 정의 </Col>
-                  <Col span={21}>
-                    <Row>
-                      CopyKey컬럼명:<Input value={this.state.copyKey} onChange={e => this.setState({ copyKey: e.target.value })}></Input>
-                    </Row>
-                    <Row>
-                      CompKey컬럼명:<Input value={this.state.compKey} onChange={e => this.setState({ compKey: e.target.value })}></Input>
-                    </Row>
-                  </Col>
-                </div>
+                CompKey컬럼명:
+                <Input
+                  value={(configInfo && configInfo.optionCompKey) || ''}
+                  onChange={e => changeCompData(groupIndex, rowIndex, colIndex, 'optionCompKey', e.target.value)}
+                ></Input>
               </Row>
-
-              <Row>
-                <div className="w100Table">
-                  <Col span={3}>PreView</Col>
-                  <Col span={21}>
-                    <span>{this.state.lableValue}</span>
-                  </Col>
-                </div>
-              </Row>
-              <Row>
-                <div className="btn-wrap">
-                  <StyledButton
-                    className="btn-primary"
-                    onClick={() => {
-                      this.onClickSave();
-                    }}
-                  >
-                    등록
-                  </StyledButton>
-                </div>
-              </Row>
-            </div>
+            </Col>
           </div>
-        </div>
-      </StyledContent>
+        </Row>
+      </div>
     );
   }
 }
-const configer = () => <BizMicroDevBase id="componentConfig" component={ComponentConfig}></BizMicroDevBase>;
+const configer = ({ changeCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
+  <BizMicroDevBase
+    id="componentConfig"
+    changeCompData={changeCompData}
+    groupIndex={groupIndex}
+    rowIndex={rowIndex}
+    colIndex={colIndex}
+    configInfo={configInfo}
+    component={ComponentConfig}
+  ></BizMicroDevBase>
+);
 
 export default configer;

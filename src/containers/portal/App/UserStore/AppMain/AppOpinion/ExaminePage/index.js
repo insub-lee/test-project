@@ -14,15 +14,14 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
 import { intlObj } from 'utils/commonUtils';
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
 import messages from '../Opinion/messages';
 
 import StyleMyAppDetail from '../Opinion/StyleMyAppDetail';
 import StyleStatusTable from '../../MyApp/AppDetailForm/StyleStatusTable';
 // import StyleMyAppDetail from '../../MyApp/AppDetail/StyleMyAppDetail';
 // import StyleStatusTable from '../../MyApp/AppDetail/StyleStatusTable';
-
-import injectReducer from 'utils/injectReducer';
-import injectSaga from 'utils/injectSaga';
 
 import reducer from '../Opinion/reducer';
 import saga from '../Opinion/saga';
@@ -264,16 +263,9 @@ const mapStateToProps = createStructuredSelector({
   // oppoList: selectors.makeOppoList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'examinePage', reducer });
 const withSaga = injectSaga({ key: 'examinePage', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(ExaminePage);
+export default compose(withReducer, withSaga, withConnect)(ExaminePage);

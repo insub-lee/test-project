@@ -7,6 +7,7 @@ import { createStructuredSelector } from 'reselect';
 
 import { intlObj, bannerImgUrl } from 'utils/commonUtils';
 
+import { WIDGET } from 'utils/constants';
 import CarouselWrapper from './carousel.style';
 import Carousels from './carousel';
 import { BannerWrapper } from './bannerStyle';
@@ -18,7 +19,6 @@ import saga from './saga';
 import * as selectors from './selectors';
 
 import messages from '../../../components/Page/messages';
-import { WIDGET } from 'utils/constants'
 
 const Carousel = props => (
   <CarouselWrapper>
@@ -234,15 +234,8 @@ const mapDispatchToProps = dispatch => ({
   // handleGetBannerList: item => dispatch(actions.getBannerList(item)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'banner', reducer });
 const withSaga = injectSaga({ key: 'banner', saga, mode: WIDGET });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Banner);
+export default compose(withReducer, withSaga, withConnect)(Banner);

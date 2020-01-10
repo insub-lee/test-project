@@ -62,9 +62,7 @@ export function* moveNode(payload) {
 }
 
 export function* insertNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
   const { node } = rowInfo;
   const { BIZGRP_ID } = node;
 
@@ -87,7 +85,7 @@ export function* insertNode(payload) {
     }
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+      history.push(`/portal/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -114,9 +112,7 @@ export function* insertNode(payload) {
 }
 
 export function* updateNode(payload) {
-  const {
-    rowInfo, treeData, data, history,
-  } = payload;
+  const { rowInfo, treeData, data, history } = payload;
   const langGubun = lang.getLocale();
 
   const { node } = rowInfo;
@@ -127,7 +123,9 @@ export function* updateNode(payload) {
 
   if (code === 200) {
     const newNode = {
-      ...node, ...bizMenu, title: lang.get('NAME', bizMenu),
+      ...node,
+      ...bizMenu,
+      title: lang.get('NAME', bizMenu),
     }; // 병합
     const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
     const newCategoryData = treeFunc.editNodeByKey(rowInfoN, treeData);
@@ -138,7 +136,7 @@ export function* updateNode(payload) {
     });
 
     if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+      history.push(`/portal/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
     }
 
     yield put({
@@ -211,7 +209,7 @@ export function* deleteNode(payload) {
     const PAGE_ID = getIdByUrl(`page/${BIZGRP_ID}/`, history);
 
     if (node.REF_ID === APP_ID || node.PAGE_ID === PAGE_ID) {
-      history.push(`/store/appMain/bizManage/bizMenuReg/info/${BIZGRP_ID}`);
+      history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${BIZGRP_ID}`);
     }
 
     message.success(`${intlObj.get(messages.completeDelete)}`, 2);

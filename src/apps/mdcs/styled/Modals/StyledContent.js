@@ -32,7 +32,7 @@ const StyledContent = styled.div`
   }
 
   .pop_con {
-    padding: 10px 30px;
+    padding: 20px 30px;
     position: relative;
     background-color: #ffffff;
     border-bottom-left-radius: 5px;
@@ -317,10 +317,10 @@ const StyledContent = styled.div`
     display: none;
   }
   .line {
-    min-height: 1px; 
-    height: 1px; 
-    background: #eceff3; 
-    padding: 0; 
+    min-height: 1px;
+    height: 1px;
+    background: #eceff3;
+    padding: 0;
     margin: 25px 0px 20px;
   }
 `;

@@ -5,6 +5,7 @@ const initialState = fromJS({
   mapList: [],
   bizMenuData: {},
   selectedIndex: -1,
+  loading: false,
 });
 
 const orgReducer = (state = initialState, action) => {
@@ -15,6 +16,10 @@ const orgReducer = (state = initialState, action) => {
       return state.set('bizMenuData', action.bizMenuData).set('selectedIndex', action.selectedIndex);
     case constants.SET_SELECTED_INDEX:
       return state.set('selectedIndex', action.selectedIndex);
+    case constants.ENABLE_LOADING:
+      return state.set('loading', true);
+    case constants.DISABLE_LOADING:
+      return state.set('loading', false);
     default:
       return state;
   }

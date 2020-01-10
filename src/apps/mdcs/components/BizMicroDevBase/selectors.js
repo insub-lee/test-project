@@ -6,10 +6,22 @@ const makeSelectResponseData = () =>
   createSelector(
     selectorBizBuilderBase,
     (state, props) => (props && props.id ? props.id : -1),
-    (state, id) => {
-      console.debug('id', id);
-      return state.getIn(['bizMicroDevBase', id, 'responseData']) !== undefined ? state.getIn(['bizMicroDevBase', id, 'responseData']).toJS() : {};
-    },
+    (state, id) => (state.getIn(['bizMicroDevBase', id, 'responseData']) !== undefined ? state.getIn(['bizMicroDevBase', id, 'responseData']).toJS() : {}),
   );
 
-export { makeSelectResponseData };
+const makeSelectFormData = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => (state.getIn(['bizMicroDevBase', id, 'formData']) !== undefined ? state.getIn(['bizMicroDevBase', id, 'formData']).toJS() : {}),
+  );
+
+const makeSelectFormDataByReduxId = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id, reduxId) =>
+      state.getIn(['bizMicroDevBase', id, 'formData', reduxId]) !== undefined ? state.getIn(['bizMicroDevBase', id, 'formData', reduxId]).toJS() : {},
+  );
+
+export { makeSelectResponseData, makeSelectFormData, makeSelectFormDataByReduxId };

@@ -9,7 +9,9 @@ class EmptyViewSearch extends React.Component {
 
     this.getType = this.getType.bind(this);
   }
+
   getType = () => constantsType.SEARCH;
+
   render() {
     const style = {
       display: 'flex',

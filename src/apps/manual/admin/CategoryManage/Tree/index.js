@@ -168,7 +168,7 @@ const Tree = ({
         treeData={getTreeData(treeData.toJS())}
         onChange={setData => setTreeData(setData, setCategoryTreeData)}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
         isVirtualized={false}
         generateNodeProps={rowInfo =>
@@ -223,7 +223,4 @@ const mapDispatchToProps = dispatch => ({
   setManualManage: (pageType, categoryIdx, manualIdx) => dispatch(manageActions.setPageModeByReducr(pageType, categoryIdx, manualIdx)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Tree);
+export default connect(mapStateToProps, mapDispatchToProps)(Tree);

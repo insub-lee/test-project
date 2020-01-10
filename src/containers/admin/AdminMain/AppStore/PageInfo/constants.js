@@ -6,5 +6,4 @@ export const ADD_WIDGETS = 'admin/AdminMain/AppStore/PageInfo/ADD_WIDGETS';
 export const MOVE_MYWIDGET = 'admin/AdminMain/AppStore/PageInfo/MOVE_MYWIDGET';
 export const UPDATE_WIDGET = 'admin/AdminMain/AppStore/PageInfo/UPDATE_WIDGET';
 
-
 // export const SET_TITLE_MODAL_VISIBLE = 'portal/container/MyPageCategory/SET_TITLE_MODAL_VISIBLE';

@@ -5,9 +5,9 @@ import { Cookies } from 'react-cookie';
 import * as actionTypes from 'containers/common/Routes/constants';
 import { delay } from 'redux-saga';
 
-import * as constants from './constants';
 import { Axios } from 'utils/AxiosFunc';
 import { IflowApi } from 'utils/IflowFunc';
+import * as constants from './constants';
 
 const cookies = new Cookies();
 const LASTUSER = cookies.get('LASTUSER');

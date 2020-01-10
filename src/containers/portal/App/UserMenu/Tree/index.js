@@ -1,26 +1,26 @@
 import React, { Component } from 'react';
-import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { lang } from 'utils/commonUtils';
 import Input from 'components/Input';
 import ScrollBar from 'react-custom-scrollbars';
+import { Badge, Button } from 'antd';
 
 import 'react-router-modal/css/react-router-modal.css';
 
 import CustomTheme from './theme';
-import { Badge, Button } from 'antd';
 import './app.css';
 
-import icon_unlock from 'images/portal/icon-unlock.png';
-import icon_lock from 'images/portal/icon_lock.png';
+import iconUnlock from 'images/portal/icon-unlock.png';
+import iconLock from 'images/portal/icon_lock.png';
 import IconGo from 'images/portal/icon_go.png';
 import TreeWrapper from './TreeWrapper';
 import MyPage from '../../UserStore/AppMain/MyPage';
 import WorkTimeLine from '../../WorkTimeLine';
 
 import { basicPath } from 'containers/common/constants';
+import { SortableTreeWithoutDndContext as SortableTree } from '../../../components/Organization/resource/react-sortable-tree';
 
 class Tree extends Component {
   constructor(props) {
@@ -42,6 +42,7 @@ class Tree extends Component {
     }
     return true;
   }
+
   // componentWillReceiveProps(nextProps) {
   //   if (nextProps.treeData && nextProps.treeData.length > 0) {
   //     this.setState({
@@ -75,23 +76,11 @@ class Tree extends Component {
     }
   };
 
-  handleTreeOnClick = node => {
-    event.stopPropagation();
-    changeSelectedIndex(node.key);
-
-    if (node.NODE_TYPE !== 'F') {
-      const url = getUrl(node);
-      history.push(url);
-      window.scrollTo(0, 0);
-    }
-  };
-
   handleShowAllBizMenuClick = () => {
     console.debug('>>>>>>>>>통합업무 메뉴 클릭');
   };
 
   handleClickMenuFolder = menuId => {
-    event.stopPropagation();
     console.debug('>>>>>>>this.props: ', this.props);
     this.props.history.push(`/${basicPath.PORTAL}/bizMenu/${menuId}`);
   };
@@ -141,7 +130,7 @@ class Tree extends Component {
               {/* <Link to="/store" className="storeLink" style={{ padding: '10px' }} title="Biz스토어" target="_blank">
                 <img src={icon_store} alt="Biz스토어 바로가기" title="Biz스토어 바로가기" />
               </Link> */}
-              <img onClick={this.onSetEditClick} src={editMenuMode ? icon_unlock : icon_lock} alt="메뉴수정" title="메뉴수정" />
+              <img onClick={this.onSetEditClick} src={editMenuMode ? iconUnlock : iconLock} alt="메뉴수정" title="메뉴수정" />
             </div>
             {/* <Button className="myMenuEdit" onClick={this.onSetEditClick} title="메뉴수정" /> */}
           </div>
@@ -210,7 +199,7 @@ class Tree extends Component {
                     };
                   }}
                   rowHeight={35}
-                  scaffoldBlockPxWidth={22}
+                  scaffoldBlockPxWidth={20}
                   className="sortableTreeWrapper sidebar CustomSCRB"
                   ref={ref => {
                     this.tree = ref;

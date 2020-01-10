@@ -9,8 +9,7 @@ const AntProgress = ComponentName => styled(ComponentName)`
 
     .ant-progress-text {
       text-align: ${props => (props['data-rtl'] === 'rtl' ? 'right' : 'left')};
-      margin: ${props => (
-    props['data-rtl'] === 'rtl' ? '0 0.75em 0 0' : '0 0 0 0.75em')};
+      margin: ${props => (props['data-rtl'] === 'rtl' ? '0 0.75em 0 0' : '0 0 0 0.75em')};
     }
   }
 `;

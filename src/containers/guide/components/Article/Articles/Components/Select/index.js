@@ -16,5 +16,4 @@ const ArticleRadio = () => (
   </div>
 );
 
-
 export default ArticleRadio;

@@ -4,11 +4,7 @@ import { LineBarAreaComposedChart1 } from './config';
 
 class ReCharts extends PureComponent {
   render() {
-    return (
-      <LineBarAreaComposedChart
-        {...LineBarAreaComposedChart1}
-      />
-    );
+    return <LineBarAreaComposedChart {...LineBarAreaComposedChart1} />;
   }
 }
 

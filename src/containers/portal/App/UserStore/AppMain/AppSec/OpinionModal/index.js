@@ -10,22 +10,14 @@ import AntRadiobox from '../../../components/uielements/radiobox.style';
 import { BtnDkGray, BtnLgtGray } from '../../../components/uielements/buttons.style';
 
 const RadioGroup = AntRadiobox(Radio.Group);
-const radioOptionReturn = [
-  'returnOption1',
-  'returnOption2',
-  'returnOption3',
-  'returnOption4',
-];
+const radioOptionReturn = ['returnOption1', 'returnOption2', 'returnOption3', 'returnOption4'];
 const { TextArea } = Input;
 
 class OpposePage extends Component {
   constructor(props) {
     super(props);
 
-    const {
-      type,
-      appAuthCnl,
-    } = props;
+    const { type, appAuthCnl } = props;
 
     this.state = {
       // 반려 사유 라디오 버튼 값
@@ -40,10 +32,7 @@ class OpposePage extends Component {
   }
 
   onChange(e) {
-    const {
-      appAuthCnl,
-      type,
-    } = this.props;
+    const { appAuthCnl, type } = this.props;
 
     if (e.target.value === 3) {
       this.setState({
@@ -52,73 +41,53 @@ class OpposePage extends Component {
         comment: '',
       });
     } else {
-      this.setState({
-        comment: '',
-      }, () => {
-        this.setState({
-          value: e.target.value,
-          disabled: true,
-          comment: type === 'R' ? radioOptionReturn[e.target.value] : lang.get('NAME', appAuthCnl[e.target.value]),
-        });
-      });
+      this.setState(
+        {
+          comment: '',
+        },
+        () => {
+          this.setState({
+            value: e.target.value,
+            disabled: true,
+            comment: type === 'R' ? radioOptionReturn[e.target.value] : lang.get('NAME', appAuthCnl[e.target.value]),
+          });
+        },
+      );
     }
   }
 
-  commentOnChange = (v) => {
+  commentOnChange = v => {
     this.setState({
       comment: v.target.value,
     });
-  }
+  };
 
   returnRequest = () => {
-    const {
-      comment,
-    } = this.state;
+    const { comment } = this.state;
 
-    const {
-      handleReturnRequest,
-      selectedApp,
-      loadingSet,
-      closeModal,
-    } = this.props;
+    const { handleReturnRequest, selectedApp, loadingSet, closeModal } = this.props;
 
     const REQ_ID_ARR = selectedApp.map(app => app.SEC_REQ_ID);
 
     handleReturnRequest(REQ_ID_ARR, comment, loadingSet);
 
     closeModal();
-  }
+  };
 
   cancelRequest = () => {
-    const {
-      comment,
-    } = this.state;
+    const { comment } = this.state;
 
-    const {
-      handleCancelRequest,
-      loadingSet,
-      closeModal,
-      selectedAppCancel,
-    } = this.props;
+    const { handleCancelRequest, loadingSet, closeModal, selectedAppCancel } = this.props;
 
     handleCancelRequest(selectedAppCancel.SEC_REQ_ID, comment, loadingSet);
 
     closeModal();
-  }
+  };
 
   render() {
-    const {
-      selectedApp,
-      selectedAppCancel,
-      appAuthCnl,
-      type,
-    } = this.props;
+    const { selectedApp, selectedAppCancel, appAuthCnl, type } = this.props;
 
-    const {
-      disabled,
-      comment,
-      value,
-    } = this.state;
+    const { disabled, comment, value } = this.state;
 
     const radioStyle = {
       display: 'block',
@@ -127,9 +96,7 @@ class OpposePage extends Component {
     };
 
     return (
-      <Draggable
-        handle="h2.modalTitle"
-      >
+      <Draggable handle="h2.modalTitle">
         <StyleModal
           style={{
             width: 840,
@@ -137,15 +104,11 @@ class OpposePage extends Component {
             marginTop: '-235px',
             marginLeft: '-420px',
           }}
-        > {/* 모달창 크기와 위치 개별적용, App심사 화면과 유사 */}
+        >
+          {' '}
+          {/* 모달창 크기와 위치 개별적용, App심사 화면과 유사 */}
           <h2 className="modalTitle" style={{ cursor: 'move' }}>
-            {
-              type === 'R'
-                ?
-                intlObj.get(messages.returnAppSec)
-                :
-                intlObj.get(messages.cancelAppSec)
-            }
+            {type === 'R' ? intlObj.get(messages.returnAppSec) : intlObj.get(messages.cancelAppSec)}
             <Button className="modalClose" onClick={this.props.closeModal} title={intlObj.get(messages.close)} />
           </h2>
           <div className="modalContents" style={{ height: 369, paddingTop: 20 }}>
@@ -154,82 +117,46 @@ class OpposePage extends Component {
                 <table className="opposeTargetTable">
                   <thead className="fixedHeader">
                     <tr>
-                      <th>
-                        {
-                          type === 'R'
-                            ?
-                            intlObj.get(messages.secRequestUser)
-                            :
-                            intlObj.get(messages.canceledUser)
-                        }
-                      </th>
-                      <th>
-                        {intlObj.get(messages.targetApp)}
-                      </th>
+                      <th>{type === 'R' ? intlObj.get(messages.secRequestUser) : intlObj.get(messages.canceledUser)}</th>
+                      <th>{intlObj.get(messages.targetApp)}</th>
                     </tr>
                   </thead>
-                  <ScrollBar
-                    autoHide
-                    autoHideTimeout={1000}
-                    style={{ width: '100%', height: 300, top: 35 }}
-                  >
+                  <ScrollBar autoHide autoHideTimeout={1000} style={{ width: '100%', height: 300, top: 35 }}>
                     <tbody>
-                      {
-                        type === 'R'
-                          ?
-                          selectedApp.map(app => (
-                            <tr>
-                              <td>{lang.get('NAME', app)}</td>
-                              <td>{lang.get('APP_NAME', app)}</td>
-                            </tr>
-                          ))
-                          :
+                      {type === 'R' ? (
+                        selectedApp.map(app => (
                           <tr>
-                            <td>{lang.get('NAME', selectedAppCancel)}</td>
-                            <td>{lang.get('APP_NAME', selectedAppCancel)}</td>
+                            <td>{lang.get('NAME', app)}</td>
+                            <td>{lang.get('APP_NAME', app)}</td>
                           </tr>
-                      }
+                        ))
+                      ) : (
+                        <tr>
+                          <td>{lang.get('NAME', selectedAppCancel)}</td>
+                          <td>{lang.get('APP_NAME', selectedAppCancel)}</td>
+                        </tr>
+                      )}
                     </tbody>
                   </ScrollBar>
                 </table>
               </Col>
               <Col xl={12} style={{ width: 430 }}>
                 <div className="storeModal">
-                  <p className="targetApp">
-                    {
-                      type === 'R'
-                        ?
-                        intlObj.get(messages.returnReason)
-                        :
-                        intlObj.get(messages.cancelReason)
-                    }
-                  </p>
+                  <p className="targetApp">{type === 'R' ? intlObj.get(messages.returnReason) : intlObj.get(messages.cancelReason)}</p>
                   <div className="grayBox" style={{ height: 297 }}>
-                    <p>
-                      {intlObj.get(messages.multipleReason)}
-                    </p>
-                    <RadioGroup
-                      onChange={this.onChange}
-                      value={this.state.value}
-                      style={{ width: '100%' }}
-                    >
-                      {
-                        type === 'R'
-                          ?
-                          radioOptionReturn.map((o, i) =>
-                            (
-                              <Radio key={o} value={i} style={radioStyle}>
-                                {intlObj.get(messages[o])}
-                              </Radio>
-                            ))
-                          :
-                          appAuthCnl.map((o, i) =>
-                            (
-                              <Radio key={o} value={i} style={radioStyle}>
-                                {lang.get('NAME', o)}
-                              </Radio>
-                            ))
-                      }
+                    <p>{intlObj.get(messages.multipleReason)}</p>
+                    <RadioGroup onChange={this.onChange} value={this.state.value} style={{ width: '100%' }}>
+                      {type === 'R'
+                        ? radioOptionReturn.map((o, i) => (
+                          <Radio key={o} value={i} style={radioStyle}>
+                            {intlObj.get(messages[o])}
+                          </Radio>
+                        ))
+                        : appAuthCnl.map((o, i) => (
+                          <Radio key={o} value={i} style={radioStyle}>
+                            {lang.get('NAME', o)}
+                          </Radio>
+                        ))}
                     </RadioGroup>
                     <TextArea
                       placeholder={intlObj.get(messages.comment)}
@@ -246,12 +173,8 @@ class OpposePage extends Component {
             </Row>
           </div>
           <div className="modalFooter">
-            <BtnLgtGray onClick={this.props.closeModal}>
-              {intlObj.get(messages.cancel)}
-            </BtnLgtGray>
-            <BtnDkGray onClick={type === 'R' ? this.returnRequest : this.cancelRequest}>
-              {intlObj.get(messages.confirmBtn)}
-            </BtnDkGray>
+            <BtnLgtGray onClick={this.props.closeModal}>{intlObj.get(messages.cancel)}</BtnLgtGray>
+            <BtnDkGray onClick={type === 'R' ? this.returnRequest : this.cancelRequest}>{intlObj.get(messages.confirmBtn)}</BtnDkGray>
           </div>
         </StyleModal>
       </Draggable>

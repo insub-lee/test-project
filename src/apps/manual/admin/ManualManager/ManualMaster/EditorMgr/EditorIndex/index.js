@@ -140,7 +140,4 @@ const mapDispatchToProps = dispatch => ({
   handleRemoveComp: (tabIdx, compIdx) => dispatch(actions.removeEditorComponentByReduc(tabIdx, compIdx)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EditorIndex);
+export default connect(mapStateToProps, mapDispatchToProps)(EditorIndex);

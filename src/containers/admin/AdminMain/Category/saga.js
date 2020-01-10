@@ -34,12 +34,7 @@ export function* cateinsert(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/regiscategory/', payload.payload);
   const { code, catgId } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.cateInsert)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.cateInsert)}</MessageContent>, 3);
     yield put({
       type: constants.INIT_CATEGORY_DATA,
       payload: PARAM,
@@ -59,12 +54,7 @@ export function* cateUpdate(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updatecategory/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.cateUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.cateUpdate)}</MessageContent>, 3);
     yield put({
       type: constants.INIT_CATEGORY_DATA,
       // payload: SITE_ID,
@@ -80,12 +70,7 @@ export function* cateDelete(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/deletecategory/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.cateDelete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.cateDelete)}</MessageContent>, 3);
     yield put({
       type: constants.INIT_CATEGORY_DATA,
       payload: SITE_ID,
@@ -97,7 +82,6 @@ export function* cateDelete(payload) {
   }
 }
 
-
 export function* moveMymenu(payload) {
   const { SITE_ID, treeData } = payload;
   const siteId = { SITE_ID: payload.SITE_ID };
@@ -105,12 +89,7 @@ export function* moveMymenu(payload) {
   const { code } = response;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.cateUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.cateUpdate)}</MessageContent>, 3);
     yield put({
       type: constants.INIT_CATEGORY_DATA,
       payload: siteId,

@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
@@ -41,6 +40,7 @@ class AppList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
+
   componentWillReceiveProps(nextProps) {
     const { match, initType } = nextProps;
     const { params } = match;
@@ -56,6 +56,7 @@ class AppList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
+
   render() {
     const {
       history,
@@ -146,8 +147,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'mypageappList', reducer });
 const withSaga = injectSaga({ key: 'mypageappList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppList);
+export default compose(withReducer, withSaga, withConnect)(AppList);

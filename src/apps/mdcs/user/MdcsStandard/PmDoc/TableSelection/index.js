@@ -64,7 +64,7 @@ export default class TableSelection extends Component {
   render() {
     const { dataList, view } = this.props;
     const { rightDataSource } = this.state;
-    let leftDataSource = [];
+    const leftDataSource = [];
     if (view === 'spec') {
       if (dataList && dataList.specData && dataList.specData.length > 0) {
         dataList.specData.map(item =>
@@ -90,11 +90,9 @@ export default class TableSelection extends Component {
             </span>
           </Button>
           <Button size="small" onClick={this.onLeftClick} style={{ border: 'none' }}>
-            {
-              <span>
-                <Icon type="left" />
-              </span>
-            }
+            <span>
+              <Icon type="left" />
+            </span>
           </Button>
         </Col>
         <Col span={11}>

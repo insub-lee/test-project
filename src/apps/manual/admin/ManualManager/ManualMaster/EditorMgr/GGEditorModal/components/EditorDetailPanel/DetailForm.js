@@ -105,7 +105,7 @@ class DetailForm extends React.Component {
     const { label, step } = this.item.getModel();
 
     return (
-      <Fragment>
+      <>
         <Item label="Label" {...inlineFormItemLayout}>
           {form.getFieldDecorator('label', {
             initialValue: label,
@@ -118,7 +118,7 @@ class DetailForm extends React.Component {
           })(this.renderStepSelect())}
         </Item>
       */}
-      </Fragment>
+      </>
     );
   };
 
@@ -127,7 +127,7 @@ class DetailForm extends React.Component {
     const { label = '', process } = this.item.getModel();
 
     return (
-      <Fragment>
+      <>
         <Item label="Label" {...inlineFormItemLayout}>
           {form.getFieldDecorator('label', {
             initialValue: label,
@@ -140,7 +140,7 @@ class DetailForm extends React.Component {
           })(this.renderProcessSelect())}
         </Item>
         */}
-      </Fragment>
+      </>
     );
   };
 

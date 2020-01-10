@@ -89,7 +89,9 @@ const SidebarWrapper = styled.div`
         padding: 0 24px;
         margin: 0;
 
-        &.ant-menu-item-active {background-color: ${palette('sidebar', 2)};}
+        &.ant-menu-item-active {
+          background-color: ${palette('sidebar', 2)};
+        }
       }
 
       .devguideMenuHolder {
@@ -156,7 +158,9 @@ const SidebarWrapper = styled.div`
         align-items: center;
         padding: 0 24px;
 
-        &:hover {background-color: ${palette('sidebar', 2)};}
+        &:hover {
+          background-color: ${palette('sidebar', 2)};
+        }
 
         > span {
           display: flex;
@@ -244,7 +248,7 @@ const SidebarWrapper = styled.div`
         display: none;
       }
 
-      .ant-menu-submenu-inline >  {
+      .ant-menu-submenu-inline > {
         .ant-menu-submenu-title:after {
           display: none;
         }

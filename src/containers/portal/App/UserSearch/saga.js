@@ -1,9 +1,9 @@
 import { select, call, put, takeLatest } from 'redux-saga/effects';
-import { sortBy } from 'utils/commonUtils';
+import { sortBy }from 'lodash';
 import * as actionType from './constants';
-import * as orgActionType from '../UserProfileOrg/constants';
+// import * as orgActionType from '../UserProfileOrg/constants';
 import { Axios } from '../../../../utils/AxiosFunc';
-import * as memberAction from '../../../../apps/members/widgets/constants';
+// import * as memberAction from '../../../../apps/members/widgets/constants';
 
 // User Search 함수
 export function* getUserByValue(action) {
@@ -26,10 +26,9 @@ export function* getUserByValue(action) {
 
 // User History Select 함수
 export function* getUserHistoryByValue() {
-  const response = yield call(Axios.post, '/api/common/v1/account/userSearchHistory/');
-  const historyList = response.list;
-
-  historyList.sort(sortBy('NAME_KOR', false, function (a) { return a.toUpperCase() })); //eslint-disable-line
+  const response = yield call(Axios.post, '/api/common/v1/account/userSearchHistory');
+  const { list } = response;
+  const historyList = sortBy(list, ['NAME_KOR']);
 
   if (historyList.length > 0) {
     yield put({ type: actionType.USER_HISTORY_SUCCESS_GET_RESULT, payload: historyList });
@@ -51,7 +50,7 @@ export function* deleteUserHistoryByValue(action) {
     const delList = srchedUserIdList2.splice(delIndexNum, 1);
     // feed.success('히스토리가 삭제 되었습니다.');
     yield put({ type: actionType.USER_HISTORY_DELETE_SUCCESS, delList });
-    yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
+    // yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
   } else {
     // 추후 처리 예정
   }
@@ -65,13 +64,13 @@ export function* deleteAllUserHistoryByValue() {
   if (resultValue === 'success') {
     // feed.success('히스토리가 전체 삭제 되었습니다.');
     yield put({ type: actionType.USER_HISTORY_DELETEALL_SUCCESS });
-    yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
+    // yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
   }
 }
 
 // History 추가 함수
 export function* insertUserHistoryByValue(action) {
-  const searChresponse = yield call(Axios.post, '/api/common/v1/account/userSearchHistory/');
+  const searChresponse = yield call(Axios.post, '/api/common/v1/account/userSearchHistory');
 
   const isList = searChresponse.list.filter(function (item) { //eslint-disable-line
     return item.SRCH_USER_ID === action.payload.user.USER_ID;
@@ -83,7 +82,7 @@ export function* insertUserHistoryByValue(action) {
     const udpateResultValue = updateResponse.result;
     if (udpateResultValue === 'success') {
       yield put({ type: actionType.USER_HISTORY_UPDATE_SUCCESS });
-      yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
+      // yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
     } else {
       yield put({ type: actionType.USER_HISTORY_INSERT_FAIL });
     }
@@ -93,7 +92,7 @@ export function* insertUserHistoryByValue(action) {
     const resultValue = response.result;
     if (resultValue === 'success') {
       yield put({ type: actionType.USER_HISTORY_INSERT_SUCCESS });
-      yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
+      // yield put({ type: memberAction.LOADING_MEMBERS_SAGA });
     }
   }
 }
@@ -107,7 +106,7 @@ export function* getProfileData(action) {
   };
   const response = yield call(Axios.post, '/api/common/v1/account/appProfileLoad/', data);
   const result = response.profile[0];
-  yield put({ type: orgActionType.SET_PROFILE_DATA, result, selectedIndex: result.DEPT_ID });
+  // yield put({ type: orgActionType.SET_PROFILE_DATA, result, selectedIndex: result.DEPT_ID });
 }
 
 export default function* userSearchSaga() {

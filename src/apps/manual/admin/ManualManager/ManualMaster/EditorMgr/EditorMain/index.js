@@ -70,7 +70,7 @@ class EditorMain extends Component {
                   handleRemoveCompValue,
                   indexRelationList,
                 };
-                return <RenderEditorComponent key={item.MUAL_TABCOMP_IDX} {...restProps} />
+                return <RenderEditorComponent key={item.MUAL_TABCOMP_IDX} {...restProps} />;
               })}
         </div>
         {/* </Scrollbars> */}
@@ -130,7 +130,4 @@ const mapDispatchToProps = dispatch => ({
   handleRemoveCompValue: (tabIdx, compIdx, key) => dispatch(actions.removeEditorComponentValueByReduc(tabIdx, compIdx, key)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EditorMain);
+export default connect(mapStateToProps, mapDispatchToProps)(EditorMain);

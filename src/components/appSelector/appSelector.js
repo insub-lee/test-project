@@ -8,12 +8,12 @@ import { Button, Row, Col } from 'antd';
 import { createStructuredSelector } from 'reselect';
 import Draggable from 'react-draggable';
 
-import messages from '../../components/Page/messages';
+import messages from '../Page/messages';
 import { BtnDkGray, BtnLgtGray } from '../../containers/store/components/uielements/buttons.style';
 import StyleModal from '../../containers/portal/components/Modal/StyleModal';
 import StyleQuickmenuContent from './StyleModalQuickmenu';
 import StyleSelectedApps from './StyleSelectedApps';
-import Input from '../../components/Input';
+import Input from '../Input';
 import basicStyle from '../../config/basicStyle';
 import Tree from './Tree';
 import CategoryGrid from './categoryGrid';
@@ -76,8 +76,7 @@ class AppTree extends Component {
       if (this.state.saveCategoryList.length > 0) {
         categoryList = this.state.saveCategoryList.slice();
         for (let i = 0; i < selectedList.length; i += 1) {
-          const idx = this.state.saveCategoryList
-            .findIndex(a => a.APP_ID === selectedList[i].APP_ID);
+          const idx = this.state.saveCategoryList.findIndex(a => a.APP_ID === selectedList[i].APP_ID);
 
           if (idx === -1) {
             categoryList.push(selectedList[i]);
@@ -119,7 +118,7 @@ class AppTree extends Component {
   }
 
   changeInputKeyword(e) {
-    const type = this.props.type;
+    const { type } = this.props;
     pageNum = 10;
 
     if (e.target.value.trim() !== '' && e.keyCode === 13) {
@@ -135,7 +134,7 @@ class AppTree extends Component {
 
   initializeSearchInput = () => {
     this.searchInputCategory.firstChild.value = '';
-  }
+  };
 
   addCategory() {
     let saveList = [];
@@ -186,7 +185,10 @@ class AppTree extends Component {
       categoryList = this.state.saveCategoryList.slice();
 
       this.setState({
-        saveCategoryList: categoryList, complete: true, catID: [], checkAll: false,
+        saveCategoryList: categoryList,
+        complete: true,
+        catID: [],
+        checkAll: false,
       });
     }
 
@@ -225,11 +227,9 @@ class AppTree extends Component {
           portalClassName="portalCommonModal"
           ariaHideApp={false}
         >
-          <Draggable
-            handle="h2.modalTitle"
-          >
+          <Draggable handle="h2.modalTitle">
             <StyleModal className="modalWrapper" style={{ width: 1100, height: 650, marginTop: '-325px', marginLeft: '-550px' }}>
-              <h2 className="modalTitle" style={{ cursor: "move" }}>
+              <h2 className="modalTitle" style={{ cursor: 'move' }}>
                 {intlObj.get(messages.addWidget)}
                 <Button className="modalClose" onClick={this.closeModal} />
               </h2>
@@ -238,40 +238,39 @@ class AppTree extends Component {
                   <Col xl={16} style={colStyle} className="leftActivity">
                     <div className="treeWrapper">
                       <h3 className="secTitle">{intlObj.get(messages.categoryList)}</h3>
-                      <Tree
-                        treeData={this.state.appTree}
-                        onClick={this.onClickNode}
-                        initializeSearchInput={this.initializeSearchInput}
-                      />
+                      <Tree treeData={this.state.appTree} onClick={this.onClickNode} initializeSearchInput={this.initializeSearchInput} />
                     </div>
-                    <div
-                      className="userGridResult"
-                    >
+                    <div className="userGridResult">
                       <div className="userSearch">
-                        <div className="inputWrapper" ref={(ref) => { this.searchInputCategory = ref; }}>
+                        <div
+                          className="inputWrapper"
+                          ref={ref => {
+                            this.searchInputCategory = ref;
+                          }}
+                        >
                           <Input
                             placeholder={intlObj.get(messages.seacrhText)}
                             onKeyUp={this.changeInputKeyword}
-                          // name='searchInput'
+                            // name='searchInput'
                           />
                           <Button className="searchButton" />
                         </div>
                       </div>
-                      {this.props.categoryList.length > 0 ?
+                      {this.props.categoryList.length > 0 ? (
                         <CategoryGrid
                           categoryList={this.props.categoryList}
                           onLoadCategory={this.onLoadCategory}
                           checkBoxStat={this.props.checkBoxStat}
                           resetCheckbox={this.props.resetCheckbox}
                         />
-                        :
+                      ) : (
                         <p style={{ textAlign: 'center' }}>{intlObj.get(messages.noApp)}</p>
-                      }
+                      )}
                     </div>
                     <Button className="inBtn" onClick={this.addCategory} />
                     <Button className="outBtn" onClick={this.deleteCategory} />
                   </Col>
-                  <Col xl={8} style={colStyle} className="rightActivity" >
+                  <Col xl={8} style={colStyle} className="rightActivity">
                     <StyleSelectedApps>
                       <SelectedCategory
                         selectedList={this.state.saveCategoryList}
@@ -334,8 +333,4 @@ const withReducer = injectReducer({ key: 'atree', reducer });
 const withSaga = injectSaga({ key: 'atree', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppTree);
+export default compose(withReducer, withSaga, withConnect)(AppTree);

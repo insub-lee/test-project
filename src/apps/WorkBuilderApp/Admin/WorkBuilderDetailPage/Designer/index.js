@@ -148,7 +148,7 @@ const mapDispatchToProps = dispatch => ({
           },
           changeName: (type, index, e) => {
             let { value } = e.target;
-            value = value.replace(/[^0-9A-Z_]/gi, '').toUpperCase();
+            value = value.replace(/[^A-Z_]/gi, '').toUpperCase();
             e.target.value = value;
             dispatch(actions.changeName({ type, index, value }));
           },
@@ -158,7 +158,7 @@ const mapDispatchToProps = dispatch => ({
           changeWorkSelectorProperty: (index, e, propertyKey) => {
             let { value } = e.target;
             if (propertyKey !== 'workSeq') {
-              value = value.replace(/[^0-9A-Z_]/gi, '').toUpperCase();
+              value = value.replace(/[^A-Z_]/gi, '').toUpperCase();
               e.target.value = value;
               console.debug('@@ changer work-selector-property', index, value, propertyKey);
             }

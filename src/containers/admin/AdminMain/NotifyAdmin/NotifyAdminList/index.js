@@ -40,6 +40,13 @@ let searchVal = '';
 let isInit = true; // 초기화 변수(화면로딩 시 한번만 사용하기 위해)
 // let isPaging = 'Y';
 
+// 검색결과 없을 때 표시(임시)
+const EmptyData = () => (
+  <div style={{ textAlign: 'center', fontSize: 15, fontWeight: 800, padding: 15 }}>
+    <span>{intlObj.get(messages.noSearch)}</span>
+  </div>
+);
+
 class NotifyAdminList extends React.Component {
   constructor(prop) {
     super(prop);
@@ -440,19 +447,20 @@ class NotifyAdminList extends React.Component {
         if (val.dependentValues.OPEN_YN === 'Y') {
           return (
             <div>
-              <Button disabled={true}>{intlObj.get(messages.post)}</Button>
+              <Button disabled>{intlObj.get(messages.post)}</Button>
               <Button onClick={() => this.postToggle(val.dependentValues.MSG_ID, false)} disabled={false}>
                 {intlObj.get(messages.cancel)}
               </Button>
             </div>
           );
-        } else if (val.dependentValues.OPEN_YN === 'N') {
+        }
+        if (val.dependentValues.OPEN_YN === 'N') {
           return (
             <div>
               <Button onClick={() => this.postToggle(val.dependentValues.MSG_ID, true)} disabled={false}>
                 {intlObj.get(messages.post)}
               </Button>
-              <Button disabled={true}>{intlObj.get(messages.cancel)}</Button>
+              <Button disabled>{intlObj.get(messages.cancel)}</Button>
             </div>
           );
         }
@@ -650,13 +658,6 @@ class NotifyAdminList extends React.Component {
       endDateStr: endDateString,
     };
 
-    // 검색결과 없을 때 표시(임시)
-    const EmptyData = () => (
-      <div colSpan="5">
-        <font size="5">{intlObj.get(messages.noSearch)}</font>
-      </div>
-    );
-
     return (
       <div>
         <StyleNotifyAdminList>
@@ -680,7 +681,7 @@ class NotifyAdminList extends React.Component {
                 value={this.state.oneDate !== '' ? this.state.oneDate : null}
                 onChange={this.onOneChange}
                 placeholder="select Date"
-                showToday={true}
+                showToday
                 style={{ display: isShowDate }}
               />
               <RangePicker
@@ -691,7 +692,7 @@ class NotifyAdminList extends React.Component {
                   'This Month': [moment(), moment().endOf('month')],
                 }}
                 onChange={this.onPeriodChange}
-                showToday={true}
+                showToday
                 style={{ display: isShowPeriod }}
                 value={this.state.periodDates !== '' ? this.state.periodDates : null}
               />
@@ -833,15 +834,8 @@ const mapStateToProps = createStructuredSelector({
   siteCombo: selectors.makeSelectSiteCombo(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'NotifyAdmin', saga });
 const withReducer = injectReducer({ key: 'NotifyAdmin', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(NotifyAdminList);
+export default compose(withReducer, withSaga, withConnect)(NotifyAdminList);

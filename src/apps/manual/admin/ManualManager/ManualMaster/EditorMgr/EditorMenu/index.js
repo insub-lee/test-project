@@ -82,7 +82,4 @@ const mapDispatchToProps = dispatch => ({
   setPreviewModal: flag => dispatch(actions.setPreviewModalByReducr(flag)),
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(EditorMenu);
+export default connect(null, mapDispatchToProps)(EditorMenu);

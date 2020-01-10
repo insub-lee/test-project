@@ -48,11 +48,9 @@ class MyAppCategoryModal extends React.Component {
   }
 
   render() {
-    const {
-      type,
-    } = this.props;
+    const { type } = this.props;
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       this.setState({
         CATG_ID: node.CATG_ID,
         APP_NAME: lang.get('NAME', node),
@@ -92,24 +90,16 @@ class MyAppCategoryModal extends React.Component {
           wrapClassName="vertical-center-modal"
           bodyStyle={{ maxHeight: 500 }}
           // title="카테고리 선택"
-          title={
-            <ModalDrag
-              title="카테고리 선택"
-              num={0}
-            />
-          }
+          title={<ModalDrag title="카테고리 선택" num={0} />}
           footer={[
-            <BtnLgtGray
-              key="back"
-              onClick={this.props.closeModal}
-            >
+            <BtnLgtGray key="back" onClick={this.props.closeModal}>
               {intlObj.get(messages.cancel)}
             </BtnLgtGray>,
             <BtnDkGray
               key="submit"
               loading={this.state.loading}
               onClick={onOk}
-            // className={this.state.qnaOn ? '' : 'disabled'}
+              // className={this.state.qnaOn ? '' : 'disabled'}
             >
               {intlObj.get(messages.confirm)}
             </BtnDkGray>,
@@ -126,8 +116,8 @@ class MyAppCategoryModal extends React.Component {
               returnGateDelete={returnGateDelete}
               history={this.props.history}
               selectedIndex={this.state.selectedIndex}
-              canDrag={true}
-              canDrop={true}
+              canDrag
+              canDrop
               moveMymenu={this.props.moveMymenu}
             />
           </div>
@@ -180,8 +170,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'myapp', reducer });
 const withSaga = injectSaga({ key: 'myapp', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyAppCategoryModal));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(MyAppCategoryModal));

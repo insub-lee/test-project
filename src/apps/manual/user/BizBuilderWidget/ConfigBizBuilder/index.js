@@ -280,13 +280,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-manual-user-BizBuilderWidget-ConfigBizBuilder-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-manual-user-BizBuilderWidget-ConfigBizBuilder-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(ConfigBizBuilder);
+export default compose(withSaga, withReducer, withConnect)(ConfigBizBuilder);

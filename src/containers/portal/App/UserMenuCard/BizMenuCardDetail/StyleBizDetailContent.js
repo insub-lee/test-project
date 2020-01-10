@@ -50,7 +50,7 @@ const StyleBizDetailContent = styled.div`
         .treeBox {
           height: 100% !important;
           padding: 0 0 0 8px !important;
-    
+
           > div {
             height: 100% !important;
 

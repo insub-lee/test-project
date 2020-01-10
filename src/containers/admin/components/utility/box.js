@@ -23,6 +23,6 @@ Box.propTypes = {
 Box.defaultProps = {
   title: '',
   subtitle: '',
-}
+};
 
 export default Box;

@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
 const SelectedUser = styled.div`
-
   padding: 0;
 
-  // 선택목록 
+  // 선택목록
   .SUTitle {
     position: relative;
     height: 33px;
@@ -50,7 +49,6 @@ const SelectedUser = styled.div`
     }
   }
 
-  
   // 테이블
   .SUTable {
     // IE에서 table 안에 체크박스가 있을 때, border로 제작된 checked 표시가 눈에 보이지 않는 버그가 있음.
@@ -65,7 +63,7 @@ const SelectedUser = styled.div`
         height: 33px;
         padding: 0 0 0 6px;
         color: #707070;
-      
+
         & > span:not(.ant-checkbox) {
           display: block;
           float: right;
@@ -80,7 +78,6 @@ const SelectedUser = styled.div`
           overflow: hidden;
           text-overflow: ellipsis;
         }
-        
       }
 
       &.grpItem {
@@ -136,7 +133,8 @@ const SelectedUser = styled.div`
         }
       }
 
-      .ant-checkbox-wrapper + span, .ant-checkbox + span {
+      .ant-checkbox-wrapper + span,
+      .ant-checkbox + span {
         padding-left: 0 !important;
         padding-right: 0 !important;
       }

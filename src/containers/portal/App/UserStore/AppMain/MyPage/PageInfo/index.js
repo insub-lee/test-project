@@ -160,18 +160,9 @@ const mapStateToProps = createStructuredSelector({
   widgetList: selectors.makeWidgetList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'pageInfo', reducer });
 const withSaga = injectSaga({ key: 'pageInfo', saga });
 
-export default injectIntl(
-  compose(
-    withReducer,
-    withSaga,
-    withConnect,
-  )(PageInfo),
-);
+export default injectIntl(compose(withReducer, withSaga, withConnect)(PageInfo));

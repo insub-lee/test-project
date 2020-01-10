@@ -27,15 +27,19 @@ const StyleCategory = styled.div`
     margin-top: 10px;
     background: #f5f5f5;
 
-    > div > div:not(.ant-select) {max-height: 480px;}
-    
+    > div > div:not(.ant-select) {
+      max-height: 480px;
+    }
+
     @media only screen and (max-width: 1280px) {
       > div > div:not(.ant-select) {
         height: calc(100vh - 45px) !important;
       }
     }
 
-    .ant-select {width: calc(100% - 10px);}
+    .ant-select {
+      width: calc(100% - 10px);
+    }
   }
 
   .categoryContents {

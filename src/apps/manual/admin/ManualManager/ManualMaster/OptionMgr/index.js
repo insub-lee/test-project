@@ -38,7 +38,4 @@ const mapDispatchToProps = dispatch => ({
   getOptionMgr: () => dispatch(actions.getOptionMgrBySaga()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(OptionMgr);
+export default connect(mapStateToProps, mapDispatchToProps)(OptionMgr);

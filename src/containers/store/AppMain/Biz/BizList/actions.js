@@ -35,19 +35,15 @@ export const registBizModal = (BIZGRP_ID, CATG_ID, history) => ({
   history,
 });
 
-export const changeSearchword = searchword => (
-  {
-    type: constants.CHANGE_SEARCHWORD,
-    searchword,
-  }
-);
+export const changeSearchword = searchword => ({
+  type: constants.CHANGE_SEARCHWORD,
+  searchword,
+});
 
-export const appBizGubun = gubun => (
-  {
-    type: appConstants.APP_BIZ_GUBUN,
-    gubun,
-  }
-);
+export const appBizGubun = gubun => ({
+  type: appConstants.APP_BIZ_GUBUN,
+  gubun,
+});
 // 테스트
 // export const getBizMenu = key => ({
 //   type: constants.GET_BIZMENU,

@@ -10,17 +10,21 @@ export function* getIflBoardDataList(payload) {
   // 해당 그룹 카테고리 가져와 해당 게시글 요청
   const grSeq = [];
   const ctSeq = [];
-  for (var i=0; i < payload.cateList.length; i++) {
+  for (var i = 0; i < payload.cateList.length; i++) {
     grSeq.push(payload.cateList[i].grSeq);
     ctSeq.push(payload.cateList[i].ctSeq);
   }
   const bArray = [];
-  for (var i=0; i < ctSeq.length; i++) {
-    const bData = yield call(Axios.get,
-      `${constants.IFLOW_URL}/api/itf/v1/portalInterface/groups/articles?ctseq=${ctSeq[i]}&grseq=${grSeq[i]}&page=${payload.pageNum}&pagepernum=${payload.count}&keyword=`);
+  for (var i = 0; i < ctSeq.length; i++) {
+    const bData = yield call(
+      Axios.get,
+      `${constants.IFLOW_URL}/api/itf/v1/portalInterface/groups/articles?ctseq=${ctSeq[i]}&grseq=${grSeq[i]}&page=${payload.pageNum}&pagepernum=${payload.count}&keyword=`,
+    );
     const articles = [];
     bData.articles.map(item => {
-      if (item.arType !== 2) { articles.push(item) };
+      if (item.arType !== 2) {
+        articles.push(item);
+      }
     });
     bArray.push(articles);
   }

@@ -7,13 +7,7 @@ import Styled from './Styled';
 const indicator = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 const Preloader = ({ size, spinning, tip, wrapperClassName, children }) => (
-  <Spin
-    size={size}
-    spinning={spinning}
-    tip={tip}
-    wrapperClassName={wrapperClassName}
-    indicator={indicator}
-  >
+  <Spin size={size} spinning={spinning} tip={tip} wrapperClassName={wrapperClassName} indicator={indicator}>
     {children}
   </Spin>
 );

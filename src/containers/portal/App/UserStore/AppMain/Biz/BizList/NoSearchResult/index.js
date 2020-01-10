@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { intlObj } from 'utils/commonUtils';
+import noResultImage from 'images/bizstore/no-result.png';
 import messages from './messages';
 import NoResultBox from './noResultStyle';
-import noResultImage from 'images/bizstore/no-result.png';
 
 class NoSearchResult extends PureComponent {
   render() {

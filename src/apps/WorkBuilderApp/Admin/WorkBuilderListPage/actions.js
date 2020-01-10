@@ -19,3 +19,5 @@ export const successGetList = list => ({
   type: actionTypes.SUCCESS_GET_LIST,
   list,
 });
+
+export const removeWorkBuilderBySaga = rowData => ({ type: actionTypes.REMOVE_WORK_BUILDER_SAGA, rowData})

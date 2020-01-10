@@ -222,7 +222,8 @@ class MyPageTree extends Component {
     } = this.props;
 
     // 조건 DEFAULT_YN 조건으로 변경하기 - daemon 쿼리 변경 후
-    const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, SORT_SQ: 2 });
+    // const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, SORT_SQ: 2 });
+    const findRootBizMenuIndex = _.filter(treeData, { DEFAULT_YN: 'Y',  LVL: 1, NAME_ENG : 'Personal Biz' });
     const findRootBizMenuID = findRootBizMenuIndex[0] ? findRootBizMenuIndex[0].MENU_ID : '';
 
     const rootRowInfo = {};
@@ -369,7 +370,7 @@ class MyPageTree extends Component {
           moveNode(treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           // console.debug('>>>>>>rowInfo node: ', node);
@@ -388,7 +389,7 @@ class MyPageTree extends Component {
             || (node.REF_TYPE === 'B' && node.NODE_TYPE === 'F' && node.REF_ID === -1);
 
           let title; // 트리 노드 제목
-          let buttons = null; // 트리 노드 마우스 오버시 노출 될 버튼
+          let buttons = []; // 트리 노드 마우스 오버시 노출 될 버튼
 
           const handleTreeOnClick = () => {
             this.setState({
@@ -403,7 +404,7 @@ class MyPageTree extends Component {
           const regBtnTitle =  (node.key === findRootBizMenuID || node.path[1] === findRootBizMenuID) ?
             '업무등록' : '앱등록';
           const bizYn =  (node.key === findRootBizMenuID || node.path[1] === findRootBizMenuID) ? 'Y' : 'N';
-
+          console.debug('~~~~~', findRootBizMenuID, findRootBizMenuID);
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때 , 개인화 홈 메뉴가 아닐 경우
           if (onHoverKey === node.key && !(node.DEFAULT_YN === 'Y' && node.NODE_TYPE === 'E')) {
             buttons = [

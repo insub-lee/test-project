@@ -372,15 +372,8 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'appRating', saga });
 const withReducer = injectReducer({ key: 'appRating', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppRating);
+export default compose(withReducer, withSaga, withConnect)(AppRating);

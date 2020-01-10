@@ -63,32 +63,30 @@ class Grid extends PureComponent {
     }
   }
 
-  onGridReady = (params) => {
+  onGridReady = params => {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
   };
 
   render() {
-    const {
-      pmSheetDataList,
-    } = this.props;
+    const { pmSheetDataList } = this.props;
     return (
       <div
         className="ag-theme-balham"
         style={{
-        height: '500px',
-        width: '1500px',
-      }}
+          height: '500px',
+          width: '1500px',
+        }}
       >
         <AgGridReact
           rowSelection="multiple"
-          enableSorting={true}
-          enableFilter={true}
+          enableSorting
+          enableFilter
           columnDefs={this.state.columnDefs}
           rowData={pmSheetDataList}
           defaultColDef={this.state.defaultColDef}
           onGridReady={this.onGridReady}
-          suppressRowTransform={true}
+          suppressRowTransform
           // suppressCsvExport={true}
         />
       </div>

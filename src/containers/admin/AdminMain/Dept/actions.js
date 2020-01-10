@@ -14,17 +14,7 @@ export const getChangeDeptTreeData = DEPT_ID => ({
   DEPT_ID,
 });
 
-export const insertDept = (
-  DEPT_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const insertDept = (DEPT_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.INSERT_DEPT,
   payload: {
     DEPT_CD,
@@ -39,18 +29,7 @@ export const insertDept = (
   },
 });
 
-export const updateDept = (
-  DEPT_ID,
-  DEPT_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const updateDept = (DEPT_ID, DEPT_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.UPDATE_DEPT,
   payload: {
     DEPT_ID,

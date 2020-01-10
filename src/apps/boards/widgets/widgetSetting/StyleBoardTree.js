@@ -49,7 +49,7 @@ const StyleBoardTree = styled.div`
       }
   
       .rst__ordinaryButton {
-        left: -16px !important;
+        left: -13px !important;
         top: calc(50% - 3px);
         width: 8px;
         height: 8px;

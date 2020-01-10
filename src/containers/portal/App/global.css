@@ -98,8 +98,8 @@ html {
   content: '';
   background-repeat: no-repeat;
   background-position: 0.125rem 0.125rem;
-  top: initial;
-  left: initial;
+  top: 0;
+  left: 0;
   border: none;
   transform: none;
 }

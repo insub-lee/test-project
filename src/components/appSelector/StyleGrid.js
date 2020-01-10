@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 const StyleGrid = styled.div`
-
-.react-grid-Main {
+  .react-grid-Main {
     outline: 0;
   }
   .react-grid-Grid {
@@ -12,11 +11,11 @@ const StyleGrid = styled.div`
   .react-grid-Header {
     background: #ffffff;
     border-bottom: 1px solid #333333;
-  
+
     .react-grid-HeaderRow {
       width: 366px !important;
     }
-  
+
     .react-grid-HeaderCell {
       //left: 40px !important;
       border-right: 0;
@@ -30,12 +29,12 @@ const StyleGrid = styled.div`
         left: 0 !important;
         width: 40px !important;
       }
-  
+
       & > .react-grid-checkbox-container {
         position: relative;
         padding: 0;
         overflow: hidden;
-  
+
         .react-grid-checkbox-label {
           top: 10px;
           width: 13px;
@@ -43,7 +42,7 @@ const StyleGrid = styled.div`
           transform: none; // 흐리게 보이는 현상 해결
         }
       }
-  
+
       &:last-child {
         padding: 0;
       }
@@ -51,27 +50,27 @@ const StyleGrid = styled.div`
   }
 
   .listDivImg {
-    position:relative;
-    overflow:hidden;
-    border-radius:50%;
-    display:inline-block;
-    vertical-align:middle;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
     width: 25px;
     height: 25px;
-    margin:0px 10px 0px 0px;
-    
+    margin: 0px 10px 0px 0px;
+
     .listImg {
-      position:absolute;
-      top:0;
-      left:0;
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
     }
   }
-  
+
   .react-grid-Viewport {
     height: 353px;
     border-bottom: 1px solid #dadbdb;
-  
+
     .react-grid-Canvas {
       top: 1px;
       height: 353px;
@@ -84,21 +83,21 @@ const StyleGrid = styled.div`
       }
     }
   }
-  
-  .react-grid-Row.react-grid-Row--even, 
+
+  .react-grid-Row.react-grid-Row--even,
   .react-grid-Row.react-grid-Row--even.row-selected {
     .react-grid-Cell {
       background-color: #f7f7f7;
     }
   }
-  
-  .react-grid-Row.react-grid-Row--odd, 
+
+  .react-grid-Row.react-grid-Row--odd,
   .react-grid-Row.react-grid-Row--odd.row-selected {
     .react-grid-Cell {
       background-color: #ffffff;
     }
   }
-  
+
   .react-grid-Cell {
     //left: 40px !important;
     padding: 0;
@@ -122,7 +121,7 @@ const StyleGrid = styled.div`
     }
   }
 
-  .react-grid-Row.row-selected, 
+  .react-grid-Row.row-selected,
   .react-grid-Row .row-selected {
     background-color: transparent;
   }
@@ -133,23 +132,23 @@ const StyleGrid = styled.div`
     color: #707070;
     line-height: 340px;
   }
-  
+
   // checkbox style
   // 1. 기존 style reset
-  .radio-custom+.radio-custom-label:before,
-  .react-grid-checkbox+.react-grid-checkbox-label:before {
+  .radio-custom + .radio-custom-label:before,
+  .react-grid-checkbox + .react-grid-checkbox-label:before {
     height: 14px;
     border: none;
     background-color: transparent;
   }
-  
-  .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
+
+  .react-grid-checkbox:checked + .react-grid-checkbox-label:before {
     background-color: transparent;
     box-shadow: none;
   }
-  
-  .radio-custom+.radio-custom-label, 
-  .react-grid-checkbox+.react-grid-checkbox-label {
+
+  .radio-custom + .radio-custom-label,
+  .react-grid-checkbox + .react-grid-checkbox-label {
     position: relative;
     width: 13px;
     height: 13px;
@@ -158,8 +157,8 @@ const StyleGrid = styled.div`
     border: 1px solid #707070;
     background-color: #ffffff;
   }
-  
-  .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
+
+  .react-grid-checkbox:checked + .react-grid-checkbox-label:before {
     position: absolute;
     top: 0;
     left: 3px;

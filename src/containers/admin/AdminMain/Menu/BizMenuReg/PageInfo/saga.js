@@ -54,7 +54,7 @@ export function* deleteWidget(payload) {
   const { code } = response;
 
   if (code === 200) {
-    const nWidgetList = widgetList.filter((o) => {
+    const nWidgetList = widgetList.filter(o => {
       if (Number(o.get('id')) === WIDGET_ID) {
         return false;
       }
@@ -160,7 +160,6 @@ export function* updateWidget(payload) {
     });
   }
 }
-
 
 export default function* rootSaga() {
   yield takeLatest(constants.GET_BIZ_INFO, getBizInfo);

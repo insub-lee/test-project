@@ -12,6 +12,10 @@ const reducer = (state = initialState, action) => {
       const { info } = action;
       return state.set('info', fromJS(info));
     }
+    case actionTypes.SET_CHANGEVALUE: {
+      const { storage, key, val } = action;
+      return state.setIn(['info', storage, key], val);
+    }
     case actionTypes.LOADING_ON:
       return state.set('isLoading', true);
     case actionTypes.LOADING_OFF:

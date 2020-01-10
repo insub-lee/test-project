@@ -26,39 +26,28 @@ class AppInfo extends Component {
     const { params } = match;
     const { APP_ID } = params;
 
-    if (APP_ID
-      && this.state.appId !== APP_ID) {
+    if (APP_ID && this.state.appId !== APP_ID) {
       this.setState({
         appId: APP_ID,
       });
     }
   }
 
-
   render() {
     return (
       <div style={{ display: 'flex', flexFlow: 'column' }}>
         <AppDetailStyle style={{ margin: '30px auto 0' }}>
           <ErrorBoundary>
-            <AppBasicInfo
-              targetUrl={window.location.href}
-              appId={this.state.appId}
-              visibleInfo={false}
-            />
+            <AppBasicInfo targetUrl={window.location.href} appId={this.state.appId} visibleInfo={false} />
           </ErrorBoundary>
           <ErrorBoundary>
-            <AppScreenshot
-              appId={this.state.appId}
-              gubun={1}
-            />
+            <AppScreenshot appId={this.state.appId} gubun={1} />
           </ErrorBoundary>
           <ErrorBoundary>
             <AppQna appId={this.state.appId} gubun="a" />
           </ErrorBoundary>
           <ErrorBoundary>
-            <AppRating
-              appId={this.state.appId}
-            />
+            <AppRating appId={this.state.appId} />
           </ErrorBoundary>
         </AppDetailStyle>
       </div>

@@ -21,10 +21,7 @@ export default class WidgetsBox extends PureComponent {
     }
 
     return (
-      <WidgetBox
-        className={widgetBoxClass}
-        style={boxStyle}
-      >
+      <WidgetBox className={widgetBoxClass} style={boxStyle}>
         {children}
       </WidgetBox>
     );

@@ -15,4 +15,3 @@ export const SYSTEM_LINK = 'admin/AdminMain/App/AppUpdateForm/AppUPdate/SYSTEM_L
 export const APP_ICON_ARR = 'admin/AdminMain/App/AppUpdateForm/AppUPdate/APP_ICON_ARR';
 export const APP_PROCESS_ARR = 'admin/AdminMain/App/AppUpdateForm/AppUPdate/APP_PROCESS_ARR';
 export const APP_MANUAL_ARR = 'admin/AdminMain/App/AppUpdateForm/AppUPdate/APP_MANUAL_ARR';
-

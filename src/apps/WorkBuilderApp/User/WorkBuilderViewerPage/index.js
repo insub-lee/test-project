@@ -12,7 +12,7 @@ import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import View from 'components/WorkBuilder/View';
-import SignLine from 'apps/WorkFlow/Admin/SignLine';
+import SignLine from 'apps/Workflow/Admin/SignLine';
 
 import * as selectors from './selectors';
 import * as actions from './actions';

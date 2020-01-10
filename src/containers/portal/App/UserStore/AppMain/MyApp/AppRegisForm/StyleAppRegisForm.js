@@ -7,7 +7,6 @@ import IconDeleteImg from 'images/bizstore/icon-deleteImg.png';
 import DelListItem from 'images/common/widget-icon-delete.png';
 
 const StyleAppRegisForm = styled.div`
-
   .sectionTitle {
     padding: 44px 0 20px;
     color: #404040;
@@ -25,7 +24,7 @@ const StyleAppRegisForm = styled.div`
     letter-spacing: -0.5px;
 
     &:before {
-      content:url(${IconOption});
+      content: url(${IconOption});
       position: absolute;
       top: -3px;
       left: 0;
@@ -35,10 +34,10 @@ const StyleAppRegisForm = styled.div`
 
     //필수입력 표시
     &.required:before {
-      content:url(${IconRequired});
+      content: url(${IconRequired});
     }
   }
-  
+
   .ant-form-item {
     // 필수 입력일 때
     &.required {
@@ -46,7 +45,7 @@ const StyleAppRegisForm = styled.div`
         padding-left: 12px;
 
         &:before {
-          content:url(${IconRequired});
+          content: url(${IconRequired});
           position: absolute;
           top: -2px;
           left: 0;
@@ -81,7 +80,8 @@ const StyleAppRegisForm = styled.div`
       padding-left: 0;
     }
 
-    &.attachFile, &.edit {
+    &.attachFile,
+    &.edit {
       position: absolute;
       right: 0;
 
@@ -100,7 +100,6 @@ const StyleAppRegisForm = styled.div`
     }
   }
 
-
   // Form.Item 스타일
   .ant-row.ant-form-item {
     min-height: 32px;
@@ -115,7 +114,7 @@ const StyleAppRegisForm = styled.div`
         line-height: 1;
 
         &:after {
-          content: "";
+          content: '';
         }
       }
     }
@@ -144,10 +143,10 @@ const StyleAppRegisForm = styled.div`
     border: 1px solid #cccccc;
     border-radius: 0;
     line-height: 35px;
-    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+    @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
       /* IE10+ specific styles go here */
       line-height: 1;
-    } 
+    }
 
     &:focus {
       border-color: #cccccc;
@@ -171,8 +170,6 @@ const StyleAppRegisForm = styled.div`
     line-height: 1.3;
     resize: none;
   }
-
-
 
   //색상 선택
   .typeOptions {
@@ -207,7 +204,6 @@ const StyleAppRegisForm = styled.div`
         > span > div {
           border-color: #000000 !important;
         }
-
       }
 
       > span > div {
@@ -215,9 +211,8 @@ const StyleAppRegisForm = styled.div`
         line-height: 35px;
         border: 2px solid transparent;
       }
-
     }
-  } 
+  }
 
   //회색 영역
   .subFormArea {
@@ -237,7 +232,6 @@ const StyleAppRegisForm = styled.div`
         }
       }
     }
-
   }
 
   // 안내(info) 목록
@@ -291,11 +285,11 @@ const StyleAppRegisForm = styled.div`
     border: 1px solid #cccccc;
     vertical-align: top;
 
-    // 커스터마이징    
+    // 커스터마이징
     .resultsTableWrapper {
       width: calc(100% - 17px);
       padding: 5px;
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         margin-bottom: 20px;
       }
@@ -340,7 +334,6 @@ const StyleAppRegisForm = styled.div`
         }
       }
     }
-
   }
 
   // 파일 업로드
@@ -359,7 +352,7 @@ const StyleAppRegisForm = styled.div`
         overflow: hidden;
       }
     }
-    
+
     .readyToUpload {
       width: 120px;
       height: 120px;
@@ -374,7 +367,8 @@ const StyleAppRegisForm = styled.div`
     }
   }
 
-  .deleteIconWrapper, .deleteScreenshots {
+  .deleteIconWrapper,
+  .deleteScreenshots {
     position: absolute;
     width: 15px;
     height: 15px;
@@ -426,7 +420,7 @@ const StyleAppRegisForm = styled.div`
         // IE11 이슈 해결
         // max-width: 646px;
         padding: 0 !important;
-        margin: 0 !important;                
+        margin: 0 !important;
 
         > div {
           position: relative;
@@ -453,17 +447,15 @@ const StyleAppRegisForm = styled.div`
             border: 1px dashed #a4a4a4;
             background: url(${IconFileUpload}) no-repeat 50% 50%;
             cursor: pointer;
-    
+
             &:hover {
               border-color: #222222;
               background-image: url(${IconFileUploadHover});
             }
           }
         }
-
       }
-
-   }
+    }
   }
 
   //앱추가
@@ -508,7 +500,6 @@ const StyleAppRegisForm = styled.div`
         background-image: url(${IconFileUploadHover});
       }
     }
-
   }
 `;
 // 앱 버전
@@ -529,7 +520,7 @@ const Vesions = styled.div`
       padding-right: 10px;
 
       &:after {
-        content:" . ";
+        content: ' . ';
         position: absolute;
         display: inline-block;
         width: 10px;

@@ -11,6 +11,8 @@ import ModalDrag from 'components/ModalDrag';
 import * as feed from 'components/Feedback/functions';
 import { intlObj, lang } from 'utils/commonUtils';
 import basicStyle from 'config/basicStyle';
+import Modals from 'components/Modal/index';
+import WithDirection from 'config/withDirection';
 import messages from '../messages';
 
 import reducer from './reducer';
@@ -20,9 +22,7 @@ import * as actions from './actions';
 
 import StyleAppRating from './StyleAppRating';
 
-import Modals from 'components/Modal/index';
 import ModalStyle from '../../../components/Modal/StyleModal';
-import WithDirection from 'config/withDirection';
 
 import { BtnWhiteRate, BtnLgtGray, BtnDkGray, BtnWhiteDel, BtnSeeMore } from '../../../components/uielements/buttons.style';
 import StyledButton from '../../../../../../../components/Button/StyledButton';

@@ -25,7 +25,7 @@ class DocSelectComp extends PureComponent {
   }
 
   componentDidMount() {
-    const { colData, CONFIG, id, getExtraApiData, extraApiData } = this.props;
+    const { colData, CONFIG, id, getExtraApiData } = this.props;
     const { searchApiType } = CONFIG.property;
     if (colData !== undefined && colData.trim() !== '') {
       const getApi = {
@@ -150,7 +150,11 @@ class DocSelectComp extends PureComponent {
     }
 
     if (extraApiData && extraApiData[`selected_${searchApiType}`] && setInitYn) {
-      const orgSelectionList = extraApiData[`selected_${searchApiType}`].dataList;
+      let orgSelectionList = [];
+      if (extraApiData[`selected_${searchApiType}`].dataList !== undefined) {
+        orgSelectionList = extraApiData[`selected_${searchApiType}`].dataList;
+      }
+
       const defaultSelection = orgSelectionList.map(item => ({
         key: item.task_seq,
         SP_ID: item.sp_id,
@@ -169,7 +173,7 @@ class DocSelectComp extends PureComponent {
     }
 
     return (
-      <React.Fragment>
+      <>
         <Row>
           <Col style={{ textAlign: 'center' }}>
             {compTitle}
@@ -189,7 +193,7 @@ class DocSelectComp extends PureComponent {
           onCancel={() => this.onClickModalBtn(false)}
           destroyOnClose
         >
-          <React.Fragment>
+          <>
             <div className="pop_tit">{modalTitle} 선택</div>
             <div className="pop_con">
               <Row>검색 키워드를 입력하세요.</Row>
@@ -201,7 +205,7 @@ class DocSelectComp extends PureComponent {
                   <AntdTable rowSelection={leftRowSelection} columns={columns} dataSource={leftTableData} pagination={{ size: 'small', pageSize: 7 }} />
                 </Col>
                 <Col span={2} style={{ textAlign: 'center', marginTop: '80px' }}>
-                  <React.Fragment>
+                  <>
                     <div>
                       <Button size="small" onClick={this.onClickRight} style={{ border: 'none', marginBottom: '10px' }}>
                         <span>
@@ -216,7 +220,7 @@ class DocSelectComp extends PureComponent {
                         </span>
                       </Button>
                     </div>
-                  </React.Fragment>
+                  </>
                 </Col>
                 <Col span={11}>
                   <AntdTable rowSelection={rightRowSelection} columns={columns} dataSource={selectedData} pagination={{ size: 'small', pageSize: 7 }} />
@@ -228,9 +232,9 @@ class DocSelectComp extends PureComponent {
                 </StyledButton>
               </Row>
             </div>
-          </React.Fragment>
+          </>
         </AntdModal>
-      </React.Fragment>
+      </>
     );
   }
 }

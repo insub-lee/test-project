@@ -17,3 +17,15 @@ export const enableLoading = () => ({
 export const disableoading = () => ({
   type: actionTypes.LOADING_OFF,
 });
+
+export const setChangeValue = (storage, key, val) => ({
+  type: actionTypes.SET_CHANGEVALUE,
+  storage,
+  key,
+  val,
+});
+
+export const setWorkInfo = workInfo => ({
+  type: actionTypes.SET_WORKINFO,
+  workInfo,
+});

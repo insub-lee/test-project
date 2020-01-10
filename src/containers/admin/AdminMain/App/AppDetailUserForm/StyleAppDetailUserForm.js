@@ -23,7 +23,7 @@ const StyleAppDetailUserForm = styled.div`
     letter-spacing: -0.5px;
 
     &:before {
-      content:url(${IconOption});
+      content: url(${IconOption});
       position: absolute;
       top: -3px;
       left: 0;
@@ -33,7 +33,7 @@ const StyleAppDetailUserForm = styled.div`
 
     //필수입력 표시
     &.required:before {
-      content:url(${IconRequired});
+      content: url(${IconRequired});
     }
   }
 
@@ -42,7 +42,7 @@ const StyleAppDetailUserForm = styled.div`
     padding: 0;
     margin-left: 10px;
 
-    .userPic {      
+    .userPic {
       > div {
         display: inline-block;
         width: 25px;
@@ -69,9 +69,9 @@ const StyleAppDetailUserForm = styled.div`
     width: 100%;
     height: auto;
     vertical-align: top;
-    
+
     .resultsTableWrapper {
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         margin-bottom: 20px;
       }
@@ -104,7 +104,6 @@ const StyleAppDetailUserForm = styled.div`
         }
       }
     }
-
   }
 
   .dsrcViewText {

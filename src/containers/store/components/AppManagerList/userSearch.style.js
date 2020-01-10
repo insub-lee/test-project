@@ -3,8 +3,8 @@ import { transition } from '../../../../config/style-util';
 // import WithDirection from '../../config/withDirection';
 
 const UserSearch = styled.div`
-
-  .history.visible, .results.visible {
+  .history.visible,
+  .results.visible {
     position: relative;
     width: 330px;
     height: 100%;
@@ -17,7 +17,8 @@ const UserSearch = styled.div`
     ${transition()};
   }
 
-  .history.visible:after, .results.visible:after {
+  .history.visible:after,
+  .results.visible:after {
     position: absolute;
     top: -4px;
     left: 50%;
@@ -28,7 +29,7 @@ const UserSearch = styled.div`
     background: #ffffff;
     border-top: 1px solid #a5a5a5;
     border-left: 1px solid #a5a5a5;
-    content: "";
+    content: '';
     transform: translateX(-50%) rotate(45deg);
   }
 
@@ -76,19 +77,19 @@ const UserSearch = styled.div`
     }
 
     div {
-      position:relative;
-      
-      vertical-align:middle;
-      overflow:hidden;
-      border-radius:50%;
-      width:25px;
-      height:25px;
-      
+      position: relative;
+
+      vertical-align: middle;
+      overflow: hidden;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+
       .listImg {
-        position:absolute;
-        top:0;
-        left:0;
-        width:100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
       }
     }
   }
@@ -106,8 +107,9 @@ const UserSearch = styled.div`
     line-height: 1;
     background-color: #f4f4f4;
 
-    .deleteHistoryAllBtn, .closeBtn {
-      height:36px !important;
+    .deleteHistoryAllBtn,
+    .closeBtn {
+      height: 36px !important;
       padding: 0 15px;
       color: #404040;
       font-size: 12px !important;

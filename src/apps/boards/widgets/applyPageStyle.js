@@ -37,7 +37,7 @@ const ApplyPageStyle = styled.div`
 
           &:after {
             content: "'";
-          }           
+          }
         }
       }
     }

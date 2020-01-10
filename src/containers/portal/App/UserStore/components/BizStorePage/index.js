@@ -147,14 +147,14 @@ function changeLayoutConfig(layoutConfig, view, items) {
 
   let count = 1;
   items.forEach((item, i) => {
-    let w = item.w;
+    let { w } = item;
 
     if (item.ow > layoutConfig.col) {
       w = layoutConfig.col;
     } else {
       w = item.ow;
     }
-    const h = item.h;
+    const { h } = item;
     cW2 = cW;
     cH2 = cH;
     while (cW2 + (w - 1) >= layoutConfig.col) {

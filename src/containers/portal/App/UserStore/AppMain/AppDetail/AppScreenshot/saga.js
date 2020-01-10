@@ -2,10 +2,10 @@ import { takeLatest, put, call } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 import * as feed from 'components/Feedback/functions';
 import { intlObj, lang } from 'utils/commonUtils';
+import { Axios } from 'utils/AxiosFunc';
 import messages from '../messages';
 
 import * as constants from './constants';
-import { Axios } from 'utils/AxiosFunc';
 
 export function* reqAppScreenshotList(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/store/appscreenshot/', payload.payload);

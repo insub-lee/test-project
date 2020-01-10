@@ -2,8 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as comp from '../../ArticleComponents/components';
 
-
-const Example = (props) => {
+const Example = props => {
   const { Ex } = props;
   return (
     <div>
@@ -13,7 +12,8 @@ const Example = (props) => {
         <Ex.App />
       </div>
       <comp.ArticleCode code={Ex.code} />
-      <br /><br />
+      <br />
+      <br />
     </div>
   );
 };
@@ -21,6 +21,5 @@ const Example = (props) => {
 Example.propTypes = {
   Ex: PropTypes.element.isRequired,
 };
-
 
 export default Example;

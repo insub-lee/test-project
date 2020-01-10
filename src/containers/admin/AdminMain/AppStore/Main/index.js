@@ -43,7 +43,7 @@ const MyPageMainStyle = styled.div`
     height: 100px;
     padding-top: 60px;
     color: #707070;
-    font-size: 16px;    
+    font-size: 16px;
   }
 
   .menu {
@@ -53,7 +53,12 @@ const MyPageMainStyle = styled.div`
     text-align: center;
     // border-top: 1px solid #222222;
 
-    &.sec01, &.sec02, &.sec03, &.sec04, &.sec05, &.sec06 {
+    &.sec01,
+    &.sec02,
+    &.sec03,
+    &.sec04,
+    &.sec05,
+    &.sec06 {
       background-repeat: no-repeat;
       background-position: 50% 70px;
     }
@@ -88,8 +93,6 @@ const MyPageMainStyle = styled.div`
       font-size: 14px;
     }
   }
-
- 
 `;
 
 class PageInfo extends Component {

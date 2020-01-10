@@ -1,9 +1,9 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import { intlObj } from 'utils/commonUtils';
+import { Axios } from 'utils/AxiosFunc';
 import * as actionType from './constants';
 import messages from './messages';
 
-import { Axios } from 'utils/AxiosFunc';
 /* eslint-disable */
 export function* getAppSecList(payload) {
   const { PAGE, PAGE_CNT, SORT_COLUMN, SORT_DIRECTION, APP_ID, REQ_STATUS_CD, SEARCH_TEXT } = payload;

@@ -12,7 +12,7 @@ const User = ({ profile, setFixedOpenMenu, fixedMenu }) => (
       </button>
       <div className="user-img">
         <img
-          src={`/img/thumb/200x200/${profile.PHOTO}`}
+          src={profile.PHOTO ? `/img/thumb/200x200/${profile.PHOTO}` : '/no_img_pro.jpg'}
           onError={e => {
             e.target.src = '/no_img_pro.jpg';
           }}

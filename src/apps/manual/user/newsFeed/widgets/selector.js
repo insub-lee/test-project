@@ -11,11 +11,7 @@ const selectWidgetDataList = () =>
   );
 
 // 세팅 - 전체 카테고리 목록
-const selectWidgetTotalCategory = () =>
-  createSelector(
-    selectNewsFeedData,
-    state => state.get('totalCategory'),
-  );
+const selectWidgetTotalCategory = () => createSelector(selectNewsFeedData, state => state.get('totalCategory'));
 
 // 세팅 - 선택된 카테고리
 const selectWidgetCategory = () =>

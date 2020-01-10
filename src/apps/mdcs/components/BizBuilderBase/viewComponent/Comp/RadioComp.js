@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Radio } from 'antd';
 import RadioGroup from 'apps/mdcs/components/RadioButton';
+
 const makeDataSource = apiData => {
   const tempData = [];
   apiData.categoryMapList
@@ -25,8 +26,16 @@ class RadioComp extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, CONFIG } = this.props;
-    getExtraApiData(id, CONFIG.property.apiArray);
+    const {
+      getExtraApiData,
+      id,
+      CONFIG: {
+        property: { mapId },
+      },
+    } = this.props;
+    const apiArray = [{ key: `radio_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
+    getExtraApiData(id, apiArray);
+    console.log('라디오디드마운트');
   }
 
   onChangeHandler = (changeFormData, id, CONFIG, changeValidationData, value) => {
@@ -42,7 +51,7 @@ class RadioComp extends Component {
     const {
       CONFIG,
       CONFIG: {
-        property: { apiKey },
+        property: { mapId },
       },
       colData,
       changeFormData,
@@ -51,19 +60,33 @@ class RadioComp extends Component {
       readOnly,
       extraApiData,
     } = this.props;
-    if (this.state.dataFlag && extraApiData[apiKey]) {
-      const dataSource = makeDataSource(extraApiData[apiKey]);
+    if (this.state.dataFlag && extraApiData[`radio_${mapId}`]) {
+      const dataSource = makeDataSource(extraApiData[`radio_${mapId}`]);
       this.setState({ dataFlag: false, dataSource });
     }
+
     return (
-      <RadioGroup
-        value={colData !== ' ' ? Number(colData) : undefined}
-        dataSource={this.state.dataSource}
-        onChange={e => this.onChangeHandler(changeFormData, id, CONFIG, changeValidationData, e.target.value)}
-        readOnly={readOnly || CONFIG.property.readOnly}
-      />
+      <>
+        {colData !== undefined ? (
+          <RadioGroup
+            value={colData !== ' ' ? Number(colData) : undefined}
+            dataSource={this.state.dataSource}
+            onChange={e => this.onChangeHandler(changeFormData, id, CONFIG, changeValidationData, e.target.value)}
+            readOnly={readOnly || CONFIG.property.readOnly}
+          />
+        ) : (
+          <RadioGroup value={1} dataSource={this.props.defaultDataSource} />
+        )}
+      </>
     );
   }
 }
 
 export default RadioComp;
+
+RadioComp.defaultProps = {
+  defaultDataSource: [
+    { value: 1, NAME_KOR: '라디오버튼' },
+    { value: 2, NAME_KOR: '라디오버튼' },
+  ],
+};

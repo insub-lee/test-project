@@ -23,7 +23,10 @@ const orgReducer = (state = initialState, action) => {
     case constants.SET_MAPLIST_ALL:
       return state.set('initType', 'ALL').set('mapList', action.mapList);
     case constants.SET_MAPLIST_SEARCH:
-      return state.set('initType', 'SEARCH').set('mapList', action.mapList).set('searchword', action.searchword);
+      return state
+        .set('initType', 'SEARCH')
+        .set('mapList', action.mapList)
+        .set('searchword', action.searchword);
     case constants.SET_MAPLIST_MORE:
       return state.set('mapList', action.mapList);
     default:

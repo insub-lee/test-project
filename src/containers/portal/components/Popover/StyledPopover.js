@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 const StyledPopover = Popover => styled(Popover)`
   display: inline-block;
-  
 `;
 
 export default { StyledPopover };

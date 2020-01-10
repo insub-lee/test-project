@@ -52,12 +52,7 @@ export function* insertDuty(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registDuty', payload.payload);
   const { code, dutyId } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.dutyInsert)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.dutyInsert)}</MessageContent>, 3);
     const DUTY_ID = PRNT_ID === 0 ? dutyId : selectedDept;
     if (PRNT_ID === 0) {
       yield put({
@@ -88,12 +83,7 @@ export function* updateDuty(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updateDuty', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.dutyUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.dutyUpdate)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_DUTY_COMBO_LIST,
@@ -114,7 +104,7 @@ export function* updateDuty(payload) {
     yield put({
       type: actionType.GET_DUTY_COMBO_LIST,
       DUTY_ID: selectedDept,
-    });    
+    });
   }
 }
 
@@ -123,12 +113,7 @@ export function* deleteDuty(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/deleteDuty/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.dutyDelete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.dutyDelete)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_DUTY_COMBO_LIST,
@@ -147,19 +132,13 @@ export function* deleteDuty(payload) {
   }
 }
 
-
 export function* moveDuty(payload) {
   const { PRNT_ID, treeData } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/moveDuty', { DUTY_ID: PRNT_ID, treeData });
   const { code } = response;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.dutyUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.dutyUpdate)}</MessageContent>, 3);
     yield put({
       type: actionType.GET_CHANGE_DUTY_DATA,
       DUTY_ID: PRNT_ID,

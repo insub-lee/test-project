@@ -8,7 +8,7 @@ const StyleDataGrid = styled.div`
 
     .react-grid-Grid {
       border: 0;
-      
+
       // Header 영역
       .react-grid-Header {
         height: 41px !important;
@@ -34,11 +34,14 @@ const StyleDataGrid = styled.div`
               line-height: 40px;
               text-align: center;
 
-              &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+              &:nth-child(2),
+              &:nth-child(3),
+              &:nth-child(4),
+              &:nth-child(5) {
                 text-align: left;
                 padding-left: 10px;
               }
-              
+
               > .react-grid-checkbox-container > .react-grid-checkbox-label {
                 // top: 5px !important;
                 transform: translateY(0);
@@ -49,7 +52,10 @@ const StyleDataGrid = styled.div`
         }
       }
 
-      .react-grid-Cell:focus{outline:0px solid #66afe9;outline-offset:-2px}
+      .react-grid-Cell:focus {
+        outline: 0px solid #66afe9;
+        outline-offset: -2px;
+      }
 
       .react-grid-Viewport {
         top: 41px !important;
@@ -67,12 +73,17 @@ const StyleDataGrid = styled.div`
             color: #404040;
             text-align: center;
 
-            &:nth-child(2), &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4),
+            &:nth-child(5) {
               text-align: left;
               padding: 0 10px;
             }
 
-            &:nth-child(3), &:nth-child(4), &:nth-child(5) {
+            &:nth-child(3),
+            &:nth-child(4),
+            &:nth-child(5) {
               div {
                 text-overflow: ellipsis;
                 white-space: nowrap;
@@ -85,20 +96,20 @@ const StyleDataGrid = styled.div`
 
       // checkbox style
       // 1. 기존 style reset
-      .radio-custom+.radio-custom-label:before,
-      .react-grid-checkbox+.react-grid-checkbox-label:before {
+      .radio-custom + .radio-custom-label:before,
+      .react-grid-checkbox + .react-grid-checkbox-label:before {
         height: 16px;
         border: none;
         background-color: transparent;
       }
 
-      .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
+      .react-grid-checkbox:checked + .react-grid-checkbox-label:before {
         background-color: transparent;
         box-shadow: none;
       }
 
-      .radio-custom+.radio-custom-label, 
-      .react-grid-checkbox+.react-grid-checkbox-label {
+      .radio-custom + .radio-custom-label,
+      .react-grid-checkbox + .react-grid-checkbox-label {
         position: relative;
         width: 13px;
         height: 13px;
@@ -107,7 +118,7 @@ const StyleDataGrid = styled.div`
         background-color: #ffffff;
       }
 
-      .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
+      .react-grid-checkbox:checked + .react-grid-checkbox-label:before {
         position: absolute;
         top: 1px;
         left: 4.7px;
@@ -120,13 +131,12 @@ const StyleDataGrid = styled.div`
         background-color: #ffffff;
         transform: rotate(45deg) scale(1);
       }
-
     }
   }
   // admin > 다국어 메시지
   &.globalLang {
     //체크박스 checked 위치
-    .react-grid-checkbox:checked+.react-grid-checkbox-label:before {
+    .react-grid-checkbox:checked + .react-grid-checkbox-label:before {
       top: 0 !important;
       left: 3px !important;
     }

@@ -20,9 +20,15 @@ class CheckListComp extends Component {
       getExtraApiData,
       id,
       CONFIG: {
-        property: { apiArray },
+        property: { mapId },
       },
     } = this.props;
+    const apiArray = [];
+    if (mapId.length > 0) {
+      mapId.map(_mapId => {
+        apiArray.push({ key: `checkList_${_mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${_mapId}`, type: 'GET' });
+      });
+    }
     getExtraApiData(id, apiArray);
   }
 
@@ -85,13 +91,13 @@ class CheckListComp extends Component {
       extraApiData,
       isCustom,
       CONFIG: {
-        property: { apiArray },
+        property: { mapId },
       },
     } = this.props;
     if (this.state.apiFlag) {
-      const keyList = apiArray.map(x => x.key);
+      const keyList = mapId.map(x => `checkList_${x}`);
       if (keyList.filter(key => extraApiData[key] !== undefined).length === keyList.length) {
-        const dataSource = keyList.map(key => ({ groupName: key, dataSet: extraApiData[key].categoryMapList }));
+        const dataSource = keyList.map(key => ({ groupName: extraApiData[key].categoryMapList[0].NAME_KOR, dataSet: extraApiData[key].categoryMapList }));
 
         if (this.state.initFlag && colData !== ' ') {
           keyList.find(x => {
@@ -104,7 +110,7 @@ class CheckListComp extends Component {
       }
     }
     return (
-      <React.Fragment>
+      <>
         {readOnly ? (
           <Input value={this.state.selectedText} readOnly></Input>
         ) : (
@@ -115,6 +121,7 @@ class CheckListComp extends Component {
               </a>
             }
             value={this.state.selectedText}
+            placeholder={colData === undefined && 'CheckList'}
             readOnly
           ></Input>
         )}
@@ -136,7 +143,7 @@ class CheckListComp extends Component {
             isCustom={isCustom}
           ></CheckSelectList>
         </Modal>
-      </React.Fragment>
+      </>
     );
   }
 }

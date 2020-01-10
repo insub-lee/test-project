@@ -7,9 +7,7 @@ import Input from 'components/Input';
 import ScrollBar from 'react-custom-scrollbars';
 import StyleUserTree from 'style/StyleUserTree';
 import _ from 'lodash';
-import {
-  SortableTreeWithoutDndContext as SortableTree,
-} from './resource/react-sortable-tree';
+import { SortableTreeWithoutDndContext as SortableTree } from './resource/react-sortable-tree';
 import messages from './messages';
 import './app.css';
 import CustomTheme from './theme';
@@ -19,9 +17,7 @@ class Tree extends Component {
   constructor(props) {
     super(props);
 
-    const {
-      treeData,
-    } = props;
+    const { treeData } = props;
 
     this.state = {
       searchFocusIndex: 0,
@@ -45,8 +41,7 @@ class Tree extends Component {
 
   componentDidUpdate(prevProps) {
     const { treeData } = this.props;
-    if (treeData.length !== 0 && prevProps.treeData.length !== 0
-          && treeData[0].key !== prevProps.treeData[0].key) {
+    if (treeData.length !== 0 && prevProps.treeData.length !== 0 && treeData[0].key !== prevProps.treeData[0].key) {
       const treeDataTemp = treeData[0];
       this.setDeptName(treeDataTemp);
     }
@@ -54,10 +49,10 @@ class Tree extends Component {
 
   resetCheckedList = () => {
     this.setState({ checkedList: [] });
-  }
+  };
 
   // 트리의 체크박스 체크 시 불리는 함수로, loadSelected~를 호출하여 선택목록에 담을 준비를 함
-  onCheckChange = (event) => {
+  onCheckChange = event => {
     const { checkedList, deptName } = this.state;
     const { loadSelected, selectSingleDept } = this.props;
     const { target } = event;
@@ -93,13 +88,13 @@ class Tree extends Component {
         checkedList: deptIdArr,
       });
     }
-  }
+  };
 
-  setDeptName = (treeDataTemp) => {
+  setDeptName = treeDataTemp => {
     this.setState({
       deptName: treeDataTemp[`NAME_${lang.translator[lang.getLocale()]}`],
     });
-  }
+  };
 
   // 트리의 변화 또는 트리의 노드 클릭 시 불리는 함수
   updateTreeData(treeData, selectedIndex) {
@@ -111,12 +106,8 @@ class Tree extends Component {
     // }
   }
 
-
   render() {
-    const {
-      searchFocusIndex,
-      checkedList,
-    } = this.state;
+    const { searchFocusIndex, checkedList } = this.state;
 
     const {
       initializeSearchInput,
@@ -146,7 +137,10 @@ class Tree extends Component {
 
     const customSearchMethod = ({ node, searchQuery }) =>
       searchQuery &&
-      lang.get('NAME', node).toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+      lang
+        .get('NAME', node)
+        .toLowerCase()
+        .indexOf(searchQuery.toLowerCase()) > -1;
 
     return (
       <StyleUserTree
@@ -158,83 +152,65 @@ class Tree extends Component {
           background: '#f5f5f5',
           marginTop: isTab ? 0 : 15,
         }}
-        pl={isTreeCheckbox ? '22px' : '0px'}
+        pl={isTreeCheckbox ? '2px' : '0px'}
       >
         <div style={{ flex: '0 0 auto' }}>
           <div>
-            <form
-              style={{ display: 'block' }}
-              onSubmit={event => event.preventDefault()}
-            >
+            <form style={{ display: 'block' }} onSubmit={event => event.preventDefault()}>
               <div className="searchOptions">
                 {/* grp 트리인 경우 selectbox 제거 */}
-                {
-                  /* eslint-disable */
-                  treeType === 'grp'
-                    ?
-                      isDeptSelectbox
-                        ?
-                          <div className="selectWrapper" style={{ marginBottom: 10 }}>
-                            <select
-                              value={selectedDept}
-                              onChange={e => changeTreeData(e.target.value)}
-                            >
-                              {
-                                organizationData.map(dept => (
-                                  <option value={dept.SITE_ID} key={dept.SITE_ID}>
-                                    {lang.get('NAME', dept)}
-                                  </option>
-                                ))
-                              }
-                            </select>
-                          </div>
-                        :
-                        ''
-                    :
-                        <div className="selectWrapper" style={{ marginBottom: 10 }}>
-                          <select
-                            value={selectedDept}
-                            onChange={e => changeTreeData(e.target.value)}
-                          >
-                            {
-                              organizationData.map((dept) => {
-                                let v = '';
-                                switch (treeType) {
-                                  case 'pstn':
-                                    v = dept.PSTN_ID;
-                                    break;
-                                  case 'duty':
-                                    v = dept.DUTY_ID;
-                                    break;
-                                  default:
-                                    v = dept.DEPT_ID;
-                                    break;
-                                }
+                {treeType === 'grp' && isDeptSelectbox && (
+                  <div className="selectWrapper" style={{ marginBottom: 10 }}>
+                    <select value={selectedDept} onChange={e => changeTreeData(e.target.value)}>
+                      {organizationData.map(dept => (
+                        <option value={dept.SITE_ID} key={dept.SITE_ID}>
+                          {lang.get('NAME', dept)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+                {treeType !== 'grp' && (
+                  <div className="selectWrapper" style={{ marginBottom: 10 }}>
+                    <select value={selectedDept} onChange={e => changeTreeData(e.target.value)}>
+                      {organizationData.map(dept => {
+                        let v = '';
+                        switch (treeType) {
+                          case 'pstn':
+                            v = dept.PSTN_ID;
+                            break;
+                          case 'duty':
+                            v = dept.DUTY_ID;
+                            break;
+                          default:
+                            v = dept.DEPT_ID;
+                            break;
+                        }
 
-                                return (
-                                  <option value={v} key={v}>
-                                    {lang.get('NAME', dept)}
-                                  </option>
-                                );
-                              })
-                            }
-                          </select>
-                        </div>
-                        /* eslint-disable */
-                      }
-                <div
-                  className="inputWrapper"
-                >
+                        return (
+                          <option value={v} key={v}>
+                            {lang.get('NAME', dept)}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                )}
+                <div className="inputWrapper">
                   <label htmlFor="find-box">
                     <Input
                       id="find-box"
                       type="text"
                       value={searchString}
-                      onChange={(event) => {
+                      onChange={event => {
                         setSearchString(event.target.value, treeType);
                       }}
-                      onFocus={() => { this.setState({ isFocus: true }); }}
-                      onBlur={() => { this.setState({ isFocus: false }); }}
+                      onFocus={() => {
+                        this.setState({ isFocus: true });
+                      }}
+                      onBlur={() => {
+                        this.setState({ isFocus: false });
+                      }}
                     />
                   </label>
                   <Button className="searchButton" title={intlObj.get(messages.search)} />
@@ -244,25 +220,21 @@ class Tree extends Component {
           </div>
         </div>
         <div style={{ flex: '1 0 50%', marginTop: 10, paddingLeft: 15 }}>
-          <ScrollBar
-            style={{ width: 280, height: '100%' }}
-            autoHide
-            autoHideTimeout={1000}
-            autoHideDuration={200}
-          >
+          <ScrollBar style={{ width: 280, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
             <SortableTree
+              canDrag={false}
               theme={CustomTheme}
               treeData={treeData}
-              onChange={(treeData) => { this.updateTreeData(treeData, selectedIndex); }}
+              onChange={treeData => {
+                this.updateTreeData(treeData, selectedIndex);
+              }}
               searchMethod={customSearchMethod}
-              searchQuery={searchString && searchString.length !== 0
-                            ? searchString : selectedUserDeptName}
+              searchQuery={searchString && searchString.length > 0 ? searchString : selectedUserDeptName}
               searchFocusOffset={searchFocusIndex}
               style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
               isVirtualized={false}
               generateNodeProps={({ node }) => {
                 const handleOnClick = () => {
-
                   // Organization index.js 자체 메소드
                   // initializeSearchInput: Organization index.js의 자체 메소드
                   if (initializeSearchInput) {
@@ -287,7 +259,7 @@ class Tree extends Component {
                     } else {
                       // 세션, props 모두 SITE_ID가 없는 경우 트리 위의 selectbox에 선택된 사이트의 SITE_ID값 사용
                       // 이 때, selectbox를 한번도 선택하지 않았을 경우 selectbox 목록 중 첫번째 목록의 SITE_ID값 사용
-                      getUsers(node.key, selectedDept ? selectedDept : organizationData[0].SITE_ID);
+                      getUsers(node.key, selectedDept || organizationData[0].SITE_ID);
                     }
                   } else {
                     getUsers(node.key);
@@ -298,33 +270,51 @@ class Tree extends Component {
                   }
                 };
 
-                const btn = isTreeCheckbox ?
-                  (
-                    <Checkbox
-                      id={node.key}
-                      name={`${node.key}`}
-                      title={node[`NAME_${lang.translator[lang.getLocale()]}`]}
-                      defaultChecked={this.state.checked}
-                      onChange={this.onCheckChange}
-                      checked={checkedList.findIndex(t => t === node.key) !== -1}
-                      node={node}
-                    />
-                  ) :
-                  '';
+                const btn = isTreeCheckbox ? (
+                  <Checkbox
+                    id={node.key}
+                    name={`${node.key}`}
+                    title={node[`NAME_${lang.translator[lang.getLocale()]}`]}
+                    defaultChecked={this.state.checked}
+                    onChange={this.onCheckChange}
+                    checked={checkedList.findIndex(t => t === node.key) !== -1}
+                    node={node}
+                  />
+                ) : (
+                  ''
+                );
 
                 return {
                   // 글자 배경색 주황색으로 표시
-                  title: (<button className={`${node.key === selectedIndex ? 'active' : ''}`} onClick={handleOnClick}>{node[`NAME_${lang.translator[lang.getLocale()]}`]}</button>),
-                  buttons: [
-                    btn,
-                  ],
+                  title: (
+                    <>
+                      {isTreeCheckbox && (
+                        <Checkbox
+                          id={node.key}
+                          name={`${node.key}`}
+                          title={node[`NAME_${lang.translator[lang.getLocale()]}`]}
+                          defaultChecked={this.state.checked}
+                          onChange={this.onCheckChange}
+                          checked={checkedList.some(t => t === node.key)}
+                          node={node}
+                          style={{ verticalAlign: 'middle' }}
+                        />
+                      )}
+                      <button type="button" className={`${node.key === selectedIndex ? 'active' : ''}`} onClick={handleOnClick}>
+                        {node[`NAME_${lang.translator[lang.getLocale()]}`]}
+                      </button>
+                    </>
+                  ),
+                  buttons: [],
                 };
               }}
               rowHeight={24}
               scaffoldBlockPxWidth={20}
               className="orgTreeWrapper CustomSCRB"
-              onlyExpandSearchedNodes={true}
-              ref={(ref) => { this.tree = ref; }}
+              onlyExpandSearchedNodes
+              ref={ref => {
+                this.tree = ref;
+              }}
             />
           </ScrollBar>
         </div>
@@ -356,8 +346,8 @@ Tree.propTypes = {
   isProfile: PropTypes.bool.isRequired,
 
   isDeptSelectbox: PropTypes.bool.isRequired,
-  siteId: PropTypes.number.isRequired,
-  siteIdParam: PropTypes.number.isRequired,
+  siteId: PropTypes.number,
+  siteIdParam: PropTypes.number,
   selectSingleDept: PropTypes.bool,
 };
 
@@ -366,6 +356,8 @@ Tree.defaultProps = {
   changeTreeData: undefined,
   loadSelected: undefined,
   searchString: '',
+  siteId: undefined,
+  siteidParam: undefined,
   selectedUserDeptName: undefined,
   selectSingleDept: false,
 };

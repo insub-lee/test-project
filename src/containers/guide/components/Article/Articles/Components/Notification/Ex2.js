@@ -29,7 +29,7 @@ const App = () => (
         <Button>LB</Button>
       </Tooltip>
     </div>
-    <div style={{ width: buttonWidth, marginLeft: (buttonWidth * 4) + 24 }}>
+    <div style={{ width: buttonWidth, marginLeft: buttonWidth * 4 + 24 }}>
       <Tooltip placement="rightTop" title={text}>
         <Button>RT</Button>
       </Tooltip>

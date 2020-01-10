@@ -29,8 +29,8 @@ const StyleAdminList = styled.div`
     text-align: right;
 
     .totalResultNum {
-      float:left;
-      display:inline-block;
+      float: left;
+      display: inline-block;
       color: #f85023;
       font-size: 12px;
       line-height: 30px;
@@ -42,19 +42,18 @@ const StyleAdminList = styled.div`
       height: 30px;
       float: right;
 
-      > .DatePicker, 
+      > .DatePicker,
       > .RangePicker,
       > input {
         border: 1px solid #c1c1c1;
         border-radius: 4px;
       }
 
-      > .DatePicker, 
+      > .DatePicker,
       > .RangePicker {
-
         //커스텀 캘린더 아이콘으로 교체
         &:before {
-          content: "";
+          content: '';
           display: block;
           width: 30px;
           height: 30px;
@@ -65,9 +64,13 @@ const StyleAdminList = styled.div`
         }
 
         //기존 캘린더 아이콘 숨기기
-        .anticon.anticon-calendar.ant-calendar-picker-icon {display: none;}
+        .anticon.anticon-calendar.ant-calendar-picker-icon {
+          display: none;
+        }
         //캘린더 초기화 아이콘 숨기기
-        .anticon.anticon-close-circle.ant-calendar-picker-clear {display: none;}
+        .anticon.anticon-close-circle.ant-calendar-picker-clear {
+          display: none;
+        }
       }
 
       > .DatePicker {
@@ -90,10 +93,15 @@ const StyleAdminList = styled.div`
           border-color: transparent !important;
           background: transparent !important;
 
-          .ant-calendar-range-picker-input {background: #ffffff; border-color: #ffffff !important;}
+          .ant-calendar-range-picker-input {
+            background: #ffffff;
+            border-color: #ffffff !important;
+          }
         }
 
-        .ant-calendar-range-picker-separator {line-height: 30px;}
+        .ant-calendar-range-picker-separator {
+          line-height: 30px;
+        }
       }
 
       > input {
@@ -147,7 +155,7 @@ const StyleAdminList = styled.div`
       }
     }
   }
-  
+
   // cell에서 생략부호 보여주기
   .react-grid-Cell__value div span hltext,
   .react-grid-Cell__value div span div {

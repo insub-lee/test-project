@@ -154,10 +154,7 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-mdcs-user-Notice-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-mdcs-user-Notice-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 Notice.propTypes = {
   getCategoryMapListBySaga: PropTypes.func,
   categoryMapId: PropTypes.number,
@@ -171,8 +168,4 @@ Notice.defaultProps = {
   categoryMapId: 17,
   filteredDataByKey: [],
 };
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(Notice);
+export default compose(withSaga, withReducer, withConnect)(Notice);

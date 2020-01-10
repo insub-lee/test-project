@@ -16,5 +16,4 @@ const ArticleSpin = () => (
   </div>
 );
 
-
 export default ArticleSpin;

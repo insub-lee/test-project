@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
 import * as comp from '../../ArticleComponents/components';
 
-const ApiTable = (props) => {
+const ApiTable = props => {
   const { Api } = props;
   console.log(Api);
   return (
     <div>
       <comp.ArticleHead txt={Api.title} />
       <comp.ArticleText txt={Api.sub} />
-      <br /><br />
+      <br />
+      <br />
       <Table style={{ width: '100%' }}>
         <Table.Header>
           <Table.Row>
@@ -21,15 +22,13 @@ const ApiTable = (props) => {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {
-            Api.list.map(line => (
-              <Table.Row>
-                {
-                  line.map(tmp => (<Table.Cell>{tmp}</Table.Cell>))
-                }
-              </Table.Row>
-            ))
-          }
+          {Api.list.map(line => (
+            <Table.Row>
+              {line.map(tmp => (
+                <Table.Cell>{tmp}</Table.Cell>
+              ))}
+            </Table.Row>
+          ))}
         </Table.Body>
       </Table>
     </div>
@@ -39,6 +38,5 @@ const ApiTable = (props) => {
 ApiTable.propTypes = {
   Api: PropTypes.element.isRequired,
 };
-
 
 export default ApiTable;

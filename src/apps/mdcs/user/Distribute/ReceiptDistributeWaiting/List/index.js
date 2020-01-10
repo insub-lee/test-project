@@ -36,22 +36,24 @@ export class ReceiptDistributeWaiting extends Component {
     // getExtraApiData(id, apiArr);
   }
 
-  onOpenModal = () => { this.setState({ visible: true }); }
-  
-  onCloseModal = () => { this.setState({ visible: false }); }
+  onOpenModal = () => {
+    this.setState({ visible: true });
+  };
 
-  onClickRow = (record) => {
+  onCloseModal = () => {
+    this.setState({ visible: false });
+  };
+
+  onClickRow = record => {
     console.log('onClickRow record : ', record);
     this.onOpenModal();
-  }
+  };
 
-  handleOk = () => {
-
-  }
+  handleOk = () => {};
 
   handleCancel = () => {
     this.onCloseModal();
-  }
+  };
 
   render() {
     // const { extraApiData } = this.props;
@@ -66,15 +68,13 @@ export class ReceiptDistributeWaiting extends Component {
           onRow={(record, rowIndex) => {
             console.log('record, rowIndex : ', record, rowIndex);
             return {
-              onClick: () => { this.onClickRow(record) },
+              onClick: () => {
+                this.onClickRow(record);
+              },
             };
           }}
         />
-        <ReceiptDistributeModal
-          visible={visible}
-          handleOk={this.handleOk}
-          handleCancel={this.handleCancel}
-        />
+        <ReceiptDistributeModal visible={visible} handleOk={this.handleOk} handleCancel={this.handleCancel} />
       </Styled>
     );
   }
@@ -84,6 +84,5 @@ ReceiptDistributeWaiting.propTypes = {
   getExtraApiData: PropTypes.func.isRequired,
   extraApiData: PropTypes.objectOf(PropTypes.any).isRequired,
 };
-
 
 export default ReceiptDistributeWaiting;

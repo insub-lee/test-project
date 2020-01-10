@@ -13,16 +13,7 @@ import Card from 'containers/store/components/uielements/card.style';
 
 class Item extends PureComponent {
   render() {
-    const {
-      title,
-      subTitle,
-      starPoint,
-      starTotal,
-      registed,
-      registCategory,
-      registApp,
-      appIcon,
-    } = this.props;
+    const { title, subTitle, starPoint, starTotal, registed, registCategory, registApp, appIcon } = this.props;
 
     const subTit = subTitle.length > 40 ? `${subTitle.substring(0, 40)}...` : subTitle.substring(0, 40);
 
@@ -36,31 +27,29 @@ class Item extends PureComponent {
             <Button className="btnMenuRgt" title={intlObj.get(messages.registMenu)} onClick={registApp}>
               <img src={menuRgtIcon} alt={intlObj.get(messages.registMenu)} />
             </Button>
-          </div>) : (
-            <div className="displayCtgIcons">
-              <div className="infoRgt" title={intlObj.get(messages.using)}>{intlObj.get(messages.using)} </div>
+          </div>
+        ) : (
+          <div className="displayCtgIcons">
+            <div className="infoRgt" title={intlObj.get(messages.using)}>
+              {intlObj.get(messages.using)}{' '}
             </div>
-          )
-        }
+          </div>
+        )}
         <div className="CtgDivIcons">
           <img
             src={imgUrl.get('120x120', appIcon)}
             alt={intlObj.get(messages.appIcon)}
             style={{ position: 'absolute', top: 0, left: 0 }}
-            onError={(e) => { e.target.src = '/app_icon/icon_no_image.png'; }}
+            onError={e => {
+              e.target.src = '/app_icon/icon_no_image.png';
+            }}
           />
         </div>
         <h4 className="appTitle">{title}</h4>
         <p className="appDesc">{subTit}</p>
         <span className="ratingAvgInfo">
-          <Rate
-            allowHalf
-            disabled
-            value={parseFloat(starPoint)}
-          />
-          <span className="rateNumber">
-            {starTotal}
-          </span>
+          <Rate allowHalf disabled value={parseFloat(starPoint)} />
+          <span className="rateNumber">{starTotal}</span>
           <img src={userIcon} alt={intlObj.get(messages.memberNum)} className="userIcon" />
         </span>
       </Card>

@@ -19,7 +19,7 @@ class Weather extends Component {
 
   getMonthDay = day => {
     // console.log('day', day);
-    let today = new Date();
+    const today = new Date();
     if (day > 0) {
       today.setDate(new Date().getDate() + day);
     }
@@ -28,7 +28,7 @@ class Weather extends Component {
     const month = '00'.concat(today.getMonth() + 1).slice(-2);
     const todate = '00'.concat(today.getDate()).slice(-2);
     const yoil = week[today.getDay()];
-    const toMonthday = month + '/' + todate + ' (' + yoil + ')';
+    const toMonthday = `${month}/${todate} (${yoil})`;
     return toMonthday;
   };
 
@@ -44,7 +44,9 @@ class Weather extends Component {
   };
 
   getWhether = () => {
-    const { item: { LOCATION } } = this.props;
+    const {
+      item: { LOCATION },
+    } = this.props;
     switch (LOCATION) {
       case 'Chengju':
         return {
@@ -90,7 +92,12 @@ class Weather extends Component {
   render() {
     const { location } = this.state;
     const { item } = this.props;
-    const { data: weatherList, user: { viewType }, WIDGET_ID: widgetId, PAGE_ID: pageId } = item;
+    const {
+      data: weatherList,
+      user: { viewType },
+      WIDGET_ID: widgetId,
+      PAGE_ID: pageId,
+    } = item;
     const { todayWhether, futureWhether } = this.getWhether();
     return (
       <WeatherStyle className="weather">

@@ -21,5 +21,4 @@ export const SET_RANK_COMBO_LIST = 'admin/containers/admin/AdminMain/Account/SET
 export const GET_CHANGE_RANK_DATA = 'admin/containers/admin/AdminMain/Account/GET_CHANGE_RANK_DATA';
 export const SET_CHANGE_RANK_DATA = 'admin/containers/admin/AdminMain/Account/SET_CHANGE_RANK_DATA';
 
-
 export const IS_LOADING = 'admin/containers/admin/AdminMain/Account/IS_LOADING';

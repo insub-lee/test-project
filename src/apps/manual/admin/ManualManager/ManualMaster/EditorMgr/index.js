@@ -70,7 +70,7 @@ class EditorMgr extends Component {
     } = this.props;
 
     return (
-      <Fragment>
+      <>
         <StyleModal className="modalWrapper inPage">
           <div>
             <EditorMenu />
@@ -154,7 +154,7 @@ class EditorMgr extends Component {
         ) : (
           ''
         )}
-      </Fragment>
+      </>
     );
   }
 }
@@ -236,7 +236,4 @@ const mapDispatchToProps = dispatch => ({
   setGGEditorModal: flag => dispatch(actions.setGGEditorModalByReducr(flag)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(EditorMgr);
+export default connect(mapStateToProps, mapDispatchToProps)(EditorMgr);

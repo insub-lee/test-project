@@ -254,13 +254,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-manual-user-CSManualList-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-manual-user-CSManualList-saga', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(CSManualList);
+export default compose(withReducer, withSaga, withConnect)(CSManualList);

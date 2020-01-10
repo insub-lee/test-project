@@ -28,39 +28,39 @@ const StyleMyAppDetail = styled.div`
     .ant-tabs-bar {
       margin-bottom: 0;
       border-bottom-color: #d3d3d3;
-  
+
       .ant-tabs-nav-container {
         height: 60px;
         color: #909090;
         font-size: 16px;
-  
+
         // 좌우 스크롤 이동 화살표 숨기기
         &.ant-tabs-nav-container-scrolling {
           padding-left: 0;
           padding-right: 0;
-  
+
           .ant-tabs-tab-arrow-show {
             display: none;
           }
         }
-  
+
         .ant-tabs-tab {
           width: 286px;
           height: 61px;
           margin-right: 0;
           padding-top: 20px;
           text-align: center;
-  
+
           &:hover {
             color: #222222;
           }
-  
+
           &.ant-tabs-tab-active {
             color: #222222;
             cursor: default;
           }
         }
-  
+
         .ant-tabs-ink-bar {
           background-color: #222222;
         }
@@ -84,8 +84,8 @@ const StyleMyAppDetail = styled.div`
       margin-left: 5px;
     }
   }
-  
-  // 향후 삭제 
+
+  // 향후 삭제
   .temp {
     display: block;
     padding: 0 10px;

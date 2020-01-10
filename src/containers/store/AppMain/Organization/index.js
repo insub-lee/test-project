@@ -20,7 +20,6 @@ import Tree from './tree';
 import { makeTreeData, makeUser, makeUsers } from './selectors';
 import { getTreeData, getUsers, getUser } from './actions';
 
-
 class Organization extends Component {
   constructor(props) {
     super(props);
@@ -47,7 +46,6 @@ class Organization extends Component {
     const {
       // data
       treeData,
-
     } = this.props;
 
     // 사용자 목록
@@ -59,7 +57,6 @@ class Organization extends Component {
       // func
       handleGetUsers,
       handleGetUser,
-
     } = this.props;
 
     const rowGetter = i => users[i];
@@ -88,14 +85,7 @@ class Organization extends Component {
             float: 'left',
           }}
         >
-          <ReactDataGrid
-            rowKey="EMP_NO"
-            columns={getColumns()}
-            rowGetter={rowGetter}
-            rowsCount={users.length}
-            minHeight={350}
-            minWidth={400}
-          />
+          <ReactDataGrid rowKey="EMP_NO" columns={getColumns()} rowGetter={rowGetter} rowsCount={users.length} minHeight={350} minWidth={400} />
         </div>
 
         <div
@@ -129,7 +119,6 @@ Organization.propTypes = {
   handleGetUser: PropTypes.func, //eslint-disable-line
 };
 
-
 export function mapDispatchToProps(dispatch) {
   return {
     // 조직도
@@ -154,8 +143,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'org', reducer });
 const withSaga = injectSaga({ key: 'org', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Organization);
+export default compose(withReducer, withSaga, withConnect)(Organization);

@@ -55,9 +55,11 @@ class IfBoardList extends Component {
     } else {
       /* 삭제 */
       let mapIndex = -1;
-      this.state.checkedList.map((item, index) => ( //eslint-disable-line
-        item === node.ctSeq ? mapIndex = index : ''
-      ));
+      this.state.checkedList.forEach((item, index) => {
+        if (item === node.ctSeq) {
+          mapIndex = index;
+        }
+      });
       if (mapIndex !== -1) {
         const tmpArrChk = fromJS(this.state.checkedList).toJS();
         tmpArrChk.splice(mapIndex, 1);
@@ -67,32 +69,18 @@ class IfBoardList extends Component {
       }
     }
     this.props.returnChkChange(e, node);
-  }
+  };
 
   updateTree(treeData) {
     this.setState({ treeData });
   }
 
   render() {
-    const {
-      treeData,
-      searchFocusIndex,
-      selectedIndex,
-      ctKeyword,
-    } = this.state;
+    const { treeData, searchFocusIndex, selectedIndex, ctKeyword } = this.state;
 
-    const {
-      rowHeight,
-      style,
-      innerStyle,
-      wrapperStyle,
-      canDrag,
-      canDrop,
-    } = this.props;
+    const { rowHeight, style, innerStyle, wrapperStyle, canDrag, canDrop } = this.props;
 
-    const customSearchMethod = ({ node, searchQuery }) =>
-      searchQuery &&
-      node.title.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
+    const customSearchMethod = ({ node, searchQuery }) => searchQuery && node.title.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1;
 
     const treeJsx = (
       <SortableTree
@@ -112,28 +100,25 @@ class IfBoardList extends Component {
         }}
         innerStyle={{ ...innerStyle }}
         isVirtualized={false}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={({ node }) => {
-          const chkBox =
-            (
-              <Checkbox
-                // id={node.key}
+          const chkBox = (
+            <Checkbox
+              // id={node.key}
                 onChange={(e) => this.onCheckChange(e, node)} //eslint-disable-line
-                checked={this.state.checkedList.findIndex(t => t === node.key) !== -1}
-              />
-            );
+              checked={this.state.checkedList.findIndex(t => t === node.key) !== -1}
+            />
+          );
 
           return {
-            title: (<button>{node.title}</button>),
-            buttons: [
-              chkBox,
-            ],
+            title: <button type="button">{node.title}</button>,
+            buttons: [chkBox],
           };
         }}
         className="orgTreeWrapper CustomSCRB"
         searchQuery={ctKeyword}
         searchMethod={customSearchMethod}
-        onlyExpandSearchedNodes={true}
+        onlyExpandSearchedNodes
         selectedIndex={selectedIndex}
       />
     );
@@ -145,18 +130,13 @@ class IfBoardList extends Component {
         }}
         pl="22px"
       >
-        {
-          treeData.length > 0 ? (
-            <ScrollBar
-              style={{ width: '100%', height: '100%' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              {treeJsx}
-            </ScrollBar>
-          ) : treeJsx
-        }
+        {treeData.length > 0 ? (
+          <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            {treeJsx}
+          </ScrollBar>
+        ) : (
+          treeJsx
+        )}
       </StyleUserTree>
     );
   }

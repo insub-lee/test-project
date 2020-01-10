@@ -47,31 +47,30 @@ class BizCategory extends Component {
 
     return (
       <StyledTabList className="treeWrapper">
-        {(currentView !== 'Mobile' && currentView !== 'Tablet') ? (
-          <Tabs
-            onSelect={() => { }}
-            selectedIndex={1}
-          >
+        {currentView !== 'Mobile' && currentView !== 'Tablet' ? (
+          <Tabs onSelect={() => {}} selectedIndex={1}>
             <TabList>
               <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
-              {
-                !isBizManage ? (
-                  <Tab>
-                    <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
-                      <FormattedMessage {...messages.bizGroup} />
-                    </Link>
-                  </Tab>
-                ) : ''
-              }
+              {!isBizManage ? (
+                <Tab>
+                  <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
+                    <FormattedMessage {...messages.bizGroup} />
+                  </Link>
+                </Tab>
+              ) : (
+                ''
+              )}
             </TabList>
             <TabPanel />
             <TabPanel />
           </Tabs>
-        ) : ''}
+        ) : (
+          ''
+        )}
         <Tree
           type="biz"
           treeData={categoryData}
@@ -100,7 +99,6 @@ BizCategory.defaultProps = {
   categoryData: [],
 };
 
-
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
@@ -121,8 +119,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizcategory', reducer });
 const withSaga = injectSaga({ key: 'bizcategory', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizCategory));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(BizCategory));

@@ -44,8 +44,7 @@ const Modals = ComponentName => styled(ComponentName)`
     }
 
     button + button {
-      margin: ${props => (
-    props['data-rtl'] === 'rtl' ? '0 8px 0 0' : '0 0 0 8px')};
+      margin: ${props => (props['data-rtl'] === 'rtl' ? '0 8px 0 0' : '0 0 0 8px')};
     }
   }
 

@@ -53,12 +53,7 @@ export function* insertDept(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registDept', payload.payload);
   const { code, deptId } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.deptInsert)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.deptInsert)}</MessageContent>, 3);
     const DEPT_ID = PRNT_ID === 0 ? deptId : selectedDept;
     if (PRNT_ID === 0) {
       yield put({
@@ -89,12 +84,7 @@ export function* updateDept(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updateDept', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.deptUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.deptUpdate)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_DEPT_COMBO_LIST,
@@ -103,8 +93,8 @@ export function* updateDept(payload) {
     } else {
       yield put({
         type: actionType.GET_CHANGE_DEPT_DATA,
-        DEPT_ID,
-      });      
+        DEPT_ID: selectedDept,
+      });
     }
     yield put({
       type: actionType.ROOT_SELECTED_INDEX,
@@ -124,12 +114,7 @@ export function* deleteDept(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/deleteDept/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.deptDelete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.deptDelete)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_DEPT_COMBO_LIST,
@@ -148,19 +133,13 @@ export function* deleteDept(payload) {
   }
 }
 
-
 export function* moveDept(payload) {
   const { PRNT_ID, treeData } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/moveDept', { DEPT_ID: PRNT_ID, treeData });
   const { code } = response;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.deptUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.deptUpdate)}</MessageContent>, 3);
     yield put({
       type: actionType.GET_CHANGE_DEPT_DATA,
       DEPT_ID: PRNT_ID,

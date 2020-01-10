@@ -18,9 +18,7 @@ class NotifyImgChild extends PureComponent {
   }
 
   render() {
-    const {
-      index,
-    } = this.props;
+    const { index } = this.props;
 
     const { imgList } = this.state;
 
@@ -33,31 +31,19 @@ class NotifyImgChild extends PureComponent {
             <tbody>
               <tr>
                 <td rowSpan="2" style={{ width: 250 }}>
-                  {imgList.IMAGE === '' ?
+                  {imgList.IMAGE === '' ? (
+                    <div style={{ width: '100%', height: '100%' }}>이미지가 없습니다</div>
+                  ) : (
                     <div style={{ width: '100%', height: '100%' }}>
-                      이미지가 없습니다
+                      <img src={imgUrl.get('320x240', imgList.seq)} style={{ width: '100%', maxHeight: 100 }} alt="defualtImg" />
                     </div>
-                      :
-                    <div style={{ width: '100%', height: '100%' }}>
-                      <img
-                        src={imgUrl.get('320x240', imgList.seq)}
-                        style={{ width: '100%', maxHeight: 100 }}
-                        alt="defualtImg"
-                      />
-                    </div>
-                  }
+                  )}
                 </td>
                 <td className="up">
                   <label htmlFor="subject" className="label">
                     TITLE
                   </label>
-                  <Input
-                    id="subject"
-                    name="TITLE"
-                    type="text"
-                    value={imgList.id}
-                    readOnly={true}
-                  />
+                  <Input id="subject" name="TITLE" type="text" value={imgList.id} readOnly />
                 </td>
               </tr>
               <tr>
@@ -65,13 +51,7 @@ class NotifyImgChild extends PureComponent {
                   <label htmlFor="url" className="label">
                     URL
                   </label>
-                  <Input
-                    id="url"
-                    name="url"
-                    type="text"
-                    value={imgList.url}
-                    readOnly={true}
-                  />
+                  <Input id="url" name="url" type="text" value={imgList.url} readOnly />
                 </td>
               </tr>
             </tbody>
@@ -89,4 +69,3 @@ NotifyImgChild.propTypes = {
 };
 
 export default NotifyImgChild;
-

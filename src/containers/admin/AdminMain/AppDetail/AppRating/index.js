@@ -258,7 +258,7 @@ class AppRating extends React.Component {
       <StyleAppRating>
         <div>
           <h2 className="adTitle">{intlObj.get(messages.userReview)}</h2>
-          {this.props.myAppRating.POINT > 0 ? updatePop : registPop}
+          {/* {this.props.myAppRating.POINT > 0 ? updatePop : registPop} */}
         </div>
         <Row style={rowStyle} gutter={gutter} className="ratingAvgChart">
           <Col span={8} style={colStyle}>
@@ -367,15 +367,8 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppRating', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppRating', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppRating);
+export default compose(withReducer, withSaga, withConnect)(AppRating);

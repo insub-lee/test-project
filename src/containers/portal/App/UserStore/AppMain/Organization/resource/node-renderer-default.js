@@ -65,35 +65,25 @@ class NodeRendererDefault extends Component {
 
     return (
       <div style={{ height: '100%' }} {...otherProps}>
-        {toggleChildrenVisibility &&
-          node.children &&
-          (node.children.length > 0 || typeof node.children === 'function') && (
-            <div>
-              <button
-                type="button"
-                aria-label={node.expanded ? 'Collapse' : 'Expand'}
-                className={
-                  node.expanded ? 'rst__collapseButton' : 'rst__expandButton'
-                }
-                style={{ left: -0.5 * scaffoldBlockPxWidth }}
-                onClick={() =>
-                  toggleChildrenVisibility({
-                    node,
-                    path,
-                    treeIndex,
-                  })
-                }
-              />
+        {toggleChildrenVisibility && node.children && (node.children.length > 0 || typeof node.children === 'function') && (
+          <div>
+            <button
+              type="button"
+              aria-label={node.expanded ? 'Collapse' : 'Expand'}
+              className={node.expanded ? 'rst__collapseButton' : 'rst__expandButton'}
+              style={{ left: -0.5 * scaffoldBlockPxWidth }}
+              onClick={() =>
+                toggleChildrenVisibility({
+                  node,
+                  path,
+                  treeIndex,
+                })
+              }
+            />
 
-              {node.expanded &&
-                !isDragging && (
-                  <div
-                    style={{ width: scaffoldBlockPxWidth }}
-                    className="rst__lineChildren"
-                  />
-                )}
-            </div>
-          )}
+            {node.expanded && !isDragging && <div style={{ width: scaffoldBlockPxWidth }} className="rst__lineChildren" />}
+          </div>
+        )}
 
         <div className="rst__rowWrapper">
           {/* Set the row preview to be used during drag and drop */}
@@ -105,7 +95,7 @@ class NodeRendererDefault extends Component {
                 isLandingPadActive && !canDrop && 'rst__rowCancelPad',
                 isSearchMatch && 'rst__rowSearchMatch',
                 isSearchFocus && 'rst__rowSearchFocus',
-                className
+                className,
               )}
               style={{
                 opacity: isDraggedDescendant ? 0.5 : 1,
@@ -114,19 +104,9 @@ class NodeRendererDefault extends Component {
             >
               {handle}
 
-              <div
-                className={classnames(
-                  'rst__rowContents',
-                  !canDrag && 'rst__rowContentsDragDisabled'
-                )}
-              >
+              <div className={classnames('rst__rowContents', !canDrag && 'rst__rowContentsDragDisabled')}>
                 <div className="rst__rowLabel">
-                  <span
-                    className={classnames(
-                      'rst__rowTitle',
-                      node.subtitle && 'rst__rowTitleWithSubtitle'
-                    )}
-                  >
+                  <span className={classnames('rst__rowTitle', node.subtitle && 'rst__rowTitleWithSubtitle')}>
                     {typeof nodeTitle === 'function'
                       ? nodeTitle({
                           node,
@@ -160,7 +140,7 @@ class NodeRendererDefault extends Component {
                   ))}
                 </div>
               </div>
-            </div>
+            </div>,
           )}
         </div>
       </div>
@@ -187,9 +167,7 @@ NodeRendererDefault.propTypes = {
   node: PropTypes.shape({}).isRequired,
   title: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
   subtitle: PropTypes.oneOfType([PropTypes.func, PropTypes.node]),
-  path: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  ).isRequired,
+  path: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
   treeIndex: PropTypes.number.isRequired,
   treeId: PropTypes.string.isRequired,
   isSearchMatch: PropTypes.bool,

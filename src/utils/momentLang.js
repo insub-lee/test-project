@@ -1,11 +1,16 @@
-
 import moment from 'moment';
-import en_ca_moment from 'moment/locale/en-ca';
-import fr_moment from 'moment/locale/fr';
-import pt_br_moment from 'moment/locale/pt-br';
-import es_moment from 'moment/locale/es';
-import ko_moment from 'moment/locale/ko'
+import enCa from 'moment/locale/en-ca';
+import fr from 'moment/locale/fr';
+import ptBr from 'moment/locale/pt-br';
+import es from 'moment/locale/es';
+import ko from 'moment/locale/ko';
 
-const languages = new Map([['en', en_ca_moment], ['fr', fr_moment], ['pt-br', pt_br_moment], ['es', es_moment], ['ko', ko_moment]]);
+const languages = new Map([
+  ['en', enCa],
+  ['fr', fr],
+  ['pt-br', ptBr],
+  ['es', es],
+  ['ko', ko],
+]);
 
 export default moment.locale(window.navigator.language, languages.get(window.navigator.language));

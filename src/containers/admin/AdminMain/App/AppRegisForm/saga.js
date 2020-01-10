@@ -14,17 +14,12 @@ import { Axios } from '../../../../../utils/AxiosFunc';
 export function* insertAppInfo(payload) {
   const { history } = payload.payload;
   const { ITEM_VALUE } = payload.payload;
-  const params = { ...payload.payload, SITE_ID: -1};
+  const params = { ...payload.payload, SITE_ID: -1 };
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/regismyapp/', params);
 
   const { code, appId, ver } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.appRegisOk)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.appRegisOk)}</MessageContent>, 3);
     history.push(`/admin/adminmain/sysapp/appUpdate/U/${appId}/${ver}/2/N`);
   } else if (code === 510) {
     feed.error(`${intlObj.get(messages.reqValFail)}`);

@@ -19,28 +19,17 @@ const webkit = [
   'webkitfullscreenerror',
 ];
 
-const moz = [
-  'mozFullScreenEnabled',
-  'mozFullScreenElement',
-  'mozRequestFullScreen',
-  'mozCancelFullScreen',
-  'mozfullscreenchange',
-  'mozfullscreenerror',
-];
+const moz = ['mozFullScreenEnabled', 'mozFullScreenElement', 'mozRequestFullScreen', 'mozCancelFullScreen', 'mozfullscreenchange', 'mozfullscreenerror'];
 
-const ms = [
-  'msFullscreenEnabled',
-  'msFullscreenElement',
-  'msRequestFullscreen',
-  'msExitFullscreen',
-  'MSFullscreenChange',
-  'MSFullscreenError',
-];
+const ms = ['msFullscreenEnabled', 'msFullscreenElement', 'msRequestFullscreen', 'msExitFullscreen', 'MSFullscreenChange', 'MSFullscreenError'];
 
 const style = {
   unActive: { position: 'relative', marginLeft: '55px' },
   active: {
-    minHeight: '100%', width: '100%', overflowY: 'auto', position: 'relative',
+    minHeight: '100%',
+    width: '100%',
+    overflowY: 'auto',
+    position: 'relative',
   },
 };
 
@@ -50,47 +39,59 @@ const defaultStyle = {
   position: 'relative',
 };
 
-
 let isEvent = false;
 
 // so it doesn't throw if no window or document
 const document = typeof window !== 'undefined' && typeof window.document !== 'undefined' ? window.document : {};
 
-const vendor = (
-  ('fullscreenEnabled' in document && Object.keys(key)) ||
-  (webkit[0] in document && webkit) ||
-  (moz[0] in document && moz) ||
-  (ms[0] in document && ms) ||
-  []
-);
+const vendor =
+  ('fullscreenEnabled' in document && Object.keys(key)) || (webkit[0] in document && webkit) || (moz[0] in document && moz) || (ms[0] in document && ms) || [];
 
 class fscreen {
-  static requestFullscreen(element) { return element[vendor[key.requestFullscreen]](); }
-  static requestFullscreenFunction(element) { return element[vendor[key.requestFullscreen]]; }
+  static requestFullscreen(element) {
+    return element[vendor[key.requestFullscreen]]();
+  }
+
+  static requestFullscreenFunction(element) {
+    return element[vendor[key.requestFullscreen]];
+  }
+
   static get exitFullscreen() {
     return document[vendor[key.exitFullscreen]].bind(document);
   }
-  static addEventListener(type, handler, options) { return document.addEventListener(vendor[key[type]], handler, options); }
-  static removeEventListener(type, handler, options) { return document.removeEventListener(vendor[key[type]], handler, options); }
+
+  static addEventListener(type, handler, options) {
+    return document.addEventListener(vendor[key[type]], handler, options);
+  }
+
+  static removeEventListener(type, handler, options) {
+    return document.removeEventListener(vendor[key[type]], handler, options);
+  }
+
   static get fullscreenEnabled() {
     return Boolean(document[vendor[key.fullscreenEnabled]]);
   }
-  static set fullscreenEnabled(val) {
-  }
+
+  static set fullscreenEnabled(val) {}
+
   static get fullscreenElement() {
     return document[vendor[key.fullscreenElement]];
   }
-  static set fullscreenElement(val) {
-  }
+
+  static set fullscreenElement(val) {}
+
   static get onfullscreenchange() {
     return document[`on${vendor[key.fullscreenchange]}`.toLowerCase()];
   }
+
   static set onfullscreenchange(handler) {
     document[`on${vendor[key.fullscreenchange]}`.toLowerCase()] = handler;
   }
+
   static get onfullscreenerror() {
     return document[`on${vendor[key.fullscreenerror]}`.toLowerCase()];
   }
+
   static set onfullscreenerror(handler) {
     document[`on${vendor[key.fullscreenerror]}`.toLowerCase()] = handler;
   }
@@ -126,7 +127,7 @@ class FullScreen extends Component {
     document.removeEventListener('touchstart', this.myTouchHandler, {});
   }
 
-  setNode = (node) => {
+  setNode = node => {
     this.node = node;
   };
 
@@ -160,7 +161,7 @@ class FullScreen extends Component {
     fscreen.exitFullscreen();
   };
 
-  myTouchHandler = (event) => {
+  myTouchHandler = event => {
     if (event.target.value === 'exitDockItem') {
       this.props.exitDockItem(Number(event.target.id));
     } else if (event.target.value === 'fixDockItem') {
@@ -172,9 +173,7 @@ class FullScreen extends Component {
   };
 
   render() {
-    const {
-      dockFixedYn, dockIconType, setMyMenuData, view, enabled,
-    } = this.props;
+    const { dockFixedYn, dockIconType, setMyMenuData, view, enabled } = this.props;
     let width = '100%';
     if (view !== 'Tablet' && view !== 'Mobile' && dockFixedYn === 'Y') {
       /*

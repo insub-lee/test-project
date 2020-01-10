@@ -41,7 +41,8 @@ const StyleTopMenu = styled.div`
     overflow: hidden;
 
     .view {
-      &.treeIcon, &.gridIcon {
+      &.treeIcon,
+      &.gridIcon {
         display: inline-block;
         width: 50%;
         height: 100%;
@@ -50,39 +51,44 @@ const StyleTopMenu = styled.div`
         background-size: 17px 17px;
         border-radius: 0;
         background-color: #ffffff;
-        &:hover, &.current {opacity: 1;}
-  
+        &:hover,
+        &.current {
+          opacity: 1;
+        }
+
         &.current {
           cursor: default;
           pointer-events: none;
         }
       }
-  
+
       &.treeIcon {
         background-image: url(${iconViewTree});
         opacity: 0.7;
-  
+
         &.current {
           background-image: url(${iconViewTreeCurrent});
         }
       }
-  
+
       &.gridIcon {
         background-image: url(${iconViewGrid});
         opacity: 0.7;
-  
+
         &.current {
           background-image: url(${iconViewGridCurrent});
         }
       }
-  
+
       &.current {
         background-color: #d2d2d2;
       }
     }
   }
 
-  .showBizTreeMobile {display:none;} //모바일용
+  .showBizTreeMobile {
+    display: none;
+  } //모바일용
 
   @media only screen and (max-width: 1024px) {
     height: auto;
@@ -129,7 +135,6 @@ const StyleTopMenu = styled.div`
       }
     }
   }
-
 `;
 
 export default StyleTopMenu;

@@ -7,8 +7,7 @@ import IconDeleteImg from 'images/bizstore/icon-deleteImg.png';
 import DelListItem from 'images/common/widget-icon-delete.png';
 
 const StyleAppUpdateForm = styled.div`
-
-  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
     /* IE10+ specific styles go here */
     line-height: 1 !important;
   }
@@ -30,7 +29,7 @@ const StyleAppUpdateForm = styled.div`
     letter-spacing: -0.5px;
 
     &:before {
-      content:url(${IconOption});
+      content: url(${IconOption});
       position: absolute;
       top: -3px;
       left: 0;
@@ -40,9 +39,9 @@ const StyleAppUpdateForm = styled.div`
 
     //필수입력 표시
     &.required:before {
-      content:url(${IconRequired});
+      content: url(${IconRequired});
     }
-  }  
+  }
 
   .ant-form-item {
     // 필수 입력일 때
@@ -51,7 +50,7 @@ const StyleAppUpdateForm = styled.div`
         padding-left: 12px;
 
         &:before {
-          content:url(${IconRequired});
+          content: url(${IconRequired});
           position: absolute;
           top: -2px;
           left: 0;
@@ -70,7 +69,7 @@ const StyleAppUpdateForm = styled.div`
         top: 10% !important;
         right: 12px !important;
       }
-    }     
+    }
   }
 
   // Form.Item 스타일
@@ -87,7 +86,7 @@ const StyleAppUpdateForm = styled.div`
         line-height: 1;
 
         &:after {
-          content: "";
+          content: '';
         }
       }
     }
@@ -114,7 +113,7 @@ const StyleAppUpdateForm = styled.div`
   .ant-input {
     height: 35px;
     line-height: 35px;
-    
+
     &:read-only {
       background: #f5f5f5;
       cursor: default;
@@ -154,7 +153,8 @@ const StyleAppUpdateForm = styled.div`
       padding-left: 0;
     }
 
-    &.attachFile, &.edit {
+    &.attachFile,
+    &.edit {
       position: absolute;
       right: 0;
 
@@ -206,7 +206,6 @@ const StyleAppUpdateForm = styled.div`
         > span > div {
           border-color: #000000 !important;
         }
-
       }
 
       > span > div {
@@ -214,7 +213,6 @@ const StyleAppUpdateForm = styled.div`
         line-height: 35px;
         border: 2px solid transparent;
       }
-
     }
   }
 
@@ -236,7 +234,6 @@ const StyleAppUpdateForm = styled.div`
         }
       }
     }
-
   }
 
   // 안내(info) 목록
@@ -291,11 +288,11 @@ const StyleAppUpdateForm = styled.div`
     vertical-align: top;
 
     // 커스터마이징
-    
+
     .resultsTableWrapper {
       width: calc(100% - 17px);
       padding: 5px;
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         margin-bottom: 20px;
       }
@@ -340,7 +337,6 @@ const StyleAppUpdateForm = styled.div`
         }
       }
     }
-
   }
 
   // 파일 업로드
@@ -359,7 +355,7 @@ const StyleAppUpdateForm = styled.div`
         overflow: hidden;
       }
     }
-    
+
     .readyToUpload {
       width: 120px;
       height: 120px;
@@ -374,7 +370,8 @@ const StyleAppUpdateForm = styled.div`
     }
   }
 
-  .deleteIconWrapper, .deleteScreenshots {
+  .deleteIconWrapper,
+  .deleteScreenshots {
     position: absolute;
     width: 15px;
     height: 15px;
@@ -453,17 +450,15 @@ const StyleAppUpdateForm = styled.div`
             border: 1px dashed #a4a4a4;
             background: url(${IconFileUpload}) no-repeat 50% 50%;
             cursor: pointer;
-    
+
             &:hover {
               border-color: #222222;
               background-image: url(${IconFileUploadHover});
             }
           }
         }
-
       }
-
-   }
+    }
   }
 
   //앱추가
@@ -508,7 +503,6 @@ const StyleAppUpdateForm = styled.div`
         background-image: url(${IconFileUploadHover});
       }
     }
-
   }
 `;
 
@@ -529,7 +523,7 @@ const Vesions = styled.div`
       padding-right: 10px;
 
       &:after {
-        content:" . ";
+        content: ' . ';
         position: absolute;
         display: inline-block;
         width: 10px;
@@ -537,7 +531,7 @@ const Vesions = styled.div`
         text-align: center;
       }
     }
-  }  
+  }
 `;
 
 export { StyleAppUpdateForm, Vesions };

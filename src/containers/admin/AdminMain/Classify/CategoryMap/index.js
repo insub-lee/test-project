@@ -286,13 +286,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Classify.CategoryMap', reducer });
 const withSaga = injectSaga({ key: 'containers.admin.AdminMain.Classify.CategoryMap', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(CategoryMap);
+export default compose(withReducer, withSaga, withConnect)(CategoryMap);

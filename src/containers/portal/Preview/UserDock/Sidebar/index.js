@@ -9,31 +9,25 @@ class Sidebar extends Component {
     super(props);
     this.linkTo = this.linkTo.bind(this);
   }
+
   linkTo(menu) {
     this.props.historyPush(menu.item.props.link);
   }
+
   render() {
     return (
-      <Menu
-        mode="inline"
-        theme="dark"
-        defaultSelectedKeys={['1']}
-        style={{ height: '100%', borderRight: 0 }}
-        onClick={this.linkTo}
-      >
-        {
-          this.props.menus.map((nav) => {
-            if (nav.subs.length > 0) {
-              return <SubMenuItem key={nav.key} title={nav.name} subs={nav.subs} />;
-            }
-            return (
-              <Menu.Item key={nav.key} link={nav.link}>
-                <Icon type="user" />
-                <span>{nav.name}</span>
-              </Menu.Item>
-            );
-          })
-        }
+      <Menu mode="inline" theme="dark" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }} onClick={this.linkTo}>
+        {this.props.menus.map(nav => {
+          if (nav.subs.length > 0) {
+            return <SubMenuItem key={nav.key} title={nav.name} subs={nav.subs} />;
+          }
+          return (
+            <Menu.Item key={nav.key} link={nav.link}>
+              <Icon type="user" />
+              <span>{nav.name}</span>
+            </Menu.Item>
+          );
+        })}
       </Menu>
     );
   }

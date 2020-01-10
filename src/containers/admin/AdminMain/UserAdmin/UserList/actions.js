@@ -1,22 +1,20 @@
 import * as actionTypes from './constants';
 
-export const getUserList = (sNum, eNum, userList, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId) => (
-  {
-    type: actionTypes.GET_USER_LIST,
-    payload: {
-      sNum,
-      eNum,
-      userList,
-      sortColumn,
-      sortDirection,
-      statusCode,
-      keywordType,
-      keyword,
-      deptId,
-      pstnId,
-    },
-  }
-);
+export const getUserList = (sNum, eNum, userList, sortColumn, sortDirection, statusCode, keywordType, keyword, deptId, pstnId) => ({
+  type: actionTypes.GET_USER_LIST,
+  payload: {
+    sNum,
+    eNum,
+    userList,
+    sortColumn,
+    sortDirection,
+    statusCode,
+    keywordType,
+    keyword,
+    deptId,
+    pstnId,
+  },
+});
 
 export const getDeptComboData = () => ({
   type: actionTypes.GET_DEPT_COMBO_LIST,

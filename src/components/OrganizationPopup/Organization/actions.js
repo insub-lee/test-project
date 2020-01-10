@@ -242,7 +242,6 @@ export const initializeTreeData = () => ({
   type: actionType.INITIALIZE_UNMOUNT,
 });
 
-
 // ****************** 조직도 팝업용 ******************
 export const getFirstDeptUser = DEPT_ID => ({
   type: actionType.GET_FIRST_DEPTUSER,

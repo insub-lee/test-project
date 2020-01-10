@@ -30,8 +30,7 @@ class PageInfo extends Component {
     const { params } = match;
     const { pageId } = params;
 
-    if (pageId
-      && this.state.PAGE_ID !== pageId) {
+    if (pageId && this.state.PAGE_ID !== pageId) {
       this.setState({
         PAGE_ID: pageId,
       });
@@ -40,9 +39,7 @@ class PageInfo extends Component {
   }
 
   render() {
-    const {
-      widgetList,
-    } = this.props;
+    const { widgetList } = this.props;
 
     /* widgetList를 미리보기용으로 변경 */
     const cWidgetList = _.clone(widgetList); // 복제
@@ -84,8 +81,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizPage', reducer });
 const withSaga = injectSaga({ key: 'bizPage', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PageInfo);
+export default compose(withReducer, withSaga, withConnect)(PageInfo);

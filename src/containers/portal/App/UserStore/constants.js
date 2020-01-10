@@ -7,3 +7,5 @@ export const GET_MENU = 'bizmicro-user/store/containers/App/GET_MENU';
 export const SET_MENU = 'bizmicro-user/store/containers/App/SET_MENU';
 export const MENU_AUTH_CHK = 'bizmicro-user/store/containers/App/MENU_AUTH_CHK';
 export const APP_BIZ_GUBUN = 'bizmicro-user/store/containers/App/APP_BIZ_GUBUN';
+export const ENABLE_LOADING = 'bizmicro-user/store/containers/App/ENABLE_LOADING';
+export const DISABLE_LOADING = 'bizmicro-user/store/containers/App/DISABLE_LOADING';

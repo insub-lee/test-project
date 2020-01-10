@@ -20,21 +20,21 @@ class LanguageTab extends Component {
     super(props);
 
     this.state = {
-      value: this.props.myLang ? this.props.myLang: 'KOR',
+      value: this.props.myLang ? this.props.myLang : 'KOR',
     };
   }
 
-  onChange = (e) => {
+  onChange = e => {
     this.setState({
       value: e.target.value,
     });
 
-    let idx = this.props.loadLang.findIndex(a => a.CODE_CD === e.target.value);
-    let language = lang.get('NAME', this.props.loadLang[idx]);
+    const idx = this.props.loadLang.findIndex(a => a.CODE_CD === e.target.value);
+    const language = lang.get('NAME', this.props.loadLang[idx]);
 
     this.props.onSaveLang(e.target.value);
     this.props.setLang(language);
-  }
+  };
 
   render() {
     const { currentView } = this.props;
@@ -42,19 +42,19 @@ class LanguageTab extends Component {
     let mHeight;
     switch (currentView) {
       case 'DesktopWide':
-      mHeight = "calc(100vh - 200px)";
+        mHeight = 'calc(100vh - 200px)';
         break;
       case 'Desktop':
-      mHeight = "calc(100vh - 200px)";
+        mHeight = 'calc(100vh - 200px)';
         break;
       case 'DesktopNarrow':
-      mHeight = "calc(100vh - 200px)";
+        mHeight = 'calc(100vh - 200px)';
         break;
       case 'Tablet':
-      mHeight = "calc(100vh - 200px)";
+        mHeight = 'calc(100vh - 200px)';
         break;
       default:
-      mHeight = "calc(100vh - 360px)";
+        mHeight = 'calc(100vh - 360px)';
     }
 
     return (
@@ -62,14 +62,14 @@ class LanguageTab extends Component {
         <div className="languageWrapper" style={{ height: mHeight }}>
           <RadioGroup onChange={this.onChange} value={this.state.value}>
             <ul className="languageList">
-            {this.props.loadLang.map((language, index) => (
-              <li key={index}>
-              <Radio value = {language.CODE_CD}>
-              <img src={require('../../../../images/portal/setting/icon-lang-' + language.CODE_CD + '.png')} alt={language.CODE_CD} className="langIcon" />
-              <span className="langTxt">{lang.get('NAME', language)}</span>
-              </Radio>
-              </li>
-            ))}
+              {this.props.loadLang.map((language, index) => (
+                <li key={index}>
+                  <Radio value={language.CODE_CD}>
+                    <img src={require(`../../../../images/portal/setting/icon-lang-${language.CODE_CD}.png`)} alt={language.CODE_CD} className="langIcon" />
+                    <span className="langTxt">{lang.get('NAME', language)}</span>
+                  </Radio>
+                </li>
+              ))}
             </ul>
           </RadioGroup>
         </div>
@@ -94,11 +94,7 @@ export function mapDispatchToProps(dispatch) {
 }
 
 const withReducer = injectReducer({ key: 'languagetab', reducer });
-const withSaga= injectSaga({ key: 'languagetab', saga });
+const withSaga = injectSaga({ key: 'languagetab', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(LanguageTab);
+export default compose(withReducer, withSaga, withConnect)(LanguageTab);

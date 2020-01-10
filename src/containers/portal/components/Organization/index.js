@@ -1,86 +1,82 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import Organization from './organization';
 
-class OrganizationWrapper extends React.PureComponent {
-  render() {
-    const {
-      show,
-      checkedDept,
-      checkedGrp,
-      checkedPstn,
-      checkedDuty,
-      selectedUsers,
-      userTab,
-      pstnTab,
-      dutyTab,
-      grpTab,
-      isModal,
-      isProfile,
-      userProfile,
-      isDraggable,
-      isTreeCheckbox,
-      getDataFromOrganization,
-      addCallback,
-      deleteCallback,
-      dndChangePositionCallback,
-      deleteAllCallback,
-      orgName,
-      item,
-      isDeptSelectbox,
-      siteIdParam,
-      closeModal,
-      userSetting,
-      onlyDept,
-      onlyUser,
-      selectSingleDept,
-      selectSingleUser,
-    } = this.props;
+const OrganizationWrapper = props => {
+  const {
+    show,
+    checkedDept,
+    checkedGrp,
+    checkedPstn,
+    checkedDuty,
+    selectedUsers,
+    userTab,
+    pstnTab,
+    dutyTab,
+    grpTab,
+    isModal,
+    isProfile,
+    userProfile,
+    isDraggable,
+    isTreeCheckbox,
+    getDataFromOrganization,
+    addCallback,
+    deleteCallback,
+    dndChangePositionCallback,
+    deleteAllCallback,
+    orgName,
+    item,
+    isDeptSelectbox,
+    siteIdParam,
+    closeModal,
+    userSetting,
+    onlyDept,
+    onlyUser,
+    selectSingleDept,
+    selectSingleUser,
+    searchOnly,
+  } = props;
 
-    return (
-      <div>
-        {
-          show
-            ?
-              <Organization
-                show={show}
-                checkedDept={checkedDept}
-                checkedGrp={checkedGrp}
-                checkedPstn={checkedPstn}
-                checkedDuty={checkedDuty}
-                selectedUsers={selectedUsers}
-                userTab={userTab}
-                pstnTab={pstnTab}
-                dutyTab={dutyTab}
-                grpTab={grpTab}
-                isModal={isModal}
-                isProfile={isProfile}
-                userProfile={userProfile}
-                isDraggable={isDraggable}
-                isTreeCheckbox={isTreeCheckbox}
-                getDataFromOrganization={getDataFromOrganization}
-                addCallback={addCallback}
-                deleteCallback={deleteCallback}
-                dndChangePositionCallback={dndChangePositionCallback}
-                deleteAllCallback={deleteAllCallback}
-                orgName={orgName}
-                item={item}
-                isDeptSelectbox={isDeptSelectbox}
-                siteIdParam={siteIdParam}
-                closeModal={closeModal}
-                userSetting={userSetting}
-                onlyDept={onlyDept}
-                onlyUser={onlyUser}
-                selectSingleDept={selectSingleDept}
-                selectSingleUser={selectSingleUser}
-              />
-            :
-              ''
-        }
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      {show && (
+        <Organization
+          show={show}
+          checkedDept={checkedDept}
+          checkedGrp={checkedGrp}
+          checkedPstn={checkedPstn}
+          checkedDuty={checkedDuty}
+          selectedUsers={selectedUsers}
+          userTab={userTab}
+          pstnTab={pstnTab}
+          dutyTab={dutyTab}
+          grpTab={grpTab}
+          isModal={isModal}
+          isProfile={isProfile}
+          userProfile={userProfile}
+          isDraggable={isDraggable}
+          isTreeCheckbox={isTreeCheckbox}
+          getDataFromOrganization={getDataFromOrganization}
+          addCallback={addCallback}
+          deleteCallback={deleteCallback}
+          dndChangePositionCallback={dndChangePositionCallback}
+          deleteAllCallback={deleteAllCallback}
+          orgName={orgName}
+          item={item}
+          isDeptSelectbox={isDeptSelectbox}
+          siteIdParam={siteIdParam}
+          closeModal={closeModal}
+          userSetting={userSetting}
+          onlyDept={onlyDept}
+          onlyUser={onlyUser}
+          selectSingleDept={selectSingleDept}
+          selectSingleUser={selectSingleUser}
+          searchOnly={searchOnly}
+        />
+      )}
+    </div>
+  );
+};
 
 OrganizationWrapper.propTypes = {
   show: PropTypes.bool.isRequired,
@@ -113,6 +109,7 @@ OrganizationWrapper.propTypes = {
   onlyUser: PropTypes.bool,
   selectSingleDept: PropTypes.bool,
   selectSingleUser: PropTypes.bool,
+  searchOnly: PropTypes.bool,
 };
 
 OrganizationWrapper.defaultProps = {
@@ -144,6 +141,7 @@ OrganizationWrapper.defaultProps = {
   onlyUser: false,
   selectSingleDept: false,
   selectSingleUser: false,
+  searchOnly: false,
 };
 
 export default OrganizationWrapper;

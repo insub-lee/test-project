@@ -343,7 +343,7 @@ class BizMenuTree extends Component {
           moveNode(BIZGRP_ID, treeFunc.generateList(fromJS(treeData)));
         }}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
@@ -374,7 +374,7 @@ class BizMenuTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push(`/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                    history.push(`/portal/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
                   }}
                 />
               ) : (
@@ -501,7 +501,7 @@ class BizMenuTree extends Component {
           <button
             onClick={() => {
               onClick({ key: -1 });
-              history.push(`/store/appMain/bizManage/bizMenuReg/info/${BIZGRP_ID}`);
+              history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${BIZGRP_ID}`);
             }}
             className="ellipsis"
             style={{ color: `${selectedIndex === -1 ? '#f85023' : 'inherit'}`, paddingLeft: 6 }}
@@ -535,7 +535,7 @@ class BizMenuTree extends Component {
               title="앱등록"
               onClick={() => {
                 saveData(rootRowInfo, this.state.treeData);
-                history.push(`/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                history.push(`/portal/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
               }}
             />
             <FolderBtn

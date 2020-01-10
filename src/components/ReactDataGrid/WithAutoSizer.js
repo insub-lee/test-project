@@ -16,7 +16,7 @@ class ReactDataGridCustom extends Component {
     if (scrollHeight > 0) {
       const pad = clientHeight / 1.2; // 100px of the bottom
       // t will be greater than 1 if we are about to reach the bottom
-      const t = ((scrollTop + pad) / (scrollHeight - clientHeight));
+      const t = (scrollTop + pad) / (scrollHeight - clientHeight);
 
       if (t > 1 || scrollTop === scrollHeight - clientHeight) this.props.readMore();
     }
@@ -26,7 +26,7 @@ class ReactDataGridCustom extends Component {
     const { minHeight } = this.props;
     let nextMinHeight = minHeight;
     const agent = navigator.userAgent.toLowerCase();
-    if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || (agent.indexOf('msie') !== -1)) {
+    if ((navigator.appName === 'Netscape' && agent.indexOf('trident') !== -1) || agent.indexOf('msie') !== -1) {
       // ie일 경우
       nextMinHeight += 26;
     } else {
@@ -42,15 +42,11 @@ class ReactDataGridCustom extends Component {
               autoHide
               autoHideTimeout={1000}
               autoHideDuration={200}
-              onUpdate={(values) => {
+              onUpdate={values => {
                 this.handleUpdate(values);
               }}
             >
-              <ReactDataGrid
-                {...this.props}
-                minHeight={nextMinHeight}
-                headerRowHeight={-1}
-              />
+              <ReactDataGrid {...this.props} minHeight={nextMinHeight} headerRowHeight={-1} />
             </ScrollBar>
           )}
         </AutoSizer>

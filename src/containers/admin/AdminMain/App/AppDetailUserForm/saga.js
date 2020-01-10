@@ -29,21 +29,11 @@ export function* getMyAppDetail(payload) {
     const grpList = [];
     const deptList = [];
 
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'U' ? userList.push(item) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'T' ? dutyList.push(item) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'P' ? pstnList.push(item) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'V' ? grpList.push(item) : ''
-    ));
-    response.appSecList.map(item => (
-      item.ACNT_TYPE === 'D' ? deptList.push(item) : ''
-    ));
+    response.appSecList.map(item => (item.ACNT_TYPE === 'U' ? userList.push(item) : ''));
+    response.appSecList.map(item => (item.ACNT_TYPE === 'T' ? dutyList.push(item) : ''));
+    response.appSecList.map(item => (item.ACNT_TYPE === 'P' ? pstnList.push(item) : ''));
+    response.appSecList.map(item => (item.ACNT_TYPE === 'V' ? grpList.push(item) : ''));
+    response.appSecList.map(item => (item.ACNT_TYPE === 'D' ? deptList.push(item) : ''));
     yield put({ type: constants.USER_LIST, payload: fromJS(userList) });
     yield put({ type: constants.DUTY_LIST, payload: fromJS(dutyList) });
     yield put({ type: constants.PSTN_LIST, payload: fromJS(pstnList) });

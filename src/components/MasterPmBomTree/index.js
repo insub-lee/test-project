@@ -54,7 +54,7 @@ class MasterPmBomTree extends Component {
     this.setState({ treeData });
   }
 
-  handleOnTreeNodeClick = (node) => {
+  handleOnTreeNodeClick = node => {
     this.setState({
       selectedIndex: node.key,
     });
@@ -62,11 +62,7 @@ class MasterPmBomTree extends Component {
   };
 
   render() {
-    const {
-      treeData,
-      searchFocusIndex,
-      selectedIndex,
-    } = this.state;
+    const { treeData, searchFocusIndex, selectedIndex } = this.state;
 
     const {
       rowHeight,
@@ -98,7 +94,7 @@ class MasterPmBomTree extends Component {
         }}
         innerStyle={{ ...innerStyle }}
         isVirtualized={false}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         onDragStateChanged={onDragStateChanged}
         generateNodeProps={({ node }) => {
           console.log('test');
@@ -125,18 +121,13 @@ class MasterPmBomTree extends Component {
           ...wrapperStyle,
         }}
       >
-        {
-          treeData.length > 0 ? (
-            <ScrollBar
-              style={{ width: '100%', height: '100%' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              {treeJsx}
-            </ScrollBar>
-          ) : treeJsx
-        }
+        {treeData.length > 0 ? (
+          <ScrollBar style={{ width: '100%', height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            {treeJsx}
+          </ScrollBar>
+        ) : (
+          treeJsx
+        )}
       </StyleTree>
     );
   }

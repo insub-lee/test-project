@@ -32,13 +32,7 @@ class AppDetailUserForm extends React.Component {
       images: [],
       photoIndex: 0,
     };
-    this.props.getMyAppDetail(
-      prop.APP_ID,
-      prop.VER,
-      lang.getLocale(),
-      prop.history,
-      prop.mod,
-    );
+    this.props.getMyAppDetail(prop.APP_ID, prop.VER, lang.getLocale(), prop.history, prop.mod);
   }
 
   managerPop = () => {
@@ -46,50 +40,46 @@ class AppDetailUserForm extends React.Component {
   };
 
   render() {
-    const {
-      isOpen,
-      images,
-      photoIndex,
-    } = this.state;
+    const { isOpen, images, photoIndex } = this.state;
 
     return (
       <div style={{ display: 'flex', flexFlow: 'column' }}>
-        {
-          isOpen && (
-            <Lightbox
-              mainSrc={images[photoIndex]}
-              nextSrc={images[(photoIndex + 1) % images.length]}
-              prevSrc={images[((photoIndex + images.length) - 1) % images.length]}
-              onCloseRequest={() => this.setState({ isOpen: false })}
-              onMovePrevRequest={() =>
-                this.setState({
-                  photoIndex: ((photoIndex + images.length) - 1) % images.length,
-                })
-              }
-              onMoveNextRequest={() =>
-                this.setState({
-                  photoIndex: (photoIndex + 1) % images.length,
-                })
-              }
-            />
-          )
-        }
+        {isOpen && (
+          <Lightbox
+            mainSrc={images[photoIndex]}
+            nextSrc={images[(photoIndex + 1) % images.length]}
+            prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+            onCloseRequest={() => this.setState({ isOpen: false })}
+            onMovePrevRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + images.length - 1) % images.length,
+              })
+            }
+            onMoveNextRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + 1) % images.length,
+              })
+            }
+          />
+        )}
         {/* App 정보 */}
         <StyleAppDetailUserForm>
           {/* <h2 className="appInfo">{intlObj.get(messages.appInfo)}</h2>
           <h2 className="appInfo">{intlObj.get(messages.verInfo)}</h2> */}
 
-          <h4>{intlObj.get(messages.manager)} ({intlObj.get(messages.groupCharge)})</h4>
-          {
-            this.props.appManagerList.length > 0 ?
-              (<OrgReturnView
-                managerList={this.props.appManagerList}
-                delFlag={false}
-                scroll={0}
+          <h4>
+            {intlObj.get(messages.manager)} ({intlObj.get(messages.groupCharge)})
+          </h4>
+          {this.props.appManagerList.length > 0 ? (
+            <OrgReturnView
+              managerList={this.props.appManagerList}
+              delFlag={false}
+              scroll={0}
               // returnManagerList={returnManagerList}
-              />
-              ) : ('')
-          }
+            />
+          ) : (
+            ''
+          )}
           {/* <h2 className="appInfo">{intlObj.get(messages.permissions)}</h2> */}
           <h4>{intlObj.get(messages.target)}</h4>
           <div className="appManagerListBoxNoScroll">
@@ -121,13 +111,11 @@ AppDetailUserForm.propTypes = {
   deptList: PropTypes.array, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getMyAppDetail: (APP_ID, VER, LANG, history, mod) => {
-      dispatch(actions.getMyAppDetail(APP_ID, VER, LANG, history, mod));
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getMyAppDetail: (APP_ID, VER, LANG, history, mod) => {
+    dispatch(actions.getMyAppDetail(APP_ID, VER, LANG, history, mod));
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   appManagerList: selectors.makeSelectAppManagerList(),
@@ -142,8 +130,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'AppDetailUserForm', saga });
 const withReducer = injectReducer({ key: 'AppDetailUserForm', reducer });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppDetailUserForm));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AppDetailUserForm));

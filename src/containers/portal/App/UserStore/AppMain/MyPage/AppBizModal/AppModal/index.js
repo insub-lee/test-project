@@ -11,15 +11,15 @@ import { Input } from 'antd';
 // import * as selectorsApp from 'containers/store/App/selectors';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+import * as commonjs from 'containers/common/functions/common';
 import AppCategory from '../../../../components/AppCategory';
 
-import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import AppList from './AppList';
 import StyleAppBizModal from '../StyleAppBizModal';
 
 class AppModal extends PureComponent {
-  searchEnter = (e) => {
+  searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
@@ -46,7 +46,7 @@ class AppModal extends PureComponent {
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
 
-    const handleOnClick = (node) => {
+    const handleOnClick = node => {
       this.searchword = '';
       this.searchInput.input.value = '';
       history.push(`${preUrl}/app/list/${node.key}`);
@@ -63,11 +63,7 @@ class AppModal extends PureComponent {
     return (
       <StyleAppBizModal>
         <ErrorBoundary>
-          <AppCategory 
-            handleOnClick={handleOnClick} 
-            selectedIndex={selectedCategoryId} 
-            preUrl={preUrl} 
-          />
+          <AppCategory handleOnClick={handleOnClick} selectedIndex={selectedCategoryId} preUrl={preUrl} />
         </ErrorBoundary>
         <div className="topPart">
           <div className="searchInput">
@@ -76,7 +72,7 @@ class AppModal extends PureComponent {
               title={intlObj.get(messages.searchBizStore)}
               // onChange={this.onChange}
               onKeyPress={this.searchEnter}
-              ref={(ref) => {
+              ref={ref => {
                 this.searchInput = ref;
               }}
             />

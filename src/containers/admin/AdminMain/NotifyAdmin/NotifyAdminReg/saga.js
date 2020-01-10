@@ -27,7 +27,6 @@ export function* getSiteCombo() {
   }
 }
 
-
 export default function* notifyAdminRegSaga() {
   yield takeLatest(constants.REG_NOTIFY, regNotify);
   yield takeLatest(constants.GET_SITE_COMBO, getSiteCombo);

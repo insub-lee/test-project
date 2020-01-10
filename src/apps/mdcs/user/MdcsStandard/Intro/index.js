@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { Select, Modal, Radio, Input, Table } from 'antd';
-
+import { Select, Modal, Radio, Input, Table, Spin } from 'antd';
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import * as DraftType from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/draftconst';
+import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
+import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
+import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
+import BizBuilderBase from 'components/BizBuilderBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
+
 import StyledContents from '../../../styled/StyledContents';
 import StyledButton from '../../../styled/StyledButton';
-import BizMicroDevBase from '../../../components/BizMicroDevBase';
-import BizBuilderBase from '../../../components/BizBuilderBase';
 import StyledModalWrapper from '../../../styled/Modals/StyledModalWrapper';
 
-import DwDoc from '../DwDoc';
-import PmDoc from '../PmDoc';
-import BizDoc from '../BizDoc';
-import TechDoc from '../TechDoc';
+import StdView from './StdView';
+import StdInput from './StdInput';
 
 const { Option } = Select;
 const AntdModal = StyledModalWrapper(Modal);
@@ -40,6 +39,7 @@ class IntroComponent extends Component {
     taskSeq: -1,
     viewType: 'INPUT',
     fullPathInfo: [],
+    isLoading: true,
   };
 
   componentDidMount() {
@@ -108,51 +108,47 @@ class IntroComponent extends Component {
   };
 
   findDocs = (listItem, aryNodesIds) => {
-    const node = aryNodesIds.filter(_node => listItem.NODE_ID.toString() === _node);
+    const node = aryNodesIds.filter(_node => listItem.CATEGORYNODEID.toString() === _node);
     return node.length > 0 ? listItem : false;
-  };
-
-  selectedTemplate = (aryDocs, categoryListinfo, aryDocTemplateInfoList) => {
-    let _selectedCategory;
-    aryDocs.map(doc => {
-      if (_selectedCategory === undefined) {
-        _selectedCategory =
-          categoryListinfo.filter(cate => cate.NODE_ID === doc.NODE_ID).length > 0
-            ? categoryListinfo.filter(cate => cate.NODE_ID === doc.NODE_ID)[0]
-            : undefined;
-      } else {
-        const _curCategory = categoryListinfo.filter(cate => cate.NODE_ID === doc.NODE_ID)
-          ? categoryListinfo.filter(cate => cate.NODE_ID === doc.NODE_ID)[0]
-          : undefined;
-        if (_selectedCategory.length > 0 && _curCategory.LVL > _selectedCategory.LVL) {
-          _selectedCategory = _curCategory;
-        }
-      }
-    });
-
-    const selectedDoc = aryDocs.filter(doc => doc.NODE_ID === _selectedCategory.NODE_ID)
-      ? aryDocs.filter(doc => doc.NODE_ID === _selectedCategory.NODE_ID)[0]
-      : undefined;
-
-    return aryDocTemplateInfoList.filter(template => template.NODE_ID === selectedDoc.DOC_CODE)
-      ? aryDocTemplateInfoList.filter(template => template.NODE_ID === selectedDoc.DOC_CODE)[0]
-      : undefined;
   };
 
   onChangeByStep4 = (value, result) => {
     const docNumber = this.onMakeDocNumber(5, value, result);
-    const selectedItem = result && result.docTemplateInfoByCategory && result.categoryInfo.categoryMapList.filter(item => item.NODE_ID === value);
+    const selectedItem =
+      result && result.categoryInfo && result.categoryInfo.categoryMapList && result.categoryInfo.categoryMapList.filter(item => item.NODE_ID === value);
     let fullPath = '';
     if (selectedItem && selectedItem.length > 0) {
       fullPath = selectedItem[0].FULLPATH;
     }
 
     const aryNodeIds = fullPath.split('|');
-    const aryDocs = result && result.docTemplateInfoByCategory && result.docTemplateInfoByCategory.list.filter(listItem => this.findDocs(listItem, aryNodeIds));
-    const aryDocTemplateInfoList = result && result.docTemplateInfo && result.docTemplateInfo.categoryMapList;
-    const selectedTemplate = this.selectedTemplate(aryDocs, result && result.categoryInfo && result.categoryInfo.categoryMapList, aryDocTemplateInfoList);
+
+    // 관련카테고리 Find하기
+    const { docTemplateInfoByCategory } = result;
+    const selectedCategorys =
+      docTemplateInfoByCategory &&
+      docTemplateInfoByCategory.list &&
+      docTemplateInfoByCategory.list.filter(category => {
+        const fidx = aryNodeIds.findIndex(nodeId => nodeId === category.CATEGORYNODEID.toString());
+        return fidx !== -1;
+      });
+
+    console.debug('selectedCategorys', selectedCategorys);
+    selectedCategorys &&
+      selectedCategorys.sort((a, b) => {
+        if (a.LVL > b.LVL) {
+          return -1;
+        }
+        if (a.LVL < b.LVL) {
+          return 1;
+        }
+        return 0;
+      });
+
+    const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];
 
     const { id, getCallDataHanlder, apiArys } = this.props;
+
     apiArys.push({
       key: 'docNum',
       url: `/api/mdcs/v1/common/DocNumberHanlder/${docNumber.join('')}`,
@@ -170,15 +166,31 @@ class IntroComponent extends Component {
     this.setState({
       selectedValue4: value,
       selectedFullPath: fullPath,
-      selectedComponent: selectedTemplate,
+      selectedComponent: selectedCategory,
       // fullPathInfo: fullPath.split('|'),
       fullPathInfo: fullPathArr,
     });
   };
 
   onModalShow = () => {
+    if (this.state.selectedValue1 === undefined) {
+      window.alert('대분류를 선택하세요');
+    } else if (this.state.selectedValue2 === undefined) {
+      window.alert('중분류를 선택하세요');
+    } else if (this.state.selectedValue3 === undefined) {
+      window.alert('소분류를 선택하세요');
+    } else if (this.state.selectedValue4 === undefined) {
+      window.alert('문서LEVEL을 선택하세요');
+    } else {
+      this.setState({
+        isShow: true,
+      });
+    }
+  };
+
+  loadingComplete = () => {
     this.setState({
-      isShow: true,
+      isLoading: false,
     });
   };
 
@@ -198,6 +210,7 @@ class IntroComponent extends Component {
       selectedDraft: prevState.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
       taskSeq: -1,
+      isLoading: true,
     }));
   };
 
@@ -215,6 +228,7 @@ class IntroComponent extends Component {
       isShow: false,
       selectedDraft: prevState.selectedDraft,
       docNumber: ['M', '', '', '', '-', ''],
+      isLoading: true,
     }));
   };
 
@@ -222,95 +236,32 @@ class IntroComponent extends Component {
     const workPrcProps = {
       draftType: this.state.selectedDraft,
       nodeIds: this.state.fullPathInfo,
-      degreeFlag: 88,
+      degreeFlag: ModifyType.MAJOR,
     };
 
+    let workSeq = -1;
     switch (doctype) {
-      case 'BS': {
-        return (
-          <BizBuilderBase
-            id="BizDoc"
-            workSeq={913}
-            taskSeq={taskSeq}
-            component={BizDoc}
-            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType={viewType}
-            selectedNodeId={this.state.selectedValue4}
-            workPrcProps={workPrcProps}
-            // fullNodeIds={this.state.fullPathInfo}
-            // draftType={this.state.selectedDraft}
-          />
-        );
-      }
-      case 'PM': {
-        return (
-          <BizBuilderBase
-            id="PmDoc"
-            workSeq={953}
-            taskSeq={taskSeq}
-            component={PmDoc}
-            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType={viewType}
-            selectedNodeId={this.state.selectedValue4}
-            workPrcProps={workPrcProps}
-            // fullNodeIds={this.state.fullPathInfo}
-            // draftType={this.state.selectedDraft}
-          />
-        );
-      }
-      case 'DW': {
-        return (
-          <BizBuilderBase
-            id="DwDoc"
-            workSeq={985}
-            taskSeq={taskSeq}
-            component={DwDoc}
-            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType={viewType}
-            selectedNodeId={this.state.selectedValue4}
-            workPrcProps={workPrcProps}
-            // fullNodeIds={this.state.fullPathInfo}
-            // draftType={this.state.selectedDraft}
-          />
-        );
-      }
-      case 'TS': {
-        return (
-          <BizBuilderBase
-            id="TechDoc"
-            workSeq={913}
-            taskSeq={taskSeq}
-            component={TechDoc}
-            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType={viewType}
-            selectedNodeId={this.state.selectedValue4}
-            workPrcProps={workPrcProps}
-            // fullNodeIds={this.state.fullPathInfo}
-            // draftType={this.state.selectedDraft}
-          />
-        );
-      }
+      case 'BS':
+        workSeq = 201;
+        break;
       default:
-        return (
-          <BizBuilderBase
-            id="BizDoc"
-            workSeq={913}
-            taskSeq={taskSeq}
-            component={BizDoc}
-            compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
-            onCloseModleHandler={this.onCompleteCloseModal}
-            viewType={viewType}
-            selectedNodeId={this.state.selectedValue4}
-            workPrcProps={workPrcProps}
-            // fullNodeIds={this.state.fullPathInfo}
-            // draftType={this.state.selectedDraft}
-          />
-        );
+        workSeq = 201;
     }
+
+    return (
+      <BizBuilderBase
+        id="BizDoc"
+        workSeq={201}
+        compProps={{ docNumber, NODE_ID: this.state.selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
+        CustomInputPage={StdInput}
+        CustomViewPage={StdView}
+        taskSeq={taskSeq}
+        workPrcProps={workPrcProps}
+        viewType={viewType}
+        loadingComplete={this.loadingComplete}
+        onCloseModal={this.onCloseModal}
+      />
+    );
   };
 
   onSearchRevisionData = selectedNodeId => {
@@ -361,11 +312,13 @@ class IntroComponent extends Component {
   };
 
   render() {
+    console.debug('intro', this.props);
     const { result } = this.props;
-    const { selectedValue1, selectedValue2, selectedValue3, selectedValue4 } = this.state;
+    const { selectedValue1, selectedValue2, selectedValue3, selectedValue4, isLoading } = this.state;
     const _fDepth =
       result &&
       result.categoryInfo &&
+      result.categoryInfo.categoryMapList &&
       result.categoryInfo.categoryMapList
         .filter(item => item.LVL === 1)
         .map(x => (
@@ -428,7 +381,6 @@ class IntroComponent extends Component {
                 </dl>
               </div>
             </div>
-
             <div className="grid4 last">
               <div className="con-tit">
                 <span>기안</span>
@@ -451,7 +403,7 @@ class IntroComponent extends Component {
                         onPressEnter={() => this.onSearchRevisionData(selectedNodeId)}
                         value={this.state.searchValue}
                         onChange={e => this.setState({ searchValue: e.target.value })}
-                      ></Input>
+                      />
                     </li>
                   )}
                   <li>
@@ -493,20 +445,39 @@ class IntroComponent extends Component {
                   <StyledButton className="btn-light">다시선택</StyledButton>
                 </div>
                 {this.state.selectedDraft === DraftType.AMENDMENT && result && result.listData && (
-                  <AntdTable columns={columData} dataSource={result.listData.arr || []}></AntdTable>
+                  <AntdTable columns={columData} dataSource={result.listData.arr || []} />
                 )}
               </div>
             </div>
           </div>
         </div>
 
-        <AntdModal destroyOnClose style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()} footer={null}>
-          {this.onShowDocTemplate(
-            this.state.selectedComponent && this.state.selectedComponent.CODE,
-            docNum && docNum.docNumber,
-            this.state.taskSeq,
-            this.state.viewType,
-          )}
+        <AntdModal
+          destroyOnClose
+          style={{ top: '50px' }}
+          width={1200}
+          visible={this.state.isShow}
+          onCancel={() => this.onCloseModal()}
+          footer={null}
+          maskClosable={false}
+        >
+          <StyledInputView>
+            <div className="pop_tit">업무표준</div>
+            <div style={{ display: this.state.isLoading ? '' : 'none' }}>
+              <Spin tip="Loading...">
+                <div style={{ height: '300px' }} />
+              </Spin>
+            </div>
+            <div style={{ display: !this.state.isLoading ? '' : 'none' }}>
+              {this.state.isShow &&
+                this.onShowDocTemplate(
+                  this.state.selectedComponent && this.state.selectedComponent.DOCTEMPLATECODE,
+                  docNum && docNum.docNumber,
+                  this.state.taskSeq,
+                  this.state.viewType,
+                )}
+            </div>
+          </StyledInputView>
         </AntdModal>
       </StyledContents>
     );
@@ -526,13 +497,13 @@ IntroComponent.defaultProps = {
   apiArys: [
     {
       key: 'categoryInfo',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=3',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1',
       type: 'GET',
       params: {},
     },
     {
       key: 'docTemplateInfoByCategory',
-      url: '/api/builder/v1/work/taskList/1011',
+      url: '/api/mdcs/v1/common/DocCategoryTemplHandler',
       type: 'GET',
       params: {},
     },

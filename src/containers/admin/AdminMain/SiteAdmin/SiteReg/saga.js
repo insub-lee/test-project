@@ -84,12 +84,7 @@ export function* registSite(payload) {
     // history.push(`/admin/adminmain/siteadmin/SiteDetail/${response.SITE_ID}`);
 
     // 성공
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.regComplete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>, 3);
 
     // yield put({
     //   type: constants.SET_SITE_DETAIL,

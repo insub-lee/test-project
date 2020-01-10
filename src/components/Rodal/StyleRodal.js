@@ -4,42 +4,54 @@ import IconAttachedFile from 'images/common/icon-attachedfile-white.png';
 import IconFileDonwload from 'images/common/icon-file-download.png';
 
 const RodalContentStyle = styled.div`
+  &.contentWrapper {
+    @media only screen and (max-width: 1160px) {
+      height: 100% !important;
 
-&.contentWrapper {
-  @media only screen and (max-width: 1160px) {
-    height: 100% !important;
-  
-    .ant-row-flex {height: 100%;}
-  }
-  @media only screen and (max-width: 320px) {width: 270px !important;}
-}
-
-.leftActivity {
-  @media only screen and (max-width: 1160px) {height: 50% !important;}
-  @media only screen and (max-width: 650px) {width: 100%;}
-
-  .rodalCustomScrollbar {
-    width: calc(100% - 15px) !important;
-    height: calc(100vh - 230px) !important;
-    background: #ffffff;
-
-    @media only screen and (max-width: 1160px) {width: 100% !important; height: 100% !important;}
-
-    .content {padding: 10px;}
-  }
-}
-
-.rightActivity {
-  @media only screen and (max-width: 1160px) {
-    width: 100% !important;
-    height: 50% !important;
-    margin-top: 15px;
+      .ant-row-flex {
+        height: 100%;
+      }
+    }
+    @media only screen and (max-width: 320px) {
+      width: 270px !important;
+    }
   }
 
-  .view {
-    height: 98%;
+  .leftActivity {
+    @media only screen and (max-width: 1160px) {
+      height: 50% !important;
+    }
+    @media only screen and (max-width: 650px) {
+      width: 100%;
+    }
+
+    .rodalCustomScrollbar {
+      width: calc(100% - 15px) !important;
+      height: calc(100vh - 230px) !important;
+      background: #ffffff;
+
+      @media only screen and (max-width: 1160px) {
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .content {
+        padding: 10px;
+      }
+    }
   }
-}
+
+  .rightActivity {
+    @media only screen and (max-width: 1160px) {
+      width: 100% !important;
+      height: 50% !important;
+      margin-top: 15px;
+    }
+
+    .view {
+      height: 98%;
+    }
+  }
 `;
 
 const DrilldownView = styled.div`
@@ -57,12 +69,13 @@ const DrilldownView = styled.div`
         margin-right: 17px;
       }
 
-      .empData, .writtenDate {
+      .empData,
+      .writtenDate {
         font-size: 12px;
         color: #ffffff;
 
         &:after {
-          content: "";
+          content: '';
           display: table;
           clear: both;
         }
@@ -81,9 +94,19 @@ const DrilldownView = styled.div`
         > li {
           float: left;
 
-          &:first-child {width: 30px;}
-          &.name, &.dept, &.position {padding-top: 5px; padding-left: 8px;}
-          &.empNo {padding-top: 5px; padding-left: 3px;}
+          &:first-child {
+            width: 30px;
+          }
+          &.name,
+          &.dept,
+          &.position {
+            padding-top: 5px;
+            padding-left: 8px;
+          }
+          &.empNo {
+            padding-top: 5px;
+            padding-left: 3px;
+          }
 
           .empPicture {
             display: inline-block;
@@ -91,12 +114,14 @@ const DrilldownView = styled.div`
             height: 30px;
             margin-right: 8px;
             ${borderRadius('15px')};
-            overflow:hidden;
-        
-            > img {width: 100%;}
-        
+            overflow: hidden;
+
+            > img {
+              width: 100%;
+            }
+
             &:after {
-              content: "";
+              content: '';
               display: table;
               clear: both;
             }
@@ -135,7 +160,9 @@ const DrilldownView = styled.div`
           > button {
             padding: 2px 10px;
 
-            > span {text-decoration: underline;}
+            > span {
+              text-decoration: underline;
+            }
           }
         }
 
@@ -152,7 +179,7 @@ const DrilldownView = styled.div`
               padding-left: 18px;
               background: url(${IconAttachedFile}) no-repeat 0 5px;
             }
-          
+
             &:last-child {
               min-width: 52px;
               text-align: right;
@@ -165,7 +192,6 @@ const DrilldownView = styled.div`
             }
           }
         }
-
       }
     }
 
@@ -214,4 +240,4 @@ const DrilldownView = styled.div`
   }
 `;
 
-export {RodalContentStyle, DrilldownView};
+export { RodalContentStyle, DrilldownView };

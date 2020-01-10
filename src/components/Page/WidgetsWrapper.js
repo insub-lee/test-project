@@ -13,17 +13,9 @@ export default class WidgetsWrapper extends Component {
     }
     return false;
   }
+
   render() {
-    const {
-      width,
-      gutterTop,
-      gutterRight,
-      gutterBottom,
-      gutterLeft,
-      padding,
-      children,
-      item,
-    } = this.props;
+    const { width, gutterTop, gutterRight, gutterBottom, gutterLeft, padding, children, item } = this.props;
 
     const wrapperStyle = {
       marginTop: gutterTop,
@@ -61,16 +53,9 @@ export default class WidgetsWrapper extends Component {
           borderRadius: 2,
         }}
       >
-        <WidgetWrapper
-          className={selectSkin}
-          style={wrapperStyle}
-        >
+        <WidgetWrapper className={selectSkin} style={wrapperStyle}>
           <WidgetHeader item={item} />
-          <WidgetBox
-            item={item}
-          >
-            {children}
-          </WidgetBox>
+          <WidgetBox item={item}>{children}</WidgetBox>
         </WidgetWrapper>
       </div>
     );

@@ -1,7 +1,18 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
 import * as treeFunc from 'containers/common/functions/treeFunc';
-import { LOAD_BAPPLIST_SAGA, SET_BAPPLIST, DELETE_APPLIST_SAGA, LOAD_APP_TREE, SET_TREE_DATA, LOAD_CATEGORY_LIST_SAGA, SET_CATEGORY_LIST, SEARCH_CATEGORY_LSIT_SAGA, DELETE_APPLIST_BIZ_SAGA, LOAD_BIZAPPLIST_SAGA } from './constants';
+import {
+  LOAD_BAPPLIST_SAGA,
+  SET_BAPPLIST,
+  DELETE_APPLIST_SAGA,
+  LOAD_APP_TREE,
+  SET_TREE_DATA,
+  LOAD_CATEGORY_LIST_SAGA,
+  SET_CATEGORY_LIST,
+  SEARCH_CATEGORY_LSIT_SAGA,
+  DELETE_APPLIST_BIZ_SAGA,
+  LOAD_BIZAPPLIST_SAGA,
+} from './constants';
 import { Axios } from '../../utils/AxiosFunc';
 
 export function* getBAppList(payload) {
@@ -9,7 +20,7 @@ export function* getBAppList(payload) {
   result.body = [];
   result.app_ID = 4;
   result.widget_ID = 31;
-  
+
   const item = JSON.stringify(result);
 
   const data = {
@@ -25,7 +36,7 @@ export function* getBAppList(payload) {
 
   const resultList = [];
 
-  if(resultValue2.length > 0) {
+  if (resultValue2.length > 0) {
     resultValue2.map(list => resultList.push(list.app_ID));
   }
 
@@ -38,9 +49,9 @@ export function* getBAppList(payload) {
   const response2 = yield call(Axios.post, '/api/portal/v1/page/getwidgetDscr/', data2);
   const resultValue = response2.dscrList;
 
-  for(let i = 0; i< resultValue2.length; i += 1) {
-    resultValue[i].TARGET = resultValue2[i].TARGET
-    resultValue[i].PAGE_ID = resultValue2[i].PAGE_ID
+  for (let i = 0; i < resultValue2.length; i += 1) {
+    resultValue[i].TARGET = resultValue2[i].TARGET;
+    resultValue[i].PAGE_ID = resultValue2[i].PAGE_ID;
   }
 
   yield put({ type: SET_BAPPLIST, resultValue });
@@ -51,7 +62,7 @@ export function* getBizAppList(payload) {
   result.body = [];
   result.app_ID = 4;
   result.widget_ID = 31;
-  
+
   const item = JSON.stringify(result);
 
   const data = {
@@ -67,7 +78,7 @@ export function* getBizAppList(payload) {
 
   const resultList = [];
 
-  if(resultValue2.length > 0) {
+  if (resultValue2.length > 0) {
     resultValue2.map(list => resultList.push(list.app_ID));
   }
 
@@ -80,9 +91,9 @@ export function* getBizAppList(payload) {
   const response2 = yield call(Axios.post, '/api/portal/v1/page/getwidgetDscr/', data2);
   const resultValue = response2.dscrList;
 
-  for(let i = 0; i< resultValue2.length; i += 1) {
-    resultValue[i].TARGET = resultValue2[i].TARGET
-    resultValue[i].PAGE_ID = resultValue2[i].PAGE_ID
+  for (let i = 0; i < resultValue2.length; i += 1) {
+    resultValue[i].TARGET = resultValue2[i].TARGET;
+    resultValue[i].PAGE_ID = resultValue2[i].PAGE_ID;
   }
 
   yield put({ type: SET_BAPPLIST, resultValue });

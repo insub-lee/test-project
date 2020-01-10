@@ -6,10 +6,7 @@ import FooterMenu from './FooterMenu';
 
 class Footer extends React.Component {
   getMarginLeftFix = () => {
-    const {
-      dockIconType,
-      view,
-    } = this.props;
+    const { dockIconType, view } = this.props;
 
     switch (view) {
       case 'DesktopWide':
@@ -41,9 +38,7 @@ class Footer extends React.Component {
   };
 
   getMarginLeftUnfix = () => {
-    const {
-      view,
-    } = this.props;
+    const { view } = this.props;
 
     // 독 고정이 아닐 경우 독아이템 크기 상관 없음
     switch (view) {
@@ -65,14 +60,10 @@ class Footer extends React.Component {
   };
 
   render() {
-    const {
-      dockFixedYn,
-    } = this.props;
+    const { dockFixedYn } = this.props;
 
     return (
-      <StyledFooter
-        marginLeft={dockFixedYn === 'Y' ? this.getMarginLeftFix() : this.getMarginLeftUnfix()}
-      >
+      <StyledFooter marginLeft={dockFixedYn === 'Y' ? this.getMarginLeftFix() : this.getMarginLeftUnfix()}>
         <div>
           <FooterMenu />
           <Copyright />

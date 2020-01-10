@@ -15,7 +15,7 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.CHANGE_WORK_SEQ: {
       const { workSeq } = action;
-      return state.setIn(['ITEM_VALUE', 'data', 'WORK_SEQ'], workSeq);
+      return state.setIn(['ITEM_VALUE', 'data'], workSeq);
     }
     case actionTypes.SET_BUILDER_WIDGET_CONFIG: {
       const { ITEM_VALUE } = action;

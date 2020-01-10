@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Input } from 'antd';
+import { Input, Select } from 'antd';
 import { Link } from 'react-router-dom';
 
 import injectReducer from 'utils/injectReducer';
@@ -17,12 +17,18 @@ import * as actions from './actions';
 
 import StyledNode from '../StyledNode';
 
+const { Option } = Select;
+
 class NodeDetail extends Component {
   componentDidMount() {
     const { NODE_ID } = this.props.match.params;
     if (NODE_ID !== '-1') {
       this.props.getNodeDetail(NODE_ID);
     }
+  }
+
+  componentDidUnmount() {
+    this.props.setNodeDetail({});
   }
 
   render() {
@@ -42,18 +48,6 @@ class NodeDetail extends Component {
                     </th>
                     <td>{node.NAME_KOR}</td>
                   </tr>
-                  {/* <tr>
-                    <th>
-                      <label htmlFor="v2">노드명(ENG)</label>
-                    </th>
-                    <td>{node.NAME_ENG}</td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <label htmlFor="v2">노드명(CHN)</label>
-                    </th>
-                    <td>{node.NAME_CHN}</td>
-                  </tr> */}
                   <tr>
                     <th>
                       <label htmlFor="v2">노드경로</label>
@@ -71,6 +65,41 @@ class NodeDetail extends Component {
                       <label htmlFor="v2">노드옵션</label>
                     </th>
                     <td>{node.NODE_OPTION}</td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <label htmlFor="v2">노드타입</label>
+                    </th>
+                    <td>
+                      <Select value={node.NODE_TYPE} style={{ width: '100px' }} disabled>
+                        <Option value="NU">사용자</Option>
+                        <Option value="ND">부서</Option>
+                        <Option value="NG">그룹</Option>
+                      </Select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <label htmlFor="v2">노드구분</label>
+                    </th>
+                    <td>
+                      <Select value={node.NODE_GUBUN} style={{ width: '100px' }} disabled>
+                        <Option value={1}>결재</Option>
+                        <Option value={9}>시스템</Option>
+                      </Select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>
+                      <label htmlFor="v2">뷰타입</label>
+                    </th>
+                    <td>
+                      <Select value={node.VIEW_TYPE} style={{ width: '100px' }} disabled>
+                        <Option value={1}>인장</Option>
+                        <Option value={2}>항목</Option>
+                        <Option value={9}>NONE</Option>
+                      </Select>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -97,6 +126,7 @@ NodeDetail.propTypes = {
   match: PropTypes.object.isRequired,
   node: PropTypes.object,
   getNodeDetail: PropTypes.func,
+  setNodeDetail: PropTypes.func,
   deleteNode: PropTypes.func,
 };
 
@@ -115,18 +145,12 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getNodeDetail: nodeId => dispatch(actions.getNodeDetail(nodeId)),
+  setNodeDetail: nodeInfo => dispatch(actions.setNodeDetail(nodeInfo)),
   deleteNode: nodeInfo => dispatch(actions.deleteNode(nodeInfo)),
 });
 
 const withReducer = injectReducer({ key: 'containers.admin.AdminMain.Node.NodeDetail', reducer });
 const withSaga = injectSaga({ key: 'containers.admin.AdminMain.Node.NodeDetail', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(NodeDetail);
+export default compose(withSaga, withReducer, withConnect)(NodeDetail);

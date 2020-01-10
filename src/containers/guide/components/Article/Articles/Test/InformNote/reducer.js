@@ -11,7 +11,10 @@ const pmsheetReducer = (state = initState, action) => {
     case constants.LOADING_PARAM:
       return state.set('sdptList', action.sdptList);
     case constants.LOADING_FACTORY_PARAM:
-      return state.set('factoryList', action.factoryList).set('versionList', action.versionList).set('signStatusList', action.signStatusList);
+      return state
+        .set('factoryList', action.factoryList)
+        .set('versionList', action.versionList)
+        .set('signStatusList', action.signStatusList);
     case constants.LOADING_SDPTPARAM:
       return state.set('modelList', action.modelList);
     case constants.LOADING_PMSHEETSEARCH:

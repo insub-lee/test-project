@@ -6,7 +6,7 @@ import wState4sm from 'images/common/icon-weather-status4-sm.png';
 import wState5sm from 'images/common/icon-weather-status5-sm.png';
 import wState5lg from 'images/common/icon-weather-status5-lg.png';
 
-const WeatherStyle = styled.div`  
+const WeatherStyle = styled.div`
   padding-left: 30px;
   padding-right: 30px;
   padding-top: 0;
@@ -34,7 +34,7 @@ const WeatherStyle = styled.div`
         &.wStatus4lg {
           background-image: url(${wState5lg});
         }
-      } 
+      }
     }
 
     .weatherInfo {
@@ -49,24 +49,24 @@ const WeatherStyle = styled.div`
         line-height: 16px;
         border: none !important; //날씨 위젯에만 해당
         border-radius: 0; //날씨 위젯에만 해당
-  
+
         .ant-select-selection {
           background: transparent;
           border: none !important; //날씨 위젯에만 해당
-  
+
           &.ant-select-selection--single {
             height: 16px;
           }
-  
+
           .ant-select-selection__rendered {
             margin-left: 0;
             margin-right: 0;
             padding-left: 15px;
             text-align: left;
-            line-height: 15px;            
+            line-height: 15px;
             background-repeat: no-repeat;
             background-position: 0 50%;
-  
+
             .ant-select-selection-selected-value {
               display: inline-block;
               width: 100%;
@@ -101,7 +101,7 @@ const WeatherStyle = styled.div`
         width: 90px;
         font-size: 42px;
         font-weight: 400;
-        
+
         &:after {
           content: '℃';
           font-size: 14px;
@@ -126,7 +126,8 @@ const WeatherStyle = styled.div`
           padding: 0 5px;
         }
 
-        .minTemp:after, .maxTemp:after {
+        .minTemp:after,
+        .maxTemp:after {
           content: '°';
           font-size: 14px;
           position: absolute;
@@ -149,16 +150,15 @@ const WeatherStyle = styled.div`
       text-align: center;
 
       &:first-child {
-        width: 86px; 
-        letter-spacing: 0.8px;       
+        width: 86px;
+        letter-spacing: 0.8px;
       }
 
       &:last-child {
-        width: 95px;        
+        width: 95px;
       }
 
       &.wStateIconSm {
-
         > div {
           display: inline-block;
           width: 20px;
@@ -177,7 +177,6 @@ const WeatherStyle = styled.div`
             background-image: url(${wState3sm});
           }
         }
-        
       }
 
       .div {
@@ -185,11 +184,13 @@ const WeatherStyle = styled.div`
         padding: 0 6px 0 11px;
       }
 
-      .minTemp, .maxTemp {
+      .minTemp,
+      .maxTemp {
         position: relative;
       }
 
-      .minTemp:after, .maxTemp:after {
+      .minTemp:after,
+      .maxTemp:after {
         content: '°';
         font-size: 14px;
         position: absolute;

@@ -10,9 +10,9 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledContent from 'apps/mdcs/styled/Modals/StyledContent';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
+import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
 
-import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
@@ -67,7 +67,7 @@ class BizDocListModify extends Component {
     const {
       saveTask,
       id,
-      extraApiData: { categoryMapInfo },
+      extraApiData,
       formData,
       workSeq,
       taskSeq,
@@ -79,14 +79,18 @@ class BizDocListModify extends Component {
       draftType,
       metaList,
     } = this.props;
-    console.debug(this.props);
+    // console.debug(this.props);
+    console.error('this.props : ', this.props);
     const categoryData =
-      categoryMapInfo && categoryMapInfo.categoryMapList && getCategoryMapListAsTree(categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y')).length > 0
-        ? getCategoryMapListAsTree(categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y'))[0]
+      extraApiData &&
+      extraApiData.categoryMapInfo &&
+      extraApiData.categoryMapInfo.categoryMapList &&
+      getCategoryMapListAsTree(extraApiData.categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y')).length > 0
+        ? getCategoryMapListAsTree(extraApiData.categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y'))[0]
         : [];
 
-    const contentMeta = metaList.filter(meta => meta.COMP_TAG === 'rich-text-editor');
-    const attachMeta = metaList.filter(meta => meta.COMP_TAG === 'file-upload');
+    const contentMeta = metaList && metaList.filter(meta => meta.COMP_TAG === 'rich-text-editor');
+    const attachMeta = metaList && metaList.filter(meta => meta.COMP_TAG === 'file-upload');
     return (
       <StyledContent>
         <div>
@@ -107,7 +111,7 @@ class BizDocListModify extends Component {
                   <div className="leftTable">
                     <Col span={4}>문서번호</Col>
                     <Col span={8}>
-                      <Input value={formData.SP_ID} readOnly />
+                      <Input value={formData && formData.SP_ID} readOnly />
                     </Col>
                   </div>
                   <div className="rightTable">
@@ -121,7 +125,7 @@ class BizDocListModify extends Component {
                   <div className="w100Table">
                     <Col span={4}>Title</Col>
                     <Col span={20}>
-                      <Input value={formData.TITLE} readOnly />
+                      <Input value={formData && formData.TITLE} readOnly />
                     </Col>
                   </div>
                 </Row>

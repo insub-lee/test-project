@@ -93,7 +93,7 @@ export default class NoticeList extends Component {
     return (
       <Styled className="manual-descriptions-view">
         {(viewType === 'List' && (
-          <React.Fragment>
+          <>
             <Table rowSelection={rowSelection} dataSource={dataSource} columns={columns} pagination={{ defaultPageSize: 10, showQuickJumper: true }} />
             <div className="listBottom">
               <span className="totalNumberPage">{dataSource ? dataSource.length : 0} 건</span>
@@ -109,10 +109,10 @@ export default class NoticeList extends Component {
                 글쓰기
               </Button>
             </div>
-          </React.Fragment>
+          </>
         )) ||
           (viewType === 'View' && (
-            <React.Fragment>
+            <>
               <table>
                 <tbody>
                   <tr className="manual-descriptions-row">
@@ -162,7 +162,7 @@ export default class NoticeList extends Component {
                   목록으로
                 </Button>
                 {profile.USER_ID === record.updUserId && (
-                  <React.Fragment>
+                  <>
                     <Button
                       type="button"
                       className="btn-primary"
@@ -176,13 +176,13 @@ export default class NoticeList extends Component {
                     <Button type="button" className="btn-primary" onClick={this.removeData}>
                       글삭제
                     </Button>
-                  </React.Fragment>
+                  </>
                 )}
               </div>
-            </React.Fragment>
+            </>
           )) ||
           (viewType === 'Edit' && (
-            <React.Fragment>
+            <>
               <table>
                 <tbody>
                   <tr className="manual-descriptions-row">
@@ -242,7 +242,7 @@ export default class NoticeList extends Component {
                   목록으로
                 </Button>
                 {Object.prototype.hasOwnProperty.call(record, 'key') ? (
-                  <React.Fragment>
+                  <>
                     <Button
                       type="button"
                       className="btn-primary"
@@ -257,7 +257,7 @@ export default class NoticeList extends Component {
                     <Button type="button" className="btn-primary" onClick={this.removeData}>
                       글삭제
                     </Button>
-                  </React.Fragment>
+                  </>
                 ) : (
                   <Button
                     type="button"
@@ -270,7 +270,7 @@ export default class NoticeList extends Component {
                   </Button>
                 )}
               </div>
-            </React.Fragment>
+            </>
           ))}
       </Styled>
     );

@@ -16,5 +16,4 @@ const ArticleCarousel = () => (
   </div>
 );
 
-
 export default ArticleCarousel;

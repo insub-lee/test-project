@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
 import { Debounce } from 'react-throttle';
@@ -12,9 +11,8 @@ import WindowResizeListener from 'react-window-size-listener';
 import { intlObj, checkPath } from 'utils/commonUtils';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-// import { Cookies } from 'react-cookie';
 import OrganizationPopup from 'components/OrganizationPopup';
-import Loading from 'containers/common/Loading';
+// import Loading from 'containers/common/Loading';
 import ErrorPage from 'containers/portal/App/ErrorPage';
 
 import 'style/sortable-tree-biz.css';
@@ -34,7 +32,7 @@ import * as authSelectors from '../Auth/selectors';
 import { basicPath } from '../constants';
 
 import RestrictedRoute from './RestrictedRoute';
-import Watermark from './Watermark';
+// import Watermark from './Watermark';
 
 // import HyPm from '../../../apps/hyPm';
 
@@ -61,109 +59,100 @@ const etcPath = [
 LicenseManager.setLicenseKey('Evaluation_License-_Not_For_Production_Valid_Until_25_April_2019__MTU1NjE0NjgwMDAwMA==5095db85700c871b2d29d9537cd451b3');
 
 class PublicRoutes extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    const { intl } = this.props;
+    intlObj.setIntl(intl);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { intl: prevIntl } = prevProps;
+    const { isLoggedIn, intl } = this.props;
+
+    if (JSON.stringify(prevIntl) !== JSON.stringify(intl)) {
+      intlObj.setIntl(intl);
+    }
+    if (isLoggedIn) {
+      this.loadData();
+    }
+  }
+
+  loadData = () => {
+    const { location, history, getLoaddata, getSingleModeLoaddata } = this.props;
+    const pathArray = location.pathname.split('/');
+    if (location.pathname === '/') {
+      // REMOVE DOCK - 주석처리, 기본 루트로 들어왔을 경우 처리 공통홈으로 이동 처리
+      // getLoaddata('latest');
+      getLoaddata('commonHome');
+    } else if (checkPath(pathArray[1], portalPath)) {
+      // go to getLoaddata
+      const param1 = pathArray[1];
+      // let param2 = pathArray[2];
+      let param2 = pathArray.slice(2).join('/');
+      // const appStartPath = ['WorkBuilderApp', 'WorkFlow', 'manual'];
+      if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
+      // else if (appStartPath.indexOf(pathArray[2]) > -1) param2 = pathArray.slice(2).join('/');
+      const param3 = {
+        isCssTarget: true,
+      };
+
+      /*
+        메뉴 실행 / 독 실행 / 독 종료
+        (execMenu / execDock / exitDock)
+        이 세가지의 경우 MDI CSS 작업등의 이유로 PUSH를 할 때 state값을 함께 넘겨준다.
+      */
+      // REMOVE DOCK - TODO 아래의 DOCK 관련된 부분 찾아서 제거
+      console.log('$$$ history', history.location);
+      if (history.location.execInfo) {
+        param3.type = history.location.execInfo.type;
+        switch (history.location.execInfo.type) {
+          case 'execMenu':
+            param3.node = history.location.execInfo.node;
+            param3.executedDockPageId = history.location.execInfo.executedDockPageId;
+            break;
+          case 'exitDock':
+            param3.node = {};
+            param3.deletedDockPageId = history.location.execInfo.deletedDockPageId;
+            break;
+          case 'execDock':
+            param3.executedDockPageId = history.location.execInfo.executedDockPageId;
+            break;
+          case 'reloadDock':
+            param3.node = {};
+            break;
+          default:
+        }
+      }
+      getLoaddata(param1, param2, param3);
+    } else if (checkPath(pathArray[1], portalSinglePath)) {
+      const param1 = pathArray[1];
+      let param2 = pathArray.slice(2).join('/');
+      if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
+      getSingleModeLoaddata(param1, param2);
+    }
+  };
 
   render() {
-    const {
-      isLoggedIn,
-      intl,
-      profile,
-      history,
-      location,
-      getLoaddata,
-      getSingleModeLoaddata,
-      // SMSESSION,
-      // checkSession,
-    } = this.props;
+    const { isLoggedIn, profile, location, windowResize } = this.props;
 
     const pathArray = location.pathname.split('/');
 
-    if (isLoggedIn) {
-      if (location.pathname === '/') {
-        // REMOVE DOCK - 주석처리, 기본 루트로 들어왔을 경우 처리 공통홈으로 이동 처리
-        // getLoaddata('latest');
-        getLoaddata('commonHome');
-      } else if (checkPath(pathArray[1], portalPath)) {
-        // go to getLoaddata
-        const param1 = pathArray[1];
-        // let param2 = pathArray[2];
-        let param2 = pathArray.slice(2).join('/');
-        // const appStartPath = ['WorkBuilderApp', 'WorkFlow', 'manual'];
-        if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
-        // else if (appStartPath.indexOf(pathArray[2]) > -1) param2 = pathArray.slice(2).join('/');
-        const param3 = {
-          isCssTarget: true,
-        };
+    const hasError =
+      isLoggedIn &&
+      location.pathname !== '/' &&
+      !checkPath(pathArray[1], portalPath) &&
+      !checkPath(pathArray[1], portalSinglePath) &&
+      !checkPath(pathArray[1], etcPath);
 
-        /*
-          메뉴 실행 / 독 실행 / 독 종료
-          (execMenu / execDock / exitDock)
-          이 세가지의 경우 MDI CSS 작업등의 이유로 PUSH를 할 때 state값을 함께 넘겨준다.
-        */
-       // REMOVE DOCK - TODO 아래의 DOCK 관련된 부분 찾아서 제거
-        console.log('$$$ history', history.location);
-        if (history.location.execInfo) {
-          param3.type = history.location.execInfo.type;
-          switch (history.location.execInfo.type) {
-            case 'execMenu':
-              param3.node = history.location.execInfo.node;
-              param3.executedDockPageId = history.location.execInfo.executedDockPageId;
-              break;
-            case 'exitDock':
-              param3.node = {};
-              param3.deletedDockPageId = history.location.execInfo.deletedDockPageId;
-              break;
-            case 'execDock':
-              param3.executedDockPageId = history.location.execInfo.executedDockPageId;
-              break;
-            case 'reloadDock':
-              param3.node = {};
-              break;
-            default:
-          }
-        }
-        getLoaddata(param1, param2, param3);
-      } else if (checkPath(pathArray[1], portalSinglePath)) {
-        // eslint-disable-line
+    console.debug('Path Array', isLoggedIn, pathArray, location, hasError);
 
-
-        const param1 = pathArray[1];
-        let param2 = pathArray.slice(2).join('/');
-        if (Number.isInteger(Number(pathArray[2]))) param2 = Number(pathArray[2]);
-        getSingleModeLoaddata(param1, param2);
-      } else if (checkPath(pathArray[1], etcPath)) {
-        // eslint-disable-line
-        // getLoaddata를 호출할 필요 없는 경로 (stroe, guide, admin ...)
-      } else {
-        // go to error
-        history.push('/error');
-      }
-
-      // checkSession
-      // const cookies = new Cookies();
-      // const SMSESSION2 = cookies.get('SMSESSION');
-      // const payload = {
-      //   url: location.pathname, // location.state ? location.state.from.pathname : '/',
-      //   pathname: location.pathname,
-      // };
-      // if (SMSESSION2 === null || SMSESSION2 === undefined) {
-      //   checkSession(1, payload);
-      // } else if (SMSESSION !== SMSESSION2) {
-      //   checkSession(2, payload);
-      // }
-    } else if (!checkPath(pathArray[1], portalPath) && !checkPath(pathArray[1], etcPath) && !checkPath(pathArray[1], portalSinglePath)) {
-      // 로그인 되지 않았으면서 잘못된 경로로 들어온 경우
-      history.push('/error');
+    if (hasError) {
+      return <Redirect to="/error" />;
     }
-
-    console.log('##isLoggedIn##', isLoggedIn);
-    console.log('##isLoggedIn this.props.location##', this.props.location);
-    intlObj.setIntl(intl);
 
     return (
       <div>
         <Debounce time="400" handler="onResize">
-          <WindowResizeListener onResize={windowSize => this.props.windowResize(windowSize)} />
+          <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />
         </Debounce>
         <Switch>
           <RestrictedRoute exact path="/" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
@@ -180,9 +169,9 @@ class PublicRoutes extends Component {
           <RestrictedRoute path="/guide" component={GuideApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path="/popup/organization/:lang/:deptId/:userId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path="/popup/organization/:lang/:deptId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute component={ErrorPage} isLoggedIn={isLoggedIn} profile={profile} />
+          <RestrictedRoute path="/error" component={ErrorPage} isLoggedIn={isLoggedIn} profile={profile} />
         </Switch>
-        <Loading />
+        {/* <Loading /> */}
         {/* {profile !== null ? <Watermark profile={profile} /> : <div />} */}
         <div />
       </div>
@@ -224,16 +213,5 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'common', reducer });
 const withSaga = injectSaga({ key: 'auth', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
-/* eslint-disable */
-export default injectIntl(
-  compose(
-    withSaga,
-    withReducer,
-    withConnect,
-  )(PublicRoutes),
-);
-/* eslint-disable */
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
+export default injectIntl(compose(withSaga, withReducer, withConnect)(PublicRoutes));

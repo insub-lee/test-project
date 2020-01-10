@@ -52,12 +52,7 @@ export function* insertPstn(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registPosition', payload.payload);
   const { code, pstnId } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.pstnInsert)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.pstnInsert)}</MessageContent>, 3);
     const PSTN_ID = PRNT_ID === 0 ? pstnId : selectedDept;
     if (PRNT_ID === 0) {
       yield put({
@@ -88,12 +83,7 @@ export function* updatePstn(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updatePosition', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.pstnUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.pstnUpdate)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_PSTN_COMBO_LIST,
@@ -123,12 +113,7 @@ export function* deletePstn(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/deletePosition/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.pstnDelete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.pstnDelete)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_PSTN_COMBO_LIST,
@@ -147,19 +132,13 @@ export function* deletePstn(payload) {
   }
 }
 
-
 export function* movePosition(payload) {
   const { PRNT_ID, treeData } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/movePosition', { PSTN_ID: PRNT_ID, treeData });
   const { code } = response;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.pstnUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.pstnUpdate)}</MessageContent>, 3);
     yield put({
       type: actionType.GET_CHANGE_PSTN_DATA,
       PSTN_ID: PRNT_ID,

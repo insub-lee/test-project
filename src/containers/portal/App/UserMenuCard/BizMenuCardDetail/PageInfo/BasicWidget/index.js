@@ -9,11 +9,7 @@ class BasicWidget extends PureComponent {
   render() {
     const { item } = this.props;
 
-    return (
-      <BizStorePreviewWidget
-        item={item}
-      />
-    );
+    return <BizStorePreviewWidget item={item} />;
   }
 }
 

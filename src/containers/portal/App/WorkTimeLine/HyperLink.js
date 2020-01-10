@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 const HyperLink = ({ data, url }) => {
   const {
-    dependentValues: {
-      modDt, arSeq, arCtname, arTitle, empNo, empName, deptName, positionName,
-    },
+    dependentValues: { modDt, arSeq, arCtname, arTitle, empNo, empName, deptName, positionName },
   } = data;
   const dtArr = modDt.split(' ')[0].split('-');
   const dtObj = new Date(dtArr[0], Number(dtArr[1]) - 1, dtArr[2]);
@@ -20,13 +18,7 @@ const HyperLink = ({ data, url }) => {
   return (
     <div className="contentWrapper">
       <small>{arCtname}</small>
-      <a
-        href={`${url}/article/${arSeq}`}
-        className="titleText ellipsis"
-        target="_blank"
-        rel="noopener noreferrer"
-        title={arTitle}
-      >
+      <a href={`${url}/article/${arSeq}`} className="titleText ellipsis" target="_blank" rel="noopener noreferrer" title={arTitle}>
         {arTitle}
       </a>
       <div className="empInfo">
@@ -34,12 +26,16 @@ const HyperLink = ({ data, url }) => {
           <img
             src={`/portalWeb/uploadfile/pictures/${empNo}.jpg`}
             alt={empNo}
-            onError={(e) => { e.target.src = '/no_img_pro.jpg'; }}
+            onError={e => {
+              e.target.src = '/no_img_pro.jpg';
+            }}
           />
         </div>
         <p className="subInfo ellipsis">
           {empName}({empNo})/{deptName} {positionName}
-          <span className="br">{modDt}  {diffRes}</span>
+          <span className="br">
+            {modDt} {diffRes}
+          </span>
         </p>
       </div>
     </div>

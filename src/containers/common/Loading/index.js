@@ -50,8 +50,4 @@ const withConnect = connect(mapStateToProps);
 const withReducer = injectReducer({ key: 'loading', reducer });
 const withSaga = injectSaga({ key: 'loading', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Loading);
+export default compose(withReducer, withSaga, withConnect)(Loading);

@@ -23,7 +23,7 @@ import * as actions from './actions';
 import Select, { SelectOption } from '../../../../../components/Select';
 import StyleSiteAdminList from './StyleSiteAdminList';
 import StyleDataGrid from '../../../../store/components/uielements/dataGrid.style';
-import { LinkBtnDkGray, BtnDelete } from '../../../../store/components/uielements/buttons.style';
+// import { LinkBtnDkGray, BtnDelete } from '../../../../store/components/uielements/buttons.style';
 import StyledButton from '../../../../../components/Button/StyledButton';
 
 const Option = SelectOption;
@@ -31,6 +31,12 @@ const Option = SelectOption;
 const pageIndex = 20; // 페이징 단위
 let pageSNum = 1; // 페이징 시작 변수
 let pageENum = 20; // 페이징 종료 변수
+
+const EmptyData = () => (
+  <div style={{ textAlign: 'center', fontSize: 15, fontWeight: 800, padding: 15 }}>
+    <span>검색 결과가 없습니다.</span>
+  </div>
+);
 
 class SiteList extends React.Component {
   constructor(prop) {
@@ -260,14 +266,6 @@ class SiteList extends React.Component {
   }
 
   render() {
-    const EmptyData = () => (
-      <div>
-        <td colSpan="5">
-          <font size="5">{intlObj.get(messages.emptySearch)}</font>
-        </td>
-      </div>
-    );
-
     return (
       <div>
         <StyleSiteAdminList>
@@ -369,15 +367,8 @@ const mapStateToProps = createStructuredSelector({
   delList: selectors.makeDelRow(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'SiteList', saga });
 const withReducer = injectReducer({ key: 'SiteList', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(SiteList);
+export default compose(withReducer, withSaga, withConnect)(SiteList);

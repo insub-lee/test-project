@@ -4,16 +4,16 @@ import PropTypes from 'prop-types';
 import { intlObj, lang } from 'utils/commonUtils';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 // import _ from 'lodash';
+import Button from 'components/Button';
+import noResultImageSm from 'images/bizstore/no-result_sm.png';
 import Box from '../../../components/utility/box';
 import LayoutWrapper from '../../../components/utility/layoutWrapper';
 import ContentHolder from '../../../components/utility/contentHolder';
-import Button from 'components/Button';
 import Item from '../Item';
 import ItemBiz from '../ItemBiz';
 import messages from './messages';
 import basicStyle from './basicStyle';
 import NoSearchResult from '../NoSearchResult';
-import noResultImageSm from 'images/bizstore/no-result_sm.png';
 
 class ItemList extends Component {
   /*

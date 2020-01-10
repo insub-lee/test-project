@@ -27,7 +27,7 @@ import * as actions from './actions';
 import StyleSiteAdminForm from './StyleSiteAdminForm';
 import StyleSiteAdminDtl from './StyleSiteAdminDtl';
 
-import { LinkBtnList, BtnDkGray, BtnDelete, BtnLgtGray } from '../../../../store/components/uielements/buttons.style';
+// import { LinkBtnList, BtnDkGray, BtnDelete, BtnLgtGray } from '../../../../store/components/uielements/buttons.style';
 import StyledButton from '../../../../../components/Button/StyledButton';
 import messages from '../messages';
 import AntRadiobox from '../../../../portal/components/uielements/radiobox.style';
@@ -35,6 +35,16 @@ import AntRadiobox from '../../../../portal/components/uielements/radiobox.style
 const FormItem = Form.Item;
 const RadioGroup = AntRadiobox(Radio.Group);
 const Option = SelectOption;
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 4 },
+    sm: { span: 4 },
+  },
+  wrapperCol: {
+    xs: { span: 20 },
+    sm: { span: 20 },
+  },
+};
 
 class SiteDetail extends React.Component {
   constructor(props) {
@@ -170,7 +180,7 @@ class SiteDetail extends React.Component {
     }
   }
 
-  onBlurURL() {
+  onBlurURL(e) {
     let strURL = '';
     if (this.state.URL.charAt(this.state.URL.length - 1) !== '/') {
       strURL = `http://${e.target.value.replace('http://', '')}/`;
@@ -303,9 +313,9 @@ class SiteDetail extends React.Component {
 
   updateRow = () => {
     if (this.state.URL.charAt(this.state.URL.length - 1) !== '/') {
-      this.setState({ URL: `${this.state.URL.replace('http://', '')}/` });
+      this.setState(prevState => ({ URL: `${prevState.URL.replace('http://', '')}/` }));
     } else {
-      this.setState({ URL: `${this.state.URL.replace('http://', '')}` });
+      this.setState(prevState => ({ URL: `${prevState.URL.replace('http://', '')}` }));
     }
     this.setState({ readOnly: 'true' });
 
@@ -370,241 +380,254 @@ class SiteDetail extends React.Component {
     this.setState({ BIZGRP_ID: e });
   }
 
-  render() {
-    // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganization = resultObj => {
-      const managerSetMembersFromOrganization = resultObj.selectedUsers;
+  getDataFromOrganization = resultObj => {
+    const managerSetMembersFromOrganization = resultObj.selectedUsers;
 
-      this.setState({
-        managerSetMembers: managerSetMembersFromOrganization,
-      });
-    };
+    this.setState({
+      managerSetMembers: managerSetMembersFromOrganization,
+    });
+  };
 
-    // 조직도에서 가져온 리스트 뷰
-    const returnManagerList = resultObj => {
-      this.setState({
-        managerSetMembers: resultObj,
-      });
-    };
+  // 조직도에서 가져온 리스트 뷰
+  returnManagerList = resultObj => {
+    this.setState({
+      managerSetMembers: resultObj,
+    });
+  };
 
-    const returnUserList = resultObj => {
-      this.setState({
-        userSetMembers: resultObj,
-      });
-    };
-    const returnDutyList = resultObj => {
-      this.setState({
-        dutySetMembers: resultObj,
-      });
-    };
-    const returnPstnList = resultObj => {
-      this.setState({
-        pstnSetMembers: resultObj,
-      });
-    };
-    const returnGrpList = resultObj => {
-      this.setState({
-        grpSetMembers: resultObj,
-      });
-    };
-    const returnDetpList = resultObj => {
-      this.setState({
-        deptSetMembers: resultObj,
-      });
-    };
-    // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = resultObj => {
-      // 구성원
-      const userSetMembersFromOrganization = resultObj.selectedUsers;
-      // 직위
-      const pstnSetMembersFromOrganization = resultObj.checkedPstn;
-      // 부서
-      const deptSetMembersFromOrganization = resultObj.checkedDept;
-      // 직책
-      const dutySetMembersFromOrganization = resultObj.checkedDuty;
-      // 가상그룹
-      const grpSetMembersFromOrganization = resultObj.checkedGrp;
+  returnUserList = resultObj => {
+    this.setState({
+      userSetMembers: resultObj,
+    });
+  };
 
-      this.setState({
-        userSetMembers: userSetMembersFromOrganization, // 구성원
-        pstnSetMembers: pstnSetMembersFromOrganization, // 직위
-        deptSetMembers: deptSetMembersFromOrganization, // 부서
-        dutySetMembers: dutySetMembersFromOrganization, // 직책
-        grpSetMembers: grpSetMembersFromOrganization, // 가상그룹
-      });
-    };
+  returnDutyList = resultObj => {
+    this.setState({
+      dutySetMembers: resultObj,
+    });
+  };
 
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 4 },
-        sm: { span: 4 },
-      },
-      wrapperCol: {
-        xs: { span: 20 },
-        sm: { span: 20 },
-      },
-    };
+  returnPstnList = resultObj => {
+    this.setState({
+      pstnSetMembers: resultObj,
+    });
+  };
 
-    const skinRow = data =>
-      data.map(skin => (
-        <li
-          key={skin.CODE_CD}
-          style={{
-            padding: '0 0 0 0',
-            bordar: '0',
-            float: 'left',
-          }}
-          className="skinOptions"
-        >
-          {/* <Radio value={skin.CODE_CD} readOnly={this.state.readOnly === 'true'}> */}
-          <Radio value={skin.CODE_CD} disabled={this.state.readOnly === 'true'}>
-            <span className="skinItem">
-              <img src={`/portal/setting/skin-option${skin.CODE_CD}.png`} alt={skin.CODE_CD} />
-            </span>
-          </Radio>
-        </li>
-      ));
+  returnGrpList = resultObj => {
+    this.setState({
+      grpSetMembers: resultObj,
+    });
+  };
 
-    const botBtn = mode => {
-      if (mode === 'true') {
-        // 상세
-        return (
-          <React.Fragment>
-            <div style={{ float: 'left' }}>
-              <ErrorBoundary>
-                <StyledButton className="btn-light" onClick={this.delConfirm}>
-                  {intlObj.get(messages.lblDelete)}
-                </StyledButton>
-                <Link to="/admin/adminmain/siteadmin" style={{ marginLeft: 10 }}>
-                  <StyledButton className="btn-light">{intlObj.get(messages.lblList)}</StyledButton>
-                </Link>
-              </ErrorBoundary>
-            </div>
+  returnDetpList = resultObj => {
+    this.setState({
+      deptSetMembers: resultObj,
+    });
+  };
+
+  // 조직도로부터 데이터 가져오는 함수
+  getDataFromOrganizationAll = resultObj => {
+    // 구성원
+    const userSetMembersFromOrganization = resultObj.selectedUsers;
+    // 직위
+    const pstnSetMembersFromOrganization = resultObj.checkedPstn;
+    // 부서
+    const deptSetMembersFromOrganization = resultObj.checkedDept;
+    // 직책
+    const dutySetMembersFromOrganization = resultObj.checkedDuty;
+    // 가상그룹
+    const grpSetMembersFromOrganization = resultObj.checkedGrp;
+
+    this.setState({
+      userSetMembers: userSetMembersFromOrganization, // 구성원
+      pstnSetMembers: pstnSetMembersFromOrganization, // 직위
+      deptSetMembers: deptSetMembersFromOrganization, // 부서
+      dutySetMembers: dutySetMembersFromOrganization, // 직책
+      grpSetMembers: grpSetMembersFromOrganization, // 가상그룹
+    });
+  };
+
+  skinRow = data =>
+    data.map(skin => (
+      <li
+        key={skin.CODE_CD}
+        style={{
+          padding: '0 0 0 0',
+          bordar: '0',
+          float: 'left',
+        }}
+        className="skinOptions"
+      >
+        {/* <Radio value={skin.CODE_CD} readOnly={this.state.readOnly === 'true'}> */}
+        <Radio value={skin.CODE_CD} disabled={this.state.readOnly === 'true'}>
+          <span className="skinItem">
+            <img src={`/portal/setting/skin-option${skin.CODE_CD}.png`} alt={skin.CODE_CD} />
+          </span>
+        </Radio>
+      </li>
+    ));
+
+  botBtn = mode => {
+    if (mode === 'true') {
+      // 상세
+      return (
+        <>
+          <div style={{ float: 'left' }}>
             <ErrorBoundary>
-              <StyledButton
-                className="btn-primary"
-                onClick={() => {
-                  const tempVal = {
-                    tmpNameKor: this.state.NAME_KOR,
-                    tmpNameEng: this.state.NAME_ENG,
-                    tmpNameChn: this.state.NAME_CHN,
-                    tmpUrl: this.state.URL,
-                    tmpBizGrp: this.state.BIZGRP_ID,
-                    tmpTheme: this.state.THEME_CD,
-                    tmpManagerSetMembers: this.state.managerSetMembers,
-                    tmpUserSetMembersTheme: this.state.userSetMembers,
-                    tmpPstnSetMembersTheme: this.state.pstnSetMembers,
-                    tmpDeptSetMembersTheme: this.state.deptSetMembers,
-                    tmpDutySetMembersTheme: this.state.dutySetMembers,
-                    tmpGrpSetMembersTheme: this.state.grpSetMembers,
-                  };
-
-                  this.setState({
-                    readOnly: 'false',
-                    orgVal: tempVal,
-                    URL: this.state.URL.replace('http://', ''),
-                    // nameValid: true,
-                    urlValid: true,
-                  });
-
-                  /*
-                   * 수정모드로 바뀔 때, 사이트명의 값을 선택하고, 포커스를 준다.
-                   * "수정모드로 바뀔 때" 이기 때문에, 상세 모드에서의 "수정"버튼의
-                   * Onclick에 넣는다.
-                   */
-                  // this.nameRef.select();
-                  this.nameRef.focus();
-                }}
-              >
-                {intlObj.get(messages.lblUdt)}
+              <StyledButton className="btn-light" onClick={this.delConfirm}>
+                {intlObj.get(messages.lblDelete)}
               </StyledButton>
+              <Link to="/admin/adminmain/siteadmin" style={{ marginLeft: 10 }}>
+                <StyledButton className="btn-light">{intlObj.get(messages.lblList)}</StyledButton>
+              </Link>
             </ErrorBoundary>
-          </React.Fragment>
-        );
-      }
-      if (mode === 'false') {
-        // 수정
-        return (
-          <React.Fragment>
-            <div style={{ float: 'left' }}>
-              <ErrorBoundary>
-                <Link to="/admin/adminmain/siteadmin">
-                  <StyledButton className="btn-light">{intlObj.get(messages.lblList)}</StyledButton>
-                </Link>
-              </ErrorBoundary>
-            </div>
+          </div>
+          <ErrorBoundary>
+            <StyledButton
+              className="btn-primary"
+              onClick={() => {
+                this.setState(prevState => ({
+                  readOnly: 'false',
+                  orgVal: {
+                    tmpNameKor: prevState.NAME_KOR,
+                    tmpNameEng: prevState.NAME_ENG,
+                    tmpNameChn: prevState.NAME_CHN,
+                    tmpUrl: prevState.URL,
+                    tmpBizGrp: prevState.BIZGRP_ID,
+                    tmpTheme: prevState.THEME_CD,
+                    tmpManagerSetMembers: prevState.managerSetMembers,
+                    tmpUserSetMembersTheme: prevState.userSetMembers,
+                    tmpPstnSetMembersTheme: prevState.pstnSetMembers,
+                    tmpDeptSetMembersTheme: prevState.deptSetMembers,
+                    tmpDutySetMembersTheme: prevState.dutySetMembers,
+                    tmpGrpSetMembersTheme: prevState.grpSetMembers,
+                  },
+                  URL: prevState.URL.replace('http://', ''),
+                  // nameValid: true,
+                  urlValid: true,
+                }));
+
+                /*
+                 * 수정모드로 바뀔 때, 사이트명의 값을 선택하고, 포커스를 준다.
+                 * "수정모드로 바뀔 때" 이기 때문에, 상세 모드에서의 "수정"버튼의
+                 * Onclick에 넣는다.
+                 */
+                // this.nameRef.select();
+                this.nameRef.focus();
+              }}
+            >
+              {intlObj.get(messages.lblUdt)}
+            </StyledButton>
+          </ErrorBoundary>
+        </>
+      );
+    }
+    if (mode === 'false') {
+      // 수정
+      return (
+        <>
+          <div style={{ float: 'left' }}>
             <ErrorBoundary>
-              <StyledButton
-                className="btn-light btn-cancel"
-                onClick={() => {
-                  console.log(this.state);
-                  // this.nameRef.blur();
-                  this.setState({
-                    readOnly: 'true',
-                    NAME_KOR: this.state.orgVal.tmpNameKor,
-                    NAME_ENG: this.state.orgVal.tmpNameEng,
-                    NAME_CHN: this.state.orgVal.tmpNameChn,
-                    URL: this.state.orgVal.tmpUrl,
-                    BIZGRP_ID: this.state.orgVal.tmpBizGrp,
-                    THEME_CD: this.state.orgVal.tmpTheme,
-                    managerSetMembers: this.state.orgVal.tmpManagerSetMembers,
-                    userSetMembers: this.state.orgVal.tmpUserSetMembersTheme,
-                    pstnSetMembers: this.state.orgVal.tmpPstnSetMembersTheme,
-                    deptSetMembers: this.state.orgVal.tmpDeptSetMembersTheme,
-                    dutySetMembers: this.state.orgVal.tmpDutySetMembersTheme,
-                    grpSetMembers: this.state.orgVal.tmpGrpSetMembersTheme,
-                  });
-                }}
-              >
-                {intlObj.get(messages.lblCancel)}
-              </StyledButton>
+              <Link to="/admin/adminmain/siteadmin">
+                <StyledButton className="btn-light">{intlObj.get(messages.lblList)}</StyledButton>
+              </Link>
             </ErrorBoundary>
-            <ErrorBoundary>
-              <StyledButton className="btn-primary" onClick={this.udtConfirm}>
-                {intlObj.get(messages.lblSave)}
-              </StyledButton>
-            </ErrorBoundary>
-          </React.Fragment>
-        );
-      }
-      return '';
-    };
+          </div>
+          <ErrorBoundary>
+            <StyledButton
+              className="btn-light btn-cancel"
+              onClick={() => {
+                // this.nameRef.blur();
+                this.setState(prevState => ({
+                  readOnly: 'true',
+                  NAME_KOR: prevState.orgVal.tmpNameKor,
+                  NAME_ENG: prevState.orgVal.tmpNameEng,
+                  NAME_CHN: prevState.orgVal.tmpNameChn,
+                  URL: prevState.orgVal.tmpUrl,
+                  BIZGRP_ID: prevState.orgVal.tmpBizGrp,
+                  THEME_CD: prevState.orgVal.tmpTheme,
+                  managerSetMembers: prevState.orgVal.tmpManagerSetMembers,
+                  userSetMembers: prevState.orgVal.tmpUserSetMembersTheme,
+                  pstnSetMembers: prevState.orgVal.tmpPstnSetMembersTheme,
+                  deptSetMembers: prevState.orgVal.tmpDeptSetMembersTheme,
+                  dutySetMembers: prevState.orgVal.tmpDutySetMembersTheme,
+                  grpSetMembers: prevState.orgVal.tmpGrpSetMembersTheme,
+                }));
+              }}
+            >
+              {intlObj.get(messages.lblCancel)}
+            </StyledButton>
+          </ErrorBoundary>
+          <ErrorBoundary>
+            <StyledButton className="btn-primary" onClick={this.udtConfirm}>
+              {intlObj.get(messages.lblSave)}
+            </StyledButton>
+          </ErrorBoundary>
+        </>
+      );
+    }
+    return '';
+  };
 
-    const mngList = mode => {
-      if (mode === 'true') {
-        // 상세
-        return (
+  mngList = mode => {
+    if (mode === 'true') {
+      // 상세
+      return (
+        <div className="authorityList">
+          <ErrorBoundary>
+            <SiteManagerList managerList={this.state.managerSetMembers} delFlag={false} returnManagerList={this.returnManagerList} />
+          </ErrorBoundary>
+        </div>
+      );
+    }
+    if (mode === 'false') {
+      // 수정
+      return (
+        <div>
           <div className="authorityList">
             <ErrorBoundary>
-              <SiteManagerList managerList={this.state.managerSetMembers} delFlag={false} returnManagerList={returnManagerList} />
+              <SiteManagerList managerList={this.state.managerSetMembers} delFlag returnManagerList={this.returnManagerList} />
             </ErrorBoundary>
           </div>
-        );
-      }
-      if (mode === 'false') {
-        // 수정
-        return (
-          <div>
-            <div className="authorityList">
-              <ErrorBoundary>
-                <SiteManagerList managerList={this.state.managerSetMembers} delFlag returnManagerList={returnManagerList} />
-              </ErrorBoundary>
-            </div>
-            <ErrorBoundary>
-              <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.managerOrgOpen}>
-                &lt; {intlObj.get(messages.lblEdit)}
-              </StyledButton>
-            </ErrorBoundary>
-          </div>
-        );
-      }
-      return '';
-    };
+          <ErrorBoundary>
+            <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.managerOrgOpen}>
+              &lt; {intlObj.get(messages.lblEdit)}
+            </StyledButton>
+          </ErrorBoundary>
+        </div>
+      );
+    }
+    return '';
+  };
 
-    const allList = mode => {
-      if (mode === 'true') {
-        // 상세
-        return (
+  allList = mode => {
+    if (mode === 'true') {
+      // 상세
+      return (
+        <div className="authorityList">
+          <ErrorBoundary>
+            <SiteManagerList
+              userList={this.state.userSetMembers}
+              pstnList={this.state.pstnSetMembers}
+              deptList={this.state.deptSetMembers}
+              dutyList={this.state.dutySetMembers}
+              grpList={this.state.grpSetMembers}
+              returnUserList={this.returnUserList}
+              returnDutyList={this.returnDutyList}
+              returnPstnList={this.returnPstnList}
+              returnGrpList={this.returnGrpList}
+              returnDetpList={this.returnDetpList}
+              delFlag={false}
+              siteIdParam={this.state.SITE_ID}
+            />
+          </ErrorBoundary>
+        </div>
+      );
+    }
+    if (mode === 'false') {
+      // 수정
+      return (
+        <div>
           <div className="authorityList">
             <ErrorBoundary>
               <SiteManagerList
@@ -613,144 +636,123 @@ class SiteDetail extends React.Component {
                 deptList={this.state.deptSetMembers}
                 dutyList={this.state.dutySetMembers}
                 grpList={this.state.grpSetMembers}
-                returnUserList={returnUserList}
-                returnDutyList={returnDutyList}
-                returnPstnList={returnPstnList}
-                returnGrpList={returnGrpList}
-                returnDetpList={returnDetpList}
-                delFlag={false}
+                returnUserList={this.returnUserList}
+                returnDutyList={this.returnDutyList}
+                returnPstnList={this.returnPstnList}
+                returnGrpList={this.returnGrpList}
+                returnDetpList={this.returnDetpList}
+                delFlag
                 siteIdParam={this.state.SITE_ID}
               />
             </ErrorBoundary>
           </div>
-        );
-      }
-      if (mode === 'false') {
-        // 수정
-        return (
-          <div>
-            <div className="authorityList">
-              <ErrorBoundary>
-                <SiteManagerList
-                  userList={this.state.userSetMembers}
-                  pstnList={this.state.pstnSetMembers}
-                  deptList={this.state.deptSetMembers}
-                  dutyList={this.state.dutySetMembers}
-                  grpList={this.state.grpSetMembers}
-                  returnUserList={returnUserList}
-                  returnDutyList={returnDutyList}
-                  returnPstnList={returnPstnList}
-                  returnGrpList={returnGrpList}
-                  returnDetpList={returnDetpList}
-                  delFlag
-                  siteIdParam={this.state.SITE_ID}
-                />
-              </ErrorBoundary>
-            </div>
-            <ErrorBoundary>
-              <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.allOrgOpen}>
-                &lt; {intlObj.get(messages.lblEdit)}
-              </StyledButton>
-            </ErrorBoundary>
-          </div>
-        );
-      }
-      return '';
-    };
+          <ErrorBoundary>
+            <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.allOrgOpen}>
+              &lt; {intlObj.get(messages.lblEdit)}
+            </StyledButton>
+          </ErrorBoundary>
+        </div>
+      );
+    }
+    return '';
+  };
 
-    const title = mode => {
-      if (mode === 'true') return `${intlObj.get(messages.titleSiteDetail)}`;
-      if (mode === 'false') return `${intlObj.get(messages.titleSiteUdt)}`;
-      return `${intlObj.get(messages.titleSiteDetail)}`;
-    };
+  title = mode => {
+    if (mode === 'true') return `${intlObj.get(messages.titleSiteDetail)}`;
+    if (mode === 'false') return `${intlObj.get(messages.titleSiteUdt)}`;
+    return `${intlObj.get(messages.titleSiteDetail)}`;
+  };
 
-    const urlInput = mode => {
-      if (mode === 'true') {
-        return (
+  urlInput = mode => {
+    if (mode === 'true') {
+      return (
+        <ErrorBoundary>
+          <Input
+            title="URL"
+            value={this.state.URL}
+            onChange={this.onChangeURL}
+            // onKeyPress={this.onKeyPressURL}
+            // onBlur={this.onBlurURL}
+            readOnly
+          />
+        </ErrorBoundary>
+      );
+    }
+    if (mode === 'false') {
+      return (
+        <div>
+          <span className="mainUrlTxt">http://</span>
           <ErrorBoundary>
             <Input
+              placeholder={intlObj.get(messages.lblURLPlaceholder)}
               title="URL"
               value={this.state.URL}
               onChange={this.onChangeURL}
               // onKeyPress={this.onKeyPressURL}
               // onBlur={this.onBlurURL}
-              readOnly
+              maxlength="380"
+              style={{ width: 285, marginRight: 10 }}
             />
           </ErrorBoundary>
-        );
-      }
-      if (mode === 'false') {
-        return (
-          <div>
-            <span className="mainUrlTxt">http://</span>
-            <ErrorBoundary>
-              <Input
-                placeholder={intlObj.get(messages.lblURLPlaceholder)}
-                title="URL"
-                value={this.state.URL}
-                onChange={this.onChangeURL}
-                // onKeyPress={this.onKeyPressURL}
-                // onBlur={this.onBlurURL}
-                maxlength="380"
-                style={{ width: 285, marginRight: 10 }}
-              />
-            </ErrorBoundary>
-            <span className="mainUrlTxt">/</span>
-          </div>
-        );
-      }
-      return '';
-    };
+          <span className="mainUrlTxt">/</span>
+        </div>
+      );
+    }
+    return '';
+  };
 
-    // const dupNameChk = (stat) => {
-    //   if (this.state.readOnly === 'true') return '';
+  // const dupNameChk = (stat) => {
+  //   if (this.state.readOnly === 'true') return '';
 
-    //   if (this.state.NAME_KOR !== '' && this.state.NAME_KOR !== this.state.orgVal.tmpName) {
-    //     if (stat) return (<font color="RED">{intlObj.get(messages.dupName)}</font>);
-    //     return (<font color="GREEN">{intlObj.get(messages.dupNameX)}</font>);
-    //   }
-    //   return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
-    // };
+  //   if (this.state.NAME_KOR !== '' && this.state.NAME_KOR !== this.state.orgVal.tmpName) {
+  //     if (stat) return (<font color="RED">{intlObj.get(messages.dupName)}</font>);
+  //     return (<font color="GREEN">{intlObj.get(messages.dupNameX)}</font>);
+  //   }
+  //   return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
+  // };
 
-    const dupNameChkK = stat => {
-      if (this.state.readOnly === 'true') return '';
+  dupNameChkK = stat => {
+    if (this.state.readOnly === 'true') return '';
 
-      if (this.state.NAME_KOR !== '') {
-        if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
-        return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
-      }
-      return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
-    };
+    if (this.state.NAME_KOR !== '') {
+      if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
+      return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
+    }
+    return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
+  };
 
-    const dupNameChkC = stat => {
-      if (this.state.readOnly === 'true') return '';
+  dupNameChkC = stat => {
+    if (this.state.readOnly === 'true') return '';
 
-      if (this.state.NAME_CHN !== '') {
-        if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
-        return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
-      }
-      return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
-    };
+    if (this.state.NAME_CHN !== '') {
+      if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
+      return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
+    }
+    return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
+  };
 
-    const dupNameChkE = stat => {
-      if (this.state.readOnly === 'true') return '';
+  dupNameChkE = stat => {
+    if (this.state.readOnly === 'true') return '';
 
-      if (this.state.NAME_ENG !== '') {
-        if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
-        return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
-      }
-      return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
-    };
+    if (this.state.NAME_ENG !== '') {
+      if (stat) return <font color="RED">{intlObj.get(messages.dupName)}</font>;
+      return <font color="GREEN">{intlObj.get(messages.dupNameX)}</font>;
+    }
+    return ''; // (<font color="RED">사이트명이 잘못되었습니다.</font>);
+  };
 
-    const dupUrlChk = stat => {
-      if (this.state.readOnly === 'true') return '';
+  dupUrlChk = stat => {
+    if (this.state.readOnly === 'true') return '';
 
-      if (this.state.URL !== '' && `http://${this.state.URL}/` !== this.state.orgVal.tmpUrl && `http://${this.state.URL}` !== this.state.orgVal.tmpUrl) {
-        if (stat) return <font color="RED">{intlObj.get(messages.dupUrl)}</font>;
-        return <font color="GREEN">{intlObj.get(messages.dupUrlX)}</font>;
-      }
-      return ''; // (<font color="RED">URL이 잘못되었습니다.</font>);
-    };
+    if (this.state.URL !== '' && `http://${this.state.URL}/` !== this.state.orgVal.tmpUrl && `http://${this.state.URL}` !== this.state.orgVal.tmpUrl) {
+      if (stat) return <font color="RED">{intlObj.get(messages.dupUrl)}</font>;
+      return <font color="GREEN">{intlObj.get(messages.dupUrlX)}</font>;
+    }
+    return ''; // (<font color="RED">URL이 잘못되었습니다.</font>);
+  };
+
+  render() {
+    // 조직도로부터 데이터 가져오는 함수
 
     const homeRow = this.props.loadHome.map(keycomp => <Option key={keycomp.BIZGRP_ID.toString()}>{lang.get('NAME', keycomp)}</Option>);
 
@@ -761,7 +763,7 @@ class SiteDetail extends React.Component {
             <OrganizationRole
               show={this.state.managerOrgShow}
               closeModal={this.managerOrgClose}
-              getDataFromOrganization={getDataFromOrganization}
+              getDataFromOrganization={this.getDataFromOrganization}
               // 조직도로 가져갈 데이터
               selectedUsers={this.state.managerSetMembers.slice()}
               orgName="관리권한조직도"
@@ -781,7 +783,7 @@ class SiteDetail extends React.Component {
             pstnTab
             dutyTab
             grpTab
-            getDataFromOrganization={getDataFromOrganizationAll}
+            getDataFromOrganization={this.getDataFromOrganizationAll}
             // 조직도로 가져갈 데이터
             selectedUsers={this.state.userSetMembers.slice()}
             checkedDept={this.state.deptSetMembers.slice()}
@@ -792,7 +794,7 @@ class SiteDetail extends React.Component {
           />
         </ErrorBoundary>
         <StyleSiteAdminDtl>
-          <h3 className="pageTitle regist">{title(this.state.readOnly)}</h3>
+          <h3 className="pageTitle regist">{this.title(this.state.readOnly)}</h3>
           <StyleSiteAdminForm className={this.state.readOnly === 'true' ? 'modeD' : ''}>
             <ErrorBoundary>
               <Form>
@@ -822,7 +824,7 @@ class SiteDetail extends React.Component {
                             readOnly={this.state.readOnly === 'true'}
                             // autoFocus={this.state.readOnly === 'false'}
                           />
-                          <span className="tipText">{dupNameChkK(this.props.getNameChkK)}</span>
+                          <span className="tipText">{this.dupNameChkK(this.props.getNameChkK)}</span>
                         </FormItem>
                       </td>
                     </tr>
@@ -850,7 +852,7 @@ class SiteDetail extends React.Component {
                             readOnly={this.state.readOnly === 'true'}
                             // autoFocus={this.state.readOnly === 'false'}
                           />
-                          <span className="tipText">{dupNameChkE(this.props.getNameChkE)}</span>
+                          <span className="tipText">{this.dupNameChkE(this.props.getNameChkE)}</span>
                         </FormItem>
                       </td>
                     </tr>
@@ -878,7 +880,7 @@ class SiteDetail extends React.Component {
                             readOnly={this.state.readOnly === 'true'}
                             // autoFocus={this.state.readOnly === 'false'}
                           />
-                          <span className="tipText">{dupNameChkC(this.props.getNameChkC)}</span>
+                          <span className="tipText">{this.dupNameChkC(this.props.getNameChkC)}</span>
                         </FormItem>
                       </td>
                     </tr>
@@ -892,8 +894,8 @@ class SiteDetail extends React.Component {
                           hasFeedback={this.state.readOnly === 'false'}
                           validateStatus={this.state.urlValid && !this.props.getUrlChk ? 'success' : 'error'}
                         >
-                          {urlInput(this.state.readOnly)}
-                          <span className="tipText">{dupUrlChk(this.props.getUrlChk)}</span>
+                          {this.urlInput(this.state.readOnly)}
+                          <span className="tipText">{this.dupUrlChk(this.props.getUrlChk)}</span>
                         </FormItem>
                       </td>
                     </tr>
@@ -904,7 +906,7 @@ class SiteDetail extends React.Component {
                       <td>
                         <FormItem {...formItemLayout}>
                           {/* // 리턴 뷰 사용 */}
-                          {mngList(this.state.readOnly)}
+                          {this.mngList(this.state.readOnly)}
                         </FormItem>
                       </td>
                     </tr>
@@ -913,7 +915,7 @@ class SiteDetail extends React.Component {
                         <label htmlFor="s4">{intlObj.get(messages.lblView)}</label>
                       </th>
                       <td>
-                        <FormItem {...formItemLayout}>{allList(this.state.readOnly)}</FormItem>
+                        <FormItem {...formItemLayout}>{this.allList(this.state.readOnly)}</FormItem>
                       </td>
                     </tr>
                     <tr>
@@ -957,7 +959,7 @@ class SiteDetail extends React.Component {
                               value={this.state.THEME_CD}
                               readOnly={this.state.readOnly === 'true'}
                             >
-                              <ul className="skinList">{skinRow(this.props.loadSkin)}</ul>
+                              <ul className="skinList">{this.skinRow(this.props.loadSkin)}</ul>
                             </RadioGroup>
                           </div>
                         </FormItem>
@@ -968,7 +970,7 @@ class SiteDetail extends React.Component {
               </Form>
             </ErrorBoundary>
           </StyleSiteAdminForm>
-          <div className="buttonWrapper">{botBtn(this.state.readOnly)}</div>
+          <div className="buttonWrapper">{this.botBtn(this.state.readOnly)}</div>
           {/* <LeftMenu /> */}
         </StyleSiteAdminDtl>
       </div>
@@ -977,27 +979,25 @@ class SiteDetail extends React.Component {
 }
 
 SiteDetail.propTypes = {
-  getSiteInfo: PropTypes.func, //eslint-disable-line
-  chkName: PropTypes.func, //eslint-disable-line
-  chkUrl: PropTypes.func, //eslint-disable-line
-  siteInfoRow: PropTypes.array, //eslint-disable-line
-  siteSecRowI: PropTypes.array, //eslint-disable-line
-  siteSecRowV: PropTypes.array, //eslint-disable-line
-  history: PropTypes.object, //eslint-disable-line
-  location: PropTypes.object, // eslint-disable-line
-  match: PropTypes.object, //eslint-disable-line
-  updateSite: PropTypes.func, //eslint-disable-line
-  delList: PropTypes.func, //eslint-disable-line
-  delSite: PropTypes.func, //eslint-disable-line
-  SITE_ID: PropTypes.number, //eslint-disable-line
-  getSkinList: PropTypes.func, //eslint-disable-line
-  getHomeList: PropTypes.func, //eslint-disable-line
-  loadSkin: PropTypes.array, //eslint-disable-line
-  loadHome: PropTypes.array, //eslint-disable-line
-  history: PropTypes.object, //eslint-disable-line
-  getNameChk: PropTypes.bool, //eslint-disable-line
-  getUrlChk: PropTypes.bool, //eslint-disable-line
-  // mySkin: PropTypes.string, //eslint-disable-line
+  getSiteInfo: PropTypes.func,
+  chkName: PropTypes.func,
+  chkUrl: PropTypes.func,
+  siteInfoRow: PropTypes.array,
+  siteSecRowI: PropTypes.array,
+  siteSecRowV: PropTypes.array,
+  location: PropTypes.object,
+  match: PropTypes.object,
+  updateSite: PropTypes.func,
+  delList: PropTypes.func,
+  delSite: PropTypes.func,
+  SITE_ID: PropTypes.number,
+  getSkinList: PropTypes.func,
+  getHomeList: PropTypes.func,
+  loadSkin: PropTypes.array,
+  loadHome: PropTypes.array,
+  history: PropTypes.object,
+  getNameChk: PropTypes.bool,
+  getUrlChk: PropTypes.bool,
   getNameChkE: PropTypes.string.isRequired,
   getNameChkK: PropTypes.string.isRequired,
   getNameChkC: PropTypes.string.isRequired,
@@ -1060,15 +1060,8 @@ const mapStateToProps = createStructuredSelector({
   // mySkin: selectors.mySkin(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'SiteInfo', saga });
 const withReducer = injectReducer({ key: 'SiteInfo', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(SiteDetail);
+export default compose(withReducer, withSaga, withConnect)(SiteDetail);

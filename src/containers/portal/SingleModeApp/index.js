@@ -71,15 +71,7 @@ class SingleModeApp extends React.Component {
       // 홈
     } = this.props;
 
-    return (
-      <div>
-        {selectedApp.length !== 0 ?
-          <SmAppsRouter selectedApp={selectedApp} />
-        :
-          <div />
-        }
-      </div>
-    );
+    return <div>{selectedApp.length !== 0 ? <SmAppsRouter selectedApp={selectedApp} /> : <div />}</div>;
   }
 }
 SingleModeApp.propTypes = {
@@ -88,13 +80,8 @@ SingleModeApp.propTypes = {
 const mapStateToProps = createStructuredSelector({
   selectedApp: makeSelectApps(),
 });
-const mapDispatchToProps = () => ({
-});
+const mapDispatchToProps = () => ({});
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'singleModeApp', reducer });
 const withSaga = injectSaga({ key: 'singleModeApp', saga });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(wrap(SingleModeApp));
+export default compose(withReducer, withSaga, withConnect)(wrap(SingleModeApp));

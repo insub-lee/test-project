@@ -8,9 +8,7 @@ import messages from './messages';
 
 class UserProfile extends React.Component {
   handleClickToMoveToSite = (profile, type) => { //eslint-disable-line
-    const {
-      onExecOrg,
-    } = this.props;
+    const { onExecOrg } = this.props;
 
     switch (type) {
       case 'org':
@@ -29,37 +27,59 @@ class UserProfile extends React.Component {
         alert('준비중입니다.');
         return false;
     }
-  }
-  
-  render() {
-    const {
-      userProfile,
-      style,
-      isPopover,
-    } = this.props;
+  };
 
-    const title = `${lang.get('NAME', userProfile)}(${userProfile.EMP_NO})\n${lang.get('PSTN_NAME',userProfile) && lang.get('PSTN_NAME',userProfile).trim() !== '' ? lang.get('DEPT_NAME',userProfile) + ' / ' : lang.get('DEPT_NAME',userProfile) + ' '}${lang.get('DUTY_NAME',userProfile) && lang.get('DUTY_NAME',userProfile).trim() !== '' ? lang.get('PSTN_NAME',userProfile) + ' / ' + lang.get('DUTY_NAME',userProfile) : lang.get('PSTN_NAME',userProfile) && lang.get('PSTN_NAME',userProfile).trim() !== '' ? lang.get('PSTN_NAME',userProfile) : ''}`;
+  render() {
+    const { userProfile, style, isPopover } = this.props;
+
+    const title = `${lang.get('NAME', userProfile)}(${userProfile.EMP_NO})\n${
+      lang.get('PSTN_NAME', userProfile) && lang.get('PSTN_NAME', userProfile).trim() !== ''
+        ? `${lang.get('DEPT_NAME', userProfile)} / `
+        : `${lang.get('DEPT_NAME', userProfile)} `
+    }${
+      lang.get('DUTY_NAME', userProfile) && lang.get('DUTY_NAME', userProfile).trim() !== ''
+        ? `${lang.get('PSTN_NAME', userProfile)} / ${lang.get('DUTY_NAME', userProfile)}`
+        : lang.get('PSTN_NAME', userProfile) && lang.get('PSTN_NAME', userProfile).trim() !== ''
+          ? lang.get('PSTN_NAME', userProfile)
+          : ''
+    }`;
 
     let content = '';
     if (isPopover) {
       content = (
         <Popover
           placement="rightBottom"
-          content={(
+          content={
             <div>
               <ul className="userProfileMenuList">
-                <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'org')} type="button" className="highlight icon-info">{intlObj.get(messages.userProfile)}</Button></li>
-                <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'talk')} type="button" className="icon-talk">{intlObj.get(messages.sendToCube)}</Button></li>
-                <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'mail')} type="button" className="icon-mail">{intlObj.get(messages.sendToMail)}</Button></li>
-                <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'todo')} type="button" className="icon-todo">{intlObj.get(messages.todoRegist)}</Button></li>
+                <li>
+                  <Button onClick={() => this.handleClickToMoveToSite(userProfile, 'org')} type="button" className="highlight icon-info">
+                    {intlObj.get(messages.userProfile)}
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={() => this.handleClickToMoveToSite(userProfile, 'talk')} type="button" className="icon-talk">
+                    {intlObj.get(messages.sendToCube)}
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={() => this.handleClickToMoveToSite(userProfile, 'mail')} type="button" className="icon-mail">
+                    {intlObj.get(messages.sendToMail)}
+                  </Button>
+                </li>
+                <li>
+                  <Button onClick={() => this.handleClickToMoveToSite(userProfile, 'todo')} type="button" className="icon-todo">
+                    {intlObj.get(messages.todoRegist)}
+                  </Button>
+                </li>
                 {/* <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
               </ul>
             </div>
-          )}
+          }
           trigger="hover"
           overlayClassName="userProfileMenu"
         >
-          <div 
+          <div
             style={{
               posotion: 'relative',
               display: 'inline-block',
@@ -70,7 +90,8 @@ class UserProfile extends React.Component {
               borderRadius: '50%',
               overflow: 'hidden',
               cursor: 'pointer',
-            }}>
+            }}
+          >
             <img
               style={{
                 top: '0',
@@ -78,7 +99,9 @@ class UserProfile extends React.Component {
                 width: '100%',
               }}
               src={`/img/thumb/200x200/${userProfile.PHOTO}`}
-              onError={(e) => { e.target.src = noImgPro }}
+              onError={e => {
+                e.target.src = noImgPro;
+              }}
               alt=""
             />
           </div>
@@ -86,17 +109,19 @@ class UserProfile extends React.Component {
       );
     } else {
       content = (
-        <div 
+        <div
           style={{
             posotion: 'relative',
             display: 'inline-block',
             verticalAlign: 'middle',
             width: '25px',
             height: '25px',
+            marginLeft: '10px',
             marginRight: '10px',
             borderRadius: '50%',
             overflow: 'hidden',
-          }}>
+          }}
+        >
           <img
             style={{
               top: '0',
@@ -104,7 +129,9 @@ class UserProfile extends React.Component {
               width: '100%',
             }}
             src={`/img/thumb/200x200/${userProfile.PHOTO}`}
-            onError={(e) => { e.target.src = noImgPro }}
+            onError={e => {
+              e.target.src = noImgPro;
+            }}
             alt=""
           />
         </div>
@@ -112,27 +139,27 @@ class UserProfile extends React.Component {
     }
 
     return (
-      <div 
-        title={title}
-        style={style}
-      >
-        {
-          userProfile.ACNT_TYPE === 'D'
-            ?
-              ''
-            :
-            content
-        }
-        <div 
+      <div title={title} style={style}>
+        {userProfile.ACNT_TYPE === 'D' ? '' : content}
+        <div
           style={{
             display: 'inline-block',
             fontSize: '12px',
             lineHeight: '1.3em',
-            verticalAlign: 'middle'
-          }}>
-          {lang.get('NAME',userProfile)}{userProfile.ACNT_TYPE === 'D' ? '' : `(${userProfile.EMP_NO})`}<br />
-          {lang.get('PSTN_NAME',userProfile) && lang.get('PSTN_NAME',userProfile).trim() !== '' ? lang.get('DEPT_NAME',userProfile) + ' / ' : lang.get('DEPT_NAME',userProfile) + ' '}
-          {lang.get('DUTY_NAME',userProfile) && lang.get('DUTY_NAME',userProfile).trim() !== '' ? lang.get('PSTN_NAME',userProfile) + ' / ' + lang.get('DUTY_NAME',userProfile) : lang.get('PSTN_NAME',userProfile) && lang.get('PSTN_NAME',userProfile).trim() !== '' ? lang.get('PSTN_NAME',userProfile) : ''}
+            verticalAlign: 'middle',
+          }}
+        >
+          {lang.get('NAME', userProfile)}
+          {userProfile.ACNT_TYPE === 'D' ? '' : `(${userProfile.EMP_NO})`}
+          <br />
+          {lang.get('PSTN_NAME', userProfile) && lang.get('PSTN_NAME', userProfile).trim() !== ''
+            ? `${lang.get('DEPT_NAME', userProfile)} / `
+            : `${lang.get('DEPT_NAME', userProfile)} `}
+          {lang.get('DUTY_NAME', userProfile) && lang.get('DUTY_NAME', userProfile).trim() !== ''
+            ? `${lang.get('PSTN_NAME', userProfile)} / ${lang.get('DUTY_NAME', userProfile)}`
+            : lang.get('PSTN_NAME', userProfile) && lang.get('PSTN_NAME', userProfile).trim() !== ''
+              ? lang.get('PSTN_NAME', userProfile)
+              : ''}
         </div>
       </div>
     );

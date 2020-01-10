@@ -92,6 +92,7 @@ class MyAppList extends React.Component {
       this.state.searchType,
     );
   }
+
   componentWillReceiveProps(nextProps) {
     // if (this.state.myAppList.length > 0) {
     //   this.setState({
@@ -104,16 +105,19 @@ class MyAppList extends React.Component {
       });
     }
   }
-  HyperlinkFomatter = (val) => {
+
+  HyperlinkFomatter = val => {
     const hyperlinkName = lang.get('NAME', val.dependentValues);
     const myAppKey = `/portal/store/appMain/MyApp/MyAppDetail/${val.dependentValues.APP_ID}/${val.dependentValues.VER}`;
 
     return <Link to={myAppKey}>{hyperlinkName}</Link>;
   };
-  apvStatusFomatter = (val) => {
+
+  apvStatusFomatter = val => {
     const columnName = lang.get('APV_STATUS', val.dependentValues);
     return <div>{columnName}</div>;
   };
+
   handleGridSort = (sortColumn, sortDirection) => {
     this.setState({
       sortColumnParam: sortColumn,
@@ -124,7 +128,8 @@ class MyAppList extends React.Component {
     pageEnum = pageIndex;
     this.props.getMyAppList(pageSnum, pageEnum, [], sortColumn, sortDirection, this.state.searchText, this.state.searchType);
   };
-  rowGetter = (i) => {
+
+  rowGetter = i => {
     if (i === pageEnum - 1) {
       pageSnum += pageIndex;
       pageEnum += pageIndex;
@@ -140,11 +145,12 @@ class MyAppList extends React.Component {
     }
     return this.state.myAppList[i];
   };
+
   render() {
-    const onChangeSearch = (val) => {
+    const onChangeSearch = val => {
       this.setState({ searchText: val.target.value });
     };
-    const handleKeyPress = (val) => {
+    const handleKeyPress = val => {
       if (val.key === 'Enter') {
         this.setState({
           myAppList: [],
@@ -170,7 +176,7 @@ class MyAppList extends React.Component {
       pageEnum = pageIndex;
       this.props.getMyAppList(pageSnum, pageEnum, [], this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchText, this.state.searchType);
     };
-    const onChangeSearchType = (val) => {
+    const onChangeSearchType = val => {
       this.setState({ searchType: val, myAppList: [] });
       pageSnum = 1;
       pageEnum = pageIndex;
@@ -258,15 +264,8 @@ const mapStateToProps = createStructuredSelector({
   searchTypeList: selectors.makeSelectSearchTypeList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'MyAppList', saga });
 const withReducer = injectReducer({ key: 'MyAppList', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyAppList);
+export default compose(withReducer, withSaga, withConnect)(MyAppList);

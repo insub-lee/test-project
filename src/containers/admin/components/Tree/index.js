@@ -48,7 +48,6 @@ class Tree extends Component {
           selectedIndex,
         });
       } else {
-
         treeFunc.mergeArray(nextProps.treeData, this.state.treeData);
 
         this.setState({
@@ -59,7 +58,7 @@ class Tree extends Component {
     } else {
       this.setState({
         treeData: [],
-      })
+      });
     }
   }
 
@@ -67,24 +66,17 @@ class Tree extends Component {
     this.setState({ treeData });
   }
 
-  handleOnTreeNodeClick = (node) => {
+  handleOnTreeNodeClick = node => {
     this.setState({
       selectedIndex: node.key,
     });
     this.props.onClick(node);
   };
 
-
   render() {
-    const {
-      treeData,
-      searchFocusIndex,
-      selectedIndex,
-    } = this.state;
+    const { treeData, searchFocusIndex, selectedIndex } = this.state;
 
-    const {
-      generateNodeProps,
-    } = this.props;
+    const { generateNodeProps } = this.props;
 
     const tree = (
       <SortableTree
@@ -92,19 +84,24 @@ class Tree extends Component {
         treeData={treeData}
         onChange={this.updateTreeData}
         searchFocusOffset={searchFocusIndex}
-        canDrag={() => this.props.canDrag ? true : false}
-        canDrop={() => this.props.canDrop ? true : false}
+        canDrag={() => !!this.props.canDrag}
+        canDrop={() => !!this.props.canDrop}
         rowHeight={35}
         style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
         isVirtualized={false}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={({ node, path, treeIndex, lowerSiblingCounts, isSearchMatch, isSearchFocus }) => {
           let parentsGenerateNodeProps = {};
           let className = '';
-          
+
           if (generateNodeProps) {
             parentsGenerateNodeProps = generateNodeProps({
-              node, path, treeIndex, lowerSiblingCounts, isSearchMatch, isSearchFocus,
+              node,
+              path,
+              treeIndex,
+              lowerSiblingCounts,
+              isSearchMatch,
+              isSearchFocus,
             });
             className = node.className ? node.className : '';
           }
@@ -113,10 +110,12 @@ class Tree extends Component {
               <button
                 className={`${node.key === selectedIndex ? `${className} active` : `${className}`}`}
                 onClick={() => this.handleOnTreeNodeClick(node)}
-                style={{ cursor: 'pointer' }}>
+                style={{ cursor: 'pointer' }}
+              >
                 {lang.get('NAME', node)}
-              </button>),
-            ... parentsGenerateNodeProps,
+              </button>
+            ),
+            ...parentsGenerateNodeProps,
           };
         }}
         className="sortableTreeWrapper CustomSCRB"
@@ -127,28 +126,25 @@ class Tree extends Component {
       <div
         className="treeWrapper2"
         style={{
-          display: 'flex', flexDirection: 'column', width: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
         }}
       >
-
         <div
           className="treeBox"
           style={{
-            flex: '1 0 50%', padding: '20px 0 0 10px',
+            flex: '1 0 50%',
+            padding: '20px 0 0 10px',
           }}
         >
-          {
-            treeData.length > 0 ? (
-              <ScrollBar
-                style={{ width: 280, height: '100%' }}
-                autoHide
-                autoHideTimeout={1000}
-                autoHideDuration={200}
-              >
-                {tree}
-              </ScrollBar>
-            ) : tree
-          }
+          {treeData.length > 0 ? (
+            <ScrollBar style={{ width: 280, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+              {tree}
+            </ScrollBar>
+          ) : (
+            tree
+          )}
         </div>
       </div>
     );

@@ -16,22 +16,21 @@ export default class WidgetsHeader extends PureComponent {
       show: false,
     };
   }
+
   onModal = () => {
     this.setState({ show: true });
-  }
+  };
 
   onModalButton = () => {
     this.setState({ show: true });
-  }
+  };
 
   closeModal = () => {
     this.setState({ show: false });
-  }
+  };
 
   render() {
-    const {
-      item,
-    } = this.props;
+    const { item } = this.props;
 
     const headerStyle = {
       color: item.color,
@@ -40,15 +39,12 @@ export default class WidgetsHeader extends PureComponent {
 
     const handleDeleteWidget = () => {
       feed.showConfirm(`${item.title} ${intlObj.get(messages.deleteWidget)}`, '', () => item.deleteWidget(Number(item.id)));
-    }
+    };
 
     const { functions } = item.basic;
 
     return (
-      <WidgetHeader
-        style={headerStyle}
-        className={item.user.isTitle ? 'draggableCancel widgetHeader' : 'draggableCancel widgetHeader noTitle'}
-      >
+      <WidgetHeader style={headerStyle} className={item.user.isTitle ? 'draggableCancel widgetHeader' : 'draggableCancel widgetHeader noTitle'}>
         <h2>
           <BtnIconNotify
             title="새 알림"
@@ -57,23 +53,11 @@ export default class WidgetsHeader extends PureComponent {
           />
           {item.title}
           <ul className="iconsWrapper">
-            <li
-              style={functions.includes('settings') ? { display: 'block' } : { display: 'none' }}
-            >
-              <Link
-                className="setupWidget"
-                to={`/store/appMain/myPage/widgetsetting/${item.PAGE_ID}/${item.id}`}
-                title="위젯 설정"
-              />
+            <li style={functions.includes('settings') ? { display: 'block' } : { display: 'none' }}>
+              <Link className="setupWidget" to={`/store/appMain/myPage/widgetsetting/${item.PAGE_ID}/${item.id}`} title="위젯 설정" />
             </li>
-            <li
-              style={functions.includes('delete') ? { display: 'block' } : { display: 'none' }}
-            >
-              <button
-                className="deleteWidget"
-                title="위젯 삭제"
-                onClick={handleDeleteWidget}
-              />
+            <li style={functions.includes('delete') ? { display: 'block' } : { display: 'none' }}>
+              <button className="deleteWidget" title="위젯 삭제" onClick={handleDeleteWidget} />
             </li>
           </ul>
         </h2>

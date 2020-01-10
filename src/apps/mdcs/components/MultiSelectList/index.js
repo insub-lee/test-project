@@ -127,17 +127,32 @@ MultiSelectList.defaultProps = {
     {
       title: 'Site',
       key: 'Site',
-      dataSet: [{ key: '1', value: 'Cheongju.' }, { key: '2', value: 'Gumi.' }, { key: '3', value: 'Seoul' }, { key: '4', value: 'General/etc' }],
+      dataSet: [
+        { key: '1', value: 'Cheongju.' },
+        { key: '2', value: 'Gumi.' },
+        { key: '3', value: 'Seoul' },
+        { key: '4', value: 'General/etc' },
+      ],
     },
     {
       title: 'Line/Site',
       key: 'key2',
-      dataSet: [{ key: 'F1', value: 'F1' }, { key: 'F2', value: 'F2' }, { key: 'F3', value: 'F3' }, { key: 'G-PKG-TEST', value: 'G-PKG-TEST' }],
+      dataSet: [
+        { key: 'F1', value: 'F1' },
+        { key: 'F2', value: 'F2' },
+        { key: 'F3', value: 'F3' },
+        { key: 'G-PKG-TEST', value: 'G-PKG-TEST' },
+      ],
     },
     {
       title: 'Product',
       key: 'key3',
-      dataSet: [{ key: '1', value: '1' }, { key: '2', value: '2' }, { key: '3', value: '3' }, { key: '4', value: '4' }],
+      dataSet: [
+        { key: '1', value: '1' },
+        { key: '2', value: '2' },
+        { key: '3', value: '3' },
+        { key: '4', value: '4' },
+      ],
     },
   ],
   onChange: () => false,

@@ -82,10 +82,10 @@ function getTransitions(duration) {
 
 function getDockStyles({ fluid, dockStyle, dockHiddenStyle, duration, position, isVisible }, { size, isResizing, fullWidth, fullHeight, isOpen }, dockFixedYn) {
   let posStyle;
-  const absSize = fluid ? size * 100 + '%' : size + 'px';
+  const absSize = fluid ? `${size * 100}%` : `${size}px`;
 
   function getRestSize(fullSize) {
-    return fluid ? 100 - size * 100 + '%' : fullSize - size + 'px';
+    return fluid ? `${100 - size * 100}%` : `${fullSize - size}px`;
   }
 
   switch (position) {
@@ -174,7 +174,7 @@ function getResizerStyles(position, isOpen, dockFixedYn, appYn) {
     case 'right':
       resizerStyle = {
         left: -size,
-        top: fullHeight / 2 - 66 + 'px',
+        top: `${fullHeight / 2 - 66}px`,
         height: '65px',
         cursor: 'pointer',
         width: '10px',
@@ -193,10 +193,8 @@ function getResizerStyles(position, isOpen, dockFixedYn, appYn) {
         } else {
           resizerStyle.backgroundImage = `url(${dockOpenIcon})`;
         }
-      } else {
-        if (dockFixedYn === 'A') {
-          resizerStyle.display = 'none';
-        }
+      } else if (dockFixedYn === 'A') {
+        resizerStyle.display = 'none';
       }
 
       if (dockFixedYn === 'Y') {
@@ -207,7 +205,7 @@ function getResizerStyles(position, isOpen, dockFixedYn, appYn) {
       resizerStyle = {
         top: -size,
         height: '10px',
-        left: fullWidth / 2 - 32.5 + 'px',
+        left: `${fullWidth / 2 - 32.5}px`,
         width: '65px',
         opacity: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
@@ -273,7 +271,7 @@ export default class Dock extends Component {
     position: 'right',
     zIndex: 1000,
     fluid: false,
-    defaultSize: 90, //dock 초기 너비값
+    defaultSize: 90, // dock 초기 너비값
     dimMode: 'opaque',
     duration: 200,
   };
@@ -327,7 +325,7 @@ export default class Dock extends Component {
 
     if (dockFixedYn !== prevProps.dockFixedYn) {
       this.setState({
-        isOpen: this.props.dockFixedYn === 'A' ? false : true,
+        isOpen: this.props.dockFixedYn !== 'A',
       });
     }
 
@@ -403,7 +401,7 @@ export default class Dock extends Component {
     const resizerStyles = Object.assign({}, ...getResizerStyles(position, isOpen, dockFixedYn, appYn));
 
     return (
-      <div style={Object.assign({}, styles.wrapper, { zIndex })} className="dockPos">
+      <div style={{ ...styles.wrapper, zIndex }} className="dockPos">
         {dimMode !== 'none' && !isDimHidden && <div style={dimStyles} onClick={this.handleDimClick} />}
         <div style={dockStyles} onMouseLeave={this.onMouseLeaveVisibleDock} onMouseEnter={dockFixedYn === 'A' ? this.onMouseEnterInvisibleDock : () => {}}>
           {/* 리사이즈 막기 */}

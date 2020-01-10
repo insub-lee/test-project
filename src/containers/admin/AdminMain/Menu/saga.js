@@ -96,9 +96,7 @@ export function* moveNode(payload) {
 }
 
 export function* addEmptyNode(payload) {
-  const {
-    rowInfo, data, categoryData, history,
-  } = payload;
+  const { rowInfo, data, categoryData, history } = payload;
   const { node } = rowInfo;
 
   // data : {

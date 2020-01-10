@@ -4,7 +4,6 @@ import { Button } from '../../../Abstraction/portalComponents';
 import * as comp from '../../../ArticleComponents/components';
 // import { Icon } from '../../../Abstraction/portalComponents';
 
-
 const ComponentsMain = () => (
   <div>
     <comp.ArticleHead txt="컴포넌트 설명의 메인 페이지 입니다." />

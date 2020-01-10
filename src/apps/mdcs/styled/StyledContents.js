@@ -68,7 +68,7 @@ const StyledContents = styled.div`
     background-color: #fff;
     padding: 15px 25px;
 
-    ul {
+    > ul {
       li {
         position: relative;
         min-height: 40px;

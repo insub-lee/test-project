@@ -245,18 +245,9 @@ const mapStateToProps = createStructuredSelector({
   userRole: selectors.makeUserRole(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu', saga });
 
-export default injectIntl(
-  compose(
-    withReducer,
-    withSaga,
-    withConnect,
-  )(BizManage),
-);
+export default injectIntl(compose(withReducer, withSaga, withConnect)(BizManage));

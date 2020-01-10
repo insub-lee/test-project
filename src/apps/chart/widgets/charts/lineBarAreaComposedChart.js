@@ -1,24 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import {
-  ComposedChart,
-  Line,
-  Area,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
+import { ComposedChart, Line, Area, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 import ChartWrapper from '../chart.style';
 
 export default class LineBarAreaComposedChart extends PureComponent {
   render() {
-    const {
-      datas, width, height, colors,
-    } = this.props;
+    const { datas, width, height, colors } = this.props;
     return (
       <ChartWrapper className="isoChartWrapper">
         <ComposedChart
@@ -26,7 +14,10 @@ export default class LineBarAreaComposedChart extends PureComponent {
           height={height}
           data={datas}
           margin={{
-            top: 0, right: 0, bottom: 0, left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
           }}
         >
           <XAxis dataKey="name" stroke={colors[3]} />
@@ -34,12 +25,7 @@ export default class LineBarAreaComposedChart extends PureComponent {
           <Tooltip />
           <Legend />
           <CartesianGrid stroke="#f5f5f5" />
-          <Area
-            type="monotone"
-            dataKey="amt"
-            fill={colors[0]}
-            stroke={colors[0]}
-          />
+          <Area type="monotone" dataKey="amt" fill={colors[0]} stroke={colors[0]} />
           <Bar dataKey="pv" barSize={20} fill={colors[1]} />
           <Line type="monotone" dataKey="uv" stroke={colors[3]} />
         </ComposedChart>

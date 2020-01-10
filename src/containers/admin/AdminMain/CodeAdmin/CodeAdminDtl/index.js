@@ -545,7 +545,7 @@ class CodeAdminDtl extends React.Component {
     const title = titleMode => {
       if (titleMode === 'R') return intlObj.get(messages.codeRegister);
       if (titleMode === 'D') return intlObj.get(messages.codeDetail);
-      else if (titleMode === 'U') return intlObj.get(messages.codeUpdate);
+      if (titleMode === 'U') return intlObj.get(messages.codeUpdate);
       return '';
     };
 
@@ -561,7 +561,7 @@ class CodeAdminDtl extends React.Component {
       if (btnMode === 'R') {
         // 등록
         return urlMode === 'R' ? (
-          <React.Fragment>
+          <>
             <div style={{ float: 'left' }}>
               <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
             </div>
@@ -574,9 +574,9 @@ class CodeAdminDtl extends React.Component {
             <StyledButton className="btn-primary" onClick={this.regConfirm}>
               {intlObj.get(messages.register)}
             </StyledButton>
-          </React.Fragment>
+          </>
         ) : (
-          <React.Fragment>
+          <>
             <div style={{ float: 'left' }}>
               <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
             </div>
@@ -586,13 +586,13 @@ class CodeAdminDtl extends React.Component {
             <StyledButton className="btn-primary" onClick={this.regCodeAdmin}>
               {intlObj.get(messages.register)}
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       if (btnMode === 'D') {
         // 상세
         return (
-          <React.Fragment>
+          <>
             <div style={{ float: 'left' }}>
               <StyledButton className="btn-light" onClick={this.delConfirm}>
                 {intlObj.get(messages.delete)}
@@ -609,13 +609,13 @@ class CodeAdminDtl extends React.Component {
             <StyledButton className="btn-dark" onClick={this.changeRegMode}>
               {intlObj.get(messages.new)}
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       if (btnMode === 'U') {
         // 수정
         return (
-          <React.Fragment>
+          <>
             <div style={{ float: 'left' }}>
               <button onClick={this.handleAddRow} title={intlObj.get(messages.addRow)} className="addRow" />
               {/* <Link to="../"> */}
@@ -630,7 +630,7 @@ class CodeAdminDtl extends React.Component {
             <StyledButton className="btn-primary" onClick={this.udtConfirm}>
               {intlObj.get(messages.save)}
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       return '';
@@ -845,15 +845,8 @@ const mapStateToProps = createStructuredSelector({
   setCodeGrpCd: selectors.makeSelectCodeGrpCd(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'CodeDtl', saga });
 const withReducer = injectReducer({ key: 'CodeDtl', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(CodeAdminDtl);
+export default compose(withReducer, withSaga, withConnect)(CodeAdminDtl);

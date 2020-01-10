@@ -44,12 +44,7 @@ class AppDetail extends React.Component {
       <div className="appDetailWrapper" style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
         <AppDetailStyle>
           <ErrorBoundary>
-            <AppCategory 
-              handleOnClick={handleOnClick} 
-              menuNum={menuNum} 
-              selectedIndex={Number(this.state.CATG_ID)} 
-              preUrl="/portal/store/appMain/bizStore" 
-            />
+            <AppCategory handleOnClick={handleOnClick} menuNum={menuNum} selectedIndex={Number(this.state.CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
           </ErrorBoundary>
           <ErrorBoundary>
             <AppBasicInfo targetUrl={window.location.href} appId={this.state.APP_ID} history={history} />

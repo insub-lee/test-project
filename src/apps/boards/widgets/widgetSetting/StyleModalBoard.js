@@ -38,7 +38,8 @@ const StyleModalBoard = styled.div`
     }
 
     // 게시판 그룹 영역
-    .boardGroupList, .boardList {
+    .boardGroupList,
+    .boardList {
       display: flex;
       flex-direction: column;
       height: calc(100% - 30px);
@@ -51,7 +52,7 @@ const StyleModalBoard = styled.div`
         padding-top: 0;
       }
     }
-    
+
     .secTitle {
       // height: 35px;
       padding: 7px 0;
@@ -60,7 +61,9 @@ const StyleModalBoard = styled.div`
       font-size: 13px;
       text-align: center;
 
-      &.noBorder { border-bottom: none; }
+      &.noBorder {
+        border-bottom: none;
+      }
     }
 
     // Data Grid 테이블
@@ -71,9 +74,7 @@ const StyleModalBoard = styled.div`
       // width: 336px;
       // height: calc(100% - 30px);
 
-      
       .react-grid-Container {
-
         .react-grid-Grid {
           min-height: 439px !important;
           height: 439px !important;
@@ -91,7 +92,7 @@ const StyleModalBoard = styled.div`
           }
           .react-grid-Viewport {
             height: 399px !important;
-            
+
             .react-grid-Row {
               .react-grid-Cell:first-child {
                 .listDivImg {
@@ -104,7 +105,6 @@ const StyleModalBoard = styled.div`
             }
           }
         }
-
       }
     }
     // 검색 폼
@@ -140,7 +140,8 @@ const StyleModalBoard = styled.div`
       }
     }
   }
-  .inBtn, .outBtn {
+  .inBtn,
+  .outBtn {
     position: absolute;
     top: 50%;
     right: 5px;

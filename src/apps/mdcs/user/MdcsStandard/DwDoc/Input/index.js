@@ -8,8 +8,8 @@ import { froalaEditorConfig } from 'components/FormStuff/config';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import FileUpload from 'components/FormStuff/Upload';
-import WorkFlowBase from 'apps/WorkFlow/WorkFlowBase';
-import * as Degree from 'apps/WorkFlow/WorkFlowBase/Nodes/Constants/modifyconst';
+import WorkFlowBase from 'apps/Workflow/WorkFlowBase';
+import * as Degree from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
 import StyledContent from '../../../../styled/Modals/StyledContent';
 import CheckSelectList from '../../../../components/CheckSelectList';
 import StyledButton from '../../../../styled/StyledButton';
@@ -35,7 +35,8 @@ class DwDocInput extends Component {
   }
 
   componentWillUnmount() {
-    console.debug('Redux 제거 필요');
+    const { removeReduxState, id } = this.props;
+    removeReduxState(id);
   }
 
   makeOptions = obj => {
@@ -317,7 +318,7 @@ class DwDocInput extends Component {
                                   <CheckSelectList
                                     onChange={this.onChange}
                                     onRemove={this.onRemove}
-                                    sourceData={[
+                                    dataSource={[
                                       {
                                         groupName: 'ball',
                                         groupKey: 'ball',

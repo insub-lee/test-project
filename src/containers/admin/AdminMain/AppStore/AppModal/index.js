@@ -11,11 +11,11 @@ import AppList from './AppList';
 import StyleAppModal from './StyleAppModal';
 
 class AppModal extends PureComponent {
-  searchEnter = (e) => {
+  searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
-  }
+  };
 
   search = () => {
     const searchword = this.searchInput.input.value;
@@ -29,16 +29,15 @@ class AppModal extends PureComponent {
     }
 
     this.searchword = searchword;
-  }
+  };
 
   render() {
     const {
       history,
-    //   // isLoading,
+      //   // isLoading,
     } = this.props;
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/modal');
-
 
     let selectedCategoryId = 0;
     const pn = history.location.pathname;
@@ -86,4 +85,3 @@ AppModal.propTypes = {
   match: PropTypes.object.isRequired,
 };
 export default AppModal;
-

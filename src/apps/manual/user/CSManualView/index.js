@@ -1,30 +1,30 @@
-import React, { Component } from "react";
-import { fromJS } from "immutable";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { createStructuredSelector } from "reselect";
-import PropTypes from "prop-types";
-import { Modal } from "antd";
+import React, { Component } from 'react';
+import { fromJS } from 'immutable';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+import { createStructuredSelector } from 'reselect';
+import PropTypes from 'prop-types';
+import { Modal } from 'antd';
 
-import injectReducer from "utils/injectReducer";
-import injectSaga from "utils/injectSaga";
-import PreviewSelectors from "apps/manual/admin/ManualManager/ManualMaster/selectors";
-import * as newsfeedAction from "../newsFeed/widgets/action";
-import Tab from "../components/Tab";
-import TabTitle from "../components/Tab/TabTitle";
-import StyledTabPanel from "../components/Tab/StyledTabPanel";
-import TopbarBtnWrap from "./TopbarBtnWrap";
-import IconCollection from "../components/IconCollection";
-import * as listActions from "../CSManualList/actions";
-import * as bookmarkViewWidgetAction from "../CSManualBookmark/action";
-import * as editorActions from "../../admin/ManualManager/ManualMaster/actions";
+import injectReducer from 'utils/injectReducer';
+import injectSaga from 'utils/injectSaga';
+import PreviewSelectors from 'apps/manual/admin/ManualManager/ManualMaster/selectors';
+import * as newsfeedAction from '../newsFeed/widgets/action';
+import Tab from '../components/Tab';
+import TabTitle from '../components/Tab/TabTitle';
+import StyledTabPanel from '../components/Tab/StyledTabPanel';
+import TopbarBtnWrap from './TopbarBtnWrap';
+import IconCollection from '../components/IconCollection';
+import * as listActions from '../CSManualList/actions';
+import * as bookmarkViewWidgetAction from '../CSManualBookmark/action';
+import * as editorActions from '../../admin/ManualManager/ManualMaster/actions';
 
-import reducer from "./reducer";
-import saga from "./saga";
-import selectors from "./selectors";
-import * as actions from "./actions";
-import ContentBody from "./ContentBody";
-import Styled from "./Styled";
+import reducer from './reducer';
+import saga from './saga';
+import selectors from './selectors';
+import * as actions from './actions';
+import ContentBody from './ContentBody';
+import Styled from './Styled';
 // import CSDiffView from '../CSDiffView';
 
 class ManualView extends Component {
@@ -35,21 +35,14 @@ class ManualView extends Component {
 
   componentWillUnmount() {
     const { removeReduxState } = this.props;
-    removeReduxState("preview");
+    removeReduxState('preview');
   }
 
   componentDidMount() {
-    const {
-      getManualView,
-      selectedMualIdx,
-      mualIdx,
-      setSelectedMualIdx,
-      match,
-      widgetId
-    } = this.props;
+    const { getManualView, selectedMualIdx, mualIdx, setSelectedMualIdx, match, widgetId } = this.props;
     if (match && match.params && match.params.mualIdx) {
       setSelectedMualIdx(match.params.mualIdx, widgetId);
-      getManualView(widgetId, match.params.lastVersionYN || "Y");
+      getManualView(widgetId, match.params.lastVersionYN || 'Y');
     } else if (selectedMualIdx !== mualIdx) {
       setSelectedMualIdx(mualIdx, widgetId);
       // getManualView(widgetId);
@@ -57,19 +50,10 @@ class ManualView extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      selectedMualIdx,
-      getManualView,
-      mualIdx,
-      setSelectedMualIdx,
-      widgetId
-    } = this.props;
+    const { selectedMualIdx, getManualView, mualIdx, setSelectedMualIdx, widgetId } = this.props;
     if (mualIdx) {
       if (selectedMualIdx !== mualIdx) setSelectedMualIdx(mualIdx, widgetId);
-      if (
-        selectedMualIdx > 0 &&
-        prevProps.selectedMualIdx !== selectedMualIdx
-      ) {
+      if (selectedMualIdx > 0 && prevProps.selectedMualIdx !== selectedMualIdx) {
         getManualView(widgetId);
       }
     }
@@ -84,7 +68,7 @@ class ManualView extends Component {
       widgetId,
       setNewsfeedModalView,
       setNewsfeedModalIdx,
-      setEditorPreviewModal
+      setEditorPreviewModal,
     } = this.props;
     setIsViewContents(false, widgetId);
     setNewsfeedModalIdx(undefined, widgetId);
@@ -98,28 +82,18 @@ class ManualView extends Component {
   handleClickTopBarButton = key => {
     const { widgetId, setMualBookmark } = this.props;
     switch (key) {
-      case "mualViewNookmarkN":
-        setMualBookmark("N", widgetId);
+      case 'mualViewNookmarkN':
+        setMualBookmark('N', widgetId);
         break;
-      case "mualViewNookmarkY":
-        setMualBookmark("Y", widgetId);
+      case 'mualViewNookmarkY':
+        setMualBookmark('Y', widgetId);
         break;
       default:
         console.debug(key);
     }
   };
 
-  getTabData = (
-    maulTabList,
-    setScrollComponent,
-    widgetId,
-    bookmarkWidgetData,
-    pagerProps,
-    mualMaster,
-    navList,
-    quickProps,
-    indexRelationList
-  ) =>
+  getTabData = (maulTabList, setScrollComponent, widgetId, bookmarkWidgetData, pagerProps, mualMaster, navList, quickProps, indexRelationList) =>
     maulTabList.map(item => ({
       MUAL_TAB_IDX: item.MUAL_TAB_IDX,
       MUAL_IDX: item.MUAL_IDX,
@@ -140,7 +114,7 @@ class ManualView extends Component {
           />
         </StyledTabPanel>
       ),
-      disabled: false
+      disabled: false,
     }));
 
   render() {
@@ -162,34 +136,24 @@ class ManualView extends Component {
       setNewsfeedModalIdx,
       indexRelationList,
       setbookmarkWidgetViewIdx,
-      bookmarkWidgetData
+      bookmarkWidgetData,
     } = this.props;
 
-    const isBookmark =
-      mualBookmarkList.findIndex(
-        find =>
-          find.get("MUAL_IDX") === selectedMualIdx ||
-          find.get("MUAL_ORG_IDX") === selectedMualIdx
-      ) > -1;
+    const isBookmark = mualBookmarkList.findIndex(find => find.get('MUAL_IDX') === selectedMualIdx || find.get('MUAL_ORG_IDX') === selectedMualIdx) > -1;
 
     const topBarButton = [
       {
-        key: isBookmark ? "mualViewNookmarkN" : "mualViewNookmarkY",
-        title: isBookmark ? "북마크해제" : "북마크",
-        event: isBookmark
-          ? this.handleClickTopBarButton
-          : this.handleClickTopBarButton,
-        widgetId
+        key: isBookmark ? 'mualViewNookmarkN' : 'mualViewNookmarkY',
+        title: isBookmark ? '북마크해제' : '북마크',
+        event: isBookmark ? this.handleClickTopBarButton : this.handleClickTopBarButton,
+        widgetId,
       },
-      { key: "diffView", title: "비교보기", event: undefined }
+      { key: 'diffView', title: '비교보기', event: undefined },
       // { key: 'viewTopbar2', title: '오류신고2', event: undefined },
     ];
 
     return (
-      <Styled
-        id={`#csManualView_${widgetId}`}
-        bookmarkWidgetData={bookmarkWidgetData}
-      >
+      <Styled id={`#csManualView_${widgetId}`} bookmarkWidgetData={bookmarkWidgetData}>
         <div className="tab-wrap">
           <Tab
             tabs={this.getTabData(
@@ -204,7 +168,7 @@ class ManualView extends Component {
                 setListSelectedMualIdx,
                 mualBookmarkList,
                 setNewsfeedModalIdx,
-                setbookmarkWidgetViewIdx
+                setbookmarkWidgetViewIdx,
               },
               mualMaster.toJS(),
               navList.toJS(),
@@ -212,9 +176,9 @@ class ManualView extends Component {
                 relationList: relationList.toJS(),
                 widgetId,
                 addManualHistory,
-                setListSelectedMualIdx
+                setListSelectedMualIdx,
               },
-              indexRelationList.toJS()
+              indexRelationList.toJS(),
             )}
             keyName="MUAL_TAB_IDX"
             selectedTabIdx={selectedTabIdx}
@@ -229,16 +193,12 @@ class ManualView extends Component {
               setSelectedMualIdx,
               setListSelectedMualIdx,
               setNewsfeedModalIdx,
-              setbookmarkWidgetViewIdx
+              setbookmarkWidgetViewIdx,
             }}
             widgetId={widgetId}
           />
           {!bookmarkWidgetData.widgetYn && (
-            <button
-              type="button"
-              className="tab-btn-close"
-              onClick={() => this.handleCloseModal()}
-            >
+            <button type="button" className="tab-btn-close" onClick={() => this.handleCloseModal()}>
               <IconCollection className="icon-close" />
             </button>
           )}
@@ -276,7 +236,7 @@ ManualView.propTypes = {
   indexRelationList: PropTypes.object,
   setbookmarkWidgetViewIdx: PropTypes.func,
   bookmarkWidgetData: PropTypes.object,
-  setEditorPreviewModal: PropTypes.func
+  setEditorPreviewModal: PropTypes.func,
 };
 
 ManualView.defaultProps = {
@@ -295,7 +255,7 @@ ManualView.defaultProps = {
   indexRelationList: fromJS([]),
   bookmarkWidgetData: { widgetYn: false, appCount: 0, isTitle: true },
   setbookmarkWidgetViewIdx: () => false,
-  setEditorPreviewModal: () => false
+  setEditorPreviewModal: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -308,55 +268,32 @@ const mapStateToProps = createStructuredSelector({
   navList: selectors.makeSelectManualViewNavList(),
   relationList: selectors.makeSelectManualViewRelationList(),
   indexRelationList: selectors.makeSelectManualViewIndexRelationList(),
-  oldVerMual: selectors.makeSelectOldVersionManual()
+  oldVerMual: selectors.makeSelectOldVersionManual(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getManualView: (widgetId, flag) =>
-    dispatch(actions.getManualViewBySaga(widgetId, flag)),
-  setNewsfeedModalView: (modalView, widget_id) =>
-    dispatch(newsfeedAction.setModalView(modalView, widget_id)),
-  setNewsfeedModalIdx: (mualIdx, widget_id) =>
-    dispatch(newsfeedAction.setModalIdx(mualIdx, widget_id)),
-  setSelectedTabIdx: (idx, widgetId) =>
-    dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
-  setSelectedMualIdx: (idx, widgetId, isLastVersion) =>
-    dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId, isLastVersion)),
-  setScrollComponent: (item, widgetId) =>
-    dispatch(actions.setScrollComponentByReducr(item, widgetId)),
-  setIsViewContents: (flag, widgetId) =>
-    dispatch(listActions.setIsViewContentsByReducr(flag, widgetId)),
-  setListSelectedMualIdx: (idx, widgetId) =>
-    dispatch(listActions.setSelectedMualIdxByReducr(idx, widgetId)),
-  resetManualView: widgetId =>
-    dispatch(actions.resetManualViewByReducr(widgetId)),
-  setMualBookmark: (flag, widgetId) =>
-    dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
-  addManualHistory: (widgetId, mualIdx, mualOrgIdx) =>
-    dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
-  setbookmarkWidgetViewIdx: (widgetId, selectedMual) =>
-    dispatch(
-      bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)
-    ),
-  setEditorPreviewModal: flag =>
-    dispatch(editorActions.setPreviewModalByReducr(flag)),
-  getOldVerManual: (widgetId, mualIdx) =>
-    dispatch(actions.getOldVersionManualBySaga(widgetId, mualIdx)),
-  removeReduxState: widgetId => dispatch(actions.removeReduxState(widgetId))
+  getManualView: (widgetId, flag) => dispatch(actions.getManualViewBySaga(widgetId, flag)),
+  setNewsfeedModalView: (modalView, widget_id) => dispatch(newsfeedAction.setModalView(modalView, widget_id)),
+  setNewsfeedModalIdx: (mualIdx, widget_id) => dispatch(newsfeedAction.setModalIdx(mualIdx, widget_id)),
+  setSelectedTabIdx: (idx, widgetId) => dispatch(actions.setSelectedTabIdxByReducr(idx, widgetId)),
+  setSelectedMualIdx: (idx, widgetId, isLastVersion) => dispatch(actions.setSelectedMualIdxByReducr(idx, widgetId, isLastVersion)),
+  setScrollComponent: (item, widgetId) => dispatch(actions.setScrollComponentByReducr(item, widgetId)),
+  setIsViewContents: (flag, widgetId) => dispatch(listActions.setIsViewContentsByReducr(flag, widgetId)),
+  setListSelectedMualIdx: (idx, widgetId) => dispatch(listActions.setSelectedMualIdxByReducr(idx, widgetId)),
+  resetManualView: widgetId => dispatch(actions.resetManualViewByReducr(widgetId)),
+  setMualBookmark: (flag, widgetId) => dispatch(actions.setManualBookmarkBySaga(flag, widgetId)),
+  addManualHistory: (widgetId, mualIdx, mualOrgIdx) => dispatch(actions.addManualHistoryBySaga(widgetId, mualIdx, mualOrgIdx)),
+  setbookmarkWidgetViewIdx: (widgetId, selectedMual) => dispatch(bookmarkViewWidgetAction.setWidgetMualIdxByReducer(widgetId, selectedMual)),
+  setEditorPreviewModal: flag => dispatch(editorActions.setPreviewModalByReducr(flag)),
+  getOldVerManual: (widgetId, mualIdx) => dispatch(actions.getOldVersionManualBySaga(widgetId, mualIdx)),
+  removeReduxState: widgetId => dispatch(actions.removeReduxState(widgetId)),
 });
 
 const withReducer = injectReducer({
-  key: "apps-manual-user-ManualView-reducer",
-  reducer
+  key: 'apps-manual-user-ManualView-reducer',
+  reducer,
 });
-const withSaga = injectSaga({ key: "apps-manual-user-ManualView-saga", saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps
-);
+const withSaga = injectSaga({ key: 'apps-manual-user-ManualView-saga', saga });
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect
-)(ManualView);
+export default compose(withSaga, withReducer, withConnect)(ManualView);

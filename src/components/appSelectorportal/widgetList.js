@@ -39,9 +39,7 @@ const collectDrop = connect => ({ connectDropTarget: connect.dropTarget() });
 class WidgetList extends Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-
-    };
+    this.state = {};
     this.onDelete = this.onDelete.bind(this);
   }
 
@@ -50,48 +48,46 @@ class WidgetList extends Component {
   }
 
   render() {
-    const {
-      widgetItem,
-    } = this.props;
+    const { widgetItem } = this.props;
 
-    const {
-      connectDragSource, connectDropTarget,
-    } = this.props;
+    const { connectDragSource, connectDropTarget } = this.props;
 
-    return connectDropTarget(connectDragSource(<div>
-      <WidgetSettingStyle>
-        <div style={style} className="dndItemWrapper">
-          <Table size="small" style={{ width: '100%' }}>
-            <Table.Body className="dndTBody">
-              <Table.Row key={widgetItem.APP_ID}>
-                <Table.Cell
-                  textAlign="left"
-                  title={`${widgetItem.NAME_KOR}`}
-                  className="SUTableCell"
-                >
-                  <div className="dndItem">
-                    <span className="appIconWrapper" style={{ position: 'absolute', left: 10, top: 7 }}>
-                      <img
-                        className="listImg"
-                        style={{ height: 25, width: 25 }}
-                        src={imgUrl.get('120x120', widgetItem.ICON)}
-                        onError={(e) => { e.target.src = '/icon_no_image.png'; }}
-                        alt=""
-                      />
-                    </span>
-                    {widgetItem.NAME_KOR}
-                    <span className="ellipsis" style={{ display: 'block' }}>
-                      {widgetItem.DSCR_KOR}
-                    </span>
-                    <button onClick={() => this.props.onChange(widgetItem.APP_ID)} className="delApp" />
-                  </div>
-                </Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-        </div>
-      </WidgetSettingStyle>
-    </div>));
+    return connectDropTarget(
+      connectDragSource(
+        <div>
+          <WidgetSettingStyle>
+            <div style={style} className="dndItemWrapper">
+              <Table size="small" style={{ width: '100%' }}>
+                <Table.Body className="dndTBody">
+                  <Table.Row key={widgetItem.APP_ID}>
+                    <Table.Cell textAlign="left" title={`${widgetItem.NAME_KOR}`} className="SUTableCell">
+                      <div className="dndItem">
+                        <span className="appIconWrapper" style={{ position: 'absolute', left: 10, top: 7 }}>
+                          <img
+                            className="listImg"
+                            style={{ height: 25, width: 25 }}
+                            src={imgUrl.get('120x120', widgetItem.ICON)}
+                            onError={e => {
+                              e.target.src = '/icon_no_image.png';
+                            }}
+                            alt=""
+                          />
+                        </span>
+                        {widgetItem.NAME_KOR}
+                        <span className="ellipsis" style={{ display: 'block' }}>
+                          {widgetItem.DSCR_KOR}
+                        </span>
+                        <button onClick={() => this.props.onChange(widgetItem.APP_ID)} className="delApp" />
+                      </div>
+                    </Table.Cell>
+                  </Table.Row>
+                </Table.Body>
+              </Table>
+            </div>
+          </WidgetSettingStyle>
+        </div>,
+      ),
+    );
   }
 }
 

@@ -21,7 +21,8 @@ export default function Loading({ isLoading, pastDelay, error }) {
         <Spin indicator={antIcon} />
       </div>
     ); // <p>Loading...</p>;
-  } else if (error && !isLoading) {
+  }
+  if (error && !isLoading) {
     return (
       <div style={{ display: 'table', width: '100%', height: '100%' }}>
         <div
@@ -35,11 +36,10 @@ export default function Loading({ isLoading, pastDelay, error }) {
           }}
         >
           <Icon type="frown" theme="outlined" />
-          <h4>
-            {intlObj.get(messages.error)}
-          </h4>
+          <h4>{intlObj.get(messages.error)}</h4>
         </div>
-      </div>);
+      </div>
+    );
   }
   return null;
 }

@@ -165,11 +165,11 @@ class CategoryInfoView extends Component {
           </StyleCategoryManageForm>
         </div>
         <div className="buttonWrapper">
-          <React.Fragment>
+          <>
             <StyledButton className="btn-primary" onClick={saveCategoryInfo}>
               저장
             </StyledButton>
-          </React.Fragment>
+          </>
         </div>
         <Modal
           title="권한설정"
@@ -272,7 +272,4 @@ const mapDispatchToProps = dispatch => ({
   removeSecurityRow: row => dispatch(actions.removeSecurityRowBySaga(row)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(CategoryInfoView);
+export default connect(mapStateToProps, mapDispatchToProps)(CategoryInfoView);

@@ -94,7 +94,7 @@ class Tree extends Component {
           overflow: 'visible',
         }}
         isVirtualized={false}
-        scaffoldBlockPxWidth={22}
+        scaffoldBlockPxWidth={20}
         generateNodeProps={({ node, path, treeIndex, lowerSiblingCounts, isSearchMatch, isSearchFocus }) => {
           let parentsGenerateNodeProps = {};
           let className = '';

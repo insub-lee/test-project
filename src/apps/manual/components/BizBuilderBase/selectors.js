@@ -10,9 +10,8 @@ const makeSelectWorkSeq = () =>
   );
 
 const makeSelectWorkSeqById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'workSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'workSeq']) : -1),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'workSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'workSeq']) : -1,
   );
 
 const makeSelectTaskSeq = () =>
@@ -23,9 +22,8 @@ const makeSelectTaskSeq = () =>
   );
 
 const makeSelectTaskSeqById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'taskSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'taskSeq']) : -1),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'taskSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'taskSeq']) : -1,
   );
 
 const makeSelectResponseData = () =>
@@ -57,25 +55,20 @@ const makeSelectFormData = () =>
   );
 
 const makeSelectFormDataById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'formData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'formData']).toJS() : {}),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'formData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'formData']).toJS() : {},
   );
 
 const makeSelectApiArrById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'apiArr']) !== undefined ? state.getIn(['bizBuilderBase', id, 'apiArr']).toJS() : {}),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'apiArr']) !== undefined ? state.getIn(['bizBuilderBase', id, 'apiArr']).toJS() : {},
   );
 
 const makeSelectWorkFlowConfig = () =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => {
-      const config = state.getIn(['workFlow', 'CONFIG']);
-      return config ? JSON.parse(config) : { info: {} };
-    },
-  );
+  createSelector(selectorBizBuilderBase, state => {
+    const config = state.getIn(['workFlow', 'CONFIG']);
+    return config ? JSON.parse(config) : { info: {} };
+  });
 
 export {
   makeSelectWorkSeq,

@@ -31,6 +31,13 @@ const pageIndex = 20; // 페이징 단위
 let pageSNum = 1; // 페이징 시작 변수
 let pageENum = 20; // 페이징 종료 변수
 
+// 검색결과 없을 때 표시(임시)
+const EmptyData = () => (
+  <div style={{ textAlign: 'center', fontSize: 15, fontWeight: 800, padding: 15 }}>
+    <span>{intlObj.get(messages.noSearch)}</span>
+  </div>
+);
+
 class CodeAdminList extends React.Component {
   // 생성자
   constructor(props) {
@@ -305,12 +312,6 @@ class CodeAdminList extends React.Component {
   };
 
   render() {
-    // 검색결과 없을 때 표시(임시)
-    const EmptyData = () => (
-      <div colSpan="5">
-        <font size="5">{intlObj.get(messages.noSearch)}</font>
-      </div>
-    );
     const initGrid = {
       CODE_GRP_CD: null,
       sortColumnParam: this.state.sortColumnParam,
@@ -408,15 +409,8 @@ const mapStateToProps = createStructuredSelector({
   delAdminList: selectors.makeSelectDelRow(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'codeAdmin', saga });
 const withReducer = injectReducer({ key: 'codeAdmin', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(CodeAdminList);
+export default compose(withReducer, withSaga, withConnect)(CodeAdminList);

@@ -7,7 +7,7 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import Preloader from 'components/Preloader';
-import Process from 'apps/WorkFlow/Admin/Process';
+import Process from 'apps/Workflow/Admin/Process';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -78,13 +78,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'work-builder-detail-process-designer', reducer });
 const withSaga = injectSaga({ key: 'work-builder-detail-process-designer', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(ProcessDesigner);
+export default compose(withReducer, withSaga, withConnect)(ProcessDesigner);

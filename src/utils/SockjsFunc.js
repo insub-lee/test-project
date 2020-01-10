@@ -1,7 +1,7 @@
 import EventBus from 'vertx3-eventbus-client';
 import { eventChannel } from 'redux-saga';
 import * as routesConstants from 'containers/common/Routes/constants';
-import notify from 'components/Notification';
+// import notify from 'components/Notification';
 import { Cookies } from 'react-cookie';
 import _ from 'lodash';
 
@@ -9,13 +9,11 @@ let eventBus = null;
 
 const EVENT_ROOT = '/eventbus';
 
-const notifyCallback = emitter => (
-  (error, message) => {
-    console.log('SERVER PUSH', message.body);
-    const msg = message.body;
-    emitter(msg);
-  }
-);
+const notifyCallback = emitter => (error, message) => {
+  console.log('SERVER PUSH', message.body);
+  const msg = message.body;
+  emitter(msg);
+};
 
 const loginCallback = (emitter, data) => {
   const payload = data;
@@ -35,7 +33,7 @@ const loginCallback = (emitter, data) => {
 
       eventBus.registerHandler(`address.client.${message.sKey}`, _.pick(payload, ['uuid', 'client']), notifyCallback(emitter));
       eventBus.registerHandler(`address.site.${PROFILE.SITE_ID}`, _.pick(payload, ['uuid', 'client']), notifyCallback(emitter));
-      
+
       emitter({
         type: payload.type,
         token: message.sKey,
@@ -48,8 +46,8 @@ const loginCallback = (emitter, data) => {
   };
 };
 
-const connect = payload => (
-  eventChannel((emitter) => {
+const connect = payload =>
+  eventChannel(emitter => {
     const data = payload;
     console.log('EB CONNECT :', data);
     if (data.client === undefined) data.client = 0;
@@ -70,11 +68,13 @@ const connect = payload => (
           if (typeof hd === 'function') {
             hd = {};
           }
-          this.sockJSConn.send(JSON.stringify({
-            type: 'unregister',
-            address,
-            headers: hd,
-          }));
+          this.sockJSConn.send(
+            JSON.stringify({
+              type: 'unregister',
+              address,
+              headers: hd,
+            }),
+          );
 
           delete this.handlers[address];
         }
@@ -86,7 +86,7 @@ const connect = payload => (
         console.log('Connection Opened by eventbus.onopen');
         return () => {};
       };
-      eventBus.onerror = (json) => {
+      eventBus.onerror = json => {
         console.log('Error Type', json.type);
         switch (json.type) {
           case 'err':
@@ -109,8 +109,7 @@ const connect = payload => (
     return () => {
       // console.log('fail...');
     };
-  })
-);
+  });
 
 const sendCallback = (emitter, data) => {
   const payload = data;
@@ -124,8 +123,8 @@ const sendCallback = (emitter, data) => {
   };
 };
 
-const send = payload => (
-  eventChannel((emitter) => {
+const send = payload =>
+  eventChannel(emitter => {
     const data = payload;
     console.log('EB SEND :', eventBus, data);
     if (data.client === undefined) data.client = 0;
@@ -139,20 +138,17 @@ const send = payload => (
     return () => {
       // console.log('fail...');
     };
-  })
-);
+  });
 
-const registerCallback = emitter => (
-  (error, message) => {
-    console.info(`received a message from article.view: ${JSON.stringify(message)}`);
-    if (message !== undefined && message.type !== 'error') {
-      emitter({ message });
-    }
+const registerCallback = emitter => (error, message) => {
+  console.info(`received a message from article.view: ${JSON.stringify(message)}`);
+  if (message !== undefined && message.type !== 'error') {
+    emitter({ message });
   }
-);
+};
 
-const register = payload => (
-  eventChannel((emitter) => {
+const register = payload =>
+  eventChannel(emitter => {
     const data = payload;
     const eBHeader = data.headers;
     console.log('EB REGISTER :', eventBus, data, eBHeader);
@@ -164,11 +160,10 @@ const register = payload => (
     return () => {
       // console.log('fail...');
     };
-  })
-);
+  });
 
-const unregister = payload => (
-  eventChannel((emitter) => {
+const unregister = payload =>
+  eventChannel(emitter => {
     const data = payload;
     console.log('EB UNREGISTER :', eventBus, data);
     if (data.client === undefined) data.client = 0;
@@ -180,16 +175,14 @@ const unregister = payload => (
     return () => {
       // console.log('fail...');
     };
-  })
-);
+  });
 
 const status = () => {
   if (eventBus === null || eventBus.state === EventBus.CLOSED) {
     return 0;
-  } else {
-    return eventBus.state;
   }
-}
+  return eventBus.state;
+};
 export const EB = {
   connect: payload => connect(payload),
   register: payload => register(payload),

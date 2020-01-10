@@ -3,21 +3,21 @@ import moment from 'moment';
 
 import Input, { Textarea } from 'components/FormStuff/Input';
 import InputNumber from 'components/FormStuff/InputNumber';
-import { CheckboxGroup } from 'components/FormStuff/Checkbox';
-import { RadioGroup } from 'components/FormStuff/Radio';
-import Select from 'components/FormStuff/Select';
-import TimePicker from 'components/FormStuff/TimePicker';
-import AgGrid from 'components/FormStuff/Grid/AgGrid';
+// import { CheckboxGroup } from 'components/FormStuff/Checkbox';
+// import { RadioGroup } from 'components/FormStuff/Radio';
+// import Select from 'components/FormStuff/Select';
+// import TimePicker from 'components/FormStuff/TimePicker';
+// import AgGrid from 'components/FormStuff/Grid/AgGrid';
 import DatePicker, { DateMonthPicker, DateRangePicker, DateWeekPicker } from 'components/FormStuff/DatePicker';
-import DropZone from 'components/FormStuff/Upload/DropZone';
+// import DropZone from 'components/FormStuff/Upload/DropZone';
 import RichTextEditor from 'components/FormStuff/RichTextEditor';
 import Upload from 'components/FormStuff/Upload';
 import MaskDiv from 'components/FormStuff/MaskDiv';
 import { froalaEditorConfig } from 'components/FormStuff/config';
 
 // Custom
-import UserSelector from 'components/FormStuff/UserSearchSelector';
-import ProcessInfoSelector from 'components/FormStuff/Custom/ProcessInfoSelector';
+// import UserSelector from 'components/FormStuff/UserSearchSelector';
+// import ProcessInfoSelector from 'components/FormStuff/Custom/ProcessInfoSelector';
 import WorkSelector from 'components/FormStuff/Custom/WorkSelector';
 
 export const defaultFormStuffs = {
@@ -269,3 +269,6 @@ export const allFormStuffs = {
 const includedOptions = Object.keys(defaultFormStuffs).concat(Object.keys(customFormStuffs));
 
 export const settingsWith = ['Box', ...includedOptions];
+
+// useless code
+export const formStuffRenderer = {};

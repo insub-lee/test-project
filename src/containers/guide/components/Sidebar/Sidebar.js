@@ -14,7 +14,7 @@ import ArticleList from './ArticleList.js';
 const { SubMenu } = Menu;
 const { Sider } = Layout;
 
-const stripTrailingSlash = (str) => {
+const stripTrailingSlash = str => {
   if (str.substr(-1) === '/') {
     return str.substr(0, str.length - 1);
   }
@@ -26,15 +26,17 @@ class Sidebar extends Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  getAncestorKeys = (key) => {
+  getAncestorKeys = key => {
     const map = {
       sub3: ['sub2'],
     };
     return map[key] || [];
   };
+
   handleClick(e) {
     this.props.articleSelected(e.key);
   }
+
   static renderView({ style, ...props }) {
     const viewStyle = {
       marginRight: rtl === 'rtl' ? '0' : '-17px',
@@ -42,9 +44,7 @@ class Sidebar extends Component {
       marginLeft: rtl === 'rtl' ? '-17px' : '0',
       paddingLeft: rtl === 'rtl' ? '9px' : '0',
     };
-    return (
-      <div className="box" style={{ ...style, ...viewStyle }} {...props} />
-    );
+    return <div className="box" style={{ ...style, ...viewStyle }} {...props} />;
   }
 
   render() {
@@ -54,16 +54,13 @@ class Sidebar extends Component {
       <SidebarWrapper>
         <Sider
           trigger={null}
-          collapsible={true}
+          collapsible
           width="240"
           className="devguideSidebar"
           // style={styling}
         >
           <Logo />
-          <Scrollbars
-            renderView={this.renderView}
-            style={{ height: scrollheight - 70 }}
-          >
+          <Scrollbars renderView={this.renderView} style={{ height: scrollheight - 70 }}>
             <Menu
               onClick={this.handleClick}
               theme="dark"
@@ -72,46 +69,37 @@ class Sidebar extends Component {
               // onOpenChange={this.onOpenChange}
               className="devDashboardMenu"
             >
-              {
-                ArticleList[this.props.selectedIndex - 1].map((line) => {
-                  if (line.hasChild === 0) {
-                    return (
-                      <Menu.Item key={line.keyUrl}>
-                        <Link to={`${url}/${line.keyUrl}`}>
-                          <span className="devguideMenuHolder" >
-                            <span className="nav-text">
-                              {line.title}
-                            </span>
-                          </span>
-                        </Link>
-                      </Menu.Item>);
-                  }
+              {ArticleList[this.props.selectedIndex - 1].map(line => {
+                if (line.hasChild === 0) {
                   return (
-                    <SubMenu
-                      key={line.keyUrl}
-                      title={
+                    <Menu.Item key={line.keyUrl}>
+                      <Link to={`${url}/${line.keyUrl}`}>
                         <span className="devguideMenuHolder">
-                          <span className="nav-text">
-                            {line.title}
-                          </span>
+                          <span className="nav-text">{line.title}</span>
                         </span>
-                      }
-                    >
-                      {
-                      line.children.map(child => (
-                        <Menu.Item key={child.keyUrl}>
-                          <Link to={`${url}/${child.keyUrl}`}>
-                            <span>
-                              {child.title}
-                            </span>
-                          </Link>
-                        </Menu.Item>
-                        ))
-                      }
-                    </SubMenu>
-                    );
-                  })
-              }
+                      </Link>
+                    </Menu.Item>
+                  );
+                }
+                return (
+                  <SubMenu
+                    key={line.keyUrl}
+                    title={
+                      <span className="devguideMenuHolder">
+                        <span className="nav-text">{line.title}</span>
+                      </span>
+                    }
+                  >
+                    {line.children.map(child => (
+                      <Menu.Item key={child.keyUrl}>
+                        <Link to={`${url}/${child.keyUrl}`}>
+                          <span>{child.title}</span>
+                        </Link>
+                      </Menu.Item>
+                    ))}
+                  </SubMenu>
+                );
+              })}
             </Menu>
           </Scrollbars>
         </Sider>

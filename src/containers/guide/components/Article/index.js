@@ -6,7 +6,7 @@ import PageHeader from './ArticleUtility/pageHeader';
 import Articles from './Articles';
 import './Article.css';
 
-const Article = (props) => {
+const Article = props => {
   let { keyUrl } = props.match.params;
   const { title } = props.match.params;
   console.log(props);
@@ -17,7 +17,8 @@ const Article = (props) => {
       <LayoutContent>
         <Articles keyUrl={keyUrl} />
       </LayoutContent>
-    </LayoutWrapper>);
+    </LayoutWrapper>
+  );
 };
 
 Article.propTypes = {

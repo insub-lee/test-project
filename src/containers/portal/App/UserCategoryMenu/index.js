@@ -76,7 +76,7 @@ class UserCategoryMenu extends Component {
       myAppTreeData,
       saveData,
       profile,
-      fixedMenu, 
+      fixedMenu,
     } = this.props;
 
     return (
@@ -173,9 +173,6 @@ const mapDispatchToProps = dispatch => ({
   updateMymenuDisp: node => dispatch(routeActions.updateMymenuDisp(node)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UserCategoryMenu);

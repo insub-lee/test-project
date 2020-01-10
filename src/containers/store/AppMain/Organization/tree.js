@@ -52,66 +52,36 @@ class Tree extends Component {
   }
 
   render() {
-    const {
-      treeData,
-      searchString,
-      searchFocusIndex,
-      searchFoundCount,
-    } = this.state;
+    const { treeData, searchString, searchFocusIndex, searchFoundCount } = this.state;
 
     const selectPrevMatch = () =>
       this.setState({
-        searchFocusIndex:
-          searchFocusIndex !== null
-            ? ((searchFoundCount + searchFocusIndex) - 1) % searchFoundCount
-            : searchFoundCount - 1,
+        searchFocusIndex: searchFocusIndex !== null ? (searchFoundCount + searchFocusIndex - 1) % searchFoundCount : searchFoundCount - 1,
       });
 
     const selectNextMatch = () =>
       this.setState({
-        searchFocusIndex:
-          searchFocusIndex !== null
-            ? (searchFocusIndex + 1) % searchFoundCount
-            : 0,
+        searchFocusIndex: searchFocusIndex !== null ? (searchFocusIndex + 1) % searchFoundCount : 0,
       });
 
     return (
-      <div
-        style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
-      >
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
         <div style={{ flex: '0 0 auto', padding: '0 15px' }}>
           <h3>File Explorer Theme</h3>
           <button onClick={this.expandAll}>Expand All</button>
           <button onClick={this.collapseAll}>Collapse All</button>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <form
-            style={{ display: 'inline-block' }}
-            onSubmit={event => event.preventDefault()}
-          >
+          <form style={{ display: 'inline-block' }} onSubmit={event => event.preventDefault()}>
             <label htmlFor="find-box">
               Search:&nbsp;
-              <input
-                id="find-box"
-                type="text"
-                value={searchString}
-                onChange={event =>
-                  this.setState({ searchString: event.target.value })}
-              />
+              <input id="find-box" type="text" value={searchString} onChange={event => this.setState({ searchString: event.target.value })} />
             </label>
 
-            <button
-              type="button"
-              disabled={!searchFoundCount}
-              onClick={selectPrevMatch}
-            >
+            <button type="button" disabled={!searchFoundCount} onClick={selectPrevMatch}>
               &lt;
             </button>
 
-            <button
-              type="submit"
-              disabled={!searchFoundCount}
-              onClick={selectNextMatch}
-            >
+            <button type="submit" disabled={!searchFoundCount} onClick={selectNextMatch}>
               &gt;
             </button>
 
@@ -134,9 +104,9 @@ class Tree extends Component {
             searchFinishCallback={matches =>
               this.setState({
                 searchFoundCount: matches.length,
-                searchFocusIndex:
-                  matches.length > 0 ? searchFocusIndex % matches.length : 0,
-              })}
+                searchFocusIndex: matches.length > 0 ? searchFocusIndex % matches.length : 0,
+              })
+            }
             // canDrag={({ node }) => !node.dragDisabled}
             // canDrop={({ nextParent }) => !nextParent || nextParent.isDirectory}
             canDrag={false}
@@ -151,13 +121,11 @@ class Tree extends Component {
   }
 }
 
-
 Tree.propTypes = {
   treeData: PropTypes.array, //eslint-disable-line
   users: PropTypes.array, //eslint-disable-line
   user: PropTypes.object, //eslint-disable-line
   getUsers: PropTypes.func, //eslint-disable-line
 };
-
 
 export default Tree;

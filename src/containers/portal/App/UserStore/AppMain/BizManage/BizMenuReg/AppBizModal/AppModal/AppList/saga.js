@@ -40,9 +40,11 @@ export function* initPage(payload) {
   // ONE. 단일 앱리스트
   if (initType.indexOf('ONE') > -1) {
     yield put({ type: constants.GET_MAPLIST_ONE, key: param });
-  } else if (initType.indexOf('SEARCH') > -1) { // SEARCH. 검색 결과 앱리스트
+  } else if (initType.indexOf('SEARCH') > -1) {
+    // SEARCH. 검색 결과 앱리스트
     yield put({ type: constants.GET_MAPLIST_SEARCH, searchword: param });
-  } else { // ALL. 전체 앱리스트
+  } else {
+    // ALL. 전체 앱리스트
     yield put({ type: constants.GET_MAPLIST_ALL });
   }
 }
@@ -61,7 +63,10 @@ export function* getMapListOne(payload) {
   const categoryFlatData = appListStore.get('categoryFlatData');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist/manage', {
-    TYPE: 'ONE', CATG_ID, LIMIT: appBlockSize, BIZGRP_ID,
+    TYPE: 'ONE',
+    CATG_ID,
+    LIMIT: appBlockSize,
+    BIZGRP_ID,
   });
   const { result, total } = response;
 
@@ -101,7 +106,11 @@ export function* getMapListMore(payload) {
   const limit = matchMap.get('appList').size + appBlockSize; // limit값 증가
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist/manage', {
-    TYPE: initType, CATG_ID, LIMIT: limit, searchword, BIZGRP_ID,
+    TYPE: initType,
+    CATG_ID,
+    LIMIT: limit,
+    searchword,
+    BIZGRP_ID,
   });
   const { result, total } = response;
 
@@ -132,7 +141,9 @@ export function* getMapListAll() {
   const BIZGRP_ID = bizmenureg.get('BIZGRP_ID');
 
   const response = yield call(Axios.post, '/api/bizstore/v1/store/applist/manage', {
-    TYPE: 'ALL', LIMIT: appBlockSizeAll, BIZGRP_ID,
+    TYPE: 'ALL',
+    LIMIT: appBlockSizeAll,
+    BIZGRP_ID,
   });
   const { result } = response;
 
@@ -140,7 +151,7 @@ export function* getMapListAll() {
 
   let mapList = fromJS([]);
 
-  categoryData.forEach((data) => {
+  categoryData.forEach(data => {
     let newData = data;
     const categoryKey = data.get('key');
     newData = newData.set('showReadMoreBtn', false);
@@ -167,7 +178,10 @@ export function* getMapListSearch(payload) {
   const url = '/api/bizstore/v1/store/applist/manage';
 
   const response = yield call(Axios.post, url, {
-    TYPE: 'SEARCH', searchword: payload.searchword, LIMIT: appBlockSize, BIZGRP_ID,
+    TYPE: 'SEARCH',
+    searchword: payload.searchword,
+    LIMIT: appBlockSize,
+    BIZGRP_ID,
   });
   const { result } = response;
 
@@ -178,7 +192,7 @@ export function* getMapListSearch(payload) {
     const appListMap = _.groupBy(result, 'CATG_ID');
     let mapList = fromJS([]);
 
-    Object.keys(appListMap).map((CATG_ID) => {
+    Object.keys(appListMap).map(CATG_ID => {
       let newData = fromJS(categoryFlatData.get(Number(CATG_ID)));
       newData = newData.set('showReadMoreBtn', false);
       newData = newData.set('searchword', searchword);

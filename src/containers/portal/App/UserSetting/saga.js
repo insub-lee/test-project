@@ -1,7 +1,22 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { lang } from 'utils/commonUtils';
-import { LOAD_LIST_SAGA, CHANGE_LIST_REDUCER, SAVE_MESSAGE_LIST_SAGA, LOAD_SKIN_SAGA, LOAD_SKIN_REDUCER, SAVE_ALL_SAGA, INSERT_NOTI_LIST, SAVE_SKIN_SAGA, LOAD_LANG_SAGA, LOAD_LANG_REDUCER, SAVE_LANG_SAGA, CHANGE_LOCALE, CHANGE_LANG_SAGA, CHANGE_LANG } from './constants';
 import * as routeConstants from 'containers/common/Routes/constants';
+import {
+  LOAD_LIST_SAGA,
+  CHANGE_LIST_REDUCER,
+  SAVE_MESSAGE_LIST_SAGA,
+  LOAD_SKIN_SAGA,
+  LOAD_SKIN_REDUCER,
+  SAVE_ALL_SAGA,
+  INSERT_NOTI_LIST,
+  SAVE_SKIN_SAGA,
+  LOAD_LANG_SAGA,
+  LOAD_LANG_REDUCER,
+  SAVE_LANG_SAGA,
+  CHANGE_LOCALE,
+  CHANGE_LANG_SAGA,
+  CHANGE_LANG,
+} from './constants';
 import { Axios } from '../../../../utils/AxiosFunc';
 
 export function* getAppNotiList() {
@@ -31,7 +46,7 @@ export function* getSaveMessage(payload) {
 export function* getLangList() {
   const response = yield call(Axios.post, '/api/common/v1/account/appSettingLang/');
   const resultValue = response;
-  
+
   if (resultValue.lang.length > 0) {
     yield put({ type: LOAD_LANG_REDUCER, resultValue });
   }
@@ -48,7 +63,7 @@ export function* saveLang(payload) {
   if (result.result === 'success') {
     const response = yield call(Axios.post, '/api/common/v1/account/appSettingLang/');
     const resultValue = response;
-    
+
     if (resultValue.lang.length > 0) {
       yield put({ type: LOAD_LANG_REDUCER, resultValue });
     }
@@ -73,7 +88,6 @@ export function* saveSkin(payload) {
     yield put({ type: routeConstants.LOAD_SKIN_SAGA });
   }
 }
-
 
 export function* saveAllMessage(payload) {
   const data = {

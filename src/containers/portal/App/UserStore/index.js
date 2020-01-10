@@ -16,6 +16,8 @@ import themes from 'config/themes/index';
 // import messages from '../messages';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
 
+import Widget from 'components/appSetting';
+import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as selectors from './selectors';
 import reducer from './reducer';
 import * as actions from './actions';
@@ -34,9 +36,6 @@ import BizDetail from './AppMain/Biz/BizDetail';
 import BizMenuList from './AppMain/Biz/BizMenuList';
 import BizStore from './AppMain/BizStore';
 import BizManage from './AppMain/BizManage';
-
-import Widget from 'components/appSetting';
-import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import './global-store.css';
 

@@ -157,14 +157,7 @@ const mapStateToProps = createStructuredSelector({
   // 테스트
   // bizMenuData: selectors.makgeBizMenuData(),
 });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'portal_bizList', reducer });
 const withSaga = injectSaga({ key: 'portal_bizList', saga });
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizList);
+export default compose(withReducer, withSaga, withConnect)(BizList);

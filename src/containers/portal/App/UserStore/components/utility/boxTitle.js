@@ -6,16 +6,8 @@ class boxTitle extends React.PureComponent {
   render() {
     return (
       <div>
-        {this.props.title ?
-          <BoxTitle className="storeBoxTitle">
-            {' '}{this.props.title}{' '}
-          </BoxTitle>
-            : ''}
-        {this.props.subtitle ?
-          <BoxSubTitle className="storeBoxSubTitle">
-            {' '}{this.props.subtitle}{' '}
-          </BoxSubTitle>
-            : ''}
+        {this.props.title ? <BoxTitle className="storeBoxTitle"> {this.props.title} </BoxTitle> : ''}
+        {this.props.subtitle ? <BoxSubTitle className="storeBoxSubTitle"> {this.props.subtitle} </BoxSubTitle> : ''}
       </div>
     );
   }

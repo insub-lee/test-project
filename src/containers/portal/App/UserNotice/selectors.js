@@ -3,30 +3,15 @@ import { createSelector } from 'reselect';
 const selectNotice = state => state.get('notice');
 const selectView = state => state.get('common');
 
-const makeNotice = () => createSelector(
-  selectNotice,
-  noticeState => noticeState.get('notice'),
-);
+const makeNotice = () => createSelector(selectNotice, noticeState => noticeState.get('notice'));
 
-const makeAllRead = () => createSelector(
-  selectNotice,
-  noticeState => noticeState.get('allread'),
-);
+const makeAllRead = () => createSelector(selectNotice, noticeState => noticeState.get('allread'));
 
-const makeAlarm = () => createSelector(
-  selectNotice,
-  noticeState => noticeState.get('alarm'),
-);
+const makeAlarm = () => createSelector(selectNotice, noticeState => noticeState.get('alarm'));
 
-const makeSelectIsNotify = () => createSelector(
-  selectNotice,
-  noticeState => noticeState.get('isNotify'),
-);
+const makeSelectIsNotify = () => createSelector(selectNotice, noticeState => noticeState.get('isNotify'));
 
-const currentView = () => createSelector(
-  selectView,
-  viewState => viewState.get('view'),
-);
+const currentView = () => createSelector(selectView, viewState => viewState.get('view'));
 
 export {
   selectNotice,
@@ -34,7 +19,6 @@ export {
   makeAllRead,
   makeAlarm,
   currentView,
-
   // Notify Dot
   makeSelectIsNotify,
 };

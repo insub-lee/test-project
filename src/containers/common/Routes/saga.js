@@ -278,6 +278,7 @@ export function* getInitialPortalPage(payload) {
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
   yield put({
     type: actionTypes.SET_HOME_ROOT_PAGE,
+    rootAppYn: response.rootAppYn,
     rootPageId: response.rootPageId,
     myHomePageId: response.myHomePageId,
   });  
@@ -301,13 +302,14 @@ export function* dockSetMyMenuData(payload) {
   if (isHome === 'Y') {
     response = yield call(Axios.post, '/api/portal/v1/dock/dockSetMyMenuDataHome/', data);
     dataList = response.list;
-
     // dock Api의 getMyMenuDataHome 쿼리에서 Home 앱의 INTL_TYPE, SRC_PATH값을 가져올 수 없어서
     // Home 앱 정보를 가져온 후 saga에서 넣어준다.
     dataList.INTL_TYPE = 'N';
     dataList.SRC_PATH = 'Home';
   } else {
     response = yield call(Axios.post, '/api/portal/v1/dock/dockSetMyMenuData/', data);
+    // Todo - when response.list is fail or isUnknown is true,,,,
+
     dataList = response.list;
   }
 
@@ -458,7 +460,7 @@ function NotiCheck(element, notiVal) {
       }
     }
   } else if (element.APP_YN === 'F') {
-    console.log('F');
+    // console.log('F');
   } else {
     const t = notiVal.findIndex(c => c.APP_ID === element.APP_ID);
 
@@ -946,9 +948,7 @@ export function* setDockIconType(payload) {
 export function* getMyAppTree(payload) {
   const response = yield call(Axios.get, '/api/portal/v1/page/portalMyMenuTree', { data: 'temp' });
   const resultSet = Object.keys(response).length > 0 ? fromJS(JSON.parse(`[${response.result}]`)) : '';
-  console.debug('@@@ resultSet', resultSet);
   const myAppTreeData = resultSet ? resultSet.getIn([0, 'children']) : '';
-  console.debug('@@ myAppTreeData', myAppTreeData);
   if (myAppTreeData && resultSet.size > 0) {
     if (payload.type === commonActionType.RESET_NOTIFY) {
       const myObject = payload.UNREAD_CNT;
@@ -1407,6 +1407,8 @@ export function* getLoaddata(payload) {
       setMyMenuData.SRC_PATH = 'Home';
     } else {
       response = yield call(Axios.post, '/api/portal/v1/dock/dockSetMyMenuData/', dataParam);
+      // Todo - when response.list is fail or isUnknown is true,,,,
+
       setMyMenuData = response.list;
     }
 

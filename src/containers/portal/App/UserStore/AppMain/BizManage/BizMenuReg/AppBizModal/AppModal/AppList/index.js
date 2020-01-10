@@ -4,7 +4,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
@@ -41,6 +40,7 @@ class AppList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
+
   componentWillReceiveProps(nextProps) {
     const { match, loadingOn, initType } = nextProps;
     const { params } = match;
@@ -86,7 +86,7 @@ class AppList extends Component {
         type={initType}
         mapList={mapList}
         getMapListOne={handleGetMapListOne}
-        getMapListMore={(key) => {
+        getMapListMore={key => {
           loadingOn();
           handleGetMapAppListMore(key);
         }}
@@ -149,8 +149,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmenuAppList', reducer });
 const withSaga = injectSaga({ key: 'bizmenuAppList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppList);
+export default compose(withReducer, withSaga, withConnect)(AppList);

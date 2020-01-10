@@ -27,8 +27,10 @@ const StyleUserForm = styled.div`
               position: relative;
               display: block;
 
-              .upper {text-transform: uppercase;}
-              
+              .upper {
+                text-transform: uppercase;
+              }
+
               // 목록
               .treeList {
                 min-height: 33px;
@@ -37,7 +39,7 @@ const StyleUserForm = styled.div`
                 .resultsTableWrapper {
                   width: calc(100% - 17px);
                   padding: 5px;
-                  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+                  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
                     /* IE10+ specific styles go here */
                     margin-bottom: 20px;
                   }
@@ -103,21 +105,23 @@ const StyleUserForm = styled.div`
 
                 .skinOptions {
                   width: 180px;
-  
+
                   label {
                     width: 100%;
-  
-                    .ant-radio, .ant-radio + span {
+
+                    .ant-radio,
+                    .ant-radio + span {
                       display: inline-block;
                       width: 100%;
                       float: left;
                       padding: 0;
                     }
-  
+
                     .ant-radio {
                       padding: 15px 30px 10px 0;
 
-                      input.ant-radio-input, .ant-radio-inner {
+                      input.ant-radio-input,
+                      .ant-radio-inner {
                         top: 0;
                         left: 50%;
                         margin-left: -8px;
@@ -136,20 +140,19 @@ const StyleUserForm = styled.div`
                         animation-fill-mode: none;
                       }
                     }
-  
+
                     .skinItem {
                       display: inline-block;
                       width: 150px;
                       height: 80px;
                       background: #dadada;
-  
+
                       > img {
                         width: 100%;
                       }
                     }
                   }
                 }
-
               }
             }
           }

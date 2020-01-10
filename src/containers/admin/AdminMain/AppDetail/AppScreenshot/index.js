@@ -26,7 +26,6 @@ import Carousels from './carousel';
 import moreMenu from '../../../../../images/bizstore/icon-more-menu.png';
 import { BtnSeeMore } from '../../../components/uielements/buttons.style';
 
-
 const Carousel = props => (
   <CarouselWrapper>
     <Carousels {...props} />
@@ -59,18 +58,12 @@ class AppScreenshot extends React.Component {
   }
 
   render() {
-    const {
-      isOpen,
-      images,
-      photoIndex,
-    } = this.state;
+    const { isOpen, images, photoIndex } = this.state;
 
-    const onClickImgFullView = (index) => {
+    const onClickImgFullView = index => {
       const imagesArr = [];
 
-      this.props.resAppScreenshotList.map(item => (
-        imagesArr.push(imgUrl.get('0x0', item.FILE_PATH))
-      ));
+      this.props.resAppScreenshotList.map(item => imagesArr.push(imgUrl.get('0x0', item.FILE_PATH)));
 
       this.setState({
         images: imagesArr,
@@ -82,22 +75,14 @@ class AppScreenshot extends React.Component {
     const loop = data =>
       data.map((item, index) => (
         <div key={item.FILE_PATH} style={{ overflow: 'hidden' }}>
-          <span
-            onClick={() => onClickImgFullView(index)}
-            onKeyPress={() => onClickImgFullView(index)}
-            role="presentation"
-          >
-            <img
-              src={imgUrl.get('190x140', item.FILE_PATH)}
-              alt={item.ITEM_VALUE}
-              style={{ height: 140, margin: 'auto', cursor: 'pointer' }}
-            />
+          <span onClick={() => onClickImgFullView(index)} onKeyPress={() => onClickImgFullView(index)} role="presentation">
+            <img src={imgUrl.get('190x140', item.FILE_PATH)} alt={item.ITEM_VALUE} style={{ height: 140, margin: 'auto', cursor: 'pointer' }} />
           </span>
         </div>
       ));
 
     const loopApp = data =>
-      data.map((item) => {
+      data.map(item => {
         const registerApps = () => {
           this.props.registApp(item.REF_APP_ID, this.props.resAppExplain.APP_ID);
         };
@@ -111,16 +96,12 @@ class AppScreenshot extends React.Component {
         return (
           <div key={item.REF_APP_ID} className="appCols">
             <Link to={`/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
-              <img
-                src={imgUrl.get('120x120', item.ICON)}
-                alt={lang.get('NAME', item)}
-                style={{ width: '100%', height: '100%' }}
-              />
+              <img src={imgUrl.get('120x120', item.ICON)} alt={lang.get('NAME', item)} style={{ width: '100%', height: '100%' }} />
             </Link>
             <Popover
               placement="bottomRight"
-              content={(
-                <ul className="popoverType1 appListMenu" >
+              content={
+                <ul className="popoverType1 appListMenu">
                   <li>
                     <Button
                       onClick={() => handleRegistCategory(item)}
@@ -142,25 +123,18 @@ class AppScreenshot extends React.Component {
                     </Button>
                   </li>
                   <li>
-                    <Button
-                      type="button"
-                      className="icon-regst-use"
-                      style={{ display: item.WG_COUNT > 0 ? 'block' : 'none' }}
-                    >
+                    <Button type="button" className="icon-regst-use" style={{ display: item.WG_COUNT > 0 ? 'block' : 'none' }}>
                       {intlObj.get(messages.apping)}
                     </Button>
                   </li>
                 </ul>
-              )}
+              }
               size="50"
               trigger="hover"
               overlayClassName="popoverType1"
             >
               <div className="moreMenuImg">
-                <img
-                  src={moreMenu}
-                  alt={intlObj.get(messages.appMenu)}
-                />
+                <img src={moreMenu} alt={intlObj.get(messages.appMenu)} />
               </div>
             </Popover>
             <Link to={`/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
@@ -188,31 +162,26 @@ class AppScreenshot extends React.Component {
 
     return (
       <div>
-        {
-          isOpen && (
-            <Lightbox
-              mainSrc={images[photoIndex]}
-              nextSrc={images[(photoIndex + 1) % images.length]}
-              prevSrc={images[((photoIndex + images.length) - 1) % images.length]}
-              onCloseRequest={() => this.setState({ isOpen: false })}
-              onMovePrevRequest={() =>
-                this.setState({
-                  photoIndex: ((photoIndex + images.length) - 1) % images.length,
-                })
-              }
-              onMoveNextRequest={() =>
-                this.setState({
-                  photoIndex: (photoIndex + 1) % images.length,
-                })
-              }
-            />
-          )
-        }
+        {isOpen && (
+          <Lightbox
+            mainSrc={images[photoIndex]}
+            nextSrc={images[(photoIndex + 1) % images.length]}
+            prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+            onCloseRequest={() => this.setState({ isOpen: false })}
+            onMovePrevRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + images.length - 1) % images.length,
+              })
+            }
+            onMoveNextRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + 1) % images.length,
+              })
+            }
+          />
+        )}
         <AppIntroduction>
-          <h2
-            className="adTitle"
-            style={{ display: lang.get('DSCR', this.props.resAppExplain) !== ' ' ? 'block' : 'none' }}
-          >
+          <h2 className="adTitle" style={{ display: lang.get('DSCR', this.props.resAppExplain) !== ' ' ? 'block' : 'none' }}>
             {intlObj.get(messages.appdscr)}
           </h2>
           <div className="dscr">{lang.get('DSCR', this.props.resAppExplain)}</div>
@@ -225,7 +194,7 @@ class AppScreenshot extends React.Component {
               slidesToScroll={3}
               adaptiveHeight
               centerMode
-            // centerPadding="10px"
+              // centerPadding="10px"
             >
               {loop(this.props.resAppScreenshotList)}
             </Carousel>
@@ -237,71 +206,87 @@ class AppScreenshot extends React.Component {
           }}
         >
           <h2 className="adTitle">{intlObj.get(messages.requiredApp)}</h2>
-          {this.state.rqheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ?
+          {this.state.rqheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ? (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 124 }}>
               {loopApp(this.props.resRequiredAppList)}
             </div>
-            : ''}
-          {this.state.rqheiFlog && (this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ?
+          ) : (
+            ''
+          )}
+          {this.state.rqheiFlog && this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 200 }}>
               {loopApp(this.props.resRequiredAppList)}
             </div>
-            : ''}
-          {!this.state.rqheiFlog ?
+          ) : (
+            ''
+          )}
+          {!this.state.rqheiFlog ? (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 'auto' }}>
               {loopApp(this.props.resRequiredAppList)}
             </div>
-            : ''}
-          {(this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ?
+          ) : (
+            ''
+          )}
+          {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
             <BtnSeeMore
               key="submit"
               loading={this.state.loading}
               onClick={rqButton}
               style={{ display: this.props.resRequiredAppList.length > 5 ? 'block' : 'none' }}
               className={this.state.rqheiFlog ? 'down' : 'up'}
-            /> : <BtnSeeMore
+            />
+          ) : (
+            <BtnSeeMore
               key="submit"
               loading={this.state.loading}
               onClick={rqButton}
               style={{ display: this.props.resRequiredAppList.length > 3 ? 'block' : 'none' }}
               className={this.state.rqheiFlog ? 'down' : 'up'}
-            />}
+            />
+          )}
         </AppsRequired>
-        <AppsRecommended
-          style={{ display: this.props.resRecomAppList.length > 0 && this.state.gubun === 1 ? 'block' : 'none' }}
-        >
+        <AppsRecommended style={{ display: this.props.resRecomAppList.length > 0 && this.state.gubun === 1 ? 'block' : 'none' }}>
           <h2 className="adTitle">{intlObj.get(messages.recomApp)}</h2>
-          {this.state.rcheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ?
+          {this.state.rcheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ? (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 124 }}>
               {loopApp(this.props.resRecomAppList)}
             </div>
-            : ''}
-          {this.state.rcheiFlog && (this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ?
+          ) : (
+            ''
+          )}
+          {this.state.rcheiFlog && this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 200 }}>
               {loopApp(this.props.resRecomAppList)}
             </div>
-            : ''}
-          {!this.state.rcheiFlog ?
+          ) : (
+            ''
+          )}
+          {!this.state.rcheiFlog ? (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 'auto' }}>
               {loopApp(this.props.resRecomAppList)}
             </div>
-            : ''}
-          {(this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ?
+          ) : (
+            ''
+          )}
+          {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
             <BtnSeeMore
               key="submit"
               loading={this.state.loading}
               onClick={rcButton}
               style={{ display: this.props.resRecomAppList.length > 5 ? 'block' : 'none' }}
               className={this.state.rcheiFlog ? 'down' : 'up'}
-            /> : <BtnSeeMore
+            />
+          ) : (
+            <BtnSeeMore
               key="submit"
               loading={this.state.loading}
               onClick={rcButton}
               style={{ display: this.props.resRecomAppList.length > 3 ? 'block' : 'none' }}
               className={this.state.rcheiFlog ? 'down' : 'up'}
-            />}
+            />
+          )}
         </AppsRecommended>
-      </div >
+      </div>
     );
   }
 }
@@ -319,15 +304,13 @@ AppScreenshot.propTypes = {
   currentView: PropTypes.string.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    reqAppScreenshotList: appId => dispatch(actions.reqAppScreenshotList(appId)),
-    registCategory: (REF_APP_ID, APP_ID) => {
-      dispatch(actions.registCategory(REF_APP_ID, APP_ID));
-    },
-    registApp: (REF_APP_ID, APP_ID) => dispatch(actions.registApp(REF_APP_ID, APP_ID)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  reqAppScreenshotList: appId => dispatch(actions.reqAppScreenshotList(appId)),
+  registCategory: (REF_APP_ID, APP_ID) => {
+    dispatch(actions.registCategory(REF_APP_ID, APP_ID));
+  },
+  registApp: (REF_APP_ID, APP_ID) => dispatch(actions.registApp(REF_APP_ID, APP_ID)),
+});
 
 const mapStateToProps = createStructuredSelector({
   resAppScreenshotList: selectors.makeSelectAppScreenshotList(),
@@ -341,8 +324,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppScreenshot', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppScreenshot', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppScreenshot);
+export default compose(withReducer, withSaga, withConnect)(AppScreenshot);

@@ -11,9 +11,9 @@ import { Input } from 'antd';
 // import * as selectorsApp from 'containers/store/App/selectors';
 // import LoadingSpin from 'containers/common/LoadingSpin';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+import * as commonjs from 'containers/common/functions/common';
 import BizCategory from '../../../../components/BizCategory';
 
-import * as commonjs from 'containers/common/functions/common';
 import messages from './messages';
 import BizList from '../../../Biz/BizList';
 import StyleAppBizModal from '../StyleAppBizModal';

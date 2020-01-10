@@ -40,14 +40,11 @@ class AuthSetting extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {
-      match, leftArr, topArr, bizMenuSecKeyList,
-    } = nextProps;
+    const { match, leftArr, topArr, bizMenuSecKeyList } = nextProps;
     const { params } = match;
     const { BIZGRP_ID } = params;
 
-    if (BIZGRP_ID
-      && Number(BIZGRP_ID) !== Number(this.state.BIZGRP_ID)) {
+    if (BIZGRP_ID && Number(BIZGRP_ID) !== Number(this.state.BIZGRP_ID)) {
       this.setState({
         BIZGRP_ID: Number(BIZGRP_ID),
       });
@@ -147,7 +144,7 @@ class AuthSetting extends Component {
 
     top.checked = isCheck;
 
-    mapList.forEach((map) => {
+    mapList.forEach(map => {
       const obj = map[id];
       obj.checked = isCheck;
       dataList.push(obj);
@@ -197,43 +194,39 @@ class AuthSetting extends Component {
 
       const row = (
         <Table.Row key={left.MENU_ID}>
+          <Table.Cell>{`${blank}${title}`}</Table.Cell>
           <Table.Cell>
-            {`${blank}${title}`}
-          </Table.Cell>
-          <Table.Cell>
-            {
-              /* Left HeaderCell */
+            {/* Left HeaderCell */
               left.NODE_TYPE !== 'F' ? (
                 <Checkbox
                   key={`left/${left.MENU_ID}`}
                   checked={left.checked}
-                  onChange={(e) => {
+                  onChange={e => {
                     this.checkLeftAll(leftArr, mapList, i, e.target.checked);
                   }}
                 />
-              ) : ''
-            }
+              ) : (
+                ''
+              )}
           </Table.Cell>
-          {
-            Object.keys(map).map((key) => {
-              const data = map[key];
-              return (
-                <Table.Cell>
-                  {
-                    data.NODE_TYPE !== 'F' ? (
-                      <Checkbox
-                        key={`${data.id}`}
-                        checked={data.checked}
-                        onChange={(e) => {
-                          this.check(mapList, leftArr, topArr, data, e.target.checked);
-                        }}
-                      />
-                    ) : ''
-                  }
-                </Table.Cell>
-              );
-            })
-          }
+          {Object.keys(map).map(key => {
+            const data = map[key];
+            return (
+              <Table.Cell>
+                {data.NODE_TYPE !== 'F' ? (
+                  <Checkbox
+                    key={`${data.id}`}
+                    checked={data.checked}
+                    onChange={e => {
+                      this.check(mapList, leftArr, topArr, data, e.target.checked);
+                    }}
+                  />
+                ) : (
+                  ''
+                )}
+              </Table.Cell>
+            );
+          })}
         </Table.Row>
       );
 
@@ -244,16 +237,9 @@ class AuthSetting extends Component {
   }
 
   render() {
-    const {
-      mapList,
-      leftArr,
-      topArr,
-    } = this.state;
+    const { mapList, leftArr, topArr } = this.state;
 
-    const {
-      history,
-      bizGroupInfo,
-    } = this.props;
+    const { history, bizGroupInfo } = this.props;
 
     return (
       <div
@@ -272,28 +258,22 @@ class AuthSetting extends Component {
               <Button
                 className="modalClose"
                 onClick={() => {
-                  history.push(`/store/appMain/bizManage/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
+                  history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
                 }}
                 title=""
               />
             </h2>
             {/* <h2 className="adTitle">{lang.get('NAME', bizGroupInfo)}</h2> */}
             <StyleAuthSettingContent>
-              <ScrollBar
-                autoHide
-                autoHideTimeout={1000}
-                style={{ height: 'calc(100vh - 90px)', marginTop: 15 }}
-              >
+              <ScrollBar autoHide autoHideTimeout={1000} style={{ height: 'calc(100vh - 90px)', marginTop: 15 }}>
                 <Table size="small" className="BizAuthTable" collapsing>
                   <Table.Header>
                     <Table.Row>
-                      <Table.HeaderCell style={{ textAlign: 'left' }}>
-                        {lang.get('NAME', bizGroupInfo)}
-                      </Table.HeaderCell>
+                      <Table.HeaderCell style={{ textAlign: 'left' }}>{lang.get('NAME', bizGroupInfo)}</Table.HeaderCell>
                       <Table.HeaderCell />
-                      {
-                        /* Top HeaderCell */
-                        topArr && topArr.map((top, j) => {
+                      {/* Top HeaderCell */
+                        topArr &&
+                        topArr.map((top, j) => {
                           const id = `${top.ACNT_TYPE}_${top.ACNT_ID}`;
                           return (
                             <Table.HeaderCell>
@@ -303,21 +283,16 @@ class AuthSetting extends Component {
                               <Checkbox
                                 key={`top/${id}`}
                                 checked={top.checked}
-                                onChange={(e) => {
+                                onChange={e => {
                                   this.checkTopAll(topArr, mapList, j, id, e.target.checked);
                                 }}
                               />
                             </Table.HeaderCell>
                           );
-                        })
-                      }
+                        })}
                     </Table.Row>
                   </Table.Header>
-                  <Table.Body>
-                    {
-                      leftArr.length > 0 && mapList.length > 0 ? this.makeTableBody(mapList, leftArr, topArr) : ''
-                    }
-                  </Table.Body>
+                  <Table.Body>{leftArr.length > 0 && mapList.length > 0 ? this.makeTableBody(mapList, leftArr, topArr) : ''}</Table.Body>
                 </Table>
               </ScrollBar>
             </StyleAuthSettingContent>
@@ -364,9 +339,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmenuAuthsetting', reducer });
 const withSaga = injectSaga({ key: 'bizmenuAuthsetting', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AuthSetting));
-
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AuthSetting));

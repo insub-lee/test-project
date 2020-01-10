@@ -205,3 +205,15 @@ export const changeValidationDataByReducr = (id, key, flag, msg) => ({
   flag,
   msg,
 });
+
+export const getDraftProcess = (id, draftId) => ({
+  type: `${actionTypes.GET_DRAFT_PROCESS}_${id}`,
+  id,
+  draftId,
+});
+
+export const setDraftProcess = (id, draftProcess) => ({
+  type: actionTypes.SET_DRAFT_PROCESS,
+  id,
+  draftProcess,
+});

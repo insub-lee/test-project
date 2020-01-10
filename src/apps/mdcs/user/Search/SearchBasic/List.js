@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Radio, Form, Checkbox, Modal } from 'antd';
+import { Table, Radio, Form, Modal } from 'antd';
+
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
-import StyledCheckbox from 'components/FormStuff/Checkbox';
+import { CheckboxGroup } from 'components/FormStuff/Checkbox';
 import StyledInput from 'components/FormStuff/Input';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import SearchViewer from '../SearchViewer';
+import CoverViewer from '../CoverViewer';
 
 const AntdModal = StyledModalWrapper(Modal);
 const FormItem = Form.Item;
@@ -19,7 +21,7 @@ const columns = [
     key: 'fullPathStr',
     dataIndex: 'fullPathStr',
     render: (text, row, index) => {
-      if (text !== null) {
+      if (text) {
         return <text>{text.replace(/&gt;/g, ' > ')}</text>;
       }
     },
@@ -47,7 +49,7 @@ const options = [
 
 const initState = {
   nodeIdList: [],
-  status: -1, // 현재 Revision, 폐기
+  status: 1, // 현재 Revision, 폐기
   docNo: '',
   keyword: '',
   type: 'title',
@@ -62,12 +64,12 @@ const initState = {
     visible: false,
     taskSeq: -1,
     workSeq: -1,
+    nodeId: -1,
   },
-  CoverView: {
+  coverView: {
     visible: false,
-    taskSeq: -1,
-    workSeq: -1,
   },
+  isLastVer: 'Y',
 };
 
 class SearchBasic extends Component {
@@ -142,6 +144,7 @@ class SearchBasic extends Component {
         visible: true,
         taskSeq: record.taskSeq,
         workSeq: record.workSeq,
+        nodeId: record.nodeId,
       },
     });
   };
@@ -153,16 +156,22 @@ class SearchBasic extends Component {
         visible: false,
         taskSeq: -1,
         workSeq: -1,
+        nodeId: -1,
       },
     });
   };
 
   clickCoverView = () => {
     console.log('clickCoverView !!');
-  }
+    this.setState({
+      coverView: {
+        visible: true,
+      },
+    });
+  };
 
   render() {
-    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView } = this.state;
+    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView } = this.state;
     const { result } = this.props;
     const { onClickRow, closeBtnFunc } = this;
     console.log('this.props : ', this.props);
@@ -173,11 +182,11 @@ class SearchBasic extends Component {
             <p className="searchTitle">기본 검색</p>
             <Form layout="inline">
               <FormItem label="문서종류">
-                <Checkbox.Group onChange={this.onChangeCheckBox} value={nodeIdList}>
-                  {options.map(node => (
-                    <StyledCheckbox value={node.value}>{node.label}</StyledCheckbox>
+                <CheckboxGroup onChange={this.onChangeCheckBox} value={nodeIdList} options={options} />
+                {/* {options.map(node => (
+                    <StyledCheck value={node.value}>{node.label}</StyledCheck>
                   ))}
-                </Checkbox.Group>
+                </CheckboxGroup> */}
               </FormItem>
               <FormItem label="Rev. 구분">
                 <Radio.Group
@@ -188,8 +197,8 @@ class SearchBasic extends Component {
                   }}
                   value={status}
                 >
-                  <StyledRadio value="1">현재 Revision</StyledRadio>
-                  <StyledRadio value="2">폐기</StyledRadio>
+                  <StyledRadio value={1}>현재 Revision</StyledRadio>
+                  <StyledRadio value={2}>폐기</StyledRadio>
                 </Radio.Group>
               </FormItem>
               <FormItem label="문서번호">
@@ -276,7 +285,7 @@ class SearchBasic extends Component {
             }}
             okButtonProps={null}
           >
-            <React.Fragment>
+            <>
               <div className="pop_tit">적용 범위 선택</div>
               <div className="pop_con">
                 <Table
@@ -291,33 +300,45 @@ class SearchBasic extends Component {
                   })}
                 />
               </div>
-            </React.Fragment>
+            </>
           </AntdModal>
           <AntdModal
             className="modalWrapper modalTechDoc modalCustom"
             visible={SearchView.visible}
             footer={null}
             width={800}
+            onCancel={this.closeBtnFunc}
+            onOk={this.closeBtnFunc}
+            okButtonProps={null}
+            destroyOnClose
+          >
+            <>
+              <div className="pop_tit">선택 내용 보기</div>
+              <div className="pop_con">
+                <SearchViewer workSeq={SearchView.workSeq} taskSeq={SearchView.taskSeq} closeBtnFunc={closeBtnFunc} clickCoverView={this.clickCoverView} />
+              </div>
+            </>
+          </AntdModal>
+          <AntdModal
+            className="modalWrapper modalTechDoc modalCustom"
+            visible={coverView.visible}
+            footer={null}
+            width={1080}
             onCancel={() => {
-              this.setState({ SearchView: { ...this.state.SearchView, visible: false } });
+              this.setState({ coverView: { ...this.state.coverView, visible: false } });
             }}
             onOk={() => {
-              this.setState({ SearchView: { ...this.state.SearchView, visible: false } });
+              this.setState({ coverView: { ...this.state.coverView, visible: false } });
             }}
             okButtonProps={null}
             destroyOnClose
           >
-            <React.Fragment>
+            <>
               <div className="pop_tit">선택 내용 보기</div>
               <div className="pop_con">
-                <SearchViewer
-                  workSeq={SearchView.workSeq}
-                  taskSeq={SearchView.taskSeq}
-                  closeBtnFunc={closeBtnFunc}
-                  clickCoverView={this.clickCoverView}  
-                />
+                <CoverViewer nodeId={SearchView.nodeId} taskSeq={SearchView.taskSeq} workSeq={SearchView.workSeq} />
               </div>
-            </React.Fragment>
+            </>
           </AntdModal>
         </div>
       </StyledSearch>

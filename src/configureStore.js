@@ -14,23 +14,13 @@ const configureStore = (initialState = {}, history) => {
     // logger,
   ];
 
-  const enhancers = [
-    applyMiddleware(...middleWares),
-  ];
+  const enhancers = [applyMiddleware(...middleWares)];
 
-  const composeEnhancers =
-    process.env.NODE_ENV !== 'production' &&
-    typeof window === 'object' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? //eslint-disable-line
-      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ //eslint-disable-line
-        shouldHotReload: false,
-      }) : compose;
+  const useReduxDevTollsExtension = process.env.NODE_ENV !== 'production' && typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 
-  const store = createStore(
-    createReducer(),
-    fromJS(initialState),
-    composeEnhancers(...enhancers),
-  );
+  const composeEnhancers = useReduxDevTollsExtension ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ shouldHotReload: false }) : compose;
+
+  const store = createStore(createReducer(), fromJS(initialState), composeEnhancers(...enhancers));
 
   store.runSaga = sagaMiddleware.run;
   store.injectedReducers = {};

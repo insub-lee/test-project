@@ -14,17 +14,7 @@ export const getChangePstnTreeData = PSTN_ID => ({
   PSTN_ID,
 });
 
-export const insertPstn = (
-  PSTN_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const insertPstn = (PSTN_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.INSERT_PSTN,
   payload: {
     PSTN_CD,
@@ -39,18 +29,7 @@ export const insertPstn = (
   },
 });
 
-export const updatePstn = (
-  PSTN_ID,
-  PSTN_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const updatePstn = (PSTN_ID, PSTN_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.UPDATE_PSTN,
   payload: {
     PSTN_ID,

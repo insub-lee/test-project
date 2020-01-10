@@ -11,7 +11,7 @@ class singleUploadExample extends PureComponent {
     };
   }
 
-  onFileUploaded = (file) => {
+  onFileUploaded = file => {
     const { uploadFiles } = this.state;
     const tmpArr = fromJS(uploadFiles).toJS();
     // one file upload 최신 파일만 업로드 되게
@@ -20,7 +20,7 @@ class singleUploadExample extends PureComponent {
       uploadFiles: tmpArr,
     });
     // this.handleChangeImage(tmpArr[0].seq);
-  }
+  };
 
   render() {
     const { uploadFiles } = this.state;
@@ -48,27 +48,22 @@ class singleUploadExample extends PureComponent {
           serviceKey="KEY"
         >
           <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-            {uploadFiles.length !== 0 ?
+            {uploadFiles.length !== 0 ? (
               <div>
                 <ul>
                   {uploadFiles.map(f => (
                     <div>
-                      <img
-                        src={`${f.link}`}
-                        alt={f.fileName}
-                        style={{ width: '100%', maxHeight: 100 }}
-                      />
-                      <li key={f.fileName}>{f.fileName} - {f.fileSize} bytes</li>
-                    </div>
-                      ))
-                  }
+                      <img src={`${f.link}`} alt={f.fileName} style={{ width: '100%', maxHeight: 100 }} />
+                      <li key={f.fileName}>
+                        {f.fileName} - {f.fileSize} bytes
+                      </li>
+                  ))
+                  ))}
                 </ul>
               </div>
-              :
-              <div>
-                Drop files here, or click to select files
-              </div>
-            }
+            ) : (
+              <div>Drop files here, or click to select files</div>
+            )}
           </div>
         </Upload>
       </div>

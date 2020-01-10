@@ -82,16 +82,9 @@ const mapDispatchToProps = dispatch => ({
   setWidgetViewIdx: (widgetId, selectedMual) => dispatch(actions.setWidgetMualIdxByReducer(widgetId, selectedMual)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'CSManual-Bookmark-Widget', saga });
 const withReducer = injectReducer({ key: 'CSManual-Bookmark-Widget', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(CSManualBookmarkWidget);
+export default compose(withReducer, withSaga, withConnect)(CSManualBookmarkWidget);

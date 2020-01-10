@@ -70,10 +70,7 @@ WorkTimeLine.propTypes = {
   getList: PropTypes.func,
   list: PropTypes.arrayOf(PropTypes.object),
   iflowUrl: PropTypes.string.isRequired,
-  height: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number,
-  ]),
+  height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
 WorkTimeLine.defaultProps = {
@@ -95,8 +92,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'work-time-line', saga });
 const withReducer = injectReducer({ key: 'work-time-line', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(WorkTimeLine);
+export default compose(withReducer, withSaga, withConnect)(WorkTimeLine);

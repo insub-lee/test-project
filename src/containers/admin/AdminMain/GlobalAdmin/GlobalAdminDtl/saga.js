@@ -6,7 +6,6 @@ import * as constants from './constants';
 import { Axios } from '../../../../../utils/AxiosFunc';
 import messages from '../messages';
 
-
 export function* getGlobalMsg(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/getglobalmsg', payload);
   if (response.globalMsg !== null) {

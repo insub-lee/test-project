@@ -9,5 +9,4 @@ export const ADD_WIDGETS = 'portal/container/BiaManage/BizMenuReg/PageInfo/ADD_W
 export const MOVE_MYWIDGET = 'portal/container/BiaManage/BizMenuReg/PageInfo/MOVE_MYWIDGET';
 export const UPDATE_WIDGET = 'portal/container/BiaManage/BizMenuReg/PageInfo/UPDATE_WIDGET';
 
-
 // export const SET_TITLE_MODAL_VISIBLE = 'portal/container/MyPageCategory/SET_TITLE_MODAL_VISIBLE';

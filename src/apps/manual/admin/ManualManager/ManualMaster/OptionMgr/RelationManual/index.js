@@ -7,10 +7,10 @@ import { fromJS } from 'immutable';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import PropTypes from 'prop-types';
 import difference from 'lodash/difference';
+import message from 'components/Feedback/message';
 import selectors from '../../selectors';
 import Styled from './Styled';
 import * as actions from '../../actions';
-import message from 'components/Feedback/message';
 import StyledButton from '../../../../../../../components/Button/StyledButton';
 
 class RelationManual extends Component {
@@ -188,20 +188,16 @@ class RelationManual extends Component {
               <td style={{ padding: '0 10px' }}>
                 <div style={{ marginBottom: '5px' }}>
                   <Button size="small" onClick={this.onRightClick}>
-                    {
-                      <span>
-                        <Icon type="right" />
-                      </span>
-                    }
+                    <span>
+                      <Icon type="right" />
+                    </span>
                   </Button>
                 </div>
                 <div>
                   <Button size="small" onClick={this.onLeftClick}>
-                    {
-                      <span>
-                        <Icon type="left" />
-                      </span>
-                    }
+                    <span>
+                      <Icon type="left" />
+                    </span>
                   </Button>
                 </div>
                 <div>&nbsp;</div>
@@ -209,12 +205,10 @@ class RelationManual extends Component {
               <td style={{ verticalAlign: 'top' }}>
                 <div style={{ marginBottom: '10px', textAlign: 'right' }}>
                   <StyledButton className="btn-secondary btn-sm btn-bs-none" onClick={this.onApply}>
-                    {
-                      <span>
-                        <Icon type="import" />
-                        적용하기
-                      </span>
-                    }
+                    <span>
+                      <Icon type="import" />
+                      적용하기
+                    </span>
                   </StyledButton>
                 </div>
                 <Table rowSelection={this.rightRowSelection} columns={this.rightTableColumns} dataSource={chooseRelMual} style={{ width: 390 }}></Table>
@@ -266,7 +260,4 @@ const mapDispatchToProps = dispatch => ({
   setRelationManualListBySaga: manualList => dispatch(actions.setRelationManualListBySaga(manualList)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(RelationManual);
+export default connect(mapStateToProps, mapDispatchToProps)(RelationManual);

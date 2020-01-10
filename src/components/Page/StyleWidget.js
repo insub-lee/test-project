@@ -1523,8 +1523,9 @@ const WidgetBox = styled.div`
   display: inline-block;
   width: 100%;
   // height: calc(100% - 35px) !important;
-  height: calc(100% - 50px);
-  padding: 10px 10px;
+  // height: calc(100% - 50px);
+  height: calc(100% - 42px);
+  //padding: 10px 10px;
 
   .ant-table-thead > tr > th {
     background: #6a60b9;
@@ -1567,6 +1568,7 @@ const WidgetBox = styled.div`
 
   .noWidgetWrapper {
     top: 0;
+    left: 0;
     .noWCIcon {
       margin-top: 4px;
     }

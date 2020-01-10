@@ -16,17 +16,17 @@ class App extends PureComponent {
     this.setState({
       show: !this.state.show,
     });
-  }
+  };
 
   /*
     appSelector로부터 가져온 App 목록을 이용해 필요한 작업 수행
   */
-  addList = (app) => {
+  addList = app => {
     const { appList } = this.state;
     const appListCopy = appList.slice();
     const appListCopyFromAppselector = app;
 
-    appListCopyFromAppselector.map((obj) => {
+    appListCopyFromAppselector.map(obj => {
       if (appList.findIndex(o => o.APP_ID === obj.APP_ID) === -1) {
         appListCopy.push(obj);
       }
@@ -36,17 +36,19 @@ class App extends PureComponent {
     this.setState({
       appList: appListCopy,
     });
-  }
+  };
 
   render() {
     return (
       <div>
-        <Button onClick={() => { this.setState({ show: !this.state.show }); }}>모달형 AppSelector</Button>
-        <AppSelector
-          show={this.state.show}
-          closeModal={this.closeModal}
-          addList={this.addList}
-        />
+        <Button
+          onClick={() => {
+            this.setState({ show: !this.state.show });
+          }}
+        >
+          모달형 AppSelector
+        </Button>
+        <AppSelector show={this.state.show} closeModal={this.closeModal} addList={this.addList} />
       </div>
     );
   }

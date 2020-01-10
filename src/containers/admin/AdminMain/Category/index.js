@@ -233,18 +233,18 @@ class Category extends React.Component {
       if (mode === 'I') {
         // 등록
         return (
-          <React.Fragment>
+          <>
             {/* <LinkBtnLgtGray>
               <Link to="../GlobalAdmin/">취소</Link>
             </LinkBtnLgtGray>
             <BtnDkGray onClick={this.regGlobalMsg}>저장</BtnDkGray> */}
-          </React.Fragment>
+          </>
         );
       }
       if (mode === 'D') {
         // 상세
         return (
-          <React.Fragment>
+          <>
             {/* <div style={{ float: 'left' }}> */}
             {/* <BtnDelete onClick={this.delConfirm}>삭제</BtnDelete> */}
             {/* </div> */}
@@ -265,13 +265,13 @@ class Category extends React.Component {
             >
               수정
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       if (mode === 'U') {
         // 수정
         return (
-          <React.Fragment>
+          <>
             <StyledButton
               className="btn-light"
               onClick={() =>
@@ -291,7 +291,7 @@ class Category extends React.Component {
             <StyledButton className="btn-primary" onClick={this.udtConfirm}>
               저장
             </StyledButton>
-          </React.Fragment>
+          </>
         );
       }
       return '';
@@ -495,15 +495,8 @@ const mapStateToProps = createStructuredSelector({
   tp: selectors.makeSelectTp(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'Category', saga });
 const withReducer = injectReducer({ key: 'Category', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(Category);
+export default compose(withReducer, withSaga, withConnect)(Category);

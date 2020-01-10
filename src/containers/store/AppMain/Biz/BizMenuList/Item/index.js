@@ -14,18 +14,7 @@ import messages from './messages';
 
 class Item extends PureComponent {
   render() {
-    const {
-      appId,
-      bizgrpId,
-      appIcon,
-      title,
-      subTitle,
-      starPoint,
-      starTotal,
-      registed,
-      registCategory,
-      registApp,
-    } = this.props;
+    const { appId, bizgrpId, appIcon, title, subTitle, starPoint, starTotal, registed, registCategory, registApp } = this.props;
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/biz/');
 
@@ -47,35 +36,26 @@ class Item extends PureComponent {
           {/* 시작 - 태블릿, 모바일 용 */}
           <Popover
             placement="bottomRight"
-            content={(
-              <ul className="popoverType1 appListMenu" >
+            content={
+              <ul className="popoverType1 appListMenu">
                 <li>
-                  <Button
-                    type="button"
-                    className="highlight icon-regst-tree"
-                  >
+                  <Button type="button" className="highlight icon-regst-tree">
                     카테고리 등록
                   </Button>
                 </li>
                 <li>
-                  <Button
-                    type="button"
-                    className="icon-regst-app"
-                  >
+                  <Button type="button" className="icon-regst-app">
                     메뉴 등록
                   </Button>
                 </li>
               </ul>
-            )}
+            }
             size="50"
             trigger="click"
             overlayClassName="popoverType1"
           >
             <div className="moreMenuImg">
-              <img
-                src={moreMenu}
-                alt="서브메뉴 보이기"
-              />
+              <img src={moreMenu} alt="서브메뉴 보이기" />
             </div>
           </Popover>
         </div>
@@ -83,7 +63,9 @@ class Item extends PureComponent {
     } else {
       registAreaJsx = (
         <div className="displayCtgIcons">
-          <div className="infoRgt" title={intlObj.get(messages.using)}>{intlObj.get(messages.using)} </div>
+          <div className="infoRgt" title={intlObj.get(messages.using)}>
+            {intlObj.get(messages.using)}{' '}
+          </div>
         </div>
       );
     }
@@ -97,7 +79,9 @@ class Item extends PureComponent {
             src={imgUrl.get('120x120', appIcon)}
             alt={intlObj.get(messages.appIcon)}
             style={{ position: 'absolute', top: 0, left: 0 }}
-            onError={(e) => { e.target.src = '/app_icon/icon_no_image.png'; }}
+            onError={e => {
+              e.target.src = '/app_icon/icon_no_image.png';
+            }}
           />
         </div>
 
@@ -105,14 +89,8 @@ class Item extends PureComponent {
           <h4 className="appTitle">{title}</h4>
           <p className="appDesc">{subTit}</p>
           <span className="ratingAvgInfo">
-            <Rate
-              allowHalf
-              disabled
-              value={parseFloat(starPoint)}
-            />
-            <span className="rateNumber">
-              {starTotal}
-            </span>
+            <Rate allowHalf disabled value={parseFloat(starPoint)} />
+            <span className="rateNumber">{starTotal}</span>
             <img src={userIcon} alt={intlObj.get(messages.memberNum)} className="userIcon" />
           </span>
         </Link>
@@ -142,6 +120,5 @@ Item.defaultProps = {
   starTotal: 0,
   appIcon: '',
 };
-
 
 export default Item;

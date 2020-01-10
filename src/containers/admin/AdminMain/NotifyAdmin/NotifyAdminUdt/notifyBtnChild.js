@@ -17,23 +17,20 @@ class NotifyBtnChild extends PureComponent {
     }
   }
 
-  handleChangeValue = (e) => {
+  handleChangeValue = e => {
     const copyBtnList = this.state.btnList;
     copyBtnList.VALUE = e.target.value;
     this.setState({ btnList: copyBtnList, value: copyBtnList.VALUE }); // eslint-disable-line
-  }
+  };
 
-  handleChangeUrl = (e) => {
+  handleChangeUrl = e => {
     const copyBtnList = this.state.btnList;
     copyBtnList.URL = e.target.value;
     this.setState({ btnList: copyBtnList, value: copyBtnList.URL }); // eslint-disable-line
-  }
+  };
 
   render() {
-    const {
-      index,
-      setDeletedBtnIndex,
-    } = this.props;
+    const { index, setDeletedBtnIndex } = this.props;
 
     const { btnList } = this.state;
 
@@ -48,13 +45,7 @@ class NotifyBtnChild extends PureComponent {
                     {/* {intlObj.get(messages.bannerName)} */}
                     VALUE
                   </label>
-                  <Input
-                    id="subject"
-                    name="VALUE"
-                    type="text"
-                    value={btnList.VALUE}
-                    onChange={this.handleChangeValue}
-                  />
+                  <Input id="subject" name="VALUE" type="text" value={btnList.VALUE} onChange={this.handleChangeValue} />
                 </td>
               </tr>
               <tr>
@@ -63,19 +54,19 @@ class NotifyBtnChild extends PureComponent {
                     {/* {intlObj.get(messages.bannerName)} */}
                     URL
                   </label>
-                  <Input
-                    placeholder="URL은 http:// 로 시작해주십시오."
-                    id="url"
-                    name="url"
-                    type="text"
-                    value={btnList.URL}
-                    onChange={this.handleChangeUrl}
-                  />
+                  <Input placeholder="URL은 http:// 로 시작해주십시오." id="url" name="url" type="text" value={btnList.URL} onChange={this.handleChangeUrl} />
                 </td>
               </tr>
             </tbody>
           </table>
-          <BtnIconWidgetDel className="delete" title="delete" onClick={() => { setDeletedBtnIndex(btnList.SEQNO); }} style={{ display: 'inline-block' }} />
+          <BtnIconWidgetDel
+            className="delete"
+            title="delete"
+            onClick={() => {
+              setDeletedBtnIndex(btnList.SEQNO);
+            }}
+            style={{ display: 'inline-block' }}
+          />
         </div>
       </div>  // eslint-disable-line
     );

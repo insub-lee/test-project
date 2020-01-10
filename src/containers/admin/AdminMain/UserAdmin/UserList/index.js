@@ -44,6 +44,13 @@ const statusSwitch = statusCd => {
   }
 };
 
+// 검색결과 없을 때 표시(임시)
+const EmptyData = () => (
+  <div style={{ textAlign: 'center', fontSize: 15, fontWeight: 800, padding: 15 }}>
+    <span>{intlObj.get(messages.noSearch)}</span>
+  </div>
+);
+
 class UserList extends React.Component {
   constructor(prop) {
     super(prop);
@@ -103,7 +110,7 @@ class UserList extends React.Component {
     ];
 
     let dtKeyword = '';
-    let dtKeywordType = 'userNameKor';
+    const dtKeywordType = 'userNameKor';
     let dtSortColumn = '';
     let dtSortDirection = '';
     let dtDeptId = 0;
@@ -116,8 +123,8 @@ class UserList extends React.Component {
     if (this.props.history.location.state !== null && this.props.history.location.state !== undefined) {
       const location = this.props.history.location.state;
 
-      (dtStatusCode = location.statusCode), (dtKeyword = location.keyword);
-      dtKeywordType = location.keywordType;
+      dtStatusCode = location.statusCode;
+      dtKeyword = location.keyword;
       dtSortColumn = location.sortColumn;
       dtSortDirection = location.sortDirection;
       dtDeptId = location.deptId;
@@ -377,12 +384,6 @@ class UserList extends React.Component {
   };
 
   render() {
-    // 검색결과 없을 때 표시(임시)
-    const EmptyData = () => (
-      <div colSpan="5">
-        <font size="5">{intlObj.get(messages.noSearch)}</font>
-      </div>
-    );
     const { userList, history } = this.props;
     const initGrid = {
       USER_ID: null,
@@ -532,15 +533,8 @@ const mapStateToProps = createStructuredSelector({
   isLoading: selectors.makeIsLoading(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'UserList', saga });
 const withReducer = injectReducer({ key: 'UserList', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(UserList);
+export default compose(withReducer, withSaga, withConnect)(UserList);

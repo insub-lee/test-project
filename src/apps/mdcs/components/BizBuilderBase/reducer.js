@@ -19,14 +19,18 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case `${actionTypes.GET_BUILDER_DATA}_${action.id}`: {
       const { id, workSeq, taskSeq } = action;
-      return state.setIn(['bizBuilderBase', id, 'workSeq'], workSeq).setIn(['bizBuilderBase', id, 'taskSeq'], taskSeq);
+      return state
+        .setIn(['bizBuilderBase', id, 'workSeq'], workSeq)
+        .setIn(['bizBuilderBase', id, 'taskSeq'], taskSeq)
+        .setIn(['bizBuilderBase', id, 'isLoading'], true);
     }
     case actionTypes.SET_BUILDER_DATA: {
       const { id, response, metaList, workFlow } = action;
       return state
         .setIn(['bizBuilderBase', id, 'responseData'], fromJS(response))
         .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
-        .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}));
+        .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}))
+        .setIn(['bizBuilderBase', id, 'isLoading'], false);
     }
     case actionTypes.SET_PROCESS_RULE: {
       const { id, processRule } = action;
@@ -182,6 +186,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CHANGE_VALIDATIONDATA_REDUCR: {
       const { id, key, flag, msg } = action;
       return state.setIn(['bizBuilderBase', id, 'validationData', key], { flag, msg });
+    }
+    case actionTypes.SET_DRAFT_PROCESS: {
+      const { id, draftProcess } = action;
+      return state.setIn(['bizBuilderBase', id, 'draftProcess'], fromJS(draftProcess));
     }
     default:
       return state;

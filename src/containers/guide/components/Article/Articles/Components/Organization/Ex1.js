@@ -15,22 +15,19 @@ class App extends PureComponent {
     this.setState({
       show: !this.state.show,
     });
-  }
+  };
 
   render() {
     return (
       <div>
-        <Button onClick={() => { this.setState({ show: !this.state.show }); }}>모달형 조직도</Button>
-        <Organization
-          isModal={true}
-          userTab={true}
-          pstnTab={true}
-          dutyTab={true}
-          grpTab={true}
-          show={this.state.show}
-          closeModal={this.closeModal}
-          isProfile={false}
-        />
+        <Button
+          onClick={() => {
+            this.setState({ show: !this.state.show });
+          }}
+        >
+          모달형 조직도
+        </Button>
+        <Organization isModal userTab pstnTab dutyTab grpTab show={this.state.show} closeModal={this.closeModal} isProfile={false} />
       </div>
     );
   }

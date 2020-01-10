@@ -52,12 +52,7 @@ export function* insertRank(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/registRank', payload.payload);
   const { code, rankId } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.rankInsert)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.rankInsert)}</MessageContent>, 3);
     const RANK_ID = PRNT_ID === 0 ? rankId : selectedDept;
     if (PRNT_ID === 0) {
       yield put({
@@ -88,12 +83,7 @@ export function* updateRank(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/updateRank', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.rankUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.rankUpdate)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_RANK_COMBO_LIST,
@@ -123,12 +113,7 @@ export function* deleteRank(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/deleteRank/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.rankDelete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.rankDelete)}</MessageContent>, 3);
     if (PRNT_ID < 1) {
       yield put({
         type: actionType.GET_RANK_COMBO_LIST,
@@ -147,19 +132,13 @@ export function* deleteRank(payload) {
   }
 }
 
-
 export function* moveRank(payload) {
   const { PRNT_ID, treeData } = payload;
   const response = yield call(Axios.post, '/api/admin/v1/common/moveRank', { RANK_ID: PRNT_ID, treeData });
   const { code } = response;
 
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.rankUpdate)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.rankUpdate)}</MessageContent>, 3);
     yield put({
       type: actionType.GET_CHANGE_RANK_DATA,
       RANK_ID: PRNT_ID,

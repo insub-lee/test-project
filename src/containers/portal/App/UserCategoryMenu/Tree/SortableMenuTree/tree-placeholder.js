@@ -3,13 +3,7 @@ import PropTypes from 'prop-types';
 
 class TreePlaceholder extends Component {
   render() {
-    const {
-      children,
-      connectDropTarget,
-      treeId,
-      drop,
-      ...otherProps
-    } = this.props;
+    const { children, connectDropTarget, treeId, drop, ...otherProps } = this.props;
     /* eslint-disable */
     return connectDropTarget(
       <div>

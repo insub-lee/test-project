@@ -81,17 +81,14 @@ const ResultsTableWrapper = styled.div`
             box-shadow: none;
           }
         }
-
       }
     }
-
   }
-
 `;
 
 class Notification extends PureComponent { //eslint-disable-line
   render() {
-    const onClickItem = (key) => {
+    const onClickItem = key => {
       this.props.execPage(key);
       this.props.execMenu(key.PAGE_ID, key.TARGET);
       this.props.onNoneClick();
@@ -101,36 +98,22 @@ class Notification extends PureComponent { //eslint-disable-line
 
     const contents = (
       <div style={{ paddingTop: 13 }}>
-        <Scrollbars
-          className="custom-scrollbar"
-          autoHide
-          autoHideTimeout={1000}
-          autoHideDuration={100}
-          autoHeight
-          autoHeightMin={290}
-          autoHeightMax={290}
-        >
+        <Scrollbars className="custom-scrollbar" autoHide autoHideTimeout={1000} autoHideDuration={100} autoHeight autoHeightMin={290} autoHeightMax={290}>
           <ResultsTableWrapper>
             <Table size="small" style={{ width: '100%' }}>
               <Table.Body>
-                {
-                  myMNotiList.map(noti => (
-                    <Table.Row key={noti.MENU_ID}>
-                      <Table.Cell onClick={() => onClickItem(noti)}>
-                        {noti.SEC_YN === 'Y' ?
-                          <p>{lang.get('NAME', noti)}</p>
-                          :
-                          <p style={{ color: 'lightgray' }}>{lang.get('NAME', noti)}</p>
-                        }
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Badge count={noti.ALARM_CNT} overflowCount={99} className="badgeCount">
-                          <Link to="/" className="badgeLink" />
-                        </Badge>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))
-                }
+                {myMNotiList.map(noti => (
+                  <Table.Row key={noti.MENU_ID}>
+                    <Table.Cell onClick={() => onClickItem(noti)}>
+                      {noti.SEC_YN === 'Y' ? <p>{lang.get('NAME', noti)}</p> : <p style={{ color: 'lightgray' }}>{lang.get('NAME', noti)}</p>}
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Badge count={noti.ALARM_CNT} overflowCount={99} className="badgeCount">
+                        <Link to="/" className="badgeLink" />
+                      </Badge>
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
               </Table.Body>
             </Table>
           </ResultsTableWrapper>
@@ -138,11 +121,7 @@ class Notification extends PureComponent { //eslint-disable-line
       </div>
     );
 
-    const emptyContents = (
-      <div style={{ paddingTop: 13, textAlign: 'center' }}>
-        알림 수신이 없습니다.
-      </div>
-    );
+    const emptyContents = <div style={{ paddingTop: 13, textAlign: 'center' }}>알림 수신이 없습니다.</div>;
 
     return (
       <div>

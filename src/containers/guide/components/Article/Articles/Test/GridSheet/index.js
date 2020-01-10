@@ -34,7 +34,8 @@ class PMSheet extends PureComponent {
     };
     this.props.handleLoadingFabParam();
   }
-  handleFabChange = (event) => {
+
+  handleFabChange = event => {
     const { handleLoadingParam } = this.props;
     handleLoadingParam(event);
     this.setState({
@@ -44,8 +45,9 @@ class PMSheet extends PureComponent {
       fl: [],
       model: [],
     });
-  }
-  handleTeamChange = (event) => {
+  };
+
+  handleTeamChange = event => {
     const { handleLoadingTeamParam } = this.props;
     handleLoadingTeamParam(event);
     this.setState({
@@ -54,35 +56,41 @@ class PMSheet extends PureComponent {
       fl: [],
       model: undefined,
     });
-  }
-  handleSdptChange = (event) => {
+  };
+
+  handleSdptChange = event => {
     const { handleLoadingSdptParam } = this.props;
     handleLoadingSdptParam(event);
     this.setState({
       sdpt: event,
       model: [],
     });
-  }
-  handleFlChange = (event) => {
+  };
+
+  handleFlChange = event => {
     this.setState({
       fl: event,
     });
-  }
-  handleModelChange = (event) => {
+  };
+
+  handleModelChange = event => {
     this.setState({
       model: event,
     });
-  }
-  handleVersionChange = (event) => {
+  };
+
+  handleVersionChange = event => {
     this.setState({
       version: event,
     });
-  }
-  handleSignStatusChange = (event) => {
+  };
+
+  handleSignStatusChange = event => {
     this.setState({
       signStatus: event,
     });
-  }
+  };
+
   handleSearch = () => {
     const { handlePmSheetSearch } = this.props;
     const {
@@ -119,39 +127,23 @@ class PMSheet extends PureComponent {
       // tabGubun: "FAB"
       handlePmSheetSearch(param);
     }
-  }
+  };
+
   render() {
-    const {
-      defaultBox,
-      fab,
-      team,
-      sdpt,
-      fl,
-      model,
-      version,
-      signStatus,
-    } = this.state;
-    const {
-      fabList,
-      teamList,
-      sdptList,
-      flList,
-      modelList,
-      versionList,
-      signStatusList,
-      pmSheetDataList,
-    } = this.props;
+    const { defaultBox, fab, team, sdpt, fl, model, version, signStatus } = this.state;
+    const { fabList, teamList, sdptList, flList, modelList, versionList, signStatusList, pmSheetDataList } = this.props;
     return (
       <div>
         <div className="PMSheetTitle">
-          <h2>PM(TBM) Plan Modeling</h2><br />
+          <h2>PM(TBM) Plan Modeling</h2>
+          <br />
         </div>
         <div>
           <div className="SearchBox">
             <table>
               <tbody>
                 <tr>
-                  <th style={{ width: 55 }} >FAB</th>
+                  <th style={{ width: 55 }}>FAB</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -162,10 +154,12 @@ class PMSheet extends PureComponent {
                       placeholder="Select 하세요."
                       defaultActiveFirstOption={false}
                     >
-                      { fabList.map(factoryKey => <Options key={factoryKey.CODE}>{factoryKey.NAME}</Options>) }
+                      {fabList.map(factoryKey => (
+                        <Options key={factoryKey.CODE}>{factoryKey.NAME}</Options>
+                      ))}
                     </Select>
                   </td>
-                  <th style={{ width: 60 }} >Team</th>
+                  <th style={{ width: 60 }}>Team</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={this.state.defaultBox}
@@ -176,10 +170,12 @@ class PMSheet extends PureComponent {
                       placeholder="All"
                       defaultActiveFirstOption={false}
                     >
-                      { teamList.map(detailFactoryKey => <Options value={detailFactoryKey.CODE}>{detailFactoryKey.NAME}</Options>) }
+                      {teamList.map(detailFactoryKey => (
+                        <Options value={detailFactoryKey.CODE}>{detailFactoryKey.NAME}</Options>
+                      ))}
                     </Select>
                   </td>
-                  <th style={{ width: 55 }} >SDPT</th>
+                  <th style={{ width: 55 }}>SDPT</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -190,10 +186,12 @@ class PMSheet extends PureComponent {
                       placeholder="All"
                       defaultActiveFirstOption={false}
                     >
-                      { sdptList.map(sdptKey => <Options /* onDeselect, onSelect */ value={sdptKey.CODE}>{sdptKey.NAME}</Options>) }
+                      {sdptList.map(sdptKey => (
+                        <Options /* onDeselect, onSelect */ value={sdptKey.CODE}>{sdptKey.NAME}</Options>
+                      ))}
                     </Select>
                   </td>
-                  <th style={{ width: 55 }} >F/L</th>
+                  <th style={{ width: 55 }}>F/L</th>
                   {/* <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -214,19 +212,19 @@ class PMSheet extends PureComponent {
                       defaultValue={defaultBox}
                       value={fl}
                       onChange={this.handleFlChange}
-                      hideSearch={true}
+                      hideSearch
                       options={flList.map(sdptKey => ({ label: sdptKey.NAME, value: sdptKey.CODE }))}
                       width={150}
                     />
                   </td>
-                  <th style={{ width: 55 }} >EQ Model</th>
+                  <th style={{ width: 55 }}>EQ Model</th>
                   <td style={{ width: 247 }}>
                     <ReactMultiSelectCheckboxes
                       placeholderButtonLabel="ALL"
                       defaultValue={defaultBox}
                       value={model}
                       onChange={this.handleModelChange}
-                      hideSearch={true}
+                      hideSearch
                       options={modelList.map(modelKey => ({ label: modelKey.NAME, value: modelKey.CODE }))}
                       width={150}
                     />
@@ -248,7 +246,7 @@ class PMSheet extends PureComponent {
                   </td> */}
                 </tr>
                 <tr>
-                  <th style={{ width: 55 }} >EQ ID</th>
+                  <th style={{ width: 55 }}>EQ ID</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={this.state.searchCompCd}
@@ -259,10 +257,12 @@ class PMSheet extends PureComponent {
                       placeholder="Select 하세요."
                       defaultActiveFirstOption={false}
                     >
-                      { modelList.map(modelKey => <Options value={modelKey.CODE}>{modelKey.NAME}</Options>) }
+                      {modelList.map(modelKey => (
+                        <Options value={modelKey.CODE}>{modelKey.NAME}</Options>
+                      ))}
                     </Select>
                   </td>
-                  <th style={{ width: 55 }} >Version</th>
+                  <th style={{ width: 55 }}>Version</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -273,10 +273,12 @@ class PMSheet extends PureComponent {
                       placeholder="All"
                       defaultActiveFirstOption={false}
                     >
-                      { versionList.map(versionKey => <Options value={versionKey.CODE}>{versionKey.NAME}</Options>) }
+                      {versionList.map(versionKey => (
+                        <Options value={versionKey.CODE}>{versionKey.NAME}</Options>
+                      ))}
                     </Select>
                   </td>
-                  <th style={{ width: 60 }} >결재상태</th>
+                  <th style={{ width: 60 }}>결재상태</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -287,7 +289,9 @@ class PMSheet extends PureComponent {
                       placeholder="Select 하세요."
                       defaultActiveFirstOption={false}
                     >
-                      { signStatusList.map(signStatusKey => <Options value={signStatusKey.CODE}>{signStatusKey.NAME}</Options>) }
+                      {signStatusList.map(signStatusKey => (
+                        <Options value={signStatusKey.CODE}>{signStatusKey.NAME}</Options>
+                      ))}
                     </Select>
                   </td>
                 </tr>
@@ -296,18 +300,12 @@ class PMSheet extends PureComponent {
           </div>
         </div>
         <div style={{ padding: 20, textAlign: 'right' }}>
-          <BtnSearchDkGray
-            title="조회"
-            className="searchBtn"
-            onClick={this.handleSearch}
-          >
-          조회
+          <BtnSearchDkGray title="조회" className="searchBtn" onClick={this.handleSearch}>
+            조회
           </BtnSearchDkGray>
         </div>
         <div>
-          <Grid
-            pmSheetDataList={pmSheetDataList}
-          />
+          <Grid pmSheetDataList={pmSheetDataList} />
         </div>
       </div>
     );
@@ -360,8 +358,4 @@ export function mapDispatchToProps(dispatch) {
 const withReducer = injectReducer({ key: 'gridsheet', reducer });
 const withSaga = injectSaga({ key: 'gridsheet', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PMSheet);
+export default compose(withReducer, withSaga, withConnect)(PMSheet);

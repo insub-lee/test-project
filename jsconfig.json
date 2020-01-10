@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src/",
+    "baseUrl": "./src",
     "paths": {
-      "components/*": ["components/*"],
-      "utils/*": ["utils/*"],
-      "containers/*": ["containers/*"],
-      "images/*": ["images/*"],
-      "apps/*": ["apps/*"],
-      "style/*": ["style/*"]
+      "components/*": ["./components/*"],
+      "utils/*": ["./utils/*"],
+      "containers/*": ["./containers/*"],
+      "images/*": ["./images/*"],
+      "config/*": ["./config/*"],
+      "style/*": ["./style/*"],
+      "apps/*": ["./apps/*"],
+      "commonStyled/*": ["./commonStyled/*"],
+      "include/*": ["./include/*"]
     },
     "target": "ES6",
     "jsx": "preserve",

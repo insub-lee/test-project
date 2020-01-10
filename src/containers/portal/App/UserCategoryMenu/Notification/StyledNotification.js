@@ -11,7 +11,9 @@ const StyledNotification = styled.div`
   text-align: left;
   margin: 10px 10px 0px 10px;
 
-  @media only screen and (max-width: 320px) {width: 250px !important;}
+  @media only screen and (max-width: 320px) {
+    width: 250px !important;
+  }
 
   .registNotNoti {
     margin-right: 16px;

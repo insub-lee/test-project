@@ -28,10 +28,8 @@ export function* getBizMenu(payload) {
     const type = history.location.pathname.indexOf('/app/') > -1 ? 'app' : 'page';
 
     const bizmenuFlatData = treeFunc.getFlatMapDataFromTreeData(children);
-    bizmenuFlatData.map((obj) => {
-      if ((type === 'page' && id === obj.PAGE_ID)
-        || (type === 'app' && id === obj.APP_ID)
-      ) {
+    bizmenuFlatData.map(obj => {
+      if ((type === 'page' && id === obj.PAGE_ID) || (type === 'app' && id === obj.APP_ID)) {
         selectedIndex = obj.MENU_ID;
       }
       return '';

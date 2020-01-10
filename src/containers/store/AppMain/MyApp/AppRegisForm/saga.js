@@ -18,12 +18,7 @@ export function* insertAppInfo(payload) {
 
   const { code, appId, ver } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.appRegisOk)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.appRegisOk)}</MessageContent>, 3);
     history.push(`/store/appMain/MyApp/MyAppUpdate/U/${appId}/${ver}/2/N`);
   } else if (code === 510) {
     feed.error(`${intlObj.get(messages.reqValFail)}`);

@@ -31,14 +31,14 @@ const renderOptionGrp = (list, widgetId) =>
 
 const renderOption = (list, widgetId) =>
   list.map(node => (
-      <TreeNode
-        key={`manualSearch_select_${widgetId}_${node.MUAL_IDX}`}
-        value={node.MUAL_IDX}
-        MUAL_ORG_IDX={node.MUAL_ORG_IDX}
-        MUAL_NAME={node.MUAL_NAME}
-        title={node.MUAL_NAME}
-      />
-    ));
+    <TreeNode
+      key={`manualSearch_select_${widgetId}_${node.MUAL_IDX}`}
+      value={node.MUAL_IDX}
+      MUAL_ORG_IDX={node.MUAL_ORG_IDX}
+      MUAL_NAME={node.MUAL_NAME}
+      title={node.MUAL_NAME}
+    />
+  ));
 
 const Topbar = ({ data, tempItemData, setSelectedMualOrgIdx, setIsViewContents, widgetId }) => (
   <Styled>

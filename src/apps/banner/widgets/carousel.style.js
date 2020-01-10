@@ -5,7 +5,6 @@ import iconNext from '../../../images/bizstore/icon-next.png';
 
 const CarouselStyleWrapper = styled.div`
   .ant-carousel {
-
     .slick-slider {
       direction: ${props => (props['data-rtl'] === 'rtl' ? 'ltr' : 'inherit')};
 
@@ -21,20 +20,19 @@ const CarouselStyleWrapper = styled.div`
         }
 
         &.slick-next {
-           right: 10px;
-           margin-top: -15px;
+          right: 10px;
+          margin-top: -15px;
           background: url(${iconNext}) no-repeat 50% 50%;
         }
       }
 
       .slick-track {
-
         .slick-slide {
           overflow: hidden;
         }
       }
 
-     .slick-dots {
+      .slick-dots {
         position: absolute;
         left: 0;
         bottom: 17px;
@@ -68,7 +66,7 @@ const CarouselStyleWrapper = styled.div`
         opacity: 1;
         cursor: pointer;
       }
-      
+
       .slick-dots li.slick-active button {
         background: #ffffff;
         opacity: 1;

@@ -6,9 +6,9 @@ import * as feed from 'components/Feedback/functions';
 import { fromJS } from 'immutable';
 
 import { intlObj } from 'utils/commonUtils';
+import { Axios } from 'utils/AxiosFunc';
 import messages from '../messages';
 
-import { Axios } from 'utils/AxiosFunc';
 import * as constants from './constants';
 
 export function* appExamine(payload) {

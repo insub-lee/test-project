@@ -6,7 +6,7 @@ const ServicePageStyle = styled.div`
   width: 100%;
   height: 100%;
 
-  // 사용중지 
+  // 사용중지
   .bgImgSuspend {
     display: table-cell;
     height: 100%;
@@ -26,36 +26,34 @@ const ServicePageStyle = styled.div`
 
     // .widgetContent {
 
-      .informTxt {
-        > span {
-          display: block;
-          color: #707070;
-          font-size: 15px;
-          line-height: 22px;
+    .informTxt {
+      > span {
+        display: block;
+        color: #707070;
+        font-size: 15px;
+        line-height: 22px;
 
-          .emp {
-            font-style: normal;
-            font-size: 16px;
+        .emp {
+          font-style: normal;
+          font-size: 16px;
 
-            &:before {
-              content: "'";
-            }
-
-            &:after {
-              content: "'";
-            }
+          &:before {
+            content: "'";
           }
 
-          &.reason {
-            font-size: 14px;
-            white-space: pre-wrap;
+          &:after {
+            content: "'";
           }
-          
+        }
+
+        &.reason {
+          font-size: 14px;
+          white-space: pre-wrap;
         }
       }
+    }
     // }
   }
-  
 `;
 
 export default ServicePageStyle;

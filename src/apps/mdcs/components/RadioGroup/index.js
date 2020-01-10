@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Radio from './Radio';
 
 const RadioGroup = ({ values, onChange, noPadding, readOnly }) => (
-  <React.Fragment>
+  <>
     {values.map(item => (
       <Radio
         key={`${item.name}_${item.value}`}
@@ -15,7 +15,7 @@ const RadioGroup = ({ values, onChange, noPadding, readOnly }) => (
         disabled={item.disabled}
       />
     ))}
-  </React.Fragment>
+  </>
 );
 
 RadioGroup.propTypes = {

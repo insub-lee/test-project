@@ -38,16 +38,10 @@ class Grid extends Component {
       selectedIndexes: [],
       selectedUsers: [],
     });
-  }
+  };
+
   render() {
-    const {
-      checkboxInitialize,
-      emptyRowsView,
-      handleInitializeCheckbox,
-      isTab,
-      loadSelected,
-      searchResultData,
-    } = this.props;
+    const { checkboxInitialize, emptyRowsView, handleInitializeCheckbox, isTab, loadSelected, searchResultData } = this.props;
 
     const { selectedIndexes, selectedUsers } = this.state;
 
@@ -70,15 +64,10 @@ class Grid extends Component {
       groupMemberData = searchResultData;
     }
 
-    const rowGetter = (i) => {
+    const rowGetter = i => {
       if (groupMemberData.length > 0 && groupMemberData[i]) {
         const content = {
-          GRID_DATA: [
-            <UserProfile
-              userProfile={groupMemberData[i]}
-              key={groupMemberData[i].EMP_NO}
-            />,
-          ],
+          GRID_DATA: [<UserProfile userProfile={groupMemberData[i]} key={groupMemberData[i].EMP_NO} />],
           users: groupMemberData[i],
         };
         return content;
@@ -93,7 +82,7 @@ class Grid extends Component {
     };
 
     // ****************** 조직도 선택목록 연동 ******************
-    const onRowsSelected = (rows) => {
+    const onRowsSelected = rows => {
       this.setState({
         selectedIndexes: selectedIndexes.concat(rows.map(r => r.rowIdx)),
       });
@@ -103,7 +92,7 @@ class Grid extends Component {
       loadSelected(selectedUsers);
     };
 
-    const onRowsDeselected = (rows) => {
+    const onRowsDeselected = rows => {
       const rowIndexes = rows.map(r => r.rowIdx);
       const empNoArr = rows.map(r => r.row.users.EMP_NO);
       this.setState({
@@ -120,12 +109,14 @@ class Grid extends Component {
     return (
       <ReactDataGridWrapper gridHeight={isTab ? 393 : 436}>
         <ReactDataGrid
-          ref={(node) => { this.grid = node; }}
+          ref={node => {
+            this.grid = node;
+          }}
           rowKey="EMP_NO"
           columns={getColumns()}
           rowGetter={rowGetter}
           rowsCount={groupMemberData.length}
-          enableCellSelect={true}
+          enableCellSelect
           rowSelection={{
             showCheckbox: true,
             enableShiftSelect: true,

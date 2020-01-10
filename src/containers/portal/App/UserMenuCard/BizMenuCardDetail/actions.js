@@ -43,3 +43,11 @@ export const appBizGubun = gubun => ({
   type: appConstants.APP_BIZ_GUBUN,
   gubun,
 });
+
+export const enableLoading = () => ({
+  type: constants.ENABLE_LOADING,
+});
+
+export const disableLoading = () => ({
+  type: constants.DISABLE_LOADING,
+});

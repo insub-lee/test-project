@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import addContent from '../../../images/common/icon-add.png';
+// import addContent from 'images/common/icon-add.png';
 
 const QuickMenuStyle = styled.div`
   .carouselWrapper {
@@ -14,7 +14,6 @@ const QuickMenuStyle = styled.div`
       transform: translate(-50%, -50%);
       color: #909090;
       font-size: 14px;
-      // background: url(${addContent}) no-repeat 50% 73px;
     }
 
     table {
@@ -32,7 +31,7 @@ const QuickMenuStyle = styled.div`
           word-break: break-word;
           word-wrap: break-word;
 
-          > a  {
+          > a {
             display: block;
             width: 50px;
             margin: 0 auto 3px;
@@ -43,13 +42,9 @@ const QuickMenuStyle = styled.div`
             }
           }
         }
-
-       
       }
     }
   }
 `;
 
-export {
-  QuickMenuStyle,
-};
+export { QuickMenuStyle };

@@ -4,13 +4,7 @@ import classnames from '../utils/classnames';
 import './placeholder-renderer-default.css';
 
 const PlaceholderRendererDefault = ({ isOver, canDrop }) => (
-  <div
-    className={classnames(
-      'rst__placeholder',
-      canDrop && 'rst__placeholderLandingPad',
-      canDrop && !isOver && 'rst__placeholderCancelPad',
-    )}
-  />
+  <div className={classnames('rst__placeholder', canDrop && 'rst__placeholderLandingPad', canDrop && !isOver && 'rst__placeholderCancelPad')} />
 );
 
 PlaceholderRendererDefault.defaultProps = {

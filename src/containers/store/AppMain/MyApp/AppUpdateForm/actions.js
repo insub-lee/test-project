@@ -1,22 +1,18 @@
 import * as constants from './constants';
 
-export const getInitInfo = () => (
-  {
-    type: constants.GET_INIT_INFO,
-  }
-);
-export const getMyAppDetail = (APP_ID, VER, LANG, history) => (
-  {
-    type: constants.GET_MY_APP_DETAIL,
-    payload: {
-      APP_ID,
-      VER,
-      LANG,
-      history,
-      mod: 1,
-    },
-  }
-);
+export const getInitInfo = () => ({
+  type: constants.GET_INIT_INFO,
+});
+export const getMyAppDetail = (APP_ID, VER, LANG, history) => ({
+  type: constants.GET_MY_APP_DETAIL,
+  payload: {
+    APP_ID,
+    VER,
+    LANG,
+    history,
+    mod: 1,
+  },
+});
 export const insertAppInfo = (
   APP_ID,
   VER,

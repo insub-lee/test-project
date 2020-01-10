@@ -14,6 +14,7 @@ import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import { fromJS } from 'immutable';
+import { WIDGET } from 'utils/constants';
 import reducer from './reducer';
 import saga from './saga';
 import selectors from './selectors';
@@ -22,7 +23,6 @@ import * as actions from './actions';
 import { RodalContentStyle, DrilldownView } from './StyleRodal';
 import FroalaEditorView from '../../components/RichTextEditor/FroalaEditorView';
 import StyledModalWrapper from './StyledModalWrapper';
-import { WIDGET } from 'utils/constants'
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
@@ -244,13 +244,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps-manual-user-BizBuilderWidget-reducer', reducer });
 const withSaga = injectSaga({ key: 'apps-manual-user-BizBuilderWidget-saga', saga, mode: WIDGET });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(BizBuilderWidget);
+export default compose(withSaga, withReducer, withConnect)(BizBuilderWidget);

@@ -30,9 +30,9 @@ const StyleAppOpinion = styled.div`
       > input {
         position: relative;
         border: 1px solid #e5e5e5;
-        padding: .5rem .875rem;
+        padding: 0.5rem 0.875rem;
         padding-right: 30px;
-        font-size: .8125rem;
+        font-size: 0.8125rem;
         height: calc(1.47em + 1rem + 2px);
       }
 
@@ -62,7 +62,11 @@ const StyleAppOpinion = styled.div`
         height: 100%;
 
         .react-grid-HeaderCell {
-          &:nth-child(4), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8) {
+          &:nth-child(4),
+          &:nth-child(5),
+          &:nth-child(6),
+          &:nth-child(7),
+          &:nth-child(8) {
             text-align: left !important;
             padding-left: 10px !important;
           }
@@ -79,7 +83,11 @@ const StyleAppOpinion = styled.div`
   .react-grid-Row {
     // cursor: pointer;
     .react-grid-Cell {
-      &:nth-child(4), &:nth-child(5), &:nth-child(6), &:nth-child(7), &:nth-child(8) {
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(6),
+      &:nth-child(7),
+      &:nth-child(8) {
         text-align: left !important;
         padding-left: 10px !important;
       }

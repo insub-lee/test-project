@@ -12,6 +12,7 @@ import * as feed from 'components/Feedback/functions';
 import { intlObj, lang, imgUrl } from 'utils/commonUtils';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import moreMenu from 'images/bizstore/icon-more-menu.png';
 import messages from '../messages';
 
 import reducer from './reducer';
@@ -23,7 +24,6 @@ import { AppIntroduction, AppsRequired, AppsRecommended } from './StyleAppScreen
 
 import CarouselWrapper from './carousel.style';
 import Carousels from './carousel';
-import moreMenu from 'images/bizstore/icon-more-menu.png';
 import { BtnSeeMore } from '../../../components/uielements/buttons.style';
 
 const Carousel = props => (

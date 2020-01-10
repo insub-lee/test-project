@@ -11,7 +11,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import * as feed from 'components/Feedback/functions';
 import axios from 'axios';
 // import ReactExport from 'react-data-export/dist/index.js';
-import AntRadiobox from '../../../../../../../containers/store/components/uielements/radiobox.style';
+import AntRadiobox from '../../../../../../store/components/uielements/radiobox.style';
 import * as actions from './actions';
 import * as selectors from './selectors';
 import reducer from './reducer';
@@ -94,7 +94,7 @@ class PMSheet extends PureComponent {
     }
   }
 
-  handleUpload = (event) => {
+  handleUpload = event => {
     const data = new FormData();
     const fileExt = event.target.files[0].name.split('.')[1];
     const { extArray } = this.state;
@@ -124,9 +124,9 @@ class PMSheet extends PureComponent {
     // handlePmSheetExcelUpload(event);
     // handleUploadToServer(event.target.files[0]);
     // yield call(Axios.post, '/api/gipms/v1/pmsheet/PmSheetExcelUpload', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-  }
+  };
 
-  handleFactoryChange = (event) => {
+  handleFactoryChange = event => {
     const { handleLoadingParam } = this.props;
     handleLoadingParam(event);
     this.setState({
@@ -134,47 +134,42 @@ class PMSheet extends PureComponent {
       sdpt: undefined,
       model: undefined,
     });
-  }
+  };
 
-  handleSdptChange = (event) => {
+  handleSdptChange = event => {
     const { handleLoadingSdptParam } = this.props;
     handleLoadingSdptParam(event);
     this.setState({
       sdpt: event,
       model: undefined,
     });
-  }
+  };
 
-  handleModelChange = (event) => {
+  handleModelChange = event => {
     this.setState({
       model: event,
     });
-  }
+  };
 
-  handleVersionChange = (event) => {
+  handleVersionChange = event => {
     this.setState({
       version: event,
     });
-  }
+  };
 
-  handleSignStatusChange = (event) => {
+  handleSignStatusChange = event => {
     this.setState({
       signStatus: event,
     });
-  }
+  };
 
   handleSearch = () => {
     const { handlePmSheetSearch } = this.props;
     handlePmSheetSearch();
-  }
+  };
 
-  handlePopoverVisibleChange = (visible) => {
-    const {
-      factory,
-      sdpt,
-      model,
-      openPopover,
-    } = this.state;
+  handlePopoverVisibleChange = visible => {
+    const { factory, sdpt, model, openPopover } = this.state;
 
     const comboValdArray = [factory, sdpt, model];
     const comboValdArrayText = ['[FAB]', '[TEAM]', '[SDPT]'];
@@ -196,27 +191,23 @@ class PMSheet extends PureComponent {
       comboValdText = comboValdText.substring(2);
       feed.error(`${comboValdText} 는(은) 입력 필수값 입니다.`);
     }
-  }
+  };
 
-  handleRadioOnChange = (e) => {
+  handleRadioOnChange = e => {
     this.setState({
       radioValue: e.target.value,
     });
-  }
+  };
 
-  handleInputOnChange = (e) => {
+  handleInputOnChange = e => {
     this.setState({
       eqIdSearchWord: e.target.value,
     });
-  }
+  };
 
   handleEqIdSearch = () => {
     const { handleLoadingTidnParam } = this.props;
-    const {
-      radioValue,
-      eqIdSearchWord,
-      targetKeys,
-    } = this.state;
+    const { radioValue, eqIdSearchWord, targetKeys } = this.state;
     if (isNull(eqIdSearchWord)) {
       this.setState({ openPopover: true });
       feed.error('검색어를 한자리이상 입력해주세요.');
@@ -249,11 +240,11 @@ class PMSheet extends PureComponent {
     // PARAM_BEBER: "224" // FAB
     // PARAM_STORT: "P224-01" // TEAM
     // tabGubun: "FAB"
-  }
+  };
 
-  handleEqIdChange = (targetKeys) => {
+  handleEqIdChange = targetKeys => {
     this.setState({ targetKeys });
-  }
+  };
 
   handleEqIdConfirm = () => {
     let eqIdtempValue = '';
@@ -264,14 +255,14 @@ class PMSheet extends PureComponent {
       popoverVisible: false,
       eqIdValue: eqIdtempValue.substring(2),
     });
-  }
+  };
 
   handleExcelDownloadAgGrid = () => {
     // this.forceUpdate();
     this.setState({
       isExcelDownload: this.state.isExcelDownload + 1,
     });
-  }
+  };
 
   handleDownloadFile = () => {
     axios({
@@ -279,7 +270,7 @@ class PMSheet extends PureComponent {
       method: 'GET',
       responseType: 'blob',
       // timeout
-    }).then((response) => {
+    }).then(response => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -287,7 +278,7 @@ class PMSheet extends PureComponent {
       document.body.appendChild(link);
       link.click();
     });
-  }
+  };
 
   render() {
     const {
@@ -306,15 +297,7 @@ class PMSheet extends PureComponent {
       eqIdValue,
     } = this.state;
 
-    const {
-      factoryList,
-      sdptList,
-      modelList,
-      versionList,
-      signStatusList,
-      pmSheetDataList,
-      tidnList,
-    } = this.props;
+    const { factoryList, sdptList, modelList, versionList, signStatusList, pmSheetDataList, tidnList } = this.props;
     // console.log(uploadFile);
     // console.log(tidnList);
     // console.log(transferList);
@@ -323,18 +306,15 @@ class PMSheet extends PureComponent {
     const sdptOptions = sdptList !== undefined ? sdptList.map(sdptKey => <Options value={sdptKey.CODE_CD}>{sdptKey.NAME_KOR}</Options>) : '';
     const modelOptions = modelList !== undefined ? modelList.map(modelKey => <Options value={modelKey.CODE_CD}>{modelKey.NAME_KOR}</Options>) : '';
     const versionOptions = versionList !== undefined ? versionList.map(versionKey => <Options value={versionKey.CODE_CD}>{versionKey.NAME_KOR}</Options>) : '';
-    const signStatusOptions = signStatusList !== undefined ? signStatusList.map(signStatusKey => <Options value={signStatusKey.CODE_CD}>{signStatusKey.NAME_KOR}</Options>) : '';
+    const signStatusOptions =
+      signStatusList !== undefined ? signStatusList.map(signStatusKey => <Options value={signStatusKey.CODE_CD}>{signStatusKey.NAME_KOR}</Options>) : '';
     const eqIdContent = (
       <div style={{ width: 450, height: 380 }}>
         <div>
           <h4>Search</h4>
         </div>
         <div>
-          <RadioGroup
-            value={radioValue}
-            onChange={this.handleRadioOnChange}
-            defaultValue="1"
-          >
+          <RadioGroup value={radioValue} onChange={this.handleRadioOnChange} defaultValue="1">
             <Radio value="1">EQ ID</Radio>
             <Radio value="2">Maker</Radio>
           </RadioGroup>
@@ -343,11 +323,7 @@ class PMSheet extends PureComponent {
             style={{ width: 250, height: 20 }}
             onChange={this.handleInputOnChange}
           />
-          <Button
-            icon="search"
-            style={{ width: 20 }}
-            onClick={this.handleEqIdSearch}
-          />
+          <Button icon="search" style={{ width: 20 }} onClick={this.handleEqIdSearch} />
         </div>
         <div>
           <Transfer
@@ -364,11 +340,8 @@ class PMSheet extends PureComponent {
           />
         </div>
         <div>
-          <Button
-            style={{ width: 60, float: 'right', alignContent: 'center' }}
-            onClick={this.handleEqIdConfirm}
-          >
-          확인
+          <Button style={{ width: 60, float: 'right', alignContent: 'center' }} onClick={this.handleEqIdConfirm}>
+            확인
           </Button>
         </div>
       </div>
@@ -377,14 +350,15 @@ class PMSheet extends PureComponent {
     return (
       <div>
         <div className="PMSheetTitle">
-          <h2>PM(TBM) Plan Modeling</h2><br />
+          <h2>PM(TBM) Plan Modeling</h2>
+          <br />
         </div>
         <div>
           <div className="SearchBox">
             <table>
               <tbody>
                 <tr>
-                  <th style={{ width: 55 }} >Factory</th>
+                  <th style={{ width: 55 }}>Factory</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -412,7 +386,7 @@ class PMSheet extends PureComponent {
                       {detailfactoryOption}
                     </Select>
                   </td> */}
-                  <th style={{ width: 55 }} >SDPT</th>
+                  <th style={{ width: 55 }}>SDPT</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -426,7 +400,7 @@ class PMSheet extends PureComponent {
                       {sdptOptions}
                     </Select>
                   </td>
-                  <th style={{ width: 55 }} >Model</th>
+                  <th style={{ width: 55 }}>Model</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={this.state.defaultBox}
@@ -456,12 +430,8 @@ class PMSheet extends PureComponent {
                   </td> */}
                   <tr>
                     <td rowSpan="2" style={{ width: 120, alignContent: 'center' }}>
-                      <BtnSearchDkGray
-                        title="조회"
-                        className="searchBtn"
-                        onClick={this.handleSearch}
-                      >
-                      조회
+                      <BtnSearchDkGray title="조회" className="searchBtn" onClick={this.handleSearch}>
+                        조회
                       </BtnSearchDkGray>
                     </td>
                     {/* <td rowSpan="2" style={{ width: 180, alignContent: 'center' }}>
@@ -474,23 +444,15 @@ class PMSheet extends PureComponent {
                       </ExcelFiles>
                     </td> */}
                     <td rowSpan="2" style={{ width: 180, alignContent: 'center' }}>
-                      <BtnSearchDkGray
-                        onClick={this.handleExcelDownloadAgGrid}
-                      >
-                        Grid Down
-                      </BtnSearchDkGray>
+                      <BtnSearchDkGray onClick={this.handleExcelDownloadAgGrid}>Grid Down</BtnSearchDkGray>
                     </td>
                     <td rowSpan="2" style={{ width: 180, alignContent: 'center' }}>
-                      <BtnSearchDkGray
-                        onClick={this.handleDownloadFile}
-                      >
-                        File Down
-                      </BtnSearchDkGray>
+                      <BtnSearchDkGray onClick={this.handleDownloadFile}>File Down</BtnSearchDkGray>
                     </td>
                   </tr>
                 </tr>
                 <tr>
-                  <th style={{ width: 55 }} >Version</th>
+                  <th style={{ width: 55 }}>Version</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -504,7 +466,7 @@ class PMSheet extends PureComponent {
                       {versionOptions}
                     </Select>
                   </td>
-                  <th style={{ width: 60 }} >결재상태</th>
+                  <th style={{ width: 60 }}>결재상태</th>
                   <td style={{ width: 247 }}>
                     <Select
                       defaultValue={defaultBox}
@@ -518,7 +480,7 @@ class PMSheet extends PureComponent {
                       {signStatusOptions}
                     </Select>
                   </td>
-                  <th style={{ width: 60 }} >EQ ID</th>
+                  <th style={{ width: 60 }}>EQ ID</th>
                   <td style={{ width: 247 }}>
                     <Popover
                       // title="Search"
@@ -527,10 +489,7 @@ class PMSheet extends PureComponent {
                       visible={popoverVisible}
                       onVisibleChange={this.handlePopoverVisibleChange}
                     >
-                      <Input
-                        style={{ width: 160 }}
-                        value={eqIdValue}
-                      />
+                      <Input style={{ width: 160 }} value={eqIdValue} />
                       <Button icon="search" style={{ width: 20 }} />
                     </Popover>
                   </td>
@@ -543,7 +502,9 @@ class PMSheet extends PureComponent {
                     <input
                       type="file"
                       id="file"
-                      ref={(ref) => { this.upload = ref; }}
+                      ref={ref => {
+                        this.upload = ref;
+                      }}
                       style={{ display: 'none' }}
                       accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                       onChange={this.handleUpload}
@@ -564,10 +525,7 @@ class PMSheet extends PureComponent {
         <br />
         <br />
         <div>
-          <Grid
-            pmSheetDataList={pmSheetDataList}
-            isExcelDownload={isExcelDownload}
-          />
+          <Grid pmSheetDataList={pmSheetDataList} isExcelDownload={isExcelDownload} />
         </div>
       </div>
     );
@@ -620,8 +578,4 @@ const withReducer = injectReducer({ key: 'pmsheet', reducer });
 const withSaga = injectSaga({ key: 'pmsheet', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PMSheet);
+export default compose(withReducer, withSaga, withConnect)(PMSheet);

@@ -9,16 +9,16 @@ class App extends React.Component {
   state = {
     count: 5,
     show: true,
-  }
+  };
 
-  onChange = (show) => {
+  onChange = show => {
     this.setState({ show });
-  }
+  };
 
   increase = () => {
     const count = this.state.count + 1;
     this.setState({ count });
-  }
+  };
 
   decline = () => {
     let count = this.state.count - 1;
@@ -26,7 +26,7 @@ class App extends React.Component {
       count = 0;
     }
     this.setState({ count });
-  }
+  };
 
   render() {
     return (

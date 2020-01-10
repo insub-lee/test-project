@@ -17,9 +17,7 @@ class NotifyBtnChild extends PureComponent {
   }
 
   render() {
-    const {
-      index,
-    } = this.props;
+    const { index } = this.props;
 
     const { btnList } = this.state;
     console.log('btnList', btnList);
@@ -34,13 +32,7 @@ class NotifyBtnChild extends PureComponent {
                   <label htmlFor="subject" className="label">
                     VALUE
                   </label>
-                  <Input
-                    id="subject"
-                    name="VALUE"
-                    type="text"
-                    value={btnList.value}
-                    readOnly={true}
-                  />
+                  <Input id="subject" name="VALUE" type="text" value={btnList.value} readOnly />
                 </td>
               </tr>
               <tr>
@@ -48,13 +40,7 @@ class NotifyBtnChild extends PureComponent {
                   <label htmlFor="url" className="label">
                     URL
                   </label>
-                  <Input
-                    id="url"
-                    name="url"
-                    type="text"
-                    value={btnList.link.url}
-                    readOnly={true}
-                  />
+                  <Input id="url" name="url" type="text" value={btnList.link.url} readOnly />
                 </td>
               </tr>
             </tbody>
@@ -72,4 +58,3 @@ NotifyBtnChild.propTypes = {
 };
 
 export default NotifyBtnChild;
-

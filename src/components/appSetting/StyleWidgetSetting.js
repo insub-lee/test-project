@@ -20,8 +20,8 @@ const StyleWidgetSetting = styled.div`
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
   ${props =>
-    props.isPortal
-      && `padding: 45px 0px 0px;
+    props.isPortal &&
+    `padding: 45px 0px 0px;
       -webkit-transition: width 0.3s ease-out 0s, left 0.3s ease-out 0s;
       -o-transition: width 0.3s ease-out 0s, left 0.3s ease-out 0s;
       transition: width 0.3s ease-out 0s, left 0.3s ease-out 0s;`};

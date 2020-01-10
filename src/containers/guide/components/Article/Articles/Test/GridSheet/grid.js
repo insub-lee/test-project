@@ -37,21 +37,19 @@ class Grid extends PureComponent {
   }
 
   render() {
-    const {
-      pmSheetDataList,
-    } = this.props;
+    const { pmSheetDataList } = this.props;
     return (
       <div
         className="ag-theme-balham"
         style={{
-        height: '500px',
-        width: '100%',
-      }}
+          height: '500px',
+          width: '100%',
+        }}
       >
         <AgGridReact
           rowSelection="multiple"
-          enableSorting={true}
-          enableFilter={true}
+          enableSorting
+          enableFilter
           columnDefs={this.state.columnDefs}
           rowData={pmSheetDataList}
           defaultColDef={this.state.defaultColDef}

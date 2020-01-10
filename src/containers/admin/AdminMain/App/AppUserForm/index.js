@@ -13,14 +13,13 @@ import AppMaNagerList from 'components/OrgReturnView';
 import * as feed from 'components/Feedback/functions';
 
 import { intlObj, lang } from 'utils/commonUtils';
+import StyledButton from 'components/Button/StyledButton';
 import messages from '../messages';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
-import { LinkBtnLgtGray, BtnDkGray, LinkBtnList } from 'containers/admin/components/uielements/buttons.style';
 import StyleUserForm from './StyleUserForm';
-import StyledButton from 'components/Button/StyledButton';
 
 const FormItem = Form.Item;
 
@@ -43,6 +42,7 @@ class AppUserForm extends React.Component {
     // this.props.getInitInfo();
     this.props.getAppUser(this.state.APP_ID, this.state.VER, lang.getLocale(), prop.history);
   }
+
   // componentDidUpdate(prevProps, prevState) { //eslint-disable-line
   componentWillReceiveProps(nextProps) {
     this.setState({
@@ -60,125 +60,134 @@ class AppUserForm extends React.Component {
       managerOrgShow: true,
     });
   };
+
   managerOrgClose = () => {
     this.setState({
       managerOrgShow: false,
     });
   };
+
   allOrgOpen = () => {
     this.setState({
       allOrgShow: true,
     });
   };
+
   allOrgClose = () => {
     this.setState({
       allOrgShow: false,
     });
   };
 
-  render() {
+  // 조직도로부터 데이터 가져오는 함수
+  getDataFromOrganization = resultObj => {
+    const managerSetMembersFromOrganization = resultObj.selectedUsers;
+
+    this.setState({
+      managerSetMembers: managerSetMembersFromOrganization,
+    });
+  };
+
+  returnManagerList = resultObj => {
+    this.setState({
+      managerSetMembers: resultObj,
+    });
+  };
+
+  returnUserList = resultObj => {
+    this.setState({
+      userSetMembers: resultObj,
+    });
+  };
+
+  returnDutyList = resultObj => {
+    this.setState({
+      dutySetMembers: resultObj,
+    });
+  };
+
+  returnPstnList = resultObj => {
+    this.setState({
+      pstnSetMembers: resultObj,
+    });
+  };
+
+  returnGrpList = resultObj => {
+    this.setState({
+      grpSetMembers: resultObj,
+    });
+  };
+
+  returnDetpList = resultObj => {
+    this.setState({
+      deptSetMembers: resultObj,
+    });
+  };
+
+  // 조직도로부터 데이터 가져오는 함수
+  getDataFromOrganizationAll = resultObj => {
+    // 구성원
+    const userSetMembersFromOrganization = resultObj.selectedUsers;
+
+    this.setState({
+      userSetMembers: userSetMembersFromOrganization,
+    });
+
+    // 직워
+    const pstnSetMembersFromOrganization = resultObj.checkedPstn;
+
+    this.setState({
+      pstnSetMembers: pstnSetMembersFromOrganization,
+    });
+
+    // 부서
+    const deptSetMembersFromOrganization = resultObj.checkedDept;
+
+    this.setState({
+      deptSetMembers: deptSetMembersFromOrganization,
+    });
+
+    // 직책
+    const dutySetMembersFromOrganization = resultObj.checkedDuty;
+
+    this.setState({
+      dutySetMembers: dutySetMembersFromOrganization,
+    });
+
+    // 가상그룹
+    const grpSetMembersFromOrganization = resultObj.checkedGrp;
+
+    this.setState({
+      grpSetMembers: grpSetMembersFromOrganization,
+    });
+  };
+
+  // 저장하기
+  appUserSaveOn = () => {
     const { history } = this.props;
 
-    // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganization = resultObj => {
-      const managerSetMembersFromOrganization = resultObj.selectedUsers;
+    this.props.appUserSave(
+      this.state.APP_ID,
+      this.state.VER,
+      history,
+      this.state.managerSetMembers,
+      this.state.userSetMembers,
+      this.state.pstnSetMembers,
+      this.state.deptSetMembers,
+      this.state.dutySetMembers,
+      this.state.grpSetMembers,
+      this.state.uv,
+    );
+  };
 
-      this.setState({
-        managerSetMembers: managerSetMembersFromOrganization,
-      });
-    };
+  appUserSaveChk = () => {
+    feed.showConfirm(`${intlObj.get(messages.updateGoing)}`, '', this.appUserSaveOn);
+  };
 
-    const returnManagerList = resultObj => {
-      this.setState({
-        managerSetMembers: resultObj,
-      });
-    };
-    const returnUserList = resultObj => {
-      this.setState({
-        userSetMembers: resultObj,
-      });
-    };
-    const returnDutyList = resultObj => {
-      this.setState({
-        dutySetMembers: resultObj,
-      });
-    };
-    const returnPstnList = resultObj => {
-      this.setState({
-        pstnSetMembers: resultObj,
-      });
-    };
-    const returnGrpList = resultObj => {
-      this.setState({
-        grpSetMembers: resultObj,
-      });
-    };
-    const returnDetpList = resultObj => {
-      this.setState({
-        deptSetMembers: resultObj,
-      });
-    };
-    // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrganizationAll = resultObj => {
-      // 구성원
-      const userSetMembersFromOrganization = resultObj.selectedUsers;
-
-      this.setState({
-        userSetMembers: userSetMembersFromOrganization,
-      });
-
-      // 직워
-      const pstnSetMembersFromOrganization = resultObj.checkedPstn;
-
-      this.setState({
-        pstnSetMembers: pstnSetMembersFromOrganization,
-      });
-
-      // 부서
-      const deptSetMembersFromOrganization = resultObj.checkedDept;
-
-      this.setState({
-        deptSetMembers: deptSetMembersFromOrganization,
-      });
-
-      // 직책
-      const dutySetMembersFromOrganization = resultObj.checkedDuty;
-
-      this.setState({
-        dutySetMembers: dutySetMembersFromOrganization,
-      });
-
-      // 가상그룹
-      const grpSetMembersFromOrganization = resultObj.checkedGrp;
-
-      this.setState({
-        grpSetMembers: grpSetMembersFromOrganization,
-      });
-    };
-
-    // 저장하기
-    const appUserSaveOn = () => {
-      this.props.appUserSave(
-        this.state.APP_ID,
-        this.state.VER,
-        history,
-        this.state.managerSetMembers,
-        this.state.userSetMembers,
-        this.state.pstnSetMembers,
-        this.state.deptSetMembers,
-        this.state.dutySetMembers,
-        this.state.grpSetMembers,
-        this.state.uv,
-      );
-    };
-
-    const appUserSaveChk = () => {
-      feed.showConfirm(`${intlObj.get(messages.updateGoing)}`, '', appUserSaveOn);
-    };
-
+  render() {
     return (
       <div>
-        {this.state.managerOrgShow ? (
+        {this.state.managerOrgShow && (
           // <Organization
           //   show={this.state.managerOrgShow}
           //   closeModal={this.managerOrgClose}
@@ -191,22 +200,20 @@ class AppUserForm extends React.Component {
           <OrganizationRole
             show={this.state.managerOrgShow}
             closeModal={this.managerOrgClose}
-            getDataFromOrganization={getDataFromOrganization}
+            getDataFromOrganization={this.getDataFromOrganization}
             // 조직도로 가져갈 데이터
             selectedUsers={this.state.managerSetMembers.slice()}
-            ROLE_CD="SM"
+            ROLE_CD="SA" // 시스템 앱으로 변경 관리 구성원 SM -> SA 로 변경
           />
-        ) : (
-          ''
         )}
         <Organization
           show={this.state.allOrgShow}
           closeModal={this.allOrgClose}
-          userTab={true}
-          pstnTab={true}
-          dutyTab={true}
-          grpTab={true}
-          getDataFromOrganization={getDataFromOrganizationAll}
+          userTab
+          pstnTab
+          dutyTab
+          grpTab
+          getDataFromOrganization={this.getDataFromOrganizationAll}
           // 조직도로 가져갈 데이터
           selectedUsers={this.state.userSetMembers.slice()}
           checkedDept={this.state.deptSetMembers.slice()}
@@ -228,10 +235,8 @@ class AppUserForm extends React.Component {
               <FormItem>
                 <div style={{ position: 'relative' }}>
                   <div className="appManagerListBox">
-                    {this.state.managerSetMembers.length > 0 ? (
-                      <AppMaNagerList managerList={this.state.managerSetMembers} delFlag={true} returnManagerList={returnManagerList} />
-                    ) : (
-                      ''
+                    {this.state.managerSetMembers.length > 0 && (
+                      <AppMaNagerList managerList={this.state.managerSetMembers} delFlag returnManagerList={this.returnManagerList} />
                     )}
                   </div>
                   <Button className="btnText edit" onClick={this.managerOrgOpen}>
@@ -259,12 +264,12 @@ class AppUserForm extends React.Component {
                       deptList={this.state.deptSetMembers}
                       dutyList={this.state.dutySetMembers}
                       grpList={this.state.grpSetMembers}
-                      returnUserList={returnUserList}
-                      returnDutyList={returnDutyList}
-                      returnPstnList={returnPstnList}
-                      returnGrpList={returnGrpList}
-                      returnDetpList={returnDetpList}
-                      delFlag={true}
+                      returnUserList={this.returnUserList}
+                      returnDutyList={this.returnDutyList}
+                      returnPstnList={this.returnPstnList}
+                      returnGrpList={this.returnGrpList}
+                      returnDetpList={this.returnDetpList}
+                      delFlag
                     />
                   </div>
                   <Button className="btnText edit" onClick={this.allOrgOpen}>
@@ -281,7 +286,7 @@ class AppUserForm extends React.Component {
               <Link to="/admin/adminmain/sysapp">
                 <StyledButton className="btn-light">{intlObj.get(messages.cancel)}</StyledButton>
               </Link>
-              <StyledButton className="btn-primary" onClick={appUserSaveChk}>
+              <StyledButton className="btn-primary" onClick={this.appUserSaveChk}>
                 {intlObj.get(messages.save)}
               </StyledButton>
             </div>
@@ -293,16 +298,27 @@ class AppUserForm extends React.Component {
 }
 
 AppUserForm.propTypes = {
-  history: PropTypes.object, //eslint-disable-line
-  appUserSave: PropTypes.func, //eslint-disable-line
-  handleSaveSettingMembers: PropTypes.func, //eslint-disable-line
-  getAppUser: PropTypes.func, //eslint-disable-line
-  appManagerList: PropTypes.array, //eslint-disable-line
-  userList: PropTypes.array, //eslint-disable-line
-  dutyList: PropTypes.array, //eslint-disable-line
-  pstnList: PropTypes.array, //eslint-disable-line
-  grpList: PropTypes.array, //eslint-disable-line
-  deptList: PropTypes.array, //eslint-disable-line
+  history: PropTypes.object,
+  appUserSave: PropTypes.func,
+  getAppUser: PropTypes.func,
+  appManagerList: PropTypes.array,
+  userList: PropTypes.array,
+  dutyList: PropTypes.array,
+  pstnList: PropTypes.array,
+  grpList: PropTypes.array,
+  deptList: PropTypes.array,
+};
+
+AppUserForm.defaultProps = {
+  history: {},
+  appUserSave: () => {},
+  getAppUser: () => {},
+  appManagerList: [],
+  userList: [],
+  dutyList: [],
+  pstnList: [],
+  grpList: [],
+  deptList: [],
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -324,15 +340,8 @@ const mapStateToProps = createStructuredSelector({
   deptList: selectors.makeSelectDeptList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppUserForm', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppUserForm', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppUserForm);
+export default compose(withReducer, withSaga, withConnect)(AppUserForm);

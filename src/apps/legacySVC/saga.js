@@ -28,7 +28,8 @@ export function* getMeta() {
   const authInfo = yield select(state => state.get('auth')).tojs;
   const META = authInfo.get('meta');
   yield put({
-    type: actionType.SET_LEGACYSVC_URL_SUCCESS, META,
+    type: actionType.SET_LEGACYSVC_URL_SUCCESS,
+    META,
   });
 }
 

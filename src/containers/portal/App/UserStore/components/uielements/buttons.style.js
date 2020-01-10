@@ -42,7 +42,6 @@ const BtnDkGray = styled.button`
     background-color: #333333;
     border: 1px solid #333333;
     color: #ffffff;
-    border-color: #333333;
   }
 
   &.disabled,
@@ -496,8 +495,6 @@ export {
   BtnWhiteAdd,
   BtnIconShare,
   BtnIconRegist,
-  BtnIconMnRegist,
-  BtnIconCgrRegist,
   BtnSeeMore,
   BtnDelete,
   LinkBtnList,

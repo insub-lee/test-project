@@ -21,30 +21,19 @@ import injectReducer from '../../../utils/injectReducer';
 const wrap = dragDropContext(HTML5Backend);
 const { Content, Footer } = Layout;
 
-const App = (props) => {
+const App = props => {
   const { url } = props.match;
   console.log(props);
 
   return (
     <ThemeProvider theme={guide}>
       <Layout style={{ minWidth: 1280 }}>
-        <Topbar
-          url={url}
-          firstLevelSelected={props.firstLevelSelected}
-        />
+        <Topbar url={url} firstLevelSelected={props.firstLevelSelected} />
         <Layout style={{ minHeight: '100vh' }}>
-          <Sidebar
-            url={url}
-            articleSelected={props.articleSelected}
-            selectedIndex={props.selectedIndex}
-            height={props.height}
-          />
+          <Sidebar url={url} articleSelected={props.articleSelected} selectedIndex={props.selectedIndex} height={props.height} />
           <Layout>
             <Content>
-              <AppRouter
-                url={url}
-                selectedArticle={props.selectedArticle}
-              />
+              <AppRouter url={url} selectedArticle={props.selectedArticle} />
             </Content>
             <Footer />
           </Layout>
@@ -53,7 +42,6 @@ const App = (props) => {
     </ThemeProvider>
   );
 };
-
 
 App.propTypes = {
   match: PropTypes.object.isRequired,
@@ -64,12 +52,10 @@ App.propTypes = {
   height: PropTypes.number.isRequired,
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    firstLevelSelected: selectedIndex => dispatch(actions.firstLevelSelected(selectedIndex)),
-    articleSelected: selectedArticle => dispatch(actions.articleSelected(selectedArticle)),
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  firstLevelSelected: selectedIndex => dispatch(actions.firstLevelSelected(selectedIndex)),
+  articleSelected: selectedArticle => dispatch(actions.articleSelected(selectedArticle)),
+});
 
 const mapStateToProps = createStructuredSelector({
   height: selectors.makeHeight(),
@@ -79,7 +65,4 @@ const mapStateToProps = createStructuredSelector({
 const withReducer = injectReducer({ key: 'app', reducer });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withConnect,
-)(wrap(App));
+export default compose(withReducer, withConnect)(wrap(App));

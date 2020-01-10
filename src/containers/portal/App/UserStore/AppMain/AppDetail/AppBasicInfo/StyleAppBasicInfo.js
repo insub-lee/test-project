@@ -3,7 +3,6 @@ import styled from 'styled-components';
 // import WithDirection from '../../../../../config/withDirection';
 
 const StyleAppBasicInfo = styled.div`
-
   .basicInfoWrapper {
     position: relative;
     display: block;
@@ -68,7 +67,7 @@ const StyleAppBasicInfo = styled.div`
         height: 100%;
 
         @media only screen and (max-width: 1024px) {
-          float:right;
+          float: right;
           width: 100%;
           height: 25px;
         }
@@ -80,9 +79,8 @@ const StyleAppBasicInfo = styled.div`
           font-size: 18px;
           font-weight: 600;
 
-
           @media only screen and (max-width: 1024px) {
-            float:right;
+            float: right;
             width: 100%;
             max-width: 100%;
             padding-top: 3px;
@@ -102,7 +100,7 @@ const StyleAppBasicInfo = styled.div`
           padding: 7px 0;
           border-bottom: 1px solid #eeeeee;
         }
-        
+
         button + button {
           margin: 0 0 0 5px;
         }
@@ -120,7 +118,8 @@ const StyleAppBasicInfo = styled.div`
 
         > li {
           height: 22px;
-          padding: 4px 5px 4px 10px;
+          line-height: 14px;
+          padding: 4px 5px 4px 20px;
           color: #555555;
           font-size: 14px;
 
@@ -129,7 +128,8 @@ const StyleAppBasicInfo = styled.div`
             line-height: 1;
           }
 
-          &:nth-child(3), &:nth-child(4) {
+          &:nth-child(3),
+          &:nth-child(4) {
             float: left;
             position: relative;
           }
@@ -137,7 +137,7 @@ const StyleAppBasicInfo = styled.div`
           &:nth-child(4) {
             margin-left: 15px;
           }
-    
+
           &:before {
             content: '◾';
             color: #bcbcbc;
@@ -196,7 +196,6 @@ const StyleAppBasicInfo = styled.div`
             float: right;
           }
         }
-
       }
     }
   }

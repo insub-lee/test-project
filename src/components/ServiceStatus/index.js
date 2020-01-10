@@ -14,15 +14,14 @@ import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
-import messages from '../../components/Page/messages';
+import messages from '../Page/messages';
 import ServicePageStyle from './servicePageStyle';
 
 class ServiceMain extends Component {
   constructor(props) {
     super(props);
     // this.props.getService(this.props.item.APP_ID);
-    this.state = {
-    };
+    this.state = {};
   }
 
   componentWillMount() {
@@ -30,9 +29,7 @@ class ServiceMain extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const {
-      serviceData,
-    } = nextProps;
+    const { serviceData } = nextProps;
 
     if (serviceData.length === undefined) {
       return false;
@@ -48,47 +45,38 @@ class ServiceMain extends Component {
     return (
       <ServicePageStyle>
         <div className="bgImgSuspend">
-          {types === 'swidget' ?
+          {types === 'swidget' ? (
             <div className="singleWidget">
               <p className="informTxt">
                 <span>
                   <i className="emp">{lang.get('NAME', itemSet)}</i>
-                </span> {/* span이 br(줄바꿈)역할이에요 */}
-
-                <span>
-                  {intlObj.get(messages.ServicePage)}
-                </span>
-
-                {data ?
+                </span>{' '}
+                {/* span이 br(줄바꿈)역할이에요 */}
+                <span>{intlObj.get(messages.ServicePage)}</span>
+                {data && (
                   <span className="reason">
                     {intlObj.get(messages.StopReason)}: {lang.get('RESN', data)}
                   </span>
-                :
-                  ''
-                }
+                )}
               </p>
             </div>
-          :
+          ) : (
             <div className="widgetContent">
               <p className="informTxt">
                 <span>
                   <i className="emp">{lang.get('NAME', itemSet)}</i>
                 </span>
 
-                <span>
-                  {intlObj.get(messages.ServicePage)}
-                </span>
+                <span>{intlObj.get(messages.ServicePage)}</span>
 
-                {data ?
+                {data && (
                   <span className="reason">
                     {intlObj.get(messages.StopReason)}: {lang.get('RESN', data)}
                   </span>
-                :
-                  ''
-              }
+                )}
               </p>
             </div>
-          }
+          )}
         </div>
       </ServicePageStyle>
     );
@@ -116,8 +104,4 @@ const withReducer = injectReducer({ key: 'servicepage', reducer });
 const withSaga = injectSaga({ key: 'servicepage', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(ServiceMain);
+export default compose(withReducer, withSaga, withConnect)(ServiceMain);

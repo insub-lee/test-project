@@ -32,13 +32,7 @@ class AppDetailForm extends React.Component {
       images: [],
       photoIndex: 0,
     };
-    this.props.getMyAppDetail(
-      prop.APP_ID,
-      prop.VER,
-      lang.getLocale(),
-      prop.history,
-      prop.mod,
-    );
+    this.props.getMyAppDetail(prop.APP_ID, prop.VER, lang.getLocale(), prop.history, prop.mod);
   }
 
   managerPop = () => {
@@ -51,11 +45,7 @@ class AppDetailForm extends React.Component {
       // systemLink,
       // history,
     } = this.props;
-    const {
-      isOpen,
-      images,
-      photoIndex,
-    } = this.state;
+    const { isOpen, images, photoIndex } = this.state;
     const onClickWorking = (flag, url) => {
       if (flag === 'L') {
         if (!url.match(/^https?:\/\//i)) {
@@ -69,12 +59,10 @@ class AppDetailForm extends React.Component {
       }
     };
 
-    const onClickImgFullView = (index) => {
+    const onClickImgFullView = index => {
       const imagesArr = [];
 
-      this.props.screenshotList.map(item => (
-        imagesArr.push(imgUrl.get('0x0', item.FILE_PATH))
-      ));
+      this.props.screenshotList.map(item => imagesArr.push(imgUrl.get('0x0', item.FILE_PATH)));
 
       this.setState({
         images: imagesArr,
@@ -85,40 +73,24 @@ class AppDetailForm extends React.Component {
 
     const loopScreenShot = data =>
       data.map((item, index) => (
-        <Col
-          key={item.ITEM_SQ}
-          md={6}
-          sm={12}
-          xs={24}
-          style={colStyle}
-          className="appCols"
-        >
-          <span
-            onClick={() => onClickImgFullView(index)}
-            onKeyPress={() => onClickImgFullView(index)}
-            role="presentation"
-          >
-            <img
-              src={imgUrl.get('190x140', item.FILE_PATH)}
-              alt={item.FILE_PATH}
-              style={{ cursor: 'pointer' }}
-            />
+        <Col key={item.ITEM_SQ} md={6} sm={12} xs={24} style={colStyle} className="appCols">
+          <span onClick={() => onClickImgFullView(index)} onKeyPress={() => onClickImgFullView(index)} role="presentation">
+            <img src={imgUrl.get('190x140', item.FILE_PATH)} alt={item.FILE_PATH} style={{ cursor: 'pointer' }} />
           </span>
         </Col>
       ));
 
     const loopApp = data =>
       data.map(item => (
-        <div
-          key={item.APP_ID}
-          className="appCols"
-        >
+        <div key={item.APP_ID} className="appCols">
           <a href={`/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.APP_ID}`} target="_blank" rel="noopener noreferrer">
             <img
               src={imgUrl.get('120x120', item.ICON)}
               alt={lang.get('NAME', item)}
               style={{ width: 120, height: 120 }}
-              onError={(e) => { e.target.src = '/app_icon/icon_no_image.png'; }}
+              onError={e => {
+                e.target.src = '/app_icon/icon_no_image.png';
+              }}
             />
             <p className="appName">{lang.get('NAME', item)}</p>
           </a>
@@ -126,28 +98,25 @@ class AppDetailForm extends React.Component {
       ));
 
     return (
-
       <div style={{ display: 'flex', flexFlow: 'column' }}>
-        {
-          isOpen && (
-            <Lightbox
-              mainSrc={images[photoIndex]}
-              nextSrc={images[(photoIndex + 1) % images.length]}
-              prevSrc={images[((photoIndex + images.length) - 1) % images.length]}
-              onCloseRequest={() => this.setState({ isOpen: false })}
-              onMovePrevRequest={() =>
-                this.setState({
-                  photoIndex: ((photoIndex + images.length) - 1) % images.length,
-                })
-              }
-              onMoveNextRequest={() =>
-                this.setState({
-                  photoIndex: (photoIndex + 1) % images.length,
-                })
-              }
-            />
-          )
-        }
+        {isOpen && (
+          <Lightbox
+            mainSrc={images[photoIndex]}
+            nextSrc={images[(photoIndex + 1) % images.length]}
+            prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+            onCloseRequest={() => this.setState({ isOpen: false })}
+            onMovePrevRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + images.length - 1) % images.length,
+              })
+            }
+            onMoveNextRequest={() =>
+              this.setState({
+                photoIndex: (photoIndex + 1) % images.length,
+              })
+            }
+          />
+        )}
         {/* App 정보 */}
         <StyleAppDetailForm>
           <h2 className="appInfo">{intlObj.get(messages.appInfo)}</h2>
@@ -209,17 +178,16 @@ class AppDetailForm extends React.Component {
             </div>
           </div>
 
-          <h4>{intlObj.get(messages.ver)} <small>(Major, Minor, Build)</small></h4>
+          <h4>
+            {intlObj.get(messages.ver)} <small>(Major, Minor, Build)</small>
+          </h4>
           <p className="textValue">{setMyAppDetail.VER}</p>
 
           <h4>{intlObj.get(messages.Workstep)}</h4>
           <div className="textValue">
             <Button
               className={this.props.appProcess.ITEM_TYPE === 'L' ? 'noBorderBtn ellipsis' : 'download'}
-              onClick={() => onClickWorking(
-                this.props.appProcess.ITEM_TYPE,
-                this.props.appProcess.FILE_PATH,
-              )}
+              onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH)}
               style={{
                 display: this.props.appProcess.ITEM_TYPE ? 'block' : 'none',
               }}
@@ -232,10 +200,7 @@ class AppDetailForm extends React.Component {
           <div className="textValue">
             <Button
               className={this.props.appManual.ITEM_TYPE === 'L' ? 'noBorderBtn ellipsis' : 'download'}
-              onClick={() => onClickWorking(
-                this.props.appManual.ITEM_TYPE,
-                this.props.appManual.FILE_PATH,
-              )}
+              onClick={() => onClickWorking(this.props.appManual.ITEM_TYPE, this.props.appManual.FILE_PATH)}
               style={{
                 display: this.props.appManual.ITEM_TYPE ? 'block' : 'none',
               }}
@@ -248,11 +213,7 @@ class AppDetailForm extends React.Component {
           <h4>{intlObj.get(messages.screenShot)}</h4>
           <div className="textValue">
             <div className="screenShots">
-              <Row
-                style={rowStyle}
-                gutter={gutter}
-                justify="start"
-              >
+              <Row style={rowStyle} gutter={gutter} justify="start">
                 {loopScreenShot(this.props.screenshotList)}
               </Row>
             </div>
@@ -262,14 +223,10 @@ class AppDetailForm extends React.Component {
           <p className="textValue">{setMyAppDetail.KEYWORD}</p>
 
           <h4>{intlObj.get(messages.requiredApp)}</h4>
-          <div className="appColWrapper">
-            {loopApp(this.props.reqAppList)}
-          </div>
+          <div className="appColWrapper">{loopApp(this.props.reqAppList)}</div>
 
           <h4>{intlObj.get(messages.recommApp)}</h4>
-          <div className="appColWrapper">
-            {loopApp(this.props.recomAppList)}
-          </div>
+          <div className="appColWrapper">{loopApp(this.props.recomAppList)}</div>
 
           <h3 className="appInfo">{intlObj.get(messages.serviceGubun)}</h3>
           <div style={{ display: setMyAppDetail.INTL_TYPE === 'N' ? 'block' : 'none' }}>
@@ -287,9 +244,7 @@ class AppDetailForm extends React.Component {
             </p>
 
             <h4>{intlObj.get(messages.display)}</h4>
-            <p className="textValue">
-              {lang.get('TARGET', this.props.systemLink)}
-            </p>
+            <p className="textValue">{lang.get('TARGET', this.props.systemLink)}</p>
 
             <h4>URL</h4>
             <p className="textValue">
@@ -299,14 +254,10 @@ class AppDetailForm extends React.Component {
             </p>
 
             <h4>{intlObj.get(messages.protocol)}</h4>
-            <p className="textValue">
-              {this.props.systemLink.METHOD}
-            </p>
+            <p className="textValue">{this.props.systemLink.METHOD}</p>
 
             <h4>{intlObj.get(messages.variable)}</h4>
-            <p className="textValue">
-              {this.props.systemLink.PARAM}
-            </p>
+            <p className="textValue">{this.props.systemLink.PARAM}</p>
           </div>
 
           <div style={{ display: setMyAppDetail.INTL_TYPE === 'Y' ? 'block' : 'none' }}>
@@ -325,7 +276,9 @@ class AppDetailForm extends React.Component {
           </div>
 
           <h3 className="appInfo">{intlObj.get(messages.permissions)}</h3>
-          <h4>{intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}</h4>
+          <h4>
+            {intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}
+          </h4>
           <p className="textValue">
             {setMyAppDetail.SEC_REQ_YN === 'Y' ? intlObj.get(messages.authAppYes) : ''}
             {setMyAppDetail.SEC_REQ_YN === 'N' ? intlObj.get(messages.authAppNo) : ''}
@@ -348,13 +301,11 @@ AppDetailForm.propTypes = {
   systemLink: PropTypes.object, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getMyAppDetail: (APP_ID, VER, LANG, history, mod) => {
-      dispatch(actions.getMyAppDetail(APP_ID, VER, LANG, history, mod));
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getMyAppDetail: (APP_ID, VER, LANG, history, mod) => {
+    dispatch(actions.getMyAppDetail(APP_ID, VER, LANG, history, mod));
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   setMyAppDetail: selectors.makeSelectMyAppDetail(),
@@ -370,8 +321,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'AppDetailForm', saga });
 const withReducer = injectReducer({ key: 'AppDetailForm', reducer });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppDetailForm));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AppDetailForm));

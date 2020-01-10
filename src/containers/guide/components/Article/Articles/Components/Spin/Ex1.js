@@ -1,10 +1,7 @@
 import React from 'react';
 import { Spin } from '../../../Abstraction/portalComponents';
 
-const App = () => (
-  <Spin />
-);
-
+const App = () => <Spin />;
 
 const code = `import { Spin } from '../../../Abstraction/portalComponents';
 

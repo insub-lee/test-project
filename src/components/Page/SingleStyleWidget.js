@@ -20,7 +20,7 @@ const SingleStyleWidget = styled.div`
   padding: 0;
   width: 100%;
   margin: 0 auto;
-  
+
   //스킨세트
   &.wSkin1 {
     background: #ffffff !important;
@@ -33,30 +33,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
           color: #222222;
           background-image: url(${noDataIcon});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #404040 !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: #bcbcbc; }
+            button {
+              background-color: #bcbcbc;
+            }
 
             &.slick-active {
-              button { background-color: #414141; }
+              button {
+                background-color: #414141;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIcon});
@@ -67,11 +74,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(64,64,64,0.7);
+              color: rgba(64, 64, 64, 0.7);
             }
           }
         }
@@ -79,12 +86,12 @@ const SingleStyleWidget = styled.div`
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(64,64,64,0.7);
+          border-bottom: 1px solid rgba(64, 64, 64, 0.7);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(64,64,64,0.7);
-              
+              color: rgba(64, 64, 64, 0.7);
+
               &.ant-tabs-tab-active {
                 color: #886ab5;
               }
@@ -104,11 +111,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(64,64,64,0.7);
+              color: rgba(64, 64, 64, 0.7);
             }
             .replyIcon {
               background-image: url(${replyGrayIcon});
@@ -116,10 +123,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(64,64,64,0.7);
+              border-bottom: 1px solid rgba(64, 64, 64, 0.7);
             }
           }
         }
@@ -141,21 +148,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(0,0,0,0.15);
+                border-color: rgba(0, 0, 0, 0.15);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(0,0,0,0.15);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(0, 0, 0, 0.15);
               }
-            }            
+            }
           }
         }
         .rbc-header {
-          background-color: rgba(0,0,0,0.15);
+          background-color: rgba(0, 0, 0, 0.15);
         }
         .react-grid-Cell__value {
           color: #404040 !important;
@@ -203,30 +212,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
           color: #222222;
           background-image: url(${noDataIcon});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #404040 !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: #bcbcbc; }
+            button {
+              background-color: #bcbcbc;
+            }
 
             &.slick-active {
-              button { background-color: #414141; }
+              button {
+                background-color: #414141;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIcon});
@@ -237,11 +253,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(64,64,64,0.7);
+              color: rgba(64, 64, 64, 0.7);
             }
           }
         }
@@ -249,12 +265,12 @@ const SingleStyleWidget = styled.div`
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(64,64,64,0.7);
+          border-bottom: 1px solid rgba(64, 64, 64, 0.7);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(64,64,64,0.7);
-              
+              color: rgba(64, 64, 64, 0.7);
+
               &.ant-tabs-tab-active {
                 color: #404040;
               }
@@ -274,11 +290,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(64,64,64,0.7);
+              color: rgba(64, 64, 64, 0.7);
             }
             .replyIcon {
               background-image: url(${replyGrayIcon});
@@ -286,10 +302,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(64,64,64,0.7);
+              border-bottom: 1px solid rgba(64, 64, 64, 0.7);
             }
           }
         }
@@ -311,21 +327,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(0,0,0,0.15);
+                border-color: rgba(0, 0, 0, 0.15);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(0,0,0,0.15);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(0, 0, 0, 0.15);
               }
-            }            
+            }
           }
         }
         .rbc-header {
-          background-color: rgba(0,0,0,0.15);
+          background-color: rgba(0, 0, 0, 0.15);
         }
         .react-grid-Cell__value {
           color: #404040;
@@ -373,30 +391,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
           color: #222222;
           background-image: url(${noDataIcon});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #404040 !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: #bcbcbc; }
+            button {
+              background-color: #bcbcbc;
+            }
 
             &.slick-active {
-              button { background-color: #414141; }
+              button {
+                background-color: #414141;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIcon});
@@ -407,24 +432,24 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(64,64,64,0.7);
+              color: rgba(64, 64, 64, 0.7);
             }
           }
-        }        
+        }
       }
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(64,64,64,0.7);
+          border-bottom: 1px solid rgba(64, 64, 64, 0.7);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(64,64,64,0.7);
-              
+              color: rgba(64, 64, 64, 0.7);
+
               &.ant-tabs-tab-active {
                 color: #404040;
               }
@@ -444,11 +469,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(64,64,64,0.7);
+              color: rgba(64, 64, 64, 0.7);
             }
             .replyIcon {
               background-image: url(${replyGrayIcon});
@@ -456,10 +481,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(64,64,64,0.7);
+            color: rgba(64, 64, 64, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(64,64,64,0.7);
+              border-bottom: 1px solid rgba(64, 64, 64, 0.7);
             }
           }
         }
@@ -481,21 +506,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(0,0,0,0.15);
+                border-color: rgba(0, 0, 0, 0.15);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(0,0,0,0.15);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(0, 0, 0, 0.15);
               }
             }
           }
         }
         .rbc-header {
-          background-color: rgba(0,0,0,0.15);
+          background-color: rgba(0, 0, 0, 0.15);
         }
         .react-grid-Cell__value {
           color: #404040;
@@ -543,30 +570,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
-          color: rgba(255,255,255,0.6);
+          color: rgba(255, 255, 255, 0.6);
           background-image: url(${noDataIconWhite});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #ffffff !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: rgba(255,255,255,0.65); }
+            button {
+              background-color: rgba(255, 255, 255, 0.65);
+            }
 
             &.slick-active {
-              button { background-color: #ffffff; }
+              button {
+                background-color: #ffffff;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIconOrange});
@@ -577,24 +611,24 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.3);
+              color: rgba(255, 255, 255, 0.3);
             }
           }
-        }        
+        }
       }
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(255,255,255,0.3);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(255,255,255,0.6);
-              
+              color: rgba(255, 255, 255, 0.6);
+
               &.ant-tabs-tab-active {
                 color: #ffffff;
               }
@@ -614,11 +648,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .replyIcon {
               background-image: url(${replyWhiteIcon});
@@ -626,10 +660,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(255,255,255,0.7);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.7);
             }
           }
         }
@@ -637,12 +671,12 @@ const SingleStyleWidget = styled.div`
       //iflow
       .iflow {
         .react-grid-Cell {
-          border-bottom: 1px dashed rgba(255,255,255,0.3);
+          border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
 
           .contentWrapper {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             small {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .titleText {
               color: #ffffff !important;
@@ -651,21 +685,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(255,255,255,0.45);
+                border-color: rgba(255, 255, 255, 0.45);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(255,255,255,0.45);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(255, 255, 255, 0.45);
               }
             }
           }
         }
         .rbc-header {
-          background-color: rgba(255,255,255,0.45);
+          background-color: rgba(255, 255, 255, 0.45);
         }
         .react-grid-Cell__value {
           color: #ffffff;
@@ -713,30 +749,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
-          color: rgba(255,255,255,0.6);
+          color: rgba(255, 255, 255, 0.6);
           background-image: url(${noDataIconWhite});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #ffffff !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: rgba(255,255,255,0.65); }
+            button {
+              background-color: rgba(255, 255, 255, 0.65);
+            }
 
             &.slick-active {
-              button { background-color: #ffffff; }
+              button {
+                background-color: #ffffff;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIconOrange});
@@ -747,24 +790,24 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.3);
+              color: rgba(255, 255, 255, 0.3);
             }
           }
-        }      
+        }
       }
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(255,255,255,0.3);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(255,255,255,0.6);
-              
+              color: rgba(255, 255, 255, 0.6);
+
               &.ant-tabs-tab-active {
                 color: #ffffff;
               }
@@ -784,11 +827,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .replyIcon {
               background-image: url(${replyWhiteIcon});
@@ -796,10 +839,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(255,255,255,0.7);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.7);
             }
           }
         }
@@ -807,12 +850,12 @@ const SingleStyleWidget = styled.div`
       //iflow
       .iflow {
         .react-grid-Cell {
-          border-bottom: 1px dashed rgba(255,255,255,0.3);
+          border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
 
           .contentWrapper {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             small {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .titleText {
               color: #ffffff !important;
@@ -821,21 +864,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(255,255,255,0.45);
+                border-color: rgba(255, 255, 255, 0.45);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(255,255,255,0.45);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(255, 255, 255, 0.45);
               }
-            }            
+            }
           }
         }
         .rbc-header {
-          background-color: rgba(255,255,255,0.45);
+          background-color: rgba(255, 255, 255, 0.45);
         }
         .react-grid-Cell__value {
           color: #ffffff;
@@ -883,30 +928,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
-          color: rgba(255,255,255,0.6);
+          color: rgba(255, 255, 255, 0.6);
           background-image: url(${noDataIconWhite});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #ffffff !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: rgba(255,255,255,0.65); }
+            button {
+              background-color: rgba(255, 255, 255, 0.65);
+            }
 
             &.slick-active {
-              button { background-color: #ffffff; }
+              button {
+                background-color: #ffffff;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIconOrange});
@@ -917,24 +969,24 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.3);
+              color: rgba(255, 255, 255, 0.3);
             }
           }
-        }      
+        }
       }
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(255,255,255,0.3);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(255,255,255,0.6);
-              
+              color: rgba(255, 255, 255, 0.6);
+
               &.ant-tabs-tab-active {
                 color: #ffffff;
               }
@@ -954,11 +1006,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .replyIcon {
               background-image: url(${replyWhiteIcon});
@@ -966,10 +1018,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(255,255,255,0.7);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.7);
             }
           }
         }
@@ -977,12 +1029,12 @@ const SingleStyleWidget = styled.div`
       //iflow
       .iflow {
         .react-grid-Cell {
-          border-bottom: 1px dashed rgba(255,255,255,0.3);
+          border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
 
           .contentWrapper {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             small {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .titleText {
               color: #ffffff !important;
@@ -991,21 +1043,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(255,255,255,0.45);
+                border-color: rgba(255, 255, 255, 0.45);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(255,255,255,0.45);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(255, 255, 255, 0.45);
               }
             }
           }
         }
         .rbc-header {
-          background-color: rgba(255,255,255,0.45);
+          background-color: rgba(255, 255, 255, 0.45);
         }
         .react-grid-Cell__value {
           color: #ffffff;
@@ -1053,30 +1107,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
-          color: rgba(255,255,255,0.6);
+          color: rgba(255, 255, 255, 0.6);
           background-image: url(${noDataIconWhite});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #ffffff;
           font-size: 12px !important;
         }
         .slick-dots {
           > li {
-            button { background-color: rgba(255,255,255,0.65); }
+            button {
+              background-color: rgba(255, 255, 255, 0.65);
+            }
 
             &.slick-active {
-              button { background-color: #ffffff; }
+              button {
+                background-color: #ffffff;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIconOrange});
@@ -1087,24 +1148,24 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.3);
+              color: rgba(255, 255, 255, 0.3);
             }
           }
-        }     
+        }
       }
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(255,255,255,0.3);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(255,255,255,0.6);
-              
+              color: rgba(255, 255, 255, 0.6);
+
               &.ant-tabs-tab-active {
                 color: #ffffff;
               }
@@ -1124,11 +1185,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .replyIcon {
               background-image: url(${replyWhiteIcon});
@@ -1136,10 +1197,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(255,255,255,0.7);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.7);
             }
           }
         }
@@ -1147,12 +1208,12 @@ const SingleStyleWidget = styled.div`
       //iflow
       .iflow {
         .react-grid-Cell {
-          border-bottom: 1px dashed rgba(255,255,255,0.3);
+          border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
 
           .contentWrapper {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             small {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .titleText {
               color: #ffffff !important;
@@ -1161,21 +1222,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(255,255,255,0.45);
+                border-color: rgba(255, 255, 255, 0.45);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(255,255,255,0.45);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(255, 255, 255, 0.45);
               }
             }
           }
         }
         .rbc-header {
-          background-color: rgba(255,255,255,0.45);
+          background-color: rgba(255, 255, 255, 0.45);
         }
         .react-grid-Cell__value {
           color: #ffffff;
@@ -1223,30 +1286,37 @@ const SingleStyleWidget = styled.div`
     .widgetBody {
       background: transparent !important;
       //내용없음(공통)
-      .react-grid-Empty, .noWidgetWrapper {
+      .react-grid-Empty,
+      .noWidgetWrapper {
         .noWCIcon {
-          color: rgba(255,255,255,0.6);
+          color: rgba(255, 255, 255, 0.6);
           background-image: url(${noDataIconWhite});
         }
       }
       //퀵메뉴, 구성원즐겨찾기
-      .quickmenu, .member {
+      .quickmenu,
+      .member {
         .titleText {
           color: #ffffff !important;
           font-size: 12px;
         }
         .slick-dots {
           > li {
-            button { background-color: rgba(255,255,255,0.65); }
+            button {
+              background-color: rgba(255, 255, 255, 0.65);
+            }
 
             &.slick-active {
-              button { background-color: #ffffff; }
+              button {
+                background-color: #ffffff;
+              }
             }
           }
         }
       }
       //이메일, 결재
-      .email, .sign {
+      .email,
+      .sign {
         .react-grid-Cell {
           &:first-child {
             background-image: url(${bulletIconOrange});
@@ -1257,24 +1327,24 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.3);
+              color: rgba(255, 255, 255, 0.3);
             }
           }
-        }     
+        }
       }
       //게시판
       .board {
         .ant-tabs-bar {
-          border-bottom: 1px solid rgba(255,255,255,0.3);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 
           .ant-tabs-nav {
             .ant-tabs-tab {
-              color: rgba(255,255,255,0.6);
-              
+              color: rgba(255, 255, 255, 0.6);
+
               &.ant-tabs-tab-active {
                 color: #ffffff;
               }
@@ -1294,11 +1364,11 @@ const SingleStyleWidget = styled.div`
             font-size: 13px;
           }
           .subInfo {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
 
             .div {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .replyIcon {
               background-image: url(${replyWhiteIcon});
@@ -1306,10 +1376,10 @@ const SingleStyleWidget = styled.div`
           }
 
           .more {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
 
             > span {
-              border-bottom: 1px solid rgba(255,255,255,0.7);
+              border-bottom: 1px solid rgba(255, 255, 255, 0.7);
             }
           }
         }
@@ -1317,12 +1387,12 @@ const SingleStyleWidget = styled.div`
       //iflow
       .iflow {
         .react-grid-Cell {
-          border-bottom: 1px dashed rgba(255,255,255,0.3);
+          border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
 
           .contentWrapper {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             small {
-              color: rgba(255,255,255,0.7);
+              color: rgba(255, 255, 255, 0.7);
             }
             .titleText {
               color: #ffffff !important;
@@ -1331,21 +1401,23 @@ const SingleStyleWidget = styled.div`
         }
       }
       //schedule, today
-      .schedule, .today {
+      .schedule,
+      .today {
         .rbc-toolbar {
           .rbc-btn-group {
             button {
               &:hover {
-                border-color: rgba(255,255,255,0.45);
+                border-color: rgba(255, 255, 255, 0.45);
               }
-              &:nth-child(2), &:last-child {
-                background-color: rgba(255,255,255,0.45);
+              &:nth-child(2),
+              &:last-child {
+                background-color: rgba(255, 255, 255, 0.45);
               }
-            }            
+            }
           }
         }
         .rbc-header {
-          background-color: rgba(255,255,255,0.45);
+          background-color: rgba(255, 255, 255, 0.45);
         }
         .react-grid-Cell__value {
           color: #ffffff;
@@ -1477,6 +1549,8 @@ const WidgetBox = styled.div`
   }
 `;
 
-const WidgetColumn = styled.div`align-content: flex-start;`;
+const WidgetColumn = styled.div`
+  align-content: flex-start;
+`;
 
 export { SingleStyleWidget, WidgetBox, WidgetHeader, WidgetColumn };

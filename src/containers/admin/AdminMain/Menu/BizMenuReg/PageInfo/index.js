@@ -10,8 +10,8 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppSelector from 'components/appSelector/index';
-import * as menuSelectors from '../../selectors';
 import Page from 'containers/admin/components/BizGroupPage';
+import * as menuSelectors from '../../selectors';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
@@ -140,7 +140,7 @@ class PageInfo extends Component {
 
         {bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
           <ErrorBoundary>
-            <AppSelector type="widget" isAdmin={true} show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
+            <AppSelector type="widget" isAdmin show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>
         ) : (
           ''
@@ -183,21 +183,11 @@ const mapStateToProps = createStructuredSelector({
   bizGroupInfo: selectors.makeBizGroupInfo(),
   widgetList: selectors.makeWidgetList(),
   userRole: menuSelectors.makeUserRole(),
-
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/PageInfo', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/PageInfo', saga });
 
-export default injectIntl(
-  compose(
-    withReducer,
-  withSaga,
-  withConnect,
-  )(PageInfo),
-);
+export default injectIntl(compose(withReducer, withSaga, withConnect)(PageInfo));

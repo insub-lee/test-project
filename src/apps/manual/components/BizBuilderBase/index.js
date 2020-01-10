@@ -106,13 +106,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
 const withSaga = injectSaga({ key: `apps.mdcs.components.BizBuilderBase`, saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(BizBuilderBase);
+export default compose(withSaga, withReducer, withConnect)(BizBuilderBase);

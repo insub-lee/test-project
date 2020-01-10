@@ -14,17 +14,7 @@ export const getChangeRankTreeData = RANK_ID => ({
   RANK_ID,
 });
 
-export const insertRank = (
-  RANK_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const insertRank = (RANK_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.INSERT_RANK,
   payload: {
     RANK_CD,
@@ -39,18 +29,7 @@ export const insertRank = (
   },
 });
 
-export const updateRank = (
-  RANK_ID,
-  RANK_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const updateRank = (RANK_ID, RANK_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.UPDATE_RANK,
   payload: {
     RANK_ID,

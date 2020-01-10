@@ -4,19 +4,19 @@ import iconDelete from 'images/common/icon-delete.png';
 import iconAddRow from 'images/common/widget-icon-add.png';
 
 const StyleCodeAdminDtl = styled.div`
-max-width: 1200px;
-min-width: 900px;
-width: 100%;
-margin: 20px auto;
+  max-width: 1200px;
+  min-width: 900px;
+  width: 100%;
+  margin: 20px auto;
 
-@media only screen and (max-width: 1660px) {
-  padding: 0 20px;
-}
+  @media only screen and (max-width: 1660px) {
+    padding: 0 20px;
+  }
 
-@media only screen and (max-width: 1280px) {
-  width: 900px;
-  padding:  0;
-}
+  @media only screen and (max-width: 1280px) {
+    width: 900px;
+    padding: 0;
+  }
 
   .searchBox {
     width: 100%;
@@ -33,9 +33,9 @@ margin: 20px auto;
       float: left;
 
       &:after {
-        content: " ";
+        content: ' ';
         display: block;
-        clear:both;
+        clear: both;
       }
     }
 
@@ -111,7 +111,7 @@ margin: 20px auto;
         }
       }
 
-      &.row-context-menu .react-grid-Cell, 
+      &.row-context-menu .react-grid-Cell,
       &:hover .react-grid-Cell {
         background-color: #ffffff !important;
       }
@@ -122,7 +122,6 @@ margin: 20px auto;
       }
     }
   }
-
 `;
 
 export default StyleCodeAdminDtl;

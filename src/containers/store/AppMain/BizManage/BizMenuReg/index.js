@@ -51,8 +51,7 @@ class BizMenuReg extends Component {
     const { params } = match;
     const { BIZGRP_ID } = params;
 
-    if (BIZGRP_ID
-      && Number(BIZGRP_ID) !== Number(this.state.BIZGRP_ID)) {
+    if (BIZGRP_ID && Number(BIZGRP_ID) !== Number(this.state.BIZGRP_ID)) {
       this.setState({
         BIZGRP_ID: Number(BIZGRP_ID),
       });
@@ -80,24 +79,23 @@ class BizMenuReg extends Component {
       updateMymenuDisp,
     } = this.props;
 
-    const {
-      BIZGRP_ID,
-    } = this.state;
+    const { BIZGRP_ID } = this.state;
 
-    const handleTreeOnClick = (node) => {
-      const {
-        key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID,
-      } = node;
+    const handleTreeOnClick = node => {
+      const { key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID } = node;
       changeSelectedIndex(key);
 
       let pageID = -1;
 
-      if (NODE_TYPE !== 'F') { // 폴더 X
+      if (NODE_TYPE !== 'F') {
+        // 폴더 X
         const preUrl = '/store/appMain/bizManage/bizMenuReg';
 
-        if (REF_TYPE === 'A' && APP_ID !== -1) { // [앱] 상세
+        if (REF_TYPE === 'A' && APP_ID !== -1) {
+          // [앱] 상세
           history.push(`${preUrl}/app/${BIZGRP_ID}/${APP_ID}`);
-        } else if (REF_TYPE !== 'B' && PAGE_ID !== -1) { // [페이지] 상세
+        } else if (REF_TYPE !== 'B' && PAGE_ID !== -1) {
+          // [페이지] 상세
           history.push(`${preUrl}/page/${BIZGRP_ID}/${PAGE_ID}`);
           pageID = PAGE_ID;
         }
@@ -127,7 +125,6 @@ class BizMenuReg extends Component {
               updateNode={updateNode}
               updateMymenuDisp={updateMymenuDisp}
               pageID={this.state.pageID}
-
               bizGroupInfo={bizGroupInfo}
             />
           </ErrorBoundary>
@@ -139,18 +136,15 @@ class BizMenuReg extends Component {
                     treeData={categoryData}
                     selectedIndex={selectedIndex}
                     onClick={handleTreeOnClick}
-                    canDrag={true}
-                    canDrop={true}
-
+                    canDrag
+                    canDrop
                     saveData={saveData}
                     moveNode={moveNode}
                     deleteNode={deleteNode}
                     insertNode={insertNode}
                     updateNode={updateNode}
                     updateMymenuDisp={updateMymenuDisp}
-
                     bizGroupInfo={bizGroupInfo}
-
                     history={history}
                   />
                 </ErrorBoundary>
@@ -214,26 +208,20 @@ BizMenuReg.propTypes = {
   loadingOn: PropTypes.func.isRequired,
 };
 
-BizMenuReg.defaultProps = {
-
-};
+BizMenuReg.defaultProps = {};
 
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
     initCategoryData: BIZGRP_ID => dispatch(actions.initCategoryData(BIZGRP_ID)),
-    changeSelectedIndex: selectedIndex =>
-      dispatch(actions.changeSelectedIndex(selectedIndex)),
+    changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
-    insertNode: (rowInfo, treeData, data, history) =>
-      dispatch(actions.insertNode(rowInfo, treeData, data, history)),
-    updateNode: (rowInfo, treeData, data, history) =>
-      dispatch(actions.updateNode(rowInfo, treeData, data, history)),
+    insertNode: (rowInfo, treeData, data, history) => dispatch(actions.insertNode(rowInfo, treeData, data, history)),
+    updateNode: (rowInfo, treeData, data, history) => dispatch(actions.updateNode(rowInfo, treeData, data, history)),
 
     moveNode: (BIZGRP_ID, treeData) => dispatch(actions.moveNode(BIZGRP_ID, treeData)),
-    deleteNode: (rowInfo, categoryData, history) =>
-      dispatch(actions.deleteNode(rowInfo, categoryData, history)),
+    deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateMymenuDisp: () => dispatch(actions.updateMymenuDisp()),
     loadingOn: () => dispatch(actionsLoading.loadingOn()),
   };
@@ -251,9 +239,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmenureg', reducer });
 const withSaga = injectSaga({ key: 'bizmenureg', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizMenuReg));
-
+export default injectIntl(compose(withReducer, withSaga, withConnect)(BizMenuReg));

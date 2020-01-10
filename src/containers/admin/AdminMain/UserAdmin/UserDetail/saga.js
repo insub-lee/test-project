@@ -7,10 +7,10 @@ import { intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import { Axios } from 'utils/AxiosFunc';
 import messages from '../messages';
 
 import * as actionType from './constants';
-import { Axios } from 'utils/AxiosFunc';
 
 export function* getUserInfo(payload) {
   const { userId } = payload;
@@ -58,7 +58,7 @@ export function* updatetUserInfo(payload) {
     yield put({
       type: actionType.GET_USER_DATA,
       userId: userInfo.userId,
-    });    
+    });
     /*
     // 저장후 리스트로
     history.push({

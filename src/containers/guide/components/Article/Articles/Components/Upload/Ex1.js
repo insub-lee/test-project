@@ -10,7 +10,7 @@ class App extends PureComponent {
     };
   }
 
-  onFileUploaded = (file) => {
+  onFileUploaded = file => {
     const { uploadFiles } = this.state;
     const tmpArr = fromJS(uploadFiles).toJS();
     // one file upload 최신 파일만 업로드 되게
@@ -19,7 +19,7 @@ class App extends PureComponent {
       uploadFiles: tmpArr,
     });
     // this.handleChangeImage(tmpArr[0].seq);
-  }
+  };
 
   render() {
     const { uploadFiles } = this.state;
@@ -45,27 +45,22 @@ class App extends PureComponent {
           borderStyle="none"
         >
           <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-            {uploadFiles.length !== 0 ?
+            {uploadFiles.length > 0 ? (
               <div>
                 <ul>
                   {uploadFiles.map(f => (
                     <div>
-                      <img
-                        src={`/img/thumb/200x200/${f.seq}`}
-                        alt={f.fileName}
-                        style={{ width: '100%', maxHeight: 100 }}
-                      />
-                      <li key={f.fileName}>{f.fileName} - {f.fileSize} bytes</li>
+                      <img src={`/img/thumb/200x200/${f.seq}`} alt={f.fileName} style={{ width: '100%', maxHeight: 100 }} />
+                      <li key={f.fileName}>
+                        {f.fileName} - {f.fileSize} bytes
+                      </li>
                     </div>
-                      ))
-                  }
+                  ))}
                 </ul>
               </div>
-              :
-              <div>
-                Drop files here, or click to select files
-              </div>
-            }
+            ) : (
+              <div>Drop files here, or click to select files</div>
+            )}
           </div>
         </Upload>
       </div>

@@ -12,7 +12,7 @@ import Footer from 'containers/admin/App/Footer';
 import { Input, Button, Select } from 'antd';
 import Organization from 'containers/portal/components/Organization';
 import MemberList from 'components/OrgReturnView';
-import { BtnDkGray } from 'containers/admin/components/uielements/buttons.style';
+// import { BtnDkGray } from 'containers/admin/components/uielements/buttons.style';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -127,132 +127,144 @@ class VgroupAdmin extends React.Component {
     this.props.vgroupMemberUpdate(this.state.SITE_ID, this.state.GRP_ID, this.state.managerSetMembers, this.state.userSetMembers, this.state.deptSetMembers);
   };
 
+  // 조직도로부터 데이터 가져오는 함수
+  getDataFromOrgMng = resultObj => {
+    const { managerSetMembers } = this.state;
+    // const {
+    //   handleSaveSettingMembers,
+    // } = this.props;
+
+    const managerSetMembersCopy = managerSetMembers.slice();
+    // const managerSetMembersCopy = [];
+    const managerSetMembersFromOrganization = resultObj.selectedUsers;
+
+    managerSetMembersFromOrganization.map(obj => {
+      if (managerSetMembers.findIndex(o => o.USER_ID === obj.USER_ID) === -1) {
+        managerSetMembersCopy.push(obj);
+      }
+      return managerSetMembersCopy;
+    });
+
+    this.setState({
+      managerSetMembers: managerSetMembersCopy,
+    });
+
+    // put({ type: constants.SET_VGROUP_MANAGER_LIST, payload: managerSetMembersCopy });
+  };
+
+  returnManagerList = resultObj => {
+    this.setState({
+      managerSetMembers: resultObj,
+    });
+  };
+
+  getDataFromOrgMem = resultObj => {
+    const { userSetMembers } = this.state;
+    // const {
+    //   handleSaveSettingMembers,
+    // } = this.props;
+
+    const userSetMembersCopy = userSetMembers.slice();
+    const userSetMembersFromOrganization = resultObj.selectedUsers;
+
+    userSetMembersFromOrganization.map(obj => {
+      if (userSetMembers.findIndex(o => o.USER_ID === obj.USER_ID) === -1) {
+        userSetMembersCopy.push(obj);
+      }
+      return userSetMembersCopy;
+    });
+
+    this.setState({
+      userSetMembers: userSetMembersCopy,
+    });
+
+    const { deptSetMembers } = this.state;
+    const deptSetMembersCopy = deptSetMembers.slice();
+    const deptSetMembersFromOrganization = resultObj.checkedDept;
+
+    deptSetMembersFromOrganization.map(obj => {
+      if (deptSetMembers.findIndex(o => o.id === obj.id) === -1) {
+        deptSetMembersCopy.push(obj);
+      }
+      return deptSetMembersCopy;
+    });
+
+    this.setState({
+      deptSetMembers: deptSetMembersCopy,
+    });
+  };
+
+  returnUserList = resultObj => {
+    this.setState({
+      userSetMembers: resultObj,
+    });
+  };
+
+  returnDeptList = resultObj => {
+    this.setState({
+      deptSetMembers: resultObj,
+    });
+  };
+
+  comboOptions = comboList =>
+    comboList.map(item => (
+      <Option key={item.SITE_ID} value={item.SITE_ID}>
+        {item.NAME_KOR}
+      </Option>
+    ));
+
+  handleTreeOnClick = node => {
+    // 그룹 관리자/멤버 조회 및 출력
+    this.props.getVgroupDtlInfo(node.GRP_ID, this.state.SITE_ID);
+
+    this.setState({
+      // title: node.title,
+      // GRP_CD: node.GRP_CD,
+      GRP_ID: node.GRP_ID, //eslint-disable-line
+      selectedIndex: node.GRP_ID,
+      PRNT_ID: node.PRNT_ID, //eslint-disable-line
+      NAME_KOR: node.NAME_KOR,
+      NAME_ENG: node.NAME_ENG,
+      NAME_CHN: node.NAME_CHN,
+      showAddMember: node.NODE_TYPE !== 'R',
+    });
+  };
+
+  returnVgroupInsert = (SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
+    this.setState({ selectedIndex: GRP_ID });
+    this.props.vgroupInfoInsert(SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN);
+  };
+
+  returnVgroupUpdate = (STIE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
+    this.setState({ selectedIndex: GRP_ID });
+    this.props.vgroupInfoUpdate(STIE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN);
+  };
+
+  returnVgroupDelete = (STIE_ID, GRP_ID, parentNode) => {
+    this.setState({
+      GRP_ID: parentNode.GRP_ID,
+      selectedIndex: parentNode.GRP_ID,
+      PRNT_ID: parentNode.PRNT_ID,
+      NAME_KOR: parentNode.NAME_KOR,
+      NAME_ENG: parentNode.NAME_ENG,
+      NAME_CHN: parentNode.NAME_CHN,
+      showAddMember: parentNode.NODE_TYPE !== 'R',
+    });
+    this.props.getVgroupDtlInfo(parentNode.GRP_ID, this.state.SITE_ID);
+
+    this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
+  };
+
+  saveButton = () =>
+    this.state.showAddMember ? (
+      <StyledButton className="btn-primary" onClick={this.updateMember}>
+        저장
+      </StyledButton>
+    ) : (
+      ''
+    );
+
   render() {
-    // 조직도로부터 데이터 가져오는 함수
-    const getDataFromOrgMng = resultObj => {
-      const { managerSetMembers } = this.state;
-      // const {
-      //   handleSaveSettingMembers,
-      // } = this.props;
-
-      const managerSetMembersCopy = managerSetMembers.slice();
-      // const managerSetMembersCopy = [];
-      const managerSetMembersFromOrganization = resultObj.selectedUsers;
-
-      managerSetMembersFromOrganization.map(obj => {
-        if (managerSetMembers.findIndex(o => o.USER_ID === obj.USER_ID) === -1) {
-          managerSetMembersCopy.push(obj);
-        }
-        return managerSetMembersCopy;
-      });
-
-      this.setState({
-        managerSetMembers: managerSetMembersCopy,
-      });
-
-      // put({ type: constants.SET_VGROUP_MANAGER_LIST, payload: managerSetMembersCopy });
-    };
-
-    const returnManagerList = resultObj => {
-      this.setState({
-        managerSetMembers: resultObj,
-      });
-    };
-
-    const getDataFromOrgMem = resultObj => {
-      const { userSetMembers } = this.state;
-      // const {
-      //   handleSaveSettingMembers,
-      // } = this.props;
-
-      const userSetMembersCopy = userSetMembers.slice();
-      const userSetMembersFromOrganization = resultObj.selectedUsers;
-
-      userSetMembersFromOrganization.map(obj => {
-        if (userSetMembers.findIndex(o => o.USER_ID === obj.USER_ID) === -1) {
-          userSetMembersCopy.push(obj);
-        }
-        return userSetMembersCopy;
-      });
-
-      this.setState({
-        userSetMembers: userSetMembersCopy,
-      });
-
-      const { deptSetMembers } = this.state;
-      const deptSetMembersCopy = deptSetMembers.slice();
-      const deptSetMembersFromOrganization = resultObj.checkedDept;
-
-      deptSetMembersFromOrganization.map(obj => {
-        if (deptSetMembers.findIndex(o => o.id === obj.id) === -1) {
-          deptSetMembersCopy.push(obj);
-        }
-        return deptSetMembersCopy;
-      });
-
-      this.setState({
-        deptSetMembers: deptSetMembersCopy,
-      });
-    };
-
-    const returnUserList = resultObj => {
-      this.setState({
-        userSetMembers: resultObj,
-      });
-    };
-    const returnDeptList = resultObj => {
-      this.setState({
-        deptSetMembers: resultObj,
-      });
-    };
-
-    const comboOptions = comboList => comboList.map(item => <Option value={item.SITE_ID}>{item.NAME_KOR}</Option>);
-    const handleTreeOnClick = node => {
-      // 그룹 관리자/멤버 조회 및 출력
-      this.props.getVgroupDtlInfo(node.GRP_ID, this.state.SITE_ID);
-
-      this.setState({
-        // title: node.title,
-        // GRP_CD: node.GRP_CD,
-        GRP_ID: node.GRP_ID, //eslint-disable-line
-        selectedIndex: node.GRP_ID,
-        PRNT_ID: node.PRNT_ID, //eslint-disable-line
-        NAME_KOR: node.NAME_KOR,
-        NAME_ENG: node.NAME_ENG,
-        NAME_CHN: node.NAME_CHN,
-        showAddMember: node.NODE_TYPE !== 'R',
-      });
-    };
-    const returnVgroupInsert = (SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
-      this.setState({ selectedIndex: GRP_ID });
-      this.props.vgroupInfoInsert(SITE_ID, GRP_ID, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN);
-    };
-    const returnVgroupUpdate = (STIE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN) => {
-      this.setState({ selectedIndex: GRP_ID });
-      this.props.vgroupInfoUpdate(STIE_ID, GRP_ID, NAME_KOR, NAME_ENG, NAME_CHN);
-    };
-    const returnVgroupDelete = (STIE_ID, GRP_ID, parentNode) => {
-      this.setState({
-        GRP_ID: parentNode.GRP_ID,
-        selectedIndex: parentNode.GRP_ID,
-        PRNT_ID: parentNode.PRNT_ID,
-        NAME_KOR: parentNode.NAME_KOR,
-        NAME_ENG: parentNode.NAME_ENG,
-        NAME_CHN: parentNode.NAME_CHN,
-        showAddMember: parentNode.NODE_TYPE !== 'R',
-      });
-      this.props.getVgroupDtlInfo(parentNode.GRP_ID, this.state.SITE_ID);
-
-      this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
-    };
-    const saveButton = () =>
-      this.state.showAddMember ? (
-        <StyledButton className="btn-primary" onClick={this.updateMember}>
-          저장
-        </StyledButton>
-      ) : (
-        ''
-      );
     return (
       <div>
         <StyleVGroup>
@@ -262,16 +274,16 @@ class VgroupAdmin extends React.Component {
               <div>
                 <Select defaultValue={this.state.SITE_ID} onChange={this.onChangeSite}>
                   <Option value={0}>공통</Option>
-                  {comboOptions(this.props.setVgroupComboList)}
+                  {this.comboOptions(this.props.setVgroupComboList)}
                 </Select>
                 <VgroupTree
                   treeData={this.props.setVgroupTreeList}
                   SITE_ID={this.state.SITE_ID}
                   selectedIndex={this.state.selectedIndex}
-                  onClick={handleTreeOnClick}
-                  returnVgroupInsert={returnVgroupInsert}
-                  returnVgroupDelete={returnVgroupDelete}
-                  returnVgroupUpdate={returnVgroupUpdate}
+                  onClick={this.handleTreeOnClick}
+                  returnVgroupInsert={this.returnVgroupInsert}
+                  returnVgroupDelete={this.returnVgroupDelete}
+                  returnVgroupUpdate={this.returnVgroupUpdate}
                 />
               </div>
             </div>
@@ -322,36 +334,34 @@ class VgroupAdmin extends React.Component {
                 closeModal={this.mOrgClose}
                 isTreeCheckbox={false}
                 userTab
-                getDataFromOrganization={getDataFromOrgMng}
+                getDataFromOrganization={this.getDataFromOrgMng}
                 selectedUsers={this.state.managerSetMembers.slice()}
               />
-              <MemberList managerList={this.state.managerSetMembers} delFlag returnManagerList={returnManagerList} />
+              <MemberList managerList={this.state.managerSetMembers} delFlag returnManagerList={this.returnManagerList} />
               <div className="buttonWrapper">
                 <Button onClick={this.mOrgOpen} title="조직도열기" className="addRow" disabled={!this.state.showAddMember} />
               </div>
               <h4 style={{ marginTop: 40 }}>가상그룹 멤버</h4>
-              {this.state.uOrgShow ? (
+              {this.state.uOrgShow && (
                 <Organization
                   show={this.state.uOrgShow}
                   closeModal={this.uOrgClose}
                   userTab
-                  getDataFromOrganization={getDataFromOrgMem}
+                  getDataFromOrganization={this.getDataFromOrgMem}
                   selectedUsers={this.state.userSetMembers.slice()}
                 />
-              ) : (
-                ''
               )}
               <MemberList
                 userList={this.state.userSetMembers}
                 deptList={this.state.deptSetMembers}
                 delFlag
                 isTreeCheckbox
-                returnUserList={returnUserList}
-                returnDetpList={returnDeptList}
+                returnUserList={this.returnUserList}
+                returnDetpList={this.returnDeptList}
               />
               <div className="buttonWrapper">
                 <Button onClick={this.uOrgOpen} title="조직도열기" className="addRow" disabled={!this.state.showAddMember} />
-                {saveButton()}
+                {this.saveButton()}
               </div>
             </div>
             {/* <Footer /> */}
@@ -403,15 +413,8 @@ const mapStateToProps = createStructuredSelector({
   setVgroupMemberDList: selectors.makeSelectVgroupMemberDList(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'VgroupAdmin', saga });
 const withReducer = injectReducer({ key: 'VgroupAdmin', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(VgroupAdmin);
+export default compose(withReducer, withSaga, withConnect)(VgroupAdmin);

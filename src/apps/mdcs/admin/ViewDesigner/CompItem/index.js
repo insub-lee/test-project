@@ -22,7 +22,7 @@ const CompItem = ({ col, groupIndex, rowIndex, colIndex, changeCompData }) => {
             <Input placeholder="필드명(KO)" onChange={e => changeCompData(groupIndex, rowIndex, colIndex, 'NAME_KOR', e.target.value)} />
           </Col>
           {col.comp.COMP_TAG !== 'LABEL' && (
-            <Fragment>
+            <>
               <Col span={11}>
                 <Input placeholder="아이디" onChange={e => changeCompData(groupIndex, rowIndex, colIndex, 'COMP_FIELD', e.target.value)} />
               </Col>
@@ -40,7 +40,7 @@ const CompItem = ({ col, groupIndex, rowIndex, colIndex, changeCompData }) => {
                   />
                 </Popover>
               </Col>
-            </Fragment>
+            </>
           )}
         </Row>
         {col.comp.COMP_TAG !== 'LABEL' && (

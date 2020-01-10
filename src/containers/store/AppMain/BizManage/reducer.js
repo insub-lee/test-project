@@ -16,7 +16,8 @@ const initialState = fromJS({
 const orgReducer = (state = initialState, action) => {
   switch (action.type) {
     case constants.SET_CATEGORY_DATA:
-      return state.set('categoryData', action.categoryData ? action.categoryData : fromJS([]))
+      return state
+        .set('categoryData', action.categoryData ? action.categoryData : fromJS([]))
         .set('categoryFlatData', treeFunc.generateListBizManage(action.categoryData))
         .set('selectedIndex', action.selectedIndex || state.get('selectedIndex'))
         .set('tempRowInfo', action.tempRowInfo || state.get('tempRowInfo'));

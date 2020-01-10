@@ -14,7 +14,7 @@ const IfBoardReducer = (state = initialState, action) => {
     case constants.SET_IFCOARD_DETAIL_DATA_LIST:
       return state.set('getDetailBoardData', action.result);
     case constants.CATE_PAGE_LIST:
-      return state.set('catePageList', action.payload);      
+      return state.set('catePageList', action.payload);
     default:
       return state;
   }

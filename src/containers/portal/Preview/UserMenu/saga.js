@@ -9,7 +9,7 @@ import { Axios } from '../../../../utils/AxiosFunc';
 export function* getMyAppTree(payload) {
   const { BIZGRP_ID } = payload;
 
-  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizmenuTree', { BIZGRP_ID:Number(BIZGRP_ID) });
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizmenuTree', { BIZGRP_ID: Number(BIZGRP_ID) });
   const { categoryData, bizGroupInfo } = response;
 
   if (bizGroupInfo) {

@@ -16,7 +16,7 @@ export function* reqAppRatingInfo(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/store/apprating/', payload.payload);
 
   if (response.appRatingList.length > 0) {
-    response.appRatingList.map(item => (
+    response.appRatingList.map(item =>
       appRatingList.push({
         RNUM: item.RNUM,
         APP_ID: item.APP_ID,
@@ -45,8 +45,8 @@ export function* reqAppRatingInfo(payload) {
         PSTN_NAME_JPN: item.PSTN_NAME_JPN,
         PSTN_NAME_ETC: item.PSTN_NAME_ETC,
         PHOTO: item.PHOTO,
-      })
-    ));
+      }),
+    );
   }
 
   yield put({
@@ -112,26 +112,11 @@ export function* registRating(payload) {
   if (code === 200 || code === 201) {
     if (code === 200) {
       if (gubun === 'INSERT') {
-        message.success(
-          <MessageContent>
-            {intlObj.get(messages.reviewRegistOk)}
-          </MessageContent>,
-          3,
-        );
+        message.success(<MessageContent>{intlObj.get(messages.reviewRegistOk)}</MessageContent>, 3);
       } else if (gubun === 'UPDATE') {
-        message.success(
-          <MessageContent>
-            {intlObj.get(messages.reviewUpdateOk)}
-          </MessageContent>,
-          3,
-        );
+        message.success(<MessageContent>{intlObj.get(messages.reviewUpdateOk)}</MessageContent>, 3);
       } else if (gubun === 'DELETE') {
-        message.success(
-          <MessageContent>
-            {intlObj.get(messages.reviewDeleteOk)}
-          </MessageContent>,
-          3,
-        );
+        message.success(<MessageContent>{intlObj.get(messages.reviewDeleteOk)}</MessageContent>, 3);
       }
     } else if (code === 201) {
       if (gubun === 'INSERT') {

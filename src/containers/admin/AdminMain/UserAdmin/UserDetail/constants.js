@@ -26,5 +26,4 @@ export const SET_RANK_COMBO_LIST = 'admin/containers/admin/AdminMain/User/SET_RA
 export const GET_CHANGE_RANK_DATA = 'admin/containers/admin/AdminMain/User/GET_CHANGE_RANK_DATA';
 export const SET_CHANGE_RANK_DATA = 'admin/containers/admin/AdminMain/User/SET_CHANGE_RANK_DATA';
 
-
 export const IS_LOADING = 'admin/containers/admin/AdminMain/User/IS_LOADING';

@@ -22,10 +22,8 @@ export const moveMyWidget = (PAGE_ID, layout) => ({
   layout,
 });
 
-export const updateWidget = (WIDGET_ID, data) => (
-  {
-    type: constants.UPDATE_WIDGET,
-    WIDGET_ID,
-    data,
-  }
-);
+export const updateWidget = (WIDGET_ID, data) => ({
+  type: constants.UPDATE_WIDGET,
+  WIDGET_ID,
+  data,
+});

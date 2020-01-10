@@ -7,7 +7,7 @@ import { split } from 'lodash';
 import { lang } from 'utils/commonUtils';
 import HyundaiLogo from 'images/Hyundai-Logo.png';
 
-import Badge from '../../../../components/Badge/StyleBadge';
+// import Badge from '../../../../components/Badge/StyleBadge';
 import UserSearch from '../../App/UserSearch';
 import UserProfile from '../../App/UserProfile';
 import AlarmPopover from '../../App/UserNotice';
@@ -59,21 +59,9 @@ const Header = ({
               </Badge> */}
             </Trigger>
             <h1 className="siteHeader">
-              {siteId === 1183 ? (
-                <img
-                  src={HyundaiLogo}
-                  alt="Hyundai Moto"
-                  onClick={() => gotoHome('common')}
-                  onKeyDown={() => gotoHome('common')}
-                  role="button"
-                  tabIndex="0"
-                  style={{ display: 'inline-block', height: '100%' }}
-                />
-              ) : (
-                <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
-                  {view !== 'Mobile' && headerTitle}
-                </span>
-              )}
+              <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
+                {view !== 'Mobile' && headerTitle}
+              </span>
               <span> {appName} </span>
               {/* 담당자 popover */}
               {menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE' && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
@@ -89,7 +77,7 @@ const Header = ({
                 <UserSearch />
                 {/* 구성원검색 */}
               </li>
-              {hasRoleAdmin === true && (
+              {hasRoleAdmin && (
                 <li>
                   <Tooltip placement="left" title="ADMIN">
                     <Link to="/admin" className="icon-setting" target="_blank" />

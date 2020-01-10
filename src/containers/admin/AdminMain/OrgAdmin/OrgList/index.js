@@ -28,7 +28,6 @@ class OrgAdmin extends React.Component {
     // this.classChange(this.state.strUrl);
   }
 
-
   componentWillReceiveProps(nextProps) {
     if (nextProps) {
       this.props.handleGetFullPath(this.props.fullPath.USER_ID);
@@ -41,16 +40,16 @@ class OrgAdmin extends React.Component {
         <StyleOrgAdmin>
           <h3 className="pageTitle list">{this.state.title}</h3>
           <Organization
-            isDeptSelectbox={true}
+            isDeptSelectbox
             isModal={false}
-            show={true}
+            show
             // closeModal={this.allOrgClose}
-            isProfile={true}
-            userTab={true}
-            pstnTab={true}
-            dutyTab={true}
-            grpTab={true}
-            userSetting={true}
+            isProfile
+            userTab
+            pstnTab
+            dutyTab
+            grpTab
+            userSetting
             userProfile={this.props.fullPath}
           />
         </StyleOrgAdmin>
@@ -81,8 +80,4 @@ const withReducer = injectReducer({ key: 'OrgAdmin', reducer });
 
 const withSaga = injectSaga({ key: 'OrgAdmin', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(OrgAdmin);
+export default compose(withReducer, withSaga, withConnect)(OrgAdmin);

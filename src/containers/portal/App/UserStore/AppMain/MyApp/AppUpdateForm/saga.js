@@ -6,9 +6,9 @@ import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
 import { intlObj } from 'utils/commonUtils';
+import { Axios } from 'utils/AxiosFunc';
 import messages from '../messages';
 import * as constants from './constants';
-import { Axios } from 'utils/AxiosFunc';
 /* eslint-disable */
 export function* insertAppInfo(payload) {
   const { history } = payload.payload;

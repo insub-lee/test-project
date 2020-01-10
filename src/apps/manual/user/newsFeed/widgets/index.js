@@ -136,16 +136,9 @@ const mapDispatchToProps = dispatch => ({
   setModalIdx: (mualIdx, widget_id) => dispatch(actions.setModalIdx(mualIdx, widget_id)),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withSaga = injectSaga({ key: 'NewsFeed', saga });
 const withReducer = injectReducer({ key: 'NewsFeed', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(NewsFeed);
+export default compose(withReducer, withSaga, withConnect)(NewsFeed);

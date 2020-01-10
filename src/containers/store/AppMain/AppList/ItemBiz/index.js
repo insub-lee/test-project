@@ -11,14 +11,7 @@ import moreMenu from '../../../../../images/bizstore/icon-more-menu.png';
 
 class ItemBiz extends PureComponent {
   render() {
-    const {
-      appId,
-      title,
-      subTitle,
-      registed,
-      registBiz,
-      appIcon,
-    } = this.props;
+    const { appId, title, subTitle, registed, registBiz, appIcon } = this.props;
 
     const subTit = subTitle.length > 40 ? `${subTitle.substring(0, 40)}...` : subTitle.substring(0, 40);
 
@@ -34,44 +27,40 @@ class ItemBiz extends PureComponent {
             {/* 시작 - 태블릿, 모바일 용 */}
             <Popover
               placement="bottomRight"
-              content={(
-                <ul className="popoverType1 appListMenu" >
+              content={
+                <ul className="popoverType1 appListMenu">
                   <li>
-                    <Button
-                      title={intlObj.get(messages.registMenu)}
-                      type="button"
-                      className="highlight icon-regst-tree"
-                      onClick={registBiz}
-                    >
+                    <Button title={intlObj.get(messages.registMenu)} type="button" className="highlight icon-regst-tree" onClick={registBiz}>
                       {intlObj.get(messages.registMenu)}
                     </Button>
                   </li>
                 </ul>
-              )}
+              }
               size="50"
               trigger="click"
               overlayClassName="popoverType1"
             >
               <div className="moreMenuImg">
-                <img
-                  src={moreMenu}
-                  alt="서브메뉴 보이기"
-                />
+                <img src={moreMenu} alt="서브메뉴 보이기" />
               </div>
             </Popover>
-          </div>) : (
-            <div className="displayCtgIcons">
-              <div className="infoRgt" title={intlObj.get(messages.using)}>{intlObj.get(messages.using)} </div>
+          </div>
+        ) : (
+          <div className="displayCtgIcons">
+            <div className="infoRgt" title={intlObj.get(messages.using)}>
+              {intlObj.get(messages.using)}{' '}
             </div>
-          )
-        }
+          </div>
+        )}
         <div className="CtgDivIcons">
           <img src={imgUrl.get('120x120', appIcon)} alt={intlObj.get(messages.appIcon)} style={{ position: 'absolute', top: 0, left: 0 }} />
         </div>
         <Link
-          to={(this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ?
-            `/store/appMain/bizStore/biz/detail/info/${appId}`
-            : `/store/appMain/bizStore/biz/menulist/${appId}`}
+          to={
+            this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet'
+              ? `/store/appMain/bizStore/biz/detail/info/${appId}`
+              : `/store/appMain/bizStore/biz/menulist/${appId}`
+          }
           title={subTit}
         >
           <h4 className="appTitle">{title}</h4>

@@ -37,8 +37,8 @@ class BizBuilderBase extends React.Component {
   }
 
   render() {
-    const { component: Component, viewType, metaList, id, isCustom } = this.props;
-    const viewLayer = metaList.filter(filterNode => filterNode.COMP_TYPE === 'VIEW' && filterNode.COMP_TAG === viewType && filterNode.COMP_FIELD === id);
+    const { component: Component, viewType, metaList, id, isCustom, metaSeq } = this.props;
+    let viewLayer = metaList.filter(filterNode => filterNode.COMP_TYPE === 'VIEW' && filterNode.COMP_TAG === viewType && filterNode.COMP_FIELD === id);
     switch (viewType.toUpperCase()) {
       case 'INPUT':
         if (!isCustom && metaList && metaList.length > 0 && viewLayer.length > 0) {
@@ -65,6 +65,7 @@ class BizBuilderBase extends React.Component {
         }
         return '';
       case 'VIEW':
+        viewLayer = metaList.filter(item => item.META_SEQ === metaSeq); // 임시
         if (!isCustom && metaList && metaList.length > 0 && viewLayer.length > 0) {
           return <ViewPage {...this.props} viewLayer={viewLayer} />;
         }
@@ -131,6 +132,11 @@ BizBuilderBase.propTypes = {
   changeValidationData: PropTypes.func.isRequired,
   getProcessRule: PropTypes.func,
   setProcessStep: PropTypes.func,
+  isLoading: PropTypes.bool,
+  draftId: PropTypes.number,
+  draftProcess: PropTypes.array,
+  setProcessRule: PropTypes.func,
+  getDraftProcess: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -153,6 +159,7 @@ BizBuilderBase.defaultProps = {
   // viewID: 'TechDoc',
   // viewID: 'DwDoc',
   isCustom: false,
+  draftId: -1,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -163,6 +170,8 @@ const mapStateToProps = createStructuredSelector({
   formData: selectors.makeSelectFormData(),
   revisionHistory: selectors.makeSelectRevisionHistory(),
   processRule: selectors.makeSelectProcessRule(),
+  isLoading: selectors.makeSelectLoading(),
+  draftProcess: selectors.makeSelectDraftProcess(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -185,18 +194,13 @@ const mapDispatchToProps = dispatch => ({
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
   getProcessRule: (id, payload) => dispatch(actions.getProcessRule(id, payload)),
+  setProcessRule: (id, processRule) => dispatch(actions.setProcessRule(id, processRule)),
   setProcessStep: (id, processStep) => dispatch(actions.setProcessStep(id, processStep)),
+  getDraftProcess: (id, draftId) => dispatch(actions.getDraftProcess(id, draftId)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
 const withSaga = injectSaga({ key: `apps.mdcs.components.BizBuilderBase`, saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(BizBuilderBase);
+export default compose(withSaga, withReducer, withConnect)(BizBuilderBase);

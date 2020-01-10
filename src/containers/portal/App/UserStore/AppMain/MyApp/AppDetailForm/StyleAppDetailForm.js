@@ -6,7 +6,8 @@ const StyleAppDetailForm = styled.div`
   width: 100%;
   padding-bottom: 15px;
 
-  h2.appInfo, h3.appInfo {
+  h2.appInfo,
+  h3.appInfo {
     color: #222222;
     font-size: 18px;
     text-align: center;
@@ -30,7 +31,7 @@ const StyleAppDetailForm = styled.div`
     letter-spacing: -0.5px;
 
     &:before {
-      content:url(${IconOption});
+      content: url(${IconOption});
       position: absolute;
       top: -3px;
       left: 0;
@@ -40,7 +41,7 @@ const StyleAppDetailForm = styled.div`
 
     //필수입력 표시
     &.required:before {
-      content:url(${IconRequired});
+      content: url(${IconRequired});
     }
   }
 
@@ -94,7 +95,7 @@ const StyleAppDetailForm = styled.div`
     color: #404040;
     font-size: 14px;
   }
-  
+
   .appColWrapper {
     display: inline-block;
     width: 100%;
@@ -120,7 +121,7 @@ const StyleAppDetailForm = styled.div`
         }
       }
     }
-  }  
+  }
 `;
 
 export default StyleAppDetailForm;

@@ -55,12 +55,7 @@ class StoreTree extends Component {
   }
 
   render() {
-    const {
-      treeData,
-      searchString,
-      searchFocusIndex,
-      selectedIndex,
-    } = this.state;
+    const { treeData, searchString, searchFocusIndex, selectedIndex } = this.state;
 
     const {
       moveNode, // 메뉴 드래그 이동 func(treeData)
@@ -80,7 +75,10 @@ class StoreTree extends Component {
         searchQuery={searchString}
         searchFocusOffset={searchFocusIndex}
         style={{
-          display: 'inline-block', width: '100%', height: '100%', overflow: 'visible',
+          display: 'inline-block',
+          width: '100%',
+          height: '100%',
+          overflow: 'visible',
         }}
         selectedIndex={selectedIndex}
         isVirtualized={false}
@@ -93,7 +91,8 @@ class StoreTree extends Component {
           let PRNT_ID = -1; // 최상위 루트
           const ROOT_ID = node.path[0];
 
-          if (nextParentNode) { // 부모가 있는 경우 PRNT_ID지정
+          if (nextParentNode) {
+            // 부모가 있는 경우 PRNT_ID지정
             PRNT_ID = nextParentNode.MENU_ID;
           }
 
@@ -123,8 +122,8 @@ class StoreTree extends Component {
           });
         }}
         rowHeight={35}
-        scaffoldBlockPxWidth={22}
-        generateNodeProps={(rowInfo) => {
+        scaffoldBlockPxWidth={20}
+        generateNodeProps={rowInfo => {
           const { node } = rowInfo;
           node.title = lang.get('NAME', node);
           node.active = node.key === selectedIndex;
@@ -151,16 +150,8 @@ class StoreTree extends Component {
 
           return {
             title: (
-              <Popover
-                placement="right"
-                content={buttons}
-                trigger="hover"
-                overlayClassName="mypageTreePopupMenu"
-              >
-                <span
-                  className={`${node.active ? 'active' : ''}`}
-                  style={{ background: 'transparent', paddingRight: '15px' }}
-                >
+              <Popover placement="right" content={buttons} trigger="hover" overlayClassName="mypageTreePopupMenu">
+                <span className={`${node.active ? 'active' : ''}`} style={{ background: 'transparent', paddingRight: '15px' }}>
                   {node.title}
                 </span>
               </Popover>
@@ -182,18 +173,13 @@ class StoreTree extends Component {
           width: '100%',
         }}
       >
-        {
-          treeData.length > 0 ? (
-            <ScrollBar
-              style={{ width: 300, height: '100%' }}
-              autoHide
-              autoHideTimeout={1000}
-              autoHideDuration={200}
-            >
-              {tree}
-            </ScrollBar>
-          ) : tree
-        }
+        {treeData.length > 0 ? (
+          <ScrollBar style={{ width: 300, height: '100%' }} autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            {tree}
+          </ScrollBar>
+        ) : (
+          tree
+        )}
       </StyleMyPageTree>
     );
   }

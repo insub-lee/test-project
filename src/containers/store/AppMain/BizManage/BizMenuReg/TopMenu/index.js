@@ -18,8 +18,7 @@ import * as actions from './actions';
 import messages from './messages';
 
 import StyleTopMenu from './StyleTopMenu';
-import { BtnDkGray, BtnBizPreview, BtnBizSettings }
-  from '../../../../components/uielements/buttons.style';
+import { BtnDkGray, BtnBizPreview, BtnBizSettings } from '../../../../components/uielements/buttons.style';
 
 // import BizMenuTree from '../../../../components/AppPreview/BizMenuTree';
 // import AppPreview from '../../../../components/AppPreview';
@@ -46,9 +45,7 @@ class TopMenu extends React.Component {
   }
 
   render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
+    const { BIZGRP_ID } = this.state;
 
     const {
       bizInfo,
@@ -66,16 +63,16 @@ class TopMenu extends React.Component {
           <Row>
             <Col sm={24} lg={8} />
             <Col sm={24} lg={8}>
-              <h1 className="bizGrpTitle ellipsis">
-                {lang.get('NAME', bizInfo)}
-              </h1>
+              <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
             </Col>
             <Col sm={24} lg={8} style={{ textAlign: 'right' }}>
               {history.location.pathname.indexOf('page') > -1 ? (
                 <Link to={linkto} target="appPreview">
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
-              ) : ''}
+              ) : (
+                ''
+              )}
               {bizInfo.SEC_YN === 'Y' ? (
                 <BtnBizSettings
                   title="설정하기"
@@ -83,19 +80,21 @@ class TopMenu extends React.Component {
                     history.push(`/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
                   }}
                 />
-              ) : ''}
-              {
-                bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' ? (
-                  <BtnDkGray
-                    style={{ verticalAlign: 'middle', marginLeft: 12 }}
-                    onClick={() => {
-                      feed.showConfirm(`${intlObj.get(messages.askConfirm)}`, '', () => confirmBizGroup(history, BIZGRP_ID));
-                    }}
-                  >
-                    확정
-                  </BtnDkGray>
-                ) : ''
-              }
+              ) : (
+                ''
+              )}
+              {bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' ? (
+                <BtnDkGray
+                  style={{ verticalAlign: 'middle', marginLeft: 12 }}
+                  onClick={() => {
+                    feed.showConfirm(`${intlObj.get(messages.askConfirm)}`, '', () => confirmBizGroup(history, BIZGRP_ID));
+                  }}
+                >
+                  확정
+                </BtnDkGray>
+              ) : (
+                ''
+              )}
             </Col>
           </Row>
         </StyleTopMenu>
@@ -136,9 +135,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmemuTopMenu', reducer });
 const withSaga = injectSaga({ key: 'bizmemuTopMenu', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(TopMenu);
-
+export default compose(withReducer, withSaga, withConnect)(TopMenu);

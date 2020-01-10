@@ -14,5 +14,4 @@ const ArticleGrid = () => (
   </div>
 );
 
-
 export default ArticleGrid;

@@ -4,8 +4,9 @@ import axios from 'axios';
 
 // import Upload from './Upload';
 import Upload from './FileUploader';
-
+// import Upload from './DropZone';
 const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
+
 class DefaultUploader extends Component {
   state = {
     fileList: [],
@@ -131,7 +132,11 @@ class DefaultUploader extends Component {
 
   render() {
     const { fileList } = this.state;
-    const { name, readOnly } = this.props;
+    const { name, readOnly, multiple } = this.props;
+    let limit = 1;
+    if (multiple === true) {
+      limit = 5;
+    }
     return (
       <div>
         <Upload
@@ -141,6 +146,7 @@ class DefaultUploader extends Component {
           action="/upload"
           onRemove={this.onRemove}
           disabled={readOnly}
+          limit={limit}
         />
         <input type="hidden" name={name} value={this.getCurrentValue(fileList.filter(file => file.status === 'done'))} data-type="json" />
       </div>
@@ -151,11 +157,13 @@ class DefaultUploader extends Component {
 DefaultUploader.propTypes = {
   name: PropTypes.string,
   readOnly: PropTypes.bool,
+  multiple: PropTypes.bool,
 };
 
 DefaultUploader.defaultProps = {
   name: '',
   readOnly: false,
+  multiple: true,
 };
 
 export default DefaultUploader;

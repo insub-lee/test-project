@@ -71,7 +71,7 @@ class RichTextEditor extends Component {
           <FroalaEditorView model={model} />
         ) : (
           <React.Fragment>
-            <FroalaEditor model={model} onModelChange={this.onModelChange} config={config} />
+            <FroalaEditor key={readOnly} model={model} onModelChange={this.onModelChange} config={config} />
             <input type="hidden" name={name} value={this.getCurrentValue()} data-type="json" />
           </React.Fragment>
         )}

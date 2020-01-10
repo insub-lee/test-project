@@ -409,7 +409,7 @@ class MyAppTree extends Component {
             treeData={getTreeData(treeData)}
             onChange={this.updateTreeData}
             rowHeight={35}
-            scaffoldBlockPxWidth={22}
+            scaffoldBlockPxWidth={20}
             style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
             isVirtualized={false}
             onMoveNode={({ treeData, node, nextParentNode }) => {

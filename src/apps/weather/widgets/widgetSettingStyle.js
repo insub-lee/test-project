@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import IconUpload from 'images/common/icon-upload-image.png';
 
 const WidgetSettingStyle = styled.div`
-  
   .viewType {
     height: 50px;
     padding-top: 8px;
@@ -19,9 +18,8 @@ const WidgetSettingStyle = styled.div`
       background: #ffffff;
       border: 1px solid #d8d8d8;
       cursor: n-resize;
-  
-      > table {
 
+      > table {
         td {
           height: 50px;
           padding: 0 !important;
@@ -39,7 +37,7 @@ const WidgetSettingStyle = styled.div`
           .dropzone {
             background: #f5f5f5 url(${IconUpload}) no-repeat 50% 50%;
           }
-          
+
           label.label {
             display: inline-block;
             width: 100px;
@@ -88,7 +86,8 @@ const WidgetSettingStyle = styled.div`
         right: 0;
         opacity: 0.5;
 
-        &:focus, &:hover {
+        &:focus,
+        &:hover {
           opacity: 1;
         }
       }

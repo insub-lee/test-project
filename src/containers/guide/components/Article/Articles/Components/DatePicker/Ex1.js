@@ -8,9 +8,9 @@ class App extends React.Component {
     size: 'default',
   };
 
-  handleSizeChange = (e) => {
+  handleSizeChange = e => {
     this.setState({ size: e.target.value });
-  }
+  };
 
   render() {
     const { size } = this.state;
@@ -21,7 +21,8 @@ class App extends React.Component {
           <Radio.Button value="default">Default</Radio.Button>
           <Radio.Button value="small">Small</Radio.Button>
         </Radio.Group>
-        <br /><br />
+        <br />
+        <br />
         <DatePicker size={size} />
         <br />
         <MonthPicker size={size} placeholder="Select Month" />
@@ -33,7 +34,6 @@ class App extends React.Component {
     );
   }
 }
-
 
 const code = `import { DatePicker, Radio } from '../../../Abstraction/portalComponents';
 

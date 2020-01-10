@@ -40,6 +40,7 @@ class AppList extends Component {
       this.props.handleInitPage('ALL');
     }
   }
+
   componentWillReceiveProps(nextProps) {
     const { match, loadingOn, initType } = nextProps;
     const { params } = match;
@@ -79,7 +80,7 @@ class AppList extends Component {
         type={initType}
         mapList={mapList}
         getMapListOne={handleGetMapListOne}
-        getMapListMore={(key) => {
+        getMapListMore={key => {
           loadingOn();
           handleGetMapAppListMore(key);
         }}
@@ -137,16 +138,9 @@ const mapStateToProps = createStructuredSelector({
   searchword: selectors.makeSearchword(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList', reducer });
 const withSaga = injectSaga({ key: 'admin/AdminMain/Menu/BizMenuReg/AppBizModal/AppModal/AppList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppList);
+export default compose(withReducer, withSaga, withConnect)(AppList);

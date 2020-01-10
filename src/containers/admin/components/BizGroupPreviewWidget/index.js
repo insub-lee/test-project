@@ -34,9 +34,9 @@ class PreviewWidget extends PureComponent {
 
     const content = (
       <PopoverWrapper>
-        <div className='widgetSize'>
+        <div className="widgetSize">
           <RadioGroup
-            onChange={(e) => {
+            onChange={e => {
               const DISP_SIZE = e.target.value;
               if (item.size !== DISP_SIZE) {
                 this.onChangeDispSize(DISP_SIZE);
@@ -44,47 +44,43 @@ class PreviewWidget extends PureComponent {
             }}
             value={item.size}
           >
-            {
-              item.sizeArr && item.sizeArr.map((s) => (
+            {item.sizeArr &&
+              item.sizeArr.map(s => (
                 <Radio.Button value={s}>
                   <div className={`rbox w${s}`}>
                     <p>{s}</p>
                   </div>
                 </Radio.Button>
-              ))
-            }
+              ))}
           </RadioGroup>
         </div>
-        {
-          this.state.loading ? (
-            <div className='loading centerPos'>
-              <Spin indicator={antIcon} />
-            </div>
-          ) : ''
-        }
+        {this.state.loading ? (
+          <div className="loading centerPos">
+            <Spin indicator={antIcon} />
+          </div>
+        ) : (
+          ''
+        )}
       </PopoverWrapper>
     );
 
     return (
       <PreviewTypeClass className={`type${item.basic.type}`}>
         <div className="backgroundPattern" />
-        {
-          item.SEC_YN === 'Y' ? (
-            <Popover
-              placement="top"
-              // title={intlObj.get(messages.changeDispSize)}
-              arrowPointAtCenter={true}
-              content={content}
-              trigger="click"
-              overlayClassName="sizeOptionPopover"
-            >
-              <button
-                className="sizeOption draggableCancel"
-                title={intlObj.get(messages.changeDispSize)}
-              />
-            </Popover>
-          ) : ''
-        }
+        {item.SEC_YN === 'Y' ? (
+          <Popover
+            placement="top"
+            // title={intlObj.get(messages.changeDispSize)}
+            arrowPointAtCenter
+            content={content}
+            trigger="click"
+            overlayClassName="sizeOptionPopover"
+          >
+            <button className="sizeOption draggableCancel" title={intlObj.get(messages.changeDispSize)} />
+          </Popover>
+        ) : (
+          ''
+        )}
       </PreviewTypeClass>
     );
   }

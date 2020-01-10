@@ -10,9 +10,8 @@ const makeSelectWorkSeq = () =>
   );
 
 const makeSelectWorkSeqById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'workSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'workSeq']) : -1),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'workSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'workSeq']) : -1,
   );
 
 const makeSelectTaskSeq = () =>
@@ -23,9 +22,8 @@ const makeSelectTaskSeq = () =>
   );
 
 const makeSelectTaskSeqById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'taskSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'taskSeq']) : -1),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'taskSeq']) !== undefined ? state.getIn(['bizBuilderBase', id, 'taskSeq']) : -1,
   );
 
 const makeSelectResponseData = () =>
@@ -57,15 +55,13 @@ const makeSelectFormData = () =>
   );
 
 const makeSelectFormDataById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'formData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'formData']).toJS() : {}),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'formData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'formData']).toJS() : {},
   );
 
 const makeSelectApiArrById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'apiArr']) !== undefined ? state.getIn(['bizBuilderBase', id, 'apiArr']).toJS() : {}),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'apiArr']) !== undefined ? state.getIn(['bizBuilderBase', id, 'apiArr']).toJS() : {},
   );
 
 const makeSelectWorkFlowConfig = () =>
@@ -86,9 +82,8 @@ const makeSelectRevisionHistory = () =>
   );
 
 const makeSelectValidationDataById = id =>
-  createSelector(
-    selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'validationData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'validationData']).toJS() : {}),
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'validationData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'validationData']).toJS() : {},
   );
 
 const makeSelectProcessRule = () =>
@@ -99,9 +94,22 @@ const makeSelectProcessRule = () =>
   );
 
 const makeSelectProcessRuleById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'processRule']) !== undefined ? state.getIn(['bizBuilderBase', id, 'processRule']).toJS() : {},
+  );
+
+const makeSelectLoading = () =>
   createSelector(
     selectorBizBuilderBase,
-    state => (state.getIn(['bizBuilderBase', id, 'processRule']) !== undefined ? state.getIn(['bizBuilderBase', id, 'processRule']).toJS() : {}),
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'isLoading']) !== undefined ? state.getIn(['bizBuilderBase', id, 'isLoading']) : true),
+  );
+
+const makeSelectDraftProcess = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.id ? props.id : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'draftProcess']) !== undefined ? state.getIn(['bizBuilderBase', id, 'draftProcess']).toJS() : []),
   );
 
 export {
@@ -124,4 +132,6 @@ export {
   makeSelectValidationDataById,
   makeSelectProcessRule,
   makeSelectProcessRuleById,
+  makeSelectLoading,
+  makeSelectDraftProcess,
 };

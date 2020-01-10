@@ -6,11 +6,7 @@ class LayoutWrapper extends React.PureComponent {
   render() {
     return (
       <LayoutContentWrapper
-        className={
-          this.props.className != null
-            ? `${this.props.className} storeLayoutContentWrapper`
-            : 'storeLayoutContentWrapper'
-        }
+        className={this.props.className != null ? `${this.props.className} storeLayoutContentWrapper` : 'storeLayoutContentWrapper'}
         {...this.props}
       >
         {this.props.children}
@@ -24,4 +20,3 @@ LayoutWrapper.propTypes = {
   children: PropTypes.object,
 };
 export default LayoutWrapper;
-

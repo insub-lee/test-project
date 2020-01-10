@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Input, TreeSelect, Row, Col } from 'antd';
 import FileUpload from 'components/FormStuff/Upload';
 const AttachList = ({ formData, workSeq, taskSeq, handlerAttachChange }) => (
-  <React.Fragment>
+  <>
     <Row>
       <div className="w100Table">
         <Col span={6} className="attachTitle">
@@ -66,7 +66,7 @@ const AttachList = ({ formData, workSeq, taskSeq, handlerAttachChange }) => (
         </Col>
       </div>
     </Row>
-  </React.Fragment>
+  </>
 );
 
 export default AttachList;

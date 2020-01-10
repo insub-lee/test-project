@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Table } from 'semantic-ui-react';
 import ScrollBar from 'react-custom-scrollbars';
 import { intlObj } from 'utils/commonUtils';
-import messages from '../../components/Page/messages';
+import messages from '../Page/messages';
 import WidgetList from './widgetList';
 
 let content = [];
@@ -12,8 +12,7 @@ class selectedCategory extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-    };
+    this.state = {};
 
     this.onChange = this.onChange.bind(this);
     this.onChangeAll = this.onChangeAll.bind(this);
@@ -42,18 +41,18 @@ class selectedCategory extends Component {
         isWidgetDragged: false,
       });
     }
-  }
+  };
 
   findWidget(id) {
     const { selectedList, appList } = this.props;
     let widget;
 
     if (selectedList.length > 0) {
-      widget = selectedList.filter(c => c.APP_ID === id)[0]
-    } else if(selectedList.length === 0 && appList.length > 0) {
-      widget = appList.filter(c => c.APP_ID === id)[0]
+      widget = selectedList.filter(c => c.APP_ID === id)[0];
+    } else if (selectedList.length === 0 && appList.length > 0) {
+      widget = appList.filter(c => c.APP_ID === id)[0];
     } else {
-      widget = this.state.changeWidgetList.filter(c => c.APP_ID === id)[0]
+      widget = this.state.changeWidgetList.filter(c => c.APP_ID === id)[0];
     }
     // const widget = appList.data.body.filter(c => c.appID === id)[0]
 
@@ -61,7 +60,7 @@ class selectedCategory extends Component {
 
     if (selectedList.length > 0) {
       selectedList.map(l => list.push(l.APP_ID));
-    } else if(selectedList.length === 0 && appList.length > 0) {
+    } else if (selectedList.length === 0 && appList.length > 0) {
       appList.map(l => list.push(l.APP_ID));
     } else {
       this.state.changeWidgetList.map(l => list.push(l.APP_ID));
@@ -81,7 +80,7 @@ class selectedCategory extends Component {
 
     if (this.props.selectedList.length > 0) {
       widget = this.props.selectedList[index];
-    } else if(this.props.selectedList.length === 0 && this.props.appList.length > 0) {
+    } else if (this.props.selectedList.length === 0 && this.props.appList.length > 0) {
       widget = this.props.appList[index];
     } else {
       widget = this.state.changeWidgetList[index];
@@ -89,7 +88,7 @@ class selectedCategory extends Component {
 
     if (this.props.selectedList.length > 0) {
       newWidget = this.props.selectedList;
-    } else if(this.props.selectedList.length === 0 && this.props.appList.length > 0) {
+    } else if (this.props.selectedList.length === 0 && this.props.appList.length > 0) {
       newWidget = this.props.appList;
     } else {
       newWidget = this.state.changeWidgetList;
@@ -132,14 +131,13 @@ class selectedCategory extends Component {
   }
 
   render() {
-
     content = [];
 
     if (this.state.changeWidgetList === undefined && this.props.selectedList.length === 0) {
       const chList = [];
 
       if (this.props.appList.length > 0 && this.props.de === false) {
-        this.props.appList.forEach((list) => {
+        this.props.appList.forEach(list => {
           const result = {};
 
           result.APP_ID = list.APP_ID;
@@ -150,28 +148,30 @@ class selectedCategory extends Component {
           chList.push(result);
         });
 
-        let bList = [];
+        const bList = [];
         content.map(list => bList.push(list.props.widgetItem.APP_ID));
 
         for (let i = 0; i < chList.length; i += 1) {
           const idx = bList.findIndex(t => t === chList[i].APP_ID);
-          if(idx === -1) {
-          content.push(<WidgetList
-            key={i}
-            id={i}
-            widgetItem={chList[i]}
-            changeIsWidgetDragged={this.changeIsWidgetDragged}
-            moveWidget={this.moveWidget}
-            onChange={this.onChange}
-            findWidget={this.findWidget}
-            findIndex={this.findIndex}
-          />);
+          if (idx === -1) {
+            content.push(
+              <WidgetList
+                key={i}
+                id={i}
+                widgetItem={chList[i]}
+                changeIsWidgetDragged={this.changeIsWidgetDragged}
+                moveWidget={this.moveWidget}
+                onChange={this.onChange}
+                findWidget={this.findWidget}
+                findIndex={this.findIndex}
+              />,
+            );
           }
         }
 
         // this.props.comList(chList);
       } else if (this.props.selectedList.length !== 0) {
-        this.props.appList.forEach((list) => {
+        this.props.appList.forEach(list => {
           const result = {};
 
           result.APP_ID = list.APP_ID;
@@ -182,69 +182,73 @@ class selectedCategory extends Component {
           chList.push(result);
         });
 
-      let bList = [];
-      content.map(list => bList.push(list.props.widgetItem.APP_ID));
+        const bList = [];
+        content.map(list => bList.push(list.props.widgetItem.APP_ID));
 
         for (let i = 0; i < chList.length; i += 1) {
           const idx = bList.findIndex(t => t === chList[i].APP_ID);
-          if(idx === -1) {
-          content.push(<WidgetList
-            key={i}
-            id={i}
-            widgetItem={chList[i]}
-            changeIsWidgetDragged={this.changeIsWidgetDragged}
-            moveWidget={this.moveWidget}
-            onChange={this.onChange}
-            findWidget={this.findWidget}
-            findIndex={this.findIndex}
-          />);
-        }
+          if (idx === -1) {
+            content.push(
+              <WidgetList
+                key={i}
+                id={i}
+                widgetItem={chList[i]}
+                changeIsWidgetDragged={this.changeIsWidgetDragged}
+                moveWidget={this.moveWidget}
+                onChange={this.onChange}
+                findWidget={this.findWidget}
+                findIndex={this.findIndex}
+              />,
+            );
+          }
 
           this.props.comList(chList);
         }
       }
     } else if (this.props.selectedList.length > 0) {
-      const category = this.props.selectedList ?
-        this.props.selectedList : this.state.changeWidgetList;
-      
-      let bList = [];
+      const category = this.props.selectedList ? this.props.selectedList : this.state.changeWidgetList;
+
+      const bList = [];
       content.map(list => bList.push(list.props.widgetItem.APP_ID));
 
       for (let i = 0; i < category.length; i += 1) {
         const idx = bList.findIndex(t => t === category[i].APP_ID);
-        if(idx === -1) {
-        content.push(<WidgetList
-          key={i}
-          id={i}
-          widgetItem={category[i]}
-          changeIsWidgetDragged={this.changeIsWidgetDragged}
-          moveWidget={this.moveWidget}
-          onChange={this.onChange}
-          findWidget={this.findWidget}
-          findIndex={this.findIndex}
-        />);
+        if (idx === -1) {
+          content.push(
+            <WidgetList
+              key={i}
+              id={i}
+              widgetItem={category[i]}
+              changeIsWidgetDragged={this.changeIsWidgetDragged}
+              moveWidget={this.moveWidget}
+              onChange={this.onChange}
+              findWidget={this.findWidget}
+              findIndex={this.findIndex}
+            />,
+          );
         }
       }
     } else {
-      const category = this.props.selectedList ?
-        this.props.selectedList : this.state.changeWidgetList;
+      const category = this.props.selectedList ? this.props.selectedList : this.state.changeWidgetList;
 
-        let bList = [];
-        content.map(list => bList.push(list.props.widgetItem.APP_ID));
+      const bList = [];
+      content.map(list => bList.push(list.props.widgetItem.APP_ID));
 
       for (let i = 0; i < category.length; i += 1) {
         const idx = bList.findIndex(t => t === category[i].APP_ID);
-        if(idx === -1) {
-        content.push(<WidgetList
-          key={i}
-          id={i}
-          widgetItem={category[i]}
-          changeIsWidgetDragged={this.changeIsWidgetDragged}
-          moveWidget={this.moveWidget}
-          onChange={this.onChange}
-          findWidget={this.findWidget}
-          findIndex={this.findIndex}
-        />);
+        if (idx === -1) {
+          content.push(
+            <WidgetList
+              key={i}
+              id={i}
+              widgetItem={category[i]}
+              changeIsWidgetDragged={this.changeIsWidgetDragged}
+              moveWidget={this.moveWidget}
+              onChange={this.onChange}
+              findWidget={this.findWidget}
+              findIndex={this.findIndex}
+            />,
+          );
         }
       }
     }
@@ -254,18 +258,14 @@ class selectedCategory extends Component {
         <div className="SUTitle">
           <h3>
             {intlObj.get(messages.selectApp)}
-            <a className="deleteAll" onClick={this.onChangeAll}>전체삭제</a>
+            <a className="deleteAll" onClick={this.onChangeAll}>
+              전체삭제
+            </a>
           </h3>
         </div>
         <Table size="small" className="SUTable" style={{ width: '100%' }}>
-          <ScrollBar
-            autoHide
-            autoHideTimeout={1000}
-            style={{ height: 700, paddingBottom: 20 }}
-          >
-            <Table.Body className="SUTBody">
-              {content}
-            </Table.Body>
+          <ScrollBar autoHide autoHideTimeout={1000} style={{ height: 700, paddingBottom: 20 }}>
+            <Table.Body className="SUTBody">{content}</Table.Body>
           </ScrollBar>
         </Table>
       </div>

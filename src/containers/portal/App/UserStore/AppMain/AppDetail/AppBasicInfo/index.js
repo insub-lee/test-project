@@ -35,7 +35,7 @@ class AppBasicInfo extends React.Component {
       popUpVisible: false,
       popUpUrl: '',
       popUpTitle: '',
-      userinfo: [],
+      userinfo: {},
       orgShow: false,
     };
     // prop.reqAppBasicInfo(this.state.appId);
@@ -84,10 +84,10 @@ class AppBasicInfo extends React.Component {
     this.setState({ popUpVisible: false });
   };
 
-  // menuClick = () => {
-  //   const { execPage, appPageInfoData } = this.props;
-  //   execPage(appPageInfoData, 'execMenu');
-  // };
+  menuClick = () => {
+    const { execPage, appPageInfoData } = this.props;
+    execPage(appPageInfoData, 'execMenu');
+  };
 
   render() {
     const popUp = (
@@ -145,6 +145,15 @@ class AppBasicInfo extends React.Component {
     };
     const closeModal = () => this.setState({ orgShow: false });
     /* eslint-disable */
+    
+    const {
+      history: {
+        location: { pathname },
+      },
+    } = this.props;
+
+    const cardYn = pathname.includes('card');
+    
     return (
       <StyleAppBasicInfo>
         {popUp}
@@ -172,9 +181,10 @@ class AppBasicInfo extends React.Component {
                 <h2 className="ellipsis">{lang.get('NAME', this.props.resAppBasicInfo)}</h2>
               </div>
               <div className="btnsWrapperTop">
-                {/* <StyledButton type="button" className="btn-outline-secondary btn-sm" onClick={this.menuClick}>
+                {cardYn &&
+                <StyledButton type="button" className="btn-outline-secondary btn-sm" onClick={this.menuClick}>
                   앱실행
-                </StyledButton> */}
+                </StyledButton>}
                 <StyledButton
                   type="button"
                   className="btn-outline-secondary btn-sm"
@@ -289,7 +299,7 @@ AppBasicInfo.propTypes = {
   appManagerList: PropTypes.array, //eslint-disable-line
   appBizGubun: PropTypes.func, //eslint-disable-line
   currentView: PropTypes.string.isRequired, //eslint-disable-line
-  // execPage: PropTypes.func.isRequired,
+  execPage: PropTypes.func.isRequired,
   appPageInfoData: PropTypes.object.isRequired,
 };
 

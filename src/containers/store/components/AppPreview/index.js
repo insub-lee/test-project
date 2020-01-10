@@ -17,24 +17,20 @@ import Modal from 'react-modal';
 // import messages from './messages';
 
 // import StyleTopMenu from './StyleTopMenu';
-import { BtnDkGray, BtnBizPreview, BtnBizSettings }
-  from '../uielements/buttons.style';
+import { BtnDkGray, BtnBizPreview, BtnBizSettings } from '../uielements/buttons.style';
 
 import RootRouter from './rootRouter';
 
 class AppPreview extends React.Component {
   constructor(prop) {
     super(prop);
-    this.state = {
-    };
+    this.state = {};
 
     // this.props.execApps(this.props.home);
   }
 
   render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
+    const { BIZGRP_ID } = this.state;
 
     const {
       bizInfo,
@@ -73,9 +69,6 @@ class AppPreview extends React.Component {
   }
 }
 
-AppPreview.propTypes = {
-
-};
+AppPreview.propTypes = {};
 
 export default AppPreview;
-

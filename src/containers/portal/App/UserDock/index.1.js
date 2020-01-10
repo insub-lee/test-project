@@ -103,7 +103,7 @@ class UserDock extends React.Component {
 
     const { styleObj } = this.state;
 
-    const styleObjCopy = Object.assign({}, styleObj);
+    const styleObjCopy = { ...styleObj };
 
     if (dockIconType === 'MIN') {
       styleObjCopy.floattingSettingAreaBottom = '40px';
@@ -233,7 +233,7 @@ class UserDock extends React.Component {
       <AppWrapper styleObj={styleObj}>
         <Dock
           position="right"
-          isVisible={true}
+          isVisible
           dimMode="none"
           size={dockIconType === 'MAX' ? 90 : 42}
           dockFixedYn={dockFixedYn}
@@ -459,7 +459,7 @@ class UserDock extends React.Component {
       <AppWrapper styleObj={styleObj}>
         <Dock
           position="bottom"
-          isVisible={true}
+          isVisible
           dimMode="none"
           size={dockIconType === 'MAX' ? 90 : 42}
           dockFixedYn={dockFixedYn}
@@ -696,9 +696,6 @@ const mapStateToProps = createStructuredSelector({
   view: makeSelectView(),
 });
 const mapDispatchToProps = () => ({});
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withConnect)(UserDock);

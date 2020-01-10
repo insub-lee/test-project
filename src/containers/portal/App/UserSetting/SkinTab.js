@@ -25,7 +25,7 @@ class SkinTab extends Component {
     super(props);
 
     this.state = {
-      value: this.props.mySkin ? this.props.mySkin + '' : '1',
+      value: this.props.mySkin ? `${this.props.mySkin}` : '1',
       isSpinnerShow: false,
     };
 
@@ -45,19 +45,16 @@ class SkinTab extends Component {
     this.props.onSaveSkin(e.target.value);
     // this.props.setSkin(skin);
 
-    setTimeout(() => { this.notDisabled(); }, 1000)
+    setTimeout(() => {
+      this.notDisabled();
+    }, 1000);
   }
 
   notDisabled() {
     this.props.onNotDisabled();
     this.setState({ isSpinnerShow: false });
-    
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.completeChangeTheme)}
-      </MessageContent>,
-      2,
-    );
+
+    message.success(<MessageContent>{intlObj.get(messages.completeChangeTheme)}</MessageContent>, 2);
   }
 
   render() {
@@ -69,44 +66,44 @@ class SkinTab extends Component {
     let width;
     switch (currentView) {
       case 'DesktopWide':
-      width = '';
+        width = '';
         break;
       case 'Desktop':
-      width = '';
+        width = '';
         break;
       case 'DesktopNarrow':
-      width = '';
+        width = '';
         break;
       case 'Tablet':
-      width = '';
+        width = '';
         break;
       default:
-      width = '120';
+        width = '120';
     }
 
     return (
       <div>
         <Spin size="large" style={styleSpinner} spinning={this.state.isSpinnerShow} />
-        {this.state.isSpinnerShow === false ?
-        <div className="skinWrapper">
-          <RadioGroup onChange={this.onChange} value={this.state.value} disabled={this.props.disabled}>
-            <ul className="skinList">
-              {this.props.loadSkin.map((skin, index) => (
-                <li key={index}>
-                  <Radio value={skin.CODE_CD}>
-                    <span className="skinItem">
-                      <img src={require('../../../../images/portal/setting/skin-option'+ skin.CODE_CD +'.png')} alt={skin.CODE_CD} />
-                    </span>
-                    <p>{lang.get('NAME', skin)}</p>
-                  </Radio>
-                </li>
-            ))}
-            </ul>
-          </RadioGroup>
-        </div>
-        :
-        <div />
-        }
+        {this.state.isSpinnerShow ? (
+          <div />
+        ) : (
+          <div className="skinWrapper">
+            <RadioGroup onChange={this.onChange} value={this.state.value} disabled={this.props.disabled}>
+              <ul className="skinList">
+                {this.props.loadSkin.map((skin, index) => (
+                  <li key={index}>
+                    <Radio value={skin.CODE_CD}>
+                      <span className="skinItem">
+                        <img src={require(`../../../../images/portal/setting/skin-option${skin.CODE_CD}.png`)} alt={skin.CODE_CD} />
+                      </span>
+                      <p>{lang.get('NAME', skin)}</p>
+                    </Radio>
+                  </li>
+                ))}
+              </ul>
+            </RadioGroup>
+          </div>
+        )}
       </div>
     );
   }
@@ -137,8 +134,4 @@ const withReducer = injectReducer({ key: 'skintab', reducer });
 const withSaga = injectSaga({ key: 'skintab', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(SkinTab);
+export default compose(withReducer, withSaga, withConnect)(SkinTab);

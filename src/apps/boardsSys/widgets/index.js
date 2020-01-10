@@ -7,15 +7,15 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import ReactDataGrid from 'containers/portal/components/ReactDataGrid';
+import { WIDGET } from 'utils/constants';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import * as constants from './constants';
 import BoardsStyle from './boardStyle';
-import { WIDGET } from 'utils/constants'
 
-const TabPane = Tabs.TabPane;
+const { TabPane } = Tabs;
 let pageNum = 1;
 let pageEnum = 20;
 const pageIndex = 20;
@@ -38,13 +38,13 @@ class IfBoard extends PureComponent {
     if (boardSet.cateList !== undefined) {
       this.state = {
         itemList: item,
-        boardSet: boardSet,
+        boardSet,
         cateList: item.data.cateList,
         tabNum: '1',
       };
       this.props.getIfBoardDataList(boardSet.cateList, pageNum, pageIndex);
     } else {
-      let defContents = new Object();
+      const defContents = new Object();
       defContents.cateList = [
         {
           SORT_SQ: 1,
@@ -76,33 +76,29 @@ class IfBoard extends PureComponent {
     // this.props.getIfBoardDataList(defContents.cateList, pageNum, pageIndex);
   }
 
-  onClickOpen = (url) => {
+  onClickOpen = url => {
     window.open(url);
-  }
+  };
 
-  HyperlinkFormatter = (val) => {
+  HyperlinkFormatter = val => {
     const url = `${constants.IFLOW_URL}/group/article/${val.dependentValues.arSeq}`;
-    const replyIcon = (
-      <span className="replyIcon" />
-    );
+    const replyIcon = <span className="replyIcon" />;
     return (
       <div>
-        <span
-          title={val.dependentValues.arTitle}
-          onClick={() => this.onClickOpen(url)}
-          className="titleText ellipsis"
-        >
+        <span title={val.dependentValues.arTitle} onClick={() => this.onClickOpen(url)} className="titleText ellipsis">
           {val.dependentValues.arTitle}
         </span>
         <span className="subInfo">
-          by {val.dependentValues.empName} <i className="div"> | </i> {val.dependentValues.regDt.split(' ')[0]}  {val.dependentValues.cntReply !== 0 ? replyIcon : ''}
+          by {val.dependentValues.empName} <i className="div"> | </i> {val.dependentValues.regDt.split(' ')[0]}{' '}
+          {val.dependentValues.cntReply !== 0 ? replyIcon : ''}
         </span>
       </div>
     );
   };
-  handleTabClicks = (num) => {
+
+  handleTabClicks = num => {
     this.setState({ tabNum: num });
-  }
+  };
 
   render() {
     const EmptyData = () => (
@@ -115,18 +111,18 @@ class IfBoard extends PureComponent {
     const wgTitleHeight = this.props.item.user.isTitle ? 35 : 0;
     const rowHeight = 44;
 
-    const boardTab = () => {
-      return this.props.setIfBoardDataList.map((item, i) => (
+    const boardTab = () =>
+      this.props.setIfBoardDataList.map((item, i) => (
         <TabPane tab={this.state.cateList[i].ctName} key={i + 1}>
           <ReactDataGrid
             columns={this.columns}
-            rowGetter={(j) => {
+            rowGetter={j => {
               if (j === pageEnum - 1) {
                 pageNum += 1;
                 pageEnum += pageIndex;
                 this.props.getIfBoardDataList(item.data.cateList, pageNum, pageIndex);
               }
-              return item[j]
+              return item[j];
             }}
             rowsCount={item.length}
             rowHeight={rowHeight}
@@ -136,14 +132,14 @@ class IfBoard extends PureComponent {
           />
         </TabPane>
       ));
-    };
 
     return (
       <BoardsStyle className="board">
-        <Tabs defaultActiveKey="1"
+        <Tabs
+          defaultActiveKey="1"
           activeKey={this.state.tabNum}
           onTabClick={this.handleTabClicks}
-        // onNextClick={this.handleTabNextClick}
+          // onNextClick={this.handleTabNextClick}
         >
           {boardTab()}
         </Tabs>
@@ -169,8 +165,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'IfBoardSys', saga });
 const withReducer = injectReducer({ key: 'IfBoardSys', reducer, mode: WIDGET });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(IfBoard);
+export default compose(withReducer, withSaga, withConnect)(IfBoard);

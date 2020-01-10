@@ -35,7 +35,7 @@ class BizManage extends Component {
     if (homeUrl === nextProps.history.location.pathname) {
       if (nextProps.categoryData.length > 0) {
         let url;
-        const generateList = (data) => {
+        const generateList = data => {
           for (let i = 0; i < data.length; i += 1) {
             const node = data[i];
 
@@ -78,7 +78,7 @@ class BizManage extends Component {
       updateBizGroupDelYn,
     } = this.props;
 
-    const handleTreeOnClick = (node) => {
+    const handleTreeOnClick = node => {
       changeSelectedIndex(node.key);
       if (node.MENU_EXIST_YN !== 'N') {
         history.push(`/store/appMain/bizManage/bizMenuReg/info/${node.key}`);
@@ -103,7 +103,6 @@ class BizManage extends Component {
               // moveNode={moveNode}
               deleteNode={deleteNode}
               updateBizGroupDelYn={updateBizGroupDelYn}
-
               history={history}
             />
           </ErrorBoundary>
@@ -116,11 +115,7 @@ class BizManage extends Component {
           <ErrorBoundary>
             <Route path="/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
             <Route path="/store/appMain/bizManage/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
-            <Route
-              path="/appPreview"
-              component={AppPreview}
-              exact
-            />
+            <Route path="/appPreview" component={AppPreview} exact />
           </ErrorBoundary>
 
           {/* <Route path="/store/appMain/bizManage/aut
@@ -151,17 +146,13 @@ export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
     initCategoryData: () => dispatch(actions.initCategoryData()),
-    changeSelectedIndex: selectedIndex =>
-      dispatch(actions.changeSelectedIndex(selectedIndex)),
+    changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
-    addEmptyNode: (rowInfo, data, categoryData, history) =>
-      dispatch(actions.addEmptyNode(rowInfo, data, categoryData, history)),
+    addEmptyNode: (rowInfo, data, categoryData, history) => dispatch(actions.addEmptyNode(rowInfo, data, categoryData, history)),
     // moveNode: treeData => dispatch(actions.moveNode(treeData)),
-    deleteNode: (rowInfo, categoryData, history) =>
-      dispatch(actions.deleteNode(rowInfo, categoryData, history)),
-    updateBizGroupDelYn: (rowInfo, categoryData, data, history) =>
-      dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
+    deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
+    updateBizGroupDelYn: (rowInfo, categoryData, data, history) => dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
   };
 }
 
@@ -176,9 +167,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmanage', reducer });
 const withSaga = injectSaga({ key: 'bizmanage', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizManage));
-
+export default injectIntl(compose(withReducer, withSaga, withConnect)(BizManage));

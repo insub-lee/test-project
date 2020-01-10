@@ -16,7 +16,7 @@ const lang = {
     JPN: 'jp',
     ETC: 'etc',
   },
-  setLang: (language) => {
+  setLang: language => {
     if (language) {
       lang.locale = lang.translatorForLang[language];
     } else {
@@ -39,7 +39,7 @@ const lang = {
 
 const intlObj = {
   intl: {},
-  setIntl: (intl) => {
+  setIntl: intl => {
     intlObj.intl = intl;
   },
   // get 메소드 내에서 언어별 추가 작업을 처리해주면됨
@@ -47,15 +47,8 @@ const intlObj = {
 };
 
 const sortBy = (field, reverse, primer) => {
-  const key = primer ?
-    function (x) { return primer(x[field]); } :
-    function (x) { return x[field]; };
-
-  reverse = !reverse ? 1 : -1;
-
-  return function (a, b) {
-    return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-  }
+  const key = primer ? x => primer(x[field]) : x => x[field];
+  return (a, b) => (!reverse ? 1 : -1) * ((key(a) > key(b)) - (key(b) > key(a)));
 };
 
 const imgUrl = {
@@ -71,7 +64,8 @@ function searchTreeEn(element, matchingAppId, payload) {
     Object.assign(element, { UNREAD_CNT: Number(payload) }); //eslint-disable-line
 
     return element.UNREAD_CNT ? Number(element.UNREAD_CNT) : 0;
-  } else if ((element.NODE_TYPE === 'F' || element.NODE_TYPE === 'R') && element.children) {
+  }
+  if ((element.NODE_TYPE === 'F' || element.NODE_TYPE === 'R') && element.children) {
     for (let j = 0; j < element.children.length; j++) {
       searchTreeEn(element.children[j], matchingAppId, payload, true, element);
     }
@@ -84,10 +78,11 @@ function searchTreeEn(element, matchingAppId, payload) {
     Object.assign(element, { UNREAD_CNT: sumCount });
 
     return element.UNREAD_CNT ? Number(element.UNREAD_CNT) : 0;
-  } else if (element.APP_ID === -1 && element.NODE_TYPE === 'E') {
+  }
+  if (element.APP_ID === -1 && element.NODE_TYPE === 'E') {
     // 페이지 경우
     const appIdArr = element.WIDGET_LIST;
-    appIdArr.map((appId) => {
+    appIdArr.map(appId => {
       if (appId === matchingAppId) {
         Object.assign(element, { UNREAD_CNT: element.UNREAD_CNT ? Number(element.UNREAD_CNT) + Number(payload) : Number(payload) });
       }
@@ -105,7 +100,8 @@ function searchTree(element, notiVal) {
 }
 
 // 익스플로러 여부를 반환
-const isExplorer = () => (navigator.appName === 'Netscape' && navigator.userAgent.toLowerCase().indexOf('trident') !== -1) || (navigator.userAgent.toLowerCase().indexOf('msie') !== -1);
+const isExplorer = () =>
+  (navigator.appName === 'Netscape' && navigator.userAgent.toLowerCase().indexOf('trident') !== -1) || navigator.userAgent.toLowerCase().indexOf('msie') !== -1;
 
 // 현재 view가 Desktop인지 여부를 반환
 const isDesktop = view => view && view.indexOf('Desktop') !== -1;
@@ -113,24 +109,19 @@ const isDesktop = view => view && view.indexOf('Desktop') !== -1;
 let storeNameIndex = 0;
 let storeNameCount = 0;
 const getStoreName = () => {
-  const names = [
-    'a',
-    'b',
-    'c',
-    'd',
-    'e',
-  ];
+  const names = ['a', 'b', 'c', 'd', 'e'];
 
   if (storeNameCount !== 2) {
     storeNameCount += 1;
     console.log(names[storeNameIndex], '스토어명반환값');
     return names[storeNameIndex];
-  } else if (storeNameCount === 2) {
+  }
+  if (storeNameCount === 2) {
     console.log(names[storeNameIndex], '스토어명반환값');
     storeNameCount = 0;
     return names[storeNameIndex++];
   }
-}
+};
 
 const checkPath = (pathname, pathArray) => {
   for (let i = 0; i < pathArray.length; i += 1) {
@@ -139,30 +130,20 @@ const checkPath = (pathname, pathArray) => {
     }
   }
   return false;
-}
+};
 
 const checkMode = (history, pathArray, singlePathname, appsPathname, data) => {
   if (pathArray[1] === 'sm') {
     history.push({
-      pathname: singlePathname, state: data
+      pathname: singlePathname,
+      state: data,
     });
   } else {
     history.push({
-      pathname: appsPathname, state: data
-  });
-}
-}
-
-export {
-  lang,
-  intlObj,
-  sortBy,
-  imgUrl,
-  searchTree,
-  bannerImgUrl,
-  isExplorer,
-  isDesktop,
-  getStoreName,
-  checkPath,
-  checkMode,
+      pathname: appsPathname,
+      state: data,
+    });
+  }
 };
+
+export { lang, intlObj, sortBy, imgUrl, searchTree, bannerImgUrl, isExplorer, isDesktop, getStoreName, checkPath, checkMode };

@@ -15,7 +15,10 @@ class MultiSelectListTest extends Component {
   };
 
   render() {
-    const selectedItems = [{ key: 'Site', value: '3', text: 'Seoul' }, { key: 'key2', value: 'F3', text: 'F3' }];
+    const selectedItems = [
+      { key: 'Site', value: '3', text: 'Seoul' },
+      { key: 'key2', value: 'F3', text: 'F3' },
+    ];
 
     return (
       <div>

@@ -49,13 +49,15 @@ class SetStatus extends Component {
           {lang.get('APP_STATUS', approv)}
         </div>
       );
-    } else if (status === 'C') {
+    }
+    if (status === 'C') {
       return (
         <div className="progress" title={intlObj.get(messages.doComplete)}>
           {lang.get('APP_STATUS', approv)}
         </div>
       );
-    } else if (status === 'R') {
+    }
+    if (status === 'R') {
       return (
         <div className="progress" title={intlObj.get(messages.doOppo)}>
           {lang.get('APP_STATUS', approv)}
@@ -151,9 +153,7 @@ class AppOpinion extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const {
-      opiList,
-    } = nextProps;
+    const { opiList } = nextProps;
 
     if (opiList.length === undefined) {
       return false;
@@ -180,7 +180,7 @@ class AppOpinion extends Component {
 
   opposeConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.checkOppo)}`, '', () => this.onOppose());
-  }
+  };
 
   onOppose() {
     if (this.state.selectedApp.length > 0) {
@@ -188,16 +188,11 @@ class AppOpinion extends Component {
         show: true,
       });
     } else {
-      message.warning(
-        <MessageContent>
-          {intlObj.get(messages.noList)}
-        </MessageContent>,
-        3,
-      );
+      message.warning(<MessageContent>{intlObj.get(messages.noList)}</MessageContent>, 3);
     }
   }
 
-  onChecked = (sta) => {
+  onChecked = sta => {
     if (sta.target.checked === true) {
       sta.target.value.check = 'true';
       this.onRowsSelected(sta.target.value);
@@ -207,20 +202,13 @@ class AppOpinion extends Component {
       this.onRowsDeselected(sta.target.value);
       this.setState({ reload: false });
     }
-  }
-
-  onRowsSelected = (rows) => {
-    this.state.selectedApp.push([rows.APV_REQ_ID,
-    rows.APP_NAME_KOR,
-    rows.NAME_KOR,
-    rows.VER,
-    rows.SVC_REQ_DT,
-    rows.EMP_NO,
-    rows.APP_ID,
-    ]);
   };
 
-  onRowsDeselected = (rows) => {
+  onRowsSelected = rows => {
+    this.state.selectedApp.push([rows.APV_REQ_ID, rows.APP_NAME_KOR, rows.NAME_KOR, rows.VER, rows.SVC_REQ_DT, rows.EMP_NO, rows.APP_ID]);
+  };
+
+  onRowsDeselected = rows => {
     const idx = this.state.selectedApp.findIndex(s => s[0] === rows.APV_REQ_ID);
     this.state.selectedApp.splice(idx, 1);
   };
@@ -228,39 +216,34 @@ class AppOpinion extends Component {
   onChangeViewType(type) {
     this.setState({ sortType: type });
 
-    this.props.getSearchOpinionData(
-      type,
-      this.state.dateType,
-      this.state.oneDate,
-      this.state.searchKeyword,
-    );
+    this.props.getSearchOpinionData(type, this.state.dateType, this.state.oneDate, this.state.searchKeyword);
   }
 
-  onOneChange = (date) => {
+  onOneChange = date => {
     const dateForm = this.timeToDate(date);
     this.setState({
       oneDate: dateForm,
     });
-  }
+  };
 
-  onChangeSearch = (e) => {
+  onChangeSearch = e => {
     this.setState({ searchKeyword: e.target.value });
-  }
+  };
 
-  onChangeSearchType = (type) => {
+  onChangeSearchType = type => {
     this.setState({ dateType: type });
-  }
+  };
 
   applyConfirm = () => {
     feed.showConfirm(`${intlObj.get(messages.checkApply)}`, '', () => this.onAccept());
-  }
+  };
 
   onAccept() {
     const id = [];
     const ver = [];
     const date = [];
     const appID = [];
-    let chageDate = [];
+    const chageDate = [];
 
     this.state.selectedApp.map(list => id.push(list[0]));
     this.state.selectedApp.map(list => ver.push(list[3]));
@@ -273,7 +256,7 @@ class AppOpinion extends Component {
         const month = date[i].substring(4, 6);
         const day = date[i].substring(6, 8);
 
-        const chDate = year + '.' + month + '.' + day;
+        const chDate = `${year}.${month}.${day}`;
 
         chageDate.push(chDate);
       } else {
@@ -291,77 +274,57 @@ class AppOpinion extends Component {
     this.props.getOpinionData(this.state.sortType, pageNum);
   }
 
-  setApps = (val) => {
+  setApps = val => {
     const value = val.dependentValues;
 
     return (
       <div className="apps">
-        <Link
-          to={{ pathname: '/store/appMain/AppOpinion/ExaminePage', state: { status: value, oppoList: this.props.oppoList } }}
-          title={val.value}
-        >
+        <Link to={{ pathname: '/store/appMain/AppOpinion/ExaminePage', state: { status: value, oppoList: this.props.oppoList } }} title={val.value}>
           {val.value}
         </Link>
       </div>
     );
-  }
+  };
 
-  setDate = (val) => {
+  setDate = val => {
     if (val.value !== '') {
       const timestamp = val.value;
       const year = timestamp.substring(0, 4);
       const month = timestamp.substring(4, 6);
       const day = timestamp.substring(6, 8);
 
-      const changeDate = year + '.' + month + '.' + day;
+      const changeDate = `${year}.${month}.${day}`;
 
-      return (
-        <div className="accept">
-          {changeDate}
-        </div>
-      );
+      return <div className="accept">{changeDate}</div>;
     }
-    return (
-      <div className="accept">
-        {intlObj.get(messages.nowAccept)}
-      </div>
-    );
-  }
+    return <div className="accept">{intlObj.get(messages.nowAccept)}</div>;
+  };
 
-  SetName = (val) => {
+  SetName = val => {
     const empNo = val.dependentValues.EMP_NO;
     return (
       <div title={empNo}>
         <div className="contents">
-          {val.value}<br />
-          <div className="ellipsis">
-            ({empNo})
-          </div>
+          {val.value}
+          <br />
+          <div className="ellipsis">({empNo})</div>
         </div>
       </div>
     );
   };
 
-  SetCheckbox = (val) => {
+  SetCheckbox = val => {
     const check = val.dependentValues.APV_STATUS_CD;
     if (check === 'P') {
       return (
         <div>
           <div className="contents">
-            <Checkbox
-              onChange={this.onChecked}
-              value={val.dependentValues}
-              checked={val.dependentValues.check ? true : false}
-            />
+            <Checkbox onChange={this.onChecked} value={val.dependentValues} checked={!!val.dependentValues.check} />
           </div>
         </div>
       );
-    } else {
-      return (
-        <div className="contents">
-        </div>
-      );
     }
+    return <div className="contents"></div>;
   };
 
   unOppose(stat) {
@@ -374,22 +337,17 @@ class AppOpinion extends Component {
     }
   }
 
-  timeToDate = (val) => {
+  timeToDate = val => {
     const timestamp = new Date(val).getTime();
-    const todate = ('00'.concat(new Date(timestamp).getDate())).slice(-2);
-    const tomonth = ('00'.concat(new Date(timestamp).getMonth() + 1)).slice(-2);
+    const todate = '00'.concat(new Date(timestamp).getDate()).slice(-2);
+    const tomonth = '00'.concat(new Date(timestamp).getMonth() + 1).slice(-2);
     const toyear = new Date(timestamp).getFullYear();
     const originalDate = `${toyear}${tomonth}${todate}`;
     return originalDate;
-  }
+  };
 
   searchApp() {
-    this.props.getSearchOpinionData(
-      this.state.sortType,
-      this.state.dateType,
-      this.state.oneDate,
-      this.state.searchKeyword,
-    );
+    this.props.getSearchOpinionData(this.state.sortType, this.state.dateType, this.state.oneDate, this.state.searchKeyword);
   }
 
   render() {
@@ -410,7 +368,7 @@ class AppOpinion extends Component {
       </div>
     );
 
-    const rowGetter = (i) => {
+    const rowGetter = i => {
       if (list.size === undefined) {
         if (i === pageNum - 1) {
           this.paging();
@@ -419,19 +377,16 @@ class AppOpinion extends Component {
       }
     };
 
-    const onRowsSelected = (rows) => {
+    const onRowsSelected = rows => {
       this.setState({
         selectedIndexes: this.state.selectedIndexes.concat(rows.map(r => r.rowIdx)),
       });
       for (let i = 0; i < rows.length; i += 1) {
-        this.state.selectedApp.push([
-          rows[i].row.APV_REQ_ID,
-          rows[i].row.APP_NAME_KOR,
-          rows[i].row.NAME_KOR]);
+        this.state.selectedApp.push([rows[i].row.APV_REQ_ID, rows[i].row.APP_NAME_KOR, rows[i].row.NAME_KOR]);
       }
     };
 
-    const onRowsDeselected = (rows) => {
+    const onRowsDeselected = rows => {
       const rowIndexes = rows.map(r => r.rowIdx);
       const empNoArr = rows.map(r => r.row.APV_REQ_ID);
       this.setState({
@@ -446,9 +401,10 @@ class AppOpinion extends Component {
     const handleGridSort = (sortColumn, sortDirection) => {
       const comparer = (a, b) => {
         if (sortDirection === 'ASC') {
-          return (a[sortColumn] > b[sortColumn]) ? 1 : -1;
-        } else if (sortDirection === 'DESC') {
-          return (a[sortColumn] < b[sortColumn]) ? 1 : -1;
+          return a[sortColumn] > b[sortColumn] ? 1 : -1;
+        }
+        if (sortDirection === 'DESC') {
+          return a[sortColumn] < b[sortColumn] ? 1 : -1;
         }
       };
 
@@ -468,14 +424,10 @@ class AppOpinion extends Component {
       },
     };
 
-    const RenderComboBox = (test) => {
+    const RenderComboBox = test => {
       if (test.length > 0) {
         return (
-          <Select
-            defaultValue=""
-            style={{ width: 120 }}
-            onChange={this.onChangeViewType}
-          >
+          <Select defaultValue="" style={{ width: 120 }} onChange={this.onChangeViewType}>
             <Option value="">{intlObj.get(messages.all)}</Option>
             {test.map(i => (
               <Option value={i.CODE_CD}>{lang.get('NAME', i)}</Option>
@@ -502,14 +454,9 @@ class AppOpinion extends Component {
               <Option value="C">{intlObj.get(messages.doComplete)}</Option>
             </Select> */}
 
-
             {/* 오른쪽 */}
             <div style={{ float: 'right' }}>
-              <Select
-                defaultValue={intlObj.get(messages.selecDate)}
-                style={{ width: 130 }}
-                onChange={this.onChangeSearchType}
-              >
+              <Select defaultValue={intlObj.get(messages.selecDate)} style={{ width: 130 }} onChange={this.onChangeSearchType}>
                 <Option value="">{intlObj.get(messages.selecDate)}</Option>
                 <Option value="S">{intlObj.get(messages.doService)}</Option>
                 <Option value="O">{intlObj.get(messages.doOpinion)}</Option>
@@ -519,7 +466,7 @@ class AppOpinion extends Component {
                 //   value={this.state.oneDate}
                 onChange={this.onOneChange}
                 placeholder="날짜 선택"
-                showToday={true}
+                showToday
                 style={{ width: 120, margin: ' 0 5px' }}
               />
               <div className="searchWrapper">
@@ -528,29 +475,20 @@ class AppOpinion extends Component {
                   // title={intlObj.get(messages.search)}
                   maxLength="100"
                   onChange={this.onChangeSearch}
-                  onKeyPress={(e) => {
+                  onKeyPress={e => {
                     if (e.key === 'Enter') {
-                      this.props.getSearchOpinionData(
-                        this.state.sortType,
-                        this.state.dateType,
-                        this.state.oneDate,
-                        this.state.searchKeyword,
-                      );
+                      this.props.getSearchOpinionData(this.state.sortType, this.state.dateType, this.state.oneDate, this.state.searchKeyword);
                     }
                   }}
                 />
-                <button
-                  title={intlObj.get(messages.search)}
-                  className="searchBtn"
-                  onClick={this.searchApp}
-                />
+                <button title={intlObj.get(messages.search)} className="searchBtn" onClick={this.searchApp} />
               </div>
             </div>
           </div>
           <StyleDataGrid>
-            {this.props.opiList.size === undefined ?
+            {this.props.opiList.size === undefined ? (
               <ReactDataGrid
-                ref={node => this.grid = node}
+                ref={node => (this.grid = node)}
                 rowKey="APP_ID"
                 columns={this.columns}
                 rowGetter={rowGetter}
@@ -567,12 +505,12 @@ class AppOpinion extends Component {
                   },
                 }}
               />
-              :
+            ) : (
               false
-            }
+            )}
           </StyleDataGrid>
           <div className="buttonWrapper">
-            <BtnLgtGray style={{ marginRight: 10 }} onClick={this.opposeConfirm} >
+            <BtnLgtGray style={{ marginRight: 10 }} onClick={this.opposeConfirm}>
               {intlObj.get(messages.doOppo)}
             </BtnLgtGray>
             <BtnDkGray onClick={this.applyConfirm} color="primary">
@@ -591,11 +529,7 @@ class AppOpinion extends Component {
             ariaHideApp={false}
             portalClassName="CommonModal"
           >
-            <OpposeModal
-              selectedApp={this.state.selectedApp}
-              closeModal={this.unOppose}
-              radioList={this.props.oppoList}
-            />
+            <OpposeModal selectedApp={this.state.selectedApp} closeModal={this.unOppose} radioList={this.props.oppoList} />
           </Modal>
         </StyleApp>
         <Footer />
@@ -604,14 +538,12 @@ class AppOpinion extends Component {
   }
 }
 
-AppOpinion.propTypes = {
-};
+AppOpinion.propTypes = {};
 
 export function mapDispatchToProps(dispatch) {
   return {
     getOpinionData: (sort, pageNum) => dispatch(actions.getOpinionData(sort, pageNum)),
-    getSearchOpinionData: (sortType, dateType, date, keyword) =>
-      dispatch(actions.getSearchOpinionData(sortType, dateType, date, keyword)),
+    getSearchOpinionData: (sortType, dateType, date, keyword) => dispatch(actions.getSearchOpinionData(sortType, dateType, date, keyword)),
     acceptApps: (id, appID, ver, date) => dispatch(actions.acceptApps(id, appID, ver, date)),
     getOppoList: () => dispatch(actions.getOppoList()),
     getComboList: () => dispatch(actions.getComboList()),
@@ -629,8 +561,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'opinionList', reducer });
 const withSaga = injectSaga({ key: 'opinionList', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppOpinion);
+export default compose(withReducer, withSaga, withConnect)(AppOpinion);

@@ -14,17 +14,7 @@ export const getChangeDutyTreeData = DUTY_ID => ({
   DUTY_ID,
 });
 
-export const insertDuty = (
-  DUTY_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const insertDuty = (DUTY_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.INSERT_DUTY,
   payload: {
     DUTY_CD,
@@ -39,18 +29,7 @@ export const insertDuty = (
   },
 });
 
-export const updateDuty = (
-  DUTY_ID,
-  DUTY_CD,
-  PRNT_ID,
-  NAME_KOR,
-  NAME_ENG,
-  NAME_CHN,
-  NAME_JPN,
-  NAME_ETC,
-  COMP_CD,
-  selectedDept,
-) => ({
+export const updateDuty = (DUTY_ID, DUTY_CD, PRNT_ID, NAME_KOR, NAME_ENG, NAME_CHN, NAME_JPN, NAME_ETC, COMP_CD, selectedDept) => ({
   type: constants.UPDATE_DUTY,
   payload: {
     DUTY_ID,

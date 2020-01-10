@@ -10,15 +10,9 @@ class ReactDataGridCustom extends Component {
   }
 
   render() {
-    const {
-      test,
-    } = this.state;
+    const { test } = this.state;
     console.log(test);
-    return (
-      <ReactDataGrid
-        {...this.props}
-      />
-    );
+    return <ReactDataGrid {...this.props} />;
   }
 }
 

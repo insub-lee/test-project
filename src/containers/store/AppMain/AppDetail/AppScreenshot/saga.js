@@ -36,7 +36,9 @@ export function* registApp(payload) {
   const param = { appId: String(APP_ID) };
 
   const response = yield call(Axios.post, '/api/bizstore/v1/mypage/registApp', {
-    APP_ID: REF_APP_ID, PRNT_ID: -1, langGubun: lang.getLocale(),
+    APP_ID: REF_APP_ID,
+    PRNT_ID: -1,
+    langGubun: lang.getLocale(),
   });
   const { code } = response;
 

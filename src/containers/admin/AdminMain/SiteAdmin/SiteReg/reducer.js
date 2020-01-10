@@ -33,8 +33,7 @@ const SiteRegReducer = (state = initialState, action) => {
       return state.set('defaultList', action.payload);
     // .set('mySkin', action.resultValue.settingList[0]);
     case constants.SET_LANG:
-      return state.set('langcheck', action.resultValue.lang)
-        .set('myLang', action.resultValue.settingList[0]);
+      return state.set('langcheck', action.resultValue.lang).set('myLang', action.resultValue.settingList[0]);
     default:
       return state;
   }

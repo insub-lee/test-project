@@ -2,7 +2,6 @@ import styled from 'styled-components';
 import SelectArrow from '../../images/common/icon-select-arrow-down.png';
 
 const AntSelect = ComponentName => styled(ComponentName)`
-
   &.ant-select {
     box-sizing: border-box;
     display: inline-block;
@@ -14,7 +13,7 @@ const AntSelect = ComponentName => styled(ComponentName)`
       background-color: #fff;
       border-radius: 4px;
       border: 1px solid #c1c1c1;
-      font-size: .8125rem;
+      font-size: 0.8125rem;
       font-weight: 400;
 
       &.ant-select-selection--single {
@@ -32,7 +31,6 @@ const AntSelect = ComponentName => styled(ComponentName)`
       }
 
       .ant-select-arrow {
-
         &:before {
           content: '';
           width: 10px;
@@ -49,7 +47,8 @@ const AntSelect = ComponentName => styled(ComponentName)`
 
     &.ant-select-focused {
       .ant-select-selection {
-        &:focus, &:active {
+        &:focus,
+        &:active {
           border-color: #886ab5 !important;
           outline: 0;
         }
@@ -76,7 +75,6 @@ const AntSelect = ComponentName => styled(ComponentName)`
   }
 `;
 
-const AntSelectOption = ComponentName => styled(ComponentName)`
-`;
+const AntSelectOption = ComponentName => styled(ComponentName)``;
 
 export { AntSelect, AntSelectOption };

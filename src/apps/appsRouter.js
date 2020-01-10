@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
-import Draft from './WorkFlow/User/Draft';
+import Draft from './Workflow/User/Draft';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -93,7 +93,7 @@ class AppsRouter extends React.PureComponent {
         </WidgetsWrapper>
       );
     }
-    <div />;
+    return <div />;
   };
 
   render() {

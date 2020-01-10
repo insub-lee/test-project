@@ -12,7 +12,6 @@ import messages from '../messages';
 import * as constants from './constants';
 import { Axios } from '../../../../../utils/AxiosFunc';
 
-
 export function* getMyAppDetail(payload) {
   const params = { ...payload.payload, SITE_ID: -1 };
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/myappdetail/', params);
@@ -30,12 +29,7 @@ export function* serviceStop(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/serviceStop/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.serviceStopOk)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.serviceStopOk)}</MessageContent>, 3);
     history.push('/admin/adminmain/sysapp');
     // yield put({ type: constants.SERVICE_STOP_OK, payload: true });
   } else if (code === 201) {
@@ -53,12 +47,7 @@ export function* serviceRestart(payload) {
   const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/serviceRestart/', payload.payload);
   const { code } = response;
   if (code === 200) {
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.serviceRestartOk)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.serviceRestartOk)}</MessageContent>, 3);
     history.push('/admin/adminmain/sysapp');
   } else if (code === 201) {
     feed.error(`${intlObj.get(messages.serviceRestartOverlap)}`);

@@ -10,18 +10,18 @@ export default class News extends PureComponent {
       {
         key: 'MUAL_NAME',
         name: 'MUAL_NAME',
-        formatter: this.Formatter,
+        formatter: this.formatter,
       },
     ];
   }
 
-  Formatter = val => (
+  formatter = ({ row }) => (
     <div>
-      <a onClick={() => this.props.handleClick(val.row.MUAL_IDX)} title={val.row.MUAL_NAME} target="_blank" className="titleText ellipsis">
-        [{val.row.REGDATE}]&nbsp;{val.row.MUAL_NAME}
+      <a onClick={() => this.props.handleClick(row.MUAL_IDX)} title={row.MUAL_NAME} target="_blank" className="titleText ellipsis">
+        [{row.REGDATE}]&nbsp;{row.MUAL_NAME}
       </a>
       <div className="empInfo">
-        <span className="subInfo"></span>
+        <span className="subInfo" />
       </div>
     </div>
   );
@@ -31,29 +31,29 @@ export default class News extends PureComponent {
     const wgHeight = Number(this.props.widgetSize.split('X')[1]);
     const wgTitleHeight = 35;
     const rowHeight = 35;
-    const item = dataList;
 
-    if (item.length === 0) {
-      return (
-        <div className="emptyDataView">
-          <p>
-            <img src={noDataImg}></img>
-            <br />
-            등록된 게시물이 없습니다.
-          </p>
-        </div>
-      );
-    }
     return (
-      <ReactDataGrid
-        columns={this.columns}
-        rowGetter={i => item[i]}
-        rowsCount={item.length}
-        rowHeight={rowHeight}
-        scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
-        minHeight={rowHeight * item.length} // 위젯 row 전체 높이
-        headerRowHeight={-1}
-      />
+      <>
+        {dataList.length > 0 ? (
+          <ReactDataGrid
+            columns={this.columns}
+            rowGetter={i => dataList[i]}
+            rowsCount={dataList.length}
+            rowHeight={rowHeight}
+            scrollHeight={wgHeight * 220 - wgTitleHeight} // 슬림스크롤 높이
+            minHeight={rowHeight * dataList.length} // 위젯 row 전체 높이
+            headerRowHeight={-1}
+          />
+        ) : (
+          <div className="emptyDataView">
+            <p>
+              <img src={noDataImg} alt="no data image" />
+              <br />
+              등록된 게시물이 없습니다.
+            </p>
+          </div>
+        )}
+      </>
     );
   }
 }

@@ -41,9 +41,8 @@ const makeSelectWorkFlow = () =>
 const makeSelectWorkFlowConfig = () =>
   createSelector(
     selectWorkBuilderDetailPage,
-    (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : -1),
-    (state, widgetId) => {
-      const config = state.getIn(['builderList', widgetId, 'workFlow', 'CONFIG']);
+    state => {
+      const config = state.getIn(['workFlow', 'CONFIG']);
       return config ? JSON.parse(config) : { info: {} };
     },
   );
@@ -76,7 +75,6 @@ const makeSelectWorkSeqByWidgetId = widgetId =>
     selectWorkBuilderDetailPage,
     state => (state.getIn(['builderList', widgetId, 'workSeq']) !== undefined ? state.getIn(['builderList', widgetId, 'workSeq']) : -1),
   );
-
 const makeSelectTaskSeq = () =>
   createSelector(
     selectWorkBuilderDetailPage,
@@ -89,7 +87,6 @@ const makeSelectTaskSeqByWidgetId = widgetId =>
     selectWorkBuilderDetailPage,
     state => (state.getIn(['builderList', widgetId, 'taskSeq']) !== undefined ? state.getIn(['builderList', widgetId, 'taskSeq']) : -1),
   );
-
 const makeSelectResultFormStuffs = () =>
   createSelector(
     selectWorkBuilderDetailPage,
@@ -102,8 +99,7 @@ const makeSelectSignLineInfo = () =>
   createSelector(
     selectWorkBuilderDetailPage,
     (state, props) => (props && props.item && props.item.WIDGET_ID ? props.item.WIDGET_ID : -1),
-    (state, widgetId) =>
-      state.getIn(['builderList', widgetId, 'signLineInfo']) !== undefined ? state.getIn(['builderList', widgetId, 'signLineInfo']).toJS() : [],
+    (state, widgetId) => (state.getIn(['builderList', widgetId, 'signLineInfo']) !== undefined ? state.getIn(['builderList', widgetId, 'signLineInfo']) : []),
   );
 
 const makeSelectIsLoading = () =>

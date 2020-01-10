@@ -99,16 +99,16 @@ const StyledSearch = styled.div`
             .ant-form-item-control {
             }
           }
-          .btn-wrap {
-            width: 100%;
-            text-align: center;
-            margin-top: 20px;
-          }
         }
         label {
           font-size: 12px;
         }
       }
+    }
+    .btn-wrap {
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
     }
     /* search form 끝 */
     .ant-table-wrapper {
@@ -138,7 +138,7 @@ const StyledSearch = styled.div`
         .tfWrapper {
           min-height: 450px;
           &.treeWrapper {
-            width: 15%;
+            width: 20%;
             float: left;
             padding: 10px 15px;
             height: 100%;
@@ -146,7 +146,7 @@ const StyledSearch = styled.div`
           }
           &.formWrapper {
             float: right;
-            width: 85%;
+            width: 80%;
           }
         }
       }

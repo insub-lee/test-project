@@ -9,7 +9,7 @@ class test extends React.Component {
     console.log(propsAPI);
   }
 
-  isValid = (data) => {
+  isValid = data => {
     console.log('isValid data : ', data);
     const { nodes, edges } = data;
     /*
@@ -19,14 +19,14 @@ class test extends React.Component {
     /*
       2) nodes에 step 선택 여부 체크
     */
-    const idx = _.findIndex(nodes, n => !(n.step));
+    const idx = _.findIndex(nodes, n => !n.step);
     console.log('idx : ', idx);
     if (idx > -1) return false;
-    
-    return true;
-  }
 
-  convertData = (data) => {
+    return true;
+  };
+
+  convertData = data => {
     const { nodes, edges } = data;
     const result = _.map(nodes, _.partialRight(_.pick, ['id']));
     console.log('result : ', result);
@@ -39,7 +39,7 @@ class test extends React.Component {
       // }
 
       if (e.process === 'approval') {
-        // 승인 일 때, target 인 데이터에 parentId = source 
+        // 승인 일 때, target 인 데이터에 parentId = source
         const idx = _.findIndex(result, r => r.id === e.target);
         result[idx].parentId = e.source;
       }
@@ -50,7 +50,7 @@ class test extends React.Component {
       }
     });
     return result;
-  }
+  };
 
   onClickEvent = () => {
     const { propsAPI } = this.props;
@@ -67,29 +67,33 @@ class test extends React.Component {
       const result = {
         tree: obj,
         originData: data,
-      }
+      };
       console.log('onClickEvent result : ', result);
       this.props.onSubmit(result);
     }
-  }
+  };
 
   read = () => {
     const { propsAPI } = this.props;
     const { data } = this.state;
     console.log('data : ', data);
     propsAPI.read(data);
-  }
+  };
 
-  render () {
-      return (
-          <div>
-            <button onClick={this.onClickEvent}>click</button>
-            <button onClick={this.read}>read</button>
-            <button onClick={() => { this.setState({ data: undefined }); }} >
-              clear
-            </button>
-          </div>
-      )
+  render() {
+    return (
+      <div>
+        <button onClick={this.onClickEvent}>click</button>
+        <button onClick={this.read}>read</button>
+        <button
+          onClick={() => {
+            this.setState({ data: undefined });
+          }}
+        >
+          clear
+        </button>
+      </div>
+    );
   }
 }
 

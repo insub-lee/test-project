@@ -19,60 +19,48 @@ import messages from './messages';
 import StyledTabList from '../TabList/StyledTabList';
 
 class AppCategory extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.handleInitCategoryData();
   }
+
   render() {
     const {
       // data
       categoryData,
       selectedIndex,
-
       preUrl,
       showTabs,
-
       handleOnClick,
       updateTreeData,
       resetSearchword,
       currentView,
     } = this.props;
-    const isBizManage = preUrl.indexOf('bizManage') > -1;
-    const isbizMenuReg = preUrl.indexOf('bizMenuReg') > -1;
+    const isBizManage = preUrl.includes('bizManage');
+    const isbizMenuReg = preUrl.includes('bizMenuReg');
 
     return (
       <StyledTabList className="treeWrapper">
-        {showTabs && (currentView !== 'Mobile' && currentView !== 'Tablet') ? (
-          <Tabs
-            onSelect={() => { }}
-            selectedIndex={0}
-          >
+        {showTabs && currentView !== 'Mobile' && currentView !== 'Tablet' && (
+          <Tabs onSelect={() => {}} selectedIndex={0}>
             <TabList>
               <Tab>
                 <Link to={`${preUrl}/app/list`} onClick={resetSearchword}>
                   <FormattedMessage {...messages.category} />
                 </Link>
               </Tab>
-              {
-                !isBizManage && !isbizMenuReg ? (
-                  <Tab>
-                    <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
-                      <FormattedMessage {...messages.bizGroup} />
-                    </Link>
-                  </Tab>
-                ) : ''
-              }
+              {!isBizManage && !isbizMenuReg && (
+                <Tab>
+                  <Link to={`${preUrl}/biz/list`} onClick={resetSearchword}>
+                    <FormattedMessage {...messages.bizGroup} />
+                  </Link>
+                </Tab>
+              )}
             </TabList>
             <TabPanel />
-            <TabPanel />
+            {!isBizManage && !isbizMenuReg && <TabPanel />}
           </Tabs>
-        ) : ''}
-        <Tree
-          type="app"
-          treeData={categoryData}
-          handleOnClick={handleOnClick}
-          selectedIndex={selectedIndex}
-          updateTreeData={updateTreeData}
-        />
+        )}
+        <Tree type="app" treeData={categoryData} handleOnClick={handleOnClick} selectedIndex={selectedIndex} updateTreeData={updateTreeData} />
       </StyledTabList>
     );
   }
@@ -85,14 +73,15 @@ AppCategory.propTypes = {
   handleOnClick: PropTypes.func.isRequired,
   handleInitCategoryData: PropTypes.func.isRequired,
   updateTreeData: PropTypes.func.isRequired,
+  preUrl: PropTypes.string,
 };
 
 AppCategory.defaultProps = {
   categoryData: [],
   showTabs: true,
   selectedIndex: -1,
+  preUrl: '',
 };
-
 
 export function mapDispatchToProps(dispatch) {
   return {
@@ -114,8 +103,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'admin/components/AppCategory', reducer });
 const withSaga = injectSaga({ key: 'admin/components/AppCategory', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppCategory));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AppCategory));

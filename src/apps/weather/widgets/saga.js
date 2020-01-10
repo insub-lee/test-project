@@ -1,12 +1,12 @@
-import React from 'react'
+import React from 'react';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 import * as actionType from './constants';
 import * as constantsCommon from '../../../containers/common/constants';
 import { Axios } from '../../../utils/AxiosFunc';
 import * as feed from '../../../components/Feedback/functions';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 
 export function* deleteWeather(payload) {
   const { item, widgetId, pageId } = payload;

@@ -62,16 +62,12 @@ export const registBizModal = (APP_ID, CATG_ID, history) => ({
   history,
 });
 
-export const changeSearchword = searchword => (
-  {
-    type: constants.CHANGE_SEARCHWORD,
-    searchword,
-  }
-);
+export const changeSearchword = searchword => ({
+  type: constants.CHANGE_SEARCHWORD,
+  searchword,
+});
 
-export const appBizGubun = gubun => (
-  {
-    type: appConstants.APP_BIZ_GUBUN,
-    gubun,
-  }
-);
+export const appBizGubun = gubun => ({
+  type: appConstants.APP_BIZ_GUBUN,
+  gubun,
+});

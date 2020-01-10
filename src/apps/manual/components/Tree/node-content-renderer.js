@@ -8,6 +8,57 @@ function isDescendant(older, younger) {
 
 // eslint-disable-next-line react/prefer-stateless-function
 class CustomThemeNodeContentRenderer extends Component {
+  // renderButton = () => {
+  //   console.debug('@@ Rendergin Button.....');
+  //   const { toggleChildrenVisibility, node, path, treeIndex, scaffoldBlockPxWidth, isDragging } = this.props;
+  //   if (toggleChildrenVisibility) {
+  //     // if (node.NODE_TYPE === 'F' || node.children && (node.children.length > 0 || typeof node.children === 'function')) {
+  //     if ((node.children !== undefined && node.children != null && node.children.length > 0) || typeof node.children === 'function') {
+  //       return (
+  //         <div>
+  //           <button
+  //             // 추가버튼명 ordinary (임시) / 가장 하위 목록일 시 버튼
+  //             // rst__lineHalfHorizontalRight 전부 안보이도록
+  //             // Marketing / Quality 는 위에 검은선 안보이는데 전사는 위에 검은선이 보임
+  //             // 클릭 시 글자와 버튼 모두 같이 색상 변경
+  //             type="button"
+  //             aria-label={node.expanded ? 'Collapse' : 'Expand'}
+  //             className={node.expanded ? `${styles.collapseButton} rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
+  //             style={{ left: -0.5 * scaffoldBlockPxWidth }}
+  //             onClick={() =>
+  //               toggleChildrenVisibility({
+  //                 node,
+  //                 path,
+  //                 treeIndex,
+  //               })
+  //             }
+  //           />
+  //
+  //           {node.expanded && !isDragging && (
+  //             <div
+  //               style={{ width: scaffoldBlockPxWidth }}
+  //               // className={styles.lineChildren}
+  //             />
+  //           )}
+  //         </div>
+  //       );
+  //     } else {
+  //       return (
+  //         <div>
+  //           <button
+  //             type="button"
+  //             aria-label="ordinary"
+  //             // className={styles.ordinaryButton}
+  //             className={`${styles.ordinaryButton} ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
+  //             style={{ left: -0.5 * scaffoldBlockPxWidth }}
+  //           />
+  //         </div>
+  //       );
+  //     }
+  //   }
+  //   return null;
+  // };
+
   render() {
     const {
       scaffoldBlockPxWidth,
@@ -48,21 +99,18 @@ class CustomThemeNodeContentRenderer extends Component {
 
     const nodeContent = connectDragPreview(
       <div
-        className={
-          styles.row +
-          (isLandingPadActive ? ` ${styles.rowLandingPad}` : '') +
-          (isLandingPadActive && !canDrop ? ` ${styles.rowCancelPad}` : '') +
-          (isSearchMatch ? ` ${styles.rowSearchMatch}` : '') +
-          (isSearchFocus ? ` ${styles.rowSearchFocus}` : '') +
-          (className ? ` ${className}` : '')
-        }
+        className={`${styles.row} rstcustom__row ${isLandingPadActive ? ` ${styles.rowLandingPad} rstcustom__rowLandingPad` : ''} ${
+          isLandingPadActive && !canDrop ? ` ${styles.rowCancelPad} rstcustom__rowCancelPad` : ''
+        } ${isSearchMatch ? ` ${styles.rowSearchMatch} rstcustom__rowSearchMatch` : ''} ${
+          isSearchFocus ? ` ${styles.rowSearchFocus} rstcustom__rowSearchFocus` : ''
+        } ${className ? ` ${className}` : ''}`}
         style={{
           opacity: isDraggedDescendant ? 0.5 : 1,
           ...style,
         }}
       >
-        <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled}` : '')}>
-          <div className={styles.rowLabel}>
+        <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled} rstcustom__rowContentsDragDisabled` : '')}>
+          <div className={`${styles.rowLabel} rstcustom__rowLabel`}>
             <span className={styles.rowTitle + (node.subtitle ? ` ${styles.rowTitleWithSubtitle} rstcustom__rowTitle` : ' rstcustom__rowTitle')}>
               {typeof nodeTitle === 'function'
                 ? nodeTitle({
@@ -74,7 +122,7 @@ class CustomThemeNodeContentRenderer extends Component {
             </span>
 
             {nodeSubtitle && (
-              <span className={styles.rowSubtitle}>
+              <span className={`${styles.rowSubtitle} rstcustom__rowSubtitle`}>
                 {typeof nodeSubtitle === 'function'
                   ? nodeSubtitle({
                     node,
@@ -86,7 +134,7 @@ class CustomThemeNodeContentRenderer extends Component {
             )}
           </div>
 
-          <div className={styles.rowToolbar}>
+          <div className={`${styles.rowToolbar} rstcustom__rowToolbar`}>
             {buttons.map((btn, index) => (
               <div
                 key={index} // eslint-disable-line react/no-array-index-key
@@ -99,8 +147,9 @@ class CustomThemeNodeContentRenderer extends Component {
         </div>
       </div>,
     );
-
+    //
     const renderButton = () => {
+      console.debug('@@ Rendergin Button.....');
       let jsx = '';
       if (toggleChildrenVisibility) {
         // if (node.NODE_TYPE === 'F' || node.children && (node.children.length > 0 || typeof node.children === 'function')) {
@@ -140,7 +189,7 @@ class CustomThemeNodeContentRenderer extends Component {
                 type="button"
                 aria-label="ordinary"
                 // className={styles.ordinaryButton}
-                className={`${styles.ordinaryButton} ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
+                className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${node.selectedIndex === node.key ? 'active' : `${node.selectedIndex}/${node.key}`}`}
                 style={{ left: -0.5 * scaffoldBlockPxWidth }}
               />
             </div>

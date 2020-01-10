@@ -23,7 +23,15 @@ function* getWorkBuilderList() {
   yield put(actions.successGetList(list));
 }
 
+function* removeWorkBuilder({rowData}) {
+  const response = yield call(Axios.delete, `/api/builder/v1/work/main?WORK_SEQ=${rowData.WORK_SEQ}`);
+  const { list } = response;
+  console.debug(response);
+  yield put(actions.successGetList(list));
+}
+
 export default function* watcher() {
   yield takeLatest(actionTypes.GET_LIST, getWorkBuilderList);
   yield takeLatest(actionTypes.POST_WORK_BUILDER, postWorkBuilder);
+  yield takeLatest(actionTypes.REMOVE_WORK_BUILDER_SAGA, removeWorkBuilder)
 }

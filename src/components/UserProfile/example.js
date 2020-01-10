@@ -17,9 +17,7 @@ class UserProfile extends React.Component {
     };
   }
   handleClickToMoveToSite = (profile, type) => { //eslint-disable-line
-    const {
-      onExecOrg,
-    } = this.props;
+    const { onExecOrg } = this.props;
 
     switch (type) {
       case 'org':
@@ -38,7 +36,8 @@ class UserProfile extends React.Component {
         alert('준비중입니다.');
         return false;
     }
-  }
+  };
+
   render() {
     /* eslint-disable */  
     const {

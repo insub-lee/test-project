@@ -1,6 +1,6 @@
 import React, { Component, Children, cloneElement } from 'react';
 import PropTypes from 'prop-types';
-import styles from './tree-node-renderer.scss';
+import styles from './tree-node-renderer.module.scss';
 
 class FileThemeTreeNodeRenderer extends Component {
   render() {
@@ -36,9 +36,9 @@ class FileThemeTreeNodeRenderer extends Component {
             swapFrom,
             swapLength,
             swapDepth,
-          })
+          }),
         )}
-      </div>
+      </div>,
     );
   }
 }
@@ -72,9 +72,7 @@ FileThemeTreeNodeRenderer.propTypes = {
   // used in dndManager
   getPrevRow: PropTypes.func.isRequired,
   node: PropTypes.shape({}).isRequired,
-  path: PropTypes.arrayOf(
-    PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-  ).isRequired,
+  path: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])).isRequired,
 };
 
 export default FileThemeTreeNodeRenderer;

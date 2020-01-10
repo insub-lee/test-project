@@ -16,7 +16,6 @@ class AppDetail extends React.Component {
     this.state = {
       APP_ID: prop.match.params.APP_ID,
       CATG_ID: prop.match.params.CATG_ID,
-
     };
   }
 
@@ -44,38 +43,22 @@ class AppDetail extends React.Component {
       <div className="appDetailWrapper" style={{ display: 'flex', flexFlow: 'column', backgroundColor: '#f7f8f9' }}>
         <AppDetailStyle>
           <ErrorBoundary>
-            <AppCategory
-              handleOnClick={handleOnClick}
-              menuNum={menuNum}
-              selectedIndex={Number(this.state.CATG_ID)}
-              preUrl="/store/appMain/bizStore"
-            />
+            <AppCategory handleOnClick={handleOnClick} menuNum={menuNum} selectedIndex={Number(this.state.CATG_ID)} preUrl="/store/appMain/bizStore" />
           </ErrorBoundary>
           <ErrorBoundary>
-            <AppBasicInfo
-              targetUrl={window.location.href}
-              appId={this.state.APP_ID}
-            />
+            <AppBasicInfo targetUrl={window.location.href} appId={this.state.APP_ID} />
           </ErrorBoundary>
 
           <ErrorBoundary>
-            <AppScreenshot
-              appId={this.state.APP_ID}
-              gubun={1}
-            />
+            <AppScreenshot appId={this.state.APP_ID} gubun={1} />
           </ErrorBoundary>
 
           <ErrorBoundary>
-            <AppQna
-              appId={this.state.APP_ID}
-              gubun="a"
-            />
+            <AppQna appId={this.state.APP_ID} gubun="a" />
           </ErrorBoundary>
 
           <ErrorBoundary>
-            <AppRating
-              appId={this.state.APP_ID}
-            />
+            <AppRating appId={this.state.APP_ID} />
           </ErrorBoundary>
         </AppDetailStyle>
         <Footer />

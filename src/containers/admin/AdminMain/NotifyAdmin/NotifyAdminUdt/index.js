@@ -531,7 +531,7 @@ class NotifyAdminUdt extends React.Component {
       <div>
         <div className="authorityList">
           <NotifyManagerList
-            isDeptSelectbox={true}
+            isDeptSelectbox
             userList={this.state.userSetMembers}
             pstnList={this.state.pstnSetMembers}
             deptList={this.state.deptSetMembers}
@@ -542,7 +542,7 @@ class NotifyAdminUdt extends React.Component {
             returnPstnList={returnPstnList}
             returnGrpList={returnGrpList}
             returnDetpList={returnDetpList}
-            delFlag={true}
+            delFlag
             siteIdParam={this.state.siteParam}
           />
         </div>
@@ -570,14 +570,14 @@ class NotifyAdminUdt extends React.Component {
       <div>
         <Organization
           siteIdParam={this.state.SITE_ID}
-          isDeptSelectbox={true}
-          isTreeCheckbox={true}
+          isDeptSelectbox
+          isTreeCheckbox
           show={this.state.allOrgShow}
           closeModal={this.allOrgClose}
-          userTab={true}
-          pstnTab={true}
-          dutyTab={true}
-          grpTab={true}
+          userTab
+          pstnTab
+          dutyTab
+          grpTab
           getDataFromOrganization={getDataFromOrganizationAll}
           // 조직도로 가져갈 데이터
           selectedUsers={this.state.userSetMembers.slice()}
@@ -605,7 +605,7 @@ class NotifyAdminUdt extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d1"
                         /> */}
-                        <Input value={this.props.setNotifyMsg.SYSTEM} readOnly={true} id="n1" />
+                        <Input value={this.props.setNotifyMsg.SYSTEM} readOnly id="n1" />
                       </FormItem>
                     </td>
                   </tr>
@@ -621,7 +621,7 @@ class NotifyAdminUdt extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d2"
                         /> */}
-                        <Input value={lang.get('SITE_NAME', this.props.setNotifyMsg)} readOnly={true} id="n2" />
+                        <Input value={lang.get('SITE_NAME', this.props.setNotifyMsg)} readOnly id="n2" />
                       </FormItem>
                     </td>
                   </tr>
@@ -637,7 +637,7 @@ class NotifyAdminUdt extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d3"
                         /> */}
-                        <Input value={lang.get('APP_NAME', this.props.setNotifyMsg)} readOnly={true} id="n3" />
+                        <Input value={lang.get('APP_NAME', this.props.setNotifyMsg)} readOnly id="n3" />
                       </FormItem>
                     </td>
                   </tr>
@@ -655,7 +655,7 @@ class NotifyAdminUdt extends React.Component {
                             'This Month': [moment(), moment().endOf('month')],
                           }}
                           onChange={this.onPeriodChange}
-                          showToday={true}
+                          showToday
                           value={this.state.periodDates !== '' ? this.state.periodDates : null}
                           id="n4"
                         />
@@ -726,7 +726,7 @@ class NotifyAdminUdt extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="n7"
                         /> */}
-                        <Input value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`} readOnly={true} id="n7" />
+                        <Input value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`} readOnly id="n7" />
                       </FormItem>
                     </td>
                   </tr>
@@ -742,7 +742,7 @@ class NotifyAdminUdt extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d10"
                         /> */}
-                        <Input value={lang.get('USER_NAME', this.props.setNotifyMsg)} readOnly={true} id="n8" />
+                        <Input value={lang.get('USER_NAME', this.props.setNotifyMsg)} readOnly id="n8" />
                       </FormItem>
                     </td>
                   </tr>
@@ -801,7 +801,7 @@ class NotifyAdminUdt extends React.Component {
             </Form>
           </StyleNotifyAdminForm>
           <div className="buttonWrapper">
-            <React.Fragment>
+            <>
               <div style={{ float: 'left' }}>
                 <StyledButton className="btn-light" onClick={this.onClickToList}>
                   {intlObj.get(messages.toList)}
@@ -813,7 +813,7 @@ class NotifyAdminUdt extends React.Component {
               <StyledButton className="btn-primary" onClick={this.saveConfirm}>
                 저장
               </StyledButton>
-            </React.Fragment>
+            </>
           </div>
         </StyleNotifyAdminUdt>
       </div>
@@ -884,15 +884,8 @@ const mapStateToProps = createStructuredSelector({
   setNotifyReceiver: selectors.makeSelectNotifyReceiver(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'NotifyAdminUdt', saga });
 const withReducer = injectReducer({ key: 'NotifyAdminUdt', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(NotifyAdminUdt);
+export default compose(withReducer, withSaga, withConnect)(NotifyAdminUdt);

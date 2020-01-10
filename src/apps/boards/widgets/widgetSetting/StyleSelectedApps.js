@@ -6,7 +6,7 @@ const SelectedUser = styled.div`
   padding: 0 10px 0 9px;
   border: 2px solid #c1c1c1;
 
-  // 선택목록 
+  // 선택목록
   .SUTitle {
     position: relative;
     height: 33px;
@@ -39,7 +39,9 @@ const SelectedUser = styled.div`
         .react-grid-Viewport {
           .react-grid-Canvas {
             overflow: hidden;
-            &::-webkit-scrollbar { width: 0 !important }
+            &::-webkit-scrollbar {
+              width: 0 !important;
+            }
 
             .react-grid-Row {
               //column width 강제 조정
@@ -80,7 +82,7 @@ const SelectedUser = styled.div`
 
     .delApp {
       position: relative;
-      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+      @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
         /* IE10+ specific styles go here */
         padding-right: 10px;
       }
@@ -89,7 +91,6 @@ const SelectedUser = styled.div`
       background: url(${DeleteApp}) no-repeat 50% 50%;
     }
   }
-
 `;
 
 export default SelectedUser;

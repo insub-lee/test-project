@@ -1,16 +1,15 @@
 import * as constants from './constants';
 
-export const getAppSecList =
-  (PAGE, PAGE_CNT, SORT_COLUMN, SORT_DIRECTION, APP_ID, REQ_STATUS_CD, SEARCH_TEXT) => ({
-    type: constants.GET_APPSECLIST_SAGA,
-    PAGE,
-    PAGE_CNT,
-    SORT_COLUMN,
-    SORT_DIRECTION,
-    APP_ID,
-    REQ_STATUS_CD,
-    SEARCH_TEXT,
-  });
+export const getAppSecList = (PAGE, PAGE_CNT, SORT_COLUMN, SORT_DIRECTION, APP_ID, REQ_STATUS_CD, SEARCH_TEXT) => ({
+  type: constants.GET_APPSECLIST_SAGA,
+  PAGE,
+  PAGE_CNT,
+  SORT_COLUMN,
+  SORT_DIRECTION,
+  APP_ID,
+  REQ_STATUS_CD,
+  SEARCH_TEXT,
+});
 
 export const returnRequest = (REQ_ID_ARR, COMMENT, loadingSet) => ({
   type: constants.RETURN_REQUEST,

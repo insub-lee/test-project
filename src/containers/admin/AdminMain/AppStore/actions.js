@@ -2,11 +2,9 @@ import { fromJS } from 'immutable';
 
 import * as constants from './constants';
 
-export const getCategoryComboList = () => (
-  {
-    type: constants.GET_CATEGORY_COMBO_LIST,
-  }
-);
+export const getCategoryComboList = () => ({
+  type: constants.GET_CATEGORY_COMBO_LIST,
+});
 
 export const getCategoryData = siteId => ({
   type: constants.GET_CATEGORY_DATA,

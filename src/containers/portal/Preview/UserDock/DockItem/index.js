@@ -49,6 +49,7 @@ class DockItem extends Component {
       // isPressed: false,
     };
   }
+
   makeIconArr = () => {
     const { isMouseOver } = this.state;
 
@@ -57,7 +58,7 @@ class DockItem extends Component {
         isMouseOver: true,
       });
     }
-  }
+  };
 
   // DockItem에 마우스 아웃 시 독 추가/제거, 실행 닫기 버튼을 제거해 주는 함수
   deleteIconArr = () => {
@@ -66,17 +67,12 @@ class DockItem extends Component {
     if (isMouseOver) {
       this.setState({ isMouseOver: false });
     }
-  }
+  };
 
   // DockItem 실행 이벤트 리스너
   execDockItem = () => {
-    const {
-      dockItem,
-      dockSetMyMenuData,
-    } = this.props;
-    const {
-      execDockItem,
-    } = this.props;
+    const { dockItem, dockSetMyMenuData } = this.props;
+    const { execDockItem } = this.props;
 
     if (dockItem.TARGET === 'NEW') {
       window.open(dockItem.URL, dockItem.DOCK_ID, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
@@ -88,33 +84,24 @@ class DockItem extends Component {
         dockSetMyMenuData(dockItem.PAGE_ID, 'N');
       }
     }
-  }
+  };
 
   // **************** 모바일/태블릿에서 독아이템 길게 누르고 있을 경우 수행될 함수 ****************
   handleButtonPress = () => {
     this.props.setIsCloseToFalse();
     this.buttonPressTimer = setTimeout(() => { this.props.setIsCloseToTrue(this.props.dockItem.DOCK_ID); }, 750); //eslint-disable-line
-  }
+  };
 
   // 모바일/태블릿에서 독아이템 길게 누르고 있다가 뗀 경우 수행될 함수
   handleButtonRelease = () => {
     clearTimeout(this.buttonPressTimer);
-  }
+  };
   // **************** 모바일/태블릿에서 독아이템 길게 누르고 있을 경우 수행될 함수 끝 ****************
 
   render() {
-    const {
-      connectDragSource, connectDropTarget,
-    } = this.props;
-    const {
-      dockItem,
-      dockIconType,
-      view,
-      isClose,
-    } = this.props;
-    const {
-      exitDockItem, fixDockItem, unfixDockItem, dockItemHeight,
-    } = this.props;
+    const { connectDragSource, connectDropTarget } = this.props;
+    const { dockItem, dockIconType, view, isClose } = this.props;
+    const { exitDockItem, fixDockItem, unfixDockItem, dockItemHeight } = this.props;
     const {
       isMouseOver,
       // isPressed,
@@ -168,36 +155,38 @@ class DockItem extends Component {
           textAlign: 'center',
         }}
       >
-        {
-          dockItem.DOCK_YN === 'Y'
-            ?
-              <button
-                style={styleContextMenuContent}
-                onClick={() => { unfixDockItem(dockItem.DOCK_ID); }}
-              >
-                Dock 등록 해제
-              </button>
-            :
-              <button
-                style={styleContextMenuContent}
-                onClick={() => { fixDockItem(dockItem.DOCK_ID); }}
-              >
-                Dock 등록
-              </button>
-        }
+        {dockItem.DOCK_YN === 'Y' ? (
+          <button
+            style={styleContextMenuContent}
+            onClick={() => {
+              unfixDockItem(dockItem.DOCK_ID);
+            }}
+          >
+            Dock 등록 해제
+          </button>
+        ) : (
+          <button
+            style={styleContextMenuContent}
+            onClick={() => {
+              fixDockItem(dockItem.DOCK_ID);
+            }}
+          >
+            > Dock 등록
+          </button>
+        )}
         <br />
-        {
-          dockItem.EXEC_YN === 'Y'
-            ?
-              <button
-                style={styleContextMenuContent}
-                onClick={() => { exitDockItem(dockItem.DOCK_ID); }}
-              >
-                닫기
-              </button>
-            :
-              ''
-        }
+        {dockItem.EXEC_YN === 'Y' ? (
+          <button
+            style={styleContextMenuContent}
+            onClick={() => {
+              exitDockItem(dockItem.DOCK_ID);
+            }}
+          >
+            닫기
+          </button>
+        ) : (
+          ''
+        )}
       </div>
     );
 

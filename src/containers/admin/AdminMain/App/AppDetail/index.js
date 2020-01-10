@@ -19,6 +19,10 @@ import ModalDrag from 'components/ModalDrag';
 
 import { LinkBtnList, LinkBtnUpdate, BtnGray, BtnDkGray, BtnLgtGray } from 'containers/admin/components/uielements/buttons.style';
 import Modals from 'components/Modal/index';
+import ModalStyle from 'containers/admin/components/Modal/StyleModal';
+import WithDirection from 'config/withDirection';
+import Footer from 'containers/admin/App/Footer';
+import StyledButton from 'components/Button/StyledButton';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -27,16 +31,12 @@ import * as actions from './actions';
 import StyleMyAppDetail from './StyleMyAppDetail';
 // import StyleStatusTable from './StyleStatusTable';
 
-import ModalStyle from 'containers/admin/components/Modal/StyleModal';
-import WithDirection from 'config/withDirection';
 // import AppDetail from '../AppDetail';
 // import AppExaModal from '../AppExaModal';
 import messages from '../messages';
 import AppDetailForm from '../AppDetailForm';
 import AppDetailUserForm from '../AppDetailUserForm';
 import AppExaForm from '../AppExaForm';
-import Footer from 'containers/admin/App/Footer';
-import StyledButton from 'components/Button/StyledButton';
 
 const isoModal = ModalStyle(Modals);
 const Modal = WithDirection(isoModal);
@@ -388,17 +388,8 @@ const mapStateToProps = createStructuredSelector({
   // serviceStopOk: selectors.makeSelectServiceServiceStopOk(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/App/AppDetail', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/App/AppDetail', reducer });
 
-export default injectIntl(
-  compose(
-    withReducer,
-    withSaga,
-    withConnect,
-  )(MyAppDetail),
-);
+export default injectIntl(compose(withReducer, withSaga, withConnect)(MyAppDetail));

@@ -17,7 +17,7 @@ const { Option } = Select;
 
 class WidgetSetting extends Component {
   constructor(props) {
-		super(props);
+    super(props);
     const { item, type } = this.props;
 
     const weatherList = item.data;
@@ -26,14 +26,14 @@ class WidgetSetting extends Component {
     if (weatherList.LOCATION !== undefined) {
       this.state = {
         itemList: item,
-        weatherList: weatherList,
+        weatherList,
         viewType: item.user.viewType,
         widgetId: item.WIDGET_ID,
         pageId: item.PAGE_ID,
         location: weatherList.LOCATION,
       };
     } else {
-      let emptyContent = new Object();
+      const emptyContent = new Object();
       emptyContent.LOCATION = 'Icheon';
 
       this.state = {
@@ -51,7 +51,6 @@ class WidgetSetting extends Component {
     const { item } = this.props;
     const nextItemWeatherList = nextProps.itemWeatherList.data;
     if (nextItemWeatherList.length !== undefined) {
-
       const nextItem = nextProps.itemWeatherList;
       const nextWidgetId = nextProps.widgetId;
       const nextPageId = nextProps.pageId;
@@ -66,23 +65,13 @@ class WidgetSetting extends Component {
     }
   }
 
-  onChangeType = (val) => {
+  onChangeType = val => {
     this.setState({ location: val });
-  }
+  };
 
-	setWeatherLocation = () => {
-		const {
-      itemList,
-      weatherList,
-      viewType,
-      widgetId,
-      pageId,
-    } = this.state;
-    const {
-      deleteWeather,
-      deleteBizWeather,
-      type,
-    } = this.props;
+  setWeatherLocation = () => {
+    const { itemList, weatherList, viewType, widgetId, pageId } = this.state;
+    const { deleteWeather, deleteBizWeather, type } = this.props;
 
     const result = {};
     result.size = itemList.size;
@@ -91,52 +80,52 @@ class WidgetSetting extends Component {
     result.user.isTitle = itemList.user.isTitle;
     result.user.skin = itemList.user.skin;
     result.user.viewType = viewType;
-    let emptyContent = new Object();
+    const emptyContent = new Object();
     emptyContent.LOCATION = this.state.location;
     result.data = emptyContent;
 
     const item = JSON.stringify(result);
 
-    if (type === "mypage") {
-		  deleteWeather(item, widgetId, pageId);
+    if (type === 'mypage') {
+      deleteWeather(item, widgetId, pageId);
     } else {
-      //업무그룹
+      // 업무그룹
       // console.log("bizPage", type);
       deleteBizWeather(item, widgetId, pageId);
     }
-	}
+  };
 
   render() {
     return (
       <div className="commonPage" style={{ width: '100%' }}>
-      <div className="basicSettingTable">
-        <table style={{ width: '100%' }}>
-          <tbody>
-            <tr>
-              <th>
-                <label className="subtitle" htmlFor="wSubject">날씨지역 설정</label>
-              </th>
-              <td>
-                <WidgetSettingStyle>
-                  <div className="viewType">
-                    <Select
-                      onChange={this.onChangeType}
-                      value={this.state.location}
-                      dropdownStyle={{ fontSize: 12 }}
-                    >
-                      <Option value='Icheon'>이천</Option>
-                      <Option value='Chengju'>청주</Option>
-                      <Option value='Seoul'>서울</Option>
-                      <Option value='Bundang'>분당</Option>
-                    </Select>
-                    <BtnDkGray style={{ float: 'right', marginTop: '-4px' }} onClick={this.setWeatherLocation}>날씨지역 적용</BtnDkGray>
-                  </div>
-                </WidgetSettingStyle>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div className="basicSettingTable">
+          <table style={{ width: '100%' }}>
+            <tbody>
+              <tr>
+                <th>
+                  <label className="subtitle" htmlFor="wSubject">
+                    날씨지역 설정
+                  </label>
+                </th>
+                <td>
+                  <WidgetSettingStyle>
+                    <div className="viewType">
+                      <Select onChange={this.onChangeType} value={this.state.location} dropdownStyle={{ fontSize: 12 }}>
+                        <Option value="Icheon">이천</Option>
+                        <Option value="Chengju">청주</Option>
+                        <Option value="Seoul">서울</Option>
+                        <Option value="Bundang">분당</Option>
+                      </Select>
+                      <BtnDkGray style={{ float: 'right', marginTop: '-4px' }} onClick={this.setWeatherLocation}>
+                        날씨지역 적용
+                      </BtnDkGray>
+                    </div>
+                  </WidgetSettingStyle>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
@@ -164,10 +153,4 @@ const withReducer = injectReducer({ key: 'weatherSetting', reducer });
 const withSaga = injectSaga({ key: 'weatherSetting', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(WidgetSetting);
-
-
+export default compose(withReducer, withSaga, withConnect)(WidgetSetting);

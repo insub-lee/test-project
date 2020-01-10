@@ -11,7 +11,8 @@ const initialState = fromJS({
 const orgReducer = (state = initialState, action) => {
   switch (action.type) {
     case constants.SET_CATEGORY_DATA:
-      return state.set('categoryData', action.categoryData)
+      return state
+        .set('categoryData', action.categoryData)
         .set('authArr', action.authArr)
         .set('bizGroupInfo', action.bizGroupInfo || state.get('bizGroupInfo'))
         .set('bizMenuSecKeyList', action.bizMenuSecKeyList || state.get('bizMenuSecKeyList'));

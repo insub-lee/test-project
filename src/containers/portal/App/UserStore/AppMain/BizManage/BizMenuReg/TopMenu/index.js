@@ -18,8 +18,7 @@ import * as actions from './actions';
 import messages from './messages';
 
 import StyleTopMenu from './StyleTopMenu';
-import { BtnDkGray, BtnBizPreview, BtnBizSettings }
-  from '../../../../components/uielements/buttons.style';
+import { BtnDkGray, BtnBizPreview, BtnBizSettings } from '../../../../components/uielements/buttons.style';
 
 // import BizMenuTree from '../../../../components/AppPreview/BizMenuTree';
 // import AppPreview from '../../../../components/AppPreview';
@@ -36,6 +35,12 @@ class TopMenu extends React.Component {
     // this.onClose = this.onClose.bind(this);
   }
 
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+  //   if (prevState.BIZGRP_ID !== this.props.BIZGRP_ID) {
+  //     this.set
+  //   }
+  // }
+
   componentWillReceiveProps(nextProps) {
     if (this.state.BIZGRP_ID !== nextProps.BIZGRP_ID) {
       this.setState({
@@ -46,18 +51,9 @@ class TopMenu extends React.Component {
   }
 
   render() {
-    const {
-      BIZGRP_ID,
-    } = this.state;
+    const { BIZGRP_ID } = this.state;
 
-    const {
-      bizInfo,
-
-      confirmBizGroup,
-
-      history,
-      pageID,
-    } = this.props;
+    const { bizInfo, confirmBizGroup, history, pageID, userRole } = this.props;
 
     const linkto = `/preview/page/${pageID}`;
     return (
@@ -66,36 +62,32 @@ class TopMenu extends React.Component {
           <Row>
             <Col sm={24} lg={8} />
             <Col sm={24} lg={8}>
-              <h1 className="bizGrpTitle ellipsis">
-                {lang.get('NAME', bizInfo)}
-              </h1>
+              <h1 className="bizGrpTitle ellipsis">{lang.get('NAME', bizInfo)}</h1>
             </Col>
             <Col sm={24} lg={8} style={{ textAlign: 'right' }}>
-              {history.location.pathname.indexOf('page') > -1 ? (
+              {history.location.pathname.indexOf('page') > -1 && (
                 <Link to={linkto} target="appPreview">
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
-              ) : ''}
-              {bizInfo.SEC_YN === 'Y' ? (
+              )}
+              {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
-                    history.push(`/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
+                    history.push(`/portal/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
                   }}
                 />
-              ) : ''}
-              {
-                bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' ? (
-                  <BtnDkGray
-                    style={{ verticalAlign: 'middle', marginLeft: 12 }}
-                    onClick={() => {
-                      feed.showConfirm(`${intlObj.get(messages.askConfirm)}`, '', () => confirmBizGroup(history, BIZGRP_ID));
-                    }}
-                  >
-                    확정
-                  </BtnDkGray>
-                ) : ''
-              }
+              )}
+              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
+                <BtnDkGray
+                  style={{ verticalAlign: 'middle', marginLeft: 12 }}
+                  onClick={() => {
+                    feed.showConfirm(`${intlObj.get(messages.askConfirm)}`, '', () => confirmBizGroup(history, BIZGRP_ID));
+                  }}
+                >
+                  확정
+                </BtnDkGray>
+              )}
             </Col>
           </Row>
         </StyleTopMenu>
@@ -111,10 +103,12 @@ TopMenu.propTypes = {
   BIZGRP_ID: PropTypes.number.isRequired,
   bizInfo: PropTypes.object.isRequired,
   pageID: PropTypes.number,
+  userRole: PropTypes.string,
 };
 
 TopMenu.defaultProps = {
   pageID: -1,
+  userRole: '',
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -136,9 +130,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmemuTopMenu', reducer });
 const withSaga = injectSaga({ key: 'bizmemuTopMenu', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(TopMenu);
-
+export default compose(withReducer, withSaga, withConnect)(TopMenu);

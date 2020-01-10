@@ -15,7 +15,7 @@ class App extends PureComponent {
     this.setState({
       show: !this.state.show,
     });
-  }
+  };
 
   render() {
     return (

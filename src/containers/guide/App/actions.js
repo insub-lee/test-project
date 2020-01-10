@@ -19,4 +19,3 @@ export const articleSelected = selectedArticle => ({
   type: actionType.ARTICLE_SELECTED,
   selectedArticle,
 });
-

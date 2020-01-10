@@ -35,6 +35,4 @@ export default defineMessages({
     id: 'store.components.BizGroupTree.restoreBizGroup',
     defaultMessage: '업무그룹을 복구하시겠습니까?',
   },
-
-
 });

@@ -7,6 +7,8 @@ import BizBuilderBase from '../../../components/BizBuilderBase';
 
 class SearchViewer extends Component {
   render() {
+    console.debug('###########');
+    console.debug(this.props);
     return <BizBuilderBase id="SearchViewer" component={Viewer} viewType="VIEW" {...this.props} />;
   }
 }

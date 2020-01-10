@@ -46,7 +46,6 @@ export function* updateWidget(payload) {
   // }
 }
 
-
 export default function* quickmenuSettingSaga() {
   yield takeLatest(constants.GET_WIDGET_LIST, getWidgetList);
   yield takeLatest(constants.GET_WIDGET, getWidget);

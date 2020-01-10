@@ -3,10 +3,10 @@ import { fromJS } from 'immutable';
 import { intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 
+import { Axios } from 'utils/AxiosFunc';
 import messages from '../messages';
 
 import * as constants from './constants';
-import { Axios } from 'utils/AxiosFunc';
 
 export function* getMyAppDetail(payload) {
   const { history } = payload.payload;

@@ -10,12 +10,7 @@ import messages from './messages';
 
 class ItemPage extends PureComponent {
   render() {
-    const {
-      bizgrpId,
-      pageId,
-      title,
-      subTitle,
-    } = this.props;
+    const { bizgrpId, pageId, title, subTitle } = this.props;
 
     const preUrl = commonjs.getPreUrl(this.props.match.path, '/biz/');
 

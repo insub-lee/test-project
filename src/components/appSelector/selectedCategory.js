@@ -11,9 +11,7 @@ class selectedCategory extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-
-    };
+    this.state = {};
     this.onChange = this.onChange.bind(this);
     this.onChangeAll = this.onChangeAll.bind(this);
   }
@@ -70,42 +68,34 @@ class selectedCategory extends Component {
     return (
       <div>
         <div className="SUTitle">
-          <Checkbox onChange={this.onChangeAll} checked={this.props.checkAll} /><h3>선택 앱</h3>
+          <Checkbox onChange={this.onChangeAll} checked={this.props.checkAll} />
+          <h3>선택 앱</h3>
         </div>
         <Table size="small" className="SUTable" style={{ width: '100%' }}>
-          <ScrollBar
-            autoHide
-            autoHideTimeout={1000}
-            style={{ height: 455 }}
-          >
+          <ScrollBar autoHide autoHideTimeout={1000} style={{ height: 455 }}>
             <Table.Body>
-              {
-              selectedList.map(category => (
+              {selectedList.map(category => (
                 <Table.Row key={category.NAME_KOR}>
                   <Table.Cell textAlign="left" title={`${category.NAME_KOR}`} className="SUTableCell">
-                    <Checkbox
-                      value={category.APP_ID}
-                      onChange={this.onChange}
-                      checked={category.checked2 ? true : false}
-                    >
+                    <Checkbox value={category.APP_ID} onChange={this.onChange} checked={!!category.checked2}>
                       <span className="appIconWrapper">
                         <img
                           className="listImg"
                           style={{ height: 25, width: 25 }}
                           src={imgUrl.get('120x120', category.ICON)}
-                          onError={(e) => { e.target.src = '/icon_no_image.png'; }}
+                          onError={e => {
+                            e.target.src = '/icon_no_image.png';
+                          }}
                           alt=""
                         />
                       </span>
-                      {category.NAME_KOR}<br />
-                      <span className="ellipsis">
-                        {category.DSCR_KOR}
-                      </span>
+                      {category.NAME_KOR}
+                      <br />
+                      <span className="ellipsis">{category.DSCR_KOR}</span>
                     </Checkbox>
                   </Table.Cell>
                 </Table.Row>
-                ))
-              }
+              ))}
             </Table.Body>
           </ScrollBar>
         </Table>

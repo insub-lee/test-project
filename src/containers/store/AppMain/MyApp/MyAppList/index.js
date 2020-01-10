@@ -92,6 +92,7 @@ class MyAppList extends React.Component {
       this.state.searchType,
     );
   }
+
   componentWillReceiveProps(nextProps) {
     // if (this.state.myAppList.length > 0) {
     //   this.setState({
@@ -104,24 +105,19 @@ class MyAppList extends React.Component {
       });
     }
   }
-  HyperlinkFomatter = (val) => {
+
+  HyperlinkFomatter = val => {
     const hyperlinkName = lang.get('NAME', val.dependentValues);
     const myAppKey = `/store/appMain/MyApp/MyAppDetail/${val.dependentValues.APP_ID}/${val.dependentValues.VER}`;
 
-    return (
-      <Link to={myAppKey}>
-        {hyperlinkName}
-      </Link>
-    );
+    return <Link to={myAppKey}>{hyperlinkName}</Link>;
   };
-  apvStatusFomatter = (val) => {
+
+  apvStatusFomatter = val => {
     const columnName = lang.get('APV_STATUS', val.dependentValues);
-    return (
-      <div>
-        {columnName}
-      </div>
-    );
+    return <div>{columnName}</div>;
   };
+
   handleGridSort = (sortColumn, sortDirection) => {
     this.setState({
       sortColumnParam: sortColumn,
@@ -130,17 +126,10 @@ class MyAppList extends React.Component {
     });
     pageSnum = 1;
     pageEnum = pageIndex;
-    this.props.getMyAppList(
-      pageSnum,
-      pageEnum,
-      [],
-      sortColumn,
-      sortDirection,
-      this.state.searchText,
-      this.state.searchType,
-    );
+    this.props.getMyAppList(pageSnum, pageEnum, [], sortColumn, sortDirection, this.state.searchText, this.state.searchType);
   };
-  rowGetter = (i) => {
+
+  rowGetter = i => {
     if (i === pageEnum - 1) {
       pageSnum += pageIndex;
       pageEnum += pageIndex;
@@ -155,12 +144,13 @@ class MyAppList extends React.Component {
       );
     }
     return this.state.myAppList[i];
-  }
+  };
+
   render() {
-    const onChangeSearch = (val) => {
+    const onChangeSearch = val => {
       this.setState({ searchText: val.target.value });
     };
-    const handleKeyPress = (val) => {
+    const handleKeyPress = val => {
       if (val.key === 'Enter') {
         this.setState({
           myAppList: [],
@@ -184,29 +174,13 @@ class MyAppList extends React.Component {
       });
       pageSnum = 1;
       pageEnum = pageIndex;
-      this.props.getMyAppList(
-        pageSnum,
-        pageEnum,
-        [],
-        this.state.sortColumnParam,
-        this.state.sortDirectionParam,
-        this.state.searchText,
-        this.state.searchType,
-      );
+      this.props.getMyAppList(pageSnum, pageEnum, [], this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchText, this.state.searchType);
     };
-    const onChangeSearchType = (val) => {
+    const onChangeSearchType = val => {
       this.setState({ searchType: val, myAppList: [] });
       pageSnum = 1;
       pageEnum = pageIndex;
-      this.props.getMyAppList(
-        pageSnum,
-        pageEnum,
-        [],
-        this.state.sortColumnParam,
-        this.state.sortDirectionParam,
-        this.state.searchText,
-        val,
-      );
+      this.props.getMyAppList(pageSnum, pageEnum, [], this.state.sortColumnParam, this.state.sortDirectionParam, this.state.searchText, val);
     };
     const EmptyData = () => (
       <div
@@ -223,17 +197,15 @@ class MyAppList extends React.Component {
     );
     const loopSearchList = data =>
       data.map(item => (
-        <Option value={item.CODE_CD} key={item.CODE_CD}>{lang.get('NAME', item)}</Option>
+        <Option value={item.CODE_CD} key={item.CODE_CD}>
+          {lang.get('NAME', item)}
+        </Option>
       ));
     return (
       <div>
         <StyleMyAppList>
           <div className="searchBox">
-            <Select
-              defaultValue=""
-              style={{ width: 120 }}
-              onChange={onChangeSearchType}
-            >
+            <Select defaultValue="" style={{ width: 120 }} onChange={onChangeSearchType}>
               <Option value="">{intlObj.get(messages.searchTypeA)}</Option>
               {loopSearchList(this.props.searchTypeList)}
             </Select>
@@ -247,14 +219,12 @@ class MyAppList extends React.Component {
                 defaultValue={this.state.searchText}
                 onKeyPress={handleKeyPress}
               />
-              <button
-                title={intlObj.get(messages.search)}
-                className="searchBtn"
-                onClick={searchGo}
-              />
+              <button title={intlObj.get(messages.search)} className="searchBtn" onClick={searchGo} />
             </div>
           </div>
-          <StyleDataGrid> {/* ReactDataGrid 커스텀 스타일 */}
+          <StyleDataGrid>
+            {' '}
+            {/* ReactDataGrid 커스텀 스타일 */}
             <ReactDataGrid
               columns={this.columns}
               rowGetter={this.rowGetter}
@@ -266,9 +236,7 @@ class MyAppList extends React.Component {
           </StyleDataGrid>
           <div className="buttonWrapper">
             <Link to="/store/appMain/MyApp/MyAppRegis">
-              <LinkBtnDkGray>
-                {intlObj.get(messages.appRegis)}
-              </LinkBtnDkGray>
+              <LinkBtnDkGray>{intlObj.get(messages.appRegis)}</LinkBtnDkGray>
             </Link>
           </div>
         </StyleMyAppList>
@@ -285,29 +253,11 @@ MyAppList.propTypes = {
   searchTypeList: PropTypes.array, //eslint-disable-line
 };
 
-const mapDispatchToProps = dispatch => (
-  {
-    getMyAppList: (
-      Snum,
-      Enum,
-      myappList,
-      sortColumn,
-      sortDirection,
-      searchText,
-      searchType,
-    ) => {
-      dispatch(actions.getMyAppList(
-        Snum,
-        Enum,
-        myappList,
-        sortColumn,
-        sortDirection,
-        searchText,
-        searchType,
-      ));
-    },
-  }
-);
+const mapDispatchToProps = dispatch => ({
+  getMyAppList: (Snum, Enum, myappList, sortColumn, sortDirection, searchText, searchType) => {
+    dispatch(actions.getMyAppList(Snum, Enum, myappList, sortColumn, sortDirection, searchText, searchType));
+  },
+});
 
 const mapStateToProps = createStructuredSelector({
   setMyAppList: selectors.makeSelectMyAppList(),
@@ -318,8 +268,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'MyAppList', saga });
 const withReducer = injectReducer({ key: 'MyAppList', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(MyAppList);
+export default compose(withReducer, withSaga, withConnect)(MyAppList);

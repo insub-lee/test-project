@@ -11,6 +11,7 @@ import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppSelector from 'components/appSelector/index';
 import Page from 'containers/store/components/BizGroupPage';
+import * as bizSelectors from '../../selectors';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
@@ -37,8 +38,7 @@ class PageInfo extends Component {
     const { params } = match;
     const { PAGE_ID, BIZGRP_ID } = params;
 
-    if (PAGE_ID
-      && this.state.PAGE_ID !== Number(PAGE_ID)) {
+    if (PAGE_ID && this.state.PAGE_ID !== Number(PAGE_ID)) {
       this.setState({
         PAGE_ID: Number(PAGE_ID),
       });
@@ -47,9 +47,7 @@ class PageInfo extends Component {
   }
 
   render() {
-    const {
-      PAGE_ID,
-    } = this.state;
+    const { PAGE_ID } = this.state;
     const {
       widgetList,
       deleteWidget,
@@ -57,6 +55,7 @@ class PageInfo extends Component {
       moveMyWidget,
       updateWidget,
       bizGroupInfo,
+      userRole,
       // history,
     } = this.props;
 
@@ -85,11 +84,11 @@ class PageInfo extends Component {
       cWidgetList[i].fixed = false;
       cWidgetList[i].updateWidget = updateWidget;
       cWidgetList[i].deleteWidget = deleteWidget;
-      if (bizGroupInfo.SEC_YN === 'Y') {
+      if (bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA') {
         cWidgetList[i].basic.functions.push('settings');
         cWidgetList[i].basic.functions.push('delete');
       }
-      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN;
+      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? 'Y' : 'N';
       cWidgetList[i].basic.path = 'AppMain/BizManage/BizMenuReg/PageInfo/BasicWidget/index';
 
       if (i === length - 1) {
@@ -97,7 +96,7 @@ class PageInfo extends Component {
       }
     }
     // 2. 마지막 순서에 addWidgets Component 추가
-    if (bizGroupInfo.SEC_YN === 'Y') {
+    if (bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA') {
       cWidgetList[length] = {
         PAGE_ID,
         title: '',
@@ -119,7 +118,7 @@ class PageInfo extends Component {
       };
     }
 
-    const addList = (app) => {
+    const addList = app => {
       const widgetArr = [];
       for (let i = 0; i < app.length; i += 1) {
         widgetArr.push(app[i].APP_ID);
@@ -136,17 +135,13 @@ class PageInfo extends Component {
           <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} />
         </ErrorBoundary>
 
-        {bizGroupInfo.SEC_YN === 'Y' ? (
+        {bizGroupInfo.SEC_YN === 'Y' || userRole === 'SA' ? (
           <ErrorBoundary>
-            <AppSelector
-              type="widget"
-              show={this.state.show}
-              closeModal={closeModal}
-              addList={addList}
-              style={{ marginTop: 570 }}
-            />
+            <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>
-        ) : ''}
+        ) : (
+          ''
+        )}
       </div>
     );
   }
@@ -162,6 +157,7 @@ PageInfo.propTypes = {
   moveMyWidget: PropTypes.func.isRequired,
   updateWidget: PropTypes.func.isRequired,
   handleGetBizInfo: PropTypes.func.isRequired,
+  userRole: PropTypes.string.isRequired,
 };
 
 PageInfo.defaultProps = {
@@ -183,6 +179,7 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   bizGroupInfo: selectors.makeBizGroupInfo(),
   widgetList: selectors.makeWidgetList(),
+  userRole: bizSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
@@ -190,8 +187,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmenuPageInfo', reducer });
 const withSaga = injectSaga({ key: 'bizmenuPageInfo', saga });
 
-export default injectIntl(compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(PageInfo));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(PageInfo));

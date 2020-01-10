@@ -63,7 +63,7 @@ const Modals = ComponentName => styled(ComponentName)`
     }
 
     button + button {
-      margin: ${props => props['data-rtl'] === 'rtl' ? '0 5px 0 0' : '0 0 0 5px'};
+      margin: ${props => (props['data-rtl'] === 'rtl' ? '0 5px 0 0' : '0 0 0 5px')};
     }
   }
 
@@ -131,9 +131,7 @@ const Modals = ComponentName => styled(ComponentName)`
   }
 `;
 
-const ModalContent = styled.div`
-  
-`;
+const ModalContent = styled.div``;
 
 export default Modals;
 export { ModalContent };

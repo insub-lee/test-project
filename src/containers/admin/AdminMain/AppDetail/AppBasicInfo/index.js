@@ -23,7 +23,7 @@ import { BtnWhiteArr, BtnRedShare, BtnRedCgrRegist, BtnRedMnRegist, BtnLgtGrayRe
 import RgtCategoryIcon from '../../../../../images/bizstore/icon-category-rgt3.png';
 import RgtMenuIcon from '../../../../../images/bizstore/icon-menu-rgt3.png';
 
-import AppMaNagerList from '../../../components/AppManagerList';
+import AppManagerList from '../../../components/AppManagerList';
 import StyledButton from '../../../../../components/Button/StyledButton';
 
 class AppBasicInfo extends React.Component {
@@ -34,7 +34,7 @@ class AppBasicInfo extends React.Component {
       popUpVisible: false,
       popUpUrl: '',
       popUpTitle: '',
-      userinfo: [],
+      userinfo: {},
       orgShow: false,
     };
     prop.reqAppBasicInfo(this.state.appId);
@@ -54,67 +54,63 @@ class AppBasicInfo extends React.Component {
     this.setState({ popUpVisible: false });
   };
 
-  render() {
-    const popUp = (
-      <div className="newFaqWrite">
-        <Modal
-          visible={this.state.popUpVisible}
-          title={this.state.popUpTitle}
-          width="90%"
-          // onOk={this.handleOk}
-          onCancel={this.popUpCancel}
-          // footer={[
-          //   <Button key="back" onClick={this.popUpCancel}>
-          //     닫기
-          //   </Button>,
-          // ]}
-        >
-          <iframe src={this.state.popUpUrl} width="100%" height="500" title="title" />
-        </Modal>
-      </div>
+  onClickWorking = (flag, url, gubun) => {
+    if (flag === 'L') {
+      // this.setState({
+      //   popUpVisible: true,
+      //   popUpUrl: url,
+      //   popUpTitle: gubun,
+      // });
+      window.open(url);
+    } else if (flag === 'F') {
+      window.location.assign(url);
+    } else {
+      let magText = '';
+      if (gubun === 'w') {
+        magText = `${intlObj.get(messages.noWorkSteps)}`;
+      } else {
+        magText = `${intlObj.get(messages.noManual)}`;
+      }
+      feed.error(magText);
+    }
+  };
+
+  closeModal = () => this.setState({ orgShow: false });
+
+  registerApps = () => this.props.registApp(this.props.resAppBasicInfo.APP_ID);
+
+  handleRegistApp = () => feed.showConfirm(`${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`, '', this.registerApps);
+
+  registerCategorys = () => this.props.registCategory(this.props.resAppBasicInfo.APP_ID);
+
+  handleRegistCategory = () =>
+    feed.showConfirm(
+      `${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`,
+      `${intlObj.get(messages.catgAppInput)}`,
+      this.registerCategorys,
     );
 
-    const onClickWorking = (flag, url, gubun) => {
-      if (flag === 'L') {
-        // this.setState({
-        //   popUpVisible: true,
-        //   popUpUrl: url,
-        //   popUpTitle: gubun,
-        // });
-        window.open(url);
-      } else if (flag === 'F') {
-        window.location.assign(url);
-      } else {
-        let magText = '';
-        if (gubun === 'w') {
-          magText = `${intlObj.get(messages.noWorkSteps)}`;
-        } else {
-          magText = `${intlObj.get(messages.noManual)}`;
-        }
-        feed.error(magText);
-      }
-    };
+  userProfile = (userinfo, orgShow) => {
+    this.setState({ orgShow, userinfo });
+  };
 
-    const registerApps = () => this.props.registApp(this.props.resAppBasicInfo.APP_ID);
-    const handleRegistApp = () => feed.showConfirm(`${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`, '', registerApps);
-    const registerCategorys = () => this.props.registCategory(this.props.resAppBasicInfo.APP_ID);
-    const handleRegistCategory = () =>
-      feed.showConfirm(
-        `${lang.get('NAME', this.props.resAppBasicInfo)} ${intlObj.get(messages.appInput)}`,
-        `${intlObj.get(messages.catgAppInput)}`,
-        registerCategorys,
-      );
-
-    const userProfile = (userinfo, orgShow) => {
-      this.setState({ orgShow, userinfo });
-    };
-
-    const closeModal = () => this.setState({ orgShow: false });
-
+  render() {
     return (
       <StyleAppBasicInfo>
-        {popUp}
-        <Organization isModal show={this.state.orgShow} closeModal={closeModal} userProfile={this.state.userinfo} isProfile orgName="구성원검색" />
+        <div className="newFaqWrite">
+          <Modal visible={this.state.popUpVisible} title={this.state.popUpTitle} width="90%" onCancel={this.popUpCancel}>
+            <iframe src={this.state.popUpUrl} width="100%" height="500" title="title" />
+          </Modal>
+        </div>
+        <Organization
+          isModal
+          show={this.state.orgShow}
+          closeModal={this.closeModal}
+          userProfile={this.state.userinfo}
+          isProfile
+          orgName="구성원검색"
+          searchOnly
+        />
         <div className="basicInfoWrapper">
           <div className="appImgWrapper">
             <img
@@ -134,14 +130,14 @@ class AppBasicInfo extends React.Component {
                 <StyledButton
                   type="button"
                   className="btn-outline-secondary btn-sm"
-                  onClick={() => onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}
+                  onClick={() => this.onClickWorking(this.props.appProcess.ITEM_TYPE, this.props.appProcess.FILE_PATH, 'w')}
                 >
                   {intlObj.get(messages.workSteps)}
                 </StyledButton>
                 <StyledButton
                   type="button"
                   className="btn-outline-secondary btn-sm"
-                  onClick={() => onClickWorking(this.props.appManual.ITEM_TYPE, this.props.appManual.FILE_PATH, 'm')}
+                  onClick={() => this.onClickWorking(this.props.appManual.ITEM_TYPE, this.props.appManual.FILE_PATH, 'm')}
                 >
                   {intlObj.get(messages.appManual)}
                 </StyledButton>
@@ -149,7 +145,7 @@ class AppBasicInfo extends React.Component {
                   placement="bottomRight"
                   content={
                     this.props.appManagerList.length > 0 ? (
-                      <AppMaNagerList managerList={this.props.appManagerList} userProfile={userProfile} currentView={this.props.currentView} />
+                      <AppManagerList managerList={this.props.appManagerList} userProfile={this.userProfile} currentView={this.props.currentView} />
                     ) : (
                       `${intlObj.get(messages.noManager)}`
                     )
@@ -189,11 +185,11 @@ class AppBasicInfo extends React.Component {
                     }}
                   >
                     <div className="regstBtnsGroup">
-                      <BtnRedCgrRegist className="category" onClick={handleRegistCategory}>
+                      <BtnRedCgrRegist className="category" onClick={this.handleRegistCategory}>
                         <img src={RgtCategoryIcon} alt="" />
                         {intlObj.get(messages.catgInput)}
                       </BtnRedCgrRegist>
-                      <BtnRedMnRegist className="menu" title={intlObj.get(messages.menuInput)} onClick={handleRegistApp}>
+                      <BtnRedMnRegist className="menu" title={intlObj.get(messages.menuInput)} onClick={this.handleRegistApp}>
                         <img src={RgtMenuIcon} alt="" />
                         {intlObj.get(messages.menuInput)}
                       </BtnRedMnRegist>
@@ -266,15 +262,8 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'admin/AdminMain/AppDetail/AppBasicInfo', saga });
 const withReducer = injectReducer({ key: 'admin/AdminMain/AppDetail/AppBasicInfo', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppBasicInfo);
+export default compose(withReducer, withSaga, withConnect)(AppBasicInfo);

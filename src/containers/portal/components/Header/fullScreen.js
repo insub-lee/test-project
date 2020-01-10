@@ -8,16 +8,14 @@ class FullScreen extends Component {
     this.state = { isFullscreenEnabled: false };
     this.handleClick = this.handleClick.bind(this);
   }
+
   handleClick() {
-    this.setState(this.state.isFullscreenEnabled ?
-      { isFullscreenEnabled: false } : { isFullscreenEnabled: !false });
+    this.setState(prevProps => ({ isFullscreenEnabled: !prevProps.isFullscreenEnabled }));
   }
+
   render() {
     return (
-      <Fullscreen
-        enabled={this.state.isFullscreenEnabled}
-        onChange={isFullscreenEnabled => this.setState({ isFullscreenEnabled })}
-      >
+      <Fullscreen enabled={this.state.isFullscreenEnabled} onChange={isFullscreenEnabled => this.setState({ isFullscreenEnabled })}>
         <div className="full-screenable-node">
           <div align="right">
             <Button type="mFullscreenButton" onClick={this.handleClick}>

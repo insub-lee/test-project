@@ -1,7 +1,7 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
-import * as actionTypes from './constants';
 import { Axios } from 'utils/AxiosFunc';
+import * as actionTypes from './constants';
 
 export function* getUserList(payload) {
   const { userList: oldUserList } = payload.payload;
@@ -14,7 +14,6 @@ export function* getUserList(payload) {
   const userList = oldUserList.length > 0 ? oldUserList.concat(response.userList) : response.userList;
   yield put({ type: actionTypes.SET_USER_LIST, payload: userList });
 }
-
 
 export function* getDeptComboData() {
   yield put({

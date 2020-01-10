@@ -7,11 +7,11 @@ export default class ComponentConfig extends Component {
   render() {
     console.log(this.props, '테스ㅡ!!');
     return (
-      <React.Fragment>
+      <>
         <GGEditor>
           <Flow></Flow>
         </GGEditor>
-      </React.Fragment>
+      </>
     );
   }
 }

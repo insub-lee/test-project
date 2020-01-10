@@ -41,6 +41,17 @@ class GenBoard extends Component {
     this.setState({ isViewModal: false });
   };
 
+  onRevisionComplete = (id, workSeq, taskSeq) => {
+    this.setState({
+      movePageType: 'EDIT',
+      isEditModal: false,
+      isViewModal: false,
+      workSeq,
+      taskSeq,
+    });
+    // this.onChangeMovePage('EDIT', workSeq, taskSeq);
+  };
+
   onCancel = viewType => {
     if (viewType === 'EDIT') {
       this.setState({ isEditModal: false });
@@ -54,7 +65,15 @@ class GenBoard extends Component {
 
     return (
       <div style={{ padding: '48px' }}>
-        <BizBuilderBase id={`list${widgetId}`} component={List} onChangeMovePageHandler={this.onChangeMovePage} viewType="LIST" {...this.props} isCustom />
+        <BizBuilderBase
+          id={`list${widgetId}`}
+          component={List}
+          onChangeMovePageHandler={this.onChangeMovePage}
+          viewType="LIST"
+          onRevisionComplete={this.onRevisionComplete}
+          {...this.props}
+          isCustom
+        />
         <Modal
           visible={this.state.isEditModal}
           width={800}
@@ -76,7 +95,6 @@ class GenBoard extends Component {
               onChangeMovePageHandler={this.onChangeMovePage}
               viewType="EDIT"
               {...this.props}
-              isCustom
             />
           )}
         </Modal>
@@ -92,15 +110,16 @@ class GenBoard extends Component {
           <BizBuilderBase
             id={`view${widgetId}`}
             reloadId={`list${widgetId}`}
+            editId={`edit${widgetId}`}
             workSeq={this.state.workSeq}
             taskSeq={this.state.taskSeq}
             component={View}
             onChangeMovePageHandler={this.onChangeMovePage}
             onDeleteComplete={this.onDeleteComplete}
+            onRevisionComplete={this.onRevisionComplete}
             viewType="VIEW"
             {...this.props}
             key={this.state.taskSeq}
-            isCustom
           />
         </Modal>
       </div>

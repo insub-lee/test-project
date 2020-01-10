@@ -331,13 +331,13 @@ class NotifyAdminDtl extends React.Component {
       <div>
         <Organization
           siteIdParam={this.state.SITE_ID}
-          isTreeCheckbox={true}
+          isTreeCheckbox
           show={this.state.allOrgShow}
           closeModal={this.allOrgClose}
-          userTab={true}
-          pstnTab={true}
-          dutyTab={true}
-          grpTab={true}
+          userTab
+          pstnTab
+          dutyTab
+          grpTab
           getDataFromOrganization={getDataFromOrganizationAll}
           // 조직도로 가져갈 데이터
           selectedUsers={this.state.userSetMembers.slice()}
@@ -365,7 +365,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d1"
                         /> */}
-                        <Input value={this.props.setNotifyMsg.SYSTEM} readOnly={true} id="n1" />
+                        <Input value={this.props.setNotifyMsg.SYSTEM} readOnly id="n1" />
                       </FormItem>
                     </td>
                   </tr>
@@ -381,7 +381,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d2"
                         /> */}
-                        <Input value={lang.get('SITE_NAME', this.props.setNotifyMsg)} readOnly={true} id="n2" />
+                        <Input value={lang.get('SITE_NAME', this.props.setNotifyMsg)} readOnly id="n2" />
                       </FormItem>
                     </td>
                   </tr>
@@ -397,7 +397,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d3"
                         /> */}
-                        <Input value={lang.get('APP_NAME', this.props.setNotifyMsg)} readOnly={true} id="n3" />
+                        <Input value={lang.get('APP_NAME', this.props.setNotifyMsg)} readOnly id="n3" />
                       </FormItem>
                     </td>
                   </tr>
@@ -426,7 +426,7 @@ class NotifyAdminDtl extends React.Component {
                                 )}`
                               : ''
                           }
-                          readOnly={true}
+                          readOnly
                           id="d4"
                         />
                       </FormItem>
@@ -442,7 +442,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d5"
                         /> */}
-                        <Input value={lang.get('CODE_NAME', this.props.setNotifyMsg)} readOnly={true} id="d5" />
+                        <Input value={lang.get('CODE_NAME', this.props.setNotifyMsg)} readOnly id="d5" />
                         <div style={{ float: 'right' }}>{this.ShowSetFormatter()}</div>
                       </FormItem>
                     </td>
@@ -472,7 +472,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d7"
                         /> */}
-                        <Input value={lang.get('TITLE', this.props.setNotifyMsg)} readOnly={true} id="n5" />
+                        <Input value={lang.get('TITLE', this.props.setNotifyMsg)} readOnly id="n5" />
                       </FormItem>
                     </td>
                   </tr>
@@ -482,7 +482,7 @@ class NotifyAdminDtl extends React.Component {
                     </th>
                     <td>
                       <FormItem {...formItemLayout}>
-                        <TextArea value={lang.get('CONTENT', this.props.setNotifyMsg)} readOnly={true} autosize={{ minRows: 1, maxRow: 8 }} id="n6" />
+                        <TextArea value={lang.get('CONTENT', this.props.setNotifyMsg)} readOnly autosize={{ minRows: 1, maxRow: 8 }} id="n6" />
                       </FormItem>
                     </td>
                   </tr>
@@ -498,7 +498,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d9"
                         /> */}
-                        <Input value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`} readOnly={true} id="n7" />
+                        <Input value={`${this.timeToDateForm(this.props.setNotifyMsg.REG_DTTM, 'point')}`} readOnly id="n7" />
                       </FormItem>
                     </td>
                   </tr>
@@ -514,7 +514,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d10"
                         /> */}
-                        <Input value={lang.get('USER_NAME', this.props.setNotifyMsg)} readOnly={true} id="n8" />
+                        <Input value={lang.get('USER_NAME', this.props.setNotifyMsg)} readOnly id="n8" />
                       </FormItem>
                     </td>
                   </tr>
@@ -530,7 +530,7 @@ class NotifyAdminDtl extends React.Component {
                           autosize={{ minRows: 1, maxRow: 4 }}
                           id="d11"
                         /> */}
-                        <Input value={this.props.setNotifyMsg.URL} readOnly={true} id="n9" />
+                        <Input value={this.props.setNotifyMsg.URL} readOnly id="n9" />
                       </FormItem>
                     </td>
                   </tr>
@@ -551,13 +551,13 @@ class NotifyAdminDtl extends React.Component {
             </Form>
           </StyleNotifyAdminForm>
           <div className="buttonWrapper">
-            <React.Fragment>
+            <>
               <div style={{ float: 'left' }}>
                 <StyledButton className="btn-light" onClick={this.onClickToList}>
                   {intlObj.get(messages.toList)}
                 </StyledButton>
               </div>
-            </React.Fragment>
+            </>
             <StyledButton className="btn-primary" onClick={this.notifyUdt}>
               수정
             </StyledButton>
@@ -586,15 +586,8 @@ const mapStateToProps = createStructuredSelector({
   setNotifyReceiver: selectors.makeSelectNotifyReceiver(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'NotifyAdminDtl', saga });
 const withReducer = injectReducer({ key: 'NotifyAdminDtl', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(NotifyAdminDtl);
+export default compose(withReducer, withSaga, withConnect)(NotifyAdminDtl);

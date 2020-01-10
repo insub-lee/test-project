@@ -118,6 +118,7 @@ class menuList extends React.Component {
   makeMenu = leftMenuList =>
     leftMenuList.map(m => (
       <MenuItem
+        key={m.SCR_CD}
         menuItem={m}
         // openMenuCode={this.state.openMenuCode}
         classString={this.classString}

@@ -99,10 +99,10 @@ export const isEqual = (value, other) => {
 
       if (itemType === '[object Function]') {
         if (item1.toString() !== item2.toString()) return false;
-      } else {
-        if (item1 !== item2) return false;
-      }
+      } else if (item1 !== item2) return false;
     }
+
+    return true;
   };
 
   if (type === '[object Array]') {
@@ -110,7 +110,7 @@ export const isEqual = (value, other) => {
       if (compare(value[i], other[i]) === false) return false;
     }
   } else {
-    for (let key in value) {
+    for (const key in value) {
       if (value.hasOwnProperty(key)) {
         if (compare(value[key], other[key]) === false) return false;
       }
@@ -172,4 +172,8 @@ export function isJSON(str) {
   } catch (e) {
     return false;
   }
+}
+
+export function cloneJSON(item) {
+  return JSON.parse(JSON.stringify(item));
 }

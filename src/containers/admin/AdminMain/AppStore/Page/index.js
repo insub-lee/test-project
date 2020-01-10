@@ -22,9 +22,7 @@ function createComponents(item) {
   return (
     <div key={`${item.id}`} className={item.id === '0' ? 'addNew' : ''}>
       <WidgetsWrapper item={item}>
-        <COMP
-          item={item}
-        />
+        <COMP item={item} />
       </WidgetsWrapper>
     </div>
   );
@@ -69,7 +67,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   const layout = [];
   const arrH = [];
 
-  items.sort((a, b) => (a.ord - b.ord));
+  items.sort((a, b) => a.ord - b.ord);
 
   for (let i = 0; i < Math.ceil(items.length / layoutConfig.col) + 10; i += 1) {
     arrH.push([]);
@@ -79,7 +77,7 @@ function createLayoutConfig(layoutConfig, view, items) {
   let cH = 0;
   let cHH = 0;
   let cH2 = 0;
-  items.forEach((item) => {
+  items.forEach(item => {
     let w = item.position[2];
     const h = item.position[3];
 
@@ -147,7 +145,7 @@ function changeLayoutConfig(layoutConfig, view, items) {
   let cH2 = 0;
 
   let count = 1;
-  items.forEach((item) => {
+  items.forEach(item => {
     let { w } = item;
 
     if (item.ow > layoutConfig.col) {
@@ -278,14 +276,7 @@ class Page extends PureComponent {
   }
 
   render() {
-    const {
-      layout,
-      layoutConfig,
-      columns,
-      currentView,
-      changeLayoutMap,
-      changedLayout,
-    } = this.state;
+    const { layout, layoutConfig, columns, currentView, changeLayoutMap, changedLayout } = this.state;
 
     const {
       // eslint-disable-next-line react/prop-types
@@ -301,8 +292,9 @@ class Page extends PureComponent {
             title="이동시킨 위젯의 위치를 저장합니다."
             onClick={() => {
               moveMyWidget(changeLayoutMap);
-          }}
-          >위젯위치확정
+            }}
+          >
+            위젯위치확정
           </button>
           {/* 위젯위치확정 버튼:
             1. 비활성화 상태 "disabled" & className="btnLocationOk"

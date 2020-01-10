@@ -22,7 +22,7 @@ PageItem.propTypes = {
   title: PropTypes.string.isRequired,
   subTitle: PropTypes.string,
   paramType: PropTypes.string.isRequired,
-  PAGE_ID: PropTypes.string.isRequired,
+  PAGE_ID: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 };
 
 PageItem.defaultProps = {

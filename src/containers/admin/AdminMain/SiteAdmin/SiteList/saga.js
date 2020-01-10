@@ -18,7 +18,6 @@ export function* getList(payload) {
   delete param.siteList;
   delete param.type;
 
-
   const response = yield call(Axios.post, '/api/admin/v1/common/siteadminlist', payload);
   const siteList = prevList.length > 0 ? prevList.concat(response.siteList) : response.siteList;
 
@@ -42,12 +41,7 @@ export function* delRow(payload) {
 
   if (response.code === 200) {
     // 성공
-    message.success(
-      <MessageContent>
-        {intlObj.get(messages.delComplete)}
-      </MessageContent>,
-      3,
-    );
+    message.success(<MessageContent>{intlObj.get(messages.delComplete)}</MessageContent>, 3);
     yield put({
       type: constants.GET_SITE_LIST,
       sNum,
