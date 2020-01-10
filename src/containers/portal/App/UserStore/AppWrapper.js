@@ -186,7 +186,8 @@ const AppWrapper = styled.div`
     position: relative;
     display: flex;
     width: 100%;
-    min-height: calc(100vh - 99px);
+    height: 100%;
+    //min-height: calc(100vh - 99px);
 
     > div {
       width: 100%;
@@ -350,8 +351,11 @@ const AppWrapper = styled.div`
 
 // Route path => {AppList}인 경우
 .appListWrapper {
-  padding-left: 320px;
-
+  //padding-left: 320px;
+  padding: 20px;
+  margin-left: 300px;
+  // padding-left: 300px;
+  
   @media only screen and (max-width: 1024px) {
     padding-left: 0;
   }

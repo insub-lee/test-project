@@ -183,7 +183,7 @@ class BizMenuReg extends Component {
             </ul>
           </StyleBizDetailContent>
         </StyleBizDetail>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

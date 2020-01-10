@@ -165,6 +165,7 @@ html {
   width: 100%;
 }
 
+/*
 .portalLayout .ant-layout-sider {
   flex: 0 0 300px !important;
   max-width: 300px !important;
@@ -177,6 +178,7 @@ html {
   border-top: 1px solid #c3c4c7;
   z-index: 990;
 }
+*/
 
 @media only screen and (max-width: 1024px) {
   .portalLayout .ant-layout-sider {

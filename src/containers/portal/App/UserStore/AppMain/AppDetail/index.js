@@ -62,7 +62,7 @@ class AppDetail extends React.Component {
             <AppRating appId={this.state.APP_ID} />
           </ErrorBoundary>
         </AppDetailStyle>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

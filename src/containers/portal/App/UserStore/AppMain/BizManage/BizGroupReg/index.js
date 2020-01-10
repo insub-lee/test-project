@@ -845,7 +845,7 @@ class BizGroupReg extends Component {
             )}
           </Form>
         </StyleGroupReg>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

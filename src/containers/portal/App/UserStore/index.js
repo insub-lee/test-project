@@ -67,8 +67,7 @@ class UserStore extends Component {
             <h2 className="pageHeader">{bizStoreYn} Store</h2>
           </div>
           <ThemeProvider theme={themes.themedefault}>
-            <Layout className="storeLayout" style={{ minHeight: '100%' }}>
-              <Sider trigger={null} collapsible collapsed={collapsed} className="siderLayout" />
+            <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>
               <AppWrapper style={{ width: '100%' }}>
                 <Content className="storeContent">
                   <div className="contentWrapper">

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { BackTop, Input, Button } from 'antd';
+import { BackTop, Input, Button, Layout } from 'antd';
 
 // import * as commonjs from 'containers/common/functions/common';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
@@ -27,6 +27,8 @@ import ItemList from './ItemList';
 import AppCategory from '../../components/AppCategory';
 
 import StyleAppList from './StyleAppList';
+
+const { Content, Sider } = Layout;
 
 class AppList extends Component {
   componentDidMount() {
@@ -75,7 +77,7 @@ class AppList extends Component {
       handleGetMapListAll();
     }
   }
-  /* eslint-disable */
+
   search = () => {
     const searchword = this.searchInput.input.value;
     this.props.changeSearchword(searchword);
@@ -84,17 +86,15 @@ class AppList extends Component {
 
     if (searchword.trim() === '') {
       this.props.history.push(`/portal/store/appMain/bizStore/${type}/list`);
-    } else if (this.props.searchword !== searchword || (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet')) {
+    } else if (this.props.searchword !== searchword || this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') {
       this.props.history.push(`/portal/store/appMain/bizStore/${type}/search/${searchword}`);
     }
-    event.stopPropagation();
   };
 
   searchEnter = e => {
     if (e.key === 'Enter') {
       this.search();
     }
-    event.stopPropagation();
   };
 
   render() {
@@ -117,67 +117,69 @@ class AppList extends Component {
       },
     } = this.props;
 
-
     return (
-      <div className="appListWrapper">
-        <BackTop />
-        <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
-        <ErrorBoundary>
-          <AppCategory 
-            handleOnClick={node => handleOnClick(node, history)} 
-            selectedIndex={Number(CATG_ID)} 
-            preUrl="/portal/store/appMain/bizStore" 
-          />
-        </ErrorBoundary>
-        <NavList className="navTabs">
-          <NavListItem>
-            <NavLink to="/portal/store/appMain/bizStore" className="current">
-              {' '}
-              {/* 현재 활성화된 상태에 current 클래스 적용 */}
-              {intlObj.get(messages.category)}
-            </NavLink>
-          </NavListItem>
-          {/* <NavListItem>
+      <Layout style={{ height: '100%', overflow: 'hidden' }}>
+        <Sider style={{ height: '100%' }}>
+          Wa
+        </Sider>
+        <Content>
+          <div className="appListWrapper">
+            <BackTop />
+            <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
+            {/*<ErrorBoundary>*/}
+              {/*<AppCategory handleOnClick={node => handleOnClick(node, history)} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />*/}
+            {/*</ErrorBoundary>*/}
+            <NavList className="navTabs">
+              <NavListItem>
+                <NavLink to="/portal/store/appMain/bizStore" className="current">
+                  {' '}
+                  {/* 현재 활성화된 상태에 current 클래스 적용 */}
+                  {intlObj.get(messages.category)}
+                </NavLink>
+              </NavListItem>
+              {/* <NavListItem>
             <NavLink to="/portal/store/appMain/bizStore/biz/list">{intlObj.get(messages.bizGroup)}</NavLink>
           </NavListItem> */}
-        </NavList>
-        
-        <StyleAppList>
-            <div className="topPart">
-              <div className="searchInput">
-                <Input
-                  placeholder=""
-                  title={intlObj.get(messages.searchBizStore)}
-                  onKeyPress={this.searchEnter}
-                  ref={ref => {
-                    this.searchInput = ref;
-                  }}
-                />
-                <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
-                {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
-              </div>
-            </div>
-          </StyleAppList>
+            </NavList>
 
-        <ErrorBoundary>
-          <ItemList
-            type={initType}
-            mapList={mapList}
-            searchword={searchword}
-            getMapListOne={key => handleGetMapListOneWithHistory(key, history)}
-            getMapListMore={key => {
-              loadingOn();
-              handleGetMapAppListMore(key);
-            }}
-            registApp={handleRegistApp}
-            registCategory={handleRegistCategory}
-            registBiz={handleRegisterBiz}
-            goBack={() => handleGoBack(history)}
-            currentView={currentView}
-          />
-        </ErrorBoundary>
-        <Footer />
-      </div>
+            <StyleAppList>
+              <div className="topPart">
+                <div className="searchInput">
+                  <Input
+                    placeholder=""
+                    title={intlObj.get(messages.searchBizStore)}
+                    onKeyPress={this.searchEnter}
+                    ref={ref => {
+                      this.searchInput = ref;
+                    }}
+                  />
+                  <Button type="button" onClick={this.search} title={intlObj.get(messages.search)} />
+                  {/* <LoadingSpin isLoading={isLoading && history.location.pathname.indexOf('modal') > -1} /> */}
+                </div>
+              </div>
+            </StyleAppList>
+
+            <ErrorBoundary>
+              <ItemList
+                type={initType}
+                mapList={mapList}
+                searchword={searchword}
+                getMapListOne={key => handleGetMapListOneWithHistory(key, history)}
+                getMapListMore={key => {
+                  loadingOn();
+                  handleGetMapAppListMore(key);
+                }}
+                registApp={handleRegistApp}
+                registCategory={handleRegistCategory}
+                registBiz={handleRegisterBiz}
+                goBack={() => handleGoBack(history)}
+                currentView={currentView}
+              />
+            </ErrorBoundary>
+            {/* <Footer /> */}
+          </div>
+        </Content>
+      </Layout>
     );
   }
 }
@@ -206,7 +208,7 @@ AppList.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
   handleInitPage: (initType, param) => dispatch(actions.initPage(initType, param)),
-  handleGetMapListAll: key=> dispatch(actions.getMapListAll()),
+  handleGetMapListAll: key => dispatch(actions.getMapListAll()),
   handleGetMapListOne: key => dispatch(actions.getMapListOne(key)),
   handleGetMapAppListMore: key => dispatch(actions.getMapListMore(key)),
   handleRegistApp: (APP_ID, CATG_ID) => dispatch(actions.registApp(APP_ID, CATG_ID)),
@@ -242,13 +244,6 @@ const mapStateToProps = createStructuredSelector({
 
 const withReducer = injectReducer({ key: 'store-appList', reducer });
 const withSaga = injectSaga({ key: 'store-appList', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppList);
+export default compose(withReducer, withSaga, withConnect)(AppList);
