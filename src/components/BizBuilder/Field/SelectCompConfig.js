@@ -3,7 +3,6 @@ import { Row, Col, Select, Input, Radio } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-
 const { Option } = Select;
 
 class ComponentConfig extends Component {
@@ -118,7 +117,7 @@ class ComponentConfig extends Component {
 }
 const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="SelectCompConfig"
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}
     rowIndex={rowIndex}

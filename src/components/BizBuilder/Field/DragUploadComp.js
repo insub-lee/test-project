@@ -113,7 +113,7 @@ class DragUploadComp extends Component {
   };
 
   onRemove = itemindex => {
-    const { id, changeFormData, colData, COMP_FIELD } = this.props;
+    const { sagaKey: id, changeFormData, colData, COMP_FIELD } = this.props;
     const { fileList } = this.state;
     this.setState({
       fileList: fileList.filter((item, index) => index !== itemindex),
@@ -166,7 +166,7 @@ class DragUploadComp extends Component {
   };
 
   handlerAttachChange = detail => {
-    const { CONFIG, id, changeFormData, changeValidationData, COMP_FIELD, NAME_KOR, WORK_SEQ, colData, COMP_TAG } = this.props;
+    const { CONFIG, sagaKey: id, changeFormData, changeValidationData, COMP_FIELD, NAME_KOR, WORK_SEQ, colData, COMP_TAG } = this.props;
     let retVal = {};
     if (CONFIG.property.isRequired) {
       changeValidationData(id, COMP_FIELD, detail.length > 0, detail.length > 0 ? '' : `${NAME_KOR}는 필수항목 입니다.`);

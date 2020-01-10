@@ -4,7 +4,7 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 
-class SelectComp extends Component {
+class SelectIntComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
@@ -32,7 +32,7 @@ class SelectComp extends Component {
       // 기본값인지 체크
       changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
-    changeFormData(id, COMP_FIELD, value);
+    changeFormData(id, COMP_FIELD, value.trim() !== '' ? Number(value) : null);
   };
 
   render() {
@@ -51,7 +51,7 @@ class SelectComp extends Component {
       <>
         {colData !== undefined ? (
           <Select
-            value={colData.trim() === '' || colData === 0 ? undefined : Number(colData)}
+            value={!colData || colData.trim() === '' || colData === 0 ? undefined : Number(colData)}
             placeholder={placeholder}
             style={{ width: 300, marginRight: 10 }}
             onChange={value => {
@@ -78,4 +78,4 @@ class SelectComp extends Component {
     );
   }
 }
-export default SelectComp;
+export default SelectIntComp;

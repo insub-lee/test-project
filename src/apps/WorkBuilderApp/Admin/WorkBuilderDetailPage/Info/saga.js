@@ -13,10 +13,13 @@ function* fetchData({ id }) {
   const { processList } = prcList;
   const optList = yield call(Axios.get, '/api/builder/v1/work/optionmeta');
   const { list } = optList;
+  const apiList = yield call(Axios.get, '/api/builder/v1/work/apimaster');
+  const { list: apiMasterList } = apiList;
   const result = {
     workInfo: object,
     processList,
     optList: list,
+    apiList: apiMasterList,
   };
 
   console.debug(result);

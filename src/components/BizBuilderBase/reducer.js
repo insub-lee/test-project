@@ -157,7 +157,8 @@ const reducer = (state = initialState, action) => {
         .deleteIn(['bizBuilderBase', id, 'metaList'])
         .deleteIn(['bizBuilderBase', id, 'workFlow'])
         .deleteIn(['bizBuilderBase', id, 'formData'])
-        .deleteIn(['bizBuilderBase', id, 'validationData']);
+        .deleteIn(['bizBuilderBase', id, 'validationData'])
+        .deleteIn(['bizBuilderBase', id, 'listData']);
     }
     case actionTypes.SET_REVISION_HISTORY: {
       const { id, list } = action;
@@ -187,6 +188,10 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.DISABLE_DATA_LOADING: {
       return state.set('dataLoading', false);
+    }
+    case actionTypes.SET_LIST_DATA_REDUCER: {
+      const { id, listData } = action;
+      return state.setIn(['bizBuilderBase', id, 'listData'], fromJS(listData));
     }
     default:
       return state;

@@ -19,9 +19,17 @@ class BizBuilderViewer extends Component {
   render() {
     const {
       match: { params },
+      item,
     } = this.props;
     const { ID } = params;
-    return <BizBuilderBase id="BizDoc" workSeq={Number(ID || -1)} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return (
+      <BizBuilderBase
+        sagaKey={`BizBuilderViewer_${item && item.id ? item.id : ''}_${ID || '-1'}`}
+        workSeq={Number(ID || -1)}
+        viewType="LIST"
+        loadingComplete={this.loadingComplete}
+      />
+    );
   }
 }
 

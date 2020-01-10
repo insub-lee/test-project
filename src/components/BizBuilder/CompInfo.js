@@ -42,6 +42,10 @@ import DCRBLabelComp from 'components/BizBuilder/Field/DCRBLabelComp';
 import DCRBTextComp from 'components/BizBuilder/Field/DCRBTextComp';
 import DwSelectLabelComp from 'components/BizBuilder/Field/DwSelectLabelComp';
 import DwSelectComp from 'components/BizBuilder/Field/DwSelectComp';
+import SelectIntComp from 'components/BizBuilder/Field/SelectIntComp';
+import RadioMaterialComp from 'components/BizBuilder/Field/RadioMaterialComp';
+import RadioMaterialLabelComp from 'components/BizBuilder/Field/RadioMaterialLabelComp';
+import RadioPopupComp from 'components/BizBuilder/Field/RadioPopupComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -86,4 +90,8 @@ export const CompInfo = {
   'components/BizBuilder/Field/DCRBTextComp': { renderer: property => <DCRBTextComp {...property} /> },
   'components/BizBuilder/Field/DwSelectLabelComp': { renderer: property => <DwSelectLabelComp {...property} /> },
   'components/BizBuilder/Field/DwSelectComp': { renderer: property => <DwSelectComp {...property} /> },
+  'components/BizBuilder/Field/SelectIntComp': { renderer: property => <SelectIntComp {...property} /> },
+  'components/BizBuilder/Field/RadioMaterialComp': { renderer: property => <RadioMaterialComp {...property} /> },
+  'components/BizBuilder/Field/RadioMaterialLabelComp': { renderer: property => <RadioMaterialLabelComp {...property} /> },
+  'components/BizBuilder/Field/RadioPopupComp': { renderer: property => <RadioPopupComp {...property} /> },
 };

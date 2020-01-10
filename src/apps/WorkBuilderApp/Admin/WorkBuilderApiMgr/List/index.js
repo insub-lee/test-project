@@ -8,7 +8,7 @@ import StyledModal from 'commonStyled/Modal/StyledModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledAntdTable from 'commonStyled/Table/StyledAntdTable';
 
-import OptInput from '../OptInput';
+import ApiInput from '../ApiInput';
 const BzmModal = StyledModal(Modal);
 const BzmTable = StyledAntdTable(Table);
 
@@ -19,9 +19,9 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHanlder, apiArys, setFormData, initData } = this.props;
-    getCallDataHanlder(id, apiArys);
-    setFormData(id, initData);
+    const { sagaKey, getCallDataHanlder, apiArys, setFormData, initData } = this.props;
+    getCallDataHanlder(sagaKey, apiArys);
+    setFormData(sagaKey, initData);
   }
 
   onRegOption = () => {
@@ -32,23 +32,23 @@ class List extends Component {
   };
 
   onModalCancel = () => {
-    const { sagaKey: id, setFormData, initData } = this.props;
+    const { sagaKey, setFormData, initData } = this.props;
     this.setState({
       isRegModal: false,
     });
-    setFormData(id, initData);
+    setFormData(sagaKey, initData);
   };
 
   onOptSave = () => {
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey, submitHadnlerBySaga, formData } = this.props;
     const param = { PARAM: formData };
-    submitHadnlerBySaga(id, 'POST', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
+    submitHadnlerBySaga(sagaKey, 'POST', '/api/builder/v1/work/apimaster', param, this.onSaveComplete);
   };
 
   onOptUpdate = () => {
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey, submitHadnlerBySaga, formData } = this.props;
     const param = { PARAM: formData };
-    submitHadnlerBySaga(id, 'PUT', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
+    submitHadnlerBySaga(sagaKey, 'PUT', '/api/builder/v1/work/apimaster', param, this.onSaveComplete);
   };
 
   onSaveComplete = id => {
@@ -61,8 +61,8 @@ class List extends Component {
   };
 
   onModify = record => {
-    const { sagaKey: id, setFormData } = this.props;
-    setFormData(id, record);
+    const { sagaKey, setFormData } = this.props;
+    setFormData(sagaKey, record);
     this.setState({
       isRegModal: true,
       actionType: 'U',
@@ -71,25 +71,19 @@ class List extends Component {
 
   columns = [
     {
-      title: '옵션명',
-      dataIndex: 'OPT_NAME',
-      key: 'OPT_NAME',
+      title: 'API명',
+      dataIndex: 'API_NAME',
+      key: 'API_NAME',
       width: '25%',
     },
     {
-      title: '사용자 조회화면 경로',
-      dataIndex: 'OPT_APP_SRC',
-      key: 'OPT_APP_SRC',
+      title: 'API SRC',
+      dataIndex: 'API_SRC',
+      key: 'API_SRC',
       width: '20%',
     },
     {
-      title: '관리자 설정화면 경로',
-      dataIndex: 'OPT_APP_SETTING_SRC',
-      key: 'OPT_APP_SETTING_SRC',
-      width: '20%',
-    },
-    {
-      title: '옵션사용여부',
+      title: '사용여부',
       align: 'center',
       dataIndex: 'ISUSED',
       key: 'ISUSED',
@@ -124,9 +118,9 @@ class List extends Component {
     return (
       <div>
         <StyledButton style={{ textAlign: 'right' }} onClick={() => this.onRegOption()}>
-          옵션등록
+          API등록
         </StyledButton>
-        <BzmTable rowKey="OPT_SEQ" pagination={false} columns={this.columns} dataSource={result.workOptMataList && result.workOptMataList.list}></BzmTable>
+        <BzmTable rowKey="OPT_SEQ" pagination={false} columns={this.columns} dataSource={result.workApiMasterList && result.workApiMasterList.list} />
         <BzmModal
           width={700}
           visible={this.state.isRegModal}
@@ -134,7 +128,7 @@ class List extends Component {
           onOk={() => (this.state.actionType === 'I' ? this.onOptSave() : this.onOptUpdate())}
           destroyOnClose
         >
-          <OptInput actionType={this.state.actionType} {...this.props}></OptInput>
+          <ApiInput actionType={this.state.actionType} {...this.props} />
         </BzmModal>
       </div>
     );
@@ -155,8 +149,8 @@ List.propTypes = {
 List.defaultProps = {
   apiArys: [
     {
-      key: 'workOptMataList',
-      url: '/api/builder/v1/work/optionmeta',
+      key: 'workApiMasterList',
+      url: '/api/builder/v1/work/apimaster',
       type: 'GET',
       params: {},
     },

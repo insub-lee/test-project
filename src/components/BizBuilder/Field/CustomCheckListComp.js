@@ -11,7 +11,7 @@ class CustomCheckListComp extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, apiArray, compGroupKeys } = this.props;
+    const { getExtraApiData, sagaKey: id, apiArray, compGroupKeys } = this.props;
     getExtraApiData(id, apiArray);
     compGroupKeys.map(key => {
       this.state = { ...this.state, [key]: { name: '', value: ' ' } };
@@ -32,7 +32,7 @@ class CustomCheckListComp extends Component {
   };
 
   onOkHandler = () => {
-    const { compGroupKeys, changeFormData, id, COMP_FIELD, NAME_KOR, colData, changeValidationData } = this.props;
+    const { compGroupKeys, changeFormData, sagaKey: id, COMP_FIELD, NAME_KOR, colData, changeValidationData } = this.props;
 
     if (this.state.FAB.value === ' ') {
       message.warning(<MessageContent>적용Line/Site는 반드시 선택이 되어야 합니다.</MessageContent>, 3);

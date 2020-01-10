@@ -41,14 +41,14 @@ const setFormDataValue = (value, colData, COMP_FIELD, COMP_TAG, WORK_SEQ) => {
 
 class EditorComp extends Component {
   componentDidMount = () => {
-    const { changeFormData, id, colData, COMP_FIELD, COMP_TAG, WORK_SEQ } = this.props;
+    const { changeFormData, sagaKey: id, colData, COMP_FIELD, COMP_TAG, WORK_SEQ } = this.props;
     if (typeof colData !== 'object') {
       changeFormData(id, COMP_FIELD, setFormDataValue(colData, colData, COMP_FIELD, COMP_TAG, WORK_SEQ));
     }
   };
 
   render = () => {
-    const { COMP_FIELD, changeFormData, id, colData, readOnly, COMP_TAG, WORK_SEQ, visible } = this.props;
+    const { COMP_FIELD, changeFormData, sagaKey: id, colData, readOnly, COMP_TAG, WORK_SEQ, visible } = this.props;
     return visible ? (
       <RichTextEditor
         name={COMP_FIELD}

@@ -3,7 +3,10 @@ import { Row, Col, Radio } from 'antd';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-const customSet = [{ valueType: 'props', valueKey: 'docNumber' }, { valueType: 'default', defaultValue: '1.0' }];
+const customSet = [
+  { valueType: 'props', valueKey: 'docNumber' },
+  { valueType: 'default', defaultValue: '1.0' },
+];
 
 class ReadOnlyTextCompConfig extends Component {
   componentDidMount() {}
@@ -24,7 +27,7 @@ class ReadOnlyTextCompConfig extends Component {
 
   render() {
     const { configInfo } = this.props;
-    const selectedValue = configInfo && configInfo.property && configInfo.property.selectedValue || undefined;
+    const selectedValue = (configInfo && configInfo.property && configInfo.property.selectedValue) || undefined;
     return (
       <div>
         <Row>
@@ -43,7 +46,7 @@ class ReadOnlyTextCompConfig extends Component {
 
 const SetReadOnlyTextCompConfig = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="ReadOnlyTextCompConfig"
     component={ReadOnlyTextCompConfig}
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}

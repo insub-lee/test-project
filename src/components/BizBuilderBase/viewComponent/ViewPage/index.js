@@ -18,7 +18,7 @@ class ViewPage extends Component {
   }
 
   componentDidMount() {
-    const { id, draftId } = this.props;
+    const { sagaKey: id, draftId } = this.props;
     if (draftId !== -1) {
       this.props.getDraftProcess(id, draftId);
     }
@@ -31,7 +31,7 @@ class ViewPage extends Component {
   // }
 
   render = () => {
-    const { id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId } = this.props;
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -72,7 +72,7 @@ class ViewPage extends Component {
 }
 
 ViewPage.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   draftId: PropTypes.number,
   getDraftProcess: PropTypes.func,
   extraApiData: PropTypes.object,

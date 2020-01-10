@@ -19,7 +19,18 @@ import ListPage from './viewComponent/ListPage';
 
 class BizBuilderBase extends React.Component {
   componentDidMount() {
-    const { getBuilderData, getDetailData, id, workSeq, taskSeq, viewType, setViewPageData, revisionTask, revisionType, changeWorkflowFormData } = this.props; // id: widget_id+@
+    const {
+      getBuilderData,
+      getDetailData,
+      sagaKey: id,
+      workSeq,
+      taskSeq,
+      viewType,
+      setViewPageData,
+      revisionTask,
+      revisionType,
+      changeWorkflowFormData,
+    } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     if (viewType) setViewPageData(id, workSeq, taskSeq, retViewType);
     if (taskSeq !== -1 && viewType === 'REVISION') {
@@ -27,21 +38,32 @@ class BizBuilderBase extends React.Component {
     } else if (taskSeq !== -1) {
       getDetailData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { getBuilderData, getDetailData, id, workSeq, taskSeq, viewType, setViewPageData, revisionTask, revisionType, changeWorkflowFormData } = this.props;
+    const {
+      getBuilderData,
+      getDetailData,
+      sagaKey: id,
+      workSeq,
+      taskSeq,
+      viewType,
+      setViewPageData,
+      revisionTask,
+      revisionType,
+      changeWorkflowFormData,
+    } = this.props;
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    if (prevProps.id !== this.props.id) {
+    if (prevProps.sagaKey !== this.props.sagaKey) {
       if (viewType !== prevProps.viewType) setViewPageData(id, workSeq, taskSeq, retViewType); // setViewType(id, viewType);
       if (taskSeq !== -1 && viewType === 'REVISION') {
         revisionTask(id, workSeq, taskSeq, retViewType, revisionType);
       } else if (taskSeq !== -1) {
         getDetailData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
       } else if (workSeq !== -1) {
-        getBuilderData(id, workSeq, taskSeq, changeWorkflowFormData);
+        getBuilderData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
       }
     }
   }
@@ -55,7 +77,7 @@ class BizBuilderBase extends React.Component {
     } else if (taskSeq !== -1) {
       getDetailData(id, workSeq, taskSeq, retViewType);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq);
+      getBuilderData(id, workSeq, taskSeq, retViewType);
     }
   };
 
@@ -66,7 +88,18 @@ class BizBuilderBase extends React.Component {
   };
 
   componentRenderer = () => {
-    const { CustomInputPage, CustomModifyPage, CustomViewPage, CustomListPage, CustomPage, viewPageData, metaList, id, workInfo, listData } = this.props;
+    const {
+      CustomInputPage,
+      CustomModifyPage,
+      CustomViewPage,
+      CustomListPage,
+      CustomPage,
+      viewPageData,
+      metaList,
+      sagaKey: id,
+      workInfo,
+      listData,
+    } = this.props;
     const viewLayer = metaList.filter(
       fNode => fNode.COMP_TYPE === 'VIEW' && fNode.COMP_TAG === viewPageData.viewType && fNode.META_SEQ === workInfo[`VW_${viewPageData.viewType}`],
     );
@@ -134,7 +167,7 @@ class BizBuilderBase extends React.Component {
 }
 
 BizBuilderBase.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string.isRequired,
   component: PropTypes.func,
   viewType: PropTypes.string,
   workSeq: PropTypes.number,
@@ -145,6 +178,7 @@ BizBuilderBase.propTypes = {
   metaList: PropTypes.arrayOf(PropTypes.object),
   formData: PropTypes.object,
   revisionHistory: PropTypes.array,
+  viewID: PropTypes.string,
   workFlowConfig: PropTypes.object,
   processRule: PropTypes.object,
   getBuilderData: PropTypes.func,
@@ -171,6 +205,7 @@ BizBuilderBase.propTypes = {
   setProcessRule: PropTypes.func,
   getDraftProcess: PropTypes.func,
   dataLoading: PropTypes.bool,
+  changeWorkflowFormData: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -189,14 +224,13 @@ BizBuilderBase.defaultProps = {
   responseData: {},
   extraApiData: {},
   revisionHistory: [],
-  viewID: 'BizDoc',
-  // viewID: 'TechDoc',
-  // viewID: 'DwDoc',
+  viewID: 'BizBuilderBase',
   isCustom: false,
   draftId: -1,
-  metaSeq: 1801,
+  metaSeq: -1,
   viewPageData: { viewType: 'LIST' },
   dataLoading: false,
+  changeWorkflowFormData: null,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -216,7 +250,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBuilderData: (id, workSeq, taskSeq, changeWorkflowFormData) => dispatch(actions.getBuilderData(id, workSeq, taskSeq, changeWorkflowFormData)),
+  getBuilderData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
+    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
   getExtraApiData: (id, apiArr) => dispatch(actions.getExtraApiData(id, apiArr)),
   getDetailData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
     dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
@@ -248,4 +283,4 @@ const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, 
 const withSaga = injectSaga({ key: `apps.mdcs.components.BizBuilderBase`, saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withSaga, withReducer, withConnect)(BizBuilderBase);
+export default compose(withReducer, withSaga, withConnect)(BizBuilderBase);

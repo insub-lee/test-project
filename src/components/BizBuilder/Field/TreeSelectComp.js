@@ -21,7 +21,7 @@ class TreeSelectComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
@@ -34,7 +34,7 @@ class TreeSelectComp extends Component {
   }
 
   onChangeHandler = value => {
-    const { changeFormData, id, CONFIG, changeValidationData, COMP_FIELD, NAME_KOR } = this.props;
+    const { changeFormData, sagaKey: id, CONFIG, changeValidationData, COMP_FIELD, NAME_KOR } = this.props;
     const { isRequired } = CONFIG.property;
     if (isRequired) {
       changeValidationData(id, COMP_FIELD, value !== ' ', value !== ' ' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
