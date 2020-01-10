@@ -25,7 +25,7 @@ class DocSelectComp extends PureComponent {
   }
 
   componentDidMount() {
-    const { colData, CONFIG, id, getExtraApiData } = this.props;
+    const { colData, CONFIG, sagaKey: id, getExtraApiData } = this.props;
     const { searchApiType } = CONFIG.property;
     if (colData !== undefined && colData.trim() !== '') {
       const getApi = {
@@ -54,7 +54,7 @@ class DocSelectComp extends PureComponent {
   };
 
   onSearchDoc = () => {
-    const { id, getExtraApiData, CONFIG } = this.props;
+    const { sagaKey: id, getExtraApiData, CONFIG } = this.props;
     const { searchApiType, searchApiResultKey } = CONFIG.property;
     const searchApi = {
       key: `${searchApiResultKey}`,
@@ -95,7 +95,7 @@ class DocSelectComp extends PureComponent {
   };
 
   formDataChange = () => {
-    const { id, changeFormData, COMP_FIELD } = this.props;
+    const { sagaKey: id, changeFormData, COMP_FIELD } = this.props;
     const { tableData } = this.state;
     const form = tableData.map(item => item.TASK_SEQ).join(',');
     changeFormData(id, COMP_FIELD, form);

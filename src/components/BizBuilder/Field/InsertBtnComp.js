@@ -2,7 +2,7 @@ import React from 'react';
 
 import StyledButton from 'components/CommonStyled/StyledButton';
 
-const InsertBtnComp = ({ id, saveTask, compProps, changeFormData, formData, visible }) =>
+const InsertBtnComp = ({ sagaKey: id, saveTask, compProps, changeFormData, formData, visible }) =>
   visible ? (
     <StyledButton
       className="btn-primary"

@@ -5,7 +5,7 @@ import List from './List';
 
 class WorkBuilderCompMgr extends Component {
   render() {
-    return <BizMicroDevBase id="ComponentPool_List" component={List} />;
+    return <BizMicroDevBase sagaKey="ComponentPool_List" component={List} />;
   }
 }
 

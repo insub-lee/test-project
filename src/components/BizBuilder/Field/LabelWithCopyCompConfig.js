@@ -57,7 +57,7 @@ class ComponentConfig extends Component {
 export default ComponentConfig;
 // const configer = ({ changeCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
 //   <BizMicroDevBase
-//     id="componentConfig"
+//     sagaKey="LabelWithCopyCompConfig"
 //     changeCompData={changeCompData}
 //     groupIndex={groupIndex}
 //     rowIndex={rowIndex}
