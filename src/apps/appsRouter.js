@@ -22,13 +22,24 @@ class AppsRouter extends React.PureComponent {
     this.contents = this.getAppsRouter(selectedApp);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // REMOVE PORTAL MULTIPLE DIVS
-    // if (JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
-    if (nextProps.columns && JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
-      this.contents = this.getAppsRouter(nextProps.columns);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { selectedApp: prevSelectedApp } = prevProps;
+    const { selectedApp } = this.props;
+    if (selectedApp && prevSelectedApp && JSON.stringify(selectedApp) !== JSON.stringify(prevSelectedApp)) {
+      console.debug('update ?');
+      this.forceUpdate();
+      this.contents = this.getAppsRouter(selectedApp);
     }
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   // REMOVE PORTAL MULTIPLE DIVS
+  //   // if (JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
+  //   // console.debug('@@@@', this.props, nextProps.columns);
+  //   if (nextProps.columns && JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
+  //     this.contents = this.getAppsRouter(nextProps.columns);
+  //   }
+  // }
 
   getAppsRouter = selectedApp => {
     const type = 'swidget';
