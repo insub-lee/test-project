@@ -2,13 +2,20 @@ import React, { Component } from 'react';
 
 class DocNumberComp extends Component {
   componentDidMount() {
-    const { sagaKey: id, COMP_FIELD, changeFormData } = this.props;
-    changeFormData(id, COMP_FIELD, this.props.compProps && this.props.compProps.docNumber);
+    const { sagaKey: id, COMP_FIELD, changeFormData, compProps, formData } = this.props;
+    if (!(formData && formData.DOCNUMBER && formData.DOCNUMBER.trim().length > 0)) {
+      const value = compProps && compProps.docNumber;
+      changeFormData(id, COMP_FIELD, value);
+    }
   }
 
   render() {
-    const { visible } = this.props;
-    return visible ? <span>{this.props.compProps && this.props.compProps.docNumber}</span> : '';
+    const { visible, compProps, formData } = this.props;
+    if (formData && formData.DOCNUMBER && formData.DOCNUMBER.trim().length > 0) {
+      console.debug('agagag', formData.DOCNUMBER.trim(), formData.DOCNUMBER.trim().length);
+      return visible ? <span>{formData.DOCNUMBER}</span> : '';
+    }
+    return visible ? <span>{compProps && compProps.docNumber}</span> : '';
   }
 }
 

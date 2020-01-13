@@ -14,15 +14,15 @@ import * as selectors from './selectors';
 function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-  const { work, metaList, formData, validationData } = response;
+  const { work, metaList, formData, validationData, apiList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
 
   if (taskSeq === -1) {
     // yield put(actions.initFormData(id, workSeq, formData));
-    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, formData, validationData));
+    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList, formData, validationData));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
   } else {
-    yield put(actions.setBuilderData(id, response, work, metaList, workFlow));
+    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
   }
   if (viewType === 'LIST') {
     const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
@@ -132,6 +132,8 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const extraApiList = yield select(selectors.makeSelectApiListById(id));
+
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
@@ -203,6 +205,24 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     );
   }
 
+  if (extraApiList.length > 0) {
+    for (let i = 0; i < extraApiList.length; i += 1) {
+      const item = extraApiList[i];
+      yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+    }
+  }
+
   if (Object.keys(processRule).length !== 0) {
     // 결재 저장
     const forthResponse = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draft`, {
@@ -233,6 +253,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
   const formData = yield select(selectors.makeSelectFormDataById(id));
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const extraApiList = yield select(selectors.makeSelectApiListById(id));
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
@@ -285,6 +306,24 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
       },
       { BUILDER: 'saveTotalData' },
     );
+  }
+
+  if (extraApiList.length > 0) {
+    for (let i = 0; i < extraApiList.length; i += 1) {
+      const item = extraApiList[i];
+      yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+    }
   }
 
   yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));

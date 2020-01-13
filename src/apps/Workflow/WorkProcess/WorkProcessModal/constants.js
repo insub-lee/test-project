@@ -1,4 +1,4 @@
-const prefix = 'apps/Workflow/WorkProcess/WorkProcessModal';
+const prefix = 'apps/WorkFlow/WorkProcess/WorkProcessModal';
 export const GET_DEPT_LIST = `${prefix}/GET_DEPT_LIST`;
 export const SET_DEPT_LIST = `${prefix}/SET_DEPT_LIST`;
 export const GET_DEPT_USER_LIST = `${prefix}/GET_DEPT_USER_LIST`;
