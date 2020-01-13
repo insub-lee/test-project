@@ -96,7 +96,7 @@ class UserStore extends Component {
                     <ModalRoute
                       path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
                       component={Widget}
-                      outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
+                      // outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
                     />
                   </ErrorBoundary>
                   <ModalContainer />

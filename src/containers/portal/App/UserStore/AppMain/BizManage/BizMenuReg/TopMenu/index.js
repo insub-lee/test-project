@@ -6,7 +6,7 @@ import { ModalContainer, ModalRoute } from 'react-router-modal';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Row, Col } from 'antd';
+import { Row, Col, Modal } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { lang, intlObj } from 'utils/commonUtils';
@@ -22,47 +22,42 @@ import messages from './messages';
 
 import StyleTopMenu from './StyleTopMenu';
 import { BtnDkGray, BtnBizPreview, BtnBizSettings } from '../../../../components/uielements/buttons.style';
+import AuthSettingModalContents from '../AuthSetting/AuthSettingModalContents';
 
 // import BizMenuTree from '../../../../components/AppPreview/BizMenuTree';
 // import AppPreview from '../../../../components/AppPreview';
 
-const Sample = () => (
-  <div>
-    Sample
-  </div>
-);
-
 class TopMenu extends React.Component {
-  constructor(prop) {
-    super(prop);
+  constructor(props) {
+    super(props);
     this.state = {
-      BIZGRP_ID: prop.BIZGRP_ID,
-      // open: false,
+      showSettingModal: false,
     };
-    prop.handleGetBizInfo(this.state.BIZGRP_ID);
-    // this.onOpen = this.onOpen.bind(this);
-    // this.onClose = this.onClose.bind(this);
   }
 
-  // componentDidUpdate(prevProps, prevState, snapshot) {
-  //   if (prevState.BIZGRP_ID !== this.props.BIZGRP_ID) {
-  //     this.set
-  //   }
-  // }
+  componentDidMount() {
+    const { BIZGRP_ID, handleGetBizInfo } = this.props;
+    handleGetBizInfo(BIZGRP_ID);
+  }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.BIZGRP_ID !== nextProps.BIZGRP_ID) {
-      this.setState({
-        BIZGRP_ID: nextProps.BIZGRP_ID,
-      });
-      this.props.handleGetBizInfo(nextProps.BIZGRP_ID);
+  componentDidUpdate(prevProps) {
+    const { BIZGRP_ID, handleGetBizInfo } = this.props;
+    if (prevProps.BIZGRP_ID !== BIZGRP_ID) {
+      handleGetBizInfo(BIZGRP_ID);
     }
   }
 
-  render() {
-    const { BIZGRP_ID } = this.state;
+  showSettingModal = () => {
+    this.setState({ showSettingModal: true });
+  };
 
-    const { bizInfo, confirmBizGroup, history, pageID, userRole, match } = this.props;
+  closeSettingModal = () => {
+    this.setState({ showSettingModal: false });
+  };
+
+  render() {
+    const { showSettingModal } = this.state;
+    const { bizInfo, confirmBizGroup, history, pageID, userRole, match, BIZGRP_ID } = this.props;
 
     const linkto = `/preview/page/${pageID}`;
     return (
@@ -85,13 +80,12 @@ class TopMenu extends React.Component {
                 </Link>
               )}
               {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
-                <BtnBizSettings
-                  title="설정하기"
-                  onClick={() => {
-                    history.push(`${match.url}/authSetting`);
-                    // history.push(`/portal/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
-                  }}
-                />
+                <>
+                  <BtnBizSettings title="설정하기" onClick={this.showSettingModal} />
+                  <Modal title="권한 설정" closable visible={showSettingModal} footer={null} destroyOnClose onCancel={this.closeSettingModal}>
+                    <AuthSettingModalContents BIZGRP_ID={BIZGRP_ID} />
+                  </Modal>
+                </>
               )}
               {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
                 <BtnDkGray

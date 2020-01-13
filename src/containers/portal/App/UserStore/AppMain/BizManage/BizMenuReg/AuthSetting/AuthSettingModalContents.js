@@ -21,44 +21,36 @@ import saga from './saga';
 import StyleAuthSetting from './StyleAuthSetting';
 import StyleAuthSettingContent from './StyleAuthSettingContent';
 
-class AuthSetting extends Component {
+class AuthSettingModalContents extends Component {
   constructor(props) {
     super(props);
-
-    const { match } = props;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
     this.state = {
-      BIZGRP_ID: Number(BIZGRP_ID),
       mapList: [],
       leftArr: [],
       topArr: [],
     };
-
-    this.props.initCategoryData(Number(BIZGRP_ID));
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { match, leftArr, topArr, bizMenuSecKeyList } = nextProps;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
+  componentDidMount() {
+    const { BIZGRP_ID, initCategoryData } = this.props;
+    initCategoryData(Number(BIZGRP_ID));
+  }
 
-    if (BIZGRP_ID && Number(BIZGRP_ID) !== Number(this.state.BIZGRP_ID)) {
-      this.setState({
-        BIZGRP_ID: Number(BIZGRP_ID),
-      });
-      this.props.initCategoryData(Number(BIZGRP_ID));
-    }
+  componentWillUnmount() {
+    this.setState({
+      mapList: [],
+      leftArr: [],
+      topArr: [],
+    });
+  }
 
-    // make mapList
-    /*
-      mapList - object array
-      [0] - { id, MENU_ID, ACNT_ID, checked, ...}
-      [1] - { id, MENU_ID, ACNT_ID, checked, ...}
-      ...
-    */
-    if (this.state.leftArr.length === 0 && this.state.topArr.length === 0) {
-      if (leftArr.length > 0 && topArr.length > 0) {
+  componentDidUpdate(prevProps, prevState) {
+    const { leftArr, topArr, BIZGRP_ID, bizMenuSecKeyList } = this.props;
+
+    console.debug('@@@ ?', leftArr, topArr);
+
+    if (prevState.leftArr.length === 0 && prevState.topArr.length === 0) {
+      if (leftArr.length > 0 || topArr.length > 0) {
         const mapList = [];
 
         for (let i = 0; i < leftArr.length; i += 1) {
@@ -100,9 +92,6 @@ class AuthSetting extends Component {
       }
     }
   }
-
-  // insert
-  // delete
 
   changeCheck(dataList, isCheck) {
     if (isCheck) {
@@ -235,25 +224,14 @@ class AuthSetting extends Component {
   render() {
     const { mapList, leftArr, topArr } = this.state;
 
-    const { history, bizGroupInfo } = this.props;
+    const { bizGroupInfo } = this.props;
 
     return (
       <div className="settingsPage">
         <StyleAuthSetting className="userSetting">
           <div className="userSettingWrapper">
-            <h2 className="pageHeader">
-              권한 설정
-              <Button
-                className="modalClose"
-                onClick={() => {
-                  history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${bizGroupInfo.BIZGRP_ID}`);
-                }}
-                title=""
-              />
-            </h2>
-            {/* <h2 className="adTitle">{lang.get('NAME', bizGroupInfo)}</h2> */}
             <StyleAuthSettingContent>
-              <ScrollBar autoHide autoHideTimeout={1000} style={{ height: 'calc(100vh - 90px)', marginTop: 15 }}>
+              <ScrollBar autoHide autoHideTimeout={1000} style={{ minHeight: 300, marginTop: 15 }}>
                 <Table size="small" className="BizAuthTable" collapsing>
                   <Table.Header>
                     <Table.Row>
@@ -290,7 +268,7 @@ class AuthSetting extends Component {
   }
 }
 
-AuthSetting.propTypes = {
+AuthSettingModalContents.propTypes = {
   history: PropTypes.object.isRequired,
   match: PropTypes.object.isRequired,
 
@@ -326,4 +304,4 @@ const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'bizmenuAuthsetting', reducer });
 const withSaga = injectSaga({ key: 'bizmenuAuthsetting', saga });
 
-export default injectIntl(compose(withReducer, withSaga, withConnect)(AuthSetting));
+export default injectIntl(compose(withReducer, withSaga, withConnect)(AuthSettingModalContents));
