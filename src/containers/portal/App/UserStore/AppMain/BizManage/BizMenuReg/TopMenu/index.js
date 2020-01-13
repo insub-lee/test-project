@@ -1,5 +1,8 @@
+import ErrorBoundary from 'containers/common/ErrorBoundary';
+import AuthSetting from 'containers/portal/App/UserStore/AppMain/BizManage/BizMenuReg/AuthSetting';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { ModalContainer, ModalRoute } from 'react-router-modal';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -22,6 +25,12 @@ import { BtnDkGray, BtnBizPreview, BtnBizSettings } from '../../../../components
 
 // import BizMenuTree from '../../../../components/AppPreview/BizMenuTree';
 // import AppPreview from '../../../../components/AppPreview';
+
+const Sample = () => (
+  <div>
+    Sample
+  </div>
+);
 
 class TopMenu extends React.Component {
   constructor(prop) {
@@ -53,11 +62,16 @@ class TopMenu extends React.Component {
   render() {
     const { BIZGRP_ID } = this.state;
 
-    const { bizInfo, confirmBizGroup, history, pageID, userRole } = this.props;
+    const { bizInfo, confirmBizGroup, history, pageID, userRole, match } = this.props;
 
     const linkto = `/preview/page/${pageID}`;
     return (
       <div>
+        <ErrorBoundary>
+          <ModalRoute path={`${match.url}/authSetting`} component={AuthSetting} />
+          {/* <ModalRoute path={`${match.url}/authSetting`} component={Sample} /> */}
+          <ModalContainer />
+        </ErrorBoundary>
         <StyleTopMenu>
           <Row>
             <Col sm={24} lg={8} />
@@ -74,7 +88,8 @@ class TopMenu extends React.Component {
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
-                    history.push(`/portal/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
+                    history.push(`${match.url}/authSetting`);
+                    // history.push(`/portal/store/appMain/bizManage/authSetting/${BIZGRP_ID}`);
                   }}
                 />
               )}

@@ -364,7 +364,8 @@ const AppWrapper = styled.div`
 
 // Route path => {AppDetail}인 경우
 .appDetailWrapper {
-  padding-left: 300px;
+  //padding-left: 300px;
+  padding: 55px 0;
 
   @media only screen and (max-width: 1024px) {
     padding: 0;

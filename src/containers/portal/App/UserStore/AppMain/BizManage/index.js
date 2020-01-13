@@ -1,6 +1,6 @@
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
-import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
@@ -83,6 +83,7 @@ class BizManage extends Component {
       deleteNode,
       updateBizGroupDelYn,
       userRole,
+      match,
     } = this.props;
 
     const handleTreeOnClick = node => {
@@ -119,14 +120,23 @@ class BizManage extends Component {
         </Sider>
         <Content>
           <div className="appMyPageWrapper">
+            {/*
             <ErrorBoundary>
               <ModalRoute path="/portal/store/appMain/bizManage/authSetting/:BIZGRP_ID" component={AuthSetting} />
               <ModalContainer />
             </ErrorBoundary>
+            */}
             <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
               <ErrorBoundary>
+                <ModalRoute path={`${match.url}/authSetting`} component={AuthSetting} />
+                {/* <ModalRoute path={`${match.url}/authSetting`} component={Sample} /> */}
+                <ModalContainer />
+              </ErrorBoundary>
+              <ErrorBoundary>
                 <Switch>
+                  {/*
                   <Route path="/portal/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
+                  */}
                   <Route path="/portal/store/appMain/bizManage/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
                   <Route path="/appPreview" component={AppPreview} exact />
                 </Switch>

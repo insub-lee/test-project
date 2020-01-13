@@ -11,7 +11,6 @@ import ScrollBar from 'react-custom-scrollbars';
 // import * as treeFunc from 'containers/common/functions/treeFunc';
 // import { fromJS } from 'immutable';
 
-import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as selectors from './selectors';
@@ -196,18 +195,15 @@ class AuthSetting extends Component {
         <Table.Row key={left.MENU_ID}>
           <Table.Cell>{`${blank}${title}`}</Table.Cell>
           <Table.Cell>
-            {/* Left HeaderCell */
-              left.NODE_TYPE !== 'F' ? (
-                <Checkbox
-                  key={`left/${left.MENU_ID}`}
-                  checked={left.checked}
-                  onChange={e => {
-                    this.checkLeftAll(leftArr, mapList, i, e.target.checked);
-                  }}
-                />
-              ) : (
-                ''
-              )}
+            {left.NODE_TYPE !== 'F' && (
+              <Checkbox
+                key={`left/${left.MENU_ID}`}
+                checked={left.checked}
+                onChange={e => {
+                  this.checkLeftAll(leftArr, mapList, i, e.target.checked);
+                }}
+              />
+            )}
           </Table.Cell>
           {Object.keys(map).map(key => {
             const data = map[key];
@@ -242,15 +238,7 @@ class AuthSetting extends Component {
     const { history, bizGroupInfo } = this.props;
 
     return (
-      <div
-        className="settingsPage"
-        style={{
-          width: '100vw',
-          height: '100vh',
-          top: 0,
-          left: 0,
-        }}
-      >
+      <div className="settingsPage">
         <StyleAuthSetting className="userSetting">
           <div className="userSettingWrapper">
             <h2 className="pageHeader">
