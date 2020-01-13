@@ -10,23 +10,10 @@ import * as constantsTopMenu from './BizMenuReg/TopMenu/constants';
 import * as constants from './constants';
 import messages from './messages';
 
-// SA권한 확인 - (SA 권한일 경우 모든 업무그룹 수정 권한 부여)
-export function* getUserRole() {
-  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizGrpSARoleCheck', { data: 'temp' });
-  const { code } = response;
-  const userRole = response.userRole ? response.userRole : '';
-  if (code === 200 && userRole) {
-    yield put({
-      type: constants.SET_USER_ROLE,
-      userRole,
-    });
-  }
-}
-
 // 업무카드관리의 좌측 트리 - (시스템[SYS_YN],홈[HOME_YN] 설정이 외의 업무그룹 리스트)
 export function* getTreeData() {
-  // const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree', { data: 'temp' });
-  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', { data: 'temp' });
+  // 시스템 업무카드 제외, SEC_TYPE='I' 권한이 있는 업무카드
+  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N&PORTAL_STORE_YN=N', {});
   const result = JSON.parse(`[${response.result}]`);
   if (!result[0].children) result[0].children = [];
   const categoryData = fromJS(result).getIn([0, 'children']);
@@ -251,7 +238,6 @@ export function* updateBizGroupDelYn(payload) {
 }
 
 export default function* rootSaga() {
-  yield takeLatest(constants.GET_USER_ROLE, getUserRole);
   yield takeLatest(constants.INIT_CATEGORY_DATA, getTreeData);
   yield takeLatest(constants.GET_MENUBIZGRP_ID, getMenuBizGrpID);
   yield takeLatest(constants.ADD_EMPTY_NODE, addEmptyNode);
