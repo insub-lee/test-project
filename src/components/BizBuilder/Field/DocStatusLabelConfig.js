@@ -70,7 +70,7 @@ ComponentConfig.propTypes = {
 
 const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="DocStatusLabelConfig"
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}
     rowIndex={rowIndex}

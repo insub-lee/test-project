@@ -18,7 +18,7 @@ class CheckListComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
@@ -42,7 +42,7 @@ class CheckListComp extends Component {
     const { tempText, tempValue } = this.state;
     const {
       changeFormData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { isRequired },
       },

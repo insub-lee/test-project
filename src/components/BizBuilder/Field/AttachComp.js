@@ -9,7 +9,7 @@ const handlerAttachChange = (detail, CONFIG, id, changeFormData, changeValidatio
   changeFormData(id, COMP_FIELD, detail);
 };
 
-const AttachComp = ({ CONFIG, colData, changeFormData, id, changeValidationData, readOnly, NAME_KOR, COMP_FIELD, visible }) => {
+const AttachComp = ({ CONFIG, colData, changeFormData, sagaKey: id, changeValidationData, readOnly, NAME_KOR, COMP_FIELD, visible }) => {
   let defaultAttachValue = { DETAIL: [] };
   if (colData !== undefined) {
     defaultAttachValue = colData;
@@ -21,7 +21,7 @@ const AttachComp = ({ CONFIG, colData, changeFormData, id, changeValidationData,
   }
 
   return visible ? (
-    <React.Fragment>
+    <>
       <FileUpload
         defaultValue={defaultAttachValue}
         multiple={CONFIG.property.multiple || true}
@@ -30,7 +30,7 @@ const AttachComp = ({ CONFIG, colData, changeFormData, id, changeValidationData,
           handlerAttachChange(detail, CONFIG, id, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD);
         }}
       ></FileUpload>
-    </React.Fragment>
+    </>
   ) : (
     ''
   );

@@ -11,9 +11,9 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, changeWorkflowFormData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
-  const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
+  const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
 
@@ -23,6 +23,13 @@ function* getBuilderData({ id, workSeq, taskSeq, changeWorkflowFormData }) {
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
   } else {
     yield put(actions.setBuilderData(id, response, work, metaList, workFlow));
+  }
+  if (viewType === 'LIST') {
+    const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
+    if (responseList) {
+      const { list } = responseList;
+      yield put(actions.setListDataByReducer(id, list));
+    }
   }
 }
 
@@ -356,25 +363,24 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-export default function* watcher() {
-  const arg = arguments[0];
-  yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.id}`, getBuilderData);
-  yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.id}`, getExtraApiData);
-  yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.id}`, getDetailData);
-  yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.id}`, getProcessRule);
-  yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.id}`, getTaskSeq);
+export default function* watcher(arg) {
+  yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
+  yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
+  yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.sagaKey}`, getDetailData);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.sagaKey}`, getProcessRule);
+  yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.sagaKey}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
-  yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);
-  yield takeLatest(`${actionTypes.SAVE_TASK}_${arg.id}`, saveTask);
-  yield takeLatest(`${actionTypes.MODIFY_TASK}_${arg.id}`, modifyTask);
-  yield takeLatest(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.id}`, modifyTaskBySeq);
-  yield takeLatest(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
-  yield takeLatest(`${actionTypes.DELETE_EXTRA_TASK}_${arg.id}`, deleteExtraTask);
-  yield takeLatest(`${actionTypes.DELETE_FAV}_${arg.id}`, deleteFav);
-  yield takeLatest(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
-  yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.id}`, revisionTask);
-  yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.id}`, getRevisionHistory);
-  yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.id}`, getDraftProcess);
+  yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.sagaKey}`, tempSaveTask);
+  yield takeLatest(`${actionTypes.SAVE_TASK}_${arg.sagaKey}`, saveTask);
+  yield takeLatest(`${actionTypes.MODIFY_TASK}_${arg.sagaKey}`, modifyTask);
+  yield takeLatest(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.sagaKey}`, modifyTaskBySeq);
+  yield takeLatest(`${actionTypes.DELETE_TASK}_${arg.sagaKey}`, deleteTask);
+  yield takeLatest(`${actionTypes.DELETE_EXTRA_TASK}_${arg.sagaKey}`, deleteExtraTask);
+  yield takeLatest(`${actionTypes.DELETE_FAV}_${arg.sagaKey}`, deleteFav);
+  yield takeLatest(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.sagaKey}`, addNotifyBuilder);
+  yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.sagaKey}`, revisionTask);
+  yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.sagaKey}`, getRevisionHistory);
+  yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.sagaKey}`, getDraftProcess);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

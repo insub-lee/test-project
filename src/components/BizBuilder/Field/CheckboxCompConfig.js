@@ -25,10 +25,11 @@ class CheckboxConfig extends Component {
   }
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray, changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHanlder, sagaKey, apiArray, changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    getCallDataHanlder(sagaKey, apiArray);
     configInfo.property.returnType = 'StringNum';
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
+    if (configInfo.property.mapId) this.getCategorieMapList(configInfo.property.mapId);
   }
 
   // etc Input태그 사용여부
@@ -84,23 +85,12 @@ class CheckboxConfig extends Component {
     }
   };
 
-  setRootMapList = () => {
-    const {
-      result: { categoryMapInfo },
-    } = this.props;
-    if (categoryMapInfo && categoryMapInfo.categoryMapList) {
-      this.setState({
-        checkboxData: categoryMapInfo.categoryMapList,
-      });
-    }
-  };
-
   // 분류체계 선택
   getCategorieMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHanlder, sagaKey } = this.props;
     const { jsonResult } = this.state;
     const apiArray = [{ key: 'categoryMapInfo', url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' }];
-    getCallDataHanlder(id, apiArray, this.setRootMapList);
+    getCallDataHanlder(sagaKey, apiArray);
     this.setState({
       rootMapValue: value,
       jsonResult: {
@@ -122,7 +112,7 @@ class CheckboxConfig extends Component {
     const { dataType, jsonResult, objectTypeData, plainTypeData, etcYn, checkboxData } = this.state;
     const { Option } = Select;
     const {
-      result: { rootMap, categoryMapInfo },
+      result: { rootMap, categoryMapInfo, categoryMapFieldList },
       groupIndex,
       rowIndex,
       colIndex,
@@ -155,6 +145,48 @@ class CheckboxConfig extends Component {
                       {item.NAME_KOR}
                     </Option>
                   ))}
+            </Select>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={6}>Value key 선택</Col>
+          <Col span={18}>
+            <Select
+              style={{ width: '100%' }}
+              placeholder="Select a item"
+              value={(configInfo && configInfo.property && configInfo.property.valueKey) || undefined}
+              onChange={value => {
+                this.handleChangeViewCompData('valueKey', value);
+              }}
+            >
+              {categoryMapFieldList &&
+                categoryMapFieldList.data &&
+                categoryMapFieldList.data.map(item => (
+                  <Option key={`valueKey_${item.COLUMN_NAME}`} value={item.COLUMN_NAME}>
+                    {item.COLUMN_NAME}
+                  </Option>
+                ))}
+            </Select>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={6}>Label key 선택</Col>
+          <Col span={18}>
+            <Select
+              style={{ width: '100%' }}
+              placeholder="Select a item"
+              value={(configInfo && configInfo.property && configInfo.property.labelKey) || undefined}
+              onChange={value => {
+                this.handleChangeViewCompData('labelKey', value);
+              }}
+            >
+              {categoryMapFieldList &&
+                categoryMapFieldList.data &&
+                categoryMapFieldList.data.map(item => (
+                  <Option key={`labelKey_${item.COLUMN_NAME}`} value={item.COLUMN_NAME}>
+                    {item.COLUMN_NAME}
+                  </Option>
+                ))}
             </Select>
           </Col>
         </Row>
@@ -194,26 +226,28 @@ class CheckboxConfig extends Component {
               </Row>
               <Row>
                 <div>(필수) Input 활성화 데이터를 선택해 주십시오.</div>
-                <Select
-                  showSearch
-                  style={{ width: '100%' }}
-                  placeholder="Select a person"
-                  optionFilterProp="children"
-                  filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                  onChange={e => this.handleChangeViewCompData('etcIndex', e)}
-                  value={(configInfo && configInfo.property && configInfo.property.etcIndex) || undefined}
-                >
-                  <Option value={-1} disabled>
-                    데이터 선택
-                  </Option>
-                  {dataType === 1 && checkboxData.map((row, index) => <Option value={index}>{row[jsonResult.labelKey]}</Option>)}
-                  {dataType === 2 &&
-                    checkboxData.map((row, index) => (
-                      <Option value={index}>
-                        {row[jsonResult.labelKey]}({row[jsonResult.valueKey]})
-                      </Option>
-                    ))}
-                </Select>
+                {categoryMapInfo && categoryMapInfo.categoryMapList && (
+                  <Select
+                    showSearch
+                    style={{ width: '100%' }}
+                    placeholder="Select a person"
+                    optionFilterProp="children"
+                    filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
+                    onChange={e => this.handleChangeViewCompData('etcIndex', e)}
+                    value={(configInfo && configInfo.property && configInfo.property.etcIndex) || undefined}
+                  >
+                    <Option value={-1} disabled>
+                      데이터 선택
+                    </Option>
+                    {dataType === 1 && categoryMapInfo.categoryMapList.map((row, index) => <Option value={index}>{row[jsonResult.labelKey]}</Option>)}
+                    {dataType === 2 &&
+                      categoryMapInfo.categoryMapList.map((row, index) => (
+                        <Option value={index}>
+                          {row[jsonResult.labelKey]}({row[jsonResult.valueKey]})
+                        </Option>
+                      ))}
+                  </Select>
+                )}
               </Row>
             </Col>
           </Row>
@@ -231,12 +265,15 @@ class CheckboxConfig extends Component {
 // etcField: 기타(INPUT 태그)에서 입력한 데이터를 넣어줄 FieldName(view가 none 인 Field가 1개 필요)
 
 CheckboxConfig.defaultProps = {
-  apiArray: [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }],
+  apiArray: [
+    { key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' },
+    { key: 'categoryMapFieldList', url: `/api/builder/v1/work/tableFieldList/FR_CATEGORY_MAP`, type: 'GET' },
+  ],
 };
 
 const CheckboxCompConfig = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="CheckboxCompConfig"
     component={CheckboxConfig}
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}

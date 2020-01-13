@@ -10,7 +10,7 @@ class DCRBTextComp extends React.Component {
   }
 
   handleOnChange = (value, key) => {
-    const { id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData, colData } = this.props;
+    const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData, colData } = this.props;
     let tempData = [];
     let retValue = '';
     if (colData && colData.length > 0) {

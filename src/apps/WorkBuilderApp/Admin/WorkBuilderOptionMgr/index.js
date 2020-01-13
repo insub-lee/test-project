@@ -5,7 +5,7 @@ import List from './List';
 
 class WorkBuilderOptionMgr extends Component {
   render() {
-    return <BizMicroDevBase id="workBuilderOption" component={List}></BizMicroDevBase>;
+    return <BizMicroDevBase sagaKey="workBuilderOption" component={List}></BizMicroDevBase>;
   }
 }
 export default WorkBuilderOptionMgr;
