@@ -1,5 +1,3 @@
-import ErrorBoundary from 'containers/common/ErrorBoundary';
-import AuthSetting from 'containers/portal/App/UserStore/AppMain/BizManage/BizMenuReg/AuthSetting';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
@@ -13,6 +11,9 @@ import { lang, intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 // import Modal from 'react-modal';
 import { Link } from 'react-router-dom';
+
+import ErrorBoundary from 'containers/common/ErrorBoundary';
+import AuthSetting from 'containers/portal/App/UserStore/AppMain/BizManage/BizMenuReg/AuthSetting';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -79,7 +80,7 @@ class TopMenu extends React.Component {
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
               )}
-              {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
+              {(bizInfo.SEC_YN === 'Y') && (
                 <>
                   <BtnBizSettings title="설정하기" onClick={this.showSettingModal} />
                   <Modal title="권한 설정" closable visible={showSettingModal} footer={null} destroyOnClose onCancel={this.closeSettingModal}>
@@ -87,7 +88,7 @@ class TopMenu extends React.Component {
                   </Modal>
                 </>
               )}
-              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
+              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y') && (
                 <BtnDkGray
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {
@@ -112,12 +113,10 @@ TopMenu.propTypes = {
   BIZGRP_ID: PropTypes.number.isRequired,
   bizInfo: PropTypes.object.isRequired,
   pageID: PropTypes.number,
-  userRole: PropTypes.string,
 };
 
 TopMenu.defaultProps = {
   pageID: -1,
-  userRole: '',
 };
 
 export function mapDispatchToProps(dispatch) {

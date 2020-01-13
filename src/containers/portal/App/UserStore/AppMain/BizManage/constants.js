@@ -1,5 +1,4 @@
 export const GET_USER_ROLE = `store/container/BizManage//GET_USER_ROLE`;
-export const SET_USER_ROLE = `store/container/BizManage//SET_USER_ROLE`;
 export const INIT_CATEGORY_DATA = 'store/container/BizManage/INIT_CATEGORY_DATA';
 export const GET_MENUBIZGRP_ID = `store/container/BizManage/GET_MENUBIZGRP_ID`;
 export const SET_CATEGORY_DATA = 'store/container/BizManage/SET_CATEGORY_DATA';

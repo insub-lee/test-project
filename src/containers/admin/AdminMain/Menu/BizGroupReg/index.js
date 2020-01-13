@@ -442,7 +442,7 @@ class BizGroupReg extends Component {
   render() {
     const { data, manualUrl, manualLink } = this.state;
 
-    const { dataP, updateBizGroup, history, userRole } = this.props;
+    const { dataP, updateBizGroup, history } = this.props;
 
     const pathArr = this.props.match.url.split('/');
     const type = pathArr[3];
@@ -896,55 +896,54 @@ class BizGroupReg extends Component {
                 </tbody>
               </table>
             </div>
-            {data.SEC_YN === 'Y' ||
-              (userRole === 'SA' && (
-                <div className="buttonWrapper">
-                  {data.MENU_EXIST_YN === 'Y' && (
-                    <Link to={`/admin/adminmain/${type}/bizMenuReg/info/${data.BIZGRP_ID}`}>
-                      <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
-                    </Link>
-                  )}
-                  <StyledButton
-                    type="button"
-                    className="btn-primary"
-                    onClick={() => {
-                      feed.showConfirm(intlObj.get(messages.saveConfirm), '', () => {
-                        const { I, V } = dataP;
-                        const delList = [];
-                        const newI = [...data.I.users, ...data.I.pstns, ...data.I.depts, ...data.I.dutys, ...data.I.grps]; // object to Array
-                        const newV = [...data.V.users, ...data.V.pstns, ...data.V.depts, ...data.V.dutys, ...data.V.grps]; // object to Array
-                        I.forEach(m => {
-                          if (newI.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID) && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
-                            delList.push(m);
-                          }
-                        });
-
-                        V.forEach(m => {
-                          if (newV.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID) && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
-                            delList.push(m);
-                          }
-                        });
-
-                        if (data.SYS_YN === 'X') {
-                          data.SYS_YN = 'N';
+            {data.SEC_YN === 'Y' && (
+              <div className="buttonWrapper">
+                {data.MENU_EXIST_YN === 'Y' && (
+                  <Link to={`/admin/adminmain/${type}/bizMenuReg/info/${data.BIZGRP_ID}`}>
+                    <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
+                  </Link>
+                )}
+                <StyledButton
+                  type="button"
+                  className="btn-primary"
+                  onClick={() => {
+                    feed.showConfirm(intlObj.get(messages.saveConfirm), '', () => {
+                      const { I, V } = dataP;
+                      const delList = [];
+                      const newI = [...data.I.users, ...data.I.pstns, ...data.I.depts, ...data.I.dutys, ...data.I.grps]; // object to Array
+                      const newV = [...data.V.users, ...data.V.pstns, ...data.V.depts, ...data.V.dutys, ...data.V.grps]; // object to Array
+                      I.forEach(m => {
+                        if (newI.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID) && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
+                          delList.push(m);
                         }
-
-                        // 사용자 매뉴얼 파일 세팅
-                        data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl.trim() : manualLink.trim();
-
-                        const resultData = { ...data };
-                        resultData.delList = acntIdStringtoInteger(delList);
-                        resultData.I = acntIdStringtoInteger(newI);
-                        resultData.V = acntIdStringtoInteger(newV);
-
-                        updateBizGroup(resultData, history);
                       });
-                    }}
-                  >
-                    {intlObj.get(messages.save)}
-                  </StyledButton>
-                </div>
-              ))}
+
+                      V.forEach(m => {
+                        if (newV.findIndex(i => Number(i.ACNT_ID) === Number(m.ACNT_ID) && i.ACNT_TYPE === m.ACNT_TYPE) === -1) {
+                          delList.push(m);
+                        }
+                      });
+
+                      if (data.SYS_YN === 'X') {
+                        data.SYS_YN = 'N';
+                      }
+
+                      // 사용자 매뉴얼 파일 세팅
+                      data.MANUAL_PATH = data.MANUAL_TYPE === 'L' ? manualUrl.trim() : manualLink.trim();
+
+                      const resultData = { ...data };
+                      resultData.delList = acntIdStringtoInteger(delList);
+                      resultData.I = acntIdStringtoInteger(newI);
+                      resultData.V = acntIdStringtoInteger(newV);
+
+                      updateBizGroup(resultData, history);
+                    });
+                  }}
+                >
+                  {intlObj.get(messages.save)}
+                </StyledButton>
+              </div>
+            )}
           </Form>
         </StyleGroupReg>
         <Footer />
@@ -961,7 +960,6 @@ BizGroupReg.propTypes = {
   history: PropTypes.object.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
-  userRole: PropTypes.string.isRequired,
 };
 
 BizGroupReg.defaultProps = {};
@@ -978,7 +976,6 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   // 카테고리
   dataP: selectors.makeData(),
-  userRole: menuSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

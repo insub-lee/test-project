@@ -1,6 +1,4 @@
 const base = 'admin/AdminMain/Menu';
-export const GET_USER_ROLE = `${base}/GET_USER_ROLE`;
-export const SET_USER_ROLE = `${base}/SET_USER_ROLE`;
 export const INIT_CATEGORY_DATA = `${base}/INIT_CATEGORY_DATA`;
 export const GET_MENUBIZGRP_ID = `${base}/GET_MENUBIZGRP_ID`;
 export const SET_CATEGORY_DATA = `${base}/SET_CATEGORY_DATA`;

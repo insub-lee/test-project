@@ -262,7 +262,7 @@ class BizGroupReg extends Component {
   render() {
     const { data, SEC_TYPE, manualUrl, manualLink } = this.state;
 
-    const { dataP, updateBizGroup, history, userRole } = this.props;
+    const { dataP, updateBizGroup, history } = this.props;
 
     const oldUsers = data[SEC_TYPE].users.length > 0 ? data[SEC_TYPE].users : [];
     const oldDepts = data[SEC_TYPE].depts.length > 0 ? data[SEC_TYPE].depts : [];
@@ -792,7 +792,7 @@ class BizGroupReg extends Component {
                 </tbody>
               </table>
             </div>
-            {data.SEC_YN === 'Y' || userRole === 'SA' ? (
+            {data.SEC_YN === 'Y' ? (
               <div className="buttonWrapper">
                 {data.MENU_EXIST_YN === 'Y' ? (
                   <Link to={`/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`}>
@@ -859,7 +859,6 @@ BizGroupReg.propTypes = {
   history: PropTypes.object.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
-  userRole: PropTypes.string.isRequired,
 };
 
 BizGroupReg.defaultProps = {};
@@ -876,7 +875,6 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   // 카테고리
   dataP: selectors.makeData(),
-  userRole: bizGrpSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

@@ -78,7 +78,6 @@ class BizMenuReg extends Component {
       insertNode,
       updateNode,
       updateMymenuDisp,
-      userRole,
     } = this.props;
 
     const { BIZGRP_ID } = this.state;
@@ -140,7 +139,6 @@ class BizMenuReg extends Component {
               updateMymenuDisp={updateMymenuDisp}
               pageID={this.state.pageID}
               bizGroupInfo={bizGroupInfo}
-              userRole={userRole}
             />
           </ErrorBoundary>
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 200px)' }}>
@@ -161,7 +159,6 @@ class BizMenuReg extends Component {
                     updateMymenuDisp={updateMymenuDisp}
                     bizGroupInfo={bizGroupInfo}
                     history={history}
-                    userRole={userRole}
                   />
                 </ErrorBoundary>
               </li>
@@ -224,7 +221,6 @@ BizMenuReg.propTypes = {
   updateMymenuDisp: PropTypes.func.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
-  userRole: PropTypes.string.isRequired,
 };
 
 BizMenuReg.defaultProps = {};
@@ -251,7 +247,6 @@ const mapStateToProps = createStructuredSelector({
   categoryData: selectors.makeCategoryData(),
   bizGroupInfo: selectors.makeBizGroupInfo(),
   selectedIndex: selectors.makeSelectedIndex(),
-  userRole: menuSelectors.makeUserRole(),
 });
 
 const withConnect = connect(
