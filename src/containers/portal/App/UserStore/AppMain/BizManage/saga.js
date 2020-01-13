@@ -23,7 +23,7 @@ export function* getUserRole(payload) {
 // 업무카드관리의 좌측 트리 - (시스템[SYS_YN],홈[HOME_YN] 설정이 외의 업무그룹 리스트)
 export function* getTreeData() {
   // 시스템 업무카드 제외, SEC_TYPE='I' 권한이 있는 업무카드
-  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N&PORTAL_STORE_YN=Y', {});
+  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', {});
   const result = JSON.parse(`[${response.result}]`);
   if (!result[0].children) result[0].children = [];
   const categoryData = fromJS(result).getIn([0, 'children']);
