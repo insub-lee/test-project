@@ -69,6 +69,7 @@ class UnApproveList extends Component {
     this.props.setViewVisible(true);
   };
 
+
   onModalClose = () => {
     this.props.setViewVisible(false);
   };

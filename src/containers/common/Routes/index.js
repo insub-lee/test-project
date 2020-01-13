@@ -140,8 +140,7 @@ class PublicRoutes extends Component {
       location.pathname !== '/' &&
       !checkPath(pathArray[1], portalPath) &&
       !checkPath(pathArray[1], portalSinglePath) &&
-      !checkPath(pathArray[1], etcPath);
-    console.debug(portalPath, portalSinglePath, etcPath);
+      !checkPath(pathArray[1], etcPath);   
     console.debug('Path Array', isLoggedIn, pathArray, location, hasError);
 
     if (hasError) {
