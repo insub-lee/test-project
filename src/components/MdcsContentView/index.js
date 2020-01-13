@@ -3,11 +3,27 @@ import React, { Component } from 'react';
 import { Button, Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledTable from 'components/CommonStyled/StyledTable';
+import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
+
+const ModalWrapper = StyledModalWrapper(Modal);
 
 class MdcsContentView extends Component {
   state = {
     modalVisible: false,
+  };
+
+  componentDidMount = () => {
+    const { sagaKey, getExtraApiData, formData } = this.props;
+    const apiArys = [
+      {
+        key: 'fullPathName',
+        url: '/api/admin/v1/common/categoryFullPathNm',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: formData.NODE_ID } },
+      },
+    ];
+    getExtraApiData(sagaKey, apiArys);
   };
 
   onDocCoverClick = () => {
@@ -19,7 +35,7 @@ class MdcsContentView extends Component {
   };
 
   render() {
-    const { formData, selectedRow } = this.props;
+    const { formData, selectedRow, extraApiData } = this.props;
     return (
       <>
         <StyledTable>
@@ -27,7 +43,9 @@ class MdcsContentView extends Component {
             <tbody>
               <tr>
                 <th style={{ width: '100px' }}>문서종류</th>
-                <td colSpan={3}></td>
+                <td colSpan={3}>
+                  {extraApiData && extraApiData.fullPathName && extraApiData.fullPathName.fullPath_Nm && extraApiData.fullPathName.fullPath_Nm.FULLPATH_NM}
+                </td>
               </tr>
               <tr>
                 <th style={{ width: '100px' }}>제목</th>
@@ -56,9 +74,9 @@ class MdcsContentView extends Component {
             </tbody>
           </table>
         </StyledTable>
-        <Modal
+        <ModalWrapper
           title="문서표지"
-          style={{ top: '10px', padding: '10px' }}
+          style={{ padding: '10px' }}
           visible={this.state.modalVisible}
           width={900}
           onCancel={this.onDocCoverCloseClick}
@@ -72,7 +90,7 @@ class MdcsContentView extends Component {
             draftId={selectedRow && selectedRow.DRAFT_ID}
             metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
           />
-        </Modal>
+        </ModalWrapper>
       </>
     );
   }
