@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
-import Draft from './Workflow/User/Draft';
+import ApproveBase from './Workflow/User/ApproveBase';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -76,10 +76,10 @@ class AppsRouter extends React.PureComponent {
                 )}
               />
               <Route
-                path={`/${basicPath.APPS}/draft/:CATE`}
+                path={`/${basicPath.APPS}/Workflow/User/ApproveBase/:CATE`}
                 render={props => (
                   <ErrorBoundary>
-                    <Draft {...props} />
+                    <ApproveBase {...props} />
                   </ErrorBoundary>
                 )}
               />
