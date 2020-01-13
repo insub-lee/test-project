@@ -271,8 +271,7 @@ class AuthSetting extends Component {
                     <Table.Row>
                       <Table.HeaderCell style={{ textAlign: 'left' }}>{lang.get('NAME', bizGroupInfo)}</Table.HeaderCell>
                       <Table.HeaderCell />
-                      {/* Top HeaderCell */
-                        topArr &&
+                      {topArr &&
                         topArr.map((top, j) => {
                           const id = `${top.ACNT_TYPE}_${top.ACNT_ID}`;
                           return (

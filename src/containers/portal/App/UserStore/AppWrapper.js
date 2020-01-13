@@ -353,7 +353,8 @@ const AppWrapper = styled.div`
 .appListWrapper {
   //padding-left: 320px;
   padding: 20px;
-  margin-left: 300px;
+  background-color: white;
+  // margin-left: 300px;
   // padding-left: 300px;
   
   @media only screen and (max-width: 1024px) {
@@ -383,7 +384,7 @@ const AppWrapper = styled.div`
 .appMyPageWrapper {
   display: flex;
   flex-direction: column;
-  padding-left: 300px;
+  //padding-left: 300px;
   background: #f7f8f9;
 
   @media only screen and (max-width: 1024px) {
@@ -411,6 +412,16 @@ const AppWrapper = styled.div`
       }
     }
   }
+}
+
+.biz-store-sider {
+  flex: 0 0 300px !important;
+  max-width: 300px !important;
+  min-width: 300px !important;
+  width: 300px !important;
+  //height: calc(100vh - 90px);
+  background: #ffffff;
+  border-right: 1px solid #c3c4c7;
 }
 `;
 

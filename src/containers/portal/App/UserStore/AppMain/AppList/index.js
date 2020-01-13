@@ -119,16 +119,16 @@ class AppList extends Component {
 
     return (
       <Layout style={{ height: '100%', overflow: 'hidden' }}>
-        <Sider style={{ height: '100%' }}>
-          Wa
+        <Sider className="biz-store-sider">
+          <ErrorBoundary>
+            <AppCategory handleOnClick={node => handleOnClick(node, history)} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
+          </ErrorBoundary>
         </Sider>
         <Content>
           <div className="appListWrapper">
             <BackTop />
             <strong style={{ color: 'rgba(64, 64, 64, 0.6)' }} />
-            {/*<ErrorBoundary>*/}
-              {/*<AppCategory handleOnClick={node => handleOnClick(node, history)} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />*/}
-            {/*</ErrorBoundary>*/}
+
             <NavList className="navTabs">
               <NavListItem>
                 <NavLink to="/portal/store/appMain/bizStore" className="current">
