@@ -11,23 +11,22 @@ import * as constants from './constants';
 import messages from './messages';
 
 // SA권한 확인 - (SA 권한일 경우 모든 업무그룹 수정 권한 부여)
-export function* getUserRole() {
-  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizGrpSARoleCheck', { data: 'temp' });
+export function* getUserRole(payload) {
+  const { history } = payload;
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizGrpRoleCheck', { data: 'temp' });
   const { code } = response;
-  const userRole = response.userRole ? response.userRole : '';
-  if (code === 200 && userRole) {
-    yield put({
-      type: constants.SET_USER_ROLE,
-      userRole,
-    });
+  if (code !== 200) {
+    history.push('/error');
   }
 }
 
 // 업무카드관리의 좌측 트리 - (시스템[SYS_YN],홈[HOME_YN] 설정이 외의 업무그룹 리스트)
 export function* getTreeData() {
-  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', { data: 'temp' });
-  const result = fromJS(JSON.parse(`[${response.result}]`));
-  const categoryData = result.get(0).get('children');
+  // 시스템 업무카드 제외, SEC_TYPE='I' 권한이 있는 업무카드
+  const response = yield call(Axios.get, '/api/bizstore/v1/bizgroup/bizgroupTree?SYS_YN=N', {});
+  const result = JSON.parse(`[${response.result}]`);
+  if (!result[0].children) result[0].children = [];
+  const categoryData = fromJS(result).getIn([0, 'children']);
   const categoryFlatData = treeFunc.generateListBiz(categoryData);
 
   yield put({

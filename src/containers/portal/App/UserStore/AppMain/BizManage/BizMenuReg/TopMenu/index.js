@@ -53,7 +53,7 @@ class TopMenu extends React.Component {
   render() {
     const { BIZGRP_ID } = this.state;
 
-    const { bizInfo, confirmBizGroup, history, pageID, userRole } = this.props;
+    const { bizInfo, confirmBizGroup, history, pageID } = this.props;
 
     const linkto = `/preview/page/${pageID}`;
     return (
@@ -70,7 +70,7 @@ class TopMenu extends React.Component {
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
               )}
-              {(bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
+              {bizInfo.SEC_YN === 'Y' && (
                 <BtnBizSettings
                   title="설정하기"
                   onClick={() => {
@@ -78,7 +78,7 @@ class TopMenu extends React.Component {
                   }}
                 />
               )}
-              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y' || userRole === 'SA') && (
+              {bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' && (
                 <BtnDkGray
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {
@@ -103,12 +103,10 @@ TopMenu.propTypes = {
   BIZGRP_ID: PropTypes.number.isRequired,
   bizInfo: PropTypes.object.isRequired,
   pageID: PropTypes.number,
-  userRole: PropTypes.string,
 };
 
 TopMenu.defaultProps = {
   pageID: -1,
-  userRole: '',
 };
 
 export function mapDispatchToProps(dispatch) {
