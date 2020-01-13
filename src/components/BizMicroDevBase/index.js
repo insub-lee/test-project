@@ -24,6 +24,7 @@ class BizMicroDevBase extends React.Component {
 }
 
 BizMicroDevBase.propTypes = {
+  sagaKey: PropTypes.string.isRequired,
   result: PropTypes.object,
   formData: PropTypes.object,
   getCallDataHanlder: PropTypes.func,
@@ -57,6 +58,7 @@ const mapDispatchToProps = dispatch => ({
   removeStorageReduxState: (id, storage) => dispatch(actions.removeStorageReduxState(id, storage)),
   removeResponseDataReduxStateByKey: (id, key) => dispatch(actions.removeResponseDataReduxStateByKey(id, key)),
   removeFormDataReduxStateByKey: (id, key) => dispatch(actions.removeFormDataReduxStateByKey(id, key)),
+  resetCalledData: id => dispatch(actions.resetCalledData(id)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });

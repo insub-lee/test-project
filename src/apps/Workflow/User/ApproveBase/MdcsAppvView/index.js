@@ -93,13 +93,12 @@ class MdcsAppvView extends Component {
 
   render() {
     const { selectedRow } = this.props;
-    console.debug('render');
+    console.debug('mdcsAppview render!!!!');
     return (
       <React.Fragment>
         <BizBuilderBase
           sagaKey="approveBase_approveView"
-          viewType="VIEW"
-          CustomViewPage={MdcsContentView}
+          viewType="VIEW"          
           workSeq={selectedRow && selectedRow.WORK_SEQ}
           taskSeq={selectedRow && selectedRow.TASK_SEQ}
           draftId={selectedRow && selectedRow.DRAFT_ID}
@@ -165,15 +164,13 @@ class MdcsAppvView extends Component {
               </td>
             </tr>
             <tr>
+              <td>의견</td>
               <td>
-                의견
-              </td>
-              <td>
-                <TextArea rows={8}  onChange={e => this.props.setOpinion(e.target.value)} />
+                <TextArea rows={8} onChange={e => this.props.setOpinion(e.target.value)} />
               </td>
             </tr>
           </tbody>
-        </table>       
+        </table>
       </React.Fragment>
     );
   }

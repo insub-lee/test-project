@@ -12,8 +12,19 @@ const AntdTable = StyledAntdTable(Table);
 
 class UnApproveList extends Component {
   componentDidMount() {
-    // const { category, getApproveList } = this.props;
-    // getApproveList({ searchType: category });
+    const { getApproveList } = this.props;
+    const category = 'unApproval';
+    getApproveList({ searchType: category });
+    console.debug('didmount');
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.match.params.CATE !== prevProps.match.params.CATE) {
+      const { getApproveList } = this.props;
+      const category = 'unApproval';
+      getApproveList({ searchType: category });
+    }
+    console.debug('didupdate');
   }
 
   getTableColumns = () => [
