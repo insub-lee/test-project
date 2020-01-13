@@ -32,7 +32,7 @@ class AppInfo extends Component {
     return (
       <div>
         <ErrorBoundary>
-          <AppBasicInfo targetUrl={window.location.href} appId={this.state.appId} />
+          <AppBasicInfo targetUrl={window.location.href} appId={this.state.appId} history={this.props.history} />
         </ErrorBoundary>
         <ErrorBoundary>
           <AppScreenshot appId={this.state.appId} gubun={2} />
@@ -50,6 +50,7 @@ class AppInfo extends Component {
 
 AppInfo.propTypes = {
   match: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
 };
 
 export default AppInfo;
