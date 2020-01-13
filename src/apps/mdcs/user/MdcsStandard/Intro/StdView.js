@@ -17,7 +17,7 @@ class StdView extends Component {
   }
 
   componentDidMount() {
-    const { id, draftId } = this.props;
+    const { sagaKey: id, draftId } = this.props;
     if (draftId !== -1) {
       this.props.getDraftProcess(id, draftId);
     }
@@ -25,13 +25,13 @@ class StdView extends Component {
 
   // state값 reset테스트
   componentWillUnmount() {
-    const { removeReduxState, id } = this.props;
+    const { removeReduxState, sagaKey: id } = this.props;
     console.debug('state값 reset테스트');
     // removeReduxState(id);
   }
 
-  render = () => {
-    const { id, viewLayer, loadingComplete, viewPageData, draftId } = this.props;
+  render() {
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, draftId } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -57,11 +57,11 @@ class StdView extends Component {
       );
     }
     return '';
-  };
+  }
 }
 
 StdView.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string.isRequired,
   draftId: PropTypes.number,
   getDraftProcess: PropTypes.func,
   extraApiData: PropTypes.object,

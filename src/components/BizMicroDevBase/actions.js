@@ -58,3 +58,8 @@ export const removeFormDataReduxStateByKey = (id, key) => ({
   id,
   key,
 });
+
+export const resetCalledData = id => ({
+  type: `${actionTypes.RESET_CALLED_DATA}_${id}`,
+  id,
+});
