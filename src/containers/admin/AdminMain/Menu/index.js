@@ -30,7 +30,6 @@ const workHomeUrl = '/admin/adminmain/work';
 
 class BizManage extends Component {
   componentDidMount() {
-    this.props.getUserRole();
     const {
       match: {
         params: { MENU },
@@ -100,7 +99,6 @@ class BizManage extends Component {
     } = this.props;
 
     if (PREVMENU !== MENU) {
-      this.props.getUserRole();
       if (MENU === 'menu') {
         this.props.getMenuBizGrpID();
       } else if (MENU === 'work') {
@@ -124,7 +122,6 @@ class BizManage extends Component {
       moveNode,
       deleteNode,
       updateBizGroupDelYn,
-      userRole,
     } = this.props;
 
     const preUrl = this.props.match.url;
@@ -171,7 +168,6 @@ class BizManage extends Component {
                 deleteNode={deleteNode}
                 updateBizGroupDelYn={updateBizGroupDelYn}
                 history={history}
-                userRole={userRole}
               />
             </ErrorBoundary>
           </StyledTabList>
@@ -215,8 +211,6 @@ BizManage.propTypes = {
   deleteNode: PropTypes.func.isRequired,
   updateBizGroupDelYn: PropTypes.func.isRequired,
 
-  getUserRole: PropTypes.func.isRequired,
-  userRole: PropTypes.string.isRequired,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -233,7 +227,6 @@ export function mapDispatchToProps(dispatch) {
     deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateBizGroupDelYn: (rowInfo, categoryData, data, history) => dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
 
-    getUserRole: () => dispatch(actions.getUserRole()),
   };
 }
 
@@ -242,7 +235,6 @@ const mapStateToProps = createStructuredSelector({
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
   menuBizGrpId: selectors.makeMenuBizGrpId(),
-  userRole: selectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

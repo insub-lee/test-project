@@ -28,7 +28,8 @@ const homeUrl = '/portal/store/appMain/bizManage';
 
 class BizManage extends Component {
   componentDidMount() {
-    this.props.getUserRole();
+    const { history } = this.props;
+    this.props.getUserRole(history);
     this.props.initCategoryData();
   }
   /* eslint-disable */
@@ -78,7 +79,6 @@ class BizManage extends Component {
       moveNode,
       deleteNode,
       updateBizGroupDelYn,
-      userRole,
     } = this.props;
 
     const handleTreeOnClick = node => {
@@ -107,7 +107,6 @@ class BizManage extends Component {
               deleteNode={deleteNode}
               updateBizGroupDelYn={updateBizGroupDelYn}
               history={history}
-              userRole={userRole}
             />
           </ErrorBoundary>
         </StyledTabList>
@@ -149,7 +148,6 @@ BizManage.propTypes = {
   updateBizGroupDelYn: PropTypes.func.isRequired,
 
   getUserRole: PropTypes.func.isRequired,
-  userRole: PropTypes.string.isRequired,  
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -166,7 +164,7 @@ export function mapDispatchToProps(dispatch) {
     deleteNode: (rowInfo, categoryData, history) => dispatch(actions.deleteNode(rowInfo, categoryData, history)),
     updateBizGroupDelYn: (rowInfo, categoryData, data, history) => dispatch(actions.updateBizGroupDelYn(rowInfo, categoryData, data, history)),
 
-    getUserRole: () => dispatch(actions.getUserRole()),
+    getUserRole: history => dispatch(actions.getUserRole(history)),
   };
 }
 
@@ -174,7 +172,6 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
-  userRole: selectors.makeUserRole(),
 });
 
 const withConnect = connect(
