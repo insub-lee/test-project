@@ -15,7 +15,7 @@ class Controller extends Component {
     const WORK_SEQ = item && item.data && item.data.WORK_SEQ ? item.data.WORK_SEQ : 913; // 779
     // return <BizBuilderBase id={`${widgetId}_DwDoc`} workSeq={WORK_SEQ} component={DwDoc} viewType="INPUT" />;
     // return <BizBuilderBase id={`${widgetId}_PmDoc`} workSeq={WORK_SEQ} component={PmDoc} viewType="INPUT" />;
-    return <BizBuilderBase id={`${widgetId}_TechDoc`} workSeq={WORK_SEQ} component={TechDoc} viewType="INPUT" />;
+    return <BizBuilderBase sagaKey={`${widgetId}_TechDoc`} workSeq={WORK_SEQ} component={TechDoc} viewType="INPUT" />;
     // return <BizBuilderBase id="DocTemplate" component={DwDoc} viewType="LIST" {...this.props} workSeq={985} />;
   }
 }

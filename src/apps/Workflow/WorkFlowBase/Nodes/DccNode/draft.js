@@ -12,7 +12,9 @@ class DccNodeDraft extends Component {
     });
   };
 
-  render = () => <div>DCC 노드</div>;
+  render = () => {
+    return <div>DCC 노드</div>;
+  };
 }
 
 export default DccNodeDraft;

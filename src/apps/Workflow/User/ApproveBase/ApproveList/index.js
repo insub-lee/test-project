@@ -49,7 +49,7 @@ class ApproveList extends Component {
       dataIndex: 'APPV_STATUS_NM',
       key: 'APPV_STATUS_NM',
       width: '10%',
-      align: 'center',
+      align: 'center',      
     },
     {
       title: '기안자',

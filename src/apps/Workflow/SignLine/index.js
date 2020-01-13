@@ -42,7 +42,7 @@ class SignLine extends Component {
         <div className="signLineWrapper">
           {signline !== undefined && signline.length > 0 && (
             <React.Fragment>
-              <Row gutter={0}>
+              <Row gutter={0} type="flex" justify="end">
                 {signline.map(item => (
                   <Col span={3} key={`prcHerder_${item.NODE_ID}_${item.USER_INFO.USER_ID}`}>
                     <div>
@@ -51,7 +51,7 @@ class SignLine extends Component {
                   </Col>
                 ))}
               </Row>
-              <Row gutter={0}>
+              <Row gutter={0} type="flex" justify="end">
                 {signline.map(item => (
                   <Col span={3} key={`prcBody_${item.NODE_ID}_${item.USER_INFO.USER_ID}`}>
                     <div className="wp_bodyCol">
@@ -59,10 +59,10 @@ class SignLine extends Component {
                       {item.USER_INFO.STATUS !== undefined && (
                         <div className="sign_img">
                           {item.USER_INFO.STATUS === 1 && (
-                            <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ fontSize: '80px', opacity: '0.5' }} />
+                            <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ margin: '5px', fontSize: '65px', opacity: '0.5' }} />
                           )}
                           {item.USER_INFO.STATUS === 9 && (
-                            <Icon type="close-circle" theme="twoTone" twoToneColor="#fe0101" style={{ fontSize: '80px', opacity: '0.5' }} />
+                            <Icon type="close-circle" theme="twoTone" twoToneColor="#fe0101" style={{ margin: '5px', fontSize: '65px', opacity: '0.5' }} />
                           )}
                         </div>
                       )}
@@ -125,6 +125,13 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(SignLine);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(SignLine);

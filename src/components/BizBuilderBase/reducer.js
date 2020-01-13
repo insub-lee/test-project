@@ -26,13 +26,14 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'isLoading'], true);
     }
     case actionTypes.SET_BUILDER_DATA: {
-      const { id, response, work, metaList, workFlow, formData, validationData } = action;
+      const { id, response, work, metaList, workFlow, apiList, formData, validationData } = action;
       if (formData && validationData) {
         return state
           .setIn(['bizBuilderBase', id, 'responseData'], fromJS(response))
           .setIn(['bizBuilderBase', id, 'workInfo'], fromJS(work))
           .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
           .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}))
+          .setIn(['bizBuilderBase', id, 'apiList'], fromJS(apiList || []))
           .setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}))
           .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData || {}))
           .setIn(['bizBuilderBase', id, 'isLoading'], false);
@@ -42,6 +43,7 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'workInfo'], fromJS(work))
         .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
         .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}))
+        .setIn(['bizBuilderBase', id, 'apiList'], fromJS(apiList || []))
         .setIn(['bizBuilderBase', id, 'isLoading'], false);
     }
     case actionTypes.SET_PROCESS_RULE: {
