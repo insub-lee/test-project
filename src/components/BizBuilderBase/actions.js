@@ -9,13 +9,14 @@ export const getBuilderData = (id, workSeq, taskSeq, viewType, changeWorkflowFor
   changeWorkflowFormData,
 });
 
-export const setBuilderData = (id, response, work, metaList, workFlow, formData, validationData) => ({
+export const setBuilderData = (id, response, work, metaList, workFlow, apiList, formData, validationData) => ({
   type: actionTypes.SET_BUILDER_DATA,
   id,
   response,
   work,
   metaList,
   workFlow,
+  apiList,
   formData,
   validationData,
 });

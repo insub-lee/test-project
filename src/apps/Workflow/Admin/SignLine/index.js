@@ -228,6 +228,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.WorkFlow.Admin.SignLine', reducer });
 const withSaga = injectSaga({ key: 'apps.WorkFlow.Admin.SignLine', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(SignLine);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(SignLine);

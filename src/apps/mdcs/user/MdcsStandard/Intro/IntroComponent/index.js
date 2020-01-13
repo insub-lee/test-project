@@ -327,7 +327,20 @@ class IntroComponent extends Component {
 
     // Todo - Set WorkSeq By Doc Type
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
+      console.debug(docType);
       switch (docType) {
+        case 'BS':
+          workSeqGoal = 201;
+          break;
+        case 'TS':
+          workSeqGoal = 361;
+          break;
+        case 'DW':
+          workSeqGoal = 423;
+          break;
+        case 'PM':
+          workSeqGoal = 461;
+          break;
         default:
           workSeqGoal = 201;
           break;
@@ -344,7 +357,7 @@ class IntroComponent extends Component {
 
     return (
       <BizBuilderBase
-        sagaKey="BizDoc"
+        sagaKey={`BizDoc_${workSeqGoal}`}
         workSeq={workSeqGoal}
         compProps={{ docNumber, NODE_ID: selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
         CustomInputPage={StdInput}
@@ -555,7 +568,7 @@ class IntroComponent extends Component {
                 {/* 개정기안 / 폐기기안(일반) */}
                 {[DraftType.AMENDMENT, DraftType.ABROGATION].includes(selectedDraft) && (
                   <AntdTable
-                    rowKey={({ workSeq, taskSeq }) => `${workSeq}-${taskSeq}`}
+                    rowKey={({ TASK_SEQ, WORK_SEQ }) => `${TASK_SEQ}-${WORK_SEQ}`}
                     columns={columns}
                     dataSource={listDataArr}
                     onRow={record => ({

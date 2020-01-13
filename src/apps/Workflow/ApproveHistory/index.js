@@ -34,7 +34,7 @@ class ApproveHistory extends Component {
             <Timeline.Item
               key={`history_${item.HISTORY_ID}`}
               dot={
-                item.APPV_STATUS === 1 ? (
+                item.APPV_STATUS === 2 ? (
                   <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" />
                 ) : (
                   <Icon type="close-circle" theme="twoTone" twoToneColor="#ff1212" />
@@ -85,6 +85,13 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(ApproveHistory);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(ApproveHistory);

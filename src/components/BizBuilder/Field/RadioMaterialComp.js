@@ -11,18 +11,16 @@ class RadioMaterialComp extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData } = this.props;
+    const { sagaKey: id, getExtraApiData, changeFormData } = this.props;
     const apiArray = [{ key: 'material_28', url: '/api/admin/v1/common/categoryMapList?MAP_ID=28', type: 'GET' }];
     getExtraApiData(id, apiArray);
+    changeFormData(id, 'MATERIAL_TEXT', '');
+    changeFormData(id, 'MATERIAL_TYPE', '');
   }
 
   onChangeHandlerText = value => {
     const { changeFormData, sagaKey: id } = this.props;
-    let newValue = ' ';
-    if (value !== ' ') {
-      newValue = value.replace(/[^0-9,]/g, '');
-    }
-    changeFormData(id, 'MATERIAL_TEXT', newValue);
+    changeFormData(id, 'MATERIAL_TEXT', value);
   };
 
   onChangeHandlerSelect = value => {
@@ -33,8 +31,8 @@ class RadioMaterialComp extends Component {
   onChangeHandlerRadio = value => {
     const { COMP_FIELD, changeFormData, sagaKey: id } = this.props;
     changeFormData(id, COMP_FIELD, value);
-    changeFormData(id, 'MATERIAL_TEXT', ' ');
-    changeFormData(id, 'MATERIAL_TYPE', ' ');
+    changeFormData(id, 'MATERIAL_TEXT', '');
+    changeFormData(id, 'MATERIAL_TYPE', '');
   };
 
   render() {
@@ -54,7 +52,8 @@ class RadioMaterialComp extends Component {
         데이터가 없습니다.
       </Option>
     );
-    return isManage || (visible && (formData.DOCNUMBER.substr(0, 4) === 'MBDA' || formData.DOCNUMBER.substr(0, 4) === 'MBKE')) ? (
+    return isManage ||
+      (visible && formData && formData.DOCNUMBER && (formData.DOCNUMBER.substr(0, 4) === 'MBDA' || formData.DOCNUMBER.substr(0, 4) === 'MBKE')) ? (
       <div style={{ float: 'left' }}>
         <div></div>
         <Radio.Group
@@ -88,7 +87,16 @@ class RadioMaterialComp extends Component {
               </Select>
             </div>
             <div style={{ float: 'left' }}>
-              <Input type="text" value={formData.MATERIAL_TEXT} onChange={e => this.onChangeHandlerText(e.target.value)} disabled={readOnly} />
+              <input
+                type="text"
+                defaultValue={formData.MATERIAL_TEXT}
+                onChange={e => {
+                  const value = e.target.value.replace(/[^0-9,]/gi, '');
+                  e.target.value = value;
+                  this.onChangeHandlerText(value);
+                }}
+                disabled={readOnly}
+              />
               &nbsp;(콤마(,)로 구분하여 입력하여 주세요.)
             </div>
           </div>
