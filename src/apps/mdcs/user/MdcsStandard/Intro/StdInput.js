@@ -17,7 +17,7 @@ class StdInput extends Component {
   }
 
   componentDidMount() {
-    const { id, getProcessRule, workInfo, workPrcProps } = this.props;
+    const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
 
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 0) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === 0);
@@ -49,8 +49,8 @@ class StdInput extends Component {
     }
   };
 
-  render = () => {
-    const { id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
+  render() {
+    const { sagaKey: id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
     // Work Process 사용여부
 
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 0) !== -1);
@@ -91,7 +91,7 @@ class StdInput extends Component {
 }
 
 StdInput.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string.isRequired,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
   viewLayer: PropTypes.array,

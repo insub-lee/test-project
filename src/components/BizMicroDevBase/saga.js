@@ -7,7 +7,6 @@ import * as actions from './actions';
 import * as selectors from './selectors';
 
 function* submitHadnlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
-  console.debug('httpMethod!!!!', httpMethod);
   let httpMethodInfo = Axios.put;
   switch (httpMethod.toUpperCase()) {
     case 'POST':
@@ -23,7 +22,6 @@ function* submitHadnlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
       httpMethodInfo = Axios.get;
       break;
   }
-  console.debug('httpMethodInfo', httpMethodInfo, apiUrl, submitData);
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
     callbackFunc(id);
@@ -31,7 +29,6 @@ function* submitHadnlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
 }
 
 function* getCallDataHandler({ id, apiArys, callbackFunc }) {
-  console.debug('getCallDatahandler', apiArys);
   if (apiArys && apiArys.length > 0) {
     for (let i = 0; i < apiArys.length; i += 1) {
       let response = {};
@@ -63,8 +60,7 @@ function* getCallDataHandler({ id, apiArys, callbackFunc }) {
   }
 }
 
-export default function* watcher() {
-  const arg = arguments[0];
-  yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.id}`, submitHadnlerBySaga);
-  yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.id}`, getCallDataHandler);
+export default function* watcher(arg) {
+  yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey}`, submitHadnlerBySaga);
+  yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey}`, getCallDataHandler);
 }
