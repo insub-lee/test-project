@@ -123,7 +123,7 @@ class Profile extends PureComponent {
             {selectedUser.length ? <li className="phone">{selectedUser.MOBILE_TEL_NO}</li> : <li className="phone">{loadProfile.MOBILE_TEL_NO}</li>}
           </ul>
         </div>
-        <ul className="buttonWrapper">
+        {/* <ul className="buttonWrapper">
           <li>
             <button className="icon talk" onClick={() => this.onClick('talk')}>
               {intlObj.get(messages.conversation)}
@@ -139,10 +139,10 @@ class Profile extends PureComponent {
               {intlObj.get(messages.registerTodo)}
             </button>
           </li>
-          {/* <li>
+          <li>
             <button className="icon hithanks" onClick={() => this.onClick('hithanks')}>{intlObj.get(messages.HyThanks)}</button>
-          </li> */}
-        </ul>
+          </li>
+        </ul> */}
         <div className="userInfoDetails">
           <table>
             <tbody>
