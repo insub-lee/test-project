@@ -795,7 +795,7 @@ class BizGroupReg extends Component {
             {data.SEC_YN === 'Y' ? (
               <div className="buttonWrapper">
                 {data.MENU_EXIST_YN === 'Y' ? (
-                  <Link to={`/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`}>
+                  <Link to={`/portal/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`}>
                     <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
                   </Link>
                 ) : (
