@@ -118,7 +118,7 @@ const getLayout = (title, listData, ROLE_CD, action) => {
   return null;
 };
 
-const GroupData = ({ groupData, getGroupMemberData, setGridFlag }) => {
+const GroupData = ({ groupData, getGroupMemberData, ROLE_CD, setGridFlag }) => {
   const listGroup = getListGroup(groupData);
 
   return (
@@ -131,7 +131,7 @@ const GroupData = ({ groupData, getGroupMemberData, setGridFlag }) => {
         height: '451px',
       }}
     >
-      {Object.keys(listGroup).map(key => getLayout(key, listGroup[key]), { getGroupMemberData, setGridFlag })}
+      {Object.keys(listGroup).map(key => getLayout(key, listGroup[key], ROLE_CD, { getGroupMemberData, setGridFlag }))}
     </div>
   );
 };

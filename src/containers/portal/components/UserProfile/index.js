@@ -57,7 +57,7 @@ class UserProfile extends React.Component {
                     {intlObj.get(messages.userProfile)}
                   </Button>
                 </li>
-                <li>
+                {/* <li>
                   <Button onClick={() => this.handleClickToMoveToSite(userProfile, 'talk')} type="button" className="icon-talk">
                     {intlObj.get(messages.sendToCube)}
                   </Button>
@@ -72,7 +72,7 @@ class UserProfile extends React.Component {
                     {intlObj.get(messages.todoRegist)}
                   </Button>
                 </li>
-                {/* <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
+                <li><Button onClick={() => this.handleClickToMoveToSite(userProfile, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
               </ul>
             </div>
           }

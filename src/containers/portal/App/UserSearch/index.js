@@ -57,7 +57,7 @@ const RenderSearchHistoryView = (props, t) => {
                                     {intlObj.get(messages.userProfile)}
                                   </Button>
                                 </li>
-                                <li>
+                                {/* <li>
                                   <Button onClick={() => props.handleClickToMoveToSite(history, t, 'talk')} type="button" className="icon-talk">
                                     {intlObj.get(messages.sendToCube)}
                                   </Button>
@@ -72,7 +72,7 @@ const RenderSearchHistoryView = (props, t) => {
                                     {intlObj.get(messages.todoRegist)}
                                   </Button>
                                 </li>
-                                {/* <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
+                                <li><Button onClick={() => props.handleClickToMoveToSite(history, t, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
                               </ul>
                             ) : (
                               <div />
@@ -163,7 +163,7 @@ const RenderSearchView = (props, t) => {
                                 <FormattedMessage {...messages.userProfile} />
                               </Button>
                             </li>
-                            <li>
+                            {/* <li>
                               <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'talk')} type="button" className="icon-talk">
                                 <FormattedMessage {...messages.sendToCube} />
                               </Button>
@@ -182,7 +182,7 @@ const RenderSearchView = (props, t) => {
                               <Button onClick={() => props.handleClickToHistoryInsert(user, t, 'hithanks')} type="button" className="icon-hithanks">
                                 <FormattedMessage {...messages.hyThanks} />
                               </Button>
-                            </li>
+                            </li> */}
                           </ul>
                         }
                         trigger="hover"
