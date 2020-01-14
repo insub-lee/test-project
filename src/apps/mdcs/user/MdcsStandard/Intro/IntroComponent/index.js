@@ -63,7 +63,7 @@ const columns = [
     title: 'Change',
     align: 'center',
     width: '10%',
-    render: text => (text === 88 ? 'Major' : 'Minor'),
+    render: text => (text === 88 ? 'MAJOR' : 'MINOR'),
   },
 ];
 
@@ -89,6 +89,7 @@ class IntroComponent extends Component {
       viewType: 'INPUT',
       fullPathInfo: [],
       isLoading: true,
+      revisionType: 'MAJOR',
     };
   }
 
@@ -121,6 +122,7 @@ class IntroComponent extends Component {
       viewType,
       fullPathInfo: [],
       isLoading: true,
+      revisionType: 'MAJOR',
     });
   };
 
@@ -309,10 +311,34 @@ class IntroComponent extends Component {
     }));
   };
 
+  getNodeIds = () => {
+    const { workSeq, taskSeq } = this.state;
+    const payload = {
+      WORK_SEQ: workSeq,
+      TASK_SEQ: taskSeq,
+      PARENT_DRAFT_PRC_ID: 0,
+    };
+    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const searchApi = [
+      {
+        key: 'nodeIdsInfo',
+        url: '/api/workflow/v1/common/workprocess/draftprocresult',
+        type: 'POST',
+        params: payload,
+      },
+    ];
+    getCallDataHanlder(id, searchApi);
+    this.setState({ isShow: true });
+    console.debug('@@@@@@ ohohohoh');
+    // const result = await getCallDataHanlder(id, searchApi);
+    // console.debug('@ getNodeIds ? ', result);
+    // return result;
+  };
+
   onShowDocTemplate = () => {
-    const { selectedComponent, taskSeq, workSeq, viewType, selectedDraft, fullPathInfo, selectedValue4 } = this.state;
+    const { selectedComponent, taskSeq, workSeq, viewType, selectedDraft, fullPathInfo, selectedValue4, revisionType } = this.state;
     const {
-      result: { docNum },
+      result: { docNum, nodeIdsInfo = { procResult: { DRAFT_DATA: '{}' } } },
     } = this.props;
     const docType = selectedComponent && selectedComponent.DOCTEMPLATECODE;
     const docNumber = docNum && docNum.docNumber;
@@ -325,9 +351,7 @@ class IntroComponent extends Component {
 
     let workSeqGoal = workSeq;
 
-    // Todo - Set WorkSeq By Doc Type
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
-      console.debug(docType);
       switch (docType) {
         case 'BS':
           workSeqGoal = 201;
@@ -346,14 +370,29 @@ class IntroComponent extends Component {
           break;
       }
     }
-    // let workSeq = -1;
-    // switch (docType) {
-    //   case 'BS':
-    //     workSeq = 201;
-    //     break;
-    //   default:
-    //     workSeq = 201;
-    // }
+
+    // Todo - get nodeIds Info
+    if ([DraftType.AMENDMENT].includes(selectedDraft)) {
+      console.debug('@@ nodeIdsInfo', nodeIdsInfo);
+      const procResult = nodeIdsInfo.procResult || { DRAFT_DATA: '{}' };
+      const draftData = procResult.DRAFT_DATA || '{}';
+      const { nodeIds } = JSON.parse(draftData);
+      if (nodeIds) {
+        workPrcProps.nodeIds = nodeIds;
+        this.setState({ isShow: true });
+      } else {
+        this.setState({ isShow: false });
+        return null;
+      }
+    }
+
+    // Todo - 폐기 기안
+    if ([DraftType.ABROGATION].includes(selectedDraft)) {
+    }
+
+    // Todo - 폐기 일괄
+    if (['ABROGATION_MULTI'].includes(selectedDraft)) {
+    }
 
     return (
       <BizBuilderBase
@@ -367,6 +406,7 @@ class IntroComponent extends Component {
         viewType={viewType}
         loadingComplete={this.loadingComplete}
         onCloseModal={this.onCloseModal}
+        revisionType={revisionType}
       />
     );
   };
@@ -411,7 +451,7 @@ class IntroComponent extends Component {
         break;
       case DraftType.AMENDMENT:
         // this.resetState(value, 'MODIFY');
-        this.resetState(value, 'MODIFY');
+        this.resetState(value, 'REVISION');
         break;
       case DraftType.ABROGATION:
         this.resetState(value, 'VIEW');
@@ -456,15 +496,26 @@ class IntroComponent extends Component {
     }
   };
 
-  onTableRowClick = (selectedDraft, taskSeq, workSeq) => {
-    switch (selectedDraft) {
-      case DraftType.AMENDMENT:
-      case DraftType.ABROGATION:
-        this.setState({ isShow: true, taskSeq, workSeq });
-        break;
-      default:
-        break;
-    }
+  setView = (id, workSeq, newTaskSeq, viewType) => {
+    console.debug(id, workSeq, newTaskSeq, viewType);
+  };
+
+  onTableRowClick = (selectedDraft, taskSeq, workSeq, revisionType) => {
+    const { getNodeIds } = this;
+    this.setState({ taskSeq, workSeq, revisionType }, () => getNodeIds());
+    // const { revisionTask } = this.props;
+    // const revisionInfo = {
+    //   id: `BizDoc_${workSeq}`,
+    //   workSeq,
+    //   taskSeq,
+    //   viewType: 'REVISION',
+    //   revisionType,
+    //   // callbackFunc: this.setView,
+    // };
+
+    // this.setState({ revisionInfo });
+    // console.debug('@@ payload', payload, revisionTask);
+    // revisionTask(payload);
   };
 
   onChangeTargetTasks = targetTasks => {
@@ -497,6 +548,7 @@ class IntroComponent extends Component {
       optAry4,
       isShow,
       targetTasks,
+      isLoading,
     } = this.state;
     const { listData = {} } = result;
     const listDataArr = listData.arr || [];
@@ -512,7 +564,6 @@ class IntroComponent extends Component {
 
     const options = [this.getFDepth(), optAry2, optAry3, optAry4];
     const values = [selectedValue1, selectedValue2, selectedValue3, selectedValue4];
-
     return (
       <StyledContents>
         <div className="contentWrapper">
@@ -572,7 +623,7 @@ class IntroComponent extends Component {
                     columns={columns}
                     dataSource={listDataArr}
                     onRow={record => ({
-                      onClick: () => this.onTableRowClick(selectedDraft, record.TASK_SEQ, record.WORK_SEQ),
+                      onClick: () => this.onTableRowClick(selectedDraft, record.TASK_SEQ, record.WORK_SEQ, record.CHANGE === 88 ? 'MAJOR' : 'MINOR'),
                     })}
                   />
                 )}
@@ -593,12 +644,12 @@ class IntroComponent extends Component {
         <AntdModal destroyOnClose style={{ top: '50px' }} width={1200} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
           <StyledInputView>
             <div className="pop_tit">업무표준</div>
-            <div style={{ display: this.state.isLoading ? '' : 'none' }}>
+            <div style={{ display: isLoading ? 'block' : 'none' }}>
               <Spin tip="Loading...">
                 <div style={{ height: '300px' }} />
               </Spin>
             </div>
-            <div style={{ display: !this.state.isLoading ? '' : 'none' }}>{isShow && this.onShowDocTemplate()}</div>
+            <div style={{ display: !isLoading ? 'block' : 'none' }}>{isShow && this.onShowDocTemplate()}</div>
           </StyledInputView>
         </AntdModal>
       </StyledContents>
@@ -628,6 +679,11 @@ IntroComponent.propTypes = {
     }),
     listData: PropTypes.shape({
       arr: PropTypes.arrayOf(PropTypes.object),
+    }),
+    nodeIdsInfo: PropTypes.shape({
+      procResult: PropTypes.shape({
+        DRAFT_DATA: PropTypes.string,
+      }),
     }),
   }),
 };
@@ -670,6 +726,11 @@ IntroComponent.defaultProps = {
     },
     listData: {
       arr: [],
+    },
+    nodeIdsInfo: {
+      procResult: {
+        DRAFT_DATA: '{}',
+      },
     },
   },
 };
