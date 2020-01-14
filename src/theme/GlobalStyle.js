@@ -402,7 +402,7 @@ html {
 
 .userProfileMenu .ant-popover-content .ant-popover-inner-content {
   min-width: 115px;
-  min-height: 85px;
+  /* min-height: 85px; */
   padding: 3px 7px;
   border-radius: 3px;
   background-color: #474747;

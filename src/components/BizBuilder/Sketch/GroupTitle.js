@@ -81,7 +81,7 @@ class GroupTitle extends Component {
               placeholder="Insert Title..."
             />
           ) : (
-            `${title}`
+            title
           )}
         </h2>
         {useOption && (

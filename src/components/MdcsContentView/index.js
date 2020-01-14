@@ -2,15 +2,29 @@ import React, { Component } from 'react';
 
 import { Button, Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
+import StyledTable from 'components/CommonStyled/StyledTable';
+import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
+
+const ModalWrapper = StyledModalWrapper(Modal);
+
 class MdcsContentView extends Component {
   state = {
     modalVisible: false,
   };
 
-  componentDidMount() {
-    console.debug('component didmout!!!!');
-  }
+  componentDidMount = () => {
+    const { sagaKey, getExtraApiData, formData } = this.props;
+    const apiArys = [
+      {
+        key: 'fullPathName',
+        url: '/api/admin/v1/common/categoryFullPathNm',
+        type: 'POST',
+        params: { PARAM: { NODE_ID: formData.NODE_ID } },
+      },
+    ];
+    getExtraApiData(sagaKey, apiArys);
+  };
 
   onDocCoverClick = () => {
     this.setState({ modalVisible: true });
@@ -21,47 +35,48 @@ class MdcsContentView extends Component {
   };
 
   render() {
-    console.debug('mdcsContentview', this.props);
-    const { formData, selectedRow } = this.props;
+    const { formData, selectedRow, extraApiData } = this.props;
     return (
       <>
-        <table>
-          <tbody>
-            <tr>
-              <td>문서종류</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>문서번호</td>
-              <td>{formData.DOCNUMBER}</td>
-            </tr>
-            <tr>
-              <td>개정번호</td>
-              <td>{formData.VERSION}</td>
-            </tr>
-            <tr>
-              <td>제목</td>
-              <td>{formData.TITLE}</td>
-            </tr>
-            <tr>
-              <td>표지보기</td>
-              <td>
-                <Button onClick={this.onDocCoverClick}>표지보기</Button>
-              </td>
-            </tr>
-            <tr>
-              <td>본문내용</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>홀드중</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-        <Modal
+        <StyledTable>
+          <table>
+            <tbody>
+              <tr>
+                <th style={{ width: '100px' }}>문서종류</th>
+                <td colSpan={3}>
+                  {extraApiData && extraApiData.fullPathName && extraApiData.fullPathName.fullPath_Nm && extraApiData.fullPathName.fullPath_Nm.FULLPATH_NM}
+                </td>
+              </tr>
+              <tr>
+                <th style={{ width: '100px' }}>제목</th>
+                <td colSpan={3}>{formData.TITLE}</td>
+              </tr>
+              <tr>
+                <th style={{ width: '100px' }}>문서번호</th>
+                <td style={{ width: '200px' }}>{formData.DOCNUMBER}</td>
+                <th style={{ width: '100px' }}>개정번호</th>
+                <td style={{ width: '200px' }}>{formData.VERSION}</td>
+              </tr>
+              <tr>
+                <th style={{ width: '100px' }}>표지보기</th>
+                <td style={{ width: '200px' }}>
+                  <Button icon="file-text" onClick={this.onDocCoverClick}>
+                    표지보기
+                  </Button>
+                </td>
+                <th style={{ width: '100px' }}>결재상태</th>
+                <td style={{ width: '200px' }}></td>
+              </tr>
+              <tr>
+                <th style={{ width: '100px' }}>본문내용</th>
+                <td colSpan={3}></td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledTable>
+        <ModalWrapper
           title="문서표지"
-          style={{ top: '10px', padding: '10px' }}
+          style={{ padding: '10px' }}
           visible={this.state.modalVisible}
           width={900}
           onCancel={this.onDocCoverCloseClick}
@@ -75,7 +90,7 @@ class MdcsContentView extends Component {
             draftId={selectedRow && selectedRow.DRAFT_ID}
             metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
           />
-        </Modal>
+        </ModalWrapper>
       </>
     );
   }

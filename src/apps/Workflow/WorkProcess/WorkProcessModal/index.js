@@ -218,7 +218,7 @@ class WorkProcessModal extends Component {
         onOk={this.handleComplete}
         onCancel={this.handleCloseModal}
         width="55%"
-        style={{ top: 20 }}
+        style={{ top: 50 }}
         footer={[
           <StyledButton key="close" onClick={this.handleCloseModal}>
             취소

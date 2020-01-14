@@ -59,12 +59,14 @@ class UserStore extends Component {
         location: { pathname },
       },
     } = this.props;
-    const bizStoreYn = pathname.includes('biz') ? 'Biz' : 'App';
+
+    const bizStoreYn = pathname.includes('bizManage') ? 'Biz Card Manage' : pathname.includes('myPage') ? 'Home Widget' : 'App Store';
+    
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
-            <h2 className="pageHeader">{bizStoreYn} Store</h2>
+            <h2 className="pageHeader">{bizStoreYn}</h2>
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>

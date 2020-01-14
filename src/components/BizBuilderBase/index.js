@@ -112,6 +112,7 @@ class BizBuilderBase extends React.Component {
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
       };
+      console.debug('@@@@ Next Props', nextProps);
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
           if (typeof CustomInputPage === 'function') {

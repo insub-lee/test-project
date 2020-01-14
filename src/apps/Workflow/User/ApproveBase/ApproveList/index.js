@@ -1,21 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Modal } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
 
 import ApproveView from '../ApproveView';
-import MdcsAppvView from '../MdcsAppvView';
+import HoldView from '../MdcsAppvView/holdview';
 
 const AntdTable = StyledAntdTable(Table);
-
+const ModalWrapper = StyledModalNofooterLine(Modal);
 class ApproveList extends Component {
-  componentDidMount() {
-    // const { category, getApproveList } = this.props;
-    // getApproveList({ searchType: category });
-  }
-
   getTableColumns = () => [
     {
       title: 'No',
@@ -49,7 +45,7 @@ class ApproveList extends Component {
       dataIndex: 'APPV_STATUS_NM',
       key: 'APPV_STATUS_NM',
       width: '10%',
-      align: 'center',
+      align: 'center',      
     },
     {
       title: '기안자',
@@ -86,7 +82,9 @@ class ApproveList extends Component {
           })}
           bordered
         />
-        {Object.keys(selectedRow).length > 0 && <MdcsAppvView {...this.props} />}
+        <ModalWrapper title="표준문서 기결함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+          <HoldView {...this.props} />
+        </ModalWrapper>
       </div>
     );
   }
