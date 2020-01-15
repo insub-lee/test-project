@@ -37,7 +37,6 @@ const columns = [
     dataIndex: 'VERSION',
     title: 'REV',
     align: 'center',
-    render: text => text && text.split('.')[0],
     width: '10%',
   },
   {
