@@ -40,6 +40,7 @@ class UserSelectComp extends Component {
 
   onInitUserSelect = () => {
     const { id, getCallDataHanlder, initUserList } = this.props;
+    console.debug('@@@ init', id, getCallDataHanlder, initUserList);
     if (initUserList && initUserList.length > 0) {
       const param = {
         PARAM: {
