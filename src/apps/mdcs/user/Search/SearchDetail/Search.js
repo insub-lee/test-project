@@ -42,7 +42,7 @@ const columns = [
 
 const initState = {
   searchParam: {
-    nodeId: { key: 'TBD.NODE_ID', condition: '=', value: null, type: 'INT' },
+    nodeId: { key: 'TBD.NODE_ID', condition: 'IN', value: null, type: 'INT' },
     status: { key: 'TBD.STATUS', condition: 'IN', value: 2, type: 'INT' }, // 현재 Revision, 폐기
     docNumber: { key: 'TBD.DOCNUMBER', condition: 'LIKE', value: '', type: 'STRING' },
     title: { key: 'TBD.TITLE', condition: 'LIKE', value: '', type: 'STRING' },

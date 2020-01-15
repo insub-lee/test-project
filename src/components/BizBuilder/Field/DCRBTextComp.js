@@ -24,6 +24,27 @@ class DCRBTextComp extends React.Component {
     }
   };
 
+  componentDidUpdate = prevProps => {
+    const { isManage, formData, rowClass } = this.props;
+    const { formData: prevFormData } = prevProps;
+    if (formData.DOCNUMBER && prevFormData.DOCNUMBER && formData.DOCNUMBER !== prevFormData.DOCNUMBER) {
+      const isDisplay =
+        formData.DOCNUMBER &&
+        formData.DOCNUMBER.indexOf('ME') === 0 &&
+        (formData.DOCNUMBER.substr(3, 1) === 'B' ||
+          formData.DOCNUMBER.substr(3, 1) === 'C' ||
+          formData.DOCNUMBER.substr(3, 1) === 'J' ||
+          formData.DOCNUMBER.substr(3, 1) === 'K');
+      if (!isManage && rowClass && !isDisplay) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = 'none';
+      } else if (rowClass) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = '';
+      }
+    }
+  };
+
   handleOnChange = (value, key) => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData, colData } = this.props;
     let tempData = [];
