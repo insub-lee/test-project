@@ -156,7 +156,7 @@ class selecteduser extends React.Component {
               <Table size="small" className="SUTable" style={{ width: '100%' }}>
                 <Table.Body>
                   {deptList.map(dept => (
-                    <Table.Row key={dept.title}>
+                    <Table.Row key={dept.ID}>
                       <Table.Cell textAlign="left" title={`${lang.get('NAME', dept)}`} className="SUTableCell">
                         <NotDraggable dept={dept} deleteCallback={deleteCallback} type="dept">
                           {lang.get('NAME', dept)}

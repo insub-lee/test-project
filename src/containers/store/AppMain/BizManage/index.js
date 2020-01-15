@@ -107,10 +107,10 @@ class BizManage extends Component {
             />
           </ErrorBoundary>
         </StyledTabList>
-        <ErrorBoundary>
-          <ModalRoute path="/store/appMain/bizManage/authSetting/:BIZGRP_ID" component={AuthSetting} />
-          <ModalContainer />
-        </ErrorBoundary>
+        {/*<ErrorBoundary>*/}
+        {/*  <ModalRoute path="/store/appMain/bizManage/authSetting/:BIZGRP_ID" component={AuthSetting} />*/}
+        {/*  <ModalContainer />*/}
+        {/*</ErrorBoundary>*/}
         <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
           <ErrorBoundary>
             <Route path="/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />

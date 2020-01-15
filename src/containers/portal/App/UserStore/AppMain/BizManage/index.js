@@ -127,7 +127,7 @@ class BizManage extends Component {
             */}
             <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)', padding: 20 }}>
               <ErrorBoundary>
-                <ModalRoute path={`${match.url}/authSetting`} component={AuthSetting} />
+                {/*<ModalRoute path={`${match.url}/authSetting`} component={AuthSetting} />*/}
                 {/* <ModalRoute path={`${match.url}/authSetting`} component={Sample} /> */}
                 <ModalContainer />
               </ErrorBoundary>
