@@ -4,7 +4,7 @@ const Group = styled.div`
   position: relative;
   padding: 5px;
   margin-bottom: 3px;
-  border: 1px solid #ddd;
+  /* border: 1px solid #ddd; */
   border-top: 2px solid #999;
 
   /* :hover {

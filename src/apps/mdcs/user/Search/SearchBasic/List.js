@@ -28,7 +28,7 @@ const columns = [
   },
   { title: 'No.', key: 'id', dataIndex: 'id' },
   { title: 'REV.', key: 'status', dataIndex: 'status' },
-  { title: 'Effect Date', key: '', dataIndex: '' },
+  { title: 'Effect Date', key: '', dataIndex: 'END_DTTM' },
   { title: 'Title', key: 'title', dataIndex: 'title' },
   { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
   { title: '기안자', key: 'name', dataIndex: 'name' },
@@ -36,15 +36,15 @@ const columns = [
 
 // Table NODE_ID 값
 const options = [
-  { label: '업무표준', value: '11' },
-  { label: '기술표준', value: '12' },
-  { label: '고객표준', value: '31' },
-  { label: '도면', value: '32' },
-  { label: '자재승인서', value: '79' },
-  { label: 'TDS', value: '-1' },
-  { label: 'NPI', value: '-1' },
-  { label: 'PDP', value: '7' },
-  { label: 'Work Process', value: '18' },
+  { label: '업무표준', value: 2 },
+  { label: '기술표준', value: 6 },
+  // { label: '고객표준', value: -1 },
+  { label: '도면', value: 16 },
+  { label: '자재승인서', value: 18 },
+  { label: 'TDS', value: 231 },
+  { label: 'NPI', value: 232 },
+  // { label: 'PDP', value: -1 },
+  { label: 'Work Process', value: 234 },
 ];
 
 const initState = {
@@ -75,24 +75,34 @@ const initState = {
 class SearchBasic extends Component {
   state = initState;
 
-  componentDidMount() {
-    this.callApi();
-  }
+  // componentDidMount() {
+  //   this.callApi();
+  // }
 
   callApi = () => {
-    const { sagaKey, getCallDataHanlder } = this.props;
+    const { sagaKey: id, getCallDataHanlder } = this.props;
+    const params = { ...this.state, status: this.state.status === 2 ? [1, 2] : [8] };
+
     const apiArr = [
       {
         key: 'listData',
         url: '/api/mdcs/v1/common/search',
         type: 'POST',
-        params: this.state,
+        params,
       },
     ];
-    this.props.getCallDataHanlder(sagaKey, apiArr);
+    getCallDataHanlder(id, apiArr);
   };
 
   onChangeCheckBox = checkedValues => {
+    const npiTIdx = checkedValues.findIndex(iNode => iNode === 232);
+    const npiPIdx = checkedValues.findIndex(iNode => iNode === 233);
+    if (npiTIdx > -1 && npiPIdx === -1) {
+      checkedValues.push(233);
+    }
+    if (npiTIdx === -1 && npiPIdx > -1) {
+      checkedValues.splice(npiPIdx, 1);
+    }
     this.setState({ nodeIdList: checkedValues });
   };
 
@@ -145,6 +155,7 @@ class SearchBasic extends Component {
         taskSeq: record.taskSeq,
         workSeq: record.workSeq,
         nodeId: record.nodeId,
+        draftId: record.DRAFT_ID,
       },
     });
   };
@@ -162,7 +173,6 @@ class SearchBasic extends Component {
   };
 
   clickCoverView = () => {
-    console.log('clickCoverView !!');
     this.setState({
       coverView: {
         visible: true,
@@ -173,8 +183,9 @@ class SearchBasic extends Component {
   render() {
     const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView } = this.state;
     const { result } = this.props;
+    const { listData = {} } = result;
+    const listDataArr = listData.arr || [];
     const { onClickRow, closeBtnFunc } = this;
-    console.log('this.props : ', this.props);
     return (
       <StyledSearch>
         <div className="searchPage">
@@ -198,7 +209,7 @@ class SearchBasic extends Component {
                   value={status}
                 >
                   <StyledRadio value={2}>현재 Revision</StyledRadio>
-                  <StyledRadio value={9}>폐기</StyledRadio>
+                  <StyledRadio value={8}>폐기</StyledRadio>
                 </Radio.Group>
               </FormItem>
               <FormItem label="문서번호">
@@ -291,7 +302,7 @@ class SearchBasic extends Component {
                 <Table
                   columns={columns}
                   size="middle"
-                  dataSource={result.listData ? result.listData.arr : []}
+                  dataSource={listDataArr}
                   className="tableCustom"
                   onRow={(record, rowIndex) => ({
                     onClick: event => {
@@ -315,7 +326,13 @@ class SearchBasic extends Component {
             <>
               <div className="pop_tit">선택 내용 보기</div>
               <div className="pop_con">
-                <SearchViewer workSeq={SearchView.workSeq} taskSeq={SearchView.taskSeq} closeBtnFunc={closeBtnFunc} clickCoverView={this.clickCoverView} />
+                <SearchViewer
+                  workSeq={SearchView.workSeq}
+                  taskSeq={SearchView.taskSeq}
+                  draftId={SearchView.draftId}
+                  closeBtnFunc={closeBtnFunc}
+                  clickCoverView={this.clickCoverView}
+                />
               </div>
             </>
           </AntdModal>
@@ -347,11 +364,15 @@ class SearchBasic extends Component {
 }
 
 SearchBasic.propTypes = {
-  result: PropTypes.objectOf(PropTypes.any).isRequired,
+  responseData: PropTypes.shape({
+    listData: PropTypes.shape({
+      arr: PropTypes.arrayOf(PropTypes.object),
+    }),
+  }),
 };
 
 SearchBasic.defaultProps = {
-  result: {
+  responseData: {
     listData: {
       arr: [],
     },

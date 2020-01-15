@@ -40,46 +40,47 @@ class DragUploadComp extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
-    const { colData: prevColData, COMP_FIELD: compField } = prevProps;
-    const { colData, COMP_FIELD } = this.props;
-
-    if (colData && colData.DETAIL && COMP_FIELD) {
-      if (!prevColData || !prevColData.DETAIL) {
-        const fileList = colData.DETAIL;
-
-        if (fileList) {
-          this.setState({
-            fileList: fileList.map(file => ({
-              ...file,
-              uid: file.seq,
-              url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
-              status: 'done',
-            })),
-          });
-        }
-      } else {
-        let isValid = true;
-        colData.DETAIL.forEach(node => {
-          if (prevColData.DETAIL.findIndex(iNode => iNode.seq === node.seq) === -1) isValid = false;
-        });
-        if (!isValid) {
-          const fileList = colData.DETAIL;
-
-          if (fileList) {
-            this.setState({
-              fileList: fileList.map(file => ({
-                ...file,
-                uid: file.seq,
-                url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
-                status: 'done',
-              })),
-            });
-          }
-        }
-      }
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   const { colData: prevColData, COMP_FIELD: compField } = prevProps;
+  //   const { colData, COMP_FIELD } = this.props;
+  //
+  //   if (colData && colData.DETAIL && COMP_FIELD) {
+  //     if (!prevColData || !prevColData.DETAIL) {
+  //       const fileList = colData.DETAIL;
+  //       console.debug('@@@ ', fileList);
+  //       if (fileList) {
+  //         console.debug('@@ fileList', fileList);
+  //         this.setState({
+  //           fileList: fileList.map(file => ({
+  //             ...file,
+  //             uid: file.seq,
+  //             url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
+  //             status: 'done',
+  //           })),
+  //         });
+  //       }
+  //     } else {
+  //       let isValid = true;
+  //       colData.DETAIL.forEach(node => {
+  //         if (prevColData.DETAIL.findIndex(iNode => iNode.seq === node.seq) === -1) isValid = false;
+  //       });
+  //       if (!isValid) {
+  //         const fileList = colData.DETAIL;
+  //
+  //         if (fileList) {
+  //           this.setState({
+  //             fileList: fileList.map(file => ({
+  //               ...file,
+  //               uid: file.seq,
+  //               url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
+  //               status: 'done',
+  //             })),
+  //           });
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   getCurrentValueJson = fileList =>
     fileList
@@ -112,20 +113,34 @@ class DragUploadComp extends Component {
     });
   };
 
-  onRemove = itemindex => {
+  onRemove = (itemindex, e) => {
+    e.stopPropagation();
     const { sagaKey: id, changeFormData, colData, COMP_FIELD } = this.props;
-    const { fileList } = this.state;
-    this.setState({
-      fileList: fileList.filter((item, index) => index !== itemindex),
-    });
-
-    const nextColDataDetail = colData.DETAIL.filter((item, index) => index !== itemindex);
-    changeFormData(id, COMP_FIELD, nextColDataDetail);
+    this.setState(
+      prevState => {
+        const { fileList } = prevState;
+        return {
+          fileList: fileList.filter((item, index) => index !== itemindex),
+        };
+      },
+      () => {
+        // const nextColDataDetail = colData.DETAIL.filter((item, index) => index !== itemindex);
+        // changeFormData(id, COMP_FIELD, nextColDataDetail);
+        // desc - 'done'상태인것만 리듀서에 푸쉬
+        changeFormData(
+          id,
+          COMP_FIELD,
+          this.state.fileList.filter(file => file.status === 'done'),
+        );
+      },
+    );
   };
 
   handleChange = ({ file, fileList }) => {
     const { uid, response, thumbUrl } = file;
-    if (fileList.length <= 5) {
+    const limitSize = 5;
+    // if (fileList.length <= 5) {
+    if (true) {
       if (response && response.code === 300) {
         const uploadedFile = {
           ...response,
@@ -165,36 +180,46 @@ class DragUploadComp extends Component {
     }
   };
 
-  handlerAttachChange = detail => {
+  handlerAttachChange = fileList => {
+    console.debug('Detail', fileList);
+
     const { CONFIG, sagaKey: id, changeFormData, changeValidationData, COMP_FIELD, NAME_KOR, WORK_SEQ, colData, COMP_TAG } = this.props;
-    let retVal = {};
+    let retVal = [];
     if (CONFIG.property.isRequired) {
-      changeValidationData(id, COMP_FIELD, detail.length > 0, detail.length > 0 ? '' : `${NAME_KOR}는 필수항목 입니다.`);
+      changeValidationData(id, COMP_FIELD, fileList.length > 0, fileList.length > 0 ? '' : `${NAME_KOR}는 필수항목 입니다.`);
     }
 
     if (colData && typeof colData === 'object' && colData.DETAIL && colData.DETAIL.length > 0) {
-      colData.DETAIL = detail;
+      console.debug('0');
+      colData.DETAIL = fileList;
       retVal = colData;
     } else if (colData && colData.indexOf('{') === 0 && isJSON(colData)) {
-      JSON.parse(colData).DETAIL = detail;
+      console.debug('1');
+      JSON.parse(colData).DETAIL = fileList;
       retVal = colData;
     } else {
-      retVal = {
-        WORK_SEQ,
-        TASK_SEQ: -1,
-        CONT_SEQ: -1,
-        FIELD_NM: COMP_FIELD,
-        TYPE: COMP_TAG,
-        DETAIL: detail,
-      };
+      console.debug('2');
+      retVal = fileList.filter(file => file.status === 'done');
+      // retVal = {
+      //   WORK_SEQ,
+      //   TASK_SEQ: -1,
+      //   CONT_SEQ: -1,
+      //   FIELD_NM: COMP_FIELD,
+      //   TYPE: COMP_TAG,
+      //   DETAIL: detail,
+      // };
     }
+    console.debug('3');
     changeFormData(id, COMP_FIELD, retVal);
   };
 
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
     const { fileList } = this.state;
     const size = fileList.length;
-    if (size + 1 <= 5) {
+    // limiter
+    const limit = 5;
+    // if (size + 1 <= 5) {
+    if (true) {
       const formData = new FormData();
       if (data) {
         Object.keys(data).forEach(key => {
@@ -251,7 +276,8 @@ class DragUploadComp extends Component {
     return visible ? (
       <StyledDragger>
         {!view && (
-          <React.Fragment>
+          <>
+            {/*
             <div className="btnTypeUploader" style={{ marginBottom: '10px' }}>
               <Upload
                 action="/upload"
@@ -262,12 +288,13 @@ class DragUploadComp extends Component {
                 showUploadList={false}
                 multiple
               >
-                <Button>
+                <StyledButton className="btn-light btn-sm">
                   <Icon type="upload" /> Click to Upload
-                </Button>
+                </StyledButton>
               </Upload>
             </div>
-            <div className="dragTypeUploader" style={{ height: '138px' }}>
+            */}
+            <div className="dragTypeUploader" style={{ height: 100 }}>
               <Dragger
                 action="/upload"
                 fileList={fileList}
@@ -275,20 +302,20 @@ class DragUploadComp extends Component {
                 onChange={this.handleChange}
                 customRequest={this.customRequest}
                 showUploadList={false}
-                openFileDialogOnClick={false}
+                openFileDialogOnClick
                 multiple
               >
-                <React.Fragment>
+                <>
                   {fileList.length === 0 && (
-                    <React.Fragment>
+                    <>
                       <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                       </p>
-                      <p className="ant-upload-text">drag file to this area to upload</p>
-                    </React.Fragment>
+                      <p className="ant-upload-text">드래그 앤 드롭 또는 클릭</p>
+                    </>
                   )}
                   {fileList.length > 0 && (
-                    <div className="uploadList" style={{ margin: '-10px 0px -10px' }}>
+                    <div className="uploadList" style={{ margin: 0, padding: 20, height: 80, overflowY: 'auto' }}>
                       {fileList.map((file, index) => (
                         <div className="uploadFileRow" style={{ position: 'relative', height: '25px' }}>
                           <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
@@ -299,12 +326,12 @@ class DragUploadComp extends Component {
                               <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
                                 <Icon type="download" />
                               </StyledButton>
-                              <StyledButton className="btn-light btn-xs" onClick={() => this.onRemove(index)}>
+                              <StyledButton className="btn-light btn-xs" onClick={e => this.onRemove(index, e)}>
                                 <Icon type="close" />
                               </StyledButton>
                             </div>
                           ) : (
-                            <React.Fragment>
+                            <>
                               {file.status === 'error' ? (
                                 <div className="uploadFileStatus" style={{ position: 'absolute', top: 4, right: 10 }}>
                                   <sapn style={{ color: 'red' }}>업로드 실패</sapn>
@@ -318,16 +345,16 @@ class DragUploadComp extends Component {
                                   <Progress percent={this.state.percent} status="active" />
                                 </div>
                               )}
-                            </React.Fragment>
+                            </>
                           )}
                         </div>
                       ))}
                     </div>
                   )}
-                </React.Fragment>
+                </>
               </Dragger>
             </div>
-          </React.Fragment>
+          </>
         )}
         {view && (
           <div className="uploadFileList">
@@ -338,7 +365,13 @@ class DragUploadComp extends Component {
                     <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
                   </div>
                   <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                    <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
+                    <StyledButton
+                      className="btn-primary btn-xs btn-first"
+                      onClick={e => {
+                        e.stopPropagation();
+                        window.location.href = `${file.down}`;
+                      }}
+                    >
                       <Icon type="download" />
                     </StyledButton>
                   </div>

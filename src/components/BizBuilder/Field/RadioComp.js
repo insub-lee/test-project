@@ -3,20 +3,17 @@ import { Radio } from 'antd';
 import RadioGroup from 'components/RadioButton';
 
 const makeDataSource = apiData => {
-  const tempData = [];
-  apiData.categoryMapList
+  const { categoryMapList = [] } = apiData;
+  return categoryMapList
     .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
-    .forEach(item => {
-      tempData.push({
-        value: item.NODE_ID,
-        NAME_KOR: item.NAME_KOR,
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-      });
-    });
-  return tempData;
+    .map(item => ({
+      value: item.NODE_ID,
+      NAME_KOR: item.NAME_KOR,
+      NAME_ENG: item.NAME_ENG,
+      NAME_CHN: item.NAME_CHN,
+      NAME_JPN: item.NAME_JPN,
+      NAME_ETC: item.NAME_ETC,
+    }));
 };
 
 class RadioComp extends Component {

@@ -8,6 +8,14 @@ class DwCheckListComp extends Component {
     type: '',
   };
 
+  componentDidMount = () => {
+    const { isManage, formData, rowClass } = this.props;
+    if (!isManage && rowClass && formData.DOCNUMBER && formData.DOCNUMBER.substr(0, 4) === 'MBKH') {
+      const rowNode = document.querySelector(`.${rowClass}`);
+      rowNode.style.display = 'none';
+    }
+  };
+
   onOkHandler = () => {
     const { changeFormData, sagaKey: id } = this.props;
     const { type } = this.state;

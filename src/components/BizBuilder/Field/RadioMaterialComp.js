@@ -11,11 +11,18 @@ class RadioMaterialComp extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData, changeFormData } = this.props;
-    const apiArray = [{ key: 'material_28', url: '/api/admin/v1/common/categoryMapList?MAP_ID=28', type: 'GET' }];
-    getExtraApiData(id, apiArray);
-    changeFormData(id, 'MATERIAL_TEXT', '');
-    changeFormData(id, 'MATERIAL_TYPE', '');
+    const { sagaKey: id, getExtraApiData, changeFormData, COMP_FIELD, isManage, formData, rowClass } = this.props;
+    const isDisplay = formData && formData.DOCNUMBER && (formData.DOCNUMBER.substr(0, 4) === 'MBDA' || formData.DOCNUMBER.substr(0, 4) === 'MBKE');
+    if (!isManage && rowClass && !isDisplay) {
+      const rowNode = document.querySelector(`.${rowClass}`);
+      rowNode.style.display = 'none';
+    } else {
+      const apiArray = [{ key: 'material_28', url: '/api/admin/v1/common/categoryMapList?MAP_ID=28', type: 'GET' }];
+      getExtraApiData(id, apiArray);
+      changeFormData(id, COMP_FIELD, 'Y');
+      changeFormData(id, 'MATERIAL_TEXT', '');
+      changeFormData(id, 'MATERIAL_TYPE', '');
+    }
   }
 
   onChangeHandlerText = value => {

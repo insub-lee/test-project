@@ -27,7 +27,7 @@ class BizStd extends Component {
   }
 
   callApi = apiArr => {
-    const { id, getCallDataHanlder } = this.props;
+    const { sagaKey: id, getCallDataHanlder } = this.props;
     getCallDataHanlder(id, apiArr);
   };
 
@@ -42,11 +42,12 @@ class BizStd extends Component {
     if (result && result.bizStdScope && result.bizStdScope.categoryMapList && result.bizStdScope.categoryMapList.length > 0) {
       scopeData = result.bizStdScope.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
     }
+
     return (
       <>
         <FormItem label="문서종류">
           {checkboxOptData && checkboxOptData.length > 0 && (
-            <Checkbox.Group onChange={value => onChangeCheckBox('nodeIds', value)} value={nodeIds.value}>
+            <Checkbox.Group onChange={value => onChangeCheckBox('nodeIds', value)} value={(nodeIds && nodeIds.value) || undefined}>
               {checkboxOptData.map(node => (
                 <StyledCheckbox value={node.NODE_ID}>{node.NAME_KOR}</StyledCheckbox>
               ))}
@@ -55,7 +56,7 @@ class BizStd extends Component {
         </FormItem>
         <FormItem label="SCOPE">
           {scopeData && scopeData.length > 0 && (
-            <Select value={scope.value} onSelect={value => onChangeValue('scope', value)}>
+            <Select value={(scope && scope.value) || 0} onSelect={value => onChangeValue('scope', value)}>
               <Option value={0}>--------</Option>
               {scopeData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
