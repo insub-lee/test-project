@@ -176,7 +176,7 @@ export function* getMapListAll() {
     let newData = data;
     const categoryKey = data.get('CATG_ID');
     newData = newData.set('showReadMoreBtn', false);
-    newData = newData.set('appList', fromJS(newResult[categoryKey])); // 앱 목록
+    newData = newData.set('appList', newResult[categoryKey] ? fromJS(newResult[categoryKey]) : []); // 앱 목록
     mapList = mapList.push(newData);
   });
 

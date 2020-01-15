@@ -166,9 +166,10 @@ export function* getOrganizationUser(payload) {
     PARAM: {
       COMP_CD,
       PAGE_CNT,
+      KEYWORD,
     },
   };
-  const response = yield call(Axios.post, `/api/common/v1/account/organizationSearch/${encodeURIComponent(KEYWORD)}`, data);
+  const response = yield call(Axios.post, `/api/common/v1/account/organizationSearch`, data);
   let result = fromJS(response.list);
   if (result === undefined || result.size === 0) {
     result = fromJS([]);
@@ -192,6 +193,7 @@ export function* loadingOrganizationUser(payload) {
       PAGE,
       COMP_CD,
       PAGE_CNT,
+      KEYWORD,
     },
   };
   const organizationSearchResultNames = {
@@ -203,7 +205,7 @@ export function* loadingOrganizationUser(payload) {
   if (organizationSearchResult.length / PAGE_CNT === PAGE) {
     return;
   }
-  const response = yield call(Axios.post, `/api/common/v1/account/organizationSearch/${encodeURIComponent(KEYWORD)}`, data);
+  const response = yield call(Axios.post, `/api/common/v1/account/organizationSearch/`, data);
   let result = fromJS(response.list);
   if (result === undefined || result.size === 0) {
     result = fromJS([]);
@@ -464,9 +466,9 @@ export function* getGroupMemberData(payload) {
 }
 
 export function* getSearchResultData(payload) {
-  const { ROLE_CD, KEYWORD } = payload;
+  const { ROLE_CD, ACNT_TYPE, ACNT_ID, KEYWORD } = payload;
 
-  const response = yield call(Axios.post, '/api/common/v1/account/getSearchResultData/', { ROLE_CD, KEYWORD });
+  const response = yield call(Axios.post, '/api/common/v1/account/getSearchResultData/', { ROLE_CD, ACNT_TYPE, ACNT_ID, KEYWORD });
   const { searchResultData } = response;
 
   yield put({
