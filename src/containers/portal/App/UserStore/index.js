@@ -109,7 +109,6 @@ class UserStore extends Component {
                       <Route path="/portal/store/appMain/bizManage" component={BizManage} />
                       <Route path="/portal/store/appMain/bizStore" render={props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
                       <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
-                      <Route exact path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} />
                     </Switch>
                   </div>
                   <ErrorBoundary>
