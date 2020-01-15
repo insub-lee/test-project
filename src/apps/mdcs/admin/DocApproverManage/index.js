@@ -8,7 +8,7 @@ import List from './List';
 class DocApproverManage extends Component {
   render() {
     return (
-      <div style={{ padding: '30px' }}>
+      <div>
         <BizMicroDevBase sagaKey="distMgntList" component={List} />
       </div>
     );

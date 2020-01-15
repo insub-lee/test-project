@@ -8,7 +8,7 @@ class DocTemplate extends Component {
   componentDidMount() {}
 
   render() {
-    return <BizMicroDevBase id="DocTemplate" component={List} {...this.props} />;
+    return <BizMicroDevBase sagaKey="DocTemplate" component={List} {...this.props} />;
   }
 }
 export default DocTemplate;
