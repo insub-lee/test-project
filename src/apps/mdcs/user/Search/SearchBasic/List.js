@@ -27,7 +27,7 @@ const columns = [
     },
   },
   { title: 'No.', key: 'id', dataIndex: 'id' },
-  { title: 'REV.', key: 'status', dataIndex: 'status' },
+  { title: 'REV.', key: 'VERSION', dataIndex: 'VERSION' },
   { title: 'Effect Date', key: '', dataIndex: 'END_DTTM' },
   { title: 'Title', key: 'title', dataIndex: 'title' },
   { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
