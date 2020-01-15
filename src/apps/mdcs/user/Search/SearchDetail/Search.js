@@ -49,8 +49,8 @@ const initState = {
     remark: { key: 'WBT.REMARK', condition: 'LIKE', value: '', type: 'STRING' }, // TOTAL에 없음
     regUserName: { key: 'TBD.REG_USER_NAME', condition: 'LIKE', value: '', type: 'STRING' },
     regDeptName: { key: 'TBD.REG_DEPT_NAME', condition: 'LIKE', value: '', type: 'STRING' },
-    startDate: { key: 'TBD.REG_DTTM', condition: '>=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
-    endDate: { key: 'TBD.REG_DTTM', condition: '<=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
+    startDate: { key: 'TBD.END_DTTM', condition: '>=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
+    endDate: { key: 'TBD.END_DTTM', condition: '<=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
     lastVer: { key: 'TBD.ISLAST_VER', condition: '=', value: 'Y', type: 'STRING' },
   },
   type: 'title',
