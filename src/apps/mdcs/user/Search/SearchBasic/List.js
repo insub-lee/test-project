@@ -27,8 +27,8 @@ const columns = [
     },
   },
   { title: 'No.', key: 'id', dataIndex: 'id' },
-  { title: 'REV.', key: 'status', dataIndex: 'status' },
-  { title: 'Effect Date', key: '', dataIndex: 'END_DTTM' },
+  { title: 'REV.', key: 'VERSION', dataIndex: 'VERSION' },
+  { title: 'Effect Date', key: 'END_DTTM', dataIndex: 'END_DTTM' },
   { title: 'Title', key: 'title', dataIndex: 'title' },
   { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
   { title: '기안자', key: 'name', dataIndex: 'name' },
@@ -82,7 +82,6 @@ class SearchBasic extends Component {
   callApi = () => {
     const { sagaKey: id, getCallDataHanlder } = this.props;
     const params = { ...this.state, status: this.state.status === 2 ? [1, 2] : [8] };
-
     const apiArr = [
       {
         key: 'listData',

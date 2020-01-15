@@ -33,7 +33,7 @@ const columns = [
     },
   },
   { title: 'No.', key: 'id', dataIndex: 'id' },
-  { title: 'REV.', key: 'status', dataIndex: 'status' },
+  { title: 'REV.', key: 'VERSION', dataIndex: 'VERSION' },
   { title: 'Effect Date', key: 'END_DTTM', dataIndex: 'END_DTTM' },
   { title: 'Title', key: 'title', dataIndex: 'title' },
   { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
@@ -42,15 +42,15 @@ const columns = [
 
 const initState = {
   searchParam: {
-    nodeId: { key: 'TBD.NODE_ID', condition: '=', value: null, type: 'INT' },
+    nodeId: { key: 'TBD.NODE_ID', condition: 'IN', value: null, type: 'INT' },
     status: { key: 'TBD.STATUS', condition: 'IN', value: 2, type: 'INT' }, // 현재 Revision, 폐기
     docNumber: { key: 'TBD.DOCNUMBER', condition: 'LIKE', value: '', type: 'STRING' },
     title: { key: 'TBD.TITLE', condition: 'LIKE', value: '', type: 'STRING' },
     remark: { key: 'WBT.REMARK', condition: 'LIKE', value: '', type: 'STRING' }, // TOTAL에 없음
     regUserName: { key: 'TBD.REG_USER_NAME', condition: 'LIKE', value: '', type: 'STRING' },
     regDeptName: { key: 'TBD.REG_DEPT_NAME', condition: 'LIKE', value: '', type: 'STRING' },
-    startDate: { key: 'TBD.REG_DTTM', condition: '>=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
-    endDate: { key: 'TBD.REG_DTTM', condition: '<=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
+    startDate: { key: 'TBD.END_DTTM', condition: '>=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
+    endDate: { key: 'TBD.END_DTTM', condition: '<=', value: null, type: 'TIMESTAMP' }, // 결재일 없어서 임시
     lastVer: { key: 'TBD.ISLAST_VER', condition: '=', value: 'Y', type: 'STRING' },
   },
   type: 'title',

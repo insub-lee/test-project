@@ -25,6 +25,21 @@ class RadioMaterialComp extends Component {
     }
   }
 
+  componentDidUpdate = prevProps => {
+    const { isManage, formData, rowClass } = this.props;
+    const { formData: prevFormData } = prevProps;
+    if (formData.DOCNUMBER && prevFormData.DOCNUMBER && formData.DOCNUMBER !== prevFormData.DOCNUMBER) {
+      const isDisplay = formData && formData.DOCNUMBER && (formData.DOCNUMBER.substr(0, 4) === 'MBDA' || formData.DOCNUMBER.substr(0, 4) === 'MBKE');
+      if (!isManage && rowClass && !isDisplay) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = 'none';
+      } else if (rowClass) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = '';
+      }
+    }
+  };
+
   onChangeHandlerText = value => {
     const { changeFormData, sagaKey: id } = this.props;
     changeFormData(id, 'MATERIAL_TEXT', value);
