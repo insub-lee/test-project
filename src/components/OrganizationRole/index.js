@@ -724,9 +724,9 @@ class Organization extends Component {
 
   /* 구성원 검색 (검색 입력창에서 엔터를 쳤을 경우) */
   changeInputKeyword = e => {
-    const { handleGetSearchResultData } = this.props;
+    const { ROLE_CD, handleGetSearchResultData } = this.props;
     if (e.target.name === 'searchInput' && e.keyCode === 13) {
-      handleGetSearchResultData('SM', e.target.value.trim());
+      handleGetSearchResultData(ROLE_CD, e.target.value.trim());
     } else {
       this.setState({
         keyword: e.target.value,
@@ -737,9 +737,9 @@ class Organization extends Component {
   /* 구성원 검색 (검색 버튼을 마우스로 클릭 했을 경우) */
   organizationUserSearch = () => {
     const { keyword } = this.state;
-    const { handleGetSearchResultData } = this.props;
+    const { ROLE_CD, handleGetSearchResultData } = this.props;
 
-    handleGetSearchResultData('SM', keyword);
+    handleGetSearchResultData(ROLE_CD, keyword);
   };
 
   render() {

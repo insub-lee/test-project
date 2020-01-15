@@ -77,6 +77,7 @@ class UserStore extends Component {
                       <Route exact path="/portal/store" component={AppList} />
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
+                      {/*<Route exact path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} />*/}
                       <Route
                         exact
                         path="/portal/store/appMain/myPage/app/:APP_ID"

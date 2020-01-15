@@ -34,9 +34,9 @@ class appSetting extends Component {
   constructor(props) {
     super(props);
 
-    const { match } = props;
-    const { params } = match;
-    const { PAGE_ID, WIDGET_ID } = params;
+    // const { match } = props;
+    // const { params } = match;
+    // const { PAGE_ID, WIDGET_ID } = params;
 
     this.state = {
       show: false,
@@ -57,23 +57,40 @@ class appSetting extends Component {
   }
 
   componentDidMount() {
-    const { match: { params: { PAGE_ID, WIDGET_ID } }, getWidget, getWidgetList } = this.props;
+    console.debug('Hello ?');
+    const {
+      match: {
+        params: { PAGE_ID, WIDGET_ID },
+      },
+      getWidget,
+      getWidgetList,
+    } = this.props;
     getWidget(Number(WIDGET_ID));
     getWidgetList(Number(PAGE_ID));
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { match, widget } = this.props;
-    const { params } = match;
-    const { PAGE_ID, WIDGET_ID } = params;
+    const {
+      match: {
+        params: { PAGE_ID: prevPageId, WIDGET_ID: prevWidgetId },
+      },
+      // getWidget,
+      // getWidgetList,
+    } = prevProps;
+    const {
+      match: {
+        params: { PAGE_ID, WIDGET_ID },
+      },
+      getWidget,
+      getWidgetList,
+    } = this.props;
+    console.debug('@ Component Did Update', prevPageId, PAGE_ID, prevWidgetId, WIDGET_ID);
   }
 
   componentWillReceiveProps(nextProps) {
     const { match, widget } = nextProps;
     const { params } = match;
     const { PAGE_ID, WIDGET_ID } = params;
-
-    console.debug('REceived', PAGE_ID, WIDGET_ID);
 
     if (WIDGET_ID && this.state.WIDGET_ID !== Number(WIDGET_ID)) {
       this.setState({
@@ -232,7 +249,6 @@ class appSetting extends Component {
     }
 
     const COMP = Loadable(param);
-    console.debug('@@@ Fuxxing Item', item);
     return (
       <div key="id">
         {item !== undefined ? (

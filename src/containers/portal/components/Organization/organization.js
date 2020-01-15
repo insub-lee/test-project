@@ -223,6 +223,9 @@ class Organization extends Component {
       selectedGrpDept: undefined,
     };
     this.deptTreeElement = React.createRef();
+    this.pstnTreeElement = React.createRef();
+    this.dutyTreeElement = React.createRef();
+    this.grpTreeElement = React.createRef();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -812,18 +815,13 @@ class Organization extends Component {
     }
     if (selectedDept !== undefined && selectedDept.length !== 0) {
       // 하위 tree 선택된 데이터 배열 초기화
-      console.debug('@@@@', this.deptTreeElement.current);
-
-      if (this.deptTreeElement.current) this.deptTreeElement.current.resetCheckedList();
-      // this.deptTreeElement.current.resetCheckedList();
+      this.deptTreeElement.current.resetCheckedList();
 
       copyselectedDept = this.state.checkDept.slice();// Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
       /*
         하나만 선택 할 수 있는 옵션 일 때,
         기존 선택된 데이터가 있을 때는 선택 안되도록 처리
       */
-      console.debug('@@@@@ Copy', copyselectedDept);
-
       if (selectSingleDept) {
         if (copyselectedDept.length > 1) {
           console.log('copyselectedDept : ', copyselectedDept);
@@ -1409,9 +1407,9 @@ class Organization extends Component {
       tabType,
       selected,
     } = this.state;
-    const isGrp = tabType[selected] === 'grp';
+    const isGrpTap = tabType[selected] === 'grp';
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
-    if (checkedDept.findIndex((item) => item.id === dept.id) === -1) {
+    if (checkedDept.findIndex((item) => item.ID === dept.id) === -1) {
       const idx = deptList.findIndex(t => t.id === dept.id);
       if (deptList.length === 0) {
         deptList = this.state.checkedDept.slice();
@@ -1421,11 +1419,11 @@ class Organization extends Component {
           let obj = {
             id: dept.id,
             ID: dept.id,
-            NAME_KOR: isGrp ? dept.NAME_KOR : dept.node.NAME_KOR,
-            NAME_ENG: isGrp ? dept.NAME_ENG : dept.node.NAME_ENG,
-            NAME_CHN: isGrp ? dept.NAME_CHN : dept.node.NAME_CHN,
-            NAME_JPN: isGrp ? dept.NAME_JPN : dept.node.NAME_JPN,
-            NAME_ETC: isGrp ? dept.NAME_ETC : dept.node.NAME_ETC,
+            NAME_KOR: isGrpTap ? dept.NAME_KOR : dept.node.NAME_KOR,
+            NAME_ENG: isGrpTap ? dept.NAME_ENG : dept.node.NAME_ENG,
+            NAME_CHN: isGrpTap ? dept.NAME_CHN : dept.node.NAME_CHN,
+            NAME_JPN: isGrpTap ? dept.NAME_JPN : dept.node.NAME_JPN,
+            NAME_ETC: isGrpTap ? dept.NAME_ETC : dept.node.NAME_ETC,
           };
           if (name !== undefined) {
             obj["deptName"] = name;
