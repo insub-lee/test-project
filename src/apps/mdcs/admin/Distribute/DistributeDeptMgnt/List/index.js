@@ -116,7 +116,7 @@ class List extends Component {
               onUserSelectHandler={this.onUserSelect}
               onUserSelectedComplete={this.onUserSelectedComplete}
               onCancel={this.onCancel}
-            ></UserSelect>
+            />
           </Modal>
           <AntdTable columns={this.getTableColumns()} dataSource={list} pagination={false} bordered />
         </div>

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
@@ -8,9 +7,11 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
 import Edit from './Edit';
+import Styled from './Styled';
 
 const AntdTable = StyledAntdTable(Table);
 const ButtonGroup = Button.Group;
+
 class List extends Component {
   componentDidMount() {
     const { id, getCallDataHanlder, apiAry, changeFormData } = this.props;
@@ -108,10 +109,14 @@ class List extends Component {
       });
 
     return (
-      <div>
-        <Edit {...this.props}></Edit>
-        <AntdTable pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
-      </div>
+      <Styled>
+        <div className="searchBox">
+          <Edit {...this.props} />
+        </div>
+        <div>
+          <AntdTable pagination={false} dataSource={totalData} columns={this.getTableColumns()} />
+        </div>
+      </Styled>
     );
   }
 }
