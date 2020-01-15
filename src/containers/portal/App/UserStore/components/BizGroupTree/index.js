@@ -349,7 +349,7 @@ class BizGroupTree extends Component {
           flex: '1 0 50%',
           padding: 0,
           flexDirection: 'column',
-          height: 'calc(100vh - 116px)',
+          height: '100%',
           width: '100%',
         }}
       >

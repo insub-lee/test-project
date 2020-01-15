@@ -24,7 +24,7 @@ class BizMicroDevBase extends React.Component {
 }
 
 BizMicroDevBase.propTypes = {
-  sagaKey: PropTypes.string.isRequired,
+  // sagaKey: PropTypes.string.isRequired,
   result: PropTypes.object,
   formData: PropTypes.object,
   getCallDataHanlder: PropTypes.func,

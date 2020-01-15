@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Row, Col, Input } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 import FroalaEditorView from 'components/FormStuff/RichTextEditor/FroalaEditorView';
 import { froalaEditorConfig } from 'components/FormStuff/config';

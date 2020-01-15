@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Select, Button, Modal } from 'antd';
 
-import BizMicroDevBase from '../../components/BizMicroDevBase';
-import BizBuilderBase from '../../components/BizBuilderBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
+import BizBuilderBase from 'components/BizBuilderBase';
 import DwDoc from './DwDoc';
 import PmDoc from './PmDoc';
 

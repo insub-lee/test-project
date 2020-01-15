@@ -4,8 +4,10 @@ import seeMoreBtnUp from 'images/bizstore/arrow-up2.png';
 
 const StyleBizDetail = styled.div`
   display: inline-block;
-  width: 1190px;
-  margin: 20px auto 0;
+  //width: 1190px;
+  width: 100%;
+  //margin: 20px auto 0;
+  margin: auto;
   padding: 0;
   border: 1px solid #d1d2d3;
   background-color: #ffffff;

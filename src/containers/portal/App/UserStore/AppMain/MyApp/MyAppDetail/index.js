@@ -334,7 +334,7 @@ class MyAppDetail extends React.Component {
             </div>
           </div>
         </StyleMyAppDetail>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

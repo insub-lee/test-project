@@ -450,7 +450,6 @@ class Organization extends Component {
       content.push(
         <div className="pstn" key={content.length}>
           <Tree
-            ref={this.pstnTreeElement}
             // 공통 속성
             isTreeCheckbox={isProfile ? false : isTreeCheckbox}
             reset={reset}
@@ -516,7 +515,6 @@ class Organization extends Component {
       content.push(
         <div className="duty" key={content.length}>
           <Tree
-            ref={this.dutyTreeElement}
             // 공통 속성
             isTreeCheckbox={isProfile ? false : isTreeCheckbox}
             reset={this.state.reset}
@@ -582,7 +580,6 @@ class Organization extends Component {
       content.push(
         <div className="grp" key={content.length}>
           <Tree
-            ref={this.grpTreeElement}
             // 공통 속성
             isTreeCheckbox={isProfile ? false : isTreeCheckbox}
             reset={this.state.reset}
@@ -817,15 +814,8 @@ class Organization extends Component {
       }
     }
     if (selectedDept !== undefined && selectedDept.length !== 0) {
-
-      const {
-        tabType,
-        selected,
-      } = this.state;
-      const isUserTap = tabType[selected] === 'user';      
-
       // 하위 tree 선택된 데이터 배열 초기화
-      if(isUserTap) this.deptTreeElement.current.resetCheckedList();
+      this.deptTreeElement.current.resetCheckedList();
 
       copyselectedDept = this.state.checkDept.slice();// Tree에서 Check 를 제거 했을 경우 바로 반영안되게 하기 위함
       /*
@@ -842,17 +832,14 @@ class Organization extends Component {
       this.setState({ checkedDept: copyselectedDept, checkAll: false, checkDept: [] });
     }
     if (selectedPstn !== undefined && selectedPstn.length !== 0) {
-      this.pstnTreeElement.current.resetCheckedList();
       copyselectedPstn = this.state.checkpstn.slice();
       this.setState({ checkedPstn: copyselectedPstn, checkAll: false });
     }
     if (selectedDuty !== undefined && selectedDuty.length !== 0) {
-      this.dutyTreeElement.current.resetCheckedList();
       copyselectedDuty = this.state.checkduty.slice();
       this.setState({ checkedDuty: copyselectedDuty, checkAll: false });
     }
     if (selectedGrp !== undefined && selectedGrp.length !== 0) {
-      this.grpTreeElement.current.resetCheckedList();
       copyselectedGrp = this.state.checkgrp.slice();
       this.setState({ selectedGrp: copyselectedGrp, checkAll: false });
     }

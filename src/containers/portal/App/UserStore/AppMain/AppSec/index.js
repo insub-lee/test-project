@@ -732,7 +732,7 @@ class AppSec extends Component {
             />
           </Modal>
         </StyleApp>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

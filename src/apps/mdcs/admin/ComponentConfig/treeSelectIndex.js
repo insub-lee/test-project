@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Row, Col, Select, Input, TreeSelect, Radio } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 const { Option } = Select;
 const { SHOW_PARENT } = TreeSelect;
