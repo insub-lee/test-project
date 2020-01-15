@@ -637,7 +637,7 @@ class IntroComponent extends Component {
           </div>
         </div>
 
-        <AntdModal destroyOnClose style={{ top: '50px' }} width={1200} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
+        <AntdModal destroyOnClose style={{ top: '50px' }} width={900} visible={isShow} onCancel={this.onCloseModal} footer={null} maskClosable={false}>
           <StyledInputView>
             <div className="pop_tit">업무표준</div>
             <div style={{ display: isLoading ? 'block' : 'none' }}>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Row, Col, Input } from 'antd';
+import { Row, Col, Input, Icon } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 
@@ -44,29 +44,37 @@ class WorkProcess extends Component {
       filterItem = DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
       colSpan = Math.floor(24 / filterRule.length);
     }
-
+    console.debug('workprocess', this.props);
     return (
       <StyledWorkProcess>
         <div className="signLineWrapper">
           {filterRule !== undefined && filterRule.length > 0 && (
-            <React.Fragment>
-              <Row gutter={0}>
+            <>
+              <Row gutter={0} type="flex" justify="end" className="table-head">
                 {filterRule.map(item => (
-                  <Col span={colSpan} key={`headCol_${item.NODE_ID}`}>
+                  <Col span={3} key={`headCol_${item.NODE_ID}`}>
                     <div>
                       <span>{item.NODE_NAME_KOR}</span>
                     </div>
                   </Col>
                 ))}
               </Row>
-              <Row gutter={0}>
+              <Row gutter={0} type="flex" justify="end">
                 {filterRule.map(item => (
-                  <Col span={colSpan}>
+                  <Col span={3}>
                     <div className="wp_bodyCol">
                       {item.APPV_MEMBER.length > 0 && (
                         <ul>
                           {item.APPV_MEMBER.map(member => (
-                            <li>{`${member.NAME_KOR} ${member.PSTN_NAME_KOR}`}</li>
+                            <>
+                              <li>{`${member.NAME_KOR} ${member.PSTN_NAME_KOR}`}</li>
+                              <li>
+                                {console.debug(item)}
+                                {/*
+                                <Icon type="check-circle" theme="twoTone" twoToneColor="#52c41a" style={{ margin: '5px', fontSize: '50px', opacity: '0.5' }} />
+                                */}
+                              </li>
+                            </>
                           ))}
                         </ul>
                       )}
@@ -74,26 +82,30 @@ class WorkProcess extends Component {
                   </Col>
                 ))}
               </Row>
-            </React.Fragment>
+            </>
           )}
         </div>
-        {filterItem.map(item => (
-          <div>
-            <Row>
-              <Col span={4}>{item.NODE_NAME_KOR}</Col>
-              <Col span={20}>
-                {item.APPV_MEMBER !== undefined ? (
-                  <Input
-                    value={item.APPV_MEMBER.map(user => (item.NODE_TYPE === 'ND' ? `${user.DEPT_NAME_KOR}` : `${user.NAME_KOR} ${user.PSTN_NAME_KOR}`))}
-                    readOnly
-                  />
-                ) : (
-                  <Input placeholder={item.NODE_NAME_KOR} readOnly />
-                )}
-              </Col>
-            </Row>
-          </div>
-        ))}
+        <div>
+          {filterItem.map(item => (
+            <div className="dataWrapper">
+              <Row type="flex">
+                <Col span={4} className="dataLabel">
+                  <span>{item.NODE_NAME_KOR}</span>
+                </Col>
+                <Col span={20} className="dataContents">
+                  {item.APPV_MEMBER !== undefined ? (
+                    <Input
+                      value={item.APPV_MEMBER.map(user => (item.NODE_TYPE === 'ND' ? `${user.DEPT_NAME_KOR}` : `${user.NAME_KOR} ${user.PSTN_NAME_KOR}`))}
+                      readOnly
+                    />
+                  ) : (
+                    <Input placeholder={item.NODE_NAME_KOR} readOnly />
+                  )}
+                </Col>
+              </Row>
+            </div>
+          ))}
+        </div>
         {/* {DRAFT_RECEIVE !== undefined && (
           <div>
             <Row>

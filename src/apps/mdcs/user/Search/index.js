@@ -16,7 +16,7 @@ class Search extends Component {
     return (
       <StyledSearch>
         <div className="searchTabs">
-          <Tabs defaultActiveKey="1">
+          <Tabs defaultActiveKey="1" animated={false}>
             <TabPane
               tab={
                 <span>

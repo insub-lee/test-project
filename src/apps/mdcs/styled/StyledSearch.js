@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
 const StyledSearch = styled.div`
+  padding: 10px;
+
   .searchTabs {
+    background-color: white;
+    border: 1px solid #e5e5e5;
     .ant-tabs-bar {
       border-bottom: 0;
       margin: 0;
@@ -46,7 +50,7 @@ const StyledSearch = styled.div`
   /* tab 끝 */
   .searchPage {
     background-color: #ebf0f6;
-    padding: 20px;
+    //padding: 20px;
     .searchWrapper {
       background-color: #fff;
       padding: 0 0 25px 0;
