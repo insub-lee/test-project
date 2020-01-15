@@ -42,7 +42,7 @@ class ComponentConfig extends Component {
               <Row>
                 CompKey컬럼명:
                 <Input
-                  value={(configInfo && configInfo.optionCompKey) || ''}
+                  value={(configInfo && configInfo.property && configInfo.property.optionCompKey) || ''}
                   onChange={e => this.handleChangeConfigData('optionCompKey', e.target.value)}
                 ></Input>
               </Row>

@@ -15,6 +15,7 @@ import CoverViewer from '../CoverViewer';
 
 import BizStd from './BizStd';
 import TechStd from './TechStd';
+import DwStd from './DwStd';
 
 const AntdModal = StyledModalWrapper(Modal);
 
@@ -33,7 +34,7 @@ const columns = [
   },
   { title: 'No.', key: 'id', dataIndex: 'id' },
   { title: 'REV.', key: 'status', dataIndex: 'status' },
-  { title: 'Effect Date', key: '', dataIndex: '' },
+  { title: 'Effect Date', key: 'END_DTTM', dataIndex: 'END_DTTM' },
   { title: 'Title', key: 'title', dataIndex: 'title' },
   { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
   { title: '기안자', key: 'name', dataIndex: 'name' },
@@ -42,7 +43,7 @@ const columns = [
 const initState = {
   searchParam: {
     nodeId: { key: 'TBD.NODE_ID', condition: '=', value: null, type: 'INT' },
-    status: { key: 'TBD.STATUS', condition: '=', value: 1, type: 'INT' }, // 현재 Revision, 폐기
+    status: { key: 'TBD.STATUS', condition: 'IN', value: 2, type: 'INT' }, // 현재 Revision, 폐기
     docNumber: { key: 'TBD.DOCNUMBER', condition: 'LIKE', value: '', type: 'STRING' },
     title: { key: 'TBD.TITLE', condition: 'LIKE', value: '', type: 'STRING' },
     remark: { key: 'WBT.REMARK', condition: 'LIKE', value: '', type: 'STRING' }, // TOTAL에 없음
@@ -81,7 +82,7 @@ class Search extends Component {
   }
 
   callApi = apiArr => {
-    const { id, getCallDataHanlder } = this.props;
+    const { sagaKey: id, getCallDataHanlder } = this.props;
     getCallDataHanlder(id, apiArr);
   };
 
@@ -112,7 +113,7 @@ class Search extends Component {
   onChangeRev = value => {
     this.setState(prevState => {
       const { searchParam } = prevState;
-      searchParam.status.value = value === 0 ? 1 : value;
+      searchParam.status.value = value === 0 ? 2 : value;
       searchParam.lastVer.value = value === 0 ? '' : 'Y';
       return { searchParam };
     });
@@ -150,7 +151,15 @@ class Search extends Component {
           } else if (key === 'scope') {
             searchParam[key].value = searchParam[key].value.toString();
           }
-          paramList.push(searchParam[key]);
+
+          if (key === 'status') {
+            paramList.push({
+              ...searchParam[key],
+              value: searchParam[key].value === 2 && searchParam.lastVer.value === 'Y' ? [1, 2] : [searchParam[key].value],
+            });
+          } else {
+            paramList.push(searchParam[key]);
+          }
         }
       });
       const apiArr = [
@@ -184,6 +193,7 @@ class Search extends Component {
         taskSeq: record.taskSeq,
         workSeq: record.workSeq,
         nodeId: record.nodeId,
+        draftId: record.DRAFT_ID,
       },
     });
   };
@@ -204,10 +214,10 @@ class Search extends Component {
   setSearchParam = searchParam => this.setState({ searchParam });
 
   renderSearch = () => {
-    const { workSeq } = this.props;
+    const { workSeq, searchType } = this.props;
     const { searchParam } = this.state;
-    switch (workSeq) {
-      case 201:
+    switch (searchType) {
+      case 'BIZ':
         return (
           <BizStd
             {...this.props}
@@ -217,7 +227,7 @@ class Search extends Component {
             setSearchParam={this.setSearchParam}
           />
         );
-      default:
+      case 'TECH':
         return (
           <TechStd
             {...this.props}
@@ -227,28 +237,71 @@ class Search extends Component {
             setSearchParam={this.setSearchParam}
           />
         );
+      case 'DW':
+        return (
+          <DwStd
+            {...this.props}
+            searchParam={searchParam}
+            onChangeValue={this.onChangeValue}
+            onChangeCheckBox={this.onChangeCheckBox}
+            setSearchParam={this.setSearchParam}
+          />
+        );
+      default:
+        return '';
     }
   };
 
   render() {
     const { type, searchParam, visible, SearchView, coverView } = this.state;
     const { nodeIds, status, docNumber, title, regUserName, regDeptName, startDate, endDate, scope, nodeId, lastVer } = searchParam;
-    const { result, workSeq } = this.props;
+    const { result, workSeq, searchType } = this.props;
     let treeData = [];
     if (result && result.categoryInfo && result.categoryInfo.categoryMapList && result.categoryInfo.categoryMapList.length > 0) {
-      let rootfullPath = '';
-      switch (workSeq) {
-        case 201:
-          rootfullPath = '1|2';
+      let rootOrdinal = '';
+      let rootOrdinal2 = '';
+      switch (searchType) {
+        case 'BIZ':
+          rootOrdinal = '000001000002';
+          break;
+        case 'TECH':
+          rootOrdinal = '000001000003';
+          break;
+        case 'DW':
+          rootOrdinal = '000001000003000002';
+          break;
+        case 'NPI':
+          rootOrdinal = '000001000005';
+          rootOrdinal2 = '000001000006';
+          break;
+        case 'TDS':
+          rootOrdinal = '000001000004';
+          break;
+        case 'WP':
+          rootOrdinal = '000001000007';
           break;
         default:
-          rootfullPath = '1|6';
+          rootOrdinal = '000001000002';
       }
-      treeData = this.getTreeData(
-        result.categoryInfo.categoryMapList
-          .filter(fNode => fNode.FULLPATH && fNode.FULLPATH.indexOf(rootfullPath) === 0 && fNode.USE_YN === 'Y')
-          .map(node => ({ ...node, key: node.NODE_ID, title: node.NAME_KOR })),
-      );
+      let flatData = [];
+      if (searchType === 'NPI') {
+        flatData = result.categoryInfo.categoryMapList
+          .filter(
+            fNode =>
+              fNode.NODE_ORDINAL && (fNode.NODE_ORDINAL.indexOf(rootOrdinal) === 0 || fNode.NODE_ORDINAL.indexOf(rootOrdinal2) === 0) && fNode.USE_YN === 'Y',
+          )
+          .map(node => ({ ...node, key: node.NODE_ID, title: node.NAME_KOR }));
+      } else {
+        flatData = result.categoryInfo.categoryMapList
+          .filter(fNode => fNode.NODE_ORDINAL && fNode.NODE_ORDINAL.indexOf(rootOrdinal) === 0 && fNode.USE_YN === 'Y')
+          .map(node => ({ ...node, key: node.NODE_ID, title: node.NAME_KOR }));
+        if (searchType === 'TECH') {
+          flatData = flatData.filter(
+            fNode => fNode.NODE_ORDINAL.indexOf('000001000003000002') !== 0 && fNode.NODE_ORDINAL.indexOf('000001000003000003000001') !== 0,
+          );
+        }
+      }
+      treeData = this.getTreeData(flatData);
     }
     return (
       <StyledSearch>
@@ -266,11 +319,11 @@ class Search extends Component {
                     onChange={e => {
                       this.onChangeRev(e.target.value);
                     }}
-                    // value={status.value === 1 && lastVer.value === '' ? 0 : status.value}
+                    value={status.value === 2 && lastVer.value === '' ? 0 : status.value}
                   >
-                    <StyledRadio value={1}>현재 Revision</StyledRadio>
+                    <StyledRadio value={2}>현재 Revision</StyledRadio>
                     <StyledRadio value={0}>과거 Rev. 포함</StyledRadio>
-                    <StyledRadio value={2}>폐기</StyledRadio>
+                    <StyledRadio value={8}>폐기</StyledRadio>
                   </Radio.Group>
                 </FormItem>
                 <FormItem label="문서번호">
@@ -379,7 +432,13 @@ class Search extends Component {
             <>
               <div className="pop_tit">선택 내용 보기</div>
               <div className="pop_con">
-                <SearchViewer workSeq={SearchView.workSeq} taskSeq={SearchView.taskSeq} closeBtnFunc={this.closeBtnFunc} clickCoverView={this.clickCoverView} />
+                <SearchViewer
+                  workSeq={SearchView.workSeq}
+                  taskSeq={SearchView.taskSeq}
+                  draftId={SearchView.draftId}
+                  closeBtnFunc={this.closeBtnFunc}
+                  clickCoverView={this.clickCoverView}
+                />
               </div>
             </>
           </AntdModal>

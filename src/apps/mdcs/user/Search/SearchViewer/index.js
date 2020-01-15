@@ -1,15 +1,28 @@
-/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import BizBuilderBase from 'components/BizBuilderBase';
+import MdcsContentView from 'components/MdcsContentView';
 
-import Viewer from './viewer';
-import BizBuilderBase from '../../../components/BizBuilderBase';
+// import Viewer from './viewer';
 
 class SearchViewer extends Component {
   render() {
-    console.debug('###########');
+    // return <BizBuilderBase sagaKey="SearchViewer" component={MdcsContentView} viewType="VIEW" {...this.props} />;
     console.debug(this.props);
-    return <BizBuilderBase id="SearchViewer" component={Viewer} viewType="VIEW" {...this.props} />;
+    const { workSeq, taskSeq, draftId } = this.props;
+    return (
+      <BizBuilderBase
+        sagaKey="SearchView"
+        viewType="VIEW"
+        CustomViewPage={MdcsContentView}
+        workSeq={workSeq}
+        taskSeq={taskSeq}
+        draftId={draftId}
+        // metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
+        selectedRow={{ WORK_SEQ: workSeq, TASK_SEQ: taskSeq, DRAFT_ID: draftId, RULE_CONFIG: {} }}
+        // changeWorkflowFormData={this.changeWorkflowFormData}
+      />
+    );
   }
 }
 

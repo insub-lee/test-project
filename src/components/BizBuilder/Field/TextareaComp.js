@@ -11,6 +11,12 @@ class TextareaComp extends React.Component {
     this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
+  componentDidUpdate() {
+    const { colData, sagaKey, COMP_FIELD } = this.props;
+    const textArea = document.querySelector(`#${sagaKey}_${COMP_FIELD}`);
+    if (textArea && colData !== textArea.value) textArea.value = colData;
+  }
+
   handleOnChange = value => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
     if (CONFIG.property.isRequired) {
@@ -20,11 +26,12 @@ class TextareaComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, colData, readOnly, visible } = this.props;
+    const { CONFIG, colData, readOnly, visible, sagaKey, COMP_FIELD } = this.props;
     return visible ? (
       <TextArea
+        id={`${sagaKey}_${COMP_FIELD}`}
         className="ant-textarea"
-        defaultValue={colData}
+        defaultValue={colData || ''}
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e.target.value)}
         readOnly={readOnly || CONFIG.property.readOnly}
@@ -42,7 +49,7 @@ TextareaComp.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.any,
   changeFormData: PropTypes.any,
-  id: PropTypes.any,
+  sagaKey: PropTypes.any,
   changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
   compProp: PropTypes.any,

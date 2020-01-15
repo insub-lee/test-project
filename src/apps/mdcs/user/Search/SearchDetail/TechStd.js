@@ -84,7 +84,7 @@ class TechStd extends Component {
   }
 
   callApi = apiArr => {
-    const { id, getCallDataHanlder } = this.props;
+    const { sagaKey: id, getCallDataHanlder } = this.props;
     getCallDataHanlder(id, apiArr);
   };
 
@@ -102,7 +102,9 @@ class TechStd extends Component {
     let customerData = [];
     let checkboxOptData = [];
     if (result && result.categoryInfo && result.categoryInfo.categoryMapList && result.categoryInfo.categoryMapList.length > 0) {
-      checkboxOptData = result.categoryInfo.categoryMapList.filter(fNode => fNode.PARENT_NODE_ID === 6 && fNode.USE_YN === 'Y');
+      checkboxOptData = result.categoryInfo.categoryMapList.filter(
+        fNode => fNode.PARENT_NODE_ID === 6 && fNode.USE_YN === 'Y' && fNode.NODE_ID !== 16 && fNode.NODE_ID !== 18,
+      );
     }
     if (result && result.region && result.region.categoryMapList && result.region.categoryMapList.length > 0) {
       regionData = result.region.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
@@ -135,7 +137,7 @@ class TechStd extends Component {
       <>
         <FormItem label="문서종류">
           {checkboxOptData && checkboxOptData.length > 0 && (
-            <Checkbox.Group onChange={value => onChangeCheckBox('nodeIds', value)} value={nodeIds.value}>
+            <Checkbox.Group onChange={value => onChangeCheckBox('nodeIds', value)} value={(nodeIds && nodeIds.value) || undefined}>
               {checkboxOptData.map(node => (
                 <StyledCheckbox value={node.NODE_ID}>{node.NAME_KOR}</StyledCheckbox>
               ))}
@@ -144,7 +146,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="지역">
           {regionData && regionData.length > 0 && (
-            <Select value={region.value} onSelect={value => onChangeValue('region', value)}>
+            <Select value={(region && region.value) || 0} onSelect={value => onChangeValue('region', value)}>
               <Option value={0}>--------</Option>
               {regionData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_ENG}</Option>
@@ -154,7 +156,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="적용Line/Site">
           {fabData && fabData.length > 0 && (
-            <Select value={fab.value} onSelect={value => onChangeValue('fab', value)}>
+            <Select value={(fab && fab.value) || 0} onSelect={value => onChangeValue('fab', value)}>
               <Option value={0}>--------</Option>
               {fabData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -164,7 +166,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Tech">
           {techData && techData.length > 0 && (
-            <Select value={tech.value} onSelect={value => onChangeValue('tech', value)}>
+            <Select value={(tech && tech.value) || 0} onSelect={value => onChangeValue('tech', value)}>
               <Option value={0}>--------</Option>
               {techData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -174,7 +176,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Gen">
           {generationData && generationData.length > 0 && (
-            <Select value={generation.value} onSelect={value => onChangeValue('generation', value)}>
+            <Select value={(generation && generation.value) || 0} onSelect={value => onChangeValue('generation', value)}>
               <Option value={0}>--------</Option>
               {generationData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -184,7 +186,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Memory Density">
           {densityData && densityData.length > 0 && (
-            <Select value={density.value} onSelect={value => onChangeValue('density', value)}>
+            <Select value={(density && density.value) || 0} onSelect={value => onChangeValue('density', value)}>
               <Option value={0}>--------</Option>
               {densityData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -194,7 +196,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Pkg">
           {pkgData && pkgData.length > 0 && (
-            <Select value={pkg.value} onSelect={value => onChangeValue('pkg', value)}>
+            <Select value={(pkg && pkg.value) || 0} onSelect={value => onChangeValue('pkg', value)}>
               <Option value={0}>--------</Option>
               {pkgData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -204,7 +206,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Product">
           {productData && productData.length > 0 && (
-            <Select value={product.value} onSelect={value => onChangeValue('product', value)}>
+            <Select value={(product && product.value) || 0} onSelect={value => onChangeValue('product', value)}>
               <Option value={0}>--------</Option>
               {productData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -214,7 +216,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Module">
           {moduleData && moduleData.length > 0 && (
-            <Select value={module.value} onSelect={value => onChangeValue('module', value)}>
+            <Select value={(module && module.value) || 0} onSelect={value => onChangeValue('module', value)}>
               <Option value={0}>--------</Option>
               {moduleData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -224,7 +226,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="Customer">
           {customerData && customerData.length > 0 && (
-            <Select value={customer.value} onSelect={value => onChangeValue('customer', value)}>
+            <Select value={(customer && customer.value) || 0} onSelect={value => onChangeValue('customer', value)}>
               <Option value={0}>--------</Option>
               {customerData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -234,7 +236,7 @@ class TechStd extends Component {
         </FormItem>
         <FormItem label="FMEA 대상">
           {fmea && (
-            <Checkbox.Group onChange={value => onChangeCheckBox('fmea', value)} value={fmea.value}>
+            <Checkbox.Group onChange={value => onChangeCheckBox('fmea', value)} value={fmea.value || ''}>
               (<StyledCheckbox value="A">실시</StyledCheckbox>
               <StyledCheckbox value="D">미실시</StyledCheckbox>)<StyledCheckbox value="N">비대상</StyledCheckbox>
             </Checkbox.Group>

@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-import BizStd from './BizStd';
 import Search from './Search';
 
 class SearchDetail extends Component {
   render() {
-    const { workSeq } = this.props;
-    return <BizMicroDevBase id="SearchDetail" workSeq={workSeq} component={Search} />;
+    const { workSeq, searchType } = this.props;
+    return <BizMicroDevBase sagaKey="SearchDetail" workSeq={workSeq} component={Search} searchType={searchType} />;
   }
 }
 

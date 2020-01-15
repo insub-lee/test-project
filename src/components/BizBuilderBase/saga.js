@@ -63,9 +63,11 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData
     const response = yield call(Axios.get, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.result;
   }
-  yield put(actions.setDetailData(id, formData));
-  if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
-  yield put(actions.getBuilderData(id, workSeq, taskSeq));
+  if (formData) {
+    yield put(actions.setDetailData(id, formData));
+    if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
+    yield put(actions.getBuilderData(id, workSeq, taskSeq));
+  }
   /* Disable Data Loading */
   yield put(actions.disableDataLoading());
 }
@@ -189,6 +191,16 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     { BUILDER: 'saveTaskComplete' },
   );
 
+  if (nextResponse && nextResponse.data) {
+    const { data: returnData } = nextResponse;
+    const keyset = Object.keys(formData);
+    if (keyset.length > 0) {
+      keyset.forEach(key => {
+        if (returnData[key]) formData[key] = returnData[key];
+      });
+    }
+  }
+
   const isTotalDataUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 3 && opt.ISUSED === 'Y') !== -1);
   if (isTotalDataUsed) {
     const totalDataResponse = yield call(
@@ -291,6 +303,16 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     },
     { BUILDER: 'modifyTaskComplete' },
   );
+
+  if (nextResponse && nextResponse.data) {
+    const { data: returnData } = nextResponse;
+    const keyset = Object.keys(formData);
+    if (keyset.length > 0) {
+      keyset.forEach(key => {
+        if (returnData[key]) formData[key] = returnData[key];
+      });
+    }
+  }
 
   const isTotalDataUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 3 && opt.ISUSED === 'Y') !== -1);
   if (isTotalDataUsed) {
