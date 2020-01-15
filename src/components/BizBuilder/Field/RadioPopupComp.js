@@ -20,6 +20,21 @@ class RadioPopupComp extends PureComponent {
     }
   };
 
+  componentDidUpdate = prevProps => {
+    const { isManage, formData, rowClass } = this.props;
+    const { formData: prevFormData } = prevProps;
+    if (formData.DOCNUMBER && prevFormData.DOCNUMBER && formData.DOCNUMBER !== prevFormData.DOCNUMBER) {
+      const isDisplay = formData.DOCNUMBER.indexOf('ME') === 0;
+      if (!isManage && rowClass && !isDisplay) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = 'none';
+      } else if (rowClass) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = '';
+      }
+    }
+  };
+
   handleOnChange = e => {
     const { sagaKey: id, COMP_FIELD, changeFormData } = this.props;
     e.target.value === 'Y' ? this.setState({ openModal: true }) : this.setState({ openModal: false });

@@ -16,6 +16,20 @@ class DwCheckListComp extends Component {
     }
   };
 
+  componentDidUpdate = prevProps => {
+    const { isManage, formData, rowClass } = this.props;
+    const { formData: prevFormData } = prevProps;
+    if (formData.DOCNUMBER && prevFormData.DOCNUMBER && formData.DOCNUMBER !== prevFormData.DOCNUMBER) {
+      if (!isManage && rowClass && formData.DOCNUMBER.substr(0, 4) === 'MBKH') {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = 'none';
+      } else if (rowClass) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = '';
+      }
+    }
+  };
+
   onOkHandler = () => {
     const { changeFormData, sagaKey: id } = this.props;
     const { type } = this.state;
