@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
@@ -45,7 +45,7 @@ class ApproveList extends Component {
       dataIndex: 'APPV_STATUS_NM',
       key: 'APPV_STATUS_NM',
       width: '10%',
-      align: 'center',      
+      align: 'center',
     },
     {
       title: '기안자',
@@ -74,6 +74,11 @@ class ApproveList extends Component {
 
     return (
       <div>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+            <Icon type="form" /> 기결함
+          </p>
+        </div>
         <AntdTable
           columns={this.getTableColumns()}
           dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
