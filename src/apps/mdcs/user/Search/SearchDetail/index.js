@@ -8,7 +8,7 @@ import Search from './Search';
 class SearchDetail extends Component {
   render() {
     const { workSeq, searchType } = this.props;
-    return <BizMicroDevBase sagaKey="SearchDetail" workSeq={workSeq} component={Search} searchType={searchType} />;
+    return <BizMicroDevBase sagaKey={`SearchDetail_${searchType}`} workSeq={workSeq} component={Search} searchType={searchType} />;
   }
 }
 
