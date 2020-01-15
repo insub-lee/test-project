@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Modal } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-
+import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
 import ApproveView from '../ApproveView';
+import HoldView from '../MdcsAppvView/holdview';
 
 const AntdTable = StyledAntdTable(Table);
-
+const ModalWrapper = StyledModalNofooterLine(Modal);
 class DraftList extends Component {
-  componentDidMount() {
-    // const { category, getApproveList } = this.props;
-    // getApproveList({ searchType: category });
-  }
+  componentDidMount() {}
 
   getTableColumns = () => [
     {
@@ -38,13 +36,6 @@ class DraftList extends Component {
       align: 'center',
     },
     {
-      title: '결재상태',
-      dataIndex: 'PROC_STATUS_NM',
-      key: 'PROC_STATUS_NM',
-      width: '10%',
-      align: 'center',
-    },
-    {
       title: 'Title',
       dataIndex: 'DRAFT_TITLE',
       key: 'title',
@@ -62,12 +53,15 @@ class DraftList extends Component {
   ];
 
   onRowClick = (record, rowIndex, e) => {
+    if (record.STATUS === 3) {
+      record.PROC_STATUS = 3;
+    }
     this.props.setSelectedRow(record);
     this.props.setViewVisible(true);
   };
 
   render() {
-    const { approveList, selectedRow } = this.props;
+    const { approveList } = this.props;
 
     return (
       <div>
@@ -82,7 +76,9 @@ class DraftList extends Component {
           })}
           bordered
         />
-        {Object.keys(selectedRow).length > 0 && <ApproveView {...this.props} />}
+        <ModalWrapper title="기안함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+          <HoldView {...this.props} />
+        </ModalWrapper>
       </div>
     );
   }

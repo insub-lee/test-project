@@ -49,7 +49,7 @@ const options = [
 
 const initState = {
   nodeIdList: [],
-  status: 1, // 현재 Revision, 폐기
+  status: 2, // 현재 Revision, 폐기
   docNo: '',
   keyword: '',
   type: 'title',
@@ -80,7 +80,7 @@ class SearchBasic extends Component {
   }
 
   callApi = () => {
-    const { id, getCallDataHanlder } = this.props;
+    const { sagaKey, getCallDataHanlder } = this.props;
     const apiArr = [
       {
         key: 'listData',
@@ -89,7 +89,7 @@ class SearchBasic extends Component {
         params: this.state,
       },
     ];
-    this.props.getCallDataHanlder(id, apiArr);
+    this.props.getCallDataHanlder(sagaKey, apiArr);
   };
 
   onChangeCheckBox = checkedValues => {
@@ -197,8 +197,8 @@ class SearchBasic extends Component {
                   }}
                   value={status}
                 >
-                  <StyledRadio value={1}>현재 Revision</StyledRadio>
-                  <StyledRadio value={2}>폐기</StyledRadio>
+                  <StyledRadio value={2}>현재 Revision</StyledRadio>
+                  <StyledRadio value={9}>폐기</StyledRadio>
                 </Radio.Group>
               </FormItem>
               <FormItem label="문서번호">
