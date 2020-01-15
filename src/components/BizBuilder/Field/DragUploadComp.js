@@ -199,14 +199,22 @@ class DragUploadComp extends Component {
       retVal = colData;
     } else {
       console.debug('2');
-      retVal = fileList.filter(file => file.status === 'done');
+      // retVal = fileList.filter(file => file.status === 'done');
+      retVal = {
+        WORK_SEQ,
+        TASK_SEQ: -1,
+        CONT_SEQ: -1,
+        FIELD_NM: COMP_FIELD,
+        TYPE: COMP_TAG,
+        DETAIL: fileList.filter(file => file.status === 'done'),
+      };
       // retVal = {
       //   WORK_SEQ,
       //   TASK_SEQ: -1,
       //   CONT_SEQ: -1,
       //   FIELD_NM: COMP_FIELD,
       //   TYPE: COMP_TAG,
-      //   DETAIL: detail,
+      //   DETAIL: fileList,
       // };
     }
     console.debug('3');
