@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { List, Tree, Row, Col, Checkbox, Button, Icon } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 
 const getTreeData = (deptList = []) => {

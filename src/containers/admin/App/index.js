@@ -59,7 +59,7 @@ class App extends Component {
                   <Switch>
                     <Route exact path="/" />
                     <Route exact path="/admin" component={AdminMain} />
-                    <Route path="/admin/adminMain" component={AdminList} />
+                    <Route path="/admin/adminmain" component={AdminList} />
                   </Switch>
                 </div>
               </div>

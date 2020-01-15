@@ -92,6 +92,8 @@ class appSetting extends Component {
     const { params } = match;
     const { PAGE_ID, WIDGET_ID } = params;
 
+    console.debug('Hello Fuxxing World!');
+
     if (WIDGET_ID && this.state.WIDGET_ID !== Number(WIDGET_ID)) {
       this.setState({
         WIDGET_ID: Number(WIDGET_ID),
@@ -272,6 +274,7 @@ class appSetting extends Component {
 
     const isPortal = path.toUpperCase().startsWith('/PORTAL');
     const isMenuFixed = menuFixedYn === 'Y' && isPortal;
+    console.debug('SETTTING!!!!!');
     return (
       <div className="settingsPage" style={{ width: '100vw', height: '100vh' }}>
         <StyleWidgetSetting isMenuFixed={isMenuFixed} isPortal={isPortal}>

@@ -11,8 +11,10 @@ import AppOpinion from './AppOpinion';
 
 const AppMain = () => (
   <div>
+    {console.debug('## WTF!!!! App Main')}
     <Switch>
       <Route path="/portal/store/appMain" component={BizStore} />
+      {/*
       <Route path="/portal/store/appMain/bizManage" component={BizManage} />
       <Route path="/portal/store/appMain/bizStore" component={BizStore} />
       <Route path="/portal/store/appMain/myPage" component={MyPage} />
@@ -21,6 +23,7 @@ const AppMain = () => (
       <Route path="/portal/store/appMain/AppOpinion" component={AppOpinion} />
       <Route path="/portal/store/appMain/AppSec" component={AppSec} />
       <Route path="/portal/store/appMain/errorPage" component={ErrorPage} exact />
+      */}
     </Switch>
   </div>
 );

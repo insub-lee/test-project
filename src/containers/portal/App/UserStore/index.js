@@ -1,3 +1,4 @@
+import messages from 'components/appSetting/messages';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -8,6 +9,7 @@ import { Layout, Input, Button } from 'antd';
 import { createStructuredSelector } from 'reselect';
 // import { lang } from 'utils/commonUtils';
 import { ThemeProvider } from 'styled-components';
+import { intlObj } from 'utils/commonUtils';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -39,7 +41,7 @@ import BizManage from './AppMain/BizManage';
 
 import './global-store.css';
 
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 /* eslint-disable */
 class UserStore extends Component {
   constructor(props) {
@@ -49,6 +51,22 @@ class UserStore extends Component {
     // this.props.getMenu('STORE');
     this.props.hideExecApps();
   }
+
+  folding = () => {
+    this.setState({ display: 'none' });
+  };
+
+  getPageHeaderTitle = () => {
+    const {
+      history: {
+        location: { pathname },
+      },
+    } = this.props;
+    if (pathname.includes('bizManage')) return 'Biz Card Manage';
+    // if (pathname.includes('widgetsetting')) return '위젯 설정';
+    if (pathname.includes('myPage')) return 'Home Widget';
+    return 'App Store';
+  };
 
   render() {
     const {
@@ -60,13 +78,12 @@ class UserStore extends Component {
       },
     } = this.props;
 
-    const bizStoreYn = pathname.includes('bizManage') ? 'Biz Card Manage' : pathname.includes('myPage') ? 'Home Widget' : 'App Store';
-    
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
-            <h2 className="pageHeader">{bizStoreYn}</h2>
+            <h2 className="pageHeader">{this.getPageHeaderTitle()}</h2>
+            <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>
@@ -77,7 +94,6 @@ class UserStore extends Component {
                       <Route exact path="/portal/store" component={AppList} />
                       <Route exact path="/portal/store/appMain" component={AppMain} />
                       <Route exact path="/portal/store/appMain/myPage" component={Main} />
-                      {/*<Route exact path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} />*/}
                       <Route
                         exact
                         path="/portal/store/appMain/myPage/app/:APP_ID"
@@ -93,6 +109,7 @@ class UserStore extends Component {
                       <Route path="/portal/store/appMain/bizManage" component={BizManage} />
                       <Route path="/portal/store/appMain/bizStore" render={props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
                       <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
+                      <Route exact path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} />
                     </Switch>
                   </div>
                   <ErrorBoundary>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Select, Input, Radio } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledContent from '../../styled/Modals/StyledContent';

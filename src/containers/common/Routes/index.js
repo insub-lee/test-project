@@ -140,7 +140,7 @@ class PublicRoutes extends Component {
       location.pathname !== '/' &&
       !checkPath(pathArray[1], portalPath) &&
       !checkPath(pathArray[1], portalSinglePath) &&
-      !checkPath(pathArray[1], etcPath);   
+      !checkPath(pathArray[1], etcPath);
     console.debug('Path Array', isLoggedIn, pathArray, location, hasError);
 
     if (hasError) {
@@ -152,7 +152,7 @@ class PublicRoutes extends Component {
         <Debounce time="400" handler="onResize">
           <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />
         </Debounce>
-        <Switch>          
+        <Switch>
           <RestrictedRoute exact path="/" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path="/preview/page/:pageID" component={Preview} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path={`/${basicPath.PAGE}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
