@@ -12,7 +12,6 @@ class DocNumberComp extends Component {
   render() {
     const { visible, compProps, formData } = this.props;
     if (formData && formData.DOCNUMBER && formData.DOCNUMBER.trim().length > 0) {
-      console.debug('agagag', formData.DOCNUMBER.trim(), formData.DOCNUMBER.trim().length);
       return visible ? <span>{formData.DOCNUMBER}</span> : '';
     }
     return visible ? <span>{compProps && compProps.docNumber}</span> : '';
