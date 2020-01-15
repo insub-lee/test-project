@@ -107,7 +107,12 @@ class List extends Component {
       });
 
     return (
-      <div>
+      <div style={{ padding: '48px', backgroundColor: 'white' }}>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+            <Icon type="form" /> 표준문서 결재자 관리
+          </p>
+        </div>
         <Edit {...this.props}></Edit>
         <AntdTable pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
       </div>
