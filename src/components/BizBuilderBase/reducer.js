@@ -84,29 +84,6 @@ const reducer = (state = initialState, action) => {
     // }
     case actionTypes.CHANGE_FORMDATA: {
       const { id, key, val } = action;
-      const metaList = state.getIn(['bizBuilderBase', id, 'metaList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'metaList']).toJS() : [];
-      // let compTag = '';
-
-      // metaList
-      //   .filter(meta => meta.COMP_TYPE === 'FIELD')
-      //   .forEach(item => {
-      //     if (item.COMP_FIELD === key) {
-      //       compTag = item.COMP_TAG;
-      //     }
-      //   });
-
-      // if (compTag.toUpperCase().indexOf('EDITOR') > -1) {
-      //   const arr = state.getIn(['bizBuilderBase', id, 'formData', key]) !== undefined ? state.getIn(['bizBuilderBase', id, 'formData', key]).toJS() : [];
-      //   arr.forEach(item => {
-      //     if (item.FIELD_NM === key) {
-      //       item.DETAIL = val;
-      //     }
-      //   });
-      //   return state.setIn(['bizBuilderBase', id, 'formData', key], fromJS(arr));
-      // }
-      // if (compTag.toUpperCase().indexOf('ATTACH') > -1) {
-      //   return state.setIn(['bizBuilderBase', id, 'formData', key, 'DETAIL'], val);
-      // }
       return state.setIn(['bizBuilderBase', id, 'formData', key], val);
     }
     case actionTypes.SUCCESS_SAVE_TASK: {
@@ -119,19 +96,6 @@ const reducer = (state = initialState, action) => {
       metaList
         .filter(meta => meta.COMP_TYPE === 'FIELD')
         .forEach(item => {
-          // if (item.COMP_TAG.toUpperCase().indexOf('EDITOR') > -1 || item.COMP_TAG.toUpperCase().indexOf('ATTACH') || item.COMP_TAG === 'work-selector') {
-          //   formData[item.COMP_FIELD] = {
-          //     WORK_SEQ: workSeq,
-          //     TASK_SEQ: -1,
-          //     CONT_SEQ: -1,
-          //     FIELD_NM: item.COMP_FIELD,
-          //     TYPE: item.COMP_TAG,
-          //     DETAIL: [],
-          //   };
-          // } else {
-          //   formData[item.COMP_FIELD] = '';
-          // }
-
           let flag = true;
           let msg = '';
 

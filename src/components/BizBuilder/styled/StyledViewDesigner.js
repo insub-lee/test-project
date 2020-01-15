@@ -98,42 +98,77 @@ const StyledViewDesigner = styled.div`
               width: 200px;
             }
           }
+          .view-designer-col .ant-textarea {
+            height: unset;
+          }
         }
       }
     }
   }
   .view-designer-table {
     width: 100%;
-    .view-designer-col {
-      border: 0;
-      border: 0;
-      font-size: 12px;
-      color: rgb(0, 0, 0);
-      padding: 5px 10px;
-      > div > span {
-        display: block;
-        padding: 7px;
-      }
-      .ant-input {
-        border-top-style: initial;
-        border-right-style: initial;
-        border-left-style: initial;
-        border-top-color: initial;
-        border-right-color: initial;
-        border-left-color: initial;
-        height: 30px;
-        line-height: 30px;
-        color: rgb(51, 51, 51);
-        vertical-align: middle;
+    .view-designer-row {
+      border: 1px solid #ddd;
+      .view-designer-col {
+        border: 0;
+        border: 0;
         font-size: 12px;
-        border-width: 0px 0px 1px;
-        border-image: initial;
-        border-bottom: 1px solid rgb(217, 224, 231);
-        border-radius: 0px;
-        padding: 0px 10px;
-      }
-      .ant-textarea {
-        height: unset;
+        color: rgb(0, 0, 0);
+        /* padding: 5px 10px; */
+        &.mdcsTitleCol {
+          position: relative;
+          background-color: #f1f1f1;
+          > div {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: auto;
+            min-height: auto;
+            left: 10px;
+          }
+        }
+        &.mdcsContentsCol {
+          padding: 6px;
+          .btnTypeUploader {
+            text-align: right;
+          }
+          .ant-upload.ant-upload-drag {
+            .ant-upload-drag-container {
+              padding-top: 10px;
+            }
+            p.ant-upload-drag-icon {
+              margin-bottom: 10px;
+            }
+            p.ant-upload-text {
+              font-size: 12px;
+            }
+          }
+        }
+        > div > span {
+          display: block;
+          font-size: 13px;
+        }
+        .ant-input {
+          border-top-style: initial;
+          border-right-style: initial;
+          border-left-style: initial;
+          border-top-color: initial;
+          border-right-color: initial;
+          border-left-color: initial;
+          height: 35px;
+          line-height: 35px;
+          color: rgb(51, 51, 51);
+          vertical-align: middle;
+          font-size: 12px;
+          border-width: 0px 0px 1px;
+          border-image: initial;
+          border: 1px solid rgb(217, 224, 231);
+          border-radius: 0px;
+          padding: 0px 10px;
+        }
+        .ant-textarea {
+          height: unset;
+        }
       }
     }
   }

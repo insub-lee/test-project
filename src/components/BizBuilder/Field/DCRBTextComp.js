@@ -9,6 +9,21 @@ class DCRBTextComp extends React.Component {
     this.handleOnChange = debounce(this.handleOnChange, 300);
   }
 
+  componentDidMount = () => {
+    const { formData, rowClass, isManage } = this.props;
+    const isDisplay =
+      formData.DOCNUMBER &&
+      formData.DOCNUMBER.indexOf('ME') === 0 &&
+      (formData.DOCNUMBER.substr(3, 1) === 'B' ||
+        formData.DOCNUMBER.substr(3, 1) === 'C' ||
+        formData.DOCNUMBER.substr(3, 1) === 'J' ||
+        formData.DOCNUMBER.substr(3, 1) === 'K');
+    if (!isManage && !isDisplay && rowClass) {
+      const rowNode = document.querySelector(`.${rowClass}`);
+      rowNode.style.display = 'none';
+    }
+  };
+
   handleOnChange = (value, key) => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData, colData } = this.props;
     let tempData = [];
@@ -27,7 +42,7 @@ class DCRBTextComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, colData, readOnly, visible, isManage, formData} = this.props;
+    const { CONFIG, colData, readOnly, visible, isManage, formData } = this.props;
     let value1 = '';
     let value2 = '';
     if (colData && colData.length > 0) {
@@ -48,28 +63,28 @@ class DCRBTextComp extends React.Component {
           formData.DOCNUMBER.substr(3, 1) === 'C' ||
           formData.DOCNUMBER.substr(3, 1) === 'J' ||
           formData.DOCNUMBER.substr(3, 1) === 'K')) ? (
-        <>
-          <Input
-            defaultValue={value1}
-            maxLength={6}
-            placeholder={CONFIG.property.placeholder}
-            onChange={e => this.handleOnChange(e.target.value, 0)}
-            readOnly={readOnly || CONFIG.property.readOnly}
-            style={{ width: '70px' }}
-          />{' '}
+      <>
+        <Input
+          defaultValue={value1}
+          maxLength={6}
+          placeholder={CONFIG.property.placeholder}
+          onChange={e => this.handleOnChange(e.target.value, 0)}
+          readOnly={readOnly || CONFIG.property.readOnly}
+          style={{ width: '70px' }}
+        />{' '}
         -{' '}
-          <Input
-            defaultValue={value2}
-            maxLength={3}
-            placeholder={CONFIG.property.placeholder}
-            onChange={e => this.handleOnChange(e.target.value, 1)}
-            readOnly={readOnly || CONFIG.property.readOnly}
-            style={{ width: '50px' }}
-          />
-        </>
-      ) : (
-        ''
-      );
+        <Input
+          defaultValue={value2}
+          maxLength={3}
+          placeholder={CONFIG.property.placeholder}
+          onChange={e => this.handleOnChange(e.target.value, 1)}
+          readOnly={readOnly || CONFIG.property.readOnly}
+          style={{ width: '50px' }}
+        />
+      </>
+    ) : (
+      ''
+    );
   }
 }
 
@@ -79,7 +94,7 @@ DCRBTextComp.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.any,
   changeFormData: PropTypes.any,
-  id: PropTypes.any,
+  sagaKey: PropTypes.any,
   changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
   compProp: PropTypes.any,

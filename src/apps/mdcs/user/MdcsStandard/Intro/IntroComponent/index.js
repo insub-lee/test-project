@@ -314,9 +314,11 @@ class IntroComponent extends Component {
   getNodeIds = () => {
     const { workSeq, taskSeq } = this.state;
     const payload = {
-      WORK_SEQ: workSeq,
-      TASK_SEQ: taskSeq,
-      PARENT_DRAFT_PRC_ID: 0,
+      PARAM: {
+        WORK_SEQ: workSeq,
+        TASK_SEQ: taskSeq,
+        PARENT_DRAFT_PRC_ID: 0,
+      },
     };
     const { getCallDataHanlder, sagaKey: id } = this.props;
     const searchApi = [
@@ -329,10 +331,6 @@ class IntroComponent extends Component {
     ];
     getCallDataHanlder(id, searchApi);
     this.setState({ isShow: true });
-    console.debug('@@@@@@ ohohohoh');
-    // const result = await getCallDataHanlder(id, searchApi);
-    // console.debug('@ getNodeIds ? ', result);
-    // return result;
   };
 
   onShowDocTemplate = () => {
@@ -343,7 +341,7 @@ class IntroComponent extends Component {
     const docType = selectedComponent && selectedComponent.DOCTEMPLATECODE;
     const docNumber = docNum && docNum.docNumber;
 
-    const workPrcProps = {
+    let workPrcProps = {
       draftType: selectedDraft,
       nodeIds: fullPathInfo,
       degreeFlag: ModifyType.MAJOR,
@@ -373,15 +371,13 @@ class IntroComponent extends Component {
 
     // Todo - get nodeIds Info
     if ([DraftType.AMENDMENT].includes(selectedDraft)) {
-      console.debug('@@ nodeIdsInfo', nodeIdsInfo);
       const procResult = nodeIdsInfo.procResult || { DRAFT_DATA: '{}' };
       const draftData = procResult.DRAFT_DATA || '{}';
-      const { nodeIds } = JSON.parse(draftData);
-      if (nodeIds) {
-        workPrcProps.nodeIds = nodeIds;
-        this.setState({ isShow: true });
+      const jsonDraftData = JSON.parse(draftData);
+      console.debug('@ Json Draft Data : ', jsonDraftData);
+      if (Object.keys(jsonDraftData).length > 2) {
+        workPrcProps = jsonDraftData;
       } else {
-        this.setState({ isShow: false });
         return null;
       }
     }

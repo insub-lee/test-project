@@ -11,6 +11,15 @@ class RadioPopupComp extends PureComponent {
     };
   }
 
+  componentDidMount = () => {
+    const { isManage, formData, rowClass } = this.props;
+    const isDisplay = formData.DOCNUMBER && formData.DOCNUMBER.indexOf('ME') === 0;
+    if (!isManage && rowClass && !isDisplay) {
+      const rowNode = document.querySelector(`.${rowClass}`);
+      rowNode.style.display = 'none';
+    }
+  };
+
   handleOnChange = e => {
     const { sagaKey: id, COMP_FIELD, changeFormData } = this.props;
     e.target.value === 'Y' ? this.setState({ openModal: true }) : this.setState({ openModal: false });
@@ -84,7 +93,7 @@ class RadioPopupComp extends PureComponent {
             <RadioPopupModalComp onChange={this.handleModalOnChange} onChecked={this.handleModalOnChecked} formData={formData} />
             <br />
           </Modal>
-          {!this.state.openModal && formData.DIVISION.trim() !== '' && formData.PLACE.trim() !== '' && (
+          {!this.state.openModal && formData.DIVISION && formData.DIVISION.trim() !== '' && formData.PLACE && formData.PLACE.trim() !== '' && (
             <p>
               <span>Application Division : {formData.DIVISION.replace(/,/gi, ', ')}</span>
               <br />

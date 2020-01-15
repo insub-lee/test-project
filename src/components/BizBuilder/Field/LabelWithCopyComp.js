@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { debounce } from 'lodash';
 
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -6,15 +7,15 @@ import MessageContent from 'components/Feedback/message.style2';
 import StyledButton from 'components/CommonStyled/StyledButton';
 
 const onCopyHandler = (CONFIG, changeFormData, formData, id) => {
-  const { copyKey, compKey } = CONFIG.property.OPTION_BUTTON;
+  const { optionCopyKey, optionCompKey } = CONFIG.property;
+  if (formData[optionCopyKey] !== undefined) {
+    const value = formData[optionCopyKey];
+    if (value && value.trim()) {
+      changeFormData(id, optionCompKey, value);
 
-  if (formData[copyKey] && formData[copyKey].length > 0) {
-    const value = formData[copyKey];
-    if (value[0].DETAIL !== ' ' || value[0].DETAIL !== '') {
-      changeFormData(id, compKey, value && value.length > 0 && value[0].DETAIL);
       message.success(<MessageContent>복사 되었습니다.</MessageContent>, 3);
     } else {
-      message.warning(<MessageContent>설명을 입력하세요.</MessageContent>, 3);
+      message.warning(<MessageContent>복사할 내용이 없습니다.</MessageContent>, 3);
     }
   } else {
     message.warning(<MessageContent>에러가 발생하였습니다. 관리자에게 문의하세요.</MessageContent>, 3);

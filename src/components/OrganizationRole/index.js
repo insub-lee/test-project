@@ -724,9 +724,10 @@ class Organization extends Component {
 
   /* 구성원 검색 (검색 입력창에서 엔터를 쳤을 경우) */
   changeInputKeyword = e => {
-    const { ROLE_CD, handleGetSearchResultData } = this.props;
+    const { ROLE_CD, handleGetSearchResultData, groupData } = this.props;
     if (e.target.name === 'searchInput' && e.keyCode === 13) {
-      handleGetSearchResultData(ROLE_CD, e.target.value.trim());
+      const data = groupData.find(item => item.ROLE_CD === ROLE_CD);
+      if (data) handleGetSearchResultData(ROLE_CD, data.ACNT_TYPE, data.ACNT_ID, e.target.value.trim());
     } else {
       this.setState({
         keyword: e.target.value,
@@ -737,9 +738,9 @@ class Organization extends Component {
   /* 구성원 검색 (검색 버튼을 마우스로 클릭 했을 경우) */
   organizationUserSearch = () => {
     const { keyword } = this.state;
-    const { ROLE_CD, handleGetSearchResultData } = this.props;
-
-    handleGetSearchResultData(ROLE_CD, keyword);
+    const { ROLE_CD, handleGetSearchResultData, groupData } = this.props;
+    const data = groupData.find(item => item.ROLE_CD === ROLE_CD);
+    if (data) handleGetSearchResultData(ROLE_CD, data.ACNT_TYPE, data.ACNT_ID, keyword);
   };
 
   render() {
@@ -933,7 +934,7 @@ export function mapDispatchToProps(dispatch) {
 
     handleGetGroupData: ROLE_CD => dispatch(actions.getGroupData(ROLE_CD)),
     handleGetGroupMemberData: (ROLE_CD, ACNT_TYPE, ACNT_ID) => dispatch(actions.getGroupMemberData(ROLE_CD, ACNT_TYPE, ACNT_ID)),
-    handleGetSearchResultData: (ROLE_CD, KEYWORD) => dispatch(actions.getSearchResultData(ROLE_CD, KEYWORD)),
+    handleGetSearchResultData: (ROLE_CD, ACNT_TYPE, ACNT_ID, KEYWORD) => dispatch(actions.getSearchResultData(ROLE_CD, ACNT_TYPE, ACNT_ID, KEYWORD)),
   };
 }
 const mapStateToProps = createStructuredSelector({
