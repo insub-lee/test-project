@@ -1,4 +1,4 @@
-const base = 'apps/Workflow/Admin/Process';
+const base = 'apps/WorkFlow/Admin/Process';
 export const SET_PROCESS_STEP = `${base}/SET_PROCESS_STEP`;
 export const SET_STEP_INFO = `${base}/SET_STEP_INFO`;
 export const SAVE_PROCESS_INFO = `${base}/SAVE_PROCESS_INFO`;

@@ -1,11 +1,13 @@
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
-import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
 import { ModalContainer, ModalRoute } from 'react-router-modal';
+import { Layout } from 'antd';
+
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import 'react-router-modal/css/react-router-modal.css';
@@ -25,6 +27,8 @@ import AuthSetting from './BizMenuReg/AuthSetting';
 // import Footer from '../../App/Footer';
 
 const homeUrl = '/portal/store/appMain/bizManage';
+
+const { Content, Sider } = Layout;
 
 class BizManage extends Component {
   componentDidMount() {
@@ -79,6 +83,7 @@ class BizManage extends Component {
       moveNode,
       deleteNode,
       updateBizGroupDelYn,
+      userRole,
     } = this.props;
 
     const handleTreeOnClick = node => {
@@ -91,43 +96,54 @@ class BizManage extends Component {
     };
 
     return (
-      <div className="appMyPageWrapper">
-        <StyledTabList className="treeWrapper">
-          <ErrorBoundary>
-            <BizGroupTree
-              treeData={categoryData}
-              selectedIndex={selectedIndex}
-              onClick={handleTreeOnClick}
-              // canDrag={() => true}
-              // canDrop={() => true}
+      <Layout style={{ height: '100%', overflow: 'hidden' }}>
+        <Sider className="biz-store-sider">
+          <StyledTabList className="treeWrapper">
+            <ErrorBoundary>
+              <BizGroupTree
+                treeData={categoryData}
+                selectedIndex={selectedIndex}
+                onClick={handleTreeOnClick}
+                // canDrag={() => true}
+                // canDrop={() => true}
 
-              saveData={saveData}
-              addEmptyNode={addEmptyNode}
-              // moveNode={moveNode}
-              deleteNode={deleteNode}
-              updateBizGroupDelYn={updateBizGroupDelYn}
-              history={history}
-            />
-          </ErrorBoundary>
-        </StyledTabList>
-        <ErrorBoundary>
-          <ModalRoute path="/portal/store/appMain/bizManage/authSetting/:BIZGRP_ID" component={AuthSetting} />
-          <ModalContainer />
-        </ErrorBoundary>
-        <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)' }}>
-          <ErrorBoundary>
-            <Switch>
-              <Route path="/portal/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
-              <Route path="/portal/store/appMain/bizManage/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
-              <Route path="/appPreview" component={AppPreview} exact />
-            </Switch>
-          </ErrorBoundary>
-
-          {/* <Route path="/store/appMain/bizManage/aut
-        hSetting/:BIZGRP_ID" component={AuthSetting} /> */}
-        </div>
-        {/* <Footer /> */}
-      </div>
+                saveData={saveData}
+                addEmptyNode={addEmptyNode}
+                // moveNode={moveNode}
+                deleteNode={deleteNode}
+                updateBizGroupDelYn={updateBizGroupDelYn}
+                history={history}
+              />
+            </ErrorBoundary>
+          </StyledTabList>
+        </Sider>
+        <Content>
+          <div className="appMyPageWrapper">
+            {/*
+            <ErrorBoundary>
+              <ModalRoute path="/portal/store/appMain/bizManage/authSetting/:BIZGRP_ID" component={AuthSetting} />
+              <ModalContainer />
+            </ErrorBoundary>
+            */}
+            <div className="myPageContentWrapper" style={{ minHeight: 'calc(100vh - 42px)', padding: 20 }}>
+              <ErrorBoundary>
+                {/*<ModalRoute path={`${match.url}/authSetting`} component={AuthSetting} />*/}
+                {/* <ModalRoute path={`${match.url}/authSetting`} component={Sample} /> */}
+                <ModalContainer />
+              </ErrorBoundary>
+              <ErrorBoundary>
+                <Switch>
+                  <Route path="/portal/store/appMain/bizManage/bizGroupReg/:BIZGRP_ID" component={BizGroupReg} exact />
+                  <Route path="/portal/store/appMain/bizManage/bizMenuReg/:type/:BIZGRP_ID" component={BizMenuReg} />
+                  <Route path="/appPreview" component={AppPreview} exact />
+                </Switch>
+              </ErrorBoundary>
+              {/* <Route path="/store/appMain/bizManage/authSetting/:BIZGRP_ID" component={AuthSetting} /> */}
+            </div>
+            {/* <Footer /> */}
+          </div>
+        </Content>
+      </Layout>
     );
   }
 }

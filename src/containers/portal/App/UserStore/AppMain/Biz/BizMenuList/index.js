@@ -76,7 +76,7 @@ class BizMenuList extends Component {
             </ErrorBoundary>
           </StyleBizDetailContent>
         </StyleBizDetail>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

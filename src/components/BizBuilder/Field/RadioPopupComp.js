@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Radio, Modal, Alert } from 'antd';
+import { Radio, Modal, message } from 'antd';
 import PropTypes from 'prop-types';
 import RadioPopupModalComp from './RadioPopupModalComp';
 
@@ -8,7 +8,6 @@ class RadioPopupComp extends PureComponent {
     super(props);
     this.state = {
       openModal: false,
-      message: '',
     };
   }
 
@@ -45,13 +44,13 @@ class RadioPopupComp extends PureComponent {
   handleAlertClose = () => {};
 
   render() {
-    const { visible, colData, formData, readOnly } = this.props;
+    const { visible, colData, formData, readOnly, isManage } = this.props;
 
     let view = false;
     if (readOnly !== undefined && readOnly) {
       view = readOnly;
     }
-    return visible ? (
+    return isManage || (visible && formData.DOCNUMBER && formData.DOCNUMBER.indexOf('ME') === 0) ? (
       <div>
         <div style={{ float: 'left', marginRight: '10px' }}>WDS / I-Foundry Registration</div>
         <div style={{ float: 'left' }}>
@@ -69,23 +68,21 @@ class RadioPopupComp extends PureComponent {
             mask={false}
             destroyOnClose
             onOk={() => {
-              let message = '';
-              if (!formData.DIVISION.trim()) message = 'Application Division를 선택해주십시오.';
-              else if (!formData.PLACE.trim()) message = 'Registration Place를 선택해주십시오.';
-              if (message) return this.setState({ message });
-              return this.setState({ openModal: false, message: '' });
+              let msg = '';
+              if (!formData.DIVISION.trim()) msg = 'Application Division를 선택해주십시오.';
+              else if (!formData.PLACE.trim()) msg = 'Registration Place를 선택해주십시오.';
+              if (msg) return message.warning(msg);
+              return this.setState({ openModal: false });
             }}
             onCancel={() => {
               this.setState({
                 openModal: false,
-                message: '',
               });
               this.handelInitForm();
             }}
           >
             <RadioPopupModalComp onChange={this.handleModalOnChange} onChecked={this.handleModalOnChecked} formData={formData} />
             <br />
-            {this.state.message && <Alert message={this.state.message} type="warning" showIcon />}
           </Modal>
           {!this.state.openModal && formData.DIVISION.trim() !== '' && formData.PLACE.trim() !== '' && (
             <p>

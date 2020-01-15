@@ -165,6 +165,7 @@ html {
   width: 100%;
 }
 
+/*
 .portalLayout .ant-layout-sider {
   flex: 0 0 300px !important;
   max-width: 300px !important;
@@ -177,6 +178,7 @@ html {
   border-top: 1px solid #c3c4c7;
   z-index: 990;
 }
+*/
 
 @media only screen and (max-width: 1024px) {
   .portalLayout .ant-layout-sider {
@@ -400,7 +402,7 @@ html {
 
 .userProfileMenu .ant-popover-content .ant-popover-inner-content {
   min-width: 115px;
-  min-height: 85px;
+  /* min-height: 85px; */
   padding: 3px 7px;
   border-radius: 3px;
   background-color: #474747;

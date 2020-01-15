@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col, Select, Button } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import CheckSelectList from 'apps/mdcs/components/CheckSelectList';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';

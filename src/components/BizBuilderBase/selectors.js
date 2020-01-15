@@ -146,6 +146,11 @@ const makeSelectWorkInfoById = id =>
 
 const makeSelectDataLoading = () => createSelector(selectorBizBuilderBase, state => state.get('dataLoading'));
 
+const makeSelectApiListById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'apiList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'apiList']).toJS() : [],
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -173,4 +178,5 @@ export {
   makeSelectWorkInfo,
   makeSelectDataLoading,
   makeSelectWorkInfoById,
+  makeSelectApiListById,
 };

@@ -62,6 +62,8 @@ const desktopDockCss = {
 };
 */
 
+const routePaths = [`/${basicPath.PORTAL}/settings`, `/${basicPath.PORTAL}/store/appMain/bizManage`, `/${basicPath.PORTAL}/store`, `/${basicPath.PORTAL}/card`];
+
 class App extends React.PureComponent {
   constructor(props) {
     super(props, 'App/index');
@@ -188,7 +190,7 @@ class App extends React.PureComponent {
   setIsFullscreenEnabled = isFullscreenEnabled => this.setState({ isFullscreenEnabled });
 
   renderApps = (setMyMenuData, selectedApp, isUnreadCnt, execPage, execMenu, show, onReload, setIsSpinnerShow, isPreviewPage) => (
-    <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID} style={{ position: 'absolute', left: 0, width: '100%' }}>
+    <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
       {setMyMenuData.INTL_TYPE === 'Y' ? (
         <AppsRouter
           id={setMyMenuData.PAGE_ID}
@@ -562,6 +564,7 @@ class App extends React.PureComponent {
                         className="portalContent"
                         style={{
                           flexShrink: '0',
+                          display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
                         }}
                       >
                         <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow}>

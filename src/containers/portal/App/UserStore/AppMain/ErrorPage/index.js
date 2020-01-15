@@ -15,7 +15,7 @@ class ErrorPage extends React.Component {
         <center>
           <img src={error404img} alt="404" />
         </center>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

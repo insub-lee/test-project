@@ -6,7 +6,7 @@ const makeDataSource = apiData => {
   const tempData = [];
   apiData.categoryMapList
     .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
-    .map(item =>
+    .forEach(item => {
       tempData.push({
         value: item.NODE_ID,
         NAME_KOR: item.NAME_KOR,
@@ -14,8 +14,8 @@ const makeDataSource = apiData => {
         NAME_CHN: item.NAME_CHN,
         NAME_JPN: item.NAME_JPN,
         NAME_ETC: item.NAME_ETC,
-      }),
-    );
+      });
+    });
   return tempData;
 };
 
@@ -33,8 +33,10 @@ class RadioComp extends Component {
         property: { mapId },
       },
     } = this.props;
-    const apiArray = [{ key: `radio_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    getExtraApiData(id, apiArray);
+    if (mapId) {
+      const apiArray = [{ key: `radio_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
+      getExtraApiData(id, apiArray);
+    }
   }
 
   onChangeHandler = (changeFormData, id, CONFIG, changeValidationData, value) => {

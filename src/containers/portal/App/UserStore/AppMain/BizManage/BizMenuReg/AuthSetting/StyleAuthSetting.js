@@ -2,9 +2,9 @@ import styled from 'styled-components';
 import IconOut from 'images/common/icon-out.png';
 
 const StyleAuthSetting = styled.div`
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
+  //position: absolute;
+  //width: 100vw;
+  //height: 100vh;
   padding: 0 30px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기

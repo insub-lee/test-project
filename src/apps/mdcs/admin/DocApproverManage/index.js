@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { Table, Button, Icon, Popconfirm } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
 import Edit from './Edit';

@@ -2,15 +2,16 @@ import styled from 'styled-components';
 
 const StyledTabList = styled.div`
   &.treeWrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
+    //position: absolute;
+    //top: 0;
+    //left: 0;
     width: 300px;
-    height: calc(100vh - 99px);
+    //height: calc(100vh - 99px);
+    height: 100%;
     padding: 10px 20px;
     border-right: 1px solid #e5e5e5;
     background-color: #ffffff;
-    z-index: 100;
+    //z-index: 100;
 
     .react-tabs {
       display: inline-block;
@@ -49,19 +50,23 @@ const StyledTabList = styled.div`
     }
 
     .tabPanel {
-      height: calc(100vh - 70px);
+      height: 100%;
+      // height: calc(100vh - 70px);
       // border: 1px solid #222222;
     }
 
     .treeWrapper2 {
-      min-height: calc(100vh - 160px);
+      //min-height: calc(100vh - 160px);
+      min-height: 100%;
 
       .treeBox {
-        min-height: calc(100vh - 160px);
-        padding: 11px 0px 0px 10px !important;
+        min-height: 100%;
+        // min-height: calc(100vh - 160px);
+        padding: 11px 0 0 10px !important;
 
         > div {
-          min-height: calc(100vh - 160px);
+          min-height: 100%;
+          // min-height: calc(100vh - 160px);
         }
       }
     }

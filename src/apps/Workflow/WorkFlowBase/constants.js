@@ -1,4 +1,4 @@
-const base = 'apps/Workflow/User/Draft/DraftBase/';
+const base = 'apps/WorkFlow/User/Draft/DraftBase/';
 export const GET_DRAFT_DETAIL = `${base}GET_DRAFT_DETAIL`;
 export const SET_DRAFT_DETAIL = `${base}SET_DRAFT_DETAIL`;
 export const SET_ISREDIRECT = `${base}SET_ISREDIRECT`;

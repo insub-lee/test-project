@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 class ComponentConfig extends Component {
   state = {

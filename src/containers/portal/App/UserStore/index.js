@@ -1,3 +1,4 @@
+import messages from 'components/appSetting/messages';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -8,6 +9,7 @@ import { Layout, Input, Button } from 'antd';
 import { createStructuredSelector } from 'reselect';
 // import { lang } from 'utils/commonUtils';
 import { ThemeProvider } from 'styled-components';
+import { intlObj } from 'utils/commonUtils';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -39,7 +41,7 @@ import BizManage from './AppMain/BizManage';
 
 import './global-store.css';
 
-const { Content, Sider } = Layout;
+const { Content } = Layout;
 /* eslint-disable */
 class UserStore extends Component {
   constructor(props) {
@@ -50,6 +52,22 @@ class UserStore extends Component {
     this.props.hideExecApps();
   }
 
+  folding = () => {
+    this.setState({ display: 'none' });
+  };
+
+  getPageHeaderTitle = () => {
+    const {
+      history: {
+        location: { pathname },
+      },
+    } = this.props;
+    if (pathname.includes('bizManage')) return 'Biz Card Manage';
+    // if (pathname.includes('widgetsetting')) return '위젯 설정';
+    if (pathname.includes('myPage')) return 'Home Widget';
+    return 'App Store';
+  };
+
   render() {
     const {
       collapsed,
@@ -59,16 +77,16 @@ class UserStore extends Component {
         location: { pathname },
       },
     } = this.props;
-    const bizStoreYn = pathname.includes('biz') ? 'Biz' : 'App';
+
     return (
       <StyleUserSetting className="userSetting">
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
-            <h2 className="pageHeader">{bizStoreYn} Store</h2>
+            <h2 className="pageHeader">{this.getPageHeaderTitle()}</h2>
+            <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
           </div>
           <ThemeProvider theme={themes.themedefault}>
-            <Layout className="storeLayout" style={{ minHeight: '100%' }}>
-              <Sider trigger={null} collapsible collapsed={collapsed} className="siderLayout" />
+            <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>
               <AppWrapper style={{ width: '100%' }}>
                 <Content className="storeContent">
                   <div className="contentWrapper">
@@ -91,13 +109,14 @@ class UserStore extends Component {
                       <Route path="/portal/store/appMain/bizManage" component={BizManage} />
                       <Route path="/portal/store/appMain/bizStore" render={props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
                       <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
+                      <Route exact path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID" component={Widget} />
                     </Switch>
                   </div>
                   <ErrorBoundary>
                     <ModalRoute
                       path="/portal/store/appMain/myPage/widgetsetting/:PAGE_ID/:WIDGET_ID"
                       component={Widget}
-                      outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
+                      // outDelay={1200} // 1000 = 1s, widgetsetting-modal-out 시간보다 조금 더 길게
                     />
                   </ErrorBoundary>
                   <ModalContainer />

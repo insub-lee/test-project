@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Input } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 class ComponentConfig extends Component {
   componentDidMount() {}

@@ -524,7 +524,7 @@ class AppOpinion extends Component {
             <OpposeModal selectedApp={this.state.selectedApp} closeModal={this.unOppose} radioList={this.props.oppoList} />
           </Modal>
         </StyleApp>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import List from './List';
 // import BizBuilderBase from '../../../components/BizBuilderBase';
-import BizMicroDevBase from '../../../components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 class SearchBasic extends Component {
   render() {

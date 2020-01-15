@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 import List from './List';
 

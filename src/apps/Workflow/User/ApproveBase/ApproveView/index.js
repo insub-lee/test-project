@@ -103,13 +103,13 @@ class ApproveView extends Component {
     console.debug('selectedRow', selectedRow);
     console.debug('selectedRow.APPV_STATUS', selectedRow.APPV_STATUS);
     return (
-      <React.Fragment>
+      <>
         <Modal
           title={selectedRow.DRAFT_TITLE}
           visible={viewVisible}
           onOk={this.handleCloseModal}
           onCancel={this.handleCloseModal}
-          width="65%"
+          width="80%"
           footer={this.getButtons(category, selectedRow.STATUS, selectedRow.PROC_STATUS)}
         >
           <BizBuilderBase
@@ -135,7 +135,7 @@ class ApproveView extends Component {
         >
           <OpinionModal {...this.props} CustomActionView={selectedRow.APPV_STATUS === 4 ? HoldRelease : AppvActionComp} />
         </Modal>
-      </React.Fragment>
+      </>
     );
   }
 }

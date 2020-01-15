@@ -69,8 +69,16 @@ class UnApproveList extends Component {
     this.props.setViewVisible(true);
   };
 
- 
- 
+
+  onModalClose = () => {
+    this.props.setViewVisible(false);
+  };
+
+  handleReqApprove = (e, appvStatus) => {
+    e.preventDefault();
+    this.props.reqApprove(appvStatus);
+    this.props.setOpinionVisible(false);
+  };
 
   render() {
     const { approveList, selectedRow } = this.props;

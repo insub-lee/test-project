@@ -61,6 +61,6 @@ function* getCallDataHandler({ id, apiArys, callbackFunc }) {
 }
 
 export default function* watcher(arg) {
-  yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey}`, submitHadnlerBySaga);
-  yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey}`, getCallDataHandler);
+  yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey || arg.id}`, submitHadnlerBySaga);
+  yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey || arg.id}`, getCallDataHandler);
 }

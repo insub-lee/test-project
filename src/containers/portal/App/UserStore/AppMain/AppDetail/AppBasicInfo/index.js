@@ -24,7 +24,7 @@ import { BtnRedShare, BtnLgtGrayRegisted } from '../../../components/uielements/
 // import RgtCategoryIcon from 'images/bizstore/icon-category-rgt3.png';
 // import RgtMenuIcon from 'images/bizstore/icon-menu-rgt3.png';
 
-import AppMaNagerList from '../../../components/AppManagerList';
+import AppManagerList from '../../../components/AppManagerList';
 import StyledButton from '../../../../../../../components/Button/StyledButton';
 
 class AppBasicInfo extends React.Component {
@@ -90,6 +90,7 @@ class AppBasicInfo extends React.Component {
   };
 
   render() {
+    console.debug('@@@ history', this.props.history);
     const popUp = (
       <div className="newFaqWrite">
         <Modal
@@ -153,7 +154,7 @@ class AppBasicInfo extends React.Component {
     } = this.props;
 
     const cardYn = pathname.includes('card');
-    
+
     return (
       <StyleAppBasicInfo>
         {popUp}
@@ -203,7 +204,7 @@ class AppBasicInfo extends React.Component {
                   placement="bottomRight"
                   content={
                     this.props.appManagerList.length > 0 ? (
-                      <AppMaNagerList managerList={this.props.appManagerList} userProfile={userProfile} currentView={this.props.currentView} />
+                      <AppManagerList managerList={this.props.appManagerList} userProfile={userProfile} currentView={this.props.currentView} />
                     ) : (
                       `${intlObj.get(messages.noManager)}`
                     )

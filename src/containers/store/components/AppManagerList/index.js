@@ -57,7 +57,7 @@ class AppManagerList extends React.Component {
                                     <FormattedMessage {...messages.userProfile} />
                                   </Button>
                                 </li>
-                                <li>
+                                {/* <li>
                                   <Button type="button" onClick={() => this.handleClickManagerInfo('talk', user.EMP_NO)} className="icon-talk">
                                     <FormattedMessage {...messages.sendToCube} />
                                   </Button>
@@ -72,7 +72,7 @@ class AppManagerList extends React.Component {
                                     <FormattedMessage {...messages.todoRegist} />
                                   </Button>
                                 </li>
-                                {/* <li><Button type="button" onClick={() => this.handleClickManagerInfo('hithanks', user.EMP_NO)} className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
+                                <li><Button type="button" onClick={() => this.handleClickManagerInfo('hithanks', user.EMP_NO)} className="icon-hithanks"><FormattedMessage {...messages.hyThanks} /></Button></li> */}
                               </ul>
                             }
                             trigger={this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? 'hover' : ''}

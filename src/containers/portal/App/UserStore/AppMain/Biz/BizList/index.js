@@ -112,7 +112,7 @@ class BizList extends Component {
           // registCategory={handleRegistCategory}
           goBack={handleGoBack}
         />
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }
