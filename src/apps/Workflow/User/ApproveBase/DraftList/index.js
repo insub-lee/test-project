@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
@@ -65,6 +65,11 @@ class DraftList extends Component {
 
     return (
       <div>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+            <Icon type="form" /> 기안함
+          </p>
+        </div>
         <AntdTable
           columns={this.getTableColumns()}
           dataSource={approveList.map(item => ({
