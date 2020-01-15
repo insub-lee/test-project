@@ -14,18 +14,18 @@ const { Option } = Select;
 const getTreeData = (categoryMapList, rootId) =>
   categoryMapList.length > 0
     ? getTreeFromFlatData({
-      flatData: categoryMapList
-        .filter(filterItem => filterItem.USE_YN === 'Y')
-        .map(item => ({
-          title: item.NAME_KOR,
-          value: item.NODE_ID,
-          key: item.NODE_ID,
-          parentValue: item.PARENT_NODE_ID,
-        })),
-      getKey: node => node.key,
-      getParentKey: node => node.parentValue,
-      rootKey: rootId,
-    })
+        flatData: categoryMapList
+          .filter(filterItem => filterItem.USE_YN === 'Y')
+          .map(item => ({
+            title: item.NAME_KOR,
+            value: item.NODE_ID,
+            key: item.NODE_ID,
+            parentValue: item.PARENT_NODE_ID,
+          })),
+        getKey: node => node.key,
+        getParentKey: node => node.parentValue,
+        rootKey: rootId,
+      })
     : [];
 
 class Edit extends Component {
@@ -40,13 +40,12 @@ class Edit extends Component {
   };
 
   onUserSelectedComplete = result => {
-    const { id, changeFormData } = this.props;
-    console.debug(result);
-    console.debug('onUserSelectedComplete', this.props);
+    const { sagaKey, changeFormData } = this.props;
+
     if (result.length > 0) {
-      changeFormData(id, 'APPROVER_ID', result[0].USER_ID);
-      changeFormData(id, 'APPROVER_NAME', result[0].NAME_KOR);
-      changeFormData(id, 'APPROVER_INFO', result);
+      changeFormData(sagaKey, 'APPROVER_ID', result[0].USER_ID);
+      changeFormData(sagaKey, 'APPROVER_NAME', result[0].NAME_KOR);
+      changeFormData(sagaKey, 'APPROVER_INFO', result);
     }
     result.length > 0 &&
       this.setState({
@@ -55,17 +54,16 @@ class Edit extends Component {
   };
 
   onChangeValue = (key, val) => {
-    console.debug(this.props);
-    const { id, changeFormData } = this.props;
-    changeFormData(id, key, val);
+    const { sagaKey, changeFormData } = this.props;
+    changeFormData(sagaKey, key, val);
   };
 
   onSave = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey, submitHadnlerBySaga, formData } = this.props;
     const submitData = {
       PARAM: { formData },
     };
-    submitHadnlerBySaga(id, 'POST', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
+    submitHadnlerBySaga(sagaKey, 'POST', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
   };
 
   onSaveComplete = id => {
@@ -79,16 +77,16 @@ class Edit extends Component {
   };
 
   onCancel = () => {
-    const { id, removeStorageReduxState, changeFormData } = this.props;
-    removeStorageReduxState(id, 'formData');
-    changeFormData(id, 'actionType', 'I');
+    const { sagaKey, removeStorageReduxState, changeFormData } = this.props;
+    removeStorageReduxState(sagaKey, 'formData');
+    changeFormData(sagaKey, 'actionType', 'I');
+    this.setState({ isOpenModal: false });
   };
 
   render() {
     const { id, result, formData, actionType } = this.props;
-    console.debug('edit props!!!! : ', this.props);
     return (
-      <Styled id="docApproverManageWrap">
+      <Styled id="docApproverManageWrap" style={{ backgroundColor: '#fff' }}>
         <Row className="editRow firstRow">
           <Col span={2} className="titleCol">
             분류
@@ -169,7 +167,7 @@ class Edit extends Component {
           </Col>
           <Col span={10}>
             <Input readOnly placeholder="select me" value={formData && formData.APPROVER_NAME} onClick={() => this.setState({ isOpenModal: true })} />
-            <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose>
+            <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
               <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onUserSelectedComplete}></UserSelect>
             </Modal>
           </Col>
