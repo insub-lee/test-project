@@ -259,8 +259,10 @@ export const getGroupMemberData = (ROLE_CD, ACNT_TYPE, ACNT_ID) => ({
   ACNT_ID,
 });
 
-export const getSearchResultData = (ROLE_CD, KEYWORD) => ({
+export const getSearchResultData = (ROLE_CD, ACNT_TYPE, ACNT_ID, KEYWORD) => ({
   type: actionType.GET_SEARCH_RESULT_DATA_SAGA,
   ROLE_CD,
+  ACNT_TYPE,
+  ACNT_ID,
   KEYWORD,
 });
