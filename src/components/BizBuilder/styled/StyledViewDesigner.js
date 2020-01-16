@@ -99,7 +99,7 @@ const StyledViewDesigner = styled.div`
             }
           }
           .view-designer-col .ant-textarea {
-            height: unset;
+            height: inherit;
           }
         }
       }
@@ -168,7 +168,7 @@ const StyledViewDesigner = styled.div`
           padding: 0px 10px;
         }
         .ant-textarea {
-          height: unset;
+          height: inherit;
         }
       }
     }
