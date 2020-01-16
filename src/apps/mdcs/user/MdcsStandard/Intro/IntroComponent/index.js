@@ -231,15 +231,40 @@ class IntroComponent extends Component {
 
     // 관련카테고리 Find하기
     const { docTemplateInfoByCategory } = result;
-    const selectedCategorys =
-      docTemplateInfoByCategory &&
-      docTemplateInfoByCategory.list &&
-      docTemplateInfoByCategory.list.filter(category => {
-        const fidx = aryNodeIds.findIndex(nodeId => nodeId === category.CATEGORYNODEID.toString());
-        return fidx !== -1;
+
+    console.debug('@@@', docTemplateInfoByCategory);
+    const list = docTemplateInfoByCategory ? docTemplateInfoByCategory.list || [] : [];
+
+    // filter selectedCategorys
+    const selectedCategorys = list
+      .filter(category => aryNodeIds.includes(category.CATEGORYNODEID.toString()))
+      .sort((a, b) => {
+        if (a.LVL > b.LVL) return -1;
+        if (a.LVL < b.LVL) return 1;
+        return 0;
       });
 
-    const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];
+    // list.some(category => {
+    //   const result = aryNodeIds.includes(category.CATEGORYFULLPATH.split('|').pop());
+    //   if (result) selectedCategorys
+    //   return result;
+    // });
+
+    // CATEGORYFULLPATH
+
+    // const selectedCategorys =
+    //   docTemplateInfoByCategory &&
+    //   docTemplateInfoByCategory.list &&
+    //   docTemplateInfoByCategory.list.filter(category => {
+    //     const fidx = aryNodeIds.findIndex(nodeId => nodeId === category.CATEGORYNODEID.toString());
+    //     return fidx !== -1;
+    //   });
+
+    const selectedCategory = selectedCategorys.shift();
+
+    // const selectedCategory = selectedCategorys && selectedCategorys.length > 0 && selectedCategorys[0];
+
+    console.debug('@@@@', aryNodeIds, selectedCategorys, selectedCategory);
 
     const { sagaKey: id, getCallDataHanlder, apiArys } = this.props;
 
