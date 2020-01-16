@@ -118,13 +118,14 @@ const StyledViewDesigner = styled.div`
         &.mdcsTitleCol {
           position: relative;
           background-color: #f1f1f1;
+          padding: 6px;
           > div {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
+            //position: absolute;
+            //top: 50%;
+            //transform: translateY(-50%);
             height: auto;
             min-height: auto;
-            left: 10px;
+            //left: 10px;
           }
         }
         &.mdcsContentsCol {
