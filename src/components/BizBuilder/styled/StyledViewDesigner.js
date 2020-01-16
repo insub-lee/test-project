@@ -118,6 +118,7 @@ const StyledViewDesigner = styled.div`
         &.mdcsTitleCol {
           position: relative;
           background-color: #f1f1f1;
+          background-clip: padding-box;
           padding: 6px;
           > div {
             //position: absolute;
