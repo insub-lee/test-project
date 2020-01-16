@@ -87,7 +87,7 @@ class StdInput extends Component {
       );
     }
     return '';
-  };
+  }
 }
 
 StdInput.propTypes = {
