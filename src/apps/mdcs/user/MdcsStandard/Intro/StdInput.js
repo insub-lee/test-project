@@ -75,7 +75,7 @@ class StdInput extends Component {
             {isWorkflowUsed && prcId !== -1 && <WorkProcess id={id} PRC_ID={prcId} processRule={processRule} setProcessRule={setProcessRule} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
                 Save
               </StyledButton>
               <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
