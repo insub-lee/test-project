@@ -257,31 +257,39 @@ class Search extends Component {
     const { nodeIds, status, docNumber, title, regUserName, regDeptName, startDate, endDate, scope, nodeId, lastVer } = searchParam;
     const { result, workSeq, searchType } = this.props;
     let treeData = [];
+    let searchTitle = '';
     if (result && result.categoryInfo && result.categoryInfo.categoryMapList && result.categoryInfo.categoryMapList.length > 0) {
       let rootOrdinal = '';
       let rootOrdinal2 = '';
       switch (searchType) {
         case 'BIZ':
           rootOrdinal = '000001000002';
+          searchTitle = '업무표준';
           break;
         case 'TECH':
           rootOrdinal = '000001000003';
+          searchTitle = '기술표준';
           break;
         case 'DW':
           rootOrdinal = '000001000003000002';
+          searchTitle = '도면';
           break;
         case 'NPI':
           rootOrdinal = '000001000005';
           rootOrdinal2 = '000001000006';
+          searchTitle = 'NPI';
           break;
         case 'TDS':
           rootOrdinal = '000001000004';
+          searchTitle = 'TDS';
           break;
         case 'WP':
           rootOrdinal = '000001000007';
+          searchTitle = 'Work Process';
           break;
         default:
           rootOrdinal = '000001000002';
+          searchTitle = '업무표준';
       }
       let flatData = [];
       if (searchType === 'NPI') {
@@ -307,7 +315,7 @@ class Search extends Component {
       <StyledSearch>
         <div className="searchPage searchDetail">
           <div className="searchWrapper">
-            <p className="searchTitle">업무표준 검색</p>
+            <p className="searchTitle">{`${searchTitle} 검색`}</p>
             <div className="treeWrapper tfWrapper">
               {treeData && <Tree showLine treeData={treeData} onSelect={(selectedKeys, info) => this.onChangeValue('nodeId', info.node.props.NODE_ID)} />}
             </div>
