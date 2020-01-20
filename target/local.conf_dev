@@ -1,0 +1,310 @@
+ server {
+    listen 80;
+    server_name dev.portal.com, dev.builder.com, magnachip.bizmicro.com;
+    client_max_body_size 1000M;
+
+    location ~ /eventbus/ {
+            proxy_pass              http://portal-sockjs;
+            proxy_http_version      1.1;
+            proxy_set_header       Upgrade $http_upgrade;
+            proxy_set_header       Connection "upgrade";
+    }
+
+    location ~ ^(/api/common/v1/auth) {
+            proxy_pass  http://portal-auth;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+
+            # Headers for client browser NOCACHE
+            #add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            #expires off;
+    }
+    location ~ ^(/oauth/) {
+            proxy_pass  http://portal-oauth;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+
+            # Headers for client browser NOCACHE
+            #add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            #expires off;
+    }
+    location ~ ^(/api/common/v1/account) {
+            proxy_pass  http://portal-account;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+     }
+
+    location ~ ^(/api/bizstore/v1/store) {
+            proxy_pass  http://portal-appstore;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/bizstore/v1/mypage) {
+            proxy_pass  http://portal-mypage;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/portal/v1/dock) {
+            proxy_pass  http://portal-dock;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/bizstore/v1/bizgroup) {
+            proxy_pass  http://portal-bizgroup;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/portal/v1/page) {
+            proxy_pass  http://portal-page;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/admin/v1/common) {
+            proxy_pass  http://portal-admin;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/common/v1/notify) {
+            proxy_pass  http://common-notify;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/bizstore/v1/appmanage) {
+            proxy_pass  http://portal-appmanage;
+            proxy_connect_timeout 60;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/builder/v1/work) {
+           proxy_pass  http://builder-common;
+           proxy_connect_timeout 60;
+           proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+           proxy_set_header     user_agent $http_user_agent;
+           proxy_set_header     referer $http_referer;
+           proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/workflow/v1/common) {
+           proxy_pass  http://workflow-common;
+           proxy_connect_timeout 60;
+           proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+           proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+           proxy_set_header     user_agent $http_user_agent;
+           proxy_set_header     referer $http_referer;
+           proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/manual/v1/) {
+            proxy_pass  http://manual-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+    location ~ ^(/api/mdcs/v1/common) {
+            proxy_pass  http://mdcs-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
+
+
+    location ~ ^/img/thumb/crop/(.*)/(.*)$ {
+        proxy_pass http://thumbor/unsafe/$1/http://http://192.168.251.14:40033/down/thumb/$2;
+        proxy_connect_timeout 60;
+        proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+        proxy_set_header     user_agent $http_user_agent;
+        proxy_set_header     referer $http_referer;
+        proxy_set_header     host $http_host;
+        proxy_set_header     ID $2;
+
+    }
+
+    location ~ ^/img/thumb/(.*)/(.*)$ {
+        proxy_pass http://thumbor/unsafe/fit-in/$1/filters:fill(auto)/http://http://192.168.251.14:40033/down/thumb/$2;
+        proxy_connect_timeout 60;
+        proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+        proxy_set_header     user_agent $http_user_agent;
+        proxy_set_header     referer $http_referer;
+        proxy_set_header     host $http_host;
+        proxy_set_header     ID $2;
+    }
+
+
+    location /upload {
+        if ($request_method = 'OPTIONS') {
+            add_header 'Access-Control-Allow-Origin' '*';
+            #add_header 'Access-Control-Allow-Credentials' 'true';
+            add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+            add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+            add_header 'Access-Control-Max-Age' 1728000;
+            add_header 'Content-Type' 'text/plain charset=UTF-8';
+            add_header 'Content-Length' 0;
+            return 204;
+        }
+        proxy_pass  http://portal-upload;
+        proxy_connect_timeout 60;
+        proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+        proxy_set_header     user_agent $http_user_agent;
+        proxy_set_header     referer $http_referer;
+        proxy_set_header     host $http_host;
+    }
+
+    location /down {
+        if ($request_method = 'OPTIONS') {
+        add_header 'Access-Control-Allow-Origin' '*';
+        #add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+        add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+        add_header 'Access-Control-Max-Age' 1728000;
+        add_header 'Content-Type' 'text/plain charset=UTF-8';
+        add_header 'Content-Length' 0;
+        return 204;
+        }
+        proxy_pass  http://portal-download;
+        proxy_connect_timeout 60;
+        proxy_set_header     X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+        proxy_set_header     user_agent $http_user_agent;
+        proxy_set_header     referer $http_referer;
+        proxy_set_header     host $http_host;
+    }
+
+
+    location / {
+            root  /usr/share/nginx/html;
+            index index.html index.htm;
+            try_files $uri $uri/ /index.html;
+
+            add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+            expires off;
+    }
+    error_page  404         = @notfound;
+    error_page  500 502 504 = @server_error;
+    error_page  503         = @maintenance;
+
+    location @notfound {
+            root  C:/Users/goodrhys/git/neo-intelligence-flow-ui/build;
+            try_files /404.html /../default/404.html =404;
+    }
+
+    location @server_error {
+            root  C:/Users/goodrhys/git/neo-intelligence-flow-ui/build;
+            try_files /500.html /../default/500.html =500;
+    }
+
+     location @maintenance {
+            root  C:/Users/goodrhys/git/neo-intelligence-flow-ui/build;
+            try_files /503.html /../default/503.html =503;
+    }
+
+}
+
+upstream portal-sockjs {
+    server http://192.168.251.14:10185;
+}
+upstream portal-auth {
+    server http://192.168.251.14:10187;
+}
+upstream portal-oauth {
+    server http://192.168.251.14:10189;
+}
+upstream portal-account {
+    server http://192.168.251.14:10186;
+}
+upstream portal-appstore {
+    server http://192.168.251.14:10190;
+}
+upstream portal-dock {
+    server http://192.168.251.14:10191;
+}
+upstream portal-mypage {
+    server http://192.168.251.14:10192;
+}
+upstream portal-bizgroup {
+    server http://192.168.251.14:10193;
+}
+upstream portal-page {
+    server http://192.168.251.14:10194;
+}
+upstream portal-admin {
+    server http://192.168.251.14:10205;
+}
+upstream common-notify {
+    server http://192.168.251.14:10195;
+}
+upstream portal-appmanage {
+    server http://192.168.251.14:10196;
+}
+upstream builder-common {
+    server http://192.168.251.14:10188;
+}
+upstream workflow-common {
+    server http://192.168.251.14:10189;
+}
+upstream mdcs-common {
+    server http://192.168.251.14:10190;
+}
+upstream manual-common {
+    server http://192.168.251.14:10500;
+}
+upstream portal-download {
+    server http://192.168.251.14:10200;
+}
+upstream portal-upload {
+    server http://192.168.251.14:10199;
+}
+upstream thumbor {
+    # hosts 파일에 등록 후 사용 192.168.251.14, 192.168.251.15, 192.168.251.16
+    server http://thumbor.magnachip.com;
+}
