@@ -30,7 +30,6 @@ import GuideApp from '../../guide/App/index';
 import Preview from '../../portal/Preview/index';
 import * as authSelectors from '../Auth/selectors';
 import { basicPath } from '../constants';
-
 import RestrictedRoute from './RestrictedRoute';
 // import Watermark from './Watermark';
 
@@ -142,7 +141,6 @@ class PublicRoutes extends Component {
       !checkPath(pathArray[1], portalPath) &&
       !checkPath(pathArray[1], portalSinglePath) &&
       !checkPath(pathArray[1], etcPath);
-
     console.debug('Path Array', isLoggedIn, pathArray, location, hasError);
 
     if (hasError) {

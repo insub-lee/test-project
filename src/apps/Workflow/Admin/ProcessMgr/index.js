@@ -7,6 +7,7 @@ import StyledModal from 'commonStyled/Modal/StyledModal';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import ProcessInput from './ProcessInput';
 import FlowChart from '../FlowChart';
+import Styled from './Styled';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModal(Modal);
@@ -23,7 +24,9 @@ class ProcessMgr extends Component {
   };
 
   componentDidMount() {
+    console.debug('@Hello');
     const { getCallDataHanlder, apiArray, id } = this.props;
+    console.debug('@@@', id, apiArray);
     getCallDataHanlder(id, apiArray);
   }
 
@@ -193,18 +196,21 @@ class ProcessMgr extends Component {
 
   render() {
     const { result } = this.props;
-    console.debug('index state!!', this.state);
+    console.debug('index state!!', this.state, this.props);
     const prcList = result && result.prcList && result.prcList.processList;
     return (
-      <div>
-        <div>프로세스 관리</div>
-        <div style={{ margin: '10px', textAlign: 'right' }}>
-          <StyledButton className="btn-primary" onClick={this.onInputClick}>
-            프로세스등록
-          </StyledButton>
+      <Styled>
+        <h3 className="pageTitle">프로세스 관리</h3>
+        <div className="searchBox">
+          <div className="searchWrapper" style={{ textAlign: 'right' }}>
+            <StyledButton className="btn-primary" onClick={this.onInputClick}>
+              프로세스등록
+            </StyledButton>
+          </div>
         </div>
-
-        <AntdTable dataSource={prcList} columns={this.columns} rowKey="PRC_ID"></AntdTable>
+        <div>
+          <AntdTable dataSource={prcList} columns={this.columns} rowKey="PRC_ID" />
+        </div>
         <AntdModal
           width="40%"
           style={{ height: '300px' }}
@@ -215,12 +221,7 @@ class ProcessMgr extends Component {
           destroyOnClose
           footer={null}
         >
-          <ProcessInput
-            processInfo={this.state}
-            onUpdateProcess={this.onUpdateProcess}
-            onSaveProcess={this.onSaveProcess}
-            onChangeValue={this.onChangeValue}
-          ></ProcessInput>
+          <ProcessInput processInfo={this.state} onUpdateProcess={this.onUpdateProcess} onSaveProcess={this.onSaveProcess} onChangeValue={this.onChangeValue} />
         </AntdModal>
         <AntdModal
           style={{ top: '50px' }}
@@ -233,9 +234,9 @@ class ProcessMgr extends Component {
           destroyOnClose
           footer={null}
         >
-          <FlowChart id="processMgr" onFlowChartSave={this.onFlowChartSave} result={result}></FlowChart>
+          <FlowChart id="processMgr" onFlowChartSave={this.onFlowChartSave} result={result} />
         </AntdModal>
-      </div>
+      </Styled>
     );
   }
 }
@@ -251,6 +252,6 @@ ProcessMgr.defaultProps = {
   ],
 };
 
-const ProcessMgrPageBase = () => <BizMicroDevBase id="processMgr" component={ProcessMgr}></BizMicroDevBase>;
+const ProcessMgrPageBase = () => <BizMicroDevBase id="processMgr" component={ProcessMgr} />;
 
 export default ProcessMgrPageBase;

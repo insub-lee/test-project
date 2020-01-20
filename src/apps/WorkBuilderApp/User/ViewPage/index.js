@@ -70,6 +70,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'work-builder-view-page', reducer });
 const withSaga = injectSaga({ key: 'work-builder-view-page', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withReducer, withSaga, withConnect)(WorkBuilderViewerPage);
+export default compose(
+  withReducer,
+  withSaga,
+  withConnect,
+)(WorkBuilderViewerPage);

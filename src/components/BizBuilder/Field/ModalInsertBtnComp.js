@@ -2,7 +2,7 @@ import React from 'react';
 
 import StyledButton from 'components/CommonStyled/StyledButton';
 
-const ModalInsertBtnComp = ({ id, saveTask, compProps, changeFormData, formData, visible }) =>
+const ModalInsertBtnComp = ({ sagaKey: id, saveTask, compProps, changeFormData, formData, visible }) =>
   visible ? (
     <StyledButton
       className="btn-primary"

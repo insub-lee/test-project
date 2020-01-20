@@ -1,20 +1,22 @@
 import * as actionTypes from './constants';
 
-export const getBuilderData = (id, workSeq, taskSeq, changeWorkflowFormData) => ({
+export const getBuilderData = (id, workSeq, taskSeq, viewType, changeWorkflowFormData) => ({
   type: `${actionTypes.GET_BUILDER_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
+  viewType,
   changeWorkflowFormData,
 });
 
-export const setBuilderData = (id, response, work, metaList, workFlow, formData, validationData) => ({
+export const setBuilderData = (id, response, work, metaList, workFlow, apiList, formData, validationData) => ({
   type: actionTypes.SET_BUILDER_DATA,
   id,
   response,
   work,
   metaList,
   workFlow,
+  apiList,
   formData,
   validationData,
 });
@@ -246,4 +248,10 @@ export const enableDataLoading = () => ({
 
 export const disableDataLoading = () => ({
   type: actionTypes.DISABLE_DATA_LOADING,
+});
+
+export const setListDataByReducer = (id, listData) => ({
+  type: actionTypes.SET_LIST_DATA_REDUCER,
+  id,
+  listData,
 });

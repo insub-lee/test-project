@@ -34,9 +34,9 @@ class appSetting extends Component {
   constructor(props) {
     super(props);
 
-    const { match } = props;
-    const { params } = match;
-    const { PAGE_ID, WIDGET_ID } = params;
+    // const { match } = props;
+    // const { params } = match;
+    // const { PAGE_ID, WIDGET_ID } = params;
 
     this.state = {
       show: false,
@@ -45,30 +45,54 @@ class appSetting extends Component {
       widgetSkin: 1,
       dispSize: '1X1',
       display: 1,
-      PAGE_ID: Number(PAGE_ID),
-      WIDGET_ID: Number(WIDGET_ID),
+      // PAGE_ID: Number(PAGE_ID),
+      // WIDGET_ID: Number(WIDGET_ID),
+      PAGE_ID: -1,
+      WIDGET_ID: -1,
       widgetSettingJsx: '',
     };
 
-    this.closeModal = this.closeModal.bind(this);
-    this.onChangeTitle = this.onChangeTitle.bind(this);
-    this.onKeyPressTitle = this.onKeyPressTitle.bind(this);
-    this.onBlurTitle = this.onBlurTitle.bind(this);
-    this.onChangeDispTitleYn = this.onChangeDispTitleYn.bind(this);
-    this.onChangeWidgetSkin = this.onChangeWidgetSkin.bind(this);
-    this.onChangeDispSize = this.onChangeDispSize.bind(this);
-    this.folding = this.folding.bind(this);
-    this.unfolding = this.unfolding.bind(this);
-    this.createComponents = this.createComponents.bind(this);
+    // this.props.getWidget(Number(WIDGET_ID));
+    // this.props.getWidgetList(Number(PAGE_ID));
+  }
 
-    this.props.getWidget(Number(WIDGET_ID));
-    this.props.getWidgetList(Number(PAGE_ID));
+  componentDidMount() {
+    console.debug('Hello ?');
+    const {
+      match: {
+        params: { PAGE_ID, WIDGET_ID },
+      },
+      getWidget,
+      getWidgetList,
+    } = this.props;
+    getWidget(Number(WIDGET_ID));
+    getWidgetList(Number(PAGE_ID));
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const {
+      match: {
+        params: { PAGE_ID: prevPageId, WIDGET_ID: prevWidgetId },
+      },
+      // getWidget,
+      // getWidgetList,
+    } = prevProps;
+    const {
+      match: {
+        params: { PAGE_ID, WIDGET_ID },
+      },
+      getWidget,
+      getWidgetList,
+    } = this.props;
+    console.debug('@ Component Did Update', prevPageId, PAGE_ID, prevWidgetId, WIDGET_ID);
   }
 
   componentWillReceiveProps(nextProps) {
     const { match, widget } = nextProps;
     const { params } = match;
     const { PAGE_ID, WIDGET_ID } = params;
+
+    console.debug('Hello Fuxxing World!');
 
     if (WIDGET_ID && this.state.WIDGET_ID !== Number(WIDGET_ID)) {
       this.setState({
@@ -111,51 +135,51 @@ class appSetting extends Component {
     }
   }
 
-  onChangeTitle(e) {
+  onChangeTitle = e => {
     this.setState({
       title: e.target.value,
     });
-  }
+  };
 
-  onKeyPressTitle(e) {
+  onKeyPressTitle = e => {
     if (e.key === 'Enter') {
       const data = { NAME: this.state.title };
       this.props.updateWidget(this.state.WIDGET_ID, data);
     }
-  }
+  };
 
-  onBlurTitle() {
+  onBlurTitle = () => {
     if (lang.get('NAME', this.props.widget) !== this.state.title) {
       const data = { NAME: this.state.title };
       this.props.updateWidget(this.state.WIDGET_ID, data);
     }
-  }
+  };
 
-  onChangeDispTitleYn(e) {
+  onChangeDispTitleYn = e => {
     this.setState({
       isTitle: e.target.value,
     });
     const data = { isTitle: e.target.value };
     this.props.updateWidget(this.state.WIDGET_ID, data);
-  }
+  };
 
-  onChangeWidgetSkin(e) {
+  onChangeWidgetSkin = e => {
     this.setState({
       widgetSkin: e.target.value,
     });
     const data = { skin: e.target.value };
     this.props.updateWidget(this.state.WIDGET_ID, data);
-  }
+  };
 
-  onChangeDispSize(e) {
+  onChangeDispSize = e => {
     this.setState({
       dispSize: e.target.value,
     });
     const data = { DISP_SIZE: e.target.value };
     this.props.updateWidget(this.state.WIDGET_ID, data);
-  }
+  };
 
-  closeModal() {
+  closeModal = () => {
     const preUrl = this.props.match.path.substr(0, this.props.match.path.indexOf('/widgetsetting'));
     this.props.history.push(`${preUrl}/page/${this.state.PAGE_ID}`);
 
@@ -165,17 +189,17 @@ class appSetting extends Component {
 
     // 조직도의 액션
     this.props.closeModalInit();
-  }
+  };
 
-  folding() {
+  folding = () => {
     this.setState({ display: 'none' });
-  }
+  };
 
-  unfolding() {
+  unfolding = () => {
     this.setState({ display: '' });
-  }
+  };
 
-  createComponents(item) {
+  createComponents = item => {
     let idx = '';
 
     if (item !== undefined) {
@@ -208,7 +232,7 @@ class appSetting extends Component {
       };
     }
 
-    if (this.props.widgetList.length > 0 && idx !== -1 && item === undefined) {
+    if (this.props.widgetList.length > 0 && idx > -1 && item === undefined) {
       if (this.props.widgetList[idx].basic.settingPath !== '') {
         settingPath = true;
 
@@ -236,7 +260,7 @@ class appSetting extends Component {
         )}
       </div>
     );
-  }
+  };
 
   render() {
     const {
@@ -250,6 +274,7 @@ class appSetting extends Component {
 
     const isPortal = path.toUpperCase().startsWith('/PORTAL');
     const isMenuFixed = menuFixedYn === 'Y' && isPortal;
+    console.debug('SETTTING!!!!!');
     return (
       <div className="settingsPage" style={{ width: '100vw', height: '100vh' }}>
         <StyleWidgetSetting isMenuFixed={isMenuFixed} isPortal={isPortal}>

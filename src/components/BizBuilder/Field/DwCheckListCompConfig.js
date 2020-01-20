@@ -12,7 +12,7 @@ class ComponentConfig extends Component {
 
   componentDidMount() {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
-    configInfo.property.mapId = [12, 13];
+    configInfo.property.mapId = [21, 22];
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   }
 
@@ -22,7 +22,7 @@ class ComponentConfig extends Component {
 }
 const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="DwCheckListCompConfig"
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}
     rowIndex={rowIndex}

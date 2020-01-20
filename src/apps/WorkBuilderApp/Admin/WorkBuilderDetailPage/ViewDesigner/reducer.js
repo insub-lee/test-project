@@ -114,7 +114,7 @@ const initialState = fromJS({
               ],
             },
           ],
-          hiddenField: [],
+          hiddenField :[],
         },
         bodyStyle: {
           width: '100%',
@@ -697,9 +697,16 @@ const addCompItem = (state, selectedComp, selectedKeys) => {
       let COMP_TYPE = 'FIELD';
       let COMP_FIELD = '';
       let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
-      if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG) && JSON.parse(COMP_CONFIG).info) {
+      let property = {
+        COMP_SRC,
+        COMP_SETTING_SRC,
+        layerIdx: { [layerIdxKey]: key },
+        compKey: `Comp_${getNewKey()}`,
+      };
+      if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
         const compConfig = JSON.parse(COMP_CONFIG);
-        info = { ...info, ...compConfig.info };
+        if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
+        if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
       }
       if (COL_GROUP_IDX === 9) {
         COMP_TYPE = 'LABEL';
@@ -720,12 +727,7 @@ const addCompItem = (state, selectedComp, selectedKeys) => {
         FIELD_TYPE: 'USER',
         CONFIG: {
           info,
-          property: {
-            COMP_SRC,
-            COMP_SETTING_SRC,
-            layerIdx: { [layerIdxKey]: key },
-            compKey: `Comp_${getNewKey()}`,
-          },
+          property,
           option: {},
         },
       });
@@ -789,6 +791,6 @@ const addHiddenComp = (state, compItem) => {
       .setIn(['compData', compDataIdx], fromJS(compItem));
   }
   return state;
-};
+}
 
 export default reducer;

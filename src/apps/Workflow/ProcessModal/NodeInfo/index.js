@@ -61,12 +61,12 @@ class NodeInfo extends Component {
           </Select>
         </Form.Item>
         <Form.Item label="승인자">
-          <>
+          <React.Fragment>
             <Input style={{ width: '70%' }} />
             <Button size="small" type="primary" style={{ right: '-10px' }}>
               선택
             </Button>
-          </>
+          </React.Fragment>
         </Form.Item>
         <Form.Item label="권한">
           <CheckboxGroup options={optionList} value={checkedList} onChange={this.authChange} />

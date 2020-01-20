@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import Loading from './Loading';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
-import Draft from './Workflow/User/Draft';
+import ApproveBase from './Workflow/User/ApproveBase';
 
 class AppsRouter extends React.PureComponent {
   constructor(props) {
@@ -22,13 +22,24 @@ class AppsRouter extends React.PureComponent {
     this.contents = this.getAppsRouter(selectedApp);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // REMOVE PORTAL MULTIPLE DIVS
-    // if (JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
-    if (nextProps.columns && JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
-      this.contents = this.getAppsRouter(nextProps.columns);
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { selectedApp: prevSelectedApp } = prevProps;
+    const { selectedApp } = this.props;
+    if (selectedApp && prevSelectedApp && JSON.stringify(selectedApp) !== JSON.stringify(prevSelectedApp)) {
+      console.debug('update ?');
+      this.forceUpdate();
+      this.contents = this.getAppsRouter(selectedApp);
     }
   }
+
+  // componentWillReceiveProps(nextProps) {
+  //   // REMOVE PORTAL MULTIPLE DIVS
+  //   // if (JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
+  //   // console.debug('@@@@', this.props, nextProps.columns);
+  //   if (nextProps.columns && JSON.stringify(this.props.columns) !== JSON.stringify(nextProps.columns)) {
+  //     this.contents = this.getAppsRouter(nextProps.columns);
+  //   }
+  // }
 
   getAppsRouter = selectedApp => {
     const type = 'swidget';
@@ -65,10 +76,10 @@ class AppsRouter extends React.PureComponent {
                 )}
               />
               <Route
-                path={`/${basicPath.APPS}/draft/:CATE`}
+                path={`/${basicPath.APPS}/Workflow/User/ApproveBase/:CATE`}
                 render={props => (
                   <ErrorBoundary>
-                    <Draft {...props} />
+                    <ApproveBase {...props} />
                   </ErrorBoundary>
                 )}
               />

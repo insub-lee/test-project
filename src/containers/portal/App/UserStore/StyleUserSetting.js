@@ -5,14 +5,16 @@ import menuIcon02 from 'images/portal/settings-menu02.png';
 import menuIcon02on from 'images/portal/settings-menu02-on.png';
 import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
-/* eslint-disable */
+import IconOut from 'images/common/icon-out.png';
+
 const StyleUserSetting = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  padding: 42px 0 45px 0;
+  //position: absolute;
+  //top: 0;
+  //left: 0;
+  //width: 100%;
+  //height: 100vh;
+  //padding: 42px 0 45px 0;
+  padding-top: 42px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
@@ -29,11 +31,23 @@ const StyleUserSetting = styled.div`
     }
     .pageHeaderWrapper {
       position: relative;
+
       & > div {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
         right: 20px;
+      }
+
+      .modalClose {
+        position: absolute;
+        top: 50%;
+        transform: translate3d(0, -50%, 0);
+        right: 10px;
+        width: 41px;
+        height: 55px;
+        border-color: transparent;
+        background: url(${IconOut}) no-repeat 50% 50%;
       }
     }
 
@@ -577,6 +591,9 @@ const StyleUserSetting = styled.div`
         }
       }
     }
+  }
+
+  .store-sider {
   }
 `;
 export default StyleUserSetting;

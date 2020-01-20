@@ -59,21 +59,9 @@ const Header = ({
               </Badge> */}
             </Trigger>
             <h1 className="siteHeader">
-              {siteId === 1183 ? (
-                <img
-                  src={HyundaiLogo}
-                  alt="Hyundai Moto"
-                  onClick={() => gotoHome('common')}
-                  onKeyDown={() => gotoHome('common')}
-                  role="button"
-                  tabIndex="0"
-                  style={{ display: 'inline-block', height: '100%' }}
-                />
-              ) : (
-                <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
-                  {view !== 'Mobile' && headerTitle}
-                </span>
-              )}
+              <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
+                {view !== 'Mobile' && headerTitle}
+              </span>
               <span> {appName} </span>
               {/* 담당자 popover */}
               {menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE' && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}

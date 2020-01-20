@@ -444,7 +444,7 @@ class AppSec extends Component {
                 {intlObj.get(messages.userProfile)}
               </Button>
             </li>
-            <li>
+            {/* <li>
               <Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'talk')} type="button" className="icon-talk">
                 {intlObj.get(messages.sendToCube)}
               </Button>
@@ -459,7 +459,7 @@ class AppSec extends Component {
                 {intlObj.get(messages.todoRegist)}
               </Button>
             </li>
-            {/* <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
+            <li><Button onClick={() => this.handleClickToMoveToSite(val.dependentValues, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
           </ul>
         </div>
       }
@@ -510,7 +510,7 @@ class AppSec extends Component {
                 {intlObj.get(messages.userProfile)}
               </Button>
             </li>
-            <li>
+            {/* <li>
               <Button
                 onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValues.CONF_USER_EMP_NO }, 'talk')}
                 type="button"
@@ -529,7 +529,7 @@ class AppSec extends Component {
                 {intlObj.get(messages.todoRegist)}
               </Button>
             </li>
-            {/* <li><Button onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValues.CONF_USER_EMP_NO }, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
+            <li><Button onClick={() => this.handleClickToMoveToSite({ EMP_NO: val.dependentValues.CONF_USER_EMP_NO }, 'hithanks')} type="button" className="icon-hithanks">{intlObj.get(messages.hyThanks)}</Button></li> */}
           </ul>
         </div>
       }
@@ -732,7 +732,7 @@ class AppSec extends Component {
             />
           </Modal>
         </StyleApp>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

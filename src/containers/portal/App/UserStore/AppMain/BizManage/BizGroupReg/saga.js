@@ -65,7 +65,7 @@ export function* updateBizGroup(payload) {
     message.success(`${intlObj.get(messages.successSave)}`);
 
     if (data.MENU_EXIST_YN === 'Y') {
-      history.push(`/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`);
+      history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${data.BIZGRP_ID}`);
     }
   }
 }

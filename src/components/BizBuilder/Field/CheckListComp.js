@@ -18,7 +18,7 @@ class CheckListComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
@@ -42,7 +42,7 @@ class CheckListComp extends Component {
     const { tempText, tempValue } = this.state;
     const {
       changeFormData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { isRequired },
       },
@@ -96,7 +96,7 @@ class CheckListComp extends Component {
       const keyList = mapId.map(x => `checkList_${x}`);
       if (keyList.filter(key => !!extraApiData[key]).length === keyList.length) {
         const dataSource = keyList.map(key => ({ groupName: extraApiData[key].categoryMapList[0].NAME_KOR, dataSet: extraApiData[key].categoryMapList }));
-        if (this.state.initFlag && colData && colData.trim()) {
+        if (this.state.initFlag && colData !== undefined) {
           keyList.find(x => {
             const selectedText = extraApiData[x].categoryMapList.find(y => y.NODE_ID.toString() === colData);
             this.setState({ selectedText: selectedText && selectedText.NAME_KOR });

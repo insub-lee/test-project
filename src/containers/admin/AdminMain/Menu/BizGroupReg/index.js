@@ -80,12 +80,12 @@ class BizGroupReg extends Component {
   constructor(props) {
     super(props);
 
-    const { match, getBizGroupInfo, loadingOn } = props;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
+    // const { match, getBizGroupInfo, loadingOn } = props;
+    // const { params } = match;
+    // const { BIZGRP_ID } = params;
     this.state = {
       data: {
-        BIZGRP_ID,
+        BIZGRP_ID: -1,
         NAME_KOR: '',
         NAME_ENG: '',
         NAME_CHN: '',
@@ -126,88 +126,175 @@ class BizGroupReg extends Component {
     this.onChangeData = this.onChangeData.bind(this);
     this.onFileUploadedIcon = this.onFileUploadedIcon.bind(this);
 
+    // getBizGroupInfo(Number(BIZGRP_ID));
+    // loadingOn();
+  }
+
+  componentDidMount() {
+    const { match, getBizGroupInfo, loadingOn } = this.props;
+    const { params } = match;
+    const { BIZGRP_ID } = params;
     getBizGroupInfo(Number(BIZGRP_ID));
     loadingOn();
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { match, dataP } = nextProps;
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { match, dataP } = this.props;
     const { params } = match;
     const { BIZGRP_ID } = params;
 
     const { data } = this.state;
 
-    if (BIZGRP_ID && Number(this.state.BIZGRP_ID) !== Number(BIZGRP_ID)) {
-      this.setState({
-        BIZGRP_ID: Number(BIZGRP_ID),
-      });
-      this.props.loadingOn();
-      this.props.getBizGroupInfo(Number(BIZGRP_ID));
-    }
+    if (BIZGRP_ID && Number(prevState.BIZGRP_ID) !== Number(BIZGRP_ID)) {
+      console.debug('WTF!!!!!!!');
+      this.setState(
+        {
+          BIZGRP_ID: Number(BIZGRP_ID),
+        },
+        () => {
+          this.props.loadingOn();
+          this.props.getBizGroupInfo(Number(BIZGRP_ID));
+        },
+      );
 
-    if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
-      let mData = { ...data, ...dataP };
-      if (dataP.I) {
-        // 관리자 권한
-        mData = {
-          ...mData,
-          I: {
-            users: getOrgData(mData[MANAGER], USER),
-            depts: getOrgData(mData[MANAGER], DEPT),
-            pstns: getOrgData(mData[MANAGER], PSTN),
-            dutys: getOrgData(mData[MANAGER], DUTY),
-            grps: getOrgData(mData[MANAGER], GRP),
-          },
-        };
-      }
-      if (dataP.V) {
-        // 조회 권한
-        mData = {
-          ...mData,
-          V: {
-            users: getOrgData(mData[VIEWAUTH], USER),
-            depts: getOrgData(mData[VIEWAUTH], DEPT),
-            pstns: getOrgData(mData[VIEWAUTH], PSTN),
-            dutys: getOrgData(mData[VIEWAUTH], DUTY),
-            grps: getOrgData(mData[VIEWAUTH], GRP),
-          },
-        };
-      }
-      if (dataP.catgPaths) {
-        // 카테고리
-        mData = {
-          ...mData,
-          CATG_NAME: lang.get('NAME', dataP.catgPaths),
-        };
-      }
-      if (dataP.ICON && dataP.ICON.trim() !== '') {
-        // 아이콘
-        const iconArr = [];
-        iconArr.push({ seq: dataP.ICON });
-        mData = {
-          ...mData,
-          UploadFilesIcon: iconArr,
-        };
-      }
+      if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
+        let mData = { ...data, ...dataP };
+        if (dataP.I) {
+          // 관리자 권한
+          mData = {
+            ...mData,
+            I: {
+              users: getOrgData(mData[MANAGER], USER),
+              depts: getOrgData(mData[MANAGER], DEPT),
+              pstns: getOrgData(mData[MANAGER], PSTN),
+              dutys: getOrgData(mData[MANAGER], DUTY),
+              grps: getOrgData(mData[MANAGER], GRP),
+            },
+          };
+        }
+        if (dataP.V) {
+          // 조회 권한
+          mData = {
+            ...mData,
+            V: {
+              users: getOrgData(mData[VIEWAUTH], USER),
+              depts: getOrgData(mData[VIEWAUTH], DEPT),
+              pstns: getOrgData(mData[VIEWAUTH], PSTN),
+              dutys: getOrgData(mData[VIEWAUTH], DUTY),
+              grps: getOrgData(mData[VIEWAUTH], GRP),
+            },
+          };
+        }
+        if (dataP.catgPaths) {
+          // 카테고리
+          mData = {
+            ...mData,
+            CATG_NAME: lang.get('NAME', dataP.catgPaths),
+          };
+        }
+        if (dataP.ICON && dataP.ICON.trim() !== '') {
+          // 아이콘
+          const iconArr = [];
+          iconArr.push({ seq: dataP.ICON });
+          mData = {
+            ...mData,
+            UploadFilesIcon: iconArr,
+          };
+        }
 
-      // 사용자 매뉴얼 초기값 초기값 설정
-      const { MANUAL_TYPE, MANUAL_PATH } = mData;
-      mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
-      const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
+        // 사용자 매뉴얼 초기값 초기값 설정
+        const { MANUAL_TYPE, MANUAL_PATH } = mData;
+        mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
+        const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
 
-      this.setState({
-        data: mData,
-        manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
-        manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
-      });
-      this.inputKor.focus();
+        this.setState({
+          data: mData,
+          manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
+          manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
+        });
+        this.inputKor.focus();
+      }
     }
   }
 
+  // componentWillReceiveProps(nextProps) {
+  // const { match, dataP } = nextProps;
+  // const { params } = match;
+  // const { BIZGRP_ID } = params;
+  //
+  // const { data } = this.state;
+  //
+  // if (BIZGRP_ID && Number(this.state.BIZGRP_ID) !== Number(BIZGRP_ID)) {
+  //   this.setState({
+  //     BIZGRP_ID: Number(BIZGRP_ID),
+  //   });
+  //   this.props.loadingOn();
+  //   this.props.getBizGroupInfo(Number(BIZGRP_ID));
+  // }
+  //
+  // if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
+  //   let mData = { ...data, ...dataP };
+  //   if (dataP.I) {
+  //     // 관리자 권한
+  //     mData = {
+  //       ...mData,
+  //       I: {
+  //         users: getOrgData(mData[MANAGER], USER),
+  //         depts: getOrgData(mData[MANAGER], DEPT),
+  //         pstns: getOrgData(mData[MANAGER], PSTN),
+  //         dutys: getOrgData(mData[MANAGER], DUTY),
+  //         grps: getOrgData(mData[MANAGER], GRP),
+  //       },
+  //     };
+  //   }
+  //   if (dataP.V) {
+  //     // 조회 권한
+  //     mData = {
+  //       ...mData,
+  //       V: {
+  //         users: getOrgData(mData[VIEWAUTH], USER),
+  //         depts: getOrgData(mData[VIEWAUTH], DEPT),
+  //         pstns: getOrgData(mData[VIEWAUTH], PSTN),
+  //         dutys: getOrgData(mData[VIEWAUTH], DUTY),
+  //         grps: getOrgData(mData[VIEWAUTH], GRP),
+  //       },
+  //     };
+  //   }
+  //   if (dataP.catgPaths) {
+  //     // 카테고리
+  //     mData = {
+  //       ...mData,
+  //       CATG_NAME: lang.get('NAME', dataP.catgPaths),
+  //     };
+  //   }
+  //   if (dataP.ICON && dataP.ICON.trim() !== '') {
+  //     // 아이콘
+  //     const iconArr = [];
+  //     iconArr.push({ seq: dataP.ICON });
+  //     mData = {
+  //       ...mData,
+  //       UploadFilesIcon: iconArr,
+  //     };
+  //   }
+  //
+  //   // 사용자 매뉴얼 초기값 초기값 설정
+  //   const { MANUAL_TYPE, MANUAL_PATH } = mData;
+  //   mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
+  //   const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
+  //
+  //   this.setState({
+  //     data: mData,
+  //     manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
+  //     manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
+  //   });
+  //   this.inputKor.focus();
+  // }
+  // }
+
   onChangeData(newData) {
-    this.setState({
-      data: { ...this.state.data, ...newData },
-    });
+    this.setState(prevState => ({
+      data: { ...prevState.data, ...newData },
+    }));
   }
 
   onFileUploadedIcon(file) {
@@ -260,41 +347,17 @@ class BizGroupReg extends Component {
     this.setState({ manualUrl: val.target.value });
   };
 
-  render() {
-    const { data, SEC_TYPE, manualUrl, manualLink } = this.state;
+  getOrgObj = () => {
+    const { data, orgShow, SEC_TYPE } = this.state;
+    if (orgShow) {
+      const oldUsers = data[SEC_TYPE].users || [];
+      const oldDepts = data[SEC_TYPE].depts || [];
+      const oldPstns = data[SEC_TYPE].pstns || [];
+      const oldDutys = data[SEC_TYPE].dutys || [];
+      const oldGrps = data[SEC_TYPE].grps || [];
 
-    const { dataP, updateBizGroup, history, userRole } = this.props;
-
-    const oldUsers = data[SEC_TYPE].users.length > 0 ? data[SEC_TYPE].users : [];
-    const oldDepts = data[SEC_TYPE].depts.length > 0 ? data[SEC_TYPE].depts : [];
-    const oldPstns = data[SEC_TYPE].pstns.length > 0 ? data[SEC_TYPE].pstns : [];
-    const oldDutys = data[SEC_TYPE].dutys.length > 0 ? data[SEC_TYPE].dutys : [];
-    const oldGrps = data[SEC_TYPE].grps.length > 0 ? data[SEC_TYPE].grps : [];
-
-    const pathArr = this.props.match.url.split('/');
-    const type = pathArr[3];
-
-    const imgClick = e => {
-      e.stopPropagation();
-    };
-
-    const returnGateId = (resultObj1, resultObj2) => {
-      this.onChangeData({
-        CATG_ID: resultObj1,
-        CATG_NAME: resultObj2,
-      });
-
-      if (resultObj1 > 0) {
-        this.setState({ CATG_ID_CHK: true });
-      } else {
-        this.setState({ CATG_ID_CHK: false });
-      }
-    };
-
-    let orgObj = '';
-    if (this.state.orgShow) {
       if (SEC_TYPE === MANAGER) {
-        orgObj = (
+        return (
           <OrganizationRole
             show={this.state.orgShow}
             closeModal={this.orgClose}
@@ -319,53 +382,80 @@ class BizGroupReg extends Component {
             ROLE_CD="BM"
           />
         );
-      } else {
-        orgObj = (
-          <Organization
-            show={this.state.orgShow}
-            closeModal={this.orgClose}
-            userTab
-            pstnTab
-            dutyTab
-            grpTab
-            /*
-              <부서/사용자 선택 중 옵션 flag>
-              onlyDept - 사용자 선택 제외한 부서만 선택
-              onlyUser - 부서 선택 제외한 사용자만 선택
-              selectSingleDept - 하나의(단일) 부서만 선택 가능
-              selectSingleUser - 하나의(단일) 사용자만 선택 가능
-            */
-            // onlyDept
-            // selectSingleDept
-            // onlyUser
-            // selectSingleUser
-            // 조직도 모달창으로 가져갈 데이터
-            selectedUsers={oldUsers.slice()}
-            checkedDept={oldDepts.slice()}
-            checkedPstn={oldPstns.slice()}
-            checkedDuty={oldDutys.slice()}
-            checkedGrp={oldGrps.slice()}
-            // 조직도 모달창으로부터 데이터 가져오는 함수
-            getDataFromOrganization={result => {
-              const mData = {
-                users: convertOrgData(result.selectedUsers, 'USER_ID', SEC_TYPE, USER),
-                pstns: convertOrgData(result.checkedPstn, 'id', SEC_TYPE, PSTN),
-                depts: convertOrgData(result.checkedDept, 'id', SEC_TYPE, DEPT),
-                dutys: convertOrgData(result.checkedDuty, 'id', SEC_TYPE, DUTY),
-                grps: convertOrgData(result.checkedGrp, 'id', SEC_TYPE, GRP),
-              };
-
-              this.onChangeData({ V: mData });
-            }}
-          />
-        );
       }
+      return (
+        <Organization
+          show={this.state.orgShow}
+          closeModal={this.orgClose}
+          userTab
+          pstnTab
+          dutyTab
+          grpTab
+          /*
+            <부서/사용자 선택 중 옵션 flag>
+            onlyDept - 사용자 선택 제외한 부서만 선택
+            onlyUser - 부서 선택 제외한 사용자만 선택
+            selectSingleDept - 하나의(단일) 부서만 선택 가능
+            selectSingleUser - 하나의(단일) 사용자만 선택 가능
+          */
+          // onlyDept
+          // selectSingleDept
+          // onlyUser
+          // selectSingleUser
+          // 조직도 모달창으로 가져갈 데이터
+          selectedUsers={oldUsers.slice()}
+          checkedDept={oldDepts.slice()}
+          checkedPstn={oldPstns.slice()}
+          checkedDuty={oldDutys.slice()}
+          checkedGrp={oldGrps.slice()}
+          // 조직도 모달창으로부터 데이터 가져오는 함수
+          getDataFromOrganization={result => {
+            const mData = {
+              users: convertOrgData(result.selectedUsers, 'USER_ID', SEC_TYPE, USER),
+              pstns: convertOrgData(result.checkedPstn, 'id', SEC_TYPE, PSTN),
+              depts: convertOrgData(result.checkedDept, 'id', SEC_TYPE, DEPT),
+              dutys: convertOrgData(result.checkedDuty, 'id', SEC_TYPE, DUTY),
+              grps: convertOrgData(result.checkedGrp, 'id', SEC_TYPE, GRP),
+            };
+
+            this.onChangeData({ V: mData });
+          }}
+        />
+      );
     }
+    return null;
+  };
+
+  returnGateId = (resultObj1, resultObj2) => {
+    this.onChangeData({
+      CATG_ID: resultObj1,
+      CATG_NAME: resultObj2,
+    });
+
+    this.setState({ CATG_ID_CHK: resultObj1 > 0 });
+  };
+
+  imgClick = e => {
+    e.stopPropagation();
+  };
+
+  render() {
+    const { data, manualUrl, manualLink } = this.state;
+
+    const { dataP, updateBizGroup, history } = this.props;
+
+    const pathArr = this.props.match.url.split('/');
+    const type = pathArr[3];
 
     return (
       <div>
-        {orgObj}
-        <MyAppCategoryModal show={this.state.MyAppCategoryModalShow} closeModal={this.MyAppCategoryModalClose} returnGateId={returnGateId} type="bizgroup" />
+        {this.getOrgObj()}
+        <MyAppCategoryModal
+          show={this.state.MyAppCategoryModalShow}
+          closeModal={this.MyAppCategoryModalClose}
+          returnGateId={this.returnGateId}
+          type="bizgroup"
+        />
         <StyleGroupReg>
           <Form>
             <h2 className="pageTitle">{data.MENU_EXIST_YN === 'Y' ? intlObj.get(messages.bizGroup) : intlObj.get(messages.bizFolder)} 등록정보 입력</h2>
@@ -381,7 +471,7 @@ class BizGroupReg extends Component {
                         <div style={{}}>
                           <Input
                             style={{}}
-                            maxLength="50"
+                            maxLength={50}
                             onChange={e => {
                               this.onChangeData({ NAME_KOR: replaceSpecialCharacter(e.target.value) });
                             }}
@@ -406,7 +496,7 @@ class BizGroupReg extends Component {
                         <textarea
                           row="5"
                           placeholder=""
-                          maxLength="1000"
+                          maxLength={1000}
                           onChange={e => {
                             this.onChangeData({ DSCR_KOR: e.target.value });
                           }}
@@ -424,7 +514,7 @@ class BizGroupReg extends Component {
                         <div style={{}}>
                           <Input
                             style={{}}
-                            maxLength="50"
+                            maxLength={50}
                             onChange={e => {
                               this.onChangeData({ NAME_ENG: replaceSpecialCharacter(e.target.value) });
                             }}
@@ -443,7 +533,7 @@ class BizGroupReg extends Component {
                         <textarea
                           row="5"
                           placeholder=""
-                          maxLength="1000"
+                          maxLength={1000}
                           onChange={e => {
                             this.onChangeData({ DSCR_ENG: e.target.value });
                           }}
@@ -461,7 +551,7 @@ class BizGroupReg extends Component {
                         <div style={{}}>
                           <Input
                             style={{}}
-                            maxLength="50"
+                            maxLength={50}
                             onChange={e => {
                               this.onChangeData({ NAME_CHN: replaceSpecialCharacter(e.target.value) });
                             }}
@@ -480,7 +570,7 @@ class BizGroupReg extends Component {
                         <textarea
                           row="5"
                           placeholder=""
-                          maxLength="1000"
+                          maxLength={1000}
                           onChange={e => {
                             this.onChangeData({ DSCR_CHN: e.target.value });
                           }}
@@ -508,16 +598,16 @@ class BizGroupReg extends Component {
                               <div className="readyToUpload" />
                             </div>
                             <div style={{ display: data.UploadFilesIcon.length > 0 ? 'block' : 'none' }}>
-                              <span onClick={imgClick} onKeyPress={imgClick} role="presentation" className="appShape">
+                              <span onClick={this.imgClick} onKeyPress={this.imgClick} role="presentation" className="appShape">
                                 {data.UploadFilesIcon.map(f => (
-                                  <img src={imgUrl.get('120x120', f.seq)} alt={f.fileName} />
+                                  <img key={f.seq} src={imgUrl.get('120x120', f.seq)} alt={f.fileName} />
                                 ))}
                               </span>
                             </div>
                           </div>
                         </Upload>
                         <div className="deleteIconWrapper" style={{ display: data.UploadFilesIcon.length > 0 ? 'block' : 'none' }}>
-                          <button className="deleteAppIcon" onClick={this.UploadFilesIconDel} title={intlObj.get(messages.appIconDel)} />
+                          <button type="button" className="deleteAppIcon" onClick={this.UploadFilesIconDel} title={intlObj.get(messages.appIconDel)} />
                         </div>
                       </section>
                     </td>
@@ -543,7 +633,7 @@ class BizGroupReg extends Component {
                               placeholder=""
                               title={intlObj.get(messages.webside)}
                               style={{ verticalAlign: 'middle' }}
-                              maxLength="1000"
+                              maxLength={1000}
                               onChange={this.onChangeUserManualUrl}
                               value={manualUrl}
                             />
@@ -736,7 +826,7 @@ class BizGroupReg extends Component {
                       </FormItem>
                     </td>
                   </tr>
-                  {data.LVL !== 1 ? (
+                  {data.LVL !== 1 && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupParentAuthYn)}</span>
@@ -748,44 +838,41 @@ class BizGroupReg extends Component {
                             onChange={arr => {
                               this.onChangeData({ INHERIT_YN: arr.includes('Y') ? 'Y' : 'N' });
                             }}
-                            value={data.INHERIT_YN}
+                            value={[data.INHERIT_YN]}
                           >
                             <Checkbox value="Y" />
                           </Checkbox.Group>
                         </FormItem>
                       </td>
                     </tr>
-                  ) : (
-                    ''
                   )}
-                  {data.LVL === 1 || data.PARENT_SYS_YN === 'Y' ? (
-                    <tr>
-                      <th className="top required">
-                        <span className="">{intlObj.get(messages.bizGroupSystem)}</span>
-                      </th>
-                      <td>
-                        <RadioGroup
-                          className="typeOptions"
-                          onChange={e => {
-                            this.onChangeData({ SYS_YN: e.target.value });
-                          }}
-                          value={data.SYS_YN === 'X' ? 'N' : data.SYS_YN}
-                        >
-                          <Radio value="Y" disabled>
-                            {intlObj.get(messages.yes)}
-                          </Radio>
-                          <Radio value="N" disabled style={{ width: 295 }}>
-                            {intlObj.get(messages.no)}
-                          </Radio>
-                          {/* <Radio value="Y" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'}>{intlObj.get(messages.yes)}</Radio>
+                  {data.LVL === 1 ||
+                    (data.PARENT_SYS_YN === 'Y' && (
+                      <tr>
+                        <th className="top required">
+                          <span className="">{intlObj.get(messages.bizGroupSystem)}</span>
+                        </th>
+                        <td>
+                          <RadioGroup
+                            className="typeOptions"
+                            onChange={e => {
+                              this.onChangeData({ SYS_YN: e.target.value });
+                            }}
+                            value={data.SYS_YN === 'X' ? 'N' : data.SYS_YN}
+                          >
+                            <Radio value="Y" disabled>
+                              {intlObj.get(messages.yes)}
+                            </Radio>
+                            <Radio value="N" disabled style={{ width: 295 }}>
+                              {intlObj.get(messages.no)}
+                            </Radio>
+                            {/* <Radio value="Y" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'}>{intlObj.get(messages.yes)}</Radio>
                           <Radio value="N" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'} style={{ width: 295 }}>{intlObj.get(messages.no)}</Radio> */}
-                        </RadioGroup>
-                      </td>
-                    </tr>
-                  ) : (
-                    ''
-                  )}
-                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' ? (
+                          </RadioGroup>
+                        </td>
+                      </tr>
+                    ))}
+                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupHomeYn)}</span>
@@ -805,22 +892,17 @@ class BizGroupReg extends Component {
                         </RadioGroup>
                       </td>
                     </tr>
-                  ) : (
-                    ''
                   )}
                 </tbody>
               </table>
             </div>
-            {data.SEC_YN === 'Y' || userRole === 'SA' ? (
+            {data.SEC_YN === 'Y' && (
               <div className="buttonWrapper">
-                {data.MENU_EXIST_YN === 'Y' ? (
+                {data.MENU_EXIST_YN === 'Y' && (
                   <Link to={`/admin/adminmain/${type}/bizMenuReg/info/${data.BIZGRP_ID}`}>
                     <LinkBtnLgtGray>{intlObj.get(messages.cancel)}</LinkBtnLgtGray>
                   </Link>
-                ) : (
-                  ''
                 )}
-
                 <StyledButton
                   type="button"
                   className="btn-primary"
@@ -861,8 +943,6 @@ class BizGroupReg extends Component {
                   {intlObj.get(messages.save)}
                 </StyledButton>
               </div>
-            ) : (
-              ''
             )}
           </Form>
         </StyleGroupReg>
@@ -880,7 +960,6 @@ BizGroupReg.propTypes = {
   history: PropTypes.object.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
-  userRole: PropTypes.string.isRequired,
 };
 
 BizGroupReg.defaultProps = {};
@@ -897,7 +976,6 @@ export function mapDispatchToProps(dispatch) {
 const mapStateToProps = createStructuredSelector({
   // 카테고리
   dataP: selectors.makeData(),
-  userRole: menuSelectors.makeUserRole(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

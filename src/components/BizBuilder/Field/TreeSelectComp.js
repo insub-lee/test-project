@@ -21,17 +21,20 @@ class TreeSelectComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
+      viewType,
+      colData,
     } = this.props;
     const apiArray = [{ key: `treeSelect_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    getExtraApiData(id, apiArray);
+    if (colData && colData.length > 0) getExtraApiData(id, apiArray);
+    else if (viewType !== 'VIEW') getExtraApiData(id, apiArray);
   }
 
   onChangeHandler = value => {
-    const { changeFormData, id, CONFIG, changeValidationData, COMP_FIELD, NAME_KOR } = this.props;
+    const { changeFormData, sagaKey: id, CONFIG, changeValidationData, COMP_FIELD, NAME_KOR } = this.props;
     const { isRequired } = CONFIG.property;
     if (isRequired) {
       changeValidationData(id, COMP_FIELD, value !== ' ', value !== ' ' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
@@ -43,7 +46,7 @@ class TreeSelectComp extends Component {
     const {
       CONFIG,
       CONFIG: {
-        property: { mapId, selectParent, placeholder, viewLang },
+        property: { mapId, selectableFlag, placeholder, viewLang },
       },
       colData,
       extraApiData,
@@ -56,7 +59,7 @@ class TreeSelectComp extends Component {
         apiData.categoryMapList &&
         getCategoryMapListAsTree(
           apiData.categoryMapList.filter(x => x.USE_YN === 'Y'),
-          selectParent,
+          selectableFlag,
           viewLang,
         )) ||
       [];
@@ -66,15 +69,16 @@ class TreeSelectComp extends Component {
         {colData !== undefined ? (
           <TreeSelect
             style={{ width: '100%' }}
-            value={colData === ' ' || colData === 0 ? undefined : colData}
+            value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
             dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
             treeData={categoryData.children}
             disabled={readOnly || CONFIG.property.readOnly}
             onChange={value => this.onChangeHandler(value)}
             placeholder={placeholder}
+            className={CONFIG.property.className || ''}
           />
         ) : (
-          <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect"></TreeSelect>
+          <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect" className={CONFIG.property.className || ''}></TreeSelect>
         )}
       </>
     ) : (

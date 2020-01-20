@@ -46,7 +46,7 @@ class ReadOnlyTextCompConfig extends Component {
 
 const SetReadOnlyTextCompConfig = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="ReadOnlyTextCompConfig"
     component={ReadOnlyTextCompConfig}
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}

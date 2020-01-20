@@ -31,12 +31,12 @@ class Designer extends Component {
     const { property, action, onDragEnd, onPreview, layers, closePreview, isLoading } = this.props;
     const { boxes, formStuffs } = layers;
     return (
-      <>
+      <React.Fragment>
         <WorkBuilder property={property} action={action} onDragEnd={onDragEnd} isLoading={isLoading} />
         <Modal title="Preview" visible={onPreview} footer={null} onCancel={closePreview}>
           <View boxes={boxes} formStuffs={formStuffs} preview />
         </Modal>
-      </>
+      </React.Fragment>
     );
   }
 }
@@ -203,6 +203,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'work-builder-detail-designer', reducer });
 const withSaga = injectSaga({ key: 'work-builder-detail-designer', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withReducer, withSaga, withConnect)(Designer);
+export default compose(
+  withReducer,
+  withSaga,
+  withConnect,
+)(Designer);

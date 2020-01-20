@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-// import 'antd/dist/antd.css';
+import 'antd/dist/antd.css';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -105,6 +105,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.Workflow.SignLienModal', reducer });
 const withSaga = injectSaga({ key: 'apps.Workflow.SignLienModal', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(SignLineModal);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(SignLineModal);

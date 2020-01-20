@@ -26,13 +26,14 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'isLoading'], true);
     }
     case actionTypes.SET_BUILDER_DATA: {
-      const { id, response, work, metaList, workFlow, formData, validationData } = action;
+      const { id, response, work, metaList, workFlow, apiList, formData, validationData } = action;
       if (formData && validationData) {
         return state
           .setIn(['bizBuilderBase', id, 'responseData'], fromJS(response))
           .setIn(['bizBuilderBase', id, 'workInfo'], fromJS(work))
           .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
           .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}))
+          .setIn(['bizBuilderBase', id, 'apiList'], fromJS(apiList || []))
           .setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}))
           .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData || {}))
           .setIn(['bizBuilderBase', id, 'isLoading'], false);
@@ -42,6 +43,7 @@ const reducer = (state = initialState, action) => {
         .setIn(['bizBuilderBase', id, 'workInfo'], fromJS(work))
         .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
         .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}))
+        .setIn(['bizBuilderBase', id, 'apiList'], fromJS(apiList || []))
         .setIn(['bizBuilderBase', id, 'isLoading'], false);
     }
     case actionTypes.SET_PROCESS_RULE: {
@@ -82,29 +84,6 @@ const reducer = (state = initialState, action) => {
     // }
     case actionTypes.CHANGE_FORMDATA: {
       const { id, key, val } = action;
-      const metaList = state.getIn(['bizBuilderBase', id, 'metaList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'metaList']).toJS() : [];
-      // let compTag = '';
-
-      // metaList
-      //   .filter(meta => meta.COMP_TYPE === 'FIELD')
-      //   .forEach(item => {
-      //     if (item.COMP_FIELD === key) {
-      //       compTag = item.COMP_TAG;
-      //     }
-      //   });
-
-      // if (compTag.toUpperCase().indexOf('EDITOR') > -1) {
-      //   const arr = state.getIn(['bizBuilderBase', id, 'formData', key]) !== undefined ? state.getIn(['bizBuilderBase', id, 'formData', key]).toJS() : [];
-      //   arr.forEach(item => {
-      //     if (item.FIELD_NM === key) {
-      //       item.DETAIL = val;
-      //     }
-      //   });
-      //   return state.setIn(['bizBuilderBase', id, 'formData', key], fromJS(arr));
-      // }
-      // if (compTag.toUpperCase().indexOf('ATTACH') > -1) {
-      //   return state.setIn(['bizBuilderBase', id, 'formData', key, 'DETAIL'], val);
-      // }
       return state.setIn(['bizBuilderBase', id, 'formData', key], val);
     }
     case actionTypes.SUCCESS_SAVE_TASK: {
@@ -117,19 +96,6 @@ const reducer = (state = initialState, action) => {
       metaList
         .filter(meta => meta.COMP_TYPE === 'FIELD')
         .forEach(item => {
-          // if (item.COMP_TAG.toUpperCase().indexOf('EDITOR') > -1 || item.COMP_TAG.toUpperCase().indexOf('ATTACH') || item.COMP_TAG === 'work-selector') {
-          //   formData[item.COMP_FIELD] = {
-          //     WORK_SEQ: workSeq,
-          //     TASK_SEQ: -1,
-          //     CONT_SEQ: -1,
-          //     FIELD_NM: item.COMP_FIELD,
-          //     TYPE: item.COMP_TAG,
-          //     DETAIL: [],
-          //   };
-          // } else {
-          //   formData[item.COMP_FIELD] = '';
-          // }
-
           let flag = true;
           let msg = '';
 
@@ -157,7 +123,8 @@ const reducer = (state = initialState, action) => {
         .deleteIn(['bizBuilderBase', id, 'metaList'])
         .deleteIn(['bizBuilderBase', id, 'workFlow'])
         .deleteIn(['bizBuilderBase', id, 'formData'])
-        .deleteIn(['bizBuilderBase', id, 'validationData']);
+        .deleteIn(['bizBuilderBase', id, 'validationData'])
+        .deleteIn(['bizBuilderBase', id, 'listData']);
     }
     case actionTypes.SET_REVISION_HISTORY: {
       const { id, list } = action;
@@ -187,6 +154,10 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.DISABLE_DATA_LOADING: {
       return state.set('dataLoading', false);
+    }
+    case actionTypes.SET_LIST_DATA_REDUCER: {
+      const { id, listData } = action;
+      return state.setIn(['bizBuilderBase', id, 'listData'], fromJS(listData));
     }
     default:
       return state;

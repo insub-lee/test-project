@@ -20,12 +20,12 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArys } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArys } = this.props;
     getCallDataHanlder(id, apiArys);
   }
 
   onSaveComplete = () => {
-    const { getCallDataHanlder, id, apiArys, removeStorageReduxState } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArys, removeStorageReduxState } = this.props;
     console.debug(this.props);
     getCallDataHanlder(id, apiArys);
     this.setState({
@@ -38,32 +38,32 @@ class List extends Component {
 
   onCompSave = () => {
     console.debug('onCompSave!!!!', this.props);
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
     const apiUrl = '/api/builder/v1/work/ComponentPool';
     submitHadnlerBySaga(id, 'POST', apiUrl, formData, this.onSaveComplete);
   };
 
   onViewSearch = record => {
-    const { id, setFormData } = this.props;
+    const { sagaKey: id, setFormData } = this.props;
     setFormData(id, record);
     this.setState({ detailVisible: true });
   };
 
   onModify = record => {
-    const { id, setFormData } = this.props;
+    const { sagaKey: id, setFormData } = this.props;
     setFormData(id, record);
     this.setState({ actionType: 'U', editVisible: true });
   };
 
   onModifySave = () => {
     console.debug('onCompSave!!!!', this.props);
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
     const apiUrl = '/api/builder/v1/work/ComponentPool';
     submitHadnlerBySaga(id, 'PUT', apiUrl, formData, this.onSaveComplete);
   };
 
   render() {
-    const { result, id, removeStorageReduxState } = this.props;
+    const { result, sagaKey: id, removeStorageReduxState } = this.props;
 
     const columns = [
       {
@@ -182,7 +182,7 @@ class List extends Component {
 
 List.propTypes = {
   getCallDataHanlder: PropTypes.func,
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   apiArys: PropTypes.array,
   result: PropTypes.object,
   setFormData: PropTypes.func,
@@ -191,7 +191,7 @@ List.propTypes = {
 };
 
 List.defaultProps = {
-  id: 'ComponentPool',
+  sagaKey: 'ComponentPool',
   apiArys: [
     {
       key: 'compPoolData',

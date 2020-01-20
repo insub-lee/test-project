@@ -17,15 +17,15 @@ class AppvView extends Component {
   }
 
   componentDidMount() {
-    const { id, draftId } = this.props;
+    const { sagaKey: id, draftId } = this.props;
     if (draftId !== -1) {
       this.props.getDraftProcess(id, draftId);
     }
   }
 
   render = () => {
-    const { id, viewLayer, loadingComplete, viewPageData, draftId } = this.props;
-    console.debug(draftId);
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, draftId } = this.props;
+
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -54,7 +54,7 @@ class AppvView extends Component {
 }
 
 AppvView.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string.isRequired,
   draftId: PropTypes.number,
   getDraftProcess: PropTypes.func,
   extraApiData: PropTypes.object,

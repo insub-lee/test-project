@@ -41,8 +41,8 @@ class SignLine extends Component {
       <StyledSignLine>
         <div className="signLineWrapper">
           {signline !== undefined && signline.length > 0 && (
-            <>
-              <Row gutter={0} type="flex" justify="end">
+            <React.Fragment>
+              <Row gutter={0} type="flex" justify="end" className="table-head">
                 {signline.map(item => (
                   <Col span={3} key={`prcHerder_${item.NODE_ID}_${item.USER_INFO.USER_ID}`}>
                     <div>
@@ -70,15 +70,17 @@ class SignLine extends Component {
                   </Col>
                 ))}
               </Row>
-            </>
+            </React.Fragment>
           )}
         </div>
-        <div>
+        <div className="dataWrapper">
           {filterItem.length > 0 &&
             filterItem.map(item => (
-              <Row key={`prcItem_${item.NODE_ID}`}>
-                <Col span={4}>{item.NODE_NAME_KOR}</Col>
-                <Col span={20}>
+              <Row key={`prcItem_${item.NODE_ID}`} type="flex">
+                <Col span={4} className="dataLabel">
+                  <span>{item.NODE_NAME_KOR}</span>
+                </Col>
+                <Col span={20} className="dataContents">
                   {item.APPV_MEMBER !== undefined ? (
                     <Input
                       value={item.APPV_MEMBER.map(user => (item.NODE_TYPE === 'ND' ? `${user.DEPT_NAME_KOR}` : `${user.NAME_KOR} ${user.PSTN_NAME_KOR}`))}
@@ -125,6 +127,13 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(SignLine);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(SignLine);

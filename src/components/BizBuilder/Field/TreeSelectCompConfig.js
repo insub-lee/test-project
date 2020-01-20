@@ -33,12 +33,12 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArray } = this.props;
     getCallDataHanlder(id, apiArray);
   }
 
   getCategorieMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHanlder, sagaKey: id } = this.props;
     const apiArray = [
       {
         key: `categoryMapInfo`,
@@ -163,7 +163,7 @@ class ComponentConfig extends Component {
 }
 const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="TreeSelectCompConfig"
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}
     rowIndex={rowIndex}

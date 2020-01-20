@@ -59,7 +59,7 @@ class DwStd extends Component {
   }
 
   callApi = apiArr => {
-    const { id, getCallDataHanlder } = this.props;
+    const { sagaKey: id, getCallDataHanlder } = this.props;
     getCallDataHanlder(id, apiArr);
   };
 
@@ -94,7 +94,7 @@ class DwStd extends Component {
       <>
         <FormItem label="도면구분">
           {dwTypeData && dwTypeData.length > 0 && (
-            <Select value={dwType.value} onSelect={value => onChangeValue('dwType', value)}>
+            <Select value={(dwType && dwType.value) || 0} onSelect={value => onChangeValue('dwType', value)}>
               <Option value={0}>--------</Option>
               {dwTypeData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_ENG}</Option>
@@ -104,7 +104,7 @@ class DwStd extends Component {
         </FormItem>
         <FormItem label="Product">
           {productData && productData.length > 0 && (
-            <Select value={product.value} onSelect={value => onChangeValue('product', value)}>
+            <Select value={(product && product.value) || 0} onSelect={value => onChangeValue('product', value)}>
               <Option value={0}>--------</Option>
               {productData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -114,7 +114,7 @@ class DwStd extends Component {
         </FormItem>
         <FormItem label="Pkg">
           {pkgData && pkgData.length > 0 && (
-            <Select value={pkg.value} onSelect={value => onChangeValue('pkg', value)}>
+            <Select value={(pkg && pkg.value) || 0} onSelect={value => onChangeValue('pkg', value)}>
               <Option value={0}>--------</Option>
               {pkgData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -124,7 +124,7 @@ class DwStd extends Component {
         </FormItem>
         <FormItem label="적용Line/Site">
           {fabData && fabData.length > 0 && (
-            <Select value={fab.value} onSelect={value => onChangeValue('fab', value)}>
+            <Select value={(fab && fab.value) || 0} onSelect={value => onChangeValue('fab', value)}>
               <Option value={0}>--------</Option>
               {fabData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -134,7 +134,7 @@ class DwStd extends Component {
         </FormItem>
         <FormItem label="적용 Lead">
           {leadData && leadData.length > 0 && (
-            <Select value={lead.value} onSelect={value => onChangeValue('lead', value)}>
+            <Select value={(lead && lead.value) || 0} onSelect={value => onChangeValue('lead', value)}>
               <Option value={0}>--------</Option>
               {leadData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
@@ -144,7 +144,7 @@ class DwStd extends Component {
         </FormItem>
         <FormItem label="적용 Ball">
           {ballData && ballData.length > 0 && (
-            <Select value={ball.value} onSelect={value => onChangeValue('ball', value)}>
+            <Select value={(ball && ball.value) || 0} onSelect={value => onChangeValue('ball', value)}>
               <Option value={0}>--------</Option>
               {ballData.map(node => (
                 <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>

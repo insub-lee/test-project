@@ -62,6 +62,13 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'work-builder-detail-table-designer', reducer });
 const withSaga = injectSaga({ key: 'work-builder-detail-table-designer', saga });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withReducer, withSaga, withConnect)(TableDesigner);
+export default compose(
+  withReducer,
+  withSaga,
+  withConnect,
+)(TableDesigner);

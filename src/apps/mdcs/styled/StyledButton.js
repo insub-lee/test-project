@@ -75,6 +75,10 @@ const StyledButton = styled.button`
   vertical-align: middle;
   transition: all 0.2s ease-in-out;
 
+  &:focus {
+    border: 1px solid transparent;
+  }
+
   &.btn-lg {
     ${btnLarge}
   }

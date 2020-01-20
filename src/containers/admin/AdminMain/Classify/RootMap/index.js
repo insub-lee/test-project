@@ -87,6 +87,13 @@ class RootMap extends Component {
         align: 'center',
       },
       {
+        title: 'MAPID',
+        dataIndex: 'MAP_ID',
+        key: 'MAP_ID',
+        width: '5%',
+        align: 'center',
+      },
+      {
         title: '분류명',
         dataIndex: 'NAME_KOR',
         key: 'NAME_KOR',

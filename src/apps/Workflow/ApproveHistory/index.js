@@ -85,6 +85,13 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(ApproveHistory);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(ApproveHistory);

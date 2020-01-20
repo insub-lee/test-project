@@ -12,7 +12,7 @@ function* getIflowUrl() {
   const uInfo = yield select(state => state.get('auth').get('profile'));
   let getIflowUrlArr = {};
 
-  if (uInfo.iflowUrl === 'http://125.141.68.18:12081') {
+  if (uInfo.iflowUrl === 'http://collabo.kb-sys.co.kr') {
     getIflowUrlArr = {
       iflowUrl: uInfo.iflowUrl,
       IFLOW_TOKEN: uInfo.IFLOW_TOKEN,
@@ -41,8 +41,8 @@ function* makeRequestHeader() {
 function* errorAxiosProcess(error) {
   const uInfo = yield select(state => state.get('auth').get('profile'));
   if (error.response.status === 401) {
-    if (uInfo.iflowUrl === 'http://125.141.68.18:12081') {
-      // window.location.href = `http://125.141.68.18:12081?initpage=${error.response.data.url}`;
+    if (uInfo.iflowUrl === 'http://collabo.kb-sys.co.kr') {
+      // window.location.href = `http://collabo.kb-sys.co.kr?initpage=${error.response.data.url}`;
     } else if (uInfo.iflowUrl === 'http://dev.board.com') {
       // window.location.href = `http://dev.board.com?initpage=${error.response.data.url}`;
     }

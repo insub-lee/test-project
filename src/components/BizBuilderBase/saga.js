@@ -11,18 +11,25 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, changeWorkflowFormData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
-  const response = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-  const { work, metaList, formData, validationData } = response;
+  const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
+  const { work, metaList, formData, validationData, apiList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
 
   if (taskSeq === -1) {
     // yield put(actions.initFormData(id, workSeq, formData));
-    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, formData, validationData));
+    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList, formData, validationData));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
   } else {
-    yield put(actions.setBuilderData(id, response, work, metaList, workFlow));
+    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
+  }
+  if (viewType === 'LIST') {
+    const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
+    if (responseList) {
+      const { list } = responseList;
+      yield put(actions.setListDataByReducer(id, list));
+    }
   }
 }
 
@@ -56,9 +63,11 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData
     const response = yield call(Axios.get, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.result;
   }
-  yield put(actions.setDetailData(id, formData));
-  if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
-  yield put(actions.getBuilderData(id, workSeq, taskSeq));
+  if (formData) {
+    yield put(actions.setDetailData(id, formData));
+    if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
+    yield put(actions.getBuilderData(id, workSeq, taskSeq));
+  }
   /* Disable Data Loading */
   yield put(actions.disableDataLoading());
 }
@@ -125,6 +134,8 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const processRule = yield select(selectors.makeSelectProcessRuleById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const extraApiList = yield select(selectors.makeSelectApiListById(id));
+
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
@@ -180,6 +191,16 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     { BUILDER: 'saveTaskComplete' },
   );
 
+  if (nextResponse && nextResponse.data) {
+    const { data: returnData } = nextResponse;
+    const keyset = Object.keys(formData);
+    if (keyset.length > 0) {
+      keyset.forEach(key => {
+        if (returnData[key]) formData[key] = returnData[key];
+      });
+    }
+  }
+
   const isTotalDataUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 3 && opt.ISUSED === 'Y') !== -1);
   if (isTotalDataUsed) {
     const totalDataResponse = yield call(
@@ -194,6 +215,24 @@ function* saveTask({ id, reloadId, callbackFunc }) {
       },
       { BUILDER: 'saveTotalData' },
     );
+  }
+
+  if (extraApiList.length > 0) {
+    for (let i = 0; i < extraApiList.length; i += 1) {
+      const item = extraApiList[i];
+      yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+    }
   }
 
   if (Object.keys(processRule).length !== 0) {
@@ -226,6 +265,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
   const formData = yield select(selectors.makeSelectFormDataById(id));
   const validationData = yield select(selectors.makeSelectValidationDataById(id));
   const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
+  const extraApiList = yield select(selectors.makeSelectApiListById(id));
   if (validationData) {
     const validKeyList = Object.keys(validationData);
     if (validKeyList && validKeyList.length > 0) {
@@ -264,6 +304,16 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     { BUILDER: 'modifyTaskComplete' },
   );
 
+  if (nextResponse && nextResponse.data) {
+    const { data: returnData } = nextResponse;
+    const keyset = Object.keys(formData);
+    if (keyset.length > 0) {
+      keyset.forEach(key => {
+        if (returnData[key]) formData[key] = returnData[key];
+      });
+    }
+  }
+
   const isTotalDataUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 3 && opt.ISUSED === 'Y') !== -1);
   if (isTotalDataUsed) {
     const totalDataResponse = yield call(
@@ -278,6 +328,24 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
       },
       { BUILDER: 'saveTotalData' },
     );
+  }
+
+  if (extraApiList.length > 0) {
+    for (let i = 0; i < extraApiList.length; i += 1) {
+      const item = extraApiList[i];
+      yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+    }
   }
 
   yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
@@ -356,25 +424,24 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-export default function* watcher() {
-  const arg = arguments[0];
-  yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.id}`, getBuilderData);
-  yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.id}`, getExtraApiData);
-  yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.id}`, getDetailData);
-  yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.id}`, getProcessRule);
-  yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.id}`, getTaskSeq);
+export default function* watcher(arg) {
+  yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
+  yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
+  yield takeEvery(`${actionTypes.GET_DETAIL_DATA}_${arg.sagaKey}`, getDetailData);
+  yield takeEvery(`${actionTypes.GET_PROCESS_RULE}_${arg.sagaKey}`, getProcessRule);
+  yield takeEvery(`${actionTypes.GET_TASK_SEQ}_${arg.sagaKey}`, getTaskSeq);
   // yield takeEvery(`${actionTypes.SAVE_TEMP_CONTENTS}_${arg.id}`, saveTempContents);
-  yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.id}`, tempSaveTask);
-  yield takeLatest(`${actionTypes.SAVE_TASK}_${arg.id}`, saveTask);
-  yield takeLatest(`${actionTypes.MODIFY_TASK}_${arg.id}`, modifyTask);
-  yield takeLatest(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.id}`, modifyTaskBySeq);
-  yield takeLatest(`${actionTypes.DELETE_TASK}_${arg.id}`, deleteTask);
-  yield takeLatest(`${actionTypes.DELETE_EXTRA_TASK}_${arg.id}`, deleteExtraTask);
-  yield takeLatest(`${actionTypes.DELETE_FAV}_${arg.id}`, deleteFav);
-  yield takeLatest(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.id}`, addNotifyBuilder);
-  yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.id}`, revisionTask);
-  yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.id}`, getRevisionHistory);
-  yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.id}`, getDraftProcess);
+  yield takeLatest(`${actionTypes.TEMP_SAVE_TASK}_${arg.sagaKey}`, tempSaveTask);
+  yield takeLatest(`${actionTypes.SAVE_TASK}_${arg.sagaKey}`, saveTask);
+  yield takeLatest(`${actionTypes.MODIFY_TASK}_${arg.sagaKey}`, modifyTask);
+  yield takeLatest(`${actionTypes.MODIFY_TASK_BY_SEQ}_${arg.sagaKey}`, modifyTaskBySeq);
+  yield takeLatest(`${actionTypes.DELETE_TASK}_${arg.sagaKey}`, deleteTask);
+  yield takeLatest(`${actionTypes.DELETE_EXTRA_TASK}_${arg.sagaKey}`, deleteExtraTask);
+  yield takeLatest(`${actionTypes.DELETE_FAV}_${arg.sagaKey}`, deleteFav);
+  yield takeLatest(`${actionTypes.ADD_NOTIFY_BUILDER}_${arg.sagaKey}`, addNotifyBuilder);
+  yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.sagaKey}`, revisionTask);
+  yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.sagaKey}`, getRevisionHistory);
+  yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.sagaKey}`, getDraftProcess);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

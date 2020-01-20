@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Radio } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 const customSet = [
   { compTitle: 'SPEC', modalTitle: '사내표준', searchApiType: 'spec', searchApiResultKey: 'specData' },

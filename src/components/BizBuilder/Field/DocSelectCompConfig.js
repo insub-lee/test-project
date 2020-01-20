@@ -44,7 +44,7 @@ class DocSelectCompConfig extends Component {
 }
 const SetDocSelectComp = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="DocSelectCompConfig"
     component={DocSelectCompConfig}
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}

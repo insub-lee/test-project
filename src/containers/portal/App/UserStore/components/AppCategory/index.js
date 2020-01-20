@@ -19,7 +19,7 @@ import messages from './messages';
 import StyledTabList from '../TabList/StyledTabList';
 
 class AppCategory extends Component {
-  componentWillMount() {
+  componentDidMount() {
     this.props.handleInitCategoryData();
   }
   /* eslint-disable */

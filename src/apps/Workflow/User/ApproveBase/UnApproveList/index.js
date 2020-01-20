@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 
 import ApproveView from '../ApproveView';
+import MdcsAppvView from '../MdcsAppvView';
 
 const AntdTable = StyledAntdTable(Table);
+const ModalWrapper = StyledModalWrapper(Modal);
 
 class UnApproveList extends Component {
   componentDidMount() {
@@ -68,9 +71,13 @@ class UnApproveList extends Component {
 
   render() {
     const { approveList, selectedRow } = this.props;
-
     return (
       <div>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+            <Icon type="form" /> 미결함
+          </p>
+        </div>
         <AntdTable
           columns={this.getTableColumns()}
           dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
@@ -79,7 +86,9 @@ class UnApproveList extends Component {
           })}
           bordered
         />
-        {Object.keys(selectedRow).length > 0 && <ApproveView {...this.props} />}
+        <ModalWrapper title="표준문서 결재" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+          <MdcsAppvView {...this.props} />
+        </ModalWrapper>
       </div>
     );
   }

@@ -5,7 +5,7 @@ class DocStatusLabel extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: { property },
     } = this.props;
     const mapId = property && property.mapId;

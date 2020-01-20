@@ -158,14 +158,14 @@ class OrgReturnView extends Component {
                   </Table.Row>
                 )}
                 {props.grpList.map((grp, index) => (
-                  <Table.Row key={grp.id} style={{ cursor: 'pointer' }}>
+                  <Table.Row key={grp.id || grp.ID} style={{ cursor: 'pointer' }}>
                     <Table.Cell textAlign="left">
                       <p style={{ marginLeft: 5 }} className="ellipsis">
                         {lang.get('NAME', grp)}
                       </p>
                     </Table.Cell>
                     <Table.Cell style={{ display: this.state.delFlag ? 'block' : 'none' }}>
-                      <button onClick={() => this.grpDel(index)} className="delete">
+                      <button type="button" onClick={() => this.grpDel(index)} className="delete">
                         {intlObj.get(messages.del)}
                       </button>
                     </Table.Cell>
