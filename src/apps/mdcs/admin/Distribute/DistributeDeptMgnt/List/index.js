@@ -107,6 +107,11 @@ class List extends Component {
 
       return (
         <div style={{ padding: '48px' }}>
+          <div style={{ marginBottom: '10px' }}>
+            <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+              <Icon type="form" /> 표준문서 템플릿관리
+            </p>
+          </div>
           <Modal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
             <UserSelect
               initUserList={this.state.selectedUserList}
@@ -116,7 +121,7 @@ class List extends Component {
               onUserSelectHandler={this.onUserSelect}
               onUserSelectedComplete={this.onUserSelectedComplete}
               onCancel={this.onCancel}
-            ></UserSelect>
+            />
           </Modal>
           <AntdTable columns={this.getTableColumns()} dataSource={list} pagination={false} bordered />
         </div>

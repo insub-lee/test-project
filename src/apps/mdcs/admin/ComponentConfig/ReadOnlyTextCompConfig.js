@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Radio } from 'antd';
 
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 
 const customSet = [
   { valueType: 'props', valueKey: 'docNumber' },

@@ -374,7 +374,7 @@ class BizMenuTree extends Component {
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
-                    history.push(`/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                    history.push(`/portal/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
                   }}
                 />
               ) : (
@@ -501,7 +501,7 @@ class BizMenuTree extends Component {
           <button
             onClick={() => {
               onClick({ key: -1 });
-              history.push(`/store/appMain/bizManage/bizMenuReg/info/${BIZGRP_ID}`);
+              history.push(`/portal/store/appMain/bizManage/bizMenuReg/info/${BIZGRP_ID}`);
             }}
             className="ellipsis"
             style={{ color: `${selectedIndex === -1 ? '#f85023' : 'inherit'}`, paddingLeft: 6 }}
@@ -535,7 +535,7 @@ class BizMenuTree extends Component {
               title="앱등록"
               onClick={() => {
                 saveData(rootRowInfo, this.state.treeData);
-                history.push(`/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                history.push(`/portal/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
               }}
             />
             <FolderBtn

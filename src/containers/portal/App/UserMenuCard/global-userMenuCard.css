@@ -402,15 +402,15 @@
 }
 
 /* Modal == Chrome에서 text가 흐리게 보이는 현상 해결 (비즈스토어, 어드민 위젯설정)*/
-.react-router-modal__modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  -webkit-transform: none;
-  transform: none;
-  border-radius: 0;
-  border: none;
-}
+/*.react-router-modal__modal {*/
+/*  position: fixed;*/
+/*  top: 0;*/
+/*  left: 0;*/
+/*  -webkit-transform: none;*/
+/*  transform: none;*/
+/*  border-radius: 0;*/
+/*  border: none;*/
+/*}*/
 
 /* 비즈스토어 My App 관리 > 카테고리 선택 */
 .popoverCtgTree.ant-popover-placement-bottom {

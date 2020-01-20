@@ -6,6 +6,10 @@ export const initCategoryData = () => ({
   type: constants.INIT_CATEGORY_DATA,
 });
 
+export const getMenuBizGrpID = () => ({
+  type: constants.GET_MENUBIZGRP_ID,
+});
+
 export const saveData = (tempRowInfo, categoryData) => ({
   type: constants.SAVE_DATA,
   tempRowInfo,
@@ -54,4 +58,9 @@ export const updateBizGroupDelYn = (rowInfo, categoryData, data) => ({
   rowInfo,
   categoryData,
   data,
+});
+
+export const getUserRole = history => ({
+  type: constants.GET_USER_ROLE,
+  history,
 });

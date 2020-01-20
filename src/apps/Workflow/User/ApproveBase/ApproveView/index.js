@@ -8,6 +8,7 @@ import StyledButton from 'components/CommonStyled/StyledButton';
 import OpinionModal from './OpinionModal';
 
 import AppvView from './appvView';
+
 import AppvActionComp from './appvActionComp';
 import HoldRelease from './holdRelease';
 
@@ -108,11 +109,11 @@ class ApproveView extends Component {
           visible={viewVisible}
           onOk={this.handleCloseModal}
           onCancel={this.handleCloseModal}
-          width="65%"
+          width="80%"
           footer={this.getButtons(category, selectedRow.STATUS, selectedRow.PROC_STATUS)}
         >
           <BizBuilderBase
-            id="approveBase_approveView"
+            sagaKey="approveBase_approveView"
             viewType="VIEW"
             CustomViewPage={AppvView}
             workSeq={selectedRow.WORK_SEQ}

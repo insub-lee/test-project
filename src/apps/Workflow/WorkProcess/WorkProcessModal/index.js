@@ -218,7 +218,7 @@ class WorkProcessModal extends Component {
         onOk={this.handleComplete}
         onCancel={this.handleCloseModal}
         width="55%"
-        style={{ top: 20 }}
+        style={{ top: 50 }}
         footer={[
           <StyledButton key="close" onClick={this.handleCloseModal}>
             취소
@@ -266,19 +266,17 @@ class WorkProcessModal extends Component {
               <div className="btnWrapper">
                 <ul>
                   {processStep.length > 0 &&
-                    processStep
-                      .filter(x => x.APPV_METHOD == 1)
-                      .map(item => {
-                        if (item.PARENT_PRC_RULE_ID !== 0 && item.NODE_TYPE !== 'NS') {
-                          return (
-                            <li key={`btn_${item.NODE_ID}`}>
-                              <StyledButton className="btn-gray btn_sm" onClick={() => this.handleAddUser(item.NODE_ID, item.NODE_TYPE)}>
-                                {`${item.NODE_NAME_KOR} >>`}
-                              </StyledButton>
-                            </li>
-                          );
-                        }
-                      })}
+                    processStep.filter(x => x.APPV_METHOD == 1).map(item => {
+                      if (item.PARENT_PRC_RULE_ID !== 0 && item.NODE_TYPE !== 'NS') {
+                        return (
+                          <li key={`btn_${item.NODE_ID}`}>
+                            <StyledButton className="btn-gray btn_sm" onClick={() => this.handleAddUser(item.NODE_ID, item.NODE_TYPE)}>
+                              {`${item.NODE_NAME_KOR} >>`}
+                            </StyledButton>
+                          </li>
+                        );
+                      }
+                    })}
                   {/* {processRule.DRAFT_RECEIVE !== undefined && (
                     <li>
                       <StyledButton
@@ -305,31 +303,29 @@ class WorkProcessModal extends Component {
             <Col span={10}>
               <div className="basicWrapper selectedWrapper">
                 {processStep.length > 0 &&
-                  processStep
-                    .filter(x => x.APPV_METHOD == 1)
-                    .map(item => {
-                      if (item.PARENT_PRC_RULE_ID !== 0 && item.NODE_TYPE !== 'NS') {
-                        return (
-                          <React.Fragment key={`node_${item.NODE_ID}`}>
-                            <h4>{item.NODE_NAME_KOR}</h4>
-                            <ul>
-                              {selDataList.map(user => {
-                                if (item.NODE_ID === user.NODE_ID) {
-                                  return (
-                                    <li>
-                                      <span>{item.NODE_TYPE === 'ND' ? `- ${user.DEPT_NAME_KOR}` : `- ${user.NAME_KOR} ${user.PSTN_NAME_KOR}`}</span>
-                                      <button type="button" onClick={() => this.handleDeleteSelectedUser(user, item.NODE_TYPE)}>
-                                        X
-                                      </button>
-                                    </li>
-                                  );
-                                }
-                              })}
-                            </ul>
-                          </React.Fragment>
-                        );
-                      }
-                    })}
+                  processStep.filter(x => x.APPV_METHOD == 1).map(item => {
+                    if (item.PARENT_PRC_RULE_ID !== 0 && item.NODE_TYPE !== 'NS') {
+                      return (
+                        <React.Fragment key={`node_${item.NODE_ID}`}>
+                          <h4>{item.NODE_NAME_KOR}</h4>
+                          <ul>
+                            {selDataList.map(user => {
+                              if (item.NODE_ID === user.NODE_ID) {
+                                return (
+                                  <li>
+                                    <span>{item.NODE_TYPE === 'ND' ? `- ${user.DEPT_NAME_KOR}` : `- ${user.NAME_KOR} ${user.PSTN_NAME_KOR}`}</span>
+                                    <button type="button" onClick={() => this.handleDeleteSelectedUser(user, item.NODE_TYPE)}>
+                                      {` X `}
+                                    </button>
+                                  </li>
+                                );
+                              }
+                            })}
+                          </ul>
+                        </React.Fragment>
+                      );
+                    }
+                  })}
                 {/* {processRule.DRAFT_RECEIVE !== undefined && (
                   <React.Fragment>
                     <h4>{processRule.DRAFT_RECEIVE.NODE_NAME_KOR}</h4>
@@ -417,6 +413,13 @@ const withSaga = injectSaga({
   key: 'apps.WorkFlow.WorkProcess.WorkProcessModal',
   saga,
 });
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+);
 
-export default compose(withSaga, withReducer, withConnect)(WorkProcessModal);
+export default compose(
+  withSaga,
+  withReducer,
+  withConnect,
+)(WorkProcessModal);

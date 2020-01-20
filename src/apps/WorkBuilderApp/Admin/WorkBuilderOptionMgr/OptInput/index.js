@@ -9,8 +9,7 @@ const AntdInput = StyledInput(Input);
 const { Option } = Select;
 class OptInput extends Component {
   render() {
-    const { id } = this.props;
-    console.debug(this.props);
+    const { sagaKey: id } = this.props;
     return (
       <TableWrapper>
         <div className="inner">

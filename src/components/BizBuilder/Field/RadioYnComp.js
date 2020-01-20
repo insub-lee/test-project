@@ -1,7 +1,7 @@
 import React from 'react';
 import { Radio } from 'antd';
 
-const RadioYnComp = ({ id, changeFormData, colData, readOnly, COMP_FIELD, visible }) =>
+const RadioYnComp = ({ sagaKey: id, changeFormData, colData, readOnly, COMP_FIELD, visible }) =>
   visible ? (
     <Radio.Group
       onChange={e => {

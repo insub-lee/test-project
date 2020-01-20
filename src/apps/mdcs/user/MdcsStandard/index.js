@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import { Select, Button, Modal } from 'antd';
 
-import BizMicroDevBase from '../../components/BizMicroDevBase';
-import BizBuilderBase from '../../components/BizBuilderBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
+import BizBuilderBase from 'components/BizBuilderBase';
 import DwDoc from './DwDoc';
 import PmDoc from './PmDoc';
 
@@ -124,10 +124,10 @@ class IntroComponent extends Component {
     console.debug(doctype);
     switch (doctype) {
       case 'PM': {
-        return <BizBuilderBase id={`${widgetId}_PmDoc`} workSeq={WORK_SEQ} component={PmDoc} viewType="INPUT" />;
+        return <BizBuilderBase sagaKey={`${widgetId}_PmDoc`} workSeq={WORK_SEQ} component={PmDoc} viewType="INPUT" />;
       }
       case 'DW': {
-        return <BizBuilderBase id={`${widgetId}_DwDoc`} workSeq={WORK_SEQ} component={DwDoc} viewType="INPUT" />;
+        return <BizBuilderBase sagaKey={`${widgetId}_DwDoc`} workSeq={WORK_SEQ} component={DwDoc} viewType="INPUT" />;
       }
       default:
         return false;
@@ -175,7 +175,7 @@ class IntroComponent extends Component {
             선택완료
           </Button>
         </div>
-        <Modal destroyOnClose style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()}>
+        <Modal destroyOnClose={true} style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()}>
           {this.onShowDocTemplate(this.state.selectedComponent && this.state.selectedComponent.CODE)}
         </Modal>
       </div>
@@ -226,7 +226,7 @@ IntroComponent.defaultProps = {
 
 class MdcsStandard extends Component {
   render() {
-    return <BizMicroDevBase id="mdcsIntro" component={IntroComponent} />;
+    return <BizMicroDevBase sagaKey="mdcsIntro" component={IntroComponent} />;
   }
 }
 

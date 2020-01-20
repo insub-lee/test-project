@@ -112,7 +112,7 @@ const makeSelectSiteId = () => createSelector(selectOrgRole, org => org.get('sit
 
 const makeSelectView = () => createSelector(selectCommon, viewState => viewState.view);
 
-const makeSelectGroupData = () => createSelector(selectOrgRole, selector => selector.get('groupData'));
+const makeSelectGroupData = () => createSelector(selectOrgRole, selector => selector.get('groupData').toJS());
 
 const makeSelectGroupMemberData = () => createSelector(selectOrgRole, selector => selector.get('groupMemberData'));
 

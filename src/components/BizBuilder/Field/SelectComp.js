@@ -8,7 +8,7 @@ class SelectComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
@@ -20,7 +20,7 @@ class SelectComp extends Component {
   onChangeHandler = value => {
     const {
       changeFormData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { isRequired },
       },
@@ -30,7 +30,7 @@ class SelectComp extends Component {
     } = this.props;
     if (isRequired) {
       // 기본값인지 체크
-      changeValidationData(id, COMP_FIELD, value !== ' ', value !== ' ' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+      changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
   };
@@ -51,7 +51,7 @@ class SelectComp extends Component {
       <>
         {colData !== undefined ? (
           <Select
-            value={colData === ' ' || colData === 0 ? undefined : Number(colData)}
+            value={colData.trim() === '' || colData === 0 ? undefined : Number(colData)}
             placeholder={placeholder}
             style={{ width: 300, marginRight: 10 }}
             onChange={value => {

@@ -19,7 +19,7 @@ class Edit extends Component {
   componentDidMount() {}
 
   changeGroupIdx = val => {
-    const { id, formData, changeFormData } = this.props;
+    const { sagaKey: id, formData, changeFormData } = this.props;
     console.debug(val);
     changeFormData(id, 'COL_GROUP_IDX', val);
     if (val === 3) {
@@ -34,7 +34,7 @@ class Edit extends Component {
   };
 
   render() {
-    const { result, id, formData } = this.props;
+    const { result, sagaKey: id, formData } = this.props;
     console.debug('props', this.props);
     return (
       <StyledPool>

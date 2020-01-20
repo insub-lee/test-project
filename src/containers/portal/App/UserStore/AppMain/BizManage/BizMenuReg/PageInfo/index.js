@@ -11,6 +11,7 @@ import injectSaga from 'utils/injectSaga';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppSelector from 'components/appSelector/index';
 import Page from 'containers/store/components/BizGroupPage';
+import * as bizSelectors from '../../selectors';
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';

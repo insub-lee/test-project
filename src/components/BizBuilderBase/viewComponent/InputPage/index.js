@@ -17,7 +17,7 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    const { id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
+    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
     const {
       info: { PRC_ID },
     } = workFlowConfig;
@@ -54,7 +54,7 @@ class InputPage extends Component {
   };
 
   render = () => {
-    const { id, viewLayer, workFlowConfig, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, workInfo } = this.props;
+    const { sagaKey: id, viewLayer, workFlowConfig, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, workInfo } = this.props;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 0) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -95,7 +95,7 @@ class InputPage extends Component {
 }
 
 InputPage.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
   viewLayer: PropTypes.array,

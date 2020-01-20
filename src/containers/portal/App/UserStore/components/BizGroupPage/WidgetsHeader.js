@@ -56,7 +56,7 @@ export default class WidgetsHeader extends PureComponent {
             <li style={functions.includes('settings') ? { display: 'block' } : { display: 'none' }}>
               <Link
                 className="setupWidget"
-                to={`/store/appMain/bizManage/bizMenuReg/widgetsetting/${item.BIZGRP_ID}/${item.PAGE_ID}/${item.id}`}
+                to={`/portal/store/appMain/bizManage/bizMenuReg/widgetsetting/${item.BIZGRP_ID}/${item.PAGE_ID}/${item.id}`}
                 title="위젯 설정"
               />
             </li>

@@ -28,14 +28,13 @@ class RadioCharComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
     } = this.props;
     const apiArray = [{ key: `radio_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
     getExtraApiData(id, apiArray);
-    console.log('라디오디드마운트');
   }
 
   onChangeHandler = (changeFormData, id, CONFIG, changeValidationData, value) => {
@@ -56,7 +55,7 @@ class RadioCharComp extends Component {
       },
       colData,
       changeFormData,
-      id,
+      sagaKey: id,
       changeValidationData,
       readOnly,
       extraApiData,

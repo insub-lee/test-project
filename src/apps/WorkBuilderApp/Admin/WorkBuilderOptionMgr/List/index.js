@@ -19,7 +19,7 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { id, getCallDataHanlder, apiArys, setFormData, initData } = this.props;
+    const { sagaKey: id, getCallDataHanlder, apiArys, setFormData, initData } = this.props;
     getCallDataHanlder(id, apiArys);
     setFormData(id, initData);
   }
@@ -32,7 +32,7 @@ class List extends Component {
   };
 
   onModalCancel = () => {
-    const { id, setFormData, initData } = this.props;
+    const { sagaKey: id, setFormData, initData } = this.props;
     this.setState({
       isRegModal: false,
     });
@@ -40,19 +40,18 @@ class List extends Component {
   };
 
   onOptSave = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
     const param = { PARAM: formData };
     submitHadnlerBySaga(id, 'POST', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
   };
 
   onOptUpdate = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
     const param = { PARAM: formData };
     submitHadnlerBySaga(id, 'PUT', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
   };
 
   onSaveComplete = id => {
-    console.debug('onsave');
     const { getCallDataHanlder, apiArys } = this.props;
     getCallDataHanlder(id, apiArys);
     this.setState({
@@ -62,7 +61,7 @@ class List extends Component {
   };
 
   onModify = record => {
-    const { id, setFormData } = this.props;
+    const { sagaKey: id, setFormData } = this.props;
     setFormData(id, record);
     this.setState({
       isRegModal: true,
@@ -121,7 +120,6 @@ class List extends Component {
   ];
 
   render() {
-    console.debug(this.props);
     const { result } = this.props;
     return (
       <div>
@@ -145,7 +143,7 @@ class List extends Component {
 
 List.propTypes = {
   getCallDataHanlder: PropTypes.func,
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   apiArys: PropTypes.array,
   result: PropTypes.object,
   setFormData: PropTypes.func,

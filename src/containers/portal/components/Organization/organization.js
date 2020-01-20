@@ -49,10 +49,10 @@ const customstyle = {
     transform: 'translate(-50%, -50%)',
   },
 };
+
 class Organization extends Component {
   constructor(props) {
     super(props);
-    console.log(props.orgName, 'constructor******');
     const {
       userTab,
       pstnTab,
@@ -223,6 +223,9 @@ class Organization extends Component {
       selectedGrpDept: undefined,
     };
     this.deptTreeElement = React.createRef();
+    this.pstnTreeElement = React.createRef();
+    this.dutyTreeElement = React.createRef();
+    this.grpTreeElement = React.createRef();
   }
 
   shouldComponentUpdate(nextProps) {
@@ -1401,9 +1404,12 @@ class Organization extends Component {
   loadSelectedDept = (dept, name) => {
     const {
       checkedDept,
+      tabType,
+      selected,
     } = this.state;
+    const isGrpTap = tabType[selected] === 'grp';
     // 상위 컴포넌트로부터 전달된 데이터와, 사용자가 선택한 데이터 중복 처리
-    if (checkedDept.findIndex((item) => item.id === dept.id) === -1) {
+    if (checkedDept.findIndex((item) => item.ID === dept.id) === -1) {
       const idx = deptList.findIndex(t => t.id === dept.id);
       if (deptList.length === 0) {
         deptList = this.state.checkedDept.slice();
@@ -1413,11 +1419,11 @@ class Organization extends Component {
           let obj = {
             id: dept.id,
             ID: dept.id,
-            NAME_KOR: dept.node.NAME_KOR,
-            NAME_ENG: dept.node.NAME_ENG,
-            NAME_CHN: dept.node.NAME_CHN,
-            NAME_JPN: dept.node.NAME_JPN,
-            NAME_ETC: dept.node.NAME_ETC,
+            NAME_KOR: isGrpTap ? dept.NAME_KOR : dept.node.NAME_KOR,
+            NAME_ENG: isGrpTap ? dept.NAME_ENG : dept.node.NAME_ENG,
+            NAME_CHN: isGrpTap ? dept.NAME_CHN : dept.node.NAME_CHN,
+            NAME_JPN: isGrpTap ? dept.NAME_JPN : dept.node.NAME_JPN,
+            NAME_ETC: isGrpTap ? dept.NAME_ETC : dept.node.NAME_ETC,
           };
           if (name !== undefined) {
             obj["deptName"] = name;

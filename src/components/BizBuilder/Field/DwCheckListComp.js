@@ -8,15 +8,37 @@ class DwCheckListComp extends Component {
     type: '',
   };
 
+  componentDidMount = () => {
+    const { isManage, formData, rowClass } = this.props;
+    if (!isManage && rowClass && formData.DOCNUMBER && formData.DOCNUMBER.substr(0, 4) === 'MBKH') {
+      const rowNode = document.querySelector(`.${rowClass}`);
+      rowNode.style.display = 'none';
+    }
+  };
+
+  componentDidUpdate = prevProps => {
+    const { isManage, formData, rowClass } = this.props;
+    const { formData: prevFormData } = prevProps;
+    if (formData.DOCNUMBER && prevFormData.DOCNUMBER && formData.DOCNUMBER !== prevFormData.DOCNUMBER) {
+      if (!isManage && rowClass && formData.DOCNUMBER.substr(0, 4) === 'MBKH') {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = 'none';
+      } else if (rowClass) {
+        const rowNode = document.querySelector(`.${rowClass}`);
+        rowNode.style.display = '';
+      }
+    }
+  };
+
   onOkHandler = () => {
-    const { changeFormData, id } = this.props;
+    const { changeFormData, sagaKey: id } = this.props;
     const { type } = this.state;
     changeFormData(id, 'LB_TYPE', type);
   };
 
   render() {
-    const { visible } = this.props;
-    return visible ? (
+    const { visible, isManage, formData } = this.props;
+    return isManage || (visible && formData.DOCNUMBER && formData.DOCNUMBER.substr(0, 4) !== 'MBKH') ? (
       <CheckListComp
         {...this.props}
         isCustom

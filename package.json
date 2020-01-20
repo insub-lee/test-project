@@ -112,7 +112,7 @@
     "prettier-eslint": "^9.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts --max-old-space-size=8192 start",
     "build": "react-scripts --max-old-space-size=8192 build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

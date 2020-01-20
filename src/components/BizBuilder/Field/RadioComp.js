@@ -3,20 +3,17 @@ import { Radio } from 'antd';
 import RadioGroup from 'components/RadioButton';
 
 const makeDataSource = apiData => {
-  const tempData = [];
-  apiData.categoryMapList
+  const { categoryMapList = [] } = apiData;
+  return categoryMapList
     .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
-    .map(item =>
-      tempData.push({
-        value: item.NODE_ID,
-        NAME_KOR: item.NAME_KOR,
-        NAME_ENG: item.NAME_ENG,
-        NAME_CHN: item.NAME_CHN,
-        NAME_JPN: item.NAME_JPN,
-        NAME_ETC: item.NAME_ETC,
-      }),
-    );
-  return tempData;
+    .map(item => ({
+      value: item.NODE_ID,
+      NAME_KOR: item.NAME_KOR,
+      NAME_ENG: item.NAME_ENG,
+      NAME_CHN: item.NAME_CHN,
+      NAME_JPN: item.NAME_JPN,
+      NAME_ETC: item.NAME_ETC,
+    }));
 };
 
 class RadioComp extends Component {
@@ -28,14 +25,15 @@ class RadioComp extends Component {
   componentDidMount() {
     const {
       getExtraApiData,
-      id,
+      sagaKey: id,
       CONFIG: {
         property: { mapId },
       },
     } = this.props;
-    const apiArray = [{ key: `radio_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    getExtraApiData(id, apiArray);
-    console.log('라디오디드마운트');
+    if (mapId) {
+      const apiArray = [{ key: `radio_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
+      getExtraApiData(id, apiArray);
+    }
   }
 
   onChangeHandler = (changeFormData, id, CONFIG, changeValidationData, value) => {
@@ -56,7 +54,7 @@ class RadioComp extends Component {
       },
       colData,
       changeFormData,
-      id,
+      sagaKey: id,
       changeValidationData,
       readOnly,
       extraApiData,

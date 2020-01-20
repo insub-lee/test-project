@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 class NodeIdComp extends Component {
   componentDidMount = () => {
-    const { id, COMP_FIELD, compProps, changeFormData } = this.props;
+    const { sagaKey: id, COMP_FIELD, compProps, changeFormData } = this.props;
     if (compProps && compProps.NODE_ID) {
       changeFormData(id, COMP_FIELD, compProps.NODE_ID);
     }

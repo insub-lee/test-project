@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
 
 import ApproveView from '../ApproveView';
+import HoldView from '../MdcsAppvView/holdview';
 
 const AntdTable = StyledAntdTable(Table);
-
+const ModalWrapper = StyledModalNofooterLine(Modal);
 class ApproveList extends Component {
-  componentDidMount() {
-    // const { category, getApproveList } = this.props;
-    // getApproveList({ searchType: category });
-  }
-
   getTableColumns = () => [
     {
       title: 'No',
@@ -77,6 +74,11 @@ class ApproveList extends Component {
 
     return (
       <div>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+            <Icon type="form" /> 기결함
+          </p>
+        </div>
         <AntdTable
           columns={this.getTableColumns()}
           dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
@@ -85,7 +87,9 @@ class ApproveList extends Component {
           })}
           bordered
         />
-        {Object.keys(selectedRow).length > 0 && <ApproveView {...this.props} />}
+        <ModalWrapper title="표준문서 기결함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
+          <HoldView {...this.props} />
+        </ModalWrapper>
       </div>
     );
   }

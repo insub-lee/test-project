@@ -174,4 +174,20 @@ export default defineMessages({
     id: 'store.AppMain.Myapp.cateDeleteFail2',
     defaultMessage: '카테고리 삭제에 실패했습니다.',
   },
+  userManual: {
+    id: 'store.AppMain.Myapp.userManual',
+    defaultMessage: '@사용자메뉴얼',
+  },
+  documentation: {
+    id: 'store.AppMain.Myapp.documentation',
+    defaultMessage: '@문서제공',
+  },
+  webside: {
+    id: 'store.AppMain.Myapp.webside',
+    defaultMessage: '@웹 화면 제공',
+  },
+  attachment: {
+    id: 'store.AppMain.Myapp.attachment',
+    defaultMessage: '@첨부',
+  },
 });

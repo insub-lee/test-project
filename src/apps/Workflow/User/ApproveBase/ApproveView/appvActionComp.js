@@ -15,7 +15,8 @@ class AppvActionComp extends Component {
 
   componentDidMount() {
     const { selectedRow, setSelectedRow, APPV_STATUS } = this.props;
-    const nSelectRow = { ...selectedRow, APPV_STATUS };
+    const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
+    const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
   }
 
@@ -66,10 +67,19 @@ class AppvActionComp extends Component {
   onApplyUSer = () => {
     const { selectedRow, setSelectedRow } = this.props;
     this.setState(
-      prevState => ({ nextApprover: prevState.selectedUser, selectedUser: undefined }),
+      prevState => ({
+        nextApprover: prevState.selectedUser,
+        selectedUser: undefined,
+      }),
       () => {
         const nRuleConfig = selectedRow.RULE_CONFIG;
-        const nSelectedRow = { ...selectedRow, RULE_CONFIG: { ...nRuleConfig, NEXT_APPV_USER_ID: this.state.nextApprover.value } };
+        const nSelectedRow = {
+          ...selectedRow,
+          RULE_CONFIG: {
+            ...nRuleConfig,
+            NEXT_APPV_USER_ID: this.state.nextApprover.value,
+          },
+        };
         console.debug('next', nSelectedRow);
         setSelectedRow(nSelectedRow);
       },
@@ -77,11 +87,12 @@ class AppvActionComp extends Component {
   };
 
   render() {
+    const { selectedRow } = this.props;
     return (
-      <>
-        <Radio.Group onChange={this.onChange} defaultValue={2}>
-          <Radio value={2}>승인</Radio>
-          <Radio value={3}>Hold</Radio>
+      <React.Fragment>
+        <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
+          <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
+          <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
           <Radio value={5}>실무자 검토의뢰</Radio>
           <Radio value={10}>실무자 결재 권한위임</Radio>
         </Radio.Group>
@@ -136,7 +147,7 @@ class AppvActionComp extends Component {
             </td>
           </tr>
         </table>
-      </>
+      </React.Fragment>
     );
   }
 }

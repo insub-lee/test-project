@@ -82,10 +82,7 @@ class BizDocListModify extends Component {
     // console.debug(this.props);
     console.error('this.props : ', this.props);
     const categoryData =
-      extraApiData &&
-      extraApiData.categoryMapInfo &&
-      extraApiData.categoryMapInfo.categoryMapList &&
-      getCategoryMapListAsTree(extraApiData.categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y')).length > 0
+      extraApiData && extraApiData.categoryMapInfo && extraApiData.categoryMapInfo.categoryMapList && getCategoryMapListAsTree(extraApiData.categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y')).length > 0
         ? getCategoryMapListAsTree(extraApiData.categoryMapInfo.categoryMapList.filter(x => x.USE_YN === 'Y'))[0]
         : [];
 

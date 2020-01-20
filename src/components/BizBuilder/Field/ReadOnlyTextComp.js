@@ -5,7 +5,7 @@ import { Input } from 'antd';
 // For Rev , DocNumber 전용 커스텀 Comp
 class ReadOnlyTextComp extends PureComponent {
   componentDidUpdate() {
-    const { colData, CONFIG, compProps, id, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD } = this.props;
+    const { colData, CONFIG, compProps, sagaKey: id, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD } = this.props;
     const { valueKey, valueType, defaultValue } = CONFIG.property;
     let initValue = ' ';
     if (colData) {

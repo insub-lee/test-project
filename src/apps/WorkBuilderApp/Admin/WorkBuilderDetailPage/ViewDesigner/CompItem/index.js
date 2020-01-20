@@ -119,7 +119,7 @@ class CompItem extends React.Component {
     nextConfig.property.COMP_SRC = value;
     nextConfig.property.COMP_SETTING_SRC = compPoolList[compIdx].COMP_SETTING_SRC;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
-  };
+  }
 
   renderCompConfig = (configType, configProps) => {
     const {

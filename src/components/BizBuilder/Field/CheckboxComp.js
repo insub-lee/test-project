@@ -12,7 +12,7 @@ class CheckboxComp extends PureComponent {
   }
 
   componentDidMount() {
-    const { id, CONFIG, getExtraApiData } = this.props;
+    const { sagaKey: id, CONFIG, getExtraApiData } = this.props;
     const { mapId } = CONFIG.property;
     const apiArray = [{ key: `checkBoxData_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
     getExtraApiData(id, apiArray);
@@ -170,7 +170,7 @@ class CheckboxComp extends PureComponent {
 
   // 체크박스 폼데이터 체인지
   formDataChange = value => {
-    const { id, CONFIG, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD } = this.props;
+    const { sagaKey: id, CONFIG, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD } = this.props;
     if (CONFIG.property.isRequired) {
       changeValidationData(id, COMP_FIELD, value.length > 0, value.length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
@@ -179,7 +179,7 @@ class CheckboxComp extends PureComponent {
 
   // 기타 인풋박스 폼데이터 체인지
   etcInputFormDataChange = (value, field) => {
-    const { changeFormData, id } = this.props;
+    const { changeFormData, sagaKey: id } = this.props;
     this.setState(
       {
         etcValue: value,
@@ -192,7 +192,7 @@ class CheckboxComp extends PureComponent {
 
   // 기타 (INPUT태그 사용시)
   etcInputTag = () => {
-    const { id, CONFIG, changeFormData, extraApiData } = this.props;
+    const { sagaKey: id, CONFIG, changeFormData, extraApiData } = this.props;
     const { etcIndex, returnType, etcField, valueKey, mapId } = CONFIG.property;
     const { checkValue, etcValue } = this.state;
 
@@ -248,12 +248,10 @@ class CheckboxComp extends PureComponent {
   };
 
   render() {
-    const { id, CONFIG, readOnly, extraApiData, changeFormData, formData, colData, visible } = this.props;
+    const { sagaKey: id, CONFIG, readOnly, extraApiData, changeFormData, formData, colData, visible } = this.props;
     const { etcIndex, mapId, etcField } = CONFIG.property;
     const { checkValue } = this.state;
     const { onChangeValue, etcInputTag, setInitState } = this;
-
-    console.debug('전체 프롭스', this.props);
 
     let view = false;
     if (readOnly !== undefined && readOnly) {

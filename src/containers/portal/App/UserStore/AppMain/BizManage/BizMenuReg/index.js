@@ -21,7 +21,7 @@ import saga from './saga';
 import AppBizModal from './AppBizModal';
 import BizMenuTree from '../../../components/BizMenuTree';
 
-import Footer from '../../../Footer';
+// import Footer from '../../../Footer';
 import BizInfo from './BizInfo';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
@@ -89,7 +89,7 @@ class BizMenuReg extends Component {
 
       if (NODE_TYPE !== 'F') {
         // 폴더 X
-        const preUrl = '/store/appMain/bizManage/bizMenuReg';
+        const preUrl = '/portal/store/appMain/bizManage/bizMenuReg';
 
         if (REF_TYPE === 'A' && APP_ID !== -1) {
           // [앱] 상세
@@ -126,6 +126,7 @@ class BizMenuReg extends Component {
               updateMymenuDisp={updateMymenuDisp}
               pageID={this.state.pageID}
               bizGroupInfo={bizGroupInfo}
+              match={match}
             />
           </ErrorBoundary>
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 200px)' }}>
@@ -168,14 +169,14 @@ class BizMenuReg extends Component {
                     <Route path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} exact />
                     <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
                     <Route path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
-                    {/* <Route
-                    path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`}
-                    component={props => (<PageInfo {...props} bizGroupInfo={bizGroupInfo} />)}
-                    exact
-                  /> */}
-
+                    {/*
+                    <Route
+                      path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`}
+                      component={props => (<PageInfo {...props} bizGroupInfo={bizGroupInfo} />)}
+                      exact
+                    />
+                    */}
                     <Route path={`${preUrl}/appSelect/${BIZGRP_ID}/modal`} component={AppBizModal} />
-
                     {/* <Route path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} /> */}
                   </Switch>
                 </ErrorBoundary>
@@ -183,7 +184,7 @@ class BizMenuReg extends Component {
             </ul>
           </StyleBizDetailContent>
         </StyleBizDetail>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     );
   }

@@ -16,8 +16,8 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { id, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry);
+    const { sagaKey, getCallDataHanlder, apiAry } = this.props;
+    getCallDataHanlder(sagaKey, apiAry);
   }
 
   onSaveComplete = id => {
@@ -73,7 +73,7 @@ class List extends Component {
   };
 
   onCategoryTreeChange = categoryNodeId => {
-    const { id, changeFormData, result } = this.props;
+    const { sagaKey, changeFormData, result } = this.props;
 
     const fidx =
       result.docCategoryTempListExtra &&
@@ -92,7 +92,7 @@ class List extends Component {
       {
         categoryNodeId,
       },
-      () => changeFormData(id, 'NODE_ID', categoryNodeId),
+      () => changeFormData(sagaKey, 'NODE_ID', categoryNodeId),
     );
   };
 
@@ -103,12 +103,12 @@ class List extends Component {
   };
 
   onDocTemplateTreeChange = docTemplateNodeId => {
-    const { id, changeFormData } = this.props;
+    const { sagaKey, changeFormData } = this.props;
     this.setState(
       {
         docTemplateNodeId,
       },
-      () => changeFormData(id, 'DOC_CODE', docTemplateNodeId),
+      () => changeFormData(sagaKey, 'DOC_CODE', docTemplateNodeId),
     );
   };
 
@@ -119,7 +119,7 @@ class List extends Component {
   };
 
   onSave = () => {
-    const { id, formData, submitHadnlerBySaga } = this.props;
+    const { sagaKey, formData, submitHadnlerBySaga } = this.props;
     const { NODE_ID, DOC_CODE } = formData;
 
     if (NODE_ID !== undefined && DOC_CODE !== '') {
@@ -130,7 +130,7 @@ class List extends Component {
           formData,
         },
       };
-      submitHadnlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
+      submitHadnlerBySaga(sagaKey, 'POST', apiUrl, submitData, this.onSaveComplete);
     } else {
       message.error('분류체계를 선택해주세요!!', 0.5);
     }
@@ -228,7 +228,7 @@ class List extends Component {
   };
 
   onEditEvent = rowItem => {
-    const { id, changeFormData } = this.props;
+    const { sagaKey, changeFormData } = this.props;
     this.setState(
       {
         actionType: 'U',
@@ -238,14 +238,14 @@ class List extends Component {
         docTemplateNodeFullPath: rowItem.DOCTEMPLATEFULLPATH.split('|'),
       },
       () => {
-        changeFormData(id, 'NODE_ID', rowItem.CATEGORYNODEID);
-        changeFormData(id, 'DOC_CODE', rowItem.DOCTEMPLATENODEID);
+        changeFormData(sagaKey, 'NODE_ID', rowItem.CATEGORYNODEID);
+        changeFormData(sagaKey, 'DOC_CODE', rowItem.DOCTEMPLATENODEID);
       },
     );
   };
 
   onUpdate = () => {
-    const { id, formData, submitHadnlerBySaga } = this.props;
+    const { sagaKey, formData, submitHadnlerBySaga } = this.props;
     const { NODE_ID, DOC_CODE } = formData;
     if (NODE_ID !== undefined && DOC_CODE !== '') {
       message.success('success!!', 0.5);
@@ -256,14 +256,14 @@ class List extends Component {
         },
       };
 
-      submitHadnlerBySaga(id, 'PUT', apiUrl, submitData, this.onSaveComplete);
+      submitHadnlerBySaga(sagaKey, 'PUT', apiUrl, submitData, this.onSaveComplete);
     } else {
       message.error('분류체계를 선택해주세요!!', 0.5);
     }
   };
 
   onDeleteEvent = rowitem => {
-    const { id, formData, submitHadnlerBySaga } = this.props;
+    const { sagaKey, formData, submitHadnlerBySaga } = this.props;
     const apiUrl = '/api/mdcs/v1/common/DocCategoryTemplDeleteHandler';
     const submitData = {
       PARAM: {
@@ -272,7 +272,7 @@ class List extends Component {
         },
       },
     };
-    submitHadnlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
+    submitHadnlerBySaga(sagaKey, 'POST', apiUrl, submitData, this.onSaveComplete);
   };
 
   render() {
@@ -304,7 +304,12 @@ class List extends Component {
     }
     console.debug('docCategoryTempListExtra', docCategoryTempListExtra);
     return (
-      <div style={{ padding: '10px', backgroundColor: 'white' }}>
+      <div style={{ padding: '48px', backgroundColor: 'white' }}>
+        <div style={{ marginBottom: '10px' }}>
+          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+            <Icon type="form" /> 표준문서 템플릿관리
+          </p>
+        </div>
         <div style={{ padding: '10px 0' }}>
           <TreeSelect
             name="code1"

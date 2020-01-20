@@ -124,7 +124,9 @@ class BizDetail extends Component {
             </ul>
           </StyleBizDetailContent>
         </StyleBizDetail>
+        {/*
         {preUrl.indexOf('myPage') > -1 ? '' : <Footer />}
+        */}
       </div>
     );
   }

@@ -35,6 +35,11 @@ const reducer = (state = initialState, action) => {
       const { id, key } = action;
       return state.removeIn(['bizMicroDevBase', id, 'formData', key]);
     }
+    case `${actionTypes.RESET_CALLED_DATA}_${action.id}`: {
+      const { id } = action;
+      // Reset listData...
+      return state.setIn(['bizMicroDevBase', id, 'responseData', 'listData'], fromJS({}));
+    }
     default:
       return state;
   }

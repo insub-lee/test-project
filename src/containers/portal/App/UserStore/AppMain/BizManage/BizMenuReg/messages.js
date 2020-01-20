@@ -65,4 +65,12 @@ export default defineMessages({
     id: 'store.AppMain.Mypage.completeDelete',
     defaultMessage: 'completeDelete',
   },
+  noManual: {
+    id: 'store.AppMain.AppDetail.noManual',
+    defaultMessage: '등록된 메뉴얼이 없습니다.',
+  },
+  userManual: {
+    id: 'store.AppMain.Myapp.userManual',
+    defaultMessage: '@사용자메뉴얼',
+  },
 });

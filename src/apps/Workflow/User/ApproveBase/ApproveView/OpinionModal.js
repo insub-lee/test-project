@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input } from 'antd';
+import { Input } from 'antd';
 
-import StyledButton from 'components/CommonStyled/StyledButton';
-
+import StyledTable from 'components/CommonStyled/StyledTable';
 const { TextArea } = Input;
 
 class OpinionModal extends Component {
@@ -19,13 +18,19 @@ class OpinionModal extends Component {
   };
 
   render() {
-    const { opinion, CustomActionView } = this.props;
     return (
-      <div>
-        {typeof CustomActionView === 'function' && <CustomActionView {...this.props} />}
-        <p>의견</p>
-        <TextArea rows={8} value={opinion} onChange={e => this.props.setOpinion(e.target.value)} />
-      </div>
+      <StyledTable style={{ padding: '5px' }}>
+        <table>
+          <tbody>
+            <tr>
+              <th>의견</th>
+              <td>
+                <TextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </StyledTable>
     );
   }
 }

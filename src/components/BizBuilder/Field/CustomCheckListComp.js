@@ -11,16 +11,16 @@ class CustomCheckListComp extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, id, apiArray, compGroupKeys } = this.props;
+    const { getExtraApiData, sagaKey: id, apiArray, compGroupKeys } = this.props;
     getExtraApiData(id, apiArray);
-    compGroupKeys.map(key => {
+    compGroupKeys.forEach(key => {
       this.state = { ...this.state, [key]: { name: '', value: ' ' } };
     });
   }
 
   onOpenHandler = () => {
     const { formData, extraApiData, compGroupKeys } = this.props;
-    compGroupKeys.map(key => {
+    compGroupKeys.forEach(key => {
       if (formData[key] !== ' ') {
         const compName = extraApiData[key].categoryMapList.filter(x => x.NODE_ID.toString() === formData[key]);
         this.setState({ [key]: { name: compName.length > 0 && compName[0].NAME_KOR, value: formData[key] } });
@@ -32,7 +32,7 @@ class CustomCheckListComp extends Component {
   };
 
   onOkHandler = () => {
-    const { compGroupKeys, changeFormData, id, COMP_FIELD, NAME_KOR, colData, changeValidationData } = this.props;
+    const { compGroupKeys, changeFormData, sagaKey: id, COMP_FIELD, NAME_KOR, colData, changeValidationData } = this.props;
 
     if (this.state.FAB.value === ' ') {
       message.warning(<MessageContent>적용Line/Site는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
@@ -42,7 +42,7 @@ class CustomCheckListComp extends Component {
       message.warning(<MessageContent>적용Product는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
       return;
     }
-    compGroupKeys.map(key => {
+    compGroupKeys.forEach(key => {
       changeFormData(id, key, this.state[key].value);
     });
     const nameScope = `SITE:${this.state.REGION.name} | FAB:${this.state.FAB.name} | Tech:${this.state.TECH.name} | Generation:${this.state.GEN.name} | Density:${this.state.DENSITY.name} | PKG Type:${this.state.PKG.name} | Product:${this.state.PRODUCT.name} |  Module:${this.state.MODULE.name} | Customer:${this.state.CUSTOMER.name} `;
@@ -52,9 +52,26 @@ class CustomCheckListComp extends Component {
   };
 
   onChangeHandler = (key, e) => {
-    const { value: selectedValue } = e.target;
-    const idx = e.nativeEvent.target.selectedIndex;
-    const { text: selectedText } = e.target[idx];
+    // Multiple = false일 경우 코드
+    // const { value: selectedValue } = e.target;
+    // const idx = e.nativeEvent.target.selectedIndex;
+    // const { text: selectedText } = e.target[idx];
+    // this.setState({ [key]: { name: selectedText, value: selectedValue } });
+
+    let selectedText = '';
+    let selectedValue = '';
+    const { selectedOptions } = e.target;
+
+    Array.from(selectedOptions).map((s, index) => {
+      if (index === 0) {
+        selectedText = s.text;
+        selectedValue = s.value;
+      } else {
+        selectedText += `, ${s.text}`;
+        selectedValue += `, ${s.value}`;
+      }
+      return '';
+    });
     this.setState({ [key]: { name: selectedText, value: selectedValue } });
   };
 
@@ -63,6 +80,7 @@ class CustomCheckListComp extends Component {
   };
 
   render() {
+    const { stateProps } = this.props;
     const {
       colData,
       readOnly,
@@ -123,7 +141,7 @@ class CustomCheckListComp extends Component {
     return visible ? (
       <>
         {colData === 'preView' ? (
-          <CheckList dataSource={this.props.dataSource} props={this.props.stateProps}></CheckList>
+          <CheckList isMultiple dataSource={this.props.dataSource} props={this.props.stateProps}></CheckList>
         ) : (
           <div>
             {colData}
@@ -135,7 +153,7 @@ class CustomCheckListComp extends Component {
               onCancel={() => this.setState({ openModal: false })}
               destroyOnClose
             >
-              <CheckList dataSource={dataSource} onClear={this.onClearHandler} onChange={this.onChangeHandler} props={this.state}></CheckList>
+              <CheckList isMultiple dataSource={dataSource} onClear={this.onClearHandler} onChange={this.onChangeHandler} props={this.state}></CheckList>
             </Modal>
             {!readOnly && <Button onClick={() => this.onOpenHandler()}>적용범위 선택</Button>}
           </div>
@@ -146,8 +164,6 @@ class CustomCheckListComp extends Component {
     );
   }
 }
-
-export default CustomCheckListComp;
 
 CustomCheckListComp.defaultProps = {
   CONFIG: { property: {} },
@@ -184,3 +200,5 @@ CustomCheckListComp.defaultProps = {
   extraApiData: {},
   compGroupKeys: ['REGION', 'FAB', 'PRODUCT', 'TECH', 'GEN', 'DENSITY', 'PKG', 'MODULE', 'CUSTOMER'],
 };
+
+export default CustomCheckListComp;

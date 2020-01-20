@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 const appDetailStyle = styled.div`
   width: 900px;
-  margin: 55px auto 0;
+  // margin: 55px auto 0;
+  margin: auto;
   padding: 20px;
   border: 1px solid #d1d2d3;
   background-color: #ffffff;

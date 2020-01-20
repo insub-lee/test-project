@@ -1,4 +1,4 @@
-const prefix = 'apps/Workflow/User/ApproveBase';
+const prefix = 'apps/WorkFlow/User/ApproveBase';
 export const GET_APPROVE_LIST = `${prefix}/GET_APPROVE_LIST`;
 export const SET_APPROVE_LIST = `${prefix}/SET_APPROVE_LIST`;
 export const SET_SELECTED_ROW = `${prefix}/SET_SELECTED_ROW`;

@@ -17,7 +17,7 @@ const inlineFormItemLayout = {
 
 class DetailForm extends React.Component {
   state = {
-    process: 'approval',
+    process: 'approve',
   };
 
   get item() {
@@ -169,8 +169,25 @@ class DetailForm extends React.Component {
 
   renderEdgeDetail = () => {
     const { form } = this.props;
-    const { process } = this.state;
-    const edgeName = process === 'approval' ? '승인' : '반려';
+    const { process } = this.item.getModel();
+    let edgeName = '';
+    switch (process) {
+      case 'approve': {
+        edgeName = '승인';
+        break;
+      }
+      case 'reject': {
+        edgeName = '반려';
+        break;
+      }
+      case 'review': {
+        edgeName = '검토';
+        break;
+      }
+      default:
+        break;
+    }
+    console.debug(process);
     return (
       <>
         <Item style={{ display: 'none' }} label="Label" {...inlineFormItemLayout}>
@@ -180,11 +197,12 @@ class DetailForm extends React.Component {
         </Item>
         <Item label="Process" {...inlineFormItemLayout}>
           {form.getFieldDecorator('process', {
-            initialValue: undefined,
+            initialValue: process,
           })(
-            <Select placeholder="선택" onChange={this.handleProcessSubmit}>
-              <Option value="approval">승인</Option>
+            <Select value={process} placeholder="선택" onChange={this.handleProcessSubmit}>
+              <Option value="approve">승인</Option>
               <Option value="reject">반려</Option>
+              <Option value="review">검토</Option>
             </Select>,
           )}
         </Item>

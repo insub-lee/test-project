@@ -97,7 +97,7 @@ class ComponentConfig extends Component {
 }
 const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
   <BizMicroDevBase
-    id="componentConfig"
+    sagaKey="CheckListCompConfig"
     changeViewCompData={changeViewCompData}
     groupIndex={groupIndex}
     rowIndex={rowIndex}

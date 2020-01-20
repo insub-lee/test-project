@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, Radio, Input, Icon, Tag, Select } from 'antd';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
-import BizMicroDevBase from 'apps/mdcs/components/BizMicroDevBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import StyledContent from '../../styled/Modals/StyledContent';
 
 class CheckboxConfig extends Component {
