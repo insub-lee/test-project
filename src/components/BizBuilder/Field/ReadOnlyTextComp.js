@@ -47,9 +47,13 @@ class ReadOnlyTextComp extends PureComponent {
     return visible ? (
       <>
         {colData === undefined ? (
-          <Input placeholder={(valueType === 'props' && '문서번호') || (valueType === 'default' && 'version')} readOnly />
+          <Input
+            placeholder={(valueType === 'props' && '문서번호') || (valueType === 'default' && 'version')}
+            readOnly
+            className={CONFIG.property.className || ''}
+          />
         ) : (
-          <Input value={initValue} readOnly />
+          <Input value={initValue} readOnly className={CONFIG.property.className || ''} />
         )}
       </>
     ) : (

@@ -284,7 +284,7 @@ class CheckboxComp extends PureComponent {
     }
 
     return visible ? (
-      <>
+      <div className={CONFIG.property.className || ''}>
         {checkboxData && checkboxData.length > 0 ? (
           checkboxData.map((item, index) => {
             if (typeof item === 'object') {
@@ -373,7 +373,7 @@ class CheckboxComp extends PureComponent {
             ></Input>
           </div>
         )}
-      </>
+      </div>
     ) : (
       ''
     );
@@ -381,7 +381,7 @@ class CheckboxComp extends PureComponent {
 }
 
 CheckboxComp.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   changeFormData: PropTypes.func,
   changeValidationData: PropTypes.func,
   CONFIG: PropTypes.object,
@@ -396,7 +396,7 @@ CheckboxComp.propTypes = {
 
 CheckboxComp.defaultProps = {
   readOnly: false,
-  id: 'checkbox_testComp',
+  sagaKey: 'checkbox_testComp',
   changeFormData: () => false,
   changeValidationData: () => false,
   getExtraApiData: () => false,

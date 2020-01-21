@@ -30,7 +30,7 @@ class TextareaComp extends React.Component {
     return visible ? (
       <TextArea
         id={`${sagaKey}_${COMP_FIELD}`}
-        className="ant-textarea"
+        className={`ant-textarea${CONFIG.property.className ? ` ${CONFIG.property.className}` : ''}`}
         defaultValue={colData || ''}
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e.target.value)}

@@ -87,6 +87,7 @@ const StyledAppvDesigner = styled.div`
           flex-grow: 1;
           padding: 1rem;
           position: relative;
+          width: 100%;
           .top-button-wrapper {
             /* position: absolute;
             top: 10px;

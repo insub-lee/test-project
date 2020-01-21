@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { Select } from 'antd';
+import LabelComp from './LabelComp';
 
 const { Option } = Select;
 
@@ -47,30 +48,48 @@ class SelectComp extends Component {
       visible,
     } = this.props;
     const apiData = extraApiData[`select_${mapId}`];
+
     return visible ? (
       <>
         {colData !== undefined ? (
-          <Select
-            value={colData.trim() === '' || colData === 0 ? undefined : Number(colData)}
-            placeholder={placeholder}
-            style={{ width: 300, marginRight: 10 }}
-            onChange={value => {
-              this.onChangeHandler(value);
-            }}
-            disabled={readOnly || CONFIG.property.readOnly}
-          >
-            {apiData &&
-              apiData.categoryMapList &&
-              apiData.categoryMapList
-                .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
-                .map(item => (
-                  <Option key={`selectMap_${item.NODE_ID}`} value={item.NODE_ID}>
-                    {item.NAME_KOR}
-                  </Option>
-                ))}
-          </Select>
+          <>
+            {readOnly || CONFIG.property.readOnly ? (
+              <>
+                {apiData &&
+                  apiData.categoryMapList &&
+                  apiData.categoryMapList
+                    .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
+                    .map(item => (
+                      <div key={`selectMap_${item.NODE_ID}`}>
+                        {colData === String(item.NODE_ID) ? <LabelComp NAME_KOR={item.NAME_KOR} visible={visible} CONFIG={CONFIG} /> : ''}
+                      </div>
+                    ))}
+              </>
+            ) : (
+              <Select
+                value={!colData || colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : Number(colData)}
+                placeholder={placeholder}
+                style={{ width: 300, marginRight: 10 }}
+                onChange={value => {
+                  this.onChangeHandler(value);
+                }}
+                disabled={readOnly || CONFIG.property.readOnly}
+                className={CONFIG.property.className || ''}
+              >
+                {apiData &&
+                  apiData.categoryMapList &&
+                  apiData.categoryMapList
+                    .filter(x => x.LVL > 0 && x.USE_YN === 'Y')
+                    .map(item => (
+                      <Option key={`selectMap_${item.NODE_ID}`} value={item.NODE_ID}>
+                        {item.NAME_KOR}
+                      </Option>
+                    ))}
+              </Select>
+            )}
+          </>
         ) : (
-          <Select value={undefined} placeholder="Select" style={{ width: '100%' }} />
+          <Select value={undefined} placeholder="Select" style={{ width: '100%' }} className={CONFIG.property.className || ''} />
         )}
       </>
     ) : (

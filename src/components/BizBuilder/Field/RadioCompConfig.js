@@ -34,12 +34,12 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArray } = this.props;
     getCallDataHanlder(id, apiArray);
   }
 
   getCategorieMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHanlder, sagaKey: id } = this.props;
     const apiArray = [{ key: `radioMapInfo${value}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' }];
     this.setState({ apiArray, rootMapValue: value, apiFlag: true });
     getCallDataHanlder(id, apiArray);
