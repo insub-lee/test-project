@@ -290,7 +290,7 @@ upstream builder-common {
     server 192.168.251.14:10188;
 }
 upstream workflow-common {
-    server 192.168.251.14:10197;
+    server 192.168.251.14:10184;
 }
 upstream mdcs-common {
     server 192.168.251.14:10198;
