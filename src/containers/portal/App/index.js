@@ -7,7 +7,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
 import { Route, Switch } from 'react-router-dom';
-import { Layout, Spin, Icon, Tooltip } from 'antd';
+import { Layout, Spin, Icon, Tooltip, Select } from 'antd';
 import Scrollbars from 'react-custom-scrollbars';
 import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
@@ -64,7 +64,20 @@ const desktopDockCss = {
 
 const routePaths = [`/${basicPath.PORTAL}/settings`, `/${basicPath.PORTAL}/store/appMain/bizManage`, `/${basicPath.PORTAL}/store`, `/${basicPath.PORTAL}/card`];
 
-class App extends React.PureComponent {
+const generatorObject = () => {
+  const number = Math.floor(Math.random() * 6) + 1;
+  const list = [];
+  for (let i = 0; i < number; i += 1) {
+    list.push({
+      key: i,
+      value: i,
+      text: `Hello Suprise Fuxxing Work ${number}`,
+    });
+  }
+  return list;
+};
+
+class App extends React.Component {
   constructor(props) {
     super(props, 'App/index');
 
@@ -391,12 +404,11 @@ class App extends React.PureComponent {
     }
   };
 
-  getLayoutMarginRight = () => {
+  getLayoutMarginRight = () =>
     // REMOVE DOCK - 주석 처리
     // const { dockFixedYn } = this.props;
     // return dockFixedYn === 'Y' ? 70 : 0;
-    return 0;
-  };
+    0;
 
   getLayoutMarginLeft = () => {
     // REMOVE DOCK - 주석 처리
@@ -536,8 +548,9 @@ class App extends React.PureComponent {
             )}
           </SideMenu>
           <Layout style={this.getLayoutStyle(isDesktop(view))}>
-            <StyledContainer>
-              <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200}>
+            <Content>
+              <StyledContainer>
+                {/* <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ height: '100vh' }}> */}
                 <AppWrapper style={{ width: '100%', backgroundColor: '#f7f8f9' }}>
                   <Fullscreen
                     enabled={this.state.isFullscreenEnabled}
@@ -662,8 +675,9 @@ class App extends React.PureComponent {
                     {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
                   </Rodal>
                 </AppWrapper>
-              </Scrollbars>
-            </StyledContainer>
+                {/* </Scrollbars> */}
+              </StyledContainer>
+            </Content>
           </Layout>
           {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
           {/* <UserDock
