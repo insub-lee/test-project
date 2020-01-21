@@ -37,7 +37,7 @@ class RadioPopupComp extends PureComponent {
 
   handleOnChange = e => {
     const { sagaKey: id, COMP_FIELD, changeFormData } = this.props;
-    e.target.value === 'Y' ? this.setState({ openModal: true }) : this.setState({ openModal: false });
+    this.setState({ openModal: e.target.value === 'Y' });
     return changeFormData(id, COMP_FIELD, e.target.value);
   };
 
@@ -65,17 +65,23 @@ class RadioPopupComp extends PureComponent {
     changeFormData(id, 'PLACE', ' ');
   };
 
-  handleAlertClose = () => {};
+  validationCheck = (divsion, place) => {
+    let msg = '';
+    if (!divsion.trim()) msg = 'Application Division을 선택해주십시오.';
+    else if (!place.trim()) msg = 'Registration Place를 선택해주십시오.';
+    if (msg) return message.warning(msg);
+    return this.setState({ openModal: false });
+  };
 
   render() {
-    const { visible, colData, formData, readOnly, isManage } = this.props;
+    const { visible, colData, formData, readOnly, isManage, CONFIG } = this.props;
 
     let view = false;
     if (readOnly !== undefined && readOnly) {
       view = readOnly;
     }
     return isManage || (visible && formData.DOCNUMBER && formData.DOCNUMBER.indexOf('ME') === 0) ? (
-      <div>
+      <div className={CONFIG.property.className || ''}>
         <div style={{ float: 'left', marginRight: '10px' }}>WDS / I-Foundry Registration</div>
         <div style={{ float: 'left' }}>
           <Radio.Group onChange={this.handleOnChange} value={colData !== ' ' ? colData : undefined} disabled={view}>
@@ -91,13 +97,7 @@ class RadioPopupComp extends PureComponent {
             visible={this.state.openModal}
             mask={false}
             destroyOnClose
-            onOk={() => {
-              let msg = '';
-              if (!formData.DIVISION.trim()) msg = 'Application Division를 선택해주십시오.';
-              else if (!formData.PLACE.trim()) msg = 'Registration Place를 선택해주십시오.';
-              if (msg) return message.warning(msg);
-              return this.setState({ openModal: false });
-            }}
+            onOk={() => this.validationCheck(formData.DIVISION, formData.PLACE)}
             onCancel={() => {
               this.setState({
                 openModal: false,

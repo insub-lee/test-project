@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const LabelVersion = ({ colData, visible }) => (visible ? <span>{colData}</span> : '');
+const LabelVersion = ({ colData, visible, CONFIG }) => (visible ? <span className={CONFIG.property.className || ''}>{colData}</span> : '');
 
 LabelVersion.propTypes = {
   colData: PropTypes.string,

@@ -14,7 +14,7 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray, changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    const { getCallDataHanlder, sagaKey: id, apiArray, changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     getCallDataHanlder(id, apiArray, this.initChkList);
     // configInfo.property.mapId = [];
     // changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);

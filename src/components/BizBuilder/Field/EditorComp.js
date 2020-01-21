@@ -57,6 +57,7 @@ class EditorComp extends Component {
         saveTempContents={(model, name) => changeFormData(id, name, setFormDataValue(model, colData, COMP_FIELD, COMP_TAG, WORK_SEQ))}
         config={froalaEditorConfig()}
         readOnly={readOnly}
+        className={CONFIG.property.className || ''}
       />
     ) : (
       ''

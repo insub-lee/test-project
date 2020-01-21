@@ -10,11 +10,11 @@ class DocNumberComp extends Component {
   }
 
   render() {
-    const { visible, compProps, formData } = this.props;
+    const { visible, compProps, formData, CONFIG } = this.props;
     if (formData && formData.DOCNUMBER && formData.DOCNUMBER.trim().length > 0) {
-      return visible ? <span>{formData.DOCNUMBER}</span> : '';
+      return visible ? <span className={CONFIG.property.className || ''}>{formData.DOCNUMBER}</span> : '';
     }
-    return visible ? <span>{compProps && compProps.docNumber}</span> : '';
+    return visible ? <span className={CONFIG.property.className || ''}>{compProps && compProps.docNumber}</span> : '';
   }
 }
 

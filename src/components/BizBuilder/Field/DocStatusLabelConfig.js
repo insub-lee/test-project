@@ -8,7 +8,7 @@ const { Option } = Select;
 
 class ComponentConfig extends Component {
   componentDidMount() {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHanlder, sagaKey: id } = this.props;
     const apiArray = [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }];
     getCallDataHanlder(id, apiArray);
   }
@@ -57,7 +57,7 @@ class ComponentConfig extends Component {
 }
 
 ComponentConfig.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   getCallDataHanlder: PropTypes.func,
   mapId: PropTypes.string,
   changeViewCompData: PropTypes.func,

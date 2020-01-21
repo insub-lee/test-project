@@ -27,6 +27,7 @@ class NumberComp extends React.Component {
         placeholder={CONFIG.property.placeholder}
         onChange={value => this.handleOnChange(value)}
         readOnly={readOnly || CONFIG.property.readOnly}
+        className={CONFIG.property.className || ''}
       />
     ) : (
       ''
@@ -40,7 +41,7 @@ NumberComp.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.any,
   changeFormData: PropTypes.any,
-  id: PropTypes.any,
+  sagaKey: PropTypes.any,
   changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
   compProp: PropTypes.any,

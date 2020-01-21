@@ -90,6 +90,7 @@ const StyledViewDesigner = styled.div`
           flex-grow: 1;
           padding: 1rem;
           position: relative;
+          width: 100%;
           .top-button-wrapper {
             /* position: absolute;
             top: 10px;
@@ -111,7 +112,6 @@ const StyledViewDesigner = styled.div`
       border: 1px solid #ddd;
       .view-designer-col {
         border: 0;
-        border: 0;
         font-size: 12px;
         color: rgb(0, 0, 0);
         /* padding: 5px 10px; */
@@ -121,12 +121,12 @@ const StyledViewDesigner = styled.div`
           background-clip: padding-box;
           padding: 6px;
           > div {
-            //position: absolute;
-            //top: 50%;
-            //transform: translateY(-50%);
+            /* position: absolute;
+            top: 50%;
+            transform: translateY(-50%); */
             height: auto;
             min-height: auto;
-            //left: 10px;
+            /* left: 10px; */
           }
         }
         &.mdcsContentsCol {

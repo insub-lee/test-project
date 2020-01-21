@@ -14,26 +14,39 @@ class CustomCheckListComp extends Component {
     const { getExtraApiData, sagaKey: id, apiArray, compGroupKeys } = this.props;
     getExtraApiData(id, apiArray);
     compGroupKeys.forEach(key => {
-      this.state = { ...this.state, [key]: { name: '', value: ' ' } };
+      this.state = { ...this.state, [key]: { name: ' ', value: ' ' } };
     });
   }
 
   onOpenHandler = () => {
     const { formData, extraApiData, compGroupKeys } = this.props;
     compGroupKeys.forEach(key => {
-      if (formData[key] !== ' ') {
-        const compName = extraApiData[key].categoryMapList.filter(x => x.NODE_ID.toString() === formData[key]);
-        this.setState({ [key]: { name: compName.length > 0 && compName[0].NAME_KOR, value: formData[key] } });
+      if (formData[key] === ' ' || formData[key] === undefined || formData[key] === '') {
+        this.setState({ [key]: { name: ' ', value: ' ' } });
       } else {
-        this.setState({ [key]: { name: '', value: ' ' } });
+        let formDataName = ' ';
+        extraApiData[key].categoryMapList.forEach(category => {
+          const formDataValue = formData[key]
+            .toString()
+            .replace(/, /gi, ',')
+            .split(',');
+          if (formDataValue.indexOf(String(category.NODE_ID)) >= 0) {
+            if (formDataName === ' ') {
+              formDataName = category.NAME_KOR;
+            } else {
+              formDataName += `, ${category.NAME_KOR}`;
+            }
+          }
+        });
+        this.setState({ [key]: { name: formDataName, value: formData[key] } });
       }
     });
     this.setState({ openModal: true });
   };
 
   onOkHandler = () => {
-    const { compGroupKeys, changeFormData, sagaKey: id, COMP_FIELD, NAME_KOR, colData, changeValidationData } = this.props;
-
+    const { compGroupKeys, changeFormData, sagaKey: id, COMP_FIELD, NAME_KOR, changeValidationData } = this.props;
+    let nameScope = '';
     if (this.state.FAB.value === ' ') {
       message.warning(<MessageContent>적용Line/Site는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
       return;
@@ -42,10 +55,15 @@ class CustomCheckListComp extends Component {
       message.warning(<MessageContent>적용Product는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
       return;
     }
-    compGroupKeys.forEach(key => {
+
+    compGroupKeys.forEach((key, index) => {
       changeFormData(id, key, this.state[key].value);
+      if (!index) {
+        nameScope = `${key}:${this.state[key].name} `;
+      } else {
+        nameScope += `| ${key}:${this.state[key].name}`;
+      }
     });
-    const nameScope = `SITE:${this.state.REGION.name} | FAB:${this.state.FAB.name} | Tech:${this.state.TECH.name} | Generation:${this.state.GEN.name} | Density:${this.state.DENSITY.name} | PKG Type:${this.state.PKG.name} | Product:${this.state.PRODUCT.name} |  Module:${this.state.MODULE.name} | Customer:${this.state.CUSTOMER.name} `;
     changeFormData(id, COMP_FIELD, nameScope);
     changeValidationData(id, COMP_FIELD, nameScope !== ' ', `${NAME_KOR}는 필수항목 입니다.`);
     this.setState({ openModal: false });
@@ -58,11 +76,10 @@ class CustomCheckListComp extends Component {
     // const { text: selectedText } = e.target[idx];
     // this.setState({ [key]: { name: selectedText, value: selectedValue } });
 
-    let selectedText = '';
-    let selectedValue = '';
+    let selectedText = ' ';
+    let selectedValue = ' ';
     const { selectedOptions } = e.target;
-
-    Array.from(selectedOptions).map((s, index) => {
+    Array.from(selectedOptions).forEach((s, index) => {
       if (index === 0) {
         selectedText = s.text;
         selectedValue = s.value;
@@ -70,13 +87,12 @@ class CustomCheckListComp extends Component {
         selectedText += `, ${s.text}`;
         selectedValue += `, ${s.value}`;
       }
-      return '';
     });
     this.setState({ [key]: { name: selectedText, value: selectedValue } });
   };
 
   onClearHandler = key => {
-    this.setState({ [key]: { name: '', value: ' ' } });
+    this.setState({ [key]: { name: ' ', value: ' ' } });
   };
 
   render() {
@@ -86,6 +102,7 @@ class CustomCheckListComp extends Component {
       readOnly,
       extraApiData: { REGION, FAB, PRODUCT, TECH, GEN, DENSITY, PKG, MODULE, CUSTOMER },
       visible,
+      CONFIG,
     } = this.props;
 
     if (this.state.apiFlag && REGION && FAB && PRODUCT && TECH && GEN && DENSITY && PKG && MODULE && CUSTOMER) {
@@ -141,9 +158,9 @@ class CustomCheckListComp extends Component {
     return visible ? (
       <>
         {colData === 'preView' ? (
-          <CheckList isMultiple dataSource={this.props.dataSource} props={this.props.stateProps}></CheckList>
+          <CheckList isMultiple dataSource={this.props.dataSource} props={this.props.stateProps} className={CONFIG.property.className || ''}></CheckList>
         ) : (
-          <div>
+          <div className={CONFIG.property.className || ''}>
             {colData}
             <Modal
               className="modalWrapper"
