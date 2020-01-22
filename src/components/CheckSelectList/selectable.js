@@ -12,7 +12,10 @@ const CheckList = ({ onChange, dataSource, onClear, props, isMultiple }) => (
           dataSource.map((ListItems, index) => {
             let multipleValues = [];
             if (isMultiple && props[ListItems.groupKey].value) {
-              multipleValues = props[ListItems.groupKey].value.replace(/, /gi, ',').split(',');
+              multipleValues = props[ListItems.groupKey].value
+                .toString()
+                .replace(/, /gi, ',')
+                .split(',');
             }
             return (
               <Col key={index}>

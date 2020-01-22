@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const LabelDate = ({ colData, visible }) => (visible ? <span>{colData}</span> : '');
+const LabelDate = ({ colData, visible, CONFIG }) => (visible ? <span className={CONFIG.property.className || ''}>{colData}</span> : '');
 
 LabelDate.propTypes = {
   colData: PropTypes.string,

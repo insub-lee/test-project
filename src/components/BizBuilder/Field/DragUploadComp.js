@@ -214,7 +214,7 @@ class DragUploadComp extends Component {
       //   CONT_SEQ: -1,
       //   FIELD_NM: COMP_FIELD,
       //   TYPE: COMP_TAG,
-      //   DETAIL: fileList,
+      //   DETAIL: detail,
       // };
     }
     console.debug('3');

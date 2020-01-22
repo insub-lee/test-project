@@ -139,7 +139,13 @@ const StyledHeader = styled.header`
 
     .onRight {
       min-width: 520px;
+      height: 100%;
       float: right;
+
+      &:before {
+        clear: both;
+      }
+
 
       .rightBottom {
         width: 100%;
@@ -148,6 +154,9 @@ const StyledHeader = styled.header`
 
         .iconMenuWrapper {
           float: right;
+          &:after {
+            clear: both;
+          }
         }
 
         .icon-bell, .icon-setting, .icon-full {
@@ -218,7 +227,7 @@ const StyledHeader = styled.header`
           .mInputBox::placeholder {color: #fff !important; font-weight: 400;}
 
           .mInputBox.ant-input:focus {
-            border-color: none;
+            border-color: transparent;
             box-shadow: 0 0 0 transparent;
           }
 
@@ -310,6 +319,7 @@ const StyledHeader = styled.header`
         }
         
       }
+      
       // onRight 미디어 쿼리
       @media only screen and (max-width: 1024px) {
         width: 50%;

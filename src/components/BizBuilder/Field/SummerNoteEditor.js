@@ -48,13 +48,14 @@ class EditorComp extends Component {
   };
 
   render = () => {
-    const { COMP_FIELD, changeFormData, sagaKey: id, colData, readOnly, COMP_TAG, WORK_SEQ, visible } = this.props;
+    const { COMP_FIELD, changeFormData, sagaKey: id, colData, readOnly, COMP_TAG, WORK_SEQ, visible, CONFIG } = this.props;
     return visible ? (
       <RichTextEditor
         name={COMP_FIELD}
         defaultValue={getDefaultValue(colData, COMP_FIELD, COMP_TAG, WORK_SEQ)}
         saveTempContents={(model, name) => changeFormData(id, name, setFormDataValue(model, colData, COMP_FIELD, COMP_TAG, WORK_SEQ))}
         readOnly={readOnly}
+        className={CONFIG.property.className || ''}
       />
     ) : (
       ''

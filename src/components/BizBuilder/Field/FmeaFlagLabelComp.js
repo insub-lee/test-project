@@ -12,8 +12,8 @@ const FmeaFlagLabelComp = props =>
       props.formData.DOCNUMBER.indexOf('MBG') === 0 ||
       props.formData.DOCNUMBER.indexOf('MBH') === 0 ||
       props.formData.DOCNUMBER.indexOf('MBI') === 0)) ? (
-      <LabelComp {...props} />
-    ) : (
-      ''
-    );
+    <LabelComp {...props} />
+  ) : (
+    ''
+  );
 export default FmeaFlagLabelComp;

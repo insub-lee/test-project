@@ -73,9 +73,10 @@ class RadioComp extends Component {
             dataSource={this.state.dataSource}
             onChange={e => this.onChangeHandler(changeFormData, id, CONFIG, changeValidationData, e.target.value)}
             readOnly={readOnly || CONFIG.property.readOnly}
+            className={CONFIG.property.className || ''}
           />
         ) : (
-          <RadioGroup value={1} dataSource={this.props.defaultDataSource} />
+          <RadioGroup value={1} dataSource={this.props.defaultDataSource} className={CONFIG.property.className || ''} />
         )}
       </>
     ) : (

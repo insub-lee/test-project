@@ -92,6 +92,7 @@ class DCRBTextComp extends React.Component {
           onChange={e => this.handleOnChange(e.target.value, 0)}
           readOnly={readOnly || CONFIG.property.readOnly}
           style={{ width: '70px' }}
+          className={CONFIG.property.className || ''}
         />{' '}
         -{' '}
         <Input
@@ -101,6 +102,7 @@ class DCRBTextComp extends React.Component {
           onChange={e => this.handleOnChange(e.target.value, 1)}
           readOnly={readOnly || CONFIG.property.readOnly}
           style={{ width: '50px' }}
+          className={CONFIG.property.className || ''}
         />
       </>
     ) : (

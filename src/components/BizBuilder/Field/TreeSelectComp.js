@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { TreeSelect } from 'antd';
+import SelectReadComp from './SelectReadComp';
 
 const getCategoryMapListAsTree = (flatData, flag, viewLang) =>
   getTreeFromFlatData({
@@ -53,6 +54,7 @@ class TreeSelectComp extends Component {
       readOnly,
       visible,
     } = this.props;
+
     const apiData = extraApiData[`treeSelect_${mapId}`];
     const tempData =
       (apiData &&
@@ -64,19 +66,28 @@ class TreeSelectComp extends Component {
         )) ||
       [];
     const categoryData = tempData.length > 0 ? tempData[0] : [];
+    let selectedValue = '';
+    let labelValue = '';
+    if (categoryData.children !== undefined) {
+      selectedValue = categoryData.children.filter(c => String(c.value) === String(colData));
+      if (selectedValue.length) labelValue = selectedValue[0].title || '';
+    }
     return visible ? (
       <>
         {colData !== undefined ? (
-          <TreeSelect
-            style={{ width: '100%' }}
-            value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            treeData={categoryData.children}
-            disabled={readOnly || CONFIG.property.readOnly}
-            onChange={value => this.onChangeHandler(value)}
-            placeholder={placeholder}
-            className={CONFIG.property.className || ''}
-          />
+          readOnly || CONFIG.property.readOnly ? (
+            <SelectReadComp value={labelValue} />
+          ) : (
+            <TreeSelect
+              style={{ width: '100%' }}
+              value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={categoryData.children}
+              onChange={value => this.onChangeHandler(value)}
+              placeholder={placeholder}
+              className={CONFIG.property.className || ''}
+            />
+          )
         ) : (
           <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect" className={CONFIG.property.className || ''}></TreeSelect>
         )}

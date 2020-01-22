@@ -10,8 +10,8 @@ class NodeIdComp extends Component {
   };
 
   render = () => {
-    const { colData, visible } = this.props;
-    return visible ? <span>{colData}</span> : '';
+    const { colData, visible, CONFIG } = this.props;
+    return visible ? <span className={CONFIG.property.className || ''}>{colData}</span> : '';
   };
 }
 
