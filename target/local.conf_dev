@@ -261,60 +261,60 @@
 }
 
 upstream portal-sockjs {
-    server http://192.168.251.14:10185;
+    server 192.168.251.14:10185;
 }
 upstream portal-auth {
-    server http://192.168.251.14:10187;
+    server 192.168.251.14:10187;
 }
 upstream portal-oauth {
-    server http://192.168.251.14:10189;
+    server 192.168.251.14:10189;
 }
 upstream portal-account {
-    server http://192.168.251.14:10186;
+    server 192.168.251.14:10186;
 }
 upstream portal-appstore {
-    server http://192.168.251.14:10190;
+    server 192.168.251.14:10190;
 }
 upstream portal-dock {
-    server http://192.168.251.14:10191;
+    server 192.168.251.14:10191;
 }
 upstream portal-mypage {
-    server http://192.168.251.14:10192;
+    server 192.168.251.14:10192;
 }
 upstream portal-bizgroup {
-    server http://192.168.251.14:10193;
+    server 192.168.251.14:10193;
 }
 upstream portal-page {
-    server http://192.168.251.14:10194;
+    server 192.168.251.14:10194;
 }
 upstream portal-admin {
-    server http://192.168.251.14:10205;
+    server 192.168.251.14:10205;
 }
 upstream common-notify {
-    server http://192.168.251.14:10195;
+    server 192.168.251.14:10195;
 }
 upstream portal-appmanage {
-    server http://192.168.251.14:10196;
+    server 192.168.251.14:10196;
 }
 upstream builder-common {
-    server http://192.168.251.14:10188;
+    server 192.168.251.14:10188;
 }
 upstream workflow-common {
-    server http://192.168.251.14:10189;
+    server 192.168.251.14:10184;
 }
 upstream mdcs-common {
-    server http://192.168.251.14:10190;
+    server 192.168.251.14:10198;
 }
 upstream manual-common {
-    server http://192.168.251.14:10500;
+    server 192.168.251.14:10500;
 }
 upstream portal-download {
-    server http://192.168.251.14:10200;
+    server 192.168.251.14:10200;
 }
 upstream portal-upload {
-    server http://192.168.251.14:10199;
+    server 192.168.251.14:10199;
 }
 upstream thumbor {
     # hosts 파일에 등록 후 사용 192.168.251.14, 192.168.251.15, 192.168.251.16
-    server http://thumbor.magnachip.com;
+    server thumbor.magnachip.com;
 }
