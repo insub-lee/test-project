@@ -31,6 +31,7 @@ import Preview from '../../portal/Preview/index';
 import * as authSelectors from '../Auth/selectors';
 import { basicPath } from '../constants';
 import RestrictedRoute from './RestrictedRoute';
+import routes from './routes';
 // import Watermark from './Watermark';
 
 // import HyPm from '../../../apps/hyPm';
@@ -141,7 +142,6 @@ class PublicRoutes extends Component {
       !checkPath(pathArray[1], portalPath) &&
       !checkPath(pathArray[1], portalSinglePath) &&
       !checkPath(pathArray[1], etcPath);
-    console.debug('Path Array', isLoggedIn, pathArray, location, hasError);
 
     if (hasError) {
       return <Redirect to="/error" />;
@@ -153,13 +153,17 @@ class PublicRoutes extends Component {
           <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />
         </Debounce>
         <Switch>
+          <Route path="/signin" component={SignIn} />
+          {routes.map(route => (
+            <RestrictedRoute {...route} isLoggedIn={isLoggedIn} profile={profile} />
+          ))}
+          {/*
           <RestrictedRoute exact path="/" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path="/preview/page/:pageID" component={Preview} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path={`/${basicPath.PAGE}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path={`/${basicPath.APPS}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path={`/${basicPath.SINGLE}/:PAGE_ID`} component={PortalSingleModeApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/portal/settings" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <Route path="/signin" component={SignIn} />
           <RestrictedRoute path="/store" component={StoreApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/portal/store" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/portal/card" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
@@ -168,6 +172,7 @@ class PublicRoutes extends Component {
           <RestrictedRoute exact path="/popup/organization/:lang/:deptId/:userId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute exact path="/popup/organization/:lang/:deptId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
           <RestrictedRoute path="/error" component={ErrorPage} isLoggedIn={isLoggedIn} profile={profile} />
+          */}
         </Switch>
         {/* <Loading /> */}
         {/* {profile !== null ? <Watermark profile={profile} /> : <div />} */}

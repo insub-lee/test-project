@@ -25,6 +25,7 @@ class TextComp extends React.Component {
         placeholder={CONFIG.property.placeholder}
         onChange={e => this.handleOnChange(e.target.value)}
         readOnly={readOnly || CONFIG.property.readOnly}
+        className={CONFIG.property.className || ''}
       />
     ) : (
       ''

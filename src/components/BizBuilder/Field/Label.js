@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 class Label extends Component {
   render() {
-    const { visible } = this.props;
-    return visible ? <span>{this.props.colData}</span> : '';
+    const { visible, CONFIG } = this.props;
+    return visible ? <span className={CONFIG.property.className || ''}>{this.props.colData}</span> : '';
   }
 }
 

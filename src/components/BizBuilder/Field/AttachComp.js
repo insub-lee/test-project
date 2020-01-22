@@ -9,7 +9,7 @@ const handlerAttachChange = (detail, CONFIG, id, changeFormData, changeValidatio
   changeFormData(id, COMP_FIELD, detail);
 };
 
-const AttachComp = ({ CONFIG, colData, changeFormData, sagaKey: id, changeValidationData, readOnly, NAME_KOR, COMP_FIELD, visible, className }) => {
+const AttachComp = ({ CONFIG, colData, changeFormData, sagaKey: id, changeValidationData, readOnly, NAME_KOR, COMP_FIELD, visible }) => {
   let defaultAttachValue = { DETAIL: [] };
   if (colData !== undefined) {
     defaultAttachValue = colData;
@@ -26,10 +26,10 @@ const AttachComp = ({ CONFIG, colData, changeFormData, sagaKey: id, changeValida
         defaultValue={defaultAttachValue}
         multiple={CONFIG.property.multiple || true}
         readOnly={view}
+        className={CONFIG.property.className || ''}
         saveTempContents={detail => {
           handlerAttachChange(detail, CONFIG, id, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD);
         }}
-        className={className || ''}
       ></FileUpload>
     </>
   ) : (

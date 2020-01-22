@@ -29,7 +29,7 @@ class DocStatusLabel extends Component {
       const docStatus = apiData.categoryMapList.find(map => map.CODE && Number(map.CODE) === colData);
       docStatusText = docStatus && docStatus.NAME_KOR ? docStatus.NAME_KOR : '';
     }
-    return visible ? <span>{docStatusText}</span> : '';
+    return visible ? <span className={property.className || ''}>{docStatusText}</span> : '';
   }
 }
 

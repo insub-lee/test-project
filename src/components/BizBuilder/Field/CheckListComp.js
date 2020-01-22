@@ -82,18 +82,9 @@ class CheckListComp extends Component {
   };
 
   render() {
-    const {
-      readOnly,
-      colData,
-      extraApiData,
-      isCustom,
-      CONFIG: {
-        property: { mapId },
-      },
-      visible,
-    } = this.props;
+    const { readOnly, colData, extraApiData, isCustom, CONFIG, visible } = this.props;
     if (this.state.apiFlag) {
-      const keyList = mapId.map(x => `checkList_${x}`);
+      const keyList = CONFIG.property.mapId.map(x => `checkList_${x}`);
       if (keyList.filter(key => !!extraApiData[key]).length === keyList.length) {
         const dataSource = keyList.map(key => ({ groupName: extraApiData[key].categoryMapList[0].NAME_KOR, dataSet: extraApiData[key].categoryMapList }));
         if (this.state.initFlag && colData !== undefined) {
@@ -109,7 +100,7 @@ class CheckListComp extends Component {
     return visible ? (
       <>
         {readOnly ? (
-          <Input value={this.state.selectedText} readOnly></Input>
+          <Input value={this.state.selectedText} readOnly className={CONFIG.property.className || ''}></Input>
         ) : (
           <Input
             addonAfter={
@@ -120,6 +111,7 @@ class CheckListComp extends Component {
             value={this.state.selectedText}
             placeholder={colData === undefined && 'CheckList'}
             readOnly
+            className={CONFIG.property.className || ''}
           ></Input>
         )}
 
