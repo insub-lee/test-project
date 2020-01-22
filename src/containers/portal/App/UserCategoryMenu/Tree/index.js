@@ -195,7 +195,7 @@ class Tree extends Component {
           >
             <AutoSizer>
               {({ width, height }) => (
-                <ScrollBar style={{ width, height, overflowX: 'hidden' }} autoHide autoHideTimeout={1000} autoHideDuration={200} className="tree-scrollbar">
+                <div style={{ width, height, overflowX: 'hidden' }} autoHide autoHideTimeout={1000} autoHideDuration={200} className="tree-scrollbar">
                   {editTree ? (
                     <MyPage history={history} height={height} />
                   ) : (
@@ -224,7 +224,7 @@ class Tree extends Component {
                       }}
                     />
                   )}
-                </ScrollBar>
+                </div>
               )}
             </AutoSizer>
           </div>

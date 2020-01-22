@@ -5,8 +5,8 @@ const StyledContainer = styled.div`
 
   > .scrollable-container {
     width: auto;
-    min-height: 100vh;
-    height: auto;
+    //min-height: 100vh;
+    //height: auto;
     overflow-x: hidden !important;
   }
 `;
