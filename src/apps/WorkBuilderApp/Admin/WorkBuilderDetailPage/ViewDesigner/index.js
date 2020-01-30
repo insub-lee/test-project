@@ -259,6 +259,7 @@ const mapDispatchToProps = dispatch => ({
     changeViewCompData: (groupIndex, rowIndex, colIndex, key, value) =>
       dispatch(actions.changeViewCompDataByReducer(groupIndex, rowIndex, colIndex, key, value)),
     removeHiddenComp: compIndex => dispatch(actions.removeHiddenCompByReducer(compIndex)),
+    changeColConfig: (groupIndex, rowIndex, colIndex, key, value) => dispatch(actions.changeColConfigByReducer(groupIndex, rowIndex, colIndex, key, value)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),

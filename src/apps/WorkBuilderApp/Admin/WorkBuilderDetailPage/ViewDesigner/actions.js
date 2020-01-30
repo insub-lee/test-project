@@ -170,3 +170,12 @@ export const setSysMetaListByReducer = (list, compList) => ({ type: actionTypes.
 export const setSysCompItemByReducer = compItem => ({ type: actionTypes.SET_SYS_COMP_ITEM_REDUCER, compItem });
 
 export const removeHiddenCompByReducer = compIdx => ({ type: actionTypes.REMOVE_HIDDEN_COMP_REDUCER, compIdx });
+
+export const changeColConfigByReducer = (groupIndex, rowIndex, colIndex, key, value) => ({
+  type: actionTypes.CHANGE_COL_CONFIG_REDUCER,
+  groupIndex,
+  rowIndex,
+  colIndex,
+  key,
+  value,
+});

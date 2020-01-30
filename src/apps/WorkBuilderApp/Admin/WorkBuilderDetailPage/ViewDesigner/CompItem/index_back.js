@@ -134,100 +134,57 @@ class CompItem extends React.Component {
   renderCompConfig = (configType, configProps) => {
     const { col, comp, compPoolList } = configProps;
     return (
-      <Styled className="popoverWrapper">
-        <div className="popoverInnerInput">
-          {comp.COMP_TYPE !== 'LABEL' ? (
-            <>
-              <div className="popoverItem">
-                <input
-                  type="text"
-                  placeholder="아이디"
-                  defaultValue={col.comp.COMP_FIELD}
-                  readOnly={col.comp.FIELD_TYPE === 'SYS'}
-                  onChange={e => {
-                    const value = e.target.value.replace(/[^0-9A-Z_]/gi, '').toUpperCase();
-                    e.target.value = value;
-                    this.handleChangeData('COMP_FIELD', value);
-                  }}
-                />
-              </div>
-              <div className="popoverItem">
-                <div className="wid50">
-                  <InputNumber
-                    placeholder="사이즈"
-                    style={{ width: '100%' }}
-                    min={0}
-                    max={100000000000}
-                    defaultValue={col.comp.CONFIG.info.size || 0}
-                    onChange={value => this.handleChangeSizeConfig('size', value, 'info')}
-                  />
-                </div>
-                <div className="wid50">
-                  <Input
-                    placeholder="디폴트값"
-                    defaultValue={col.comp.CONFIG.info.defaultValue}
-                    onChange={e => this.handleChangeDefaultConfig('defaultValue', e.target.value, 'info')}
-                  />
-                </div>
-              </div>
-              <div className="popoverItem">
-                <Checkbox
-                  defaultChecked={comp.CONFIG.property.isRequired}
-                  onChange={e => this.handleChangeViewConfig('isRequired', e.target.checked, 'property')}
-                >
-                  필수
-                </Checkbox>
-                <Checkbox defaultChecked={comp.CONFIG.property.readOnly} onChange={e => this.handleChangeViewConfig('readOnly', e.target.checked, 'property')}>
-                  일기전용
-                </Checkbox>
-              </div>
-              <div className="popoverItem popoverItemInput">
-                <span className="spanLabel">컴포넌트 설정</span>
-                <Select
-                  style={{ width: '200px' }}
-                  placeholder="Select component"
-                  defaultValue={comp.CONFIG.property.COMP_SRC}
-                  onChange={value => this.handleChangeCompSetting(value)}
-                >
-                  {compPoolList
-                    .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')
-                    .map(node => (
-                      <Option key={node.COMP_SRC} value={node.COMP_SRC}>
-                        {node.COMP_NAME}
-                      </Option>
-                    ))}
-                </Select>
-              </div>
-            </>
-          ) : (
-            <div className="popoverItem">
-              <Input placeholder="제목(KO)" defaultValue={col.comp.NAME_KOR} onChange={e => this.handleChangeCompData(e.target.value)} />
+      <div>
+        {comp.COMP_TYPE !== 'LABEL' && (
+          <>
+            <div>
+              <Checkbox
+                defaultChecked={comp.CONFIG.property.isRequired}
+                onChange={e => this.handleChangeViewConfig('isRequired', e.target.checked, 'property')}
+              >
+                필수
+              </Checkbox>
+              <Checkbox defaultChecked={comp.CONFIG.property.readOnly} onChange={e => this.handleChangeViewConfig('readOnly', e.target.checked, 'property')}>
+                일기전용
+              </Checkbox>
             </div>
-          )}
+            <div>
+              <span>컴포넌트 설정</span>
+              <Select
+                style={{ width: '200px' }}
+                placeholder="Select component"
+                defaultValue={comp.CONFIG.property.COMP_SRC}
+                onChange={value => this.handleChangeCompSetting(value)}
+              >
+                {compPoolList
+                  .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')
+                  .map(node => (
+                    <Option key={node.COMP_SRC} value={node.COMP_SRC}>
+                      {node.COMP_NAME}
+                    </Option>
+                  ))}
+              </Select>
+            </div>
+          </>
+        )}
+        <div>
+          <span>컴포넌트 Class명 설정</span>
+          <Input
+            placeholder="컴포넌트 Class명 입력"
+            defaultValue={comp.CONFIG.property.className}
+            onChange={e => this.handleChangeViewConfig('className', e.target.value, 'property')}
+          />
         </div>
-        <div className="popoverInner">
-          <p className="popover-tit">컴포넌트 설정</p>
-          <div className="popoverInnerCom">
-            <div className="popoverItem popoverItemInput">
-              <span className="spanLabel">컴포넌트 Class명 설정</span>
-              <Input
-                placeholder="컴포넌트 Class명 입력"
-                defaultValue={comp.CONFIG.property.className}
-                onChange={e => this.handleChangeViewConfig('className', e.target.value, 'property')}
-              />
-            </div>
-            <div className="popoverItem popoverItemInput">
-              <span className="spanLabel">컬럼 Class명 설정</span>
-              <Input
-                placeholder="컬럼 Class명 입력"
-                defaultValue={col.addonClassName || ''}
-                onChange={e => this.handleChangeColConfig('addonClassName', e.target.value)}
-              />
-            </div>
-            {ConfigInfo[configType] && <div>{ConfigInfo[configType].renderer(configProps)}</div>}
-          </div>
+        <div>
+          <span>컬럼 Class명 설정</span>
+          <Input
+            placeholder="컬럼 Class명 입력"
+            defaultValue={col.addonClassName || ''}
+            onChange={e => this.handleChangeColConfig('addonClassName', e.target.value)}
+          />
         </div>
-      </Styled>
+        {ConfigInfo[configType] && <div>{ConfigInfo[configType].renderer(configProps)}</div>}
+      </div>
     );
   };
 
@@ -254,34 +211,42 @@ class CompItem extends React.Component {
         col,
       };
       if (groupType !== 'listGroup') {
-        // const colClassName = `compConfigCol compConfigDiv ${col.comp.COMP_TYPE === 'LABEL' ? 'wid100-28' : 'wid50'}`;
-        const colClassName = 'compConfigCol compConfigDiv wid100-28';
+        const colClassName = `compConfigCol compConfigDiv ${col.comp.COMP_TYPE === 'LABEL' ? 'wid100-28' : 'wid50'}`;
         return (
           <Styled className="compConfig compConfigDiv">
             <div className="compConfigRow compConfigDiv">
               <div className={colClassName}>
-                <i className="iconField iconFieldCheck"></i>
-                <p className="componentTit">{col.comp.CONFIG.property.COMP_NAME}</p>
+                <Input placeholder="필드명(KO)" defaultValue={col.comp.NAME_KOR} onChange={e => this.handleChangeCompData(e.target.value)} />
               </div>
-              {/* {col.comp.COMP_TYPE !== 'LABEL' && (
-                <div className={`${colClassName} ${col.comp.COMP_TYPE !== 'LABEL' ? ' compLabelNone' : 'compLabel'}`}>
-                  <Input
+              {col.comp.COMP_TYPE !== 'LABEL' && (
+                <div className={colClassName}>
+                  {/* <Input
                   placeholder="아이디"
                   defaultValue={col.comp.COMP_FIELD}
                   readOnly={col.comp.CONFIG.property.isSysField}
                   onChange={e => handleChangeData(groupIndex, rowIndex, colIndex, 'COMP_FIELD', e, changeCompData)}
-                /> 
+                /> */}
+                  <input
+                    type="text"
+                    placeholder="아이디"
+                    defaultValue={col.comp.COMP_FIELD}
+                    readOnly={col.comp.FIELD_TYPE === 'SYS'}
+                    onChange={e => {
+                      const value = e.target.value.replace(/[^0-9A-Z_]/gi, '').toUpperCase();
+                      e.target.value = value;
+                      this.handleChangeData('COMP_FIELD', value, changeCompData);
+                    }}
+                  />
                 </div>
-              )} */}
-              <div className="compConfigCol compConfigDiv buttonWrapper">
+              )}
+              <div className="compConfigCol compConfigDiv wid28px">
                 <Popover
                   placement="bottomRight"
                   content={this.renderCompConfig(col.comp.CONFIG.property.COMP_SETTING_SRC, configProps)}
                   trigger="click"
                   overlayStyle={{ width: '500px' }}
-                  getPopupContainer={() => document.querySelector('.compConfig')}
                 >
-                  <span className="toolbar-item iconSetting" role="button" onKeyPress={() => false} tabIndex="0" />
+                  <span className="toolbar-item fa fa-cog" role="button" onKeyPress={() => false} tabIndex="0" />
                 </Popover>
                 <Popconfirm
                   title="Are you sure delete this Component?"
@@ -289,13 +254,31 @@ class CompItem extends React.Component {
                   okText="Yes"
                   cancelText="No"
                 >
-                  <span className="toolbar-item iconTrash" role="button" onKeyPress={() => false} tabIndex="0" />
+                  <span className="toolbar-item fa fa-trash" role="button" onKeyPress={() => false} tabIndex="0" />
                 </Popconfirm>
               </div>
             </div>
-            <div className="compTitleWrapper">
-              <p>{col.comp.COMP_TYPE !== 'LABEL' ? col.comp.COMP_FIELD : col.comp.NAME_KOR}</p>
-            </div>
+            {col.comp.COMP_TYPE !== 'LABEL' && (
+              <div className="compConfigRow compConfigDiv">
+                <div className={colClassName}>
+                  <InputNumber
+                    placeholder="사이즈"
+                    style={{ width: '100%' }}
+                    min={0}
+                    max={100000000000}
+                    defaultValue={col.comp.CONFIG.info.size || 0}
+                    onChange={value => this.handleChangeSizeConfig('size', value, 'info')}
+                  />
+                </div>
+                <div className={colClassName}>
+                  <Input
+                    placeholder="디폴트값"
+                    defaultValue={col.comp.CONFIG.info.defaultValue}
+                    onChange={e => this.handleChangeDefaultConfig('defaultValue', e.target.value, 'info')}
+                  />
+                </div>
+              </div>
+            )}
           </Styled>
         );
       }
@@ -318,7 +301,6 @@ class CompItem extends React.Component {
                 content={this.renderCompConfig(col.comp.CONFIG.property.COMP_SETTING_SRC, configProps)}
                 trigger="click"
                 overlayStyle={{ width: '500px' }}
-                getPopupContainer={() => document.querySelector('.compConfig')}
               >
                 <span className="toolbar-item fa fa-cog" role="button" onKeyPress={() => false} tabIndex="0" />
               </Popover>

@@ -18,7 +18,7 @@ const getNewKey = () => uuid();
 
 function* getMetaData({ workSeq, viewType, viewID }) {
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${workSeq}`);
-  const sysResponse = yield call(Axios.get, '/api/builder/v1/work/sysmeta');
+  const sysResponse = yield call(Axios.get, `/api/builder/v1/work/sysmeta?workSeq=${workSeq}`);
   const compResponse = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
   if (response && response.resultType && response.resultType.length > 0 && response[response.resultType] && response[response.resultType].length > 0) {
     const metaList = response[response.resultType].map(node => ({ ...node, CONFIG: JSON.parse(node.CONFIG) }));
@@ -84,10 +84,11 @@ function* addMetaData() {
       if (!node.COMP_FIELD || (node.COMP_FIELD && node.COMP_FIELD.length) < 1) {
         isError = true;
         errorField = `${node.NAME_KOR}(${node.COMP_FIELD})`;
-      } else if (!node.NAME_KOR || (node.NAME_KOR && node.NAME_KOR.length) < 1) {
-        isError = true;
-        errorField = `${node.NAME_KOR}(${node.COMP_FIELD})`;
       }
+      // else if (!node.NAME_KOR || (node.NAME_KOR && node.NAME_KOR.length) < 1) {
+      //   isError = true;
+      //   errorField = `${node.NAME_KOR}(${node.COMP_FIELD})`;
+      // }
     });
 
   if (isError) {
