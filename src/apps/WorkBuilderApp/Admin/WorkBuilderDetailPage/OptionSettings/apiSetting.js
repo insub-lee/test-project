@@ -8,7 +8,7 @@ class apiSetting extends React.Component {
     const { info, setChangeValue } = this.props;
     const { workInfo } = info;
     const optList = workInfo.OPT_INFO;
-    const nOptList = optList.map(opt => (opt.OPT_SEQ === optSeq ? { ...opt, OPT_VALUE: val } : opt));
+    const nOptList = optList.map(opt => (opt.OPT_SEQ === optSeq ? { ...opt, OPT_VALUE: JSON.stringify(val) } : opt));
     console.debug(val, nOptList);
     setChangeValue('workInfo', 'OPT_INFO', nOptList);
   };
@@ -20,7 +20,7 @@ class apiSetting extends React.Component {
     return (
       <Select
         mode="multiple"
-        value={optConfig && optConfig.OPT_VALUE ? Number(optConfig.OPT_VALUE) : undefined}
+        value={optConfig && optConfig.OPT_VALUE && optConfig.OPT_VALUE.length > 0 ? JSON.parse(optConfig.OPT_VALUE) : undefined}
         style={{ width: '100%' }}
         placeholder="API를 선택해 주세요"
         onChange={val => this.onChange(val, optSeq)}

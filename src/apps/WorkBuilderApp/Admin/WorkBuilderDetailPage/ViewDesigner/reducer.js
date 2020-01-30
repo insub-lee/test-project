@@ -114,7 +114,7 @@ const initialState = fromJS({
               ],
             },
           ],
-          hiddenField :[],
+          hiddenField: [],
         },
         bodyStyle: {
           width: '100%',
@@ -679,6 +679,10 @@ const reducer = (state = initialState, action) => {
       const { compIdx } = action;
       return state.deleteIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField', compIdx]);
     }
+    case actionTypes.CHANGE_COL_CONFIG_REDUCER: {
+      const { groupIndex, rowIndex, colIndex, key, value } = action;
+      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, key], value);
+    }
     default:
       return state;
   }
@@ -693,7 +697,7 @@ const addCompItem = (state, selectedComp, selectedKeys) => {
     const keyGroup = key.split('-');
     const colData = groups.getIn([Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2])]).toJS();
     if (!colData.comp || !colData.comp.COMP_TAG) {
-      const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG } = selectedComp;
+      const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME } = selectedComp;
       let COMP_TYPE = 'FIELD';
       let COMP_FIELD = '';
       let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
@@ -702,6 +706,7 @@ const addCompItem = (state, selectedComp, selectedKeys) => {
         COMP_SETTING_SRC,
         layerIdx: { [layerIdxKey]: key },
         compKey: `Comp_${getNewKey()}`,
+        COMP_NAME,
       };
       if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
         const compConfig = JSON.parse(COMP_CONFIG);
@@ -791,6 +796,6 @@ const addHiddenComp = (state, compItem) => {
       .setIn(['compData', compDataIdx], fromJS(compItem));
   }
   return state;
-}
+};
 
 export default reducer;

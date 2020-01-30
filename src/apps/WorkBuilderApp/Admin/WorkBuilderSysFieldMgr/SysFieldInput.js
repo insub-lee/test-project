@@ -16,7 +16,7 @@ const { TextArea } = Input;
 
 class SysFieldInput extends Component {
   onCompChange = val => {
-    const { id, result, formData, changeFormData } = this.props;
+    const { sagaKey: id, result, formData, changeFormData } = this.props;
     const { compPoolData } = result;
     const { CONFIG } = formData;
     const selectedComp =
@@ -31,21 +31,21 @@ class SysFieldInput extends Component {
   };
 
   onDataSize = val => {
-    const { id, formData, changeFormData } = this.props;
+    const { sagaKey: id, formData, changeFormData } = this.props;
     const { CONFIG } = formData;
     CONFIG.info.size = Number(val);
     changeFormData(id, 'CONFIG', CONFIG);
   };
 
   onIsNullUsed = val => {
-    const { id, formData, changeFormData } = this.props;
+    const { sagaKey: id, formData, changeFormData } = this.props;
     const { CONFIG } = formData;
     CONFIG.info.nullable = val;
     changeFormData(id, 'CONFIG', CONFIG);
   };
 
   onDefaultValue = (val, dbType) => {
-    const { id, formData, changeFormData } = this.props;
+    const { sagaKey: id, formData, changeFormData } = this.props;
     const { CONFIG } = formData;
     if (dbType === 'FLOAT' || dbType === 'DOUBLE' || dbType === 'INT' || dbType === 'NUMBER') CONFIG.info.defaultValue = Number(val);
     else CONFIG.info.defaultValue = val;
@@ -53,7 +53,7 @@ class SysFieldInput extends Component {
   };
 
   onChangValue = (key, val) => {
-    const { id, formData, changeFormData } = this.props;
+    const { sagaKey: id, formData, changeFormData } = this.props;
     const { CONFIG } = formData;
     CONFIG.property[key] = val;
     changeFormData(id, key, val);
@@ -61,7 +61,7 @@ class SysFieldInput extends Component {
   };
 
   render() {
-    const { id, result, formData } = this.props;
+    const { sagaKey: id, result, formData } = this.props;
     return (
       <div>
         <AntdRow gutter={24}>
