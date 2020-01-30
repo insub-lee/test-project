@@ -161,6 +161,15 @@
             proxy_set_header     referer $http_referer;
             proxy_set_header     host $http_host;
     }
+    location ~ ^(/api/eshs/v1/common/) {
+            proxy_pass  http://eshs-common;
+            proxy_connect_timeout 10;
+            proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header     X-Real-IP $proxy_add_x_forwarded_for;
+            proxy_set_header     user_agent $http_user_agent;
+            proxy_set_header     referer $http_referer;
+            proxy_set_header     host $http_host;
+    }
 
 
     location ~ ^/img/thumb/crop/(.*)/(.*)$ {
@@ -307,6 +316,9 @@ upstream mdcs-common {
 }
 upstream manual-common {
     server 192.168.251.14:10500;
+}
+upstream eshs-common {
+    server 192.168.251.14:10510;
 }
 upstream portal-download {
     server 192.168.251.14:10200;
