@@ -45,6 +45,10 @@ export function* getSiteInfo(payload) {
       payload: fromJS([]),
     });
   }
+  yield put({
+    type: constants.SET_MENU_TYPE_LIST,
+    payload: response.menuTypeList || fromJS([]),
+  });
 }
 
 export function* chkName(payload) {

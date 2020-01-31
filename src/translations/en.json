@@ -315,6 +315,7 @@
   "admin.AdminMain.SiteAdmin.titleSiteNameKor": "@사이트 명(한국어)",
   "admin.AdminMain.SiteAdmin.titleSiteNameChn": "@사이트 명(중국어)",
   "admin.AdminMain.SiteAdmin.titleSiteNameEng": "@사이트 명(영어)",
+  "admin.AdminMain.SiteAdmin.lblMenuType": "@메뉴타입",
   "admin.App.globaladmin": "@다국어 메세지 관리",
   "admin.App.adminMain": "@시스템 관리",
   "apps.quickMenu.widgets.save": "@저장",
