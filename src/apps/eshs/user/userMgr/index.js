@@ -1,9 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import BizBuilderBase from 'components/BizBuilderBase';
+import BizBuilderDevBase from 'components/BizMicroDevBase';
+import List from './List';
 
-class EhsUserManager extends React.component {
+class EshsUserManager extends React.component {
   render() {
-    return <div>Hello,</div>;
+    return '8789';
   }
 }
 
-export default EhsUserManager;
+EshsUserManager.propTypes = {};
+EshsUserManager.defaultProps = {};
+
+export default EshsUserManager;
