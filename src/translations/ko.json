@@ -609,6 +609,7 @@
   "admin.AdminMain.SiteAdmin.udtError": "수정 중 오류가 발생하였습니다.",
   "admin.AdminMain.SiteAdmin.urlFail": "URL이 중복되었습니다.",
   "admin.AdminMain.SiteAdmin.urlSuccess": "사용할 수 있는 URL입니다.",
+  "admin.AdminMain.SiteAdmin.lblMenuType": "메뉴타입",
   "store.AppMain.appDetail.download": "다운로드",
   "store.AppMain.Myapp.reqValFail": "필수 입력 값을 입력해 주세요.",
   "store.AppMain.Myapp.appIdFail": "App ID를 확인해 주세요.",

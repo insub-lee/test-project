@@ -46,21 +46,12 @@ class SelectIntComp extends Component {
       readOnly,
       visible,
     } = this.props;
-    const { categoryMapList } = extraApiData[`select_${mapId}`] ? extraApiData[`select_${mapId}`] : [];
-    let labelValue = '';
-    if (colData && categoryMapList) {
-      categoryMapList.forEach(c => {
-        if (Number(c.NODE_ID) === Number(colData)) {
-          labelValue = c.NAME_KOR;
-        }
-      });
-    }
     const apiData = extraApiData[`select_${mapId}`];
     return visible ? (
       <>
         {colData !== undefined ? (
           readOnly || CONFIG.property.readOnly ? (
-            <SelectReadComp value={labelValue} />
+            <SelectReadComp {...this.props} />
           ) : (
             <Select
               value={!colData || colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : Number(colData)}

@@ -14,6 +14,7 @@ const initialState = fromJS({
   nameChk_Chn: false,
   nameChk_Eng: false,
   urlChk: false,
+  menuTypeList: [],
 });
 
 const SiteInfoReducer = (state = initialState, action) => {
@@ -42,6 +43,8 @@ const SiteInfoReducer = (state = initialState, action) => {
       return state.set('siteUdt', action.payload);
     case constants.SET_DEL_ROW:
       return state.set('delList', action.payload);
+    case constants.SET_MENU_TYPE_LIST:
+      return state.set('menuTypeList', action.payload);
     default:
       return state;
   }

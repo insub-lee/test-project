@@ -73,6 +73,8 @@ const windowResizeReducer = (state = initialState, action) => {
         .set('dockAppList', action.dockAppList)
         .set('dockFixedYn', action.dockFixedYn)
         .set('dockIconType', action.dockIconType);
+    case actionTypes.SET_PORTAL_MENU_TYPE_CODE:
+      return state.set('menuTypeCode', action.menuTypeCode);
     // 1-2 loadSkin
     case actionTypes.LOAD_SKIN_REDUCER:
       return state.set('mySkin', action.resultValue.settingList[0]);

@@ -119,6 +119,11 @@ export function* getDefaultList() {
   // if (response.defaultList.length > 0) {
   if (response.code === 200) {
     yield put({ type: constants.SET_DEFAULT, payload: fromJS(response.defaultList) });
+
+    yield put({
+      type: constants.SET_MENU_TYPE_LIST,
+      payload: response.menuTypeList || fromJS([]),
+    });
   } else {
     yield put({ type: constants.SET_DEFAULT, payload: fromJS([]) });
   }

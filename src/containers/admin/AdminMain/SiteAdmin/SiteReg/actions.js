@@ -31,6 +31,7 @@ export const registSite = (
   dutySetMembers,
   grpSetMembers,
   history,
+  menuTypeCd,
 ) => ({
   type: constants.GET_SITE_DETAIL,
   nameKor,
@@ -46,6 +47,7 @@ export const registSite = (
   dutySetMembers,
   grpSetMembers,
   history,
+  menuTypeCd,
 });
 
 export const skincheck = value => ({

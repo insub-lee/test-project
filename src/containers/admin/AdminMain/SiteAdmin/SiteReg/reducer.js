@@ -13,6 +13,7 @@ const initialState = fromJS({
   mySkin: '',
   langcheck: '',
   myLang: '',
+  menuTypeList: [],
 });
 
 const SiteRegReducer = (state = initialState, action) => {
@@ -34,6 +35,8 @@ const SiteRegReducer = (state = initialState, action) => {
     // .set('mySkin', action.resultValue.settingList[0]);
     case constants.SET_LANG:
       return state.set('langcheck', action.resultValue.lang).set('myLang', action.resultValue.settingList[0]);
+    case constants.SET_MENU_TYPE_LIST:
+      return state.set('menuTypeList', action.payload);
     default:
       return state;
   }
