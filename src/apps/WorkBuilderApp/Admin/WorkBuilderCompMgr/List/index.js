@@ -67,10 +67,16 @@ class List extends Component {
 
     const columns = [
       {
+        title: '종류',
+        dataIndex: 'COMPDIV',
+        key: 'COMPDIV',
+        width: '10%',
+      },
+      {
         title: '컴포넌트 명',
         dataIndex: 'COMP_NAME',
         key: 'COMP_NAME',
-        width: '20%',
+        width: '10%',
       },
       {
         title: '컬럼TAG',
