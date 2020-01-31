@@ -133,7 +133,7 @@ class AppStore extends Component {
         <StyleAppStore>
           <h3 className="pageTitle list">AppStore 관리</h3>
           {/* <div style={{ display: 'inline-block', width: '100%', minHeight: '100%' }}> */}
-          <div className="pageContent">
+          <div className="pageContent" style={{ display: 'inline-block', width: '100%', height: 'calc(100vh - 170px)' }}>
             <div className="appstoreTreeWrapper">
               <div>
                 <ErrorBoundary>
