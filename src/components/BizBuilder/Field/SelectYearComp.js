@@ -40,23 +40,37 @@ class SelectYearComp extends Component {
   render() {
     const { colData, visible, CONFIG } = this.props;
     const { options } = this.state;
+<<<<<<< HEAD
     return visible ? (
+=======
+    return (
+>>>>>>> 7af0664134234a46f6e8bb646ad0506035c90470
       <Select
         value={colData || ' '}
         onChange={value => {
           this.onChangeHandler(value);
         }}
+<<<<<<< HEAD
         style={{ width: '100%', marginRight: 10 }}
         className={CONFIG.property.className || ''}
       >
         {options.map(o => (
           <Option key={o} value={o} style={{ height: 25 }}>
+=======
+        className={CONFIG.property.className || ''}
+      >
+        {options.map(o => (
+          <Option key={o} value={o}>
+>>>>>>> 7af0664134234a46f6e8bb646ad0506035c90470
             {o}
           </Option>
         ))}
       </Select>
+<<<<<<< HEAD
     ) : (
       ''
+=======
+>>>>>>> 7af0664134234a46f6e8bb646ad0506035c90470
     );
   }
 }
