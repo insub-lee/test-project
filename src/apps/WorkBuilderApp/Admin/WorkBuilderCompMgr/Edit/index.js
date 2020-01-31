@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { getTreeFromFlatData } from 'react-sortable-tree';
+
 import FroalaEditor from 'components/FormStuff/RichTextEditor/FroalaEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
-import { Descriptions, Input, Select, Checkbox } from 'antd';
+import { Descriptions, Input, Select, Checkbox, TreeSelect } from 'antd';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledTextarea from 'commonStyled/Form/StyledTextarea';
@@ -16,7 +18,36 @@ const AntdTextArea = StyledTextarea(TextArea);
 
 const { Option } = Select;
 class Edit extends Component {
-  componentDidMount() {}
+  state = {
+    colGroupList: [],
+  };
+
+  getTreeData = flatData =>
+    getTreeFromFlatData({
+      flatData,
+      getKey: node => node.COL_GROUP_IDX,
+      getParentKey: node => node.COL_GROUP_PIDX,
+      rootKey: 0,
+    });
+
+  componentDidMount() {
+    const { result } = this.props;
+    const aryColList =
+      result &&
+      result.compPoolData &&
+      result.compPoolData.colGroup &&
+      result.compPoolData.colGroup.map(item => ({
+        ...item,
+        title: item.COL_GROUP_NAME,
+        value: item.COL_GROUP_IDX,
+        key: item.COL_GROUP_IDX,
+      }));
+
+    const colGroupList = this.getTreeData(aryColList);
+    this.setState({
+      colGroupList,
+    });
+  }
 
   changeGroupIdx = val => {
     const { sagaKey: id, formData, changeFormData } = this.props;
@@ -36,11 +67,19 @@ class Edit extends Component {
   render() {
     const { result, sagaKey: id, formData } = this.props;
     console.debug('props', this.props);
+    console.debug('this.state', this.state);
     return (
       <StyledPool>
         <Descriptions bordered>
           <Descriptions.Item label="구분" span={3}>
-            <AntdSelect
+            <TreeSelect
+              value={formData.COL_GROUP_IDX !== null ? formData.COL_GROUP_IDX : undefined}
+              onChange={val => this.changeGroupIdx(val)}
+              style={{ width: '100%' }}
+              treeData={this.state.colGroupList}
+              placeholder="컴포넌트 구분을 선택해주세요"
+            />
+            {/* <AntdSelect
               allowClear
               value={formData.COL_GROUP_IDX !== null ? formData.COL_GROUP_IDX : undefined}
               onChange={val => this.changeGroupIdx(val)}
@@ -48,7 +87,7 @@ class Edit extends Component {
               style={{ width: '100%' }}
             >
               {result && result.compPoolData && result.compPoolData.colGroup.map(col => <Option value={col.COL_GROUP_IDX}>{col.COL_GROUP_NAME}</Option>)}
-            </AntdSelect>
+            </AntdSelect> */}
           </Descriptions.Item>
           <Descriptions.Item label="컬럼DB형식" span={3}>
             <AntdSelect
@@ -58,11 +97,7 @@ class Edit extends Component {
               placeholder="컬럼 DB형식을 선택해주세요"
               style={{ width: '100%' }}
             >
-              {result &&
-                result.compPoolData &&
-                result.compPoolData.colTypes
-                  .filter(x => x.COL_GROUP_IDX === formData.COL_GROUP_IDX)
-                  .map(col => <Option value={col.COL_TYPE_IDX}>{col.COL_DB_TYPE}</Option>)}
+              {result && result.compPoolData && result.compPoolData.colTypes.map(col => <Option value={col.COL_TYPE_IDX}>{col.COL_DB_TYPE}</Option>)}
             </AntdSelect>
           </Descriptions.Item>
           <Descriptions.Item label="컴포넌트 명" span={3}>
