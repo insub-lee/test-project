@@ -60,6 +60,8 @@ const makeSelectApps = () => createSelector(selectRoute, portalState => portalSt
 
 const makeSelectMenuFixedYn = () => createSelector(selectRoute, portalState => portalState.menuFixedYn);
 
+const makeSelectMenuTypeCode = () => createSelector(selectRoute, portalState => portalState.menuTypeCode);
+
 // ****************** app 스토어에서 가져오는 state ******************
 const selectApp = state => state.get('app');
 
@@ -116,4 +118,5 @@ export {
   makeSelectIsSpinnerShow,
   makeSelectCount,
   makeSelectIsMakingApps,
+  makeSelectMenuTypeCode,
 };

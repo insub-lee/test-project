@@ -282,6 +282,12 @@ export function* getInitialPortalPage(payload) {
     rootPageId: response.rootPageId,
     myHomePageId: response.myHomePageId,
   });  
+  yield put({
+    type: actionTypes.SET_PORTAL_MENU_TYPE_CODE,
+    menuTypeCode: response.menuTypeCode,
+  });  
+
+  
 }
 
 export function* dockSetMyMenuData(payload) {

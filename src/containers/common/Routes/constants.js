@@ -30,6 +30,7 @@ export const RECEIVE_MYMENU_DATA_SUCCESS = 'containers/common/Routes/RECEIVE_MYM
 export const RECEIVE_MYMENU_DATA_FAIL = 'containers/common/Routes/RECEIVE_MYMENU_DATA_FAIL';
 export const COMMON_DOCK_LOADING_UNREADCNT = 'containers/common/Routes/COMMON_DOCK_LOADING_UNREADCNT';
 export const SET_DOCKAPPLIST = 'containers/common/Routes/SET_DOCKAPPLIST';
+export const SET_PORTAL_MENU_TYPE_CODE = 'containers/common/Routes/SET_PORTAL_MENU_TYPE_CODE';
 
 // 1-2 loadSkin
 export const LOAD_SKIN_SAGA = 'containers/common/Routes/LOAD_SKIN_SAGA';

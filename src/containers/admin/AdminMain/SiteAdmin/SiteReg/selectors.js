@@ -41,6 +41,8 @@ const loadLang = () => createSelector(selectSiteReg, selectSiteRegState => selec
 
 const myLang = () => createSelector(selectSiteReg, selectSiteRegState => selectSiteRegState.get('myLang'));
 
+const makeMenuTypeList = () => createSelector(selectSiteReg, selectSiteRegState => selectSiteRegState.get('menuTypeList'));
+
 export {
   selectSiteReg,
   makeNameCheckK,
@@ -55,4 +57,5 @@ export {
   myHome,
   loadLang,
   myLang,
+  makeMenuTypeList,
 };

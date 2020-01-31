@@ -71,6 +71,7 @@ class SiteDetail extends React.Component {
       dutySetMembers: [], // 직책
       grpSetMembers: [], // 가상그룹
       orgVal: props.location.state,
+      MENUTYPE_CD: '1',
     };
 
     this.props.getSkinList();
@@ -88,6 +89,7 @@ class SiteDetail extends React.Component {
     this.getSecInfoFromDBAll = this.getSecInfoFromDBAll.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     // this.setReadOnly = this.setReadOnly.bind(this);
+    this.onChangeMenuType = this.onChangeMenuType.bind(this);
   }
 
   componentDidMount() {
@@ -118,6 +120,7 @@ class SiteDetail extends React.Component {
       nameValid_Eng: false,
       nameValid_Chn: false,
       urlValid: false,
+      MENUTYPE_CD: nextProps.siteInfoRow.MENUTYPE_CD,
     });
 
     this.getSecInfoFromDB(nextProps.siteSecRowI);
@@ -287,6 +290,8 @@ class SiteDetail extends React.Component {
       this.state.BIZGRP_ID !== null &&
       this.state.THEME_CD !== '' &&
       this.state.THEME_CD !== null &&
+      this.state.MENUTYPE_CD !== '' &&
+      this.state.MENUTYPE_CD !== null &&
       mngCnt > 0 &&
       usrCnt > 0
     ) {
@@ -335,6 +340,7 @@ class SiteDetail extends React.Component {
       this.state.deptSetMembers,
       this.state.dutySetMembers,
       this.state.grpSetMembers,
+      this.state.MENUTYPE_CD,
     );
   };
 
@@ -501,6 +507,7 @@ class SiteDetail extends React.Component {
                     tmpDeptSetMembersTheme: prevState.deptSetMembers,
                     tmpDutySetMembersTheme: prevState.dutySetMembers,
                     tmpGrpSetMembersTheme: prevState.grpSetMembers,
+                    tmpMenuType: prevState.MENUTYPE_CD,
                   },
                   URL: prevState.URL.replace('http://', ''),
                   // nameValid: true,
@@ -552,6 +559,7 @@ class SiteDetail extends React.Component {
                   deptSetMembers: prevState.orgVal.tmpDeptSetMembersTheme,
                   dutySetMembers: prevState.orgVal.tmpDutySetMembersTheme,
                   grpSetMembers: prevState.orgVal.tmpGrpSetMembersTheme,
+                  MENUTYPE_CD: prevState.orgVal.tmpMenuType,
                 }));
               }}
             >
@@ -750,6 +758,17 @@ class SiteDetail extends React.Component {
     }
     return ''; // (<font color="RED">URL이 잘못되었습니다.</font>);
   };
+
+  menuTypeRow = data =>
+    data.map(item => (
+      <Radio value={item.CODE_CD} disabled={this.state.readOnly === 'true'}>
+        {`${lang.get('NAME', item)} (샘플 이미지 필요)`}
+      </Radio>
+    ));
+
+  onChangeMenuType(e) {
+    this.setState({ MENUTYPE_CD: e.target.value });
+  }
 
   render() {
     // 조직도로부터 데이터 가져오는 함수
@@ -965,6 +984,18 @@ class SiteDetail extends React.Component {
                         </FormItem>
                       </td>
                     </tr>
+                    <tr>
+                      <th className="required">
+                        <label htmlFor="s6">{intlObj.get(messages.lblMenuType)}</label>
+                      </th>
+                      <td>
+                        <FormItem {...formItemLayout}>
+                          <RadioGroup onChange={this.onChangeMenuType} value={this.state.MENUTYPE_CD} readOnly={this.state.readOnly === 'true'}>
+                            {this.menuTypeRow(this.props.menuType)}
+                          </RadioGroup>
+                        </FormItem>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </Form>
@@ -1001,6 +1032,7 @@ SiteDetail.propTypes = {
   getNameChkE: PropTypes.string.isRequired,
   getNameChkK: PropTypes.string.isRequired,
   getNameChkC: PropTypes.string.isRequired,
+  menuType: PropTypes.array,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -1022,6 +1054,7 @@ const mapDispatchToProps = dispatch => ({
     deptSetMembers,
     dutySetMembers,
     grpSetMembers,
+    menuTypeCd,
   ) =>
     dispatch(
       actions.updateSite(
@@ -1038,6 +1071,7 @@ const mapDispatchToProps = dispatch => ({
         deptSetMembers,
         dutySetMembers,
         grpSetMembers,
+        menuTypeCd,
       ),
     ),
   delSite: (delData, history) => dispatch(actions.delSite(delData, history)),
@@ -1058,6 +1092,7 @@ const mapStateToProps = createStructuredSelector({
   getNameChkE: selectors.makeNameCheckE(),
   getUrlChk: selectors.makeUrlCheck(),
   // mySkin: selectors.mySkin(),
+  menuType: selectors.makeMenuTypeList(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

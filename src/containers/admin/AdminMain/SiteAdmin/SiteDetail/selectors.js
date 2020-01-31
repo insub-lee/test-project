@@ -34,6 +34,8 @@ const makeNameCheckE = () => createSelector(selectSiteInfo, selectSiteRegState =
 
 const makeUrlCheck = () => createSelector(selectSiteInfo, selectSiteState => selectSiteState.get('urlChk'));
 
+const makeMenuTypeList = () => createSelector(selectSiteInfo, selectSiteState => selectSiteState.get('menuTypeList'));
+
 export {
   selectSiteInfo,
   makeSelectSiteInfo,
@@ -47,4 +49,5 @@ export {
   makeNameCheckC,
   makeNameCheckE,
   makeUrlCheck,
+  makeMenuTypeList,
 };
