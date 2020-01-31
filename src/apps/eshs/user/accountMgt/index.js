@@ -17,11 +17,11 @@ class AccountMgt extends Component {
   };
 
   render() {
-    const {
-      match: { params },
-      item,
-    } = this.props;
-    const { ID } = params;
+    // const {
+    //   match: { params },
+    //   item,
+    // } = this.props;
+    // const { ID } = params;
     return <BizBuilderBase sagaKey="AccountMgt" workSeq={401} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
