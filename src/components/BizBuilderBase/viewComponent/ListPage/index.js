@@ -44,12 +44,14 @@ class ListPage extends Component {
   setColumns = cols => {
     const columns = [];
     cols.forEach(node => {
-      columns.push({
-        dataIndex: node.comp.COMP_FIELD,
-        title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-        width: node.style.width,
-        render: (text, record) => this.renderComp(node.comp, text, record, true),
-      });
+      if (node.comp && node.comp.COMP_FIELD) {
+        columns.push({
+          dataIndex: node.comp.COMP_FIELD,
+          title: node.comp.CONFIG.property.HEADER_NAME_KOR,
+          width: node.style.width,
+          render: (text, record) => this.renderComp(node.comp, text, record, true),
+        });
+      }
     });
     return columns;
   };
