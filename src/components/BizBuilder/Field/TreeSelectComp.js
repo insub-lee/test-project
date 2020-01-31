@@ -66,17 +66,11 @@ class TreeSelectComp extends Component {
         )) ||
       [];
     const categoryData = tempData.length > 0 ? tempData[0] : [];
-    let selectedValue = '';
-    let labelValue = '';
-    if (categoryData.children !== undefined) {
-      selectedValue = categoryData.children.filter(c => String(c.value) === String(colData));
-      if (selectedValue.length) labelValue = selectedValue[0].title || '';
-    }
     return visible ? (
       <>
         {colData !== undefined ? (
           readOnly || CONFIG.property.readOnly ? (
-            <SelectReadComp value={labelValue} />
+            <SelectReadComp {...this.props} />
           ) : (
             <TreeSelect
               style={{ width: '100%' }}
