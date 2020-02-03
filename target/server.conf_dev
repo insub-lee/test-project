@@ -295,10 +295,10 @@ upstream portal-appmanage {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10006;
 }
 upstream builder-common {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10200;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10188;
 }
 upstream workflow-common {
-    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10300;
+    server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10301;
 }
 upstream mdcs-common {
     server dev-bizmicro-portal.marathon.l4lb.thisdcos.directory:10400;
