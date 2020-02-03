@@ -44,6 +44,7 @@ import MenuCategory from './MenuCategory';
 import AppsRouter from '../../../apps/appsRouter';
 import StyledContainer from './StyledContainer';
 import UserCategoryMenu from './UserCategoryMenu';
+import HeaderMenu from './HeaderMenuCategory';
 
 // import logo from 'images/logo.png';
 
@@ -485,23 +486,24 @@ class App extends React.Component {
             headerTitle={headerTitle}
             siteId={profile.SITE_ID}
           />
+          {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
           <MenuCategory
             open={headerMenuOpen}
             execMenu={this.execMenu}
             execPage={this.execPage}
-            myMNotiCnt={myMNotiCnt}
-            myHNotiCnt={myHNotiCnt}
-            myMNotiList={myMNotiList}
-            selectedIndex={selectedIndex}
-            menuName={menuName}
-            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-            setMyMenuData={setMyMenuData}
-            visible={this.state.visible}
+            // myMNotiCnt={myMNotiCnt}
+            // myHNotiCnt={myHNotiCnt}
+            // myMNotiList={myMNotiList}
+            // selectedIndex={selectedIndex}
+            // menuName={menuName}
+            // handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+            // setMyMenuData={setMyMenuData}
+            // visible={this.state.visible}
             setMenuClose={this.setHeaderMenuClose}
-            view={view}
-            menuLayoutCode={menuLayoutCode}
-            menuCompCode={menuCompCode}
+            // view={view}
+            // menuLayoutCode={menuLayoutCode}
+            // menuCompCode={menuCompCode}
           />
           <UserCategoryMenu
             isShow={open}
@@ -603,28 +605,17 @@ class App extends React.Component {
                       <Switch>
                         <Route
                           path={`/${basicPath.PORTAL}/settings`}
-                          render={() => (
-                            <UserSetting //eslint-disable-line
-                              applySkin={this.applySkin}
-                              hideExecApps={this.hideExecApps}
-                            />
-                          )}
+                          render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                         />
                         <Route
                           exact
                           path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
-                          render={props => (
-                            <UserStore //eslint-disable-line
-                              {...props}
-                              applySkin={this.applySkin}
-                              hideExecApps={this.hideExecApps}
-                            />
-                          )}
+                          render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                         />
                         <Route
                           path={`/${basicPath.PORTAL}/store`}
                           render={props => (
-                            <UserStore //eslint-disable-line
+                            <UserStore
                               {...props}
                               execMenu={this.execMenu}
                               execPage={this.execPage}
@@ -636,7 +627,7 @@ class App extends React.Component {
                         <Route
                           path={`/${basicPath.PORTAL}/card`}
                           render={props => (
-                            <UserMenuCard //eslint-disable-line
+                            <UserMenuCard
                               {...props}
                               execMenu={this.execMenu}
                               execPage={this.execPage}
