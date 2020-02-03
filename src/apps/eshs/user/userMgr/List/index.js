@@ -1,32 +1,42 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import request from 'request';
+import request from 'utils/request';
 import { Table } from 'antd';
 
-class List extends React.component {
+class List extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      users: [],
+    };
+  }
+
   componentDidMount() {
     const data = request({
       method: 'GET',
-      url: '/api/eshs/v1/common/AllEshsUsers',
+      url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/AllEshsUsers',
     });
-    const getResponse = data.response;
-    console.debug(getResponse);
+    data.then(res => {
+      this.setState({
+        users: res.response.users,
+      });
+      console.debug(res.response.users);
+    });
   }
 
   column = [
-    { title: '소속' },
-    { title: '사번' },
-    { title: '이름' },
-    { title: '직위' },
-    { title: '직책' },
-    { title: '근무지' },
-    { title: '전화번호' },
-    { title: '권한' },
+    { title: '소속', dataIndex: 'department', key: 'department' },
+    { title: '사번', dataIndex: 'employee_num', key: 'employee_num' },
+    { title: '이름', dataIndex: 'name', key: 'name' },
+    { title: '직위', dataIndex: 'pstn', key: 'pstn' },
+    { title: '직책', dataIndex: 'duty', kdutyey: 'duty' },
+    { title: '근무지', dataIndex: 'base_area', key: 'base_area' },
+    { title: '전화번호', dataIndex: 'tel', key: 'tel' },
+    { title: '권한', dataIndex: 'auth', key: 'auth' },
   ];
 
   render() {
-    // return <Table column={this.column} p></Table>;
-    return <div>Hello</div>;
+    return <Table dataSource={this.state.users} columns={this.column} pagination={false} />;
   }
 }
 
