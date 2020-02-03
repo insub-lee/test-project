@@ -50,7 +50,7 @@ class SelectYearComp extends Component {
         className={CONFIG.property.className || ''}
       >
         {options.map(o => (
-          <Option key={o} value={o}>
+          <Option key={o} value={o} style={{ height: 30 }}>
             {o}
           </Option>
         ))}
