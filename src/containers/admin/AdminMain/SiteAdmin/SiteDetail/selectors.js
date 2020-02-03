@@ -34,7 +34,8 @@ const makeNameCheckE = () => createSelector(selectSiteInfo, selectSiteRegState =
 
 const makeUrlCheck = () => createSelector(selectSiteInfo, selectSiteState => selectSiteState.get('urlChk'));
 
-const makeMenuTypeList = () => createSelector(selectSiteInfo, selectSiteState => selectSiteState.get('menuTypeList'));
+const makeMenuLayoutList = () => createSelector(selectSiteInfo, selectSiteState => selectSiteState.get('menuLayoutList'));
+const makeMenuCompList = () => createSelector(selectSiteInfo, selectSiteState => selectSiteState.get('menuCompList'));
 
 export {
   selectSiteInfo,
@@ -49,5 +50,6 @@ export {
   makeNameCheckC,
   makeNameCheckE,
   makeUrlCheck,
-  makeMenuTypeList,
+  makeMenuLayoutList,
+  makeMenuCompList,
 };

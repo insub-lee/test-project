@@ -31,7 +31,8 @@ export const updateSite = (
   deptSetMembers,
   dutySetMembers,
   grpSetMembers,
-  menuTypeCd,
+  menuLayoutCd,
+  menuCompCd,
 ) => ({
   type: constants.GET_SITE_UPDATE,
   siteId,
@@ -47,7 +48,8 @@ export const updateSite = (
   deptSetMembers,
   dutySetMembers,
   grpSetMembers,
-  menuTypeCd,
+  menuLayoutCd,
+  menuCompCd,
 });
 
 export const delSite = (delData, history) => ({

@@ -455,7 +455,8 @@ class App extends React.Component {
       menuFixedYn,
       isUnreadCnt,
       isPreviewPage,
-      menuTypeCode,
+      menuLayoutCode,
+      menuCompCode,
     } = this.props;
 
     let theme = themes.skin1;
@@ -468,7 +469,7 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          {/* TODO menuTypeCode 값에 따라 메뉴 타입 변경 '1':가로, '2':탑 */}
+          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태)/}
           {/* Header */}
           <Header
             className="portalHeader"
@@ -499,7 +500,8 @@ class App extends React.Component {
             visible={this.state.visible}
             setMenuClose={this.setHeaderMenuClose}
             view={view}
-            menuTypeCode={menuTypeCode}
+            menuLayoutCode={menuLayoutCode}
+            menuCompCode={menuCompCode}
           />
           <UserCategoryMenu
             isShow={open}
@@ -762,7 +764,8 @@ App.propTypes = {
   rootPageId: PropTypes.number,
   rootAppYn: PropTypes.string,
   myHomePageId: PropTypes.number,
-  menuTypeCode: PropTypes.string,
+  menuLayoutCode: PropTypes.string,
+  menuCompCode: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -780,7 +783,8 @@ App.defaultProps = {
   hasRoleBizMng: false,
   headerTitle: '',
   rootAppYn: 'N',
-  menuTypeCode: '1',
+  menuLayoutCode: '1',
+  menuCompCode: '1',
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -817,7 +821,8 @@ const mapStateToProps = createStructuredSelector({
   rootPageId: routesSelector.makeSelectRootPageId(),
   rootAppYn: routesSelector.makeSelectRootAppYn(),
   myHomePageId: routesSelector.makeSelectMyHomePageID(),
-  menuTypeCode: selectors.makeSelectMenuTypeCode(),
+  menuLayoutCode: selectors.makeSelectMenuLayoutCode(),
+  menuCompCode: selectors.makeSelectMenuCompCode(),
 });
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),
