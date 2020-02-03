@@ -284,7 +284,8 @@ export function* getInitialPortalPage(payload) {
   });  
   yield put({
     type: actionTypes.SET_PORTAL_MENU_TYPE_CODE,
-    menuTypeCode: response.menuTypeCode,
+    menuLayoutCode: response.menuLayoutCode,
+    menuCompCode: response.menuCompCode,
   });  
 
   

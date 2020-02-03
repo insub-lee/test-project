@@ -47,7 +47,8 @@ export function* getSiteInfo(payload) {
   }
   yield put({
     type: constants.SET_MENU_TYPE_LIST,
-    payload: response.menuTypeList || fromJS([]),
+    menuLayoutList: response.menuLayoutList || fromJS([]),
+    menuCompList: response.menuCompList || fromJS([]),
   });
 }
 

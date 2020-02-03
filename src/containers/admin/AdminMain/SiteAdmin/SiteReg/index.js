@@ -59,7 +59,8 @@ class SiteReg extends React.Component {
       nameValid_Eng: false,
       // nameValid: false,
       urlValid: false,
-      MENUTYPE_CD: '1',
+      MENU_LAYOUT_CD: '1',
+      MENU_COMP_CD: '1',
     };
 
     this.onChangeName = this.onChangeName.bind(this);
@@ -69,7 +70,8 @@ class SiteReg extends React.Component {
     this.onChangeTheme = this.onChangeTheme.bind(this);
     this.setDefault = this.setDefault.bind(this);
     // this.regSite = this.regSite.bind(this);
-    this.onChangeMenuType = this.onChangeMenuType.bind(this);
+    this.onChangeMenuLayout = this.onChangeMenuLayout.bind(this);
+    this.onChangeMenuComp = this.onChangeMenuComp.bind(this);
 
     this.props.getSkinList();
     this.props.getHomeList();
@@ -254,8 +256,10 @@ class SiteReg extends React.Component {
       this.state.URL !== null &&
       this.state.THEME_CD !== '' &&
       this.state.THEME_CD !== null &&
-      this.state.MENUTYPE_CD !== '' &&
-      this.state.MENUTYPE_CD !== null &&
+      this.state.MENU_LAYOUT_CD !== '' &&
+      this.state.MENU_LAYOUT_CD !== null &&
+      this.state.MENU_COMP_CD !== '' &&
+      this.state.MENU_COMP_CD !== null &&
       mngCnt > 0 &&
       usrCnt > 0
     ) {
@@ -293,7 +297,8 @@ class SiteReg extends React.Component {
       this.state.dutySetMembers,
       this.state.grpSetMembers,
       this.props.history,
-      this.state.MENUTYPE_CD,
+      this.state.MENU_LAYOUT_CD,
+      this.state.MENU_COMP_CD,
     );
   };
 
@@ -333,15 +338,26 @@ class SiteReg extends React.Component {
   //   });
   // };
 
-  menuTypeRow = data =>
+  menuLayOutRow = data =>
     data.map(item => (
       <Radio value={item.CODE_CD} disabled={this.state.readOnly === 'true'}>
         {`${lang.get('NAME', item)} (샘플 이미지 필요)`}
       </Radio>
     ));
 
-  onChangeMenuType(e) {
-    this.setState({ MENUTYPE_CD: e.target.value });
+  menuCompRow = data =>
+    data.map(item => (
+      <Radio value={item.CODE_CD} disabled={this.state.readOnly === 'true'}>
+        {`${lang.get('NAME', item)} (샘플 이미지 필요)`}
+      </Radio>
+  ));
+
+  onChangeMenuLayout(e) {
+    this.setState({ MENU_LAYOUT_CD: e.target.value });
+  }
+
+  onChangeMenuComp(e) {
+    this.setState({ MENU_COMP_CD: e.target.value });
   }
 
   render() {
@@ -727,16 +743,28 @@ class SiteReg extends React.Component {
                 </tr>
                 <tr>
                   <th className="required">
-                    <label htmlFor="s5">{intlObj.get(messages.lblMenuType)}</label>
+                    <label htmlFor="s5">{intlObj.get(messages.lblMenuLayout)}</label>
                   </th>
                   <td>
                     <FormItem {...formItemLayout}>
-                      <RadioGroup onChange={this.onChangeMenuType} value={this.state.MENUTYPE_CD} >
-                        {this.menuTypeRow(this.props.menuType)}
+                      <RadioGroup onChange={this.onChangeMenuLayout} value={this.state.MENU_LAYOUT_CD}>
+                        {this.menuLayOutRow(this.props.menuLayoutList)}
                       </RadioGroup>
                     </FormItem>
                   </td>
                 </tr>
+                <tr>
+                  <th className="required">
+                    <label htmlFor="s6">{intlObj.get(messages.lblMenuComp)}</label>
+                  </th>
+                  <td>
+                    <FormItem {...formItemLayout}>
+                      <RadioGroup onChange={this.onChangeMenuComp} value={this.state.MENU_COMP_CD}>
+                        {this.menuCompRow(this.props.menuCompList)}
+                      </RadioGroup>
+                    </FormItem>
+                  </td>
+                </tr>                
               </tbody>
             </table>
           </StyleSiteAdminForm>
@@ -776,7 +804,8 @@ SiteReg.propTypes = {
   getDefaultList: PropTypes.func, //eslint-disable-line
   getNameChkE: PropTypes.string.isRequired,
   getNameChkC: PropTypes.string.isRequired,
-  menuType: PropTypes.array,
+  menuLayoutList: PropTypes.array,
+  menuCompList: PropTypes.array,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -798,7 +827,8 @@ const mapDispatchToProps = dispatch => ({
     dutySetMembers,
     grpSetMembers,
     history,
-    menuTypeCd,
+    menuLayoutCd,
+    menuCompCd,
   ) =>
     dispatch(
       actions.registSite(
@@ -815,7 +845,8 @@ const mapDispatchToProps = dispatch => ({
         dutySetMembers,
         grpSetMembers,
         history,
-        menuTypeCd,
+        menuLayoutCd,
+        menuCompCd,
       ),
     ),
   getDefaultList: () => dispatch(actions.getDefaultList()),
@@ -832,7 +863,8 @@ const mapStateToProps = createStructuredSelector({
   mySkin: selectors.mySkin(),
   myHome: selectors.myHome(),
   getDefault: selectors.makeDefaultList(),
-  menuType: selectors.makeMenuTypeList(),
+  menuLayoutList: selectors.makeMenuLayoutList(),
+  menuCompList: selectors.makeMenuCompList(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
