@@ -1,11 +1,11 @@
-import { call, put, take, takeLatest, select } from 'redux-saga/effects';
+import { call, put, select, take, takeLatest } from 'redux-saga/effects';
 import { delay } from 'redux-saga';
 import { push } from 'react-router-redux';
 import update from 'react-addons-update';
 import { EB } from 'utils/SockjsFunc';
 import { Axios } from 'utils/AxiosFunc';
 import { fromJS } from 'immutable';
-import { lang, searchTree, checkPath } from 'utils/commonUtils';
+import { checkPath, lang, searchTree } from 'utils/commonUtils';
 import * as treeFunc from 'containers/common/functions/treeFunc';
 import notify from 'components/Notification';
 import * as authConstants from 'containers/common/Auth/constants';
@@ -284,7 +284,8 @@ export function* getInitialPortalPage(payload) {
   });  
   yield put({
     type: actionTypes.SET_PORTAL_MENU_TYPE_CODE,
-    menuTypeCode: response.menuTypeCode,
+    menuLayoutCode: response.menuLayoutCode,
+    menuCompCode: response.menuCompCode,
   });  
 
   

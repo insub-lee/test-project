@@ -177,8 +177,12 @@ export default defineMessages({
     id: 'admin.AdminMain.SiteAdmin.urlSuccess',
     defaultMessage: '사용할 수 있는 URL입니다.',
   },
-  lblMenuType: {
-    id: 'admin.AdminMain.SiteAdmin.lblMenuType',
-    defaultMessage: '메뉴타입',
+  lblMenuLayout: {
+    id: 'admin.AdminMain.SiteAdmin.lblMenuLayout',
+    defaultMessage: '메뉴레이아웃',
+  },
+  lblMenuComp: {
+    id: 'admin.AdminMain.SiteAdmin.lblMenuComp',
+    defaultMessage: '메뉴컴포넌트',
   },
 });

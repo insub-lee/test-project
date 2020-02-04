@@ -7,45 +7,58 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
 import { Route, Switch } from 'react-router-dom';
-import { Layout, Spin, Icon, Tooltip, Select } from 'antd';
-import Scrollbars from 'react-custom-scrollbars';
+import { Icon, Layout, Spin, Tooltip } from 'antd';
 import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 
 import Rodal from 'rodal';
 
-import Fullscreen from 'components/Fullscreen';
+import Loadable from 'components/Loadable';
+
 import * as routesAction from 'containers/common/Routes/actions';
 import { basicPath } from 'containers/common/constants';
-import SideMenu from 'components/SideMenu';
 import * as routesSelector from 'containers/common/Routes/selectors';
 import * as authSelector from 'containers/common/Auth/selectors';
+import Fullscreen from 'components/Fullscreen';
+import SideMenu from 'components/SideMenu';
 import { BtnMyhome } from './UserStore/components/uielements/buttons.style';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
 import * as selectors from './selectors';
-import themes from '../../../config/themes/index';
-import AppWrapper from './AppWrapper';
-import Header from '../components/Header';
-// import Footer from '../components/Footer';
-// import './global.css';
 import * as actions from './actions';
 import saga from './saga';
 import reducer from './reducer';
-// import UserDock from './UserDock';
-// import UserMenu from './UserMenu';
-import UserMenuCard from './UserMenuCard';
-import UserSetting from './UserSetting';
-import UserStore from './UserStore';
-import RodalPage from '../../../components/Rodal';
-import Page from '../../../components/Page';
+import themes from '../../../config/themes';
+
+import AppWrapper from './AppWrapper';
+import Header from '../components/Header';
 import MenuCategory from './MenuCategory';
-import AppsRouter from '../../../apps/appsRouter';
 import StyledContainer from './StyledContainer';
 import UserCategoryMenu from './UserCategoryMenu';
 
-// import logo from 'images/logo.png';
+/* Code Split */
+const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
+const UserSetting = Loadable({ loader: () => import('./UserSetting') });
+const UserStore = Loadable({ loader: () => import('./UserStore') });
+const RodalPage = Loadable({ loader: () => import('../../../components/Rodal') });
+const Page = Loadable({ loader: () => import('../../../components/Page') });
+const AppsRouter = Loadable({ loader: () => import('../../../apps/appsRouter') });
+
+// import Fullscreen from 'components/Fullscreen';
+// import SideMenu from 'components/SideMenu';
+// import themes from '../../../config/themes/index';
+// import AppWrapper from './AppWrapper';
+// import Header from '../components/Header';
+// import UserMenuCard from './UserMenuCard';
+// import UserSetting from './UserSetting';
+// import UserStore from './UserStore';
+// import RodalPage from '../../../components/Rodal';
+// import Page from '../../../components/Page';
+// import MenuCategory from './MenuCategory';
+// import AppsRouter from '../../../apps/appsRouter';
+// import StyledContainer from './StyledContainer';
+// import UserCategoryMenu from './UserCategoryMenu';
 
 const wrap = dragDropContext(HTML5Backend);
 const { Content } = Layout;
@@ -63,19 +76,6 @@ const desktopDockCss = {
 */
 
 const routePaths = [`/${basicPath.PORTAL}/settings`, `/${basicPath.PORTAL}/store/appMain/bizManage`, `/${basicPath.PORTAL}/store`, `/${basicPath.PORTAL}/card`];
-
-const generatorObject = () => {
-  const number = Math.floor(Math.random() * 6) + 1;
-  const list = [];
-  for (let i = 0; i < number; i += 1) {
-    list.push({
-      key: i,
-      value: i,
-      text: `Hello Suprise Fuxxing Work ${number}`,
-    });
-  }
-  return list;
-};
 
 class App extends React.Component {
   constructor(props) {
@@ -455,7 +455,8 @@ class App extends React.Component {
       menuFixedYn,
       isUnreadCnt,
       isPreviewPage,
-      menuTypeCode,
+      menuLayoutCode,
+      menuCompCode,
     } = this.props;
 
     let theme = themes.skin1;
@@ -468,7 +469,7 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          {/* TODO menuTypeCode 값에 따라 메뉴 타입 변경 '1':가로, '2':탑 */}
+          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태)/}
           {/* Header */}
           <Header
             className="portalHeader"
@@ -484,23 +485,9 @@ class App extends React.Component {
             headerTitle={headerTitle}
             siteId={profile.SITE_ID}
           />
+          {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
-          <MenuCategory
-            open={headerMenuOpen}
-            execMenu={this.execMenu}
-            execPage={this.execPage}
-            myMNotiCnt={myMNotiCnt}
-            myHNotiCnt={myHNotiCnt}
-            myMNotiList={myMNotiList}
-            selectedIndex={selectedIndex}
-            menuName={menuName}
-            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
-            setMyMenuData={setMyMenuData}
-            visible={this.state.visible}
-            setMenuClose={this.setHeaderMenuClose}
-            view={view}
-            menuTypeCode={menuTypeCode}
-          />
+          <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose} />
           <UserCategoryMenu
             isShow={open}
             setOpen={this.setOpen}
@@ -601,28 +588,17 @@ class App extends React.Component {
                       <Switch>
                         <Route
                           path={`/${basicPath.PORTAL}/settings`}
-                          render={() => (
-                            <UserSetting //eslint-disable-line
-                              applySkin={this.applySkin}
-                              hideExecApps={this.hideExecApps}
-                            />
-                          )}
+                          render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                         />
                         <Route
                           exact
                           path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
-                          render={props => (
-                            <UserStore //eslint-disable-line
-                              {...props}
-                              applySkin={this.applySkin}
-                              hideExecApps={this.hideExecApps}
-                            />
-                          )}
+                          render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                         />
                         <Route
                           path={`/${basicPath.PORTAL}/store`}
                           render={props => (
-                            <UserStore //eslint-disable-line
+                            <UserStore
                               {...props}
                               execMenu={this.execMenu}
                               execPage={this.execPage}
@@ -634,7 +610,7 @@ class App extends React.Component {
                         <Route
                           path={`/${basicPath.PORTAL}/card`}
                           render={props => (
-                            <UserMenuCard //eslint-disable-line
+                            <UserMenuCard
                               {...props}
                               execMenu={this.execMenu}
                               execPage={this.execPage}
@@ -762,7 +738,8 @@ App.propTypes = {
   rootPageId: PropTypes.number,
   rootAppYn: PropTypes.string,
   myHomePageId: PropTypes.number,
-  menuTypeCode: PropTypes.string,
+  menuLayoutCode: PropTypes.string,
+  menuCompCode: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -780,7 +757,8 @@ App.defaultProps = {
   hasRoleBizMng: false,
   headerTitle: '',
   rootAppYn: 'N',
-  menuTypeCode: '1',
+  menuLayoutCode: '1',
+  menuCompCode: '1',
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -817,8 +795,10 @@ const mapStateToProps = createStructuredSelector({
   rootPageId: routesSelector.makeSelectRootPageId(),
   rootAppYn: routesSelector.makeSelectRootAppYn(),
   myHomePageId: routesSelector.makeSelectMyHomePageID(),
-  menuTypeCode: selectors.makeSelectMenuTypeCode(),
+  menuLayoutCode: selectors.makeSelectMenuLayoutCode(),
+  menuCompCode: selectors.makeSelectMenuCompCode(),
 });
+
 const mapDispatchToProps = dispatch => ({
   deleteDock: () => dispatch(actions.deleteDock()),
 
@@ -843,7 +823,9 @@ const mapDispatchToProps = dispatch => ({
   resetLastExecYn: () => dispatch(routesAction.resetLastExecYn()),
   handleUpdateMenuFixedYn: menuFixedYn => dispatch(routesAction.updateMenuFixedYn(menuFixedYn)),
 });
+
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withReducer = injectReducer({ key: 'app', reducer });
 const withSaga = injectSaga({ key: 'app', saga });
+
 export default compose(withReducer, withSaga, withConnect)(wrap(App));

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
 const RestrictedRoute = ({ component: Component, isLoggedIn, profile, ...rest }) => (
   <div>
