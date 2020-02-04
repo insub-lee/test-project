@@ -241,9 +241,7 @@ class UserMenu extends React.Component {
     const { open } = this.props;
     return (
       <div onMouseLeave={this.onNoneClick} onMouseEnter={this.onMenuClick}>
-        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch shadow>
-          <p style={{ dispaly: 'none' }}>remove children undefined error</p>
-        </Sidebar>
+        <Sidebar sidebar={sidebarContent} open={open} styles={styleObj} touch shadow />
       </div>
     );
   }

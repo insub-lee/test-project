@@ -76,9 +76,7 @@ const getSidebarContent = (commonMenuTreeData, execMenu, execPage) => {
 
 const MenuCategory = ({ open, setMenuClose, commonMenuTreeData, execMenu, execPage }) => (
   <div onMouseLeave={setMenuClose}>
-    <Sidebar sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)} open={open} styles={styleObj} touch shadow>
-      <p style={{ dispaly: 'none' }}>remove children undefined error</p>
-    </Sidebar>
+    <Sidebar sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)} open={open} styles={styleObj} touch shadow />
   </div>
 );
 
