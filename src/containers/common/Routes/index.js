@@ -6,7 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
 import { Debounce } from 'react-throttle';
-import { LicenseManager } from 'ag-grid-enterprise';
+import { LicenseManager } from 'ag-grid-enterprise/dist/lib/licenseManager';
 import WindowResizeListener from 'react-window-size-listener';
 import { checkPath, intlObj } from 'utils/commonUtils';
 import injectReducer from 'utils/injectReducer';

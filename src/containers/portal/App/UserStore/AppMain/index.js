@@ -1,17 +1,17 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+
 import BizStore from './BizStore';
-import BizManage from './BizManage';
-import MyPage from './MyPage';
-import Organization from './Organization';
-import ErrorPage from './ErrorPage';
-import AppSec from './AppSec';
-import MyApp from './MyApp';
-import AppOpinion from './AppOpinion';
+// import BizManage from './BizManage';
+// import MyPage from './MyPage';
+// import Organization from './Organization';
+// import ErrorPage from './ErrorPage';
+// import AppSec from './AppSec';
+// import MyApp from './MyApp';
+// import AppOpinion from './AppOpinion';
 
 const AppMain = () => (
   <div>
-    {console.debug('## WTF!!!! App Main')}
     <Switch>
       <Route path="/portal/store/appMain" component={BizStore} />
       {/*

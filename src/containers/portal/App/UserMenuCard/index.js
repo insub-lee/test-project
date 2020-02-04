@@ -5,6 +5,8 @@ import { Layout } from 'antd';
 import { ThemeProvider } from 'styled-components';
 import themes from 'config/themes/index';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+// import Loadable from 'components/Loadable';
+
 import StyleUserMenuCard from './StyleUserMenuCard';
 import AppWrapper from './AppWrapper';
 
@@ -12,6 +14,9 @@ import BizMenuCardList from './BizMenuCardList';
 import BizMenuCardDetail from './BizMenuCardDetail';
 
 import './global-userMenuCard.css';
+
+// const BizMenuCardList = Loadable({ loader: import('./BizMenuCardList') });
+// const BizMenuCardDetail = Loadable({ loader: import('./BizMenuCardDetail') });
 
 const { Content } = Layout;
 
