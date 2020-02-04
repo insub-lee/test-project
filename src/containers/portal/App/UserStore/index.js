@@ -20,6 +20,7 @@ import { ModalContainer, ModalRoute } from 'react-router-modal';
 
 import Widget from 'components/appSetting';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+import Loadable from 'components/Loadable';
 
 import * as selectors from './selectors';
 import reducer from './reducer';
@@ -28,29 +29,29 @@ import saga from './saga';
 import AppWrapper from './AppWrapper';
 import StyleUserSetting from './StyleUserSetting';
 
-import AppList from './AppMain/AppList';
-import AppMain from './AppMain';
-import Main from './AppMain/MyPage/Main';
-import AppInfo from './AppMain/MyPage/AppInfo';
-import PageInfo from './AppMain/MyPage/PageInfo';
-import AppBizModal from './AppMain/MyPage/AppBizModal';
-import BizDetail from './AppMain/Biz/BizDetail';
-import BizMenuList from './AppMain/Biz/BizMenuList';
-import BizStore from './AppMain/BizStore';
-import BizManage from './AppMain/BizManage';
+// import AppList from './AppMain/AppList';
+// import AppMain from './AppMain';
+// import Main from './AppMain/MyPage/Main';
+// import AppInfo from './AppMain/MyPage/AppInfo';
+// import PageInfo from './AppMain/MyPage/PageInfo';
+// import AppBizModal from './AppMain/MyPage/AppBizModal';
+// import BizDetail from './AppMain/Biz/BizDetail';
+// import BizMenuList from './AppMain/Biz/BizMenuList';
+// import BizStore from './AppMain/BizStore';
+// import BizManage from './AppMain/BizManage';
 
 import './global-store.css';
 
-// const AppList = Loadable({ loader: import('./AppMain/AppList') });
-// const AppMain = Loadable({ loader: import('./AppMain') });
-// const Main = Loadable({ loader: import('./AppMain/MyPage/Main') });
-// const AppInfo = Loadable({ loader: import('./AppMain/MyPage/AppInfo') });
-// const PageInfo = Loadable({ loader: import('./AppMain/MyPage/PageInfo') });
-// const AppBizModal = Loadable({ loader: import('./AppMain/MyPage/AppBizModal') });
-// const BizDetail = Loadable({ loader: import('./AppMain/Biz/BizDetail') });
-// const BizMenuList = Loadable({ loader: import('./AppMain/Biz/BizMenuList') });
-// const BizStore = Loadable({ loader: import('./AppMain/BizStore') });
-// const BizManage = Loadable({ loader: import('./AppMain/BizManage') });
+const AppList = Loadable({ loader: () => import('./AppMain/AppList') });
+const AppMain = Loadable({ loader: () => import('./AppMain') });
+const Main = Loadable({ loader: () => import('./AppMain/MyPage/Main') });
+const AppInfo = Loadable({ loader: () => import('./AppMain/MyPage/AppInfo') });
+const PageInfo = Loadable({ loader: () => import('./AppMain/MyPage/PageInfo') });
+const AppBizModal = Loadable({ loader: () => import('./AppMain/MyPage/AppBizModal') });
+const BizDetail = Loadable({ loader: () => import('./AppMain/Biz/BizDetail') });
+const BizMenuList = Loadable({ loader: () => import('./AppMain/Biz/BizMenuList') });
+const BizStore = Loadable({ loader: () => import('./AppMain/BizStore') });
+const BizManage = Loadable({ loader: () => import('./AppMain/BizManage') });
 
 const { Content } = Layout;
 

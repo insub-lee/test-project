@@ -13,7 +13,7 @@ import messages from './messages';
 import AppList from './AppList';
 import StyleAppBizModal from '../StyleAppBizModal';
 
-// const AppList = Loadable({ loader: import('./AppList') });
+// const AppList = Loadable({ loader: () => import('./AppList') });
 
 class AppModal extends PureComponent {
   searchEnter = e => {

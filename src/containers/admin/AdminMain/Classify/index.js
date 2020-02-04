@@ -4,8 +4,8 @@ import { Route, Switch } from 'react-router-dom';
 
 import RootMap from './RootMap';
 import CategoryMap from './CategoryMap';
-// const RootMap = Loadable({ loader: import('./RootMap') });
-// const CategoryMap = Loadable({ loader: import('./CategoryMap') });
+// const RootMap = Loadable({ loader: () => import('./RootMap') });
+// const CategoryMap = Loadable({ loader: () => import('./CategoryMap') });
 
 const Classify = () => (
   <div>
