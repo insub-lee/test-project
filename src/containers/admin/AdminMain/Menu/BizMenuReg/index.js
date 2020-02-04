@@ -35,10 +35,10 @@ import TopMenu from './TopMenu/index';
 import StyleBizDetail from './StyleBizDetail';
 import StyleBizDetailContent from './StyleBizDetailContent';
 
-// const BizInfo = Loadable({ loader: import('./BizInfo') });
-// const AppInfo = Loadable({ loader: import('./AppInfo') });
-// const PageInfo = Loadable({ loader: import('./PageInfo') });
-// const AppBizModal = Loadable({ loader: import('./AppBizModal') });
+// const BizInfo = Loadable({ loader: () => import('./BizInfo') });
+// const AppInfo = Loadable({ loader: () => import('./AppInfo') });
+// const PageInfo = Loadable({ loader: () => import('./PageInfo') });
+// const AppBizModal = Loadable({ loader: () => import('./AppBizModal') });
 
 /* eslint-disable */
 class BizMenuReg extends Component {

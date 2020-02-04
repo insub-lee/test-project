@@ -7,7 +7,11 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
 import { Route, Switch } from 'react-router-dom';
-import { Icon, Layout, Spin, Tooltip } from 'antd';
+// import { Icon, Layout, Spin, Tooltip } from 'antd';
+import Icon from 'antd/lib/icon';
+import Layout from 'antd/lib/layout';
+import Spin from 'antd/lib/spin';
+import Tooltip from 'antd/lib/tooltip';
 import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -33,11 +37,13 @@ import themes from '../../../config/themes';
 
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
-import MenuCategory from './MenuCategory';
+// import MenuCategory from './MenuCategory';
 import StyledContainer from './StyledContainer';
-import UserCategoryMenu from './UserCategoryMenu';
+// import UserCategoryMenu from './UserCategoryMenu';
 
 /* Code Split */
+const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
+const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
 const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
 const UserSetting = Loadable({ loader: () => import('./UserSetting') });
 const UserStore = Loadable({ loader: () => import('./UserStore') });
@@ -128,10 +134,11 @@ class App extends React.Component {
 
     if (view !== prevProps.view) {
       if (view === 'Mobile' || view === 'Tablet') {
-        const styleSpinnerCopy = { ...this.styleSpinner };
-        styleSpinnerCopy.height = '100vh';
-        styleSpinnerCopy.paddingTop = '70%';
-
+        const styleSpinnerCopy = {
+          ...this.styleSpinner,
+          height: '100vh',
+          paddingTop: '70%',
+        };
         this.styleSpinner = styleSpinnerCopy;
       }
     }
@@ -267,8 +274,6 @@ class App extends React.Component {
   };
 
   execPage = (node, type) => {
-    console.debug('@@@@ node: ', node);
-    console.debug('@@@@ type: ', type);
     const { dockAppList } = this.props;
 
     switch (node) {

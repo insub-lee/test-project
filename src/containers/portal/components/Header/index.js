@@ -1,21 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Tooltip } from 'antd';
+import Tooltip from 'antd/lib/tooltip';
 import { split } from 'lodash';
 
+import Loadable from 'components/Loadable';
 import { lang } from 'utils/commonUtils';
-import HyundaiLogo from 'images/Hyundai-Logo.png';
+// import HyundaiLogo from 'images/Hyundai-Logo.png';
 
 // import Badge from '../../../../components/Badge/StyleBadge';
-import UserSearch from '../../App/UserSearch';
-import UserProfile from '../../App/UserProfile';
-import AlarmPopover from '../../App/UserNotice';
-import ManagerInfo from '../ManagerInfo';
+// import UserSearch from '../../App/UserSearch';
+// import UserProfile from '../../App/UserProfile';
+// import AlarmPopover from '../../App/UserNotice';
+// import ManagerInfo from '../ManagerInfo';
 // import messages from './messages';
 import StyledHeader from './StyledHeader';
 import Trigger from '../../App/Trigger';
 import Button from '../../../../components/Button';
+
+const UserSearch = Loadable({ loader: () => import('../../App/UserSearch') });
+const UserProfile = Loadable({ loader: () => import('../../App/UserProfile') });
+const AlarmPopover = Loadable({ loader: () => import('../../App/UserNotice') });
+const ManagerInfo = Loadable({ loader: () => import('../ManagerInfo') });
 
 const Header = ({
   myHNotiCnt,
