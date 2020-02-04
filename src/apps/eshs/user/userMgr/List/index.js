@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Column } from 'react-virtualized';
 
-const ESHS_PARENT_ID = 'ESHS_PARENT_ID';
-const ESHS_DEPARTMENT_ID = 'ESHS_DEPARTMENT_ID';
-
 class List extends Component {
   constructor(props) {
     super(props);
@@ -13,16 +10,21 @@ class List extends Component {
     };
   }
 
+  ESHS_PARENT_ID = 'ESHS_PARENT_ID';
+
+  ESHS_DEPARTMENT_ID = 'ESHS_DEPARTMENT_ID';
+
   componentDidMount() {
     const { id, getCallDataHanlder, apiAry } = this.props;
     getCallDataHanlder(id, apiAry);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { result } = nextProps;
+    const { result, formData } = nextProps;
     if (result.userList) {
       if (prevState.users !== result.userList.users) {
-        return { users: result.userList.users.filter(item => item.prnt_id === 1082 || item.prnt_id === null) };
+        return { users: result.userList.users };
+        // return { users: result.userList.users.filter(item => item.prnt_id === 1082 || item.prnt_id === null) };
       }
     }
     return null;
@@ -30,8 +32,9 @@ class List extends Component {
 
   render() {
     const { id, formData } = this.props;
+    // console.debug('@@@@@LIST RENDERING@@@@@');
     console.debug('@@@LIST@@@', id, formData.ESHS_PARENT_ID, formData.ESHS_DEPARTMENT_ID);
-
+    const { users } = this.state;
     return (
       <div>
         <Table
@@ -40,8 +43,8 @@ class List extends Component {
           headerHeight={30}
           // headerStyle={{ textAlign: 'center' }}
           rowHeight={50}
-          rowCount={this.state.users.length}
-          rowGetter={({ index }) => this.state.users[index]}
+          rowCount={users.length}
+          rowGetter={({ index }) => users[index]}
         >
           <Column label="소속" dataKey="department" width={150} />
           <Column label="사번" dataKey="employee_num" width={100} />
@@ -62,6 +65,7 @@ List.propTypes = {
   getCallDataHanlder: PropTypes.func,
   apiAry: PropTypes.array,
   result: PropTypes.func,
+  formData: PropTypes.func,
 };
 
 List.defaultProps = {

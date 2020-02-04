@@ -63,7 +63,6 @@ class SearchBar extends Component {
   render() {
     const { hq, isSelected } = this.state;
     const { selectedDept } = this;
-    console.debug(this.props.id, this.props.formData);
     return (
       <div>
         <Select defaultValue="지역 전체" style={{ width: 110, padding: 3 }}>
@@ -77,6 +76,7 @@ class SearchBar extends Component {
           ))}
         </Select>
         <Select defaultValue="팀 전체" style={{ width: 170, padding: 3 }} disabled={!isSelected} onChange={this.handleDeptChange}>
+          <Option value={0}>팀 전체</Option>
           {selectedDept.map(item => (
             <Option value={item.dept_id}>{item.name_kor}</Option>
           ))}
