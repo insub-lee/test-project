@@ -1,5 +1,5 @@
 import React from 'react';
-import { notification } from 'antd';
+import notification from 'antd/lib/notification';
 import styled from 'styled-components';
 import parse from 'html-react-parser';
 import { BtnDkGray } from 'containers/portal/components/uielements/buttons.style';

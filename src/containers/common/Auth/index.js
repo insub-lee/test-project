@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Spin } from 'antd';
+import Spin from 'antd/lib/spin';
 
 import * as selectors from './selectors';
 import * as authActions from './actions';

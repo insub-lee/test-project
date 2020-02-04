@@ -16,6 +16,8 @@ import ErrorBoundary from 'containers/common/ErrorBoundary';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+// import Loadable from 'components/Loadable';
+
 import * as selectors from './selectors';
 import * as actions from './actions';
 import reducer from './reducer';
@@ -31,7 +33,13 @@ import AppModal from './AppModal';
 import StyleAppStore from './StyleAppStore';
 // import MyAppDetail from '../../../store/AppMain/MyApp/MyAppDetail';
 // import MyAppUpdate from '../../../store/AppMain/MyApp/MyAppUpdate';
-const Option = Select.Option; // eslint-disable-line
+
+// const Main = Loadable({ loader: import('./Main') });
+// const AppInfo = Loadable({ loader: import('./AppInfo') });
+// const PageInfo = Loadable({ loader: import('./PageInfo') });
+// const AppModal = Loadable({ loader: import('./AppModal') });
+
+const { Option } = Select;
 const homeUrl = '/admin/adminmain/appstore';
 
 function getUrl(node) {

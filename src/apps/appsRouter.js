@@ -2,7 +2,8 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { basicPath } from 'containers/common/constants';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
-import Loadable from 'react-loadable';
+// import Loadable from 'react-loadable';
+import Loadable from 'components/Loadable';
 import ApplyWidget from 'components/ApplyWidget';
 import ServiceStop from 'components/ServiceStatus';
 import PropTypes from 'prop-types';
@@ -12,10 +13,6 @@ import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
 import ApproveBase from './Workflow/User/ApproveBase';
 
 class AppsRouter extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     const { selectedApp } = this.props;
     this.forceUpdate();
@@ -26,7 +23,6 @@ class AppsRouter extends React.PureComponent {
     const { selectedApp: prevSelectedApp } = prevProps;
     const { selectedApp } = this.props;
     if (selectedApp && prevSelectedApp && JSON.stringify(selectedApp) !== JSON.stringify(prevSelectedApp)) {
-      console.debug('update ?');
       this.forceUpdate();
       this.contents = this.getAppsRouter(selectedApp);
     }
@@ -44,7 +40,6 @@ class AppsRouter extends React.PureComponent {
   getAppsRouter = selectedApp => {
     const type = 'swidget';
     const item = selectedApp[0];
-    console.log('$$$ appsRouter item', item);
 
     const Comp = Loadable({
       loader: () => import(`apps/${item.legacyPath}`),

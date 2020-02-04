@@ -3,7 +3,8 @@
 import React, { PureComponent } from 'react';
 // import GridLayout from 'react-grid-layout';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import Loadable from 'react-loadable';
+// import Loadable from 'react-loadable';
+import Loadable from 'components/Loadable';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';

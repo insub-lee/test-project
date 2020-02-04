@@ -7,9 +7,13 @@ import * as commonjs from 'containers/common/functions/common';
 import { Input } from 'antd';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import AppCategory from 'containers/admin/components/AppCategory';
+// import Loadable from 'components/Loadable';
+
 import messages from './messages';
 import AppList from './AppList';
 import StyleAppBizModal from '../StyleAppBizModal';
+
+// const AppList = Loadable({ loader: import('./AppList') });
 
 class AppModal extends PureComponent {
   searchEnter = e => {

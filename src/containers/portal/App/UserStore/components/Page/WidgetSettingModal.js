@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 // import Modal from 'react-modal';
-import Loadable from 'react-loadable';
+// import Loadable from 'react-loadable';
+import Loadable from 'components/Loadable';
 import { intlObj } from 'utils/commonUtils';
 import WithDirection from 'config/withDirection';
 import Modals from 'components/Modal/index';

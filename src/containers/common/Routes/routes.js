@@ -1,6 +1,5 @@
 import Loadable from 'components/Loadable';
 import { basicPath } from '../constants';
-// const Load = ({ loader, ...otherProps }) => loadable(loader, { LoadingComponent: () => 'Loading...' });
 
 const OrganizationPopup = Loadable({ loader: () => import('components/OrganizationPopup') });
 const AdminApp = Loadable({ loader: () => import('containers/admin/App') });
