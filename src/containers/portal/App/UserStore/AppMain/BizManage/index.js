@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import { ModalContainer, ModalRoute } from 'react-router-modal';
+import { ModalContainer } from 'react-router-modal';
 import { Layout } from 'antd';
 
 import ErrorBoundary from 'containers/common/ErrorBoundary';
@@ -23,7 +23,7 @@ import StyledTabList from '../../components/TabList/StyledTabList';
 import AppPreview from '../../../../Preview/index';
 import BizGroupReg from './BizGroupReg';
 import BizMenuReg from './BizMenuReg';
-import AuthSetting from './BizMenuReg/AuthSetting';
+// import AuthSetting from './BizMenuReg/AuthSetting';
 // import Footer from '../../App/Footer';
 
 const homeUrl = '/portal/store/appMain/bizManage';

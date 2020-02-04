@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Row, Col } from 'antd';
-import Loadable from 'react-loadable';
+// import Loadable from 'react-loadable';
 
 import { isJSON } from 'utils/helpers';
 import SignLine from 'apps/Workflow/SignLine';
