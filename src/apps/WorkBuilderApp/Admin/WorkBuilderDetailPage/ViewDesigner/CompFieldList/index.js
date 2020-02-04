@@ -47,7 +47,7 @@ class CompList extends Component {
                       title={`${node.NAME_KOR}(${node.COMP_FIELD})`}
                     >
                       <i className="fa fa-plus" />
-                      {`${node.NAME_KOR}(${node.COMP_FIELD})`}
+                      {node.COMP_FIELD}
                     </Button>
                   </li>
                 ))}
@@ -61,9 +61,9 @@ class CompList extends Component {
                   .filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove && fNode.FIELD_TYPE !== 'SYS')
                   .map(node => (
                     <li key={`compList_${node.CONFIG.property.compKey}`}>
-                      <Button className="btnCompTool ellipsis" onClick={() => setViewDataCompItem(node)}>{`${node.NAME_KOR || 'no name'}(${
-                        node.COMP_FIELD
-                      })`}</Button>
+                      <Button className="btnCompTool ellipsis" onClick={() => setViewDataCompItem(node)}>
+                        {node.COMP_FIELD || 'no id'}
+                      </Button>
                       <Popconfirm
                         title="Are you sure delete this Field?"
                         onConfirm={() => removeCompItem(node.CONFIG.property.layerIdx[layerIdxKey], node.CONFIG.property.compKey)}

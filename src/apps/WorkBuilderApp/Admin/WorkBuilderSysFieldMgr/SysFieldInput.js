@@ -61,9 +61,15 @@ class SysFieldInput extends Component {
   };
 
   render() {
-    const { sagaKey: id, result, formData } = this.props;
+    const { sagaKey: id, result, formData, totalBuilderName } = this.props;
     return (
       <div>
+        <AntdRow gutter={24}>
+          <AntdCol span={4}>빌더 구분</AntdCol>
+          <AntdCol span={20}>
+            <AntdInput value={totalBuilderName} ReadOnly disabled></AntdInput>
+          </AntdCol>
+        </AntdRow>
         <AntdRow gutter={24}>
           <AntdCol span={4}>시스템 필드명(KO)</AntdCol>
           <AntdCol span={20}>
