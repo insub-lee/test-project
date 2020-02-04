@@ -36,6 +36,8 @@ const Styled = styled.div`
         top: 50%;
         transform: translateY(-50%);
         right: 0;
+        width: initial;
+        padding: 0;
         .toolbar-item {
           cursor: pointer;
           display: inline-block;

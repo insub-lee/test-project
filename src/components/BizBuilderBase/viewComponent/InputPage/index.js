@@ -7,6 +7,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 class InputPage extends Component {
   constructor(props) {
@@ -56,7 +57,7 @@ class InputPage extends Component {
   render = () => {
     const { sagaKey: id, viewLayer, workFlowConfig, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, workInfo } = this.props;
     // Work Process 사용여부
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 0) !== -1);
+    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
