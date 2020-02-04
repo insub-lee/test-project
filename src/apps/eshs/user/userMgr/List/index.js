@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import request from 'utils/request';
-import { Table } from 'antd';
+import { Table, Column } from 'react-virtualized';
+
+const ESHS_PARENT_ID = 'ESHS_PARENT_ID';
+const ESHS_DEPARTMENT_ID = 'ESHS_DEPARTMENT_ID';
 
 class List extends Component {
   constructor(props) {
@@ -12,35 +14,66 @@ class List extends Component {
   }
 
   componentDidMount() {
-    const data = request({
-      method: 'GET',
-      url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/AllEshsUsers',
-    });
-    data.then(res => {
-      this.setState({
-        users: res.response.users,
-      });
-      console.debug(res.response.users);
-    });
+    const { id, getCallDataHanlder, apiAry } = this.props;
+    getCallDataHanlder(id, apiAry);
   }
 
-  column = [
-    { title: '소속', dataIndex: 'department', key: 'department' },
-    { title: '사번', dataIndex: 'employee_num', key: 'employee_num' },
-    { title: '이름', dataIndex: 'name', key: 'name' },
-    { title: '직위', dataIndex: 'pstn', key: 'pstn' },
-    { title: '직책', dataIndex: 'duty', kdutyey: 'duty' },
-    { title: '근무지', dataIndex: 'base_area', key: 'base_area' },
-    { title: '전화번호', dataIndex: 'tel', key: 'tel' },
-    { title: '권한', dataIndex: 'auth', key: 'auth' },
-  ];
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { result } = nextProps;
+    if (result.userList) {
+      if (prevState.users !== result.userList.users) {
+        return { users: result.userList.users.filter(item => item.prnt_id === 1082 || item.prnt_id === null) };
+      }
+    }
+    return null;
+  }
 
   render() {
-    return <Table dataSource={this.state.users} columns={this.column} pagination={false} />;
+    const { id, formData } = this.props;
+    console.debug('@@@LIST@@@', id, formData.ESHS_PARENT_ID, formData.ESHS_DEPARTMENT_ID);
+
+    return (
+      <div>
+        <Table
+          width={1100}
+          height={1000}
+          headerHeight={30}
+          // headerStyle={{ textAlign: 'center' }}
+          rowHeight={50}
+          rowCount={this.state.users.length}
+          rowGetter={({ index }) => this.state.users[index]}
+        >
+          <Column label="소속" dataKey="department" width={150} />
+          <Column label="사번" dataKey="employee_num" width={100} />
+          <Column label="이름" dataKey="name" width={100} />
+          <Column label="직위" dataKey="pstn" width={100} />
+          <Column label="직책" dataKey="duty" width={100} />
+          <Column label="근무지" dataKey="base_area" width={100} />
+          <Column label="전화번호" dataKey="tel" width={100} />
+          <Column label="권한" dataKey="auth" width={150} />
+        </Table>
+      </div>
+    );
   }
 }
 
-List.propTypes = {};
-List.defaultProps = {};
+List.propTypes = {
+  id: PropTypes.string,
+  getCallDataHanlder: PropTypes.func,
+  apiAry: PropTypes.array,
+  result: PropTypes.func,
+};
+
+List.defaultProps = {
+  id: 'EshsUserManager',
+  apiAry: [
+    {
+      key: 'userList',
+      type: 'GET',
+      url: '/api/eshs/v1/common/AllEshsUsers',
+      params: {},
+    },
+  ],
+};
 
 export default List;
