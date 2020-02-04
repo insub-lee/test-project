@@ -1,12 +1,11 @@
-import OrganizationPopup from 'components/OrganizationPopup';
-import AdminApp from 'containers/admin/App';
-import GuideApp from 'containers/guide/App';
-import PortalApp from 'containers/portal/App';
-import Preview from 'containers/portal/Preview';
-import PortalSingleModeApp from 'containers/portal/SingleModeApp';
-import StoreApp from 'containers/store/App';
-
+import Loadable from 'components/Loadable';
 import { basicPath } from '../constants';
+// const Load = ({ loader, ...otherProps }) => loadable(loader, { LoadingComponent: () => 'Loading...' });
+
+const OrganizationPopup = Loadable({ loader: () => import('components/OrganizationPopup') });
+const AdminApp = Loadable({ loader: () => import('containers/admin/App') });
+const PortalApp = Loadable({ loader: () => import('containers/portal/App') });
+const Preview = Loadable({ loader: () => import('containers/portal/Preview') });
 
 const routes = [
   {
@@ -33,24 +32,24 @@ const routes = [
     component: PortalApp,
     exact: false,
   },
-  {
-    key: 4,
-    path: `/${basicPath.SINGLE}/:PAGE_ID`,
-    component: PortalSingleModeApp,
-    exact: false,
-  },
+  // {
+  //   key: 4,
+  //   path: `/${basicPath.SINGLE}/:PAGE_ID`,
+  //   component: PortalSingleModeApp,
+  //   exact: false,
+  // },
   {
     key: 5,
     path: '/portal/settings',
     component: PortalApp,
     exact: false,
   },
-  {
-    key: 6,
-    path: '/store',
-    component: StoreApp,
-    exact: false,
-  },
+  // {
+  //   key: 6,
+  //   path: '/store',
+  //   component: StoreApp,
+  //   exact: false,
+  // },
   {
     key: 7,
     path: '/portal/store',
@@ -69,12 +68,12 @@ const routes = [
     component: AdminApp,
     exact: false,
   },
-  {
-    key: 10,
-    path: '/guide',
-    component: GuideApp,
-    exact: false,
-  },
+  // {
+  //   key: 10,
+  //   path: '/guide',
+  //   component: GuideApp,
+  //   exact: false,
+  // },
   {
     key: 11,
     path: '/popup/organization/:lang/:deptId/:userId',
