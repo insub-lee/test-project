@@ -118,6 +118,7 @@ class CompItem extends React.Component {
     const nextConfig = JSON.parse(JSON.stringify(CONFIG));
     nextConfig.property.COMP_SRC = value;
     nextConfig.property.COMP_SETTING_SRC = compPoolList[compIdx].COMP_SETTING_SRC;
+    nextConfig.property.COMP_NAME = compPoolList[compIdx].COMP_NAME;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
   };
 
@@ -324,7 +325,7 @@ class CompItem extends React.Component {
       return (
         <Styled className="compConfig compConfigDiv">
           <div className="compConfigRow compConfigDiv">
-            <div className="compConfigCol compConfigDiv wid100">{col.comp.NAME_KOR}</div>
+            <div className="compConfigCol compConfigDiv wid100">{col.comp.COMP_FIELD || 'no id'}</div>
           </div>
           <div className="compConfigRow compConfigDiv">
             <div className="compConfigCol compConfigDiv wid100-28">
