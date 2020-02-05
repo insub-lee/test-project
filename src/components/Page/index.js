@@ -259,7 +259,6 @@ class Page extends Component {
   };
 
   render() {
-    console.debug('@@@ Hello Fuxxing World');
     const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, menuFixedYn } = this.props;
     const nextColumns = columns.map(column => ({
       ...column,

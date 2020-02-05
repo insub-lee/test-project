@@ -599,11 +599,13 @@ class App extends React.Component {
                       >
                         <Switch>
                           <Route exact path="/error" component={ErrorPage} />
+                          {/*
                           <Route
                             exact
                             path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
                             render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                           />
+                          */}
                           <Route
                             path={`/${basicPath.PORTAL}/settings`}
                             render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}

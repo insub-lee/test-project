@@ -5,9 +5,13 @@ import Spin from 'antd/lib/spin';
 // import loadable from '@loadable/component';
 // import LoadingIndicator from 'components/LoadingIndicator';
 
-const indicator = <Icon type="loading" spin />;
 // const Loader = () => <div />;
+
+const indicator = <Icon type="loading" spin style={{ fontSize: 24 }} />;
 const Loader = () => <Spin indicator={indicator} style={{ margin: 'auto', width: '100%', padding: '20%' }} />;
 
-// export default ({ loader, ...otherProps }) => loadable(loader, { LoadingComponent: <Loader /> });
+/* When use @loadable/component (but loading is not working) */
+// export default ({ loader, ...otherProps }) => loadable(loader, { loading: Loader });
+
+/* When use react-loadable */
 export default ({ loader, ...otherProps }) => loadable({ loader, loading: Loader });

@@ -58,7 +58,6 @@ class appSetting extends Component {
   }
 
   componentDidMount() {
-    console.debug('Hello ?');
     const {
       match: {
         params: { PAGE_ID, WIDGET_ID },
@@ -92,8 +91,6 @@ class appSetting extends Component {
     const { match, widget } = nextProps;
     const { params } = match;
     const { PAGE_ID, WIDGET_ID } = params;
-
-    console.debug('Hello Fuxxing World!');
 
     if (WIDGET_ID && this.state.WIDGET_ID !== Number(WIDGET_ID)) {
       this.setState({

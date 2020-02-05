@@ -300,8 +300,13 @@ AppBasicInfo.propTypes = {
   appManagerList: PropTypes.array, //eslint-disable-line
   appBizGubun: PropTypes.func, //eslint-disable-line
   currentView: PropTypes.string.isRequired, //eslint-disable-line
-  execPage: PropTypes.func.isRequired,
-  appPageInfoData: PropTypes.object.isRequired,
+  execPage: PropTypes.func,
+  appPageInfoData: PropTypes.object,
+};
+
+AppBasicInfo.defaultProps = {
+  appPageInfoData: {},
+  execPage: () => {},
 };
 
 const mapDispatchToProps = dispatch => ({
