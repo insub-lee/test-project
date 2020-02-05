@@ -5,9 +5,9 @@ import { compose } from 'redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import { Debounce } from 'react-throttle';
-import { LicenseManager } from 'ag-grid-enterprise';
-import WindowResizeListener from 'react-window-size-listener';
+// import { Debounce } from 'react-throttle';
+// import { LicenseManager } from 'ag-grid-enterprise/dist/lib/licenseManager';
+// import WindowResizeListener from 'react-window-size-listener';
 import { checkPath, intlObj } from 'utils/commonUtils';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -17,6 +17,7 @@ import 'utils/momentLang';
 import reducer from './reducer';
 import saga from './saga';
 import * as actions from './actions';
+import * as authActions from '../Auth/actions';
 import SignIn from '../Auth/index';
 // import PortalApp from '../../portal/App/index';
 // import PortalSingleModeApp from '../../portal/SingleModeApp/index';
@@ -56,9 +57,20 @@ const etcPath = [
   'devpmmodel',
 ];
 
-LicenseManager.setLicenseKey('Evaluation_License-_Not_For_Production_Valid_Until_25_April_2019__MTU1NjE0NjgwMDAwMA==5095db85700c871b2d29d9537cd451b3');
+// LicenseManager.setLicenseKey('Evaluation_License-_Not_For_Production_Valid_Until_25_April_2019__MTU1NjE0NjgwMDAwMA==5095db85700c871b2d29d9537cd451b3');
 
 class PublicRoutes extends Component {
+  UNSAFE_componentWillMount() {
+    const {
+      location: { pathname, search },
+      boot,
+    } = this.props;
+    console.debug('@@@ location', this.props.location);
+    // const url = locState ? locState.from.pathname : '/';
+    // const search = locState ? locState.from.search : '';
+    boot(pathname + search, pathname);
+  }
+
   componentDidMount() {
     const { intl } = this.props;
     intlObj.setIntl(intl);
@@ -148,9 +160,11 @@ class PublicRoutes extends Component {
 
     return (
       <div>
+        {/*
         <Debounce time="400" handler="onResize">
           <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />
         </Debounce>
+        */}
         <Switch>
           <Route path="/signin" component={SignIn} />
           {routes.map(route => (
@@ -173,6 +187,7 @@ PublicRoutes.propTypes = {
   history: PropTypes.object.isRequired,
   getLoaddata: PropTypes.func.isRequired,
   getSingleModeLoaddata: PropTypes.func.isRequired,
+  boot: PropTypes.func.isRequired,
   // SMSESSION: PropTypes.string,
   // checkSession: PropTypes.func.isRequired,
 };
@@ -193,6 +208,7 @@ const mapDispatchToProps = dispatch => ({
   getLoaddata: (path, param, data) => dispatch(actions.getLoaddata(path, param, data)),
   getSingleModeLoaddata: (path, param) => dispatch(actions.getSingleModeLoaddata(path, param)),
   checkSession: (ctype, payload) => dispatch(actions.checkSession(ctype, payload)),
+  boot: (url, pathname, username) => dispatch(authActions.checkAuthorization(url, pathname, username)),
 });
 
 const withReducer = injectReducer({ key: 'common', reducer });

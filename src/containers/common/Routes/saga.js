@@ -202,6 +202,7 @@ export function* checkAuthorization(action) {
     ...action.payload,
   };
   authInfo.lastUrl = action.payload.url;
+  console.debug('@@@ Payload Url : ', action.payload.url);
   console.log('profile:', authInfo.get('uuid'));
   if (authInfo.get('uuid') !== null) {
     console.log('token:', authInfo.uuid);

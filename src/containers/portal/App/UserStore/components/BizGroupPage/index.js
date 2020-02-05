@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import RGL, { WidthProvider } from 'react-grid-layout';
-import Loadable from 'react-loadable';
+// import Loadable from 'react-loadable';
+import Loadable from 'components/Loadable';
 import PropTypes from 'prop-types';
 import { createStructuredSelector } from 'reselect';
 import { connect } from 'react-redux';
@@ -145,14 +146,14 @@ function changeLayoutConfig(layoutConfig, view, items) {
 
   let count = 1;
   items.forEach((item, i) => {
-    let {w} = item;
+    let { w } = item;
 
     if (item.ow > layoutConfig.col) {
       w = layoutConfig.col;
     } else {
       w = item.ow;
     }
-    const {h} = item;
+    const { h } = item;
     cW2 = cW;
     cH2 = cH;
     while (cW2 + (w - 1) >= layoutConfig.col) {
@@ -288,7 +289,7 @@ class Page extends PureComponent {
               onClick={() => {
                 moveMyWidget(changeLayoutMap);
               }}
-              }}
+            >
               위젯위치확정
             </button>
             {/* 위젯위치확정 버튼:

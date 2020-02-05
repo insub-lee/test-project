@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { isDesktop } from 'utils/commonUtils';
-import { Switch, Route } from 'react-router-dom';
+// import { Switch, Route } from 'react-router-dom';
 
 import dockBigIconActive from 'images/portal/dock_big_active.png';
 import dockBigIcon from 'images/portal/dock_big_icon.png';
@@ -105,7 +105,7 @@ class UserDock extends React.Component {
 
     const { styleObj } = this.state;
 
-    const styleObjCopy = { ...styleObj};
+    const styleObjCopy = { ...styleObj };
 
     if (dockIconType === 'MIN') {
       styleObjCopy.floattingSettingAreaBottom = '40px';
@@ -396,10 +396,12 @@ class UserDock extends React.Component {
                   <DragBottomArea isDockItemDragged={isDockItemDragged} scrollTopForDnD={this.scrollTopForDnD} position={position} />
                   {isDesktop(view) ? (
                     <div style={floattingClass}>
-                        <button
+                      <button
                         // onClick={() => { handleSetDockFixedYn(dockFixedYn === 'Y' ? 'N' : 'Y'); }}
-                          onClick={() => { this.setIsSettingArea(); }}
-                          className={isSettingArea ? 'floattingBtn' : 'floattingBtnShow'}
+                        onClick={() => {
+                          this.setIsSettingArea();
+                        }}
+                        className={isSettingArea ? 'floattingBtn' : 'floattingBtnShow'}
                       />
                     </div>
                   ) : (
@@ -408,142 +410,83 @@ class UserDock extends React.Component {
                   {isDesktop(view) ? (
                     <div
                       className={isSettingArea ? 'floattingSettingAreaShow' : 'floattingSettingArea'}
-                        onMouseLeave={() => { this.setIsSettingArea(); }}
-                      >
+                      onMouseLeave={() => {
+                        this.setIsSettingArea();
+                      }}
+                    >
+                      <div className="floattingSettingAreaTop">
                         <div
-                          className="floattingSettingAreaTop"
-                        >
-                          <div
                           className="settingMenuList"
-                            onClick={() => { handleSetDockIconType('MAX'); }}
+                          onClick={() => {
+                            handleSetDockIconType('MAX');
                           }}
                           onKeyPress={() => {}}
                           role="button"
-                            tabIndex="0"
+                          tabIndex="0"
                         >
-                            <img
-                              src={dockIconType === 'MAX' ? dockBigIconActive : dockBigIcon}
-                              alt="큰 아이콘"
-                            />
-                            {
-                              dockIconType === 'MAX'
-                                ?
-                                <span
-                                  className="settingMenuName"
-                                >
-                                      큰 아이콘
-                                </span>
-                                :
-                                ''
-                            }
+                          <img src={dockIconType === 'MAX' ? dockBigIconActive : dockBigIcon} alt="큰 아이콘" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuName">큰 아이콘</span> : ''}
                         </div>
                         <div
                           className="settingMenuList"
-                            onClick={() => { handleSetDockIconType('MIN'); }}
-                            onKeyPress={() => {}}
+                          onClick={() => {
+                            handleSetDockIconType('MIN');
+                          }}
+                          onKeyPress={() => {}}
                           role="button"
                           tabIndex="0"
-                          >
-                            <img
-                              src={dockIconType === 'MIN' ? dockSmallIconActive : dockSmallIcon}
-                              alt="작은 아이콘"
-                            />
-                            {
-                              dockIconType === 'MAX'
-                                ?
-                                <span
-                                  className="settingMenuNameSmallIcon"
-                                >
-                                      작은 아이콘
-                                </span>
-                                :
-                                ''
-                            }
+                        >
+                          <img src={dockIconType === 'MIN' ? dockSmallIconActive : dockSmallIcon} alt="작은 아이콘" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameSmallIcon">작은 아이콘</span> : ''}
                         </div>
                       </div>
 
-                        <div
+                      <div
                         className="myHorizontal"
-                          style={{
+                        style={{
                           width: dockIconType === 'MAX' ? ' 76px' : '28px',
-                          }}
+                        }}
                       />
 
-                        <div
-                          className="floattingSettingAreaTop"
-                        >
+                      <div className="floattingSettingAreaTop">
                         <div
                           className="settingMenuList"
-                            onClick={() => { handleSetDockFixedYn('Y'); }}
-                            onKeyPress={() => {}}
-                          role="button"
-                          tabIndex="0"
-                          >
-                            <img
-                              src={dockFixedYn === 'Y' ? dockLockActive : dockLock}
-                              alt="고정"
-                            />
-                            {
-                              dockIconType === 'MAX'
-                                ?
-                                <span
-                                  className="settingMenuNameFixed"
-                                >
-                                      고정
-                                </span>
-                                :
-                                ''
-                            }
-                        </div>
-                        <div
-                          className="settingMenuList"
-                            onClick={() => { handleSetDockFixedYn('N'); }}
+                          onClick={() => {
+                            handleSetDockFixedYn('Y');
                           }}
                           onKeyPress={() => {}}
                           role="button"
-                            tabIndex="0"
+                          tabIndex="0"
                         >
-                            <img
-                              src={dockFixedYn === 'N' ? dockUnlockActive : dockUnlock}
-                              alt="고정 해제"
-                            />
-                            {
-                              dockIconType === 'MAX'
-                                ?
-                                <span
-                                  className="settingMenuNameUnfixed"
-                                >
-                                      고정 해제
-                                </span>
-                                :
-                                ''
-                            }
-                          </div>
+                          <img src={dockFixedYn === 'Y' ? dockLockActive : dockLock} alt="고정" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameFixed">고정</span> : ''}
+                        </div>
                         <div
-                            className="settingMenuList"
-                            onClick={() => { handleSetDockFixedYn('A'); }}
-                            onKeyPress={() => {}}
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockFixedYn('N');
+                          }}
+                          onKeyPress={() => {}}
                           role="button"
-                            tabIndex="0"
+                          tabIndex="0"
                         >
-                            <img
-                              src={dockFixedYn === 'A' ? dockAutoActive : dockAutoHidden}
-                              alt="자동 숨김"
-                            />
-                            {
-                              dockIconType === 'MAX'
-                                ?
-                                <span
-                                  className="settingMenuNameAuto"
-                                >
-                                      자동 숨김
-                                </span>
-                                :
-                                ''
-                            }
+                          <img src={dockFixedYn === 'N' ? dockUnlockActive : dockUnlock} alt="고정 해제" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameUnfixed">고정 해제</span> : ''}
+                        </div>
+                        <div
+                          className="settingMenuList"
+                          onClick={() => {
+                            handleSetDockFixedYn('A');
+                          }}
+                          onKeyPress={() => {}}
+                          role="button"
+                          tabIndex="0"
+                        >
+                          <img src={dockFixedYn === 'A' ? dockAutoActive : dockAutoHidden} alt="자동 숨김" />
+                          {dockIconType === 'MAX' ? <span className="settingMenuNameAuto">자동 숨김</span> : ''}
                         </div>
                       </div>
-                      </div>
+                    </div>
                   ) : (
                     ''
                   )}
@@ -552,9 +495,9 @@ class UserDock extends React.Component {
             );
           }}
         </Dock>
-        <Switch>
-          <Route exact path="/cube" />
-        </Switch>
+        {/* <Switch> */}
+        {/*  <Route exact path="/cube" /> */}
+        {/* </Switch> */}
       </AppWrapper>
     );
   }

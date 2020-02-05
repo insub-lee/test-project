@@ -2,13 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
 
-const RestrictedRoute = ({ component: Component, isLoggedIn, profile, ...rest }) => (
+const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
   <div>
     <Route
       {...rest}
       render={props =>
         isLoggedIn ? (
-          <Component {...props} profile={profile} />
+          <Component {...props} />
         ) : (
           <Redirect
             to={{

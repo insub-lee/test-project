@@ -1,5 +1,5 @@
 import React from 'react';
-import { notification } from 'antd';
+import notification from 'antd/lib/notification';
 import styled from 'styled-components';
 import parse from 'html-react-parser';
 import { BtnDkGray } from 'containers/portal/components/uielements/buttons.style';
@@ -66,7 +66,7 @@ const notificationConfig = args => {
         ) : (
           <span className="textDesc">{parse(msg.CONTENT_KOR)}</span>
         )}
-        {src.length > 0 ? (
+        {src.length > 0 && (
           <div className="imgContent">
             {src.map(image => (
               <a href={image.url !== '' ? image.url : false} target="_blank" rel="noopener noreferrer" className="linkedImg">
@@ -74,8 +74,6 @@ const notificationConfig = args => {
               </a>
             ))}
           </div>
-        ) : (
-          false
         )}
       </NotificationContent>
     );

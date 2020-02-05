@@ -9,7 +9,7 @@ const StyledContents = styled.div`
   .col-body {
     display: flex;
     align-items: center;
-    padding: calc(12px - 1px);
+    padding: ${({ selected }) => (selected ? 'calc(12px - 2px)' : 'calc(12px - 1px)')};
     min-height: 60px;
     /* background: ${({ selected }) => (selected ? '#eaeaea' : '#ffffff')}; */
     border: ${({ selected }) => (selected ? '2px solid #a646be' : '1px solid #e3e3e3')};
