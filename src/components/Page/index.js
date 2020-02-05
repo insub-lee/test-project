@@ -64,7 +64,7 @@ function createComponents(item) {
 }
 
 function createSingleComponents(item, isFullSize) {
-  // Object.assign(item.basic, { path: item.legacyPath }); //eslint-disable-line
+  // Object.assign(item.basic, { path: item.legacyPath });
 
   const param = {
     loader: () => import(`apps/${isFullSize ? item.basic.path : item.legacyPath}`),
@@ -202,9 +202,7 @@ class Page extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    /* eslint-disable */
     const { columns, setMyMenuData, isUnreadCnt, currentView, menuFixedYn } = this.props;
-    /* eslint-disable */
     if (columns && JSON.stringify(columns) !== JSON.stringify(nextProps.columns)) {
       return true;
     }
@@ -219,9 +217,10 @@ class Page extends Component {
     }
     if (menuFixedYn !== nextProps.menuFixedYn) {
       return true;
-    }    
+    }
     return false;
   }
+
   componentDidUpdate() {
     this.props.setIsSpinnerShow();
   }
@@ -260,45 +259,54 @@ class Page extends Component {
   };
 
   render() {
-    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, menuFixedYn} = this.props;
-
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].onReload = onReload;
-    }
-
-    // 위젯의 더보기 기능을 위해 메뉴 실행 함수를 넣어줌
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].execMenu = execMenu;
-    }
-
-    // 퀵메뉴 실행을 위해 execPage
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].execPage = execPage;
-    }
-
-    // 게시판 위젯에서 쓰이는 show 함수
-    for (let i = 0; i < columns.length; i += 1) {
-      columns[i].show = show;
-    }
+    const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, menuFixedYn } = this.props;
+    const nextColumns = columns.map(column => ({
+      ...column,
+      onReload,
+      execMenu, // 더보기
+      execPage, // 퀵메뉴
+      show, // 게시판 위젯
+    }));
+    // for (let i = 0; i < columns.length; i += 1) {
+    //   columns[i].onReload = onReload;
+    // }
+    //
+    // // 위젯의 더보기 기능을 위해 메뉴 실행 함수를 넣어줌
+    // for (let i = 0; i < columns.length; i += 1) {
+    //   columns[i].execMenu = execMenu;
+    // }
+    //
+    // // 퀵메뉴 실행을 위해 execPage
+    // for (let i = 0; i < columns.length; i += 1) {
+    //   columns[i].execPage = execPage;
+    // }
+    //
+    // // 게시판 위젯에서 쓰이는 show 함수
+    // for (let i = 0; i < columns.length; i += 1) {
+    //   columns[i].show = show;
+    // }
 
     const layoutConfig = this.getLayoutConfig(currentView, menuFixedYn);
     // const columns2 = Object.values(this.props.columns);
-    const layout = createLayoutConfig(layoutConfig, currentView, columns);
-    const isFullSize = columns.length === 1 && columns[0].size.toUpperCase() === 'FULLSIZE';
+    const layout = createLayoutConfig(layoutConfig, currentView, nextColumns);
+    const isFullSize = nextColumns.length === 1 && nextColumns[0].size.toUpperCase() === 'FULLSIZE';
     return (
       <div style={!isFullSize && setMyMenuData.SRC_PATH !== 'legacySVC' ? { width: `${layoutConfig.width}px`, margin: '0 auto' } : {}}>
         {!setMyMenuData ? (
           <GridLayout className="layout" layout={layout} cols={layoutConfig.col} rowHeight={270} width={layoutConfig.width} compactType="horizontal">
-            {columns.map(createComponents)}
+            {nextColumns.map(createComponents)}
           </GridLayout>
         ) : (
           <div>
             {isPreviewPage === false ? (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N'
-                && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
+                {setMyMenuData &&
+                nextColumns &&
+                nextColumns.length > 0 &&
+                setMyMenuData.INTL_TYPE === 'N' &&
+                (setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === nextColumns[0].PAGE_ID) ? (
                   <div>
-                    { (setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( //TODO 임시 풀사이즈 위젯 처리
+                    {(setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( // TODO 임시 풀사이즈 위젯 처리
                       <GridLayout
                         className="layout"
                         layout={layout}
@@ -307,10 +315,10 @@ class Page extends Component {
                         width={layoutConfig.width}
                         compactType="horizontal"
                       >
-                        {columns.map(createComponents)}
+                        {nextColumns.map(createComponents)}
                       </GridLayout>
                     ) : (
-                      <div>{columns.map(item => createSingleComponents(item, isFullSize))}</div>
+                      <div>{nextColumns.map(item => createSingleComponents(item, isFullSize))}</div>
                     )}
                   </div>
                 ) : (
@@ -319,10 +327,13 @@ class Page extends Component {
               </div>
             ) : (
               <div>
-                {setMyMenuData && columns && columns.length > 0 && setMyMenuData.INTL_TYPE === 'N'
-                && ( setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === columns[0].PAGE_ID ) ? (
+                {setMyMenuData &&
+                nextColumns &&
+                nextColumns.length > 0 &&
+                setMyMenuData.INTL_TYPE === 'N' &&
+                (setMyMenuData.SRC_PATH === 'PAGE' || setMyMenuData.PAGE_ID === nextColumns[0].PAGE_ID) ? (
                   <div>
-                    { (setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( //TODO 임시 풀사이즈 위젯 처리
+                    {(setMyMenuData.APP_YN === 'N' || setMyMenuData.SRC_PATH === 'PAGE') && !isFullSize ? ( // TODO 임시 풀사이즈 위젯 처리
                       <GridLayout
                         className="layout"
                         layout={layout}
@@ -331,10 +342,10 @@ class Page extends Component {
                         width={layoutConfig.width}
                         compactType="horizontal"
                       >
-                        {columns.map(createComponents)}
+                        {nextColumns.map(createComponents)}
                       </GridLayout>
                     ) : (
-                      <div>{columns.map(item => createSingleComponents(item, isFullSize))}</div>
+                      <div>{nextColumns.map(item => createSingleComponents(item, isFullSize))}</div>
                     )}
                   </div>
                 ) : (
@@ -348,13 +359,14 @@ class Page extends Component {
     );
   }
 }
+
 Page.defaultProps = {
   columns: [],
   setMyMenuData: undefined,
 };
 
 Page.propTypes = {
-  columns: PropTypes.array.isRequired,
+  columns: PropTypes.arrayOf(PropTypes.object),
   currentView: PropTypes.string.isRequired,
   setMyMenuData: PropTypes.object,
   execMenu: PropTypes.func.isRequired,

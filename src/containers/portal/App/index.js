@@ -7,7 +7,11 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { isDesktop } from 'utils/commonUtils';
 import { Route, Switch } from 'react-router-dom';
-import { Icon, Layout, Spin, Tooltip } from 'antd';
+// import { Icon, Layout, Spin, Tooltip } from 'antd';
+import Icon from 'antd/lib/icon';
+import Layout from 'antd/lib/layout';
+// import Spin from 'antd/lib/spin';
+import Tooltip from 'antd/lib/tooltip';
 import { ThemeProvider } from 'styled-components';
 import { DragDropContext as dragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
@@ -33,11 +37,14 @@ import themes from '../../../config/themes';
 
 import AppWrapper from './AppWrapper';
 import Header from '../components/Header';
-import MenuCategory from './MenuCategory';
+// import MenuCategory from './MenuCategory';
 import StyledContainer from './StyledContainer';
-import UserCategoryMenu from './UserCategoryMenu';
+// import UserCategoryMenu from './UserCategoryMenu';
+import ErrorPage from './ErrorPage';
 
 /* Code Split */
+const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
+const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
 const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
 const UserSetting = Loadable({ loader: () => import('./UserSetting') });
 const UserStore = Loadable({ loader: () => import('./UserStore') });
@@ -75,7 +82,7 @@ const desktopDockCss = {
 };
 */
 
-const routePaths = [`/${basicPath.PORTAL}/settings`, `/${basicPath.PORTAL}/store/appMain/bizManage`, `/${basicPath.PORTAL}/store`, `/${basicPath.PORTAL}/card`];
+// const routePaths = [`/${basicPath.PORTAL}/settings`, `/${basicPath.PORTAL}/store/appMain/bizManage`, `/${basicPath.PORTAL}/store`, `/${basicPath.PORTAL}/card`];
 
 class App extends React.Component {
   constructor(props) {
@@ -128,10 +135,11 @@ class App extends React.Component {
 
     if (view !== prevProps.view) {
       if (view === 'Mobile' || view === 'Tablet') {
-        const styleSpinnerCopy = { ...this.styleSpinner };
-        styleSpinnerCopy.height = '100vh';
-        styleSpinnerCopy.paddingTop = '70%';
-
+        const styleSpinnerCopy = {
+          ...this.styleSpinner,
+          height: '100vh',
+          paddingTop: '70%',
+        };
         this.styleSpinner = styleSpinnerCopy;
       }
     }
@@ -267,8 +275,6 @@ class App extends React.Component {
   };
 
   execPage = (node, type) => {
-    console.debug('@@@@ node: ', node);
-    console.debug('@@@@ type: ', type);
     const { dockAppList } = this.props;
 
     switch (node) {
@@ -540,7 +546,6 @@ class App extends React.Component {
           <Layout style={this.getLayoutStyle(isDesktop(view))}>
             <Content>
               <StyledContainer>
-                {/* <Scrollbars className="scrollable-container" autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ height: '100vh' }}> */}
                 <AppWrapper style={{ width: '100%', backgroundColor: '#f7f8f9' }}>
                   <Fullscreen
                     enabled={this.state.isFullscreenEnabled}
@@ -563,63 +568,111 @@ class App extends React.Component {
                           : 'gridWrapper'
                       }`}
                     >
+                      {/* <Content */}
+                      {/*  className="portalContent" */}
+                      {/*  style={{ */}
+                      {/*    flexShrink: '0', */}
+                      {/*    display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit', */}
+                      {/*  }} */}
+                      {/* > */}
+                      {/*  <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow}> */}
+                      {/*    {this.renderApps( */}
+                      {/*      setMyMenuData, */}
+                      {/*      selectedApp, */}
+                      {/*      isUnreadCnt, */}
+                      {/*      this.execPage, */}
+                      {/*      this.execMenu, */}
+                      {/*      this.show, */}
+                      {/*      this.onReload, */}
+                      {/*      this.setIsSpinnerShow, */}
+                      {/*      isPreviewPage, */}
+                      {/*    )} */}
+                      {/*  </Spin> */}
+                      {/*  /!* {this.props.apps} *!/ */}
+                      {/* </Content> */}
                       <Content
                         className="portalContent"
                         style={{
                           flexShrink: '0',
-                          display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
+                          // display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
                         }}
                       >
-                        <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow}>
-                          {this.renderApps(
-                            setMyMenuData,
-                            selectedApp,
-                            isUnreadCnt,
-                            this.execPage,
-                            this.execMenu,
-                            this.show,
-                            this.onReload,
-                            this.setIsSpinnerShow,
-                            isPreviewPage,
-                          )}
-                        </Spin>
-                        {/* {this.props.apps} */}
+                        <Switch>
+                          <Route exact path="/error" component={ErrorPage} />
+                          {/*
+                          <Route
+                            exact
+                            path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
+                            render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
+                          />
+                          */}
+                          <Route
+                            path={`/${basicPath.PORTAL}/settings`}
+                            render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
+                          />
+                          <Route
+                            path={`/${basicPath.PORTAL}/store`}
+                            render={props => (
+                              <UserStore
+                                {...props}
+                                execMenu={this.execMenu}
+                                execPage={this.execPage}
+                                applySkin={this.applySkin}
+                                hideExecApps={this.hideExecApps}
+                              />
+                            )}
+                          />
+                          <Route
+                            path={`/${basicPath.PORTAL}/card`}
+                            render={props => (
+                              <UserMenuCard
+                                {...props}
+                                execMenu={this.execMenu}
+                                execPage={this.execPage}
+                                applySkin={this.applySkin}
+                                hideExecApps={this.hideExecApps}
+                              />
+                            )}
+                          />
+                          <Route
+                            path={`/${basicPath.APPS}/:PAGE_ID`}
+                            render={() => (
+                              <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
+                                <AppsRouter
+                                  id={setMyMenuData.PAGE_ID}
+                                  selectedApp={selectedApp}
+                                  setMyMenuData={setMyMenuData}
+                                  setIsSpinnerShow={this.setIsSpinnerShow}
+                                  isPreviewPage={isPreviewPage}
+                                  isUnreadCnt={isUnreadCnt}
+                                  execPage={this.execPage}
+                                  execMenu={this.execMenu}
+                                  show={this.show}
+                                  onReload={this.onReload}
+                                />
+                              </div>
+                            )}
+                          />
+                          <Route
+                            path={`/${basicPath.PAGE}/:PAGE_ID`}
+                            render={() => (
+                              <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
+                                <Page
+                                  columns={selectedApp}
+                                  setMyMenuData={setMyMenuData}
+                                  setIsSpinnerShow={this.setIsSpinnerShow}
+                                  isPreviewPage={isPreviewPage}
+                                  isUnreadCnt={isUnreadCnt}
+                                  execPage={this.execPage}
+                                  execMenu={this.execMenu}
+                                  show={this.show}
+                                  onReload={this.onReload}
+                                />
+                              </div>
+                            )}
+                          />
+                        </Switch>
                       </Content>
-                      <Switch>
-                        <Route
-                          path={`/${basicPath.PORTAL}/settings`}
-                          render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
-                        />
-                        <Route
-                          exact
-                          path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
-                          render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
-                        />
-                        <Route
-                          path={`/${basicPath.PORTAL}/store`}
-                          render={props => (
-                            <UserStore
-                              {...props}
-                              execMenu={this.execMenu}
-                              execPage={this.execPage}
-                              applySkin={this.applySkin}
-                              hideExecApps={this.hideExecApps}
-                            />
-                          )}
-                        />
-                        <Route
-                          path={`/${basicPath.PORTAL}/card`}
-                          render={props => (
-                            <UserMenuCard
-                              {...props}
-                              execMenu={this.execMenu}
-                              execPage={this.execPage}
-                              applySkin={this.applySkin}
-                              hideExecApps={this.hideExecApps}
-                            />
-                          )}
-                        />
-                      </Switch>
                     </div>
                   </Fullscreen>
                   {/*
@@ -654,7 +707,6 @@ class App extends React.Component {
                     {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
                   </Rodal>
                 </AppWrapper>
-                {/* </Scrollbars> */}
               </StyledContainer>
             </Content>
           </Layout>

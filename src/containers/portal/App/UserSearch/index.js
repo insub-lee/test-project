@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import Scrollbars from 'react-custom-scrollbars';
 import { intlObj, lang } from 'utils/commonUtils';
-import { Button, Popover } from 'antd';
+import Button from 'antd/lib/button';
+import Popover from 'antd/lib/popover';
 import { Table, Dimmer, Loader } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import Organization from 'containers/portal/components/Organization';
+import Loadable from 'components/Loadable';
+// import Organization from 'containers/portal/components/Organization';
 import injectReducer from '../../../../utils/injectReducer';
 import { makeSelectSearch, makeSearchProfile } from './selectors';
 import reducer from './reducer';
@@ -26,6 +28,8 @@ import saga from './saga';
 import messages from './messages';
 import UserSearchWrapper from './userSearch.style';
 import deleteIcon from '../../../../images/portal/icon-delete.png';
+
+const Organization = Loadable({ loader: () => import('containers/portal/components/Organization') });
 
 const RenderSearchHistoryView = (props, t) => {
   if (props.search.searchedUserHistory.length > 0) {
