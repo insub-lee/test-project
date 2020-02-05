@@ -6,7 +6,9 @@ import SearchBar from './List/SearchBar';
 import Styeld from './Styled';
 
 class EshsUserManager extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    console.debug('TESTESTEST');
+  }
 
   render() {
     return (
