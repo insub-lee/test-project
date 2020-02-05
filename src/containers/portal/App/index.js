@@ -40,6 +40,7 @@ import Header from '../components/Header';
 // import MenuCategory from './MenuCategory';
 import StyledContainer from './StyledContainer';
 // import UserCategoryMenu from './UserCategoryMenu';
+import ErrorPage from './ErrorPage';
 
 /* Code Split */
 const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
@@ -624,6 +625,9 @@ class App extends React.Component {
                             />
                           )}
                         />
+                        <Route page={`/${basicPath.PAGE}/:PAGE_ID`} render={() => <div />} />
+                        <Route page={`/${basicPath.APPS}/:PAGE_ID`} render={() => <div />} />
+                        <Route page="/error" component={ErrorPage} />
                       </Switch>
                     </div>
                   </Fullscreen>

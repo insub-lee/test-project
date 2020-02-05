@@ -11,12 +11,12 @@ class SignIn extends Component {
   componentDidMount() {
     // console.log('didmount signin', this.props.isLoggedIn);
     // console.log('!@@@@@@@@@@@@@@', this.props.location);
-    const loc = this.props.location;
-    const url = loc.state ? loc.state.from.pathname : '/';
-    const search = loc.state ? loc.state.from.search : '';
-    const { pathname } = loc;
-    // console.log('LOCQ!!!!!!!!!!!!!!:', loc);
-    this.props.boot(url + search, pathname);
+    // const loc = this.props.location;
+    // const url = loc.state ? loc.state.from.pathname : '/';
+    // const search = loc.state ? loc.state.from.search : '';
+    // const { pathname } = loc;
+    // // console.log('LOCQ!!!!!!!!!!!!!!:', loc);
+    // this.props.boot(url + search, pathname);
   }
 
   render() {
