@@ -88,7 +88,7 @@ class UserStore extends Component {
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
             <h2 className="pageHeader">{this.getPageHeaderTitle()}</h2>
-            <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
+            {/* <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} /> */}
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>
