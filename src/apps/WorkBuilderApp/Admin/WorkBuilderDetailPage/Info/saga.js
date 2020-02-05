@@ -22,7 +22,6 @@ function* fetchData({ id }) {
     apiList: apiMasterList,
   };
 
-  console.debug(result);
   yield put(actions.successFetchData(result));
   yield put(actions.disableoading());
 }

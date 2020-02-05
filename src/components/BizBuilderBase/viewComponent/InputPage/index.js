@@ -79,7 +79,7 @@ class InputPage extends Component {
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && PRC_ID !== -1 && <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div>
+            <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
                 Save
               </StyledButton>

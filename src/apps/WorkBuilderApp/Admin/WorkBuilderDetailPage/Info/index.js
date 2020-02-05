@@ -71,6 +71,8 @@ class Info extends Component {
           <div className="item">
             <div className="item-title">등록일</div>
             <div className="item-cont">{workInfo && workInfo.REG_DTTM}</div>
+            <div className="item-title">빌더구분</div>
+            <div className="item-cont">{workInfo && workInfo.TOTAL_BUILDER_NAME}</div>
             <div className="item-cont cont-textarea">{workInfo && workInfo.DSCR}</div>
           </div>
 
