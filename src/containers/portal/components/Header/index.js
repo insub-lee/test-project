@@ -18,11 +18,6 @@ import StyledHeader from './StyledHeader';
 import Trigger from '../../App/Trigger';
 import Button from '../../../../components/Button';
 
-// const UserSearch = Loadable({ loader: () => import('../../App/UserSearch') });
-// const UserProfile = Loadable({ loader: () => import('../../App/UserProfile') });
-// const AlarmPopover = Loadable({ loader: () => import('../../App/UserNotice') });
-// const ManagerInfo = Loadable({ loader: () => import('../ManagerInfo') });
-
 const Header = ({
   myHNotiCnt,
   managerInfo,
