@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import Spin from 'antd/lib/spin';
+import Icon from 'antd/lib/icon';
 
 import * as selectors from './selectors';
 import * as authActions from './actions';
+
+const indicator = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 
 class SignIn extends Component {
   componentDidMount() {
@@ -20,16 +23,16 @@ class SignIn extends Component {
   }
 
   render() {
-    return <Spin size="large" style={{ margin: 'auto', width: '100%', padding: '20%' }} />;
+    return <Spin size="large" indicator={indicator} style={{ margin: 'auto', width: '100%', padding: '20%' }} />;
   }
 }
 
 SignIn.propTypes = {
-  boot: PropTypes.func.isRequired,
-  location: PropTypes.object.isRequired,
-  history: PropTypes.object, // eslint-disable-line
-  intl: PropTypes.object, // eslint-disable-line
-  isLoggedIn: PropTypes.bool.isRequired,
+  // boot: PropTypes.func.isRequired,
+  // location: PropTypes.object.isRequired,
+  // history: PropTypes.object, // eslint-disable-line
+  // intl: PropTypes.object, // eslint-disable-line
+  // isLoggedIn: PropTypes.bool.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({

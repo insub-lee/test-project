@@ -62,12 +62,13 @@ const etcPath = [
 class PublicRoutes extends Component {
   UNSAFE_componentWillMount() {
     const {
-      location: { state: locState, pathname },
+      location: { pathname, search },
       boot,
     } = this.props;
-    const url = locState ? locState.from.pathname : '/';
-    const search = locState ? locState.from.search : '';
-    boot(url + search, pathname);
+    console.debug('@@@ location', this.props.location);
+    // const url = locState ? locState.from.pathname : '/';
+    // const search = locState ? locState.from.search : '';
+    boot(pathname + search, pathname);
   }
 
   componentDidMount() {
