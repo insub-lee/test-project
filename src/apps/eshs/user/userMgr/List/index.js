@@ -3,14 +3,6 @@ import PropTypes from 'prop-types';
 import { Table, Column } from 'react-virtualized';
 
 class List extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      prnt_id: 0,
-      dept_id: 0,
-    };
-  }
-
   ESHS_PARENT_ID = 'ESHS_PARENT_ID';
 
   ESHS_DEPARTMENT_ID = 'ESHS_DEPARTMENT_ID';
@@ -20,26 +12,8 @@ class List extends Component {
     getCallDataHanlder(id, apiAry);
   }
 
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   console.debug('@@@prevState@@@', prevState);
-  //   console.debug('@@@nextProps@@@', nextProps.formData);
-  //   if (prevState.prnt_id === nextProps.formData.ESHS_PARENT_ID || prevState.dept_id === nextProps.formData.ESHS_DEPARTMENT_ID) {
-  //     return { prnt_id: nextProps.formData.ESHS_PARENT_ID, dept_id: nextProps.formData.ESHS_DEPARTMENT_ID };
-  //   }
-  //   return null;
-  // }
-
-  // shouldComponentUpdate(nextProps) {
-  //   console.debug('@@@this.props.formdata@@@', this.props.formData);
-  //   console.debug('@@@nextProps@@@', nextProps.formData);
-  //   if (this.props.formData !== nextProps.formData) {
-  //     return true;
-  //   }
-  // }
-
   render() {
-    const { id, formData, result } = this.props;
-    // console.debug(formData);
+    const { result } = this.props;
     if (result.userList) {
       return (
         <div>
@@ -72,8 +46,7 @@ List.propTypes = {
   id: PropTypes.string,
   getCallDataHanlder: PropTypes.func,
   apiAry: PropTypes.array,
-  result: PropTypes.func,
-  formData: PropTypes.func,
+  result: PropTypes.object,
 };
 
 List.defaultProps = {
