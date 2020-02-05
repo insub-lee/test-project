@@ -22,7 +22,7 @@ class SearchBar extends Component {
     getCallDataHanlder(id, apiAry);
   }
 
-  handleHqChange = e => {
+  handleHqOnChange = e => {
     const { id, changeFormData, result } = this.props;
     this.setState({
       isSelected: true,
@@ -33,11 +33,12 @@ class SearchBar extends Component {
       });
       changeFormData(id, 'ESHS_DEPARTMENT_ID');
     }
+    changeFormData(id, 'ESHS_DEPARTMENT_ID');
     changeFormData(id, 'ESHS_PARENT_ID', e); // 선택한 본부id 리듀서에 저장
     this.selectedDept = result.deptList.dept.filter(item => item.prnt_id === e);
   };
 
-  handleDeptChange = e => {
+  handleDeptOnChange = e => {
     const { id, changeFormData } = this.props;
     changeFormData(id, 'ESHS_DEPARTMENT_ID', e); // 선택한 본부id 리듀서에 저장
   };
@@ -54,14 +55,14 @@ class SearchBar extends Component {
             <Option value="C1">청주</Option>
             <Option value="H3">구미</Option>
           </Select>
-          <Select defaultValue="본부 전체" style={{ width: 130, padding: 3 }} onChange={this.handleHqChange}>
+          <Select defaultValue="본부 전체" style={{ width: 130, padding: 3 }} onChange={this.handleHqOnChange}>
             <Option value={900}>본부 전체</Option>
             {this.hq.map(item => (
               <Option value={item.dept_id}>{item.name_kor}</Option>
             ))}
           </Select>
-          <Select defaultValue="팀 전체" style={{ width: 170, padding: 3 }} disabled={!isSelected} onChange={this.handleDeptChange}>
-            <Option value={0}>팀 전체</Option>
+          <Select defaultValue="팀 전체" style={{ width: 170, padding: 3 }} disabled={!isSelected} onChange={this.handleDeptOnChange}>
+            <Option value={9999}>팀 전체</Option>
             {selectedDept.map(item => (
               <Option value={item.dept_id}>{item.name_kor}</Option>
             ))}
