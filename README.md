@@ -28,6 +28,7 @@
 
 ## Magnachip Logs
 - 2020년 02월 05월
+
 ```text
 * loadable-component 사용 (router 부분에 code split 적용 이로 인해 전체 빌드 타임 무식하게 증가......)
 * 기존 App이나 Page를 그리던 화면을 일반 페이지 처리, Route로 적용 시킴 (/containers/portal/App/index.js 참고)
