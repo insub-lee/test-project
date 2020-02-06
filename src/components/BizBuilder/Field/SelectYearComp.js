@@ -46,7 +46,7 @@ class SelectYearComp extends Component {
         onChange={value => {
           this.onChangeHandler(value);
         }}
-        style={{ width: "100%", marginRight: 10 }}
+        style={{ width: '100%', marginRight: 10 }}
         className={CONFIG.property.className || ''}
       >
         {options.map(o => (
@@ -55,9 +55,9 @@ class SelectYearComp extends Component {
           </Option>
         ))}
       </Select>
-    )
-    :
-    '';
+    ) : (
+      ''
+    );
   }
 }
 
