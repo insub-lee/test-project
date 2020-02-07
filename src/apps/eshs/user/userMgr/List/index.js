@@ -37,6 +37,7 @@ class List extends Component {
         filteredUserList: userList.users,
         // filteredDeptList: deptList.dept.filter(item => item.prnt_id !== 900),
       });
+      console.debug(this.props.result);
     }
   };
 
@@ -235,16 +236,17 @@ class List extends Component {
   };
 
   handleFindData = () => {
-    const { id, getCallDataHanlder, apiAry } = this.props;
+    const { id, getCallDataHanlder } = this.props;
     const { searchType, searchValue } = this.state;
 
-    const api = {
-      key: 'searchUser',
-      type: 'GET',
-      url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=%25${searchValue}%25`,
-    };
-    apiAry.push(api);
-    getCallDataHanlder(id, apiAry, this.handleOnCallBack);
+    const api = [
+      {
+        key: 'searchUser',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=%25${searchValue}%25`,
+      },
+    ];
+    getCallDataHanlder(id, api, this.handleOnCallBack);
   };
 
   render() {
@@ -268,12 +270,12 @@ class List extends Component {
             <Option value={item.dept_id}>{item.name_kor}</Option>
           ))}
         </Select>
-        <InputGroup style={{ width: 500, display: 'inline' }} compact>
+        <InputGroup style={{ paddingLeft: 3 }} compact>
           <Select defaultValue="이름" onChange={this.handleSearchTypeOnChange}>
             <Option value="name_kor">이름</Option>
             <Option value="emp_no">사번</Option>
           </Select>
-          <Search placeholder=" 검색어를 입력하세요" style={{ width: 300, padding: 3 }} onChange={this.handleOnChange} value={searchValue} />
+          <Search placeholder=" 검색어를 입력하세요" style={{ width: 300 }} onChange={this.handleOnChange} value={searchValue} />
         </InputGroup>
 
         <Table
