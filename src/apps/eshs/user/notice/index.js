@@ -17,12 +17,7 @@ class Notice extends Component {
   };
 
   render() {
-    /* const {
-      match: { params },
-      item,
-    } = this.props;
-    const { ID } = params; */
-    return <BizBuilderBase sagaKey="Notice" workSeq={1161} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="Notice" workSeq={1221} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 
