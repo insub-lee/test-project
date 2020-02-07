@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import SearchBar from './SearchBar';
+import List from './List';
 
 class hostCompnyUserMgt extends Component {
   render() {
-    console.log('this.props ', this.props);
-    return  <BizMicroDevBase component={SearchBar} sagaKey='EshshostCompny' />;
+    return <BizMicroDevBase component={List} sagaKey="EshshostCompny" />;
   }
 }
-
-
-
 
 export default hostCompnyUserMgt;
