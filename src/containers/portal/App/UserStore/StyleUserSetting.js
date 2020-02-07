@@ -14,7 +14,7 @@ const StyleUserSetting = styled.div`
   //width: 100%;
   //height: 100vh;
   //padding: 42px 0 45px 0;
-  padding-top: 42px;
+  //padding-top: 42px;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 

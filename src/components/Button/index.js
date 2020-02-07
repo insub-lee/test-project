@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import Button from 'antd/lib/button';
 import Styled from './Styled';
 // import { Buttons, ButtonsGroup } from './styles/button.style';
 

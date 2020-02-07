@@ -29,11 +29,11 @@ const StyleUserMenuCard = styled.div`
 
     .pageHeader {
       width: 100%;
-      height: 45px;
+      height: 75px;
       border-bottom: 1px solid #e5e5e5;
       color: #222222;
       font-size: 24px;
-      line-height: 45px;
+      line-height: 75px;
       text-align: left;
       font-weight: 600;
       padding-left: 45px;

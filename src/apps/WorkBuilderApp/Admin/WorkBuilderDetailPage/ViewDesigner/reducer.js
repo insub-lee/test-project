@@ -2,6 +2,8 @@ import { fromJS } from 'immutable';
 import uuid from 'uuid/v1';
 
 import { isJSON } from 'utils/helpers';
+import { VIEW_TYPE_IDX } from 'components/BizBuilder/Common/Constants';
+
 import * as actionTypes from './constants';
 import { checkMergeAble, fieldInfoBasic } from './helper';
 
@@ -18,10 +20,10 @@ const initialGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
       ],
     },
   ],
@@ -32,10 +34,10 @@ const initialRow = fromJS({
   type: 'row',
   gutter: [8, 8],
   cols: [
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
   ],
 });
 
@@ -72,10 +74,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
                   ],
                 },
                 {
@@ -83,10 +85,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
                   ],
                 },
                 {
@@ -94,10 +96,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
                   ],
                 },
                 {
@@ -105,10 +107,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
                   ],
                 },
               ],
@@ -147,10 +149,10 @@ const initialSearchGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
       ],
     },
     {
@@ -158,10 +160,10 @@ const initialSearchGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '70px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
       ],
     },
   ],
@@ -178,12 +180,12 @@ const initialListGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '70px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '70px' } },
+        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
       ],
     },
   ],
@@ -697,7 +699,7 @@ const addCompItem = (state, selectedComp, selectedKeys) => {
     const keyGroup = key.split('-');
     const colData = groups.getIn([Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2])]).toJS();
     if (!colData.comp || !colData.comp.COMP_TAG) {
-      const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME } = selectedComp;
+      const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME, COL_TYPE_IDX } = selectedComp;
       let COMP_TYPE = 'FIELD';
       let COMP_FIELD = '';
       let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
@@ -713,7 +715,7 @@ const addCompItem = (state, selectedComp, selectedKeys) => {
         if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
         if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
       }
-      if (COL_GROUP_IDX === 9) {
+      if (COL_TYPE_IDX === VIEW_TYPE_IDX) {
         COMP_TYPE = 'LABEL';
         COMP_FIELD = `Label_${getNewKey()}`;
         info = { type: COL_DB_TYPE };

@@ -83,7 +83,7 @@ function* addMetaData() {
     .forEach(node => {
       if (!node.COMP_FIELD || (node.COMP_FIELD && node.COMP_FIELD.length) < 1) {
         isError = true;
-        errorField = `${node.NAME_KOR}(${node.COMP_FIELD})`;
+        errorField = node.CONFIG.property.COMP_NAME || '';
       }
       // else if (!node.NAME_KOR || (node.NAME_KOR && node.NAME_KOR.length) < 1) {
       //   isError = true;
@@ -92,7 +92,7 @@ function* addMetaData() {
     });
 
   if (isError) {
-    message.error(<MessageContent>{`${errorField}필드 데이터를 채워주세요.`}</MessageContent>);
+    message.error(<MessageContent>{`${errorField} 필드 데이터를 채워주세요.`}</MessageContent>);
     return;
   }
   const viewDataIdx = compData.findIndex(

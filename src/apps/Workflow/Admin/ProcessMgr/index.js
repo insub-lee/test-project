@@ -24,9 +24,7 @@ class ProcessMgr extends Component {
   };
 
   componentDidMount() {
-    console.debug('@Hello');
     const { getCallDataHanlder, apiArray, id } = this.props;
-    console.debug('@@@', id, apiArray);
     getCallDataHanlder(id, apiArray);
   }
 

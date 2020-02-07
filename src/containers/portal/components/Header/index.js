@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Tooltip } from 'antd';
+import Tooltip from 'antd/lib/tooltip';
 import { split } from 'lodash';
 
+// import Loadable from 'components/Loadable';
 import { lang } from 'utils/commonUtils';
-import HyundaiLogo from 'images/Hyundai-Logo.png';
+// import HyundaiLogo from 'images/Hyundai-Logo.png';
 
 // import Badge from '../../../../components/Badge/StyleBadge';
 import UserSearch from '../../App/UserSearch';

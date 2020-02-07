@@ -174,6 +174,18 @@ const StyledViewDesigner = styled.div`
       }
     }
   }
+
+  .alignRight {
+    text-align: right;
+  }
+
+  .alignLeft {
+    text-align: left;
+  }
+
+  .alignCenter {
+    text-align: center;
+  }
 `;
 
 export default StyledViewDesigner;

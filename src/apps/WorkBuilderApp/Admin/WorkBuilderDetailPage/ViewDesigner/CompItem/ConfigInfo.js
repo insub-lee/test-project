@@ -12,6 +12,7 @@ import RadioCompConfig from 'components/BizBuilder/Field/RadioCompConfig';
 import DwCheckListCompConfig from 'components/BizBuilder/Field/DwCheckListCompConfig';
 import DocStatusLabelConfig from 'components/BizBuilder/Field/DocStatusLabelConfig';
 import RadioCharCompConfig from 'components/BizBuilder/Field/RadioCharCompConfig';
+import JoinReadCompConfig from 'components/BizBuilder/Field/JoinReadCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -26,4 +27,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/LabelWithCopyCompConfig': { renderer: property => <LabelWithCopyCompConfig {...property} /> },
   'components/BizBuilder/Field/DocStatusLabelConfig': { renderer: property => <DocStatusLabelConfig {...property} /> },
   'components/BizBuilder/Field/RadioCharCompConfig': { renderer: property => <RadioCharCompConfig {...property} /> },
+  'components/BizBuilder/Field/JoinReadCompConfig': { renderer: property => <JoinReadCompConfig {...property} /> },
 };

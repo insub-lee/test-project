@@ -9,6 +9,7 @@ import { Icon, Spin } from 'antd';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import { intlObj, lang } from 'utils/commonUtils';
+import Loadable from 'components/Loadable';
 
 import messages from './messages';
 
@@ -17,9 +18,9 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-import BizInfo from './BizInfo';
-import AppInfo from './AppInfo';
-import PageInfo from './PageInfo';
+// import BizInfo from './BizInfo';
+// import AppInfo from './AppInfo';
+// import PageInfo from './PageInfo';
 import TopMenu from './TopMenu/index';
 
 import StyleBizDetail from './StyleBizDetail';
@@ -27,6 +28,10 @@ import StyleBizDetailContent from './StyleBizDetailContent';
 
 import BizMenuTree from '../../UserStore/components/Tree';
 import Footer from '../../UserStore/Footer';
+
+const BizInfo = Loadable({ loader: () => import('./BizInfo') });
+const AppInfo = Loadable({ loader: () => import('./AppInfo') });
+const PageInfo = Loadable({ loader: () => import('./PageInfo') });
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 

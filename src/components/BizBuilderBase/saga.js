@@ -4,6 +4,7 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import { TOTAL_DATA_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 import * as actionTypes from './constants';
 import * as actions from './actions';
@@ -201,7 +202,11 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     }
   }
 
-  const isTotalDataUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 3 && opt.ISUSED === 'Y') !== -1);
+  const isTotalDataUsed = !!(
+    workInfo &&
+    workInfo.OPT_INFO &&
+    workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === TOTAL_DATA_OPT_SEQ && opt.ISUSED === 'Y') !== -1
+  );
   if (isTotalDataUsed) {
     const totalDataResponse = yield call(
       Axios.post,
@@ -314,7 +319,11 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     }
   }
 
-  const isTotalDataUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === 3 && opt.ISUSED === 'Y') !== -1);
+  const isTotalDataUsed = !!(
+    workInfo &&
+    workInfo.OPT_INFO &&
+    workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === TOTAL_DATA_OPT_SEQ && opt.ISUSED === 'Y') !== -1
+  );
   if (isTotalDataUsed) {
     const totalDataResponse = yield call(
       Axios.post,

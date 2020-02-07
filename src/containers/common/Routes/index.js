@@ -2,36 +2,37 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { injectIntl } from 'react-intl';
-import { Debounce } from 'react-throttle';
-import { LicenseManager } from 'ag-grid-enterprise';
-import WindowResizeListener from 'react-window-size-listener';
-import { intlObj, checkPath } from 'utils/commonUtils';
+// import { Debounce } from 'react-throttle';
+// import { LicenseManager } from 'ag-grid-enterprise/dist/lib/licenseManager';
+// import WindowResizeListener from 'react-window-size-listener';
+import { checkPath, intlObj } from 'utils/commonUtils';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import OrganizationPopup from 'components/OrganizationPopup';
-// import Loading from 'containers/common/Loading';
-import ErrorPage from 'containers/portal/App/ErrorPage';
-
 import 'style/sortable-tree-biz.css';
 import 'utils/momentLang';
 
 import reducer from './reducer';
 import saga from './saga';
 import * as actions from './actions';
+import * as authActions from '../Auth/actions';
 import SignIn from '../Auth/index';
-import PortalApp from '../../portal/App/index';
-import PortalSingleModeApp from '../../portal/SingleModeApp/index';
-import StoreApp from '../../store/App/index';
-import AdminApp from '../../admin/App/index';
-import GuideApp from '../../guide/App/index';
-import Preview from '../../portal/Preview/index';
+// import PortalApp from '../../portal/App/index';
+// import PortalSingleModeApp from '../../portal/SingleModeApp/index';
+// import StoreApp from '../../store/App/index';
+// import AdminApp from '../../admin/App/index';
+// import GuideApp from '../../guide/App/index';
+// import Preview from '../../portal/Preview/index';
 import * as authSelectors from '../Auth/selectors';
-import { basicPath } from '../constants';
+// import { basicPath } from '../constants';
 import RestrictedRoute from './RestrictedRoute';
 import routes from './routes';
+
+// import OrganizationPopup from 'components/OrganizationPopup';
+// // import Loading from 'containers/common/Loading';
+// import ErrorPage from 'containers/portal/App/ErrorPage';
 // import Watermark from './Watermark';
 
 // import HyPm from '../../../apps/hyPm';
@@ -56,9 +57,20 @@ const etcPath = [
   'devpmmodel',
 ];
 
-LicenseManager.setLicenseKey('Evaluation_License-_Not_For_Production_Valid_Until_25_April_2019__MTU1NjE0NjgwMDAwMA==5095db85700c871b2d29d9537cd451b3');
+// LicenseManager.setLicenseKey('Evaluation_License-_Not_For_Production_Valid_Until_25_April_2019__MTU1NjE0NjgwMDAwMA==5095db85700c871b2d29d9537cd451b3');
 
 class PublicRoutes extends Component {
+  UNSAFE_componentWillMount() {
+    const {
+      location: { pathname, search },
+      boot,
+    } = this.props;
+    console.debug('@@@ location', this.props.location);
+    // const url = locState ? locState.from.pathname : '/';
+    // const search = locState ? locState.from.search : '';
+    boot(pathname + search, pathname);
+  }
+
   componentDidMount() {
     const { intl } = this.props;
     intlObj.setIntl(intl);
@@ -101,7 +113,6 @@ class PublicRoutes extends Component {
         이 세가지의 경우 MDI CSS 작업등의 이유로 PUSH를 할 때 state값을 함께 넘겨준다.
       */
       // REMOVE DOCK - TODO 아래의 DOCK 관련된 부분 찾아서 제거
-      console.log('$$$ history', history.location);
       if (history.location.execInfo) {
         param3.type = history.location.execInfo.type;
         switch (history.location.execInfo.type) {
@@ -149,33 +160,17 @@ class PublicRoutes extends Component {
 
     return (
       <div>
+        {/*
         <Debounce time="400" handler="onResize">
           <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />
         </Debounce>
+        */}
         <Switch>
           <Route path="/signin" component={SignIn} />
           {routes.map(route => (
             <RestrictedRoute {...route} isLoggedIn={isLoggedIn} profile={profile} />
           ))}
-          {/*
-          <RestrictedRoute exact path="/" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute exact path="/preview/page/:pageID" component={Preview} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute exact path={`/${basicPath.PAGE}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path={`/${basicPath.APPS}/:PAGE_ID`} component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path={`/${basicPath.SINGLE}/:PAGE_ID`} component={PortalSingleModeApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/portal/settings" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/store" component={StoreApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/portal/store" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/portal/card" component={PortalApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/admin" component={AdminApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/guide" component={GuideApp} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute exact path="/popup/organization/:lang/:deptId/:userId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute exact path="/popup/organization/:lang/:deptId" component={OrganizationPopup} isLoggedIn={isLoggedIn} profile={profile} />
-          <RestrictedRoute path="/error" component={ErrorPage} isLoggedIn={isLoggedIn} profile={profile} />
-          */}
         </Switch>
-        {/* <Loading /> */}
-        {/* {profile !== null ? <Watermark profile={profile} /> : <div />} */}
         <div />
       </div>
     );
@@ -192,6 +187,7 @@ PublicRoutes.propTypes = {
   history: PropTypes.object.isRequired,
   getLoaddata: PropTypes.func.isRequired,
   getSingleModeLoaddata: PropTypes.func.isRequired,
+  boot: PropTypes.func.isRequired,
   // SMSESSION: PropTypes.string,
   // checkSession: PropTypes.func.isRequired,
 };
@@ -212,6 +208,7 @@ const mapDispatchToProps = dispatch => ({
   getLoaddata: (path, param, data) => dispatch(actions.getLoaddata(path, param, data)),
   getSingleModeLoaddata: (path, param) => dispatch(actions.getSingleModeLoaddata(path, param)),
   checkSession: (ctype, payload) => dispatch(actions.checkSession(ctype, payload)),
+  boot: (url, pathname, username) => dispatch(authActions.checkAuthorization(url, pathname, username)),
 });
 
 const withReducer = injectReducer({ key: 'common', reducer });
