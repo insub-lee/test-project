@@ -118,6 +118,7 @@ class CompItem extends React.Component {
     const nextConfig = JSON.parse(JSON.stringify(CONFIG));
     nextConfig.property.COMP_SRC = value;
     nextConfig.property.COMP_SETTING_SRC = compPoolList[compIdx].COMP_SETTING_SRC;
+    nextConfig.property.COMP_NAME = compPoolList[compIdx].COMP_NAME;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
   };
 
@@ -136,68 +137,73 @@ class CompItem extends React.Component {
     return (
       <Styled className="popoverWrapper">
         <div className="popoverInnerInput">
+          <p className="popover-tit">컬럼 설정</p>
           {comp.COMP_TYPE !== 'LABEL' ? (
             <>
-              <div className="popoverItem">
-                <input
-                  type="text"
-                  placeholder="아이디"
-                  defaultValue={col.comp.COMP_FIELD}
-                  readOnly={col.comp.FIELD_TYPE === 'SYS'}
-                  onChange={e => {
-                    const value = e.target.value.replace(/[^0-9A-Z_]/gi, '').toUpperCase();
-                    e.target.value = value;
-                    this.handleChangeData('COMP_FIELD', value);
-                  }}
-                />
-              </div>
-              <div className="popoverItem">
-                <div className="wid50">
-                  <InputNumber
-                    placeholder="사이즈"
-                    style={{ width: '100%' }}
-                    min={0}
-                    max={100000000000}
-                    defaultValue={col.comp.CONFIG.info.size || 0}
-                    onChange={value => this.handleChangeSizeConfig('size', value, 'info')}
-                  />
-                </div>
-                <div className="wid50">
-                  <Input
-                    placeholder="디폴트값"
-                    defaultValue={col.comp.CONFIG.info.defaultValue}
-                    onChange={e => this.handleChangeDefaultConfig('defaultValue', e.target.value, 'info')}
-                  />
-                </div>
-              </div>
-              <div className="popoverItem">
-                <Checkbox
-                  defaultChecked={comp.CONFIG.property.isRequired}
-                  onChange={e => this.handleChangeViewConfig('isRequired', e.target.checked, 'property')}
-                >
-                  필수
-                </Checkbox>
-                <Checkbox defaultChecked={comp.CONFIG.property.readOnly} onChange={e => this.handleChangeViewConfig('readOnly', e.target.checked, 'property')}>
-                  일기전용
-                </Checkbox>
-              </div>
-              <div className="popoverItem popoverItemInput">
-                <span className="spanLabel">컴포넌트 설정</span>
-                <Select
-                  style={{ width: '200px' }}
-                  placeholder="Select component"
-                  defaultValue={comp.CONFIG.property.COMP_SRC}
-                  onChange={value => this.handleChangeCompSetting(value)}
-                >
-                  {compPoolList
-                    .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')
-                    .map(node => (
-                      <Option key={node.COMP_SRC} value={node.COMP_SRC}>
-                        {node.COMP_NAME}
-                      </Option>
-                    ))}
-                </Select>
-              </div>
+              <table className="popoverInnerTable">
+                <colgroup>
+                  <col width="50%" />
+                  <col width="25%" />
+                  <col width="25%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th>컬럼명</th>
+                    <th>Size</th>
+                    <th>기본값</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input
+                        type="text"
+                        placeholder="아이디"
+                        defaultValue={col.comp.COMP_FIELD}
+                        readOnly={col.comp.FIELD_TYPE === 'SYS'}
+                        onChange={e => {
+                          const value = e.target.value.replace(/[^0-9A-Z_]/gi, '').toUpperCase();
+                          e.target.value = value;
+                          this.handleChangeData('COMP_FIELD', value);
+                        }}
+                      />
+                    </td>
+                    <td>
+                      <InputNumber
+                        placeholder="사이즈"
+                        style={{ width: '100%' }}
+                        min={0}
+                        max={100000000000}
+                        defaultValue={col.comp.CONFIG.info.size || 0}
+                        onChange={value => this.handleChangeSizeConfig('size', value, 'info')}
+                      />
+                    </td>
+                    <td>
+                      <Input
+                        placeholder="디폴트값"
+                        defaultValue={col.comp.CONFIG.info.defaultValue}
+                        onChange={e => this.handleChangeDefaultConfig('defaultValue', e.target.value, 'info')}
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colSpan="3" className="popoverInnerTableLastRow">
+                      <Checkbox
+                        defaultChecked={comp.CONFIG.property.isRequired}
+                        onChange={e => this.handleChangeViewConfig('isRequired', e.target.checked, 'property')}
+                      >
+                        필수
+                      </Checkbox>
+                      <Checkbox
+                        defaultChecked={comp.CONFIG.property.readOnly}
+                        onChange={e => this.handleChangeViewConfig('readOnly', e.target.checked, 'property')}
+                      >
+                        일기전용
+                      </Checkbox>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </>
           ) : (
             <div className="popoverItem">
@@ -208,6 +214,23 @@ class CompItem extends React.Component {
         <div className="popoverInner">
           <p className="popover-tit">컴포넌트 설정</p>
           <div className="popoverInnerCom">
+            <div className="popoverItem popoverItemInput">
+              <span className="spanLabel">컴포넌트 설정</span>
+              <Select
+                style={{ width: '200px' }}
+                placeholder="Select component"
+                defaultValue={comp.CONFIG.property.COMP_SRC}
+                onChange={value => this.handleChangeCompSetting(value)}
+              >
+                {compPoolList
+                  .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')
+                  .map(node => (
+                    <Option key={node.COMP_SRC} value={node.COMP_SRC}>
+                      {node.COMP_NAME}
+                    </Option>
+                  ))}
+              </Select>
+            </div>
             <div className="popoverItem popoverItemInput">
               <span className="spanLabel">컴포넌트 Class명 설정</span>
               <Input
@@ -302,7 +325,7 @@ class CompItem extends React.Component {
       return (
         <Styled className="compConfig compConfigDiv">
           <div className="compConfigRow compConfigDiv">
-            <div className="compConfigCol compConfigDiv wid100">{col.comp.NAME_KOR}</div>
+            <div className="compConfigCol compConfigDiv wid100">{col.comp.COMP_FIELD || 'no id'}</div>
           </div>
           <div className="compConfigRow compConfigDiv">
             <div className="compConfigCol compConfigDiv wid100-28">

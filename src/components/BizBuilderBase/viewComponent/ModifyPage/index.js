@@ -56,7 +56,7 @@ class ModifyPage extends Component {
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div>
+            <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
                 Save
               </StyledButton>

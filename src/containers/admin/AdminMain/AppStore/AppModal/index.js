@@ -1,14 +1,17 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router-dom';
-import Button from 'components/Button';
-import { intlObj } from 'utils/commonUtils';
-import { Input } from 'antd';
+// import Button from 'components/Button';
+// import { intlObj } from 'utils/commonUtils';
+// import { Input } from 'antd';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
 import * as commonjs from 'containers/common/functions/common';
-import messages from './messages';
+// import Loadable from 'components/Loadable';
+// import messages from './messages';
 import AppList from './AppList';
 import StyleAppModal from './StyleAppModal';
+
+// const AppList = Loadable({ loader: () => import('./AppList') });
 
 class AppModal extends PureComponent {
   searchEnter = e => {

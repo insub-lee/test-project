@@ -46,7 +46,7 @@ class ListPage extends Component {
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
-          dataIndex: node.comp.COMP_FIELD,
+          dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
           width: node.style.width,
           render: (text, record) => this.renderComp(node.comp, text, record, true),
@@ -125,7 +125,7 @@ class ListPage extends Component {
                 </div>
               );
             })}
-            <div>
+            <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
                 Add
               </StyledButton>

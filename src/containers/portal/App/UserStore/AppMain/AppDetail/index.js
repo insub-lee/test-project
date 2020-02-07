@@ -3,14 +3,21 @@ import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+import Loadable from 'components/Loadable';
 
-import AppBasicInfo from './AppBasicInfo/index';
-import AppScreenshot from './AppScreenshot/index';
-import AppQna from './AppQna/index';
-import AppRating from './AppRating/index';
-import AppCategory from '../../components/AppCategory';
+// import AppBasicInfo from './AppBasicInfo';
+// import AppScreenshot from './AppScreenshot';
+// import AppQna from './AppQna';
+// import AppRating from './AppRating';
+// import AppCategory from '../../components/AppCategory';
 import AppDetailStyle from './appDetailStyle';
 // import Footer from '../../Footer';
+
+const AppBasicInfo = Loadable({ loader: () => import('./AppBasicInfo') });
+const AppScreenshot = Loadable({ loader: () => import('./AppScreenshot') });
+const AppQna = Loadable({ loader: () => import('./AppQna') });
+const AppRating = Loadable({ loader: () => import('./AppRating') });
+const AppCategory = Loadable({ loader: () => import('../../components/AppCategory') });
 
 const { Content, Sider } = Layout;
 
@@ -23,7 +30,7 @@ class AppDetail extends React.Component {
   //   };
   // }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
+  componentDidUpdate(prevProps) {
     const {
       match: {
         params: { APP_ID: PREV_APP_ID },
@@ -56,6 +63,11 @@ class AppDetail extends React.Component {
   //   // }
   // }
 
+  handleOnClick = node => {
+    const { history } = this.props;
+    history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
+  };
+
   render() {
     const menuNum = 0; // 0-카테고리, 1-업무그룹
     const {
@@ -64,12 +76,12 @@ class AppDetail extends React.Component {
         params: { APP_ID, CATG_ID },
       },
     } = this.props;
-    const handleOnClick = node => history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
+    // const handleOnClick = node => history.push(`/portal/store/appMain/bizStore/app/list/${node.key}`);
     return (
       <Layout style={{ height: '100%', overflow: 'hidden' }}>
         <Sider className="biz-store-sider">
           <ErrorBoundary>
-            <AppCategory handleOnClick={handleOnClick} menuNum={menuNum} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
+            <AppCategory handleOnClick={this.handleOnClick} menuNum={menuNum} selectedIndex={Number(CATG_ID)} preUrl="/portal/store/appMain/bizStore" />
           </ErrorBoundary>
         </Sider>
         <Content>

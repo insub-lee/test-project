@@ -36,6 +36,8 @@ const Styled = styled.div`
         top: 50%;
         transform: translateY(-50%);
         right: 0;
+        width: initial;
+        padding: 0;
         .toolbar-item {
           cursor: pointer;
           display: inline-block;
@@ -121,9 +123,28 @@ const Styled = styled.div`
     }
     .popoverInnerInput {
       padding-bottom: 10px;
+      .popover-tit {
+        color: #666666;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        &::before {
+          content: '';
+          background: url(${iconSetting}) no-repeat center;
+          background-size: 100%;
+          width: 14px;
+          height: 14px;
+          margin-right: 5px;
+          display: inline-block;
+        }
+      }
       .popoverItem {
         .wid50 {
           width: 50%;
+          display: inline-block;
+        }
+        .wid25 {
+          width: 25%;
           display: inline-block;
         }
         .ant-input-number-input {
@@ -141,6 +162,28 @@ const Styled = styled.div`
         }
         .ant-input-number {
           height: 35px;
+        }
+      }
+      > .popoverInnerTable {
+        th {
+          padding: 4px;
+          background-color: #f1f3f5;
+          text-align: center;
+          border: 1px solid #adb5bd;
+        }
+        td {
+          padding: 4px;
+          border: 1px solid #adb5bd;
+          &.popoverInnerTableLastRow {
+            padding: 11px 4px;
+          }
+        }
+        .ant-input-number {
+          height: 35px;
+          .ant-input-number-input {
+            border: none;
+            height: initial;
+          }
         }
       }
     }

@@ -15,7 +15,7 @@ import NavLink from 'components/Header/NavLink';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import messages from '../../../messages';
-import Footer from '../../Footer';
+// import Footer from '../../Footer';
 
 import reducer from './reducer';
 import saga from './saga';

@@ -1,4 +1,3 @@
-/* eslint-disable import/no-unresolved */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
@@ -12,6 +11,7 @@ import { ThemeProvider } from 'styled-components';
 import themes from 'config/themes/index';
 import 'containers/admin/App/global-store.css';
 import 'containers/admin/App/global-admin.css';
+// import Loadable from 'components/Loadable';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -25,6 +25,9 @@ import reducer from './reducer';
 import * as actions from './actions';
 import AppWrapper from './AppWrapper';
 import LeftMenu from './LeftMenu';
+
+// const AdminMain = Loadable({ loader: () => import('../AdminMain/SiteAdmin/SiteList') });
+// const AdminList = Loadable({ loader: () => import('../AdminMain') });
 
 const { Content } = Layout;
 
@@ -57,7 +60,7 @@ class App extends Component {
                 {/* 비즈앱 메인 콘텐츠 */}
                 <div style={{ width: '100%' }}>
                   <Switch>
-                    <Route exact path="/" />
+                    {/*<Route exact path="/" />*/}
                     <Route exact path="/admin" component={AdminMain} />
                     <Route path="/admin/adminmain" component={AdminList} />
                   </Switch>

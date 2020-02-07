@@ -12,7 +12,7 @@ class RadioMaterialComp extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getExtraApiData, changeFormData, COMP_FIELD, isManage, formData, rowClass } = this.props;
+    const { sagaKey: id, getExtraApiData, changeFormData, COMP_FIELD, isManage, formData, rowClass, viewPageData } = this.props;
     const isDisplay = formData && formData.DOCNUMBER && (formData.DOCNUMBER.substr(0, 4) === 'MBDA' || formData.DOCNUMBER.substr(0, 4) === 'MBKE');
     if (!isManage && rowClass && !isDisplay) {
       const rowNode = document.querySelector(`.${rowClass}`);
@@ -20,6 +20,11 @@ class RadioMaterialComp extends Component {
     } else {
       const apiArray = [{ key: 'material_28', url: '/api/admin/v1/common/categoryMapList?MAP_ID=28', type: 'GET' }];
       getExtraApiData(id, apiArray);
+    }
+    if (viewPageData.viewType === 'INPUT') {
+      changeFormData(id, COMP_FIELD, 'Y');
+      changeFormData(id, 'MATERIAL_TEXT', ' ');
+      changeFormData(id, 'MATERIAL_TYPE', ' ');
     }
   }
 
@@ -61,23 +66,12 @@ class RadioMaterialComp extends Component {
     if (extraApiData && extraApiData.material_28 && extraApiData.material_28.categoryMapList) {
       materialTypes = extraApiData.material_28.categoryMapList.filter(t => t.LVL > 0);
     }
-    const materialTypesOption = materialTypes ? (
-      materialTypes.map(m => (
-        <Option key={m.CODE} value={m.CODE}>
-          {m.NAME_KOR}
-        </Option>
-      ))
-    ) : (
-      <Option key="0" value="0">
-        데이터가 없습니다.
-      </Option>
-    );
     return isManage ||
       (visible && formData && formData.DOCNUMBER && (formData.DOCNUMBER.substr(0, 4) === 'MBDA' || formData.DOCNUMBER.substr(0, 4) === 'MBKE')) ? (
       <>
         <Radio.Group
           name="radiogroup"
-          defaultValue={colData.trim() !== undefined || colData.trim() !== '' || colData.trim() ? colData.trim() : 'Y'}
+          defaultValue={colData === undefined || colData === '' || !colData ? 'Y' : colData.trim()}
           style={{ float: 'left' }}
           onChange={e => {
             this.onChangeHandlerRadio(e.target.value);
@@ -87,25 +81,23 @@ class RadioMaterialComp extends Component {
           <Radio value="Y">Yes</Radio>
           <Radio value="N">No</Radio>
         </Radio.Group>
-        {colData.trim() === 'Y' || !colData.trim() ? (
-          <div style={{ float: 'left' }}>
-            <div style={{ float: 'left' }}>&nbsp;자제코드&nbsp;</div>
+        {colData.trim() === 'Y' || colData === undefined || colData === '' || !colData ? (
+          <>
+            <div style={{ float: 'left' }}>
+              <span>자제코드&nbsp;</span>
+            </div>
             {readOnly || CONFIG.property.readOnly ? (
-              <>
-                {materialTypes.map(m => (
+              materialTypes.map(m =>
+                formData.MATERIAL_TYPE === String(m.CODE) ? (
                   <div key={m.CODE} style={{ float: 'left' }}>
-                    {formData.MATERIAL_TYPE === String(m.CODE) ? (
-                      <>
-                        <LabelComp NAME_KOR={m.NAME_KOR} visible={visible} CONFIG={CONFIG} />
-                        &nbsp;&nbsp;
-                        <LabelComp NAME_KOR={formData.MATERIAL_TEXT} visible={visible} CONFIG={CONFIG} />
-                      </>
-                    ) : (
-                      ''
-                    )}
+                    <LabelComp NAME_KOR={m.NAME_KOR} visible={visible} CONFIG={CONFIG} />
+                    &nbsp;&nbsp;
+                    <LabelComp NAME_KOR={formData.MATERIAL_TEXT} visible={visible} CONFIG={CONFIG} />
                   </div>
-                ))}
-              </>
+                ) : (
+                  ''
+                ),
+              )
             ) : (
               <>
                 <Select
@@ -119,7 +111,17 @@ class RadioMaterialComp extends Component {
                   <Option value=" " disabled>
                     선택
                   </Option>
-                  {materialTypesOption}
+                  {materialTypes ? (
+                    materialTypes.map(m => (
+                      <Option key={m.CODE} value={m.CODE}>
+                        {m.NAME_KOR}
+                      </Option>
+                    ))
+                  ) : (
+                    <Option key="0" value="0">
+                      데이터가 없습니다.
+                    </Option>
+                  )}
                 </Select>
                 <input
                   type="text"
@@ -134,7 +136,7 @@ class RadioMaterialComp extends Component {
                 &nbsp;(콤마(,)로 구분하여 입력하여 주세요.)
               </>
             )}
-          </div>
+          </>
         ) : (
           ''
         )}
