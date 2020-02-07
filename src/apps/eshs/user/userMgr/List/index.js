@@ -170,7 +170,7 @@ class List extends Component {
   };
 
   handleOnCallBack = () => {
-    const { hqId, deptId, bAreaCode, filteredUserList, searchValue, userList } = this.state;
+    const { hqId, deptId, bAreaCode, searchValue, userList } = this.state;
     const { result } = this.props;
     this.setState({
       filteredUserList: result.searchUser.searchResult,
@@ -178,7 +178,6 @@ class List extends Component {
 
     if (!searchValue) {
       if ((!bAreaCode && !hqId) || (bAreaCode === 'ZZ' && hqId === 900)) {
-        console.debug('@@아무 것도 없고@@');
         this.setState({
           filteredUserList: userList,
         });
@@ -198,12 +197,10 @@ class List extends Component {
     if (!bAreaCode || bAreaCode === 'ZZ') {
       if (hqId && hqId !== 900) {
         if (deptId && deptId !== 9999) {
-          console.debug('@@지역 없고 본부 있고 부서 있고 검색어 있고@@');
           this.setState({
             filteredUserList: result.searchUser.searchResult.filter(item => item.hq_id === hqId && item.dept_id === deptId),
           });
         } else if (!deptId || deptId === 9999) {
-          console.debug('@@지역 없고 본부 있고 부서 없고 검색어 있고@@');
           this.setState({
             filteredUserList: result.searchUser.searchResult.filter(item => item.hq_id === hqId),
           });
@@ -211,22 +208,18 @@ class List extends Component {
         return;
       }
       if (!hqId || hqId === 900) {
-        console.debug('@@지역 없고 본부 없고 검색어 있고@@');
         this.setState({
           filteredUserList: result.searchUser.searchResult,
         });
       }
     }
     if (bAreaCode && bAreaCode !== 'ZZ') {
-      console.debug('@@지역 있음@@');
       if (hqId && hqId !== 900) {
         if (deptId && deptId !== 9999) {
-          console.debug('@@지역 있고 본부 있고 부서 있고 검색어 있고@@');
           this.setState({
             filteredUserList: result.searchUser.searchResult.filter(item => item.b_area_code === bAreaCode && item.hq_id === hqId && item.dept_id === deptId),
           });
         } else if (!deptId || deptId === 9999) {
-          console.debug('@@지역 있고 본부 있고 부서 없고 검색어 있고@@');
           this.setState({
             filteredUserList: result.searchUser.searchResult.filter(item => item.b_area_code === bAreaCode && item.hq_id === hqId),
           });
@@ -234,7 +227,6 @@ class List extends Component {
         return;
       }
       if (!hqId || hqId === 900) {
-        console.debug('@@지역 있고 본부 없고 검색어 있고@@');
         this.setState({
           filteredUserList: result.searchUser.searchResult.filter(item => item.b_area_code === bAreaCode),
         });
