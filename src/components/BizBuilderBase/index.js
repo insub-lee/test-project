@@ -16,6 +16,7 @@ import InputPage from './viewComponent/InputPage';
 import ModifyPage from './viewComponent/ModifyPage';
 import ViewPage from './viewComponent/ViewPage';
 import ListPage from './viewComponent/ListPage';
+import SearchComp from './viewComponent/SearchComp';
 
 class BizBuilderBase extends React.Component {
   componentDidMount() {
@@ -87,6 +88,8 @@ class BizBuilderBase extends React.Component {
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData({ ...formData, [key]: val });
   };
 
+  searchCompRenderer = props => <SearchComp {...props} />;
+
   componentRenderer = () => {
     const {
       CustomInputPage,
@@ -136,9 +139,9 @@ class BizBuilderBase extends React.Component {
           break;
         case 'LIST':
           if (typeof CustomListPage === 'function') {
-            component = <CustomListPage {...nextProps} listData={listData} />;
+            component = <CustomListPage {...nextProps} listData={listData} searchCompRenderer={this.searchCompRenderer} />;
           } else if (metaList && metaList.length > 0 && viewLayer.length > 0) {
-            component = <ListPage {...nextProps} listData={listData} />;
+            component = <ListPage {...nextProps} listData={listData} searchCompRenderer={this.searchCompRenderer} />;
           }
           break;
         case 'CUSTOM':
@@ -277,6 +280,8 @@ const mapDispatchToProps = dispatch => ({
   getDraftProcess: (id, draftId) => dispatch(actions.getDraftProcess(id, draftId)),
   setViewPageData: (id, workSeq, taskSeq, viewType) => dispatch(actions.setViewPageDataByReducer(id, workSeq, taskSeq, viewType)),
   setViewType: (id, viewType) => dispatch(actions.setViewTypeByReducer(id, viewType)),
+  changeSearchData: (id, key, val) => dispatch(actions.changeSearchDataByReducer(id, key, val)),
+  getListData: (id, workSeq) => dispatch(actions.getListDataBySaga(id, workSeq)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });

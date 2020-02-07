@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
 
 const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
-  <div>
+  <div className="RestrictedRouteWrapper">
     <Route
       {...rest}
       render={props =>

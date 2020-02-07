@@ -94,6 +94,9 @@ const Styled = styled.div`
       font-size: 13px;
       font-weight: 400;
       color: #000;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   &.popoverWrapper {
