@@ -46,9 +46,13 @@ class SelectComp extends Component {
       colData,
       readOnly,
       visible,
+      isSearch,
+      searchCompRenderer,
     } = this.props;
     const apiData = extraApiData[`select_${mapId}`];
-
+    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM' && apiData && apiData.categoryMapList) {
+      return searchCompRenderer({ ...this.props, searchSelectData: apiData.categoryMapList.filter(x => x.LVL > 0 && x.USE_YN === 'Y') });
+    }
     return visible ? (
       <>
         {colData !== undefined ? (

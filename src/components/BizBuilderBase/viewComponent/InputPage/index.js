@@ -33,9 +33,9 @@ class InputPage extends Component {
     }
   }
 
-  saveTask = (id, reloadId, callbackFunc) => {
-    const { saveTask } = this.props;
-    saveTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+  saveTask = (id, reloadId) => {
+    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
+    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
   };
 
   // state값 reset테스트
@@ -80,7 +80,7 @@ class InputPage extends Component {
             {isWorkflowUsed && PRC_ID !== -1 && <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
+              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
                 Save
               </StyledButton>
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>

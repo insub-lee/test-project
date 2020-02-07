@@ -28,7 +28,22 @@ class ListPage extends Component {
   //   removeReduxState(id);
   // }
 
-  renderComp = (comp, colData, rowData, visible) => {
+  renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
+    if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
+      return CompInfo[comp.CONFIG.property.COMP_SRC].renderer({
+        ...comp,
+        colData,
+        ...this.props,
+        visible,
+        rowClass,
+        colClass,
+        isSearch,
+      });
+    }
+    return <div />;
+  };
+
+  renderCompRow = (comp, colData, rowData, visible) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
       return CompInfo[comp.CONFIG.property.COMP_SRC].renderer({
         ...comp,
@@ -49,7 +64,7 @@ class ListPage extends Component {
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
           width: node.style.width,
-          render: (text, record) => this.renderComp(node.comp, text, record, true),
+          render: (text, record) => this.renderCompRow(node.comp, text, record, true),
         });
       }
     });
@@ -70,7 +85,7 @@ class ListPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage } = this.props;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -99,30 +114,52 @@ class ListPage extends Component {
                 return this.renderList(group, groupIndex);
               }
               return (
-                <div key={group.key}>
-                  {group.useTitle && <GroupTitle title={group.title} />}
-                  <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                    <table className={`view-designer-table table-${groupIndex}`}>
-                      <tbody>
-                        {group.rows.map((row, rowIndex) => (
-                          <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                            {row.cols &&
-                              row.cols.map((col, colIndex) => (
-                                <td
-                                  key={col.key}
-                                  {...col}
-                                  colSpan={col.span}
-                                  className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                >
-                                  <Contents>{col.comp && this.renderComp(col.comp, col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '', true)}</Contents>
-                                </td>
-                              ))}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </Group>
-                </div>
+                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
+                  <div key={group.key}>
+                    {group.useTitle && <GroupTitle title={group.title} />}
+                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
+                        <table className={`view-designer-table table-${groupIndex}`}>
+                          <tbody>
+                            {group.rows.map((row, rowIndex) => (
+                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
+                                {row.cols &&
+                                  row.cols.map((col, colIndex) => (
+                                    <td
+                                      key={col.key}
+                                      {...col}
+                                      comp=""
+                                      colSpan={col.span}
+                                      className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                                    >
+                                      <Contents>
+                                        {col.comp &&
+                                          this.renderComp(
+                                            col.comp,
+                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                            true,
+                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                            group.type === 'searchGroup',
+                                          )}
+                                      </Contents>
+                                    </td>
+                                  ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      {group.type === 'searchGroup' && group.useSearch && (
+                        <div className="view-designer-group-search-btn-wrap">
+                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                            Search
+                          </StyledButton>
+                        </div>
+                      )}
+                    </Group>
+                  </div>
+                )
               );
             })}
             <div className="alignRight">

@@ -159,7 +159,7 @@ class PublicRoutes extends Component {
     }
 
     return (
-      <div>
+      <div className="rootRouteWrapper">
         {/*
         <Debounce time="400" handler="onResize">
           <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />
