@@ -1,16 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import BizBuilderBase from 'components/BizBuilderBase';
-import BizBuilderDevBase from 'components/BizMicroDevBase';
+/* eslint-disable react/prefer-stateless-function */
+import React, { Component } from 'react';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
+import Styeld from './Styled';
 
-class EshsUserManager extends React.component {
+class EshsUserManager extends Component {
   render() {
-    return '8789';
+    return (
+      <Styeld>
+        <BizMicroDevBase component={List} sagaKey="EshsUserManager" />
+      </Styeld>
+    );
   }
 }
-
-EshsUserManager.propTypes = {};
-EshsUserManager.defaultProps = {};
 
 export default EshsUserManager;
