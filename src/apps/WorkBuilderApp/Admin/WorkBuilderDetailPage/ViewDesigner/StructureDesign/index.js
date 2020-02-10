@@ -36,7 +36,7 @@ const StyledActionBar = styled.div`
   }
 `;
 
-const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action, tabBodyHeight, viewType, compPoolList, viewField, hiddenField }) => (
+const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action, tabBodyHeight, viewType, compPoolList, viewField, hiddenField, compList }) => (
   <div key={viewField}>
     <StyledActionBar>
       <div className="button--group--left">
@@ -125,6 +125,7 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
                               groupType={group.type}
                               action={action}
                               compPoolList={compPoolList}
+                              compList={compList}
                             />
                           </Contents>
                         </Col>

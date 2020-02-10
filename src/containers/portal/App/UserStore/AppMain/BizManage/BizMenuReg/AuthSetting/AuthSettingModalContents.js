@@ -168,19 +168,11 @@ class AuthSettingModalContents extends Component {
   }
 
   makeTableBody(mapList, leftArr, topArr) {
-    const tableCellArr = [];
-
-    leftArr.forEach((left, i) => {
+    return leftArr.map((left, index) => {
       const title = lang.get('NAME', left);
-
-      let blank = '';
-      for (let x = 1; x < left.LVL; x += 1) {
-        blank += '　';
-      }
-
-      const map = mapList[i];
-
-      const row = (
+      const blank = new Array(left.LVL - 1).join(' ');
+      const map = mapList[index];
+      return (
         <Table.Row key={left.MENU_ID}>
           <Table.Cell>{`${blank}${title}`}</Table.Cell>
           <Table.Cell>
@@ -189,7 +181,7 @@ class AuthSettingModalContents extends Component {
                 key={`left/${left.MENU_ID}`}
                 checked={left.checked}
                 onChange={e => {
-                  this.checkLeftAll(leftArr, mapList, i, e.target.checked);
+                  this.checkLeftAll(leftArr, mapList, index, e.target.checked);
                 }}
               />
             )}
@@ -198,7 +190,7 @@ class AuthSettingModalContents extends Component {
             const data = map[key];
             return (
               <Table.Cell>
-                {data.NODE_TYPE !== 'F' ? (
+                {data.NODE_TYPE !== 'F' && (
                   <Checkbox
                     key={`${data.id}`}
                     checked={data.checked}
@@ -206,19 +198,13 @@ class AuthSettingModalContents extends Component {
                       this.check(mapList, leftArr, topArr, data, e.target.checked);
                     }}
                   />
-                ) : (
-                  ''
                 )}
               </Table.Cell>
             );
           })}
         </Table.Row>
       );
-
-      tableCellArr.push(row);
     });
-
-    return tableCellArr;
   }
 
   render() {
@@ -257,7 +243,7 @@ class AuthSettingModalContents extends Component {
                         })}
                     </Table.Row>
                   </Table.Header>
-                  <Table.Body>{leftArr.length > 0 && mapList.length > 0 ? this.makeTableBody(mapList, leftArr, topArr) : ''}</Table.Body>
+                  <Table.Body>{leftArr.length > 0 && mapList.length > 0 ? this.makeTableBody(mapList, leftArr, topArr) : <Table.Row />}</Table.Body>
                 </Table>
               </ScrollBar>
             </StyleAuthSettingContent>
@@ -269,8 +255,8 @@ class AuthSettingModalContents extends Component {
 }
 
 AuthSettingModalContents.propTypes = {
-  history: PropTypes.object.isRequired,
-  match: PropTypes.object.isRequired,
+  // history: PropTypes.object.isRequired,
+  // match: PropTypes.object.isRequired,
 
   bizGroupInfo: PropTypes.object.isRequired,
   leftArr: PropTypes.array.isRequired,

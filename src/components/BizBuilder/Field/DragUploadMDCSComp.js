@@ -12,7 +12,7 @@ import MessageContent from 'components/Feedback/message.style2';
 const { Dragger } = Upload;
 const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
 
-class DragUploadComp extends Component {
+class DragUploadMDCSComp extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -127,7 +127,11 @@ class DragUploadComp extends Component {
         // const nextColDataDetail = colData.DETAIL.filter((item, index) => index !== itemindex);
         // changeFormData(id, COMP_FIELD, nextColDataDetail);
         // desc - 'done'상태인것만 리듀서에 푸쉬
-        changeFormData(id, COMP_FIELD, { ...colData, DETAIL: this.state.fileList.filter(file => file.status === 'done') });
+        changeFormData(
+          id,
+          COMP_FIELD,
+          this.state.fileList.filter(file => file.status === 'done'),
+        );
         if (
           CONFIG.property.fileCntFieldFlag &&
           CONFIG.property.fileCntFieldFlag === 'Y' &&
@@ -310,7 +314,7 @@ class DragUploadComp extends Component {
             */}
             <div className="dragTypeUploader" style={{ height: 100 }}>
               <Dragger
-                action="/upload"
+                action="/upload/mdcs"
                 fileList={fileList}
                 disabled={!(successFileList.length <= 5)}
                 onChange={this.handleChange}
@@ -403,8 +407,8 @@ class DragUploadComp extends Component {
   }
 }
 
-DragUploadComp.propTypes = {};
+DragUploadMDCSComp.propTypes = {};
 
-DragUploadComp.defaultProps = {};
+DragUploadMDCSComp.defaultProps = {};
 
-export default DragUploadComp;
+export default DragUploadMDCSComp;

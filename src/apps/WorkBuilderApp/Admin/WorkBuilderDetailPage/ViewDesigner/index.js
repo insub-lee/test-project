@@ -177,6 +177,7 @@ class ViewDesigner extends Component {
                       viewField={viewData.COMP_FIELD}
                       compPoolList={compPoolList}
                       hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
+                      compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
                     />
                   )}
                   {activeTabKey === '2' && (

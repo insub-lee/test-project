@@ -20,7 +20,7 @@ import { toggleExpandedForSelected } from './tree-data-utils';
 // import './app.css';
 import CustomTheme from './theme';
 import StyleMyPageTree, { RemoveBtn, FolderBtn, EditBtn, BizGroupBtn, BizGroupResetBtn } from './StyleMyPageTree';
-/* eslint=disable */
+
 class BizGroupTree extends Component {
   constructor(props) {
     super(props);
@@ -114,6 +114,7 @@ class BizGroupTree extends Component {
 
   registBizgroup = rowInfo => (
     <BizGroupBtn
+      key="BizGroupBtn"
       title="업무그룹 등록"
       onClick={() => {
         const data = {
@@ -127,6 +128,7 @@ class BizGroupTree extends Component {
 
   registFolder = rowInfo => (
     <FolderBtn
+      key="FolderBtn"
       title="폴더 등록"
       onClick={() => {
         const data = {
@@ -140,6 +142,7 @@ class BizGroupTree extends Component {
 
   updateBizgroup = rowInfo => (
     <EditBtn
+      key="updateBizgroup"
       title="업무그룹 수정"
       onClick={() => {
         this.props.saveData(rowInfo, this.state.treeData);
@@ -150,6 +153,7 @@ class BizGroupTree extends Component {
 
   updateFolder = rowInfo => (
     <EditBtn
+      key="updateFolder"
       title="폴더 수정"
       onClick={() => {
         this.props.saveData(rowInfo, this.state.treeData);
@@ -160,6 +164,7 @@ class BizGroupTree extends Component {
 
   deleteBizgroup = rowInfo => (
     <RemoveBtn
+      key="deleteBizgroup"
       title="업무그룹 삭제"
       onClick={() => {
         const messageStr = `${rowInfo.node.title} ${intlObj.get(messages.deleteBizGroup)}`;
@@ -170,6 +175,7 @@ class BizGroupTree extends Component {
 
   deleteFolder = rowInfo => (
     <RemoveBtn
+      key="deleteFolder"
       title="폴더 삭제"
       onClick={() => {
         const messageStr = `${rowInfo.node.title} ${intlObj.get(messages.deleteBizFolder)}`;

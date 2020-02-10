@@ -25,7 +25,7 @@ const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
 RestrictedRoute.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   profile: PropTypes.object,
-  component: PropTypes.func, //eslint-disable-line
+  component: PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.node]), //eslint-disable-line
   location: PropTypes.object, //eslint-disable-line
 };
 
