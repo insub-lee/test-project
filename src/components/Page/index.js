@@ -372,11 +372,15 @@ Page.propTypes = {
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   show: PropTypes.func.isRequired,
-  onReload: PropTypes.func.isRequired,
+  onReload: PropTypes.func,
   isUnreadCnt: PropTypes.array.isRequired,
   setIsSpinnerShow: PropTypes.func.isRequired,
   isPreviewPage: PropTypes.bool.isRequired,
   menuFixedYn: PropTypes.string,
+};
+
+Page.defaultProps = {
+  onReload: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({

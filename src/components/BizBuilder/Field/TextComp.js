@@ -7,6 +7,7 @@ class TextComp extends React.Component {
   constructor(props) {
     super(props);
     this.handleOnChange = debounce(this.handleOnChange, 300);
+    // this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
   handleOnChange = value => {
@@ -17,8 +18,22 @@ class TextComp extends React.Component {
     changeFormData(id, COMP_FIELD, value);
   };
 
+  // custom search 예제
+  // handleOnChangeSearch = value => {
+  //   const { sagaKey, COMP_FIELD, changeSearchData } = this.props;
+  //   const searchText = value.length > 0 ? `AND W.${COMP_FIELD} LIKE '%${value}%'` : '';
+  //   changeSearchData(sagaKey, COMP_FIELD, searchText);
+  // };
+
   render() {
-    const { CONFIG, colData, readOnly, visible } = this.props;
+    const { CONFIG, colData, readOnly, visible, isSearch, searchCompRenderer } = this.props;
+    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
+      return searchCompRenderer(this.props);
+    }
+    // custom search 예제
+    // } else {
+    // return <Input onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} />;
+    // }
     return visible ? (
       <Input
         defaultValue={colData}
@@ -43,6 +58,7 @@ TextComp.propTypes = {
   changeValidationData: PropTypes.any,
   readOnly: PropTypes.any,
   compProp: PropTypes.any,
+  changeSearchData: PropTypes.any,
 };
 
 export default TextComp;

@@ -26,11 +26,12 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormDat
     yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
   }
   if (viewType === 'LIST') {
-    const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-    if (responseList) {
-      const { list } = responseList;
-      yield put(actions.setListDataByReducer(id, list));
-    }
+    yield put(actions.getListDataBySaga(id, workSeq));
+    // const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
+    // if (responseList) {
+    //   const { list } = responseList;
+    //   yield put(actions.setListDataByReducer(id, list));
+    // }
   }
 }
 
@@ -433,6 +434,20 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
+function* getListData({ id, workSeq }) {
+  const searchData = yield select(selectors.makeSelectSearchDataById(id));
+  const whereString = [];
+  const keySet = Object.keys(searchData);
+  keySet.forEach(key => {
+    whereString.push(searchData[key]);
+  });
+  const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getBuilderData' });
+  if (responseList) {
+    const { list } = responseList;
+    yield put(actions.setListDataByReducer(id, list));
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -451,6 +466,7 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.REVISION_TASK}_${arg.sagaKey}`, revisionTask);
   yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.sagaKey}`, getRevisionHistory);
   yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.sagaKey}`, getDraftProcess);
+  yield takeEvery(`${actionTypes.GET_LIST_DATA_SAGA}_${arg.sagaKey}`, getListData);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

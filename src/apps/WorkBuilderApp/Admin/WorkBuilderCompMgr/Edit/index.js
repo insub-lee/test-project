@@ -8,7 +8,9 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledTextarea from 'commonStyled/Form/StyledTextarea';
 import { isJSON } from 'utils/helpers';
+import { COMP_EDITOR_SEQ, COMP_FILE_SEQ } from 'components/BizBuilder/Common/Constants';
 import StyledButton from '../Styled/StyledButton';
+
 import StyledPool from './StyledPool';
 
 const { TextArea } = Input;
@@ -51,23 +53,26 @@ class Edit extends Component {
 
   changeGroupIdx = val => {
     const { sagaKey: id, formData, changeFormData } = this.props;
-    console.debug(val);
     changeFormData(id, 'COL_GROUP_IDX', val);
-    if (val === 3) {
+    if (val === COMP_EDITOR_SEQ || val === COMP_FILE_SEQ) {
       if (formData.COMP_CONFIG && formData.COMP_CONFIG.length > 0 && isJSON(formData.COMP_CONFIG)) {
         const compConfig = JSON.parse(formData.COMP_CONFIG);
         compConfig.info.isClob = true;
+        if (val === COMP_FILE_SEQ) compConfig.info.isAttach = true;
         changeFormData(id, 'COMP_CONFIG', JSON.stringify(compConfig));
       } else {
-        changeFormData(id, 'COMP_CONFIG', '{"info":{"isClob": true}}');
+        changeFormData(id, 'COMP_CONFIG', `{"info":{"isClob": true${val === COMP_FILE_SEQ ? ',"isAttach": true' : ''}}}`);
       }
+    } else if (formData.COMP_CONFIG && formData.COMP_CONFIG.length > 0 && isJSON(formData.COMP_CONFIG)) {
+      const compConfig = JSON.parse(formData.COMP_CONFIG);
+      if (compConfig.info && compConfig.info.isClob) delete compConfig.info.isClob;
+      if (compConfig.info && compConfig.info.isAttach) delete compConfig.info.isAttach;
+      changeFormData(id, 'COMP_CONFIG', JSON.stringify(compConfig));
     }
   };
 
   render() {
     const { result, sagaKey: id, formData } = this.props;
-    console.debug('props', this.props);
-    console.debug('this.state', this.state);
     return (
       <StyledPool>
         <Descriptions bordered>
