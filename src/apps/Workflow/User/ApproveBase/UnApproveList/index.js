@@ -71,6 +71,7 @@ class UnApproveList extends Component {
 
   render() {
     const { approveList, selectedRow } = this.props;
+    console.debug(this.props);
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>

@@ -45,7 +45,7 @@ class Edit extends Component {
     if (result.length > 0) {
       changeFormData(sagaKey, 'APPROVER_ID', result[0].USER_ID);
       changeFormData(sagaKey, 'APPROVER_NAME', result[0].NAME_KOR);
-      changeFormData(sagaKey, 'APPROVER_INFO', result);
+      changeFormData(sagaKey, 'APPROVER_INFO', result);     
     }
     result.length > 0 &&
       this.setState({
@@ -66,14 +66,22 @@ class Edit extends Component {
     submitHadnlerBySaga(sagaKey, 'POST', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
   };
 
+  onUpdate = () => {
+    const { sagaKey, submitHadnlerBySaga, formData } = this.props;
+    const submitData = {
+      PARAM: { formData },
+    };
+    submitHadnlerBySaga(sagaKey, 'PUT', '/api/mdcs/v1/common/DocApproverManageList', submitData, this.onSaveComplete);
+  };
+
   onSaveComplete = id => {
     const { getCallDataHanlder, apiAry, removeStorageReduxState } = this.props;
     removeStorageReduxState(id, 'result');
     getCallDataHanlder(id, apiAry);
     this.setState({
-      displayUserName: undefined,
+      displayUserName: undefined,      
     });
-    removeStorageReduxState(id, 'formData');
+   this.onCancel();
   };
 
   onCancel = () => {
