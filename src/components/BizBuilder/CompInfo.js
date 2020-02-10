@@ -46,6 +46,7 @@ import SelectIntComp from 'components/BizBuilder/Field/SelectIntComp';
 import RadioMaterialComp from 'components/BizBuilder/Field/RadioMaterialComp';
 import RadioMaterialLabelComp from 'components/BizBuilder/Field/RadioMaterialLabelComp';
 import RadioPopupComp from 'components/BizBuilder/Field/RadioPopupComp';
+import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -94,4 +95,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioMaterialComp': { renderer: property => <RadioMaterialComp {...property} /> },
   'components/BizBuilder/Field/RadioMaterialLabelComp': { renderer: property => <RadioMaterialLabelComp {...property} /> },
   'components/BizBuilder/Field/RadioPopupComp': { renderer: property => <RadioPopupComp {...property} /> },
+  'components/BizBuilder/Field/ManageCodeComp': { renderer: property => <ManageCodeComp {...property} /> },
 };
