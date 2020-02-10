@@ -10,6 +10,7 @@ import InsertBtnComp from 'components/BizBuilder/Field/InsertBtnComp';
 import ModalInsertBtnComp from 'components/BizBuilder/Field/ModalInsertBtnComp';
 import AttachComp from 'components/BizBuilder/Field/AttachComp';
 import DragUploadComp from 'components/BizBuilder/Field/DragUploadComp';
+import DragUploadMDCSComp from 'components/BizBuilder/Field/DragUploadMDCSComp';
 import TreeSelectComp from 'components/BizBuilder/Field/TreeSelectComp';
 import SelectComp from 'components/BizBuilder/Field/SelectComp';
 import ReadOnlyTextComp from 'components/BizBuilder/Field/ReadOnlyTextComp';
@@ -59,6 +60,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/ModalInsertBtnComp': { renderer: property => <ModalInsertBtnComp {...property} /> },
   'components/BizBuilder/Field/AttachComp': { renderer: property => <AttachComp {...property} /> },
   'components/BizBuilder/Field/DragUploadComp': { renderer: property => <DragUploadComp {...property} /> },
+  'components/BizBuilder/Field/DragUploadMDCSComp': { renderer: property => <DragUploadMDCSComp {...property} /> },
   'components/BizBuilder/Field/TreeSelectComp': { renderer: property => <TreeSelectComp {...property} /> },
   'components/BizBuilder/Field/SelectComp': { renderer: property => <SelectComp {...property} /> },
   'components/BizBuilder/Field/ReadOnlyTextComp': { renderer: property => <ReadOnlyTextComp {...property} /> },
