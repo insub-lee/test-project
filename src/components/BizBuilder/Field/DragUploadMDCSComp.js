@@ -115,7 +115,7 @@ class DragUploadMDCSComp extends Component {
 
   onRemove = (itemindex, e) => {
     e.stopPropagation();
-    const { sagaKey: id, changeFormData, colData, COMP_FIELD } = this.props;
+    const { sagaKey: id, changeFormData, colData, COMP_FIELD, CONFIG } = this.props;
     this.setState(
       prevState => {
         const { fileList } = prevState;
