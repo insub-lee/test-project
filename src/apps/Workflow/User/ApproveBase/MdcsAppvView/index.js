@@ -94,6 +94,7 @@ class MdcsAppvView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     e.preventDefault();
+    console.debug('handleReqApprove call!! ');
     this.props.reqApprove(appvStatus);
     this.props.setOpinionVisible(false);
   };
@@ -105,6 +106,7 @@ class MdcsAppvView extends Component {
   render() {
     const { selectedRow } = this.props;
     console.debug('render', selectedRow.CURRENT_STATUS);
+    console.debug('this.prosp', this.props);
     return (
       <>
         <StyledTable style={{ padding: '10px' }}>
@@ -116,8 +118,8 @@ class MdcsAppvView extends Component {
                   <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
                     <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
                     <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
-                    {selectedRow.CURRENT_STATUS !== 5 && selectedRow.CURRENT_STATUS !== 10 && <Radio value={5}>실무자 검토의뢰</Radio>}
-                    {selectedRow.CURRENT_STATUS !== 5 && selectedRow.CURRENT_STATUS !== 10 && <Radio value={10}>실무자 결재 권한위임</Radio>}
+                    {selectedRow.NODE_ID === 106 && <Radio value={5}>실무자 검토의뢰</Radio>}
+                    {selectedRow.NODE_ID === 106 && <Radio value={10}>실무자 결재 권한위임</Radio>}
                   </Radio.Group>
                 </td>
               </tr>
