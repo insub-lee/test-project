@@ -561,10 +561,9 @@ class ReactSortableTree extends Component {
     );
   }
 
-  render() {
+  getList = () => {
     const {
       style,
-      className,
       innerStyle,
       rowHeight,
       isVirtualized,
@@ -625,7 +624,7 @@ class ReactSortableTree extends Component {
     if (rows.length < 1) {
       const Placeholder = this.treePlaceholderRenderer;
       const PlaceholderContent = placeholderRenderer;
-      list = (
+      return (
         <Placeholder treeId={this.treeId} drop={this.drop}>
           <PlaceholderContent />
         </Placeholder>
@@ -635,7 +634,7 @@ class ReactSortableTree extends Component {
 
       const ScrollZoneVirtualList = this.scrollZoneVirtualList;
       // Render list with react-virtualized
-      list = (
+      return (
         <AutoSizer>
           {({ height, width }) => (
             <ScrollZoneVirtualList
@@ -659,12 +658,12 @@ class ReactSortableTree extends Component {
                 typeof rowHeight !== 'function'
                   ? rowHeight
                   : ({ index }) =>
-                      rowHeight({
-                        index,
-                        treeIndex: index,
-                        node: rows[index].node,
-                        path: rows[index].path,
-                      })
+                    rowHeight({
+                      index,
+                      treeIndex: index,
+                      node: rows[index].node,
+                      path: rows[index].path,
+                    })
               }
               rowRenderer={({ index, style: rowStyle }) =>
                 this.renderRow(rows[index], {
@@ -682,37 +681,44 @@ class ReactSortableTree extends Component {
           )}
         </AutoSizer>
       );
-    } else {
-      // Render list without react-virtualized
-      list = rows.map((row, index) =>
-        this.renderRow(row, {
-          listIndex: index,
-          style: {
-            height:
-              typeof rowHeight !== 'function'
-                ? rowHeight
-                : rowHeight({
-                    index,
-                    treeIndex: index,
-                    node: row.node,
-                    path: row.path,
-                  }),
-          },
-          getPrevRow: () => rows[index - 1] || null,
-          matchKeys,
-          swapFrom,
-          swapDepth: draggedDepth,
-          swapLength,
-        })
-      );
     }
+    // Render list without react-virtualized
+    return rows.map((row, index) =>
+      this.renderRow(row, {
+        listIndex: index,
+        style: {
+          height:
+            typeof rowHeight !== 'function'
+              ? rowHeight
+              : rowHeight({
+                index,
+                treeIndex: index,
+                node: row.node,
+                path: row.path,
+              }),
+        },
+        getPrevRow: () => rows[index - 1] || null,
+        matchKeys,
+        swapFrom,
+        swapDepth: draggedDepth,
+        swapLength,
+      })
+    );
+  };
+
+  render() {
+    const {
+      style,
+      className,
+      isVirtualized,
+    } = mergeTheme(this.props);
 
     return (
       <div
         className={classnames('rst__tree', className)}
-        style={containerStyle}
+        style={isVirtualized ? { ...style, height: '100%' } : style}
       >
-        {list}
+        {this.getList()}
       </div>
     );
   }

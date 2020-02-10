@@ -255,3 +255,16 @@ export const setListDataByReducer = (id, listData) => ({
   id,
   listData,
 });
+
+export const changeSearchDataByReducer = (id, key, val) => ({
+  type: actionTypes.CHANGE_SEARCH_DATA_REDUCER,
+  id,
+  key,
+  val,
+});
+
+export const getListDataBySaga = (id, workSeq) => ({
+  type: `${actionTypes.GET_LIST_DATA_SAGA}_${id}`,
+  id,
+  workSeq,
+});

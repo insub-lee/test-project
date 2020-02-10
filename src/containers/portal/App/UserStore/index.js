@@ -88,7 +88,7 @@ class UserStore extends Component {
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
             <h2 className="pageHeader">{this.getPageHeaderTitle()}</h2>
-            <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
+            {/* <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} /> */}
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>
@@ -96,24 +96,24 @@ class UserStore extends Component {
                 <Content className="storeContent">
                   <div className="contentWrapper">
                     <Switch>
-                      <Route exact path="/portal/store" component={AppList} />
-                      <Route exact path="/portal/store/appMain" component={AppMain} />
-                      <Route exact path="/portal/store/appMain/myPage" component={Main} />
+                      <Route exact path="/portal/store" render={props => <AppList {...props} />} />
+                      <Route exact path="/portal/store/appMain" render={props => <AppMain {...props} />} />
+                      <Route exact path="/portal/store/appMain/myPage" render={props => <Main {...props} />} />
                       <Route
                         exact
                         path="/portal/store/appMain/myPage/app/:APP_ID"
                         render={props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />}
                       />
-                      <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
-                      <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
+                      <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" render={props => <PageInfo {...props} />} />
+                      <Route path="/portal/store/appMain/myPage/modal" render={props => <AppBizModal {...props} />} />
                       <Route
                         path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID"
                         render={props => <BizDetail {...props} execMenu={execMenu} execPage={execPage} />}
                       />
-                      <Route exact path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
-                      <Route path="/portal/store/appMain/bizManage" component={BizManage} />
+                      <Route exact path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" render={props => <BizMenuList {...props} />} />
+                      <Route path="/portal/store/appMain/bizManage" render={props => <BizManage {...props} />} />
                       <Route path="/portal/store/appMain/bizStore" render={props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
-                      <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
+                      <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" render={props => <AppList {...props} />} />
                     </Switch>
                   </div>
                   <ErrorBoundary>

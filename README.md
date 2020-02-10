@@ -1,4 +1,4 @@
-biz
+#bizmicro-portal-front
 
 
 * [컴파일 속도 관련 이슈](#2)
@@ -20,10 +20,17 @@ biz
 
 * 위젯 중복 실행 관련 src/utils/sagaInjectors.js 파일 수정 
 
-    ``` react
-    props.sagaKey 또는 props.id 값을 기반으로 saga watcher가 등록됨, 
-    saga.js, selectors.js 에서 sagaKey || id 비교 체크 하는 로직 추가해야함 
-    자세한 내용은 BizMicroDevBase 컴포넌트 참조
-    ```
+```text
+props.sagaKey 또는 props.id 값을 기반으로 saga watcher가 등록됨, 
+saga.js, selectors.js 에서 sagaKey || id 비교 체크 하는 로직 추가해야함 
+자세한 내용은 BizMicroDevBase 컴포넌트 참조
+```
 
+## Magnachip Logs
+- 2020년 02월 05월
 
+```text
+* loadable-component 사용 (router 부분에 code split 적용 이로 인해 전체 빌드 타임 무식하게 증가......)
+* 기존 App이나 Page를 그리던 화면을 일반 페이지 처리, Route로 적용 시킴 (/containers/portal/App/index.js 참고)
+* Build 시 캐쉬화를 통한 재빌드가 가능한지 현재 테스트중...
+```

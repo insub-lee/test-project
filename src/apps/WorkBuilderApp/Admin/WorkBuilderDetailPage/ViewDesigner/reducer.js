@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import uuid from 'uuid/v1';
+import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import { isJSON } from 'utils/helpers';
 import { VIEW_TYPE_IDX } from 'components/BizBuilder/Common/Constants';
@@ -478,6 +479,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CHANGE_GROUP_TITLE: {
       const { groupIndex, title } = action;
       return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'title'], title);
+    }
+    case actionTypes.CHANGE_GROUP_DATA_REDUCER: {
+      const { groupIndex, key, value } = action;
+      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, key], value);
     }
     case actionTypes.CHANGE_USE_GROUP_TITLE: {
       const { groupIndex, useTitle } = action;

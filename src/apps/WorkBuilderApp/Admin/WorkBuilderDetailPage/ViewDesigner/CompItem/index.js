@@ -118,6 +118,7 @@ class CompItem extends React.Component {
     const nextConfig = JSON.parse(JSON.stringify(CONFIG));
     nextConfig.property.COMP_SRC = value;
     nextConfig.property.COMP_SETTING_SRC = compPoolList[compIdx].COMP_SETTING_SRC;
+    nextConfig.property.COMP_NAME = compPoolList[compIdx].COMP_NAME;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
   };
 
@@ -132,7 +133,7 @@ class CompItem extends React.Component {
   };
 
   renderCompConfig = (configType, configProps) => {
-    const { col, comp, compPoolList } = configProps;
+    const { col, comp, compPoolList, viewType, groupType } = configProps;
     return (
       <Styled className="popoverWrapper">
         <div className="popoverInnerInput">
@@ -197,7 +198,7 @@ class CompItem extends React.Component {
                         defaultChecked={comp.CONFIG.property.readOnly}
                         onChange={e => this.handleChangeViewConfig('readOnly', e.target.checked, 'property')}
                       >
-                        일기전용
+                        읽기전용
                       </Checkbox>
                     </td>
                   </tr>
@@ -210,13 +211,64 @@ class CompItem extends React.Component {
             </div>
           )}
         </div>
+        {viewType === 'LIST' && groupType === 'searchGroup' && comp.COMP_TYPE !== 'LABEL' && (
+          <div className="popoverInner">
+            <p className="popover-tit">검색 설정</p>
+            <div className="popoverInnerCom">
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">검색 타입</span>
+                <Select
+                  style={{ width: '100%' }}
+                  placeholder="Select component"
+                  defaultValue={comp.CONFIG.property.searchType || ''}
+                  onChange={value => this.handleChangeViewConfig('searchType', value, 'property')}
+                >
+                  <Option value="INPUT">Input</Option>
+                  <Option value="SELECT">Select</Option>
+                  <Option value="TREESELECT">Tree Select</Option>
+                  <Option value="CUSTOM">Custom</Option>
+                </Select>
+              </div>
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">검색 조건</span>
+                <Select
+                  style={{ width: '100%' }}
+                  placeholder="Select component"
+                  defaultValue={comp.CONFIG.property.searchCondition || ''}
+                  onChange={value => this.handleChangeViewConfig('searchCondition', value, 'property')}
+                >
+                  <Option value="=">=</Option>
+                  <Option value=">=">&gt;=</Option>
+                  <Option value="<=">&lt;=</Option>
+                  <Option value=">">&gt;</Option>
+                  <Option value="<">&lt;</Option>
+                  <Option value="LIKE">Like</Option>
+                  <Option value="BETWEEN">Between</Option>
+                </Select>
+              </div>
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">검색 데이터 구분</span>
+                <Select
+                  style={{ width: '100%' }}
+                  placeholder="Select component"
+                  defaultValue={comp.CONFIG.property.searchDataType || ''}
+                  onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
+                >
+                  <Option value="STRING">String</Option>
+                  <Option value="NUMBER">Number</Option>
+                  <Option value="DATETIME">Datetime</Option>
+                </Select>
+              </div>
+            </div>
+          </div>
+        )}
         <div className="popoverInner">
           <p className="popover-tit">컴포넌트 설정</p>
           <div className="popoverInnerCom">
             <div className="popoverItem popoverItemInput">
               <span className="spanLabel">컴포넌트 설정</span>
               <Select
-                style={{ width: '200px' }}
+                style={{ width: '100%' }}
                 placeholder="Select component"
                 defaultValue={comp.CONFIG.property.COMP_SRC}
                 onChange={value => this.handleChangeCompSetting(value)}
@@ -262,6 +314,8 @@ class CompItem extends React.Component {
       action: { changeCompData, removeColComp, changeViewCompData },
       groupType,
       compPoolList,
+      viewType,
+      compList,
     } = this.props;
     if (col && col.comp && col.comp.CONFIG && col.comp.CONFIG.property.COMP_SRC) {
       const configProps = {
@@ -274,6 +328,9 @@ class CompItem extends React.Component {
         compPoolList,
         changeViewCompData,
         col,
+        viewType,
+        groupType,
+        compList,
       };
       if (groupType !== 'listGroup') {
         // const colClassName = `compConfigCol compConfigDiv ${col.comp.COMP_TYPE === 'LABEL' ? 'wid100-28' : 'wid50'}`;
@@ -324,7 +381,7 @@ class CompItem extends React.Component {
       return (
         <Styled className="compConfig compConfigDiv">
           <div className="compConfigRow compConfigDiv">
-            <div className="compConfigCol compConfigDiv wid100">{col.comp.NAME_KOR}</div>
+            <div className="compConfigCol compConfigDiv wid100">{col.comp.COMP_FIELD || 'no id'}</div>
           </div>
           <div className="compConfigRow compConfigDiv">
             <div className="compConfigCol compConfigDiv wid100-28">

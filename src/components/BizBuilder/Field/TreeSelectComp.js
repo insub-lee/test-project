@@ -53,6 +53,8 @@ class TreeSelectComp extends Component {
       extraApiData,
       readOnly,
       visible,
+      searchCompRenderer,
+      isSearch,
     } = this.props;
 
     const apiData = extraApiData[`treeSelect_${mapId}`];
@@ -66,6 +68,9 @@ class TreeSelectComp extends Component {
         )) ||
       [];
     const categoryData = tempData.length > 0 ? tempData[0] : [];
+    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
+      return searchCompRenderer({ ...this.props, searchTreeData: categoryData.children });
+    }
     return visible ? (
       <>
         {colData !== undefined ? (

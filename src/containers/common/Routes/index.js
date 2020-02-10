@@ -19,23 +19,9 @@ import saga from './saga';
 import * as actions from './actions';
 import * as authActions from '../Auth/actions';
 import SignIn from '../Auth/index';
-// import PortalApp from '../../portal/App/index';
-// import PortalSingleModeApp from '../../portal/SingleModeApp/index';
-// import StoreApp from '../../store/App/index';
-// import AdminApp from '../../admin/App/index';
-// import GuideApp from '../../guide/App/index';
-// import Preview from '../../portal/Preview/index';
 import * as authSelectors from '../Auth/selectors';
-// import { basicPath } from '../constants';
 import RestrictedRoute from './RestrictedRoute';
 import routes from './routes';
-
-// import OrganizationPopup from 'components/OrganizationPopup';
-// // import Loading from 'containers/common/Loading';
-// import ErrorPage from 'containers/portal/App/ErrorPage';
-// import Watermark from './Watermark';
-
-// import HyPm from '../../../apps/hyPm';
 
 // 포탈에서 앱을 실행했을 때 사용되는 경로
 // getLoaddata 함수가 실행되야함
@@ -159,7 +145,7 @@ class PublicRoutes extends Component {
     }
 
     return (
-      <div>
+      <div className="rootRouteWrapper">
         {/*
         <Debounce time="400" handler="onResize">
           <WindowResizeListener onResize={windowSize => windowResize(windowSize)} />

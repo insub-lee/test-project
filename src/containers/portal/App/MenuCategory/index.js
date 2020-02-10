@@ -76,7 +76,9 @@ const getSidebarContent = (commonMenuTreeData, execMenu, execPage) => {
 
 const MenuCategory = ({ open, setMenuClose, commonMenuTreeData, execMenu, execPage }) => (
   <div onMouseLeave={setMenuClose}>
-    <Sidebar sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)} open={open} styles={styleObj} touch shadow />
+    <Sidebar sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)} open={open} styles={styleObj} touch shadow>
+      <div />
+    </Sidebar>
   </div>
 );
 
@@ -85,7 +87,6 @@ MenuCategory.propTypes = {
   commonMenuTreeData: PropTypes.array.isRequired,
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
-  visible: PropTypes.bool.isRequired,
   setMenuClose: PropTypes.func.isRequired,
 };
 

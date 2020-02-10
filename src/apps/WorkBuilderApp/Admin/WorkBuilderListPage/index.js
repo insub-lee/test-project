@@ -11,7 +11,7 @@ import moment from 'moment';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import WorkBuilderDetailPage from '../WorkBuilderDetailPage'
+import WorkBuilderDetailPage from '../WorkBuilderDetailPage';
 
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -26,7 +26,7 @@ class WorkBuilderListPage extends Component {
   state = {
     isShow: false,
     workSeq: 0,
-  }
+  };
 
   componentDidMount() {
     const { getList } = this.props;
@@ -47,17 +47,17 @@ class WorkBuilderListPage extends Component {
       title: '업무빌더ID',
       dataIndex: 'WORK_ID',
       key: 'WORK_ID',
-      onCell: ({WORK_SEQ}) => ({
+      onCell: ({ WORK_SEQ }) => ({
         onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
-      })
+      }),
     },
     {
       title: '업무빌더명',
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
-      onCell: ({WORK_SEQ}) => ({
+      onCell: ({ WORK_SEQ }) => ({
         onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
-      })
+      }),
     },
     {
       title: '등록일',
@@ -83,13 +83,12 @@ class WorkBuilderListPage extends Component {
     {
       title: '',
       key: 'action',
-      render: record => (<Popconfirm
-      title="Are you sure delete this Builder?"
-      onConfirm={() => this.props.removeWorkBuilder(record)}
-      okText="Yes"
-      cancelText="No"
-      ><Button>Delete</Button></Popconfirm>),
-    }
+      render: record => (
+        <Popconfirm title="Are you sure delete this Builder?" onConfirm={() => this.props.removeWorkBuilder(record)} okText="Yes" cancelText="No">
+          <Button>Delete</Button>
+        </Popconfirm>
+      ),
+    },
   ];
 
   render() {
@@ -100,7 +99,7 @@ class WorkBuilderListPage extends Component {
       toggleModalVisible,
       postWorkBuilder,
       history,
-      removeWorkBuilder
+      removeWorkBuilder,
     } = this.props;
     return (
       <Wrapper>
@@ -122,15 +121,15 @@ class WorkBuilderListPage extends Component {
           onRowClick={i => this.setState({ isShow: true, workSeq: list[i].WORK_SEQ })}
           enableCellAutoFocus={false}
         /> */}
-        <AntdTable 
-          rowKey="WORK_SEQ" 
-          className="workBuilderList" 
-          columns={this.columns} 
-          dataSource={list} 
+        <AntdTable
+          rowKey="WORK_SEQ"
+          className="workBuilderList"
+          columns={this.columns}
+          dataSource={list}
           // onRow={({WORK_SEQ}) => ({
           //   onClick: event => event.target.tagName === "BUTTON" ? false : this.setState({ isShow: true, workSeq: WORK_SEQ }),
-          // })} 
-          />
+          // })}
+        />
         <FormModal
           wrappedComponentRef={this.registerFormRef}
           visible={formModal.visible}
@@ -142,6 +141,7 @@ class WorkBuilderListPage extends Component {
           style={{ top: '10px' }}
           visible={this.state.isShow}
           width="95%"
+          bodyStyle={{ padding: '0px 0px 10px 0px' }}
           maskClosable={false}
           onCancel={() => {
             this.setState({ isShow: false, workSeq: 0 });
@@ -194,18 +194,11 @@ const mapDispatchToProps = dispatch => ({
     });
   },
   getList: () => dispatch(actions.getList()),
-  removeWorkBuilder: rowData => dispatch(actions.removeWorkBuilderBySaga(rowData))
+  removeWorkBuilder: rowData => dispatch(actions.removeWorkBuilderBySaga(rowData)),
 });
 
 const withReducer = injectReducer({ key: 'work-builder-detail-page', reducer });
 const withSaga = injectSaga({ key: 'work-builder-detail-page', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(WorkBuilderListPage);
+export default compose(withReducer, withSaga, withConnect)(WorkBuilderListPage);

@@ -52,7 +52,7 @@ class ViewPage extends Component {
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-            <div>
+            <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
                 Modify
               </StyledButton>

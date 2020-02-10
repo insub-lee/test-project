@@ -19,10 +19,7 @@ const checkDescriptor = descriptor => {
   invariant(conformsTo(descriptor, shape), '(app/utils...) injectSaga: Expected a valid saga descriptor');
 };
 
-const buildKey = (originKey, subKey) => {
-  console.debug('Sub Key ?', subKey);
-  return (subKey ? `${originKey}-${subKey}` : originKey);
-};
+const buildKey = (originKey, subKey) => (subKey ? `${originKey}-${subKey}` : originKey);
 
 export function injectSagaFactory(store, isValid) {
   return function injectSaga(key, descriptor = {}, args) {

@@ -9,7 +9,9 @@ import ServiceStop from 'components/ServiceStatus';
 import PropTypes from 'prop-types';
 import Loading from './Loading';
 import WidgetsWrapper from '../components/Page/WidgetsWrapper';
-import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
+// 뷰어 변경 jhkim 20-02-07
+// import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
+import WorkBuilderViewer from './WorkBuilderApp/User/BizBuilderViewer';
 import ApproveBase from './Workflow/User/ApproveBase';
 
 class AppsRouter extends React.PureComponent {
@@ -60,7 +62,7 @@ class AppsRouter extends React.PureComponent {
       if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
-          <div>
+          <div className="AppsRouterWrapper">
             <Switch>
               <Route
                 path={`/${basicPath.APPS}/workBuilder/:ID`}

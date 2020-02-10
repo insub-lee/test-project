@@ -74,10 +74,6 @@ const WorkBuilderDetailPage = ({
   ];
   return (
     <Wrapper>
-      <div className="title">
-        <h3>업무빌더관리</h3>
-      </div>
-      <hr />
       <Tabs tabs={tabs} keyName="id" title="업무빌더관리" bodyStyle={bodyStyle} />
     </Wrapper>
   );

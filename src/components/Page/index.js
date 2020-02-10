@@ -259,7 +259,6 @@ class Page extends Component {
   };
 
   render() {
-    console.debug('@@@ Hello Fuxxing World');
     const { columns, setMyMenuData, currentView, execMenu, execPage, show, onReload, isPreviewPage, menuFixedYn } = this.props;
     const nextColumns = columns.map(column => ({
       ...column,
@@ -373,11 +372,15 @@ Page.propTypes = {
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   show: PropTypes.func.isRequired,
-  onReload: PropTypes.func.isRequired,
+  onReload: PropTypes.func,
   isUnreadCnt: PropTypes.array.isRequired,
   setIsSpinnerShow: PropTypes.func.isRequired,
   isPreviewPage: PropTypes.bool.isRequired,
   menuFixedYn: PropTypes.string,
+};
+
+Page.defaultProps = {
+  onReload: () => {},
 };
 
 const mapStateToProps = createStructuredSelector({

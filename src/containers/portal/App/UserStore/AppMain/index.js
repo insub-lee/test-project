@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+// import { Route, Switch } from 'react-router-dom';
 
 import BizStore from './BizStore';
 // import BizManage from './BizManage';
@@ -12,9 +12,10 @@ import BizStore from './BizStore';
 
 const AppMain = () => (
   <div>
-    <Switch>
-      <Route path="/portal/store/appMain" component={BizStore} />
-      {/*
+    <BizStore />
+    {/* <Switch> */}
+    {/* <Route path="/portal/store/appMain" component={BizStore} /> */}
+    {/*
       <Route path="/portal/store/appMain/bizManage" component={BizManage} />
       <Route path="/portal/store/appMain/bizStore" component={BizStore} />
       <Route path="/portal/store/appMain/myPage" component={MyPage} />
@@ -24,7 +25,7 @@ const AppMain = () => (
       <Route path="/portal/store/appMain/AppSec" component={AppSec} />
       <Route path="/portal/store/appMain/errorPage" component={ErrorPage} exact />
       */}
-    </Switch>
+    {/* </Switch> */}
   </div>
 );
 

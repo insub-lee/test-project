@@ -177,6 +177,7 @@ class ViewDesigner extends Component {
                       viewField={viewData.COMP_FIELD}
                       compPoolList={compPoolList}
                       hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
+                      compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
                     />
                   )}
                   {activeTabKey === '2' && (
@@ -260,6 +261,7 @@ const mapDispatchToProps = dispatch => ({
       dispatch(actions.changeViewCompDataByReducer(groupIndex, rowIndex, colIndex, key, value)),
     removeHiddenComp: compIndex => dispatch(actions.removeHiddenCompByReducer(compIndex)),
     changeColConfig: (groupIndex, rowIndex, colIndex, key, value) => dispatch(actions.changeColConfigByReducer(groupIndex, rowIndex, colIndex, key, value)),
+    changeGroupData: (groupIndex, key, value) => dispatch(actions.changeGroupDataByReducer(groupIndex, key, value)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),
