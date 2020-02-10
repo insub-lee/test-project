@@ -11,8 +11,7 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { Column } from 'react-virtualized';
-import { ColumnGroup } from '../../../../../../node_modules/ag-grid-community/main';
+import request from 'utils/request';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -20,6 +19,7 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      communicationList: [],
       initLoading: true,
     };
   }
@@ -29,6 +29,22 @@ class List extends Component {
   //   const { removeReduxState, id } = this.props;
   //   removeReduxState(id);
   // }
+
+  componentDidMount() {
+    const fetchData = async () => {
+      const result = await request({
+        url: '/api/eshs/v1/common/AllEshsCommunications',
+        method: 'GET',
+      });
+      console.debug('@@@result@@@', result.response.list);
+
+      this.setState({
+        communicationList: result.response.list,
+      });
+    };
+
+    fetchData();
+  }
 
   renderComp = (comp, colData, rowData, visible) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -43,49 +59,79 @@ class List extends Component {
     return <div />;
   };
 
-  // setColumns = cols => {
-  //   const columns = [];
-  //   cols.forEach(node => {
-  //     if (node.comp && node.comp.COMP_FIELD) {
-  //       columns.push({
-  //         dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
-  //         title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-  //         width: node.style.width,
-  //         render: (text, record) => this.renderComp(node.comp, text, record, true),
-  //       });
-  //     }
-  //   });
-  //   return columns;
-  // };
-
   renderList = (group, groupIndex) => {
+    const idx = 1;
+    const columns = [
+      {
+        title: '번호',
+        dataIndex: (this.idx += 1),
+      },
+      {
+        title: '접수',
+        children: [
+          {
+            title: '접수일자',
+            dataIndex: 'receive_date',
+            key: 'receive_date',
+          },
+          {
+            title: '발행처',
+            dataIndex: 'publication',
+            key: 'publication',
+          },
+          {
+            title: '제목(접수내역)',
+            dataIndex: 'title',
+            key: 'title',
+          },
+        ],
+      },
+      {
+        title: '조치/회신',
+        children: [
+          {
+            title: '회신일자',
+            dataIndex: 'reply_date',
+            key: 'reply_date',
+          },
+          {
+            title: '조치/회신 내용(방법, 요약)',
+            dataIndex: 'reply_content',
+            key: 'reply_content',
+          },
+          {
+            title: '관련문서',
+            dataIndex: 'file_name',
+            key: 'file_name',
+          },
+        ],
+      },
+    ];
+
     const { listData } = this.props;
-    // const columns = this.setColumns(group.rows[0].cols);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable rowKey="TASK_SEQ" key={`${group.key}_list`} className="view-designer-list" dataSource={listData || []}>
-            <Column title="번호" width={50} />
-            <ColumnGroup title="접수">
-              <Column title="접수일자" dataSource="recieveDate" />
-              <Column title="발행처" dataSource="publication" />
-              <Column title="제목(접수내역)" dataSource="title" />
-            </ColumnGroup>
-            <ColumnGroup title="조치/회신">
-              <Column title="회신일자" dataSource="replyDate" />
-              <Column title="조치/회신 내용(방법, 요약)" dataSource="replyContent" />
-              <Column title="관련문서" dataSource="fileName" />
-            </ColumnGroup>
-          </AntdTable>
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            className="view-designer-list"
+            columns={columns}
+            dataSource={this.state.communicationList || []}
+            onRow={(record, rowIndex) => ({
+              onClick: e => console.debug(record, '@@@CLICK@@@'),
+            })}
+          />
         </Group>
       </div>
     );
   };
 
   render = () => {
+    console.debug('@@@DIDMOUNT@@@', this.state.communicationList);
+
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage } = this.props;
-    console.debug(this.props);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
