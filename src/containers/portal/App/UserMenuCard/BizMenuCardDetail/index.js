@@ -68,7 +68,6 @@ class BizMenuCardDetail extends Component {
     }
   }
 
-  /* eslint-disable */
   handleTreeOnClick = node => {
     const {
       handleChangeSelectedIndex,
@@ -78,7 +77,6 @@ class BizMenuCardDetail extends Component {
         params: { TYPE },
       },
     } = this.props;
-    console.log(match);
     const preUrl = match.path.substr(0, match.path.indexOf('/:TYPE'));
     handleChangeSelectedIndex(node.MENU_ID);
 
@@ -114,12 +112,13 @@ class BizMenuCardDetail extends Component {
       >
         <StyleBizDetail>
           <Spin size="large" indicator={antIcon} spinning={loading}>
-            <TopMenu history={history} match={match} BIZGRP_ID={Number(BIZGRP_ID)} execMenu={execMenu} execPage={execPage}/>
+            <TopMenu history={history} match={match} BIZGRP_ID={Number(BIZGRP_ID)} execMenu={execMenu} execPage={execPage} />
             <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 240px)' }}>
               <ul className="bizDetailContentWrapper">
                 <li className="leftContent inPage">
                   <h2>
                     <button
+                      type="button"
                       onClick={() => history.push(`${buttonPreUrl}/detail/info/${BIZGRP_ID}`)}
                       className="ellipsis"
                       style={{ color: `${history.location.pathname.indexOf('/info') > -1 ? '#886ab5' : 'inherit'}`, paddingLeft: 10 }}
@@ -137,9 +136,17 @@ class BizMenuCardDetail extends Component {
                 </li>
                 <li className="rightContent">
                   <Switch>
-                    <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} component={BizInfo} exact />
-                    <Route path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`} render={ props => (<AppInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
-                    <Route path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`} render={ props => (<PageInfo {...props} execMenu={execMenu} execPage={execPage} />)} exact />
+                    <Route path={`${preUrl}/detail/info/:BIZGRP_ID`} render={props => <BizInfo {...props} />} exact />
+                    <Route
+                      path={`${preUrl}/detail/app/:BIZGRP_ID/:appId`}
+                      render={props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />}
+                      exact
+                    />
+                    <Route
+                      path={`${preUrl}/detail/page/:BIZGRP_ID/:pageId`}
+                      render={props => <PageInfo {...props} execMenu={execMenu} execPage={execPage} />}
+                      exact
+                    />
                   </Switch>
                 </li>
               </ul>
@@ -177,16 +184,9 @@ const mapStateToProps = createStructuredSelector({
   loading: selectors.makeSelectLoading(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'bizMenuCardDetail', reducer });
 const withSaga = injectSaga({ key: 'bizMenuCardDetail', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(BizMenuCardDetail);
+export default compose(withReducer, withSaga, withConnect)(BizMenuCardDetail);

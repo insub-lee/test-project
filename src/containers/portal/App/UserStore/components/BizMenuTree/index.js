@@ -16,7 +16,7 @@ import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn } f
 
 /* eslint-disable */
 const replaceSpecialCharacter = str => {
-  var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
+  const regExp = /[{}\[\]\/?.,;:|)*~`!^\-_+<>@#$%&\\=('"]/gi;
   return str.replace(regExp, '');
 };
 
@@ -371,6 +371,7 @@ class BizMenuTree extends Component {
               // [앱등록 버튼]
               isFolder ? (
                 <AppListBtn
+                  key="AppListBtn"
                   title="앱등록"
                   onClick={() => {
                     saveData(rowInfo, treeData);
@@ -384,6 +385,7 @@ class BizMenuTree extends Component {
               // [폴더추가 버튼]
               isFolder ? (
                 <FolderBtn
+                  key="FolderBtn"
                   title="폴더추가"
                   onClick={() => {
                     // cateInsert(rowInfo);
@@ -397,6 +399,7 @@ class BizMenuTree extends Component {
               // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
               isFolder ? (
                 <CopyBtn
+                  key="CopyBtn"
                   title="페이지 추가"
                   onClick={() => {
                     this.addNode(BIZGRP_ID, node.key, 'E');
@@ -407,11 +410,12 @@ class BizMenuTree extends Component {
               ),
 
               // [메뉴명수정]
-              canEditName ? <EditBtn title="편집" onClick={() => this.editNode(node)} /> : '',
+              canEditName ? <EditBtn key="EditBtn" title="편집" onClick={() => this.editNode(node)} /> : '',
 
               // [메뉴삭제 버튼]
               isEmptyFolder ? (
                 <RemoveBtn
+                  key="RemoveBtn"
                   title="삭제"
                   onClick={() => {
                     let message = '';
