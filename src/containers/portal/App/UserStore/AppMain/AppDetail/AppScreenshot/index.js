@@ -56,110 +56,102 @@ class AppScreenshot extends React.Component {
       this.props.reqAppScreenshotList(nextProps.appId);
     }
   }
-  /* eslint-disable */
+
+  rcButton = () => {
+    this.setState(prevState => ({ rcheiFlog: !prevState.rcheiFlog }));
+  };
+
+  rqButton = () => {
+    this.setState(prevState => ({ rqheiFlog: !prevState.rqheiFlog }));
+  };
+
+  onClickImgFullView = index => {
+    const imagesArr = [];
+
+    this.props.resAppScreenshotList.map(item => imagesArr.push(imgUrl.get('0x0', item.FILE_PATH)));
+
+    this.setState({
+      images: imagesArr,
+      isOpen: true,
+      photoIndex: index === '' ? 0 : index,
+    });
+  };
+
+  loop = data =>
+    data.map((item, index) => (
+      <div key={item.FILE_PATH} style={{ overflow: 'hidden' }}>
+        <span onClick={() => this.onClickImgFullView(index)} onKeyPress={() => this.onClickImgFullView(index)} role="presentation">
+          <img src={imgUrl.get('190x140', item.FILE_PATH)} alt={item.ITEM_VALUE} style={{ height: 140, margin: 'auto', cursor: 'pointer' }} />
+        </span>
+      </div>
+    ));
+
+  registerApps = item => {
+    this.props.registApp(item.REF_APP_ID, this.props.resAppExplain.APP_ID);
+  };
+
+  handleRegistApp = item => feed.showConfirm(`${lang.get('NAME', item)} ${intlObj.get(messages.appInput)}`, '', this.registerApps);
+
+  registerCategorys = item => {
+    this.props.registCategory(item.REF_APP_ID, this.props.resAppExplain.APP_ID);
+  };
+
+  handleRegistCategory = item =>
+    feed.showConfirm(`${lang.get('NAME', item)} ${intlObj.get(messages.appInput)}`, `${intlObj.get(messages.catgAppInput)}`, this.registerCategorys);
+
+  loopApp = data =>
+    data.map(item => (
+      <div key={item.REF_APP_ID} className="appCols">
+        <Link to={`/portal/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
+          <img src={imgUrl.get('120x120', item.ICON)} alt={lang.get('NAME', item)} style={{ width: '100%', height: '100%' }} />
+        </Link>
+        <Popover
+          placement="bottomRight"
+          content={
+            <ul className="popoverType1 appListMenu">
+              <li>
+                <Button
+                  onClick={() => this.handleRegistCategory(item)}
+                  type="button"
+                  className="highlight icon-regst-tree"
+                  style={{ display: item.WG_COUNT === 0 ? 'block' : 'none' }}
+                >
+                  {intlObj.get(messages.catgInput)}
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => this.handleRegistApp(item)}
+                  type="button"
+                  className="icon-regst-app"
+                  style={{ display: item.WG_COUNT === 0 ? 'block' : 'none' }}
+                >
+                  {intlObj.get(messages.menuInput)}
+                </Button>
+              </li>
+              <li>
+                <Button type="button" className="icon-regst-use" style={{ display: item.WG_COUNT > 0 ? 'block' : 'none' }}>
+                  {intlObj.get(messages.apping)}
+                </Button>
+              </li>
+            </ul>
+          }
+          size="50"
+          trigger="hover"
+          overlayClassName="popoverType1"
+        >
+          <div className="moreMenuImg">
+            <img src={moreMenu} alt={intlObj.get(messages.appMenu)} />
+          </div>
+        </Popover>
+        <Link to={`/portal/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
+          <p className="appName">{lang.get('NAME', item)}</p>
+        </Link>
+      </div>
+    ));
+
   render() {
     const { isOpen, images, photoIndex } = this.state;
-
-    const onClickImgFullView = index => {
-      const imagesArr = [];
-
-      this.props.resAppScreenshotList.map(item => imagesArr.push(imgUrl.get('0x0', item.FILE_PATH)));
-
-      this.setState({
-        images: imagesArr,
-        isOpen: true,
-        photoIndex: index === '' ? 0 : index,
-      });
-    };
-
-    const loop = data =>
-      data.map((item, index) => (
-        <div key={item.FILE_PATH} style={{ overflow: 'hidden' }}>
-          <span onClick={() => onClickImgFullView(index)} onKeyPress={() => onClickImgFullView(index)} role="presentation">
-            <img src={imgUrl.get('190x140', item.FILE_PATH)} alt={item.ITEM_VALUE} style={{ height: 140, margin: 'auto', cursor: 'pointer' }} />
-          </span>
-        </div>
-      ));
-
-    const loopApp = data =>
-      data.map(item => {
-        const registerApps = () => {
-          this.props.registApp(item.REF_APP_ID, this.props.resAppExplain.APP_ID);
-        };
-        const handleRegistApp = () => feed.showConfirm(`${lang.get('NAME', item)} ${intlObj.get(messages.appInput)}`, '', registerApps);
-
-        const registerCategorys = () => {
-          this.props.registCategory(item.REF_APP_ID, this.props.resAppExplain.APP_ID);
-        };
-        const handleRegistCategory = () =>
-          feed.showConfirm(`${lang.get('NAME', item)} ${intlObj.get(messages.appInput)}`, `${intlObj.get(messages.catgAppInput)}`, registerCategorys);
-        return (
-          <div key={item.REF_APP_ID} className="appCols">
-            <Link to={`/portal/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
-              <img src={imgUrl.get('120x120', item.ICON)} alt={lang.get('NAME', item)} style={{ width: '100%', height: '100%' }} />
-            </Link>
-            <Popover
-              placement="bottomRight"
-              content={
-                <ul className="popoverType1 appListMenu">
-                  <li>
-                    <Button
-                      onClick={() => handleRegistCategory(item)}
-                      type="button"
-                      className="highlight icon-regst-tree"
-                      style={{ display: item.WG_COUNT === 0 ? 'block' : 'none' }}
-                    >
-                      {intlObj.get(messages.catgInput)}
-                    </Button>
-                  </li>
-                  <li>
-                    <Button
-                      onClick={() => handleRegistApp(item)}
-                      type="button"
-                      className="icon-regst-app"
-                      style={{ display: item.WG_COUNT === 0 ? 'block' : 'none' }}
-                    >
-                      {intlObj.get(messages.menuInput)}
-                    </Button>
-                  </li>
-                  <li>
-                    <Button type="button" className="icon-regst-use" style={{ display: item.WG_COUNT > 0 ? 'block' : 'none' }}>
-                      {intlObj.get(messages.apping)}
-                    </Button>
-                  </li>
-                </ul>
-              }
-              size="50"
-              trigger="hover"
-              overlayClassName="popoverType1"
-            >
-              <div className="moreMenuImg">
-                <img src={moreMenu} alt={intlObj.get(messages.appMenu)} />
-              </div>
-            </Popover>
-            <Link to={`/portal/store/appMain/bizStore/app/detail/${item.CATG_ID}/${item.REF_APP_ID}`}>
-              <p className="appName">{lang.get('NAME', item)}</p>
-            </Link>
-          </div>
-        );
-      });
-
-    const rqButton = () => {
-      if (this.state.rqheiFlog) {
-        this.setState({ rqheiFlog: false });
-      } else {
-        this.setState({ rqheiFlog: true });
-      }
-    };
-
-    const rcButton = () => {
-      if (this.state.rcheiFlog) {
-        this.setState({ rcheiFlog: false });
-      } else {
-        this.setState({ rcheiFlog: true });
-      }
-    };
-
     return (
       <div>
         {isOpen && (
@@ -196,7 +188,7 @@ class AppScreenshot extends React.Component {
               centerMode
               // centerPadding="10px"
             >
-              {loop(this.props.resAppScreenshotList)}
+              {this.loop(this.props.resAppScreenshotList)}
             </Carousel>
           </div>
         </AppIntroduction>
@@ -206,32 +198,26 @@ class AppScreenshot extends React.Component {
           }}
         >
           <h2 className="adTitle">{intlObj.get(messages.requiredApp)}</h2>
-          {this.state.rqheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ? (
+          {this.state.rqheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') && (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 124 }}>
-              {loopApp(this.props.resRequiredAppList)}
+              {this.loopApp(this.props.resRequiredAppList)}
             </div>
-          ) : (
-            ''
           )}
-          {this.state.rqheiFlog && (this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ? (
+          {this.state.rqheiFlog && this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' && (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 200 }}>
-              {loopApp(this.props.resRequiredAppList)}
+              {this.loopApp(this.props.resRequiredAppList)}
             </div>
-          ) : (
-            ''
           )}
-          {!this.state.rqheiFlog ? (
+          {!this.state.rqheiFlog && (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 'auto' }}>
-              {loopApp(this.props.resRequiredAppList)}
+              {this.loopApp(this.props.resRequiredAppList)}
             </div>
-          ) : (
-            ''
           )}
           {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
             <BtnSeeMore
               key="submit"
               loading={this.state.loading}
-              onClick={rqButton}
+              onClick={this.rqButton}
               style={{ display: this.props.resRequiredAppList.length > 5 ? 'block' : 'none' }}
               className={this.state.rqheiFlog ? 'down' : 'up'}
             />
@@ -239,7 +225,7 @@ class AppScreenshot extends React.Component {
             <BtnSeeMore
               key="submit"
               loading={this.state.loading}
-              onClick={rqButton}
+              onClick={this.rqButton}
               style={{ display: this.props.resRequiredAppList.length > 3 ? 'block' : 'none' }}
               className={this.state.rqheiFlog ? 'down' : 'up'}
             />
@@ -247,32 +233,26 @@ class AppScreenshot extends React.Component {
         </AppsRequired>
         <AppsRecommended style={{ display: this.props.resRecomAppList.length > 0 && this.state.gubun === 1 ? 'block' : 'none' }}>
           <h2 className="adTitle">{intlObj.get(messages.recomApp)}</h2>
-          {this.state.rcheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') ? (
+          {this.state.rcheiFlog && (this.props.currentView === 'Mobile' || this.props.currentView === 'Tablet') && (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 124 }}>
-              {loopApp(this.props.resRecomAppList)}
+              {this.loopApp(this.props.resRecomAppList)}
             </div>
-          ) : (
-            ''
           )}
-          {this.state.rcheiFlog && (this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet') ? (
+          {this.state.rcheiFlog && this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' && (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 200 }}>
-              {loopApp(this.props.resRecomAppList)}
+              {this.loopApp(this.props.resRecomAppList)}
             </div>
-          ) : (
-            ''
           )}
-          {!this.state.rcheiFlog ? (
+          {!this.state.rcheiFlog && (
             <div className="appColWrapper" style={{ overflow: 'hidden', maxHeight: 'auto' }}>
-              {loopApp(this.props.resRecomAppList)}
+              {this.loopApp(this.props.resRecomAppList)}
             </div>
-          ) : (
-            ''
           )}
           {this.props.currentView !== 'Mobile' && this.props.currentView !== 'Tablet' ? (
             <BtnSeeMore
               key="submit"
               loading={this.state.loading}
-              onClick={rcButton}
+              onClick={this.rcButton}
               style={{ display: this.props.resRecomAppList.length > 5 ? 'block' : 'none' }}
               className={this.state.rcheiFlog ? 'down' : 'up'}
             />
@@ -280,7 +260,7 @@ class AppScreenshot extends React.Component {
             <BtnSeeMore
               key="submit"
               loading={this.state.loading}
-              onClick={rcButton}
+              onClick={this.rcButton}
               style={{ display: this.props.resRecomAppList.length > 3 ? 'block' : 'none' }}
               className={this.state.rcheiFlog ? 'down' : 'up'}
             />
@@ -320,15 +300,8 @@ const mapStateToProps = createStructuredSelector({
   currentView: selectors.currentView(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'appScreenshotList', saga });
 const withReducer = injectReducer({ key: 'appScreenshotList', reducer });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(AppScreenshot);
+export default compose(withReducer, withSaga, withConnect)(AppScreenshot);
