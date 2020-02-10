@@ -376,7 +376,7 @@ class IntroComponent extends Component {
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
-          workSeqGoal = 201;
+          workSeqGoal = 901;
           break;
         case 'TS':
           workSeqGoal = 361;
@@ -388,7 +388,7 @@ class IntroComponent extends Component {
           workSeqGoal = 461;
           break;
         default:
-          workSeqGoal = 201;
+          workSeqGoal = 901;
           break;
       }
     }
