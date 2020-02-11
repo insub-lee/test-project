@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
-class Notice extends Component {
+class PartnersCommittee extends Component {
   state = {
     isLoading: true,
   };
@@ -21,8 +21,8 @@ class Notice extends Component {
   }
 }
 
-Notice.propTypes = {};
+PartnersCommittee.propTypes = {};
 
-Notice.defaultProps = {};
+PartnersCommittee.defaultProps = {};
 
-export default Notice;
+export default PartnersCommittee;

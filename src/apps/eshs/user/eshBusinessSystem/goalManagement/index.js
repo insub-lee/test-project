@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
-class Notice extends Component {
+class GoalManagement extends Component {
   state = {
     isLoading: true,
   };
@@ -21,8 +21,8 @@ class Notice extends Component {
   }
 }
 
-Notice.propTypes = {};
+GoalManagement.propTypes = {};
 
-Notice.defaultProps = {};
+GoalManagement.defaultProps = {};
 
-export default Notice;
+export default GoalManagement;
