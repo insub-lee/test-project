@@ -88,8 +88,6 @@ class SearchBar extends Component {
     changeFormData(id, 'deptModal', true);
   };
 
-  handleDeptOk = () => {};
-
   handleDeptCancel = () => {
     const { id, changeFormData } = this.props;
     changeFormData(id, 'deptModal', false);
@@ -137,7 +135,7 @@ class SearchBar extends Component {
     const { result } = this.props;
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
     return (
-      <div>
+      <div className="Eshs_hostCmpny_SearchBar">
         <Select
           defaultValue={formData.searchSite && formData.searchSite === 'all' ? formData.searchSite : '지역 전체'}
           style={{ width: 110, padding: 3 }}
@@ -159,7 +157,7 @@ class SearchBar extends Component {
             </Option>
           ))}
         </Select>
-        이름
+        <span>이름</span>
         <Input style={{ width: 130, padding: 3 }} value={formData.searchName || ''} name="searchName" onChange={this.handleInputOnChange} placeholder="이름" />
         &nbsp;&nbsp;
         <Button onClick={this.handleOnSearch}>검색</Button>
@@ -177,6 +175,10 @@ class SearchBar extends Component {
           onCancel={this.handleUserCancel}
           okText={formData && formData.userModalType === 'INSERT' ? '추가' : '저장'}
           cancelText="닫기"
+          width={500}
+          height={400}
+          bodyStyle={{ backgroundColor: '#f4f4f4' }}
+          className="eshs_user_modal"
         >
           <UserModal {...this.props} />
         </Modal>
@@ -184,11 +186,10 @@ class SearchBar extends Component {
           title="주관회사 부서 관리"
           destroyOnClose
           visible={(formData && formData.deptModal) || false}
-          onOk={this.handleDeptOk}
           onCancel={this.handleDeptCancel}
-          okText="추가"
-          cancelText="닫기"
-          style={{ width: 800, heigth: 400 }}
+          width={900}
+          height={600}
+          footer={[null]}
         >
           <DeptModal {...this.props} />
         </Modal>

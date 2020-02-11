@@ -1,7 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Table, Column } from 'react-virtualized';
 import { Input, Select, Button, message } from 'antd';
+import DeptModalStyled from './DeptModalStyled';
 
 const { Option } = Select;
 const ReadStar = () => <label style={{ color: 'red' }}>* </label>;
@@ -88,7 +88,9 @@ class DeptModal extends Component {
   handleIsDeleted = () => {
     const { id, submitHadnlerBySaga, formData, changeFormData, result } = this.props;
     const submitData = (formData && formData.selectedDept) || {};
-    const is_deleted = (result && result.isDeleted && result.isDeleted.isDeleted) || 1;
+    const is_deleted = result && result.isDeleted && result.isDeleted.isDeleted;
+    console.debug('222222', is_deleted);
+    console.debug('222222', result);
     if (!is_deleted) {
       submitHadnlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsHstCmpnyDeptDelete', submitData, this.handleDeptReload);
       changeFormData(id, 'selectedDept', {});
@@ -159,7 +161,7 @@ class DeptModal extends Component {
   };
 
   handleDwExcel = () => {
-    console.debug('handleDwExcel');
+    message.warning('미구현');
   };
 
   render() {
@@ -168,65 +170,57 @@ class DeptModal extends Component {
     const dfValue = cmpnyList.length ? cmpnyList[0].hst_cmpny_cd : ' ';
     const selectedDept = (formData && formData.selectedDept) || {};
     return (
-      <div style={{ width: 650, height: 350 }}>
-        <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
-          {cmpnyList.map(c => (
-            <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
-              {c.hst_cmpny_nm}
-            </Option>
-          ))}
-        </Select>
-        <Button onClick={this.handleDwExcel}>엑셀받기</Button>
-        <div>
-          <table style={{ width: 550 }}>
-            <thead>
-              <tr className="bgF6f8fa">
-                <td>
-                  <ReadStar />
-                  부서코드
-                </td>
-                <td>
-                  <ReadStar />
-                  부서명
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <Input
-                    style={{ width: 130, padding: 3 }}
-                    name="dept_cd"
-                    value={selectedDept.dept_cd}
-                    onChange={this.handleInputChange}
-                    placeholder="부서코드"
-                  ></Input>
-                </td>
-                <td>
-                  <Input
-                    style={{ width: 200, padding: 3 }}
-                    name="dept_nm"
-                    value={selectedDept.dept_nm}
-                    onChange={this.handleInputChange}
-                    placeholder="부서명"
-                  ></Input>
-                  <Button onClick={this.handleDeptAdd}>추가</Button>
-                  &nbsp; &nbsp;
-                  <Button onClick={this.handleDeptUpdate}>저장</Button>
-                  &nbsp; &nbsp;
-                  <Button onClick={this.handleDeptDelete}>삭제</Button>
-                </td>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.searchDept.map(d => (
-                <tr key={d.dept_cd} onClick={() => this.onRowClick(d)} className="cell">
-                  <td>{d.dept_cd}</td>
-                  <td>{d.dept_nm}</td>
-                </tr>
+      <DeptModalStyled>
+        <div className="deptModal">
+          <div>
+            <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
+              {cmpnyList.map(c => (
+                <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
+                  {c.hst_cmpny_nm}
+                </Option>
               ))}
-            </tbody>
-          </table>
+            </Select>
+            <Button onClick={this.handleDwExcel}>엑셀받기</Button>
+          </div>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <td>
+                    <ReadStar />
+                    부서코드
+                  </td>
+                  <td>
+                    <ReadStar />
+                    부서명
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <Input name="dept_cd" value={selectedDept.dept_cd} onChange={this.handleInputChange} placeholder="부서코드"></Input>
+                  </td>
+                  <td>
+                    <Input name="dept_nm" value={selectedDept.dept_nm} onChange={this.handleInputChange} placeholder="부서명"></Input>
+                    <Button onClick={this.handleDeptAdd}>추가</Button>
+                    &nbsp; &nbsp;
+                    <Button onClick={this.handleDeptUpdate}>저장</Button>
+                    &nbsp; &nbsp;
+                    <Button onClick={this.handleDeptDelete}>삭제</Button>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.searchDept.map(d => (
+                  <tr key={d.dept_cd} onClick={() => this.onRowClick(d)} className="cell">
+                    <td>{d.dept_cd}</td>
+                    <td>{d.dept_nm}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      </DeptModalStyled>
     );
   }
 }
