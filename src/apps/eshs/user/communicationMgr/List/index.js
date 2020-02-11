@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, DatePicker } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -31,18 +31,19 @@ class List extends Component {
   // }
 
   componentDidMount() {
+    console.debug(this.props);
     const fetchData = async () => {
       const result = await request({
         url: '/api/eshs/v1/common/AllEshsCommunications',
         method: 'GET',
       });
-      result.response.list.map(item => {
-        const receiveDate = new Date(item.receive_date);
-        const replyDate = new Date(item.reply_date);
-        item.receive_date = `${receiveDate.getFullYear()}-${receiveDate.getMonth() + 1}-${receiveDate.getDate()}`;
-        item.reply_date = `${replyDate.getFullYear()}-${replyDate.getMonth() + 1}-${replyDate.getDate()}`;
-        return item;
-      });
+      // result.response.list.map(item => {
+      //   const receiveDate = new Date(item.receive_date);
+      //   const replyDate = new Date(item.reply_date);
+      //   item.receive_date = `${receiveDate.getFullYear()}-${receiveDate.getMonth() + 1}-${receiveDate.getDate()}`;
+      //   item.reply_date = `${replyDate.getFullYear()}-${replyDate.getMonth() + 1}-${replyDate.getDate()}`;
+      //   return item;
+      // });
       this.setState({
         communicationList: result.response.list,
       });
