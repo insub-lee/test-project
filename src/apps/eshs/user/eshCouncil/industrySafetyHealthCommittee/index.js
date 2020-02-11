@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
-class Notice extends Component {
+class IndustrySafetyAndHealth extends Component {
   state = {
     isLoading: true,
   };
@@ -21,8 +21,8 @@ class Notice extends Component {
   }
 }
 
-Notice.propTypes = {};
+IndustrySafetyAndHealth.propTypes = {};
 
-Notice.defaultProps = {};
+IndustrySafetyAndHealth.defaultProps = {};
 
-export default Notice;
+export default IndustrySafetyAndHealth;

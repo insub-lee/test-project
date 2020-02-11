@@ -27,6 +27,11 @@ class List extends Component {
     this.handleFindData = debounce(this.handleFindData, 500);
   }
 
+  componentDidMount() {
+    const { id, getCallDataHanlder, apiAry } = this.props;
+    getCallDataHanlder(id, apiAry, this.handleAppStart);
+  }
+
   handleAppStart = () => {
     const { deptList, userList } = this.props.result;
     if (userList) {
@@ -35,16 +40,9 @@ class List extends Component {
         deptList: deptList.dept.filter(item => item.prnt_id !== 900),
         userList: userList.users,
         filteredUserList: userList.users,
-        // filteredDeptList: deptList.dept.filter(item => item.prnt_id !== 900),
       });
-      console.debug(this.props.result);
     }
   };
-
-  componentDidMount() {
-    const { id, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry, this.handleAppStart);
-  }
 
   handleBaseareaChange = e => {
     const { userList, hqId, deptId } = this.state;
@@ -170,6 +168,20 @@ class List extends Component {
     this.handleFindData();
   };
 
+  handleFindData = () => {
+    const { id, getCallDataHanlder } = this.props;
+    const { searchType, searchValue } = this.state;
+
+    const api = [
+      {
+        key: 'searchUser',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=%25${searchValue}%25`,
+      },
+    ];
+    getCallDataHanlder(id, api, this.handleOnCallBack);
+  };
+
   handleOnCallBack = () => {
     const { hqId, deptId, bAreaCode, searchValue, userList } = this.state;
     const { result } = this.props;
@@ -183,17 +195,6 @@ class List extends Component {
           filteredUserList: userList,
         });
       }
-      // if (bAreaCode && !hqId) {
-      //   console.debug('@@지역만 있고@@');
-      //   this.setState({
-      //     filteredUserList: userList.filter(item => item.b_area_code === bAreaCode),
-      //   });
-      // }
-      // if(!bAreaCode && hqId) {
-      //   if(deptId ) {
-
-      //   }
-      // }
     }
     if (!bAreaCode || bAreaCode === 'ZZ') {
       if (hqId && hqId !== 900) {
@@ -233,20 +234,6 @@ class List extends Component {
         });
       }
     }
-  };
-
-  handleFindData = () => {
-    const { id, getCallDataHanlder } = this.props;
-    const { searchType, searchValue } = this.state;
-
-    const api = [
-      {
-        key: 'searchUser',
-        type: 'GET',
-        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=%25${searchValue}%25`,
-      },
-    ];
-    getCallDataHanlder(id, api, this.handleOnCallBack);
   };
 
   render() {
