@@ -21,6 +21,7 @@ class List extends Component {
     this.state = {
       communicationList: [],
       initLoading: true,
+      idx: 1,
     };
   }
 
@@ -36,8 +37,14 @@ class List extends Component {
         url: '/api/eshs/v1/common/AllEshsCommunications',
         method: 'GET',
       });
-      console.debug('@@@result@@@', result.response.list);
-
+      console.debug(result.response.list);
+      result.response.list.map(item => {
+        const receiveDate = new Date(item.receive_date);
+        const replyDate = new Date(item.reply_date);
+        item.receive_date = `${receiveDate.getFullYear()}-${receiveDate.getMonth() + 1}-${receiveDate.getDate()}`;
+        item.reply_date = `${replyDate.getFullYear()}-${replyDate.getMonth() + 1}-${replyDate.getDate()}`;
+        return item;
+      });
       this.setState({
         communicationList: result.response.list,
       });
@@ -60,11 +67,10 @@ class List extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const idx = 1;
     const columns = [
       {
         title: '번호',
-        dataIndex: (this.idx += 1),
+        dataSource: this.state.idx,
       },
       {
         title: '접수',
@@ -73,16 +79,19 @@ class List extends Component {
             title: '접수일자',
             dataIndex: 'receive_date',
             key: 'receive_date',
+            align: 'center',
           },
           {
             title: '발행처',
             dataIndex: 'publication',
             key: 'publication',
+            align: 'center',
           },
           {
             title: '제목(접수내역)',
             dataIndex: 'title',
             key: 'title',
+            align: 'center',
           },
         ],
       },
@@ -93,16 +102,25 @@ class List extends Component {
             title: '회신일자',
             dataIndex: 'reply_date',
             key: 'reply_date',
+            align: 'center',
           },
           {
             title: '조치/회신 내용(방법, 요약)',
             dataIndex: 'reply_content',
             key: 'reply_content',
+            align: 'center',
           },
           {
             title: '관련문서',
             dataIndex: 'file_name',
             key: 'file_name',
+            align: 'center',
+          },
+          {
+            title: '문서유형',
+            dataIndex: 'doc_type',
+            key: 'doc_type',
+            align: 'center',
           },
         ],
       },
@@ -119,8 +137,10 @@ class List extends Component {
             className="view-designer-list"
             columns={columns}
             dataSource={this.state.communicationList || []}
+            bordered
+            pagination={{ pageSize: 30 }}
             onRow={(record, rowIndex) => ({
-              onClick: e => console.debug(record, '@@@CLICK@@@'),
+              onClick: e => console.debug(rowIndex, '@@@CLICK@@@'),
             })}
           />
         </Group>
@@ -129,8 +149,6 @@ class List extends Component {
   };
 
   render = () => {
-    console.debug('@@@DIDMOUNT@@@', this.state.communicationList);
-
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -187,7 +205,7 @@ class List extends Component {
             })}
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-                Add
+                신규등록
               </StyledButton>
             </div>
           </Sketch>
