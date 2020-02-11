@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { debounce } from 'lodash';
 import PropTypes from 'prop-types';
-import ScrollBar from 'react-custom-scrollbars';
+// import ScrollBar from 'react-custom-scrollbars';
 import { AutoSizer } from 'react-virtualized';
 
 import { Badge } from 'antd';
@@ -195,7 +195,7 @@ class Tree extends Component {
           >
             <AutoSizer>
               {({ width, height }) => (
-                <div style={{ width, height, overflowX: 'hidden' }} autoHide autoHideTimeout={1000} autoHideDuration={200} className="tree-scrollbar">
+                <div style={{ width, height, overflowX: 'hidden' }} className="tree-scrollbar">
                   {editTree ? (
                     <MyPage history={history} height={height} />
                   ) : (

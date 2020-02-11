@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import JSONInput from 'react-json-editor-ajrm/index';
-import { Divider, Drawer } from 'antd';
+import { Divider, Drawer, Checkbox } from 'antd';
 import styled from 'styled-components';
 
 import Row from 'components/BizBuilder/Row/BasedAntd';
@@ -36,7 +36,7 @@ const StyledActionBar = styled.div`
   }
 `;
 
-const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action, tabBodyHeight, viewType, compPoolList, viewField, hiddenField }) => (
+const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action, tabBodyHeight, viewType, compPoolList, viewField, hiddenField, compList }) => (
   <div key={viewField}>
     <StyledActionBar>
       <div className="button--group--left">
@@ -78,6 +78,13 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
                 onChangeUseTitle={useTitle => action.changeUseGroupTitle(groupIndex, useTitle)}
               />
             )}
+            {group.type === 'searchGroup' && (
+              <div className="group-search-options">
+                <Checkbox defaultChecked={group.useSearch || false} onChange={e => action.changeGroupData(groupIndex, 'useSearch', e.target.checked)}>
+                  Use Search
+                </Checkbox>
+              </div>
+            )}
             <Group key={group.key} className={`group-${groupIndex}`}>
               {group.rows.map((row, rowIndex) => (
                 <ShadowWrapper key={row.key}>
@@ -118,6 +125,7 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
                               groupType={group.type}
                               action={action}
                               compPoolList={compPoolList}
+                              compList={compList}
                             />
                           </Contents>
                         </Col>
@@ -125,11 +133,13 @@ const StructureDesign = ({ isShowEditor, canMerge, groups, selectedKeys, action,
                   </Row>
                 </ShadowWrapper>
               ))}
-              <div className="group-actions">
-                <ActionButton type="button" onClick={() => action.removeGroup(groupIndex)}>
-                  <i className="fa fa-times" />
-                </ActionButton>
-              </div>
+              {group.type === 'group' && (
+                <div className="group-actions">
+                  <ActionButton type="button" onClick={() => action.removeGroup(groupIndex)}>
+                    <i className="fa fa-times" />
+                  </ActionButton>
+                </div>
+              )}
             </Group>
           </div>
         ))}
@@ -200,6 +210,7 @@ StructureDesign.propTypes = {
     changeGroupTitle: PropTypes.func,
     changeUseGroupTitle: PropTypes.func,
     removeHiddenComp: PropTypes.func,
+    changeGroupData: PropTypes.func,
   }),
   tabBodyHeight: PropTypes.number,
   hiddenFields: PropTypes.arrayOf(PropTypes.object),
@@ -223,6 +234,7 @@ StructureDesign.defaultProps = {
     changeGroupTitle: () => {},
     changeUseGroupTitle: () => {},
     removeHiddenComp: () => {},
+    changeGroupData: () => {},
   },
   tabBodyHeight: 0,
   hiddenFields: [],

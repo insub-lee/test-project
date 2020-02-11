@@ -56,8 +56,6 @@ class BizMenuCardList extends Component {
       },
     } = this.props;
 
-    console.debug('@@@@@ menuList, parentInfo', { menuList, parentInfo });
-    console.debug('@@@@@ this.props', this.props);
     return (
       <StyleBizMenuList>
         <div className="bizCardListDiv">

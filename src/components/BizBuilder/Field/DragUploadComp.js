@@ -115,7 +115,7 @@ class DragUploadComp extends Component {
 
   onRemove = (itemindex, e) => {
     e.stopPropagation();
-    const { sagaKey: id, changeFormData, colData, COMP_FIELD } = this.props;
+    const { sagaKey: id, changeFormData, colData, COMP_FIELD, CONFIG } = this.props;
     this.setState(
       prevState => {
         const { fileList } = prevState;
@@ -127,11 +127,15 @@ class DragUploadComp extends Component {
         // const nextColDataDetail = colData.DETAIL.filter((item, index) => index !== itemindex);
         // changeFormData(id, COMP_FIELD, nextColDataDetail);
         // desc - 'done'상태인것만 리듀서에 푸쉬
-        changeFormData(
-          id,
-          COMP_FIELD,
-          this.state.fileList.filter(file => file.status === 'done'),
-        );
+        changeFormData(id, COMP_FIELD, { ...colData, DETAIL: this.state.fileList.filter(file => file.status === 'done') });
+        if (
+          CONFIG.property.fileCntFieldFlag &&
+          CONFIG.property.fileCntFieldFlag === 'Y' &&
+          CONFIG.property.fileCntFieldFlagKey &&
+          CONFIG.property.fileCntFieldFlagKey.length > 0
+        ) {
+          changeFormData(id, CONFIG.property.fileCntFieldFlagKey, this.state.fileList.filter(file => file.status === 'done').length);
+        }
       },
     );
   };
@@ -181,8 +185,6 @@ class DragUploadComp extends Component {
   };
 
   handlerAttachChange = fileList => {
-    console.debug('Detail', fileList);
-
     const { CONFIG, sagaKey: id, changeFormData, changeValidationData, COMP_FIELD, NAME_KOR, WORK_SEQ, colData, COMP_TAG } = this.props;
     let retVal = [];
     if (CONFIG.property.isRequired) {
@@ -190,15 +192,12 @@ class DragUploadComp extends Component {
     }
 
     if (colData && typeof colData === 'object' && colData.DETAIL && colData.DETAIL.length > 0) {
-      console.debug('0');
       colData.DETAIL = fileList;
       retVal = colData;
     } else if (colData && colData.indexOf('{') === 0 && isJSON(colData)) {
-      console.debug('1');
       JSON.parse(colData).DETAIL = fileList;
       retVal = colData;
     } else {
-      console.debug('2');
       // retVal = fileList.filter(file => file.status === 'done');
       retVal = {
         WORK_SEQ,
@@ -217,8 +216,15 @@ class DragUploadComp extends Component {
       //   DETAIL: detail,
       // };
     }
-    console.debug('3');
     changeFormData(id, COMP_FIELD, retVal);
+    if (
+      CONFIG.property.fileCntFieldFlag &&
+      CONFIG.property.fileCntFieldFlag === 'Y' &&
+      CONFIG.property.fileCntFieldFlagKey &&
+      CONFIG.property.fileCntFieldFlagKey.length > 0
+    ) {
+      changeFormData(id, CONFIG.property.fileCntFieldFlagKey, fileList.filter(file => file.status === 'done').length);
+    }
   };
 
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {

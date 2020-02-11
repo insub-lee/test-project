@@ -6,23 +6,47 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledModal from 'commonStyled/Modal/StyledModal';
 
-import { Button, Modal, Table, Icon } from 'antd';
+import { Button, Modal, Table, Icon, Select } from 'antd';
 import BizMicroDevBase from 'components/BizMicroDevBase/index';
 import SysFieldInput from './SysFieldInput';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModal(Modal);
+const { Option } = Select;
+
+const apiArray = [{ key: 'compPoolData', url: '/api/builder/v1/work/ComponentPool', type: 'GET' }];
+
+const totalBuilderList = [
+  { TOTAL_BUILDER_SEQ: 1, NAME_KOR: 'Basic' },
+  { TOTAL_BUILDER_SEQ: 2, NAME_KOR: 'MDCS' },
+  { TOTAL_BUILDER_SEQ: 3, NAME_KOR: 'ESHS' },
+];
 
 class WorkBuilderSysFieldMgr extends Component {
-  state = {
-    actionType: 'I',
-    isWriteMode: false,
+  constructor(props) {
+    super(props);
+    this.state = {
+      actionType: 'I',
+      isWriteMode: false,
+      totalBuilderSeq: 1,
+      totalBuilderName: 'Basic',
+    };
+  }
+
+  makeApiArray = () => {
+    const { totalBuilderSeq } = this.state;
+    const retApiArray = [...apiArray];
+    const sysMeta = { key: 'sysWorkMeta', url: `/api/builder/v1/work/sysmeta?totalBuilderSeq=${totalBuilderSeq}`, type: 'GET' };
+    const sysFieldInfo = { key: 'sysFieldInfo', url: `/api/builder/v1/worksys/create?totalBuilderSeq=${totalBuilderSeq}`, type: 'GET' };
+    retApiArray.push(sysMeta);
+    retApiArray.push(sysFieldInfo);
+    return retApiArray;
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, sagaKey: id, apiArray, initData, setFormData } = this.props;
-    getCallDataHanlder(id, apiArray);
-    setFormData(id, initData);
+    const { getCallDataHanlder, sagaKey, initData, setFormData } = this.props;
+    getCallDataHanlder(sagaKey, this.makeApiArray());
+    setFormData(sagaKey, initData);
   }
 
   onWrite = () => {
@@ -33,12 +57,13 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onSaveDo = () => {
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey, submitHadnlerBySaga, formData } = this.props;
+    const { totalBuilderSeq } = this.state;
+    const PARAM = { ...formData, TOTAL_BUILDER_SEQ: totalBuilderSeq };
     const param = {
-      PARAM: formData,
+      PARAM,
     };
-    console.debug(param);
-    submitHadnlerBySaga(id, 'POST', '/api/builder/v1/work/sysmeta', param, this.onSaveComplete);
+    submitHadnlerBySaga(sagaKey, 'POST', '/api/builder/v1/work/sysmeta', param, this.onSaveComplete);
     this.setState({
       actionType: 'I',
       isWriteMode: false,
@@ -46,24 +71,24 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onCancel = () => {
-    const { sagaKey: id, removeStorageReduxState, initData, setFormData } = this.props;
+    const { sagaKey, removeStorageReduxState, initData, setFormData } = this.props;
     this.setState({
       isWriteMode: false,
     });
-    removeStorageReduxState(id, 'formData');
-    setFormData(id, initData);
+    removeStorageReduxState(sagaKey, 'formData');
+    setFormData(sagaKey, initData);
   };
 
   onSaveComplete = rid => {
-    const { getCallDataHanlder, sagaKey: id, apiArray, removeStorageReduxState, initData, setFormData } = this.props;
-    getCallDataHanlder(id, apiArray);
-    removeStorageReduxState(id, 'formData');
-    setFormData(id, initData);
+    const { getCallDataHanlder, sagaKey, removeStorageReduxState, initData, setFormData } = this.props;
+    getCallDataHanlder(sagaKey, this.makeApiArray());
+    removeStorageReduxState(sagaKey, 'formData');
+    setFormData(sagaKey, initData);
   };
 
   onModify = record => {
-    const { sagaKey: id, setFormData } = this.props;
-    setFormData(id, record);
+    const { sagaKey, setFormData } = this.props;
+    setFormData(sagaKey, record);
     this.setState({
       actionType: 'U',
       isWriteMode: true,
@@ -71,11 +96,13 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onModifyDo = () => {
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey, submitHadnlerBySaga, formData } = this.props;
+    const { totalBuilderSeq } = this.state;
+    const PARAM = { ...formData, TOTAL_BUILDER_SEQ: totalBuilderSeq };
     const param = {
-      PARAM: formData,
+      PARAM,
     };
-    submitHadnlerBySaga(id, 'PUT', '/api/builder/v1/work/sysmeta', param, this.onSaveComplete);
+    submitHadnlerBySaga(sagaKey, 'PUT', '/api/builder/v1/work/sysmeta', param, this.onSaveComplete);
     this.setState({
       actionType: 'I',
       isWriteMode: false,
@@ -83,16 +110,23 @@ class WorkBuilderSysFieldMgr extends Component {
   };
 
   onDBApply = record => {
-    const { sagaKey: id, submitHadnlerBySaga } = this.props;
+    const { sagaKey, submitHadnlerBySaga } = this.props;
     const param = {
       PARAM: record,
     };
-    submitHadnlerBySaga(id, 'POST', '/api/builder/v1/worksys/create', param, this.onComplete);
+    submitHadnlerBySaga(sagaKey, 'POST', '/api/builder/v1/worksys/create', param, this.onComplete);
   };
 
   onComplete = id => {
-    const { getCallDataHanlder, apiArray } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHanlder } = this.props;
+    getCallDataHanlder(id, this.makeApiArray());
+  };
+
+  handleChangeTotalBuilderSeq = (value, option) => {
+    const { sagaKey, getCallDataHanlder } = this.props;
+    const sysMeta = { key: 'sysWorkMeta', url: `/api/builder/v1/work/sysmeta?totalBuilderSeq=${value}`, type: 'GET' };
+    const sysFieldInfo = { key: 'sysFieldInfo', url: `/api/builder/v1/worksys/create?totalBuilderSeq=${value}`, type: 'GET' };
+    this.setState({ totalBuilderSeq: value, totalBuilderName: option.props.children || '' }, () => getCallDataHanlder(sagaKey, [sysMeta, sysFieldInfo]));
   };
 
   columns = [
@@ -164,11 +198,19 @@ class WorkBuilderSysFieldMgr extends Component {
 
   render() {
     const { result } = this.props;
+    const { totalBuilderSeq, totalBuilderName } = this.state;
     const dataSource = result && result.sysWorkMeta && result.sysWorkMeta.list.map(item => ({ ...item, fieldInfo: result.sysFieldInfo }));
 
     return (
       <div>
         <StyledButtonWrapper className="btn-wrap-right">
+          <Select style={{ width: '200px' }} defaultValue={totalBuilderSeq} onChange={(value, option) => this.handleChangeTotalBuilderSeq(value, option)}>
+            {totalBuilderList.map(node => (
+              <Option key={`totalBuilderSeq_${node.TOTAL_BUILDER_SEQ}`} value={node.TOTAL_BUILDER_SEQ}>
+                {node.NAME_KOR}
+              </Option>
+            ))}
+          </Select>
           <StyledButton className="btn-primary" onClick={this.onWrite}>
             등록하기
           </StyledButton>
@@ -206,7 +248,7 @@ class WorkBuilderSysFieldMgr extends Component {
             </StyledButton>,
           ]}
         >
-          <SysFieldInput {...this.props} />
+          <SysFieldInput {...this.props} totalBuilderSeq={totalBuilderSeq} totalBuilderName={totalBuilderName} />
         </AntdModal>
       </div>
     );
@@ -219,11 +261,6 @@ WorkBuilderSysFieldMgr.propTypes = {
 };
 
 WorkBuilderSysFieldMgr.defaultProps = {
-  apiArray: [
-    { key: 'compPoolData', url: '/api/builder/v1/work/ComponentPool', type: 'GET' },
-    { key: 'sysWorkMeta', url: '/api/builder/v1/work/sysmeta', type: 'GET' },
-    { key: 'sysFieldInfo', url: '/api/builder/v1/worksys/create', type: 'GET' },
-  ],
   initData: {
     NAME_KOR: '',
     NAME_ENG: '',

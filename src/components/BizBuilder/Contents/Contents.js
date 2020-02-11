@@ -9,19 +9,27 @@ const StyledContents = styled.div`
   .col-body {
     display: flex;
     align-items: center;
-    padding: 15px;
+    padding: ${({ selected }) => (selected ? 'calc(12px - 2px)' : 'calc(12px - 1px)')};
     min-height: 60px;
-    background: ${({ selected }) => (selected ? '#eaeaea' : '#ffffff')};
-    border: 1px solid #e3e3e3;
+    /* background: ${({ selected }) => (selected ? '#eaeaea' : '#ffffff')}; */
+    border: ${({ selected }) => (selected ? '2px solid #a646be' : '1px solid #e3e3e3')};
+    border-radius: 5px;
+    box-sizing: border-box;
     :hover {
-      background-color: rgb(231, 225, 240);
+      border: 2px solid #a646be;
+      padding: calc(12px - 2px);
+    }
+    &.col-body02 {
+      background: #e7e1f0;
     }
   }
 `;
 
 const Contents = ({ selected, children, action }) => (
   <StyledContents onClick={action.selectCell} selected={selected}>
-    <div className="col-body">{children}</div>
+    <div className={`col-body${children.props.col && children.props.col.comp && children.props.col.comp.COMP_TAG !== 'LABEL' ? ' col-body02' : ''}`}>
+      {children}
+    </div>
   </StyledContents>
 );
 

@@ -38,12 +38,12 @@ html {
 }
 
 /* 버튼 */
-.ant-btn,
-.ant-btn:hover,
-.ant-btn:focus {
-  border-color: transparent;
-  border: 0;
-}
+// .ant-btn,
+// .ant-btn:hover,
+// .ant-btn:focus {
+//   border-color: transparent;
+//   border: 0;
+// }
 
 .ant-btn-clicked:after {
   top: 0;

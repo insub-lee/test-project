@@ -1,4 +1,4 @@
-const prefix = 'apps/mdcs/components/BizBuilderBase/';
+const prefix = 'apps/BizBuilder/components/BizBuilderBase/';
 export const GET_BUILDER_DATA = `${prefix}GET_BUILDER_DATA`;
 export const SET_BUILDER_DATA = `${prefix}SET_BUILDER_DATA`;
 export const GET_EXTRA_API_DATA = `${prefix}GET_EXTRA_API_DATA`;
@@ -36,3 +36,6 @@ export const SET_VIEWTYPE_REDUCER = `${prefix}SET_VIEWTYPE_REDUCER`;
 export const ENABLE_DATA_LOADING = `${prefix}ENABLE_DATA_LOADING`;
 export const DISABLE_DATA_LOADING = `${prefix}DISABLE_DATA_LOADING`;
 export const SET_LIST_DATA_REDUCER = `${prefix}SET_LIST_DATA_REDUCER`;
+export const CHANGE_SEARCH_DATA_REDUCER = `${prefix}CHANGE_SEARCH_DATA_REDUCER`;
+export const GET_LIST_DATA_SAGA = `${prefix}GET_LIST_DATA_SAGA`;
+export const SUBMIT_EXTRA = `${prefix}SUBMIT_EXTRA`;

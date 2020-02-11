@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Route, Switch } from 'react-router-dom';
-import { Layout, Input, Button } from 'antd';
+import { Layout, Button } from 'antd';
 import { createStructuredSelector } from 'reselect';
 // import { lang } from 'utils/commonUtils';
 import { ThemeProvider } from 'styled-components';
@@ -20,6 +20,8 @@ import { ModalContainer, ModalRoute } from 'react-router-modal';
 
 import Widget from 'components/appSetting';
 import ErrorBoundary from 'containers/common/ErrorBoundary';
+import Loadable from 'components/Loadable';
+
 import * as selectors from './selectors';
 import reducer from './reducer';
 import * as actions from './actions';
@@ -27,34 +29,37 @@ import saga from './saga';
 import AppWrapper from './AppWrapper';
 import StyleUserSetting from './StyleUserSetting';
 
-import AppList from './AppMain/AppList';
-import AppMain from './AppMain';
-
-import Main from './AppMain/MyPage/Main';
-import AppInfo from './AppMain/MyPage/AppInfo';
-import PageInfo from './AppMain/MyPage/PageInfo';
-import AppBizModal from './AppMain/MyPage/AppBizModal';
-import BizDetail from './AppMain/Biz/BizDetail';
-import BizMenuList from './AppMain/Biz/BizMenuList';
-import BizStore from './AppMain/BizStore';
-import BizManage from './AppMain/BizManage';
+// import AppList from './AppMain/AppList';
+// import AppMain from './AppMain';
+// import Main from './AppMain/MyPage/Main';
+// import AppInfo from './AppMain/MyPage/AppInfo';
+// import PageInfo from './AppMain/MyPage/PageInfo';
+// import AppBizModal from './AppMain/MyPage/AppBizModal';
+// import BizDetail from './AppMain/Biz/BizDetail';
+// import BizMenuList from './AppMain/Biz/BizMenuList';
+// import BizStore from './AppMain/BizStore';
+// import BizManage from './AppMain/BizManage';
 
 import './global-store.css';
 
+const AppList = Loadable({ loader: () => import('./AppMain/AppList') });
+const AppMain = Loadable({ loader: () => import('./AppMain') });
+const Main = Loadable({ loader: () => import('./AppMain/MyPage/Main') });
+const AppInfo = Loadable({ loader: () => import('./AppMain/MyPage/AppInfo') });
+const PageInfo = Loadable({ loader: () => import('./AppMain/MyPage/PageInfo') });
+const AppBizModal = Loadable({ loader: () => import('./AppMain/MyPage/AppBizModal') });
+const BizDetail = Loadable({ loader: () => import('./AppMain/Biz/BizDetail') });
+const BizMenuList = Loadable({ loader: () => import('./AppMain/Biz/BizMenuList') });
+const BizStore = Loadable({ loader: () => import('./AppMain/BizStore') });
+const BizManage = Loadable({ loader: () => import('./AppMain/BizManage') });
+
 const { Content } = Layout;
-/* eslint-disable */
+
 class UserStore extends Component {
-  constructor(props) {
-    super(props);
-  }
   componentDidMount() {
     // this.props.getMenu('STORE');
     this.props.hideExecApps();
   }
-
-  folding = () => {
-    this.setState({ display: 'none' });
-  };
 
   getPageHeaderTitle = () => {
     const {
@@ -83,7 +88,7 @@ class UserStore extends Component {
         <div className="userSettingWrapper">
           <div className="pageHeaderWrapper">
             <h2 className="pageHeader">{this.getPageHeaderTitle()}</h2>
-            <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} />
+            {/* <Button className="modalClose" onClick={this.closeModal} title={intlObj.get(messages.closeModal)} /> */}
           </div>
           <ThemeProvider theme={themes.themedefault}>
             <Layout className="storeLayout" style={{ height: '100%', overflow: 'hidden' }}>
@@ -91,24 +96,24 @@ class UserStore extends Component {
                 <Content className="storeContent">
                   <div className="contentWrapper">
                     <Switch>
-                      <Route exact path="/portal/store" component={AppList} />
-                      <Route exact path="/portal/store/appMain" component={AppMain} />
-                      <Route exact path="/portal/store/appMain/myPage" component={Main} />
+                      <Route exact path="/portal/store" render={props => <AppList {...props} />} />
+                      <Route exact path="/portal/store/appMain" render={props => <AppMain {...props} />} />
+                      <Route exact path="/portal/store/appMain/myPage" render={props => <Main {...props} />} />
                       <Route
                         exact
                         path="/portal/store/appMain/myPage/app/:APP_ID"
                         render={props => <AppInfo {...props} execMenu={execMenu} execPage={execPage} />}
                       />
-                      <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" component={PageInfo} />
-                      <Route path="/portal/store/appMain/myPage/modal" component={AppBizModal} />
+                      <Route exact path="/portal/store/appMain/myPage/page/:PAGE_ID" render={props => <PageInfo {...props} />} />
+                      <Route path="/portal/store/appMain/myPage/modal" render={props => <AppBizModal {...props} />} />
                       <Route
                         path="/portal/store/appMain/myPage/biz/detail/:type/:BIZGRP_ID"
                         render={props => <BizDetail {...props} execMenu={execMenu} execPage={execPage} />}
                       />
-                      <Route exact path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" component={BizMenuList} />
-                      <Route path="/portal/store/appMain/bizManage" component={BizManage} />
+                      <Route exact path="/portal/store/appMain/myPage/biz/menulist/:BIZGRP_ID" render={props => <BizMenuList {...props} />} />
+                      <Route path="/portal/store/appMain/bizManage" render={props => <BizManage {...props} />} />
                       <Route path="/portal/store/appMain/bizStore" render={props => <BizStore {...props} execMenu={execMenu} execPage={execPage} />} />
-                      <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" component={AppList} />
+                      <Route exact path="/portal/store/appMain/bizStore/app/list/:CATG_ID" render={props => <AppList {...props} />} />
                     </Switch>
                   </div>
                   <ErrorBoundary>
@@ -164,16 +169,9 @@ const mapStateToProps = createStructuredSelector({
   appbizGubun: selectors.makeAppBizGubun(),
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 const withReducer = injectReducer({ key: 'userStore-app', reducer });
 const withSaga = injectSaga({ key: 'userStore-app', saga });
 
-export default compose(
-  withReducer,
-  withSaga,
-  withConnect,
-)(UserStore);
+export default compose(withReducer, withSaga, withConnect)(UserStore);

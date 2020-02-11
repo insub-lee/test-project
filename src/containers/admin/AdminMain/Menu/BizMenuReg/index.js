@@ -13,24 +13,32 @@ import * as actionsLoading from 'containers/common/Loading/actions';
 import 'react-router-modal/css/react-router-modal.css';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+// import Loadable from 'components/Loadable';
 import * as selectors from './selectors';
-import * as menuSelectors from '../selectors';
+// import * as menuSelectors from '../selectors';
 import * as actions from './actions';
 import reducer from './reducer';
 import saga from './saga';
 
-import AppBizModal from './AppBizModal';
 import BizMenuTree from '../../../components/BizMenuTree';
 
 import Footer from '../../../App/Footer';
+
 import BizInfo from './BizInfo';
 import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
+import AppBizModal from './AppBizModal';
+
 import TopMenu from './TopMenu/index';
 // import AuthSetting from './AuthSetting';
 
 import StyleBizDetail from './StyleBizDetail';
 import StyleBizDetailContent from './StyleBizDetailContent';
+
+// const BizInfo = Loadable({ loader: () => import('./BizInfo') });
+// const AppInfo = Loadable({ loader: () => import('./AppInfo') });
+// const PageInfo = Loadable({ loader: () => import('./PageInfo') });
+// const AppBizModal = Loadable({ loader: () => import('./AppBizModal') });
 
 /* eslint-disable */
 class BizMenuReg extends Component {

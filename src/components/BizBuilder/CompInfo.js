@@ -10,6 +10,7 @@ import InsertBtnComp from 'components/BizBuilder/Field/InsertBtnComp';
 import ModalInsertBtnComp from 'components/BizBuilder/Field/ModalInsertBtnComp';
 import AttachComp from 'components/BizBuilder/Field/AttachComp';
 import DragUploadComp from 'components/BizBuilder/Field/DragUploadComp';
+import DragUploadMDCSComp from 'components/BizBuilder/Field/DragUploadMDCSComp';
 import TreeSelectComp from 'components/BizBuilder/Field/TreeSelectComp';
 import SelectComp from 'components/BizBuilder/Field/SelectComp';
 import ReadOnlyTextComp from 'components/BizBuilder/Field/ReadOnlyTextComp';
@@ -48,6 +49,8 @@ import RadioMaterialLabelComp from 'components/BizBuilder/Field/RadioMaterialLab
 import RadioPopupComp from 'components/BizBuilder/Field/RadioPopupComp';
 import SelectYearComp from 'components/BizBuilder/Field/SelectYearComp';
 import SelectSiteComp from 'components/BizBuilder/Field/SelectSiteComp';
+import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
+import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -60,6 +63,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/ModalInsertBtnComp': { renderer: property => <ModalInsertBtnComp {...property} /> },
   'components/BizBuilder/Field/AttachComp': { renderer: property => <AttachComp {...property} /> },
   'components/BizBuilder/Field/DragUploadComp': { renderer: property => <DragUploadComp {...property} /> },
+  'components/BizBuilder/Field/DragUploadMDCSComp': { renderer: property => <DragUploadMDCSComp {...property} /> },
   'components/BizBuilder/Field/TreeSelectComp': { renderer: property => <TreeSelectComp {...property} /> },
   'components/BizBuilder/Field/SelectComp': { renderer: property => <SelectComp {...property} /> },
   'components/BizBuilder/Field/ReadOnlyTextComp': { renderer: property => <ReadOnlyTextComp {...property} /> },
@@ -98,4 +102,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioPopupComp': { renderer: property => <RadioPopupComp {...property} /> },
   'components/BizBuilder/Field/SelectYearComp': { renderer: property => <SelectYearComp {...property} /> },
   'components/BizBuilder/Field/SelectSiteComp': { renderer: property => <SelectSiteComp {...property} /> },
+  'components/BizBuilder/Field/ManageCodeComp': { renderer: property => <ManageCodeComp {...property} /> },
+  'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
 };

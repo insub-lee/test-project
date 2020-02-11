@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom';
 
-const RestrictedRoute = ({ component: Component, isLoggedIn, profile, ...rest }) => (
-  <div>
+const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => (
+  <div className="RestrictedRouteWrapper">
     <Route
       {...rest}
       render={props =>
         isLoggedIn ? (
-          <Component {...props} profile={profile} />
+          <Component {...props} />
         ) : (
           <Redirect
             to={{
@@ -25,7 +25,7 @@ const RestrictedRoute = ({ component: Component, isLoggedIn, profile, ...rest })
 RestrictedRoute.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
   profile: PropTypes.object,
-  component: PropTypes.func, //eslint-disable-line
+  component: PropTypes.oneOfType([PropTypes.func, PropTypes.object, PropTypes.node]), //eslint-disable-line
   location: PropTypes.object, //eslint-disable-line
 };
 

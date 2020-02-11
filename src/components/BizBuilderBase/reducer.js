@@ -159,6 +159,10 @@ const reducer = (state = initialState, action) => {
       const { id, listData } = action;
       return state.setIn(['bizBuilderBase', id, 'listData'], fromJS(listData));
     }
+    case actionTypes.CHANGE_SEARCH_DATA_REDUCER: {
+      const { id, key, val } = action;
+      return state.setIn(['bizBuilderBase', id, 'searchData', key], val);
+    }
     default:
       return state;
   }

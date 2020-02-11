@@ -2,19 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ContentHolderWrapper from './contentHolder.style';
 
-class ContentHolder extends React.PureComponent {
-  render() {
-    return (
-      <ContentHolderWrapper className="storeBoxListWrapper" style={this.props.style}>
-        {this.props.children}
-      </ContentHolderWrapper>
-    );
-  }
-}
+const ContentHolder = ({ children, style }) => (
+  <ContentHolderWrapper className="storeBoxListWrapper" style={style}>
+    {children}
+  </ContentHolderWrapper>
+);
 
 ContentHolder.propTypes = {
   style: PropTypes.object.isRequired,
-  children: PropTypes.node.isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+};
+
+ContentHolder.defaultProps = {
+  children: [],
 };
 
 export default ContentHolder;

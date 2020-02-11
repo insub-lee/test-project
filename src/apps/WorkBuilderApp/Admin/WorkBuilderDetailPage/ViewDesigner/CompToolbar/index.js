@@ -29,7 +29,7 @@ class CompToolbar extends Component {
         {compGroupList &&
           compGroupList.length > 0 &&
           compGroupList.map((node, nodeIdx) => (
-            <React.Fragment key={`viewDesignerCategoryFragment_${nodeIdx}`}>
+            <>
               <div
                 key={`viewDesignerCategoryTitle_${nodeIdx}`}
                 className="categoryTitle"
@@ -53,7 +53,7 @@ class CompToolbar extends Component {
                       </Button>
                     ))}
               </div>
-            </React.Fragment>
+            </>
           ))}
       </div>
     );

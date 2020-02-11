@@ -372,11 +372,11 @@ class IntroComponent extends Component {
     };
 
     let workSeqGoal = workSeq;
-
+    console.debug('selectedDraft', selectedDraft);
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
-          workSeqGoal = 201;
+          workSeqGoal = 901;
           break;
         case 'TS':
           workSeqGoal = 361;
@@ -388,7 +388,7 @@ class IntroComponent extends Component {
           workSeqGoal = 461;
           break;
         default:
-          workSeqGoal = 201;
+          workSeqGoal = 901;
           break;
       }
     }
@@ -398,6 +398,7 @@ class IntroComponent extends Component {
       const procResult = nodeIdsInfo.procResult || { DRAFT_DATA: '{}' };
       const draftData = procResult.DRAFT_DATA || '{}';
       const jsonDraftData = JSON.parse(draftData);
+      console.debug('draftData', draftData);
       console.debug('@ Json Draft Data : ', jsonDraftData);
       if (Object.keys(jsonDraftData).length > 2) {
         workPrcProps = jsonDraftData;
@@ -413,7 +414,7 @@ class IntroComponent extends Component {
     // Todo - 폐기 일괄
     if (['ABROGATION_MULTI'].includes(selectedDraft)) {
     }
-
+    console.debug(taskSeq, workSeqGoal, viewType);
     return (
       <BizBuilderBase
         sagaKey={`BizDoc_${workSeqGoal}`}
@@ -643,7 +644,7 @@ class IntroComponent extends Component {
                     columns={columns}
                     dataSource={listDataArr}
                     onRow={record => ({
-                      onClick: () => this.onTableRowClick(selectedDraft, record.TASK_SEQ, record.WORK_SEQ, record.CHANGE === 88 ? 'MAJOR' : 'MINOR'),
+                      onClick: () => this.onTableRowClick(selectedDraft, record.TASK_SEQ, record.WORK_SEQ, record.CHANGE !== 88 ? 'MAJOR' : 'MINOR'),
                     })}
                   />
                 )}

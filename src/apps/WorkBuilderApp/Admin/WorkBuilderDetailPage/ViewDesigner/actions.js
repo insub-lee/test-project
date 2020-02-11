@@ -179,3 +179,10 @@ export const changeColConfigByReducer = (groupIndex, rowIndex, colIndex, key, va
   key,
   value,
 });
+
+export const changeGroupDataByReducer = (groupIndex, key, value) => ({
+  type: actionTypes.CHANGE_GROUP_DATA_REDUCER,
+  groupIndex,
+  key,
+  value,
+});

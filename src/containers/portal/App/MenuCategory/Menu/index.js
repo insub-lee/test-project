@@ -4,7 +4,7 @@ import SideMenu from 'react-sidemenu';
 
 import StlyedDefaultTheme from './StlyedDefaultTheme';
 
-class Tree extends Component {
+class Menu extends Component {
   /* eslint-disable */
   constructor(props) {
     super(props);
@@ -40,16 +40,16 @@ class Tree extends Component {
   }
 }
 
-Tree.propTypes = {
+Menu.propTypes = {
   treeData: PropTypes.array,
   execMenu: PropTypes.func,
   execPage: PropTypes.func,
 };
 
-Tree.defaultProps = {
+Menu.defaultProps = {
   treeData: [],
   execMenu: () => {},
   execPage: () => {},
 };
 
-export default Tree;
+export default Menu;

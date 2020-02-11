@@ -151,6 +151,11 @@ const makeSelectApiListById = id =>
     state.getIn(['bizBuilderBase', id, 'apiList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'apiList']).toJS() : [],
   );
 
+const makeSelectSearchDataById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'searchData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'searchData']).toJS() : {},
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -179,4 +184,5 @@ export {
   makeSelectDataLoading,
   makeSelectWorkInfoById,
   makeSelectApiListById,
+  makeSelectSearchDataById,
 };

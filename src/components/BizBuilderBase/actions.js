@@ -21,10 +21,20 @@ export const setBuilderData = (id, response, work, metaList, workFlow, apiList, 
   validationData,
 });
 
-export const getExtraApiData = (id, apiArr) => ({
+export const getExtraApiData = (id, apiArr, callback) => ({
   type: `${actionTypes.GET_EXTRA_API_DATA}_${id}`,
   id,
   apiArr,
+  callback,
+});
+
+export const submitExtraHandler = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
+  type: `${actionTypes.SUBMIT_EXTRA}_${id}`,
+  id,
+  httpMethod,
+  apiUrl,
+  submitData,
+  callbackFunc,
 });
 
 export const setExtraApiData = (id, apiKey, response) => ({
@@ -254,4 +264,17 @@ export const setListDataByReducer = (id, listData) => ({
   type: actionTypes.SET_LIST_DATA_REDUCER,
   id,
   listData,
+});
+
+export const changeSearchDataByReducer = (id, key, val) => ({
+  type: actionTypes.CHANGE_SEARCH_DATA_REDUCER,
+  id,
+  key,
+  val,
+});
+
+export const getListDataBySaga = (id, workSeq) => ({
+  type: `${actionTypes.GET_LIST_DATA_SAGA}_${id}`,
+  id,
+  workSeq,
 });

@@ -174,6 +174,34 @@ const StyledViewDesigner = styled.div`
       }
     }
   }
+
+  .alignRight {
+    text-align: right;
+  }
+
+  .alignLeft {
+    text-align: left;
+  }
+
+  .alignCenter {
+    text-align: center;
+  }
+
+  .view-designer-group-search-wrap {
+    width: calc(100% - 80px);
+    display: inline-block;
+  }
+
+  .view-designer-group-search-btn-wrap {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .group-search-options {
+    position: absolute;
+    display: inline-block;
+    right: 30px;
+  }
 `;
 
 export default StyledViewDesigner;
