@@ -17,7 +17,6 @@ class List extends Component {
   }
 
   handleAppStart = () => {
-    console.log('handleAppStart       ', this.props);
     const { result, id, changeFormData } = this.props;
     const userList = (result && result.selectAllUserList && result.selectAllUserList.list) || [];
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
@@ -32,21 +31,40 @@ class List extends Component {
     getCallDataHanlder(id, apiAry, this.handleAppStart);
   };
 
-  render() {
+  setList = () => {
     const { formData } = this.props;
     const { userList } = this.state;
     const searchList = (formData && formData.searchList) || [];
     let list = [];
-    if (searchList.length) list = searchList;
+    const is_search = (formData && formData.is_search) || false;
+    if (is_search) list = searchList;
     else list = userList;
-    console.debug(userList);
-    console.debug('this.state', this.state);
-    console.debug('this.props', this.props);
+    return list;
+  };
+
+  onRowClick = e => {
+    const { id, changeFormData } = this.props;
+
+    changeFormData(id, 'userModalType', 'UPDATE');
+    changeFormData(id, 'selectedUser', e.rowData);
+    changeFormData(id, 'userModal', true);
+  };
+
+  render() {
+    const list = this.setList();
     return (
       <>
-        <SearchBar {...this.props} />
-        <Table width={1100} height={1000} headerHeight={30} rowHeight={50} rowCount={list.length} rowGetter={({ index }) => list[index]}>
-          <Column label="SEQ" dataKey="sq_swtb_hst_cmpny_emp" width={0} />
+        <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
+        <Table
+          width={700}
+          height={1000}
+          headerHeight={30}
+          rowHeight={50}
+          rowCount={list.length}
+          rowGetter={({ index }) => list[index]}
+          onRowClick={this.onRowClick}
+          rowClassName="cell"
+        >
           <Column label="소속" dataKey="belong" width={150} dataAlign="center" headerAlign="center" />
           <Column label="이름" dataKey="emp_nm" width={100} dataAlign="center" headerAlign="center" />
           <Column label="직위" dataKey="emp_position" width={100} dataAlign="center" headerAlign="center" />

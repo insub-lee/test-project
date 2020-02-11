@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Select, Input, Button, Modal } from 'antd';
+import { Select, Input, Button, Modal, message } from 'antd';
 import UserModal from './UserModal';
+import DeptModal from './DeptModal';
 
 const { Option } = Select;
 
 class SearchBar extends Component {
   constructor(props) {
     super(props);
-    this.state = { user_Modal: false };
   }
 
   handleSiteOnChange = e => {
@@ -32,10 +32,6 @@ class SearchBar extends Component {
     const searchName = (formData && formData.searchName) || '';
     const userList = (result && result.selectAllUserList && result.selectAllUserList.list) || [];
     let searchList = [];
-    console.debug('searchSite 111111111111111', searchSite);
-    console.debug('searchCmpny111111111111111', searchCmpny);
-    console.debug('searchName1111111111111', searchName);
-    console.debug('userList1111111111111', userList);
 
     if (searchSite && searchCmpny && searchName)
       searchList = userList.filter(u => u.site === searchSite && u.hst_cmpny_cd === searchCmpny && u.emp_nm === searchName);
@@ -46,38 +42,100 @@ class SearchBar extends Component {
     else if (searchCmpny) searchList = userList.filter(u => u.hst_cmpny_cd === searchCmpny);
     else if (searchName) searchList = userList.filter(u => u.emp_nm === searchName);
     else searchList = userList;
-    console.debug('searchList1111111111111', searchList);
+    if (searchList.length) changeFormData(id, 'is_search', true);
+    changeFormData(id, 'is_search', true);
     changeFormData(id, 'searchList', searchList);
   };
 
   showUserModal = () => {
-    console.debug('userModal', this.state);
-    this.setState({
-      user_Modal: true,
-    });
+    const { id, changeFormData } = this.props;
+    changeFormData(id, 'userModal', true);
+    changeFormData(id, 'userModalType', 'INSERT');
   };
 
   handleUserOk = e => {
-    console.debug(e);
-    this.setState({
-      user_Modal: false,
-    });
+    if (this.validationCheck()) {
+      const { id, submitHadnlerBySaga, formData } = this.props;
+      const type = (formData && formData.userModalType) || '';
+      if (type === 'INSERT') {
+        const submitData = (formData && formData.userData) || {};
+
+        submitHadnlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
+      } else if (type === 'UPDATE') {
+        const submitData = (formData && formData.selectedUser) || {};
+
+        submitHadnlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
+      }
+    } else return false;
+  };
+
+  saveComplete = sagaKey => {
+    const { id, getCallDataHanlder, apiAry, changeFormData, handleAppStart, formData } = this.props;
+    changeFormData(sagaKey, 'userData', { SITE: '청주' });
+    getCallDataHanlder(sagaKey, apiAry, handleAppStart);
+    const is_update = formData && formData.userModalType;
+    if (is_update === 'UPDATE') changeFormData(id, 'userModal', false);
   };
 
   handleUserCancel = e => {
-    console.debug(e);
-    this.setState({
-      user_Modal: false,
-    });
+    const { id, changeFormData } = this.props;
+    changeFormData(id, 'userModal', false);
+    changeFormData(id, 'userModalType', ' ');
+  };
+
+  showDeptModal = () => {
+    const { id, changeFormData } = this.props;
+    changeFormData(id, 'deptModal', true);
+  };
+
+  handleDeptOk = () => {};
+
+  handleDeptCancel = () => {
+    const { id, changeFormData } = this.props;
+    changeFormData(id, 'deptModal', false);
+    changeFormData(id, 'selectedDept', {});
+  };
+
+  validationCheck = () => {
+    let is_ok = false;
+    const { formData } = this.props;
+    const type = (formData && formData.userModalType) || '';
+
+    if (type === 'INSERT') {
+      const userData = (formData && formData.userData) || {};
+      if (!userData.HST_CMPNY_CD) {
+        message.warning('주관회사를 선택하세요');
+        return false;
+      }
+      if (!userData.EMP_NM) {
+        message.warning('직원명을 입력하세요');
+        return false;
+      }
+      if (!userData.DEPT_NM) {
+        message.warning('부서를 선택하세요');
+        return false;
+      }
+      is_ok = true;
+    } else if (type === 'UPDATE') {
+      const selectedUser = (formData && formData.selectedUser) || {};
+      if (!selectedUser.emp_nm) {
+        message.warning('직원명을 입력하세요');
+        return false;
+      }
+      if (!selectedUser.dept_nm) {
+        message.warning('부서를 선택하세요');
+        return false;
+      }
+      is_ok = true;
+    }
+
+    return is_ok;
   };
 
   render() {
     const { formData, Search } = this.props;
     const { result } = this.props;
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
-    console.debug('formData', formData);
-    console.log('this.props ..... ', this.props);
-    // const cmpnyList = (formData && formData.cmpnyList) || [];
     return (
       <div>
         <Select
@@ -102,12 +160,37 @@ class SearchBar extends Component {
           ))}
         </Select>
         이름
-        <Input style={{ width: 130, padding: 3 }} value={formData.searchName || ''} name="searchName" onChange={this.handleInputOnChange} />
+        <Input style={{ width: 130, padding: 3 }} value={formData.searchName || ''} name="searchName" onChange={this.handleInputOnChange} placeholder="이름" />
+        &nbsp;&nbsp;
         <Button onClick={this.handleOnSearch}>검색</Button>
+        &nbsp;&nbsp;
         <Button onClick={this.showUserModal}>추가</Button>
-        <Button type="link">[주관회사 부서관리]</Button>
-        <Modal title="사용자 상세정보" destroyOnClose visible={this.state.user_Modal} onOk={this.handleUserOk} onCancel={this.handleUserCancel}>
+        &nbsp;&nbsp;
+        <Button type="link" onClick={this.showDeptModal}>
+          [주관회사 부서관리]
+        </Button>
+        <Modal
+          title="사용자 상세정보"
+          destroyOnClose
+          visible={(formData && formData.userModal) || false}
+          onOk={this.handleUserOk}
+          onCancel={this.handleUserCancel}
+          okText={formData && formData.userModalType === 'INSERT' ? '추가' : '저장'}
+          cancelText="닫기"
+        >
           <UserModal {...this.props} />
+        </Modal>
+        <Modal
+          title="주관회사 부서 관리"
+          destroyOnClose
+          visible={(formData && formData.deptModal) || false}
+          onOk={this.handleDeptOk}
+          onCancel={this.handleDeptCancel}
+          okText="추가"
+          cancelText="닫기"
+          style={{ width: 800, heigth: 400 }}
+        >
+          <DeptModal {...this.props} />
         </Modal>
       </div>
     );

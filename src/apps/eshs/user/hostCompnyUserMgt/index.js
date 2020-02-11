@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
+import Styled from './Styled';
 
 class hostCompnyUserMgt extends Component {
   render() {
-    return <BizMicroDevBase component={List} sagaKey="EshshostCompny" />;
+    return (
+      <Styled>
+        <BizMicroDevBase component={List} sagaKey="EshshostCompny" />
+      </Styled>
+    );
   }
 }
 
