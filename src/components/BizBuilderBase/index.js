@@ -255,7 +255,9 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
   getBuilderData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
     dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
-  getExtraApiData: (id, apiArr) => dispatch(actions.getExtraApiData(id, apiArr)),
+  getExtraApiData: (id, apiArr, callback) => dispatch(actions.getExtraApiData(id, apiArr, callback)),
+  submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
+    dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc)),
   getDetailData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
     dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
   getTaskSeq: (id, workSeq) => dispatch(actions.getTaskSeq(id, workSeq)),
