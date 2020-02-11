@@ -21,7 +21,6 @@ class List extends Component {
     this.state = {
       communicationList: [],
       initLoading: true,
-      idx: 1,
     };
   }
 
@@ -37,7 +36,6 @@ class List extends Component {
         url: '/api/eshs/v1/common/AllEshsCommunications',
         method: 'GET',
       });
-      console.debug(result.response.list);
       result.response.list.map(item => {
         const receiveDate = new Date(item.receive_date);
         const replyDate = new Date(item.reply_date);
@@ -70,7 +68,8 @@ class List extends Component {
     const columns = [
       {
         title: '번호',
-        dataSource: this.state.idx,
+        dataSource: 'idx',
+        width: 50,
       },
       {
         title: '접수',
@@ -80,18 +79,21 @@ class List extends Component {
             dataIndex: 'receive_date',
             key: 'receive_date',
             align: 'center',
+            width: 100,
           },
           {
             title: '발행처',
             dataIndex: 'publication',
             key: 'publication',
             align: 'center',
+            width: 150,
           },
           {
             title: '제목(접수내역)',
             dataIndex: 'title',
             key: 'title',
             align: 'center',
+            ellipsis: 'true',
           },
         ],
       },
@@ -103,30 +105,33 @@ class List extends Component {
             dataIndex: 'reply_date',
             key: 'reply_date',
             align: 'center',
+            width: 100,
           },
           {
             title: '조치/회신 내용(방법, 요약)',
             dataIndex: 'reply_content',
             key: 'reply_content',
             align: 'center',
+            ellipsis: 'true',
           },
           {
             title: '관련문서',
             dataIndex: 'file_name',
             key: 'file_name',
             align: 'center',
+            width: 100,
           },
           {
             title: '문서유형',
             dataIndex: 'doc_type',
             key: 'doc_type',
             align: 'center',
+            width: 150,
           },
         ],
       },
     ];
 
-    const { listData } = this.props;
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -139,8 +144,9 @@ class List extends Component {
             dataSource={this.state.communicationList || []}
             bordered
             pagination={{ pageSize: 30 }}
+            tableLayout="fixed"
             onRow={(record, rowIndex) => ({
-              onClick: e => console.debug(rowIndex, '@@@CLICK@@@'),
+              onClick: () => console.debug(rowIndex, '@@@CLICK@@@'),
             })}
           />
         </Group>
