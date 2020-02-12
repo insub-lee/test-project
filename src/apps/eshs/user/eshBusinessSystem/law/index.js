@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
-import List from './ListPage';
+import List from '../CommonListPage';
 
 class EshSystemLaw extends Component {
   state = {

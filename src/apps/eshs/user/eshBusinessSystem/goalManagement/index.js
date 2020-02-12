@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import List from '../CommonListPage';
 
 class GoalManagement extends Component {
   state = {
@@ -17,7 +18,7 @@ class GoalManagement extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="GoalManagement" workSeq={1841} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="GoalManagement" workSeq={1841} viewType="LIST" loadingComplete={this.loadingComplete} CustomListPage={List} />;
   }
 }
 

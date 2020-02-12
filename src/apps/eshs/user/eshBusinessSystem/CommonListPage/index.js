@@ -13,9 +13,9 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import View from '../ViewPage';
-import Input from '../InputPage';
-import Modify from '../ModifyPage';
+import View from '../law/ViewPage';
+import Input from '../law/InputPage';
+import Modify from '../law/ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -35,10 +35,6 @@ class ListPage extends Component {
   //   const { removeReduxState, id } = this.props;
   //   removeReduxState(id);
   // }
-
-  loadingComplete = () => {
-    console.debug('lodingComplete');
-  };
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -97,21 +93,25 @@ class ListPage extends Component {
     });
   };
 
-  handleOnBuild = (sagaKey, taskSeq, viewType) => {
-    console.debug('@@@VIEWTYPE, TASKSEQ@@@', viewType, taskSeq);
+  handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
+    /* 
+      changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
+      taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
+      viewType: INPUT, MODIFY, VIEW
+    */
+    const { workSeq, sagaKey, loadingComplete } = this.props;
     return (
       <BizBuilderBase
-        sagaKey={sagaKey}
-        workSeq={this.props.workSeq}
+        sagaKey={changedSagaKey}
+        workSeq={workSeq}
         viewType={viewType.toUpperCase()}
         taskSeq={taskSeq}
         CustomViewPage={View}
         CustomInputPage={Input}
         CustomModifyPage={Modify}
-        loadingComplete={this.loadingComplete}
+        loadingComplete={loadingComplete}
         onCloseModleHandler={this.handleModalClose}
-        baseSagaKey="EshSystemLaw"
-        // isOpenModalChange={this.isOpenModalChange}
+        baseSagaKey={sagaKey}
       />
     );
   };
@@ -126,11 +126,12 @@ class ListPage extends Component {
 
   handleModalClose = () => {
     this.setState({
-      modalVisible: !this.state.modalVisible,
+      modalVisible: false,
     });
   };
 
   renderList = (group, groupIndex) => {
+    const { modalVisible, selectedTaskSeq, viewType } = this.state;
     const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
     const columns = this.setColumns(group.rows[0].cols);
     return (
@@ -148,8 +149,8 @@ class ListPage extends Component {
             })}
           />
         </Group>
-        <Modal visible={this.state.modalVisible} closable onCancel={this.handleOnCancel} width={900}>
-          <div>{this.state.modalVisible && this.handleOnBuild('EshSystemLaw2', this.state.selectedTaskSeq, this.state.viewType)}</div>
+        <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
+          <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
         </Modal>
       </div>
     );
@@ -262,6 +263,7 @@ ListPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  workSeq: PropTypes.number,
 };
 
 ListPage.defaultProps = {
