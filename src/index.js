@@ -15,8 +15,9 @@ import { withRouter } from 'react-router-dom';
 import { ConnectedRouter } from 'react-router-redux';
 // import createHistory from 'history/createBrowserHistory';
 import globalConfigs from 'utils/globalConfigs';
-import { createBrowserHistory as createHistory } from 'history';
+// import { createBrowserHistory as createHistory } from 'history';
 
+import history from './utils/history';
 import './include';
 import GlobalStyle from './theme/GlobalStyle';
 
@@ -27,10 +28,8 @@ import configureStore from './configureStore';
 import { translationMessages } from './i18n';
 
 const initialState = {};
-const history = createHistory();
-history.listen((location, action) => {
-  console.log(action, location.pathname, 'location.pathname');
-});
+// const history = createHistory();
+
 const store = configureStore(initialState, history);
 globalConfigs.store = store;
 const MOUNT_NODE = window.document.getElementById('root');
