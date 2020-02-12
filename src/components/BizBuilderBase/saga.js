@@ -1,4 +1,5 @@
 import { takeEvery, call, put, select, takeLatest } from 'redux-saga/effects';
+import { delay } from 'redux-saga';
 import React from 'react';
 
 import { Axios } from 'utils/AxiosFunc';
@@ -283,8 +284,6 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
 
   yield put(actions.successSaveTask(id));
-  // const apiArr = yield select(selectors.makeSelectApiArrById(reloadId || id));
-  // yield put(actions.getExtraApiData(reloadId || id, apiArr));
 
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, workSeq, taskSeq, formData);

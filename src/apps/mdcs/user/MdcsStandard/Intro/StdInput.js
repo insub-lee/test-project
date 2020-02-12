@@ -53,17 +53,7 @@ class StdInput extends Component {
   };
 
   render() {
-    const {
-      sagaKey: id,
-      viewLayer,
-      workInfo,
-      processRule,
-      setProcessRule,
-      loadingComplete,
-      viewPageData,
-      changeViewPage,
-      onCloseModal,
-    } = this.props;
+    const { sagaKey: id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
     // Work Process 사용여부
 
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
