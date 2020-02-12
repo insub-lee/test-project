@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popover, Modal } from 'antd';
+import { Table, Modal, Input, Select } from 'antd';
 
 import request from 'utils/request';
 import { isJSON } from 'utils/helpers';
@@ -11,10 +11,11 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import Contents from 'components/BizBuilder/Common/Contents';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import LawModal from '../../lawModal';
 
 const AntdTable = StyledAntdTable(Table);
+const Option = Select;
 
 class ClauseListPage extends Component {
   constructor(props) {
@@ -112,7 +113,7 @@ class ClauseListPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage } = this.props;
+    const { sagaKey: id, viewLayer, workFlowConfig, loadingComplete, viewPageData, changeViewPage } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -144,57 +145,39 @@ class ClauseListPage extends Component {
                 <div key={group.key}>
                   {group.useTitle && <GroupTitle title={group.title} />}
                   <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                    <table className={`view-designer-table table-${groupIndex}`}>
-                      <tbody>
-                        <tr>
-                          <td>법규</td>
-                          <td>
-                            <input value={this.state.selectedRechNo} placeholder="관리 번호" readOnly />
-                          </td>
-                          <td>
-                            <input value={this.state.selectedLawName} placeholder="법규명" readOnly />
-                            <input type="button" value="법규검색" onClick={() => this.isOpenLawModal()} readOnly />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>작성자</td>
-                          <td>
-                            <input value={this.state.selectedRegUserName} placeholder="작성자" readOnly />
-                          </td>
-                        </tr>
-                        <tr>
-                          {/* onChangeHandler 작성할 것 */}
-                          <td>법령</td>
-                          <td colSpan="2">
-                            <select defaultValue={0}>
-                              <option value="0">선택</option>
-                              <option value="001">법</option>
-                              <option value="002">시행령</option>
-                              <option value="003">시행규칙</option>
-                              <option value="004">기타</option>
-                            </select>
-                          </td>
-                          <td>주요 법규 내용(요약)</td>
-                          <td>
-                            <input value={undefined} placeholder="주요 법규 내용(요약)" readOnly />
-                          </td>
-                          <td>운영 현황</td>
-                          <td>
-                            <input value={undefined} placeholder="운영 현황" readOnly />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>대응부서</td>
-                          <td colSpan="2">
-                            <input value={undefined} placeholder="대응부서" readOnly />
-                          </td>
-                          <td>책임자</td>
-                          <td>
-                            <input value={undefined} placeholder="책임자" readOnly />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <StyledSearchWrap>
+                      <div className="seach-group-layer">
+                        <span>법규 </span>
+                        <Input style={{ width: 200 }} value={this.state.selectedRechNo} placeholder="관리 번호" readOnly />
+                        <Input style={{ width: 200 }} value={this.state.selectedLawName} placeholder="법규명" readOnly />
+                        <StyledButton className="btn-primary" onClick={() => this.isOpenLawModal()} readOnly>
+                          Law Search
+                        </StyledButton>
+                      </div>
+                      <div className="seach-group-layer">
+                        <span> 작성자 </span>
+                        <Input style={{ width: 200 }} value={this.state.selectedRegUserName} placeholder="작성자" readOnly />
+                        <span> 법령 </span>
+                        <Select style={{ width: 120 }} defaultValue="0">
+                          <Option value="0">선택</Option>
+                          <Option value="001">법</Option>
+                          <Option value="002">시행령</Option>
+                          <Option value="003">시행규칙</Option>
+                          <Option value="004">기타</Option>
+                        </Select>
+                        <span> 주요 법규 내용(요약) </span>
+                        <Input style={{ width: 200 }} value={undefined} placeholder="주요 법규 내용(요약)" readOnly />
+                        <span> 운영 현황 </span>
+                        <Input style={{ width: 200 }} value={undefined} placeholder="운영 현황" readOnly />
+                      </div>
+                      <div className="seach-group-layer">
+                        <span> 대응부서 </span>
+                        <Input style={{ width: 200 }} value={undefined} placeholder="대응부서" readOnly />
+                        <span> 책임자 </span>
+                        <Input style={{ width: 200 }} value={undefined} placeholder="책임자" readOnly />
+                      </div>
+                    </StyledSearchWrap>
+
                     <div align="right">
                       <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
                         Add

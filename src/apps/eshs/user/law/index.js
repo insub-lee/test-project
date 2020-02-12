@@ -38,6 +38,7 @@ class law extends Component {
       viewType="MODIFY"
       loadingComplete={this.loadingComplete}
       CustomListPage={List}
+      onCloseModleHandler={this.onCancel}
     />
   );
 
