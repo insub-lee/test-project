@@ -103,7 +103,7 @@ class List extends Component {
     }
 
     return (
-      <div style={{ padding: '48px', backgroundColor: 'white' }}>
+      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <Edit {...this.props}></Edit>
         <AntdTable rowKey={totalData => totalData.SIPA_SEQ} pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
       </div>

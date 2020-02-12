@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const StyledSearch = styled.div`
-  padding: 10px;
-
   .searchTabs {
     background-color: white;
     border: 1px solid #e5e5e5;

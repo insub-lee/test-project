@@ -74,10 +74,10 @@ const getSidebarContent = (commonMenuTreeData, execMenu, execPage) => {
   );
 };
 
-const MenuCategory = ({ open, setMenuClose, commonMenuTreeData, execMenu, execPage }) => (
-  <div onMouseLeave={setMenuClose}>
+const MenuCategory = ({ open, setMenuClose, commonMenuTreeData, execMenu, execPage, children }) => (
+  <div onMouseLeave={setMenuClose} style={{ background: 'red' }}>
     <Sidebar sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)} open={open} styles={styleObj} touch shadow>
-      <div />
+      {children}
     </Sidebar>
   </div>
 );
@@ -88,6 +88,11 @@ MenuCategory.propTypes = {
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   setMenuClose: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+};
+
+MenuCategory.defaultProps = {
+  children: null,
 };
 
 const mapStateToProps = createStructuredSelector({

@@ -7,11 +7,11 @@ import menuIcon03 from 'images/portal/settings-menu03.png';
 import menuIcon03on from 'images/portal/settings-menu03-on.png';
 /* eslint-disable */
 const StyleUserMenuCard = styled.div`
-  position: absolute;
-  top: 0;
+  //position: absolute;
+  //top: 0;
   width: 100%;
-  height: 100vh;
-  padding: 42px 0 45px 0;
+  //height: 100vh;
+  //padding: 42px 0 45px 0;
   background-color: #ffffff;
   z-index: 1; //footer 내용 가리기 + 사이드바 보이기
 
