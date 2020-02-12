@@ -52,6 +52,7 @@ import SelectSiteComp from 'components/BizBuilder/Field/SelectSiteComp';
 import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 import DatePicker from 'components/BizBuilder/Field/DatePicker';
+import BusinessNumberComp from 'components/BizBuilder/Field/BusinessNumberComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -106,4 +107,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/ManageCodeComp': { renderer: property => <ManageCodeComp {...property} /> },
   'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
   'components/BizBuilder/Field/DatePicker': { renderer: property => <DatePicker {...property} /> },
+  'components/BizBuilder/Field/BusinessNumberComp': { renderer: property => <BusinessNumberComp {...property} /> },
 };
