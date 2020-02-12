@@ -146,38 +146,76 @@ class ClauseListPage extends Component {
                   {group.useTitle && <GroupTitle title={group.title} />}
                   <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                     <StyledSearchWrap>
-                      <div className="seach-group-layer">
-                        <span>법규 </span>
-                        <Input style={{ width: 200 }} value={this.state.selectedRechNo} placeholder="관리 번호" readOnly />
-                        <Input style={{ width: 200 }} value={this.state.selectedLawName} placeholder="법규명" readOnly />
-                        <StyledButton className="btn-primary" onClick={() => this.isOpenLawModal()} readOnly>
-                          Law Search
-                        </StyledButton>
-                      </div>
-                      <div className="seach-group-layer">
-                        <span> 작성자 </span>
-                        <Input style={{ width: 200 }} value={this.state.selectedRegUserName} placeholder="작성자" readOnly />
-                        <span> 법령 </span>
-                        <Select style={{ width: 120 }} defaultValue="0">
-                          <Option value="0">선택</Option>
-                          <Option value="001">법</Option>
-                          <Option value="002">시행령</Option>
-                          <Option value="003">시행규칙</Option>
-                          <Option value="004">기타</Option>
-                        </Select>
-                        <span> 주요 법규 내용(요약) </span>
-                        <Input style={{ width: 200 }} value={undefined} placeholder="주요 법규 내용(요약)" readOnly />
-                        <span> 운영 현황 </span>
-                        <Input style={{ width: 200 }} value={undefined} placeholder="운영 현황" readOnly />
-                      </div>
-                      <div className="seach-group-layer">
-                        <span> 대응부서 </span>
-                        <Input style={{ width: 200 }} value={undefined} placeholder="대응부서" readOnly />
-                        <span> 책임자 </span>
-                        <Input style={{ width: 200 }} value={undefined} placeholder="책임자" readOnly />
-                      </div>
-                    </StyledSearchWrap>
+                      <div className="seach-group-layer"></div>
+                      <div className="seach-group-layer"></div>
+                      <div className="seach-group-layer"></div>
+                      <div className="seach-group-layer"></div>
 
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <span className="ant-select">법규</span>
+                            </td>
+                            <td>
+                              <Input className="input-width200" value={this.state.selectedRechNo} placeholder="관리 번호" readOnly />
+                              <Input className="input-width200" value={this.state.selectedLawName} placeholder="법규명" readOnly />
+                              <StyledButton className="btn-primary" onClick={() => this.isOpenLawModal()} readOnly>
+                                Law Search
+                              </StyledButton>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span>작성자</span>
+                            </td>
+                            <td>
+                              <Input className="input-width200" value={this.state.selectedRegUserName} placeholder="작성자" readOnly />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span>법령</span>
+                            </td>
+                            <td>
+                              <Select className="input-width120" defaultValue="0">
+                                <Option value="0">선택</Option>
+                                <Option value="001">법</Option>
+                                <Option value="002">시행령</Option>
+                                <Option value="003">시행규칙</Option>
+                                <Option value="004">기타</Option>
+                              </Select>
+                            </td>
+                            <td>
+                              <span>주요 법규 내용(요약)</span>
+                            </td>
+                            <td>
+                              <Input className="input-width200" value={undefined} placeholder="주요 법규 내용(요약)" readOnly />
+                            </td>
+                            <td>
+                              <span>운영 현황</span>
+                            </td>
+                            <td>
+                              <Input className="input-width200" value={undefined} placeholder="운영 현황" readOnly />
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <span>대응부서</span>
+                            </td>
+                            <td>
+                              <Input className="input-width200" value={undefined} placeholder="대응부서" readOnly />
+                            </td>
+                            <td>
+                              <span>책임자</span>
+                            </td>
+                            <td>
+                              <Input className="input-width200" value={undefined} placeholder="책임자" readOnly />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </StyledSearchWrap>
                     <div align="right">
                       <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
                         Add

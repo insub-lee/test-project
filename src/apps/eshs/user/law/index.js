@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Modal } from 'antd';
 import List from './List';
+import InputAndModify from './InputAndModify';
 
 class law extends Component {
   state = {
@@ -37,7 +38,8 @@ class law extends Component {
       taskSeq={this.state.selectedTaskSeq}
       viewType="MODIFY"
       loadingComplete={this.loadingComplete}
-      CustomListPage={List}
+      CustomModifyPage={InputAndModify}
+      CustomInputPage={InputAndModify}
       onCloseModleHandler={this.onCancel}
     />
   );
