@@ -51,7 +51,7 @@ class SignLineModal extends Component {
         visible={visible}
         onOk={this.handleOkModal}
         onCancel={this.handleCloselModal}
-        width="750px"
+        width={900}
         style={{ top: 20 }}
         footer={[
           <Button key="back" onClick={this.handleCloselModal}>
@@ -105,13 +105,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.Workflow.SignLienModal', reducer });
 const withSaga = injectSaga({ key: 'apps.Workflow.SignLienModal', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(SignLineModal);
+export default compose(withSaga, withReducer, withConnect)(SignLineModal);
