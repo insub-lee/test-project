@@ -61,6 +61,12 @@ const StyledSearchWrap = styled.div`
         width: 70%;
       }
     }
+
+    .ant-input {
+      display: inline-block;
+      vertical-align: top;
+      width: 300px;
+    }
   }
 `;
 

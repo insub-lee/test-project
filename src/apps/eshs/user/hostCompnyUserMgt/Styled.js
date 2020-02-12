@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
+  /*
   padding: 15px;
   width: 1500px;
   margin: auto;
-  .hostCmpnyUserMgt {
-    width: 1500px;
+.hostCmpnyUserMgt {
+  width: 1500px;
     background-color: #ffffff;
   }
 
@@ -63,5 +64,6 @@ const Styled = styled.div`
     width: 500px;
     margin: auto;
   }
+  */
 `;
 export default Styled;

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Select, Input, Button, Modal, message } from 'antd';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import UserModal from './UserModal';
 import DeptModal from './DeptModal';
 
@@ -135,38 +136,47 @@ class SearchBar extends Component {
     const { result } = this.props;
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
     return (
-      <div className="Eshs_hostCmpny_SearchBar">
-        <Select
-          defaultValue={formData.searchSite && formData.searchSite === 'all' ? formData.searchSite : '지역 전체'}
-          style={{ width: 110, padding: 3 }}
-          onChange={this.handleSiteOnChange}
-        >
-          <Option value="all">지역 전체</Option>
-          <Option value="청주">청주</Option>
-          <Option value="구미">구미</Option>
-        </Select>
-        <Select
-          defaultValue={formData.searchCmpny && formData.searchCmpny === 'all' ? formData.searchCmpny : '회사 전체'}
-          style={{ width: 130, padding: 3 }}
-          onChange={this.handleCmpnyOnChange}
-        >
-          <Option value="all">회사 전체</Option>
-          {cmpnyList.map(c => (
-            <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
-              {c.hst_cmpny_nm}
-            </Option>
-          ))}
-        </Select>
-        <span>이름</span>
-        <Input style={{ width: 130, padding: 3 }} value={formData.searchName || ''} name="searchName" onChange={this.handleInputOnChange} placeholder="이름" />
-        &nbsp;&nbsp;
-        <Button onClick={this.handleOnSearch}>검색</Button>
-        &nbsp;&nbsp;
-        <Button onClick={this.showUserModal}>추가</Button>
-        &nbsp;&nbsp;
-        <Button type="link" onClick={this.showDeptModal}>
-          [주관회사 부서관리]
-        </Button>
+      <div>
+        <StyledSearchWrap>
+          <div className="search-group-layer">
+            <Select
+              className="search-item input-width120"
+              defaultValue={formData.searchSite && formData.searchSite === 'all' ? formData.searchSite : '지역 전체'}
+              onChange={this.handleSiteOnChange}
+            >
+              <Option value="all">지역 전체</Option>
+              <Option value="청주">청주</Option>
+              <Option value="구미">구미</Option>
+            </Select>
+            <Select
+              className="search-item input-width120"
+              defaultValue={formData.searchCmpny && formData.searchCmpny === 'all' ? formData.searchCmpny : '회사 전체'}
+              onChange={this.handleCmpnyOnChange}
+            >
+              <Option value="all">회사 전체</Option>
+              {cmpnyList.map(c => (
+                <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
+                  {c.hst_cmpny_nm}
+                </Option>
+              ))}
+            </Select>
+            <Input
+              className="search-item ant-input-group"
+              value={formData.searchName || ''}
+              name="searchName"
+              onChange={this.handleInputOnChange}
+              placeholder="이름."
+            />
+            &nbsp;&nbsp;
+            <Button onClick={this.handleOnSearch}>검색</Button>
+            &nbsp;&nbsp;
+            <Button onClick={this.showUserModal}>추가</Button>
+            &nbsp;&nbsp;
+            <Button type="link" onClick={this.showDeptModal}>
+              [주관회사 부서관리]
+            </Button>
+          </div>
+        </StyledSearchWrap>
         <Modal
           title="사용자 상세정보"
           destroyOnClose
