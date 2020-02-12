@@ -435,7 +435,6 @@ class App extends React.Component {
       : mobileDockCss;
 
   getChildDivClassName = (setMyMenuData, history, isFullSize) => {
-    console.debug(history);
     if ((setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize) {
       return '';
     }
@@ -483,7 +482,7 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태)/}
+          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
           {/* Header */}
           <Header
             className="portalHeader"

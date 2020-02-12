@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { isJSON } from 'utils/helpers';
-import history from 'utils/history';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -42,15 +41,14 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
-    console.debug('saveTaskAfter');
+    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
       // changeViewPage(id, workSeq, taskSeq, 'VIEW');
       // page 이동
-      history.push('/apps/Workflow/User/ApproveBase/draft');
+      redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
     }
   };
 
