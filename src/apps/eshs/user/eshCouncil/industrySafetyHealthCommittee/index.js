@@ -17,7 +17,7 @@ class IndustrySafetyAndHealth extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="IndustrySafetyAndHealth" workSeq={1221} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="IndustrySafetyAndHealth" workSeq={1733} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 

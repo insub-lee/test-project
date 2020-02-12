@@ -17,7 +17,7 @@ class GoalManagement extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="GoalManagement" workSeq={1221} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="GoalManagement" workSeq={1841} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 

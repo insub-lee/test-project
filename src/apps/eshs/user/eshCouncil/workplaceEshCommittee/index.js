@@ -17,7 +17,7 @@ class WorkplaceEshCommittee extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="WorkplaceEshCommittee" workSeq={1221} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="WorkplaceEshCommittee" workSeq={1745} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 
