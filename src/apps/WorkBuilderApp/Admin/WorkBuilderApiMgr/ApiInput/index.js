@@ -33,10 +33,10 @@ const ApiInput = ({ sagaKey, formData, changeFormData }) => (
                 onChange={val => changeFormData(sagaKey, 'METHOD_TYPE', val)}
                 style={{ width: '300px' }}
               >
-                <Option value="GET">GET</Option>
-                <Option value="POST">POST</Option>
-                <Option value="PUT">PUT</Option>
-                <Option value="DELETE">DELETE</Option>
+                <Option value="get">GET</Option>
+                <Option value="post">POST</Option>
+                <Option value="put">PUT</Option>
+                <Option value="delete">DELETE</Option>
               </Select>
             </td>
           </tr>
