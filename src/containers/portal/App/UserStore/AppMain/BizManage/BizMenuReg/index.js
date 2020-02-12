@@ -27,6 +27,7 @@ import AppInfo from './AppInfo';
 import PageInfo from './PageInfo';
 import TopMenu from './TopMenu/index';
 // import AuthSetting from './AuthSetting';
+import BizMenuAuthSetting from './BizMenuAuthSetting';
 
 import StyleBizDetail from './StyleBizDetail';
 import StyleBizDetailContent from './StyleBizDetailContent';
@@ -77,10 +78,11 @@ class BizMenuReg extends Component {
       insertNode,
       updateNode,
       updateMymenuDisp,
+      rootMenuId,
+      rootAuthType,
     } = this.props;
 
     const { BIZGRP_ID } = this.state;
-
     const handleTreeOnClick = node => {
       const { key, NODE_TYPE, REF_TYPE, APP_ID, PAGE_ID } = node;
       changeSelectedIndex(key);
@@ -147,6 +149,8 @@ class BizMenuReg extends Component {
                     updateMymenuDisp={updateMymenuDisp}
                     bizGroupInfo={bizGroupInfo}
                     history={history}
+                    rootMenuId={rootMenuId}
+                    rootAuthType={rootAuthType}
                   />
                 </ErrorBoundary>
               </li>
@@ -169,6 +173,7 @@ class BizMenuReg extends Component {
                     <Route path={`${preUrl}/info/:BIZGRP_ID`} component={BizInfo} exact />
                     <Route path={`${preUrl}/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
                     <Route path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
+                    <Route path={`${preUrl}/auth/:BIZGRP_ID/:MENU_ID`} component={BizMenuAuthSetting} exact />
                     {/*
                     <Route
                       path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`}
@@ -209,6 +214,8 @@ BizMenuReg.propTypes = {
   updateMymenuDisp: PropTypes.func.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
+  rootMenuId: PropTypes.number.isRequired,
+  rootAuthType: PropTypes.string.isRequired,
 };
 
 BizMenuReg.defaultProps = {};
@@ -235,6 +242,8 @@ const mapStateToProps = createStructuredSelector({
   categoryData: selectors.makeCategoryData(),
   bizGroupInfo: selectors.makeBizGroupInfo(),
   selectedIndex: selectors.makeSelectedIndex(),
+  rootMenuId: selectors.makeRootMenuId(),
+  rootAuthType: selectors.makeRootAuthType(),
 });
 
 const withConnect = connect(

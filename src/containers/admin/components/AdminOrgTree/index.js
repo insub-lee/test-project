@@ -152,9 +152,18 @@ class AdminOrgTree extends Component {
               // [ 노드 드롭 가능 여부 ]
               // 조건 : 최하위 노드 하위에 이동불가
               if (nextParent && (canDropOut || prevParent.key === nextParent.key)) {
+                this.state = { moveNodeFlag: 1 };
                 return nextParent;
               }
+              this.state = { moveNodeFlag: 2 };
               return false;
+            }}
+            onDragStateChanged={({ isDragging }) => {
+              if (isDragging) {
+                this.state = { moveNodeFlag: 0 };
+              } else if (!isDragging && this.state.moveNodeFlag === 2) {
+                feed.error('상위노드 혹은 하위노드로 이동할 수 없습니다.');
+              }
             }}
             onMoveNode={({ treeData, node, nextParentNode }) => {
               if (node.LVL !== 0) {
