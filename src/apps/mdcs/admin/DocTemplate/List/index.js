@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
+const AntdTable = StyledAntdTable(Table);
 class List extends Component {
   state = {
     searchText: '',
@@ -244,6 +246,16 @@ class List extends Component {
     );
   };
 
+  handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    this.setState({ searchText: selectedKeys[0] });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
+
   onUpdate = () => {
     const { sagaKey, formData, submitHadnlerBySaga } = this.props;
     const { NODE_ID, DOC_CODE } = formData;
@@ -347,7 +359,7 @@ class List extends Component {
           </Button>
         </div>
 
-        <Table rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
+        <AntdTable rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
       </div>
     );
   }

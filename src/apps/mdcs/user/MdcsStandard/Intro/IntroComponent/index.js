@@ -379,7 +379,7 @@ class IntroComponent extends Component {
           workSeqGoal = 901;
           break;
         case 'TS':
-          workSeqGoal = 361;
+          workSeqGoal = 1921;
           break;
         case 'DW':
           workSeqGoal = 423;
