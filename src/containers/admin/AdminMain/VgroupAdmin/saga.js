@@ -85,6 +85,23 @@ export function* vgroupMemberUpdate(payload) {
   }
 }
 
+export function* moveVgroup(payload) {
+  const { SITE_ID, treeData } = payload;
+  const response = yield call(Axios.post, '/api/admin/v1/common/vgroupMove', { SITE_ID, treeData });
+  const { code } = response;
+
+  if (code === 200) {
+    message.success(`${intlObj.get(messages.udtComplete)}`, 2);
+    yield put({
+      type: constants.GET_VGROUP_TREE_LIST,
+      searchKeyword: '',
+      SITE_ID,
+    });
+  } else {
+    message.success(`${intlObj.get(messages.udtFail)}`, 2);
+  }
+}
+
 export default function* orgSage() {
   yield takeLatest(constants.GET_VGROUP_TREE_LIST, getVgroupTreeList);
   yield takeLatest(constants.GET_VGROUP_COMBO_LIST, getVgroupComboList);
@@ -93,4 +110,5 @@ export default function* orgSage() {
   yield takeLatest(constants.DELETE_VGROUP_INFO, vgroupInfoDelete);
   yield takeLatest(constants.UPDATE_VGROUP_INFO, vgroupInfoUpdate);
   yield takeLatest(constants.UPDATE_VGROUP_MEMBER, vgroupMemberUpdate);
+  yield takeLatest(constants.MOVE_VGROUP, moveVgroup);
 }
