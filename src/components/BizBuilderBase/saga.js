@@ -35,7 +35,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormDat
   }
 }
 
-function* getExtraApiData({ id, apiArr }) {
+function* getExtraApiData({ id, apiArr, callback }) {
   if (apiArr && apiArr.length > 0) {
     for (let i = 0; i < apiArr.length; i += 1) {
       let response = {};
@@ -49,6 +49,32 @@ function* getExtraApiData({ id, apiArr }) {
       }
       yield put(actions.setExtraApiData(id, apiInfo.key, response));
     }
+  }
+
+  if (typeof callback === 'function') {
+    callback(id);
+  }
+}
+
+function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
+  let httpMethodInfo = Axios.put;
+  switch (httpMethod.toUpperCase()) {
+    case 'POST':
+      httpMethodInfo = Axios.post;
+      break;
+    case 'PUT':
+      httpMethodInfo = Axios.put;
+      break;
+    case 'DELETE':
+      httpMethodInfo = Axios.delete;
+      break;
+    default:
+      httpMethodInfo = Axios.get;
+      break;
+  }
+  const response = yield call(httpMethodInfo, apiUrl, submitData);
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id);
   }
 }
 
@@ -153,6 +179,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
 
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        return;
       }
     }
   }
@@ -467,6 +494,7 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_REVISION_HISTORY}_${arg.sagaKey}`, getRevisionHistory);
   yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.sagaKey}`, getDraftProcess);
   yield takeEvery(`${actionTypes.GET_LIST_DATA_SAGA}_${arg.sagaKey}`, getListData);
+  yield takeEvery(`${actionTypes.SUBMIT_EXTRA}_${arg.sagaKey || arg.id}`, submitExtraHandler);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);
