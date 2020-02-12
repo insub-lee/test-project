@@ -9,11 +9,6 @@ class List extends Component {
     super(props);
     this.state = {
       userList: [],
-      filterUserList: [],
-      searchType: '',
-      searchValue: '',
-      overScanRowCount: 10,
-      userModal: false,
     };
   }
 
@@ -51,7 +46,7 @@ class List extends Component {
     changeFormData(id, 'userModal', true);
   };
 
-  noRowsRenderer = () => <div className="noRows">데이터가 없습니다.</div>;
+  noRowsRenderer = () => <div className="noRows">0 명</div>;
 
   render() {
     const list = this.setList();
