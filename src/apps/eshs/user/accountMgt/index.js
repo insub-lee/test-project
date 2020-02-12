@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import { Data } from 'react-data-grid-addons';
 
 class AccountMgt extends Component {
   state = {
     isLoading: true,
   };
-
-  componentDidMount() {}
 
   loadingComplete = () => {
     this.setState({
