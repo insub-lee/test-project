@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Column } from 'react-virtualized';
+import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Select, Input } from 'antd';
 import debounce from 'lodash/debounce';
+
+import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -236,52 +239,83 @@ class List extends Component {
     }
   };
 
+  getColumns = () => [
+    { label: '소속', dataKey: 'department', width: 150, ratio: 20 },
+    { label: '사번', dataKey: 'employee_num', width: 100, ratio: 10 },
+    { label: '이름', dataKey: 'name', width: 100, ratio: 10 },
+    { label: '직위', dataKey: 'pstn', width: 100, ratio: 10 },
+    { label: '직책', dataKey: 'duty', width: 100, ratio: 10 },
+    { label: '근무지', dataKey: 'base_area', width: 100, ratio: 10 },
+    { label: '전화번호', dataKey: 'tel', width: 100, ratio: 15 },
+    { label: '권한', dataKey: 'auth', width: 150, ratio: 15 },
+  ];
+
+  getTableWidth = () =>
+    this.getColumns()
+      .map(({ width }) => width)
+      .reduce((a, b) => a + b);
+
   render() {
     const { isSelected, hqList, filteredDeptList, filteredUserList, searchValue } = this.state;
     return (
       <div>
-        <Select defaultValue="지역 전체" style={{ width: 110, padding: 3 }} onChange={this.handleBaseareaChange}>
-          <Option value="ZZ">지역 전체</Option>
-          <Option value="C1">청주</Option>
-          <Option value="H3">구미</Option>
-        </Select>
-        <Select defaultValue="본부 전체" style={{ width: 130, padding: 3 }} onChange={this.handleHqOnChange}>
-          <Option value={900}>본부 전체</Option>
-          {hqList.map(item => (
-            <Option value={item.dept_id}>{item.name_kor}</Option>
-          ))}
-        </Select>
-        <Select defaultValue="팀 전체" style={{ width: 170, padding: 3 }} disabled={!isSelected} onChange={this.handleDeptOnChange}>
-          <Option value={9999}>팀 전체</Option>
-          {filteredDeptList.map(item => (
-            <Option value={item.dept_id}>{item.name_kor}</Option>
-          ))}
-        </Select>
-        <InputGroup style={{ paddingLeft: 3 }} compact>
-          <Select defaultValue="이름" onChange={this.handleSearchTypeOnChange}>
-            <Option value="name_kor">이름</Option>
-            <Option value="emp_no">사번</Option>
-          </Select>
-          <Search placeholder=" 검색어를 입력하세요" style={{ width: 300 }} onChange={this.handleOnChange} value={searchValue} />
-        </InputGroup>
+        <StyledSearchWrap>
+          <div className="search-group-layer">
+            <Select defaultValue="지역 전체" className="search-item input-width120" onChange={this.handleBaseareaChange}>
+              <Option value="ZZ">지역 전체</Option>
+              <Option value="C1">청주</Option>
+              <Option value="H3">구미</Option>
+            </Select>
+            <Select defaultValue="본부 전체" className="search-item input-width120" onChange={this.handleHqOnChange}>
+              <Option value={900}>본부 전체</Option>
+              {hqList.map(item => (
+                <Option value={item.dept_id}>{item.name_kor}</Option>
+              ))}
+            </Select>
+            <Select defaultValue="팀 전체" className="search-item input-width160" disabled={!isSelected} onChange={this.handleDeptOnChange}>
+              <Option value={9999}>팀 전체</Option>
+              {filteredDeptList.map(item => (
+                <Option value={item.dept_id}>{item.name_kor}</Option>
+              ))}
+            </Select>
+            <InputGroup className="search-item search-input-group" compact>
+              <Select defaultValue="이름" onChange={this.handleSearchTypeOnChange}>
+                <Option value="name_kor">이름</Option>
+                <Option value="emp_no">사번</Option>
+              </Select>
+              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleOnChange} value={searchValue} />
+            </InputGroup>
+          </div>
+        </StyledSearchWrap>
 
-        <Table
-          width={1100}
-          height={1000}
-          headerHeight={30}
-          rowHeight={50}
-          rowCount={filteredUserList.length}
-          rowGetter={({ index }) => filteredUserList[index]}
-        >
-          <Column label="소속" dataKey="department" width={150} />
-          <Column label="사번" dataKey="employee_num" width={100} />
-          <Column label="이름" dataKey="name" width={100} />
-          <Column label="직위" dataKey="pstn" width={100} />
-          <Column label="직책" dataKey="duty" width={100} />
-          <Column label="근무지" dataKey="base_area" width={100} />
-          <Column label="전화번호" dataKey="tel" width={100} />
-          <Column label="권한" dataKey="auth" width={150} />
-        </Table>
+        <StyledVirtualizedTable>
+          <AutoSizer disableHeight>
+            {({ width }) => (
+              <Table
+                width={width}
+                height={500}
+                headerHeight={40}
+                rowHeight={53}
+                rowCount={filteredUserList.length}
+                rowGetter={({ index }) => filteredUserList[index]}
+              >
+                {this.getColumns().map(({ label, dataKey, ratio }) => (
+                  <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
+                ))}
+                {/* 
+            <Column label="소속" dataKey="department" width={150} />
+            <Column label="사번" dataKey="employee_num" width={100} />
+            <Column label="이름" dataKey="name" width={100} />
+            <Column label="직위" dataKey="pstn" width={100} />
+            <Column label="직책" dataKey="duty" width={100} />
+            <Column label="근무지" dataKey="base_area" width={100} />
+            <Column label="전화번호" dataKey="tel" width={100} />
+            <Column label="권한" dataKey="auth" width={150} />
+            */}
+              </Table>
+            )}
+          </AutoSizer>
+        </StyledVirtualizedTable>
       </div>
     );
   }
