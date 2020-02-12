@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { isJSON } from 'utils/helpers';
-import history from 'utils/history';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -42,20 +41,29 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
+    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
-
+      // changeViewPage(id, workSeq, taskSeq, 'VIEW');
       // page 이동
-      history.push('/apps/Workflow/User/ApproveBase/draft');
+      redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
     }
   };
 
   render() {
-    const { sagaKey: id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      workInfo,
+      processRule,
+      setProcessRule,
+      loadingComplete,
+      viewPageData,
+      changeViewPage,
+      onCloseModal,
+    } = this.props;
     // Work Process 사용여부
 
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
