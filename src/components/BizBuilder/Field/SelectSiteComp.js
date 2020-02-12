@@ -3,21 +3,7 @@ import { Select } from 'antd';
 
 const { Option } = Select;
 
-class SelectYearComp extends Component {
-  state = {
-    options: [],
-  };
-
-  componentDidMount() {
-    const year = new Date().getFullYear();
-    const years = [' '];
-    for (let i = 2006; i <= year + 1; i++) {
-      years.push(String(i));
-    }
-    this.setState({
-      options: years,
-    });
-  }
+class SelectSiteComp extends Component {
 
   onChangeHandler = value => {
     const {
@@ -39,26 +25,29 @@ class SelectYearComp extends Component {
 
   render() {
     const { colData, visible, CONFIG } = this.props;
-    const { options } = this.state;
     return visible ? (
       <Select
-        value={colData || ' '}
+        value={colData === ' ' ? "선택" : colData}
         onChange={value => {
           this.onChangeHandler(value);
         }}
-        style={{ width: '100%', marginRight: 10 }}
+        style={{ width: "100%", marginRight: 10 }}
         className={CONFIG.property.className || ''}
       >
-        {options.map(o => (
-          <Option key={o} value={o} style={{ height: 30 }}>
-            {o}
-          </Option>
-        ))}
+        <Option key={'선택'} value={' '}>
+            {'선택'}
+        </Option>
+        <Option key={'청주'} value={'청주'}>
+            {'청주'}
+        </Option>
+        <Option key={'구미'} value={'구미'}>
+            {'구미'}
+        </Option>
       </Select>
-    ) : (
-      ''
-    );
+    )
+    :
+    '';
   }
 }
 
-export default SelectYearComp;
+export default SelectSiteComp;

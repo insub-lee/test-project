@@ -109,7 +109,7 @@ class List extends Component {
         <div style={{ padding: '48px' }}>
           <div style={{ marginBottom: '10px' }}>
             <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-              <Icon type="form" /> 표준문서 템플릿관리
+              <Icon type="form" /> 배포부서 담당자
             </p>
           </div>
           <Modal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>

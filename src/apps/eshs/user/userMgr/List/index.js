@@ -286,6 +286,58 @@ class List extends Component {
               <Search placeholder=" 검색어를 입력하세요" onChange={this.handleOnChange} value={searchValue} />
             </InputGroup>
           </div>
+          <div className="search-group-layer">
+            <Select defaultValue="지역 전체" className="search-item input-width120" onChange={this.handleBaseareaChange}>
+              <Option value="ZZ">지역 전체</Option>
+              <Option value="C1">청주</Option>
+              <Option value="H3">구미</Option>
+            </Select>
+            <Select defaultValue="본부 전체" className="search-item input-width120" onChange={this.handleHqOnChange}>
+              <Option value={900}>본부 전체</Option>
+              {hqList.map(item => (
+                <Option value={item.dept_id}>{item.name_kor}</Option>
+              ))}
+            </Select>
+            <Select defaultValue="팀 전체" className="search-item input-width160" disabled={!isSelected} onChange={this.handleDeptOnChange}>
+              <Option value={9999}>팀 전체</Option>
+              {filteredDeptList.map(item => (
+                <Option value={item.dept_id}>{item.name_kor}</Option>
+              ))}
+            </Select>
+            <InputGroup className="search-item search-input-group" compact>
+              <Select defaultValue="이름" onChange={this.handleSearchTypeOnChange}>
+                <Option value="name_kor">이름</Option>
+                <Option value="emp_no">사번</Option>
+              </Select>
+              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleOnChange} value={searchValue} />
+            </InputGroup>
+          </div>
+          <div className="search-group-layer">
+            <Select defaultValue="지역 전체" className="search-item input-width120" onChange={this.handleBaseareaChange}>
+              <Option value="ZZ">지역 전체</Option>
+              <Option value="C1">청주</Option>
+              <Option value="H3">구미</Option>
+            </Select>
+            <Select defaultValue="본부 전체" className="search-item input-width120" onChange={this.handleHqOnChange}>
+              <Option value={900}>본부 전체</Option>
+              {hqList.map(item => (
+                <Option value={item.dept_id}>{item.name_kor}</Option>
+              ))}
+            </Select>
+            <Select defaultValue="팀 전체" className="search-item input-width160" disabled={!isSelected} onChange={this.handleDeptOnChange}>
+              <Option value={9999}>팀 전체</Option>
+              {filteredDeptList.map(item => (
+                <Option value={item.dept_id}>{item.name_kor}</Option>
+              ))}
+            </Select>
+            <InputGroup className="search-item search-input-group" compact>
+              <Select defaultValue="이름" onChange={this.handleSearchTypeOnChange}>
+                <Option value="name_kor">이름</Option>
+                <Option value="emp_no">사번</Option>
+              </Select>
+              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleOnChange} value={searchValue} />
+            </InputGroup>
+          </div>
         </StyledSearchWrap>
 
         <StyledVirtualizedTable>

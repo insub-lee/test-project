@@ -38,3 +38,4 @@ export const DISABLE_DATA_LOADING = `${prefix}DISABLE_DATA_LOADING`;
 export const SET_LIST_DATA_REDUCER = `${prefix}SET_LIST_DATA_REDUCER`;
 export const CHANGE_SEARCH_DATA_REDUCER = `${prefix}CHANGE_SEARCH_DATA_REDUCER`;
 export const GET_LIST_DATA_SAGA = `${prefix}GET_LIST_DATA_SAGA`;
+export const SUBMIT_EXTRA = `${prefix}SUBMIT_EXTRA`;
