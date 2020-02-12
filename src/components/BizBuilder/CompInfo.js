@@ -50,6 +50,8 @@ import RadioPopupComp from 'components/BizBuilder/Field/RadioPopupComp';
 import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 
+import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
+
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
   'components/BizBuilder/Field/FmeaLabelComp': { renderer: property => <FmeaLabelComp {...property} /> },
@@ -100,4 +102,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioPopupComp': { renderer: property => <RadioPopupComp {...property} /> },
   'components/BizBuilder/Field/ManageCodeComp': { renderer: property => <ManageCodeComp {...property} /> },
   'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
+
+  'components/BizBuilder/Field/TitleModalComp': { renderer: property => <TitleModalComp {...property} /> },
 };
