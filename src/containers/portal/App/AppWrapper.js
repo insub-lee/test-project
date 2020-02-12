@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const AppWrapper = styled.div`
-  min-height: 100vh;
+  // min-height: 100vh;
   padding-bottom: 0px;
   background: ${props => props.theme.portalContentBackground};
 
@@ -116,8 +116,15 @@ const AppWrapper = styled.div`
     }
   }
 
+  .gridWrapper {
+    .portalContent {
+      padding: 0;
+    }
+  }
+
   .portalContent {
-    padding-top: 42px;
+    //padding-top: 42px;
+    padding: 20px;
     position: relative;
 
     iframe {

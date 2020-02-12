@@ -423,15 +423,23 @@ class App extends React.Component {
     return open && menuFixedYn === 'Y' ? 335 : 45;
   };
 
-  getLayoutStyle = desktopMode => {
-    if (desktopMode) {
-      return {
-        marginLeft: this.getLayoutMarginLeft(),
-        marginRight: this.getLayoutMarginRight(),
-        transition: 'margin-left 0.3s ease-out 0s',
-      };
+  getLayoutStyle = desktopMode =>
+    desktopMode
+      ? {
+          // height: '100%',
+          marginTop: 42,
+          marginLeft: this.getLayoutMarginLeft(),
+          marginRight: this.getLayoutMarginRight(),
+          transition: 'margin-left 0.3s ease-out 0s',
+        }
+      : mobileDockCss;
+
+  getChildDivClassName = (setMyMenuData, history, isFullSize) => {
+    console.debug(history);
+    if ((setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize) {
+      return '';
     }
-    return mobileDockCss;
+    return 'gridWrapper';
   };
 
   render() {
@@ -493,7 +501,6 @@ class App extends React.Component {
           />
           {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
-          <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose} />
           <UserCategoryMenu
             isShow={open}
             setOpen={this.setOpen}
@@ -543,139 +550,112 @@ class App extends React.Component {
               </div>
             )}
           </SideMenu>
-          <Layout style={this.getLayoutStyle(isDesktop(view))}>
-            <Content>
-              <StyledContainer>
-                <AppWrapper style={{ width: '100%', backgroundColor: '#f7f8f9' }}>
-                  <Fullscreen
-                    enabled={this.state.isFullscreenEnabled}
-                    onChange={this.setIsFullscreenEnabled}
-                    dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
-                    dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
-                    exitDockItem={handleExitDockItem} // REMOVE DOCK - 확인후 처리
-                    fixDockItem={handleFixDockItem} // REMOVE DOCK - 확인후 처리
-                    unfixDockItem={handleUnfixDockItem} // REMOVE DOCK - 확인후 처리
-                    // 모바일 Dock ContextMenu 플래그 설정
-                    view={view}
-                    setIsCloseToFalse={this.setIsCloseToFalse}
-                    setMyMenuData={setMyMenuData}
-                  >
-                    <div
-                      id="child"
-                      className={`${
-                        (setMyMenuData.APP_YN === 'Y' && setMyMenuData.SRC_PATH !== 'PAGE') || setMyMenuData.INTL_TYPE === 'Y' || isFullSize
-                          ? ''
-                          : 'gridWrapper'
-                      }`}
+          <MenuCategory open={headerMenuOpen} execMenu={this.execMenu} execPage={this.execPage} setMenuClose={this.setHeaderMenuClose}>
+            <Layout style={this.getLayoutStyle(isDesktop(view))}>
+              <Content style={{}}>
+                <StyledContainer>
+                  <AppWrapper style={{ width: '100%', height: '100%', backgroundColor: '#ffffff' }}>
+                    <Fullscreen
+                      enabled={this.state.isFullscreenEnabled}
+                      onChange={this.setIsFullscreenEnabled}
+                      dockFixedYn={isDesktop(view) ? dockFixedYn : 'N'}
+                      dockIconType={isDesktop(view) ? dockIconType : 'MAX'}
+                      exitDockItem={handleExitDockItem} // REMOVE DOCK - 확인후 처리
+                      fixDockItem={handleFixDockItem} // REMOVE DOCK - 확인후 처리
+                      unfixDockItem={handleUnfixDockItem} // REMOVE DOCK - 확인후 처리
+                      // 모바일 Dock ContextMenu 플래그 설정
+                      view={view}
+                      setIsCloseToFalse={this.setIsCloseToFalse}
+                      setMyMenuData={setMyMenuData}
                     >
-                      {/* <Content */}
-                      {/*  className="portalContent" */}
-                      {/*  style={{ */}
-                      {/*    flexShrink: '0', */}
-                      {/*    display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit', */}
-                      {/*  }} */}
-                      {/* > */}
-                      {/*  <Spin size="large" style={this.styleSpinner} spinning={isSpinnerShow}> */}
-                      {/*    {this.renderApps( */}
-                      {/*      setMyMenuData, */}
-                      {/*      selectedApp, */}
-                      {/*      isUnreadCnt, */}
-                      {/*      this.execPage, */}
-                      {/*      this.execMenu, */}
-                      {/*      this.show, */}
-                      {/*      this.onReload, */}
-                      {/*      this.setIsSpinnerShow, */}
-                      {/*      isPreviewPage, */}
-                      {/*    )} */}
-                      {/*  </Spin> */}
-                      {/*  /!* {this.props.apps} *!/ */}
-                      {/* </Content> */}
-                      <Content
-                        className="portalContent"
-                        style={{
-                          flexShrink: '0',
-                          // display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
-                        }}
-                      >
-                        <Switch>
-                          <Route exact path="/error" component={ErrorPage} />
-                          {/*
+                      <div id="child" className={this.getChildDivClassName(setMyMenuData, history, isFullSize)} style={{ height: '100%' }}>
+                        <Content
+                          className="portalContent"
+                          style={{
+                            flexShrink: '0',
+                            height: '100%',
+                            // display: routePaths.some(path => history.location.pathname.indexOf(path) === 0) ? 'none' : 'inherit',
+                          }}
+                        >
+                          <Switch>
+                            <Route exact path="/error" component={ErrorPage} />
+                            {/*
                           <Route
                             exact
                             path={`/${basicPath.PORTAL}/store/appMain/bizManage`}
                             render={props => <UserStore {...props} applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
                           />
                           */}
-                          <Route
-                            path={`/${basicPath.PORTAL}/settings`}
-                            render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
-                          />
-                          <Route
-                            path={`/${basicPath.PORTAL}/store`}
-                            render={props => (
-                              <UserStore
-                                {...props}
-                                execMenu={this.execMenu}
-                                execPage={this.execPage}
-                                applySkin={this.applySkin}
-                                hideExecApps={this.hideExecApps}
-                              />
-                            )}
-                          />
-                          <Route
-                            path={`/${basicPath.PORTAL}/card`}
-                            render={props => (
-                              <UserMenuCard
-                                {...props}
-                                execMenu={this.execMenu}
-                                execPage={this.execPage}
-                                applySkin={this.applySkin}
-                                hideExecApps={this.hideExecApps}
-                              />
-                            )}
-                          />
-                          <Route
-                            path={`/${basicPath.APPS}/:PAGE_ID`}
-                            render={() => (
-                              <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
-                                <AppsRouter
-                                  id={setMyMenuData.PAGE_ID}
-                                  selectedApp={selectedApp}
-                                  setMyMenuData={setMyMenuData}
-                                  setIsSpinnerShow={this.setIsSpinnerShow}
-                                  isPreviewPage={isPreviewPage}
-                                  isUnreadCnt={isUnreadCnt}
-                                  execPage={this.execPage}
+                            <Route
+                              path={`/${basicPath.PORTAL}/settings`}
+                              render={() => <UserSetting applySkin={this.applySkin} hideExecApps={this.hideExecApps} />}
+                            />
+                            <Route
+                              path={`/${basicPath.PORTAL}/store`}
+                              render={props => (
+                                <UserStore
+                                  {...props}
                                   execMenu={this.execMenu}
-                                  show={this.show}
-                                  onReload={this.onReload}
-                                />
-                              </div>
-                            )}
-                          />
-                          <Route
-                            path={`/${basicPath.PAGE}/:PAGE_ID`}
-                            render={() => (
-                              <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
-                                <Page
-                                  columns={selectedApp}
-                                  setMyMenuData={setMyMenuData}
-                                  setIsSpinnerShow={this.setIsSpinnerShow}
-                                  isPreviewPage={isPreviewPage}
-                                  isUnreadCnt={isUnreadCnt}
                                   execPage={this.execPage}
-                                  execMenu={this.execMenu}
-                                  show={this.show}
-                                  onReload={this.onReload}
+                                  applySkin={this.applySkin}
+                                  hideExecApps={this.hideExecApps}
                                 />
-                              </div>
-                            )}
-                          />
-                        </Switch>
-                      </Content>
-                    </div>
-                  </Fullscreen>
-                  {/*
+                              )}
+                            />
+                            <Route
+                              path={`/${basicPath.PORTAL}/card`}
+                              render={props => (
+                                <UserMenuCard
+                                  {...props}
+                                  execMenu={this.execMenu}
+                                  execPage={this.execPage}
+                                  applySkin={this.applySkin}
+                                  hideExecApps={this.hideExecApps}
+                                />
+                              )}
+                            />
+                            <Route
+                              path={`/${basicPath.APPS}/:PAGE_ID`}
+                              render={() => (
+                                <div id={setMyMenuData.PAGE_ID} className={`app-view ${setMyMenuData.PAGE_ID}`} style={{ height: '100%' }}>
+                                  <AppsRouter
+                                    id={setMyMenuData.PAGE_ID}
+                                    selectedApp={selectedApp}
+                                    setMyMenuData={setMyMenuData}
+                                    setIsSpinnerShow={this.setIsSpinnerShow}
+                                    isPreviewPage={isPreviewPage}
+                                    isUnreadCnt={isUnreadCnt}
+                                    execPage={this.execPage}
+                                    execMenu={this.execMenu}
+                                    show={this.show}
+                                    onReload={this.onReload}
+                                  />
+                                </div>
+                              )}
+                            />
+                            <Route
+                              path={`/${basicPath.PAGE}/:PAGE_ID`}
+                              render={() => (
+                                <div id={setMyMenuData.PAGE_ID} className={setMyMenuData.PAGE_ID}>
+                                  <Page
+                                    columns={selectedApp}
+                                    setMyMenuData={setMyMenuData}
+                                    setIsSpinnerShow={this.setIsSpinnerShow}
+                                    isPreviewPage={isPreviewPage}
+                                    isUnreadCnt={isUnreadCnt}
+                                    execPage={this.execPage}
+                                    execMenu={this.execMenu}
+                                    show={this.show}
+                                    onReload={this.onReload}
+                                  />
+                                </div>
+                              )}
+                            />
+                          </Switch>
+                        </Content>
+                      </div>
+                    </Fullscreen>
+                    {/*
                   {setMyMenuData.APP_YN !== 'Y' && (
                     <Footer
                       style={{
@@ -688,28 +668,29 @@ class App extends React.Component {
                   )}
                   */}
 
-                  <Rodal
-                    className="drillDownCon"
-                    visible={this.state.show}
-                    onClose={this.hide}
-                    animation="slideRight"
-                    showCloseButton={false}
-                    // leaveAnimation="slideLeft"
-                    duration={1000}
-                    customStyles={{
-                      position: 'absolute',
-                      width: 1580,
-                      height: 'calc(100vh - 200px)',
-                      backgroundColor: '#646567',
-                    }}
-                    // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
-                  >
-                    {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
-                  </Rodal>
-                </AppWrapper>
-              </StyledContainer>
-            </Content>
-          </Layout>
+                    <Rodal
+                      className="drillDownCon"
+                      visible={this.state.show}
+                      onClose={this.hide}
+                      animation="slideRight"
+                      showCloseButton={false}
+                      // leaveAnimation="slideLeft"
+                      duration={1000}
+                      customStyles={{
+                        position: 'absolute',
+                        width: 1580,
+                        height: 'calc(100vh - 200px)',
+                        backgroundColor: '#646567',
+                      }}
+                      // height는 태블릿, 모바일에서 하단에 나오는 Dock 높이를 고려해서 계산함
+                    >
+                      {this.state.show && <RodalPage tabNum={this.state.tabNum} onClose={this.hide} show={this.show} />}
+                    </Rodal>
+                  </AppWrapper>
+                </StyledContainer>
+              </Content>
+            </Layout>
+          </MenuCategory>
           {/* // REMOVE DOCK - 확인후 처리 (주석??) */}
           {/* <UserDock
             execPage={this.execPage}

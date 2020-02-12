@@ -35,7 +35,7 @@ class ApproveBase extends Component {
   render() {
     const category = this.props.match.params.CATE || 'draft';
     return (
-      <div style={{ width: '100%', height: '600px', padding: '48px' }}>
+      <div style={{ width: '100%', height: '600px', padding: '10px 15px' }}>
         {category === 'draft' ? <DraftList {...this.props} category={category} /> : category === 'approval' ? <ApproveList {...this.props} category={category} /> : <UnApproveList {...this.props} category={category} />}
       </div>
     );
