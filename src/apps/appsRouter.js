@@ -62,7 +62,7 @@ class AppsRouter extends React.PureComponent {
       if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         return (
-          <div className="AppsRouterWrapper">
+          <div className="AppsRouterWrapper" style={{ height: '100%' }}>
             <Switch>
               <Route
                 path={`/${basicPath.APPS}/workBuilder/:ID`}
@@ -105,8 +105,11 @@ class AppsRouter extends React.PureComponent {
   };
 
   render() {
-    console.log('$$$ appsRouter의 render()', this.contents);
-    return <div className="appsRoute">{this.contents}</div>;
+    return (
+      <div className="appsRoute" style={{ height: '100%' }}>
+        {this.contents}
+      </div>
+    );
   }
 }
 

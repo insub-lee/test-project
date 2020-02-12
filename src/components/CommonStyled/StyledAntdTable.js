@@ -15,7 +15,7 @@ const StyledAntdTable = Component => styled(Component)`
   .ant-table-thead > tr > th {
     background-color: ${primaryColor};
     color: #ffffff;
-    text-align: center;
+    // text-align: center;
     font-size: 12px;
     padding: 10px;
   }

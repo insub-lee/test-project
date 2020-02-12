@@ -16,7 +16,7 @@ class BizMicroDevBase extends React.Component {
   render() {
     const { component: Component } = this.props;
     return (
-      <div>
+      <div style={{ height: '100%' }}>
         <Component {...this.props} />
       </div>
     );

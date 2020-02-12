@@ -109,7 +109,7 @@ class Draft extends Component {
     columns = getColumns(columns, CATE);
 
     return (
-      <div style={{ width: '100%', height: '600px', padding: '48px' }}>
+      <div style={{ width: '100%', height: '600px', padding: '10px 15px' }}>
         <div style={{ width: '100%', height: '100%' }}>
           <AntdTable columns={columns} dataSource={draftList.map((item, idx) => ({ ...item, key: idx }))} bordered pagination />
         </div>

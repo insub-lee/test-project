@@ -62,11 +62,11 @@ class ListPage extends Component {
     const fetchData = async r => {
       await request({
         url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
-        method: 'POST',
+        method: 'DELETE',
         params: { TASK_SEQ: r },
-      }).then(this.callList());
+      });
     };
-    selectedRowKeys.map(r => fetchData(r));
+    selectedRowKeys.map(r => fetchData(r).then(this.callList()));
 
     // 삭제후 선택된 rows 초기화
     this.setState({
@@ -117,8 +117,8 @@ class ListPage extends Component {
     const columns = [
       {
         title: '법규구분',
-        dataIndex: 'RECH_GUBUN',
-        key: 'RECH_GUBUN',
+        dataIndex: 'RECH_GUBUN_NM',
+        key: 'RECH_GUBUN_NM',
       },
     ];
     cols.forEach(node => {
@@ -133,22 +133,6 @@ class ListPage extends Component {
     });
 
     columns.push(
-      /* {
-        dataIndex: 'TITLE',
-        title: '법규명',
-        key: 'TITLE',
-        width: '25%',
-        render: (text, record) => (
-            <>
-              <span role="button" onKeyPress={() => false} onClick={() => this.setState({ isOpenOModal: true })} style={{ cursor: 'pointer' }}>
-                {text}
-              </span>
-              <Modal visible={this.state.isOpenOModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-                <ViewPage {...this.props} />
-              </Modal>
-            </>
-          ),
-      }, */
       {
         title: '관리번호',
         dataIndex: 'RECH_NO',
@@ -166,58 +150,32 @@ class ListPage extends Component {
         render: key => (
           <span>
             <Popover placement="topLeft" title={key.replace(/(<([^>]+)>)/gi, '').replace('Powered by Froala Editor', '')} trigger="hover">
-              <span>
-                {key
-                  .replace(/(<([^>]+)>)/gi, '')
-                  .replace('Powered by Froala Editor', '')
-                  .split('\n')}
-              </span>
+              <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '100px', whiteSpace: 'nowrap' }}>
+                {key.replace(/(<([^>]+)>)/gi, '').replace('Powered by Froala Editor', '')}
+              </div>
             </Popover>
           </span>
         ),
       },
-      // 관련문서 CHECK할것
       {
         title: '관련문서',
-        dataIndex: 'FILE1_NAME',
-        key: 'FILE1_NAME',
-        rowData: 'rowData',
-        render: (key, rowData) => (
+        dataIndex: 'FILE_NAME',
+        key: 'FILE_NAME',
+        render: key => (
           <>
-            <Popover placement="topLeft" title={key && JSON.parse(key)[0].fileName ? JSON.parse(key)[0].fileName : ''} trigger="hover">
-              <a href={key && JSON.parse(key)[0].down ? JSON.parse(key)[0].down : ''}>
-                {key && JSON.parse(key)[0].fileExt ? <img src={this.imgSet(JSON.parse(key)[0].fileExt)} alt={JSON.parse(key)[0].fileName} /> : ''}
-              </a>
-            </Popover>
-            <Popover
-              placement="topLeft"
-              title={rowData.FILE2_NAME && JSON.parse(rowData.FILE2_NAME)[0].fileName ? JSON.parse(rowData.FILE2_NAME)[0].fileName : ''}
-              trigger="hover"
-            >
-              <a href={rowData.FILE2_NAME && JSON.parse(rowData.FILE2_NAME)[0].down ? JSON.parse(rowData.FILE2_NAME)[0].down : ''}>
-                {rowData.FILE2_NAME && JSON.parse(rowData.FILE2_NAME)[0].fileExt ? (
-                  <img src={this.imgSet(JSON.parse(rowData.FILE2_NAME)[0].fileExt)} alt={JSON.parse(rowData.FILE2_NAME)[0].fileName} />
-                ) : (
-                  ''
-                )}
-              </a>
-            </Popover>
-            <Popover
-              placement="topLeft"
-              title={rowData.FILE3_NAME && JSON.parse(rowData.FILE3_NAME)[0].fileName ? JSON.parse(rowData.FILE3_NAME)[0].fileName : ''}
-              trigger="hover"
-            >
-              <a href={rowData.FILE3_NAME && JSON.parse(rowData.FILE3_NAME)[0].down ? JSON.parse(rowData.FILE3_NAME)[0].down : ''}>
-                {rowData.FILE3_NAME && JSON.parse(rowData.FILE3_NAME)[0].fileExt ? (
-                  <img src={this.imgSet(JSON.parse(rowData.FILE3_NAME)[0].fileExt)} alt={JSON.parse(rowData.FILE3_NAME)[0].fileName} />
-                ) : (
-                  ''
-                )}
-              </a>
-            </Popover>
+            {key && JSON.parse(key).length > 0
+              ? JSON.parse(key).map(k => (
+                  <Popover placement="topLeft" title={k.fileName} trigger="hover">
+                    <a href={k.down}>
+                      <img src={this.imgSet(k.fileExt)} alt={k.fileName} />
+                    </a>
+                  </Popover>
+                ))
+              : ''}
           </>
         ),
       },
+
       {
         title: '적용일자',
         dataIndex: 'REG_DTTM',

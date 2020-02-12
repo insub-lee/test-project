@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { isJSON } from 'utils/helpers';
+import history from 'utils/history';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -47,6 +48,9 @@ class StdInput extends Component {
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');
+
+      // page 이동
+      history.push('/apps/Workflow/User/ApproveBase/draft');
     }
   };
 
