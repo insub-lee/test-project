@@ -13,7 +13,7 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
-import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
+import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn, SettingBtn } from './StyleMyPageTree';
 
 const replaceSpecialCharacter = str => {
   // var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/gi;
@@ -203,6 +203,7 @@ class BizMenuTree extends Component {
       deleteNode, // 메뉴 삭제 func(rowInfo, treeData)
 
       bizGroupInfo,
+      rootMenuId,
     } = this.props;
 
     const pathArr = history.location.pathname.split('/');
@@ -373,6 +374,15 @@ class BizMenuTree extends Component {
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
           if (onHoverKey === node.key && SEC_YN) {
             buttons = [
+              <SettingBtn
+                title="권한설정"
+                onClick={() => {
+                  // saveData(rowInfo, treeData);
+                  handleTreeOnClick();
+                  history.push(`/admin/adminmain/${type}/bizMenuReg/auth/${BIZGRP_ID}/${node.MENU_ID}`);
+                }}
+              />,
+
               // [앱등록 버튼]
               isFolder ? (
                 <AppListBtn
@@ -535,6 +545,14 @@ class BizMenuTree extends Component {
         {this.state.showInsert && data.PRNT_ID === -1 ? rootInsertBox : ''}
         {SEC_YN ? (
           <div className="fixedMenu">
+            <SettingBtn
+              title="권한설정"
+              onClick={() => {
+                onClick({ key: -1 });
+                saveData(rootRowInfo, this.state.treeData);
+                history.push(`/admin/adminmain/${type}/bizMenuReg/auth/${BIZGRP_ID}/${rootMenuId}`);
+              }}
+            />
             <AppListBtn
               className="apps"
               title="앱등록"
@@ -573,6 +591,7 @@ BizMenuTree.propTypes = {
   canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
+  rootMenuId: PropTypes.number.isRequired,
 };
 
 BizMenuTree.defaultProps = {
