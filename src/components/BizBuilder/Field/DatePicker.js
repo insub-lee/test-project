@@ -13,7 +13,7 @@ class DatePicker extends Component {
   };
 
   render() {
-    return <AntdDatePicker onChange={this.onChangeHandler} format="YYYY-MM-DD" />;
+    return <AntdDatePicker onChange={this.onChangeHandler} />;
   }
 }
 
