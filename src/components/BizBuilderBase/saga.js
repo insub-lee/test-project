@@ -5,6 +5,7 @@ import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 import { TOTAL_DATA_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import history from 'utils/history';
 
 import * as actionTypes from './constants';
 import * as actions from './actions';
@@ -385,11 +386,11 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     }
   }
 
-  yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
+  // yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id, modifyWorkSeq, modifyTaskSeq, formData);
+    yield call(callbackFunc, id, modifyWorkSeq, modifyTaskSeq, formData);
   }
-  yield put(actions.successSaveTask(id));
+  // yield put(actions.successSaveTask(id));
 }
 
 function* modifyTask({ id, callbackFunc }) {
@@ -475,6 +476,10 @@ function* getListData({ id, workSeq }) {
   }
 }
 
+function* redirectUrl({ id, url }) {
+  history.push(url);
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -499,4 +504,5 @@ export default function* watcher(arg) {
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);
   // yield takeLatest(actionTypes.DELETE_TASK, deleteTask);
+  yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
 }

@@ -7,6 +7,7 @@ import { Spin } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
+import history from 'utils/history';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -284,6 +285,7 @@ const mapDispatchToProps = dispatch => ({
   setViewType: (id, viewType) => dispatch(actions.setViewTypeByReducer(id, viewType)),
   changeSearchData: (id, key, val) => dispatch(actions.changeSearchDataByReducer(id, key, val)),
   getListData: (id, workSeq) => dispatch(actions.getListDataBySaga(id, workSeq)),
+  redirectUrl: (id, url) => dispatch(actions.redirectUrl(id, url)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
