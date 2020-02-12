@@ -179,6 +179,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
 
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+        return;
       }
     }
   }
