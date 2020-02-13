@@ -284,3 +284,8 @@ export const redirectUrl = (id, url) => ({
   id,
   url,
 });
+
+export const destroyReducerByReducer = id => ({
+  type: actionTypes.DESTROY_REDUCER,
+  id,
+});

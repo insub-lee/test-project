@@ -70,6 +70,11 @@ class BizBuilderBase extends React.Component {
     }
   }
 
+  componentWillUnmount = () => {
+    const { destroyReducer, sagaKey } = this.props;
+    destroyReducer(sagaKey);
+  };
+
   changeViewPage = (id, workSeq, taskSeq, viewType, revisionType) => {
     const { getBuilderData, getDetailData, setViewPageData, revisionTask } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
@@ -286,6 +291,7 @@ const mapDispatchToProps = dispatch => ({
   changeSearchData: (id, key, val) => dispatch(actions.changeSearchDataByReducer(id, key, val)),
   getListData: (id, workSeq) => dispatch(actions.getListDataBySaga(id, workSeq)),
   redirectUrl: (id, url) => dispatch(actions.redirectUrl(id, url)),
+  destroyReducer: id => dispatch(actions.destroyReducerByReducer(id)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
