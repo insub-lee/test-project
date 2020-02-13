@@ -26,8 +26,9 @@ class RadioMaterialComp extends Component {
 
   componentDidUpdate(prevProps) {
     const { sagaKey, processRule, COMP_FIELD, setProcessRule, formData } = this.props;
-    const { formData: prevFormData } = prevProps;
-    if (formData.MATERIAL_YN !== prevFormData.MATERIAL_YN) {
+    const { processRule: prevProcessRule } = prevProps;
+
+    if (processRule.PRC_ID !== prevProcessRule.PRC_ID) {
       const { DRAFT_DATA } = processRule;
       const tmpDraftData = { ...DRAFT_DATA, material_yn: 'Y' };
       const tmpPrcRule = { ...processRule, DRAFT_DATA: tmpDraftData };
