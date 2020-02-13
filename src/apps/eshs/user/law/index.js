@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Modal } from 'antd';
 import List from './List';
-import InputAndModify from './InputAndModify';
+import ModalModify from './ModalModify';
+import ModalInput from './ModalInput';
 
 class law extends Component {
   state = {
     isLoading: true,
     isOpenModal: false,
+    isInputModal: false,
     selectedTaskSeq: 0,
   };
 
@@ -20,7 +22,11 @@ class law extends Component {
     });
   };
 
-  isOpenModalChange = taskSeq => {
+  isOpenInputModal = () => {
+    this.setState({ isInputModal: true });
+  };
+
+  isOpenModifyModal = taskSeq => {
     this.setState({ isOpenModal: true });
     this.setState({ selectedTaskSeq: taskSeq });
   };
@@ -28,18 +34,20 @@ class law extends Component {
   onCancel = () => {
     this.setState({
       isOpenModal: false,
+      isInputModal: false,
     });
   };
 
-  onShowModalTemplate = () => (
+  onShowModalTemplate = (viewType, taskSeq) => (
     <BizBuilderBase
       sagaKey="law_M"
+      baseSagaKey="law"
       workSeq={1081}
-      taskSeq={this.state.selectedTaskSeq}
-      viewType="MODIFY"
+      taskSeq={taskSeq}
+      viewType={viewType}
       loadingComplete={this.loadingComplete}
-      CustomModifyPage={InputAndModify}
-      CustomInputPage={InputAndModify}
+      CustomModifyPage={ModalModify}
+      CustomInputPage={ModalInput}
       onCloseModleHandler={this.onCancel}
     />
   );
@@ -58,10 +66,14 @@ class law extends Component {
           viewType="LIST"
           loadingComplete={this.loadingComplete}
           CustomListPage={List}
-          isOpenModalChange={this.isOpenModalChange}
+          isOpenInputModal={this.isOpenInputModal}
+          isOpenModalChange={this.isOpenModifyModal}
         />
-        <Modal visible={this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-          <div>{this.state.isOpenModal && this.onShowModalTemplate()}</div>
+        <Modal visible={this.state.isInputModal || this.state.isOpenModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+          <div>
+            {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
+            {this.state.isOpenModal && this.onShowModalTemplate('MODIFY', this.state.selectedTaskSeq)}
+          </div>
         </Modal>
       </>
     );

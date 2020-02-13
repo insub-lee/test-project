@@ -64,41 +64,8 @@ class LawModal extends Component {
     });
   };
 
-  setColumn = onSelected => {
-    const columns = [
-      {
-        title: '법규명',
-        dataIndex: 'TITLE',
-        key: 'TITLE',
-        render: (key, rowdata) => <sapn onClick={() => onSelected(rowdata)}>{key}</sapn>,
-      },
-      {
-        title: '관리번호',
-        dataIndex: 'RECH_NO',
-        key: 'RECH_NO',
-      },
-      {
-        title: '종류',
-        dataIndex: 'RECH_TYPE1',
-        key: 'RECH_TYPE1',
-      },
-      {
-        title: '작성부서',
-        dataIndex: 'REG_USER_DEPT',
-        key: 'REG_USER_DEPT',
-      },
-      {
-        title: '작성자',
-        dataIndex: 'REG_USER_NAME',
-        key: 'REG_USER_NAME',
-      },
-    ];
-    return columns;
-  };
-
   render = () => {
-    const { onCancel, onSelected } = this.props;
-    const lawColumn = this.setColumn(onSelected);
+    const { onCancel, onSelected, sagaKey: id, lawColumns } = this.props;
     return (
       <>
         <h2>법규 검색</h2>
@@ -106,7 +73,7 @@ class LawModal extends Component {
         <StyledSearchWrap>
           <div className="seach-group-layer">
             <span>검색구분 </span>
-            <Select style={{ width: 120 }} onChange={e => this.onTypeChange(e.target.value)} defaultValue="TITLE">
+            <Select style={{ width: 120 }} onChange={this.onTypeChange} defaultValue="TITLE">
               <Option value="TITLE">법규명</Option>
               <Option value="RECH_NO">관리번호</Option>
               <Option value="REG_USER_NAME">작성자</Option>
@@ -120,7 +87,18 @@ class LawModal extends Component {
           </div>
         </StyledSearchWrap>
         <hr />
-        <AntdTable rowKey="TASK_SEQ" key="lawListModal" className="view-designer-list" columns={lawColumn} dataSource={this.state.data} />
+        <AntdTable
+          onRow={record => ({
+            onClick: () => {
+              onSelected(record);
+            },
+          })}
+          rowKey="TASK_SEQ"
+          key={id}
+          className="view-designer-list"
+          columns={lawColumns}
+          dataSource={this.state.data}
+        />
         <StyledButton className="btn-primary" onClick={onCancel}>
           Close
         </StyledButton>
@@ -130,10 +108,40 @@ class LawModal extends Component {
 }
 
 LawModal.propTypes = {
+  sagaKey: PropTypes.string,
   onCancel: PropTypes.func,
   onSelected: PropTypes.func,
+  lawColumns: PropTypes.array,
 };
 
-LawModal.defaultProps = {};
+LawModal.defaultProps = {
+  lawColumns: [
+    {
+      title: '법규명',
+      dataIndex: 'TITLE',
+      key: 'TITLE',
+    },
+    {
+      title: '관리번호',
+      dataIndex: 'RECH_NO',
+      key: 'RECH_NO',
+    },
+    {
+      title: '종류',
+      dataIndex: 'RECH_TYPE1',
+      key: 'RECH_TYPE1',
+    },
+    {
+      title: '작성부서',
+      dataIndex: 'REG_USER_DEPT',
+      key: 'REG_USER_DEPT',
+    },
+    {
+      title: '작성자',
+      dataIndex: 'REG_USER_NAME',
+      key: 'REG_USER_NAME',
+    },
+  ],
+};
 
 export default LawModal;

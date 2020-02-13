@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popover } from 'antd';
+import { Table, Popover, Input, Select } from 'antd';
 
 import request from 'utils/request';
 import { isJSON } from 'utils/helpers';
@@ -11,7 +11,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import Contents from 'components/BizBuilder/Common/Contents';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import xlxImg from './image/xls_file.gif';
 import docImg from './image/doc_file.gif';
 import pptImg from './image/ppt_file.gif';
@@ -21,6 +21,7 @@ import txtImg from './image/txt_file.gif';
 import ftv2Img from './image/ftv2doc.gif';
 
 const AntdTable = StyledAntdTable(Table);
+const { Option } = Select;
 
 class ListPage extends Component {
   constructor(props) {
@@ -29,6 +30,12 @@ class ListPage extends Component {
       initLoading: true,
       data: [],
       selectedRowKeys: [],
+      title: '',
+      rechInstitution: '',
+      rechGubun: '',
+      regUserName: '',
+      regUserDept: '',
+      content: '',
     };
   }
 
@@ -74,8 +81,59 @@ class ListPage extends Component {
     });
   };
 
+  onSearchSelect = value => {
+    this.setState({ rechGubun: value });
+  };
+
+  onSearchValue = (type, value) => {
+    switch (type) {
+      case 'title':
+        this.setState({ title: value });
+        break;
+      case 'rechInstitution':
+        this.setState({ rechInstitution: value });
+        break;
+      case 'rechGubun':
+        this.setState({ rechGubun: value });
+        break;
+      case 'regUserName':
+        this.setState({ regUserName: value });
+        break;
+      case 'regUserDept':
+        this.setState({ regUserDept: value });
+        break;
+      case 'content':
+        this.setState({ content: value });
+        break;
+      default:
+        break;
+    }
+  };
+
   searchData() {
     console.log('searchData 개발 중');
+    const fetchData = async () => {
+      const result = await request({
+        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
+        method: 'POST',
+        params: {
+          SEARCHYN: 1,
+          TITLE: this.state.title,
+          RECH_INSTITUTION: this.state.rechInstitution,
+          RECH_GUBUN: this.state.rechGubun,
+          REG_USER_NAME: this.state.regUserName,
+          REG_USER_DEPT: this.state.regUserDept,
+          CONTENT: this.state.content,
+        },
+      });
+      if (result.response) {
+        console.log(result, 'searchData');
+        this.setState({
+          data: result.response.list,
+        });
+      }
+    };
+    fetchData();
   }
 
   renderComp = (comp, colData, rowData, visible) => {
@@ -231,7 +289,7 @@ class ListPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage } = this.props;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, isOpenInputModal } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -263,27 +321,92 @@ class ListPage extends Component {
                 <div key={group.key}>
                   {group.useTitle && <GroupTitle title={group.title} />}
                   <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                    <table className={`view-designer-table table-${groupIndex}`}>
-                      <tbody>
-                        {group.rows.map((row, rowIndex) => (
-                          <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                            {row.cols &&
-                              row.cols.map((col, colIndex) => (
-                                <td
-                                  key={col.key}
-                                  {...col}
-                                  colSpan={col.span}
-                                  className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                >
-                                  <Contents>{col.comp && this.renderComp(col.comp, col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '', true)}</Contents>
-                                </td>
-                              ))}
+                    <StyledSearchWrap>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <span>법규정보</span>
+                            </td>
+                            <td>
+                              <span>법규명</span>
+                            </td>
+                            <td>
+                              <Input
+                                className="input-width200"
+                                value={this.state.title}
+                                onChange={e => this.onSearchValue('title', e.target.value)}
+                                placeholder="법규명"
+                              />
+                            </td>
+                            <td>
+                              <span>관련기관</span>
+                            </td>
+                            <td>
+                              <Input
+                                className="input-width200"
+                                value={this.state.rechInstitution}
+                                onChange={e => this.onSearchValue('rechInstitution', e.target.value)}
+                                placeholder="관련기관"
+                              />
+                            </td>
+                            <td>
+                              <span>법규구분</span>
+                            </td>
+                            <td>
+                              <Select style={{ width: 120 }} onChange={this.onSearchSelect} value={this.state.rechGubun}>
+                                <Option value="">선택</Option>
+                                <Option value="환경관련">환경관련 법규</Option>
+                                <Option value="소방관련">소방관련 법규</Option>
+                                <Option value="기타">기타</Option>
+                                <Option value="규격 및 고객요구사항">규격 및 고객요구사항</Option>
+                                <Option value="안전보건관련">안전보건관련 법규</Option>
+                              </Select>
+                            </td>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                          <tr>
+                            <td>
+                              <span>작성자 정보</span>
+                            </td>
+                            <td>
+                              <span>작성자</span>
+                            </td>
+                            <td>
+                              <Input
+                                className="input-width200"
+                                value={this.state.regUserName}
+                                onChange={e => this.onSearchValue('regUserName', e.target.value)}
+                                placeholder="작성자"
+                              />
+                            </td>
+                            <td>
+                              <span>작성부서</span>
+                            </td>
+                            <td>
+                              <Input
+                                className="input-width200"
+                                value={this.state.regUserDept}
+                                onChange={e => this.onSearchValue('regUserDept', e.target.value)}
+                                placeholder="작성부서"
+                              />
+                            </td>
+                            <td>
+                              <span>주요내용</span>
+                            </td>
+                            <td>
+                              <Input
+                                className="input-width200"
+                                value={this.state.content}
+                                onChange={e => this.onSearchValue('content', e.target.value)}
+                                placeholder="주요내용"
+                              />
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </StyledSearchWrap>
                     <div align="right">
-                      <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+                      <StyledButton className="btn-primary" onClick={() => isOpenInputModal()}>
                         Add
                       </StyledButton>
                       <StyledButton className="btn-primary" onClick={() => this.deleteData(this.state.selectedRowKeys)}>

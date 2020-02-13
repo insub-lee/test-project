@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm } from 'antd';
+import { Table, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -11,7 +11,11 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+
+import BizBuilderBase from 'components/BizBuilderBase';
+import View from '../ViewPage';
+import Input from '../InputPage';
+import Modify from '../ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -20,25 +24,11 @@ class ListPage extends Component {
     super(props);
     this.state = {
       initLoading: true,
-      isMultiDelete: false,
+      modalVisible: false,
+      selectedTaskSeq: 0,
+      viewType: '',
     };
   }
-
-  componentDidMount = () => {
-    const { workInfo } = this.props;
-    const isMultiDelete = !!(
-      workInfo &&
-      workInfo.OPT_INFO &&
-      workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') !== -1
-    );
-    this.setState({ isMultiDelete });
-  };
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -83,22 +73,61 @@ class ListPage extends Component {
     return columns;
   };
 
-  onSelectChange = selectedRowKeys => {
-    const { sagaKey, setListSelectRowKeys } = this.props;
-    setListSelectRowKeys(sagaKey, selectedRowKeys);
+  handleRowClick = taskSeq => {
+    this.setState({
+      modalVisible: true,
+      selectedTaskSeq: taskSeq,
+      viewType: 'VIEW',
+    });
+  };
+
+  handleOnCancel = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
+  handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
+    /* 
+      changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
+      taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
+      viewType: INPUT, MODIFY, VIEW
+    */
+    const { workSeq, sagaKey, loadingComplete } = this.props;
+    return (
+      <BizBuilderBase
+        sagaKey={changedSagaKey}
+        workSeq={workSeq}
+        viewType={viewType.toUpperCase()}
+        taskSeq={taskSeq}
+        CustomViewPage={View}
+        CustomInputPage={Input}
+        CustomModifyPage={Modify}
+        loadingComplete={loadingComplete}
+        onCloseModleHandler={this.handleModalClose}
+        baseSagaKey={sagaKey}
+      />
+    );
+  };
+
+  handleAddClick = () => {
+    this.setState({
+      modalVisible: true,
+      selectedTaskSeq: -1,
+      viewType: 'INPUT',
+    });
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      modalVisible: false,
+    });
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys } = this.props;
-    const { isMultiDelete } = this.state;
+    const { modalVisible, selectedTaskSeq, viewType } = this.state;
+    const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
     const columns = this.setColumns(group.rows[0].cols);
-    let rowSelection = false;
-    if (isMultiDelete) {
-      rowSelection = {
-        selectedRowKeys: listSelectRowKeys,
-        onChange: this.onSelectChange,
-      };
-    }
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -109,27 +138,20 @@ class ListPage extends Component {
             className="view-designer-list"
             columns={columns}
             dataSource={listData || []}
-            rowSelection={rowSelection}
+            onRow={record => ({
+              onClick: () => this.handleRowClick(record.TASK_SEQ),
+            })}
           />
         </Group>
+        <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
+          <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
+        </Modal>
       </div>
     );
   };
 
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      formData,
-      workFlowConfig,
-      loadingComplete,
-      viewPageData,
-      changeViewPage,
-      getListData,
-      workSeq,
-      removeMultiTask,
-    } = this.props;
-    const { isMultiDelete } = this.state;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -207,12 +229,10 @@ class ListPage extends Component {
               );
             })}
             <div className="alignRight">
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-primary">Delete</StyledButton>
-                </Popconfirm>
-              )}
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+                Add
+              </StyledButton> */}
+              <StyledButton className="btn-primary" onClick={() => this.handleAddClick()}>
                 Add
               </StyledButton>
             </div>
@@ -237,6 +257,7 @@ ListPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  workSeq: PropTypes.number,
 };
 
 ListPage.defaultProps = {
@@ -245,7 +266,6 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
-  loadingComplete: () => {},
 };
 
 export default ListPage;
