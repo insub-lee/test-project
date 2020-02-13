@@ -98,10 +98,7 @@ class InputPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
-                Save
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                List
+                저장
               </StyledButton>
             </div>
           </Sketch>

@@ -13,15 +13,14 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import request from 'utils/request';
-import moment from 'moment';
+import Moment from 'moment';
 
 import View from '../ViewPage';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
-moment.locale('ko');
+Moment.locale('ko');
 class ListPage extends Component {
   constructor(props) {
     super(props);
@@ -30,24 +29,11 @@ class ListPage extends Component {
       modalVisible: false,
       selectedTaskSeq: 0,
       viewType: '',
+      listIndex: [],
     };
   }
 
-  componentDidMount() {
-    const fetchData = async () => {
-      const result = await request({
-        url: '/api/eshs/v1/common/AllEshsCommunications',
-        method: 'GET',
-      });
-      result.response.list.map(item => {
-        item.receive_date = moment(item.receive_date).format('YYYY-MM-DD');
-        item.reply_date = moment(item.reply_date).format('YYYY-MM-DD');
-        return item;
-      });
-    };
-
-    fetchData();
-  }
+  componentDidMount() {}
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -144,7 +130,10 @@ class ListPage extends Component {
             dataIndex: 'RECEIVE_DATE',
             key: 'RECEIVE_DATE',
             align: 'center',
-            width: 100,
+            width: 120,
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => Moment(a.RECEIVE_DATE) - Moment(b.RECEIVE_DATE),
+            sortDirections: ['descend'],
           },
           {
             title: '발행처',
@@ -152,6 +141,7 @@ class ListPage extends Component {
             key: 'PUBLICATION',
             align: 'center',
             width: 150,
+            ellipsis: 'true',
           },
           {
             title: '제목(접수내역)',
@@ -170,7 +160,7 @@ class ListPage extends Component {
             dataIndex: 'REPLY_DATE',
             key: 'REPLY_DATE',
             align: 'center',
-            width: 100,
+            width: 120,
           },
           {
             title: '조치/회신 내용(방법, 요약)',
@@ -198,7 +188,7 @@ class ListPage extends Component {
     ];
 
     const { modalVisible, selectedTaskSeq, viewType } = this.state;
-    const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
+    const { listData, sagaKey: id } = this.props;
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -208,12 +198,17 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={
+              listData.map(item => {
+                item.RECEIVE_DATE = Moment(item.RECEIVE_DATE).format('YYYY-MM-DD');
+                item.REPLY_DATE = Moment(item.REPLY_DATE).format('YYYY-MM-DD');
+                return item;
+              }) || []
+            }
             bordered
             pagination={{ pageSize: 30 }}
             tableLayout="fixed"
             onRow={record => ({
-              // onClick: () => console.debug(record),
               onClick: () => this.handleRowClick(record.TASK_SEQ),
             })}
           />
@@ -226,7 +221,7 @@ class ListPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -324,6 +319,7 @@ ListPage.propTypes = {
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
   viewLayer: PropTypes.array,
+  listData: PropTypes.array,
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
