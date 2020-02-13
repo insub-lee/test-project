@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Radio, Select, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
+
+import message from 'components/Feedback/message';
 import LabelComp from './LabelComp';
 
 const { Option } = Select;
@@ -51,9 +53,9 @@ class RadioMaterialComp extends Component {
     changeFormData(sagaKey, 'MATERIAL_TYPE', value);
   };
 
-  onChangeHandlerText = value => {
+  onChangeHandlerText = vals => {
     const { changeFormData, sagaKey } = this.props;
-    changeFormData(sagaKey, 'MATERIAL_TEXT', value);
+    changeFormData(sagaKey, 'MATERIAL_TEXT', vals);
   };
 
   render() {
@@ -76,14 +78,20 @@ class RadioMaterialComp extends Component {
           </td>
           <td>
             {this.state.isMeterialView && (
-              <Input
+              <input
+                className="ant-input"
+                defaultValue={formData.MATERIAL_TEXT}
                 onChange={e => {
-                  const value = e.target.value.replace(/[^0-9,]/gi, '');
-                  e.target.value = value;
-                  this.onChangeHandlerText(value);
+                  const reg = /[^0-9,]/gi;
+                  if (reg.test(e.target.value)) {
+                    message.success('숫자 ,(comma) 만 사용가능');
+                    e.target.value = e.target.value.replace(/[^0-9,]/gi, '');
+                  }
+                  const vals = e.target.value;
+                  this.onChangeHandlerText(vals);
                 }}
-              ></Input>
-            )}
+              />
+            )}{' '}
           </td>
         </tr>
       </table>
