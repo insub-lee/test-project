@@ -54,6 +54,7 @@ class InputPage extends Component {
   };
 
   render = () => {
+    console.debug('@@@INPUT RENDERING@@@', this.props);
     const {
       sagaKey: id,
       viewLayer,

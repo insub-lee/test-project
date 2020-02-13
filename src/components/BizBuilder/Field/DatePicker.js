@@ -8,7 +8,17 @@ class DatePicker extends Component {
     changeFormData(id, COMP_FIELD, dateString);
   };
 
+  onChangeSearchHandle = (date, dateString) => {
+    const { sagaKey: id, COMP_FIELD, changeSearchData } = this.props;
+    const searchDate = dateString.length > 0 ? `AND W.${COMP_FIELD} = '${dateString}'::TIMESTAMP` : '';
+    changeSearchData(id, COMP_FIELD, searchDate);
+  };
+
   render() {
+    const { CONFIG, visible, isSearch } = this.props;
+    if (isSearch && visible && CONFIG.property.searchType === 'CUSTOM') {
+      return <AntdDatePicker onChange={this.onChangeSearchHandle} />;
+    }
     return <AntdDatePicker onChange={this.onChangeHandler} />;
   }
 }
@@ -17,6 +27,10 @@ DatePicker.propTypes = {
   sagaKey: PropTypes.string,
   changeFormData: PropTypes.func,
   COMP_FIELD: PropTypes.string,
+  changeSearchData: PropTypes.func,
+  CONFIG: PropTypes.object,
+  visible: PropTypes.bool,
+  isSearch: PropTypes.bool,
 };
 
 export default DatePicker;

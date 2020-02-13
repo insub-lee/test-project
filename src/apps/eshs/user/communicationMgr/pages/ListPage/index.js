@@ -134,7 +134,7 @@ class ListPage extends Component {
         title: '번호',
         dataIndex: 'RNUM',
         key: 'RNUM',
-        width: 50,
+        width: 70,
       },
       {
         title: '접수',
@@ -185,7 +185,6 @@ class ListPage extends Component {
             key: 'UPLOAD_FILE',
             align: 'center',
             width: 100,
-            onClick: e => e.stopPropagation(),
           },
           {
             title: '문서유형',
@@ -210,11 +209,11 @@ class ListPage extends Component {
             className="view-designer-list"
             columns={columns}
             dataSource={listData || []}
-            // dataSource={this.state.communicationList || []}
             bordered
             pagination={{ pageSize: 30 }}
             tableLayout="fixed"
             onRow={record => ({
+              // onClick: () => console.debug(record),
               onClick: () => this.handleRowClick(record.TASK_SEQ),
             })}
           />
@@ -227,7 +226,6 @@ class ListPage extends Component {
   };
 
   render = () => {
-    console.debug('@@@COMMUNICATION LISTDATA@@@', this.props.listData);
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
