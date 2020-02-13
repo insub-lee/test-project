@@ -133,6 +133,7 @@ InputPage.defaultProps = {
       PRC_ID: -1,
     },
   },
+  loadingComplete: () => {},
 };
 
 export default InputPage;

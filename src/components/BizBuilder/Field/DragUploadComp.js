@@ -128,14 +128,6 @@ class DragUploadComp extends Component {
         // changeFormData(id, COMP_FIELD, nextColDataDetail);
         // desc - 'done'상태인것만 리듀서에 푸쉬
         changeFormData(id, COMP_FIELD, { ...colData, DETAIL: this.state.fileList.filter(file => file.status === 'done') });
-        if (
-          CONFIG.property.fileCntFieldFlag &&
-          CONFIG.property.fileCntFieldFlag === 'Y' &&
-          CONFIG.property.fileCntFieldFlagKey &&
-          CONFIG.property.fileCntFieldFlagKey.length > 0
-        ) {
-          changeFormData(id, CONFIG.property.fileCntFieldFlagKey, this.state.fileList.filter(file => file.status === 'done').length);
-        }
       },
     );
   };
@@ -194,7 +186,7 @@ class DragUploadComp extends Component {
     if (colData && typeof colData === 'object' && colData.DETAIL && colData.DETAIL.length > 0) {
       colData.DETAIL = fileList;
       retVal = colData;
-    } else if (colData && colData.indexOf('{') === 0 && isJSON(colData)) {
+    } else if (colData && typeof colData === 'string' && colData.length > 0 && colData.indexOf('{') === 0 && isJSON(colData)) {
       JSON.parse(colData).DETAIL = fileList;
       retVal = colData;
     } else {
@@ -217,14 +209,6 @@ class DragUploadComp extends Component {
       // };
     }
     changeFormData(id, COMP_FIELD, retVal);
-    if (
-      CONFIG.property.fileCntFieldFlag &&
-      CONFIG.property.fileCntFieldFlag === 'Y' &&
-      CONFIG.property.fileCntFieldFlagKey &&
-      CONFIG.property.fileCntFieldFlagKey.length > 0
-    ) {
-      changeFormData(id, CONFIG.property.fileCntFieldFlagKey, fileList.filter(file => file.status === 'done').length);
-    }
   };
 
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
