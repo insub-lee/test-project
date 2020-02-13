@@ -77,13 +77,13 @@ function* addMetaData() {
   const workInfo = yield select(selectors.makeSelectWorkInfo());
   const viewCnt = compData.filter(fNode => fNode.COMP_TYPE === 'VIEW').length;
   let isError = false;
-  let errorField = '';
+  let errorMsg = '';
   compData
     .filter(fNode => fNode.COMP_TYPE !== 'VIEW' && !fNode.isRemove)
     .forEach(node => {
       if (!node.COMP_FIELD || (node.COMP_FIELD && node.COMP_FIELD.length) < 1) {
         isError = true;
-        errorField = node.CONFIG.property.COMP_NAME || '';
+        errorMsg = `${node.CONFIG.property.COMP_NAME || ''} 필드 컬럼명을 채워주세요.`;
       }
       // else if (!node.NAME_KOR || (node.NAME_KOR && node.NAME_KOR.length) < 1) {
       //   isError = true;
@@ -92,7 +92,7 @@ function* addMetaData() {
     });
 
   if (isError) {
-    message.error(<MessageContent>{`${errorField} 필드 데이터를 채워주세요.`}</MessageContent>);
+    message.error(<MessageContent>{errorMsg}</MessageContent>);
     return;
   }
   const viewDataIdx = compData.findIndex(

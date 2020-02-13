@@ -8,7 +8,9 @@ import createReducer from './reducers';
 const sagaMiddleware = createSagaMiddleWare();
 
 const configureStore = (initialState = {}, history) => {
-  const middleWares = [sagaMiddleware, routerMiddleware(history), logger];
+  const middleWares = [sagaMiddleware, routerMiddleware(history)];
+
+  if (process.env.NODE_ENV !== 'production') middleWares.push(logger);
 
   const enhancers = [applyMiddleware(...middleWares)];
 

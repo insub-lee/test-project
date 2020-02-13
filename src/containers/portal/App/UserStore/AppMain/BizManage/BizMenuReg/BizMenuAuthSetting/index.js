@@ -344,7 +344,7 @@ class BizMenuAuthSetting extends Component {
                   </tr>
                   <tr>
                     <th className="top">
-                      <span className="">{intlObj.get(messages.bizGroupViewAuth)}</span>
+                      <span className="">사용자</span>
                     </th>
                     <td>
                       <FormItem>
