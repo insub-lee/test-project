@@ -8,6 +8,7 @@ import MessageContent from 'components/Feedback/message.style2';
 import * as feed from 'components/Feedback/functions';
 import * as constantsLoading from 'containers/common/Loading/constants';
 import * as constants from './constants';
+import * as constantsTopMenu from '../TopMenu/constants';
 
 export function* getBizMenuAuthInfo(payload) {
   const { BIZGRP_ID, MENU_ID } = payload;
@@ -43,24 +44,32 @@ export function* updateBizMenuAuth(payload) {
       });
     }
 
-    /* TODO 변경후 확정 버튼 활성화 필요
+    // 변경후 확정 버튼 활성화
+    yield put({
+      type: constantsTopMenu.GET_BIZ_INFO,
+      BIZGRP_ID,
+    });
+    /*
     yield put({
       type: constantsBizManage.UPDATE_TREENODE,
       key: Number(BIZGRP_ID),
       newNode: { CHG_YN: 'Y' },
     });
     */
+  } else if (code === 403) {
+    feed.error('수정 권한이 없습니다.');
   } else {
-    // feed.error(`${intlObj.get(messages.dutyInsertFail)}`);
     feed.error('수정에 실패 하였습니다.');
-    /*
-    yield put({
-      type: constants.GET_BIZ_AUTH_INFO,
-      BIZGRP_ID,
-      MENU_ID,
-    });
-    */
   }
+
+  // feed.error(`${intlObj.get(messages.dutyInsertFail)}`);
+  /*
+  yield put({
+    type: constants.GET_BIZ_AUTH_INFO,
+    BIZGRP_ID,
+    MENU_ID,
+  });
+  */
 }
 
 export default function* rootSaga() {
