@@ -12,7 +12,7 @@ import * as treeFunc from 'containers/common/functions/treeFunc';
 import { toggleExpandedForSelected } from './tree-data-utils';
 import messages from './messages';
 import CustomTheme from './theme';
-import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn } from './StyleMyPageTree';
+import StyleMyPageTree, { AppListBtn, FolderBtn, CopyBtn, RemoveBtn, EditBtn, SettingBtn } from './StyleMyPageTree';
 
 /* eslint-disable */
 const replaceSpecialCharacter = str => {
@@ -200,6 +200,7 @@ class BizMenuTree extends Component {
       deleteNode, // 메뉴 삭제 func(rowInfo, treeData)
 
       bizGroupInfo,
+      rootMenuId,
     } = this.props;
 
     const BIZGRP_ID = bizGroupInfo.BIZGRP_ID;
@@ -348,7 +349,8 @@ class BizMenuTree extends Component {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
-
+          const authM = node.AUTH_TYPE.indexOf('M') > -1;
+          const authG = node.AUTH_TYPE.indexOf('G') > -1;
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE === 'F'; // 마지막노드X
           const isEmptyFolder = !node.children || node.children.length === 0; // 하위노드존재X
@@ -366,10 +368,23 @@ class BizMenuTree extends Component {
           };
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-          if (onHoverKey === node.key && SEC_YN) {
+          if (onHoverKey === node.key && SEC_YN && (authM || authG)) {
             buttons = [
+              authG ? (
+              <SettingBtn
+              title="권한설정"
+              onClick={() => {
+                // saveData(rowInfo, treeData);
+                handleTreeOnClick();
+                history.push(`/portal/store/appMain/bizManage/bizMenuReg/auth/${BIZGRP_ID}/${node.MENU_ID}`);
+              }}
+            />
+            ) : (
+              ''
+            ),
+
               // [앱등록 버튼]
-              isFolder ? (
+              isFolder && authM ? (
                 <AppListBtn
                   key="AppListBtn"
                   title="앱등록"
@@ -383,7 +398,7 @@ class BizMenuTree extends Component {
               ),
 
               // [폴더추가 버튼]
-              isFolder ? (
+              isFolder && authM ? (
                 <FolderBtn
                   key="FolderBtn"
                   title="폴더추가"
@@ -397,7 +412,7 @@ class BizMenuTree extends Component {
               ),
 
               // [페이지추가 버튼] 버튼노출조건 : 마지막노드X 업무그룹X
-              isFolder ? (
+              isFolder && authM ? (
                 <CopyBtn
                   key="CopyBtn"
                   title="페이지 추가"
@@ -410,10 +425,10 @@ class BizMenuTree extends Component {
               ),
 
               // [메뉴명수정]
-              canEditName ? <EditBtn key="EditBtn" title="편집" onClick={() => this.editNode(node)} /> : '',
+              canEditName && authM ? <EditBtn key="EditBtn" title="편집" onClick={() => this.editNode(node)} /> : '',
 
               // [메뉴삭제 버튼]
-              isEmptyFolder ? (
+              isEmptyFolder && authM ? (
                 <RemoveBtn
                   key="RemoveBtn"
                   title="삭제"
@@ -490,7 +505,9 @@ class BizMenuTree extends Component {
         style={{ height: 'calc(100vh - 304px)' /* 페이지 내 하단 메뉴버튼을 제외한 높이 */ }}
       />
     );
-
+    const { rootAuthType } = this.props;
+    const rootAuthM = rootAuthType.indexOf('M') > -1;
+    const rootAuthG = rootAuthType.indexOf('G') > -1;
     return (
       <StyleMyPageTree
         style={{
@@ -534,28 +551,46 @@ class BizMenuTree extends Component {
         {this.state.showInsert && data.PRNT_ID === -1 ? rootInsertBox : ''}
         {SEC_YN ? (
           <div className="fixedMenu">
-            <AppListBtn
-              className="apps"
-              title="앱등록"
-              onClick={() => {
-                saveData(rootRowInfo, this.state.treeData);
-                history.push(`/portal/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
-              }}
-            />
-            <FolderBtn
-              className="folder"
-              title="폴더추가"
-              onClick={() => {
-                this.addNode(BIZGRP_ID, -1, 'F');
-              }}
-            />
-            <CopyBtn
-              className="copy"
-              title="페이지 추가"
-              onClick={() => {
-                this.addNode(BIZGRP_ID, -1, 'E');
-              }}
-            />
+            {rootAuthG ? (
+              <SettingBtn
+                title="권한설정"
+                onClick={() => {
+                  onClick({ key: -1 });
+                  saveData(rootRowInfo, this.state.treeData);
+                  history.push(`/portal/store/appMain/bizManage/bizMenuReg/auth/${BIZGRP_ID}/${rootMenuId}`);
+                }}
+              />
+            ): (
+              ''
+            )}
+            {rootAuthM ? (
+              <>
+                <AppListBtn
+                  className="apps"
+                  title="앱등록"
+                  onClick={() => {
+                    saveData(rootRowInfo, this.state.treeData);
+                    history.push(`/portal/store/appMain/bizManage/bizMenuReg/appSelect/${BIZGRP_ID}/modal/app/list`);
+                  }}
+                />
+                <FolderBtn
+                  className="folder"
+                  title="폴더추가"
+                  onClick={() => {
+                    this.addNode(BIZGRP_ID, -1, 'F');
+                  }}
+                />
+                <CopyBtn
+                  className="copy"
+                  title="페이지 추가"
+                  onClick={() => {
+                    this.addNode(BIZGRP_ID, -1, 'E');
+                  }}
+                />
+              </>
+            ): (
+              ''
+            )}
           </div>
         ) : (
           ''
@@ -572,6 +607,8 @@ BizMenuTree.propTypes = {
   canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object.isRequired,
   onClick: PropTypes.func,
+  rootMenuId: PropTypes.number.isRequired,
+  rootAuthType: PropTypes.string.isRequired,
 };
 
 BizMenuTree.defaultProps = {

@@ -176,6 +176,7 @@ class Category extends React.Component {
         APP_NAME: lang.get('NAME', node),
         selectedIndex: node.CATG_ID,
         PRNT_ID: node.PRNT_ID,
+        SYS_YN: node.SYS_YN, //eslint-disable-line
         NAME_KOR: node.NAME_KOR,
         NAME_ENG: node.NAME_ENG,
         NAME_CHN: node.NAME_CHN,
@@ -230,6 +231,7 @@ class Category extends React.Component {
     };
 
     const botBtn = mode => {
+      // 시스템 카테고리 (CATG_ID 100보다 작을경우) 수정불가
       if (mode === 'I') {
         // 등록
         return (
@@ -241,7 +243,7 @@ class Category extends React.Component {
           </>
         );
       }
-      if (mode === 'D') {
+      if (mode === 'D' && this.state.SYS_YN !== 'Y') {
         // 상세
         return (
           <>
@@ -268,7 +270,7 @@ class Category extends React.Component {
           </>
         );
       }
-      if (mode === 'U') {
+      if (mode === 'U' && this.state.SYS_YN !== 'Y') {
         // 수정
         return (
           <>

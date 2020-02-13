@@ -10,3 +10,4 @@ export const INSERT_VGROUP_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAd
 export const DELETE_VGROUP_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/DELETE_VGROUP_INFO';
 export const UPDATE_VGROUP_INFO = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/UPDATE_VGROUP_INFO';
 export const UPDATE_VGROUP_MEMBER = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/UPDATE_VGROUP_MEMBER';
+export const MOVE_VGROUP = 'nrp-admin/containers/admin/AdminMain/VgroupAdmin/MOVE_VGROUP';
