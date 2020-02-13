@@ -83,6 +83,7 @@ class BizMenuAuthSetting extends Component {
       INHERIT: false,
       orgShow: false,
       AUTH_GRP: ADMIN_GRP,
+      ADMIN_AUTH: false,
     };
   }
 
@@ -107,15 +108,6 @@ class BizMenuAuthSetting extends Component {
     const { BIZGRP_ID, MENU_ID } = params;
     const { data } = this.state;
 
-    if (dataP.ADMIN_AUTH) {
-      const { ADMIN_AUTH } = dataP;
-      const auth = ADMIN_AUTH.AUTH_TYPE ? ADMIN_AUTH.AUTH_TYPE : '';
-
-      if (auth.indexOf('G') === -1) {
-        history.push('/error');
-      }
-    }
-
     if (MENU_ID && Number(this.state.MENU_ID) !== Number(MENU_ID)) {
       this.setState(
         {
@@ -128,6 +120,16 @@ class BizMenuAuthSetting extends Component {
       );
     }
     if (dataP.MENU_ID && data.MENU_ID !== dataP.MENU_ID) {
+      const { ADMIN_AUTH } = dataP;
+      const auth = ADMIN_AUTH.AUTH_TYPE ? ADMIN_AUTH.AUTH_TYPE : '';
+
+      if (auth.indexOf('G') === -1) {
+        history.push('/error');
+      }
+      this.setState({
+        ADMIN_AUTH: auth.indexOf('M') > -1,
+      });
+
       let mData = { ...data, ...dataP };
       if (dataP.A) {
         // 관리자 권한
@@ -191,7 +193,15 @@ class BizMenuAuthSetting extends Component {
 
       if (AUTH_GRP === ADMIN_GRP) {
         return (
-          <OrganizationRole
+          // 업무그룹 관리자만 등록 가능 했던 방식 수정
+          // <OrganizationRole
+          <Organization
+            // 업무그룹 관리자만 등록 가능 했던 방식 수정
+            userTab
+            pstnTab
+            dutyTab
+            grpTab
+            //
             show={this.state.orgShow}
             closeModal={this.orgClose}
             // 조직도 모달창으로 가져갈 데이터
@@ -212,7 +222,8 @@ class BizMenuAuthSetting extends Component {
 
               this.onChangeData({ A: mData });
             }}
-            ROLE_CD="BM"
+            // 업무그룹 관리자만 등록 가능 했던 방식 수정
+            // ROLE_CD="BM"
           />
         );
       }
@@ -260,7 +271,7 @@ class BizMenuAuthSetting extends Component {
   };
 
   render() {
-    const { data } = this.state;
+    const { data, ADMIN_AUTH } = this.state;
     const { dataP, updateBizMenuAuth, history } = this.props;
     const {
       match: {
@@ -280,68 +291,72 @@ class BizMenuAuthSetting extends Component {
             <div className="formTable">
               <table>
                 <tbody>
-                  <tr>
-                    <th className="top">
-                      <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
-                    </th>
-                    <td>
-                      <FormItem>
-                        <div style={{}}>
-                          <div className="appManagerListBox">
-                            {data.A ? (
-                              <AppMaNagerList
-                                grpType={ADMIN_GRP}
-                                userList={data.A.users}
-                                pstnList={data.A.pstns}
-                                deptList={data.A.depts}
-                                dutyList={data.A.dutys}
-                                grpList={data.A.grps}
-                                returnUserList={result => {
-                                  const nData = { ...data.A };
-                                  delete nData.users;
-                                  this.onChangeData({ A: { ...nData, users: result } });
+                  {ADMIN_AUTH ? (
+                    <tr>
+                      <th className="top">
+                        <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
+                      </th>
+                      <td>
+                        <FormItem>
+                          <div style={{}}>
+                            <div className="appManagerListBox">
+                              {data.A ? (
+                                <AppMaNagerList
+                                  grpType={ADMIN_GRP}
+                                  userList={data.A.users}
+                                  pstnList={data.A.pstns}
+                                  deptList={data.A.depts}
+                                  dutyList={data.A.dutys}
+                                  grpList={data.A.grps}
+                                  returnUserList={result => {
+                                    const nData = { ...data.A };
+                                    delete nData.users;
+                                    this.onChangeData({ A: { ...nData, users: result } });
+                                  }}
+                                  returnPstnList={result => {
+                                    const nData = { ...data.A };
+                                    delete nData.pstns;
+                                    this.onChangeData({ A: { ...nData, pstns: result } });
+                                  }}
+                                  returnDetpList={result => {
+                                    const nData = { ...data.A };
+                                    delete nData.depts;
+                                    this.onChangeData({ A: { ...nData, depts: result } });
+                                  }}
+                                  returnDutyList={result => {
+                                    const nData = { ...data.A };
+                                    delete nData.dutys;
+                                    this.onChangeData({ A: { ...nData, dutys: result } });
+                                  }}
+                                  returnGrpList={result => {
+                                    const nData = { ...data.A };
+                                    delete nData.grps;
+                                    this.onChangeData({ A: { ...nData, grps: result } });
+                                  }}
+                                  delFlag
+                                />
+                              ) : (
+                                ''
+                              )}
+                            </div>
+                            <div className="btnText-wrap">
+                              <Button
+                                className="btnText"
+                                onClick={() => {
+                                  this.managerOrgOpen(ADMIN_GRP);
                                 }}
-                                returnPstnList={result => {
-                                  const nData = { ...data.A };
-                                  delete nData.pstns;
-                                  this.onChangeData({ A: { ...nData, pstns: result } });
-                                }}
-                                returnDetpList={result => {
-                                  const nData = { ...data.A };
-                                  delete nData.depts;
-                                  this.onChangeData({ A: { ...nData, depts: result } });
-                                }}
-                                returnDutyList={result => {
-                                  const nData = { ...data.A };
-                                  delete nData.dutys;
-                                  this.onChangeData({ A: { ...nData, dutys: result } });
-                                }}
-                                returnGrpList={result => {
-                                  const nData = { ...data.A };
-                                  delete nData.grps;
-                                  this.onChangeData({ A: { ...nData, grps: result } });
-                                }}
-                                delFlag
-                              />
-                            ) : (
-                              ''
-                            )}
+                              >
+                                <Icon type="plus-circle" />
+                                {intlObj.get(messages.find)}
+                              </Button>
+                            </div>
                           </div>
-                          <div className="btnText-wrap">
-                            <Button
-                              className="btnText"
-                              onClick={() => {
-                                this.managerOrgOpen(ADMIN_GRP);
-                              }}
-                            >
-                              <Icon type="plus-circle" />
-                              {intlObj.get(messages.find)}
-                            </Button>
-                          </div>
-                        </div>
-                      </FormItem>
-                    </td>
-                  </tr>
+                        </FormItem>
+                      </td>
+                    </tr>
+                  ) : (
+                    ''
+                  )}
                   <tr>
                     <th className="top">
                       <span className="">사용자</span>
@@ -454,7 +469,7 @@ class BizMenuAuthSetting extends Component {
 
                       const resultData = { ...data };
                       resultData.delList = acntIdStringtoInteger(delList);
-                      resultData.A = acntIdStringtoInteger(newA);
+                      resultData.A = ADMIN_AUTH ? acntIdStringtoInteger(newA) : [];
                       resultData.U = acntIdStringtoInteger(newU);
                       const { INHERIT } = this.state;
                       updateBizMenuAuth(resultData, Number(BIZGRP_ID), Number(MENU_ID), INHERIT, history);
