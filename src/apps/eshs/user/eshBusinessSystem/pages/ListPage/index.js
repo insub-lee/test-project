@@ -13,9 +13,9 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import View from '../law/ViewPage';
-import Input from '../law/InputPage';
-import Modify from '../law/ModifyPage';
+import View from '../ViewPage';
+import Input from '../InputPage';
+import Modify from '../ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -29,12 +29,6 @@ class ListPage extends Component {
       viewType: '',
     };
   }
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -239,7 +233,7 @@ class ListPage extends Component {
                 Add
               </StyledButton> */}
               <StyledButton className="btn-primary" onClick={() => this.handleAddClick()}>
-                Add
+                새 글
               </StyledButton>
             </div>
           </Sketch>

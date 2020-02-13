@@ -12,6 +12,7 @@ import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import request from 'utils/request';
+import moment from 'moment';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -37,13 +38,11 @@ class List extends Component {
         url: '/api/eshs/v1/common/AllEshsCommunications',
         method: 'GET',
       });
-      // result.response.list.map(item => {
-      //   const receiveDate = new Date(item.receive_date);
-      //   const replyDate = new Date(item.reply_date);
-      //   item.receive_date = `${receiveDate.getFullYear()}-${receiveDate.getMonth() + 1}-${receiveDate.getDate()}`;
-      //   item.reply_date = `${replyDate.getFullYear()}-${replyDate.getMonth() + 1}-${replyDate.getDate()}`;
-      //   return item;
-      // });
+      result.response.list.map(item => {
+        item.receive_date = moment(item.receive_date).format('YYYY-MM-DD');
+        item.reply_date = moment(item.reply_date).format('YYYY-MM-DD');
+        return item;
+      });
       this.setState({
         communicationList: result.response.list,
       });

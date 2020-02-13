@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
-import List from '../CommonListPage';
+import List from '../pages/ListPage';
 
 class EshSystemLaw extends Component {
   state = {
     isLoading: true,
-    isOpenModal: false,
-    selectedTaskSeq: 0,
   };
 
   componentDidMount() {}

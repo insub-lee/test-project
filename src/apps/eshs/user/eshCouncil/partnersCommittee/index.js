@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import List from '../pages/ListPage';
 
 class PartnersCommittee extends Component {
   state = {
@@ -17,7 +18,7 @@ class PartnersCommittee extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="PartnersCommittee" workSeq={1765} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="PartnersCommittee" workSeq={1765} viewType="LIST" loadingComplete={this.loadingComplete} CustomListPage={List} />;
   }
 }
 
