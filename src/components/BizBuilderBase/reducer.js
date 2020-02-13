@@ -124,7 +124,9 @@ const reducer = (state = initialState, action) => {
         .deleteIn(['bizBuilderBase', id, 'workFlow'])
         .deleteIn(['bizBuilderBase', id, 'formData'])
         .deleteIn(['bizBuilderBase', id, 'validationData'])
-        .deleteIn(['bizBuilderBase', id, 'listData']);
+        .deleteIn(['bizBuilderBase', id, 'listData'])
+        .deleteIn(['bizBuilderBase', id, 'listSelectRowKeys'])
+        .deleteIn(['bizBuilderBase', id, 'processRule']);
     }
     case actionTypes.SET_REVISION_HISTORY: {
       const { id, list } = action;
