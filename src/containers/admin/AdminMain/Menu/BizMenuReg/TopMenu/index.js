@@ -64,7 +64,7 @@ class TopMenu extends React.Component {
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
               )}
-              {bizInfo.SEC_YN === 'Y' && rootMenuId > 0 && (
+              {/* bizInfo.SEC_YN === 'Y' && rootMenuId > 0 && (
                 <BtnBizSettings
                   title="설정하기"
                   // title="권한설정"
@@ -73,7 +73,7 @@ class TopMenu extends React.Component {
                     // history.push(`/admin/adminmain/menu/bizMenuReg/auth/${BIZGRP_ID}/${rootMenuId}`);
                   }}
                 />
-              )}
+              ) */}
               {bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' && (
                 <BtnPrimary
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}

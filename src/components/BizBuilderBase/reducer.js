@@ -165,6 +165,10 @@ const reducer = (state = initialState, action) => {
       const { id, key, val } = action;
       return state.setIn(['bizBuilderBase', id, 'searchData', key], val);
     }
+    case actionTypes.DESTROY_REDUCER: {
+      const { id } = action;
+      return state.deleteIn(['bizBuilderBase', id]);
+    }
     default:
       return state;
   }

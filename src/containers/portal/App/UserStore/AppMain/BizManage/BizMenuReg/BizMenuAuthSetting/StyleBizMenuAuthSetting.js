@@ -14,7 +14,7 @@ const StyleBizMenuAuthSetting = styled.div`
   background: #ffffff;
   margin-top: 30px;
   margin-bottom: 0;
-  margin-left: 30px; /* 350px; */
+  /* margin-left: 30px; /* 350px; */
 
   .pageTitle {
     height: 60px;
