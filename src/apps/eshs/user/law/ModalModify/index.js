@@ -4,7 +4,6 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CompInfo } from 'components/BizBuilder/CompInfo';
 import View from 'components/BizBuilder/PageComp/view';
 
 class ModifyPage extends Component {
@@ -27,9 +26,10 @@ class ModifyPage extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
+    const { onCloseModleHandler, changeViewPage, baseSagaKey } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
+      changeViewPage(baseSagaKey, workSeq, -1, 'LIST');
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');
