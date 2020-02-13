@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -12,6 +12,11 @@ import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyle
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 
+import BizBuilderBase from 'components/BizBuilderBase';
+import View from '../ViewPage';
+import Input from '../InputPage';
+import Modify from '../ModifyPage';
+
 const AntdTable = StyledAntdTable(Table);
 
 class ListPage extends Component {
@@ -19,14 +24,11 @@ class ListPage extends Component {
     super(props);
     this.state = {
       initLoading: true,
+      modalVisible: false,
+      selectedTaskSeq: 0,
+      viewType: '',
     };
   }
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -71,15 +73,79 @@ class ListPage extends Component {
     return columns;
   };
 
+  handleRowClick = taskSeq => {
+    this.setState({
+      modalVisible: true,
+      selectedTaskSeq: taskSeq,
+      viewType: 'VIEW',
+    });
+  };
+
+  handleOnCancel = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
+  handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
+    /* 
+      changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
+      taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
+      viewType: INPUT, MODIFY, VIEW
+    */
+    const { workSeq, sagaKey, loadingComplete } = this.props;
+    return (
+      <BizBuilderBase
+        sagaKey={changedSagaKey}
+        workSeq={workSeq}
+        viewType={viewType.toUpperCase()}
+        taskSeq={taskSeq}
+        CustomViewPage={View}
+        CustomInputPage={Input}
+        CustomModifyPage={Modify}
+        loadingComplete={loadingComplete}
+        onCloseModleHandler={this.handleModalClose}
+        baseSagaKey={sagaKey}
+      />
+    );
+  };
+
+  handleAddClick = () => {
+    this.setState({
+      modalVisible: true,
+      selectedTaskSeq: -1,
+      viewType: 'INPUT',
+    });
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData } = this.props;
+    const { modalVisible, selectedTaskSeq, viewType } = this.state;
+    const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
     const columns = this.setColumns(group.rows[0].cols);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable rowKey="TASK_SEQ" key={`${group.key}_list`} className="view-designer-list" columns={columns} dataSource={listData || []} />
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            className="view-designer-list"
+            columns={columns}
+            dataSource={listData || []}
+            onRow={record => ({
+              onClick: () => this.handleRowClick(record.TASK_SEQ),
+            })}
+          />
         </Group>
+        <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
+          <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
+        </Modal>
       </div>
     );
   };
@@ -163,8 +229,11 @@ class ListPage extends Component {
               );
             })}
             <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
                 Add
+              </StyledButton> */}
+              <StyledButton className="btn-primary" onClick={() => this.handleAddClick()}>
+                새 글
               </StyledButton>
             </div>
           </Sketch>
@@ -188,6 +257,7 @@ ListPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  workSeq: PropTypes.number,
 };
 
 ListPage.defaultProps = {
@@ -196,7 +266,6 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
-  loadingComplete: () => {},
 };
 
 export default ListPage;
