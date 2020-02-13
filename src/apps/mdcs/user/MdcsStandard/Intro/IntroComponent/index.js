@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Modal, Radio, Table, Spin } from 'antd';
+
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
@@ -379,7 +380,7 @@ class IntroComponent extends Component {
           workSeqGoal = 901;
           break;
         case 'TS':
-          workSeqGoal = 361;
+          workSeqGoal = 1921;
           break;
         case 'DW':
           workSeqGoal = 423;

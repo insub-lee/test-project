@@ -30,7 +30,7 @@ import PageInfo from './PageInfo';
 import AppBizModal from './AppBizModal';
 
 import TopMenu from './TopMenu/index';
-// import AuthSetting from './AuthSetting';
+import BizMenuAuthSetting from './BizMenuAuthSetting';
 
 import StyleBizDetail from './StyleBizDetail';
 import StyleBizDetailContent from './StyleBizDetailContent';
@@ -86,6 +86,7 @@ class BizMenuReg extends Component {
       insertNode,
       updateNode,
       updateMymenuDisp,
+      rootMenuId,
     } = this.props;
 
     const { BIZGRP_ID } = this.state;
@@ -147,6 +148,7 @@ class BizMenuReg extends Component {
               updateMymenuDisp={updateMymenuDisp}
               pageID={this.state.pageID}
               bizGroupInfo={bizGroupInfo}
+              rootMenuId={rootMenuId}
             />
           </ErrorBoundary>
           <StyleBizDetailContent style={{ minHeight: 'calc(100vh - 200px)' }}>
@@ -167,6 +169,7 @@ class BizMenuReg extends Component {
                     updateMymenuDisp={updateMymenuDisp}
                     bizGroupInfo={bizGroupInfo}
                     history={history}
+                    rootMenuId={rootMenuId}
                   />
                 </ErrorBoundary>
               </li>
@@ -189,6 +192,7 @@ class BizMenuReg extends Component {
                     <Route path={`/admin/adminmain/${type}/bizMenuReg/info/:BIZGRP_ID`} component={BizInfo} exact />
                     <Route path={`/admin/adminmain/${type}/bizMenuReg/app/:BIZGRP_ID/:appId`} component={AppInfo} exact />
                     <Route path={`/admin/adminmain/${type}/bizMenuReg/page/:BIZGRP_ID/:PAGE_ID`} component={PageInfo} exact />
+                    <Route path={`/admin/adminmain/${type}/bizMenuReg/auth/:BIZGRP_ID/:MENU_ID`} component={BizMenuAuthSetting} exact />
                     {/* <Route
                     path={`${preUrl}/page/:BIZGRP_ID/:PAGE_ID`}
                     component={props => (<PageInfo {...props} bizGroupInfo={bizGroupInfo} />)}
@@ -196,7 +200,6 @@ class BizMenuReg extends Component {
                   /> */}
 
                     <Route path={`/admin/adminmain/${type}/bizMenuReg/appSelect/${BIZGRP_ID}/modal`} component={AppBizModal} />
-
                     {/* <Route path={`${preUrl}/authSetting/:BIZGRP_ID`} component={AuthSetting} /> */}
                   </Switch>
                 </ErrorBoundary>
@@ -229,6 +232,7 @@ BizMenuReg.propTypes = {
   updateMymenuDisp: PropTypes.func.isRequired,
 
   loadingOn: PropTypes.func.isRequired,
+  rootMenuId: PropTypes.number.isRequired,
 };
 
 BizMenuReg.defaultProps = {};
@@ -255,6 +259,8 @@ const mapStateToProps = createStructuredSelector({
   categoryData: selectors.makeCategoryData(),
   bizGroupInfo: selectors.makeBizGroupInfo(),
   selectedIndex: selectors.makeSelectedIndex(),
+  rootMenuId: selectors.makeRootMenuId(),
+  
 });
 
 const withConnect = connect(

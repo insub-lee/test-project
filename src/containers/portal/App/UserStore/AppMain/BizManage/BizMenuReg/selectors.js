@@ -8,6 +8,10 @@ const makeBizGroupInfo = () => createSelector(selectOrg, org => org.get('bizGrou
 
 const makeSelectedIndex = () => createSelector(selectOrg, org => org.get('selectedIndex'));
 
+const makeRootMenuId = () => createSelector(selectOrg, org => org.get('MENU_ID'));
+
+const makeRootAuthType = () => createSelector(selectOrg, org => org.get('AUTH_TYPE'));
+
 // const makeModalVisible = () => createSelector(
 //   selectOrg,
 //   org => org.get('titleModalVisible'),
@@ -18,5 +22,7 @@ export {
   makeCategoryData,
   makeBizGroupInfo,
   makeSelectedIndex,
+  makeRootMenuId,
+  makeRootAuthType,
   // makeModalVisible,
 };

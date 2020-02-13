@@ -255,6 +255,10 @@ class VgroupAdmin extends React.Component {
     this.props.vgroupInfoDelete(STIE_ID, GRP_ID);
   };
 
+  moveVgroup = treeData => {
+    this.props.moveVgroup(this.state.SITE_ID, treeData);
+  };
+
   saveButton = () =>
     this.state.showAddMember ? (
       <StyledButton className="btn-primary" onClick={this.updateMember}>
@@ -284,6 +288,10 @@ class VgroupAdmin extends React.Component {
                   returnVgroupInsert={this.returnVgroupInsert}
                   returnVgroupDelete={this.returnVgroupDelete}
                   returnVgroupUpdate={this.returnVgroupUpdate}
+                  canDrag
+                  canDropOut={false}
+                  canDrop
+                  moveNode={this.moveVgroup}
                 />
               </div>
             </div>
@@ -387,6 +395,7 @@ VgroupAdmin.propTypes = {
   vgroupInfoUpdate: PropTypes.func, //eslint-disable-line
   vgroupInfoDelete: PropTypes.func, //eslint-disable-line
   vgroupMemberUpdate: PropTypes.func, //eslint-disable-line
+  moveVgroup: PropTypes.func, //eslint-disable-line
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -403,6 +412,7 @@ const mapDispatchToProps = dispatch => ({
   vgroupMemberUpdate: (SITE_ID, GRP_ID, managerSetMembers, userSetMembers, deptSetMembers) => {
     dispatch(actions.vgroupMemberUpdate(SITE_ID, GRP_ID, managerSetMembers, userSetMembers, deptSetMembers));
   },
+  moveVgroup: (SITE_ID, treeData) => dispatch(actions.moveVgroup(SITE_ID, treeData)),
 });
 
 const mapStateToProps = createStructuredSelector({

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 
+const AntdTable = StyledAntdTable(Table);
 class List extends Component {
   state = {
     searchText: '',
@@ -244,6 +246,16 @@ class List extends Component {
     );
   };
 
+  handleSearch = (selectedKeys, confirm) => {
+    confirm();
+    this.setState({ searchText: selectedKeys[0] });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
+  };
+
   onUpdate = () => {
     const { sagaKey, formData, submitHadnlerBySaga } = this.props;
     const { NODE_ID, DOC_CODE } = formData;
@@ -304,7 +316,7 @@ class List extends Component {
     }
     console.debug('docCategoryTempListExtra', docCategoryTempListExtra);
     return (
-      <div style={{ padding: '48px', backgroundColor: 'white' }}>
+      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <div style={{ marginBottom: '10px' }}>
           <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
             <Icon type="form" /> 표준문서 템플릿관리
@@ -347,7 +359,7 @@ class List extends Component {
           </Button>
         </div>
 
-        <Table rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
+        <AntdTable rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
       </div>
     );
   }

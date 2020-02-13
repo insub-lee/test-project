@@ -64,7 +64,7 @@ class GenBoard extends Component {
     const { widgetId } = this.props;
 
     return (
-      <div style={{ padding: '48px' }}>
+      <div style={{ padding: '10px 15px' }}>
         <BizBuilderBase
           id={`list${widgetId}`}
           component={List}

@@ -6,6 +6,7 @@ import iconVisible from 'images/common/icon-visible.png';
 import iconInVisible from 'images/common/icon-invisible.png';
 import iconRemove from 'images/common/icon-delete-white.png';
 import iconEdit from 'images/common/icon-edit-white2.png';
+import iconSetting from 'images/common/icon-settings.png';
 
 const StyleMyPageTree = styled.div`
   .rst__node {
@@ -133,5 +134,13 @@ const EditBtn = styled.button`
   background: #4b4b4b url(${iconEdit}) no-repeat 50% 50%;
 `;
 
+const SettingBtn = styled.button`
+  width: 25px;
+  height: 25px;
+  border: 1px solid #d3d5d7;
+  border-radius: 3px;
+  background: #ffffff url(${iconSetting}) no-repeat 50% 50%;
+`;
+
 export default StyleMyPageTree;
-export { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn };
+export { AppListBtn, FolderBtn, CopyBtn, VisionBtn, RemoveBtn, EditBtn, SettingBtn };

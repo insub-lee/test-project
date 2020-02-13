@@ -2,17 +2,15 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { fromJS } from 'immutable';
 import { routerMiddleware } from 'react-router-redux';
 import createSagaMiddleWare from 'redux-saga';
-// import logger from 'redux-logger';
+import logger from 'redux-logger';
 import createReducer from './reducers';
 
 const sagaMiddleware = createSagaMiddleWare();
 
 const configureStore = (initialState = {}, history) => {
-  const middleWares = [
-    sagaMiddleware,
-    routerMiddleware(history),
-    // logger,
-  ];
+  const middleWares = [sagaMiddleware, routerMiddleware(history)];
+
+  if (process.env.NODE_ENV !== 'production') middleWares.push(logger);
 
   const enhancers = [applyMiddleware(...middleWares)];
 

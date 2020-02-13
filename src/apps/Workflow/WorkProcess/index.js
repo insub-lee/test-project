@@ -44,7 +44,6 @@ class WorkProcess extends Component {
       filterItem = DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
       colSpan = Math.floor(24 / filterRule.length);
     }
-    console.debug('workprocess', this.props);
     return (
       <StyledWorkProcess>
         <div className="signLineWrapper">

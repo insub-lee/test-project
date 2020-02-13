@@ -61,14 +61,16 @@ class AppsRouter extends React.PureComponent {
       }
       if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
+        const authority = item.BIZMENU_AUTH ? item.BIZMENU_AUTH : [];
+        console.debug(item.NAME_KOR, item.legacyPath, 'authority: ', authority);
         return (
-          <div className="AppsRouterWrapper">
+          <div className="AppsRouterWrapper" style={{ height: '100%' }}>
             <Switch>
               <Route
                 path={`/${basicPath.APPS}/workBuilder/:ID`}
                 render={props => (
                   <ErrorBoundary>
-                    <WorkBuilderViewer {...props} />
+                    <WorkBuilderViewer {...props} authority={authority} />
                   </ErrorBoundary>
                 )}
               />
@@ -76,7 +78,7 @@ class AppsRouter extends React.PureComponent {
                 path={`/${basicPath.APPS}/Workflow/User/ApproveBase/:CATE`}
                 render={props => (
                   <ErrorBoundary>
-                    <ApproveBase {...props} />
+                    <ApproveBase {...props} authority={authority} />
                   </ErrorBoundary>
                 )}
               />
@@ -84,7 +86,7 @@ class AppsRouter extends React.PureComponent {
                 path={`/${basicPath.APPS}/${item.legacyPath}`}
                 render={() => (
                   <ErrorBoundary>
-                    <Comp />
+                    <Comp authority={authority} />
                   </ErrorBoundary>
                 )}
               />
@@ -105,8 +107,11 @@ class AppsRouter extends React.PureComponent {
   };
 
   render() {
-    console.log('$$$ appsRouter의 render()', this.contents);
-    return <div className="appsRoute">{this.contents}</div>;
+    return (
+      <div className="appsRoute" style={{ height: '100%' }}>
+        {this.contents}
+      </div>
+    );
   }
 }
 

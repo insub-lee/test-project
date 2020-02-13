@@ -32,6 +32,8 @@ export function* getTreeData(payload) {
       bizGroupInfo: fromJS(bizGroupInfo),
       selectedIndex: -1,
       BIZGRP_ID,
+      MENU_ID: result.get(0) ? result.get(0).get('MENU_ID') : -1,
+      AUTH_TYPE: result.get(0) ? result.get(0).get('AUTH_TYPE') : '',
     });
   }
 

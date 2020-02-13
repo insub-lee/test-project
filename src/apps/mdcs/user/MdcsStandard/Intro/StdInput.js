@@ -41,12 +41,14 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
+    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      // changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      // page 이동
+      redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
     }
   };
 
