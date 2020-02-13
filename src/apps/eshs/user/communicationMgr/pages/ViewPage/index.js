@@ -31,6 +31,7 @@ class ViewPage extends Component {
   // }
 
   render = () => {
+    console.debug('@@@@@@VIEW RENDERING@@@@@@', this.props);
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -54,7 +55,10 @@ class ViewPage extends Component {
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-                수정
+                Modify
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                List
               </StyledButton>
             </div>
           </Sketch>

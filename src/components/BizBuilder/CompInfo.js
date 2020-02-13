@@ -53,6 +53,7 @@ import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 import DatePicker from 'components/BizBuilder/Field/DatePicker';
 import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
+import LabelDateWithoutTime from 'components/BizBuilder/Field/LabelDateWithoutTime';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -108,4 +109,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
   'components/BizBuilder/Field/TitleModalComp': { renderer: property => <TitleModalComp {...property} /> },
   'components/BizBuilder/Field/DatePicker': { renderer: property => <DatePicker {...property} /> },
+  'components/BizBuilder/Field/LabelDateWithoutTime': { renderer: property => <LabelDateWithoutTime {...property} /> },
 };

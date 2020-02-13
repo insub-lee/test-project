@@ -13,12 +13,15 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import request from 'utils/request';
+import moment from 'moment';
+
 import View from '../ViewPage';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
-
+moment.locale('ko');
 class ListPage extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +30,27 @@ class ListPage extends Component {
       modalVisible: false,
       selectedTaskSeq: 0,
       viewType: '',
+      communicationList: [],
     };
+  }
+
+  componentDidMount() {
+    const fetchData = async () => {
+      const result = await request({
+        url: '/api/eshs/v1/common/AllEshsCommunications',
+        method: 'GET',
+      });
+      result.response.list.map(item => {
+        item.receive_date = moment(item.receive_date).format('YYYY-MM-DD');
+        item.reply_date = moment(item.reply_date).format('YYYY-MM-DD');
+        return item;
+      });
+      this.setState({
+        communicationList: result.response.list,
+      });
+    };
+
+    fetchData();
   }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
@@ -56,21 +79,6 @@ class ListPage extends Component {
       });
     }
     return <div />;
-  };
-
-  setColumns = cols => {
-    const columns = [];
-    cols.forEach(node => {
-      if (node.comp && node.comp.COMP_FIELD) {
-        columns.push({
-          dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
-          title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: node.style.width,
-          render: (text, record) => this.renderCompRow(node.comp, text, record, true),
-        });
-      }
-    });
-    return columns;
   };
 
   handleRowClick = taskSeq => {
@@ -125,9 +133,76 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
+    const columns = [
+      {
+        title: '번호',
+        dataIndex: 'RNUM',
+        key: 'RNUM',
+        width: 50,
+      },
+      {
+        title: '접수',
+        children: [
+          {
+            title: '접수일자',
+            dataIndex: 'RECEIVE_DATE',
+            key: 'RECEIVE_DATE',
+            align: 'center',
+            width: 100,
+          },
+          {
+            title: '발행처',
+            dataIndex: 'PUBLICATION',
+            key: 'PUBLICATION',
+            align: 'center',
+            width: 150,
+          },
+          {
+            title: '제목(접수내역)',
+            dataIndex: 'TITLE',
+            key: 'TITLE',
+            align: 'center',
+            ellipsis: 'true',
+          },
+        ],
+      },
+      {
+        title: '조치/회신',
+        children: [
+          {
+            title: '회신일자',
+            dataIndex: 'REPLY_DATE',
+            key: 'REPLY_DATE',
+            align: 'center',
+            width: 100,
+          },
+          {
+            title: '조치/회신 내용(방법, 요약)',
+            dataIndex: 'REPLY_CONTENT',
+            key: 'REPLY_CONTENT',
+            align: 'center',
+            ellipsis: 'true',
+          },
+          {
+            title: '관련문서',
+            dataIndex: 'file_name',
+            key: 'file_name',
+            align: 'center',
+            width: 100,
+          },
+          {
+            title: '문서유형',
+            dataIndex: 'DOC_TYPE',
+            key: 'DOC_TYPE',
+            align: 'center',
+            width: 150,
+          },
+        ],
+      },
+    ];
+
     const { modalVisible, selectedTaskSeq, viewType } = this.state;
     const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
-    const columns = this.setColumns(group.rows[0].cols);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -138,6 +213,10 @@ class ListPage extends Component {
             className="view-designer-list"
             columns={columns}
             dataSource={listData || []}
+            // dataSource={this.state.communicationList || []}
+            bordered
+            pagination={{ pageSize: 30 }}
+            tableLayout="fixed"
             onRow={record => ({
               onClick: () => this.handleRowClick(record.TASK_SEQ),
             })}

@@ -35,7 +35,7 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    console.debug('@@@@@@MODIFY@@@@@@');
+    console.debug('@@@@@@MODIFY RENDERING@@@@@@', this.props.taskSeq);
 
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage } = this.props;
 
@@ -58,7 +58,10 @@ class ModifyPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
-                저장
+                Save
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                List
               </StyledButton>
             </div>
           </Sketch>
