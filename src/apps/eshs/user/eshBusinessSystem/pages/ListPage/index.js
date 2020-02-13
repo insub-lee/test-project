@@ -151,6 +151,7 @@ class ListPage extends Component {
   };
 
   render = () => {
+    console.debug('@@@LIST UPLOAD_FILE@@@', this.props.listData);
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {

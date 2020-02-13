@@ -30,7 +30,6 @@ class ListPage extends Component {
       modalVisible: false,
       selectedTaskSeq: 0,
       viewType: '',
-      communicationList: [],
     };
   }
 
@@ -44,9 +43,6 @@ class ListPage extends Component {
         item.receive_date = moment(item.receive_date).format('YYYY-MM-DD');
         item.reply_date = moment(item.reply_date).format('YYYY-MM-DD');
         return item;
-      });
-      this.setState({
-        communicationList: result.response.list,
       });
     };
 
@@ -185,10 +181,11 @@ class ListPage extends Component {
           },
           {
             title: '관련문서',
-            dataIndex: 'file_name',
-            key: 'file_name',
+            dataIndex: 'UPLOAD_FILE',
+            key: 'UPLOAD_FILE',
             align: 'center',
             width: 100,
+            onClick: e => e.stopPropagation(),
           },
           {
             title: '문서유형',
@@ -230,6 +227,7 @@ class ListPage extends Component {
   };
 
   render = () => {
+    console.debug('@@@COMMUNICATION LISTDATA@@@', this.props.listData);
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {

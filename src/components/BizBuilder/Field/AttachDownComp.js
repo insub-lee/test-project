@@ -138,6 +138,7 @@ class AttachDownComp extends React.Component {
         {list.map(node => (
           <div key={`${rowData.TASK_SEQ}_${node.seq}`}>
             <a href={node.down} download>
+              <Icon type={this.getFileExtType(node.fileExt)} />
               {node.fileName}
             </a>
           </div>
@@ -163,7 +164,7 @@ class AttachDownComp extends React.Component {
       );
     if (visible && renderDownList) {
       return (
-        <Popover content={renderDownList} trigger="click" visible={this.state.popVisible} onVisibleChange={this.handleVisibleChange}>
+        <Popover content={renderDownList} trigger="click" visible={this.state.popVisible} onVisibleChange={this.handleVisibleChange} placement="right">
           <button type="button" className="attachDownCompIconBtn">
             <Icon className="attachDownCompIcon" type="file-markdown" />
           </button>
