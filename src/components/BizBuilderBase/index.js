@@ -256,6 +256,7 @@ const mapStateToProps = createStructuredSelector({
   viewPageData: selectors.makeSelectViewPageData(),
   workInfo: selectors.makeSelectWorkInfo(),
   dataLoading: selectors.makeSelectDataLoading(),
+  listSelectRowKeys: selectors.makeSelectListSelectRowKeys(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -292,6 +293,8 @@ const mapDispatchToProps = dispatch => ({
   getListData: (id, workSeq) => dispatch(actions.getListDataBySaga(id, workSeq)),
   redirectUrl: (id, url) => dispatch(actions.redirectUrl(id, url)),
   destroyReducer: id => dispatch(actions.destroyReducerByReducer(id)),
+  setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),
+  removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });

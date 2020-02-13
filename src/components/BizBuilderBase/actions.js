@@ -289,3 +289,16 @@ export const destroyReducerByReducer = id => ({
   type: actionTypes.DESTROY_REDUCER,
   id,
 });
+
+export const setListSelectRowKeysByReducer = (id, list) => ({
+  type: actionTypes.SET_LIST_SELECT_ROW_KEYS_REDUCER,
+  id,
+  list,
+});
+
+export const removeMultiTaskBySaga = (id, reloadId, callbackFunc) => ({
+  type: `${actionTypes.REMOVE_MULTI_TASK_SAGA}_${id}`,
+  id,
+  reloadId,
+  callbackFunc,
+});

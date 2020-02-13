@@ -481,6 +481,31 @@ function* redirectUrl({ id, url }) {
   history.push(url);
 }
 
+function* removeMultiTask({ id, reloadId, callbackFunc }) {
+  const removeList = yield select(selectors.makeSelectListSelectRowKeysById(id));
+  if (removeList.length > 0) {
+    const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
+    const { workSeq, taskSeq } = viewPageData;
+
+    const response = yield call(
+      Axios.post,
+      `/api/builder/v1/work/taskContentsList/-1`,
+      { PARAM: { WORK_SEQ: workSeq, taskList: removeList } },
+      { BUILDER: 'deleteMultiTask' },
+    );
+
+    if (response) {
+      if (typeof callbackFunc === 'function') {
+        callbackFunc(id, workSeq, taskSeq);
+      } else {
+        yield put(actions.getBuilderData(reloadId || id, workSeq, -1, viewPageData.viewType));
+      }
+    }
+  } else {
+    message.warning(<MessageContent>삭제할 컨텐츠를 선택하세요.</MessageContent>);
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -502,6 +527,7 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_LIST_DATA_SAGA}_${arg.sagaKey}`, getListData);
   yield takeEvery(`${actionTypes.SUBMIT_EXTRA}_${arg.sagaKey || arg.id}`, submitExtraHandler);
   yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
+  yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);
