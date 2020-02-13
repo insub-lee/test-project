@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Modal, Radio, Table, Spin } from 'antd';
+
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
@@ -372,14 +373,13 @@ class IntroComponent extends Component {
     };
 
     let workSeqGoal = workSeq;
-    console.debug('selectedDraft', selectedDraft);
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
           workSeqGoal = 901;
           break;
         case 'TS':
-          workSeqGoal = 361;
+          workSeqGoal = 1921;
           break;
         case 'DW':
           workSeqGoal = 423;
@@ -414,7 +414,7 @@ class IntroComponent extends Component {
     // Todo - 폐기 일괄
     if (['ABROGATION_MULTI'].includes(selectedDraft)) {
     }
-    console.debug(taskSeq, workSeqGoal, viewType);
+    console.debug('workPrcProps', workPrcProps);
     return (
       <BizBuilderBase
         sagaKey={`BizDoc_${workSeqGoal}`}

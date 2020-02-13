@@ -46,7 +46,7 @@ class TopMenu extends React.Component {
 
   render() {
     const { BIZGRP_ID } = this.state;
-    const { bizInfo, confirmBizGroup, history, pageID } = this.props;
+    const { bizInfo, confirmBizGroup, history, pageID, rootMenuId } = this.props;
     const pathArr = history.location.pathname.split('/');
     const type = pathArr[3];
     const linkto = `/preview/page/${pageID}`;
@@ -64,14 +64,16 @@ class TopMenu extends React.Component {
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
               )}
-              {bizInfo.SEC_YN === 'Y' && (
+              {/* bizInfo.SEC_YN === 'Y' && rootMenuId > 0 && (
                 <BtnBizSettings
                   title="설정하기"
+                  // title="권한설정"
                   onClick={() => {
                     history.push(`/admin/adminmain/${type}/authSetting/${BIZGRP_ID}`);
+                    // history.push(`/admin/adminmain/menu/bizMenuReg/auth/${BIZGRP_ID}/${rootMenuId}`);
                   }}
                 />
-              )}
+              ) */}
               {bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' && (
                 <BtnPrimary
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
@@ -95,6 +97,7 @@ TopMenu.propTypes = {
   handleGetBizInfo: PropTypes.func.isRequired,
   confirmBizGroup: PropTypes.func.isRequired,
   BIZGRP_ID: PropTypes.number.isRequired,
+  rootMenuId: PropTypes.number.isRequired,
   bizInfo: PropTypes.object.isRequired,
   pageID: PropTypes.number,
 };

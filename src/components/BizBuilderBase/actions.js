@@ -278,3 +278,14 @@ export const getListDataBySaga = (id, workSeq) => ({
   id,
   workSeq,
 });
+
+export const redirectUrl = (id, url) => ({
+  type: `${actionTypes.REDIRECT_URL}_${id}`,
+  id,
+  url,
+});
+
+export const destroyReducerByReducer = id => ({
+  type: actionTypes.DESTROY_REDUCER,
+  id,
+});

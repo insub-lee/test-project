@@ -41,19 +41,21 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
+    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      // changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      // page 이동
+      redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
     }
   };
 
   render() {
     const { sagaKey: id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
     // Work Process 사용여부
-
+    console.debug('input props', this.props);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;

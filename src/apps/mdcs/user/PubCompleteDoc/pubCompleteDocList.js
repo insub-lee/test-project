@@ -104,7 +104,7 @@ class PubCompleteDocList extends Component {
 
   render() {
     return (
-      <div style={{ padding: '48px', backgroundColor: 'white' }}>
+      <div style={{ padding: '10px 15px', backgroundColor: 'white', height: '100%' }}>
         <div style={{ marginBottom: '10px', clear: 'both', overflow: 'hidden', width: '100%' }}>
           <p style={{ fontSize: '22px', fontWeight: '500', color: '#000', paddingBottom: '10px', float: 'left' }}>
             <Icon type="form" /> 접수/배포 완료함

@@ -8,6 +8,7 @@ import { Icon, Input, Popover } from 'antd';
 import { lang, intlObj } from 'utils/commonUtils';
 import * as feed from 'components/Feedback/functions';
 // import 'style/sortable-tree-biz.css';
+import * as treeFunc from 'containers/common/functions/treeFunc';
 import messages from './messages';
 import * as makeTreeData from './makeTreeData';
 import { toggleExpandedForSelected } from './tree-data-utils';
@@ -193,16 +194,16 @@ class VgroupTree extends Component {
   };
 
   onMoveNode = ({ treeData, node, nextParentNode }) => {
-    const { moveMymenu } = this.props;
+    const { moveNode } = this.props;
     if (node.LVL !== 0) {
       // [ 노드 드래그 이동 후 실행됨 ]
       // 이동 후 변경된 treeData를 재귀함수돌며 sort, lvl값을 재정렬하고, 트리데이터를 파라미터로 전달
-      const { CATG_ID } = node;
+      const { GRP_ID } = node;
       let PRNT_ID = -1; // 최상위 루트
 
       if (nextParentNode) {
         // 부모가 있는 경우 PRNT_ID지정
-        PRNT_ID = nextParentNode.CATG_ID;
+        PRNT_ID = nextParentNode.GRP_ID;
       }
 
       const resortTreeData = (data, lvl) => {
@@ -210,7 +211,7 @@ class VgroupTree extends Component {
           const node = data[i];
           node.SORT_SQ = i + 1;
           node.LVL = lvl;
-          if (node.CATG_ID === CATG_ID) {
+          if (node.GRP_ID === GRP_ID) {
             node.PRNT_ID = PRNT_ID;
           }
           if (node.children) {
@@ -220,7 +221,7 @@ class VgroupTree extends Component {
       };
 
       resortTreeData(treeData, 0);
-      moveMymenu(generateList(fromJS(treeData)));
+      moveNode(treeFunc.generateList(fromJS(treeData)));
     }
   };
 
@@ -418,50 +419,14 @@ class VgroupTree extends Component {
   };
 
   render() {
-    const {
-      treeData,
-      selectedIndex,
-      menuName, // 폴더/페이지명 입력인풋
-      editingMenuName, // 폴더/페이지명 수정중 bool
-    } = this.state;
+    const { treeData } = this.state;
 
     const {
-      onClick, // 트리 클릭 func
-      saveData, // 임시데이터 저장 func
-      deleteMymenu, // 메뉴 삭제 func
       canDrag, // 드래그 가능 bool
-      moveMymenu, // 메뉴 드래그 이동 func(treeData)
     } = this.props;
 
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1 };
-    const updateContent = (
-      <div>
-        <ul className="entryName">
-          <li>
-            <label htmlFor="l_ko">{intlObj.get(messages.kor)}</label>
-            <Input placeholder="" title={intlObj.get(messages.kor)} maxLength={100} onChange={this.onChangeNameKor} value={this.state.NAME_KOR} id="l_ko" />
-          </li>
-          <li>
-            <label htmlFor="l_en">{intlObj.get(messages.eng)}</label>
-            <Input placeholder="" title={intlObj.get(messages.eng)} maxLength={100} onChange={this.onChangeNameEng} value={this.state.NAME_ENG} id="l_en" />
-          </li>
-          <li>
-            <label htmlFor="l_ch">{intlObj.get(messages.chn)}</label>
-            <Input placeholder="" title={intlObj.get(messages.chn)} maxLength={100} onChange={this.onChangeNameChn} value={this.state.NAME_CHN} id="l_ch" />
-          </li>
-        </ul>
-        <div className="buttonWrapper">
-          <button type="button" onClick={this.closeModalUpdate}>
-            {intlObj.get(messages.cancle)}
-          </button>
-          <button type="button" onClick={this.onOkVgroupUpdate}>
-            {intlObj.get(messages.save)}
-          </button>
-        </div>
-      </div>
-    );
-
     return (
       <StyleMyAppTree
         style={{
@@ -480,15 +445,24 @@ class VgroupTree extends Component {
             onChange={this.updateTreeData}
             rowHeight={35}
             scaffoldBlockPxWidth={20}
-            canDrag={({ node }) =>
-              // [ 노드 드래그 가능 여부 ]
-              canDrag
-            }
-            canDrop={({ nextParent }) =>
+            canDrag={canDrag}
+            canDrop={({ prevParent, nextParent }) => {
               // [ 노드 드롭 가능 여부 ]
               // 조건 : 최하위 노드 하위에 이동불가
-              nextParent
-            }
+              if (nextParent) {
+                this.state = { moveNodeFlag: 1 };
+                return nextParent;
+              }
+              this.state = { moveNodeFlag: 2 };
+              return false;
+            }}
+            onDragStateChanged={({ isDragging }) => {
+              if (isDragging) {
+                this.state = { moveNodeFlag: 0 };
+              } else if (!isDragging && this.state.moveNodeFlag === 2) {
+                feed.error('해당 위치로 이동할 수 없습니다.');
+              }
+            }}
             onMoveNode={this.onMoveNode}
             generateNodeProps={this.generateNodeProps}
             style={{ display: 'inline-block', width: '100%', height: '100%', overflow: 'visible' }}
@@ -506,26 +480,25 @@ VgroupTree.propTypes = {
   selectedIndex: PropTypes.number,
   SITE_ID: PropTypes.number.isRequired,
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
-  canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   history: PropTypes.object,
   onClick: PropTypes.func,
   returnVgroupInsert: PropTypes.func,
   returnVgroupUpdate: PropTypes.func,
   returnVgroupDelete: PropTypes.func,
-  moveMymenu: PropTypes.func,
+  moveNode: PropTypes.func.isRequired, //eslint-disable-line
+
 };
 
 VgroupTree.defaultProps = {
   treeData: [],
   selectedIndex: 0,
   canDrag: false,
-  canDrop: false,
   history: {},
   onClick: () => {},
   returnVgroupInsert: () => {},
   returnVgroupUpdate: () => {},
   returnVgroupDelete: () => {},
-  moveMymenu: () => {},
+  moveNode: () => {},
 };
 
 export default VgroupTree;

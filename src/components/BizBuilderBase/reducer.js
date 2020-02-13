@@ -124,7 +124,9 @@ const reducer = (state = initialState, action) => {
         .deleteIn(['bizBuilderBase', id, 'workFlow'])
         .deleteIn(['bizBuilderBase', id, 'formData'])
         .deleteIn(['bizBuilderBase', id, 'validationData'])
-        .deleteIn(['bizBuilderBase', id, 'listData']);
+        .deleteIn(['bizBuilderBase', id, 'listData'])
+        .deleteIn(['bizBuilderBase', id, 'listSelectRowKeys'])
+        .deleteIn(['bizBuilderBase', id, 'processRule']);
     }
     case actionTypes.SET_REVISION_HISTORY: {
       const { id, list } = action;
@@ -162,6 +164,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CHANGE_SEARCH_DATA_REDUCER: {
       const { id, key, val } = action;
       return state.setIn(['bizBuilderBase', id, 'searchData', key], val);
+    }
+    case actionTypes.DESTROY_REDUCER: {
+      const { id } = action;
+      return state.deleteIn(['bizBuilderBase', id]);
     }
     default:
       return state;
