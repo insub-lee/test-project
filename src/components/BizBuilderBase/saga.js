@@ -385,11 +385,13 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     }
   }
 
-  // yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
+  yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
   if (typeof callbackFunc === 'function') {
-    yield call(callbackFunc, id, modifyWorkSeq, modifyTaskSeq, formData);
+    callbackFunc(id, modifyWorkSeq, modifyTaskSeq, formData);
+    // 이런 형태로도 가능 함수, 파라미터...
+    // yield call(callbackFunc, id, modifyWorkSeq, modifyTaskSeq, formData);
   }
-  // yield put(actions.successSaveTask(id));
+  yield put(actions.successSaveTask(id));
 }
 
 function* modifyTask({ id, callbackFunc }) {
@@ -499,9 +501,9 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_DRAFT_PROCESS}_${arg.sagaKey}`, getDraftProcess);
   yield takeEvery(`${actionTypes.GET_LIST_DATA_SAGA}_${arg.sagaKey}`, getListData);
   yield takeEvery(`${actionTypes.SUBMIT_EXTRA}_${arg.sagaKey || arg.id}`, submitExtraHandler);
+  yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);
   // yield takeLatest(actionTypes.DELETE_TASK, deleteTask);
-  yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
 }
