@@ -24,8 +24,26 @@ class SelectInputSearchComp extends React.Component {
       },
     } = this.props;
     const apiArray = [{ key: `select_${mapId}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
-    getExtraApiData(id, apiArray);
+    getExtraApiData(id, apiArray, this.setInit);
   }
+
+  setInit = () => {
+    const {
+      extraApiData,
+      CONFIG: {
+        property: { mapId },
+      },
+    } = this.props;
+    const apiData = extraApiData[`select_${mapId}`];
+
+    const init = (apiData && apiData.categoryMapList && apiData.categoryMapList[1]) || {};
+    if (init !== {}) {
+      this.setState({
+        searchType: init.CODE,
+        searchText: init.NAME_KOR,
+      });
+    }
+  };
 
   // custom search 예제
   handleOnChangeSearch = value => {
@@ -66,7 +84,7 @@ class SelectInputSearchComp extends React.Component {
         <Select
           value={searchText || ''}
           placeholder={placeholder}
-          style={{ width: 300, marginRight: 10 }}
+          style={{ width: 150 }}
           onChange={value => {
             this.onChangeHandler(value);
           }}
@@ -83,7 +101,7 @@ class SelectInputSearchComp extends React.Component {
                 </Option>
               ))}
         </Select>
-        <Input style={{ width: 300, marginRight: 10 }} onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} />
+        <Input style={{ width: 150 }} onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} />
       </>
     );
   }
