@@ -53,7 +53,18 @@ class StdInput extends Component {
   };
 
   render() {
-    const { sagaKey: id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      workInfo,
+      processRule,
+      setProcessRule,
+      loadingComplete,
+      viewPageData,
+      changeViewPage,
+      onCloseModal,
+      CustomWorkProcess,
+    } = this.props;
     // Work Process 사용여부
     console.debug('input props', this.props);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -75,7 +86,9 @@ class StdInput extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed && prcId !== -1 && <WorkProcess id={id} PRC_ID={prcId} processRule={processRule} setProcessRule={setProcessRule} />}
+            {isWorkflowUsed && prcId !== -1 && (
+              <WorkProcess id={id} PRC_ID={prcId} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
+            )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
               <StyledButton className="btn-primary btn-first" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>

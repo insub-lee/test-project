@@ -27,8 +27,16 @@ class HoldView extends Component {
   }
 
   onHoldRelase = () => {
-    const { selectedRow, setSelectedRow, setOpinionVisible } = this.props;    
+    const { selectedRow, setSelectedRow, setOpinionVisible } = this.props;
     const APPV_STATUS = selectedRow.PROC_STATUS === 3 ? 4 : 40;
+    const nSelectedRow = { ...selectedRow, APPV_STATUS };
+    setSelectedRow(nSelectedRow);
+    setOpinionVisible(true);
+  };
+
+  onMDCSHoldRelase = () => {
+    const { selectedRow, setSelectedRow, setOpinionVisible } = this.props;
+    const APPV_STATUS = 400;
     const nSelectedRow = { ...selectedRow, APPV_STATUS };
     setSelectedRow(nSelectedRow);
     setOpinionVisible(true);
@@ -76,11 +84,18 @@ class HoldView extends Component {
           style={{ top: 100 }}
           destroyOnClose
         >
-          {(selectedRow.APPV_STATUS === 4 || selectedRow.APPV_STATUS === 40) && <OpinionModal {...this.props} CustomActionView={HoldRelease} />}
+          {(selectedRow.APPV_STATUS === 4 || selectedRow.APPV_STATUS === 40 || selectedRow.APPV_STATUS === 400) && (
+            <OpinionModal {...this.props} CustomActionView={HoldRelease} />
+          )}
         </ModalWrapper>
         <div style={{ textAlign: 'center' }} className="btn-group">
-          {(selectedRow.PROC_STATUS === 3 ||  selectedRow.PROC_STATUS === 30) && selectedRow.NODE_ID !== 114 && (
+          {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 30) && selectedRow.NODE_ID !== 114 && (
             <StyledButton style={{ marginRight: '5px' }} key="appvBtn" className="btn-primary" onClick={() => this.onHoldRelase()}>
+              홀드해제
+            </StyledButton>
+          )}
+          {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
+            <StyledButton style={{ marginRight: '5px' }} key="appvBtn" className="btn-primary" onClick={() => this.onMDCSHoldRelase()}>
               홀드해제
             </StyledButton>
           )}
