@@ -7,49 +7,41 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userList: [],
+      recordList: [],
     };
   }
 
   handleAppStart = () => {
-    // const { result, id, changeFormData } = this.props;
-    // const userList = (result && result.selectAllUserList && result.selectAllUserList.list) || [];
-    // const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
-    // changeFormData(id, 'cmpnyList', cmpnyList);
-    // this.setState({
-    //   userList,
-    // });
+    const { result, id, changeFormData } = this.props;
+    const recordList = (result && result.recordList && result.recordList.recordList) || [];
+    this.setState({
+      recordList,
+    });
   };
 
   componentDidMount = () => {
-    // const { id, getCallDataHanlder, apiAry } = this.props;
-    // getCallDataHanlder(id, apiAry, this.handleAppStart);
-  };
-
-  setList = () => {
-    // const { formData } = this.props;
-    // const { userList } = this.state;
-    // const searchList = (formData && formData.searchList) || [];
-    // let list = [];
-    // const is_search = (formData && formData.is_search) || false;
-    // if (is_search) list = searchList;
-    // else list = userList;
-    // return list;
+    const { id, getCallDataHanlder, apiAry } = this.props;
+    getCallDataHanlder(id, apiAry, this.handleAppStart);
   };
 
   onRowClick = e => {
-    // const { id, changeFormData } = this.props;
+    const { id, changeFormData } = this.props;
+    changeFormData(id, 'rowData', (e && e.rowData) || {});
+    console.debug('onRowClick ', e);
   };
 
   noRowsRenderer = () => <div className="noRows">0 명</div>;
 
   getColumns = () => [
-    // { label: '소속', dataKey: 'belong', width: 350, ratio: 25 },
-    // { label: '이름', dataKey: 'emp_nm', width: 200, ratio: 14 },
-    // { label: '직위', dataKey: 'emp_position', width: 200, ratio: 12 },
-    // { label: '직책', dataKey: 'duty', width: 200, ratio: 12 },
-    // { label: '근무지', dataKey: 'site', width: 200, ratio: 12 },
-    // { label: '전화번호', dataKey: 'tel', width: 350, ratio: 25 },
+    { label: '지역', dataKey: 'work_area_cd', width: 120, ratio: 8 },
+    { label: '일자', dataKey: 'visit_date', width: 180, ratio: 12 },
+    { label: '업체명', dataKey: 'wrk_cmpny_nm', width: 300, ratio: 20 },
+    { label: '사업자등록번호', dataKey: 'biz_reg_no', width: 255, ratio: 17 },
+    { label: '이름', dataKey: 'visitor_name', width: 150, ratio: 10 },
+    { label: '출입시간', dataKey: 'visitor_in_date', width: 120, ratio: 8 },
+    { label: '퇴장시간', dataKey: 'visitor_out_date', width: 120, ratio: 8 },
+    { label: '출입구분', dataKey: 'visitor_type', width: 120, ratio: 8 },
+    { label: '업체등록여부', dataKey: 'wrk_reg', width: 135, ratio: 9 },
   ];
 
   getTablewidth = () => {
@@ -60,18 +52,19 @@ class List extends Component {
 
   render() {
     // const list = this.setList();
+    const { recordList } = this.state;
     return (
       <div className="hostCmpnyUserMgt">
         <StyledVirtualizedTable>
-          {/* <AutoSizer disableHeight>
+          <AutoSizer disableHeight>
             {({ width }) => (
               <Table
                 width={width}
                 height={500}
                 headerHeight={40}
                 rowHeight={53}
-                rowCount={list.length}
-                rowGetter={({ index }) => list[index]}
+                rowCount={recordList.length}
+                rowGetter={({ index }) => recordList[index]}
                 noRowsRenderer={this.noRowsRenderer}
                 onRowClick={this.onRowClick}
               >
@@ -80,7 +73,7 @@ class List extends Component {
                 ))}
               </Table>
             )}
-          </AutoSizer> */}
+          </AutoSizer>
         </StyledVirtualizedTable>
       </div>
     );
@@ -93,14 +86,9 @@ List.defaultProps = {
   result: {},
   apiAry: [
     {
-      key: 'selectAllUserList',
+      key: 'recordList',
       type: 'GET',
-      url: '/api/eshs/v1/common/eshsHstCmpnyUser',
-    },
-    {
-      key: 'cmpnyList',
-      type: 'GET',
-      url: '/api/eshs/v1/common/eshsHstCompanyList',
+      url: '/api/eshs/v1/common/eshsAccessRecord',
     },
   ],
 };
