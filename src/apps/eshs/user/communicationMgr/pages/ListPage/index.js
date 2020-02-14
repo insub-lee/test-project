@@ -29,7 +29,6 @@ class ListPage extends Component {
       modalVisible: false,
       selectedTaskSeq: 0,
       viewType: '',
-      listIndex: [],
     };
   }
 
@@ -222,7 +221,6 @@ class ListPage extends Component {
 
   render = () => {
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
-
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
@@ -299,9 +297,6 @@ class ListPage extends Component {
               );
             })}
             <div className="alignRight">
-              {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-                Add
-              </StyledButton> */}
               <StyledButton className="btn-primary" onClick={() => this.handleAddClick()}>
                 새 글
               </StyledButton>

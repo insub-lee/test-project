@@ -24,6 +24,18 @@ class RadioMaterialComp extends Component {
     getExtraApiData(sagaKey, apiArys, this.initDataBind);
   }
 
+  componentDidUpdate(prevProps) {
+    const { sagaKey, processRule, COMP_FIELD, setProcessRule, formData } = this.props;
+    const { processRule: prevProcessRule } = prevProps;
+
+    if (processRule.PRC_ID !== prevProcessRule.PRC_ID) {
+      const { DRAFT_DATA } = processRule;
+      const tmpDraftData = { ...DRAFT_DATA, material_yn: 'Y' };
+      const tmpPrcRule = { ...processRule, DRAFT_DATA: tmpDraftData };
+      setProcessRule(sagaKey, tmpPrcRule);
+    }
+  }
+
   initDataBind = id => {
     const {
       extraApiData: { meterialList },
@@ -39,8 +51,13 @@ class RadioMaterialComp extends Component {
   };
 
   onChangeHandler = e => {
-    const { changeFormData, sagaKey, COMP_FIELD } = this.props;
+    const { changeFormData, sagaKey, COMP_FIELD, setProcessRule, processRule } = this.props;
+    const { DRAFT_DATA } = processRule;
+    const tmpDraftData = { ...DRAFT_DATA, material_yn: e.target.value };
+    const tmpPrcRule = { ...processRule, DRAFT_DATA: tmpDraftData };
+    setProcessRule(sagaKey, tmpPrcRule);
     changeFormData(sagaKey, COMP_FIELD, e.target.value);
+
     if (e.target.value === 'N') {
       changeFormData(sagaKey, 'MATERIAL_TYPE', ' ');
       changeFormData(sagaKey, 'MATERIAL_TEXT', ' ');
@@ -59,7 +76,8 @@ class RadioMaterialComp extends Component {
   };
 
   render() {
-    const { formData, colData } = this.props;
+    const { formData, colData, processRule } = this.props;
+    console.debug('render', processRule);
     return (
       <table>
         <tr>

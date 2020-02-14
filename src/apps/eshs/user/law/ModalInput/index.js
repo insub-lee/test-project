@@ -9,7 +9,7 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
-class StdInput extends Component {
+class InputPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -18,15 +18,13 @@ class StdInput extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
-
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
-    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
-    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
-
-    if (isWorkflowUsed && prcId !== -1) {
+    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
+    const {
+      info: { PRC_ID },
+    } = workFlowConfig;
+    if (PRC_ID !== -1) {
       const payload = {
-        PRC_ID: Number(prcId),
+        PRC_ID,
         DRAFT_DATA: {
           ...workPrcProps,
         },
@@ -35,33 +33,49 @@ class StdInput extends Component {
     }
   }
 
-  saveTask = (id, reloadId, callbackFunc) => {
-    const { saveTask } = this.props;
-    saveTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+  saveTask = (id, reloadId) => {
+    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
+    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
   };
+
+  // state값 reset테스트
+  // componentWillUnmount() {
+  //   const { removeReduxState, id } = this.props;
+  //   removeReduxState(id);
+  // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
+    const { onCloseModleHandler, changeViewPage, baseSagaKey } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
+      changeViewPage(baseSagaKey, workSeq, -1, 'LIST');
     }
     if (typeof changeViewPage === 'function') {
-      // changeViewPage(id, workSeq, taskSeq, 'VIEW');
-      // page 이동
-      redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
+      changeViewPage(id, workSeq, taskSeq, 'VIEW');
     }
   };
 
-  render() {
-    const { sagaKey: id, viewLayer, workInfo, processRule, setProcessRule, loadingComplete, viewPageData, changeViewPage, onCloseModal } = this.props;
+  render = () => {
+    const {
+      sagaKey: id,
+      viewLayer,
+      workFlowConfig,
+      processRule,
+      setProcessRule,
+      loadingComplete,
+      viewPageData,
+      changeViewPage,
+      workInfo,
+      CustomWorkProcess,
+    } = this.props;
     // Work Process 사용여부
-    console.debug('input props', this.props);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
-    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
-    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
+      const {
+        info: { PRC_ID },
+      } = workFlowConfig;
 
       // 로딩
       if (this.props.isLoading === false && this.state.initLoading) {
@@ -75,14 +89,17 @@ class StdInput extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed && prcId !== -1 && <WorkProcess id={id} PRC_ID={prcId} processRule={processRule} setProcessRule={setProcessRule} />}
+            {isWorkflowUsed &&
+              PRC_ID !== -1 &&
+              (typeof CustomWorkProcess === 'function' ? (
+                <CustomWorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+              ) : (
+                <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+              ))}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
+            <div className="alignRight">
+              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
                 Save
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
-                닫기
               </StyledButton>
             </div>
           </Sketch>
@@ -90,11 +107,11 @@ class StdInput extends Component {
       );
     }
     return '';
-  }
+  };
 }
 
-StdInput.propTypes = {
-  sagaKey: PropTypes.string.isRequired,
+InputPage.propTypes = {
+  sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
   viewLayer: PropTypes.array,
@@ -108,7 +125,7 @@ StdInput.propTypes = {
   loadingComplete: PropTypes.func,
 };
 
-StdInput.defaultProps = {
+InputPage.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
@@ -116,4 +133,4 @@ StdInput.defaultProps = {
   },
 };
 
-export default StdInput;
+export default InputPage;

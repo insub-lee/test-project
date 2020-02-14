@@ -57,6 +57,9 @@ import BusinessNumberComp from 'components/BizBuilder/Field/BusinessNumberComp';
 import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
 import LabelDateWithoutTime from 'components/BizBuilder/Field/LabelDateWithoutTime';
 import SelectInputSearchComp from 'components/BizBuilder/Field/SelectInputSearchComp';
+import LawMasterSeqComp from 'components/BizBuilder/Field/LawMasterSeqComp';
+import UserSelectComp from 'components/BizBuilder/Field/UserSelectComp';
+import JoinToolTipComp from 'components/BizBuilder/Field/JoinToolTipComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -116,4 +119,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/LabelDateWithoutTime': { renderer: property => <LabelDateWithoutTime {...property} /> },
   'components/BizBuilder/Field/BusinessNumberComp': { renderer: property => <BusinessNumberComp {...property} /> },
   'components/BizBuilder/Field/SelectInputSearchComp': { renderer: property => <SelectInputSearchComp {...property} /> },
+  'components/BizBuilder/Field/LawMasterSeqComp': { renderer: property => <LawMasterSeqComp {...property} /> },
+  'components/BizBuilder/Field/UserSelectComp': { renderer: property => <UserSelectComp {...property} /> },
+  'components/BizBuilder/Field/JoinToolTipComp': { renderer: property => <JoinToolTipComp {...property} /> },
 };

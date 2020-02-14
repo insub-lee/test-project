@@ -373,7 +373,6 @@ class IntroComponent extends Component {
     };
 
     let workSeqGoal = workSeq;
-    console.debug('selectedDraft', selectedDraft);
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
@@ -415,7 +414,7 @@ class IntroComponent extends Component {
     // Todo - 폐기 일괄
     if (['ABROGATION_MULTI'].includes(selectedDraft)) {
     }
-    console.debug(taskSeq, workSeqGoal, viewType);
+    console.debug('workPrcProps', workPrcProps);
     return (
       <BizBuilderBase
         sagaKey={`BizDoc_${workSeqGoal}`}

@@ -40,3 +40,4 @@ export const CHANGE_SEARCH_DATA_REDUCER = `${prefix}CHANGE_SEARCH_DATA_REDUCER`;
 export const GET_LIST_DATA_SAGA = `${prefix}GET_LIST_DATA_SAGA`;
 export const SUBMIT_EXTRA = `${prefix}SUBMIT_EXTRA`;
 export const REDIRECT_URL = `${prefix}REDIRECT_URL`;
+export const DESTROY_REDUCER = `${prefix}DESTROY_REDUCER`;
