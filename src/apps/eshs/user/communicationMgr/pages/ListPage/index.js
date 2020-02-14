@@ -12,10 +12,10 @@ import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyle
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
+import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
-import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 
 import View from '../ViewPage';
 import Input from '../InputPage';
@@ -67,8 +67,8 @@ class ListPage extends Component {
   handleRowClick = taskSeq => {
     this.setState({
       modalVisible: true,
-      selectedTaskSeq: taskSeq,
       viewType: 'VIEW',
+      selectedTaskSeq: taskSeq,
     });
   };
 
@@ -149,6 +149,16 @@ class ListPage extends Component {
             align: 'center',
             width: 150,
             ellipsis: 'true',
+            render: (key, record, index) => (
+              <TitleModalComp
+                colData={key}
+                sagaKey={this.props.sagaKey}
+                rowData={{ TASK_SEQ: record.TASK_SEQ }}
+                isOpenModalChange={this.handleRowClick}
+                visible
+                // CONFIG={this.props.CONFIG}
+              />
+            ),
           },
           {
             title: '제목(접수내역)',
@@ -156,6 +166,16 @@ class ListPage extends Component {
             key: 'TITLE',
             align: 'center',
             ellipsis: 'true',
+            render: (key, record, index) => (
+              <TitleModalComp
+                colData={key}
+                sagaKey={this.props.sagaKey}
+                rowData={{ TASK_SEQ: record.TASK_SEQ }}
+                isOpenModalChange={this.handleRowClick}
+                visible
+                // CONFIG={this.props.CONFIG}
+              />
+            ),
           },
         ],
       },
@@ -175,6 +195,16 @@ class ListPage extends Component {
             key: 'REPLY_CONTENT',
             align: 'center',
             ellipsis: 'true',
+            render: (key, record, index) => (
+              <TitleModalComp
+                colData={key}
+                sagaKey={this.props.sagaKey}
+                rowData={{ TASK_SEQ: record.TASK_SEQ }}
+                isOpenModalChange={this.handleRowClick}
+                visible
+                // CONFIG={this.props.CONFIG}
+              />
+            ),
           },
           {
             title: '관련문서',
@@ -183,15 +213,16 @@ class ListPage extends Component {
             align: 'center',
             width: 100,
             render: (text, record, index) => (
-              <AttachDownComp
-                colData={text}
-                readOnly={false}
-                visible
-                isSearch={false}
-                rowData={{ TASK_SEQ: record.TASK_SEQ, WORK_SEQ: this.props.workSeq }}
-                getExtraApiData={this.props.getExtraApiData}
-                // onClick={e => e.stopPropagation()}
-              />
+              <div onClick={e => e.stopPropagation}>
+                <AttachDownComp
+                  colData={text}
+                  readOnly={false}
+                  visible
+                  isSearch={false}
+                  rowData={{ TASK_SEQ: record.TASK_SEQ, WORK_SEQ: this.props.workSeq }}
+                  getExtraApiData={this.props.getExtraApiData}
+                />
+              </div>
               // <div
               //   onClick={e => {
               //     const { sagaKey, workSeq } = this.props;
@@ -238,8 +269,10 @@ class ListPage extends Component {
             tableLayout="fixed"
             onRow={record => ({
               onClick: () => {
-                console.debug(record);
-                this.handleRowClick(record.TASK_SEQ);
+                console.debug(record.TASK_SEQ);
+                console.debug(this.state.modalVisible);
+
+                // this.handleRowClick(record.TASK_SEQ);
               },
             })}
           />
@@ -357,6 +390,8 @@ ListPage.propTypes = {
   loadingComplete: PropTypes.func,
   workSeq: PropTypes.number,
   getExtraApiData: PropTypes.func,
+  visible: PropTypes.bool,
+  CONFIG: PropTypes.object,
 };
 
 ListPage.defaultProps = {
