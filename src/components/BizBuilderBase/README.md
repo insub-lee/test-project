@@ -12,6 +12,10 @@
   - extraApiData: apiArr로 조회한 데이터
   - formData: meta의 FIELD속성으로만 만든 실제 저장시 사용할 데이터
   - revisionHistory: Revision 이력 리스트
+  - inputMetaSeq: 기본 뷰 레이어 사용 안하고 다른 뷰 사용시 metaSeq 
+  - modifyMetaSeq: 기본 뷰 레이어 사용 안하고 다른 뷰 사용시 metaSeq
+  - viewMetaSeq: 기본 뷰 레이어 사용 안하고 다른 뷰 사용시 metaSeq
+  - listMetaSeq: 기본 뷰 레이어 사용 안하고 다른 뷰 사용시 metaSeq
 
 # EVENT
   - getBuilderData: meta, list, work 등을 조회하는 기본 함수(reducer - responseData 에 저장됨)
