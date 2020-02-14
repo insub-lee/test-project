@@ -10,6 +10,8 @@ const initialState = fromJS({
   tempRowInfo: {},
 
   bizGroupInfo: {},
+  MENU_ID: -1,
+  AUTH_TYPE: '',
 });
 
 const orgReducer = (state = initialState, action) => {
@@ -20,7 +22,9 @@ const orgReducer = (state = initialState, action) => {
         .set('selectedIndex', action.selectedIndex || state.get('selectedIndex'))
         .set('tempRowInfo', action.tempRowInfo || state.get('tempRowInfo'))
         .set('bizGroupInfo', action.bizGroupInfo || state.get('bizGroupInfo'))
-        .set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID'));
+        .set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID'))
+        .set('MENU_ID', action.MENU_ID || -1)
+        .set('AUTH_TYPE', action.AUTH_TYPE || '');
     case constants.SET_SELECTED_INDEX:
       return state.set('selectedIndex', action.selectedIndex);
     case constants.SAVE_DATA:

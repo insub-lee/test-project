@@ -139,14 +139,17 @@ class BizGroupReg extends Component {
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
+    console.debug('componentDidUpdate');
     const { match, dataP } = this.props;
     const { params } = match;
     const { BIZGRP_ID } = params;
 
     const { data } = this.state;
-
+    console.debug('dataP', dataP.BIZGRP_ID);
+    console.debug('1', Number(prevState.BIZGRP_ID), Number(BIZGRP_ID));
     if (BIZGRP_ID && Number(prevState.BIZGRP_ID) !== Number(BIZGRP_ID)) {
       console.debug('WTF!!!!!!!');
+      console.debug('componentDidUpdate#2');
       this.setState(
         {
           BIZGRP_ID: Number(BIZGRP_ID),
@@ -156,8 +159,9 @@ class BizGroupReg extends Component {
           this.props.getBizGroupInfo(Number(BIZGRP_ID));
         },
       );
-
+      console.debug('2', data.BIZGRP_ID, dataP.BIZGRP_ID);
       if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
+        console.debug('componentDidUpdate#3');
         let mData = { ...data, ...dataP };
         if (dataP.I) {
           // 관리자 권한

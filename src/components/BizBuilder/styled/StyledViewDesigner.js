@@ -197,6 +197,14 @@ const StyledViewDesigner = styled.div`
     vertical-align: top;
   }
 
+  .attachDownCompIconBtn {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+    .attachDownCompIcon {
+      font-size: 20px;
+    }
+  }
+
   .group-search-options {
     position: absolute;
     display: inline-block;

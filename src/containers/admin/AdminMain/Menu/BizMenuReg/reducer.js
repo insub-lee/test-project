@@ -20,7 +20,8 @@ const orgReducer = (state = initialState, action) => {
         .set('selectedIndex', action.selectedIndex || state.get('selectedIndex'))
         .set('tempRowInfo', action.tempRowInfo || state.get('tempRowInfo'))
         .set('bizGroupInfo', action.bizGroupInfo || state.get('bizGroupInfo'))
-        .set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID'));
+        .set('BIZGRP_ID', action.BIZGRP_ID || state.get('BIZGRP_ID'))
+        .set('MENU_ID', action.MENU_ID || state.get('MENU_ID'));
     case constants.SET_SELECTED_INDEX:
       return state.set('selectedIndex', action.selectedIndex);
     case constants.SAVE_DATA:

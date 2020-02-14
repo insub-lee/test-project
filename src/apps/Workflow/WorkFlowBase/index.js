@@ -265,13 +265,6 @@ const mapDispatchToProps = dispatch => ({
 
 const withReducer = injectReducer({ key: 'apps.WorkFlow.WorkFlowBase', reducer });
 const withSaga = injectSaga({ key: 'apps.WorkFlow.WorkFlowBase', saga });
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(WorkFlowBase);
+export default compose(withSaga, withReducer, withConnect)(WorkFlowBase);

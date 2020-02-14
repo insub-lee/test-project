@@ -49,3 +49,9 @@ export const vgroupMemberUpdate = (SITE_ID, GRP_ID, managerSetMembers, userSetMe
   userSetMembers,
   deptSetMembers,
 });
+
+export const moveVgroup = (SITE_ID, treeData) => ({
+  type: constants.MOVE_VGROUP,
+  SITE_ID,
+  treeData,
+});

@@ -80,15 +80,15 @@ class TopMenu extends React.Component {
                   <BtnBizPreview title="미리보기" /* onClick={() => this.onOpen()} */ />
                 </Link>
               )}
-              {(bizInfo.SEC_YN === 'Y') && (
+              {/* (bizInfo.SEC_YN === 'Y') && (
                 <>
                   <BtnBizSettings title="설정하기" onClick={this.showSettingModal} />
                   <Modal title="권한 설정" closable visible={showSettingModal} footer={null} destroyOnClose onCancel={this.closeSettingModal}>
                     <AuthSettingModalContents BIZGRP_ID={BIZGRP_ID} />
                   </Modal>
                 </>
-              )}
-              {bizInfo.CHG_YN === 'Y' && (bizInfo.SEC_YN === 'Y') && (
+              ) */}
+              {bizInfo.CHG_YN === 'Y' && bizInfo.SEC_YN === 'Y' && (
                 <BtnDkGray
                   style={{ verticalAlign: 'middle', marginLeft: 12 }}
                   onClick={() => {

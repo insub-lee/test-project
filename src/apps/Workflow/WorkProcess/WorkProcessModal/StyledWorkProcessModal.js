@@ -5,7 +5,7 @@ const StyledWorkProcessModal = styled.div`
 
   .basicWrapper {
     width: 100%;
-    height: 600px;
+    height: 500px;
     border: 1px solid rgb(217, 224, 231);
 
     &.deptWrapper {
@@ -77,7 +77,7 @@ const StyledWorkProcessModal = styled.div`
 
   .btnWrapper {
     width: 100%;
-    height: 600px;
+    height: 500px;
     text-align: center;
     display: flex;
 

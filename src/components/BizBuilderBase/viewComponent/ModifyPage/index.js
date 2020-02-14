@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CompInfo } from 'components/BizBuilder/CompInfo';
 import View from 'components/BizBuilder/PageComp/view';
 
 class ModifyPage extends Component {
@@ -71,5 +71,13 @@ class ModifyPage extends Component {
     return '';
   };
 }
+
+ModifyPage.propTypes = {
+  loadingComplete: PropTypes.func,
+};
+
+ModifyPage.defaultProps = {
+  loadingComplete: () => {},
+};
 
 export default ModifyPage;

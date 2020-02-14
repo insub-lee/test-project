@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Modal, Radio, Table, Spin } from 'antd';
+
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
 
@@ -10,6 +11,7 @@ import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyco
 import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import BizBuilderBase from 'components/BizBuilderBase';
 
+import DraftPrcLine from 'apps/mdcs/user/Workflow/DraftPrcLine';
 import StyledContents from '../../../../styled/StyledContents';
 import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
@@ -102,6 +104,7 @@ class IntroComponent extends Component {
   }
 
   resetState = (selectedDraft = DraftType.ENACTMENT, viewType = 'INPUT', searchValue = '', targetTasks = []) => {
+    console.debug('Reset State', selectedDraft, viewType, searchValue, targetTasks);
     this.setState({
       optAry2: [],
       optAry3: [],
@@ -372,14 +375,13 @@ class IntroComponent extends Component {
     };
 
     let workSeqGoal = workSeq;
-    console.debug('selectedDraft', selectedDraft);
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
           workSeqGoal = 901;
           break;
         case 'TS':
-          workSeqGoal = 361;
+          workSeqGoal = 1921;
           break;
         case 'DW':
           workSeqGoal = 423;
@@ -401,7 +403,7 @@ class IntroComponent extends Component {
       console.debug('draftData', draftData);
       console.debug('@ Json Draft Data : ', jsonDraftData);
       if (Object.keys(jsonDraftData).length > 2) {
-        workPrcProps = jsonDraftData;
+        workPrcProps = { ...jsonDraftData, draftType: selectedDraft };
       } else {
         return null;
       }
@@ -414,7 +416,7 @@ class IntroComponent extends Component {
     // Todo - 폐기 일괄
     if (['ABROGATION_MULTI'].includes(selectedDraft)) {
     }
-    console.debug(taskSeq, workSeqGoal, viewType);
+    console.debug('workPrcProps', viewType, workSeqGoal, taskSeq, revisionType, workPrcProps);
     return (
       <BizBuilderBase
         sagaKey={`BizDoc_${workSeqGoal}`}
@@ -422,6 +424,7 @@ class IntroComponent extends Component {
         compProps={{ docNumber, NODE_ID: selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
         CustomInputPage={StdInput}
         CustomViewPage={StdView}
+        CustomWorkProcess={DraftPrcLine}
         taskSeq={taskSeq}
         workPrcProps={workPrcProps}
         viewType={viewType}

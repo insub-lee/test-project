@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table } from 'antd';
+import { Table, Popconfirm } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -11,6 +11,7 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
+import { MULTI_DELETE_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -19,8 +20,19 @@ class ListPage extends Component {
     super(props);
     this.state = {
       initLoading: true,
+      isMultiDelete: false,
     };
   }
+
+  componentDidMount = () => {
+    const { workInfo } = this.props;
+    const isMultiDelete = !!(
+      workInfo &&
+      workInfo.OPT_INFO &&
+      workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') !== -1
+    );
+    this.setState({ isMultiDelete });
+  };
 
   // state값 reset테스트
   // componentWillUnmount() {
@@ -71,21 +83,53 @@ class ListPage extends Component {
     return columns;
   };
 
+  onSelectChange = selectedRowKeys => {
+    const { sagaKey, setListSelectRowKeys } = this.props;
+    setListSelectRowKeys(sagaKey, selectedRowKeys);
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData } = this.props;
+    const { listData, listSelectRowKeys } = this.props;
+    const { isMultiDelete } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
+    let rowSelection = false;
+    if (isMultiDelete) {
+      rowSelection = {
+        selectedRowKeys: listSelectRowKeys,
+        onChange: this.onSelectChange,
+      };
+    }
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable rowKey="TASK_SEQ" key={`${group.key}_list`} className="view-designer-list" columns={columns} dataSource={listData || []} />
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            className="view-designer-list"
+            columns={columns}
+            dataSource={listData || []}
+            rowSelection={rowSelection}
+          />
         </Group>
       </div>
     );
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      formData,
+      workFlowConfig,
+      loadingComplete,
+      viewPageData,
+      changeViewPage,
+      getListData,
+      workSeq,
+      removeMultiTask,
+    } = this.props;
+    const { isMultiDelete } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -163,6 +207,11 @@ class ListPage extends Component {
               );
             })}
             <div className="alignRight">
+              {isMultiDelete && (
+                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-primary">Delete</StyledButton>
+                </Popconfirm>
+              )}
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
                 Add
               </StyledButton>
@@ -196,6 +245,7 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
+  loadingComplete: () => {},
 };
 
 export default ListPage;

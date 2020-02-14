@@ -42,9 +42,9 @@ const styleObj = {
     backgroundColor: 'transparent',
   },
   overlay: {
-    zIndex: 1,
+    zIndex: 1999,
     position: 'fixed',
-    top: 0,
+    top: 42,
     left: 0,
     right: 0,
     bottom: 0,
@@ -52,7 +52,7 @@ const styleObj = {
     visibility: 'hidden',
     transition: 'opacity .3s ease-out, visibility .3s ease-out',
     backgroundColor: 'rgba(0,0,0,0)',
-    display: 'none',
+    // display: 'none',
   },
   dragHandle: {
     zIndex: 1,
@@ -74,13 +74,40 @@ const getSidebarContent = (commonMenuTreeData, execMenu, execPage) => {
   );
 };
 
-const MenuCategory = ({ open, setMenuClose, commonMenuTreeData, execMenu, execPage }) => (
-  <div onMouseLeave={setMenuClose}>
-    <Sidebar sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)} open={open} styles={styleObj} touch shadow>
-      <div />
-    </Sidebar>
-  </div>
-);
+class MenuCategory extends React.Component {
+  componentDidMount() {
+    const node = document.getElementsByClassName('overlay-closer')[0];
+    node.addEventListener('mouseenter', this.handleMenuClose, false);
+  }
+
+  componentWillUnmount() {
+    const node = document.getElementsByClassName('overlay-closer')[0];
+    node.removeEventListener('mouseenter', this.handleMenuClose, false);
+  }
+
+  handleMenuClose = () => {
+    const { setMenuClose } = this.props;
+    setMenuClose();
+  };
+
+  render() {
+    const { open, commonMenuTreeData, execMenu, execPage, children } = this.props;
+    return (
+      <div>
+        <Sidebar
+          sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)}
+          open={open}
+          styles={styleObj}
+          touch
+          shadow
+          overlayClassName="overlay-closer"
+        >
+          {children}
+        </Sidebar>
+      </div>
+    );
+  }
+}
 
 MenuCategory.propTypes = {
   open: PropTypes.bool.isRequired,
@@ -88,6 +115,11 @@ MenuCategory.propTypes = {
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   setMenuClose: PropTypes.func.isRequired,
+  children: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.node), PropTypes.node]),
+};
+
+MenuCategory.defaultProps = {
+  children: null,
 };
 
 const mapStateToProps = createStructuredSelector({
