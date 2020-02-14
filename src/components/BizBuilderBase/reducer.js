@@ -169,6 +169,10 @@ const reducer = (state = initialState, action) => {
       const { id } = action;
       return state.deleteIn(['bizBuilderBase', id]);
     }
+    case actionTypes.SET_LIST_SELECT_ROW_KEYS_REDUCER: {
+      const { id, list } = action;
+      return state.setIn(['bizBuilderBase', id, 'listSelectRowKeys'], fromJS(list));
+    }
     default:
       return state;
   }
