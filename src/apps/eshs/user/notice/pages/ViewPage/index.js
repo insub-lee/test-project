@@ -8,6 +8,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import request from 'utils/request';
 
 class ViewPage extends Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class ViewPage extends Component {
 
   render = () => {
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId } = this.props;
+    console.debug('@@@@@VIEW PAGE@@@@@', this.props); // sagaKey, workSeq, taskSeq, metaList, formData, apiArr
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
