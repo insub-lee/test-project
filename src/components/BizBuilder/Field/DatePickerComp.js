@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { DatePicker as AntdDatePicker } from 'antd';
 import PropTypes from 'prop-types';
+import Moment from 'moment';
 
-class DatePicker extends Component {
+class DatePickerComp extends Component {
   onChangeHandler = (date, dateString) => {
     const { sagaKey: id, changeFormData, COMP_FIELD } = this.props;
     changeFormData(id, COMP_FIELD, dateString);
@@ -15,15 +16,15 @@ class DatePicker extends Component {
   };
 
   render() {
-    const { CONFIG, visible, isSearch } = this.props;
+    const { CONFIG, visible, isSearch, readOnly } = this.props;
     if (isSearch && visible && CONFIG.property.searchType === 'CUSTOM') {
-      return <AntdDatePicker onChange={this.onChangeSearchHandle} />;
+      return <AntdDatePicker onChange={this.onChangeSearchHandle} placeholder="날짜를 선택하세요." readOnly={readOnly || CONFIG.property.readOnly} />;
     }
-    return <AntdDatePicker onChange={this.onChangeHandler} />;
+    return visible ? <AntdDatePicker onChange={this.onChangeHandler} placeholder="날짜를 선택하세요." readOnly={readOnly || CONFIG.property.readOnly} /> : '';
   }
 }
 
-DatePicker.propTypes = {
+DatePickerComp.propTypes = {
   sagaKey: PropTypes.string,
   changeFormData: PropTypes.func,
   COMP_FIELD: PropTypes.string,
@@ -31,7 +32,7 @@ DatePicker.propTypes = {
   CONFIG: PropTypes.object,
   visible: PropTypes.bool,
   isSearch: PropTypes.bool,
+  readOnly: PropTypes.bool,
 };
 
-export default DatePicker;
-// readonly 뷰에서 값만 보기, visible 보일 지 안 보일지 설정
+export default DatePickerComp;

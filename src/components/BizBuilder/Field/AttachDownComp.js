@@ -150,7 +150,6 @@ class AttachDownComp extends React.Component {
   render() {
     const { CONFIG, colData, readOnly, visible, isSearch, searchCompRenderer } = this.props;
     const { renderDownComp, fileDownLink, fileExt, renderDownList } = this.state;
-    console.debug('@@@ATTACH@@@', CONFIG, colData, readOnly, visible, isSearch, searchCompRenderer);
     if (isSearch) {
       return '';
     }

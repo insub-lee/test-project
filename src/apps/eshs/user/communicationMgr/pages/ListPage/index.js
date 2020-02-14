@@ -213,27 +213,18 @@ class ListPage extends Component {
             align: 'center',
             width: 100,
             render: (text, record, index) => (
-              <div onClick={e => e.stopPropagation}>
-                <AttachDownComp
-                  colData={text}
-                  readOnly={false}
-                  visible
-                  isSearch={false}
-                  rowData={{ TASK_SEQ: record.TASK_SEQ, WORK_SEQ: this.props.workSeq }}
-                  getExtraApiData={this.props.getExtraApiData}
-                />
-              </div>
-              // <div
-              //   onClick={e => {
-              //     const { sagaKey, workSeq } = this.props;
-              //     console.debug(this.props, record);
-              //     e.stopPropagation();
-              //     this.handleDownloadApi(sagaKey, record.TASK_SEQ, workSeq);
-              //   }}
-              // >
-              //   {text}
-              // </div>
-            ), // 클릭하면 이벤트 멈추고, 파일 다운로드 부르기
+              <AttachDownComp
+                colData={text}
+                readOnly={false}
+                visible
+                isSearch={false}
+                COMP_FIELD="UPLOAD_FILE"
+                rowData={{ TASK_SEQ: record.TASK_SEQ, WORK_SEQ: this.props.workSeq }}
+                getExtraApiData={this.props.getExtraApiData}
+                extraApiData={this.props.extraApiData}
+                sagaKey={this.props.sagaKey}
+              />
+            ),
           },
           {
             title: '문서유형',
