@@ -103,6 +103,7 @@ class BizBuilderBase extends React.Component {
       CustomViewPage,
       CustomListPage,
       CustomPage,
+      CustomWorkProcess,
       viewPageData,
       metaList,
       sagaKey: id,
@@ -215,6 +216,7 @@ BizBuilderBase.propTypes = {
   getDraftProcess: PropTypes.func,
   dataLoading: PropTypes.bool,
   changeWorkflowFormData: PropTypes.func,
+  CustomWorkProcess: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -240,6 +242,7 @@ BizBuilderBase.defaultProps = {
   viewPageData: { viewType: 'LIST' },
   dataLoading: false,
   changeWorkflowFormData: null,
+  CustomWorkProcess: undefined,
 };
 
 const mapStateToProps = createStructuredSelector({
