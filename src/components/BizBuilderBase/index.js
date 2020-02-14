@@ -259,14 +259,11 @@ BizBuilderBase.defaultProps = {
   viewPageData: { viewType: 'LIST' },
   dataLoading: false,
   changeWorkflowFormData: null,
-<<<<<<< HEAD
   CustomWorkProcess: undefined,
-=======
   inputMetaSeq: -1,
   modifyMetaSeq: -1,
   viewMetaSeq: -1,
   listMetaSeq: -1,
->>>>>>> origin/magnachip
 };
 
 const mapStateToProps = createStructuredSelector({
