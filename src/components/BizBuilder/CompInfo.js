@@ -53,7 +53,9 @@ import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 import DatePicker from 'components/BizBuilder/Field/DatePicker';
+import BusinessNumberComp from 'components/BizBuilder/Field/BusinessNumberComp';
 import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
+import SelectInputSearchComp from 'components/BizBuilder/Field/SelectInputSearchComp';
 import LawMasterSeqComp from 'components/BizBuilder/Field/LawMasterSeqComp';
 import UserSelectComp from 'components/BizBuilder/Field/UserSelectComp';
 import JoinToolTipComp from 'components/BizBuilder/Field/JoinToolTipComp';
@@ -113,6 +115,8 @@ export const CompInfo = {
   'components/BizBuilder/Field/AttachDownComp': { renderer: property => <AttachDownComp {...property} /> },
   'components/BizBuilder/Field/TitleModalComp': { renderer: property => <TitleModalComp {...property} /> },
   'components/BizBuilder/Field/DatePicker': { renderer: property => <DatePicker {...property} /> },
+  'components/BizBuilder/Field/BusinessNumberComp': { renderer: property => <BusinessNumberComp {...property} /> },
+  'components/BizBuilder/Field/SelectInputSearchComp': { renderer: property => <SelectInputSearchComp {...property} /> },
   'components/BizBuilder/Field/LawMasterSeqComp': { renderer: property => <LawMasterSeqComp {...property} /> },
   'components/BizBuilder/Field/UserSelectComp': { renderer: property => <UserSelectComp {...property} /> },
   'components/BizBuilder/Field/JoinToolTipComp': { renderer: property => <JoinToolTipComp {...property} /> },
