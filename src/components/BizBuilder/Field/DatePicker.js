@@ -34,3 +34,4 @@ DatePicker.propTypes = {
 };
 
 export default DatePicker;
+// readonly 뷰에서 값만 보기, visible 보일 지 안 보일지 설정
