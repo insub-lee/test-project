@@ -26,10 +26,10 @@ class ModifyPage extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, baseSagaKey, baseWorkSeq } = this.props;
+    const { onCloseModleHandler, changeViewPage, baseSagaKey } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
-      changeViewPage(baseSagaKey, baseWorkSeq, -1, 'LIST');
+      changeViewPage(baseSagaKey, workSeq, -1, 'LIST');
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');
@@ -59,6 +59,9 @@ class ModifyPage extends Component {
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
                 Save
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                Revision
               </StyledButton>
             </div>
           </Sketch>
