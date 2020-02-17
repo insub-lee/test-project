@@ -26,7 +26,7 @@ const request = options => {
   };
   console.debug('>>>> optionWithMeta', optionWithMeta);
   const onSuccess = response => {
-    console.debug('Requst Successful', response);
+    console.debug('Request Successful', response);
     return response.data;
   };
   const onError = error => {

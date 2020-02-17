@@ -12,6 +12,7 @@ import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyle
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 
+import request from 'utils/request';
 import BizBuilderBase from 'components/BizBuilderBase';
 import View from '../ViewPage';
 import Input from '../InputPage';
@@ -29,6 +30,23 @@ class ListPage extends Component {
       viewType: '',
     };
   }
+
+  componentDidMount() {
+    const getTableName = async () => {
+      const result = await request({
+        method: 'GET',
+        url: `/api/eshs/v1/common/increasereadcount?workSeq=${this.props.workSeq}`,
+      });
+      return result.response.tableName;
+    };
+    getTableName().then(res => this.handleAppInit(res));
+  }
+
+  handleAppInit = getName => {
+    this.setState({
+      tableName: getName,
+    });
+  };
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -74,11 +92,22 @@ class ListPage extends Component {
   };
 
   handleRowClick = taskSeq => {
+    const { tableName } = this.state;
+
     this.setState({
       modalVisible: true,
       selectedTaskSeq: taskSeq,
       viewType: 'VIEW',
     });
+    this.handleIncreseReadCount(tableName, taskSeq);
+  };
+
+  handleIncreseReadCount = async (tableName, selectedtaskSeq) => {
+    const result = await request({
+      method: 'PATCH',
+      url: `/api/eshs/v1/common/increasereadcount?table=${tableName}&taskSeq=${selectedtaskSeq}`,
+    });
+    return result.response;
   };
 
   handleOnCancel = () => {
