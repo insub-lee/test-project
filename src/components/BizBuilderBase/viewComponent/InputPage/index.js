@@ -87,14 +87,12 @@ class InputPage extends Component {
         );
       }
 
-      console.debug('input page', this.props);
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed && PRC_ID !== -1 && (
+            {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
-
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>

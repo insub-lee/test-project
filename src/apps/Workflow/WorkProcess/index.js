@@ -21,7 +21,6 @@ class WorkProcess extends Component {
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
     const colSpan = Math.floor(24 / filterRule && filterRule.length);
-    console.debug('DRAFT_PROCESS_STEP', DRAFT_PROCESS_STEP);
     this.setState({ filterRule, filterItem, colSpan });
   }
 
@@ -43,7 +42,7 @@ class WorkProcess extends Component {
     const { processRule, viewType, CustomWorkProcess } = this.props;
     const { modalVisible } = this.state;
 
-    if (typeof CustomWorkProcess === 'function') {
+    if (typeof CustomWorkProcess === 'function' && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0) {
       return <CustomWorkProcess {...this.props}></CustomWorkProcess>;
     }
 

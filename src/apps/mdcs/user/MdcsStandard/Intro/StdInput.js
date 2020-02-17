@@ -56,15 +56,17 @@ class StdInput extends Component {
     const {
       sagaKey: id,
       viewLayer,
-      workInfo,
+      workFlowConfig,
       processRule,
       setProcessRule,
       loadingComplete,
       viewPageData,
       changeViewPage,
-      onCloseModal,
+      workInfo,
       CustomWorkProcess,
+      onCloseModal,
     } = this.props;
+
     // Work Process 사용여부
     console.debug('input props', this.props);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -73,6 +75,9 @@ class StdInput extends Component {
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
+      const {
+        info: { PRC_ID },
+      } = workFlowConfig;
 
       // 로딩
       if (this.props.isLoading === false && this.state.initLoading) {
@@ -86,7 +91,7 @@ class StdInput extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed && prcId !== -1 && (
+            {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} PRC_ID={prcId} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
