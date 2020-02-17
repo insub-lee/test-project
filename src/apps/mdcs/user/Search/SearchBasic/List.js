@@ -80,7 +80,7 @@ class SearchBasic extends Component {
   // }
 
   callApi = () => {
-    const { sagaKey: id, getCallDataHanlder } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const params = { ...this.state, status: this.state.status === 2 ? [1, 2] : [8] };
     const apiArr = [
       {
@@ -90,7 +90,7 @@ class SearchBasic extends Component {
         params,
       },
     ];
-    getCallDataHanlder(id, apiArr);
+    getCallDataHandler(id, apiArr);
   };
 
   onChangeCheckBox = checkedValues => {

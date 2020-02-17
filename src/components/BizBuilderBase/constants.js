@@ -41,3 +41,5 @@ export const GET_LIST_DATA_SAGA = `${prefix}GET_LIST_DATA_SAGA`;
 export const SUBMIT_EXTRA = `${prefix}SUBMIT_EXTRA`;
 export const REDIRECT_URL = `${prefix}REDIRECT_URL`;
 export const DESTROY_REDUCER = `${prefix}DESTROY_REDUCER`;
+export const SET_LIST_SELECT_ROW_KEYS_REDUCER = `${prefix}SET_LIST_SELECT_ROW_KEYS_REDUCER`;
+export const REMOVE_MULTI_TASK_SAGA = `${prefix}REMOVE_MULTI_TASK_SAGA`;

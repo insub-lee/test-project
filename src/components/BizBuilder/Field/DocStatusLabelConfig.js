@@ -8,9 +8,9 @@ const { Option } = Select;
 
 class ComponentConfig extends Component {
   componentDidMount() {
-    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const { getCallDataHandler, sagaKey: id } = this.props;
     const apiArray = [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }];
-    getCallDataHanlder(id, apiArray);
+    getCallDataHandler(id, apiArray);
   }
 
   handleChangeViewCompData = (key, value) => {
@@ -58,7 +58,7 @@ class ComponentConfig extends Component {
 
 ComponentConfig.propTypes = {
   sagaKey: PropTypes.string,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   mapId: PropTypes.string,
   changeViewCompData: PropTypes.func,
   groupIndex: PropTypes.number,

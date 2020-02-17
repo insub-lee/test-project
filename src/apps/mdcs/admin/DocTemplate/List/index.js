@@ -18,13 +18,13 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { sagaKey, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(sagaKey, apiAry);
+    const { sagaKey, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(sagaKey, apiAry);
   }
 
   onSaveComplete = id => {
-    const { getCallDataHanlder, apiAry, removeStorageReduxState } = this.props;
-    getCallDataHanlder(id, apiAry);
+    const { getCallDataHandler, apiAry, removeStorageReduxState } = this.props;
+    getCallDataHandler(id, apiAry);
     removeStorageReduxState(id, 'formData');
     this.setState({
       searchText: '',
@@ -121,7 +121,7 @@ class List extends Component {
   };
 
   onSave = () => {
-    const { sagaKey, formData, submitHadnlerBySaga } = this.props;
+    const { sagaKey, formData, submitHandlerBySaga } = this.props;
     const { NODE_ID, DOC_CODE } = formData;
 
     if (NODE_ID !== undefined && DOC_CODE !== '') {
@@ -132,7 +132,7 @@ class List extends Component {
           formData,
         },
       };
-      submitHadnlerBySaga(sagaKey, 'POST', apiUrl, submitData, this.onSaveComplete);
+      submitHandlerBySaga(sagaKey, 'POST', apiUrl, submitData, this.onSaveComplete);
     } else {
       message.error('분류체계를 선택해주세요!!', 0.5);
     }
@@ -257,7 +257,7 @@ class List extends Component {
   };
 
   onUpdate = () => {
-    const { sagaKey, formData, submitHadnlerBySaga } = this.props;
+    const { sagaKey, formData, submitHandlerBySaga } = this.props;
     const { NODE_ID, DOC_CODE } = formData;
     if (NODE_ID !== undefined && DOC_CODE !== '') {
       message.success('success!!', 0.5);
@@ -268,14 +268,14 @@ class List extends Component {
         },
       };
 
-      submitHadnlerBySaga(sagaKey, 'PUT', apiUrl, submitData, this.onSaveComplete);
+      submitHandlerBySaga(sagaKey, 'PUT', apiUrl, submitData, this.onSaveComplete);
     } else {
       message.error('분류체계를 선택해주세요!!', 0.5);
     }
   };
 
   onDeleteEvent = rowitem => {
-    const { sagaKey, formData, submitHadnlerBySaga } = this.props;
+    const { sagaKey, formData, submitHandlerBySaga } = this.props;
     const apiUrl = '/api/mdcs/v1/common/DocCategoryTemplDeleteHandler';
     const submitData = {
       PARAM: {
@@ -284,7 +284,7 @@ class List extends Component {
         },
       },
     };
-    submitHadnlerBySaga(sagaKey, 'POST', apiUrl, submitData, this.onSaveComplete);
+    submitHandlerBySaga(sagaKey, 'POST', apiUrl, submitData, this.onSaveComplete);
   };
 
   render() {

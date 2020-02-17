@@ -15,7 +15,14 @@ class WorkProcess extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { processRule, viewType, CustomWorkProcess } = this.props;
+    const { DRAFT_PROCESS_STEP } = processRule;
+    const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
+    const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
+    const colSpan = Math.floor(24 / filterRule && filterRule.length);
+    this.setState({ filterRule, filterItem, colSpan });
+  }
 
   handleOpenModal = () => {
     this.setState({ modalVisible: true });
@@ -32,25 +39,20 @@ class WorkProcess extends Component {
   };
 
   render() {
-    const { processRule, viewType } = this.props;
+    const { processRule, viewType, CustomWorkProcess } = this.props;
     const { modalVisible } = this.state;
-    const { DRAFT_PROCESS_STEP } = processRule;
 
-    let colSpan = 6;
-    let filterRule = [];
-    let filterItem = [];
-    if (DRAFT_PROCESS_STEP !== undefined && DRAFT_PROCESS_STEP !== null) {
-      filterRule = DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
-      filterItem = DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
-      colSpan = Math.floor(24 / filterRule.length);
+    if (typeof CustomWorkProcess === 'function' && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0) {
+      return <CustomWorkProcess {...this.props}></CustomWorkProcess>;
     }
+
     return (
       <StyledWorkProcess>
         <div className="signLineWrapper">
-          {filterRule !== undefined && filterRule.length > 0 && (
+          {this.state.filterRule !== undefined && this.state.filterRule.length > 0 && (
             <>
               <Row gutter={0} type="flex" justify="end" className="table-head">
-                {filterRule.map(item => (
+                {this.state.filterRule.map(item => (
                   <Col span={3} key={`headCol_${item.NODE_ID}`}>
                     <div>
                       <span>{item.NODE_NAME_KOR}</span>
@@ -59,7 +61,7 @@ class WorkProcess extends Component {
                 ))}
               </Row>
               <Row gutter={0} type="flex" justify="end">
-                {filterRule.map(item => (
+                {this.state.filterRule.map(item => (
                   <Col span={3}>
                     <div className="wp_bodyCol">
                       {item.APPV_MEMBER.length > 0 && (
@@ -85,7 +87,7 @@ class WorkProcess extends Component {
           )}
         </div>
         <div>
-          {filterItem.map(item => (
+          {this.state.filterItem.map(item => (
             <div className="dataWrapper">
               <Row type="flex">
                 <Col span={4} className="dataLabel">
@@ -160,6 +162,7 @@ WorkProcess.propTypes = {
   processRule: PropTypes.object,
   setProcessRule: PropTypes.func,
   viewType: PropTypes.string,
+  CustomWorkProcess: PropTypes.func,
 };
 
 WorkProcess.defaultProps = {
@@ -168,6 +171,7 @@ WorkProcess.defaultProps = {
     DRAFT_PROCESS_STEP: [],
   },
   viewType: 'INPUT',
+  CustomWorkProcess: undefined,
 };
 
 export default WorkProcess;

@@ -6,7 +6,7 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
 
-function* submitHadnlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
+function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
   let httpMethodInfo = Axios.put;
   switch (httpMethod.toUpperCase()) {
     case 'POST':
@@ -63,6 +63,6 @@ function* getCallDataHandler({ id, apiArys, callbackFunc }) {
 
 export default function* watcher() {
   const arg = arguments[0];
-  yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.id}`, submitHadnlerBySaga);
+  yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.id}`, submitHandlerBySaga);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.id}`, getCallDataHandler);
 }

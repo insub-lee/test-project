@@ -24,8 +24,8 @@ class ProcessMgr extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, apiArray, id } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, apiArray, id } = this.props;
+    getCallDataHandler(id, apiArray);
   }
 
   onTitleClick = record => {
@@ -39,7 +39,7 @@ class ProcessMgr extends Component {
   };
 
   onProcessSetting = record => {
-    const { getCallDataHanlder, apiArray, id } = this.props;
+    const { getCallDataHandler, apiArray, id } = this.props;
     this.setState({
       prcId: record.PRC_ID,
       isFlowShow: true,
@@ -62,16 +62,16 @@ class ProcessMgr extends Component {
     if (isSave) {
       apiArray.push(designInfo);
     }
-    getCallDataHanlder(id, apiArray);
+    getCallDataHandler(id, apiArray);
   };
 
   onSaveComplete = fid => {
-    const { getCallDataHanlder, apiArray } = this.props;
-    getCallDataHanlder(fid, apiArray);
+    const { getCallDataHandler, apiArray } = this.props;
+    getCallDataHandler(fid, apiArray);
   };
 
   onFlowChartSave = (id, result) => {
-    const { submitHadnlerBySaga } = this.props;
+    const { submitHandlerBySaga } = this.props;
 
     const submitData = {
       PARAM: {
@@ -80,16 +80,16 @@ class ProcessMgr extends Component {
         DESIGN_DATA: result.DESIGN_DATA,
       },
     };
-    submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/workprocess/AddDefaultPrcRuleHandler', submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', '/api/workflow/v1/common/workprocess/AddDefaultPrcRuleHandler', submitData, this.onSaveComplete);
   };
 
   onReRender = () => {
-    const { getCallDataHanlder, apiArray, id } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, apiArray, id } = this.props;
+    getCallDataHandler(id, apiArray);
   };
 
   onSaveProcess = () => {
-    const { submitHadnlerBySaga, id } = this.props;
+    const { submitHandlerBySaga, id } = this.props;
     const { NAME_KOR, PROCESS_SVRNAME } = this.state;
     const submitData = {
       PARAM: {
@@ -98,14 +98,14 @@ class ProcessMgr extends Component {
         PROCESS_SVRNAME,
       },
     };
-    submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/process', submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', '/api/workflow/v1/common/process', submitData, this.onSaveComplete);
     this.setState({
       isInputShow: false,
     });
   };
 
   onUpdateProcess = () => {
-    const { submitHadnlerBySaga, id } = this.props;
+    const { submitHandlerBySaga, id } = this.props;
     const { NAME_KOR, PROCESS_SVRNAME } = this.state;
     const submitData = {
       PARAM: {
@@ -114,14 +114,14 @@ class ProcessMgr extends Component {
         PROCESS_SVRNAME,
       },
     };
-    submitHadnlerBySaga(id, 'PUT', '/api/workflow/v1/common/process', submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'PUT', '/api/workflow/v1/common/process', submitData, this.onSaveComplete);
     this.setState({
       isInputShow: false,
     });
   };
 
   onDeleteProcess = record => {
-    const { submitHadnlerBySaga, id } = this.props;
+    const { submitHandlerBySaga, id } = this.props;
 
     const submitData = {
       PARAM: {
@@ -133,7 +133,7 @@ class ProcessMgr extends Component {
 
     console.debug('submitData', submitData);
 
-    submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/deleteprocess', submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', '/api/workflow/v1/common/deleteprocess', submitData, this.onSaveComplete);
     this.setState({
       isInputShow: false,
     });
@@ -177,8 +177,8 @@ class ProcessMgr extends Component {
   ];
 
   onRefresh = () => {
-    const { getCallDataHanlder, apiArray, id } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, apiArray, id } = this.props;
+    getCallDataHandler(id, apiArray);
   };
 
   onInputClick = () => {

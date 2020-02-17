@@ -156,6 +156,19 @@ const makeSelectSearchDataById = id =>
     state.getIn(['bizBuilderBase', id, 'searchData']) !== undefined ? state.getIn(['bizBuilderBase', id, 'searchData']).toJS() : {},
   );
 
+const makeSelectListSelectRowKeys = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) =>
+      state.getIn(['bizBuilderBase', id, 'listSelectRowKeys']) !== undefined ? state.getIn(['bizBuilderBase', id, 'listSelectRowKeys']).toJS() : [],
+  );
+
+const makeSelectListSelectRowKeysById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'listSelectRowKeys']) !== undefined ? state.getIn(['bizBuilderBase', id, 'listSelectRowKeys']).toJS() : [],
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -185,4 +198,6 @@ export {
   makeSelectWorkInfoById,
   makeSelectApiListById,
   makeSelectSearchDataById,
+  makeSelectListSelectRowKeys,
+  makeSelectListSelectRowKeysById,
 };

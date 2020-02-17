@@ -27,20 +27,20 @@ BizMicroDevBase.propTypes = {
   // sagaKey: PropTypes.string.isRequired,
   result: PropTypes.object,
   formData: PropTypes.object,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   removeReduxState: PropTypes.func,
   changeFormData: PropTypes.func,
   setFormData: PropTypes.func,
-  submitHadnlerBySaga: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
 };
 
 BizMicroDevBase.defaultProps = {
   result: {},
   formData: {},
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   changeFormData: () => false,
   setFormData: () => false,
-  submitHadnlerBySaga: () => false,
+  submitHandlerBySaga: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -49,11 +49,11 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getCallDataHanlder: (id, apiAry, callbackFunc) => dispatch(actions.getCallDataHandler(id, apiAry, callbackFunc)),
+  getCallDataHandler: (id, apiAry, callbackFunc) => dispatch(actions.getCallDataHandler(id, apiAry, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   setFormData: (id, obj) => dispatch(actions.setFormData(id, obj)),
-  submitHadnlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
-    dispatch(actions.submitHadnlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
+  submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
+    dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   removeStorageReduxState: (id, storage) => dispatch(actions.removeStorageReduxState(id, storage)),
   removeResponseDataReduxStateByKey: (id, key) => dispatch(actions.removeResponseDataReduxStateByKey(id, key)),

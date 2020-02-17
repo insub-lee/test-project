@@ -77,8 +77,8 @@ class PubCompleteDocList extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, sagaKey, apiArys } = this.props;
-    getCallDataHanlder(sagaKey, apiArys, this.onDataBind);
+    const { getCallDataHandler, sagaKey, apiArys } = this.props;
+    getCallDataHandler(sagaKey, apiArys, this.onDataBind);
   }
 
   onCancel = () => {
@@ -86,20 +86,20 @@ class PubCompleteDocList extends Component {
   };
 
   onReceltComplete = sagaKey => {
-    const { getCallDataHanlder, apiArys } = this.props;
-    getCallDataHanlder(sagaKey, apiArys, this.onDataBind);
+    const { getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(sagaKey, apiArys, this.onDataBind);
     this.setState({ isShow: false });
   };
 
   onRecept = () => {
-    const { sagaKey, submitHadnlerBySaga } = this.props;
+    const { sagaKey, submitHandlerBySaga } = this.props;
     const param = {
       PARAM: {
         RECV_ID: this.state.recvId,
         STATUS: 1,
       },
     };
-    submitHadnlerBySaga(sagaKey, 'PUT', '/api/mdcs/v1/common/mdscPubDocListHandler', param, this.onReceltComplete);
+    submitHandlerBySaga(sagaKey, 'PUT', '/api/mdcs/v1/common/mdscPubDocListHandler', param, this.onReceltComplete);
   };
 
   render() {

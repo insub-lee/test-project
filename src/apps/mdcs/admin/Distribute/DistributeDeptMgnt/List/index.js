@@ -16,8 +16,8 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { id, apiAry, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiAry, () => {});
+    const { id, apiAry, getCallDataHandler } = this.props;
+    getCallDataHandler(id, apiAry, () => {});
   }
 
   onClickDept = dept => {
@@ -53,7 +53,7 @@ class List extends Component {
   ];
 
   onTreeSelect = selectKeys => {
-    const { id, getCallDataHanlder } = this.props;
+    const { id, getCallDataHandler } = this.props;
     const apiAry = [
       {
         key: 'userList',
@@ -62,7 +62,7 @@ class List extends Component {
         params: {},
       },
     ];
-    getCallDataHanlder(id, apiAry);
+    getCallDataHandler(id, apiAry);
   };
 
   onUserSelect = result => {
@@ -78,15 +78,15 @@ class List extends Component {
   };
 
   onSaveComplete = id => {
-    const { apiAry, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiAry, () => {});
+    const { apiAry, getCallDataHandler } = this.props;
+    getCallDataHandler(id, apiAry, () => {});
     this.setState({
       isShow: false,
     });
   };
 
   onUserSelectedComplete = result => {
-    const { id, submitHadnlerBySaga } = this.props;
+    const { id, submitHandlerBySaga } = this.props;
     const apiUrl = '/api/mdcs/v1/common/distribute/DistributeDeptMgnt';
     const userIds = result.map(userInfo => userInfo.USER_ID);
     const submitData = {
@@ -95,7 +95,7 @@ class List extends Component {
         USER_IDS: userIds,
       },
     };
-    submitHadnlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
   };
 
   render() {
@@ -136,8 +136,8 @@ List.propTypes = {
   id: PropTypes.string,
   apiAry: PropTypes.array,
   result: PropTypes.object,
-  getCallDataHanlder: PropTypes.func,
-  submitHadnlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
 };
 
 List.defaultProps = {
@@ -155,7 +155,7 @@ List.defaultProps = {
       list: [],
     },
   },
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   formData: {},
   setFormData: () => {},
 };
