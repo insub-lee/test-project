@@ -282,7 +282,7 @@ class CheckboxComp extends PureComponent {
     if (formData && formData[etcField] && formData[etcField] === ' ') {
       changeFormData(id, etcField, undefined);
     }
-    console.debug('this.props', this.props);
+
     return visible ? (
       <div className={CONFIG.property.className || ''}>
         {checkboxData && checkboxData.length > 0 ? (

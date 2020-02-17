@@ -142,12 +142,13 @@ export const modifyTaskBySeq = (id, workSeq, taskSeq, callbackFunc) => ({
   callbackFunc,
 });
 
-export const deleteTask = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
+export const deleteTask = (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) => ({
   type: `${actionTypes.DELETE_TASK}_${id}`,
   id,
   reloadId,
   workSeq,
   taskSeq,
+  changeViewPage,
   callbackFunc,
 });
 
