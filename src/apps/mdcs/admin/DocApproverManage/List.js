@@ -12,9 +12,9 @@ const AntdTable = StyledAntdTable(Table);
 const ButtonGroup = Button.Group;
 class List extends Component {
   componentDidMount() {
-    const { id, getCallDataHanlder, apiAry, changeFormData } = this.props;
+    const { id, getCallDataHandler, apiAry, changeFormData } = this.props;
     changeFormData(id, 'actionType', 'I');
-    getCallDataHanlder(id, apiAry);
+    getCallDataHandler(id, apiAry);
   }
 
   onMakeFullPath = (fullPath, nodeKey) => {
@@ -84,14 +84,14 @@ class List extends Component {
   };
 
   onComplete = id => {
-    const { getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry);
+    const { getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry);
   };
 
   onRemoveDo = record => {
-    const { id, submitHadnlerBySaga } = this.props;
+    const { id, submitHandlerBySaga } = this.props;
     const param = { PARAM: { ...record } };
-    submitHadnlerBySaga(id, 'POST', '/api/mdcs/v1/common/DocApproverDelete', param, this.onComplete);
+    submitHandlerBySaga(id, 'POST', '/api/mdcs/v1/common/DocApproverDelete', param, this.onComplete);
   };
 
   render() {
@@ -128,8 +128,8 @@ List.propTypes = {
       list: PropTypes.arrayOf(PropTypes.object),
     }),
   }),
-  getCallDataHanlder: PropTypes.func,
-  submitHadnlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
   actionType: PropTypes.string,
 };
 
@@ -168,7 +168,7 @@ List.defaultProps = {
     },
   ],
 
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   formData: {},
   setFormData: () => {},
   actionType: 'I',

@@ -15,7 +15,7 @@ class DeptModal extends Component {
   }
 
   componentDidMount = () => {
-    const { id, getCallDataHanlder, changeFormData } = this.props;
+    const { id, getCallDataHandler, changeFormData } = this.props;
 
     const apiAry = [
       {
@@ -24,13 +24,13 @@ class DeptModal extends Component {
         url: '/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=02',
       },
     ];
-    getCallDataHanlder(id, apiAry, this.setDept);
+    getCallDataHandler(id, apiAry, this.setDept);
     changeFormData(id, 'deptModal_cmpny', '02');
   };
 
   handleDeptAdd = () => {
     if (this.validationCheck()) {
-      const { id, formData, getCallDataHanlder } = this.props;
+      const { id, formData, getCallDataHandler } = this.props;
       const hst_cmpny_cd = (formData && formData.deptModal_cmpny) || '';
       const dept_cd = (formData && formData.selectedDept.dept_cd) || '';
 
@@ -42,18 +42,18 @@ class DeptModal extends Component {
         },
       ];
 
-      getCallDataHanlder(id, apiAry, this.handleDeptOverLab);
+      getCallDataHandler(id, apiAry, this.handleDeptOverLab);
     }
   };
 
   handleDeptOverLab = () => {
-    const { id, submitHadnlerBySaga, formData, changeFormData, result } = this.props;
+    const { id, submitHandlerBySaga, formData, changeFormData, result } = this.props;
     const hst_cmpny_cd = (formData && formData.deptModal_cmpny) || '';
     const submitData = { ...(formData && formData.selectedDept), hst_cmpny_cd };
 
     const is_ok = (result && result.deptCnt && result.deptCnt.deptCnt) || 0;
     if (!is_ok) {
-      submitHadnlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyDept', submitData, this.handleDeptReload);
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyDept', submitData, this.handleDeptReload);
       changeFormData(id, 'selectedDept', {});
     } else {
       message.warning('이전에 사용되었던 코드는 다시 사용할 수 없습니다!');
@@ -62,16 +62,16 @@ class DeptModal extends Component {
 
   handleDeptUpdate = () => {
     if (this.validationCheck()) {
-      const { id, submitHadnlerBySaga, formData, changeFormData } = this.props;
+      const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
       const submitData = (formData && formData.selectedDept) || {};
 
-      submitHadnlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyDept', submitData, this.handleDeptReload);
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyDept', submitData, this.handleDeptReload);
       changeFormData(id, 'selectedDept', {});
     }
   };
 
   handleDeptDelete = () => {
-    const { id, formData, getCallDataHanlder } = this.props;
+    const { id, formData, getCallDataHandler } = this.props;
     const hst_cmpny_cd = (formData && formData.deptModal_cmpny) || '';
     const dept_cd = (formData && formData.selectedDept.dept_cd) || '';
     const apiAry = [
@@ -82,17 +82,17 @@ class DeptModal extends Component {
       },
     ];
 
-    getCallDataHanlder(id, apiAry, this.handleIsDeleted);
+    getCallDataHandler(id, apiAry, this.handleIsDeleted);
   };
 
   handleIsDeleted = () => {
-    const { id, submitHadnlerBySaga, formData, changeFormData, result } = this.props;
+    const { id, submitHandlerBySaga, formData, changeFormData, result } = this.props;
     const submitData = (formData && formData.selectedDept) || {};
     const is_deleted = result && result.isDeleted && result.isDeleted.isDeleted;
     console.debug('222222', is_deleted);
     console.debug('222222', result);
     if (!is_deleted) {
-      submitHadnlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsHstCmpnyDeptDelete', submitData, this.handleDeptReload);
+      submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsHstCmpnyDeptDelete', submitData, this.handleDeptReload);
       changeFormData(id, 'selectedDept', {});
     } else {
       message.warning('해당 부서에 등록된 직원이 있습니다. 직원 삭제후 시도해 주십시오.');
@@ -100,7 +100,7 @@ class DeptModal extends Component {
   };
 
   handleSearchDept = e => {
-    const { id, getCallDataHanlder, changeFormData } = this.props;
+    const { id, getCallDataHandler, changeFormData } = this.props;
 
     const apiAry = [
       {
@@ -109,7 +109,7 @@ class DeptModal extends Component {
         url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${e}`,
       },
     ];
-    getCallDataHanlder(id, apiAry, this.setDept);
+    getCallDataHandler(id, apiAry, this.setDept);
     changeFormData(id, 'deptModal_cmpny', e);
   };
 
@@ -123,7 +123,7 @@ class DeptModal extends Component {
   };
 
   handleDeptReload = sagaKey => {
-    const { getCallDataHanlder, formData } = this.props;
+    const { getCallDataHandler, formData } = this.props;
     const apiAry = [
       {
         key: 'deptList',
@@ -131,7 +131,7 @@ class DeptModal extends Component {
         url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${formData && formData.deptModal_cmpny}`,
       },
     ];
-    getCallDataHanlder(sagaKey, apiAry, this.setDept);
+    getCallDataHandler(sagaKey, apiAry, this.setDept);
   };
 
   onRowClick = deptInfo => {

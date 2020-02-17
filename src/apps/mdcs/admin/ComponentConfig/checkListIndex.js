@@ -19,8 +19,8 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray, changeCompData, groupIndex, rowIndex, colIndex } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, id, apiArray, changeCompData, groupIndex, rowIndex, colIndex } = this.props;
+    getCallDataHandler(id, apiArray);
     changeCompData(groupIndex, rowIndex, colIndex, 'mapId', []);
   }
 

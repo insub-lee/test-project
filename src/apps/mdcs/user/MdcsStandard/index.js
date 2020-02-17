@@ -25,8 +25,8 @@ class IntroComponent extends Component {
   };
 
   componentWillMount() {
-    const { id, getCallDataHanlder, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { id, getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   componentDidMount() {
@@ -175,7 +175,7 @@ class IntroComponent extends Component {
             선택완료
           </Button>
         </div>
-        <Modal destroyOnClose={true} style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()}>
+        <Modal destroyOnClose style={{ top: '50px' }} width={1200} visible={this.state.isShow} onCancel={() => this.onCloseModal()}>
           {this.onShowDocTemplate(this.state.selectedComponent && this.state.selectedComponent.CODE)}
         </Modal>
       </div>
@@ -188,7 +188,7 @@ IntroComponent.propTypes = {
   apiArys: PropTypes.array,
   categoryInfo: PropTypes.array,
   categoryMapList: PropTypes.object,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   workSeq: PropTypes.number,
   item: PropTypes.object,
   doctype: PropTypes.object,
@@ -218,7 +218,7 @@ IntroComponent.defaultProps = {
   ],
   categoryInfo: [],
   categoryMapList: {},
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   workSeq: 1011,
   item: {},
   doctype: {},

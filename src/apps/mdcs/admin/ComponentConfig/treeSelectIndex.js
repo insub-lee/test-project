@@ -33,12 +33,12 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, id, apiArray } = this.props;
+    getCallDataHandler(id, apiArray);
   }
 
   getCategorieMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const apiArray = [
       {
         key: `categoryMapInfo`,
@@ -46,7 +46,7 @@ class ComponentConfig extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHanlder(id, apiArray);
+    getCallDataHandler(id, apiArray);
   };
 
   render() {

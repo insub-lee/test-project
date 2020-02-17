@@ -26,8 +26,8 @@ class CheckboxConfig extends Component {
   }
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray, changeCompData, groupIndex, rowIndex, colIndex } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, id, apiArray, changeCompData, groupIndex, rowIndex, colIndex } = this.props;
+    getCallDataHandler(id, apiArray);
     changeCompData(groupIndex, rowIndex, colIndex, 'returnType', 'StringNum');
   }
 
@@ -97,10 +97,10 @@ class CheckboxConfig extends Component {
 
   // 분류체계 선택
   getCategorieMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const { jsonResult } = this.state;
     const apiArray = [{ key: 'categoryMapInfo', url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' }];
-    getCallDataHanlder(id, apiArray, this.setRootMapList);
+    getCallDataHandler(id, apiArray, this.setRootMapList);
     this.setState({
       rootMapValue: value,
       jsonResult: {

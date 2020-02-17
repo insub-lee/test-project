@@ -35,27 +35,27 @@ class FiledManageInput extends Component {
   };
 
   callApiData = (key, value) => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const { COL_GROUP_IDX, COL_TYPE_IDX } = value;
     const apiArr = [{ key, url: `/api/builder/v1/work/FieldList`, type: 'POST', params: { key, COL_GROUP_IDX, COL_TYPE_IDX } }];
-    getCallDataHanlder(id, apiArr);
+    getCallDataHandler(id, apiArr);
   };
 
   onClickModify = () => {
-    const { id, getCallDataHanlder, onCloseModal } = this.props;
+    const { id, getCallDataHandler, onCloseModal } = this.props;
     const params = this.state;
     const apiArr = [{ key: 'fieldList', url: `/api/builder/v1/work/FieldModify`, type: 'POST', params }];
     if (this.checkValidate()) {
-      getCallDataHanlder(id, apiArr, onCloseModal());
+      getCallDataHandler(id, apiArr, onCloseModal());
       message.success(<MessageContent>변경사항이 반영 되었습니다.</MessageContent>, 3);
     }
   };
 
   onClickDelete = () => {
-    const { id, getCallDataHanlder, onCloseModal } = this.props;
+    const { id, getCallDataHandler, onCloseModal } = this.props;
     const params = this.state;
     const apiArr = [{ key: 'fieldList', url: `/api/builder/v1/work/FieldDelete`, type: 'POST', params }];
-    getCallDataHanlder(id, apiArr, onCloseModal());
+    getCallDataHandler(id, apiArr, onCloseModal());
     message.success(<MessageContent>해당 필드가 삭제 되었습니다.</MessageContent>, 3);
   };
 

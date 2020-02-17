@@ -106,8 +106,8 @@ class CompPoolEditComponent extends Component {
   }
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { getCallDataHandler, id, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   modifyResetHandle = () => {
@@ -197,7 +197,7 @@ class CompPoolEditComponent extends Component {
 
   // 저장
   onSaveHandle = () => {
-    const { id, getCallDataHanlder, closeBtnHandle, viewData } = this.props;
+    const { id, getCallDataHandler, closeBtnHandle, viewData } = this.props;
     const { formData, viewType } = this.state;
     if (formData.COL_GROUP_IDX === undefined) {
       return message.success(<MessageContent>컬럼형식(논리)을 선택해주십시오.</MessageContent>, 2);
@@ -238,12 +238,12 @@ class CompPoolEditComponent extends Component {
     ];
 
     if (viewType === 'edit') {
-      getCallDataHanlder(id, insertApi, closeBtnHandle);
+      getCallDataHandler(id, insertApi, closeBtnHandle);
       // this.resetState();
     }
 
     if (viewType === 'modify') {
-      getCallDataHanlder(id, updateApi, closeBtnHandle);
+      getCallDataHandler(id, updateApi, closeBtnHandle);
       message.success(<MessageContent>정보가 수정되었습니다.</MessageContent>, 2);
     }
   };
@@ -324,7 +324,7 @@ CompPoolEditComponent.propTypes = {
   viewData: PropTypes.object,
   id: PropTypes.string,
   apiArys: PropTypes.array,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
   closeBtnHandle: PropTypes.func,
 };
@@ -342,7 +342,7 @@ CompPoolEditComponent.defaultProps = {
       params: {},
     },
   ],
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   result: {},
   closeBtnHandle: () => false,
 };

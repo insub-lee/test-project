@@ -9,27 +9,14 @@ const { Option } = Select;
 
 class BizStd extends Component {
   componentDidMount() {
-    const { searchParam, setSearchParam } = this.props;
-    const apiArr = [
-      {
-        key: 'bizStdScope',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=7',
-        type: 'GET',
-        params: {},
-      },
-    ];
-    this.callApi(apiArr);
+    const { sagaKey, getCallDataHandler, searchParam, setSearchParam, apiAry } = this.props;
+    getCallDataHandler(sagaKey, apiAry);
     setSearchParam({
       ...searchParam,
       scope: { key: 'TBD.SCOPE', condition: '=', value: 0, type: 'INT' },
       nodeIds: { key: 'TBD.NODE_ID', condition: 'IN', value: [], type: 'INT' },
     });
   }
-
-  callApi = apiArr => {
-    const { sagaKey: id, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiArr);
-  };
 
   render() {
     const { result, searchParam, onChangeCheckBox, onChangeValue } = this.props;
@@ -71,10 +58,19 @@ class BizStd extends Component {
 
 BizStd.propTypes = {
   searchParam: PropTypes.objectOf(PropTypes.object, PropTypes.object),
+  apiAry: PropTypes.array,
 };
 
 BizStd.defaultProps = {
   searchParam: { nodeIds: { value: [] }, scope: { value: 0 } },
+  apiAry: [
+    {
+      key: 'bizStdScope',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=7',
+      type: 'GET',
+      params: {},
+    },
+  ],
 };
 
 export default BizStd;

@@ -20,8 +20,8 @@ class List extends Component {
   };
 
   componentDidMount = () => {
-    const { id, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry, this.handleAppStart);
+    const { id, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry, this.handleAppStart);
   };
 
   onRowClick = e => {
@@ -82,7 +82,7 @@ class List extends Component {
 
 List.defaultProps = {
   id: 'EshsAccAccRecord',
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   result: {},
   apiAry: [
     {
