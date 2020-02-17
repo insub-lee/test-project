@@ -27,7 +27,7 @@ class ClauseListPage extends Component {
       selectedLawName: '',
       selectedRegUserName: '',
       selectedTaskSeq: '',
-      isOpenModal: false,
+      listVeiwBool: false,
     };
     this.debounceList = debounce(this.debounceList, 300);
   }
@@ -98,8 +98,22 @@ class ClauseListPage extends Component {
     return <div />;
   };
 
+  setColumnButton = (quarterSeq, record, quarter, year) => {
+    const { isOpenInputModal } = this.props;
+    return !quarterSeq ? (
+      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year)}>
+        평가
+      </StyledButton>
+    ) : (
+      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year, quarterSeq)}>
+        수정
+      </StyledButton>
+    );
+  };
+
   setColumns = cols => {
     const columns = [];
+    const yearSt = '2020';
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
@@ -109,6 +123,32 @@ class ClauseListPage extends Component {
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
         });
       }
+    });
+
+    columns.push({
+      title: `${yearSt} 준수평가`,
+      children: [
+        {
+          title: '1분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ1, record, 1, yearSt),
+        },
+        {
+          title: '2분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ2, record, 2, yearSt),
+        },
+        {
+          title: '3분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ3, record, 3, yearSt),
+        },
+        {
+          title: '4분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ4, record, 4, yearSt),
+        },
+      ],
     });
 
     return columns;
@@ -135,19 +175,7 @@ class ClauseListPage extends Component {
   };
 
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      formData,
-      workFlowConfig,
-      loadingComplete,
-      viewPageData,
-      isOpenInputModal,
-      getListData,
-      workSeq,
-      getRevisionHistory,
-      revisionHistory,
-    } = this.props;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, isOpenInputModal, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -168,7 +196,6 @@ class ClauseListPage extends Component {
           () => loadingComplete(),
         );
       }
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -215,16 +242,6 @@ class ClauseListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div align="right">
-                          {formData.MASTER_SEQ ? (
-                            <StyledButton
-                              className="btn-primary"
-                              onClick={() => isOpenInputModal(formData.MASTER_SEQ, formData.RECH_LAW_NAME, formData.RECH_NO)}
-                            >
-                              Add
-                            </StyledButton>
-                          ) : (
-                            ''
-                          )}
                           <StyledButton className="btn-primary" onClick={() => this.listVeiwBool(id, workSeq)}>
                             Search
                           </StyledButton>

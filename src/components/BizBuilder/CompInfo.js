@@ -60,6 +60,8 @@ import SelectInputSearchComp from 'components/BizBuilder/Field/SelectInputSearch
 import LawMasterSeqComp from 'components/BizBuilder/Field/LawMasterSeqComp';
 import UserSelectComp from 'components/BizBuilder/Field/UserSelectComp';
 import JoinToolTipComp from 'components/BizBuilder/Field/JoinToolTipComp';
+import LawClauseSeqComp from 'components/BizBuilder/Field/LawClauseSeqComp';
+import TitleModalPlusComp from 'components/BizBuilder/Field/TitleModalPlusComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -122,4 +124,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/LawMasterSeqComp': { renderer: property => <LawMasterSeqComp {...property} /> },
   'components/BizBuilder/Field/UserSelectComp': { renderer: property => <UserSelectComp {...property} /> },
   'components/BizBuilder/Field/JoinToolTipComp': { renderer: property => <JoinToolTipComp {...property} /> },
+  'components/BizBuilder/Field/LawClauseSeqComp': { renderer: property => <LawClauseSeqComp {...property} /> },
+  'components/BizBuilder/Field/TitleModalPlusComp': { renderer: property => <TitleModalPlusComp {...property} /> },
 };

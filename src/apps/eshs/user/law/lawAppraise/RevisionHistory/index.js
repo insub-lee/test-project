@@ -29,24 +29,9 @@ class ClauseListPage extends Component {
       selectedTaskSeq: '',
       isOpenModal: false,
     };
-    this.debounceList = debounce(this.debounceList, 300);
   }
 
   componentDidMount() {}
-
-  listVeiwBool = (id, workSeq) => {
-    const { getListData, formData } = this.props;
-    if (formData && formData.MASTER_SEQ) {
-      getListData(id, workSeq);
-      this.debounceList();
-    } else {
-      message.warning('법규를 선택해주세요.');
-    }
-  };
-
-  debounceList() {
-    this.setState({ listVeiwBool: true });
-  }
 
   isOpenLawModal = () => {
     this.setState({ isOpenModal: true });
@@ -98,8 +83,20 @@ class ClauseListPage extends Component {
     return <div />;
   };
 
+  setColumnButton = quarterSeq => {
+    const { isOpenAppraiseDetailModal } = this.props;
+    return quarterSeq ? (
+      <StyledButton className="btn-primary" onClick={() => isOpenAppraiseDetailModal(quarterSeq)}>
+        보기
+      </StyledButton>
+    ) : (
+      ''
+    );
+  };
+
   setColumns = cols => {
     const columns = [];
+    const yearSt = '2020';
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
@@ -111,43 +108,51 @@ class ClauseListPage extends Component {
       }
     });
 
+    columns.push({
+      title: `${yearSt} 준수평가`,
+      children: [
+        {
+          title: '1분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ1),
+        },
+        {
+          title: '2분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ2),
+        },
+        {
+          title: '3분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ3),
+        },
+        {
+          title: '4분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ4),
+        },
+      ],
+    });
+
     return columns;
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, formData } = this.props;
-    const filterList = listData.filter(f => f.ISLAST_VER === 'Y');
+    const { listData, revisionTaskSeq, taskSeqReal } = this.props;
+    const filterList = listData.filter(f => (revisionTaskSeq === 0 ? f.TASK_SEQ === taskSeqReal : f.TASK_ORIGIN_SEQ === revisionTaskSeq));
     const columns = this.setColumns(group.rows[0].cols);
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={formData && formData.MASTER_SEQ && listData && this.state.listVeiwBool ? filterList : []}
-          />
+          <AntdTable rowKey="TASK_SEQ" key={`${group.key}_list`} className="view-designer-list" columns={columns} dataSource={filterList || []} />
         </Group>
       </div>
     );
   };
 
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      formData,
-      workFlowConfig,
-      loadingComplete,
-      viewPageData,
-      isOpenInputModal,
-      getListData,
-      workSeq,
-      getRevisionHistory,
-      revisionHistory,
-    } = this.props;
+    const { sagaKey: id, viewLayer, workFlowConfig, loadingComplete } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -168,7 +173,6 @@ class ClauseListPage extends Component {
           () => loadingComplete(),
         );
       }
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -176,64 +180,7 @@ class ClauseListPage extends Component {
               if (group.type === 'listGroup') {
                 return this.renderList(group, groupIndex);
               }
-              return (
-                <div key={group.key}>
-                  {group.useTitle && <GroupTitle title={group.title} />}
-                  <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-                    <StyledSearchWrap>
-                      <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
-                        <table className={`view-designer-table table-${groupIndex}`}>
-                          <tbody>
-                            {group.rows.map((row, rowIndex) => (
-                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                                {row.cols &&
-                                  row.cols.map((col, colIndex) => (
-                                    <td
-                                      key={col.key}
-                                      {...col}
-                                      comp=""
-                                      colSpan={col.span}
-                                      className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                    >
-                                      <Contents>
-                                        {col.comp &&
-                                          this.renderComp(
-                                            col.comp,
-                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                            true,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                            group.type === 'searchGroup',
-                                          )}
-                                      </Contents>
-                                    </td>
-                                  ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      {group.type === 'searchGroup' && group.useSearch && (
-                        <div align="right">
-                          {formData.MASTER_SEQ ? (
-                            <StyledButton
-                              className="btn-primary"
-                              onClick={() => isOpenInputModal(formData.MASTER_SEQ, formData.RECH_LAW_NAME, formData.RECH_NO)}
-                            >
-                              Add
-                            </StyledButton>
-                          ) : (
-                            ''
-                          )}
-                          <StyledButton className="btn-primary" onClick={() => this.listVeiwBool(id, workSeq)}>
-                            Search
-                          </StyledButton>
-                        </div>
-                      )}
-                    </StyledSearchWrap>
-                  </Group>
-                </div>
-              );
+              return <div key={group.key}></div>;
             })}
           </Sketch>
         </StyledViewDesigner>

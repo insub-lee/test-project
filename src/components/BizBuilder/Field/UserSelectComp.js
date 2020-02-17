@@ -59,7 +59,9 @@ class UserSelectComp extends React.Component {
 
     return visible ? (
       <>
-        {viewType !== 'LIST' ? (
+        {readOnly || viewType === 'LIST' ? (
+          <span className={CONFIG.property.className || ''}>{colData}</span>
+        ) : (
           <>
             <Input
               readOnly
@@ -72,8 +74,6 @@ class UserSelectComp extends React.Component {
               <UserSelect onUserSelectHandler={this.onUserSelect} onUserSelectedComplete={this.onSelectedComplete} onCancel={this.onCancel} />
             </Modal>
           </>
-        ) : (
-          <span className={CONFIG.property.className || ''}>{colData}</span>
         )}
       </>
     ) : (

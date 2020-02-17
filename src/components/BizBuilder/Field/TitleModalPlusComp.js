@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const TitleModalComp = ({ colData, sagaKey: id, rowData, isOpenModalChange, visible, CONFIG }) =>
+const TitleModalPlusComp = ({ colData, sagaKey: id, rowData, isOpenModalPlusChange, visible, CONFIG }) =>
   visible ? (
     <span
       role="button"
       onKeyPress={() => false}
-      onClick={() => isOpenModalChange(rowData)}
+      onClick={() => isOpenModalPlusChange(rowData)}
       style={{ cursor: 'pointer' }}
-      className={(CONFIG && CONFIG.property.className) || ''}
+      className={CONFIG.property.className || ''}
     >
       {colData}
     </span>
@@ -16,12 +16,12 @@ const TitleModalComp = ({ colData, sagaKey: id, rowData, isOpenModalChange, visi
     ''
   );
 
-TitleModalComp.propTypes = {
+TitleModalPlusComp.propTypes = {
   setViewPageData: PropTypes.func,
 };
 
-TitleModalComp.defaultProps = {
+TitleModalPlusComp.defaultProps = {
   setViewPageData: (a, b) => console.debug(a, b),
 };
 
-export default TitleModalComp;
+export default TitleModalPlusComp;
