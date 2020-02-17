@@ -1,13 +1,18 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
+import { Modal } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import NothGateCmpnyModal from '../NothGateCmpnyModal';
 
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       recordList: [],
+      nothGateModal: false,
+      type: '',
     };
   }
 
@@ -50,11 +55,35 @@ class List extends Component {
       .reduce((a, b) => a + b);
   };
 
+  handleModalOpen = () => {
+    this.setState({
+      nothGateModal: true,
+    });
+  };
+
+  handleOk = () => {
+    this.setState({
+      nothGateModal: false,
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      nothGateModal: false,
+    });
+  };
+
   render() {
     // const list = this.setList();
     const { recordList } = this.state;
+    const { nothGateModal } = this.state;
     return (
-      <div className="hostCmpnyUserMgt">
+      <div>
+        <StyledButton classNmae="btn-gray btn-first" onClick={this.handleModalOpen}>
+          등록
+        </StyledButton>
+        <StyledButton classNmae="btn-gray">검색</StyledButton>
+        <StyledButton classNmae="btn-gray">액셀받기</StyledButton>
         <StyledVirtualizedTable>
           <AutoSizer disableHeight>
             {({ width }) => (
@@ -75,6 +104,9 @@ class List extends Component {
             )}
           </AutoSizer>
         </StyledVirtualizedTable>
+        <Modal title="북문 업체등록" visible={nothGateModal} onOk={this.handleOk} onCancel={this.handleCancel} width={900} height={600}>
+          <NothGateCmpnyModal {...this.props} />
+        </Modal>
       </div>
     );
   }
