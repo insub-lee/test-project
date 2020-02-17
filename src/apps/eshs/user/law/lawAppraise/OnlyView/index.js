@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewExceptMinH';
 import View from 'components/BizBuilder/PageComp/view';
 
 class ViewPage extends Component {

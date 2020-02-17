@@ -26,10 +26,10 @@ class lawClause extends Component {
       clauseGubunName: '',
       quarterN: 0,
       yearSt: '2020',
-      lawAppraise1: '',
-      lawAppraise2: '',
-      lawAppraise3: '',
-      lawAppraise4: '',
+      lawAppraise1: 0,
+      lawAppraise2: 0,
+      lawAppraise3: 0,
+      lawAppraise4: 0,
       isRevisionModal: '',
       isRevisionDetailModal: '',
       isAppraiseDetailModal: '',
@@ -173,11 +173,11 @@ class lawClause extends Component {
                 MASTER_NO: this.state.masterRechNo,
                 CLAUSE_RECH_NAME: this.state.clauseRechName,
                 CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-                QUARTER: this.state.quarterN,
-                YEAR: this.state.yearSt,
+                // QUARTER: this.state.quarterN,
+                // YEAR: this.state.yearSt,
               }}
               taskSeq={taskSeq}
-              viewType={viewType}
+              viewType="VIEW"
               CustomViewPage={OnlyView}
               loadingComplete={this.loadingComplete}
               onCloseModleHandler={this.onCancel}
@@ -195,18 +195,18 @@ class lawClause extends Component {
             <BizBuilderBase
               sagaKey="lawAppraise1"
               workSeq={2242}
-              compProps={{
-                MASTER_SEQ: this.state.masterSeq,
-                CLAUSE_TASK_SEQ: this.state.clauseSeq,
-                MASTER_RECH_NAME: this.state.masterRechName,
-                MASTER_NO: this.state.masterRechNo,
-                CLAUSE_RECH_NAME: this.state.clauseRechName,
-                CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-                QUARTER: 1,
-                YEAR: this.state.yearSt,
-              }}
+              // compProps={{
+              //   MASTER_SEQ: this.state.masterSeq,
+              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
+              //   MASTER_RECH_NAME: this.state.masterRechName,
+              //   MASTER_NO: this.state.masterRechNo,
+              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
+              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
+              //   QUARTER: 1,
+              //   YEAR: this.state.yearSt,
+              // }}
               CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise1}
+              taskSeq={this.state.lawAppraise1 || 2901} // 빈 화면 taskSEQ
               viewType="VIEW"
               loadingComplete={this.loadingComplete}
             />
@@ -215,18 +215,18 @@ class lawClause extends Component {
             <BizBuilderBase
               sagaKey="lawAppraise2"
               workSeq={2242}
-              compProps={{
-                MASTER_SEQ: this.state.masterSeq,
-                CLAUSE_TASK_SEQ: this.state.clauseSeq,
-                MASTER_RECH_NAME: this.state.masterRechName,
-                MASTER_NO: this.state.masterRechNo,
-                CLAUSE_RECH_NAME: this.state.clauseRechName,
-                CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-                QUARTER: 2,
-                YEAR: this.state.yearSt,
-              }}
+              // compProps={{
+              //   MASTER_SEQ: this.state.masterSeq,
+              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
+              //   MASTER_RECH_NAME: this.state.masterRechName,
+              //   MASTER_NO: this.state.masterRechNo,
+              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
+              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
+              //   QUARTER: 2,
+              //   YEAR: this.state.yearSt,
+              // }}
               CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise2}
+              taskSeq={this.state.lawAppraise2 || 2901}
               viewType="VIEW"
               loadingComplete={this.loadingComplete}
             />
@@ -235,18 +235,18 @@ class lawClause extends Component {
             <BizBuilderBase
               sagaKey="lawAppraise3"
               workSeq={2242}
-              compProps={{
-                MASTER_SEQ: this.state.masterSeq,
-                CLAUSE_TASK_SEQ: this.state.clauseSeq,
-                MASTER_RECH_NAME: this.state.masterRechName,
-                MASTER_NO: this.state.masterRechNo,
-                CLAUSE_RECH_NAME: this.state.clauseRechName,
-                CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-                QUARTER: 3,
-                YEAR: this.state.yearSt,
-              }}
+              // compProps={{
+              //   MASTER_SEQ: this.state.masterSeq,
+              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
+              //   MASTER_RECH_NAME: this.state.masterRechName,
+              //   MASTER_NO: this.state.masterRechNo,
+              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
+              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
+              //   QUARTER: 3,
+              //   YEAR: this.state.yearSt,
+              // }}
               CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise3}
+              taskSeq={this.state.lawAppraise3 || 2901}
               viewType="VIEW"
               loadingComplete={this.loadingComplete}
             />
@@ -255,18 +255,18 @@ class lawClause extends Component {
             <BizBuilderBase
               sagaKey="lawAppraise4"
               workSeq={2242}
-              compProps={{
-                MASTER_SEQ: this.state.masterSeq,
-                CLAUSE_TASK_SEQ: this.state.clauseSeq,
-                MASTER_RECH_NAME: this.state.masterRechName,
-                MASTER_NO: this.state.masterRechNo,
-                CLAUSE_RECH_NAME: this.state.clauseRechName,
-                CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
-                QUARTER: 4,
-                YEAR: this.state.yearSt,
-              }}
+              // compProps={{
+              //   MASTER_SEQ: this.state.masterSeq,
+              //   CLAUSE_TASK_SEQ: this.state.clauseSeq,
+              //   MASTER_RECH_NAME: this.state.masterRechName,
+              //   MASTER_NO: this.state.masterRechNo,
+              //   CLAUSE_RECH_NAME: this.state.clauseRechName,
+              //   CLAUSE_GUBUN_NAME: this.state.clauseGubunName,
+              //   QUARTER: 4,
+              //   YEAR: this.state.yearSt,
+              // }}
               CustomViewPage={OnlyView}
-              taskSeq={this.state.lawAppraise4}
+              taskSeq={this.state.lawAppraise4 || 2901}
               viewType="VIEW"
               loadingComplete={this.loadingComplete}
             />
