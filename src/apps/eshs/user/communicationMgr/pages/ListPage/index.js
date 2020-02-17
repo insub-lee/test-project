@@ -11,14 +11,18 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
+import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
+import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 
 import BizBuilderBase from 'components/BizBuilderBase';
+import Moment from 'moment';
+
 import View from '../ViewPage';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
-
+Moment.locale('ko');
 class ListPage extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +33,8 @@ class ListPage extends Component {
       viewType: '',
     };
   }
+
+  componentDidMount() {}
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -58,26 +64,11 @@ class ListPage extends Component {
     return <div />;
   };
 
-  setColumns = cols => {
-    const columns = [];
-    cols.forEach(node => {
-      if (node.comp && node.comp.COMP_FIELD) {
-        columns.push({
-          dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
-          title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: node.style.width,
-          render: (text, record) => this.renderCompRow(node.comp, text, record, true),
-        });
-      }
-    });
-    return columns;
-  };
-
   handleRowClick = taskSeq => {
     this.setState({
       modalVisible: true,
-      selectedTaskSeq: taskSeq,
       viewType: 'VIEW',
+      selectedTaskSeq: taskSeq,
     });
   };
 
@@ -124,10 +115,130 @@ class ListPage extends Component {
     });
   };
 
+  handleDownloadApi = (sagaKey, taskSeq, workSeq) => {
+    const { getExtraApiData } = this.props;
+    const apiArr = [{ key: `taskFileList_${taskSeq}`, url: `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, type: 'GET' }];
+    getExtraApiData(sagaKey, apiArr);
+  };
+
   renderList = (group, groupIndex) => {
+    const columns = [
+      {
+        title: '번호',
+        key: 'RNUM',
+        width: 70,
+        render: (text, record, index) => <div>{index + 1}</div>,
+      },
+      {
+        title: '접수',
+        children: [
+          {
+            title: '접수일자',
+            dataIndex: 'RECEIVE_DATE',
+            key: 'RECEIVE_DATE',
+            align: 'center',
+            width: 120,
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => Moment(a.RECEIVE_DATE) - Moment(b.RECEIVE_DATE),
+            sortDirections: ['descend'],
+          },
+          {
+            title: '발행처',
+            dataIndex: 'PUBLICATION',
+            key: 'PUBLICATION',
+            align: 'center',
+            width: 150,
+            ellipsis: 'true',
+            render: (key, record, index) => (
+              <TitleModalComp
+                colData={key}
+                sagaKey={this.props.sagaKey}
+                rowData={{ TASK_SEQ: record.TASK_SEQ }}
+                isOpenModalChange={this.handleRowClick}
+                visible
+                // CONFIG={this.props.CONFIG}
+              />
+            ),
+          },
+          {
+            title: '제목(접수내역)',
+            dataIndex: 'TITLE',
+            key: 'TITLE',
+            align: 'center',
+            ellipsis: 'true',
+            render: (key, record, index) => (
+              <TitleModalComp
+                colData={key}
+                sagaKey={this.props.sagaKey}
+                rowData={{ TASK_SEQ: record.TASK_SEQ }}
+                isOpenModalChange={this.handleRowClick}
+                visible
+                // CONFIG={this.props.CONFIG}
+              />
+            ),
+          },
+        ],
+      },
+      {
+        title: '조치/회신',
+        children: [
+          {
+            title: '회신일자',
+            dataIndex: 'REPLY_DATE',
+            key: 'REPLY_DATE',
+            align: 'center',
+            width: 120,
+          },
+          {
+            title: '조치/회신 내용(방법, 요약)',
+            dataIndex: 'REPLY_CONTENT',
+            key: 'REPLY_CONTENT',
+            align: 'center',
+            ellipsis: 'true',
+            render: (key, record, index) => (
+              <TitleModalComp
+                colData={key}
+                sagaKey={this.props.sagaKey}
+                rowData={{ TASK_SEQ: record.TASK_SEQ }}
+                isOpenModalChange={this.handleRowClick}
+                visible
+                // CONFIG={this.props.CONFIG}
+              />
+            ),
+          },
+          {
+            title: '관련문서',
+            dataIndex: 'UPLOAD_FILE',
+            key: 'UPLOAD_FILE',
+            align: 'center',
+            width: 100,
+            render: (text, record, index) => (
+              <AttachDownComp
+                colData={text}
+                readOnly={false}
+                visible
+                isSearch={false}
+                COMP_FIELD="UPLOAD_FILE"
+                rowData={{ TASK_SEQ: record.TASK_SEQ, WORK_SEQ: this.props.workSeq }}
+                getExtraApiData={this.props.getExtraApiData}
+                extraApiData={this.props.extraApiData}
+                sagaKey={this.props.sagaKey}
+              />
+            ),
+          },
+          {
+            title: '문서유형',
+            dataIndex: 'DOC_TYPE',
+            key: 'DOC_TYPE',
+            align: 'center',
+            width: 150,
+          },
+        ],
+      },
+    ];
+
     const { modalVisible, selectedTaskSeq, viewType } = this.state;
-    const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
-    const columns = this.setColumns(group.rows[0].cols);
+    const { listData, sagaKey: id } = this.props;
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -137,9 +248,23 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
+            dataSource={
+              listData.map(item => {
+                item.RECEIVE_DATE = Moment(item.RECEIVE_DATE).format('YYYY-MM-DD');
+                item.REPLY_DATE = Moment(item.REPLY_DATE).format('YYYY-MM-DD');
+                return item;
+              }) || []
+            }
+            bordered
+            pagination={{ pageSize: 30 }}
+            tableLayout="fixed"
             onRow={record => ({
-              onClick: () => this.handleRowClick(record.TASK_SEQ),
+              onClick: () => {
+                console.debug(record.TASK_SEQ);
+                console.debug(this.state.modalVisible);
+
+                // this.handleRowClick(record.TASK_SEQ);
+              },
             })}
           />
         </Group>
@@ -151,8 +276,7 @@ class ListPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
-
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
@@ -229,10 +353,7 @@ class ListPage extends Component {
               );
             })}
             <div className="alignRight">
-              {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-                Add
-              </StyledButton> */}
-              <StyledButton className="btn-primary" onClick={() => this.handleAddClick()}>
+              <StyledButton className="btn-primary" onClick={this.handleAddClick}>
                 새 글
               </StyledButton>
             </div>
@@ -249,6 +370,7 @@ ListPage.propTypes = {
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
   viewLayer: PropTypes.array,
+  listData: PropTypes.array,
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
@@ -258,6 +380,9 @@ ListPage.propTypes = {
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
   workSeq: PropTypes.number,
+  getExtraApiData: PropTypes.func,
+  visible: PropTypes.bool,
+  CONFIG: PropTypes.object,
 };
 
 ListPage.defaultProps = {

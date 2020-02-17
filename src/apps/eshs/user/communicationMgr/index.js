@@ -1,7 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import BizBuilderBase from 'components/BizBuilderBase';
-import List from './List';
+import List from './pages/ListPage';
 
 class CommunicationMgr extends Component {
   state = {
