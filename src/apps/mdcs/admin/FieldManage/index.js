@@ -28,18 +28,18 @@ class FiledManageComponent extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, apiArray, id } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, apiArray, id } = this.props;
+    getCallDataHandler(id, apiArray);
   }
 
   onClickField = record => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const { FIELD_IDX, COL_GROUP_IDX, COL_TYPE_IDX } = record;
     const apiArr = [
       { key: 'typeList', url: `/api/builder/v1/work/FieldList`, type: 'POST', params: { key: 'typeList', COL_GROUP_IDX } },
       { key: 'compList', url: `/api/builder/v1/work/FieldList`, type: 'POST', params: { key: 'compList', COL_GROUP_IDX, COL_TYPE_IDX } },
     ];
-    getCallDataHanlder(id, apiArr);
+    getCallDataHandler(id, apiArr);
     this.setState({ isModalOpen: true, selectedIndex: FIELD_IDX, viewType: 'View' });
   };
 
@@ -65,7 +65,7 @@ class FiledManageComponent extends Component {
     const {
       result: { fieldList },
     } = this.props;
-    const { result, getCallDataHanlder, id, removeReduxStateByKey } = this.props;
+    const { result, getCallDataHandler, id, removeReduxStateByKey } = this.props;
     const { viewType } = this.state;
     return (
       <StyledContentField>
@@ -122,7 +122,7 @@ class FiledManageComponent extends Component {
           {(viewType === 'View' && (
             <View
               result={result}
-              getCallDataHanlder={getCallDataHanlder}
+              getCallDataHandler={getCallDataHandler}
               id={id}
               selectedIndex={this.state.selectedIndex}
               onChangeViewType={this.onChangeViewType}
@@ -132,7 +132,7 @@ class FiledManageComponent extends Component {
               <Input
                 result={result}
                 onCloseModal={this.onCloseModal}
-                getCallDataHanlder={getCallDataHanlder}
+                getCallDataHandler={getCallDataHandler}
                 id={id}
                 removeReduxStateByKey={removeReduxStateByKey}
               ></Input>
@@ -140,7 +140,7 @@ class FiledManageComponent extends Component {
             (viewType === 'Modify' && (
               <Modify
                 result={result}
-                getCallDataHanlder={getCallDataHanlder}
+                getCallDataHandler={getCallDataHandler}
                 id={id}
                 selectedIndex={this.state.selectedIndex}
                 onChangeViewType={this.onChangeViewType}

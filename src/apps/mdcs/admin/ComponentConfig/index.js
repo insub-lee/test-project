@@ -23,8 +23,8 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, id, apiArray } = this.props;
+    getCallDataHandler(id, apiArray);
   }
 
   onChangeHandler = (e, type) => {
@@ -35,11 +35,11 @@ class ComponentConfig extends Component {
   };
 
   getCategoryMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const apiData = { key: `checkListMapInfo${value}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' };
     this.setState({ apiData });
 
-    getCallDataHanlder(id, [apiData]);
+    getCallDataHandler(id, [apiData]);
   };
 
   onClickAdd = () => {

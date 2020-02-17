@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import { Data } from 'react-data-grid-addons';
 
 class IndusrtialAccidentCmpnyMgt extends Component {
   state = {
@@ -16,12 +15,7 @@ class IndusrtialAccidentCmpnyMgt extends Component {
   };
 
   render() {
-    // const {
-    //   match: { params },
-    //   item,
-    // } = this.props;
-    // const { ID } = params;
-    return <BizBuilderBase sagaKey="IndusrtialAccidentCmpnyMgt" workSeq={2061} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="IndusrtialAccidentCmpnyMgt" workSeq={2201} viewType="LIST" loadingComplete={this.loadingComplete} />;
   }
 }
 

@@ -7,7 +7,6 @@ import { Spin } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import history from 'utils/history';
 
 import reducer from './reducer';
 import saga from './saga';
@@ -103,20 +102,35 @@ class BizBuilderBase extends React.Component {
       CustomViewPage,
       CustomListPage,
       CustomPage,
+      CustomWorkProcess,
       viewPageData,
       metaList,
       sagaKey: id,
       workInfo,
       listData,
+      inputMetaSeq,
+      modifyMetaSeq,
+      viewMetaSeq,
+      listMetaSeq,
     } = this.props;
-    const viewLayer = metaList.filter(
-      fNode => fNode.COMP_TYPE === 'VIEW' && fNode.COMP_TAG === viewPageData.viewType && fNode.META_SEQ === workInfo[`VW_${viewPageData.viewType}`],
-    );
     let component = <div style={{ minHeight: 300 }} />;
     if (viewPageData && viewPageData.viewType && metaList && workInfo) {
+      let viewSeq = -1;
+      if (viewPageData.viewType.toUpperCase() === 'INPUT' && inputMetaSeq > -1) {
+        viewSeq = inputMetaSeq;
+      } else if (viewPageData.viewType.toUpperCase() === 'MODIFY' && modifyMetaSeq > -1) {
+        viewSeq = modifyMetaSeq;
+      } else if (viewPageData.viewType.toUpperCase() === 'VIEW' && viewMetaSeq > -1) {
+        viewSeq = viewMetaSeq;
+      } else if (viewPageData.viewType.toUpperCase() === 'LIST' && listMetaSeq > -1) {
+        viewSeq = listMetaSeq;
+      } else {
+        viewSeq = workInfo[`VW_${viewPageData.viewType}`];
+      }
+      const viewLayer = metaList.filter(fNode => fNode.COMP_TYPE === 'VIEW' && fNode.COMP_TAG === viewPageData.viewType && fNode.META_SEQ === viewSeq);
       const nextProps = {
         ...this.props,
-        key: `${id}_${viewPageData.viewType}_${workInfo[`VW_${viewPageData.viewType}`]}`,
+        key: `${id}_${viewPageData.viewType}_${viewSeq}`,
         viewLayer,
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
@@ -215,6 +229,11 @@ BizBuilderBase.propTypes = {
   getDraftProcess: PropTypes.func,
   dataLoading: PropTypes.bool,
   changeWorkflowFormData: PropTypes.func,
+  CustomWorkProcess: PropTypes.func,
+  inputMetaSeq: PropTypes.number,
+  modifyMetaSeq: PropTypes.number,
+  viewMetaSeq: PropTypes.number,
+  listMetaSeq: PropTypes.number,
 };
 
 BizBuilderBase.defaultProps = {
@@ -240,6 +259,11 @@ BizBuilderBase.defaultProps = {
   viewPageData: { viewType: 'LIST' },
   dataLoading: false,
   changeWorkflowFormData: null,
+  CustomWorkProcess: undefined,
+  inputMetaSeq: -1,
+  modifyMetaSeq: -1,
+  viewMetaSeq: -1,
+  listMetaSeq: -1,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -273,7 +297,8 @@ const mapDispatchToProps = dispatch => ({
   saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
   modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
   modifyTaskBySeq: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc)),
-  deleteTask: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, callbackFunc)),
+  deleteTask: (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) =>
+    dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc)),
   deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
   deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),

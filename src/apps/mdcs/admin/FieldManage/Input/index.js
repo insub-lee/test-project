@@ -27,8 +27,8 @@ class FiledManageInput extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, apiArray, id } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, apiArray, id } = this.props;
+    getCallDataHandler(id, apiArray);
     console.log(this.props, '테스트...');
   }
 
@@ -37,18 +37,18 @@ class FiledManageInput extends Component {
   };
 
   callApiData = (key, value) => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const { COL_GROUP_IDX, COL_TYPE_IDX } = value;
     const apiArr = [{ key, url: `/api/builder/v1/work/FieldList`, type: 'POST', params: { key, COL_GROUP_IDX, COL_TYPE_IDX } }];
-    getCallDataHanlder(id, apiArr);
+    getCallDataHandler(id, apiArr);
   };
 
   onClickSave = () => {
-    const { id, getCallDataHanlder, onCloseModal } = this.props;
+    const { id, getCallDataHandler, onCloseModal } = this.props;
     const params = this.state;
     const apiArr = [{ key: 'fieldList', url: `/api/builder/v1/work/FieldCreate`, type: 'POST', params }];
     if (this.checkValidate()) {
-      getCallDataHanlder(id, apiArr);
+      getCallDataHandler(id, apiArr);
       message.success(<MessageContent>저장 완료.</MessageContent>, 3);
       onCloseModal();
     }

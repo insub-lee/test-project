@@ -11,6 +11,7 @@ import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyco
 import StyledInputView from 'apps/mdcs/components/BizBuilderBase/viewComponent/InputPage/Styled';
 import BizBuilderBase from 'components/BizBuilderBase';
 
+import DraftPrcLine from 'apps/mdcs/user/Workflow/DraftPrcLine';
 import StyledContents from '../../../../styled/StyledContents';
 import StyledButton from '../../../../styled/StyledButton';
 import StyledModalWrapper from '../../../../styled/Modals/StyledModalWrapper';
@@ -94,8 +95,8 @@ class IntroComponent extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHanlder, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { sagaKey: id, getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   componentWillUnmount() {
@@ -103,6 +104,7 @@ class IntroComponent extends Component {
   }
 
   resetState = (selectedDraft = DraftType.ENACTMENT, viewType = 'INPUT', searchValue = '', targetTasks = []) => {
+    console.debug('Reset State', selectedDraft, viewType, searchValue, targetTasks);
     this.setState({
       optAry2: [],
       optAry3: [],
@@ -267,7 +269,7 @@ class IntroComponent extends Component {
 
     console.debug('@@@@', aryNodeIds, selectedCategorys, selectedCategory);
 
-    const { sagaKey: id, getCallDataHanlder, apiArys } = this.props;
+    const { sagaKey: id, getCallDataHandler, apiArys } = this.props;
 
     apiArys.push({
       key: 'docNum',
@@ -276,7 +278,7 @@ class IntroComponent extends Component {
       params: {},
     });
 
-    getCallDataHanlder(id, apiArys);
+    getCallDataHandler(id, apiArys);
 
     const fullPathArr = [];
     fullPathArr.push(this.state.selectedValue1);
@@ -345,7 +347,7 @@ class IntroComponent extends Component {
         PARENT_DRAFT_PRC_ID: 0,
       },
     };
-    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const { getCallDataHandler, sagaKey: id } = this.props;
     const searchApi = [
       {
         key: 'nodeIdsInfo',
@@ -354,7 +356,7 @@ class IntroComponent extends Component {
         params: payload,
       },
     ];
-    getCallDataHanlder(id, searchApi);
+    getCallDataHandler(id, searchApi);
     this.setState({ isShow: true });
   };
 
@@ -401,7 +403,7 @@ class IntroComponent extends Component {
       console.debug('draftData', draftData);
       console.debug('@ Json Draft Data : ', jsonDraftData);
       if (Object.keys(jsonDraftData).length > 2) {
-        workPrcProps = jsonDraftData;
+        workPrcProps = { ...jsonDraftData, draftType: selectedDraft };
       } else {
         return null;
       }
@@ -414,7 +416,7 @@ class IntroComponent extends Component {
     // Todo - 폐기 일괄
     if (['ABROGATION_MULTI'].includes(selectedDraft)) {
     }
-    console.debug('workPrcProps', workPrcProps);
+    console.debug('workPrcProps', viewType, workSeqGoal, taskSeq, revisionType, workPrcProps);
     return (
       <BizBuilderBase
         sagaKey={`BizDoc_${workSeqGoal}`}
@@ -422,6 +424,7 @@ class IntroComponent extends Component {
         compProps={{ docNumber, NODE_ID: selectedValue4, onCloseModleHandler: this.onCompleteCloseModal }}
         CustomInputPage={StdInput}
         CustomViewPage={StdView}
+        CustomWorkProcess={DraftPrcLine}
         taskSeq={taskSeq}
         workPrcProps={workPrcProps}
         viewType={viewType}
@@ -434,7 +437,7 @@ class IntroComponent extends Component {
 
   onSearchRevisionData = () => {
     const selectedNodeId = this.getSelectedNodeId();
-    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const { getCallDataHandler, sagaKey: id } = this.props;
     const { searchValue } = this.state;
 
     const searchApi = [
@@ -445,7 +448,7 @@ class IntroComponent extends Component {
         params: { nodeIdList: [selectedNodeId || null], docNo: searchValue },
       },
     ];
-    getCallDataHanlder(id, searchApi);
+    getCallDataHandler(id, searchApi);
   };
 
   onClickRevision = (taskSeq, nodeId) => {
@@ -683,7 +686,7 @@ IntroComponent.propTypes = {
   apiArys: PropTypes.array,
   categoryInfo: PropTypes.array,
   categoryMapList: PropTypes.object,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   resetCalledData: PropTypes.func,
   result: PropTypes.shape({
     docNum: PropTypes.shape({
@@ -732,7 +735,7 @@ IntroComponent.defaultProps = {
   ],
   categoryInfo: [],
   categoryMapList: {},
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   resetCalledData: () => false,
   result: {
     docNumber: {},

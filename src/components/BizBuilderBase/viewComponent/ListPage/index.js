@@ -11,7 +11,7 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -21,17 +21,21 @@ class ListPage extends Component {
     this.state = {
       initLoading: true,
       isMultiDelete: false,
+      isRowNo: false,
     };
   }
 
   componentDidMount = () => {
     const { workInfo } = this.props;
-    const isMultiDelete = !!(
-      workInfo &&
-      workInfo.OPT_INFO &&
-      workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') !== -1
-    );
-    this.setState({ isMultiDelete });
+    let isMultiDelete = false;
+    let isRowNo = false;
+    if (workInfo && workInfo.OPT_INFO) {
+      workInfo.OPT_INFO.forEach(opt => {
+        if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
+        if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
+      });
+      this.setState({ isMultiDelete, isRowNo });
+    }
   };
 
   // state값 reset테스트
@@ -69,7 +73,14 @@ class ListPage extends Component {
   };
 
   setColumns = cols => {
+    const { isRowNo } = this.state;
     const columns = [];
+    if (isRowNo) {
+      columns.push({
+        dataIndex: 'RNUM',
+        title: 'No.',
+      });
+    }
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({

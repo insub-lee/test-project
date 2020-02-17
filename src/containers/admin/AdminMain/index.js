@@ -9,6 +9,8 @@ import WorkBuilderListPage from 'apps/WorkBuilderApp/Admin/WorkBuilderListPage';
 import WorkBuilderToAppPage from 'apps/WorkBuilderApp/Admin/WorkBuilderToAppPage';
 import WorkBuilderCompMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderCompMgr';
 import WorkBuilderAPIMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderApiMgr';
+import WorkBuilderOptionMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderOptionMgr';
+import WorkBuilderSysFieldMgr from 'apps/WorkBuilderApp/Admin/WorkBuilderSysFieldMgr';
 import FileManager from 'apps/FileManager';
 import ProcessMgr from 'apps/Workflow/Admin/ProcessMgr';
 
@@ -76,6 +78,8 @@ class wrap extends PureComponent {
           <Route path="/admin/adminmain/ProcessMgr" component={ProcessMgr} />
           <Route path="/admin/adminmain/workBuilderCompMgr" component={WorkBuilderCompMgr} />
           <Route path="/admin/adminmain/WorkBuilderApiMgr" component={WorkBuilderAPIMgr} />
+          <Route path="/admin/adminmain/WorkBuilderOptionMgr" component={WorkBuilderOptionMgr} />
+          <Route path="/admin/adminmain/WorkBuilderSysFieldMgr" component={WorkBuilderSysFieldMgr} />
           {/* Route 추가시 아래의 Route 위에 추가 하세요 */}
           <Route path="/admin/adminmain/:MENU/" component={Menu} />
         </Switch>

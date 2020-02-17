@@ -67,6 +67,7 @@ class InputPage extends Component {
       workInfo,
       CustomWorkProcess,
     } = this.props;
+
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -85,16 +86,13 @@ class InputPage extends Component {
           () => loadingComplete(),
         );
       }
+
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            {isWorkflowUsed &&
-              PRC_ID !== -1 &&
-              (typeof CustomWorkProcess === 'function' ? (
-                <CustomWorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
-              ) : (
-                <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
-              ))}
+            {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
+              <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
+            )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
@@ -125,6 +123,7 @@ InputPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  CustomWorkProcess: PropTypes.func,
 };
 
 InputPage.defaultProps = {
@@ -134,6 +133,7 @@ InputPage.defaultProps = {
     },
   },
   loadingComplete: () => {},
+  CustomWorkProcess: undefined,
 };
 
 export default InputPage;

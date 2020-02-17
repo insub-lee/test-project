@@ -31,8 +31,8 @@ class List extends Component {
   }
 
   componentDidMount() {
-    const { id, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry, this.handleAppStart);
+    const { id, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry, this.handleAppStart);
   }
 
   handleAppStart = () => {
@@ -172,7 +172,7 @@ class List extends Component {
   };
 
   handleFindData = () => {
-    const { id, getCallDataHanlder } = this.props;
+    const { id, getCallDataHandler } = this.props;
     const { searchType, searchValue } = this.state;
 
     const api = [
@@ -182,7 +182,7 @@ class List extends Component {
         url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=%25${searchValue}%25`,
       },
     ];
-    getCallDataHanlder(id, api, this.handleOnCallBack);
+    getCallDataHandler(id, api, this.handleOnCallBack);
   };
 
   handleOnCallBack = () => {
@@ -322,7 +322,7 @@ class List extends Component {
 }
 List.propTypes = {
   id: PropTypes.string,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   apiAry: PropTypes.array,
   result: PropTypes.func,
 };
@@ -331,7 +331,7 @@ List.propTypes = {
 
 List.defaultProps = {
   id: 'EshsUserManager',
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   apiAry: [
     {
       key: 'userList',

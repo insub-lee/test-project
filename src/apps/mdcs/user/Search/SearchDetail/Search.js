@@ -82,8 +82,8 @@ class Search extends Component {
   }
 
   callApi = apiArr => {
-    const { sagaKey: id, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiArr);
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    getCallDataHandler(id, apiArr);
   };
 
   onChangeCheckBox = (key, checkedValues) => {

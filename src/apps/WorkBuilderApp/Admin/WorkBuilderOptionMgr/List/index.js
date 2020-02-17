@@ -19,8 +19,8 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHanlder, apiArys, setFormData, initData } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { sagaKey: id, getCallDataHandler, apiArys, setFormData, initData } = this.props;
+    getCallDataHandler(id, apiArys);
     setFormData(id, initData);
   }
 
@@ -40,20 +40,20 @@ class List extends Component {
   };
 
   onOptSave = () => {
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const param = { PARAM: formData };
-    submitHadnlerBySaga(id, 'POST', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
   };
 
   onOptUpdate = () => {
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const param = { PARAM: formData };
-    submitHadnlerBySaga(id, 'PUT', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
+    submitHandlerBySaga(id, 'PUT', '/api/builder/v1/work/optionmeta', param, this.onSaveComplete);
   };
 
   onSaveComplete = id => {
-    const { getCallDataHanlder, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
     this.setState({
       isRegModal: false,
       actionType: 'I',
@@ -142,12 +142,12 @@ class List extends Component {
 }
 
 List.propTypes = {
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   sagaKey: PropTypes.string,
   apiArys: PropTypes.array,
   result: PropTypes.object,
   setFormData: PropTypes.func,
-  submitHadnlerBySaga: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
   formData: PropTypes.object,
   initData: PropTypes.object,
 };
@@ -161,7 +161,7 @@ List.defaultProps = {
       params: {},
     },
   ],
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   result: {},
   initData: {
     OPT_SEQ: -1,
