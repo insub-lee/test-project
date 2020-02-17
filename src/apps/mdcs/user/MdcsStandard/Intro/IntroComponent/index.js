@@ -95,8 +95,8 @@ class IntroComponent extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getCallDataHanlder, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { sagaKey: id, getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   componentWillUnmount() {
@@ -269,7 +269,7 @@ class IntroComponent extends Component {
 
     console.debug('@@@@', aryNodeIds, selectedCategorys, selectedCategory);
 
-    const { sagaKey: id, getCallDataHanlder, apiArys } = this.props;
+    const { sagaKey: id, getCallDataHandler, apiArys } = this.props;
 
     apiArys.push({
       key: 'docNum',
@@ -278,7 +278,7 @@ class IntroComponent extends Component {
       params: {},
     });
 
-    getCallDataHanlder(id, apiArys);
+    getCallDataHandler(id, apiArys);
 
     const fullPathArr = [];
     fullPathArr.push(this.state.selectedValue1);
@@ -347,7 +347,7 @@ class IntroComponent extends Component {
         PARENT_DRAFT_PRC_ID: 0,
       },
     };
-    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const { getCallDataHandler, sagaKey: id } = this.props;
     const searchApi = [
       {
         key: 'nodeIdsInfo',
@@ -356,7 +356,7 @@ class IntroComponent extends Component {
         params: payload,
       },
     ];
-    getCallDataHanlder(id, searchApi);
+    getCallDataHandler(id, searchApi);
     this.setState({ isShow: true });
   };
 
@@ -437,7 +437,7 @@ class IntroComponent extends Component {
 
   onSearchRevisionData = () => {
     const selectedNodeId = this.getSelectedNodeId();
-    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const { getCallDataHandler, sagaKey: id } = this.props;
     const { searchValue } = this.state;
 
     const searchApi = [
@@ -448,7 +448,7 @@ class IntroComponent extends Component {
         params: { nodeIdList: [selectedNodeId || null], docNo: searchValue },
       },
     ];
-    getCallDataHanlder(id, searchApi);
+    getCallDataHandler(id, searchApi);
   };
 
   onClickRevision = (taskSeq, nodeId) => {
@@ -686,7 +686,7 @@ IntroComponent.propTypes = {
   apiArys: PropTypes.array,
   categoryInfo: PropTypes.array,
   categoryMapList: PropTypes.object,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   resetCalledData: PropTypes.func,
   result: PropTypes.shape({
     docNum: PropTypes.shape({
@@ -735,7 +735,7 @@ IntroComponent.defaultProps = {
   ],
   categoryInfo: [],
   categoryMapList: {},
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   resetCalledData: () => false,
   result: {
     docNumber: {},

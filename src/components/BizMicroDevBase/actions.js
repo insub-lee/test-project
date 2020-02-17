@@ -14,7 +14,7 @@ export const setCallDataHandler = (id, apiKey, response) => ({
   response,
 });
 
-export const submitHadnlerBySaga = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
+export const submitHandlerBySaga = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
   type: `${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${id}`,
   id,
   httpMethod,

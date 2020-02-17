@@ -38,15 +38,15 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArray } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, id, apiArray } = this.props;
+    getCallDataHandler(id, apiArray);
   }
 
   getCategorieMapList = value => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const apiArray = [{ key: `radioMapInfo${value}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' }];
     this.setState({ apiArray, rootMapValue: value, apiFlag: true });
-    getCallDataHanlder(id, apiArray);
+    getCallDataHandler(id, apiArray);
   };
 
   render() {

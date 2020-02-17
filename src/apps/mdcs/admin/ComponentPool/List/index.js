@@ -32,8 +32,8 @@ class ComponentPoolListComponent extends Component {
   }
 
   componentDidMount() {
-    const { getCallDataHanlder, id, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { getCallDataHandler, id, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   onClickRow = (record, index) => {
@@ -60,13 +60,13 @@ class ComponentPoolListComponent extends Component {
   };
 
   onCloseEdit = orgId => {
-    const { id, getCallDataHanlder, apiArys } = this.props;
+    const { id, getCallDataHandler, apiArys } = this.props;
     this.setState(
       {
         addVisible: false,
         editVisible: false,
       },
-      () => getCallDataHanlder(id, apiArys),
+      () => getCallDataHandler(id, apiArys),
     );
   };
 
@@ -189,7 +189,7 @@ class ComponentPoolListComponent extends Component {
 }
 
 ComponentPoolListComponent.propTypes = {
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   id: PropTypes.string,
   apiArys: PropTypes.array,
   result: PropTypes.object,
@@ -205,7 +205,7 @@ ComponentPoolListComponent.defaultProps = {
       params: {},
     },
   ],
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   result: {},
 };
 

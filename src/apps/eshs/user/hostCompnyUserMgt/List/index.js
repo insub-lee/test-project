@@ -23,8 +23,8 @@ class List extends Component {
   };
 
   componentDidMount = () => {
-    const { id, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry, this.handleAppStart);
+    const { id, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry, this.handleAppStart);
   };
 
   setList = () => {
@@ -114,7 +114,7 @@ class List extends Component {
 
 List.defaultProps = {
   id: 'EshshostCompny',
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   result: {},
   apiAry: [
     {

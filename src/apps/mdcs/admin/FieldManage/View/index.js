@@ -15,9 +15,9 @@ const { Option } = Select;
 
 class FieldViewComponent extends Component {
   componentDidMount() {
-    const { getCallDataHanlder, id, selectedIndex } = this.props;
+    const { getCallDataHandler, id, selectedIndex } = this.props;
     const apiArr = [{ key: 'fieldCompList', url: `/api/builder/v1/work/FieldList`, type: 'POST', params: { key: 'fieldCompList', FIELD_IDX: selectedIndex } }];
-    getCallDataHanlder(id, apiArr);
+    getCallDataHandler(id, apiArr);
   }
 
   render() {

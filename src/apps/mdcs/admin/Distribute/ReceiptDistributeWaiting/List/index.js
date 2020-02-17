@@ -23,7 +23,7 @@ export class DistributeList extends Component {
   }
 
   getDistributeList = () => {
-    const { getCallDataHanlder, id } = this.props;
+    const { getCallDataHandler, id } = this.props;
     const apiArr = [
       {
         key: 'distList',
@@ -32,7 +32,7 @@ export class DistributeList extends Component {
         params: { PARAM: { STATUS: 0 } },
       },
     ];
-    getCallDataHanlder(id, apiArr);
+    getCallDataHandler(id, apiArr);
   };
 
   handleCloseModal = () => {
@@ -43,7 +43,7 @@ export class DistributeList extends Component {
   };
 
   handleReceiptDistribute = () => {
-    const { id, submitHadnlerBySaga } = this.props;
+    const { id, submitHandlerBySaga } = this.props;
     const { selectedRow } = this.state;
     const callbackFunc = () => {
       this.handleCloseModal();
@@ -53,7 +53,7 @@ export class DistributeList extends Component {
       DRAFT_ID: selectedRow.DRAFT_ID,
       ACNT_ID: selectedRow.ACNT_ID,
     };
-    submitHadnlerBySaga(id, 'POST', '/api/mdcs/v1/common/distribute/distributeReceipt', { PARAM: { ...param } }, callbackFunc);
+    submitHandlerBySaga(id, 'POST', '/api/mdcs/v1/common/distribute/distributeReceipt', { PARAM: { ...param } }, callbackFunc);
   };
 
   getColumns = () => [
@@ -118,9 +118,9 @@ export class DistributeList extends Component {
 
 DistributeList.propTypes = {
   id: PropTypes.string,
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
-  submitHadnlerBySaga: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
 };
 
 DistributeList.defaultProps = {

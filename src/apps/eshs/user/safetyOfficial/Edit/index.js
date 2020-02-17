@@ -63,15 +63,15 @@ class Edit extends Component {
   };
 
   onSave = () => {
-    const { sagaKey, submitHadnlerBySaga, formData, changeFormData } = this.props;
+    const { sagaKey, submitHandlerBySaga, formData, changeFormData } = this.props;
 
     const submitData = {
       PARAM: { formData },
     };
     if (formData && formData.OFFICER_NO && formData.KEEPER_NO && formData.MANAGER_NO) {
       formData.actionType.trim() === 'U'
-        ? submitHadnlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete)
-        : submitHadnlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete);
+        ? submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete)
+        : submitHandlerBySaga(sagaKey, 'POST', '/api/eshs/v1/common/eshsproposalofficer', submitData, this.onSaveComplete);
       changeFormData(sagaKey, 'actionType', 'I');
     } else {
       this.warning();
@@ -79,9 +79,9 @@ class Edit extends Component {
   };
 
   onSaveComplete = id => {
-    const { getCallDataHanlder, apiAry, removeStorageReduxState, changeFormData, sagaKey } = this.props;
+    const { getCallDataHandler, apiAry, removeStorageReduxState, changeFormData, sagaKey } = this.props;
     removeStorageReduxState(id, 'result');
-    getCallDataHanlder(id, apiAry);
+    getCallDataHandler(id, apiAry);
     removeStorageReduxState(id, 'formData');
     changeFormData(sagaKey, 'actionType', 'I');
   };

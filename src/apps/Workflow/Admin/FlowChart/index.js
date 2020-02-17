@@ -63,7 +63,7 @@ class FlowPage extends Component {
 FlowPage.propTypes = {
   // actionApi: PropTypes.array,
   // publicActionMethodBySaga: PropTypes.func,
-  // getCallDataHanlder: PropTypes.func,
+  // getCallDataHandler: PropTypes.func,
 };
 
 FlowPage.defaultProps = {};

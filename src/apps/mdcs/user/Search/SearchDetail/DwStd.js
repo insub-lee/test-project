@@ -59,8 +59,8 @@ class DwStd extends Component {
   }
 
   callApi = apiArr => {
-    const { sagaKey: id, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiArr);
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    getCallDataHandler(id, apiArr);
   };
 
   render() {

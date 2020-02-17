@@ -20,14 +20,14 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, sagaKey: id, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { getCallDataHandler, sagaKey: id, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   onSaveComplete = () => {
-    const { getCallDataHanlder, sagaKey: id, apiArys, removeStorageReduxState } = this.props;
+    const { getCallDataHandler, sagaKey: id, apiArys, removeStorageReduxState } = this.props;
     console.debug(this.props);
-    getCallDataHanlder(id, apiArys);
+    getCallDataHandler(id, apiArys);
     this.setState({
       actionType: 'I',
       editVisible: false,
@@ -38,9 +38,9 @@ class List extends Component {
 
   onCompSave = () => {
     console.debug('onCompSave!!!!', this.props);
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const apiUrl = '/api/builder/v1/work/ComponentPool';
-    submitHadnlerBySaga(id, 'POST', apiUrl, formData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', apiUrl, formData, this.onSaveComplete);
   };
 
   onViewSearch = record => {
@@ -57,9 +57,9 @@ class List extends Component {
 
   onModifySave = () => {
     console.debug('onCompSave!!!!', this.props);
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const apiUrl = '/api/builder/v1/work/ComponentPool';
-    submitHadnlerBySaga(id, 'PUT', apiUrl, formData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'PUT', apiUrl, formData, this.onSaveComplete);
   };
 
   render() {
@@ -187,12 +187,12 @@ class List extends Component {
 }
 
 List.propTypes = {
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   sagaKey: PropTypes.string,
   apiArys: PropTypes.array,
   result: PropTypes.object,
   setFormData: PropTypes.func,
-  submitHadnlerBySaga: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
   formData: PropTypes.object,
 };
 
@@ -206,7 +206,7 @@ List.defaultProps = {
       params: {},
     },
   ],
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   result: {},
 };
 

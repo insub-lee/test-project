@@ -12,9 +12,9 @@ const ButtonGroup = Button.Group;
 
 class List extends Component {
   componentDidMount() {
-    const { id, getCallDataHanlder, apiAry, changeFormData } = this.props;
+    const { id, getCallDataHandler, apiAry, changeFormData } = this.props;
     changeFormData(id, 'actionType', 'I');
-    getCallDataHanlder(id, apiAry);
+    getCallDataHandler(id, apiAry);
   }
 
   getTableColumns = () => [
@@ -80,14 +80,14 @@ class List extends Component {
   };
 
   onComplete = id => {
-    const { getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry);
+    const { getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry);
   };
 
   onRemoveDo = record => {
-    const { id, submitHadnlerBySaga } = this.props;
+    const { id, submitHandlerBySaga } = this.props;
     const param = { PARAM: { ...record } };
-    submitHadnlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsproposalofficer', param, this.onComplete);
+    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsproposalofficer', param, this.onComplete);
   };
 
   render() {
@@ -123,7 +123,7 @@ List.defaultProps = {
       params: {},
     },
   ],
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   formData: {},
 };
 
