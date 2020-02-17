@@ -29,7 +29,7 @@ class ModifyPage extends Component {
     const { onCloseModleHandler, changeViewPage, baseSagaKey, baseWorkSeq } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
-      changeViewPage(baseSagaKey, baseWorkSeq, -1, 'LIST');
+      changeViewPage(baseSagaKey, baseWorkSeq || workSeq, -1, 'LIST');
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');

@@ -83,8 +83,20 @@ class ClauseListPage extends Component {
     return <div />;
   };
 
+  setColumnButton = quarterSeq => {
+    const { isOpenAppraiseDetailModal } = this.props;
+    return quarterSeq ? (
+      <StyledButton className="btn-primary" onClick={() => isOpenAppraiseDetailModal(quarterSeq)}>
+        보기
+      </StyledButton>
+    ) : (
+      ''
+    );
+  };
+
   setColumns = cols => {
     const columns = [];
+    const yearSt = '2020';
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
@@ -94,6 +106,32 @@ class ClauseListPage extends Component {
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
         });
       }
+    });
+
+    columns.push({
+      title: `${yearSt} 준수평가`,
+      children: [
+        {
+          title: '1분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ1),
+        },
+        {
+          title: '2분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ2),
+        },
+        {
+          title: '3분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ3),
+        },
+        {
+          title: '4분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ4),
+        },
+      ],
     });
 
     return columns;

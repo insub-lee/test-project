@@ -156,6 +156,7 @@ class ClauseListPage extends Component {
 
   renderList = (group, groupIndex) => {
     const { listData, formData } = this.props;
+    const filterList = listData.filter(f => f.ISLAST_VER === 'Y');
     const columns = this.setColumns(group.rows[0].cols);
     return (
       <div key={group.key}>
@@ -166,7 +167,7 @@ class ClauseListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={formData && formData.MASTER_SEQ && listData && this.state.listVeiwBool ? listData : []}
+            dataSource={formData && formData.MASTER_SEQ && listData && this.state.listVeiwBool ? filterList : []}
           />
         </Group>
       </div>

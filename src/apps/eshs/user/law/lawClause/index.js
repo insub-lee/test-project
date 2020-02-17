@@ -6,6 +6,7 @@ import ClauseList from './ClauseList';
 import ModalInput from '../ModalInput';
 import ModalModify from '../ModalClause';
 import RevisionHistory from './RevisionHistory';
+import OnlyView from '../lawAppraise/OnlyView';
 
 class lawClause extends Component {
   state = {
@@ -17,6 +18,8 @@ class lawClause extends Component {
     masterRechNo: '',
     modifyTaskSeq: '',
     isRevisionModal: '',
+    isRevisionDetailModal: '',
+    taskSeqReal: '',
   };
 
   loadingComplete = () => {
@@ -36,7 +39,11 @@ class lawClause extends Component {
   };
 
   isOpenRevisionModal = rowData => {
-    this.setState({ isRevisionModal: true, modifyTaskSeq: rowData.TASK_ORIGIN_SEQ });
+    this.setState({ isRevisionModal: true, modifyTaskSeq: rowData.TASK_ORIGIN_SEQ, taskSeqReal: rowData.TASK_SEQ });
+  };
+
+  isOpenRevisionDetailModal = rowData => {
+    this.setState({ isRevisionDetailModal: true, modifyTaskSeq: rowData.TASK_SEQ, masterRechName: rowData.RECH_LAW_NAME, masterRechNo: rowData.RECH_NO });
   };
 
   onCancel = () => {
@@ -59,23 +66,32 @@ class lawClause extends Component {
       loadingComplete={this.loadingComplete}
       CustomModifyPage={ModalModify}
       CustomInputPage={ModalInput}
+      CustomViewPage={OnlyView}
       onCloseModleHandler={this.onCancel}
       revisionType="MAJOR"
     />
   );
 
   onShowRevisionTemplate = (viewType, taskSeq) => (
-    <BizBuilderBase
-      sagaKey="lawClause_Revision"
-      listMetaSeq={2601}
-      workSeq={1645}
-      taskSeq={-1}
-      revisionTaskSeq={taskSeq}
-      viewType={viewType}
-      loadingComplete={this.loadingComplete}
-      CustomListPage={RevisionHistory}
-      onCloseModleHandler={this.onCancel}
-    />
+    <>
+      <BizBuilderBase
+        sagaKey="lawClause_Revision"
+        listMetaSeq={2601}
+        workSeq={1645}
+        taskSeq={-1}
+        compProps={{ MASTER_SEQ: this.state.masterSeq, MASTER_RECH_NAME: this.state.masterRechName, MASTER_NO: this.state.masterRechNo }}
+        revisionTaskSeq={taskSeq}
+        viewType={viewType}
+        loadingComplete={this.loadingComplete}
+        CustomListPage={RevisionHistory}
+        onCloseModleHandler={this.onCancel}
+        isOpenModalChange={this.isOpenRevisionDetailModal}
+        taskSeqReal={this.state.taskSeqReal}
+      />
+      <Modal visible={this.state.isRevisionDetailModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+        <div>{this.state.isRevisionDetailModal && this.onShowModalTemplate('VIEW', this.state.modifyTaskSeq)}</div>
+      </Modal>
+    </>
   );
 
   render() {

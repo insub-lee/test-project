@@ -6,6 +6,7 @@ import ClauseList from './AppraiseList';
 import ModalInput from '../ModalInput';
 import ModalModify from '../ModalModify';
 import OnlyView from './OnlyView';
+import RevisionHistory from './RevisionHistory';
 
 class lawClause extends Component {
   constructor(props) {
@@ -29,6 +30,10 @@ class lawClause extends Component {
       lawAppraise2: '',
       lawAppraise3: '',
       lawAppraise4: '',
+      isRevisionModal: '',
+      isRevisionDetailModal: '',
+      isAppraiseDetailModal: '',
+      taskSeqReal: '',
     };
   }
 
@@ -63,10 +68,48 @@ class lawClause extends Component {
     });
   };
 
+  isOpenAppraiseDetailModal = quarterSeq => {
+    this.setState({
+      isAppraiseDetailModal: true,
+      veiwTaskSeq: quarterSeq,
+    });
+  };
+
   isOpenModifyModal = rowData => {
     this.setState({
       isViewModal: true,
       veiwTaskSeq: rowData.TASK_SEQ,
+      masterRechName: rowData.RECH_LAW_NAME,
+      masterRechNo: rowData.RECH_NO,
+      lawAppraise1: rowData.QUARTER_SEQ1,
+      lawAppraise2: rowData.QUARTER_SEQ2,
+      lawAppraise3: rowData.QUARTER_SEQ3,
+      lawAppraise4: rowData.QUARTER_SEQ4,
+      clauseRechName: rowData.TITLE,
+      clauseGubunName: rowData.RECH_CLAUSE_GUBUN_NAME,
+    });
+  };
+
+  isOpenPlusModal = rowData => {
+    this.setState({
+      isRevisionModal: true,
+      veiwTaskSeq: rowData.TASK_ORIGIN_SEQ,
+      taskSeqReal: rowData.TASK_SEQ,
+      masterRechName: rowData.RECH_LAW_NAME,
+      masterRechNo: rowData.RECH_NO,
+      lawAppraise1: rowData.QUARTER_SEQ1,
+      lawAppraise2: rowData.QUARTER_SEQ2,
+      lawAppraise3: rowData.QUARTER_SEQ3,
+      lawAppraise4: rowData.QUARTER_SEQ4,
+      clauseRechName: rowData.TITLE,
+      clauseGubunName: rowData.RECH_CLAUSE_GUBUN_NAME,
+    });
+  };
+
+  isOpenRevisionDetailModal = rowData => {
+    this.setState({
+      isRevisionDetailModal: true,
+      modifyTaskSeq: rowData.TASK_SEQ,
       masterRechName: rowData.RECH_LAW_NAME,
       masterRechNo: rowData.RECH_NO,
       lawAppraise1: rowData.QUARTER_SEQ1,
@@ -83,6 +126,9 @@ class lawClause extends Component {
       isInputModal: false,
       isModifyModal: false,
       isViewModal: false,
+      isRevisionModal: false,
+      isAppraiseDetailModal: false,
+      isRevisionDetailModal: false,
     });
   };
 
@@ -107,6 +153,8 @@ class lawClause extends Component {
       loadingComplete={this.loadingComplete}
       CustomModifyPage={ModalModify}
       CustomInputPage={ModalInput}
+      CustomViewPage={OnlyView}
+      viewMetaSeq={2621}
       onCloseModleHandler={this.onCancel}
     />
   );
@@ -228,6 +276,30 @@ class lawClause extends Component {
     </>
   );
 
+  onShowRevisionTemplate = (viewType, taskSeq) => (
+    <>
+      <BizBuilderBase
+        sagaKey="lawClause_Revision"
+        listMetaSeq={2601}
+        workSeq={1645}
+        taskSeq={-1}
+        compProps={{ MASTER_SEQ: this.state.masterSeq, MASTER_RECH_NAME: this.state.masterRechName, MASTER_NO: this.state.masterRechNo }}
+        revisionTaskSeq={taskSeq}
+        viewType={viewType}
+        loadingComplete={this.loadingComplete}
+        CustomListPage={RevisionHistory}
+        onCloseModleHandler={this.onCancel}
+        isOpenModalChange={this.isOpenRevisionDetailModal}
+        isOpenAppraiseDetailModal={this.isOpenAppraiseDetailModal}
+        taskSeqReal={this.state.taskSeqReal}
+      />
+      <Modal visible={this.state.isRevisionDetailModal || this.state.isAppraiseDetailModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+        <div>{this.state.isRevisionDetailModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)}</div>
+        <div>{this.state.isAppraiseDetailModal && this.onShowModalTemplate('VIEW', this.state.veiwTaskSeq)}</div>
+      </Modal>
+    </>
+  );
+
   render() {
     /* const {
       match: { params },
@@ -244,9 +316,10 @@ class lawClause extends Component {
           CustomListPage={ClauseList}
           isOpenInputModal={this.isOpenInputModal}
           isOpenModalChange={this.isOpenModifyModal}
+          isOpenModalPlusChange={this.isOpenPlusModal}
         />
         <Modal
-          visible={this.state.isInputModal || this.state.isModifyModal || this.state.isViewModal}
+          visible={this.state.isInputModal || this.state.isModifyModal || this.state.isViewModal || this.state.isRevisionModal}
           width="1100px"
           onCancel={this.onCancel}
           destroyOnClose
@@ -256,6 +329,7 @@ class lawClause extends Component {
             {this.state.isInputModal && this.onShowModalTemplate('INPUT', -1)}
             {this.state.isModifyModal && this.onShowModalTemplate('MODIFY', this.state.modifyTaskSeq)}
             {this.state.isViewModal && this.onShowViewTemplate('VIEW', this.state.veiwTaskSeq)}
+            {this.state.isRevisionModal && this.onShowRevisionTemplate('LIST', this.state.veiwTaskSeq)}
           </div>
         </Modal>
       </>
