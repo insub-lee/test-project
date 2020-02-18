@@ -111,7 +111,6 @@ class ListPage extends Component {
   };
 
   searchData() {
-    console.log('searchData 개발 중');
     const fetchData = async () => {
       const result = await request({
         url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
@@ -127,7 +126,6 @@ class ListPage extends Component {
         },
       });
       if (result.response) {
-        console.log(result, 'searchData');
         this.setState({
           data: result.response.list,
         });

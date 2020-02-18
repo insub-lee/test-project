@@ -52,13 +52,16 @@ import SelectSiteComp from 'components/BizBuilder/Field/SelectSiteComp';
 import ManageCodeComp from 'components/BizBuilder/Field/ManageCodeComp';
 import JoinReadComp from 'components/BizBuilder/Field/JoinReadComp';
 import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
-import DatePicker from 'components/BizBuilder/Field/DatePicker';
+import DatePickerComp from 'components/BizBuilder/Field/DatePickerComp';
 import BusinessNumberComp from 'components/BizBuilder/Field/BusinessNumberComp';
 import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
+import LabelDateWithoutTime from 'components/BizBuilder/Field/LabelDateWithoutTime';
 import SelectInputSearchComp from 'components/BizBuilder/Field/SelectInputSearchComp';
 import LawMasterSeqComp from 'components/BizBuilder/Field/LawMasterSeqComp';
 import UserSelectComp from 'components/BizBuilder/Field/UserSelectComp';
 import JoinToolTipComp from 'components/BizBuilder/Field/JoinToolTipComp';
+import LawClauseSeqComp from 'components/BizBuilder/Field/LawClauseSeqComp';
+import TitleModalPlusComp from 'components/BizBuilder/Field/TitleModalPlusComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -114,10 +117,13 @@ export const CompInfo = {
   'components/BizBuilder/Field/JoinReadComp': { renderer: property => <JoinReadComp {...property} /> },
   'components/BizBuilder/Field/AttachDownComp': { renderer: property => <AttachDownComp {...property} /> },
   'components/BizBuilder/Field/TitleModalComp': { renderer: property => <TitleModalComp {...property} /> },
-  'components/BizBuilder/Field/DatePicker': { renderer: property => <DatePicker {...property} /> },
+  'components/BizBuilder/Field/DatePickerComp': { renderer: property => <DatePickerComp {...property} /> },
+  'components/BizBuilder/Field/LabelDateWithoutTime': { renderer: property => <LabelDateWithoutTime {...property} /> },
   'components/BizBuilder/Field/BusinessNumberComp': { renderer: property => <BusinessNumberComp {...property} /> },
   'components/BizBuilder/Field/SelectInputSearchComp': { renderer: property => <SelectInputSearchComp {...property} /> },
   'components/BizBuilder/Field/LawMasterSeqComp': { renderer: property => <LawMasterSeqComp {...property} /> },
   'components/BizBuilder/Field/UserSelectComp': { renderer: property => <UserSelectComp {...property} /> },
   'components/BizBuilder/Field/JoinToolTipComp': { renderer: property => <JoinToolTipComp {...property} /> },
+  'components/BizBuilder/Field/LawClauseSeqComp': { renderer: property => <LawClauseSeqComp {...property} /> },
+  'components/BizBuilder/Field/TitleModalPlusComp': { renderer: property => <TitleModalPlusComp {...property} /> },
 };

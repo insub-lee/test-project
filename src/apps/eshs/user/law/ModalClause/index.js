@@ -4,7 +4,6 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CompInfo } from 'components/BizBuilder/CompInfo';
 import View from 'components/BizBuilder/PageComp/view';
 
 class ModifyPage extends Component {
@@ -32,11 +31,12 @@ class ModifyPage extends Component {
       onCloseModleHandler();
       changeViewPage(baseSagaKey, workSeq, -1, 'LIST');
     }
+    if (typeof changeViewPage === 'function') {
+      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+    }
   };
 
   render = () => {
-    console.debug('@@@@@@MODIFY@@@@@@');
-
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -60,8 +60,8 @@ class ModifyPage extends Component {
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
                 Save
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                List
+              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                Revision
               </StyledButton>
             </div>
           </Sketch>

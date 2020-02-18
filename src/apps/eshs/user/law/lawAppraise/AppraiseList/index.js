@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, message } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -8,27 +8,67 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import Contents from 'components/BizBuilder/Common/Contents';
-
-import BizBuilderBase from 'components/BizBuilderBase';
-import View from '../ViewPage';
-import Input from '../InputPage';
-import Modify from '../ModifyPage';
+import { debounce } from 'lodash';
 
 const AntdTable = StyledAntdTable(Table);
 
-class ListPage extends Component {
+class ClauseListPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       initLoading: true,
-      modalVisible: false,
-      selectedTaskSeq: 0,
-      viewType: '',
+      data: [],
+      isOpenModal: false,
+      selectedRechNo: '',
+      selectedLawName: '',
+      selectedRegUserName: '',
+      selectedTaskSeq: '',
+      listVeiwBool: false,
     };
+    this.debounceList = debounce(this.debounceList, 300);
   }
+
+  componentDidMount() {}
+
+  listVeiwBool = (id, workSeq) => {
+    const { getListData, formData } = this.props;
+    if (formData && formData.MASTER_SEQ) {
+      getListData(id, workSeq);
+      this.debounceList();
+    } else {
+      message.warning('법규를 선택해주세요.');
+    }
+  };
+
+  debounceList() {
+    this.setState({ listVeiwBool: true });
+  }
+
+  isOpenLawModal = () => {
+    this.setState({ isOpenModal: true });
+  };
+
+  onCancel = () => {
+    this.setState({
+      isOpenModal: false,
+    });
+  };
+
+  onSelected = rowData => {
+    const { sagaKey: id, changeFormData } = this.props;
+    changeFormData(id, 'MASTER_SEQ', rowData.TASK_SEQ);
+    this.setState({
+      selectedRechNo: rowData.RECH_NO,
+      selectedLawName: rowData.TITLE,
+      selectedRegUserName: rowData.REG_USER_NAME,
+      selectedTaskSeq: rowData.TASK_SEQ,
+    });
+    this.onCancel();
+  };
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -58,8 +98,22 @@ class ListPage extends Component {
     return <div />;
   };
 
+  setColumnButton = (quarterSeq, record, quarter, year) => {
+    const { isOpenInputModal } = this.props;
+    return !quarterSeq ? (
+      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year)}>
+        평가
+      </StyledButton>
+    ) : (
+      <StyledButton className="btn-primary" onClick={() => isOpenInputModal(record, quarter, year, quarterSeq)}>
+        수정
+      </StyledButton>
+    );
+  };
+
   setColumns = cols => {
     const columns = [];
+    const yearSt = '2020';
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
@@ -70,63 +124,39 @@ class ListPage extends Component {
         });
       }
     });
+
+    columns.push({
+      title: `${yearSt} 준수평가`,
+      children: [
+        {
+          title: '1분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ1, record, 1, yearSt),
+        },
+        {
+          title: '2분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ2, record, 2, yearSt),
+        },
+        {
+          title: '3분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ3, record, 3, yearSt),
+        },
+        {
+          title: '4분기',
+          width: 100,
+          render: record => this.setColumnButton(record.QUARTER_SEQ4, record, 4, yearSt),
+        },
+      ],
+    });
+
     return columns;
   };
 
-  handleRowClick = taskSeq => {
-    this.setState({
-      modalVisible: true,
-      selectedTaskSeq: taskSeq,
-      viewType: 'VIEW',
-    });
-  };
-
-  handleOnCancel = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
-  handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
-    /* 
-      changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
-      taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
-      viewType: INPUT, MODIFY, VIEW
-    */
-    const { workSeq, sagaKey, loadingComplete } = this.props;
-    return (
-      <BizBuilderBase
-        sagaKey={changedSagaKey}
-        workSeq={workSeq}
-        viewType={viewType.toUpperCase()}
-        taskSeq={taskSeq}
-        CustomViewPage={View}
-        CustomInputPage={Input}
-        CustomModifyPage={Modify}
-        loadingComplete={loadingComplete}
-        onCloseModleHandler={this.handleModalClose}
-        baseSagaKey={sagaKey}
-      />
-    );
-  };
-
-  handleAddClick = () => {
-    this.setState({
-      modalVisible: true,
-      selectedTaskSeq: -1,
-      viewType: 'INPUT',
-    });
-  };
-
-  handleModalClose = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
   renderList = (group, groupIndex) => {
-    const { modalVisible, selectedTaskSeq, viewType } = this.state;
-    const { listData, sagaKey: id, changeFormData, COMP_FIELD } = this.props;
+    const { listData, formData } = this.props;
+    const filterList = listData.filter(f => f.ISLAST_VER === 'Y');
     const columns = this.setColumns(group.rows[0].cols);
     return (
       <div key={group.key}>
@@ -137,21 +167,15 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData || []}
-            onRow={record => ({
-              onClick: () => this.handleRowClick(record.TASK_SEQ),
-            })}
+            dataSource={formData && formData.MASTER_SEQ && listData && this.state.listVeiwBool ? filterList : []}
           />
         </Group>
-        <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
-          <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
-        </Modal>
       </div>
     );
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
+    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, isOpenInputModal, getListData, workSeq } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -180,10 +204,10 @@ class ListPage extends Component {
                 return this.renderList(group, groupIndex);
               }
               return (
-                (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
-                    {group.useTitle && <GroupTitle title={group.title} />}
-                    <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+                <div key={group.key}>
+                  {group.useTitle && <GroupTitle title={group.title} />}
+                  <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+                    <StyledSearchWrap>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
                         <table className={`view-designer-table table-${groupIndex}`}>
                           <tbody>
@@ -217,25 +241,17 @@ class ListPage extends Component {
                         </table>
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
-                        <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                        <div align="right">
+                          <StyledButton className="btn-primary" onClick={() => this.listVeiwBool(id, workSeq)}>
                             Search
                           </StyledButton>
                         </div>
                       )}
-                    </Group>
-                  </div>
-                )
+                    </StyledSearchWrap>
+                  </Group>
+                </div>
               );
             })}
-            <div className="alignRight">
-              {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-                Add
-              </StyledButton> */}
-              <StyledButton className="btn-primary" onClick={() => this.handleAddClick()}>
-                Add
-              </StyledButton>
-            </div>
           </Sketch>
         </StyledViewDesigner>
       );
@@ -244,7 +260,7 @@ class ListPage extends Component {
   };
 }
 
-ListPage.propTypes = {
+ClauseListPage.propTypes = {
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
@@ -257,10 +273,10 @@ ListPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
-  workSeq: PropTypes.number,
+  columns: PropTypes.array,
 };
 
-ListPage.defaultProps = {
+ClauseListPage.defaultProps = {
   workFlowConfig: {
     info: {
       PRC_ID: -1,
@@ -268,4 +284,4 @@ ListPage.defaultProps = {
   },
 };
 
-export default ListPage;
+export default ClauseListPage;
