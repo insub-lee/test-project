@@ -14,7 +14,7 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData, conditional }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData, apiList } = response;
@@ -28,7 +28,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormDat
     yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
   }
   if (viewType === 'LIST') {
-    yield put(actions.getListDataBySaga(id, workSeq));
+    yield put(actions.getListDataBySaga(id, workSeq, conditional));
     // const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
     // if (responseList) {
     //   const { list } = responseList;
@@ -465,13 +465,16 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-function* getListData({ id, workSeq }) {
+function* getListData({ id, workSeq, conditional }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
   keySet.forEach(key => {
     whereString.push(searchData[key]);
   });
+
+  if (conditional.length > 0) whereString.push(conditional);
+
   const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getBuilderData' });
   if (responseList) {
     const { list } = responseList;
