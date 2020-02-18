@@ -19,11 +19,12 @@ const initialState = fromJS({
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case `${actionTypes.GET_BUILDER_DATA}_${action.id}`: {
-      const { id, workSeq, taskSeq } = action;
+      const { id, workSeq, taskSeq, conditional } = action;
       return state
         .setIn(['bizBuilderBase', id, 'workSeq'], workSeq)
         .setIn(['bizBuilderBase', id, 'taskSeq'], taskSeq)
-        .setIn(['bizBuilderBase', id, 'isLoading'], true);
+        .setIn(['bizBuilderBase', id, 'isLoading'], true)
+        .setIn(['bizBuilderBase', id, 'conditional'], conditional || '');
     }
     case actionTypes.SET_BUILDER_DATA: {
       const { id, response, work, metaList, workFlow, apiList, formData, validationData } = action;
