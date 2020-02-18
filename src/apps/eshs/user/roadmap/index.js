@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import List from './List';
+import List from './ListPage';
 
 class EshRoadMap extends Component {
   constructor(props) {

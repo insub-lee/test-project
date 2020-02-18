@@ -35,8 +35,6 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    console.debug('@@@@@@MODIFY@@@@@@');
-
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {

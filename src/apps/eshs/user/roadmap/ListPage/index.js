@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Select } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -11,18 +11,19 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
-import TitleModalComp from 'components/BizBuilder/Field/TitleModalComp';
-import AttachDownComp from 'components/BizBuilder/Field/AttachDownComp';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
 
-import View from '../ViewPage';
+import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
 const AntdTable = StyledAntdTable(Table);
+const { Option } = Select;
+
 Moment.locale('ko');
+
 class ListPage extends Component {
   constructor(props) {
     super(props);
@@ -31,10 +32,21 @@ class ListPage extends Component {
       modalVisible: false,
       selectedTaskSeq: 0,
       viewType: '',
+      currentYear: 0,
+      currentMonth: 0,
+      selectedCategory: '387',
+      categoryLength: 0,
     };
   }
 
-  componentDidMount() {}
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { selectedCategory } = prevState;
+    const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
+    if (prevState.categoryLength !== filterdList.length) {
+      return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
+    }
+    return null;
+  }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -64,14 +76,6 @@ class ListPage extends Component {
     return <div />;
   };
 
-  handleRowClick = taskSeq => {
-    this.setState({
-      modalVisible: true,
-      viewType: 'VIEW',
-      selectedTaskSeq: taskSeq,
-    });
-  };
-
   handleOnCancel = () => {
     this.setState({
       modalVisible: false,
@@ -79,11 +83,6 @@ class ListPage extends Component {
   };
 
   handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
-    /* 
-      changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
-      taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
-      viewType: INPUT, MODIFY, VIEW
-    */
     const { workSeq, sagaKey, loadingComplete } = this.props;
     return (
       <BizBuilderBase
@@ -91,12 +90,13 @@ class ListPage extends Component {
         workSeq={workSeq}
         viewType={viewType.toUpperCase()}
         taskSeq={taskSeq}
-        CustomViewPage={View}
         CustomInputPage={Input}
         CustomModifyPage={Modify}
         loadingComplete={loadingComplete}
         onCloseModleHandler={this.handleModalClose}
         baseSagaKey={sagaKey}
+        year={this.state.currentYear}
+        month={this.state.currentMonth}
       />
     );
   };
@@ -115,157 +115,97 @@ class ListPage extends Component {
     });
   };
 
-  handleDownloadApi = (sagaKey, taskSeq, workSeq) => {
-    const { getExtraApiData } = this.props;
-    const apiArr = [{ key: `taskFileList_${taskSeq}`, url: `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, type: 'GET' }];
-    getExtraApiData(sagaKey, apiArr);
+  handleModifyClick = taskSeq => {
+    this.setState({
+      modalVisible: true,
+      selectedTaskSeq: taskSeq,
+      viewType: 'MODIFY',
+    });
+  };
+
+  handleChange = e => {
+    const { listData } = this.props;
+    this.setState({
+      selectedCategory: e,
+      categoryLength: listData.filter(item => item.CATEGORY === e).length,
+    });
   };
 
   renderList = (group, groupIndex) => {
+    const { sagaKey, getExtraApiData, extraApiData } = this.props;
     const columns = [
+      // moment().unix() = 현재 시간 타임스탬프
       {
-        title: '번호',
+        title: '항목',
+        dataIndex: 'CATEGORY',
+        key: 'CATEGORY',
+        render: (key, record, index) => (
+          <SelectReadComp colData={record.CATEGORY} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
+        ),
+      },
+      { title: '연도', dataIndex: 'CHK_YEAR', key: 'CHK_YEAR' },
+      { title: '월', dataIndex: 'CHK_MONTH', key: 'CHK_MONTH', defaultSortOrder: 'ascend', sorter: (a, b) => b - a, sortDirections: ['ascend'] },
+      {
+        title: '지역',
+        children: [
+          {
+            title: '청주',
+            dataIndex: 'FIRST_VALUE',
+            key: 'FIRST_VALUE',
+          },
+          {
+            title: '구미',
+            dataIndex: 'SECOND_VALUE',
+            key: 'SECOND_VALUE',
+          },
+        ],
+      },
+      {
+        title: '입력여부',
         key: 'RNUM',
-        width: 70,
-        render: (text, record, index) => <div>{index + 1}</div>,
+        render: (key, record, index) => (
+          <div>
+            <StyledButton className="btn-primary">완료</StyledButton>
+            <StyledButton className="btn-primary" onClick={() => this.handleModifyClick(record.TASK_SEQ)}>
+              수정
+            </StyledButton>
+          </div>
+        ),
       },
-      {
-        title: '접수',
-        children: [
-          {
-            title: '접수일자',
-            dataIndex: 'RECEIVE_DATE',
-            key: 'RECEIVE_DATE',
-            align: 'center',
-            width: 120,
-            defaultSortOrder: 'descend',
-            sorter: (a, b) => Moment(a.RECEIVE_DATE) - Moment(b.RECEIVE_DATE),
-            sortDirections: ['descend'],
-          },
-          {
-            title: '발행처',
-            dataIndex: 'PUBLICATION',
-            key: 'PUBLICATION',
-            align: 'center',
-            width: 150,
-            ellipsis: 'true',
-            render: (key, record, index) => (
-              <TitleModalComp
-                colData={key}
-                sagaKey={this.props.sagaKey}
-                rowData={{ TASK_SEQ: record.TASK_SEQ }}
-                isOpenModalChange={this.handleRowClick}
-                visible
-                // CONFIG={this.props.CONFIG}
-              />
-            ),
-          },
-          {
-            title: '제목(접수내역)',
-            dataIndex: 'TITLE',
-            key: 'TITLE',
-            align: 'center',
-            ellipsis: 'true',
-            render: (key, record, index) => (
-              <TitleModalComp
-                colData={key}
-                sagaKey={this.props.sagaKey}
-                rowData={{ TASK_SEQ: record.TASK_SEQ }}
-                isOpenModalChange={this.handleRowClick}
-                visible
-                // CONFIG={this.props.CONFIG}
-              />
-            ),
-          },
-        ],
-      },
-      {
-        title: '조치/회신',
-        children: [
-          {
-            title: '회신일자',
-            dataIndex: 'REPLY_DATE',
-            key: 'REPLY_DATE',
-            align: 'center',
-            width: 120,
-          },
-          {
-            title: '조치/회신 내용(방법, 요약)',
-            dataIndex: 'REPLY_CONTENT',
-            key: 'REPLY_CONTENT',
-            align: 'center',
-            ellipsis: 'true',
-            render: (key, record, index) => (
-              <TitleModalComp
-                colData={key}
-                sagaKey={this.props.sagaKey}
-                rowData={{ TASK_SEQ: record.TASK_SEQ }}
-                isOpenModalChange={this.handleRowClick}
-                visible
-                // CONFIG={this.props.CONFIG}
-              />
-            ),
-          },
-          {
-            title: '관련문서',
-            dataIndex: 'UPLOAD_FILE',
-            key: 'UPLOAD_FILE',
-            align: 'center',
-            width: 100,
-            render: (text, record, index) => (
-              <AttachDownComp
-                colData={text}
-                readOnly={false}
-                visible
-                isSearch={false}
-                COMP_FIELD="UPLOAD_FILE"
-                rowData={{ TASK_SEQ: record.TASK_SEQ, WORK_SEQ: this.props.workSeq }}
-                getExtraApiData={this.props.getExtraApiData}
-                extraApiData={this.props.extraApiData}
-                sagaKey={this.props.sagaKey}
-              />
-            ),
-          },
-          {
-            title: '문서유형',
-            dataIndex: 'DOC_TYPE',
-            key: 'DOC_TYPE',
-            align: 'center',
-            width: 150,
-          },
-        ],
-      },
+      { title: '작성자', dataIndex: 'REG_USER_NAME', key: 'REG_USER_NAME' },
     ];
 
-    const { modalVisible, selectedTaskSeq, viewType } = this.state;
+    const { modalVisible, selectedTaskSeq, viewType, categoryLength } = this.state;
     const { listData, sagaKey: id } = this.props;
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
+        <Select defaultValue="387" onChange={this.handleChange} width="200px" style={{ marginBottom: '10px' }}>
+          <Option value="387">WF 생산량</Option>
+          <Option value="388">전력</Option>
+          <Option value="389">연료</Option>
+          <Option value="390">용수</Option>
+          <Option value="391">경미재해</Option>
+        </Select>
+
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+          <div>{`총 ${categoryLength}건`}</div>
+          <div className="alignRight">
+            <StyledButton className="btn-primary" onClick={this.handleAddClick} style={{ marginBottom: '5px' }}>
+              항목 추가
+            </StyledButton>
+          </div>
+
           <AntdTable
             rowKey="TASK_SEQ"
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={
-              listData.map(item => {
-                item.RECEIVE_DATE = Moment(item.RECEIVE_DATE).format('YYYY-MM-DD');
-                item.REPLY_DATE = Moment(item.REPLY_DATE).format('YYYY-MM-DD');
-                return item;
-              }) || []
-            }
+            dataSource={listData.filter(item => item.CATEGORY === this.state.selectedCategory)}
             bordered
-            pagination={{ pageSize: 30 }}
+            pagination={{ pageSize: 12 }}
             tableLayout="fixed"
-            onRow={record => ({
-              onClick: () => {
-                console.debug(record.TASK_SEQ);
-                console.debug(this.state.modalVisible);
-
-                // this.handleRowClick(record.TASK_SEQ);
-              },
-            })}
           />
         </Group>
         <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
@@ -277,6 +217,7 @@ class ListPage extends Component {
 
   render = () => {
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
+    console.debug(this.state.currentYear, this.state.currentMonth);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
@@ -352,11 +293,6 @@ class ListPage extends Component {
                 )
               );
             })}
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={this.handleAddClick}>
-                새 글
-              </StyledButton>
-            </div>
           </Sketch>
         </StyledViewDesigner>
       );
