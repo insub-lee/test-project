@@ -18,7 +18,6 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    console.debug('@@@@@@INPUT@@@@@@');
     const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
     const {
       info: { PRC_ID },
@@ -54,7 +53,6 @@ class InputPage extends Component {
   };
 
   render = () => {
-    console.debug('@@@INPUT RENDERING@@@', this.props);
     const {
       sagaKey: id,
       viewLayer,
