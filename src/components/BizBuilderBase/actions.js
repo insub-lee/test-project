@@ -1,11 +1,12 @@
 import * as actionTypes from './constants';
 
-export const getBuilderData = (id, workSeq, taskSeq, viewType, changeWorkflowFormData) => ({
+export const getBuilderData = (id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData) => ({
   type: `${actionTypes.GET_BUILDER_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
+  conditional,
   changeWorkflowFormData,
 });
 
