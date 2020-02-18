@@ -1,11 +1,17 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Modal } from 'antd';
+import { Modal, Select, Input, DatePicker, message } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import moment from 'moment';
 import NothGateCmpnyModal from '../NothGateCmpnyModal';
 
+const { Option } = Select;
+const { RangePicker } = DatePicker;
+const format = 'YYYY-MM-DD HH:mm:ss';
+moment.locale('ko');
 class List extends Component {
   constructor(props) {
     super(props);
@@ -31,8 +37,21 @@ class List extends Component {
 
   onRowClick = e => {
     const { id, changeFormData } = this.props;
-    changeFormData(id, 'rowData', (e && e.rowData) || {});
-    console.debug('onRowClick ', e);
+    const { rowData } = e;
+    const visit_date = (rowData && rowData.visit_date) || null;
+    const visitor_in_date = (rowData && rowData.visitor_in_date) || null;
+    const visitor_out_date = (rowData && rowData.visitor_out_date) || null;
+    const work_area_cd = (rowData && rowData.work_area_cd) || '';
+    changeFormData(id, 'modal', {
+      type: 'UPDATE',
+      is_modal: true,
+      info: {
+        ...rowData,
+        work_area_cd: work_area_cd === '청주' ? 'CJ' : 'GM',
+        visitor_out_date: moment(`${visit_date} ${visitor_out_date}`).format(format),
+        visitor_in_date: moment(`${visit_date} ${visitor_in_date}`).format(format),
+      },
+    });
   };
 
   noRowsRenderer = () => <div className="noRows">0 명</div>;
@@ -56,34 +75,144 @@ class List extends Component {
   };
 
   handleModalOpen = () => {
-    this.setState({
-      nothGateModal: true,
-    });
-  };
+    const { id, changeFormData } = this.props;
+    const now = new Date();
+    const now2 = new Date(`${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`);
 
-  handleOk = () => {
-    this.setState({
-      nothGateModal: false,
+    changeFormData(id, 'modal', {
+      type: 'INSERT',
+      is_modal: true,
+      info: { work_area_cd: 'CJ', visitor_type: 'N', visitor_in_date: moment().format(format), visitor_out_date: moment(now2, format) },
     });
   };
 
   handleCancel = () => {
+    const { id, changeFormData } = this.props;
+    changeFormData(id, 'modal', { type: '', is_modal: false, info: {} });
+  };
+
+  handleSiteOnChange = e => {
+    const { id, changeFormData, formData } = this.props;
+    const search = (formData && formData.search) || {};
+    changeFormData(id, 'search', { ...search, WORK_AREA_CD: e });
+  };
+
+  handleDateOnChange = (data, dateString) => {
+    const { id, changeFormData, formData } = this.props;
+    const search = (formData && formData.search) || {};
+    changeFormData(id, 'search', { ...search, FROM_DATE: dateString[0], TO_DATE: dateString[1] });
+  };
+
+  handleInputOnChange = e => {
+    const { id, changeFormData, formData } = this.props;
+    const search = (formData && formData.search) || {};
+    changeFormData(id, 'search', { ...search, [e.target.name]: e.target.value });
+  };
+
+  handleRegOnChange = e => {
+    const { id, changeFormData, formData } = this.props;
+    const search = (formData && formData.search) || {};
+    changeFormData(id, 'search', { ...search, WRK_REG: e });
+  };
+
+  handleOnSearch = () => {
+    const { id, getCallDataHanlder, formData } = this.props;
+    console.debug('getCallDataHanlder  ', getCallDataHanlder);
+    const search = (formData && formData.search) || {};
+    const apiAry = [
+      {
+        key: 'searchList',
+        type: 'POST',
+        url: '/api/eshs/v1/common/eshsAccessRecord',
+        params: search,
+      },
+    ];
+    getCallDataHanlder(id, apiAry, this.onSearchCallBack);
+  };
+
+  onSearchCallBack = sagaKey => {
+    console.debug('asdasd');
+    const { result } = this.props;
+
+    const recordList = (result && result.searchList && result.searchList.recordList) || [];
     this.setState({
-      nothGateModal: false,
+      recordList,
     });
   };
 
+  handleTypeOnChange = e => {
+    const { id, changeFormData, formData } = this.props;
+    const search = (formData && formData.search) || {};
+    changeFormData(id, 'search', { ...search, VISITOR_TYPE: e });
+  };
+
+  handleDwExcel = () => {
+    message.warning('미구현');
+  };
+
   render() {
-    // const list = this.setList();
-    const { recordList } = this.state;
-    const { nothGateModal } = this.state;
+    const { recordList, nothGateModal } = this.state;
+    const { formData } = this.props;
+    const search = (formData && formData.search) || {};
+    const is_modal = (formData && formData.modal && formData.modal.is_modal) || false;
+
     return (
       <div>
-        <StyledButton classNmae="btn-gray btn-first" onClick={this.handleModalOpen}>
-          등록
+        <StyledSearchWrap>
+          <div className="search-group-layer">
+            <Select defaultValue="" className="search-item input-width120" onChange={this.handleSiteOnChange}>
+              <Option value="">지역 전체</Option>
+              <Option value="청주">청주</Option>
+              <Option value="구미">구미</Option>
+            </Select>
+            <Select defaultValue="" className="search-item input-width120" onChange={this.handleTypeOnChange}>
+              <Option value="">전체</Option>
+              <Option value="일일">일일</Option>
+              <Option value="북/후문">북/후문</Option>
+              <Option value="상시">상시</Option>
+            </Select>
+            <Input
+              placeholder="업체명"
+              value={search.WRK_CMPNY_NM || ''}
+              name="WRK_CMPNY_NM"
+              className="search-item input-width200"
+              onChange={this.handleInputOnChange}
+            />
+            <Input
+              placeholder="사업자 등록번호"
+              value={search.BIZ_REG_NO || ''}
+              name="BIZ_REG_NO"
+              className="search-item input-width200"
+              onChange={this.handleInputOnChange}
+            />
+            <Input
+              placeholder="방문자 성명"
+              value={search.VISITOR_NAME || ''}
+              name="VISITOR_NAME"
+              className="search-item input-width160"
+              onChange={this.handleInputOnChange}
+            />
+            <Select defaultValue="" className="search-item input-width200" onChange={this.handleRegOnChange}>
+              <Option value="">선택</Option>
+              <Option value="등록">등록</Option>
+              <Option value="미등록">미등록</Option>
+            </Select>
+            <RangePicker onChange={this.handleDateOnChange} className="margin-term" />
+          </div>
+        </StyledSearchWrap>
+        {search.VISITOR_TYPE === '북/후문' ? (
+          <StyledButton classNmae="btn-gray btn-first" onClick={this.handleModalOpen}>
+            등록
+          </StyledButton>
+        ) : (
+          ''
+        )}
+        <StyledButton classNmae="btn-gray" onClick={this.handleOnSearch}>
+          검색
         </StyledButton>
-        <StyledButton classNmae="btn-gray">검색</StyledButton>
-        <StyledButton classNmae="btn-gray">액셀받기</StyledButton>
+        <StyledButton classNmae="btn-gray" onClick={this.handleDwExcel}>
+          액셀받기
+        </StyledButton>
         <StyledVirtualizedTable>
           <AutoSizer disableHeight>
             {({ width }) => (
@@ -104,8 +233,8 @@ class List extends Component {
             )}
           </AutoSizer>
         </StyledVirtualizedTable>
-        <Modal title="북문 업체등록" visible={nothGateModal} onOk={this.handleOk} onCancel={this.handleCancel} width={900} height={600}>
-          <NothGateCmpnyModal {...this.props} />
+        <Modal title="북문 업체등록" visible={is_modal} onCancel={this.handleCancel} width={900} height={600} footer={[null]}>
+          <NothGateCmpnyModal {...this.props} handleAppStart={this.handleAppStart} handleModalOpen={this.handleModalOpen} />
         </Modal>
       </div>
     );
@@ -119,7 +248,7 @@ List.defaultProps = {
   apiAry: [
     {
       key: 'recordList',
-      type: 'GET',
+      type: 'POST',
       url: '/api/eshs/v1/common/eshsAccessRecord',
     },
   ],
