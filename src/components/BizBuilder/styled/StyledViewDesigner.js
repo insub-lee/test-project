@@ -188,7 +188,7 @@ const StyledViewDesigner = styled.div`
           position: relative;
           background-color: #f1f1f1;
           background-clip: padding-box;
-          padding: 6px;
+          padding: 4px;
           > div {
             /* position: absolute;
             top: 50%;
@@ -217,8 +217,41 @@ const StyledViewDesigner = styled.div`
         }
         > div > span {
           display: block;
-          font-size: 13px;
+          font-size: 12px;
         }
+        .ant-radio-group {
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+          color: rgba(0, 0, 0, 0.65);
+          font-size: 12px;
+          font-variant: tabular-nums;
+          line-height: 1.5;
+          list-style: none;
+          -webkit-font-feature-settings: 'tnum';
+          font-feature-settings: 'tnum';
+          display: inline-block;
+        }
+
+        .ant-radio,
+        .ant-radio-wrapper {
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          padding: 0;
+          color: rgba(0, 0, 0, 0.65);
+          font-size: 12px;
+          font-variant: tabular-nums;
+          line-height: 1.5;
+          list-style: none;
+          -webkit-font-feature-settings: 'tnum';
+          font-feature-settings: 'tnum';
+          position: relative;
+          display: inline-block;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+
         .ant-input {
           border-top-style: initial;
           border-right-style: initial;
@@ -226,8 +259,8 @@ const StyledViewDesigner = styled.div`
           border-top-color: initial;
           border-right-color: initial;
           border-left-color: initial;
-          height: 35px;
-          line-height: 35px;
+          height: 30px;
+          line-height: 30px;
           color: rgb(51, 51, 51);
           vertical-align: middle;
           font-size: 12px;
