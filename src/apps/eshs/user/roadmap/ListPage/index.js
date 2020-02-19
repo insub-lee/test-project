@@ -14,6 +14,7 @@ import Contents from 'components/BizBuilder/Common/Contents';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
+import request from 'utils/request';
 
 import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
 import Input from '../InputPage';
@@ -99,6 +100,7 @@ class ListPage extends Component {
         category={selectedCategory}
         year={currentYear}
         month={currentMonth}
+        compProps={{ category: selectedCategory, year: currentYear, month: currentMonth }}
       />
     );
   };
@@ -127,22 +129,26 @@ class ListPage extends Component {
 
   handleChange = e => {
     const { listData } = this.props;
-    // if (listData.filter(item => item.CATEGORY === e).length && listData.filter(item => item.CATEGORY === e)[0].CHK_MONTH > 12) {
-    //   console.debug('@@@@MONTH > 12');
-    //   this.setState({
-    //     selectedCategory: e,
-    //     categoryLength: listData.filter(item => item.CATEGORY === e).length,
-    //     currentYear: parseInt(listData.filter(item => item.CATEGORY === e)[0].CHK_YEAR, 10) + 1,
-    //     currentMonth: '1',
-    //   });
-    //   return;
-    // }
     this.setState({
       selectedCategory: e,
       categoryLength: listData.filter(item => item.CATEGORY === e).length,
       currentYear: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_YEAR : '2020',
       currentMonth: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_MONTH : '0',
     });
+  };
+
+  handleCompleteClick = taskSeq => {
+    const { sagaKey: id, changeViewPage, workSeq } = this.props;
+    this.handleIsConfirmedChange(taskSeq);
+    changeViewPage(id, workSeq, -1, 'LIST');
+  };
+
+  handleIsConfirmedChange = async taskSeq => {
+    await request({
+      method: 'PATCH',
+      url: `/api/eshs/v1/common/updateroadmapisconfirmed?taskSeq=${taskSeq}`,
+    });
+    // return result.response;
   };
 
   renderList = (group, groupIndex) => {
@@ -177,14 +183,19 @@ class ListPage extends Component {
       {
         title: '입력여부',
         key: 'RNUM',
-        render: (key, record, index) => (
-          <div>
-            <StyledButton className="btn-primary">완료</StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.handleModifyClick(record.TASK_SEQ)}>
-              수정
-            </StyledButton>
-          </div>
-        ),
+        render: (key, record, index) =>
+          record.IS_CONFIRMED === 'N' ? (
+            <div>
+              <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.TASK_SEQ)}>
+                완료
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={() => this.handleModifyClick(record.TASK_SEQ)}>
+                수정
+              </StyledButton>
+            </div>
+          ) : (
+            <div>입력완료</div>
+          ),
       },
       { title: '작성자', dataIndex: 'REG_USER_NAME', key: 'REG_USER_NAME' },
     ];
@@ -218,8 +229,7 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData.filter(item => item.CATEGORY === this.state.selectedCategory)}
             bordered
-            pagination={{ pageSize: 12 }}
-            tableLayout="fixed"
+            pagination={false}
           />
         </Group>
         <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
@@ -231,7 +241,6 @@ class ListPage extends Component {
 
   render = () => {
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
-    console.debug(this.state.currentYear, this.state.currentMonth);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {

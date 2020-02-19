@@ -9,8 +9,6 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
-import LabelComp from 'components/BizBuilder/Field/LabelComp';
-
 class InputPage extends Component {
   constructor(props) {
     super(props);
@@ -36,11 +34,9 @@ class InputPage extends Component {
     }
     changeFormData(id, 'CATEGORY', category);
     if (parseInt(month, 10) >= 12) {
-      console.debug('@@@@MONTH > 12', category, year, month);
       changeFormData(id, 'CHK_YEAR', parseInt(year, 10) + 1);
       changeFormData(id, 'CHK_MONTH', 1);
     } else {
-      console.debug('@@@@MONTH < 13', category, year, month);
       changeFormData(id, 'CHK_YEAR', year);
       changeFormData(id, 'CHK_MONTH', parseInt(month, 10) + 1);
     }
@@ -79,7 +75,7 @@ class InputPage extends Component {
       CustomWorkProcess,
     } = this.props;
     // Work Process 사용여부
-    console.debug('@@@@INPUTPAGE', this.props);
+    console.debug('@@@@INPUTPAGE', this.props.formData);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
