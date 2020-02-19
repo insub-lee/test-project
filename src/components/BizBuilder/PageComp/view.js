@@ -35,33 +35,43 @@ class View extends Component {
               <Group key={group.key} className={`view-designer-group group-${groupIndex} ${viewLayer[0].COMP_FIELD}-${groupIndex}`}>
                 <table className={`view-designer-table table-${groupIndex}`}>
                   <tbody>
-                    {group.rows.map((row, rowIndex) => (
-                      <tr key={row.key} className={`view-designer-row row-${rowIndex} ${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`}>
-                        {row.cols &&
-                          row.cols.map((col, colIndex) => (
-                            <td
-                              key={col.key}
-                              {...col}
-                              comp=""
-                              colSpan={col.span}
-                              className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${
-                                viewLayer[0].COMP_FIELD
-                              }-${groupIndex}-${rowIndex}-${colIndex} ${col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName}` : ''}`}
-                            >
-                              <Contents>
-                                {col.comp &&
-                                  this.renderComp(
-                                    col.comp,
-                                    col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                    true,
-                                    `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                    `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                  )}
-                              </Contents>
-                            </td>
-                          ))}
-                      </tr>
-                    ))}
+                    {group.rows.map((row, rowIndex) =>
+                      row ? (
+                        <tr key={row.key} className={`view-designer-row row-${rowIndex} ${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`}>
+                          {row.cols &&
+                            row.cols.map((col, colIndex) =>
+                              col ? (
+                                <td
+                                  key={col.key}
+                                  {...col}
+                                  comp=""
+                                  colSpan={col.span}
+                                  className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${
+                                    viewLayer[0].COMP_FIELD
+                                  }-${groupIndex}-${rowIndex}-${colIndex} ${
+                                    col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName}` : ''
+                                  }`}
+                                >
+                                  <Contents>
+                                    {col.comp &&
+                                      this.renderComp(
+                                        col.comp,
+                                        col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                        true,
+                                        `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
+                                        `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
+                                      )}
+                                  </Contents>
+                                </td>
+                              ) : (
+                                ''
+                              ),
+                            )}
+                        </tr>
+                      ) : (
+                        ''
+                      ),
+                    )}
                   </tbody>
                 </table>
               </Group>
