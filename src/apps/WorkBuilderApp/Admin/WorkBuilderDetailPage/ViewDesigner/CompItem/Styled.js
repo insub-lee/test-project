@@ -9,6 +9,10 @@ import iconTrash from 'images/workbuilder/iconTrash_wb.png';
 const Styled = styled.div`
   display: inline-block;
   width: 100%;
+  &.bizBuilderHiddenComp {
+    width: initial;
+    padding-right: 20px;
+  }
   .compConfigDiv {
     position: relative;
     display: inline-block;
@@ -84,6 +88,9 @@ const Styled = styled.div`
       font-size: 13px;
       color: #000;
       padding-left: 22px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
   .compTitleWrapper {
