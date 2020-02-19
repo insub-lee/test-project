@@ -101,11 +101,11 @@ class List extends Component {
     });
   }
 
-  onCancel() {
+  onCancel = () => {
     this.setState({
       onMedicineCodeModal: false,
     });
-  }
+  };
 
   selectedRecord = record => {
     if (record.COMPANY_CD) {
@@ -165,7 +165,7 @@ class List extends Component {
         MEDICINE_NAME: this.state.medicine_name,
         DENSITY: this.state.density,
         STANDARD_PRICE_UNIT: (
-          <>
+          <div style={{ align: 'left' }}>
             <Input style={{ width: '300px' }} value={this.state.inputValue} onChange={e => this.changeInputValue(e.target.value)}></Input>
             <StyledButton className="btn-primary btn-first" onClick={() => this.onSave('I')}>
               추가
@@ -179,7 +179,7 @@ class List extends Component {
             <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
               Reset
             </StyledButton>
-          </>
+          </div>
         ),
       },
     ];

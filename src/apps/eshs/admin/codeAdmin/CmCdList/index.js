@@ -44,12 +44,26 @@ class List extends Component {
     this.selectCodeApi();
   };
 
+  selectDataApi() {
+    const { sagaKey: id, getCallDataHandler, tableName } = this.props;
+    const apiAry = [
+      {
+        key: 'selectData',
+        url: `/api/eshs/v1/common/EshsCodeGubun/${tableName}`,
+        type: 'GET',
+        params: {},
+      },
+    ];
+    getCallDataHandler(id, apiAry);
+    this.renderSelect();
+  }
+
   selectCodeApi() {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, tableName } = this.props;
     const apiAry = [
       {
         key: 'eshsBasicCode',
-        url: `/api/eshs/v1/common/eshsbasiccode?GUBUN=${this.state.changeSelectValue}`,
+        url: `/api/eshs/v1/common/eshsbasiccode/${tableName}?GUBUN=${this.state.changeSelectValue}`,
         type: 'GET',
         params: {},
       },
@@ -67,7 +81,7 @@ class List extends Component {
   };
 
   onSave = value => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, tableName } = this.props;
 
     const submitData = {
       PARAM: {
@@ -80,9 +94,9 @@ class List extends Component {
     };
     if (this.state.inputValue && this.state.changeSelectValue) {
       if (value === 'U' && this.state.code) {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsbasiccode', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshsbasiccode/${tableName}`, submitData, this.callBackApi);
       } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsbasiccode', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshsbasiccode/${tableName}`, submitData, this.callBackApi);
       }
     } else if (this.state.changeSelectValue) {
       this.warning('코드명을 올바르게 입력하시오.');
@@ -94,9 +108,9 @@ class List extends Component {
   };
 
   onRemoveDo = isDel => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, tableName } = this.props;
     const submitData = { PARAM: { GUBUN: this.state.changeSelectValue, CODE: this.state.code, IS_DEL: isDel } };
-    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsbasiccode', submitData, this.callBackApi);
+    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshsbasiccode/${tableName}`, submitData, this.callBackApi);
   };
 
   onCancel() {
@@ -168,6 +182,23 @@ class List extends Component {
     );
   }
 
+  renderSelect() {
+    const { tableName, result } = this.props;
+
+    console.log(result, '&&&&&&&&');
+    return (
+      <Col span={4}>
+        <Select style={{ width: '200px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+          <Option value="0" disabled>
+            선택
+          </Option>
+          <Option value="DISCHARGE">방구류</Option>
+          {result && result.selectData && result.selectData.codeList.map(itme => <Option value={itme.gubun}>{itme.gubun_nm}</Option>)}
+        </Select>
+      </Col>
+    );
+  }
+
   render() {
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
@@ -175,25 +206,12 @@ class List extends Component {
           <Sketch>
             <Group>
               <Row>
-                <Col span={4}>
-                  <Select style={{ width: '200px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
-                    <Option value="0" disabled>
-                      선택
-                    </Option>
-                    <Option value="DISCHARGE">방구류</Option>
-                    <Option value="MEDICINE">약품</Option>
-                    <Option value="FILTER_PLANT">정수장</Option>
-                    <Option value="TREATMENT_PLANT">처리장</Option>
-                    <Option value="CHK_VALUE_TYPE">측정값 종류</Option>
-                  </Select>
-                </Col>
+                {this.renderSelect()}
                 <Col span={4}>
                   <StyledButton className="btn-primary btn-first" onClick={() => this.selectCodeApi()}>
                     검색
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.selectCodeApi()}>
-                    엑셀받기
-                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first">엑셀받기</StyledButton>
                 </Col>
               </Row>
               {this.renderTable()}
