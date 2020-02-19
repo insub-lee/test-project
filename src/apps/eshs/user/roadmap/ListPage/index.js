@@ -84,6 +84,7 @@ class ListPage extends Component {
 
   handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
     const { workSeq, sagaKey, loadingComplete } = this.props;
+    const { selectedCategory, currentYear, currentMonth } = this.state;
     return (
       <BizBuilderBase
         sagaKey={changedSagaKey}
@@ -95,8 +96,9 @@ class ListPage extends Component {
         loadingComplete={loadingComplete}
         onCloseModleHandler={this.handleModalClose}
         baseSagaKey={sagaKey}
-        year={this.state.currentYear}
-        month={this.state.currentMonth}
+        category={selectedCategory}
+        year={currentYear}
+        month={currentMonth}
       />
     );
   };
@@ -125,9 +127,21 @@ class ListPage extends Component {
 
   handleChange = e => {
     const { listData } = this.props;
+    // if (listData.filter(item => item.CATEGORY === e).length && listData.filter(item => item.CATEGORY === e)[0].CHK_MONTH > 12) {
+    //   console.debug('@@@@MONTH > 12');
+    //   this.setState({
+    //     selectedCategory: e,
+    //     categoryLength: listData.filter(item => item.CATEGORY === e).length,
+    //     currentYear: parseInt(listData.filter(item => item.CATEGORY === e)[0].CHK_YEAR, 10) + 1,
+    //     currentMonth: '1',
+    //   });
+    //   return;
+    // }
     this.setState({
       selectedCategory: e,
       categoryLength: listData.filter(item => item.CATEGORY === e).length,
+      currentYear: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_YEAR : '2020',
+      currentMonth: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_MONTH : '0',
     });
   };
 
