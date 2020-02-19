@@ -83,7 +83,8 @@ class BizMenuAuthSetting extends Component {
       INHERIT: false,
       orgShow: false,
       AUTH_GRP: ADMIN_GRP,
-      ADMIN_AUTH: false,
+      authM: false,
+      authG: false,
     };
   }
 
@@ -126,8 +127,10 @@ class BizMenuAuthSetting extends Component {
       if (auth.indexOf('G') === -1) {
         history.push('/error');
       }
+
       this.setState({
-        ADMIN_AUTH: auth.indexOf('M') > -1,
+        authM: auth.indexOf('M') > -1,
+        authG: auth.indexOf('G') > -1,
       });
 
       let mData = { ...data, ...dataP };
@@ -271,7 +274,7 @@ class BizMenuAuthSetting extends Component {
   };
 
   render() {
-    const { data, ADMIN_AUTH } = this.state;
+    const { data, authM, authG } = this.state;
     const { dataP, updateBizMenuAuth, history } = this.props;
     const {
       match: {
@@ -279,6 +282,7 @@ class BizMenuAuthSetting extends Component {
       },
     } = this.props;
     const { CHILD_CNT } = dataP;
+
     return (
       <div>
         <div className="title-wrapper">
@@ -291,7 +295,7 @@ class BizMenuAuthSetting extends Component {
             <div className="formTable">
               <table>
                 <tbody>
-                  {ADMIN_AUTH ? (
+                  {authM ? (
                     <tr>
                       <th className="top">
                         <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
@@ -422,7 +426,8 @@ class BizMenuAuthSetting extends Component {
                 </tbody>
               </table>
             </div>
-            {data.SEC_YN === 'Y' && (
+            {/* {data.SEC_YN === 'Y' && ( */}
+            {authG && (
               <div className="buttonWrapper">
                 {CHILD_CNT && CHILD_CNT > 0 ? (
                   <>
@@ -469,7 +474,7 @@ class BizMenuAuthSetting extends Component {
 
                       const resultData = { ...data };
                       resultData.delList = acntIdStringtoInteger(delList);
-                      resultData.A = ADMIN_AUTH ? acntIdStringtoInteger(newA) : [];
+                      resultData.A = authM ? acntIdStringtoInteger(newA) : [];
                       resultData.U = acntIdStringtoInteger(newU);
                       const { INHERIT } = this.state;
                       updateBizMenuAuth(resultData, Number(BIZGRP_ID), Number(MENU_ID), INHERIT, history);
