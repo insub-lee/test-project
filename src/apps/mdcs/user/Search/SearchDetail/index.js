@@ -102,21 +102,26 @@ class SearchDetail extends Component {
   };
 
   onChangeSearchValue = (key, sql, realValue) => {
-    const { conditionItems } = this.state;
-    const tmpCondi = { ...conditionItems, [key]: { sql: `${sql}`, realValue } };
-    this.setState({ conditionItems: tmpCondi });
+    console.debug('onChangeSearchValue', key, sql, realValue);
+    console.debug('cur', this.state);
+    this.setState((prevState, curState) => {
+      const { conditionItems } = prevState;
+      const tmpCondi = { ...conditionItems, [key]: { sql: `${sql}`, realValue } };
+      return { conditionItems: { ...tmpCondi } };
+    });
   };
 
   onSearch = () => {
-    const { workSeq } = this.props;
     const { conditionItems } = this.state;
-    console.debug('conditionItems', conditionItems);
     let whereStr = '';
     Object.keys(conditionItems).map(x => {
       whereStr += ` ${conditionItems[x].realValue !== '' ? conditionItems[x].sql : ''}`;
     });
-    console.debug('whereStr', whereStr);
     this.setState({ whereStr });
+  };
+
+  onChangeCategory = value => {
+    console.debug(value);
   };
 
   render() {
@@ -137,7 +142,9 @@ class SearchDetail extends Component {
                 </StyledButton>
               </div>
             </div>
-            <div className="treeWrapper tfWrapper">{stdTreeData.children && stdTreeData.children.length > 0 && <Tree showLine treeData={stdTreeData} />}</div>
+            <div className="treeWrapper tfWrapper">
+              {stdTreeData.children && stdTreeData.children.length > 0 && <Tree onChange={this.onChangeCategory} showLine treeData={stdTreeData} />}
+            </div>
             <div className="formWrapper tfWrapper" style={{ padding: '10px' }}>
               <StyledHtmlTable>
                 <table style={{ marginBottom: '10px' }}>
@@ -157,11 +164,19 @@ class SearchDetail extends Component {
                           size="default"
                           defaultValue={2}
                           onChange={e => {
-                            this.onChangeSearchValue('w.status', 'and w.status in (', `${e.target.value === 2 ? '1,2' : e.target.value} )`, e.target.value);
+                            // eslint-disable-next-line no-unused-expressions
+                            e.target.value === 1
+                              ? this.onChangeSearchValue('w.islast_ver', '', '')
+                              : this.onChangeSearchValue('w.islast_ver', "and w.islast_ver='Y'", 'Y');
+                            this.onChangeSearchValue(
+                              'w.status',
+                              ` and w.status in (${e.target.value === 1 || e.target.value === 2 ? '1,2' : e.target.value})`,
+                              e.target.value,
+                            );
                           }}
                         >
                           <StyledRadio value={2}>현재 Revision</StyledRadio>
-                          <StyledRadio value={0}>과거 Rev. 포함</StyledRadio>
+                          <StyledRadio value={1}>과거 Rev. 포함</StyledRadio>
                           <StyledRadio value={8}>폐기</StyledRadio>
                         </Radio.Group>
                       </td>
