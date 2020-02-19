@@ -169,6 +169,11 @@ const makeSelectListSelectRowKeysById = id =>
     state.getIn(['bizBuilderBase', id, 'listSelectRowKeys']) !== undefined ? state.getIn(['bizBuilderBase', id, 'listSelectRowKeys']).toJS() : [],
   );
 
+const makeSelectConditionalById = id =>
+  createSelector(selectorBizBuilderBase, state =>
+    state.getIn(['bizBuilderBase', id, 'conditional']) !== undefined ? state.getIn(['bizBuilderBase', id, 'conditional']) : '',
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -200,4 +205,5 @@ export {
   makeSelectSearchDataById,
   makeSelectListSelectRowKeys,
   makeSelectListSelectRowKeysById,
+  makeSelectConditionalById,
 };

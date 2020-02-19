@@ -14,7 +14,7 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData, apiList } = response;
@@ -28,7 +28,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, changeWorkflowFormDat
     yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
   }
   if (viewType === 'LIST') {
-    yield put(actions.getListDataBySaga(id, workSeq));
+    yield put(actions.getListDataBySaga(id, workSeq, conditional));
     // const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
     // if (responseList) {
     //   const { list } = responseList;
@@ -403,8 +403,8 @@ function* modifyTask({ id, callbackFunc }) {
 function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc }) {
   // 삭제도 saveTask처럼 reloadId 필요한지 확인
   const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, {}, { BUILDER: 'deleteTask' });
-
-  yield put(actions.getBuilderData(reloadId || id, workSeq, -1, 'LIST'));
+  const conditional = yield select(selectors.makeSelectConditionalById(id));
+  yield put(actions.getBuilderData(reloadId || id, workSeq, -1, 'LIST', conditional));
 
   // const apiArr = yield select(selectors.makeSelectApiArrById(id));
   // yield put(actions.getExtraApiData(id, apiArr));
@@ -465,14 +465,17 @@ function* getDraftProcess({ id, draftId }) {
   yield put(actions.setDraftProcess(id, draftProcess));
 }
 
-function* getListData({ id, workSeq }) {
+function* getListData({ id, workSeq, conditional }) {
   const searchData = yield select(selectors.makeSelectSearchDataById(id));
   const whereString = [];
   const keySet = Object.keys(searchData);
   keySet.forEach(key => {
     whereString.push(searchData[key]);
   });
-  const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getBuilderData' });
+
+  if (conditional.length > 0) whereString.push(conditional);
+
+  const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getTaskList' });
   if (responseList) {
     const { list } = responseList;
     yield put(actions.setListDataByReducer(id, list));
@@ -487,6 +490,7 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
   const removeList = yield select(selectors.makeSelectListSelectRowKeysById(id));
   if (removeList.length > 0) {
     const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
+    const conditional = yield select(selectors.makeSelectConditionalById(id));
     const { workSeq, taskSeq } = viewPageData;
 
     const response = yield call(
@@ -500,7 +504,7 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
       if (typeof callbackFunc === 'function') {
         callbackFunc(id, workSeq, taskSeq);
       } else {
-        yield put(actions.getBuilderData(reloadId || id, workSeq, -1, viewPageData.viewType));
+        yield put(actions.getBuilderData(reloadId || id, workSeq, -1, viewPageData.viewType, conditional));
       }
     }
   } else {
