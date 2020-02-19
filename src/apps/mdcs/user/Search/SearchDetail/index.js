@@ -12,6 +12,7 @@ import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
 
+import BizBuilderBase from 'components/BizBuilderBase';
 import SearchViewer from '../SearchViewer';
 import CoverViewer from '../CoverViewer';
 
@@ -27,6 +28,8 @@ const { Option } = Select;
 class SearchDetail extends Component {
   state = {
     stdTreeData: [],
+    conditionItems: { 'w.status': { sql: 'and w.status in (1,2)', realValue: 2 }, 'w.islast_ver': { sql: "and w.islast_ver='Y'", realValue: 'Y' } },
+    whereStr: '',
   };
 
   componentDidMount() {
@@ -86,19 +89,38 @@ class SearchDetail extends Component {
 
   renderDetailSearch = () => {
     const { currentPage } = this.props;
-    console.debug('currentPage', currentPage);
     switch (currentPage) {
       case 'BIZ':
-        return <BizStd getTreeData={this.getTreeData} {...this.props} />;
+        return <BizStd getTreeData={this.getTreeData} onChangeSearchValue={this.onChangeSearchValue} {...this.props} />;
       case 'TECH':
-        return <TechStd getTreeData={this.getTreeData} {...this.props} />;
+        return <TechStd getTreeData={this.getTreeData} onChangeSearchValue={this.onChangeSearchValue} {...this.props} />;
+      case 'DW':
+        return <DwStd getTreeData={this.getTreeData} onChangeSearchValue={this.onChangeSearchValue} {...this.props} />;
       default:
         return '';
     }
   };
 
+  onChangeSearchValue = (key, sql, realValue) => {
+    const { conditionItems } = this.state;
+    const tmpCondi = { ...conditionItems, [key]: { sql: `${sql}`, realValue } };
+    this.setState({ conditionItems: tmpCondi });
+  };
+
+  onSearch = () => {
+    const { workSeq } = this.props;
+    const { conditionItems } = this.state;
+    console.debug('conditionItems', conditionItems);
+    let whereStr = '';
+    Object.keys(conditionItems).map(x => {
+      whereStr += ` ${conditionItems[x].realValue !== '' ? conditionItems[x].sql : ''}`;
+    });
+    console.debug('whereStr', whereStr);
+    this.setState({ whereStr });
+  };
+
   render() {
-    const { searchTitle } = this.props;
+    const { searchTitle, workSeq } = this.props;
     const { stdTreeData } = this.state;
     return (
       <StyledSearch>
@@ -125,7 +147,7 @@ class SearchDetail extends Component {
                       <td>
                         <Input
                           onChange={e => {
-                            this.onChangeValue('docNumber', e.target.value);
+                            this.onChangeSearchValue('w.docnumber', ` and w.docnumber like '%${e.target.value}%'`, e.target.value);
                           }}
                         />
                       </td>
@@ -133,8 +155,9 @@ class SearchDetail extends Component {
                       <td>
                         <Radio.Group
                           size="default"
+                          defaultValue={2}
                           onChange={e => {
-                            this.onChangeRev(e.target.value);
+                            this.onChangeSearchValue('w.status', 'and w.status in (', `${e.target.value === 2 ? '1,2' : e.target.value} )`, e.target.value);
                           }}
                         >
                           <StyledRadio value={2}>현재 Revision</StyledRadio>
@@ -154,7 +177,7 @@ class SearchDetail extends Component {
                           <Input
                             style={{ width: '50%' }}
                             onChange={e => {
-                              this.onChangeKeyword(e.target.value);
+                              this.onChangeSearchValue('w.title', `and w.title like '%${e.target.value}%'`, e.target.value);
                             }}
                           />
                         </InputGroup>
@@ -165,7 +188,7 @@ class SearchDetail extends Component {
                       <td colSpan={3}>
                         <Input
                           onChange={e => {
-                            this.onChangeValue('regUserName', e.target.value);
+                            this.onChangeSearchValue('w.reg_user_name', ` and w.reg_user_name like '%${e.target.value}%'`, e.target.value);
                           }}
                         />
                       </td>
@@ -175,7 +198,7 @@ class SearchDetail extends Component {
                       <td colSpan={3}>
                         <Input
                           onChange={e => {
-                            this.onChangeValue('regDeptName', e.target.value);
+                            this.onChangeSearchValue('w.reg_dept_name', ` and w.reg_dept_name like '%${e.target.value}%'`, e.target.value);
                           }}
                         />
                       </td>
@@ -183,8 +206,15 @@ class SearchDetail extends Component {
                     <tr>
                       <th>시행일자</th>
                       <td colSpan={3}>
-                        <StyledDatePicker format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'startDate')} /> ~{' '}
-                        <StyledDatePicker format="YYYY-MM-DD" onChange={(date, dateStr) => this.onChangeDate(dateStr, 'endDate')} />
+                        <StyledDatePicker
+                          format="YYYY-MM-DD"
+                          onChange={(date, dateStr) => this.onChangeSearchValue('w.end_dttm1', ` and w.end_dttm >= date'${dateStr}'`, dateStr)}
+                        />
+                        ~{' '}
+                        <StyledDatePicker
+                          format="YYYY-MM-DD"
+                          onChange={(date, dateStr) => this.onChangeSearchValue('w.end_dttm2', ` and w.end_dttm < date'${dateStr}'+integer'1'`, dateStr)}
+                        />
                       </td>
                     </tr>
                   </tbody>
@@ -194,6 +224,7 @@ class SearchDetail extends Component {
             </div>
           </div>
         </div>
+        <BizBuilderBase sagaKey={`BizDoc_${workSeq}`} viewType="LIST" conditional={this.state.whereStr} workSeq={workSeq}></BizBuilderBase>
       </StyledSearch>
     );
   }
