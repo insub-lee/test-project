@@ -461,6 +461,7 @@ class App extends React.Component {
       dockIconType,
       hasRoleAdmin,
       hasRoleBizMng,
+      bizGrpMngCnt,
       selectedApp,
       history,
       headerTitle,
@@ -540,8 +541,8 @@ class App extends React.Component {
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
             </div>
-            {/* SA BM 권한이 있을 경우에만 노출 되도록 */}
-            {(hasRoleAdmin || hasRoleBizMng) && (
+            {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능)*/}
+            {(hasRoleAdmin || hasRoleBizMng || bizGrpMngCnt > 0) && (
               <div className="iconPositon" style={{ marginTop: '20px' }}>
                 <Tooltip placement="right" title="Biz Card">
                   <Icon type="profile" style={{ color: 'white', fontSize: '20px' }} onClick={this.goBusinessReg} />
@@ -760,6 +761,7 @@ App.propTypes = {
   executedDockPageId: PropTypes.number,
   hasRoleAdmin: PropTypes.bool,
   hasRoleBizMng: PropTypes.bool,
+  bizGrpMngCnt: PropTypes.number,
   headerTitle: PropTypes.string,
   profile: PropTypes.object.isRequired,
   handleMenuShow: PropTypes.func,
@@ -787,6 +789,7 @@ App.defaultProps = {
   isPreviewPage: false,
   hasRoleAdmin: false,
   hasRoleBizMng: false,
+  bizGrpMngCnt: 0,
   headerTitle: '',
   rootAppYn: 'N',
   menuLayoutCode: '1',
@@ -819,6 +822,7 @@ const mapStateToProps = createStructuredSelector({
   executedDockPageId: selectors.makeSelectExecutedDockPageId(),
   hasRoleAdmin: selectors.makeSelectRoleAdmin(),
   hasRoleBizMng: selectors.makeSelectRoleBizMng(),
+  bizGrpMngCnt: selectors.makeSelectBizGrpMngCnt(),
   headerTitle: routesSelector.makeSelectHeaderTitle(),
   profile: authSelector.makeSelectProfile(),
   commonMenuTreeData: routesSelector.makeCommonMenuTree(),
