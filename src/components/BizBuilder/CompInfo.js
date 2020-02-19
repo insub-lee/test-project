@@ -62,6 +62,7 @@ import UserSelectComp from 'components/BizBuilder/Field/UserSelectComp';
 import JoinToolTipComp from 'components/BizBuilder/Field/JoinToolTipComp';
 import LawClauseSeqComp from 'components/BizBuilder/Field/LawClauseSeqComp';
 import TitleModalPlusComp from 'components/BizBuilder/Field/TitleModalPlusComp';
+import CheckableTreeSelectComp from 'components/BizBuilder/Field/CheckableTreeSelectComp';
 import RoadmapCategoryComp from 'components/BizBuilder/Field/RoadmapCategoryComp';
 
 export const CompInfo = {
@@ -127,5 +128,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/JoinToolTipComp': { renderer: property => <JoinToolTipComp {...property} /> },
   'components/BizBuilder/Field/LawClauseSeqComp': { renderer: property => <LawClauseSeqComp {...property} /> },
   'components/BizBuilder/Field/TitleModalPlusComp': { renderer: property => <TitleModalPlusComp {...property} /> },
+  'components/BizBuilder/Field/CheckableTreeSelectComp': { renderer: property => <CheckableTreeSelectComp {...property} /> },
   'components/BizBuilder/Field/RoadmapCategoryComp': { renderer: property => <RoadmapCategoryComp {...property} /> },
 };

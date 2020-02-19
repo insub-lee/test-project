@@ -251,7 +251,7 @@ BizBuilderBase.defaultProps = {
       params: {},
     },
   ],
-  viewType: 'INPUT', // LIST, VIEW
+  viewType: 'LIST', // LIST, VIEW
   metaList: [],
   responseData: {},
   extraApiData: {},

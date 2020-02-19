@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Tabs, Button, Input } from 'antd';
+import { Tabs, Button, Input, Spin, Icon } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
@@ -24,7 +24,7 @@ import StructureDesign from './StructureDesign';
 import StyleDesign from './StyleDesign';
 import CompFieldList from './CompFieldList';
 
-const { TabPane } = Tabs;
+// const { TabPane } = Tabs;
 
 class ViewDesigner extends Component {
   constructor(props) {
@@ -90,6 +90,7 @@ class ViewDesigner extends Component {
       viewData,
       selectedKeys,
       canMerge,
+      canDivide,
       selectedStyleCells,
       structureDesignAction,
       styleDesignAction,
@@ -102,10 +103,13 @@ class ViewDesigner extends Component {
       topMenus,
       compPoolList,
       compGroupList,
+      compTreeData,
       sysMetaList,
+      styleMode,
+      isLoadingContent,
     } = this.props;
     return (
-      <div>
+      <div style={{ height: '100%' }}>
         <Header>
           <div className="button--group--left">{`${viewData.NAME_KOR || 'New View Design'}(${viewData.COMP_TAG})`}</div>
           <div className="button--group--right">
@@ -117,6 +121,8 @@ class ViewDesigner extends Component {
                 key => this.handleChangeViewDesigner('VIEW', key),
                 key => this.handleChangeViewDesigner('LIST', key),
               ]}
+              viewType={viewData.COMP_TAG}
+              viewID={viewData.META_SEQ}
             />
           </div>
         </Header>
@@ -124,37 +130,39 @@ class ViewDesigner extends Component {
           <div className="view-designer">
             <div className="view-wrapper">
               <div className="view-inner">
-                <div className="view-sidebar view-sidebar-left">
-                  <div>
-                    <CompToolbar compPoolList={compPoolList} compGroupList={compGroupList} action={toolbarAction} />
+                {!styleMode && (
+                  <div className="view-sidebar view-sidebar-left">
+                    <div>
+                      <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
+                      <CompToolbar
+                        compPoolList={compPoolList}
+                        compGroupList={compGroupList}
+                        compTreeData={compTreeData}
+                        action={{ ...toolbarAction, ...compListAction }}
+                        compList={compList}
+                        sysMetaList={sysMetaList}
+                        layerIdxKey={viewData.CONFIG.property.layerIdxKey}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="view-content-wrapper">
-                  <div className="top-button-wrapper">
+                )}
+                <div className={`view-content-wrapper ${styleMode ? 'single-wrapper' : ''}`}>
+                  <Spin indicator={<Icon type="loading" />} spinning={isLoadingContent}>
+                    <div className="top-button-wrapper">
+                      {/*
                     <Button onClick={() => onChangeTab('1')}>Structure Design</Button>
                     <Button onClick={() => onChangeTab('2')}>Style Design</Button>
-                    <Input
-                      placeholder="페이지명(KO)"
-                      defaultValue={viewData.NAME_KOR}
-                      className="viewNameInput"
-                      onChange={e => this.handleChangeViewDesignerName(e.target.value)}
-                    />
-                    <Button onClick={addMetaData}>Save</Button>
-                  </div>
-                  {/* <Tabs key="view-designer-tabs" activeKey={activeTabKey} onChange={onChangeTab}>
-                    <TabPane tab="Structure Design" key="vd1">
-                      <StructureDesign
-                        isShowEditor={isShowEditor}
-                        groups={viewData.CONFIG.property.layer.groups}
-                        selectedKeys={selectedKeys}
-                        canMerge={canMerge}
-                        action={structureDesignAction}
-                        tabBodyHeight={tabBodyHeight}
-                        viewType={viewData.COMP_TAG}
-                        compPoolList={compPoolList}
+                    */}
+                      <Input
+                        placeholder="페이지명(KO)"
+                        defaultValue={viewData.NAME_KOR}
+                        className="viewNameInput"
+                        onChange={e => this.handleChangeViewDesignerName(e.target.value)}
+                        disabled={styleMode}
                       />
-                    </TabPane>
-                    <TabPane tab="Style Design" key="vd2">
+                      <Button onClick={addMetaData}>Save</Button>
+                    </div>
+                    {styleMode ? (
                       <StyleDesign
                         isShowEditor={isShowEditor}
                         groups={viewData.CONFIG.property.layer.groups}
@@ -163,39 +171,32 @@ class ViewDesigner extends Component {
                         action={styleDesignAction}
                         tabBodyHeight={tabBodyHeight}
                       />
-                    </TabPane>
-                  </Tabs> */}
-                  {activeTabKey === '1' && (
-                    <StructureDesign
-                      isShowEditor={isShowEditor}
-                      groups={viewData.CONFIG.property.layer.groups}
-                      selectedKeys={selectedKeys}
-                      canMerge={canMerge}
-                      action={structureDesignAction}
-                      tabBodyHeight={tabBodyHeight}
-                      viewType={viewData.COMP_TAG}
-                      viewField={viewData.COMP_FIELD}
-                      compPoolList={compPoolList}
-                      hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
-                      compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
-                    />
-                  )}
-                  {activeTabKey === '2' && (
-                    <StyleDesign
-                      isShowEditor={isShowEditor}
-                      groups={viewData.CONFIG.property.layer.groups}
-                      selectedKeys={selectedStyleCells}
-                      bodyStyle={viewData.CONFIG.property.bodyStyle}
-                      action={styleDesignAction}
-                      tabBodyHeight={tabBodyHeight}
-                    />
-                  )}
+                    ) : (
+                      <StructureDesign
+                        isShowEditor={isShowEditor}
+                        groups={viewData.CONFIG.property.layer.groups}
+                        selectedKeys={selectedKeys}
+                        canMerge={canMerge}
+                        canDivide={canDivide}
+                        action={structureDesignAction}
+                        tabBodyHeight={tabBodyHeight}
+                        viewType={viewData.COMP_TAG}
+                        viewField={viewData.COMP_FIELD}
+                        compPoolList={compPoolList}
+                        compGroupList={compGroupList}
+                        hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
+                        compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
+                      />
+                    )}
+                  </Spin>
                 </div>
-                <div className="view-sidebar view-sidebar-left">
-                  <div>
-                    <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
+                {/* {!styleMode && (
+                  <div className="view-sidebar view-sidebar-left">
+                    <div>
+                      <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
+                    </div>
                   </div>
-                </div>
+                )} */}
               </div>
             </div>
           </div>
@@ -209,14 +210,36 @@ ViewDesigner.propTypes = {
   workSeq: PropTypes.number,
   viewType: PropTypes.string,
   viewID: PropTypes.number,
+  styleMode: PropTypes.bool,
   compPoolList: PropTypes.arrayOf(PropTypes.object),
+  isLoadingContent: PropTypes.bool,
+  compTreeData: PropTypes.arrayOf(PropTypes.object),
+  canMerge: PropTypes.shape({
+    row: PropTypes.bool,
+    col: PropTypes.bool,
+  }),
+  canDivide: PropTypes.shape({
+    row: PropTypes.bool,
+    col: PropTypes.bool,
+  }),
 };
 
 ViewDesigner.defaultProps = {
   workSeq: 1538,
   viewType: 'INPUT',
   viewID: -1,
+  styleMode: false,
   compPoolList: [],
+  isLoadingContent: true,
+  compTreeData: [],
+  canMerge: {
+    row: false,
+    col: false,
+  },
+  canDivide: {
+    row: false,
+    col: false,
+  },
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -233,6 +256,9 @@ const mapStateToProps = createStructuredSelector({
   compPoolList: selectors.makeSelectCompPoolList(),
   compGroupList: selectors.makeSelectCompGroupList(),
   sysMetaList: selectors.makeSelectSysMetaList(),
+  isLoadingContent: selectors.makeSelectIsLoadingContent(),
+  compTreeData: selectors.makeSelectCompTreeData(),
+  canDivide: selectors.makeSelectCanDivide(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -247,9 +273,9 @@ const mapDispatchToProps = dispatch => ({
     closeJsonCodeEditor: () => dispatch(actions.closeJsonCodeEditor()),
     updateJsonCode: jsObject => dispatch(actions.updateJsonCode(jsObject)),
     addRow: (groupIndex, rowIndex) => dispatch(actions.addRow(groupIndex, rowIndex)),
-    removeRow: (groupIndex, rowIndex) => dispatch(actions.removeRow(groupIndex, rowIndex)),
-    mergeCell: () => dispatch(actions.mergeCell()),
-    divideCell: () => dispatch(actions.divideCell()),
+    // mergeCell: () => dispatch(actions.mergeCell()),
+    // divideCell: () => dispatch(actions.divideCell()),
+    addCell: () => dispatch(actions.addCell()),
     selectCell: ({ metaKey, ctrlKey }, groupIndex, rowIndex, colIndex) => dispatch(actions.selectCell(groupIndex, rowIndex, colIndex, metaKey || ctrlKey)),
     addGroup: () => dispatch(actions.addGroup()),
     changeGroupTitle: (groupIndex, title) => dispatch(actions.changeGroupTitle(groupIndex, title)),
@@ -262,6 +288,21 @@ const mapDispatchToProps = dispatch => ({
     removeHiddenComp: compIndex => dispatch(actions.removeHiddenCompByReducer(compIndex)),
     changeColConfig: (groupIndex, rowIndex, colIndex, key, value) => dispatch(actions.changeColConfigByReducer(groupIndex, rowIndex, colIndex, key, value)),
     changeGroupData: (groupIndex, key, value) => dispatch(actions.changeGroupDataByReducer(groupIndex, key, value)),
+    increaseRow: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.increaseRow(groupIndex, rowIndex, colIndex)),
+    decreaseRow: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.decreaseRow(groupIndex, rowIndex, colIndex)),
+    increaseCol: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.increaseCol(groupIndex, rowIndex, colIndex)),
+    decreaseCol: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.decreaseCol(groupIndex, rowIndex, colIndex)),
+    addRowToUp: (e, { groupIndex, rowIndex }) => dispatch(actions.addRowToUp(groupIndex, rowIndex)),
+    addRowToDown: (e, { groupIndex, rowIndex }) => dispatch(actions.addRowToDown(groupIndex, rowIndex)),
+    removeRow: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.removeRow(groupIndex, rowIndex, colIndex)),
+    addColToLeft: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.addColToLeft(groupIndex, rowIndex, colIndex)),
+    addColToRight: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.addColToRight(groupIndex, rowIndex, colIndex)),
+    removeCol: (e, { groupIndex, rowIndex, colIndex }) => dispatch(actions.removeCol(groupIndex, rowIndex, colIndex)),
+    mergeRow: () => dispatch(actions.mergeRow()),
+    mergeCol: () => dispatch(actions.mergeCol()),
+    divideRow: () => dispatch(actions.divideRow()),
+    divideCol: () => dispatch(actions.divideCol()),
+    onChangeTableSize: (groupIndex, tableSize) => dispatch(actions.onChangeTableSize(groupIndex, tableSize)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),
