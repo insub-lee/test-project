@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col, Table, Select, Input, message } from 'antd';
+import { Row, Col, Table, Select, Input, message, Modal } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import Moment from 'moment';
@@ -24,42 +24,37 @@ class List extends Component {
     this.state = {
       changeSelectValue: '',
       inputValue: '',
-      code: '',
+      medicine_name: '',
+      medicine_cd: '',
+      density: '',
+      onMedicineCodeModal: false,
     };
-    this.selectCodeApi = debounce(this.selectCodeApi, 300);
   }
 
   componentDidUpdate() {}
 
   changeSelectValue = value => {
     this.setState({ changeSelectValue: value });
-    this.selectCodeApi();
   };
 
   changeInputValue = value => {
     this.setState({ inputValue: value });
   };
 
-  callBackApi = () => {
-    this.selectCodeApi();
-  };
+  callBackApi = () => {};
 
   selectCodeApi() {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
         key: 'eshsBasicCode',
-        url: `/api/eshs/v1/common/eshsbasiccode?GUBUN=${this.state.changeSelectValue}`,
+        url: '/api/eshs/v1/common/eshsbasiccode/?GUBUN=MEDICINE',
         type: 'GET',
         params: {},
       },
     ];
-    if (this.state.changeSelectValue) {
-      getCallDataHandler(id, apiAry);
-      this.renderTable();
-    } else {
-      this.warning('코드 구분을 선택해주세요.');
-    }
+    getCallDataHandler(id, apiAry);
+    this.onModalList();
   }
 
   warning = value => {
@@ -80,9 +75,9 @@ class List extends Component {
     };
     if (this.state.inputValue && this.state.changeSelectValue) {
       if (value === 'U' && this.state.code) {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsbasiccode', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/', submitData, this.callBackApi);
       } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsbasiccode', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/', submitData, this.callBackApi);
       }
     } else if (this.state.changeSelectValue) {
       this.warning('코드명을 올바르게 입력하시오.');
@@ -90,19 +85,25 @@ class List extends Component {
       this.warning('코드 구분을 선택해주세요.');
     }
 
-    this.onCancel();
+    this.onReset();
   };
 
   onRemoveDo = isDel => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const submitData = { PARAM: { GUBUN: this.state.changeSelectValue, CODE: this.state.code, IS_DEL: isDel } };
-    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsbasiccode', submitData, this.callBackApi);
+    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/', submitData, this.callBackApi);
   };
 
-  onCancel() {
+  onReset() {
     this.setState({
       inputValue: '',
       code: '',
+    });
+  }
+
+  onCancel() {
+    this.setState({
+      onMedicineCodeModal: false,
     });
   }
 
@@ -116,17 +117,54 @@ class List extends Component {
     }
   };
 
+  onModalOpen() {
+    this.setState({ onMedicineCodeModal: true });
+    this.selectCodeApi();
+  }
+
+  onModalList() {
+    const { result } = this.props;
+    const codeColumns = [
+      {
+        title: '코드',
+        dataIndex: 'CODE',
+        align: 'center',
+      },
+      {
+        title: '코드명',
+        dataIndex: 'NAME',
+        align: 'left',
+      },
+    ];
+    const codeList = result && result.eshsBasicCode && result.eshsBasicCode.list ? result.eshsBasicCode.list : [];
+
+    return (
+      <AntdTable
+        rowKey={`${codeList.GUBUN}_${codeList.CODE}`}
+        columns={codeColumns}
+        dataSource={codeList}
+        bordered
+        onRow={record => ({
+          onClick: () => {
+            this.selectedCodeRecord(record);
+          },
+        })}
+      />
+    );
+  }
+
+  selectedCodeRecord = record => {
+    this.setState({ onMedicineCodeModal: false, medicine_name: record.NAME, medicine_cd: record.CODE });
+  };
+
   renderTable() {
     const { result, columns } = this.props;
     let renderList = [
       {
-        IS_DEL: (
-          <StyledButton className="btn-primary btn-first" onClick={() => this.onRemoveDo('0')}>
-            삭제 취소
-          </StyledButton>
-        ),
-        CODE: this.state.code,
-        NAME: (
+        MEDICINE_CD: <Input style={{ width: '200px' }} value={this.state.medicine_cd} readOnly onClick={() => this.onModalOpen()} />,
+        MEDICINE_NAME: this.state.medicine_name,
+        DENSITY: this.state.density,
+        STANDARD_PRICE_UNIT: (
           <>
             <Input style={{ width: '300px' }} value={this.state.inputValue} onChange={e => this.changeInputValue(e.target.value)}></Input>
             <StyledButton className="btn-primary btn-first" onClick={() => this.onSave('I')}>
@@ -138,7 +176,7 @@ class List extends Component {
             <StyledButton className="btn-primary btn-first" onClick={() => this.onRemoveDo('1')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onCancel()}>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
               Reset
             </StyledButton>
           </>
@@ -180,23 +218,19 @@ class List extends Component {
                     <Option value="0" disabled>
                       선택
                     </Option>
-                    <Option value="DISCHARGE">방구류</Option>
-                    <Option value="MEDICINE">약품</Option>
-                    <Option value="FILTER_PLANT">정수장</Option>
-                    <Option value="TREATMENT_PLANT">처리장</Option>
-                    <Option value="CHK_VALUE_TYPE">측정값 종류</Option>
+                    <Option value="청주">청주</Option>
+                    <Option value="청주">구미</Option>
+                    <Option value="청주">서울</Option>
                   </Select>
                 </Col>
                 <Col span={4}>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.selectCodeApi()}>
-                    검색
-                  </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.selectCodeApi()}>
-                    엑셀받기
-                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first">검색</StyledButton>
                 </Col>
               </Row>
               {this.renderTable()}
+              <Modal visible={this.state.onMedicineCodeModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+                {this.state.onMedicineCodeModal ? this.onModalList() : ''}
+              </Modal>
             </Group>
           </Sketch>
         </StyledViewDesigner>
@@ -212,19 +246,24 @@ List.defaultProps = {
   formData: {},
   columns: [
     {
-      title: '상태',
-      dataIndex: 'IS_DEL',
+      title: '약품코드',
+      dataIndex: 'MEDICINE_CD',
       align: 'center',
     },
     {
-      title: '코드',
-      dataIndex: 'CODE',
-      align: 'center',
-    },
-    {
-      title: '코드명',
-      dataIndex: 'NAME',
+      title: '약품명',
+      dataIndex: 'MEDICINE_NAME',
       align: 'left',
+    },
+    {
+      title: '농도(%)',
+      dataIndex: 'DENSITY',
+      align: 'center',
+    },
+    {
+      title: '단가(원/Kg)',
+      dataIndex: 'STANDARD_PRICE_UNIT',
+      align: 'center',
     },
   ],
 };
