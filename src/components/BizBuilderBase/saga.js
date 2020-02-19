@@ -263,6 +263,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
+            viewType: 'INPUT',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },
@@ -330,6 +331,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
         ...formData,
         TASK_SEQ: modifyTaskSeq,
         WORK_SEQ: modifyWorkSeq,
+        viewType: 'MODIFY',
         // prcId,
         // processStep,
       },
@@ -473,7 +475,7 @@ function* getListData({ id, workSeq, conditional }) {
     whereString.push(searchData[key]);
   });
 
-  if (conditional.length > 0) whereString.push(conditional);
+  if (conditional && conditional.length > 0) whereString.push(conditional);
 
   const responseList = yield call(Axios.post, `/api/builder/v1/work/taskList/${workSeq}`, { PARAM: { whereString } }, { BUILDER: 'getTaskList' });
   if (responseList) {
