@@ -39,6 +39,7 @@
     "react-beautiful-dnd": "^11.0.4",
     "react-big-calendar": "^0.19.2",
     "react-bootstrap-tabs": "^1.0.2",
+    "react-contextmenu": "^2.13.0",
     "react-cookie": "^2.1.4",
     "react-copy-to-clipboard": "^5.0.1",
     "react-custom-scrollbars": "^4.1.2",

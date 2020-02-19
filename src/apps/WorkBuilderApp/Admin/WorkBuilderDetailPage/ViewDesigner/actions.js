@@ -20,18 +20,84 @@ export const addRow = (groupIndex, rowIndex) => ({
   rowIndex,
 });
 
-export const removeRow = (groupIndex, rowIndex) => ({
-  type: actionTypes.REMOVE_ROW,
-  groupIndex,
-  rowIndex,
-});
-
 export const mergeCell = () => ({
   type: actionTypes.MERGE_CELL,
 });
 
 export const divideCell = () => ({
   type: actionTypes.DIVIDE_CELL,
+});
+
+export const addCell = () => ({
+  type: actionTypes.ADD_CELL,
+});
+
+export const increaseRow = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.INCREASE_ROW,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const decreaseRow = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.DECREASE_ROW,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const increaseCol = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.INCREASE_COL,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const decreaseCol = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.DECREASE_COL,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const addRowToUp = (groupIndex, rowIndex) => ({
+  type: actionTypes.ADD_ROW_TO_UP,
+  groupIndex,
+  rowIndex,
+});
+
+export const addRowToDown = (groupIndex, rowIndex) => ({
+  type: actionTypes.ADD_ROW_TO_DOWN,
+  groupIndex,
+  rowIndex,
+});
+
+export const removeRow = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.REMOVE_ROW,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const addColToLeft = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.ADD_COL_TO_LEFT,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const addColToRight = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.ADD_COL_TO_RIGHT,
+  groupIndex,
+  rowIndex,
+  colIndex,
+});
+
+export const removeCol = (groupIndex, rowIndex, colIndex) => ({
+  type: actionTypes.REMOVE_COL,
+  groupIndex,
+  rowIndex,
+  colIndex,
 });
 
 export const selectCell = (groupIndex, rowIndex, colIndex, isCombine) => ({
@@ -185,4 +251,34 @@ export const changeGroupDataByReducer = (groupIndex, key, value) => ({
   groupIndex,
   key,
   value,
+});
+
+export const enableContentLoading = () => ({
+  type: actionTypes.ENABLE_CONTENT_LOADING,
+});
+
+export const disableContentLoading = () => ({
+  type: actionTypes.DISABLE_CONTENT_LOADING,
+});
+
+export const mergeRow = () => ({
+  type: actionTypes.MERGE_ROW,
+});
+
+export const mergeCol = () => ({
+  type: actionTypes.MERGE_COL,
+});
+
+export const divideRow = () => ({
+  type: actionTypes.DIVIDE_ROW,
+});
+
+export const divideCol = () => ({
+  type: actionTypes.DIVIDE_COL,
+});
+
+export const onChangeTableSize = (groupIndex, tableSize) => ({
+  type: actionTypes.ON_CHANGE_TABLE_SIZE,
+  groupIndex,
+  tableSize,
 });
