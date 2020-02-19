@@ -18,7 +18,8 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
+    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps, changeFormData, category, year, month } = this.props;
+
     const {
       info: { PRC_ID },
     } = workFlowConfig;
@@ -30,6 +31,14 @@ class InputPage extends Component {
         },
       };
       getProcessRule(id, payload);
+    }
+    changeFormData(id, 'CATEGORY', category);
+    if (parseInt(month, 10) >= 12) {
+      changeFormData(id, 'CHK_YEAR', parseInt(year, 10) + 1);
+      changeFormData(id, 'CHK_MONTH', 1);
+    } else {
+      changeFormData(id, 'CHK_YEAR', year);
+      changeFormData(id, 'CHK_MONTH', parseInt(month, 10) + 1);
     }
   }
 
@@ -66,6 +75,7 @@ class InputPage extends Component {
       CustomWorkProcess,
     } = this.props;
     // Work Process 사용여부
+    console.debug('@@@@INPUTPAGE', this.props.formData);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -93,6 +103,8 @@ class InputPage extends Component {
               ) : (
                 <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
               ))}
+            {/* <LabelComp visible NAME_KOR={this.props.year} CONFIG={{ property: { className: 'roadMap' } }}></LabelComp> */}
+
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
               <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
@@ -120,6 +132,9 @@ InputPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  year: PropTypes.string,
+  month: PropTypes.string,
+  changeFormData: PropTypes.func,
 };
 
 InputPage.defaultProps = {
