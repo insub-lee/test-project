@@ -128,9 +128,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/JoinToolTipComp': { renderer: property => <JoinToolTipComp {...property} /> },
   'components/BizBuilder/Field/LawClauseSeqComp': { renderer: property => <LawClauseSeqComp {...property} /> },
   'components/BizBuilder/Field/TitleModalPlusComp': { renderer: property => <TitleModalPlusComp {...property} /> },
-<<<<<<< HEAD
   'components/BizBuilder/Field/CheckableTreeSelectComp': { renderer: property => <CheckableTreeSelectComp {...property} /> },
-=======
   'components/BizBuilder/Field/RoadmapCategoryComp': { renderer: property => <RoadmapCategoryComp {...property} /> },
->>>>>>> origin/magnachip
 };
