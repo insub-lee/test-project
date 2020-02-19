@@ -1,46 +1,79 @@
 import { fromJS } from 'immutable';
 import uuid from 'uuid/v1';
 import { getTreeFromFlatData } from 'react-sortable-tree';
-
+import { sortBy } from 'lodash';
 import { isJSON } from 'utils/helpers';
 import { VIEW_TYPE_IDX } from 'components/BizBuilder/Common/Constants';
 
 import * as actionTypes from './constants';
-import { checkMergeAble, fieldInfoBasic } from './helper';
+import { fieldInfoBasic, checkRowContinuity, checkColContinuity, checkCanRemoveRow, checkCanRemoveCol } from './helper';
 
 const getNewKey = () => uuid();
 
-const initialGroup = fromJS({
-  key: getNewKey(),
-  type: 'group',
-  title: '',
-  useTitle: true,
-  rows: [
-    {
+const initialCol = () => fromJS({ key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } });
+
+const generateCols = colSize => {
+  const result = [];
+  for (let i = 0; i < colSize; i += 1) {
+    result.push({ key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } });
+  }
+  return result;
+};
+
+const generateRowsWithCols = ([rowSize, colSize]) => {
+  const result = [];
+  for (let i = 0; i < rowSize; i += 1) {
+    result.push({
       key: getNewKey(),
       type: 'row',
       gutter: [8, 8],
-      cols: [
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-      ],
-    },
-  ],
-});
+      cols: generateCols(colSize),
+    });
+  }
+  return result;
+};
 
-const initialRow = fromJS({
-  key: getNewKey(),
-  type: 'row',
-  gutter: [8, 8],
-  cols: [
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-  ],
-});
+const initialGroup = () =>
+  fromJS({
+    key: getNewKey(),
+    type: 'group',
+    title: '',
+    useTitle: true,
+    rows: [
+      {
+        key: getNewKey(),
+        type: 'row',
+        gutter: [8, 8],
+        cols: [
+          { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+          { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+          { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+          { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+        ],
+      },
+    ],
+  });
+
+const initialRowByColSize = size => {
+  const cols = [];
+  for (let i = 0; i < size; i += 1) {
+    cols.push({ key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } });
+  }
+  return fromJS({ key: getNewKey(), type: 'row', gutter: [8, 8], cols });
+};
+
+const initialRow = () =>
+  fromJS({
+    key: getNewKey(),
+    type: 'row',
+    gutter: [8, 8],
+    cols: [
+      { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+      { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+      { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+      { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+    ],
+  });
 
 const initialState = fromJS({
   topMenus: [
@@ -75,10 +108,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
                   ],
                 },
                 {
@@ -86,10 +119,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
                   ],
                 },
                 {
@@ -97,10 +130,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
                   ],
                 },
                 {
@@ -108,10 +141,10 @@ const initialState = fromJS({
                   type: 'row',
                   gutter: [8, 8],
                   cols: [
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-                    { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
+                    { key: getNewKey(), type: 'col', rowSpan: 1, span: 1, style: { height: '35px' } },
                   ],
                 },
               ],
@@ -128,15 +161,24 @@ const initialState = fromJS({
     },
   },
   selectedKeys: [],
-  canMerge: false,
+  canMerge: {
+    row: false,
+    col: false,
+  },
+  canDivide: {
+    row: false,
+    col: false,
+  },
   selectedStyleCells: [],
   compData: [],
   workInfo: {},
   compPoolList: [],
   compGroupList: [],
+  compTreeData: [],
   selectedComp: {},
   selectedField: {},
   sysMetaList: [],
+  isLoadingContent: true,
 });
 
 const initialSearchGroup = fromJS({
@@ -150,10 +192,10 @@ const initialSearchGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
       ],
     },
     {
@@ -161,10 +203,10 @@ const initialSearchGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 6, style: { width: '25%', height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
+        { key: getNewKey(), type: 'col', span: 6, style: { height: '35px' } },
       ],
     },
   ],
@@ -181,12 +223,12 @@ const initialListGroup = fromJS({
       type: 'row',
       gutter: [8, 8],
       cols: [
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
-        { key: getNewKey(), type: 'col', span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', rowSpan: 1, span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', rowSpan: 1, span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', rowSpan: 1, span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', rowSpan: 1, span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', rowSpan: 1, span: 4, style: { width: '16.6%', height: '35px' } },
+        { key: getNewKey(), type: 'col', rowSpan: 1, span: 4, style: { width: '16.6%', height: '35px' } },
       ],
     },
   ],
@@ -202,191 +244,48 @@ const reducer = (state = initialState, action) => {
       const { jsObject } = action;
       return state.set('rows', fromJS(jsObject));
     }
-    case actionTypes.ADD_ROW: {
-      const { groupIndex, rowIndex } = action;
-      let retRows = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows']);
-      let compList = state.get('compData');
-      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
-      const tempRow = initialRow.toJS();
-      tempRow.key = getNewKey();
-      tempRow.cols[0].key = getNewKey();
-      tempRow.cols[1].key = getNewKey();
-      tempRow.cols[2].key = getNewKey();
-      tempRow.cols[3].key = getNewKey();
-      if (retRows.size === rowIndex + 1) {
-        retRows = retRows.update(rows => rows.insert(rowIndex + 1, fromJS(tempRow)));
-        return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'], retRows);
-      }
-      compList = compList.map(node => {
-        if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
-          const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
-          const keyGroup = compLayerIdx.split('-');
-          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) > rowIndex) {
-            retRows = retRows.setIn(
-              [Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
-              `${Number(keyGroup[0])}-${Number(keyGroup[1]) + 1}-${Number(keyGroup[2])}`,
-            );
-            return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1]) + 1}-${Number(keyGroup[2])}`);
-          }
-        }
-        return node;
-      });
-      retRows = retRows.update(rows => rows.insert(rowIndex + 1, fromJS(tempRow)));
-      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'], retRows).set('compData', compList);
-      // return state.updateIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'], rows => rows.insert(rowIndex + 1, fromJS(tempRow)));
-    }
-    case actionTypes.REMOVE_ROW: {
-      const { groupIndex, rowIndex } = action;
-      let retRows = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows']);
-      let compList = state.get('compData');
-      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
-      if (retRows.size === rowIndex + 1) {
-        return state.deleteIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex]);
-      }
-      compList = compList.map(node => {
-        if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
-          const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
-          const keyGroup = compLayerIdx.split('-');
-          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex) {
-            return node.deleteIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
-          }
-          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) > rowIndex) {
-            retRows = retRows.setIn(
-              [Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
-              `${Number(keyGroup[0])}-${Number(keyGroup[1]) - 1}-${Number(keyGroup[2])}`,
-            );
-            return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1]) - 1}-${Number(keyGroup[2])}`);
-          }
-        }
-        return node;
-      });
-      retRows = retRows.delete(rowIndex);
-      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'], retRows).set('compData', compList);
-    }
-    case actionTypes.MERGE_CELL: {
-      let groups = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups']);
-      let selectedKeys = state.get('selectedKeys');
-      if (selectedKeys.size > 1 && checkMergeAble(selectedKeys)) {
-        const targetGroupIndex = selectedKeys.getIn([0]).split('-')[0];
-        const targetRowIndex = selectedKeys.getIn([0]).split('-')[1];
-        const targetColIndexs = selectedKeys
-          .map(key => {
-            const keyGroup = key.split('-');
-            return Number(keyGroup[2]);
-          })
-          .sort();
-        targetColIndexs.forEach((colKey, index) => {
-          if (index > 0) {
-            groups = groups.updateIn([targetGroupIndex, 'rows', targetRowIndex, 'cols'], cols => {
-              const span = cols.getIn([targetColIndexs.get(0), 'span']) + cols.getIn([colKey - (index - 1), 'span']);
-              const width = `${parseFloat(cols.getIn([targetColIndexs.get(0), 'style', 'width'])) +
-                parseFloat(cols.getIn([colKey - (index - 1), 'style', 'width']))}%`;
-              return cols
-                .setIn([targetColIndexs.get(0), 'span'], span)
-                .setIn([targetColIndexs.get(0), 'style', 'width'], width)
-                .delete(colKey - (index - 1));
-            });
-
-            const targetIndex = selectedKeys.findIndex(key => key === `${targetGroupIndex}-${targetRowIndex}-${colKey}`);
-            if (targetIndex > -1) {
-              selectedKeys = selectedKeys.delete(targetIndex);
-            }
-          }
-        });
-      }
-      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups'], groups).set('selectedKeys', selectedKeys);
-    }
-    case actionTypes.DIVIDE_CELL: {
-      let groups = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups']);
-      const selectedKeys = state.get('selectedKeys').map(key => {
-        const keyGroup = key.split('-');
-        return fromJS({ groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) });
-      });
-
-      let newCols = fromJS([]);
-      let prevIndex = '';
-      let prevAddedIndex = 1;
-
-      selectedKeys.forEach(key => {
-        const groupIndex = key.get('groupIndex');
-        const rowIndex = key.get('rowIndex');
-        const colIndex = key.get('colIndex');
-
-        groups = groups.updateIn([groupIndex, 'rows', rowIndex], row => {
-          const targetCol = row.getIn(['cols', colIndex]);
-          const currentSpan = targetCol.get('span');
-          const style = targetCol.get('style');
-          const dividedStyle = style.update('width', width => {
-            const widthValue = parseFloat(width);
-            const widthType = width.replace(widthValue.toString(), '');
-            return `${widthValue / 2}${widthType}`;
-          });
-          if (currentSpan > 1) {
-            const nextSpan = Math.ceil(currentSpan / 2);
-            const newSpan = currentSpan - nextSpan;
-            if (prevIndex === rowIndex) {
-              prevAddedIndex += 1;
-              newCols = newCols.push(
-                fromJS({
-                  targetGroupIndex: groupIndex,
-                  targetRowIndex: rowIndex,
-                  targetColIndex: colIndex + prevAddedIndex,
-                  data: { key: getNewKey(), type: 'col', span: newSpan },
-                }).setIn(['data', 'style'], dividedStyle),
-              );
-            } else {
-              prevAddedIndex = 1;
-              newCols = newCols.push(
-                fromJS({
-                  targetGroupIndex: groupIndex,
-                  targetRowIndex: rowIndex,
-                  targetColIndex: colIndex + prevAddedIndex,
-                  data: { key: getNewKey(), type: 'col', span: newSpan },
-                }).setIn(['data', 'style'], dividedStyle),
-              );
-            }
-            return row.setIn(['cols', colIndex], targetCol.set('span', nextSpan).set('style', dividedStyle));
-          }
-          return row;
-        });
-        prevIndex = 0;
-      });
-      newCols.forEach(newCol => {
-        const targetGroupIndex = newCol.get('targetGroupIndex');
-        const targetRowIndex = newCol.get('targetRowIndex');
-        const targetColIndex = newCol.get('targetColIndex');
-        let targetCols = groups.getIn([targetGroupIndex, 'rows', targetRowIndex, 'cols']);
-        targetCols = targetCols.insert(targetColIndex, newCol.get('data'));
-        groups = groups.setIn([targetGroupIndex, 'rows', targetRowIndex, 'cols'], targetCols);
-      });
-      // const nextSelectedKeys = selectedKeys.map(selectedKey => `${selectedKey.get('rowIndex')}-${selectedKey.get('colIndex')}`);
-      const nextSelectedKeys = fromJS([]);
-      return state
-        .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups'], groups)
-        .set('selectedKeys', nextSelectedKeys)
-        .set('canMerge', checkMergeAble(nextSelectedKeys));
-    }
     case actionTypes.SELECT_CELL: {
       const { groupIndex, rowIndex, colIndex, isCombine } = action;
       const newKey = `${groupIndex}-${rowIndex}-${colIndex}`;
       const selectedKeys = state.get('selectedKeys');
       const hasKey = selectedKeys.includes(newKey);
+      const checkCondition = ['viewData', 'CONFIG', 'property', 'layer', 'groups'];
       if (isCombine) {
         if (hasKey) {
           const targetIndex = selectedKeys.findIndex(key => key === newKey);
           const nextSelectedKeys = selectedKeys.delete(targetIndex);
-          return state.set('selectedKeys', nextSelectedKeys).set('canMerge', checkMergeAble(nextSelectedKeys));
+          const canMerge = {
+            row: checkRowContinuity(nextSelectedKeys.toJS(), state.getIn(checkCondition).toJS()),
+            col: checkColContinuity(nextSelectedKeys.toJS(), state.getIn(checkCondition).toJS()),
+          };
+          return state
+            .set('selectedKeys', nextSelectedKeys)
+            .set('canMerge', fromJS(canMerge))
+            .set('canDivide', fromJS({ row: false, col: false }));
         }
         const nextSelectedKeys = selectedKeys.push(newKey);
+        const canMerge = {
+          row: checkRowContinuity(nextSelectedKeys.toJS(), state.getIn(checkCondition).toJS()),
+          col: checkColContinuity(nextSelectedKeys.toJS(), state.getIn(checkCondition).toJS()),
+        };
         return state
           .set('selectedKeys', nextSelectedKeys)
-          .set('canMerge', checkMergeAble(nextSelectedKeys))
-          .sort();
+          .set('canMerge', fromJS(canMerge))
+          .set('canDivide', fromJS({ row: false, col: false }));
       }
       if (hasKey) {
-        return state.set('selectedKeys', fromJS([]));
+        return state
+          .set('selectedKeys', fromJS([]))
+          .set('canMerge', fromJS({ row: false, col: false }))
+          .set('canDivide', fromJS({ row: false, col: false }));
       }
-      return state.set('selectedKeys', fromJS([newKey])).set('canMerge', false);
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex];
+      const canDivideRow = (state.getIn([...condition, 'rowSpan']) || 1) > 1;
+      const canDivideCol = (state.getIn([...condition, 'span']) || 1) > 1;
+      return state
+        .set('selectedKeys', fromJS([newKey]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: canDivideRow, col: canDivideCol }));
     }
     case actionTypes.UPDATE_STYLE_WIDTH: {
       const { groupIndex, rowIndex, colIndex, width, diff } = action;
@@ -463,7 +362,7 @@ const reducer = (state = initialState, action) => {
         .set('selectedStyleCells', fromJS([]));
     }
     case actionTypes.ADD_GROUP: {
-      const tempGroup = initialGroup.toJS();
+      const tempGroup = initialGroup().toJS();
       tempGroup.key = getNewKey();
       tempGroup.rows[0].key = getNewKey();
       tempGroup.rows[0].cols[0].key = getNewKey();
@@ -662,7 +561,22 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.SET_COMPONENT_POOL_REDUCER: {
       const { list, group } = action;
-      return state.set('compPoolList', fromJS(list)).set('compGroupList', fromJS(group));
+      const flatData = group.map(node => {
+        const tempList = list.filter(fNode => fNode.COL_GROUP_IDX === node.COL_GROUP_IDX) || [];
+        if (tempList.length > 0)
+          return {
+            ...node,
+            label: node.COL_GROUP_NAME,
+            value: node.COL_GROUP_IDX,
+            children: tempList.map(temp => ({ ...temp, label: temp.COMP_NAME, value: temp.COMP_POOL_IDX, extras: { ...temp } })),
+          };
+        return { ...node, label: node.COL_GROUP_NAME, value: node.COL_GROUP_IDX };
+      });
+      const treeData = getTreeFromFlatData({ flatData, getKey: node => node.COL_GROUP_IDX, getParentKey: node => node.COL_GROUP_PIDX, rootKey: -1 });
+      return state
+        .set('compPoolList', fromJS(list))
+        .set('compGroupList', fromJS(group))
+        .set('compTreeData', fromJS(treeData));
     }
     case actionTypes.SET_SYSMETA_LIST_REDUCER: {
       const { list, compList } = action;
@@ -689,6 +603,530 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CHANGE_COL_CONFIG_REDUCER: {
       const { groupIndex, rowIndex, colIndex, key, value } = action;
       return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, key], value);
+    }
+    case actionTypes.ENABLE_CONTENT_LOADING: {
+      return state.set('isLoadingContent', true);
+    }
+    case actionTypes.DISABLE_CONTENT_LOADING: {
+      return state.set('isLoadingContent', false);
+    }
+    case actionTypes.INCREASE_ROW: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'rowSpan'];
+      return state
+        .setIn(condition, (state.getIn(condition) || 1) + 1)
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.DECREASE_ROW: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'rowSpan'];
+      return state
+        .setIn(condition, (state.getIn(condition) || 1) - 1)
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.INCREASE_COL: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'span'];
+      return state
+        .setIn(condition, (state.getIn(condition) || 1) + 1)
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.DECREASE_COL: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'span'];
+      return state
+        .setIn(condition, (state.getIn(condition) || 1) - 1)
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.ADD_ROW_TO_UP: {
+      const { groupIndex, rowIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
+      let retRows = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows']);
+      let compList = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+
+      const targetCols = state.getIn([...condition, rowIndex, 'cols']);
+      if (targetCols.map(col => (col ? col.get('span') : 0)).reduce((acc, cul) => acc + cul) !== targetCols.size) {
+        window.alert('병합된 셀이 있어 불가능 합니다.');
+        return state;
+      }
+
+      const tempSize = state
+        .getIn([...condition, 0, 'cols'])
+        .map(col => col.get('span'))
+        .reduce((acc, curt) => acc + curt);
+
+      compList = compList.map(node => {
+        if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+          const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+          const keyGroup = compLayerIdx.split('-');
+          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) >= rowIndex) {
+            retRows = retRows.setIn(
+              [Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+              `${Number(keyGroup[0])}-${Number(keyGroup[1]) + 1}-${Number(keyGroup[2])}`,
+            );
+            return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1]) + 1}-${Number(keyGroup[2])}`);
+          }
+        }
+        return node;
+      });
+      retRows = retRows.update(rows => rows.insert(rowIndex, initialRowByColSize(tempSize)));
+      return state
+        .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'], retRows)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }))
+        .set('compData', compList);
+      // .updateIn(condition, rows => rows.insert(rowIndex, initialRowByColSize(tempSize)))
+    }
+    case actionTypes.ADD_ROW_TO_DOWN: {
+      const { groupIndex, rowIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
+      let retRows = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows']);
+      let compList = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+
+      const targetNextRow = state.getIn([...condition, rowIndex + 1]);
+      if (targetNextRow && targetNextRow.get('cols').some(col => !col)) {
+        window.alert('병합된 셀이 있어 불가능 합니다.');
+        return state;
+      }
+
+      const tempSize = state
+        .getIn([...condition, 0, 'cols'])
+        .map(col => col.get('span'))
+        .reduce((acc, curt) => acc + curt);
+
+      if (retRows.size === rowIndex + 1) {
+        return state
+          .updateIn(condition, rows => rows.insert(rowIndex + 1, initialRowByColSize(tempSize)))
+          .set('selectedKeys', fromJS([]))
+          .set('canMerge', fromJS({ row: false, col: false }))
+          .set('canDivide', fromJS({ row: false, col: false }));
+      }
+      compList = compList.map(node => {
+        if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+          const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+          const keyGroup = compLayerIdx.split('-');
+          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) > rowIndex) {
+            retRows = retRows.setIn(
+              [Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+              `${Number(keyGroup[0])}-${Number(keyGroup[1]) + 1}-${Number(keyGroup[2])}`,
+            );
+            return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1]) + 1}-${Number(keyGroup[2])}`);
+          }
+        }
+        return node;
+      });
+
+      retRows = retRows.update(rows => rows.insert(rowIndex + 1, initialRowByColSize(tempSize)));
+      return state
+        .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'], retRows)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }))
+        .set('compData', compList);
+    }
+    case actionTypes.ADD_COL_TO_LEFT: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
+      let compList = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+      let rows = state.getIn(condition);
+
+      const checkResult = rows.some((row, index) => {
+        if (row.getIn(['cols', colIndex]) === null) {
+          return rows.getIn([index - 1, 'cols', colIndex]) === null;
+        }
+        return false;
+      });
+
+      if (checkResult) {
+        window.alert('병합된 셀이 있어 불가능 합니다.');
+        return state;
+      }
+
+      compList = compList.map(node => {
+        if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+          const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+          const keyGroup = compLayerIdx.split('-');
+          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex && Number(keyGroup[2]) >= colIndex) {
+            rows = rows.map(subNode => {
+              const tempKey = subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey]);
+              const tempKeyGroup = tempKey.split('-');
+              return subNode.setIn(
+                ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+                `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) + 1}`,
+              );
+            });
+            return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1])}-${Number(keyGroup[2]) + 1}`);
+          }
+        }
+        return node;
+      });
+
+      const nextRows = rows.update(rowsData => rowsData.map(row => row.set('cols', row.get('cols').insert(colIndex, initialCol()))));
+      return state
+        .setIn(condition, nextRows)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }))
+        .set('compData', compList);
+    }
+    case actionTypes.ADD_COL_TO_RIGHT: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
+      let compList = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+      let rows = state.getIn(condition);
+
+      const disableCondition1 =
+        rows
+          .map(row => {
+            const currentCol = row.getIn(['cols', colIndex]);
+            return currentCol ? currentCol.get('rowSpan') : 0;
+          })
+          .toJS()
+          .reduce((acc, cul) => acc + cul) !== rows.size;
+      const colSpanSizes = rows
+        .map(row => {
+          const currentCol = row.getIn(['cols', colIndex]);
+          return currentCol ? currentCol.get('span') : 0;
+        })
+        .filter(size => size !== 0);
+
+      const disableCondition2 = colSpanSizes.some((size, index) => {
+        if (index > 0 && size !== 0) {
+          return size !== colSpanSizes.get(index - 1);
+        }
+        return false;
+      });
+
+      if (disableCondition1 || disableCondition2) {
+        window.alert('병합된 셀이 있어 불가능 합니다.');
+        return state;
+      }
+
+      compList = compList.map(node => {
+        if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+          const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+          const keyGroup = compLayerIdx.split('-');
+          if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex && Number(keyGroup[2]) > colIndex) {
+            rows = rows.map(subNode => {
+              const tempKey = subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey]);
+              const tempKeyGroup = tempKey.split('-');
+              return subNode.setIn(
+                ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+                `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) + 1}`,
+              );
+            });
+            return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1])}-${Number(keyGroup[2]) + 1}`);
+          }
+        }
+        return node;
+      });
+
+      // const nextRows = rows.update(rowsData => rowsData.map(row => row.set('cols', row.get('cols').push(initialCol()))));
+      const nextRows = rows.update(rowsData => rowsData.map(row => row.set('cols', row.get('cols').insert(colIndex + 1, initialCol()))));
+      return state
+        .setIn(condition, nextRows)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }))
+        .set('compData', compList);
+    }
+    case actionTypes.REMOVE_ROW: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups'];
+      let compList = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+
+      /* Rows length 가 1인 경우 삭제 X */
+      if (state.getIn([...condition, groupIndex, 'rows']).size < 2) {
+        window.alert('행 사이즈가 1인 경우 삭제 불가능합니다.');
+        return state;
+      }
+
+      /* Check Using Component */
+      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).some(col => col.get('comp'))) {
+        window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
+        return state;
+      }
+
+      const canRemoveRow = checkCanRemoveRow({ groupIndex, rowIndex, colIndex }, state.getIn(condition).toJS());
+      if (canRemoveRow) {
+        const rowSpanSize = state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols', colIndex, 'rowSpan']);
+        return state
+          .updateIn([...condition, groupIndex, 'rows'], rows => {
+            let i = 0;
+            let nextRows = rows;
+            if (nextRows.size > rowIndex + 1) {
+              compList = compList.map(node => {
+                if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+                  const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+                  const keyGroup = compLayerIdx.split('-');
+                  if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex) {
+                    return node.deleteIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+                  }
+                  if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) > rowIndex) {
+                    nextRows = nextRows.setIn(
+                      [Number(keyGroup[1]), 'cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+                      `${Number(keyGroup[0])}-${Number(keyGroup[1]) - 1}-${Number(keyGroup[2])}`,
+                    );
+                    return node.setIn(
+                      ['CONFIG', 'property', 'layerIdx', layerIdxKey],
+                      `${Number(keyGroup[0])}-${Number(keyGroup[1]) - 1}-${Number(keyGroup[2])}`,
+                    );
+                  }
+                }
+                return node;
+              });
+            }
+            while (i < rowSpanSize) {
+              nextRows = nextRows.remove(rowIndex);
+              i += 1;
+            }
+            return nextRows;
+          })
+          .set('selectedKeys', fromJS([]))
+          .set('canMerge', fromJS({ row: false, col: false }))
+          .set('canDivide', fromJS({ row: false, col: false }));
+      }
+      return state;
+      // return state
+      //   .updateIn(condition, rows => rows.remove(rowIndex))
+      //   .set('selectedKeys', fromJS([]))
+      //   .set('canMerge', fromJS({ row: false, col: false }))
+      //   .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.REMOVE_COL: {
+      const { groupIndex, rowIndex, colIndex } = action;
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups'];
+      let compList = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+
+      /* Cols length 가 1인 경우 삭제 X */
+      if (state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols']).size < 2) {
+        window.alert('열 사이즈가 1인 경우 삭제 불가능합니다.');
+        return state;
+      }
+
+      /* Check Using Component */
+      if (state.getIn([...condition, groupIndex, 'rows']).some(row => row.getIn(['cols', colIndex]).get('comp'))) {
+        window.alert('Component를 사용하는 경우 삭제 불가능합니다.');
+        return state;
+      }
+
+      const canRemoveCol = checkCanRemoveCol({ groupIndex, rowIndex, colIndex }, state.getIn(condition).toJS());
+
+      if (canRemoveCol) {
+        const colSpanSize = state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols', colIndex, 'span']);
+        /* 빈 열 삭제  */
+        return state
+          .updateIn([...condition, groupIndex, 'rows'], rows => {
+            let newRows = rows;
+            compList = compList.map(node => {
+              if (node.getIn(['CONFIG', 'property', 'layerIdx']) && node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+                const compLayerIdx = node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]);
+                const keyGroup = compLayerIdx.split('-');
+                if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex && Number(keyGroup[2]) > colIndex) {
+                  newRows = newRows.map(subNode => {
+                    const tempKey = subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey]);
+                    const tempKeyGroup = tempKey.split('-');
+                    return subNode.setIn(
+                      ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+                      `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) - 1}`,
+                    );
+                  });
+                  return node.setIn(
+                    ['CONFIG', 'property', 'layerIdx', layerIdxKey],
+                    `${Number(keyGroup[0])}-${Number(keyGroup[1])}-${Number(keyGroup[2]) - 1}`,
+                  );
+                }
+              }
+              return node;
+            });
+            return newRows.map(row => {
+              let i = 0;
+              let nextRow = row;
+              while (i < colSpanSize) {
+                nextRow = nextRow.removeIn(['cols', colIndex]);
+                i += 1;
+              }
+              return nextRow;
+            });
+          })
+          .set('selectedKeys', fromJS([]))
+          .set('canMerge', fromJS({ row: false, col: false }))
+          .set('canDivide', fromJS({ row: false, col: false }));
+      }
+      return state;
+    }
+    case actionTypes.MERGE_ROW: {
+      const testKeys = state
+        .get('selectedKeys')
+        .toJS()
+        .map(key => {
+          const keyGroup = key.split('-');
+          return { groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) };
+        });
+
+      const sortedSelectedKeys = sortBy(testKeys, ['rowIndex']);
+      const { groupIndex, colIndex, rowIndex } = sortedSelectedKeys[0];
+      const { rowIndex: lastRowIndex } = sortedSelectedKeys[sortedSelectedKeys.length - 1];
+
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
+
+      const rowSize = sortedSelectedKeys.map(obj => state.getIn([...condition, obj.rowIndex, 'cols', obj.colIndex, 'rowSpan'])).reduce((acc, cul) => acc + cul);
+
+      let i = 0;
+      let nextRows = state.getIn(condition);
+      while (i + rowIndex < lastRowIndex + 1) {
+        if (i > 0) {
+          nextRows = nextRows.setIn([rowIndex + i, 'cols', colIndex], null);
+        } else {
+          nextRows = nextRows.setIn([rowIndex, 'cols', colIndex, 'rowSpan'], rowSize);
+        }
+        i += 1;
+      }
+
+      return state
+        .setIn(condition, fromJS(nextRows))
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.MERGE_COL: {
+      const testKeys = state
+        .get('selectedKeys')
+        .toJS()
+        .map(key => {
+          const keyGroup = key.split('-');
+          return { groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) };
+        });
+      const sortedSelectedKeys = sortBy(testKeys, ['colIndex']);
+      const { groupIndex, rowIndex, colIndex } = sortedSelectedKeys[0];
+      const { colIndex: lastColIndex } = sortedSelectedKeys[sortedSelectedKeys.length - 1];
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols'];
+
+      const colSize = sortedSelectedKeys.map(obj => state.getIn([...condition, obj.colIndex, 'span'])).reduce((acc, cul) => acc + cul);
+
+      let i = 0;
+      let nextCols = state.getIn(condition);
+      while (i + colIndex < lastColIndex + 1) {
+        if (i > 0) {
+          nextCols = nextCols.set(colIndex + i, null);
+        } else {
+          nextCols = nextCols.setIn([colIndex, 'span'], colSize);
+        }
+        i += 1;
+      }
+      return state
+        .setIn(condition, nextCols)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.DIVIDE_ROW: {
+      const testKeys = state
+        .get('selectedKeys')
+        .toJS()
+        .map(key => {
+          const keyGroup = key.split('-');
+          return { groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) };
+        });
+      const { groupIndex, rowIndex, colIndex } = testKeys[0];
+
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows'];
+
+      const currentCol = state.getIn([...condition, rowIndex, 'cols', colIndex]);
+      const colSize = currentCol.get('span');
+      const rowSize = currentCol.get('rowSpan');
+
+      let i = 0;
+      let nextRows = state.getIn(condition);
+      while (i < rowSize) {
+        if (i > 0) {
+          nextRows = nextRows.setIn([rowIndex + i, 'cols', colIndex], initialCol().set('span', colSize));
+        } else {
+          nextRows = nextRows.setIn([rowIndex, 'cols', colIndex, 'rowSpan'], 1);
+        }
+        i += 1;
+      }
+
+      return state
+        .setIn(condition, nextRows)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.DIVIDE_COL: {
+      const testKeys = state
+        .get('selectedKeys')
+        .toJS()
+        .map(key => {
+          const keyGroup = key.split('-');
+          return { groupIndex: Number(keyGroup[0]), rowIndex: Number(keyGroup[1]), colIndex: Number(keyGroup[2]) };
+        });
+      const { groupIndex, rowIndex, colIndex } = testKeys[0];
+      /* by cols */
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols'];
+
+      const currentCol = state.getIn([...condition, colIndex]);
+
+      const colSize = currentCol.get('span');
+      const rowSize = currentCol.get('rowSpan');
+
+      let i = 0;
+      let nextCols = state.getIn(condition);
+      while (i < colSize) {
+        if (i > 0) {
+          nextCols = nextCols.setIn([colIndex + i], initialCol().set('rowSpan', rowSize));
+        } else {
+          nextCols = nextCols.setIn([colIndex, 'span'], 1);
+        }
+        i += 1;
+      }
+
+      return state
+        .setIn(condition, nextCols)
+        .set('selectedKeys', fromJS([]))
+        .set('canMerge', fromJS({ row: false, col: false }))
+        .set('canDivide', fromJS({ row: false, col: false }));
+    }
+    case actionTypes.ON_CHANGE_TABLE_SIZE: {
+      const { groupIndex, tableSize } = action;
+
+      const condition = ['viewData', 'CONFIG', 'property', 'layer', 'groups'];
+
+      if (tableSize.includes(0)) {
+        window.alert('가로, 세로 최소값은 1입니다.');
+        return state;
+      }
+
+      console.debug();
+
+      if (tableSize.some(size => size > 10)) {
+        window.alert('가로, 세로 최대값은 10입니다.');
+        tableSize[0] = tableSize[0] > 10 ? 10 : tableSize[0];
+        tableSize[1] = tableSize[1] > 10 ? 10 : tableSize[1];
+      }
+
+      /* Check Using Component */
+      if (state.getIn([...condition, groupIndex, 'rows']).some(row => row.get('cols').some(col => col.get('comp')))) {
+        window.alert('Component를 사용하는 조절이 불가능합니다.');
+        return state;
+      }
+
+      console.debug(groupIndex, tableSize);
+
+      const newRows = generateRowsWithCols(tableSize);
+
+      return state.setIn([...condition, groupIndex, 'rows'], fromJS(newRows));
     }
     default:
       return state;

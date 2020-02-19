@@ -42,6 +42,7 @@ class WorkBuilderListPage extends Component {
       title: 'WORK_SEQ',
       dataIndex: 'WORK_SEQ',
       key: 'WORK_SEQ',
+      align: 'center',
     },
     {
       title: '업무빌더ID',
@@ -50,6 +51,7 @@ class WorkBuilderListPage extends Component {
       onCell: ({ WORK_SEQ }) => ({
         onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
       }),
+      align: 'center',
     },
     {
       title: '업무빌더명',
@@ -58,12 +60,14 @@ class WorkBuilderListPage extends Component {
       onCell: ({ WORK_SEQ }) => ({
         onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
       }),
+      align: 'center',
     },
     {
       title: '등록일',
       dataIndex: 'REG_DTTM',
       key: 'REG_DTTM',
       render: text => moment(text).format('YYYY-MM-DD'),
+      align: 'center',
     },
     {
       title: '상태',
@@ -79,6 +83,7 @@ class WorkBuilderListPage extends Component {
             return '';
         }
       },
+      align: 'center',
     },
     {
       title: '',
@@ -88,6 +93,7 @@ class WorkBuilderListPage extends Component {
           <Button>Delete</Button>
         </Popconfirm>
       ),
+      align: 'center',
     },
   ];
 
