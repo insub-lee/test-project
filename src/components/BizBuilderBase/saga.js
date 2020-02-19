@@ -190,9 +190,10 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   if (taskSeq === -1) {
     const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'saveTaskCreate' });
     const {
-      data: { TASK_SEQ },
+      data: { TASK_SEQ, TASK_ORIGIN_SEQ },
     } = firstResponse;
     taskSeq = TASK_SEQ;
+    formData.TASK_ORIGIN_SEQ = TASK_ORIGIN_SEQ;
   }
 
   // const formDataKeys = Object.keys(formData);
