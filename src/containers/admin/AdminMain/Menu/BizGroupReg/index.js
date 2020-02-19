@@ -362,7 +362,15 @@ class BizGroupReg extends Component {
 
       if (SEC_TYPE === MANAGER) {
         return (
-          <OrganizationRole
+          // 업무그룹 관리자만 등록 가능 했던 방식 수정
+          // <OrganizationRole
+          <Organization
+            // 업무그룹 관리자만 등록 가능 했던 방식 수정
+            userTab
+            pstnTab
+            dutyTab
+            grpTab
+            //
             show={this.state.orgShow}
             closeModal={this.orgClose}
             // 조직도 모달창으로 가져갈 데이터
@@ -383,7 +391,8 @@ class BizGroupReg extends Component {
 
               this.onChangeData({ I: mData });
             }}
-            ROLE_CD="BM"
+            // 업무그룹 관리자만 등록 가능 했던 방식 수정
+            // ROLE_CD="BM"
           />
         );
       }
