@@ -68,7 +68,7 @@ class ListPage extends Component {
     this.setState({
       modalVisible: true,
       viewType: 'VIEW',
-      selectedTaskSeq: taskSeq,
+      selectedTaskSeq: taskSeq.TASK_SEQ,
     });
   };
 

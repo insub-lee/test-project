@@ -164,7 +164,7 @@ class ListPage extends Component {
         ),
       },
       { title: '연도', dataIndex: 'CHK_YEAR', key: 'CHK_YEAR' },
-      { title: '월', dataIndex: 'CHK_MONTH', key: 'CHK_MONTH', defaultSortOrder: 'ascend', sorter: (a, b) => b - a, sortDirections: ['ascend'] },
+      { title: '월', dataIndex: 'CHK_MONTH', key: 'CHK_MONTH' },
       {
         title: '지역',
         children: [
