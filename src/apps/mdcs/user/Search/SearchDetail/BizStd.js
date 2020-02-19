@@ -15,6 +15,7 @@ class BizStd extends Component {
   componentDidMount() {
     const { sagaKey, getCallDataHandler, apiArys } = this.props;
     getCallDataHandler(sagaKey, apiArys, this.initDataBind);
+    console.debug('bizStd didMout');
   }
 
   initDataBind = sagaKey => {

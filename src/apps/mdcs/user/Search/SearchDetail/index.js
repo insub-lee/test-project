@@ -86,7 +86,7 @@ class SearchDetail extends Component {
 
   renderDetailSearch = () => {
     const { currentPage } = this.props;
-
+    console.debug('currentPage', currentPage);
     switch (currentPage) {
       case 'BIZ':
         return <BizStd getTreeData={this.getTreeData} {...this.props} />;
