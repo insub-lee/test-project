@@ -28,6 +28,7 @@ class List extends Component {
       medicineCd: '',
       density: '',
       onMedicineCodeModal: false,
+      densityReadOnly: false,
     };
   }
 
@@ -36,7 +37,7 @@ class List extends Component {
   }
 
   changeSelectValue = value => {
-    this.setState({ changeSelectValue: value });
+    this.setState({ changeSelectValue: value, densityReadOnly: false, medicineValue: '', medicineName: '', medicineCd: '', density: '' });
     this.seletList(value);
   };
 
@@ -46,10 +47,6 @@ class List extends Component {
 
   changeDensity = value => {
     this.setState({ density: value.replace(/[^0-9]/g, '') });
-  };
-
-  initData = () => {
-    this.renderSelect();
   };
 
   selectCodeApi() {
@@ -95,7 +92,14 @@ class List extends Component {
   };
 
   onChagneData = value => {
-    const { sagaKey: id, submitHandlerBySaga, tableName } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, result } = this.props;
+    if (value === 'I') {
+      const overlap =
+        result && result.listData && result.listData.list.find(item => item.MEDICINE_CD === this.state.medicineCd && item.DENSITY === this.state.density);
+      if (overlap) {
+        return this.warning('이미 입력된 값입니다.');
+      }
+    }
 
     const submitData = {
       PARAM: {
@@ -107,7 +111,7 @@ class List extends Component {
     };
     if (this.state.medicineValue && this.state.changeSelectValue) {
       if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshschemicalcode', submitData, this.callBack);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshschemicalcode', submitData, this.updateCallBack);
       } else if (value === 'I') {
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshschemicalcode', submitData, this.callBack);
       } else if (value === 'D') {
@@ -122,25 +126,14 @@ class List extends Component {
     this.onReset();
   };
 
-  onRemoveDo = isDel => {};
-
   onReset() {
     this.setState({
       medicineValue: '',
       medicineName: '',
       medicineCd: '',
       density: '',
+      densityReadOnly: false,
     });
-  }
-
-  onCancel = () => {
-    this.setState({
-      onMedicineCodeModal: false,
-    });
-  };
-
-  onModalOpen() {
-    this.setState({ onMedicineCodeModal: true });
   }
 
   onModalList() {
@@ -167,24 +160,27 @@ class List extends Component {
         bordered
         onRow={record => ({
           onClick: () => {
-            this.selectedModalRecord(record);
+            this.setState({
+              onMedicineCodeModal: false,
+              medicineName: record.NAME,
+              medicineCd: record.CODE,
+              density: '',
+              medicineValue: '',
+              densityReadOnly: false,
+            });
           },
         })}
       />
     );
   }
 
-  selectedModalRecord = record => {
-    this.setState({ onMedicineCodeModal: false, medicineName: record.NAME, medicineCd: record.CODE, density: '', medicineValue: '' });
-  };
-
   renderTable() {
     const { result, columns } = this.props;
     let renderList = [
       {
-        MEDICINE_CD: <Input value={this.state.medicineCd} readOnly onClick={() => this.onModalOpen()} />,
+        MEDICINE_CD: <Input value={this.state.medicineCd} readOnly onClick={() => this.setState({ onMedicineCodeModal: true })} />,
         MEDICINE_CD_NAME: this.state.medicineName,
-        DENSITY: <Input value={this.state.density} onChange={e => this.changeDensity(e.target.value)} />,
+        DENSITY: <Input value={this.state.density} onChange={e => this.changeDensity(e.target.value)} readOnly={this.state.densityReadOnly} />,
         STANDARD_PRICE_UNIT: (
           <div style={{ align: 'left' }}>
             <Input style={{ width: '300px' }} value={this.state.medicineValue} onChange={e => this.changeInputValue(e.target.value)}></Input>
@@ -213,24 +209,21 @@ class List extends Component {
         bordered
         onRow={record => ({
           onClick: () => {
-            this.selectedRecord(record);
+            if (typeof record.DENSITY === 'number') {
+              this.setState({
+                medicineCd: record.MEDICINE_CD,
+                medicineName: record.MEDICINE_CD_NAME,
+                changeSelectValue: record.SITE,
+                density: record.DENSITY,
+                medicineValue: record.STANDARD_PRICE_UNIT,
+                densityReadOnly: true,
+              });
+            }
           },
         })}
       />
     );
   }
-
-  selectedRecord = record => {
-    if (typeof record.DENSITY === 'number') {
-      this.setState({
-        medicineCd: record.MEDICINE_CD,
-        medicineName: record.MEDICINE_CD_NAME,
-        changeSelectValue: record.SITE,
-        density: record.DENSITY,
-        medicineValue: record.STANDARD_PRICE_UNIT,
-      });
-    }
-  };
 
   renderSelect = () => {
     const { result } = this.props;
@@ -254,9 +247,6 @@ class List extends Component {
   };
 
   render() {
-    const { result } = this.props;
-    console.log(result, 'result');
-    console.log(this.state, 'state');
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledViewDesigner>
@@ -264,7 +254,13 @@ class List extends Component {
             <Group>
               {this.renderSelect()}
               {this.renderTable()}
-              <Modal visible={this.state.onMedicineCodeModal} width="400px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+              <Modal
+                visible={this.state.onMedicineCodeModal}
+                width="400px"
+                onCancel={() => this.setState({ onMedicineCodeModal: false })}
+                destroyOnClose
+                footer={[]}
+              >
                 {this.state.onMedicineCodeModal ? this.onModalList() : ''}
               </Modal>
             </Group>
@@ -275,11 +271,14 @@ class List extends Component {
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  result: PropTypes.array,
+  columns: PropTypes.array,
+  getCallDataHandler: PropTypes.func,
+};
 
 List.defaultProps = {
   getCallDataHandler: () => {},
-  formData: {},
   columns: [
     {
       title: '약품코드',
