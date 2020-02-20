@@ -46,7 +46,7 @@ class List extends Component {
   };
 
   changeDensity = value => {
-    this.setState({ density: value.replace(/[^0-9]/g, '') });
+    this.setState({ density: value.replace(/[^0-9,.]/g, '') });
   };
 
   selectCodeApi() {
