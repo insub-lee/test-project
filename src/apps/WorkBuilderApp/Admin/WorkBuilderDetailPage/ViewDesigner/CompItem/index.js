@@ -64,7 +64,9 @@ class CompItem extends React.Component {
             <div className="compConfigRow compConfigDiv">
               <div className={colClassName}>
                 <i className="iconField iconFieldCheck" />
-                <p className="componentTit">{col.comp.CONFIG.property.COMP_NAME}</p>
+                <p className="componentTit" role="button" onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps)}>
+                  {col.comp.COMP_TYPE !== 'LABEL' ? col.comp.COMP_FIELD : col.comp.NAME_KOR}
+                </p>
               </div>
               <div className="compConfigCol compConfigDiv buttonWrapper">
                 <span
@@ -85,7 +87,7 @@ class CompItem extends React.Component {
               </div>
             </div>
             <div className="compTitleWrapper">
-              <p>{col.comp.COMP_TYPE !== 'LABEL' ? col.comp.COMP_FIELD : col.comp.NAME_KOR}</p>
+              <p>{col.comp.CONFIG.property.COMP_NAME}</p>
             </div>
           </Styled>
         );
