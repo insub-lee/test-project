@@ -361,10 +361,8 @@ class DragUploadComp extends Component {
                 <div className="uploadFileRow" style={{ padding: '10px 10px 10px', position: 'relative', height: '25px' }}>
                   <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
                     <Tooltip placement="topLeft" title={`${file.name}(${this.bytesToSize(file.size)})`} trigger="hover">
-                      <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', width: '90%', whiteSpace: 'nowrap' }}>
-                        <Icon type="paper-clip" />
-                        {file.name} ({this.bytesToSize(file.size)})
-                      </div>
+                      <Icon type="paper-clip" />
+                      {file.name} ({this.bytesToSize(file.size)})
                     </Tooltip>
                   </div>
                   <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
