@@ -84,7 +84,7 @@ export const CustomStyledAntdTable = Component => styled(Component)`
 
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
-    font-size: 15px;
+    font-size: 12px;
     padding: 14px;
     text-align: center;
     background-color: ${customPrimaryColor};
