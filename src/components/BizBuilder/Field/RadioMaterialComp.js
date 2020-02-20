@@ -70,14 +70,13 @@ class RadioMaterialComp extends Component {
     changeFormData(sagaKey, 'MATERIAL_TYPE', value);
   };
 
-  onChangeHandlerText = vals => {
+  onChangeHandlerText = value => {
     const { changeFormData, sagaKey } = this.props;
-    changeFormData(sagaKey, 'MATERIAL_TEXT', vals);
+    changeFormData(sagaKey, 'MATERIAL_TEXT', value);
   };
 
   render() {
     const { formData, colData, processRule } = this.props;
-    console.debug('render', processRule);
     return (
       <table>
         <tr>

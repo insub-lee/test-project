@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import List from './List';
+import List from '../../CmCdList';
 
 class EshsBasicCode extends Component {
   render() {
-    return <BizMicroDevBase sagaKey="eshsBasicCode" component={List} />;
+    return <BizMicroDevBase sagaKey="eshsBasicCode" component={List} tableName="UW" />;
   }
 }
 
