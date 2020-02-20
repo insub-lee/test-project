@@ -320,7 +320,7 @@ class lawClause extends Component {
         />
         <Modal
           visible={this.state.isInputModal || this.state.isModifyModal || this.state.isViewModal || this.state.isRevisionModal}
-          width="1100px"
+          width="1500px"
           onCancel={this.onCancel}
           destroyOnClose
           footer={[]}
