@@ -23,81 +23,113 @@ class List extends Component {
     super(props);
     this.state = {
       changeSelectValue: '',
-      inputValue: '',
-      medicine_name: '',
-      medicine_cd: '',
+      medicineValue: '',
+      medicineName: '',
+      medicineCd: '',
       density: '',
       onMedicineCodeModal: false,
     };
   }
 
-  componentDidUpdate() {}
+  componentDidMount() {
+    this.selectCodeApi();
+  }
 
   changeSelectValue = value => {
     this.setState({ changeSelectValue: value });
+    this.seletList(value);
   };
 
   changeInputValue = value => {
-    this.setState({ inputValue: value });
+    this.setState({ medicineValue: value.replace(/[^0-9]/g, '') });
   };
 
-  callBackApi = () => {};
+  changeDensity = value => {
+    this.setState({ density: value.replace(/[^0-9]/g, '') });
+  };
+
+  initData = () => {
+    this.renderSelect();
+  };
 
   selectCodeApi() {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
-        key: 'eshsBasicCode',
-        url: '/api/eshs/v1/common/eshsbasiccode/?GUBUN=MEDICINE',
+        key: 'selectData',
+        url: '/api/eshs/v1/common/eshsbasiccode/CM?GUBUN=SITE',
         type: 'GET',
-        params: {},
+      },
+      {
+        key: 'modalData',
+        url: '/api/eshs/v1/common/eshsbasiccode/UW?GUBUN=MEDICINE',
+        type: 'GET',
       },
     ];
     getCallDataHandler(id, apiAry);
-    this.onModalList();
   }
+
+  callBack = () => {
+    this.seletList(this.state.changeSelectValue);
+  };
+
+  seletList = value => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'listData',
+        url: `/api/eshs/v1/common/eshschemicalcode?SITE=${value}`,
+        type: 'GET',
+      },
+    ];
+    if (value) {
+      getCallDataHandler(id, apiAry);
+      this.renderTable();
+    } else {
+      this.warning('코드 구분을 선택해주세요.');
+    }
+  };
 
   warning = value => {
     message.warning(value);
   };
 
-  onSave = value => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+  onChagneData = value => {
+    const { sagaKey: id, submitHandlerBySaga, tableName } = this.props;
 
     const submitData = {
       PARAM: {
-        GUBUN: this.state.changeSelectValue,
-        CODE: this.state.code,
-        NAME: this.state.inputValue,
-        IS_DEL: '0',
-        CREATE_DT: Moment().format('YYYY-MM-DD hh:mm:ss'),
+        MEDICINE_CD: this.state.medicineCd,
+        DENSITY: this.state.density,
+        SITE: this.state.changeSelectValue,
+        STANDARD_PRICE_UNIT: this.state.medicineValue,
       },
     };
-    if (this.state.inputValue && this.state.changeSelectValue) {
-      if (value === 'U' && this.state.code) {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/', submitData, this.callBackApi);
-      } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/', submitData, this.callBackApi);
+    if (this.state.medicineValue && this.state.changeSelectValue) {
+      if (value === 'U') {
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshschemicalcode', submitData, this.callBack);
+      } else if (value === 'I') {
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshschemicalcode', submitData, this.callBack);
+      } else if (value === 'D') {
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshschemicalcode', submitData, this.callBack);
       }
-    } else if (this.state.changeSelectValue) {
-      this.warning('코드명을 올바르게 입력하시오.');
+    } else if (this.state.changeInputValue) {
+      this.warning('지역 구분을 선택해주세요.');
     } else {
-      this.warning('코드 구분을 선택해주세요.');
+      this.warning('단가를 입력해주세요.');
     }
 
     this.onReset();
   };
 
-  onRemoveDo = isDel => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const submitData = { PARAM: { GUBUN: this.state.changeSelectValue, CODE: this.state.code, IS_DEL: isDel } };
-    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/', submitData, this.callBackApi);
-  };
+  onRemoveDo = isDel => {};
 
   onReset() {
     this.setState({
-      inputValue: '',
-      code: '',
+      medicineValue: '',
+      medicineName: '',
+      medicineCd: '',
+      density: '',
     });
   }
 
@@ -107,24 +139,13 @@ class List extends Component {
     });
   };
 
-  selectedRecord = record => {
-    if (record.COMPANY_CD) {
-      this.setState({
-        changeSelectValue: record.GUBUN,
-        inputValue: record.NAME,
-        code: record.CODE,
-      });
-    }
-  };
-
   onModalOpen() {
     this.setState({ onMedicineCodeModal: true });
-    this.selectCodeApi();
   }
 
   onModalList() {
     const { result } = this.props;
-    const codeColumns = [
+    const modalColumns = [
       {
         title: '코드',
         dataIndex: 'CODE',
@@ -133,47 +154,47 @@ class List extends Component {
       {
         title: '코드명',
         dataIndex: 'NAME',
-        align: 'left',
+        align: 'center',
       },
     ];
-    const codeList = result && result.eshsBasicCode && result.eshsBasicCode.list ? result.eshsBasicCode.list : [];
+    const codeList = result && result.modalData && result.modalData.list ? result.modalData.list : [];
 
     return (
       <AntdTable
         rowKey={`${codeList.GUBUN}_${codeList.CODE}`}
-        columns={codeColumns}
+        columns={modalColumns}
         dataSource={codeList}
         bordered
         onRow={record => ({
           onClick: () => {
-            this.selectedCodeRecord(record);
+            this.selectedModalRecord(record);
           },
         })}
       />
     );
   }
 
-  selectedCodeRecord = record => {
-    this.setState({ onMedicineCodeModal: false, medicine_name: record.NAME, medicine_cd: record.CODE });
+  selectedModalRecord = record => {
+    this.setState({ onMedicineCodeModal: false, medicineName: record.NAME, medicineCd: record.CODE, density: '', medicineValue: '' });
   };
 
   renderTable() {
     const { result, columns } = this.props;
     let renderList = [
       {
-        MEDICINE_CD: <Input style={{ width: '200px' }} value={this.state.medicine_cd} readOnly onClick={() => this.onModalOpen()} />,
-        MEDICINE_NAME: this.state.medicine_name,
-        DENSITY: this.state.density,
+        MEDICINE_CD: <Input value={this.state.medicineCd} readOnly onClick={() => this.onModalOpen()} />,
+        MEDICINE_CD_NAME: this.state.medicineName,
+        DENSITY: <Input value={this.state.density} onChange={e => this.changeDensity(e.target.value)} />,
         STANDARD_PRICE_UNIT: (
           <div style={{ align: 'left' }}>
-            <Input style={{ width: '300px' }} value={this.state.inputValue} onChange={e => this.changeInputValue(e.target.value)}></Input>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onSave('I')}>
+            <Input style={{ width: '300px' }} value={this.state.medicineValue} onChange={e => this.changeInputValue(e.target.value)}></Input>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onChagneData('I')}>
               추가
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onSave('U')}>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onChagneData('U')}>
               수정
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onRemoveDo('1')}>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onChagneData('D')}>
               삭제
             </StyledButton>
             <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
@@ -183,14 +204,7 @@ class List extends Component {
         ),
       },
     ];
-    let listData;
-    if (result && result.eshsBasicCode && result.eshsBasicCode.list) {
-      listData = result.eshsBasicCode.list.map(item => ({
-        ...item,
-        IS_DEL: item.IS_DEL === '0' ? '사용중' : '삭제',
-      }));
-    }
-    renderList = [...renderList, ...(listData || [])];
+    renderList = [...renderList, ...((result && result.listData && result.listData.list) || [])];
     return (
       <AntdTable
         rowKey={`${renderList.GUBUN}_${renderList.CODE}`}
@@ -206,29 +220,51 @@ class List extends Component {
     );
   }
 
+  selectedRecord = record => {
+    if (typeof record.DENSITY === 'number') {
+      this.setState({
+        medicineCd: record.MEDICINE_CD,
+        medicineName: record.MEDICINE_CD_NAME,
+        changeSelectValue: record.SITE,
+        density: record.DENSITY,
+        medicineValue: record.STANDARD_PRICE_UNIT,
+      });
+    }
+  };
+
+  renderSelect = () => {
+    const { result } = this.props;
+    return (
+      <Row>
+        <Col span={4}>
+          <Select style={{ width: '200px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+            <Option value="0" disabled>
+              선택
+            </Option>
+            {result && result.selectData && result.selectData.list.map(itme => <Option value={itme.CODE}>{itme.NAME}</Option>)}
+          </Select>
+        </Col>
+        <Col span={4}>
+          <StyledButton className="btn-primary btn-first" onClick={() => this.changeSelectValue(this.state.changeSelectValue)}>
+            검색
+          </StyledButton>
+        </Col>
+      </Row>
+    );
+  };
+
   render() {
+    const { result } = this.props;
+    console.log(result, 'result');
+    console.log(this.state, 'state');
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledViewDesigner>
           <Sketch>
             <Group>
-              <Row>
-                <Col span={4}>
-                  <Select style={{ width: '200px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
-                    <Option value="0" disabled>
-                      선택
-                    </Option>
-                    <Option value="청주">청주</Option>
-                    <Option value="청주">구미</Option>
-                    <Option value="청주">서울</Option>
-                  </Select>
-                </Col>
-                <Col span={4}>
-                  <StyledButton className="btn-primary btn-first">검색</StyledButton>
-                </Col>
-              </Row>
+              {this.renderSelect()}
               {this.renderTable()}
-              <Modal visible={this.state.onMedicineCodeModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+              <Modal visible={this.state.onMedicineCodeModal} width="400px" onCancel={this.onCancel} destroyOnClose footer={[]}>
                 {this.state.onMedicineCodeModal ? this.onModalList() : ''}
               </Modal>
             </Group>
@@ -249,16 +285,19 @@ List.defaultProps = {
       title: '약품코드',
       dataIndex: 'MEDICINE_CD',
       align: 'center',
+      width: 150,
     },
     {
       title: '약품명',
-      dataIndex: 'MEDICINE_NAME',
-      align: 'left',
+      dataIndex: 'MEDICINE_CD_NAME',
+      align: 'center',
+      width: 300,
     },
     {
       title: '농도(%)',
       dataIndex: 'DENSITY',
       align: 'center',
+      width: 150,
     },
     {
       title: '단가(원/Kg)',
