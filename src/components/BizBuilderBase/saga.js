@@ -405,12 +405,28 @@ function* modifyTask({ id, callbackFunc }) {
 
 function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc }) {
   // 삭제도 saveTask처럼 reloadId 필요한지 확인
+  const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
   const response = yield call(Axios.delete, `/api/builder/v1/work/contents/${workSeq}/${taskSeq}`, {}, { BUILDER: 'deleteTask' });
-  const conditional = yield select(selectors.makeSelectConditionalById(id));
-  yield put(actions.getBuilderData(reloadId || id, workSeq, -1, 'LIST', conditional));
 
   // const apiArr = yield select(selectors.makeSelectApiArrById(id));
   // yield put(actions.getExtraApiData(id, apiArr));
+
+  const isTotalDataUsed = !!(
+    workInfo &&
+    workInfo.OPT_INFO &&
+    workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === TOTAL_DATA_OPT_SEQ && opt.ISUSED === 'Y') !== -1
+  );
+  if (isTotalDataUsed) {
+    const totalDataResponse = yield call(
+      Axios.delete,
+      `/api/builder/v1/work/totalBuildereRemoveHandler/${workSeq}/${taskSeq}`,
+      {},
+      { BUILDER: 'deleteTotalData' },
+    );
+  }
+
+  const conditional = yield select(selectors.makeSelectConditionalById(id));
+  yield put(actions.getBuilderData(reloadId || id, workSeq, -1, 'LIST', conditional));
 
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, taskSeq);
@@ -492,6 +508,7 @@ function* redirectUrl({ id, url }) {
 function* removeMultiTask({ id, reloadId, callbackFunc }) {
   const removeList = yield select(selectors.makeSelectListSelectRowKeysById(id));
   if (removeList.length > 0) {
+    const workInfo = yield select(selectors.makeSelectWorkInfoById(id));
     const viewPageData = yield select(selectors.makeSelectViewPageDataById(id));
     const conditional = yield select(selectors.makeSelectConditionalById(id));
     const { workSeq, taskSeq } = viewPageData;
@@ -502,6 +519,20 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
       { PARAM: { WORK_SEQ: workSeq, taskList: removeList } },
       { BUILDER: 'deleteMultiTask' },
     );
+
+    const isTotalDataUsed = !!(
+      workInfo &&
+      workInfo.OPT_INFO &&
+      workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === TOTAL_DATA_OPT_SEQ && opt.ISUSED === 'Y') !== -1
+    );
+    if (isTotalDataUsed) {
+      const totalDataResponse = yield call(
+        Axios.post,
+        `/api/builder/v1/work/totalBuildereRemoveHandler/${workSeq}/-1`,
+        { PARAM: { WORK_SEQ: workSeq, taskList: removeList } },
+        { BUILDER: 'deleteTotalDataMulti' },
+      );
+    }
 
     if (response) {
       if (typeof callbackFunc === 'function') {

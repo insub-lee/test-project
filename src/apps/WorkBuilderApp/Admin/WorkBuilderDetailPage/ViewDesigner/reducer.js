@@ -757,11 +757,14 @@ const reducer = (state = initialState, action) => {
           if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex && Number(keyGroup[2]) >= colIndex) {
             rows = rows.map(subNode => {
               const tempKey = subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey]);
-              const tempKeyGroup = tempKey.split('-');
-              return subNode.setIn(
-                ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
-                `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) + 1}`,
-              );
+              if (tempKey) {
+                const tempKeyGroup = tempKey.split('-');
+                return subNode.setIn(
+                  ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+                  `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) + 1}`,
+                );
+              }
+              return subNode;
             });
             return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1])}-${Number(keyGroup[2]) + 1}`);
           }
@@ -818,11 +821,14 @@ const reducer = (state = initialState, action) => {
           if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex && Number(keyGroup[2]) > colIndex) {
             rows = rows.map(subNode => {
               const tempKey = subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey]);
-              const tempKeyGroup = tempKey.split('-');
-              return subNode.setIn(
-                ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
-                `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) + 1}`,
-              );
+              if (tempKey) {
+                const tempKeyGroup = tempKey.split('-');
+                return subNode.setIn(
+                  ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
+                  `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) + 1}`,
+                );
+              }
+              return subNode;
             });
             return node.setIn(['CONFIG', 'property', 'layerIdx', layerIdxKey], `${Number(keyGroup[0])}-${Number(keyGroup[1])}-${Number(keyGroup[2]) + 1}`);
           }
@@ -938,8 +944,8 @@ const reducer = (state = initialState, action) => {
                 if (keyGroup.length > 0 && Number(keyGroup[0]) === groupIndex && Number(keyGroup[1]) === rowIndex && Number(keyGroup[2]) > colIndex) {
                   newRows = newRows.map(subNode => {
                     const tempKey = subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey]);
-                    const tempKeyGroup = tempKey.split('-');
-                    if (subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+                    if (tempKey && subNode.getIn(['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey])) {
+                      const tempKeyGroup = tempKey.split('-');
                       return subNode.setIn(
                         ['cols', Number(keyGroup[2]), 'comp', 'CONFIG', 'property', 'layerIdx', layerIdxKey],
                         `${Number(keyGroup[0])}-${Number(tempKeyGroup[1])}-${Number(keyGroup[2]) - 1}`,
