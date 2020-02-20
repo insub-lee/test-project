@@ -32,7 +32,7 @@ class ViewDesigner extends Component {
     this.state = {
       tabBodyHeight: 0,
     };
-    this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
+    // this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
   }
 
   componentDidMount = () => {
@@ -111,7 +111,19 @@ class ViewDesigner extends Component {
     return (
       <div style={{ height: '100%' }}>
         <Header>
-          <div className="button--group--left">{`${viewData.NAME_KOR || 'New View Design'}(${viewData.COMP_TAG})`}</div>
+          <div className="button--group--left">
+            {/* {`${viewData.NAME_KOR || 'New View Design'}(${viewData.COMP_TAG})`} */}
+            {/* <div className="top-button-wrapper"> */}
+            <Input
+              placeholder="페이지명(KO)"
+              value={viewData.NAME_KOR}
+              className="viewNameInput"
+              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
+              disabled={styleMode}
+            />
+            <Button onClick={addMetaData}>Save</Button>
+            {/* </div> */}
+          </div>
           <div className="button--group--right">
             <TopMenus
               topMenus={topMenus}
@@ -148,20 +160,6 @@ class ViewDesigner extends Component {
                 )}
                 <div className={`view-content-wrapper ${styleMode ? 'single-wrapper' : ''}`}>
                   <Spin indicator={<Icon type="loading" />} spinning={isLoadingContent}>
-                    <div className="top-button-wrapper">
-                      {/*
-                    <Button onClick={() => onChangeTab('1')}>Structure Design</Button>
-                    <Button onClick={() => onChangeTab('2')}>Style Design</Button>
-                    */}
-                      <Input
-                        placeholder="페이지명(KO)"
-                        defaultValue={viewData.NAME_KOR}
-                        className="viewNameInput"
-                        onChange={e => this.handleChangeViewDesignerName(e.target.value)}
-                        disabled={styleMode}
-                      />
-                      <Button onClick={addMetaData}>Save</Button>
-                    </div>
                     {styleMode ? (
                       <StyleDesign
                         isShowEditor={isShowEditor}

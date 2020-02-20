@@ -102,8 +102,6 @@ class SearchDetail extends Component {
   };
 
   onChangeSearchValue = (key, sql, realValue) => {
-    console.debug('onChangeSearchValue', key, sql, realValue);
-    console.debug('cur', this.state);
     this.setState((prevState, curState) => {
       const { conditionItems } = prevState;
       const tmpCondi = { ...conditionItems, [key]: { sql: `${sql}`, realValue } };
@@ -120,8 +118,13 @@ class SearchDetail extends Component {
     this.setState({ whereStr });
   };
 
-  onChangeCategory = value => {
-    console.debug(value);
+  onSelectCategory = value => {
+    const nodeId = value.length > 0 && value[0];
+    this.onChangeSearchValue(
+      'w.category',
+      ` and w.node_id in (select node_id from fr_category_map where fullpath like (select fullpath || '%' from fr_category_map where node_id=${nodeId})) `,
+      nodeId,
+    );
   };
 
   render() {
@@ -143,7 +146,7 @@ class SearchDetail extends Component {
               </div>
             </div>
             <div className="treeWrapper tfWrapper">
-              {stdTreeData.children && stdTreeData.children.length > 0 && <Tree onChange={this.onChangeCategory} showLine treeData={stdTreeData} />}
+              {stdTreeData.children && stdTreeData.children.length > 0 && <Tree onSelect={this.onSelectCategory} showLine treeData={stdTreeData} />}
             </div>
             <div className="formWrapper tfWrapper" style={{ padding: '10px' }}>
               <StyledHtmlTable>
