@@ -31,14 +31,14 @@ class DeptModal extends Component {
   handleDeptAdd = () => {
     if (this.validationCheck()) {
       const { id, formData, getCallDataHandler } = this.props;
-      const hst_cmpny_cd = (formData && formData.deptModal_cmpny) || '';
-      const dept_cd = (formData && formData.selectedDept.dept_cd) || '';
+      const HST_CMPNY_CD = (formData && formData.deptModal_cmpny) || '';
+      const DEPT_CD = (formData && formData.selectedDept.DEPT_CD) || '';
 
       const apiAry = [
         {
           key: 'deptCnt',
           type: 'GET',
-          url: `/api/eshs/v1/common/eshsHstCmpnyDeptOverLap?HST_CMPNY_CD=${hst_cmpny_cd}&&DEPT_CD=${dept_cd}`,
+          url: `/api/eshs/v1/common/eshsHstCmpnyDeptOverLap?HST_CMPNY_CD=${HST_CMPNY_CD}&&DEPT_CD=${DEPT_CD}`,
         },
       ];
 
@@ -48,8 +48,8 @@ class DeptModal extends Component {
 
   handleDeptOverLab = () => {
     const { id, submitHandlerBySaga, formData, changeFormData, result } = this.props;
-    const hst_cmpny_cd = (formData && formData.deptModal_cmpny) || '';
-    const submitData = { ...(formData && formData.selectedDept), hst_cmpny_cd };
+    const HST_CMPNY_CD = (formData && formData.deptModal_cmpny) || '';
+    const submitData = { ...(formData && formData.selectedDept), HST_CMPNY_CD };
 
     const is_ok = (result && result.deptCnt && result.deptCnt.deptCnt) || 0;
     if (!is_ok) {
@@ -72,13 +72,13 @@ class DeptModal extends Component {
 
   handleDeptDelete = () => {
     const { id, formData, getCallDataHandler } = this.props;
-    const hst_cmpny_cd = (formData && formData.deptModal_cmpny) || '';
-    const dept_cd = (formData && formData.selectedDept.dept_cd) || '';
+    const HST_CMPNY_CD = (formData && formData.deptModal_cmpny) || '';
+    const DEPT_CD = (formData && formData.selectedDept.DEPT_CD) || '';
     const apiAry = [
       {
         key: 'isDeleted',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsHstCmpnyDeptDelete?HST_CMPNY_CD=${hst_cmpny_cd}&&DEPT_CD=${dept_cd}`,
+        url: `/api/eshs/v1/common/eshsHstCmpnyDeptDelete?HST_CMPNY_CD=${HST_CMPNY_CD}&&DEPT_CD=${DEPT_CD}`,
       },
     ];
 
@@ -89,8 +89,6 @@ class DeptModal extends Component {
     const { id, submitHandlerBySaga, formData, changeFormData, result } = this.props;
     const submitData = (formData && formData.selectedDept) || {};
     const is_deleted = result && result.isDeleted && result.isDeleted.isDeleted;
-    console.debug('222222', is_deleted);
-    console.debug('222222', result);
     if (!is_deleted) {
       submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsHstCmpnyDeptDelete', submitData, this.handleDeptReload);
       changeFormData(id, 'selectedDept', {});
@@ -149,10 +147,10 @@ class DeptModal extends Component {
     let is_ok = true;
     const { formData } = this.props;
     const deptInfo = (formData && formData.selectedDept) || {};
-    if (!deptInfo.dept_cd) {
+    if (!deptInfo.DEPT_CD) {
       message.warning('부서코드를 입력하세요');
       is_ok = false;
-    } else if (!deptInfo.dept_nm) {
+    } else if (!deptInfo.DEPT_CD) {
       message.warning('부서명을 입력하세요');
       is_ok = false;
     }
@@ -167,7 +165,7 @@ class DeptModal extends Component {
   render() {
     const { result, formData } = this.props;
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
-    const dfValue = cmpnyList.length ? cmpnyList[0].hst_cmpny_cd : ' ';
+    const dfValue = cmpnyList.length ? cmpnyList[0].HST_CMPNY_CD : ' ';
     const selectedDept = (formData && formData.selectedDept) || {};
     return (
       <DeptModalStyled>
@@ -175,7 +173,7 @@ class DeptModal extends Component {
           <div>
             <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
               {cmpnyList.map(c => (
-                <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
+                <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
                   {c.hst_cmpny_nm}
                 </Option>
               ))}
@@ -197,10 +195,14 @@ class DeptModal extends Component {
                 </tr>
                 <tr>
                   <td>
-                    <Input name="dept_cd" value={selectedDept.dept_cd} onChange={this.handleInputChange} placeholder="부서코드"></Input>
+                    <Input name="DEPT_CD" value={selectedDept.DEPT_CD} onChange={this.handleInputChange} placeholder="부서코드"></Input>
                   </td>
                   <td>
-                    <Input name="dept_nm" value={selectedDept.dept_nm} onChange={this.handleInputChange} placeholder="부서명"></Input>
+                    <Input name="DEPT_NM" value={selectedDept.DEPT_NM} onChange={this.handleInputChange} placeholder="부서명"></Input>
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={2}>
                     <Button onClick={this.handleDeptAdd}>추가</Button>
                     &nbsp; &nbsp;
                     <Button onClick={this.handleDeptUpdate}>저장</Button>
@@ -211,9 +213,9 @@ class DeptModal extends Component {
               </thead>
               <tbody>
                 {this.state.searchDept.map(d => (
-                  <tr key={d.dept_cd} onClick={() => this.onRowClick(d)} className="cell">
-                    <td>{d.dept_cd}</td>
-                    <td>{d.dept_nm}</td>
+                  <tr key={d.DEPT_CD} onClick={() => this.onRowClick(d)} className="cell">
+                    <td>{d.DEPT_CD}</td>
+                    <td>{d.DEPT_NM}</td>
                   </tr>
                 ))}
               </tbody>
