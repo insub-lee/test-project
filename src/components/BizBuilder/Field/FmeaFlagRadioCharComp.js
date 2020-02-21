@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import RadioCharComp from './RadioCharComp';
+import RadioComp from './RadioComp';
 
 class FmeaFlagRadioCharComp extends Component {
   componentDidMount() {
@@ -8,7 +8,7 @@ class FmeaFlagRadioCharComp extends Component {
   }
 
   render() {
-    return <RadioCharComp {...this.props}></RadioCharComp>;
+    return <RadioComp visible {...this.props}></RadioComp>;
   }
 }
 

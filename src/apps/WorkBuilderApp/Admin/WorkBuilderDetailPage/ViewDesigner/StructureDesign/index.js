@@ -271,7 +271,14 @@ const StructureDesign = ({
           width="100%"
         />
       </Drawer>
-      <Modal destroyOnClose footer={null} visible={isShowCompConfigModal} bodyStyle={{ padding: '1px' }} onCancel={() => setCompConfigModal(false, '', {})}>
+      <Modal
+        centered
+        destroyOnClose
+        footer={null}
+        visible={isShowCompConfigModal}
+        bodyStyle={{ padding: '1px' }}
+        onCancel={() => setCompConfigModal(false, '', {})}
+      >
         <CompModal
           configType={compConfigType}
           configProps={compConfigProps}
