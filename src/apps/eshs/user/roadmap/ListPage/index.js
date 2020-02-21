@@ -33,18 +33,34 @@ class ListPage extends Component {
       modalVisible: false,
       selectedTaskSeq: 0,
       viewType: '',
-      currentYear: 0,
+      currentYear: Moment().format('YYYY'),
       currentMonth: 0,
       selectedCategory: '387',
       categoryLength: 0,
+      initList: [],
     };
+  }
+
+  componentDidMount() {
+    const handleAppInit = async () => {
+      const result = await request({
+        method: 'GET',
+        url: '/api/eshs/v1/common/selectinputroadmap',
+      });
+      return result.response;
+    };
+    handleAppInit().then(res => this.setState({ initList: res.roadmap }));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { selectedCategory } = prevState;
     const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
     if (prevState.categoryLength !== filterdList.length) {
-      return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
+      return {
+        categoryLength: filterdList.length,
+        currentYear: Moment(filterdList[0].CHK_DATE).format('YYYY'),
+        currentMonth: Moment(filterdList[0].CHK_DATE).format('MM'),
+      };
     }
     return null;
   }
@@ -132,8 +148,10 @@ class ListPage extends Component {
     this.setState({
       selectedCategory: e,
       categoryLength: listData.filter(item => item.CATEGORY === e).length,
-      currentYear: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_YEAR : '2020',
-      currentMonth: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_MONTH : '0',
+      currentYear: listData.filter(item => item.CATEGORY === e).length
+        ? Moment(listData.filter(item => item.CATEGORY === e)[0].CHK_DATE).format('YYYY')
+        : '2020',
+      currentMonth: listData.filter(item => item.CATEGORY === e).length ? Moment(listData.filter(item => item.CATEGORY === e)[0].CHK_DATE).format('MM') : '0',
     });
   };
 
@@ -159,12 +177,13 @@ class ListPage extends Component {
         title: '항목',
         dataIndex: 'CATEGORY',
         key: 'CATEGORY',
+        width: '150px',
         render: (key, record, index) => (
           <SelectReadComp colData={record.CATEGORY} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
         ),
       },
-      { title: '연도', dataIndex: 'CHK_YEAR', key: 'CHK_YEAR' },
-      { title: '월', dataIndex: 'CHK_MONTH', key: 'CHK_MONTH' },
+      { title: '연도', key: 'CHK_DATE', width: '100px', render: (key, record, index) => <div>{Moment(record.CHK_DATE).format('YYYY')}</div> },
+      { title: '월', key: 'CHK_MONTH', width: '60px', render: (key, record, index) => <div>{Moment(record.CHK_DATE).format('M')}</div> },
       {
         title: '지역',
         children: [
@@ -183,6 +202,7 @@ class ListPage extends Component {
       {
         title: '입력여부',
         key: 'RNUM',
+        width: '180px',
         render: (key, record, index) =>
           record.IS_CONFIRMED === 'N' ? (
             <div>
@@ -197,7 +217,7 @@ class ListPage extends Component {
             <div>입력완료</div>
           ),
       },
-      { title: '작성자', dataIndex: 'REG_USER_NAME', key: 'REG_USER_NAME' },
+      { title: '작성자', dataIndex: 'REG_USER_NAME', key: 'REG_USER_NAME', width: '80px' },
     ];
 
     const { modalVisible, selectedTaskSeq, viewType, categoryLength } = this.state;
@@ -240,6 +260,7 @@ class ListPage extends Component {
   };
 
   render = () => {
+    console.debug('@@@@@INITLIST@@@@@', this.state.initList);
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};

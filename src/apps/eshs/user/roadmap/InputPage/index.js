@@ -34,12 +34,16 @@ class InputPage extends Component {
     }
     changeFormData(id, 'CATEGORY', category);
     if (parseInt(month, 10) >= 12) {
-      changeFormData(id, 'CHK_YEAR', parseInt(year, 10) + 1);
-      changeFormData(id, 'CHK_MONTH', 1);
+      changeFormData(id, 'CHK_DATE', `${parseInt(year, 10) + 1}/01`);
+      // changeFormData(id, 'CHK_YEAR', `${parseInt(year, 10) + 1}/1`);
+      // changeFormData(id, 'CHK_MONTH', 1);
     } else {
-      changeFormData(id, 'CHK_YEAR', year);
-      changeFormData(id, 'CHK_MONTH', parseInt(month, 10) + 1);
+      changeFormData(id, 'CHK_DATE', `${year}/${parseInt(month, 10) + 1}`);
+      // changeFormData(id, 'CHK_YEAR', year);
+      // changeFormData(id, 'CHK_MONTH', parseInt(month, 10) + 1);
     }
+
+    console.debug(this.props.formData);
   }
 
   saveTask = (id, reloadId) => {
@@ -61,6 +65,17 @@ class InputPage extends Component {
     }
   };
 
+  handleOnSaveTask = () => {
+    const { sagaKey: id, changeFormData, saveTask } = this.props;
+    changeFormData(id, 'VALUE', '');
+    changeFormData(id, 'STIE', 'C1');
+    saveTask(id, id);
+    changeFormData(id, 'TASK_SEQ', -1);
+    changeFormData(id, 'SITE', 'H3');
+    changeFormData(id, 'VALUE', '');
+    this.saveTask(id, id);
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -74,8 +89,8 @@ class InputPage extends Component {
       workInfo,
       CustomWorkProcess,
     } = this.props;
+    console.debug(this.props.year, this.props.month);
     // Work Process 사용여부
-    console.debug('@@@@INPUTPAGE', this.props.formData);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -103,7 +118,6 @@ class InputPage extends Component {
               ) : (
                 <WorkProcess id={id} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
               ))}
-            {/* <LabelComp visible NAME_KOR={this.props.year} CONFIG={{ property: { className: 'roadMap' } }}></LabelComp> */}
 
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
