@@ -2,7 +2,9 @@
 /* eslint-disable no-unused-expressions */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Modal } from 'antd';
+import { Table, Icon, Modal, Input, Button } from 'antd';
+import Highlighter from 'react-highlight-words';
+
 import FroalaEditorView from 'components/FormStuff/RichTextEditor/FroalaEditorView';
 import Edit from '../Edit';
 import StyledButton from '../Styled/StyledButton';
@@ -20,14 +22,14 @@ class List extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, sagaKey: id, apiArys } = this.props;
-    getCallDataHanlder(id, apiArys);
+    const { getCallDataHandler, sagaKey: id, apiArys } = this.props;
+    getCallDataHandler(id, apiArys);
   }
 
   onSaveComplete = () => {
-    const { getCallDataHanlder, sagaKey: id, apiArys, removeStorageReduxState } = this.props;
+    const { getCallDataHandler, sagaKey: id, apiArys, removeStorageReduxState } = this.props;
     console.debug(this.props);
-    getCallDataHanlder(id, apiArys);
+    getCallDataHandler(id, apiArys);
     this.setState({
       actionType: 'I',
       editVisible: false,
@@ -38,9 +40,9 @@ class List extends Component {
 
   onCompSave = () => {
     console.debug('onCompSave!!!!', this.props);
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const apiUrl = '/api/builder/v1/work/ComponentPool';
-    submitHadnlerBySaga(id, 'POST', apiUrl, formData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', apiUrl, formData, this.onSaveComplete);
   };
 
   onViewSearch = record => {
@@ -57,9 +59,73 @@ class List extends Component {
 
   onModifySave = () => {
     console.debug('onCompSave!!!!', this.props);
-    const { sagaKey: id, submitHadnlerBySaga, formData } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, formData } = this.props;
     const apiUrl = '/api/builder/v1/work/ComponentPool';
-    submitHadnlerBySaga(id, 'PUT', apiUrl, formData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'PUT', apiUrl, formData, this.onSaveComplete);
+  };
+
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({ searchText: '' });
   };
 
   render() {
@@ -71,12 +137,14 @@ class List extends Component {
         dataIndex: 'COMPDIV',
         key: 'COMPDIV',
         width: '10%',
+        ...this.getColumnSearchProps('COMPDIV'),
       },
       {
         title: '컴포넌트 명',
         dataIndex: 'COMP_NAME',
         key: 'COMP_NAME',
         width: '10%',
+        ...this.getColumnSearchProps('COMP_NAME'),
       },
       {
         title: '컬럼TAG',
@@ -187,12 +255,12 @@ class List extends Component {
 }
 
 List.propTypes = {
-  getCallDataHanlder: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
   sagaKey: PropTypes.string,
   apiArys: PropTypes.array,
   result: PropTypes.object,
   setFormData: PropTypes.func,
-  submitHadnlerBySaga: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
   formData: PropTypes.object,
 };
 
@@ -206,7 +274,7 @@ List.defaultProps = {
       params: {},
     },
   ],
-  getCallDataHanlder: () => false,
+  getCallDataHandler: () => false,
   result: {},
 };
 

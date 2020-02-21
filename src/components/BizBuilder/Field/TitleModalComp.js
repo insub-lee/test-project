@@ -6,9 +6,9 @@ const TitleModalComp = ({ colData, sagaKey: id, rowData, isOpenModalChange, visi
     <span
       role="button"
       onKeyPress={() => false}
-      onClick={() => isOpenModalChange(rowData.TASK_SEQ)}
+      onClick={() => isOpenModalChange(rowData)}
       style={{ cursor: 'pointer' }}
-      className={CONFIG.property.className || ''}
+      className={(CONFIG && CONFIG.property.className) || ''}
     >
       {colData}
     </span>

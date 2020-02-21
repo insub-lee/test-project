@@ -46,9 +46,9 @@ class NodeList extends Component {
       title: '편집',
       dataIndex: 'edit',
       render: (text, record) => (
-        <React.Fragment>
+        <>
           <Button onClick={() => this.onUpdate(record)}>수정</Button>
-        </React.Fragment>
+        </>
       ),
     },
   ];
@@ -60,8 +60,8 @@ class NodeList extends Component {
   };
 
   componentDidMount() {
-    const { id, getCallDataHanlder, apiArray } = this.props;
-    getCallDataHanlder(id, apiArray, () => {});
+    const { id, getCallDataHandler, apiArray } = this.props;
+    getCallDataHandler(id, apiArray, () => {});
   }
 
   onChangeSearchText = e => {
@@ -80,21 +80,21 @@ class NodeList extends Component {
   };
 
   onSaveDo = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { id, submitHandlerBySaga, formData } = this.props;
     const submitData = { PARAM: { ...formData } };
-    submitHadnlerBySaga(id, 'POST', '/api/workflow/v1/common/node/-1', submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'POST', '/api/workflow/v1/common/node/-1', submitData, this.onSaveComplete);
   };
 
   onUpdateDo = () => {
-    const { id, submitHadnlerBySaga, formData } = this.props;
+    const { id, submitHandlerBySaga, formData } = this.props;
     const submitData = { PARAM: { ...formData } };
     const nodeId = formData.NODE_ID;
-    submitHadnlerBySaga(id, 'PUT', `/api/workflow/v1/common/node/${nodeId}`, submitData, this.onSaveComplete);
+    submitHandlerBySaga(id, 'PUT', `/api/workflow/v1/common/node/${nodeId}`, submitData, this.onSaveComplete);
   };
 
   onSaveComplete = () => {
-    const { id, getCallDataHanlder, apiArray, removeStorageReduxState } = this.props;
-    getCallDataHanlder(id, apiArray, () => {});
+    const { id, getCallDataHandler, apiArray, removeStorageReduxState } = this.props;
+    getCallDataHandler(id, apiArray, () => {});
     this.setState({ isOpen: false });
     removeStorageReduxState(id, 'formData');
   };

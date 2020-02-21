@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import List from '../pages/ListPage';
+import List from '../../pages/ListPage';
 
 class PartnersCommittee extends Component {
   state = {

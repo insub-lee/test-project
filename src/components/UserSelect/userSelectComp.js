@@ -49,7 +49,7 @@ class UserSelectComp extends Component {
   };
 
   onInitUserSelect = () => {
-    const { sagaKey, getCallDataHanlder, initUserList } = this.props;
+    const { sagaKey, getCallDataHandler, initUserList } = this.props;
     if (initUserList && initUserList.length > 0) {
       const param = {
         PARAM: {
@@ -57,15 +57,15 @@ class UserSelectComp extends Component {
         },
       };
       const apiAry = [{ key: 'initUserList', url: '/api/common/v1/account/userInfoByUserIds', type: 'POST', params: param }];
-      getCallDataHanlder(sagaKey, apiAry, this.onInitComplete);
+      getCallDataHandler(sagaKey, apiAry, this.onInitComplete);
     }
   };
 
   onInitTreeData = () => {
-    const { sagaKey, getCallDataHanlder, removeReduxState } = this.props;
+    const { sagaKey, getCallDataHandler, removeReduxState } = this.props;
     removeReduxState(sagaKey);
     const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/getDeptList', type: 'GET', params: {} }];
-    getCallDataHanlder(sagaKey, apiAry);
+    getCallDataHandler(sagaKey, apiAry);
   };
 
   componentDidMount() {
@@ -135,12 +135,12 @@ class UserSelectComp extends Component {
   };
 
   onTreeSelect = selectedKeys => {
-    const { onTreeSelect, sagaKey, getCallDataHanlder } = this.props;
+    const { onTreeSelect, sagaKey, getCallDataHandler } = this.props;
     if (typeof onTreeSelect === 'function') {
       this.props.onTreeSelect(selectedKeys);
     } else if (selectedKeys.length > 0) {
       const apiAry = [{ key: 'userList', url: `/api/common/v1/account/deptUser/${selectedKeys}`, type: 'POST', params: {} }];
-      getCallDataHanlder(sagaKey, apiAry);
+      getCallDataHandler(sagaKey, apiAry);
     }
   };
 

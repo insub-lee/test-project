@@ -1,11 +1,12 @@
 import * as actionTypes from './constants';
 
-export const getBuilderData = (id, workSeq, taskSeq, viewType, changeWorkflowFormData) => ({
+export const getBuilderData = (id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData) => ({
   type: `${actionTypes.GET_BUILDER_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
+  conditional,
   changeWorkflowFormData,
 });
 
@@ -142,12 +143,13 @@ export const modifyTaskBySeq = (id, workSeq, taskSeq, callbackFunc) => ({
   callbackFunc,
 });
 
-export const deleteTask = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
+export const deleteTask = (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) => ({
   type: `${actionTypes.DELETE_TASK}_${id}`,
   id,
   reloadId,
   workSeq,
   taskSeq,
+  changeViewPage,
   callbackFunc,
 });
 
@@ -273,10 +275,11 @@ export const changeSearchDataByReducer = (id, key, val) => ({
   val,
 });
 
-export const getListDataBySaga = (id, workSeq) => ({
+export const getListDataBySaga = (id, workSeq, conditional) => ({
   type: `${actionTypes.GET_LIST_DATA_SAGA}_${id}`,
   id,
   workSeq,
+  conditional,
 });
 
 export const redirectUrl = (id, url) => ({

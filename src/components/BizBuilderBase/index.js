@@ -31,6 +31,7 @@ class BizBuilderBase extends React.Component {
       revisionTask,
       revisionType,
       changeWorkflowFormData,
+      conditional,
     } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     if (viewType) setViewPageData(id, workSeq, taskSeq, retViewType);
@@ -39,7 +40,7 @@ class BizBuilderBase extends React.Component {
     } else if (taskSeq !== -1) {
       getDetailData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -55,6 +56,7 @@ class BizBuilderBase extends React.Component {
       revisionTask,
       revisionType,
       changeWorkflowFormData,
+      conditional,
     } = this.props;
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     if (prevProps.sagaKey !== this.props.sagaKey) {
@@ -64,8 +66,10 @@ class BizBuilderBase extends React.Component {
       } else if (taskSeq !== -1) {
         getDetailData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
       } else if (workSeq !== -1) {
-        getBuilderData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
+        getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '', changeWorkflowFormData);
       }
+    } else if (conditional !== prevProps.conditional && retViewType === 'LIST' && workSeq !== -1) {
+      getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -75,7 +79,7 @@ class BizBuilderBase extends React.Component {
   };
 
   changeViewPage = (id, workSeq, taskSeq, viewType, revisionType) => {
-    const { getBuilderData, getDetailData, setViewPageData, revisionTask } = this.props; // id: widget_id+@
+    const { getBuilderData, getDetailData, setViewPageData, revisionTask, conditional } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
     if (viewType) setViewPageData(id, workSeq, taskSeq, retViewType);
     if (taskSeq !== -1 && viewType === 'REVISION') {
@@ -83,7 +87,7 @@ class BizBuilderBase extends React.Component {
     } else if (taskSeq !== -1) {
       getDetailData(id, workSeq, taskSeq, retViewType);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType);
+      getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '');
     }
   };
 
@@ -247,7 +251,7 @@ BizBuilderBase.defaultProps = {
       params: {},
     },
   ],
-  viewType: 'INPUT', // LIST, VIEW
+  viewType: 'LIST', // LIST, VIEW
   metaList: [],
   responseData: {},
   extraApiData: {},
@@ -284,8 +288,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBuilderData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
-    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
+  getBuilderData: (id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData) =>
+    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData)),
   getExtraApiData: (id, apiArr, callback) => dispatch(actions.getExtraApiData(id, apiArr, callback)),
   submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
     dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc)),
@@ -297,7 +301,8 @@ const mapDispatchToProps = dispatch => ({
   saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
   modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
   modifyTaskBySeq: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc)),
-  deleteTask: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, callbackFunc)),
+  deleteTask: (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) =>
+    dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc)),
   deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
   deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),

@@ -1,209 +1,213 @@
 import React, { Component } from 'react';
-import { Modal, Button } from 'antd';
-import CheckList from 'components/CheckSelectList/selectable';
+import PropTypes from 'prop-types';
+
+import { Modal, Button, Icon } from 'antd';
+import { isJSON } from 'utils/helpers';
+
+import MultiSelector from 'components/MdcsComponents/MultiSelector';
+import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
+import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+
+const AntdModal = StyledModalWrapper(Modal);
+
 let dataSource;
 class CustomCheckListComp extends Component {
   state = {
-    openModal: false,
+    isShowModal: false,
     apiFlag: true,
+    dataSource: [],
   };
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, apiArray, compGroupKeys } = this.props;
-    getExtraApiData(id, apiArray);
-    compGroupKeys.forEach(key => {
-      this.state = { ...this.state, [key]: { name: ' ', value: ' ' } };
-    });
+    const { getExtraApiData, sagaKey: id, apiArys } = this.props;
+    getExtraApiData(id, apiArys, this.initDataBind);
   }
 
-  onOpenHandler = () => {
-    const { formData, extraApiData, compGroupKeys } = this.props;
-    compGroupKeys.forEach(key => {
-      if (formData[key] === ' ' || formData[key] === undefined || formData[key] === '') {
-        this.setState({ [key]: { name: ' ', value: ' ' } });
-      } else {
-        let formDataName = ' ';
-        extraApiData[key].categoryMapList.forEach(category => {
-          const formDataValue = formData[key]
-            .toString()
-            .replace(/, /gi, ',')
-            .split(',');
-          if (formDataValue.indexOf(String(category.NODE_ID)) >= 0) {
-            if (formDataName === ' ') {
-              formDataName = category.NAME_KOR;
-            } else {
-              formDataName += `, ${category.NAME_KOR}`;
-            }
-          }
-        });
-        this.setState({ [key]: { name: formDataName, value: formData[key] } });
-      }
-    });
-    this.setState({ openModal: true });
+  initDataBind = sagaKey => {
+    const {
+      extraApiData: {
+        REGION: { categoryMapList: regionList },
+        FAB: { categoryMapList: fabList },
+        DENSITY: { categoryMapList: densityList },
+        PKG: { categoryMapList: pkgList },
+        MODULE: { categoryMapList: moduleList },
+        PRODUCT: { categoryMapList: prdList },
+        GEN: { categoryMapList: genList },
+        TECH: { categoryMapList: techList },
+        CUSTOMER: { categoryMapList: customList },
+      },
+    } = this.props;
+
+    dataSource = [
+      {
+        groupName: 'Site',
+        groupKey: 'REGION',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: regionList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0).map(item => ({ ...item, checked: true })),
+      },
+      {
+        groupName: 'Line/Site',
+        groupKey: 'FAB',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: fabList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
+      },
+      {
+        groupName: 'Product',
+        groupKey: 'PRODUCT',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: prdList.filter(x => x.USE_YN === 'Y'),
+      },
+      {
+        groupName: 'Tech.',
+        groupKey: 'TECH',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: techList.filter(x => x.USE_YN === 'Y'),
+      },
+      {
+        groupName: 'Generation',
+        groupKey: 'GEN',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: genList.filter(x => x.USE_YN === 'Y'),
+      },
+      {
+        groupName: 'Memory Density',
+        groupKey: 'DENSITY',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: densityList.filter(x => x.USE_YN === 'Y'),
+      },
+      {
+        groupName: 'PKG',
+        groupKey: 'PKG',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: pkgList.filter(x => x.USE_YN === 'Y'),
+      },
+      {
+        groupName: 'Module',
+        groupKey: 'MODULE',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: moduleList.filter(x => x.USE_YN === 'Y'),
+      },
+      {
+        groupName: 'Customer',
+        groupKey: 'CUSTOMER',
+        selectedValue: [],
+        selectedItem: [],
+        dataSet: customList.filter(x => x.USE_YN === 'Y'),
+      },
+    ];
+    this.setState({ dataSource });
   };
 
-  onOkHandler = () => {
-    const { compGroupKeys, changeFormData, sagaKey: id, COMP_FIELD, NAME_KOR, changeValidationData } = this.props;
-    let nameScope = '';
-    if (this.state.FAB.value === ' ') {
-      message.warning(<MessageContent>적용Line/Site는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
-      return;
+  onClickSelectedWin = () => {
+    this.setState({ isShowModal: true });
+  };
+
+  onCancelModal = () => {
+    this.setState({ isShowModal: false });
+  };
+
+  onChangeMultiSelector = (dataList, selectedValue) => {
+    this.setState({ selectedCheckList: dataList });
+  };
+
+  onClickScope = () => {
+    this.setState(
+      prevState => ({
+        dataSource: prevState.selectedCheckList,
+        isShowModal: false,
+      }),
+      () => {
+        const { changeFormData, COMP_FIELD, sagaKey, colData, COMP_TAG, WORK_SEQ } = this.props;
+        const { dataSource } = this.state;
+        const submitData = dataSource
+          .filter(f => f.selectedValue.length > 0)
+          .map(grp => ({
+            groupName: grp.groupName,
+            groupKey: grp.groupKey,
+            selectedValue: grp.selectedValue,
+            selectedItem: grp.selectedItem,
+          }));
+        changeFormData(sagaKey, COMP_FIELD, this.setFormDataValue(submitData, colData, COMP_FIELD, COMP_TAG, WORK_SEQ));
+      },
+    );
+  };
+
+  setFormDataValue = (value, colData, COMP_FIELD, COMP_TAG, WORK_SEQ) => {
+    if (typeof colData === 'object') {
+      colData[0].DETAIL = value;
+      return colData;
     }
-    if (this.state.PRODUCT.value === ' ') {
-      message.warning(<MessageContent>적용Product는 반드시 선택이 되어야 합니다.</MessageContent>, 3);
-      return;
+    if (colData && colData.length > 0 && isJSON(colData)) {
+      JSON.parse(colData)[0].DETAIL = value;
+      return colData;
     }
-
-    compGroupKeys.forEach((key, index) => {
-      changeFormData(id, key, this.state[key].value);
-      if (!index) {
-        nameScope = `${key}:${this.state[key].name} `;
-      } else {
-        nameScope += `| ${key}:${this.state[key].name}`;
-      }
-    });
-    changeFormData(id, COMP_FIELD, nameScope);
-    changeValidationData(id, COMP_FIELD, nameScope !== ' ', `${NAME_KOR}는 필수항목 입니다.`);
-    this.setState({ openModal: false });
-  };
-
-  onChangeHandler = (key, e) => {
-    // Multiple = false일 경우 코드
-    // const { value: selectedValue } = e.target;
-    // const idx = e.nativeEvent.target.selectedIndex;
-    // const { text: selectedText } = e.target[idx];
-    // this.setState({ [key]: { name: selectedText, value: selectedValue } });
-
-    let selectedText = ' ';
-    let selectedValue = ' ';
-    const { selectedOptions } = e.target;
-    Array.from(selectedOptions).forEach((s, index) => {
-      if (index === 0) {
-        selectedText = s.text;
-        selectedValue = s.value;
-      } else {
-        selectedText += `, ${s.text}`;
-        selectedValue += `, ${s.value}`;
-      }
-    });
-    this.setState({ [key]: { name: selectedText, value: selectedValue } });
-  };
-
-  onClearHandler = key => {
-    this.setState({ [key]: { name: ' ', value: ' ' } });
+    return [
+      {
+        WORK_SEQ,
+        TASK_SEQ: -1,
+        CONT_SEQ: -1,
+        FIELD_NM: COMP_FIELD,
+        TYPE: COMP_TAG,
+        DETAIL: value,
+      },
+    ];
   };
 
   render() {
-    const { stateProps } = this.props;
-    const {
-      colData,
-      readOnly,
-      extraApiData: { REGION, FAB, PRODUCT, TECH, GEN, DENSITY, PKG, MODULE, CUSTOMER },
-      visible,
-      CONFIG,
-    } = this.props;
-
-    if (this.state.apiFlag && REGION && FAB && PRODUCT && TECH && GEN && DENSITY && PKG && MODULE && CUSTOMER) {
-      dataSource = [
-        {
-          groupName: 'Site',
-          groupKey: 'REGION',
-          dataSet: REGION.categoryMapList,
-        },
-        {
-          groupName: 'Line/Site',
-          groupKey: 'FAB',
-          dataSet: FAB.categoryMapList,
-        },
-        {
-          groupName: 'Product',
-          groupKey: 'PRODUCT',
-          dataSet: PRODUCT.categoryMapList,
-        },
-        {
-          groupName: 'Tech.',
-          groupKey: 'TECH',
-          dataSet: TECH.categoryMapList,
-        },
-        {
-          groupName: 'Generation',
-          groupKey: 'GEN',
-          dataSet: GEN.categoryMapList,
-        },
-        {
-          groupName: 'Memory Density',
-          groupKey: 'DENSITY',
-          dataSet: DENSITY.categoryMapList,
-        },
-        {
-          groupName: 'PKG',
-          groupKey: 'PKG',
-          dataSet: PKG.categoryMapList,
-        },
-        {
-          groupName: 'Module',
-          groupKey: 'MODULE',
-          dataSet: MODULE.categoryMapList,
-        },
-        {
-          groupName: 'Customer',
-          groupKey: 'CUSTOMER',
-          dataSet: CUSTOMER.categoryMapList,
-        },
-      ];
-      this.setState({ apiFlag: false });
-    }
-    return visible ? (
+    console.debug(this.state);
+    return (
       <>
-        {colData === 'preView' ? (
-          <CheckList isMultiple dataSource={this.props.dataSource} props={this.props.stateProps} className={CONFIG.property.className || ''}></CheckList>
-        ) : (
-          <div className={CONFIG.property.className || ''}>
-            {colData}
-            <Modal
-              className="modalWrapper"
-              width={1280}
-              visible={this.state.openModal}
-              onOk={this.onOkHandler}
-              onCancel={() => this.setState({ openModal: false })}
-              destroyOnClose
-            >
-              <CheckList isMultiple dataSource={dataSource} onClear={this.onClearHandler} onChange={this.onChangeHandler} props={this.state}></CheckList>
-            </Modal>
-            {!readOnly && <Button onClick={() => this.onOpenHandler()}>적용범위 선택</Button>}
+        <StyledMultiSelector>
+          <div className="wrapper">
+            <div className="draftWrapper">
+              {this.state.dataSource.map(grp =>
+                grp.selectedItem.map(item => (
+                  <div className="draftInfoBox">
+                    <Icon type="code" />
+                    <span className="infoTxt">
+                      {grp.groupName}: {item.title}
+                    </span>
+                  </div>
+                )),
+              )}
+            </div>
+            <Button onClick={this.onClickSelectedWin}>
+              <Icon type="select" /> 선택
+            </Button>
           </div>
-        )}
+        </StyledMultiSelector>
+        <AntdModal
+          title="적용범위 및 조회정보 선택"
+          width={1100}
+          visible={this.state.isShowModal}
+          onCancel={this.onCancelModal}
+          destroyOnClose
+          footer={[<Button onClick={this.onClickScope}>선택</Button>]}
+        >
+          <MultiSelector onChange={this.onChangeMultiSelector} dataSource={this.state.dataSource}></MultiSelector>
+        </AntdModal>
       </>
-    ) : (
-      ''
     );
   }
 }
 
+CustomCheckListComp.property = {
+  apiArys: PropTypes.array,
+  extraApiData: PropTypes.object,
+};
+
 CustomCheckListComp.defaultProps = {
-  CONFIG: { property: {} },
-  colData: '',
-  changeFormData: () => false,
-  changeValidationData: () => false,
-  readOnly: false,
-  formData: {},
-  dataSource: [
-    {
-      groupName: 'customList1',
-      groupKey: 'checkList1',
-    },
-    {
-      groupName: 'customList2',
-      groupKey: 'checkList2',
-    },
-  ],
-  stateProps: {
-    checkList1: { value: ' ' },
-    checkList2: { value: ' ' },
-  },
-  apiArray: [
+  apiArys: [
     { key: 'REGION', url: `/api/admin/v1/common/categoryMapList?MAP_ID=10`, type: 'GET' },
     { key: 'FAB', url: `/api/admin/v1/common/categoryMapList?MAP_ID=11`, type: 'GET' },
     { key: 'PRODUCT', url: `/api/admin/v1/common/categoryMapList?MAP_ID=16`, type: 'GET' },
@@ -214,8 +218,17 @@ CustomCheckListComp.defaultProps = {
     { key: 'MODULE', url: `/api/admin/v1/common/categoryMapList?MAP_ID=17`, type: 'GET' },
     { key: 'CUSTOMER', url: `/api/admin/v1/common/categoryMapList?MAP_ID=18`, type: 'GET' },
   ],
-  extraApiData: {},
-  compGroupKeys: ['REGION', 'FAB', 'PRODUCT', 'TECH', 'GEN', 'DENSITY', 'PKG', 'MODULE', 'CUSTOMER'],
+  extraApiData: {
+    FAB: {},
+    DENSITY: {},
+    PKG: {},
+    MODULE: {},
+    PRODUCT: {},
+    GEN: {},
+    REGION: {},
+    TECH: {},
+    CUSTOMER: {},
+  },
 };
 
 export default CustomCheckListComp;

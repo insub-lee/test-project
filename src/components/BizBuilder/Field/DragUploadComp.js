@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Icon, Progress, Upload, Button } from 'antd';
+import { Icon, Progress, Upload, Button, Tooltip } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import StyledDragger from 'components/CommonStyled/StyledDragger';
@@ -360,7 +360,10 @@ class DragUploadComp extends Component {
               fileList.map((file, index) => (
                 <div className="uploadFileRow" style={{ padding: '10px 10px 10px', position: 'relative', height: '25px' }}>
                   <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
-                    <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
+                    <Tooltip placement="topLeft" title={`${file.name}(${this.bytesToSize(file.size)})`} trigger="hover">
+                      <Icon type="paper-clip" />
+                      {file.name} ({this.bytesToSize(file.size)})
+                    </Tooltip>
                   </div>
                   <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
                     <StyledButton

@@ -1,258 +1,212 @@
 import React, { Component } from 'react';
-import { Form, Checkbox, Select } from 'antd';
 import PropTypes from 'prop-types';
 
+import { Checkbox, Select } from 'antd';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
 
-const FormItem = Form.Item;
+import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+
 const { Option } = Select;
 
 class TechStd extends Component {
+  state = {
+    siteList: [],
+  };
+
   componentDidMount() {
-    const { searchParam, setSearchParam } = this.props;
-    const apiArr = [
-      {
-        key: 'region',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=10',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'fab',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=11',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'tech',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=12',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'generation',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=13',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'density',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=14',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'pkg',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=15',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'product',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=16',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'module',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=17',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'customer',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=18',
-        type: 'GET',
-        params: {},
-      },
-    ];
-    this.callApi(apiArr);
-    setSearchParam({
-      ...searchParam,
-      nodeIds: { key: 'TBD.NODE_ID', condition: 'IN', value: [], type: 'INT' },
-      region: { key: 'TBD.REGION', condition: '=', value: 0, type: 'INT' },
-      fab: { key: 'TBD.FAB', condition: '=', value: 0, type: 'INT' },
-      tech: { key: 'TBD.TECH', condition: '=', value: 0, type: 'INT' },
-      generation: { key: 'TBD.GENERATION', condition: '=', value: 0, type: 'INT' },
-      density: { key: 'TBD.DENSITY', condition: '=', value: 0, type: 'INT' },
-      pkg: { key: 'TBD.PKG', condition: '=', value: 0, type: 'INT' },
-      product: { key: 'TBD.PRODUCT', condition: '=', value: 0, type: 'INT' },
-      module: { key: 'TBD.MODULE', condition: '=', value: 0, type: 'INT' },
-      customer: { key: 'TBD.CUSTOMER', condition: '=', value: 0, type: 'INT' },
-      fmea: { key: 'TBD.FMEA', condition: 'IN', value: [], type: 'INT' },
-    });
+    const { sagaKey, getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(sagaKey, apiArys, this.initDataBind);
   }
 
-  callApi = apiArr => {
-    const { sagaKey: id, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiArr);
+  initDataBind = sagaKey => {
+    const {
+      result: {
+        site: { categoryMapList: siteItems },
+        lineSite: { categoryMapList: lineItems },
+        teachList: { categoryMapList: techItems },
+        genList: { categoryMapList: genItems },
+        memoryList: { categoryMapList: memoryItems },
+        pkgList: { categoryMapList: pkgItems },
+        prdList: { categoryMapList: prdItems },
+        moduleList: { categoryMapList: moduleItems },
+        customList: { categoryMapList: customItems },
+        changeList: { categoryMapList: changeItems },
+        fmeaList: { categoryMapList: fmeaItems },
+      },
+    } = this.props;
+
+    this.setState({
+      siteItems: siteItems.filter(x => x.LVL !== 0),
+      lineItems: lineItems.filter(x => x.LVL !== 0),
+      techItems: techItems.filter(x => x.LVL !== 0),
+      genItems: genItems.filter(x => x.LVL !== 0),
+      memoryItems: memoryItems.filter(x => x.LVL !== 0),
+      pkgItems: pkgItems.filter(x => x.LVL !== 0),
+      prdItems: prdItems.filter(x => x.LVL !== 0),
+      moduleItems: moduleItems.filter(x => x.LVL !== 0),
+      customItems: customItems.filter(x => x.LVL !== 0),
+      changeItems: changeItems.filter(x => x.LVL !== 0),
+      fmeaItems: fmeaItems.filter(x => x.LVL !== 0),
+    });
   };
 
   render() {
-    const { result, searchParam, onChangeCheckBox, onChangeValue } = this.props;
-    const { nodeIds, region, fab, tech, generation, density, pkg, product, module, customer, fmea } = searchParam;
-    let regionData = [];
-    let fabData = [];
-    let techData = [];
-    let generationData = [];
-    let densityData = [];
-    let pkgData = [];
-    let productData = [];
-    let moduleData = [];
-    let customerData = [];
-    let checkboxOptData = [];
-    if (result && result.categoryInfo && result.categoryInfo.categoryMapList && result.categoryInfo.categoryMapList.length > 0) {
-      checkboxOptData = result.categoryInfo.categoryMapList.filter(
-        fNode => fNode.PARENT_NODE_ID === 6 && fNode.USE_YN === 'Y' && fNode.NODE_ID !== 16 && fNode.NODE_ID !== 18,
-      );
-    }
-    if (result && result.region && result.region.categoryMapList && result.region.categoryMapList.length > 0) {
-      regionData = result.region.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.fab && result.fab.categoryMapList && result.fab.categoryMapList.length > 0) {
-      fabData = result.fab.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.tech && result.tech.categoryMapList && result.tech.categoryMapList.length > 0) {
-      techData = result.tech.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.generation && result.generation.categoryMapList && result.generation.categoryMapList.length > 0) {
-      generationData = result.generation.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.density && result.density.categoryMapList && result.density.categoryMapList.length > 0) {
-      densityData = result.density.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.pkg && result.pkg.categoryMapList && result.pkg.categoryMapList.length > 0) {
-      pkgData = result.pkg.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.product && result.product.categoryMapList && result.product.categoryMapList.length > 0) {
-      productData = result.product.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.module && result.module.categoryMapList && result.module.categoryMapList.length > 0) {
-      moduleData = result.module.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.customer && result.customer.categoryMapList && result.customer.categoryMapList.length > 0) {
-      customerData = result.customer.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
+    const { siteItems, lineItems, techItems, genItems, memoryItems, pkgItems, prdItems, moduleItems, customItems, changeItems, fmeaItems } = this.state;
     return (
-      <>
-        <FormItem label="문서종류">
-          {checkboxOptData && checkboxOptData.length > 0 && (
-            <Checkbox.Group onChange={value => onChangeCheckBox('nodeIds', value)} value={(nodeIds && nodeIds.value) || undefined}>
-              {checkboxOptData.map(node => (
-                <StyledCheckbox value={node.NODE_ID}>{node.NAME_KOR}</StyledCheckbox>
-              ))}
-            </Checkbox.Group>
-          )}
-        </FormItem>
-        <FormItem label="지역">
-          {regionData && regionData.length > 0 && (
-            <Select value={(region && region.value) || 0} onSelect={value => onChangeValue('region', value)}>
-              <Option value={0}>--------</Option>
-              {regionData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_ENG}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="적용Line/Site">
-          {fabData && fabData.length > 0 && (
-            <Select value={(fab && fab.value) || 0} onSelect={value => onChangeValue('fab', value)}>
-              <Option value={0}>--------</Option>
-              {fabData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Tech">
-          {techData && techData.length > 0 && (
-            <Select value={(tech && tech.value) || 0} onSelect={value => onChangeValue('tech', value)}>
-              <Option value={0}>--------</Option>
-              {techData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Gen">
-          {generationData && generationData.length > 0 && (
-            <Select value={(generation && generation.value) || 0} onSelect={value => onChangeValue('generation', value)}>
-              <Option value={0}>--------</Option>
-              {generationData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Memory Density">
-          {densityData && densityData.length > 0 && (
-            <Select value={(density && density.value) || 0} onSelect={value => onChangeValue('density', value)}>
-              <Option value={0}>--------</Option>
-              {densityData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Pkg">
-          {pkgData && pkgData.length > 0 && (
-            <Select value={(pkg && pkg.value) || 0} onSelect={value => onChangeValue('pkg', value)}>
-              <Option value={0}>--------</Option>
-              {pkgData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Product">
-          {productData && productData.length > 0 && (
-            <Select value={(product && product.value) || 0} onSelect={value => onChangeValue('product', value)}>
-              <Option value={0}>--------</Option>
-              {productData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Module">
-          {moduleData && moduleData.length > 0 && (
-            <Select value={(module && module.value) || 0} onSelect={value => onChangeValue('module', value)}>
-              <Option value={0}>--------</Option>
-              {moduleData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="Customer">
-          {customerData && customerData.length > 0 && (
-            <Select value={(customer && customer.value) || 0} onSelect={value => onChangeValue('customer', value)}>
-              <Option value={0}>--------</Option>
-              {customerData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-        <FormItem label="FMEA 대상">
-          {fmea && (
-            <Checkbox.Group onChange={value => onChangeCheckBox('fmea', value)} value={fmea.value || ''}>
-              (<StyledCheckbox value="A">실시</StyledCheckbox>
-              <StyledCheckbox value="D">미실시</StyledCheckbox>)<StyledCheckbox value="N">비대상</StyledCheckbox>
-            </Checkbox.Group>
-          )}
-        </FormItem>
-      </>
+      <StyledHtmlTable>
+        <table>
+          <thead>
+            <tr>
+              <th colSpan="4">기술표준 정보선택</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>중분류</th>
+              <td>
+                <Checkbox.Group>{}</Checkbox.Group>
+              </td>
+            </tr>
+            <tr>
+              <th>SCOPE</th>
+              <td>
+                <StyledHtmlTable>
+                  <table>
+                    <tr>
+                      <th>지역</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{siteItems && siteItems.map(site => <Option key={site.NODE_ID}>{site.NAME_KOR}</Option>)}</Select>
+                      </td>
+                      <th>적용 Line/Site</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{lineItems && lineItems.map(line => <Option key={line.NODE_ID}>{line.NAME_KOR}</Option>)}</Select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Tech</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{techItems && techItems.map(tech => <Option key={tech.NODE_ID}>{tech.NAME_KOR}</Option>)}</Select>
+                      </td>
+                      <th>Gen</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{genItems && genItems.map(gen => <Option key={gen.NODE_ID}>{gen.NAME_KOR}</Option>)}</Select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Memory Density</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>
+                          {memoryItems && memoryItems.map(memory => <Option key={memory.NODE_ID}>{memory.NAME_KOR}</Option>)}
+                        </Select>
+                      </td>
+                      <th>Pkg</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{pkgItems && pkgItems.map(pkg => <Option key={pkg.NODE_ID}>{pkg.NAME_KOR}</Option>)}</Select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Product</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{prdItems && prdItems.map(prd => <Option key={prd.NODE_ID}>{prd.NAME_KOR}</Option>)}</Select>
+                      </td>
+                      <th>Module</th>
+                      <td>
+                        <Select style={{ width: '150px' }}>{moduleItems && moduleItems.map(mod => <Option key={mod.NODE_ID}>{mod.NAME_KOR}</Option>)}</Select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>Customer</th>
+                      <td colSpan={3}>
+                        <Select style={{ width: '150px' }}>
+                          {customItems && customItems.map(custom => <Option key={custom.NODE_ID}>{custom.NAME_KOR}</Option>)}
+                        </Select>
+                      </td>
+                    </tr>
+                  </table>
+                </StyledHtmlTable>
+              </td>
+            </tr>
+            <tr>
+              <th>Change</th>
+              <td>
+                <Checkbox.Group>{changeItems && changeItems.map(change => <Checkbox value={change.NODE_ID}>{change.NAME_KOR}</Checkbox>)}</Checkbox.Group>
+              </td>
+            </tr>
+            <tr>
+              <th>FMEA 대상</th>
+              <td>
+                <Checkbox.Group>{fmeaItems && fmeaItems.map(fmea => <Checkbox value={fmea.NODE_ID}>{fmea.NAME_KOR}</Checkbox>)}</Checkbox.Group>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </StyledHtmlTable>
     );
   }
 }
 
 TechStd.propTypes = {
-  searchParam: PropTypes.objectOf(PropTypes.object, PropTypes.object),
+  apiArys: PropTypes.array,
 };
 
 TechStd.defaultProps = {
-  searchParam: { nodeIds: { value: [] }, scope: { value: 0 } },
+  apiArys: [
+    {
+      key: 'changeList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=19',
+      type: 'GET',
+    },
+    {
+      key: 'fmeaList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=23',
+      type: 'GET',
+    },
+    {
+      key: 'site',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=10',
+      type: 'GET',
+    },
+    {
+      key: 'lineSite',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=11',
+      type: 'GET',
+    },
+    {
+      key: 'teachList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=12',
+      type: 'GET',
+    },
+    {
+      key: 'genList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=13',
+      type: 'GET',
+    },
+    {
+      key: 'memoryList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=14',
+      type: 'GET',
+    },
+    {
+      key: 'pkgList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=15',
+      type: 'GET',
+    },
+    {
+      key: 'prdList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=16',
+      type: 'GET',
+    },
+    {
+      key: 'moduleList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=17',
+      type: 'GET',
+    },
+    {
+      key: 'customList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=18',
+      type: 'GET',
+    },
+  ],
 };
 
 export default TechStd;

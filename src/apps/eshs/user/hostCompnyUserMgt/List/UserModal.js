@@ -16,7 +16,7 @@ class UserModal extends Component {
   }
 
   componentDidMount = () => {
-    const { id, changeFormData, formData, getCallDataHanlder } = this.props;
+    const { id, changeFormData, formData, getCallDataHandler } = this.props;
     changeFormData(id, 'userData', { SITE: '청주' });
     const type = (formData && formData.userModalType) || '';
     if (type === 'UPDATE') {
@@ -28,7 +28,7 @@ class UserModal extends Component {
         },
       ];
 
-      getCallDataHanlder(id, apiAry, this.setDept);
+      getCallDataHandler(id, apiAry, this.setDept);
     } else if (type === 'INSERT') {
       const apiAry = [
         {
@@ -38,14 +38,14 @@ class UserModal extends Component {
         },
       ];
 
-      getCallDataHanlder(id, apiAry, this.setDept);
+      getCallDataHandler(id, apiAry, this.setDept);
     }
   };
 
   handleSearchDept = e => {
     const {
       id,
-      getCallDataHanlder,
+      getCallDataHandler,
       changeFormData,
       formData: { userData },
     } = this.props;
@@ -57,7 +57,7 @@ class UserModal extends Component {
         url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${e}`,
       },
     ];
-    getCallDataHanlder(id, apiAry, this.setDept);
+    getCallDataHandler(id, apiAry, this.setDept);
     this.setState({
       hst_cmpny_cd: e,
     });

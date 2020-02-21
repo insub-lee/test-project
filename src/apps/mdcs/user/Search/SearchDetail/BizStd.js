@@ -1,80 +1,107 @@
 import React, { Component } from 'react';
-import { Form, Checkbox, Select } from 'antd';
+import { Form, Checkbox, TreeSelect } from 'antd';
 import PropTypes from 'prop-types';
 
+import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
 
 const FormItem = Form.Item;
-const { Option } = Select;
 
 class BizStd extends Component {
+  state = {
+    scopeTree: [],
+  };
+
   componentDidMount() {
-    const { searchParam, setSearchParam } = this.props;
-    const apiArr = [
-      {
-        key: 'bizStdScope',
-        url: '/api/admin/v1/common/categoryMapList?MAP_ID=7',
-        type: 'GET',
-        params: {},
-      },
-    ];
-    this.callApi(apiArr);
-    setSearchParam({
-      ...searchParam,
-      scope: { key: 'TBD.SCOPE', condition: '=', value: 0, type: 'INT' },
-      nodeIds: { key: 'TBD.NODE_ID', condition: 'IN', value: [], type: 'INT' },
-    });
+    const { sagaKey, getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(sagaKey, apiArys, this.initDataBind);
+    console.debug(this.props);
   }
 
-  callApi = apiArr => {
-    const { sagaKey: id, getCallDataHanlder } = this.props;
-    getCallDataHanlder(id, apiArr);
+  initDataBind = sagaKey => {
+    const {
+      result: {
+        list: { categoryMapList },
+      },
+      getTreeData,
+      treeData,
+      workSeq,
+    } = this.props;
+
+    const docTree = getTreeData(treeData, 2);
+    const docTypelist = docTree.map(doc => <Checkbox value={doc.value}>{doc.title}</Checkbox>);
+    const scopeTree = getTreeData(categoryMapList);
+    this.setState({ scopeTree: scopeTree[0] && scopeTree[0].children, docTypelist, workSeq });
+  };
+
+  onChangeDocType = checkedValues => {
+    console.debug('onchageDocType', checkedValues, this.props);
+    const { onChangeSearchValue } = this.props;
+    let strSql = 'select node_id from fr_category_map where ';
+    let cnt = 1;
+    checkedValues.map(value => {
+      if (cnt !== 1) {
+        strSql += ' OR ';
+      }
+      cnt += 1;
+      strSql += `fullpath like (select fullpath || '%' from fr_category_map where node_id=${value})`;
+    });
+
+    onChangeSearchValue('w.node_id', ` and w.node_id in (${strSql})`, checkedValues.join());
+  };
+
+  onChangeTree = value => {
+    const { onChangeSearchValue } = this.props;
+    const strSql = `and w.task_seq in (select task_seq from mg_commoncode where node_id in (select node_id from fr_category_map where fullpath like (select fullpath || '%' from fr_category_map where node_id=${value}))) `;
+    console.debug(strSql);
+    onChangeSearchValue('w.scope', strSql, value);
   };
 
   render() {
-    const { result, searchParam, onChangeCheckBox, onChangeValue } = this.props;
-    const { nodeIds, scope } = searchParam;
-    let scopeData = [];
-    let checkboxOptData = [];
-    if (result && result.categoryInfo && result.categoryInfo.categoryMapList && result.categoryInfo.categoryMapList.length > 0) {
-      checkboxOptData = result.categoryInfo.categoryMapList.filter(fNode => fNode.PARENT_NODE_ID === 2 && fNode.USE_YN === 'Y');
-    }
-    if (result && result.bizStdScope && result.bizStdScope.categoryMapList && result.bizStdScope.categoryMapList.length > 0) {
-      scopeData = result.bizStdScope.categoryMapList.filter(fNode => fNode.LVL > 0 && fNode.USE_YN === 'Y');
-    }
-
+    const { scopeTree, docTypelist } = this.state;
     return (
-      <>
-        <FormItem label="문서종류">
-          {checkboxOptData && checkboxOptData.length > 0 && (
-            <Checkbox.Group onChange={value => onChangeCheckBox('nodeIds', value)} value={(nodeIds && nodeIds.value) || undefined}>
-              {checkboxOptData.map(node => (
-                <StyledCheckbox value={node.NODE_ID}>{node.NAME_KOR}</StyledCheckbox>
-              ))}
-            </Checkbox.Group>
-          )}
-        </FormItem>
-        <FormItem label="SCOPE">
-          {scopeData && scopeData.length > 0 && (
-            <Select value={(scope && scope.value) || 0} onSelect={value => onChangeValue('scope', value)}>
-              <Option value={0}>--------</Option>
-              {scopeData.map(node => (
-                <Option value={node.NODE_ID}>{node.NAME_KOR}</Option>
-              ))}
-            </Select>
-          )}
-        </FormItem>
-      </>
+      <StyledHtmlTable>
+        <table>
+          <thead>
+            <tr>
+              <th colSpan="4">업무표준 정보 선택</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>문서종류</th>
+              <td>
+                <Checkbox.Group onChange={this.onChangeDocType}>{docTypelist}</Checkbox.Group>
+              </td>
+            </tr>
+            <tr>
+              <th>SCOPE</th>
+              <td>
+                {scopeTree && scopeTree.length > 0 && (
+                  <TreeSelect onChange={this.onChangeTree} placeholder="Scope를 선택해주세요" style={{ width: '300px' }} treeData={scopeTree}></TreeSelect>
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </StyledHtmlTable>
     );
   }
 }
 
 BizStd.propTypes = {
-  searchParam: PropTypes.objectOf(PropTypes.object, PropTypes.object),
+  apiArys: PropTypes.array,
 };
 
 BizStd.defaultProps = {
-  searchParam: { nodeIds: { value: [] }, scope: { value: 0 } },
+  apiArys: [
+    {
+      key: 'list',
+      url: `/api/admin/v1/common/categoryMapList`,
+      type: 'POST',
+      params: { PARAM: { NODE_ID: 94 } },
+    },
+  ],
 };
 
 export default BizStd;

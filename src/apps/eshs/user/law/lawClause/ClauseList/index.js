@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Input, Select } from 'antd';
+import { Table, message } from 'antd';
 
-import request from 'utils/request';
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
@@ -13,10 +12,9 @@ import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import Contents from 'components/BizBuilder/Common/Contents';
-import LawModal from '../../lawModal';
+import { debounce } from 'lodash';
 
 const AntdTable = StyledAntdTable(Table);
-const Option = Select;
 
 class ClauseListPage extends Component {
   constructor(props) {
@@ -29,10 +27,26 @@ class ClauseListPage extends Component {
       selectedLawName: '',
       selectedRegUserName: '',
       selectedTaskSeq: '',
+      isOpenModal: false,
     };
+    this.debounceList = debounce(this.debounceList, 300);
   }
 
   componentDidMount() {}
+
+  listVeiwBool = (id, workSeq) => {
+    const { getListData, formData } = this.props;
+    if (formData && formData.MASTER_SEQ) {
+      getListData(id, workSeq);
+      this.debounceList();
+    } else {
+      message.warning('법규를 선택해주세요.');
+    }
+  };
+
+  debounceList() {
+    this.setState({ listVeiwBool: true });
+  }
 
   isOpenLawModal = () => {
     this.setState({ isOpenModal: true });
@@ -55,10 +69,6 @@ class ClauseListPage extends Component {
     });
     this.onCancel();
   };
-
-  searchData() {
-    console.log('searchData 개발 중');
-  }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -105,21 +115,39 @@ class ClauseListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData } = this.props;
+    const { listData, formData } = this.props;
+    const filterList = listData.filter(f => f.ISLAST_VER === 'Y');
     const columns = this.setColumns(group.rows[0].cols);
-    console.log(listData, '###########');
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable rowKey="TASK_SEQ" key={`${group.key}_list`} className="view-designer-list" columns={columns} dataSource={listData || []} />
+          <AntdTable
+            rowKey="TASK_SEQ"
+            key={`${group.key}_list`}
+            className="view-designer-list"
+            columns={columns}
+            dataSource={formData && formData.MASTER_SEQ && listData && this.state.listVeiwBool ? filterList : []}
+          />
         </Group>
       </div>
     );
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, isOpenInputModal, getListData, workSeq } = this.props;
+    const {
+      sagaKey: id,
+      viewLayer,
+      formData,
+      workFlowConfig,
+      loadingComplete,
+      viewPageData,
+      isOpenInputModal,
+      getListData,
+      workSeq,
+      getRevisionHistory,
+      revisionHistory,
+    } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -140,6 +168,7 @@ class ClauseListPage extends Component {
           () => loadingComplete(),
         );
       }
+
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -189,14 +218,14 @@ class ClauseListPage extends Component {
                           {formData.MASTER_SEQ ? (
                             <StyledButton
                               className="btn-primary"
-                              onClick={() => isOpenInputModal(formData.MASTER_SEQ, formData.MASTER_LAW_NAME, formData.MASTER_NO)}
+                              onClick={() => isOpenInputModal(formData.MASTER_SEQ, formData.RECH_LAW_NAME, formData.RECH_NO)}
                             >
                               Add
                             </StyledButton>
                           ) : (
                             ''
                           )}
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-primary" onClick={() => this.listVeiwBool(id, workSeq)}>
                             Search
                           </StyledButton>
                         </div>

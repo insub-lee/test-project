@@ -56,24 +56,24 @@ class SearchBar extends Component {
 
   handleUserOk = e => {
     if (this.validationCheck()) {
-      const { id, submitHadnlerBySaga, formData } = this.props;
+      const { id, submitHandlerBySaga, formData } = this.props;
       const type = (formData && formData.userModalType) || '';
       if (type === 'INSERT') {
         const submitData = (formData && formData.userData) || {};
 
-        submitHadnlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
       } else if (type === 'UPDATE') {
         const submitData = (formData && formData.selectedUser) || {};
 
-        submitHadnlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyUser', submitData, this.saveComplete);
       }
     } else return false;
   };
 
   saveComplete = sagaKey => {
-    const { id, getCallDataHanlder, apiAry, changeFormData, handleAppStart, formData } = this.props;
+    const { id, getCallDataHandler, apiAry, changeFormData, handleAppStart, formData } = this.props;
     changeFormData(sagaKey, 'userData', { SITE: '청주' });
-    getCallDataHanlder(sagaKey, apiAry, handleAppStart);
+    getCallDataHandler(sagaKey, apiAry, handleAppStart);
     const is_update = formData && formData.userModalType;
     if (is_update === 'UPDATE') changeFormData(id, 'userModal', false);
   };

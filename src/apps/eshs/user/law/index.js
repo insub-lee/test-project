@@ -26,9 +26,9 @@ class law extends Component {
     this.setState({ isInputModal: true });
   };
 
-  isOpenModifyModal = taskSeq => {
+  isOpenModifyModal = rowData => {
     this.setState({ isOpenModal: true });
-    this.setState({ selectedTaskSeq: taskSeq });
+    this.setState({ selectedTaskSeq: rowData.TASK_SEQ });
   };
 
   onCancel = () => {

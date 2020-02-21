@@ -17,17 +17,17 @@ class ComponentConfig extends Component {
   };
 
   componentDidMount() {
-    const { getCallDataHanlder, sagaKey: id, apiArray } = this.props;
-    getCallDataHanlder(id, apiArray);
+    const { getCallDataHandler, sagaKey: id, apiArray } = this.props;
+    getCallDataHandler(id, apiArray);
   }
 
   getCategorieMapList = value => {
-    const { getCallDataHanlder, sagaKey: id } = this.props;
+    const { getCallDataHandler, sagaKey: id } = this.props;
     const apiArray = [{ key: 'categoryMapInfo', url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' }];
     const saveArray = [{ key: `selectMapInfo${value}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${value}`, type: 'GET' }];
     this.setState({ apiArray: saveArray, apiKey: `selectMapInfo${value}` });
 
-    getCallDataHanlder(id, apiArray);
+    getCallDataHandler(id, apiArray);
   };
 
   handleChangeViewCompData = (key, value) => {
