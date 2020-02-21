@@ -39,18 +39,18 @@ class List extends Component {
   onRowClick = e => {
     const { id, changeFormData } = this.props;
     const { rowData } = e;
-    const visit_date = (rowData && rowData.visit_date) || null;
-    const visitor_in_date = (rowData && rowData.visitor_in_date) || null;
-    const visitor_out_date = (rowData && rowData.visitor_out_date) || null;
-    const work_area_cd = (rowData && rowData.work_area_cd) || '';
+    const VISIT_DATE = (rowData && rowData.VISIT_DATE) || null;
+    const VISITOR_IN_DATE = (rowData && rowData.VISITOR_IN_DATE) || null;
+    const VISITOR_OUT_DATE = (rowData && rowData.VISITOR_OUT_DATE) || null;
+    const WORK_AREA_CD = (rowData && rowData.WORK_AREA_CD) || '';
     changeFormData(id, 'modal', {
       type: 'UPDATE',
       is_modal: true,
       info: {
         ...rowData,
-        work_area_cd: work_area_cd === '청주' ? 'CJ' : 'GM',
-        visitor_out_date: moment(`${visit_date} ${visitor_out_date}`).format(format),
-        visitor_in_date: moment(`${visit_date} ${visitor_in_date}`).format(format),
+        WORK_AREA_CD: WORK_AREA_CD === '청주' ? 'CJ' : 'GM',
+        VISITOR_OUT_DATE: moment(`${VISIT_DATE} ${VISITOR_OUT_DATE}`).format(format),
+        VISITOR_IN_DATE: moment(`${VISIT_DATE} ${VISITOR_IN_DATE}`).format(format),
       },
     });
   };
@@ -58,15 +58,15 @@ class List extends Component {
   noRowsRenderer = () => <div className="noRows">결과없음</div>;
 
   getColumns = () => [
-    { label: '지역', dataKey: 'work_area_cd', width: 120, ratio: 8 },
-    { label: '일자', dataKey: 'visit_date', width: 180, ratio: 12 },
-    { label: '업체명', dataKey: 'wrk_cmpny_nm', width: 300, ratio: 20 },
-    { label: '사업자등록번호', dataKey: 'biz_reg_no', width: 255, ratio: 17 },
-    { label: '이름', dataKey: 'visitor_name', width: 150, ratio: 10 },
-    { label: '출입시간', dataKey: 'visitor_in_date', width: 120, ratio: 8 },
-    { label: '퇴장시간', dataKey: 'visitor_out_date', width: 120, ratio: 8 },
-    { label: '출입구분', dataKey: 'visitor_type', width: 120, ratio: 8 },
-    { label: '업체등록여부', dataKey: 'wrk_reg', width: 135, ratio: 9 },
+    { label: '지역', dataKey: 'WORK_AREA_CD', width: 120, ratio: 8 },
+    { label: '일자', dataKey: 'VISIT_DATE', width: 180, ratio: 12 },
+    { label: '업체명', dataKey: 'WRK_CMPNY_NM', width: 300, ratio: 20 },
+    { label: '사업자등록번호', dataKey: 'BIZ_REG_NO', width: 255, ratio: 17 },
+    { label: '이름', dataKey: 'VISITOR_NAME', width: 150, ratio: 10 },
+    { label: '출입시간', dataKey: 'VISITOR_IN_DATE', width: 120, ratio: 8 },
+    { label: '퇴장시간', dataKey: 'VISITOR_OUT_DATE', width: 120, ratio: 8 },
+    { label: '출입구분', dataKey: 'VISITOR_TYPE', width: 120, ratio: 8 },
+    { label: '업체등록여부', dataKey: 'WRK_REG', width: 135, ratio: 9 },
   ];
 
   getTablewidth = () => {
@@ -83,7 +83,7 @@ class List extends Component {
     changeFormData(id, 'modal', {
       type: 'INSERT',
       is_modal: true,
-      info: { work_area_cd: 'CJ', visitor_type: 'N', visitor_in_date: moment().format(format), visitor_out_date: moment(now2, format) },
+      info: { WORK_AREA_CD: 'CJ', VISITOR_TYPE: 'N', VISITOR_IN_DATE: moment().format(format), VISITOR_OUT_DATE: moment(now2, format) },
     });
   };
 
@@ -117,8 +117,7 @@ class List extends Component {
   };
 
   handleOnSearch = () => {
-    const { id, getCallDataHanlder, formData } = this.props;
-    console.debug('getCallDataHanlder  ', getCallDataHanlder);
+    const { id, getCallDataHandler, formData } = this.props;
     const search = (formData && formData.search) || {};
     const apiAry = [
       {
@@ -128,11 +127,10 @@ class List extends Component {
         params: search,
       },
     ];
-    getCallDataHanlder(id, apiAry, this.onSearchCallBack);
+    getCallDataHandler(id, apiAry, this.onSearchCallBack);
   };
 
   onSearchCallBack = sagaKey => {
-    console.debug('asdasd');
     const { result } = this.props;
 
     const recordList = (result && result.searchList && result.searchList.recordList) || [];

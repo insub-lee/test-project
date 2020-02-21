@@ -19,12 +19,12 @@ class List extends Component {
   }
 
   componentDidMount = () => {
-    const { id, getCallDataHanlder, apiAry } = this.props;
-    getCallDataHanlder(id, apiAry, this.handleAppStart);
+    const { id, getCallDataHandler, apiAry } = this.props;
+    getCallDataHandler(id, apiAry, this.handleAppStart);
   };
 
   handleAppStart = () => {
-    const { result, id, changeFormData, getCallDataHanlder } = this.props;
+    const { result, id, changeFormData, getCallDataHandler } = this.props;
     const systemCodeList = (result && result.systemCodeList && result.systemCodeList.systemCodeList) || [];
 
     if (systemCodeList.length) {
@@ -39,7 +39,7 @@ class List extends Component {
           url: `/api/eshs/v1/common/EshsCodeGubun/${systemCodeList[0].system_cd}`,
         },
       ];
-      getCallDataHanlder(id, apiAry, this.setList);
+      getCallDataHandler(id, apiAry, this.setList);
     }
   };
 
@@ -69,7 +69,7 @@ class List extends Component {
   };
 
   handleCodeOnChange = e => {
-    const { id, changeFormData, formData, getCallDataHanlder } = this.props;
+    const { id, changeFormData, formData, getCallDataHandler } = this.props;
     const info = (formData && formData.info) || {};
     changeFormData(id, 'info', { system_cd: e, code_type: '0' });
     changeFormData(id, 'action', ' ');
@@ -80,7 +80,7 @@ class List extends Component {
         url: `/api/eshs/v1/common/EshsCodeGubun/${e}`,
       },
     ];
-    getCallDataHanlder(id, apiAry, this.setList);
+    getCallDataHandler(id, apiAry, this.setList);
   };
 
   handleInputChange = e => {
@@ -96,14 +96,13 @@ class List extends Component {
   };
 
   onRowClick = e => {
-    console.debug(e);
     const { id, changeFormData } = this.props;
     changeFormData(id, 'info', e.rowData);
     changeFormData(id, 'action', 'MODIFY');
   };
 
   handleInsertOnClick = () => {
-    const { id, getCallDataHanlder, formData, changeFormData } = this.props;
+    const { id, getCallDataHandler, formData, changeFormData } = this.props;
     const info = (formData && formData.info) || {};
     const apiAry = [
       {
@@ -114,11 +113,11 @@ class List extends Component {
       },
     ];
     changeFormData(id, 'action', 'INSERT');
-    getCallDataHanlder(id, apiAry, this.validationCheck);
+    getCallDataHandler(id, apiAry, this.validationCheck);
   };
 
   validationCheck = sagaKey => {
-    const { result, submitHadnlerBySaga, formData } = this.props;
+    const { result, submitHandlerBySaga, formData } = this.props;
     const msg = (result && result.validationCheck && result.validationCheck.msg) || '';
     const waring = (result && result.validationCheck && result.validationCheck.waring) || '';
 
@@ -127,9 +126,7 @@ class List extends Component {
       return false;
     }
     const submitData = (formData && formData.info) || {};
-    submitHadnlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/EshsCodeGubun/NULL', submitData, this.saveComplete);
-
-    console.debug('111111111111111', msg, waring);
+    submitHandlerBySaga(sagaKey, 'PUT', '/api/eshs/v1/common/EshsCodeGubun/NULL', submitData, this.saveComplete);
   };
 
   saveComplete = () => {
@@ -149,18 +146,22 @@ class List extends Component {
   handleEditOnClick = () => {
     // /api/eshs/v1/common/EshsCodeGubunUpdate
 
-    const { id, submitHadnlerBySaga, formData, changeFormData } = this.props;
+    const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
     const submitData = (formData && formData.info) || {};
     changeFormData(id, 'action', 'MODIFY');
-    submitHadnlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsCodeGubunUpdate', submitData, this.saveComplete);
+    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsCodeGubunUpdate', submitData, this.saveComplete);
   };
 
   handleDeleteOnClick = () => {
-    const { id, submitHadnlerBySaga, formData, changeFormData } = this.props;
+    const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
     const submitData = (formData && formData.info) || {};
     const is_readable = (submitData && submitData.is_readable) || '0';
+    const action = (formData && formData.action) || '';
+
+    if (action !== 'MODIFY') return;
+
     changeFormData(id, 'action', 'DELETE');
-    submitHadnlerBySaga(
+    submitHandlerBySaga(
       id,
       'DELETE',
       '/api/eshs/v1/common/EshsCodeGubun/NULL',
@@ -273,7 +274,7 @@ class List extends Component {
 
 List.defaultProps = {
   id: 'EshsCodeGubun',
-  getCallDataHanlder: () => {},
+  getCallDataHandler: () => {},
   result: {},
   apiAry: [
     {

@@ -35,13 +35,13 @@ class SearchBar extends Component {
     let searchList = [];
 
     if (searchSite && searchCmpny && searchName)
-      searchList = userList.filter(u => u.site === searchSite && u.hst_cmpny_cd === searchCmpny && u.emp_nm === searchName);
-    else if (searchSite && searchCmpny) searchList = userList.filter(u => u.site === searchSite && u.hst_cmpny_cd === searchCmpny);
-    else if (searchSite && searchName) searchList = userList.filter(u => u.site === searchSite && u.emp_nm === searchName);
-    else if (searchName && searchCmpny) searchList = userList.filter(u => u.emp_nm === searchName && u.hst_cmpny_cd === searchCmpny);
-    else if (searchSite) searchList = userList.filter(u => u.site === searchSite);
-    else if (searchCmpny) searchList = userList.filter(u => u.hst_cmpny_cd === searchCmpny);
-    else if (searchName) searchList = userList.filter(u => u.emp_nm === searchName);
+      searchList = userList.filter(u => u.SITE === searchSite && u.HST_CMPNY_CD === searchCmpny && u.EMP_NM === searchName);
+    else if (searchSite && searchCmpny) searchList = userList.filter(u => u.SITE === searchSite && u.HST_CMPNY_CD === searchCmpny);
+    else if (searchSite && searchName) searchList = userList.filter(u => u.SITE === searchSite && u.EMP_NM === searchName);
+    else if (searchName && searchCmpny) searchList = userList.filter(u => u.EMP_NM === searchName && u.HST_CMPNY_CD === searchCmpny);
+    else if (searchSite) searchList = userList.filter(u => u.SITE === searchSite);
+    else if (searchCmpny) searchList = userList.filter(u => u.HST_CMPNY_CD === searchCmpny);
+    else if (searchName) searchList = userList.filter(u => u.EMP_NM === searchName);
     else searchList = userList;
     if (searchList.length) changeFormData(id, 'is_search', true);
     changeFormData(id, 'is_search', true);
@@ -99,6 +99,8 @@ class SearchBar extends Component {
     let is_ok = false;
     const { formData } = this.props;
     const type = (formData && formData.userModalType) || '';
+    console.debug('11111111111', formData);
+    console.debug('222222222222', formData.userData);
 
     if (type === 'INSERT') {
       const userData = (formData && formData.userData) || {};
@@ -117,11 +119,11 @@ class SearchBar extends Component {
       is_ok = true;
     } else if (type === 'UPDATE') {
       const selectedUser = (formData && formData.selectedUser) || {};
-      if (!selectedUser.emp_nm) {
+      if (!selectedUser.EMP_NM) {
         message.warning('직원명을 입력하세요');
         return false;
       }
-      if (!selectedUser.dept_nm) {
+      if (!selectedUser.DEPT_NM) {
         message.warning('부서를 선택하세요');
         return false;
       }
@@ -155,8 +157,8 @@ class SearchBar extends Component {
             >
               <Option value="all">회사 전체</Option>
               {cmpnyList.map(c => (
-                <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
-                  {c.hst_cmpny_nm}
+                <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
+                  {c.HST_CMPNY_NM}
                 </Option>
               ))}
             </Select>
@@ -165,7 +167,7 @@ class SearchBar extends Component {
               value={formData.searchName || ''}
               name="searchName"
               onChange={this.handleInputOnChange}
-              placeholder="이름."
+              placeholder="이름"
             />
             &nbsp;&nbsp;
             <Button onClick={this.handleOnSearch}>검색</Button>
