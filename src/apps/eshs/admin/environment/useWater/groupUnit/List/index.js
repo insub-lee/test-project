@@ -11,7 +11,7 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
-const { Option } = this.props;
+const { Option } = Select;
 
 class List extends Component {
   constructor(props) {
