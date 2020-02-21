@@ -8,7 +8,7 @@ import ActionButton from '../ActionButton';
 
 const REG_NUMBER = /^-?(0|[1-9][0-9]*)(\.[0-9]*)?$/;
 
-const getValueAndType = cssString => {
+const getValueAndType = (cssString = '25%') => {
   const value = parseFloat(cssString).toString();
   const type = cssString.replace(value, '');
   return { value, type };
@@ -25,7 +25,7 @@ const getNodeAndValue = ref => {
   };
 };
 const isInvalidWidth = stringValue =>
-  (Number(stringValue) >= 10 && (!Number.isNaN(stringValue) && REG_NUMBER.test(stringValue))) || (stringValue !== '' && !Number.isNaN(Number(stringValue)));
+  (Number(stringValue) >= 10 && !Number.isNaN(stringValue) && REG_NUMBER.test(stringValue)) || (stringValue !== '' && !Number.isNaN(Number(stringValue)));
 const isInvalidHeight = stringValue =>
   (!Number.isNaN(stringValue) && REG_NUMBER.test(stringValue)) || (stringValue !== '' && !Number.isNaN(Number(stringValue)));
 

@@ -16,6 +16,7 @@ const ActionButton = styled.button`
 `;
 
 const CircleActionButton = styled.button`
+  width: 25px;
   height: 25px;
   background: #fff;
   border: 1px solid #9c9797;
@@ -23,6 +24,7 @@ const CircleActionButton = styled.button`
   color: #9c9797;
   cursor: pointer;
   text-align: center;
+  transform: scale(0.6);
 
   :hover {
     background: #9c9797;

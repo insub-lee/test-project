@@ -16,8 +16,6 @@ class TechStd extends Component {
   componentDidMount() {
     const { sagaKey, getCallDataHandler, apiArys } = this.props;
     getCallDataHandler(sagaKey, apiArys, this.initDataBind);
-    console.debug(sagaKey);
-    console.debug('biztech didMout');
   }
 
   initDataBind = sagaKey => {
@@ -154,6 +152,16 @@ TechStd.propTypes = {
 TechStd.defaultProps = {
   apiArys: [
     {
+      key: 'changeList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=19',
+      type: 'GET',
+    },
+    {
+      key: 'fmeaList',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=23',
+      type: 'GET',
+    },
+    {
       key: 'site',
       url: '/api/admin/v1/common/categoryMapList?MAP_ID=10',
       type: 'GET',
@@ -196,16 +204,6 @@ TechStd.defaultProps = {
     {
       key: 'customList',
       url: '/api/admin/v1/common/categoryMapList?MAP_ID=18',
-      type: 'GET',
-    },
-    {
-      key: 'changeList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=19',
-      type: 'GET',
-    },
-    {
-      key: 'fmeaList',
-      url: '/api/admin/v1/common/categoryMapList?MAP_ID=23',
       type: 'GET',
     },
   ],

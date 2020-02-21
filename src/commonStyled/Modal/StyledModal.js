@@ -10,14 +10,13 @@ const StyledModal = Component => styled(Component)`
   }
   .ant-modal-title {
     margin: 0;
-    color: rgba(0, 0, 0, 0.85);
+    color: #ffffff;
     font-weight: 500;
     font-size: 16px;
     line-height: 22px;
     word-wrap: break-word;
   }
   .ant-modal-content {
-    padding-top: 30px;
     height: 100%;
   }
   .ant-modal-footer {

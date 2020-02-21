@@ -29,7 +29,23 @@ const StyledHtmlTable = styled.div`
     padding: 5px 5px;
     font-size: 12px;
     width: auto;
-  }
+  }  
+
+  .ant-checkbox-wrapper {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0,0,0,.65);
+    font-size: 12px;
+    font-variant: tabular-nums;
+    line-height: 1.5;
+    list-style: none;
+    -webkit-font-feature-settings: "tnum";
+    font-feature-settings: "tnum";
+    display: inline-block;
+    line-height: unset;
+    cursor: pointer;
 `;
 
 export default StyledHtmlTable;

@@ -383,6 +383,7 @@ ListPage.propTypes = {
   getExtraApiData: PropTypes.func,
   visible: PropTypes.bool,
   CONFIG: PropTypes.object,
+  extraApiData: PropTypes.func,
 };
 
 ListPage.defaultProps = {

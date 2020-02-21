@@ -18,7 +18,6 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    console.debug('@@@@@@INPUT@@@@@@');
     const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
     const {
       info: { PRC_ID },

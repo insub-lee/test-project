@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 
 class SearchTab extends Component {
   state = {
-    currentPage: 'Basic',
+    currentPage: 'BASIC',
     treeData: [],
   };
 
@@ -35,6 +35,7 @@ class SearchTab extends Component {
   };
 
   render() {
+    const { currentPage } = this.state;
     return (
       <StyledSearch>
         <div className="searchTabs">
@@ -59,15 +60,17 @@ class SearchTab extends Component {
               }
               key="BIZ"
             >
-              <BizMicroDevBase
-                rootNodeId={2}
-                currentPage={this.state.currentPage}
-                treeData={this.state.treeData}
-                sagaKey="STD_BIZ_SEARCH"
-                searchTitle="업무표준"
-                workSeq={201}
-                component={SearchDetail}
-              />
+              {currentPage === 'BIZ' && (
+                <BizMicroDevBase
+                  rootNodeId={2}
+                  currentPage={this.state.currentPage}
+                  treeData={this.state.treeData}
+                  sagaKey="STD_BIZ_SEARCH"
+                  searchTitle="업무표준"
+                  workSeq={901}
+                  component={SearchDetail}
+                />
+              )}
             </TabPane>
             <TabPane
               tab={
@@ -78,15 +81,17 @@ class SearchTab extends Component {
               }
               key="TECH"
             >
-              <BizMicroDevBase
-                rootNodeId={6}
-                currentPage={this.state.currentPage}
-                treeData={this.state.treeData}
-                sagaKey="STD_TECH_SEARCH"
-                searchTitle="기술표준"
-                workSeq={201}
-                component={SearchDetail}
-              />
+              {currentPage === 'TECH' && (
+                <BizMicroDevBase
+                  rootNodeId={6}
+                  currentPage={this.state.currentPage}
+                  treeData={this.state.treeData}
+                  sagaKey="STD_TECH_SEARCH"
+                  searchTitle="기술표준"
+                  workSeq={1921}
+                  component={SearchDetail}
+                />
+              )}
             </TabPane>
             <TabPane
               tab={
@@ -97,15 +102,17 @@ class SearchTab extends Component {
               }
               key="DW"
             >
-              <BizMicroDevBase
-                rootNodeId={16}
-                currentPage={this.state.currentPage}
-                treeData={this.state.treeData}
-                sagaKey="STD_DW_SEARCH"
-                searchTitle="도면"
-                workSeq={201}
-                component={SearchDetail}
-              />
+              {currentPage === 'DW' && (
+                <BizMicroDevBase
+                  rootNodeId={16}
+                  currentPage={this.state.currentPage}
+                  treeData={this.state.treeData}
+                  sagaKey="STD_DW_SEARCH"
+                  searchTitle="도면"
+                  workSeq={1881}
+                  component={SearchDetail}
+                />
+              )}
             </TabPane>
             <TabPane
               tab={
@@ -116,15 +123,17 @@ class SearchTab extends Component {
               }
               key="NPI"
             >
-              <BizMicroDevBase
-                rootNodeId={0}
-                currentPage={this.state.currentPage}
-                treeData={this.state.treeData}
-                sagaKey="STD_NPI_SEARCH"
-                searchTitle="NPI"
-                workSeq={201}
-                component={SearchDetail}
-              />
+              {currentPage === 'NPI' && (
+                <BizMicroDevBase
+                  rootNodeId={0}
+                  currentPage={this.state.currentPage}
+                  treeData={this.state.treeData}
+                  sagaKey="STD_NPI_SEARCH"
+                  searchTitle="NPI"
+                  workSeq={201}
+                  component={SearchDetail}
+                />
+              )}
             </TabPane>
             <TabPane
               tab={
@@ -135,15 +144,17 @@ class SearchTab extends Component {
               }
               key="TDS"
             >
-              <BizMicroDevBase
-                rootNodeId={231}
-                currentPage={this.state.currentPage}
-                treeData={this.state.treeData}
-                sagaKey="STD_TDS_SEARCH"
-                searchTitle="TDS"
-                workSeq={201}
-                component={SearchDetail}
-              />
+              {currentPage === 'TDS' && (
+                <BizMicroDevBase
+                  rootNodeId={231}
+                  currentPage={this.state.currentPage}
+                  treeData={this.state.treeData}
+                  sagaKey="STD_TDS_SEARCH"
+                  searchTitle="TDS"
+                  workSeq={201}
+                  component={SearchDetail}
+                />
+              )}
             </TabPane>
             <TabPane
               tab={
@@ -154,15 +165,17 @@ class SearchTab extends Component {
               }
               key="WP"
             >
-              <BizMicroDevBase
-                rootNodeId={234}
-                currentPage={this.state.currentPage}
-                treeData={this.state.treeData}
-                sagaKey="STD_WP_SEARCH"
-                searchTitle="Work Process"
-                workSeq={201}
-                component={SearchDetail}
-              />
+              {currentPage === 'WP' && (
+                <BizMicroDevBase
+                  rootNodeId={234}
+                  currentPage={this.state.currentPage}
+                  treeData={this.state.treeData}
+                  sagaKey="STD_WP_SEARCH"
+                  searchTitle="Work Process"
+                  workSeq={201}
+                  component={SearchDetail}
+                />
+              )}
             </TabPane>
           </Tabs>
         </div>

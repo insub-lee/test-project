@@ -2,89 +2,39 @@ import { createSelector } from 'reselect';
 
 const selectViewDesignerState = state => state.get('apps-mdcs-admin-ViewDesigner-reducer');
 
-const makeSelectActiveTabKey = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('activeTabKey'),
-  );
+const makeSelectActiveTabKey = () => createSelector(selectViewDesignerState, state => state.get('activeTabKey'));
 
-const makeSelectIsShowEditor = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('isShowEditor'),
-  );
+const makeSelectIsShowEditor = () => createSelector(selectViewDesignerState, state => state.get('isShowEditor'));
 
-const makeSelectGroups = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups']).toJS(),
-  );
+const makeSelectGroups = () => createSelector(selectViewDesignerState, state => state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups']).toJS());
 
-const makeSelectSelectedKeys = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('selectedKeys').toJS(),
-  );
+const makeSelectSelectedKeys = () => createSelector(selectViewDesignerState, state => state.get('selectedKeys').toJS());
 
-const makeSelectSelectedStyleCells = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('selectedStyleCells').toJS(),
-  );
+const makeSelectSelectedStyleCells = () => createSelector(selectViewDesignerState, state => state.get('selectedStyleCells').toJS());
 
-const makeSelectCanMerge = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('canMerge'),
-  );
+const makeSelectCanMerge = () => createSelector(selectViewDesignerState, state => state.get('canMerge').toJS());
 
-const makeSelectCompData = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('compData').toJS(),
-  );
+const makeSelectCanDivide = () => createSelector(selectViewDesignerState, state => state.get('canDivide').toJS());
 
-const makeSelectBodyStyle = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.getIn(['viewData', 'CONFIG', 'property', 'bodyStyle']).toJS(),
-  );
+const makeSelectCompData = () => createSelector(selectViewDesignerState, state => state.get('compData').toJS());
 
-const makeSelectWorkInfo = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('workInfo').toJS(),
-  );
+const makeSelectBodyStyle = () => createSelector(selectViewDesignerState, state => state.getIn(['viewData', 'CONFIG', 'property', 'bodyStyle']).toJS());
 
-const makeSelectTopMenus = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('topMenus').toJS(),
-  );
+const makeSelectWorkInfo = () => createSelector(selectViewDesignerState, state => state.get('workInfo').toJS());
 
-const makeSelectViewData = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('viewData').toJS(),
-  );
+const makeSelectTopMenus = () => createSelector(selectViewDesignerState, state => state.get('topMenus').toJS());
 
-const makeSelectCompPoolList = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('compPoolList').toJS(),
-  );
+const makeSelectViewData = () => createSelector(selectViewDesignerState, state => state.get('viewData').toJS());
 
-const makeSelectCompGroupList = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('compGroupList').toJS(),
-  );
+const makeSelectCompPoolList = () => createSelector(selectViewDesignerState, state => state.get('compPoolList').toJS());
 
-const makeSelectSysMetaList = () =>
-  createSelector(
-    selectViewDesignerState,
-    state => state.get('sysMetaList').toJS(),
-  );
+const makeSelectCompGroupList = () => createSelector(selectViewDesignerState, state => state.get('compGroupList').toJS());
+
+const makeSelectCompTreeData = () => createSelector(selectViewDesignerState, state => state.get('compTreeData').toJS());
+
+const makeSelectSysMetaList = () => createSelector(selectViewDesignerState, state => state.get('sysMetaList').toJS());
+
+const makeSelectIsLoadingContent = () => createSelector(selectViewDesignerState, state => state.get('isLoadingContent'));
 
 export {
   makeSelectIsShowEditor,
@@ -100,5 +50,8 @@ export {
   makeSelectViewData,
   makeSelectCompPoolList,
   makeSelectCompGroupList,
+  makeSelectCompTreeData,
   makeSelectSysMetaList,
+  makeSelectIsLoadingContent,
+  makeSelectCanDivide,
 };

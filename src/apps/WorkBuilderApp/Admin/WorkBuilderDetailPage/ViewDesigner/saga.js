@@ -17,6 +17,7 @@ import { setGroupsLayerIdxKey, setInitListGroups } from './helper';
 const getNewKey = () => uuid();
 
 function* getMetaData({ workSeq, viewType, viewID }) {
+  yield put(actions.enableContentLoading());
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${workSeq}`);
   const sysResponse = yield call(Axios.get, `/api/builder/v1/work/sysmeta?workSeq=${workSeq}`);
   const compResponse = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
@@ -53,6 +54,7 @@ function* getMetaData({ workSeq, viewType, viewID }) {
       yield put(actions.setComponentPoolListByReducer(compResponse.compPoolList, compResponse.colGroup));
     }
   }
+  yield put(actions.disableContentLoading());
 }
 
 const makeTopMenuData = viewList => {
@@ -79,16 +81,30 @@ function* addMetaData() {
   let isError = false;
   let errorMsg = '';
   compData
-    .filter(fNode => fNode.COMP_TYPE !== 'VIEW' && !fNode.isRemove)
+    .filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove)
     .forEach(node => {
       if (!node.COMP_FIELD || (node.COMP_FIELD && node.COMP_FIELD.length) < 1) {
         isError = true;
         errorMsg = `${node.CONFIG.property.COMP_NAME || ''} 필드 컬럼명을 채워주세요.`;
       }
-      // else if (!node.NAME_KOR || (node.NAME_KOR && node.NAME_KOR.length) < 1) {
-      //   isError = true;
-      //   errorField = `${node.NAME_KOR}(${node.COMP_FIELD})`;
-      // }
+      if (node.CONFIG) {
+        const compInfo = node.CONFIG.info;
+        // if (compInfo.type.indexOf('VARCHAR') > -1 && (compInfo.size || 0) < 1) {
+        //   isError = true;
+        //   errorMsg = `${node.COMP_FIELD || ''} 필드 컬럼 사이즈는 1 이상입니다.`;
+        // } else
+        if (!(compInfo.isClob || false) && compInfo.type.indexOf('DATE') === -1 && compInfo.type.indexOf('TIME') === -1 && (compInfo.size || 0) < 1) {
+          isError = true;
+          errorMsg = `${node.COMP_FIELD || ''} 필드 컬럼 사이즈가 설정되지 않았습니다.`;
+        }
+      }
+      if (compData.filter(fNode => fNode.COMP_FIELD === node.COMP_FIELD && !fNode.isRemove).length > 1) {
+        isError = true;
+        errorMsg =
+          node.COMP_TYPE === 'SYS'
+            ? `${node.COMP_FIELD || ''}는 시스템 필드입니다. 컬럼명을 사용하실 수 없습니다.`
+            : `${node.COMP_FIELD || ''} 필드 컬럼명이 중복입니다.`;
+      }
     });
 
   if (isError) {
@@ -169,17 +185,21 @@ function* addMetaData() {
 }
 
 function* getComponentPoolList() {
+  yield put(actions.enableContentLoading());
   const response = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
   if (response) {
     yield put(actions.setComponentPoolListByReducer(response.compPoolList, response.colGroup));
   }
+  yield put(actions.disableContentLoading());
 }
 
 function* getSysMetaList() {
+  yield put(actions.enableContentLoading());
   const response = yield call(Axios.get, '/api/builder/v1/work/sysmeta');
   if (response && response.list) {
     yield put(actions.setSysMetaListByReducer(response.list));
   }
+  yield put(actions.disableContentLoading());
 }
 
 export default function* watcher() {
