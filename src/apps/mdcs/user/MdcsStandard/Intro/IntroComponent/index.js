@@ -375,6 +375,11 @@ class IntroComponent extends Component {
     };
 
     let workSeqGoal = workSeq;
+    let inputMetaSeq;
+    if (fullPathInfo.includes(289)) {
+      inputMetaSeq = 2921;
+    }
+
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
@@ -388,6 +393,9 @@ class IntroComponent extends Component {
           break;
         case 'PM':
           workSeqGoal = 461;
+          break;
+        case 'WD':
+          workSeqGoal = 2941;
           break;
         default:
           workSeqGoal = 901;
@@ -425,6 +433,7 @@ class IntroComponent extends Component {
         CustomInputPage={StdInput}
         CustomViewPage={StdView}
         CustomWorkProcess={DraftPrcLine}
+        inputMetaSeq={inputMetaSeq}
         taskSeq={taskSeq}
         workPrcProps={workPrcProps}
         viewType={viewType}

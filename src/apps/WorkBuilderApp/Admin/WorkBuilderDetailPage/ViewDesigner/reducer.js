@@ -38,7 +38,7 @@ const initialGroup = () =>
     key: getNewKey(),
     type: 'group',
     title: '',
-    useTitle: true,
+    useTitle: false,
     rows: [
       {
         key: getNewKey(),
@@ -101,7 +101,7 @@ const initialState = fromJS({
               key: getNewKey(),
               type: 'group',
               title: '',
-              useTitle: true,
+              useTitle: false,
               rows: [
                 {
                   key: getNewKey(),
