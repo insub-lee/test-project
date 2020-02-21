@@ -8,6 +8,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import moment from 'moment';
 import { changeFormData } from 'components/BizBuilderBase/actions';
+import NothGateCmpnyModalStyled from './NothGateCmpnyModalStyled';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -58,7 +59,10 @@ class NothGateCmpnyModal extends Component {
     const modal = (formData && formData.modal) || {};
     const info = (formData && formData.modal && formData.modal.info) || {};
 
-    changeFormData(id, 'modal', { ...modal, info: { ...info, ...e.rowData } });
+    changeFormData(id, 'modal', {
+      ...modal,
+      info: { ...info, ...e.rowData, wrk_cmpny_nm: e.rowData.biz_reg_no === '000-00-00000' ? '' : e.rowData.wrk_cmpny_nm },
+    });
     console.debug('onRowClick ', e);
   };
 
@@ -109,19 +113,24 @@ class NothGateCmpnyModal extends Component {
   };
 
   handleBtnOnClick = () => {
-    const { id, formData, submitHadnlerBySaga, changeFormData } = this.props;
+    const is_ok = this.validationCheck();
+    console.debug('is_ok 1111111111111111 ', is_ok);
+    if (is_ok) {
+      const { id, formData, submitHadnlerBySaga, changeFormData } = this.props;
 
-    const type = (formData && formData.modal && formData.modal.type) || '';
-    if (type === 'INSERT') {
-      const submitData = (formData && formData.modal && formData.modal.info) || {};
-      changeFormData(id, 'actionType', 'INSERT');
-      submitHadnlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
-    } else if (type === 'UPDATE') {
-      const submitData = (formData && formData.modal && formData.modal.info) || {};
-      changeFormData(id, 'actionType', 'UPDATE');
-      console.debug('submitData ', submitData);
-      submitHadnlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
-    } else return false;
+      const type = (formData && formData.modal && formData.modal.type) || '';
+      if (type === 'INSERT') {
+        const submitData = (formData && formData.modal && formData.modal.info) || {};
+        changeFormData(id, 'actionType', 'INSERT');
+        submitHadnlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
+      } else if (type === 'UPDATE') {
+        const submitData = (formData && formData.modal && formData.modal.info) || {};
+        changeFormData(id, 'actionType', 'UPDATE');
+        console.debug('submitData ', submitData);
+        submitHadnlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
+      } else return false;
+    }
+    return false;
   };
 
   saveComplete = sagaKey => {
@@ -141,6 +150,18 @@ class NothGateCmpnyModal extends Component {
     const modal = (formData && formData.modal) || {};
     const info = (formData && formData.modal && formData.modal.info) || {};
     changeFormData(id, 'modal', { ...modal, info: { ...info, [e.target.name]: e.target.value } });
+  };
+
+  handleBusinessInputChange = e => {
+    const bspt = /^[0-9 \-]+$/;
+    if (bspt.test(e.target.value)) {
+      const { id, changeFormData, formData } = this.props;
+      const modal = (formData && formData.modal) || {};
+      const info = (formData && formData.modal && formData.modal.info) || {};
+
+      changeFormData(id, 'modal', { ...modal, info: { ...info, [e.target.name]: e.target.value } });
+    }
+    return false;
   };
 
   handleSiteOnChange = e => {
@@ -207,6 +228,65 @@ class NothGateCmpnyModal extends Component {
     submitHadnlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsNothGateCmpny', submitData, this.saveComplete);
   };
 
+  businessNumberCheck = () => {
+    let sum = 0;
+    const getlist = new Array(10);
+    const chkvalue = new Array('1', '3', '7', '1', '3', '7', '1', '3', '5');
+
+    const { formData } = this.props;
+    const biz_reg_no = (formData && formData.modal && formData.modal.info && formData.modal.info.biz_reg_no) || '';
+    if (biz_reg_no) {
+      const bNum = biz_reg_no.replace(/-/gi, '');
+      for (let i = 0; i < 10; i++) {
+        getlist[i] = bNum.substring(i, i + 1);
+      }
+      for (let i = 0; i < 9; i++) {
+        sum += getlist[i] * chkvalue[i];
+      }
+      sum += parseInt((getlist[8] * 5) / 10);
+      const sidliy = sum % 10;
+      let sidchk = 0;
+      if (sidliy != 0) {
+        sidchk = 10 - sidliy;
+      } else {
+        sidchk = 0;
+      }
+      if (sidchk != getlist[9]) {
+        message.warning('사업자번호를 정확히 입력해주세요.');
+        return false;
+      }
+      return true;
+    }
+    message.warning('사업자번호를 정확히 입력해주세요.');
+    return false;
+  };
+
+  validationCheck = () => {
+    const { formData } = this.props;
+    const info = (formData && formData.modal && formData.modal.info) || {};
+    const wrk_cmpny_nm = (info && info.wrk_cmpny_nm) || '';
+    const visitor_name = (info && info.visitor_name) || '';
+    const biz_reg_no = (info && info.biz_reg_no) || '';
+    if (biz_reg_no === '000-00-00000') {
+      if (!wrk_cmpny_nm) {
+        message.warning('업체명을 직접 입력해 주세요.');
+        return false;
+      }
+    }
+    if (!wrk_cmpny_nm) {
+      message.warning('방문업체를 선택해 주세요.');
+      return false;
+    }
+    if (!visitor_name) {
+      message.warning('방문자 성함을 입력해 주세요.');
+      return false;
+    }
+    if (!this.businessNumberCheck()) {
+      return false;
+    }
+    return true;
+  };
+
   render() {
     // const list = this.setList();
     const { nothGateCmpnyList, startValue, endValue, endOpen } = this.state;
@@ -216,91 +296,100 @@ class NothGateCmpnyModal extends Component {
     const searchText = (formData && formData.nothGateSearch && formData.nothGateSearch.searchText) || '';
     const visitor_in_date = formData && formData.modal && formData.modal.info && formData.modal.info.visitor_in_date;
     const visitor_out_date = formData && formData.modal && formData.modal.info && formData.modal.info.visitor_out_date;
+    const biz_reg_no = (formData && formData.modal && formData.modal.info && formData.modal.info.biz_reg_no) || '';
     return (
       <div>
-        <div className="userModal_body">
-          <table>
-            <tbody>
-              <tr>
-                <td>지역</td>
-                <td colSpan="3">
-                  <Select value={info.work_area_cd ? info.work_area_cd : 'CJ'} onChange={this.handleSiteOnChange}>
-                    <Option value="CJ">청주</Option>
-                    <Option value="GM">구미</Option>
-                  </Select>
-                </td>
-              </tr>
-              <tr>
-                <td>업체명</td>
-                <td>
-                  <Input placeholder="업체명" name="wrk_cmpny_nm" value={info.wrk_cmpny_nm} onChange={this.handleInputChange} readOnly />
-                </td>
-                <td>사업자등록번호</td>
-                <td>
-                  <Input placeholder="사업자등록번호" name="biz_reg_no" value={info.biz_reg_no} onChange={this.handleInputChange} />
-                </td>
-              </tr>
-              <tr>
-                <td>방문자 성명</td>
-                <td>
-                  <Input placeholder="방문자 성명" name="visitor_name" value={info.visitor_name} onChange={this.handleInputChange} />
-                </td>
-                <td>연락처</td>
-                <td>
-                  <Input placeholder="연락처" name="phone_number" value={info.phone_number} onChange={this.handleInputChange} />
-                </td>
-              </tr>
-              <tr>
-                <td>출입시간</td>
-                <td>
-                  <DatePicker
-                    disabledDate={this.disabledStartDate}
-                    showTime
-                    format="YYYY-MM-DD HH:mm:ss"
-                    value={moment(visitor_in_date)}
-                    placeholder="Start"
-                    onChange={this.onStartChange}
-                    onOpenChange={this.handleStartOpenChange}
-                  />
-                </td>
-                <td>퇴장시간</td>
-                <td>
-                  <DatePicker
-                    disabledDate={this.disabledEndDate}
-                    showTime
-                    format="YYYY-MM-DD HH:mm:ss"
-                    value={moment(visitor_out_date)}
-                    placeholder="End"
-                    onChange={this.onEndChange}
-                    open={endOpen}
-                    onOpenChange={this.handleEndOpenChange}
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <StyledButton classNmae="btn-gray btn-first" onClick={this.handleBtnOnClick}>
-            {modalType === 'INSERT' ? '등록' : '수정'}
-          </StyledButton>
-          {modalType === 'INSERT' ? (
-            ''
-          ) : (
-            <StyledButton classNmae="btn-gray btn-first" onClick={this.handleDeleteBtn}>
-              삭제
-            </StyledButton>
-          )}
-        </div>
+        <NothGateCmpnyModalStyled>
+          <div className="nothGateCmpny_modal">
+            <table>
+              <tbody>
+                <tr>
+                  <td>지역</td>
+                  <td colSpan="3">
+                    <Select value={info.work_area_cd ? info.work_area_cd : 'CJ'} onChange={this.handleSiteOnChange}>
+                      <Option value="CJ">청주</Option>
+                      <Option value="GM">구미</Option>
+                    </Select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>업체명</td>
+                  <td>
+                    <Input
+                      placeholder="업체명"
+                      name="wrk_cmpny_nm"
+                      value={info.wrk_cmpny_nm}
+                      onChange={this.handleInputChange}
+                      readOnly={biz_reg_no !== '000-00-00000'}
+                    />
+                  </td>
+                  <td>사업자등록번호</td>
+                  <td>
+                    <Input placeholder="사업자등록번호" name="biz_reg_no" value={info.biz_reg_no} onChange={this.handleBusinessInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>방문자 성명</td>
+                  <td>
+                    <Input placeholder="방문자 성명" name="visitor_name" value={info.visitor_name} onChange={this.handleInputChange} />
+                  </td>
+                  <td>연락처</td>
+                  <td>
+                    <Input placeholder="연락처" name="phone_number" value={info.phone_number} onChange={this.handleInputChange} />
+                  </td>
+                </tr>
+                <tr>
+                  <td>출입시간</td>
+                  <td>
+                    <DatePicker
+                      disabledDate={this.disabledStartDate}
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss"
+                      value={moment(visitor_in_date)}
+                      placeholder="Start"
+                      onChange={this.onStartChange}
+                      onOpenChange={this.handleStartOpenChange}
+                    />
+                  </td>
+                  <td>퇴장시간</td>
+                  <td>
+                    <DatePicker
+                      disabledDate={this.disabledEndDate}
+                      showTime
+                      format="YYYY-MM-DD HH:mm:ss"
+                      value={moment(visitor_out_date)}
+                      placeholder="End"
+                      onChange={this.onEndChange}
+                      open={endOpen}
+                      onOpenChange={this.handleEndOpenChange}
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div>
+              <StyledButton classNmae="btn-gray btn-first" onClick={this.handleBtnOnClick}>
+                {modalType === 'INSERT' ? '등록' : '수정'}
+              </StyledButton>
+              {modalType === 'INSERT' ? (
+                ''
+              ) : (
+                <StyledButton classNmae="btn-gray btn-first" onClick={this.handleDeleteBtn}>
+                  삭제
+                </StyledButton>
+              )}
+            </div>
+          </div>
+        </NothGateCmpnyModalStyled>
         {modalType === 'INSERT' ? (
           <>
             <StyledSearchWrap>
               <div className="search-group-layer">
-                <InputGroup className="search-item search-input-group" compact>
-                  <Select defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange}>
-                    <Option value="BIZ_REG_NO">사업자등록번호</Option>
-                    <Option value="WRK_CMPNY_NM">업체명</Option>
-                  </Select>
-                  <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchOnChange} value={searchText} />
-                </InputGroup>
+                <Select defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange} className="search-item input-width160">
+                  <Option value="BIZ_REG_NO">사업자등록번호</Option>
+                  <Option value="WRK_CMPNY_NM">업체명</Option>
+                </Select>
+                <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchOnChange} value={searchText} className="search-item input-width200" />
               </div>
             </StyledSearchWrap>
 
