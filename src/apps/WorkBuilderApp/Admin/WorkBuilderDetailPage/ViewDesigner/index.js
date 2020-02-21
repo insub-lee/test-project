@@ -31,6 +31,7 @@ class ViewDesigner extends Component {
     super(props);
     this.state = {
       tabBodyHeight: 0,
+      isButtonLoding: false,
     };
     // this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
   }
@@ -82,8 +83,12 @@ class ViewDesigner extends Component {
     this.props.changeViewDesignerName(value);
   };
 
+  handleSaveMetaData = () => this.setState({ isButtonLoding: true }, () => this.props.addMetaData(this.handleChangeIsButtonLoading));
+
+  handleChangeIsButtonLoading = () => this.setState({ isButtonLoding: false });
+
   render = () => {
-    const { tabBodyHeight } = this.state;
+    const { tabBodyHeight, isButtonLoding } = this.state;
     const {
       activeTabKey,
       isShowEditor,
@@ -96,7 +101,6 @@ class ViewDesigner extends Component {
       styleDesignAction,
       toolbarAction,
       onChangeTab,
-      addMetaData,
       compList,
       compListAction,
       changeViewDesignerName,
@@ -112,19 +116,6 @@ class ViewDesigner extends Component {
       <div style={{ height: '100%' }}>
         <Header>
           <div className="button--group--left">
-            {/* {`${viewData.NAME_KOR || 'New View Design'}(${viewData.COMP_TAG})`} */}
-            {/* <div className="top-button-wrapper"> */}
-            <Input
-              placeholder="페이지명(KO)"
-              value={viewData.NAME_KOR}
-              className="viewNameInput"
-              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
-              disabled={styleMode}
-            />
-            <Button onClick={addMetaData}>Save</Button>
-            {/* </div> */}
-          </div>
-          <div className="button--group--right">
             <TopMenus
               topMenus={topMenus}
               actions={[
@@ -136,6 +127,18 @@ class ViewDesigner extends Component {
               viewType={viewData.COMP_TAG}
               viewID={viewData.META_SEQ}
             />
+          </div>
+          <div className="button--group--right">
+            <Input
+              placeholder="페이지명(KO)"
+              value={viewData.NAME_KOR}
+              className="viewNameInput"
+              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
+              disabled={styleMode}
+            />
+            <Button onClick={this.handleSaveMetaData} loading={isButtonLoding}>
+              Save
+            </Button>
           </div>
         </Header>
         <StyledViewDesigner>
@@ -261,7 +264,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   onChangeTab: activeKey => dispatch(actions.changeActiveTab(activeKey)),
-  addMetaData: () => dispatch(actions.addMetaDataBySaga()),
+  addMetaData: callbackFunc => dispatch(actions.addMetaDataBySaga(callbackFunc)),
   changeViewDesignerName: value => dispatch(actions.changeViewDesignerNameByReducer(value)),
   getMetaData: (workSeq, viewType, viewID) => dispatch(actions.getMetaDataBySaga(workSeq, viewType, viewID)),
   getComponentPoolList: () => dispatch(actions.getComponentPoolListBySaga()),

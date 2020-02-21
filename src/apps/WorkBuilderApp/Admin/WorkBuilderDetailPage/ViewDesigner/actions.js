@@ -194,7 +194,7 @@ export const changeCompDataByReducer = (groupIndex, rowIndex, colIndex, key, val
   value,
 });
 
-export const addMetaDataBySaga = () => ({ type: actionTypes.ADD_METADATA_SAGA });
+export const addMetaDataBySaga = callbackFunc => ({ type: actionTypes.ADD_METADATA_SAGA, callbackFunc });
 
 export const setInitDataByReducer = (workSeq, viewType) => ({ type: actionTypes.SET_INIT_DATA_REDUCER, workSeq, viewType });
 
