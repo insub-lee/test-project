@@ -61,41 +61,49 @@ const StyleDesign = ({ isShowEditor, groups, selectedKeys, action, bodyStyle, ta
           <div key={group.key}>
             {group.useTitle && <GroupTitle title={group.title} />}
             <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-              {group.rows.map((row, rowIndex) => (
-                <ShadowWrapper key={row.key}>
-                  <Row gutter={row.gutter || [0, 0]} className={`view-designer-row row-${rowIndex}`}>
-                    {row.cols &&
-                      row.cols.map((col, colIndex) => (
-                        <Col
-                          key={col.key}
-                          {...col}
-                          selected={selectedKeys.includes(`${groupIndex}-${rowIndex}-${colIndex}`)}
-                          className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                        >
-                          <Contents
-                            selected={selectedKeys.includes(`${groupIndex}-${rowIndex}-${colIndex}`)}
-                            action={{
-                              selectCell: () => action.selectCell(groupIndex, rowIndex, colIndex),
-                              updateStyleWidth: (width, diff) => action.updateStyleWidth(groupIndex, rowIndex, colIndex, width, diff),
-                              updateStyleHeight: height => action.updateStyleHeight(groupIndex, rowIndex, colIndex, height),
-                              updateStyleRowHeight: () => action.updateStyleRowHeight(groupIndex, rowIndex, colIndex),
-                            }}
-                            widthOption={{
-                              current: col.style.width,
-                              diffTarget: row.cols[row.cols.length - 1 === colIndex ? colIndex - 1 : colIndex + 1]
-                                ? row.cols[row.cols.length - 1 === colIndex ? colIndex - 1 : colIndex + 1].style.width
-                                : '0%',
-                            }}
-                            option={{ style: col.style }}
-                          >
-                            {col.comp && <CompRender comp={col.comp} />}
-                            {/* {col.comp && <AsyncComponent comp={col.comp} />} */}
-                          </Contents>
-                        </Col>
-                      ))}
-                  </Row>
-                </ShadowWrapper>
-              ))}
+              {group.rows.map((row, rowIndex) =>
+                row ? (
+                  <ShadowWrapper key={row.key}>
+                    <Row gutter={row.gutter || [0, 0]} className={`view-designer-row row-${rowIndex}`}>
+                      {row.cols &&
+                        row.cols.map((col, colIndex) =>
+                          col ? (
+                            <Col
+                              key={col.key}
+                              {...col}
+                              selected={selectedKeys.includes(`${groupIndex}-${rowIndex}-${colIndex}`)}
+                              className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
+                            >
+                              <Contents
+                                selected={selectedKeys.includes(`${groupIndex}-${rowIndex}-${colIndex}`)}
+                                action={{
+                                  selectCell: () => action.selectCell(groupIndex, rowIndex, colIndex),
+                                  updateStyleWidth: (width, diff) => action.updateStyleWidth(groupIndex, rowIndex, colIndex, width, diff),
+                                  updateStyleHeight: height => action.updateStyleHeight(groupIndex, rowIndex, colIndex, height),
+                                  updateStyleRowHeight: () => action.updateStyleRowHeight(groupIndex, rowIndex, colIndex),
+                                }}
+                                widthOption={{
+                                  current: col.style.width,
+                                  diffTarget: row.cols[row.cols.length - 1 === colIndex ? colIndex - 1 : colIndex + 1]
+                                    ? row.cols[row.cols.length - 1 === colIndex ? colIndex - 1 : colIndex + 1].style.width
+                                    : '0%',
+                                }}
+                                option={{ style: col.style }}
+                              >
+                                {col.comp && <CompRender comp={col.comp} />}
+                                {/* {col.comp && <AsyncComponent comp={col.comp} />} */}
+                              </Contents>
+                            </Col>
+                          ) : (
+                            ''
+                          ),
+                        )}
+                    </Row>
+                  </ShadowWrapper>
+                ) : (
+                  ''
+                ),
+              )}
             </Group>
           </div>
         ))}
