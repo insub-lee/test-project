@@ -379,8 +379,7 @@ class IntroComponent extends Component {
     if (fullPathInfo.includes(289)) {
       inputMetaSeq = 2921;
     }
-    console.debug(selectedDraft, this.props);
-    console.debug('inputMetaSeq', inputMetaSeq, fullPathInfo, fullPathInfo.includes(289));
+
     if ([DraftType.ENACTMENT].includes(selectedDraft)) {
       switch (docType) {
         case 'BS':
@@ -394,6 +393,9 @@ class IntroComponent extends Component {
           break;
         case 'PM':
           workSeqGoal = 461;
+          break;
+        case 'WD':
+          workSeqGoal = 2941;
           break;
         default:
           workSeqGoal = 901;
