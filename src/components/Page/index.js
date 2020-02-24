@@ -16,6 +16,9 @@ import Loading from './Loading';
 import * as selectors from './selectors';
 
 function createComponents(item) {
+  const authority = item.BIZMENU_AUTH ? item.BIZMENU_AUTH : [];
+  console.debug('Widget Name:', item.NAME_KOR, 'Widget Path:', item.legacyPath, 'authority:', authority);
+
   const param = {
     loader: () => import(`apps/${item.basic.path}`),
     loading: Loading,

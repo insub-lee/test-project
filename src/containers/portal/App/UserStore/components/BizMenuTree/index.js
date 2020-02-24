@@ -161,12 +161,12 @@ class BizMenuTree extends Component {
     this.inputEng.input.value = NAME_ENG;
     this.inputChn.input.value = NAME_CHN;
 
-    if (NAME_KOR === '' || NAME_ENG === '' || NAME_CHN === '') {
+    if (NAME_KOR === '') {
       // 빈 값 처리
     } else {
       data.NAME_KOR = NAME_KOR;
-      data.NAME_ENG = NAME_ENG;
-      data.NAME_CHN = NAME_CHN;
+      data.NAME_ENG = NAME_ENG === '' ? NAME_KOR : NAME_ENG;
+      data.NAME_CHN = NAME_CHN === '' ? NAME_KOR : NAME_CHN;
 
       if (data.MENU_ID) {
         this.props.updateNode(rowInfo, treeData, data, this.props.history);
@@ -349,8 +349,8 @@ class BizMenuTree extends Component {
           const { node } = rowInfo;
           node.selectedIndex = selectedIndex; // node-content-renderer.js에서 쓰임..
           node.title = lang.get('NAME', node);
-          const authM = node.AUTH_TYPE.indexOf('M') > -1;
-          const authG = node.AUTH_TYPE.indexOf('G') > -1;
+          const authM = node.AUTH_TYPE ? node.AUTH_TYPE.indexOf('M') > -1 : false;
+          const authG = node.AUTH_TYPE ? node.AUTH_TYPE.indexOf('G') > -1 : false;
           // 버튼 노출 조건(아이콘 별)
           const isFolder = node.NODE_TYPE === 'F'; // 마지막노드X
           const isEmptyFolder = !node.children || node.children.length === 0; // 하위노드존재X

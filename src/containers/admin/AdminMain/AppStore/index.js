@@ -46,13 +46,13 @@ function getUrl(node) {
   console.log('getUrl');
   console.log(node);
 
-  const { NODE_TYPE, APP_ID, PAGE_ID, CATG_ID } = node;
+  const { NODE_TYPE, APP_ID, PAGE_ID, CATG_ID, SITE_ID } = node;
 
   let url = homeUrl;
 
   if (NODE_TYPE === 'A' && APP_ID > 0) {
     // [앱] 상세
-    url = `${homeUrl}/app/${APP_ID}`;
+    url = `${homeUrl}/app/${SITE_ID}/${APP_ID}`;
   } else if (NODE_TYPE === 'P' && PAGE_ID > 0) {
     // [페이지] 상세
     url = `${homeUrl}/page/${PAGE_ID}`;
@@ -186,7 +186,7 @@ class AppStore extends Component {
                 <ErrorBoundary>
                   <Switch>
                     <Route path="/admin/adminmain/appstore" component={Main} exact />
-                    <Route path="/admin/adminmain/appstore/app/:APP_ID" component={AppInfo} exact />
+                    <Route path="/admin/adminmain/appstore/app/:SITE_ID/:APP_ID" component={AppInfo} exact />
                     <Route path="/admin/adminmain/appstore/page/:PAGE_ID" component={PageInfo} exact />
                     <Route path="/admin/adminmain/appstore/modal/app/list/" component={AppModal} />
                     {/* 앱정보 수정 및 권한 변경 링크

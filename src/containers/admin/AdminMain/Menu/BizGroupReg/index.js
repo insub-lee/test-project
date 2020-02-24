@@ -138,18 +138,13 @@ class BizGroupReg extends Component {
     loadingOn();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    console.debug('componentDidUpdate');
+  componentDidUpdate(prevProps, prevState) {
     const { match, dataP } = this.props;
     const { params } = match;
     const { BIZGRP_ID } = params;
 
     const { data } = this.state;
-    console.debug('dataP', dataP.BIZGRP_ID);
-    console.debug('1', Number(prevState.BIZGRP_ID), Number(BIZGRP_ID));
     if (BIZGRP_ID && Number(prevState.BIZGRP_ID) !== Number(BIZGRP_ID)) {
-      console.debug('WTF!!!!!!!');
-      console.debug('componentDidUpdate#2');
       this.setState(
         {
           BIZGRP_ID: Number(BIZGRP_ID),
@@ -159,141 +154,66 @@ class BizGroupReg extends Component {
           this.props.getBizGroupInfo(Number(BIZGRP_ID));
         },
       );
-      console.debug('2', data.BIZGRP_ID, dataP.BIZGRP_ID);
-      if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
-        console.debug('componentDidUpdate#3');
-        let mData = { ...data, ...dataP };
-        if (dataP.I) {
-          // 관리자 권한
-          mData = {
-            ...mData,
-            I: {
-              users: getOrgData(mData[MANAGER], USER),
-              depts: getOrgData(mData[MANAGER], DEPT),
-              pstns: getOrgData(mData[MANAGER], PSTN),
-              dutys: getOrgData(mData[MANAGER], DUTY),
-              grps: getOrgData(mData[MANAGER], GRP),
-            },
-          };
-        }
-        if (dataP.V) {
-          // 조회 권한
-          mData = {
-            ...mData,
-            V: {
-              users: getOrgData(mData[VIEWAUTH], USER),
-              depts: getOrgData(mData[VIEWAUTH], DEPT),
-              pstns: getOrgData(mData[VIEWAUTH], PSTN),
-              dutys: getOrgData(mData[VIEWAUTH], DUTY),
-              grps: getOrgData(mData[VIEWAUTH], GRP),
-            },
-          };
-        }
-        if (dataP.catgPaths) {
-          // 카테고리
-          mData = {
-            ...mData,
-            CATG_NAME: lang.get('NAME', dataP.catgPaths),
-          };
-        }
-        if (dataP.ICON && dataP.ICON.trim() !== '') {
-          // 아이콘
-          const iconArr = [];
-          iconArr.push({ seq: dataP.ICON });
-          mData = {
-            ...mData,
-            UploadFilesIcon: iconArr,
-          };
-        }
-
-        // 사용자 매뉴얼 초기값 초기값 설정
-        const { MANUAL_TYPE, MANUAL_PATH } = mData;
-        mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
-        const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
-
-        this.setState({
-          data: mData,
-          manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
-          manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
-        });
-        this.inputKor.focus();
+    }
+    console.debug('2', data.BIZGRP_ID, dataP.BIZGRP_ID);
+    if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
+      let mData = { ...data, ...dataP };
+      if (dataP.I) {
+        // 관리자 권한
+        mData = {
+          ...mData,
+          I: {
+            users: getOrgData(mData[MANAGER], USER),
+            depts: getOrgData(mData[MANAGER], DEPT),
+            pstns: getOrgData(mData[MANAGER], PSTN),
+            dutys: getOrgData(mData[MANAGER], DUTY),
+            grps: getOrgData(mData[MANAGER], GRP),
+          },
+        };
       }
+      if (dataP.V) {
+        // 조회 권한
+        mData = {
+          ...mData,
+          V: {
+            users: getOrgData(mData[VIEWAUTH], USER),
+            depts: getOrgData(mData[VIEWAUTH], DEPT),
+            pstns: getOrgData(mData[VIEWAUTH], PSTN),
+            dutys: getOrgData(mData[VIEWAUTH], DUTY),
+            grps: getOrgData(mData[VIEWAUTH], GRP),
+          },
+        };
+      }
+      if (dataP.catgPaths) {
+        // 카테고리
+        mData = {
+          ...mData,
+          CATG_NAME: lang.get('NAME', dataP.catgPaths),
+        };
+      }
+      if (dataP.ICON && dataP.ICON.trim() !== '') {
+        // 아이콘
+        const iconArr = [];
+        iconArr.push({ seq: dataP.ICON });
+        mData = {
+          ...mData,
+          UploadFilesIcon: iconArr,
+        };
+      }
+
+      // 사용자 매뉴얼 초기값 초기값 설정
+      const { MANUAL_TYPE, MANUAL_PATH } = mData;
+      mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
+      const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
+
+      this.setState({
+        data: mData,
+        manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
+        manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
+      });
+      this.inputKor.focus();
     }
   }
-
-  // componentWillReceiveProps(nextProps) {
-  // const { match, dataP } = nextProps;
-  // const { params } = match;
-  // const { BIZGRP_ID } = params;
-  //
-  // const { data } = this.state;
-  //
-  // if (BIZGRP_ID && Number(this.state.BIZGRP_ID) !== Number(BIZGRP_ID)) {
-  //   this.setState({
-  //     BIZGRP_ID: Number(BIZGRP_ID),
-  //   });
-  //   this.props.loadingOn();
-  //   this.props.getBizGroupInfo(Number(BIZGRP_ID));
-  // }
-  //
-  // if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
-  //   let mData = { ...data, ...dataP };
-  //   if (dataP.I) {
-  //     // 관리자 권한
-  //     mData = {
-  //       ...mData,
-  //       I: {
-  //         users: getOrgData(mData[MANAGER], USER),
-  //         depts: getOrgData(mData[MANAGER], DEPT),
-  //         pstns: getOrgData(mData[MANAGER], PSTN),
-  //         dutys: getOrgData(mData[MANAGER], DUTY),
-  //         grps: getOrgData(mData[MANAGER], GRP),
-  //       },
-  //     };
-  //   }
-  //   if (dataP.V) {
-  //     // 조회 권한
-  //     mData = {
-  //       ...mData,
-  //       V: {
-  //         users: getOrgData(mData[VIEWAUTH], USER),
-  //         depts: getOrgData(mData[VIEWAUTH], DEPT),
-  //         pstns: getOrgData(mData[VIEWAUTH], PSTN),
-  //         dutys: getOrgData(mData[VIEWAUTH], DUTY),
-  //         grps: getOrgData(mData[VIEWAUTH], GRP),
-  //       },
-  //     };
-  //   }
-  //   if (dataP.catgPaths) {
-  //     // 카테고리
-  //     mData = {
-  //       ...mData,
-  //       CATG_NAME: lang.get('NAME', dataP.catgPaths),
-  //     };
-  //   }
-  //   if (dataP.ICON && dataP.ICON.trim() !== '') {
-  //     // 아이콘
-  //     const iconArr = [];
-  //     iconArr.push({ seq: dataP.ICON });
-  //     mData = {
-  //       ...mData,
-  //       UploadFilesIcon: iconArr,
-  //     };
-  //   }
-  //
-  //   // 사용자 매뉴얼 초기값 초기값 설정
-  //   const { MANUAL_TYPE, MANUAL_PATH } = mData;
-  //   mData.MANUAL_TYPE = !!MANUAL_TYPE && !!MANUAL_TYPE.trim() ? MANUAL_TYPE : 'L';
-  //   const manualPath = MANUAL_PATH ? MANUAL_PATH.trim() : '';
-  //
-  //   this.setState({
-  //     data: mData,
-  //     manualUrl: !!MANUAL_TYPE && MANUAL_TYPE === 'L' ? manualPath : '',
-  //     manualLink: !!MANUAL_TYPE && MANUAL_TYPE === 'F' ? manualPath : '',
-  //   });
-  //   this.inputKor.focus();
-  // }
-  // }
 
   onChangeData(newData) {
     this.setState(prevState => ({
@@ -362,7 +282,15 @@ class BizGroupReg extends Component {
 
       if (SEC_TYPE === MANAGER) {
         return (
-          <OrganizationRole
+          // 업무그룹 관리자만 등록 가능 했던 방식 수정
+          // <OrganizationRole
+          <Organization
+            // 업무그룹 관리자만 등록 가능 했던 방식 수정
+            userTab
+            pstnTab
+            dutyTab
+            grpTab
+            //
             show={this.state.orgShow}
             closeModal={this.orgClose}
             // 조직도 모달창으로 가져갈 데이터
@@ -383,7 +311,8 @@ class BizGroupReg extends Component {
 
               this.onChangeData({ I: mData });
             }}
-            ROLE_CD="BM"
+            // 업무그룹 관리자만 등록 가능 했던 방식 수정
+            // ROLE_CD="BM"
           />
         );
       }

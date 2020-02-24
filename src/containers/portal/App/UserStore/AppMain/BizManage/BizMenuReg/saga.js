@@ -14,7 +14,7 @@ import * as constantsAppList from './AppBizModal/AppModal/AppList/constants';
 import messages from './messages';
 
 export function* getTreeData(payload) {
-  const { BIZGRP_ID } = payload;
+  const { BIZGRP_ID, SELECTED_INDEX } = payload;
 
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizmenuTree', { BIZGRP_ID });
   const { categoryData, bizGroupInfo } = response;
@@ -30,7 +30,7 @@ export function* getTreeData(payload) {
       type: constants.SET_CATEGORY_DATA,
       categoryData: newCategoryData,
       bizGroupInfo: fromJS(bizGroupInfo),
-      selectedIndex: -1,
+      selectedIndex: SELECTED_INDEX ? Number(SELECTED_INDEX) : -1,
       BIZGRP_ID,
       MENU_ID: result.get(0) ? result.get(0).get('MENU_ID') : -1,
       AUTH_TYPE: result.get(0) ? result.get(0).get('AUTH_TYPE') : '',
@@ -76,6 +76,7 @@ export function* insertNode(payload) {
     let newCategoryData = [];
     let newNode = {};
 
+    /*
     if (isRoot) {
       const path = [resultNode.PRNT_ID, resultNode.key];
       newNode = { ...resultNode, path };
@@ -85,17 +86,26 @@ export function* insertNode(payload) {
       newNode = { ...resultNode, path };
       newCategoryData = treeFunc.addNode(rowInfo, newNode, treeData);
     }
+    */
 
-    if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/portal/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+    yield put({
+      type: constants.INIT_CATEGORY_DATA,
+      BIZGRP_ID,
+      SELECTED_INDEX: resultNode.key,
+    });
+
+    if (resultNode.PAGE_ID && resultNode.PAGE_ID !== -1) {
+      history.push(`/portal/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${resultNode.PAGE_ID}`);
     }
 
+    /*
     yield put({
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
       selectedIndex: resultNode.key,
       tempRowInfo: { node: newNode },
     });
+    */
 
     yield put({
       type: constantsTopMenu.GET_BIZ_INFO,
@@ -124,11 +134,13 @@ export function* updateNode(payload) {
   const { code, bizMenu } = response;
 
   if (code === 200) {
+    /*
     const newNode = {
       ...node,
       ...bizMenu,
       title: lang.get('NAME', bizMenu),
     }; // 병합
+    
     const rowInfoN = { node: newNode, path: _.drop(node.path, 1) };
     const newCategoryData = treeFunc.editNodeByKey(rowInfoN, treeData);
 
@@ -136,9 +148,16 @@ export function* updateNode(payload) {
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
     });
+    */
 
-    if (newNode.PAGE_ID && newNode.PAGE_ID !== -1) {
-      history.push(`/portal/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${newNode.PAGE_ID}`);
+    yield put({
+      type: constants.INIT_CATEGORY_DATA,
+      BIZGRP_ID,
+      SELECTED_INDEX: bizMenu.MENU_ID,
+    });
+
+    if (node.PAGE_ID && node.PAGE_ID !== -1) {
+      history.push(`/portal/store/appMain/bizManage/bizMenuReg/page/${BIZGRP_ID}/${node.PAGE_ID}`);
     }
 
     yield put({
@@ -179,11 +198,21 @@ export function* deleteNode(payload) {
   const { code } = response;
 
   if (code === 200) {
+    const selectedIndex = node.LVL === 1 ? -1 : node.PRNT_ID;
+    /*
     const newCategoryData = treeFunc.deleteNode(rowInfo, categoryData);
 
     yield put({
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(newCategoryData),
+      selectedIndex,
+    });
+    */
+
+    yield put({
+      type: constants.INIT_CATEGORY_DATA,
+      BIZGRP_ID,
+      SELECTED_INDEX: selectedIndex,
     });
 
     // 삭제 시 사용중 -> 사용안함 상태로 변경
