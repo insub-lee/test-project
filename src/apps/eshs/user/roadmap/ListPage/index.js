@@ -49,7 +49,7 @@ class ListPage extends Component {
       });
       return result.response;
     };
-    handleAppInit().then(res => this.setState({ initList: res.roadmap }));
+    handleAppInit().then(res => this.setState({ initList: res.roadmap || [] }));
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -172,31 +172,40 @@ class ListPage extends Component {
   renderList = (group, groupIndex) => {
     const { sagaKey, getExtraApiData, extraApiData } = this.props;
     const columns = [
-      // moment().unix() = 현재 시간 타임스탬프
       {
         title: '항목',
-        dataIndex: 'CATEGORY',
-        key: 'CATEGORY',
+        dataIndex: 'category',
+        key: 'category',
         width: '150px',
         render: (key, record, index) => (
-          <SelectReadComp colData={record.CATEGORY} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
+          <SelectReadComp colData={record.category} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
         ),
       },
-      { title: '연도', key: 'CHK_DATE', width: '100px', render: (key, record, index) => <div>{Moment(record.CHK_DATE).format('YYYY')}</div> },
-      { title: '월', key: 'CHK_MONTH', width: '60px', render: (key, record, index) => <div>{Moment(record.CHK_DATE).format('M')}</div> },
+      { title: '연도', key: 'CHK_DATE', width: '100px', render: (key, record, index) => <div>{Moment(record.chk_date).format('YYYY')}</div> },
+      { title: '월', key: 'CHK_MONTH', width: '60px', render: (key, record, index) => <div>{Moment(record.chk_date).format('M')}</div> },
       {
         title: '지역',
         children: [
           {
             title: '청주',
-            dataIndex: 'FIRST_VALUE',
-            key: 'FIRST_VALUE',
+            dataIndex: 'c1',
+            key: 'c1',
           },
           {
             title: '구미',
-            dataIndex: 'SECOND_VALUE',
-            key: 'SECOND_VALUE',
+            dataIndex: 'h3',
+            key: 'h3',
           },
+          // {
+          //   title: '청주',
+          //   dataIndex: 'FIRST_VALUE',
+          //   key: 'FIRST_VALUE',
+          // },
+          // {
+          //   title: '구미',
+          //   dataIndex: 'SECOND_VALUE',
+          //   key: 'SECOND_VALUE',
+          // },
         ],
       },
       {
@@ -204,7 +213,7 @@ class ListPage extends Component {
         key: 'RNUM',
         width: '180px',
         render: (key, record, index) =>
-          record.IS_CONFIRMED === 'N' ? (
+          record.is_confirmed === 'N' ? (
             <div>
               <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.TASK_SEQ)}>
                 완료
@@ -217,7 +226,7 @@ class ListPage extends Component {
             <div>입력완료</div>
           ),
       },
-      { title: '작성자', dataIndex: 'REG_USER_NAME', key: 'REG_USER_NAME', width: '80px' },
+      { title: '작성자', dataIndex: 'reg_user_name', key: 'reg_user_name', width: '80px' },
     ];
 
     const { modalVisible, selectedTaskSeq, viewType, categoryLength } = this.state;
@@ -235,7 +244,7 @@ class ListPage extends Component {
         </Select>
 
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <div>{`총 ${categoryLength}건`}</div>
+          <div>{`총 ${this.state.initList.filter(item => item.category === this.state.selectedCategory).length}건`}</div>
           <div className="alignRight">
             <StyledButton className="btn-primary" onClick={this.handleAddClick} style={{ marginBottom: '5px' }}>
               항목 추가
@@ -247,9 +256,12 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData.filter(item => item.CATEGORY === this.state.selectedCategory)}
+            dataSource={this.state.initList.filter(item => item.category === this.state.selectedCategory) || []}
             bordered
             pagination={false}
+            onRow={(record, index) => ({
+              onClick: () => console.debug(record.category),
+            })}
           />
         </Group>
         <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
@@ -260,7 +272,6 @@ class ListPage extends Component {
   };
 
   render = () => {
-    console.debug('@@@@@INITLIST@@@@@', this.state.initList);
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, getListData, workSeq } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
