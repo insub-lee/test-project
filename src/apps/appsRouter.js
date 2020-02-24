@@ -17,16 +17,20 @@ import ApproveBase from './Workflow/User/ApproveBase';
 class AppsRouter extends React.PureComponent {
   componentDidMount() {
     const { selectedApp } = this.props;
-    this.forceUpdate();
-    this.contents = this.getAppsRouter(selectedApp);
+    if (selectedApp.length > 0 && selectedApp[0].APP_YN && selectedApp[0].APP_YN === 'Y') {
+      this.forceUpdate();
+      this.contents = this.getAppsRouter(selectedApp);
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { selectedApp: prevSelectedApp } = prevProps;
     const { selectedApp } = this.props;
     if (selectedApp && prevSelectedApp && JSON.stringify(selectedApp) !== JSON.stringify(prevSelectedApp)) {
-      this.forceUpdate();
-      this.contents = this.getAppsRouter(selectedApp);
+      if (selectedApp.length > 0 && selectedApp[0].APP_YN && selectedApp[0].APP_YN === 'Y') {
+        this.forceUpdate();
+        this.contents = this.getAppsRouter(selectedApp);
+      }
     }
   }
 

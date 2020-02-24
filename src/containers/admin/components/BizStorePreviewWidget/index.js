@@ -11,7 +11,7 @@ class BizStorePreviewWidget extends PureComponent {
 
     return (
       <PreviewTypeClass className={`type${item.basic.type}`}>
-        <div className="backgroundPattern" />
+        <div className="backgroundPattern">{item.SVC_YN && item.SVC_YN !== 'Y' && <div style={{ color: '#f35610', textAlign: 'center' }}>사용중지</div>}</div>
       </PreviewTypeClass>
     );
   }

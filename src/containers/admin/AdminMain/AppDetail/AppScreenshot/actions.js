@@ -1,8 +1,8 @@
 import * as constants from './constants';
 
-export const reqAppScreenshotList = appId => ({
+export const reqAppScreenshotList = (appId, SITE_ID) => ({
   type: constants.REQ_APP_SCREENSHOT_LIST,
-  payload: { appId },
+  payload: { appId, SITE_ID },
 });
 
 export const resAppScreenshotList = list => ({
