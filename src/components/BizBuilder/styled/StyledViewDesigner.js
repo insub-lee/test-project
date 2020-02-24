@@ -185,23 +185,22 @@ const StyledViewDesigner = styled.div`
         color: rgb(0, 0, 0);
         /* padding: 5px 10px; */
         &.mdcsTitleCol {
+          text-align: center;
           position: relative;
           background-color: #f1f1f1;
           background-clip: padding-box;
           padding: 4px;
           > div {
-            /* position: absolute;
-            top: 50%;
-            transform: translateY(-50%); */
             height: auto;
-            min-height: auto;
-            /* left: 10px; */
           }
         }
         &.mdcsContentsCol {
           padding: 6px;
           .btnTypeUploader {
             text-align: right;
+          }
+          > div {
+            height: auto;
           }
           .ant-upload.ant-upload-drag {
             .ant-upload-drag-container {
