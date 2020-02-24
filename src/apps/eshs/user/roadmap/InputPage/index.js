@@ -53,6 +53,12 @@ class InputPage extends Component {
     }
   };
 
+  handleAddClick = (id, reloadId) => {
+    const { changeFormData, saveTask, saveTaskAfterCallbackFunc } = this.props;
+    saveTask(id, reloadId);
+    changeFormData(id, 'TASK_SEQ', -1);
+  };
+
   render = () => {
     const {
       sagaKey: id,
