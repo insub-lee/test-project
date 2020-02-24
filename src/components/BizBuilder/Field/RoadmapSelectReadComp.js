@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
-class SelectReadComp extends Component {
+class RoadmapSelectReadComp extends Component {
   componentDidMount() {
     const { getExtraApiData, sagaKey: id, colData } = this.props;
+    console.debug('@@@DIDMOUNT@@@', colData);
     const apiValue = [
       {
         key: `label_${colData}`,
@@ -19,8 +20,10 @@ class SelectReadComp extends Component {
   render() {
     const { extraApiData, colData } = this.props;
     const apiData = extraApiData[`label_${colData}`];
+    console.debug('@@@APIDATA@@@', apiData);
+    // return <div>hello</div>;
     return <label>{apiData ? apiData.fullPath_Nm.FULLPATH_NM : ''}</label>;
   }
 }
 
-export default SelectReadComp;
+export default RoadmapSelectReadComp;

@@ -32,7 +32,7 @@ class InputPage extends Component {
       };
       getProcessRule(id, payload);
     }
-    changeFormData(id, 'CATEGORY', category);
+    changeFormData(id, 'category', category);
     if (parseInt(month, 10) >= 12) {
       changeFormData(id, 'CHK_YEAR', parseInt(year, 10) + 1);
       changeFormData(id, 'CHK_MONTH', 1);
