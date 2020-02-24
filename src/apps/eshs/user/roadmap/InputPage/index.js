@@ -8,6 +8,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import Moment from 'moment';
 
 class InputPage extends Component {
   constructor(props) {
@@ -19,7 +20,6 @@ class InputPage extends Component {
 
   componentDidMount() {
     const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps, changeFormData, category, year, month } = this.props;
-
     const {
       info: { PRC_ID },
     } = workFlowConfig;
@@ -32,13 +32,11 @@ class InputPage extends Component {
       };
       getProcessRule(id, payload);
     }
-    changeFormData(id, 'category', category);
-    if (parseInt(month, 10) >= 12) {
-      changeFormData(id, 'CHK_YEAR', parseInt(year, 10) + 1);
-      changeFormData(id, 'CHK_MONTH', 1);
+    changeFormData(id, 'CATEGORY', category);
+    if (Moment(month).format('MM') >= 12) {
+      changeFormData(id, 'CHK_DATE', `${Number(Moment(year).format('YYYY')) + 1}/${Moment('01').format('MM')}`);
     } else {
-      changeFormData(id, 'CHK_YEAR', year);
-      changeFormData(id, 'CHK_MONTH', parseInt(month, 10) + 1);
+      changeFormData(id, 'CHK_DATE', `${Moment(year).format('YYYY')}/${Number(Moment(month).format('MM')) + 1}`);
     }
   }
 
@@ -46,12 +44,6 @@ class InputPage extends Component {
     const { saveTask, saveTaskAfterCallbackFunc } = this.props;
     saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
   };
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
     const { onCloseModleHandler, changeViewPage, baseSagaKey } = this.props;
@@ -75,7 +67,7 @@ class InputPage extends Component {
       CustomWorkProcess,
     } = this.props;
     // Work Process 사용여부
-    console.debug('@@@@INPUTPAGE', this.props.formData);
+    console.debug('@@@DATE@@@', this.props.formData);
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -135,6 +127,7 @@ InputPage.propTypes = {
   year: PropTypes.string,
   month: PropTypes.string,
   changeFormData: PropTypes.func,
+  category: PropTypes.string,
 };
 
 InputPage.defaultProps = {

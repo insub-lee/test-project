@@ -49,17 +49,28 @@ class ListPage extends Component {
       });
       return result.response;
     };
-    handleAppInit().then(res => this.setState({ initList: res.roadmap }));
+    handleAppInit().then(res =>
+      this.setState({
+        initList: res.roadmap,
+        currentYear: res.roadmap.length
+          ? Moment(res.roadmap.filter(item => item.category === '387')[res.roadmap.filter(item => item.category === '387').length - 1].chk_date).format('YYYY')
+          : 0,
+        currentMonth: res.roadmap.length
+          ? Moment(res.roadmap.filter(item => item.category === '387')[res.roadmap.filter(item => item.category === '387').length - 1].chk_date).format('MM')
+          : 0,
+        categoryLength: res.roadmap.filter(item => item.category === '387').length,
+      }),
+    );
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { selectedCategory } = prevState;
-    const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
-    if (prevState.categoryLength !== filterdList.length) {
-      return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
-    }
-    return null;
-  }
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   const { selectedCategory } = prevState;
+  //   const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
+  //   if (prevState.categoryLength !== filterdList.length) {
+  //     return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
+  //   }
+  //   return null;
+  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -141,12 +152,15 @@ class ListPage extends Component {
 
   handleChange = e => {
     const { initList } = this.state;
-    const { listData } = this.props;
     this.setState({
       selectedCategory: e,
       categoryLength: initList.filter(item => item.category === e).length,
-      currentYear: initList.filter(item => item.category === e).length ? initList.filter(item => item.category === e)[0].CHK_YEAR : '2020',
-      currentMonth: initList.filter(item => item.category === e).length ? initList.filter(item => item.category === e)[0].CHK_MONTH : '0',
+      currentYear: initList.filter(item => item.category === e).length
+        ? Moment(initList.filter(item => item.category === e)[initList.filter(item => item.category === e).length - 1].chk_date).format('YYYY')
+        : '2020',
+      currentMonth: initList.filter(item => item.category === e).length
+        ? Moment(initList.filter(item => item.category === e)[initList.filter(item => item.category === e).length - 1].chk_date).format('MM')
+        : '0',
     });
   };
 
