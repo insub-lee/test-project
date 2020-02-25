@@ -111,6 +111,7 @@ class ViewDesigner extends Component {
       sysMetaList,
       styleMode,
       isLoadingContent,
+      workName,
     } = this.props;
     return (
       <div style={{ height: '100%' }}>
@@ -129,6 +130,7 @@ class ViewDesigner extends Component {
             />
           </div>
           <div className="button--group--right">
+            {workName}
             <Input
               placeholder="페이지명(KO)"
               value={viewData.NAME_KOR}
@@ -304,6 +306,8 @@ const mapDispatchToProps = dispatch => ({
     divideRow: () => dispatch(actions.divideRow()),
     divideCol: () => dispatch(actions.divideCol()),
     onChangeTableSize: (groupIndex, tableSize) => dispatch(actions.onChangeTableSize(groupIndex, tableSize)),
+    changeCompFieldData: (compKey, key, value) => dispatch(actions.changeCompFieldDataByReducer(compKey, key, value)),
+    changeHiddenCompData: (compIdx, key, value) => dispatch(actions.changeHiddenCompDatByReducer(compIdx, key, value)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),

@@ -15,7 +15,7 @@ const bodyStyle = {
   overflowY: 'auto',
 };
 
-const getTabs = workSeq => [
+const getTabs = (workSeq, workName) => [
   {
     id: 0,
     TabComponent: '기본정보',
@@ -31,7 +31,7 @@ const getTabs = workSeq => [
     TabPanelComponent: (
       <div style={bodyStyle}>
         {/* <Designer id={ID} /> */}
-        <ViewDesigner workSeq={workSeq} />
+        <ViewDesigner workSeq={workSeq} workName={workName} />
       </div>
     ),
   },
@@ -40,7 +40,7 @@ const getTabs = workSeq => [
     TabComponent: '스타일 디자이너',
     TabPanelComponent: (
       <div style={bodyStyle}>
-        <ViewDesigner workSeq={workSeq} styleMode />
+        <ViewDesigner workSeq={workSeq} workName={workName} styleMode />
       </div>
     ),
   },
@@ -78,9 +78,10 @@ const WorkBuilderDetailPage = ({
   //   params: { ID },
   // },
   workSeq,
+  workName,
 }) => (
   <Wrapper>
-    <Tabs tabs={getTabs(workSeq)} keyName="id" title="업무빌더관리" bodyStyle={bodyStyle} />
+    <Tabs tabs={getTabs(workSeq, workName)} keyName="id" title="업무빌더관리" bodyStyle={bodyStyle} />
   </Wrapper>
 );
 

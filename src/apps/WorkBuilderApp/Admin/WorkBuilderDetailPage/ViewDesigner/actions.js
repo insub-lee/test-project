@@ -282,3 +282,17 @@ export const onChangeTableSize = (groupIndex, tableSize) => ({
   groupIndex,
   tableSize,
 });
+
+export const changeCompFieldDataByReducer = (compKey, key, value) => ({
+  type: actionTypes.CHANGE_COMP_FIELD_DATA_REDUCER,
+  compKey,
+  key,
+  value,
+});
+
+export const changeHiddenCompDatByReducer = (compIdx, key, value) => ({
+  type: actionTypes.CHANGE_HIDDEN_COMP_DATA_REDUCER,
+  compIdx,
+  key,
+  value,
+});

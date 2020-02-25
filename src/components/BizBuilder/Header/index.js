@@ -23,6 +23,7 @@ const Header = styled.div`
     .viewNameInput {
       width: 200px;
       height: 32px;
+      margin-left: 10px;
     }
     button {
       background: transparent;
