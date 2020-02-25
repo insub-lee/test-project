@@ -10,7 +10,7 @@ import messages from '../messages';
 
 export function* getBizInfo(payload) {
   const { BIZGRP_ID, PAGE_ID } = payload;
-  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/info', { BIZGRP_ID: Number(BIZGRP_ID) });
+  const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/info', { BIZGRP_ID: Number(BIZGRP_ID), PAGE_ID: Number(PAGE_ID) });
 
   if (response.result !== undefined) {
     yield put({

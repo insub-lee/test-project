@@ -13,6 +13,8 @@ export const DELETE_FOLDER = 'store/container/BizManage/DELETE_FOLDER';
 export const DELETE_NODE = 'store/container/BizManage/DELETE_NODE';
 export const UPDATE_BIZGROUP_DELYN = 'store/container/BizManage/UPDATE_BIZGROUP_DELYN';
 export const SET_MENUBIZGRP_ID = `store/container/BizManage/SET_MENUBIZGRP_ID`;
+export const SET_BIZGRP_AUTH = `store/container/BizManage/SET_BIZGRP_AUTH`;
+
 // export const SET_DATA = 'store/container/BizManage/SET_DATA';
 
 // export const SET_TITLE_MODAL_VISIBLE = 'store/container/BizManage/SET_TITLE_MODAL_VISIBLE';

@@ -141,28 +141,28 @@ class BizBuilderBase extends React.Component {
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
-          if (typeof CustomInputPage === 'function') {
+          if (typeof CustomInputPage === 'function' && metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <CustomInputPage {...nextProps} />;
           } else if (metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <InputPage {...nextProps} />;
           }
           break;
         case 'MODIFY':
-          if (typeof CustomModifyPage === 'function') {
+          if (typeof CustomModifyPage === 'function' && metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <CustomModifyPage {...nextProps} />;
           } else if (metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <ModifyPage {...nextProps} />;
           }
           break;
         case 'VIEW':
-          if (typeof CustomViewPage === 'function') {
+          if (typeof CustomViewPage === 'function' && metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <CustomViewPage {...nextProps} />;
           } else if (metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <ViewPage {...nextProps} />;
           }
           break;
         case 'LIST':
-          if (typeof CustomListPage === 'function') {
+          if (typeof CustomListPage === 'function' && metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <CustomListPage {...nextProps} listData={listData} searchCompRenderer={this.searchCompRenderer} />;
           } else if (metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = <ListPage {...nextProps} listData={listData} searchCompRenderer={this.searchCompRenderer} />;
@@ -170,7 +170,7 @@ class BizBuilderBase extends React.Component {
           break;
         case 'CUSTOM':
         default:
-          if (typeof CustomPage === 'function') {
+          if (typeof CustomPage === 'function' && metaList && metaList.length > 0 && viewLayer.length > 0) {
             component = (
               <div>
                 <CustomPage {...nextProps} />

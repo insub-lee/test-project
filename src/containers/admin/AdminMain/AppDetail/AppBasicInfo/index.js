@@ -30,23 +30,41 @@ class AppBasicInfo extends React.Component {
   constructor(prop) {
     super(prop);
     this.state = {
-      appId: prop.appId,
+      appId: -1,
+      SITE_ID: 0,
       popUpVisible: false,
       popUpUrl: '',
       popUpTitle: '',
       userinfo: {},
       orgShow: false,
     };
-    prop.reqAppBasicInfo(this.state.appId);
+    // prop.reqAppBasicInfo(this.state.appId);
     this.props.appBizGubun(3);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (this.state.appId !== nextProps.appId) {
-      this.setState({
-        appId: nextProps.appId,
-      });
-      this.props.reqAppBasicInfo(nextProps.appId);
+  componentDidMount() {
+    const { appId, SITE_ID } = this.props;
+    if (this.state.appId !== appId) {
+      this.setState(
+        {
+          appId,
+          SITE_ID,
+        },
+        () => this.props.reqAppBasicInfo(appId, SITE_ID),
+      );
+    }
+  }
+
+  componentDidUpdate() {
+    const { appId, SITE_ID } = this.props;
+    if (this.state.appId !== appId || this.state.SITE_ID !== SITE_ID) {
+      this.setState(
+        {
+          appId,
+          SITE_ID,
+        },
+        () => this.props.reqAppBasicInfo(appId, SITE_ID),
+      );
     }
   }
 
@@ -207,7 +225,10 @@ class AppBasicInfo extends React.Component {
                   </div>
                 </div>
               ) : (
-                <div className="btnsWrapperBottom" style={{ visibility: this.props.visibleInfo ? 'visible' : 'hidden' }}>
+                <div
+                  className="btnsWrapperBottom"
+                  // style={{ visibility: this.props.visibleInfo ? 'visible' : 'hidden' }}
+                >
                   <div
                     className="regstBtns registered"
                     style={{
@@ -235,6 +256,7 @@ AppBasicInfo.propTypes = {
   registApp: PropTypes.func, //eslint-disable-line
   targetUrl: PropTypes.string, //eslint-disable-line
   appId: PropTypes.string, //eslint-disable-line
+  SITE_ID: PropTypes.number, //eslint-disable-line
   appProcess: PropTypes.object, //eslint-disable-line
   appManual: PropTypes.object, //eslint-disable-line
   appManagerList: PropTypes.array, //eslint-disable-line
@@ -245,10 +267,11 @@ AppBasicInfo.propTypes = {
 
 AppBasicInfo.defaultProps = {
   visibleInfo: false,
+  SITE_ID: 0,
 };
 
 const mapDispatchToProps = dispatch => ({
-  reqAppBasicInfo: appId => dispatch(actions.reqAppBasicInfo(appId)),
+  reqAppBasicInfo: (appId, SITE_ID) => dispatch(actions.reqAppBasicInfo(appId, SITE_ID)),
   registCategory: APP_ID => dispatch(actions.registCategory(APP_ID)),
   registApp: APP_ID => dispatch(actions.registApp(APP_ID)),
   appBizGubun: gubun => dispatch(actions.appBizGubun(gubun)),

@@ -65,6 +65,9 @@ import TitleModalPlusComp from 'components/BizBuilder/Field/TitleModalPlusComp';
 import CheckableTreeSelectComp from 'components/BizBuilder/Field/CheckableTreeSelectComp';
 import RoadmapCategoryComp from 'components/BizBuilder/Field/RoadmapCategoryComp';
 import RoadmapNumberComp from 'components/BizBuilder/Field/RoadmapNumberComp';
+import ParentTaskSeqComp from 'components/BizBuilder/Field/ParentTaskSeqComp';
+import RadioIFoundryComp from 'components/BizBuilder/Field/RadioIFoundryComp';
+import RadioMdcsChangeComp from 'components/BizBuilder/Field/RadioMdcsChangeComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -132,4 +135,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/CheckableTreeSelectComp': { renderer: property => <CheckableTreeSelectComp {...property} /> },
   'components/BizBuilder/Field/RoadmapCategoryComp': { renderer: property => <RoadmapCategoryComp {...property} /> },
   'components/BizBuilder/Field/RoadmapNumberComp': { renderer: property => <RoadmapNumberComp {...property} /> },
+  'components/BizBuilder/Field/ParentTaskSeqComp': { renderer: property => <ParentTaskSeqComp {...property} /> },
+  'components/BizBuilder/Field/RadioIFoundryComp': { renderer: property => <RadioIFoundryComp {...property} /> },
+  'components/BizBuilder/Field/RadioMdcsChangeComp': { renderer: property => <RadioMdcsChangeComp {...property} /> },
 };

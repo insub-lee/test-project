@@ -16,15 +16,17 @@ class UserModal extends Component {
   }
 
   componentDidMount = () => {
+    console.debug('여기는 componentDIdMount');
     const { id, changeFormData, formData, getCallDataHandler } = this.props;
-    changeFormData(id, 'userData', { SITE: '청주' });
+    const cmpnyList = (formData && formData.cmpnyList) || [];
+    changeFormData(id, 'userData', { SITE: '청주', HST_CMPNY_CD: cmpnyList[0].HST_CMPNY_CD });
     const type = (formData && formData.userModalType) || '';
     if (type === 'UPDATE') {
       const apiAry = [
         {
           key: 'deptList',
           type: 'GET',
-          url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${(formData && formData.selectedUser && formData.selectedUser.hst_cmpny_cd) || ' '}`,
+          url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${(formData && formData.selectedUser && formData.selectedUser.HST_CMPNY_CD) || ' '}`,
         },
       ];
 
@@ -34,7 +36,7 @@ class UserModal extends Component {
         {
           key: 'deptList',
           type: 'GET',
-          url: '/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=02',
+          url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${cmpnyList[0].HST_CMPNY_CD}`,
         },
       ];
 
@@ -59,9 +61,9 @@ class UserModal extends Component {
     ];
     getCallDataHandler(id, apiAry, this.setDept);
     this.setState({
-      hst_cmpny_cd: e,
+      HST_CMPNY_CD: e,
     });
-    changeFormData(id, 'userData', { ...userData, HST_CMPNY_CD: e });
+    changeFormData(id, 'userData', { ...userData, HST_CMPNY_CD: e, DEPT_CD: '', DEPT_NM: '' });
   };
 
   setDept = () => {
@@ -89,7 +91,7 @@ class UserModal extends Component {
     const { userData, selectedUser } = formData;
     const type = (formData && formData.userModalType) || '';
     if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, SITE: e });
-    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, site: e });
+    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, SITE: e });
   };
 
   handleDeptChange = e => {
@@ -97,8 +99,8 @@ class UserModal extends Component {
     const { userData, selectedUser } = formData;
     const code = e.split('&&');
     const type = (formData && formData.userModalType) || '';
-    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, DEPT_CD: code[1] });
-    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, dept_cd: code[1] });
+    if (type === 'INSERT') changeFormData(id, 'userData', { ...userData, DEPT_CD: code[1], DEPT_NM: code[2] });
+    else if (type === 'UPDATE') changeFormData(id, 'selectedUser', { ...selectedUser, DEPT_CD: code[1], DEPT_NM: code[2] });
   };
 
   render() {
@@ -106,7 +108,7 @@ class UserModal extends Component {
     const { searchDept } = this.state;
     const userModalType = (formData && formData.userModalType) || ' ';
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
-    const dfValue = cmpnyList.length ? cmpnyList[0].hst_cmpny_cd : ' ';
+    const dfValue = (formData && formData.userData && formData.userData.HST_CMPNY_CD) || '';
     const selectedUser = (formData && formData.selectedUser) || {};
     const userData = (formData && formData.userData) || {};
 
@@ -122,10 +124,10 @@ class UserModal extends Component {
                   회사
                 </td>
                 <td>
-                  <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
+                  <Select value={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
                     {cmpnyList.map(c => (
-                      <Option key={c.hst_cmpny_cd} style={{ height: 30 }}>
-                        {c.hst_cmpny_nm}
+                      <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
+                        {c.HST_CMPNY_NM}
                       </Option>
                     ))}
                   </Select>
@@ -161,13 +163,14 @@ class UserModal extends Component {
                 </td>
                 <td>
                   <Select
-                    defaultValue={userData.DEPT_CD ? `${userData.HST_CMPNY_CD}&&${userData.DEPT_CD}` : ' '}
+                    defaultValue={' '}
+                    value={userData.DEPT_CD ? `${userData.HST_CMPNY_CD}&&${userData.DEPT_CD}&&${userData.DEPT_NM}` : ''}
                     style={{ width: 130, padding: 3 }}
                     onChange={this.handleDeptChange}
                   >
                     {searchDept.map(d => (
-                      <Option key={`${d.hst_cmpny_cd}&&${d.dept_cd}`} style={{ height: 30 }}>
-                        {d.dept_nm}
+                      <Option key={`${d.HST_CMPNY_CD}&&${d.DEPT_CD}&&${d.DEPT_NM}`} style={{ height: 30 }}>
+                        {d.DEPT_NM}
                       </Option>
                     ))}
                   </Select>
@@ -208,7 +211,7 @@ class UserModal extends Component {
                 <td>
                   <label>
                     {cmpnyList.map(c => {
-                      if (c.hst_cmpny_cd === selectedUser.hst_cmpny_cd) return c.hst_cmpny_nm;
+                      if (c.HST_CMPNY_CD === selectedUser.HST_CMPNY_CD) return c.HST_CMPNY_NM;
                     })}
                   </label>
                 </td>
@@ -219,20 +222,20 @@ class UserModal extends Component {
                   이름
                 </td>
                 <td>
-                  <Input name="emp_nm" value={selectedUser.emp_nm || ''} onChange={this.handleInputChange} placeholder="이름" />
+                  <Input name="EMP_NM" value={selectedUser.EMP_NM || ''} onChange={this.handleInputChange} placeholder="이름" />
                 </td>
               </tr>
               <tr>
                 <td>직위</td>
                 <td>
-                  <Input name="emp_position" value={selectedUser.emp_position || ''} onChange={this.handleInputChange} placeholder="직위" />
+                  <Input name="EMP_POSITION" value={selectedUser.EMP_POSITION || ''} onChange={this.handleInputChange} placeholder="직위" />
                   <span>(ex. 부장)</span>
                 </td>
               </tr>
               <tr>
                 <td>직책</td>
                 <td>
-                  <Input name="duty" value={selectedUser.duty || ''} onChange={this.handleInputChange} placeholder="직책" />
+                  <Input name="DUTY" value={selectedUser.DUTY || ''} onChange={this.handleInputChange} placeholder="직책" />
                   <span>(ex. 팀장)</span>
                 </td>
               </tr>
@@ -242,10 +245,14 @@ class UserModal extends Component {
                   부서
                 </td>
                 <td>
-                  <Select defaultValue={selectedUser.dept_nm} style={{ width: 130, padding: 3 }} onChange={this.handleDeptChange}>
+                  <Select
+                    value={`${selectedUser.HST_CMPNY_CD}&&${selectedUser.DEPT_CD}&&${selectedUser.DEPT_NM}`}
+                    style={{ width: 130, padding: 3 }}
+                    onChange={this.handleDeptChange}
+                  >
                     {searchDept.map(d => (
-                      <Option key={`${d.hst_cmpny_cd}&&${d.dept_cd}`} style={{ height: 30 }}>
-                        {d.dept_nm}
+                      <Option key={`${d.HST_CMPNY_CD}&&${d.DEPT_CD}&&${d.DEPT_NM}`} style={{ height: 30 }}>
+                        {d.DEPT_NM}
                       </Option>
                     ))}
                   </Select>
@@ -257,7 +264,7 @@ class UserModal extends Component {
                   근무지
                 </td>
                 <td>
-                  <Select defaultValue={selectedUser.site || '청주'} style={{ width: 110, padding: 3 }} onChange={this.handleSiteOnChange}>
+                  <Select defaultValue={selectedUser.SITE || '청주'} style={{ width: 110, padding: 3 }} onChange={this.handleSiteOnChange}>
                     <Option value="청주">청주</Option>
                     <Option value="구미">구미</Option>
                   </Select>

@@ -88,7 +88,7 @@ class SearchTab extends Component {
                   treeData={this.state.treeData}
                   sagaKey="STD_TECH_SEARCH"
                   searchTitle="기술표준"
-                  workSeq={201}
+                  workSeq={1921}
                   component={SearchDetail}
                 />
               )}
@@ -109,7 +109,7 @@ class SearchTab extends Component {
                   treeData={this.state.treeData}
                   sagaKey="STD_DW_SEARCH"
                   searchTitle="도면"
-                  workSeq={201}
+                  workSeq={1881}
                   component={SearchDetail}
                 />
               )}

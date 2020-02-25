@@ -49,12 +49,12 @@ class List extends Component {
   noRowsRenderer = () => <div className="noRows">0 명</div>;
 
   getColumns = () => [
-    { label: '소속', dataKey: 'belong', width: 350, ratio: 25 },
-    { label: '이름', dataKey: 'emp_nm', width: 200, ratio: 14 },
-    { label: '직위', dataKey: 'emp_position', width: 200, ratio: 12 },
-    { label: '직책', dataKey: 'duty', width: 200, ratio: 12 },
-    { label: '근무지', dataKey: 'site', width: 200, ratio: 12 },
-    { label: '전화번호', dataKey: 'tel', width: 350, ratio: 25 },
+    { label: '소속', dataKey: 'BELONG', width: 350, ratio: 25 },
+    { label: '이름', dataKey: 'EMP_NM', width: 200, ratio: 14 },
+    { label: '직위', dataKey: 'EMP_POSITION', width: 200, ratio: 12 },
+    { label: '직책', dataKey: 'DUTY', width: 200, ratio: 12 },
+    { label: '근무지', dataKey: 'SITE', width: 200, ratio: 12 },
+    { label: '전화번호', dataKey: 'TEL', width: 350, ratio: 25 },
   ];
 
   getTablewidth = () => {

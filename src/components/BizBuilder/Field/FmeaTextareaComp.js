@@ -1,33 +1,33 @@
 import React, { Component } from 'react';
 
+import message from 'components/Feedback/message';
 import TextareaComp from './TextareaComp';
 
 class FmeaTextareaComp extends Component {
   componentDidMount = () => {
-    const { isManage, formData, rowClass } = this.props;
-    if (!isManage && rowClass && Number(formData.FMEA_FLAG) !== 195) {
-      const rowNode = document.querySelector(`.${rowClass}`);
-      rowNode.style.display = 'none';
-    }
+    const { rowClass } = this.props;
+    const rowNode = document.querySelector(`.${rowClass}`);
+    rowNode.style.display = 'none';
   };
 
   componentDidUpdate = prevProps => {
-    const { isManage, formData, rowClass } = this.props;
-    const { formData: prevFormData } = prevProps;
-    if (formData.FMEA_FLAG && prevFormData.FMEA_FLAG && formData.FMEA_FLAG !== prevFormData.FMEA_FLAG) {
-      if (!isManage && rowClass && Number(formData.FMEA_FLAG) !== 195) {
-        const rowNode = document.querySelector(`.${rowClass}`);
-        rowNode.style.display = 'none';
-      } else if (rowClass) {
-        const rowNode = document.querySelector(`.${rowClass}`);
+    const { formData, rowClass } = this.props;
+    const { formData: preFormData } = prevProps;
+    if (formData.FMEA_FLAG !== preFormData.FMEA_FLAG) {
+      const rowNode = document.querySelector(`.${rowClass}`);
+      console.debug(formData.FMEA_FLAG);
+      if (formData.FMEA_FLAG === 195) {
         rowNode.style.display = '';
+        message.success('Description of FMEA를 입력해주세요', 2);
+      } else {
+        rowNode.style.display = 'none';
       }
     }
   };
 
   render = () => {
     const { isManage, formData, visible } = this.props;
-    return isManage || (visible && Number(formData.FMEA_FLAG) === 195) ? <TextareaComp {...this.props} /> : '';
+    return <TextareaComp {...this.props} />;
   };
 }
 
