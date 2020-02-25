@@ -8,6 +8,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import { Popconfirm } from 'antd';
 
 class ViewPage extends Component {
   constructor(props) {
@@ -24,6 +25,15 @@ class ViewPage extends Component {
     }
   }
 
+  customDeleteTask = ({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc }) => {
+    this.props.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc);
+  };
+
+  customDeleteCallback = workSeq => {
+    this.props.onCloseModleHandler();
+    this.props.changeViewPage(this.props.baseSagaKey, workSeq, -1, 'LIST');
+  };
+
   // state값 reset테스트
   // componentWillUnmount() {
   //   const { removeReduxState, id } = this.props;
@@ -32,7 +42,7 @@ class ViewPage extends Component {
 
   render = () => {
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId } = this.props;
-
+    console.debug(id, viewPageData);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -53,6 +63,15 @@ class ViewPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
             <div className="alignRight">
+              <Popconfirm
+                title="Are you sure delete this task?"
+                // onConfirm={() => this.customDeleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.props.onCloseModleHandler)}
+                onConfirm={() => this.props.deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, this.customDeleteCallback(viewPageData.workSeq))}
+                okText="Yes"
+                cancelText="No"
+              >
+                <StyledButton className="btn-primary">Delete</StyledButton>
+              </Popconfirm>
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
                 수정
               </StyledButton>
