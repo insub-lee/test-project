@@ -214,6 +214,10 @@ const Styled = styled.div`
           margin-right: 5px;
           display: inline-block;
         }
+        button {
+          height: 24px;
+          margin-left: 10px;
+        }
       }
       .popoverInnerCom {
         border: 1px solid #adb5bd;

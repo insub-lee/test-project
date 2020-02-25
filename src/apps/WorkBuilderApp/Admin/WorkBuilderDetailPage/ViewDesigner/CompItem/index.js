@@ -64,7 +64,11 @@ class CompItem extends React.Component {
             <div className="compConfigRow compConfigDiv">
               <div className={colClassName}>
                 <i className="iconField iconFieldCheck" />
-                <p className="componentTit" role="button" onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps)}>
+                <p
+                  className="componentTit"
+                  role="button"
+                  onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps, 'COMP')}
+                >
                   {col.comp.COMP_TYPE !== 'LABEL' ? col.comp.COMP_FIELD : col.comp.NAME_KOR}
                 </p>
               </div>
@@ -74,7 +78,7 @@ class CompItem extends React.Component {
                   role="button"
                   onKeyPress={() => false}
                   tabIndex="0"
-                  onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps)}
+                  onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps, 'COMP')}
                 />
                 <Popconfirm
                   title="Are you sure delete this Component?"
@@ -111,7 +115,7 @@ class CompItem extends React.Component {
                 role="button"
                 onKeyPress={() => false}
                 tabIndex="0"
-                onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps)}
+                onClick={() => setCompConfigModal(true, col.comp.CONFIG.property.COMP_SETTING_SRC, configProps, 'COMP')}
               />
               <Popconfirm
                 title="Are you sure delete this Component?"

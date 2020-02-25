@@ -1,6 +1,6 @@
  server {
     listen 80;
-    server_name dev.portal.com, dev.builder.com, magnachip.bizmicro.com;
+    server_name dev.portal.com, eshs-dev.magnachip.com, magnachip.bizmicro.com;
     client_max_body_size 1000M;
 
     location ~ /eventbus/ {

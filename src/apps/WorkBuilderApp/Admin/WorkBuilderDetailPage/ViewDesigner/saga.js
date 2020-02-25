@@ -73,7 +73,7 @@ const makeTopMenuData = viewList => {
   return topMenus;
 };
 
-function* addMetaData() {
+function* addMetaData({ callbackFunc }) {
   const viewData = yield select(selectors.makeSelectViewData());
   let compData = yield select(selectors.makeSelectCompData());
   const workInfo = yield select(selectors.makeSelectWorkInfo());
@@ -181,6 +181,7 @@ function* addMetaData() {
     const currentViewIdx = viewList.findIndex(iNode => iNode.CONFIG.property.layerIdxKey === originIdxKey);
     yield put(actions.getMetaDataBySaga(workInfo.workSeq, workInfo.viewType, viewList[currentViewIdx].META_SEQ));
     message.success(<MessageContent>Save</MessageContent>);
+    if (typeof callbackFunc === 'function') callbackFunc();
   }
 }
 

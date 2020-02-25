@@ -23,10 +23,14 @@ import FormModal from './FormModal';
 const AntdTable = StyledAntdTable(Table);
 
 class WorkBuilderListPage extends Component {
-  state = {
-    isShow: false,
-    workSeq: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShow: false,
+      workSeq: 0,
+      workName: '',
+    };
+  }
 
   componentDidMount() {
     const { getList } = this.props;
@@ -48,8 +52,8 @@ class WorkBuilderListPage extends Component {
       title: '업무빌더ID',
       dataIndex: 'WORK_ID',
       key: 'WORK_ID',
-      onCell: ({ WORK_SEQ }) => ({
-        onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
+      onCell: ({ WORK_SEQ, NAME_KOR }) => ({
+        onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ, workName: NAME_KOR }),
       }),
       align: 'center',
     },
@@ -156,7 +160,7 @@ class WorkBuilderListPage extends Component {
           footer={null}
           zIndex={106}
         >
-          <WorkBuilderDetailPage workSeq={this.state.workSeq} />
+          <WorkBuilderDetailPage workSeq={this.state.workSeq} workName={this.state.workName} />
         </Modal>
       </Wrapper>
     );
