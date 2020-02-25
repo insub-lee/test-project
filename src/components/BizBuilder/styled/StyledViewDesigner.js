@@ -63,7 +63,7 @@ const StyledViewDesigner = styled.div`
               padding-top: 14px;
               padding-left: 10px;
               padding-right: 10px;
-              font-size: 14px;
+              font-size: 12px;
               cursor: pointer !important;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -394,7 +394,7 @@ const StyledViewDesigner = styled.div`
     padding-top: 14px;
     padding-left: 10px;
     padding-right: 10px;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer !important;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -425,8 +425,8 @@ const StyledViewDesigner = styled.div`
     color: #b8c7ce;
   }
   .Side-menu-default *:not(i) {
-    font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-    font-weight: 300;
+    /* font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; */
+    font-weight: 400;
   }
   .Side-menu-default .divider {
     background-color: #584475;

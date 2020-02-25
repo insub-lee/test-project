@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Input, Checkbox, InputNumber, Select, TreeSelect } from 'antd';
+import { Input, Checkbox, InputNumber, Select, TreeSelect, Button } from 'antd';
 import { debounce } from 'lodash';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
@@ -190,7 +190,7 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configType, configProps, compPoolList, groups } = this.props;
+    const { configType, configProps, compPoolList, groups, onCloseModal } = this.props;
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
     return (
@@ -322,24 +322,12 @@ class CompModal extends Component {
           </div>
         )}
         <div className="popoverInner">
-          <p className="popover-tit">컴포넌트 설정</p>
+          <p className="popover-tit">
+            컴포넌트 설정<Button onClick={onCloseModal}>Save</Button>
+          </p>
           <div className="popoverInnerCom">
             <div className="popoverItem popoverItemInput">
               <span className="spanLabel">컴포넌트 설정</span>
-              {/* <Select
-                style={{ width: '100%' }}
-                placeholder="Select component"
-                defaultValue={comp.CONFIG.property.COMP_SRC}
-                onChange={value => this.handleChangeCompSetting(value)}
-              >
-                {compPoolList
-                  .filter(fNode => fNode.COL_DB_TYPE === comp.CONFIG.info.type || fNode.COL_DB_TYPE === 'NONE')
-                  .map(node => (
-                    <Option key={node.COMP_SRC} value={node.COMP_SRC}>
-                      {node.COMP_NAME}
-                    </Option>
-                  ))}
-              </Select> */}
               <TreeSelect
                 defaultValue={comp.CONFIG.property.COMP_SRC}
                 onChange={value => this.handleChangeCompSetting(value)}
