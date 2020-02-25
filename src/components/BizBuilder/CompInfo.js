@@ -67,6 +67,7 @@ import RoadmapCategoryComp from 'components/BizBuilder/Field/RoadmapCategoryComp
 import ParentTaskSeqComp from 'components/BizBuilder/Field/ParentTaskSeqComp';
 import RadioIFoundryComp from 'components/BizBuilder/Field/RadioIFoundryComp';
 import RadioMdcsChangeComp from 'components/BizBuilder/Field/RadioMdcsChangeComp';
+import RadioMultiSelector from 'components/BizBuilder/Field/RadioMultiSelector';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -136,4 +137,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/ParentTaskSeqComp': { renderer: property => <ParentTaskSeqComp {...property} /> },
   'components/BizBuilder/Field/RadioIFoundryComp': { renderer: property => <RadioIFoundryComp {...property} /> },
   'components/BizBuilder/Field/RadioMdcsChangeComp': { renderer: property => <RadioMdcsChangeComp {...property} /> },
+  'components/BizBuilder/Field/RadioMultiSelector': { renderer: property => <RadioMultiSelector {...property} /> },
 };
