@@ -18,6 +18,8 @@ class RadioMultiSelector extends Component {
     isShowModal: false,
     apiFlag: true,
     dataSource: [],
+    selectedCheckList: [],
+    selectedCheckListValue: {},
   };
 
   componentDidMount() {
@@ -57,50 +59,21 @@ class RadioMultiSelector extends Component {
   };
 
   onChangeMultiSelector = (dataList, selectedValue) => {
-    this.setState({ selectedCheckList: dataList });
+    this.setState({ selectedCheckList: dataList, selectedCheckListValue: selectedValue });
   };
 
   onClickScope = () => {
+    const { changeFormData, COMP_FIELD, sagaKey, colData, COMP_TAG, WORK_SEQ } = this.props;
+    const { selectedCheckListValue } = this.state;
     this.setState(
       prevState => ({
         dataSource: prevState.selectedCheckList,
         isShowModal: false,
       }),
       () => {
-        const { changeFormData, COMP_FIELD, sagaKey, colData, COMP_TAG, WORK_SEQ } = this.props;
-        const { dataSource } = this.state;
-        const submitData = dataSource
-          .filter(f => f.selectedValue.length > 0)
-          .map(grp => ({
-            groupName: grp.groupName,
-            groupKey: grp.groupKey,
-            selectedValue: grp.selectedValue,
-            selectedItem: grp.selectedItem,
-          }));
-        changeFormData(sagaKey, COMP_FIELD, this.setFormDataValue(submitData, colData, COMP_FIELD, COMP_TAG, WORK_SEQ));
+        changeFormData(sagaKey, COMP_FIELD, selectedCheckListValue.join());
       },
     );
-  };
-
-  setFormDataValue = (value, colData, COMP_FIELD, COMP_TAG, WORK_SEQ) => {
-    if (typeof colData === 'object') {
-      colData[0].DETAIL = value;
-      return colData;
-    }
-    if (colData && colData.length > 0 && isJSON(colData)) {
-      JSON.parse(colData)[0].DETAIL = value;
-      return colData;
-    }
-    return [
-      {
-        WORK_SEQ,
-        TASK_SEQ: -1,
-        CONT_SEQ: -1,
-        FIELD_NM: COMP_FIELD,
-        TYPE: COMP_TAG,
-        DETAIL: value,
-      },
-    ];
   };
 
   render() {
@@ -118,9 +91,7 @@ class RadioMultiSelector extends Component {
                 grp.selectedItem.map(item => (
                   <div className="draftInfoBox">
                     <Icon type="code" />
-                    <span className="infoTxt">
-                      {grp.groupName}: {item.title}
-                    </span>
+                    <span className="infoTxt">{item.title}</span>
                   </div>
                 )),
               )}
@@ -131,7 +102,7 @@ class RadioMultiSelector extends Component {
           </div>
         </StyledMultiSelector>
         <AntdModal
-          title={COMP_NAME}
+          title="기술표준적용"
           width={200}
           visible={this.state.isShowModal}
           onCancel={this.onCancelModal}
