@@ -197,6 +197,7 @@ class BizGroupTree extends Component {
 
       canDrag,
       canDrop,
+      hasBizGrpAuth,
     } = this.props;
 
     const rootRowInfo = {};
@@ -277,7 +278,7 @@ class BizGroupTree extends Component {
           titleInner = node.title;
 
           // 버튼 노출 조건. 폴더명 수정중아닐때, 노드에 마우스 오버했을 때
-          if (this.state.onHoverKey === node.key && node.SEC_YN === 'Y') {
+          if (this.state.onHoverKey === node.key && node.SEC_YN === 'Y' && hasBizGrpAuth) {
             if (node.DEL_YN !== 'Y') {
               // 메뉴가 삭제되지않은 경우
               if (node.SYS_YN === 'Y' && node.LVL === 1) {
@@ -366,9 +367,13 @@ class BizGroupTree extends Component {
         ) : (
           tree
         )}
+        
         <div className="fixedMenu">
-          {this.registFolder(rootRowInfo)}
-          {this.registBizgroup(rootRowInfo)}
+          {hasBizGrpAuth && (
+           <>
+            {this.registFolder(rootRowInfo)}
+            {this.registBizgroup(rootRowInfo)}
+          </>)}  
         </div>
       </StyleMyPageTree>
     );
@@ -381,6 +386,7 @@ BizGroupTree.propTypes = {
   canDrag: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   canDrop: PropTypes.oneOfType([PropTypes.func, PropTypes.bool]),
   onClick: PropTypes.func,
+  hasBizGrpAuth: PropTypes.bool,
 };
 
 BizGroupTree.defaultProps = {

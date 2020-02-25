@@ -182,7 +182,7 @@ class AppBasicInfo extends React.Component {
                 <h2 className="ellipsis">{lang.get('NAME', this.props.resAppBasicInfo)}</h2>
               </div>
               <div className="btnsWrapperTop">
-                {cardYn &&
+                {cardYn && this.props.resAppBasicInfo.SVC_YN === 'Y' &&
                 <StyledButton type="button" className="btn-outline-secondary btn-sm" onClick={this.menuClick}>
                   앱실행
                 </StyledButton>}

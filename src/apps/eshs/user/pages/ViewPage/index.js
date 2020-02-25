@@ -8,6 +8,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
+import { Popconfirm } from 'antd';
 
 class ViewPage extends Component {
   constructor(props) {
@@ -29,6 +30,15 @@ class ViewPage extends Component {
   //   const { removeReduxState, id } = this.props;
   //   removeReduxState(id);
   // }
+
+  customDeleteTask = ({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc }) => {
+    this.props.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc);
+  };
+
+  customDeleteCallback = workSeq => {
+    this.props.onCloseModleHandler();
+    this.props.changeViewPage(this.props.baseSagaKey, workSeq, -1, 'LIST');
+  };
 
   render = () => {
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId } = this.props;
@@ -53,6 +63,16 @@ class ViewPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
             <div className="alignRight">
+              <Popconfirm
+                title="Are you sure delete this task?"
+                // onConfirm={() => this.customDeleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.props.onCloseModleHandler)}
+                onConfirm={() => this.props.deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, this.customDeleteCallback(viewPageData.workSeq))}
+                okText="Yes"
+                cancelText="No"
+              >
+                <StyledButton className="btn-primary">Delete</StyledButton>
+              </Popconfirm>
+
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
                 수정
               </StyledButton>
@@ -79,6 +99,9 @@ ViewPage.propTypes = {
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
   removeReduxState: PropTypes.func,
+  deleteTask: PropTypes.func,
+  viewPageData: PropTypes.object,
+  changeViewPage: PropTypes.func,
 };
 
 ViewPage.defaultProps = {

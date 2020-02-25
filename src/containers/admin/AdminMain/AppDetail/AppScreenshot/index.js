@@ -37,6 +37,7 @@ class AppScreenshot extends React.Component {
     super(prop);
     this.state = {
       appId: prop.appId,
+      SITE_ID: prop.SITE_ID,
       rqheiFlog: true,
       rcheiFlog: true,
       gubun: prop.gubun,
@@ -44,16 +45,17 @@ class AppScreenshot extends React.Component {
       images: [],
       photoIndex: 0,
     };
-    prop.reqAppScreenshotList(this.state.appId);
+    prop.reqAppScreenshotList(this.state.appId, this.state.SITE_ID);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.state.appId !== nextProps.appId) {
+    if (this.state.appId !== nextProps.appId || this.state.SITE_ID !== nextProps.SITE_ID) {
       this.setState({
         appId: nextProps.appId,
         gubun: nextProps.gubun,
+        SITE_ID: nextProps.SITE_ID,
       });
-      this.props.reqAppScreenshotList(nextProps.appId);
+      this.props.reqAppScreenshotList(nextProps.appId, nextProps.SITE_ID);
     }
   }
 
@@ -301,11 +303,12 @@ AppScreenshot.propTypes = {
   registApp: PropTypes.func, //eslint-disable-line
   appId: PropTypes.string, //eslint-disable-line
   gubun: PropTypes.number, //eslint-disable-line
+  SITE_ID: PropTypes.number, //eslint-disable-line
   currentView: PropTypes.string.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  reqAppScreenshotList: appId => dispatch(actions.reqAppScreenshotList(appId)),
+  reqAppScreenshotList: (appId, SITE_ID) => dispatch(actions.reqAppScreenshotList(appId, SITE_ID)),
   registCategory: (REF_APP_ID, APP_ID) => {
     dispatch(actions.registCategory(REF_APP_ID, APP_ID));
   },

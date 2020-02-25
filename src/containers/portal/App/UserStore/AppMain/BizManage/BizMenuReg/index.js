@@ -44,7 +44,7 @@ class BizMenuReg extends Component {
     };
 
     loadingOn();
-    initCategoryData(Number(BIZGRP_ID));
+    initCategoryData(Number(BIZGRP_ID), -1);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,7 +57,7 @@ class BizMenuReg extends Component {
         BIZGRP_ID: Number(BIZGRP_ID),
       });
       loadingOn();
-      initCategoryData(Number(BIZGRP_ID));
+      initCategoryData(Number(BIZGRP_ID), -1);
     }
   }
 
@@ -92,13 +92,29 @@ class BizMenuReg extends Component {
       if (NODE_TYPE !== 'F') {
         // 폴더 X
         const preUrl = '/portal/store/appMain/bizManage/bizMenuReg';
-
+        const auth = node.AUTH_TYPE ? node.AUTH_TYPE : '';
+        const authM = auth.indexOf('M') > -1;
+        const authG = auth.indexOf('G') > -1;          
         if (REF_TYPE === 'A' && APP_ID !== -1) {
           // [앱] 상세
-          history.push(`${preUrl}/app/${BIZGRP_ID}/${APP_ID}`);
+          history.push({
+            pathname: `${preUrl}/app/${BIZGRP_ID}/${APP_ID}`,
+            state: { 
+              MENU_ID: node.MENU_ID,
+              authM,
+              authG, 
+            }
+          });
         } else if (REF_TYPE !== 'B' && PAGE_ID !== -1) {
           // [페이지] 상세
-          history.push(`${preUrl}/page/${BIZGRP_ID}/${PAGE_ID}`);
+          history.push({
+            pathname: `${preUrl}/page/${BIZGRP_ID}/${PAGE_ID}`,
+            state: { 
+              MENU_ID: node.MENU_ID,
+              authM,
+              authG, 
+            }
+          });
           pageID = PAGE_ID;
         }
 
@@ -223,7 +239,7 @@ BizMenuReg.defaultProps = {};
 export function mapDispatchToProps(dispatch) {
   return {
     // 카테고리
-    initCategoryData: BIZGRP_ID => dispatch(actions.initCategoryData(BIZGRP_ID)),
+    initCategoryData: (BIZGRP_ID, SELECTED_INDEX) => dispatch(actions.initCategoryData(BIZGRP_ID, SELECTED_INDEX)),
     changeSelectedIndex: selectedIndex => dispatch(actions.changeSelectedIndex(selectedIndex)),
     saveData: (rowInfo, categoryData) => dispatch(actions.saveData(rowInfo, categoryData)),
 
