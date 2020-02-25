@@ -8,6 +8,8 @@ const makeSelectedIndex = () => createSelector(selectOrg, org => org.get('select
 
 const makeMenuBizGrpId = () => createSelector(selectOrg, org => org.get('menuBizGrpId'));
 
+const makeMenuHasBizGrpAuth = () => createSelector(selectOrg, org => org.get('hasBizGrpAuth'));
+
 // const makeModalVisible = () => createSelector(
 //   selectOrg,
 //   org => org.get('titleModalVisible'),
@@ -18,5 +20,6 @@ export {
   makeCategoryData,
   makeSelectedIndex,
   makeMenuBizGrpId,
+  makeMenuHasBizGrpAuth,
   // makeModalVisible,
 };

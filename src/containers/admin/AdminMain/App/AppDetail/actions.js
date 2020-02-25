@@ -24,3 +24,12 @@ export const serviceRestart = (APP_ID, VER, history) => ({
     history,
   },
 });
+
+export const serviceStopDelete = (APP_ID, VER, history) => ({
+  type: constants.SERVICE_STOP_DELETE,
+  payload: {
+    APP_ID,
+    VER,
+    history,
+  },
+});

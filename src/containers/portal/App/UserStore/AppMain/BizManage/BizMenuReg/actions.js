@@ -2,9 +2,10 @@ import { fromJS } from 'immutable';
 
 import * as constants from './constants';
 
-export const initCategoryData = BIZGRP_ID => ({
+export const initCategoryData = (BIZGRP_ID, SELECTED_INDEX) => ({
   type: constants.INIT_CATEGORY_DATA,
   BIZGRP_ID,
+  SELECTED_INDEX,
 });
 
 export const saveData = (tempRowInfo, categoryData) => ({

@@ -225,7 +225,8 @@ class appSetting extends Component {
       }
     } else {
       param = {
-        loader: () => import(item),
+        // loader: () => import(item),
+        loader: () => import(`apps/noSetting/widgetSetting`),
         loading: Loading,
       };
     }

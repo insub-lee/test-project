@@ -615,4 +615,20 @@ export default defineMessages({
     id: 'store.AppMain.Myapp.okay',
     defaultMessage: '@승인',
   },
+  delete: {
+    id: 'store.AppMain.Myapp.delete',
+    defaultMessage: '@삭제',
+  },
+  serviceDeleteFail: {
+    id: 'store.AppMain.Myapp.serviceDeleteFail',
+    defaultMessage: '@삭제에 실패 하였습니다.',
+  },
+  serviceDeleteOk: {
+    id: 'store.AppMain.Myapp.serviceDeleteOk',
+    defaultMessage: '@삭제 성공',
+  },
+  serviceDeleteYn: {
+    id: 'store.AppMain.Myapp.serviceDeleteYn',
+    defaultMessage: '@삭제 하시겠습니까?',
+  },
 });

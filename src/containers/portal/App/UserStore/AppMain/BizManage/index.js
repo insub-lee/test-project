@@ -84,6 +84,7 @@ class BizManage extends Component {
       deleteNode,
       updateBizGroupDelYn,
       userRole,
+      hasBizGrpAuth,
     } = this.props;
 
     const handleTreeOnClick = node => {
@@ -113,6 +114,7 @@ class BizManage extends Component {
                 deleteNode={deleteNode}
                 updateBizGroupDelYn={updateBizGroupDelYn}
                 history={history}
+                hasBizGrpAuth={hasBizGrpAuth}
               />
             </ErrorBoundary>
           </StyledTabList>
@@ -164,6 +166,7 @@ BizManage.propTypes = {
   updateBizGroupDelYn: PropTypes.func.isRequired,
 
   getUserRole: PropTypes.func.isRequired,
+  hasBizGrpAuth: PropTypes.bool,
 };
 
 export function mapDispatchToProps(dispatch) {
@@ -188,6 +191,7 @@ const mapStateToProps = createStructuredSelector({
   // 카테고리
   categoryData: selectors.makeCategoryData(),
   selectedIndex: selectors.makeSelectedIndex(),
+  hasBizGrpAuth: selectors.makeMenuHasBizGrpAuth(),
 });
 
 const withConnect = connect(
