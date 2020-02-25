@@ -9,11 +9,15 @@ import ScrollBar from 'react-custom-scrollbars';
 class MultiSelector extends Component {
   state = {
     checkDataList: [],
+    wid: 100,
   };
 
   componentDidMount() {
     const { dataSource } = this.props;
-    this.setState({ checkDataList: dataSource });
+    const total = dataSource.length;
+    const wid = 100 / total;
+
+    this.setState({ checkDataList: dataSource, wid });
   }
 
   onChangeGroup = (groupKey, checkedValue) => {
@@ -35,14 +39,13 @@ class MultiSelector extends Component {
   };
 
   render() {
-    console.debug('render!!!!');
     return (
       <StyledSelectTable>
         <table>
           <tbody>
             <tr>
               {this.state.checkDataList.map(grp => (
-                <td style={{ padding: '0px', verticalAlign: 'top' }}>
+                <td style={{ width: `${this.state.wid}%`, padding: '0px', verticalAlign: 'top' }}>
                   <table className="subTable">
                     <tr>
                       <th>
