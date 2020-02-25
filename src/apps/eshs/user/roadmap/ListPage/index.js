@@ -16,7 +16,6 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
 import request from 'utils/request';
 
-import RoadmapSelectReadComp from 'components/BizBuilder/Field/RoadmapSelectReadComp';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
@@ -34,10 +33,11 @@ class ListPage extends Component {
       selectedTaskSeq: 0,
       viewType: '',
       currentYear: 0,
-      currentMonth: 0,
+      currentMonth: 1,
       selectedCategory: '387',
       categoryLength: 0,
       initList: [],
+      bindTaskSeq: {},
     };
   }
 
@@ -54,7 +54,7 @@ class ListPage extends Component {
         initList: res.roadmap,
         currentYear: res.roadmap.length
           ? Moment(res.roadmap.filter(item => item.category === '387')[res.roadmap.filter(item => item.category === '387').length - 1].chk_date).format('YYYY')
-          : 0,
+          : Moment().format('YYYY'),
         currentMonth: res.roadmap.length
           ? Moment(res.roadmap.filter(item => item.category === '387')[res.roadmap.filter(item => item.category === '387').length - 1].chk_date).format('MM')
           : 0,
@@ -62,15 +62,6 @@ class ListPage extends Component {
       }),
     );
   }
-
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //   const { selectedCategory } = prevState;
-  //   const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
-  //   if (prevState.categoryLength !== filterdList.length) {
-  //     return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
-  //   }
-  //   return null;
-  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -108,7 +99,7 @@ class ListPage extends Component {
 
   handleOnBuild = (changedSagaKey, taskSeq, viewType) => {
     const { workSeq, sagaKey, loadingComplete } = this.props;
-    const { selectedCategory, currentYear, currentMonth } = this.state;
+    const { selectedCategory, currentYear, currentMonth, bindTaskSeq, selectedC1Value, selectedH3Value } = this.state;
     return (
       <BizBuilderBase
         sagaKey={changedSagaKey}
@@ -124,6 +115,9 @@ class ListPage extends Component {
         year={currentYear}
         month={currentMonth}
         compProps={{ category: selectedCategory, year: currentYear, month: currentMonth }}
+        bindTaskSeq={bindTaskSeq}
+        c1Value={selectedC1Value}
+        h3Value={selectedH3Value}
       />
     );
   };
@@ -142,11 +136,29 @@ class ListPage extends Component {
     });
   };
 
-  handleModifyClick = taskSeq => {
+  handleCompleteClick = (chkDate, category) => {
+    const { sagaKey: id, changeViewPage, workSeq } = this.props;
+    this.handleIsConfirmedChange(Moment(chkDate).format('YYYYMM'), category);
+    changeViewPage(id, workSeq, -1, 'LIST');
+  };
+
+  handleIsConfirmedChange = async (date, category) => {
+    await request({
+      method: 'PATCH',
+      url: `/api/eshs/v1/common/updateroadmapisconfirmed?date=${date}&category=${category}`, // 여기에 category랑 chk_date넘겨서 나온 두 개 Y로 바꿈
+    });
+  };
+
+  handleModifyClick = record => {
     this.setState({
       modalVisible: true,
-      selectedTaskSeq: taskSeq,
       viewType: 'MODIFY',
+      currentYear: Moment(record.chk_date).format('YYYY'),
+      currentMonth: Moment(record.chk_date).format('MM'),
+      bindTaskSeq: { c1_task_seq: record.c1_task_seq, h3_task_seq: record.h3_task_seq },
+      selectedTaskSeq: record.c1_task_seq,
+      selectedC1Value: record.c1,
+      selectedH3Value: record.h3,
     });
   };
 
@@ -164,33 +176,14 @@ class ListPage extends Component {
     });
   };
 
-  handleCompleteClick = taskSeq => {
-    const { sagaKey: id, changeViewPage, workSeq } = this.props;
-    this.handleIsConfirmedChange(taskSeq);
-    changeViewPage(id, workSeq, -1, 'LIST');
-  };
-
-  handleIsConfirmedChange = async taskSeq => {
-    await request({
-      method: 'PATCH',
-      url: `/api/eshs/v1/common/updateroadmapisconfirmed?taskSeq=${taskSeq}`,
-    });
-    // return result.response;
-  };
-
   renderList = (group, groupIndex) => {
     const { sagaKey, getExtraApiData, extraApiData } = this.props;
     const columns = [
-      // moment().unix() = 현재 시간 타임스탬프
       {
         title: '항목',
-        dataIndex: 'CATEGORY',
-        key: 'CATEGORY',
+        key: 'category',
         width: '150px',
-        // render: (key, record, index) => (
-        //   <RoadmapSelectReadComp colData={this.state.selectedCategory} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
-        // ),
-        render: (key, record, index) => {
+        render: () => {
           switch (this.state.selectedCategory) {
             case '387':
               return <div>WF 생산량</div>;
@@ -214,13 +207,13 @@ class ListPage extends Component {
         children: [
           {
             title: '청주',
-            dataIndex: 'c1',
+            dataIndex: 'c1_task_seq',
             key: 'c1',
             render: (key, record, index) => <div>{Number(record.c1).toLocaleString()}</div>,
           },
           {
             title: '구미',
-            dataIndex: 'h3',
+            dataIndex: 'h3_task_seq',
             key: 'h3',
             render: (key, record, index) => <div>{Number(record.h3).toLocaleString()}</div>,
           },
@@ -233,10 +226,10 @@ class ListPage extends Component {
         render: (key, record, index) =>
           record.is_confirmed === 'N' ? (
             <div>
-              <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.TASK_SEQ)}>
+              <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.chk_date, record.category)}>
                 완료
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => this.handleModifyClick(record.TASK_SEQ)}>
+              <StyledButton className="btn-primary" onClick={() => this.handleModifyClick(record)}>
                 수정
               </StyledButton>
             </div>
@@ -270,7 +263,7 @@ class ListPage extends Component {
           </div>
 
           <AntdTable
-            rowKey="TASK_SEQ"
+            rowKey="c1_task_seq"
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
@@ -390,6 +383,7 @@ ListPage.propTypes = {
   visible: PropTypes.bool,
   CONFIG: PropTypes.object,
   extraApiData: PropTypes.func,
+  changeViewPage: PropTypes.func,
 };
 
 ListPage.defaultProps = {

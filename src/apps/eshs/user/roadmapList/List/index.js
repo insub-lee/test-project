@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import 'ag-grid-community';
 import request from 'utils/request';
 
 class List extends Component {
@@ -65,7 +64,7 @@ class List extends Component {
 
     return (
       <div className="ag-theme-balham" style={{ width: '100%', height: '560px' }}>
-        <AgGridReact columnDefs={this.state.columnDefs} rowData={this.state.rowData} onGirdReady={this.handleGridReady} />
+        <AgGridReact columnDefs={this.state.columnDefs} rowData={this.state.rowData} />
       </div>
     );
   }
