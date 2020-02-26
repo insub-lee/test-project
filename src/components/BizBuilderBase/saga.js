@@ -176,6 +176,9 @@ function* saveTask({ id, reloadId, callbackFunc }) {
         if (!validationData[node].flag) {
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
+        } else if (validationData[node].requiredFlag === false) {
+          validFlag = validationData[node].requiredFlag;
+          validMsg = `${validationData[node].requiredMsg}1`;
         }
       });
 
@@ -312,6 +315,9 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
         if (!validationData[node].flag) {
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
+        } else if (validationData[node].requiredFlag === false) {
+          validFlag = validationData[node].requiredFlag;
+          validMsg = `${validationData[node].requiredMsg}1`;
         }
       });
 
