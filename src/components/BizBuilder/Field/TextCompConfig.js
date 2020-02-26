@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { Row, Col, Input } from 'antd';
 import { debounce } from 'lodash';
 
-import BizMicroDevBase from 'components/BizMicroDevBase';
-
 class ComponentConfig extends Component {
   constructor(props) {
     super(props);
@@ -35,17 +33,5 @@ class ComponentConfig extends Component {
     );
   }
 }
-const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
-  <BizMicroDevBase
-    sagaKey="TextCompConfig"
-    changeViewCompData={changeViewCompData}
-    groupIndex={groupIndex}
-    rowIndex={rowIndex}
-    colIndex={colIndex}
-    configInfo={configInfo}
-    component={ComponentConfig}
-  ></BizMicroDevBase>
-);
 
-// ComponentConfig.defaultProps = {};
-export default configer;
+export default ComponentConfig;

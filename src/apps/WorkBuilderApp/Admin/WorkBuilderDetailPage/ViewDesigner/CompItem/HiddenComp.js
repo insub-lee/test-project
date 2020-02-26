@@ -26,7 +26,10 @@ const HiddenComp = ({ compItem, compIndex, removeHiddenComp, changeCompData, cha
           role="button"
           onKeyPress={() => false}
           tabIndex="0"
-          onClick={() => setCompConfigModal(true, compItem.CONFIG.property.COMP_SETTING_SRC, configProps, 'HIDDEN')}
+          onClick={e => {
+            e.stopPropagation();
+            setCompConfigModal(true, compItem.CONFIG.property.COMP_SETTING_SRC, configProps, 'HIDDEN');
+          }}
         />
         <Popconfirm title="Are you sure delete this Component?" onConfirm={() => removeHiddenComp(compIndex)} okText="Yes" cancelText="No">
           <span className="toolbar-item fa fa-trash" role="button" onKeyPress={() => false} tabIndex="0" />
