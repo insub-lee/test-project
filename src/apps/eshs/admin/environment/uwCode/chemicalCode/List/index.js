@@ -54,7 +54,7 @@ class List extends Component {
     const apiAry = [
       {
         key: 'selectData',
-        url: '/api/eshs/v1/common/eshsbasiccode/CM?GUBUN=SITE',
+        url: '/api/eshs/v1/common/eshsbasiccode/CM?GUBUN=SITE&IS_DEL=0',
         type: 'GET',
       },
       {
