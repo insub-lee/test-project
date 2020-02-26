@@ -115,34 +115,6 @@ class ViewDesigner extends Component {
     } = this.props;
     return (
       <div style={{ height: '100%' }}>
-        <Header>
-          <div className="button--group--left">
-            <TopMenus
-              topMenus={topMenus}
-              actions={[
-                key => this.handleChangeViewDesigner('INPUT', key),
-                key => this.handleChangeViewDesigner('MODIFY', key),
-                key => this.handleChangeViewDesigner('VIEW', key),
-                key => this.handleChangeViewDesigner('LIST', key),
-              ]}
-              viewType={viewData.COMP_TAG}
-              viewID={viewData.META_SEQ}
-            />
-          </div>
-          <div className="button--group--right">
-            {workName}
-            <Input
-              placeholder="페이지명(KO)"
-              value={viewData.NAME_KOR}
-              className="viewNameInput"
-              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
-              disabled={styleMode}
-            />
-            <Button onClick={this.handleSaveMetaData} loading={isButtonLoding}>
-              Save
-            </Button>
-          </div>
-        </Header>
         <StyledViewDesigner>
           <div className="view-designer">
             <div className="view-wrapper">
@@ -204,6 +176,34 @@ class ViewDesigner extends Component {
             </div>
           </div>
         </StyledViewDesigner>
+        <Header>
+          <div className="button--group--left">
+            <TopMenus
+              topMenus={topMenus}
+              actions={[
+                key => this.handleChangeViewDesigner('INPUT', key),
+                key => this.handleChangeViewDesigner('MODIFY', key),
+                key => this.handleChangeViewDesigner('VIEW', key),
+                key => this.handleChangeViewDesigner('LIST', key),
+              ]}
+              viewType={viewData.COMP_TAG}
+              viewID={viewData.META_SEQ}
+            />
+          </div>
+          <div className="button--group--right">
+            {workName}
+            <Input
+              placeholder="페이지명(KO)"
+              value={viewData.NAME_KOR}
+              className="viewNameInput"
+              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
+              disabled={styleMode}
+            />
+            <Button onClick={this.handleSaveMetaData} loading={isButtonLoding}>
+              Save
+            </Button>
+          </div>
+        </Header>
       </div>
     );
   };
