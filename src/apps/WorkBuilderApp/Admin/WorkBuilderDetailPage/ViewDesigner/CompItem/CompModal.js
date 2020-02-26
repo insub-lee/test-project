@@ -323,7 +323,10 @@ class CompModal extends Component {
         )}
         <div className="popoverInner">
           <p className="popover-tit">
-            컴포넌트 설정<Button onClick={onCloseModal}>Save</Button>
+            컴포넌트 설정
+            <Button type="primary" onClick={onCloseModal}>
+              Save
+            </Button>
           </p>
           <div className="popoverInnerCom">
             <div className="popoverItem popoverItemInput">

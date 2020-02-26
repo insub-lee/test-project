@@ -26,8 +26,9 @@ const Header = styled.div`
       margin-left: 10px;
     }
     button {
-      background: transparent;
-      color: rgba(255, 255, 255, 0.7);
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #ffffff;
       margin-left: 10px;
     }
   }

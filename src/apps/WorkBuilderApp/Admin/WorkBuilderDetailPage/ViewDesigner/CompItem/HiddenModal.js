@@ -72,7 +72,6 @@ class CompModal extends Component {
     const {
       action: { changeCompFieldData, changeHiddenCompData },
       configProps,
-      compList,
       hiddenField,
     } = this.props;
     const hiddenCompIdx = hiddenField.findIndex(iNode => iNode.CONFIG.property.compKey === configProps.comp.CONFIG.property.compKey);
@@ -85,7 +84,6 @@ class CompModal extends Component {
     const {
       action: { changeCompFieldData, changeHiddenCompData },
       configProps,
-      compList,
       hiddenField,
     } = this.props;
     const hiddenCompIdx = hiddenField.findIndex(iNode => iNode.CONFIG.property.compKey === configProps.comp.CONFIG.property.compKey);
@@ -102,7 +100,6 @@ class CompModal extends Component {
       action: { changeCompFieldData, changeHiddenCompData },
       compPoolList,
       configProps,
-      compList,
       hiddenField,
     } = this.props;
     const hiddenCompIdx = hiddenField.findIndex(iNode => iNode.CONFIG.property.compKey === configProps.comp.CONFIG.property.compKey);
@@ -131,7 +128,7 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configProps, compList, onCloseModal, hiddenField } = this.props;
+    const { configProps, onCloseModal, hiddenField } = this.props;
     const comp = hiddenField[hiddenField.findIndex(iNode => iNode.CONFIG.property.compKey === configProps.comp.CONFIG.property.compKey)];
     const hiddenConfigProps = { ...configProps, changeViewCompData: this.handleChangeCompPersonalConfig };
     return (
@@ -189,7 +186,10 @@ class CompModal extends Component {
         </div>
         <div className="popoverInner">
           <p className="popover-tit">
-            컴포넌트 설정<Button onClick={onCloseModal}>Save</Button>
+            컴포넌트 설정
+            <Button type="primary" onClick={onCloseModal}>
+              Save
+            </Button>
           </p>
           <div className="popoverInnerCom">
             <div className="popoverItem popoverItemInput">

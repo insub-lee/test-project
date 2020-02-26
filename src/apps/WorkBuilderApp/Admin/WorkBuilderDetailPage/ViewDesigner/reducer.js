@@ -390,7 +390,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_SELECT_TOOLBAR_ITEM_REDUCER: {
       const { comp } = action;
       const selectedKeys = state.get('selectedKeys').toJS();
-      if (selectedKeys.length > 0) {
+      if (selectedKeys.length === 1 && selectedKeys[0] === '999-0-0') {
+        return addHiddenCompItem(state, comp);
+      }
+      if (selectedKeys.length > 0 && selectedKeys.findIndex(iNode => iNode === '999-0-0') === -1) {
         return addCompItem(state, comp, selectedKeys);
       }
       return state.set('selectedComp', comp);
@@ -1256,6 +1259,47 @@ const addHiddenComp = (state, compItem) => {
     return state
       .setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField.push(fromJS(compItem)))
       .setIn(['compData', compDataIdx], fromJS(compItem));
+  }
+  return state;
+};
+
+const addHiddenCompItem = (state, selectedComp) => {
+  const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME, COL_TYPE_IDX } = selectedComp;
+  if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
+    const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
+    let compData = state.get('compData');
+    const workSeq = state.getIn(['workInfo', 'workSeq']);
+    const COMP_TYPE = 'FIELD';
+    const COMP_FIELD = '';
+    let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
+    let property = {
+      COMP_SRC,
+      COMP_SETTING_SRC,
+      layerIdx: {},
+      compKey: `Comp_${getNewKey()}`,
+      COMP_NAME,
+    };
+    if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
+      const compConfig = JSON.parse(COMP_CONFIG);
+      if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
+      if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
+    }
+    const compItem = fromJS({
+      WORK_SEQ: workSeq,
+      COMP_TAG,
+      COMP_TYPE,
+      COMP_FIELD,
+      ORD: compData.size + 1,
+      PRNT_SEQ: workSeq,
+      FIELD_TYPE: 'USER',
+      CONFIG: {
+        info,
+        property,
+        option: {},
+      },
+    });
+    compData = compData.push(compItem);
+    return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField.push(compItem)).set('compData', compData);
   }
   return state;
 };
