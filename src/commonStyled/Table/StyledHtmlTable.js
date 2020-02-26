@@ -25,6 +25,9 @@ const StyledHtmlTable = styled.div`
     width: 130px;
   }
   table tbody td {
+    &:first {
+      border-left: 1px solid #e8e8e8; 
+    }
     border-bottom: 1px solid #e8e8e8;
     padding: 5px 5px;
     font-size: 12px;
