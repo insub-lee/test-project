@@ -189,6 +189,34 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     }
   }
 
+  const beforeApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'B');
+  if (beforeApiList.length > 0) {
+    for (let i = 0; i < beforeApiList.length; i += 1) {
+      const item = beforeApiList[i];
+      const beforeResponse = yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+            viewType: 'INPUT',
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+
+      if (beforeResponse) {
+        const { retFlag, retMsg } = beforeResponse;
+        if (retFlag === false) {
+          message.error(<MessageContent>{retMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+          return;
+        }
+      }
+    }
+  }
+
   // taskSeq 생성
   if (taskSeq === -1) {
     const firstResponse = yield call(Axios.post, `/api/builder/v1/work/taskCreate/${workSeq}`, {}, { BUILDER: 'saveTaskCreate' });
@@ -257,9 +285,10 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     );
   }
 
-  if (extraApiList.length > 0) {
-    for (let i = 0; i < extraApiList.length; i += 1) {
-      const item = extraApiList[i];
+  const afterApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'A');
+  if (afterApiList.length > 0) {
+    for (let i = 0; i < afterApiList.length; i += 1) {
+      const item = afterApiList[i];
       yield call(
         Axios[item.METHOD_TYPE],
         item.API_SRC,
@@ -328,6 +357,34 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     }
   }
 
+  const beforeApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'B');
+  if (beforeApiList.length > 0) {
+    for (let i = 0; i < beforeApiList.length; i += 1) {
+      const item = beforeApiList[i];
+      const beforeResponse = yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+            viewType: 'INPUT',
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+
+      if (beforeResponse) {
+        const { retFlag, retMsg } = beforeResponse;
+        if (retFlag === false) {
+          message.error(<MessageContent>{retMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+          return;
+        }
+      }
+    }
+  }
+
   // temp저장
   const secondResponse = yield call(Axios.post, `/api/builder/v1/work/task/${modifyWorkSeq}/${modifyTaskSeq}`, { PARAM: formData }, { BUILDER: 'modifyTask' });
   // temp -> origin
@@ -377,9 +434,10 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     );
   }
 
-  if (extraApiList.length > 0) {
-    for (let i = 0; i < extraApiList.length; i += 1) {
-      const item = extraApiList[i];
+  const afterApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'A');
+  if (afterApiList.length > 0) {
+    for (let i = 0; i < afterApiList.length; i += 1) {
+      const item = afterApiList[i];
       yield call(
         Axios[item.METHOD_TYPE],
         item.API_SRC,
@@ -388,7 +446,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
-            viewType: 'MODIFY',
+            viewType: 'INPUT',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },
