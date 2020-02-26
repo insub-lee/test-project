@@ -45,8 +45,7 @@ class CompModal extends Component {
     };
     this.handleChangeData = debounce(this.handleChangeData, 500);
     this.handleChangeHeaderName = debounce(this.handleChangeHeaderName, 500);
-    this.handleChangeSizeConfig = debounce(this.handleChangeSizeConfig, 500);
-    this.handleChangeDefaultConfig = debounce(this.handleChangeDefaultConfig, 500);
+    this.handleChangeCompConfig = debounce(this.handleChangeCompConfig, 500);
     this.handleChangeCompData = debounce(this.handleChangeCompData, 500);
   }
 
@@ -101,20 +100,7 @@ class CompModal extends Component {
     changeCompData(groupIndex, rowIndex, colIndex, key, value);
   };
 
-  handleChangeSizeConfig = (key, value, configKey) => {
-    const {
-      action: { changeCompData },
-      configProps,
-      groups,
-    } = this.props;
-    const { groupIndex, rowIndex, colIndex } = configProps;
-    const { CONFIG } = groups[groupIndex].rows[rowIndex].cols[colIndex].comp;
-    const nextConfig = JSON.parse(JSON.stringify(CONFIG));
-    nextConfig[configKey][key] = value;
-    changeCompData(groupIndex, rowIndex, colIndex, 'CONFIG', nextConfig);
-  };
-
-  handleChangeDefaultConfig = (key, value, configKey) => {
+  handleChangeCompConfig = (key, value, configKey) => {
     const {
       action: { changeCompData },
       configProps,
@@ -234,14 +220,14 @@ class CompModal extends Component {
                         min={0}
                         max={100000000000}
                         defaultValue={comp.CONFIG.info.size || 0}
-                        onChange={value => this.handleChangeSizeConfig('size', value, 'info')}
+                        onChange={value => this.handleChangeCompConfig('size', value, 'info')}
                       />
                     </td>
                     <td>
                       <Input
                         placeholder="디폴트값"
                         defaultValue={comp.CONFIG.info.defaultValue}
-                        onChange={e => this.handleChangeDefaultConfig('defaultValue', e.target.value, 'info')}
+                        onChange={e => this.handleChangeCompConfig('defaultValue', e.target.value, 'info')}
                       />
                     </td>
                   </tr>
@@ -249,7 +235,7 @@ class CompModal extends Component {
                     <td colSpan="3" className="popoverInnerTableLastRow">
                       <Checkbox
                         defaultChecked={comp.CONFIG.property.isRequired}
-                        onChange={e => this.handleChangeViewConfig('isRequired', e.target.checked, 'property')}
+                        onChange={e => this.handleChangeCompConfig('isRequired', e.target.checked, 'property')}
                       >
                         필수
                       </Checkbox>
