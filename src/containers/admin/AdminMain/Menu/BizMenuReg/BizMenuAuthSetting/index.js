@@ -203,8 +203,8 @@ class BizMenuAuthSetting extends Component {
             getDataFromOrganization={result => {
               const mData = {
                 users: convertOrgData(result.selectedUsers, 'USER_ID', AUTH_GRP, USER),
-                pstns: convertOrgData(result.checkedDept, 'id', AUTH_GRP, DEPT),
-                depts: convertOrgData(result.checkedPstn, 'id', AUTH_GRP, PSTN),
+                pstns: convertOrgData(result.checkedPstn, 'id', AUTH_GRP, PSTN),
+                depts: convertOrgData(result.checkedDept, 'id', AUTH_GRP, DEPT),
                 dutys: convertOrgData(result.checkedDuty, 'id', AUTH_GRP, DUTY),
                 grps: convertOrgData(result.checkedGrp, 'id', AUTH_GRP, GRP),
               };
