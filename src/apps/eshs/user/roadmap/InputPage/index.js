@@ -5,7 +5,7 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+// import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import Moment from 'moment';
 import { debounce } from 'lodash';
 
@@ -39,7 +39,7 @@ class InputPage extends Component {
     changeFormData(id, 'CATEGORY', category);
     if (month >= 12) {
       changeFormData(id, 'CHK_DATE', `${Number(Moment(year).format('YYYY')) + 1}/01`);
-    } else if (month === 0) {
+    } else if (month === '0') {
       changeFormData(id, 'CHK_DATE', `${Number(Moment(year).format('YYYY'))}/01`);
     } else {
       changeFormData(id, 'CHK_DATE', `${Moment(year).format('YYYY')}/${Number(Moment(month).format('MM')) + 1}`);
@@ -77,12 +77,12 @@ class InputPage extends Component {
   }
 
   saveTask = (id, reloadId) => {
-    const { saveTask, saveTaskAfterCallbackFunc, changeFormData } = this.props;
+    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
     saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
   };
 
-  saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, baseSagaKey, changeFormData } = this.props;
+  saveTaskAfter = (id, workSeq) => {
+    const { onCloseModleHandler, changeViewPage, baseSagaKey } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
       changeViewPage(baseSagaKey, workSeq, -1, 'LIST');
@@ -105,21 +105,9 @@ class InputPage extends Component {
   };
 
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      workFlowConfig,
-      processRule,
-      setProcessRule,
-      loadingComplete,
-      viewPageData,
-      changeViewPage,
-      workInfo,
-      CustomWorkProcess,
-      formData,
-    } = this.props;
+    const { sagaKey: id, viewLayer, workFlowConfig, loadingComplete, workInfo, formData } = this.props;
     // Work Process 사용여부
-    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
+    // const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -196,6 +184,9 @@ InputPage.propTypes = {
   changeFormData: PropTypes.func,
   category: PropTypes.string,
   saveTaskAfterCallbackFunc: PropTypes.func,
+  changeViewPage: PropTypes.func,
+  baseSagaKey: PropTypes.string,
+  workInfo: PropTypes.object,
 };
 
 InputPage.defaultProps = {

@@ -177,7 +177,6 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { sagaKey, getExtraApiData, extraApiData } = this.props;
     const columns = [
       {
         title: '항목',
@@ -200,8 +199,8 @@ class ListPage extends Component {
           }
         },
       },
-      { title: '연도', key: 'chk_date', width: '100px', render: (key, record, index) => <div>{Moment(record.chk_date).format('YYYY')}</div> },
-      { title: '월', key: 'chk_date', width: '60px', render: (key, record, index) => <div>{Moment(record.chk_date).format('M')}</div> },
+      { title: '연도', key: 'chk_date', width: '100px', render: (key, record) => <div>{Moment(record.chk_date).format('YYYY')}</div> },
+      { title: '월', key: 'chk_date', width: '60px', render: (key, record) => <div>{Moment(record.chk_date).format('M')}</div> },
       {
         title: '지역',
         children: [
@@ -209,13 +208,13 @@ class ListPage extends Component {
             title: '청주',
             dataIndex: 'c1_task_seq',
             key: 'c1',
-            render: (key, record, index) => <div>{Number(record.c1).toLocaleString()}</div>,
+            render: (key, record) => <div>{Number(record.c1).toLocaleString()}</div>,
           },
           {
             title: '구미',
             dataIndex: 'h3_task_seq',
             key: 'h3',
-            render: (key, record, index) => <div>{Number(record.h3).toLocaleString()}</div>,
+            render: (key, record) => <div>{Number(record.h3).toLocaleString()}</div>,
           },
         ],
       },
@@ -223,7 +222,7 @@ class ListPage extends Component {
         title: '입력여부',
         key: 'RNUM',
         width: '180px',
-        render: (key, record, index) =>
+        render: (key, record) =>
           record.is_confirmed === 'N' ? (
             <div>
               <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.chk_date, record.category)}>
@@ -241,7 +240,7 @@ class ListPage extends Component {
     ];
 
     const { modalVisible, selectedTaskSeq, viewType, categoryLength, initList } = this.state;
-    const { listData, sagaKey: id } = this.props;
+    const { sagaKey: id } = this.props;
 
     return (
       <div key={group.key}>
@@ -384,6 +383,7 @@ ListPage.propTypes = {
   CONFIG: PropTypes.object,
   extraApiData: PropTypes.func,
   changeViewPage: PropTypes.func,
+  getListData: PropTypes.func,
 };
 
 ListPage.defaultProps = {

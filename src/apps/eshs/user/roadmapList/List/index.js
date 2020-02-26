@@ -60,18 +60,17 @@ class List extends Component {
   };
 
   render() {
-    console.debug(this.state.rowData);
-
     return (
-      <div className="ag-theme-balham" style={{ width: '100%', height: '560px' }}>
-        <AgGridReact columnDefs={this.state.columnDefs} rowData={this.state.rowData} />
+      <div>
+        {/* <Select></Select> */}
+        <div className="ag-theme-balham" style={{ width: '100%', height: '560px' }}>
+          <AgGridReact columnDefs={this.state.columnDefs} rowData={this.state.rowData} />
+        </div>
       </div>
     );
   }
 }
 
-List.propTypes = {
-  listData: PropTypes.array,
-};
+List.propTypes = {};
 
 export default List;
