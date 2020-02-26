@@ -41,6 +41,20 @@ const ApiInput = ({ sagaKey, formData, changeFormData }) => (
             </td>
           </tr>
           <tr className="item">
+            <th className="item-title">호출유형</th>
+            <td className="item-cont">
+              <Select
+                value={formData.CALL_TYPE}
+                placeholder="선택해주세요"
+                onChange={val => changeFormData(sagaKey, 'CALL_TYPE', val)}
+                style={{ width: '300px' }}
+              >
+                <Option value="B">Before</Option>
+                <Option value="A">After</Option>
+              </Select>
+            </td>
+          </tr>
+          <tr className="item">
             <th className="item-title">사용여부</th>
             <td className="item-cont">
               <Select
