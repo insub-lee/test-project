@@ -109,6 +109,7 @@ function* addMetaData({ callbackFunc }) {
 
   if (isError) {
     message.error(<MessageContent>{errorMsg}</MessageContent>);
+    if (typeof callbackFunc === 'function') callbackFunc();
     return;
   }
   const viewDataIdx = compData.findIndex(
