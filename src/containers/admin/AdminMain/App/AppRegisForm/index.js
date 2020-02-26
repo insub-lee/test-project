@@ -742,7 +742,7 @@ class AppRegisForm extends React.Component {
             {/* <h4 className="required">App ID</h4> */}
             <h4 className="required">SRC PATH [앱경로]</h4>
             <FormItem hasFeedback validateStatus={this.state.SRC_PATH_CHK ? 'success' : 'error'}>
-              <Input maxLength="50" onChange={onChangeSrcPath} defaultValue={this.state.SRC_PATH} />
+              <Input maxLength="250" onChange={onChangeSrcPath} defaultValue={this.state.SRC_PATH} />
             </FormItem>
 
             <h3 className="sectionTitle" style={{ padding: '33px 0 20px' }}>
