@@ -16,7 +16,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
 import request from 'utils/request';
 
-import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
+import RoadmapSelectReadComp from 'components/BizBuilder/Field/RoadmapSelectReadComp';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
@@ -37,17 +37,40 @@ class ListPage extends Component {
       currentMonth: 0,
       selectedCategory: '387',
       categoryLength: 0,
+      initList: [],
     };
   }
 
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const { selectedCategory } = prevState;
-    const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
-    if (prevState.categoryLength !== filterdList.length) {
-      return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
-    }
-    return null;
+  componentDidMount() {
+    const handleAppInit = async () => {
+      const result = await request({
+        method: 'GET',
+        url: '/api/eshs/v1/common/selectinputroadmap',
+      });
+      return result.response;
+    };
+    handleAppInit().then(res =>
+      this.setState({
+        initList: res.roadmap,
+        currentYear: res.roadmap.length
+          ? Moment(res.roadmap.filter(item => item.category === '387')[res.roadmap.filter(item => item.category === '387').length - 1].chk_date).format('YYYY')
+          : 0,
+        currentMonth: res.roadmap.length
+          ? Moment(res.roadmap.filter(item => item.category === '387')[res.roadmap.filter(item => item.category === '387').length - 1].chk_date).format('MM')
+          : 0,
+        categoryLength: res.roadmap.filter(item => item.category === '387').length,
+      }),
+    );
   }
+
+  // static getDerivedStateFromProps(nextProps, prevState) {
+  //   const { selectedCategory } = prevState;
+  //   const filterdList = nextProps.listData.filter(item => item.CATEGORY === selectedCategory);
+  //   if (prevState.categoryLength !== filterdList.length) {
+  //     return { categoryLength: filterdList.length, currentYear: filterdList[0].CHK_YEAR, currentMonth: filterdList[0].CHK_MONTH };
+  //   }
+  //   return null;
+  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -128,12 +151,16 @@ class ListPage extends Component {
   };
 
   handleChange = e => {
-    const { listData } = this.props;
+    const { initList } = this.state;
     this.setState({
       selectedCategory: e,
-      categoryLength: listData.filter(item => item.CATEGORY === e).length,
-      currentYear: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_YEAR : '2020',
-      currentMonth: listData.filter(item => item.CATEGORY === e).length ? listData.filter(item => item.CATEGORY === e)[0].CHK_MONTH : '0',
+      categoryLength: initList.filter(item => item.category === e).length,
+      currentYear: initList.filter(item => item.category === e).length
+        ? Moment(initList.filter(item => item.category === e)[initList.filter(item => item.category === e).length - 1].chk_date).format('YYYY')
+        : '2020',
+      currentMonth: initList.filter(item => item.category === e).length
+        ? Moment(initList.filter(item => item.category === e)[initList.filter(item => item.category === e).length - 1].chk_date).format('MM')
+        : '0',
     });
   };
 
@@ -159,32 +186,52 @@ class ListPage extends Component {
         title: '항목',
         dataIndex: 'CATEGORY',
         key: 'CATEGORY',
-        render: (key, record, index) => (
-          <SelectReadComp colData={record.CATEGORY} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
-        ),
+        width: '150px',
+        // render: (key, record, index) => (
+        //   <RoadmapSelectReadComp colData={this.state.selectedCategory} sagaKey={sagaKey} getExtraApiData={getExtraApiData} extraApiData={extraApiData} />
+        // ),
+        render: (key, record, index) => {
+          switch (this.state.selectedCategory) {
+            case '387':
+              return <div>WF 생산량</div>;
+            case '388':
+              return <div>전력</div>;
+            case '389':
+              return <div>연료</div>;
+            case '390':
+              return <div>용수</div>;
+            case '391':
+              return <div>경미재해</div>;
+            default:
+              return <div>WF 생산량</div>;
+          }
+        },
       },
-      { title: '연도', dataIndex: 'CHK_YEAR', key: 'CHK_YEAR' },
-      { title: '월', dataIndex: 'CHK_MONTH', key: 'CHK_MONTH', defaultSortOrder: 'ascend', sorter: (a, b) => b - a, sortDirections: ['ascend'] },
+      { title: '연도', key: 'chk_date', width: '100px', render: (key, record, index) => <div>{Moment(record.chk_date).format('YYYY')}</div> },
+      { title: '월', key: 'chk_date', width: '60px', render: (key, record, index) => <div>{Moment(record.chk_date).format('M')}</div> },
       {
         title: '지역',
         children: [
           {
             title: '청주',
-            dataIndex: 'FIRST_VALUE',
-            key: 'FIRST_VALUE',
+            dataIndex: 'c1',
+            key: 'c1',
+            render: (key, record, index) => <div>{Number(record.c1).toLocaleString()}</div>,
           },
           {
             title: '구미',
-            dataIndex: 'SECOND_VALUE',
-            key: 'SECOND_VALUE',
+            dataIndex: 'h3',
+            key: 'h3',
+            render: (key, record, index) => <div>{Number(record.h3).toLocaleString()}</div>,
           },
         ],
       },
       {
         title: '입력여부',
         key: 'RNUM',
+        width: '180px',
         render: (key, record, index) =>
-          record.IS_CONFIRMED === 'N' ? (
+          record.is_confirmed === 'N' ? (
             <div>
               <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.TASK_SEQ)}>
                 완료
@@ -197,10 +244,10 @@ class ListPage extends Component {
             <div>입력완료</div>
           ),
       },
-      { title: '작성자', dataIndex: 'REG_USER_NAME', key: 'REG_USER_NAME' },
+      { title: '작성자', dataIndex: 'reg_user_name', key: 'reg_user_name', width: '80px' },
     ];
 
-    const { modalVisible, selectedTaskSeq, viewType, categoryLength } = this.state;
+    const { modalVisible, selectedTaskSeq, viewType, categoryLength, initList } = this.state;
     const { listData, sagaKey: id } = this.props;
 
     return (
@@ -227,7 +274,7 @@ class ListPage extends Component {
             key={`${group.key}_list`}
             className="view-designer-list"
             columns={columns}
-            dataSource={listData.filter(item => item.CATEGORY === this.state.selectedCategory)}
+            dataSource={initList.filter(item => item.category === this.state.selectedCategory) || []}
             bordered
             pagination={false}
           />

@@ -68,7 +68,7 @@ class ListPage extends Component {
     this.setState({
       modalVisible: true,
       viewType: 'VIEW',
-      selectedTaskSeq: taskSeq,
+      selectedTaskSeq: taskSeq.TASK_SEQ,
     });
   };
 
@@ -124,10 +124,11 @@ class ListPage extends Component {
   renderList = (group, groupIndex) => {
     const columns = [
       {
-        title: '번호',
+        title: 'No.',
+        dataIndex: 'RNUM',
         key: 'RNUM',
         width: 70,
-        render: (text, record, index) => <div>{index + 1}</div>,
+        // render: (text, record, index) => <div>{index + 1}</div>,
       },
       {
         title: '접수',

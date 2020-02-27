@@ -22,7 +22,11 @@ function* getMetaData({ workSeq, viewType, viewID }) {
   const sysResponse = yield call(Axios.get, `/api/builder/v1/work/sysmeta?workSeq=${workSeq}`);
   const compResponse = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
   if (response && response.resultType && response.resultType.length > 0 && response[response.resultType] && response[response.resultType].length > 0) {
-    const metaList = response[response.resultType].map(node => ({ ...node, CONFIG: JSON.parse(node.CONFIG) }));
+    let metaList = response[response.resultType].map(node => ({ ...node, CONFIG: JSON.parse(node.CONFIG) }));
+    metaList = metaList.map(node => ({
+      ...node,
+      OriginSize: node.COMP_TYPE === 'FIELD' && node.CONFIG.info && node.CONFIG.info.size ? node.CONFIG.info.size : 0,
+    }));
     const viewList = metaList.filter(fNode => fNode.COMP_TYPE === 'VIEW');
     const topMenus = makeTopMenuData(viewList);
     let viewDataIdx = viewList.findIndex(node => node.META_SEQ === viewID && node.COMP_TAG === viewType);
@@ -73,7 +77,7 @@ const makeTopMenuData = viewList => {
   return topMenus;
 };
 
-function* addMetaData() {
+function* addMetaData({ callbackFunc }) {
   const viewData = yield select(selectors.makeSelectViewData());
   let compData = yield select(selectors.makeSelectCompData());
   const workInfo = yield select(selectors.makeSelectWorkInfo());
@@ -98,7 +102,7 @@ function* addMetaData() {
           errorMsg = `${node.COMP_FIELD || ''} 필드 컬럼 사이즈가 설정되지 않았습니다.`;
         }
       }
-      if (compData.filter(fNode => fNode.COMP_FIELD === node.COMP_FIELD && !fNode.isRemove).length > 1) {
+      if (compData.filter(fNode => fNode.COMP_FIELD === node.COMP_FIELD && !fNode.isRemove && node.COMP_FIELD.length > 0).length > 1) {
         isError = true;
         errorMsg =
           node.COMP_TYPE === 'SYS'
@@ -109,6 +113,7 @@ function* addMetaData() {
 
   if (isError) {
     message.error(<MessageContent>{errorMsg}</MessageContent>);
+    if (typeof callbackFunc === 'function') callbackFunc();
     return;
   }
   const viewDataIdx = compData.findIndex(
@@ -181,6 +186,7 @@ function* addMetaData() {
     const currentViewIdx = viewList.findIndex(iNode => iNode.CONFIG.property.layerIdxKey === originIdxKey);
     yield put(actions.getMetaDataBySaga(workInfo.workSeq, workInfo.viewType, viewList[currentViewIdx].META_SEQ));
     message.success(<MessageContent>Save</MessageContent>);
+    if (typeof callbackFunc === 'function') callbackFunc();
   }
 }
 

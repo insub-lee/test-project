@@ -7,7 +7,7 @@ class EshsBasicCode extends Component {
   componantDidMount() {}
 
   render() {
-    return <BizMicroDevBase sagaKey="eshsBasicCode" component={List} tableName="HC" />;
+    return <BizMicroDevBase sagaKey="eshsBasicCode" component={List} MAP_ID={66} INIT_NODE_ID={672} />;
   }
 }
 

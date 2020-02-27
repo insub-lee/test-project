@@ -101,6 +101,12 @@ class MyAppDetail extends React.Component {
     });
   };
 
+  serviceStopDelete = () => {
+    const { VER, APP_ID } = this.state;
+    const { serviceStopDelete, history } = this.props;
+    feed.showConfirm(`${intlObj.get(messages.serviceDeleteYn)}`, '', () => serviceStopDelete(APP_ID, VER, history));
+  };
+
   render() {
     const { VER, APP_ID, APV_STATUS_CODE, tabNum } = this.state;
 
@@ -274,12 +280,18 @@ class MyAppDetail extends React.Component {
             <Link to="/admin/adminmain/sysapp">
               <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
+            <StyledButton className="btn-primary" onClick={this.serviceStopDelete}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
           </div>
           {/* 반려 */}
           <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'R' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
               <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
+            <StyledButton className="btn-primary" onClick={this.serviceStopDelete}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <StyledButton className="btn-primary">{intlObj.get(messages.Modified)}</StyledButton>
@@ -296,12 +308,18 @@ class MyAppDetail extends React.Component {
             <Link to="/admin/adminmain/sysapp">
               <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
+            <StyledButton className="btn-primary" onClick={this.serviceStopDelete}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
           </div>
           {/* 임시저장 */}
           <div className="buttonsWrapper bottom" style={{ display: APV_STATUS_CODE === 'N' ? 'block' : 'none' }}>
             <Link to="/admin/adminmain/sysapp">
               <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
             </Link>
+            <StyledButton className="btn-primary" onClick={this.serviceStopDelete}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <StyledButton className="btn-primary">{intlObj.get(messages.Modified)}</StyledButton>
@@ -324,6 +342,9 @@ class MyAppDetail extends React.Component {
                 {intlObj.get(messages.verUpdate)}
               </StyledButton>
             </Link>
+            <StyledButton className="btn-primary" onClick={this.serviceStopDelete}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <StyledButton className="btn-primary">{intlObj.get(messages.Modified)}</StyledButton>
@@ -344,6 +365,9 @@ class MyAppDetail extends React.Component {
                 {intlObj.get(messages.verUpdate)}
               </StyledButton>
             </Link>
+            <StyledButton className="btn-primary" onClick={this.serviceStopDelete}>
+              {intlObj.get(messages.delete)}
+            </StyledButton>
             <div className="alignRight">
               <Link to={`/admin/adminmain/sysapp/appUpdate/U/${APP_ID}/${VER}/${tabNum}/${APV_STATUS_CODE}`}>
                 <BtnGray>{intlObj.get(messages.Modified)}</BtnGray>
@@ -368,6 +392,7 @@ MyAppDetail.propTypes = {
   serviceStopCodeList: PropTypes.array, //eslint-disable-line
   // serviceStopOk: PropTypes.bool, //eslint-disable-line
   serviceRestart: PropTypes.func, //eslint-disable-line
+  serviceStopDelete: PropTypes.func, //eslint-disable-line
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -379,6 +404,9 @@ const mapDispatchToProps = dispatch => ({
   },
   serviceRestart: (APP_ID, VER, history) => {
     dispatch(actions.serviceRestart(APP_ID, VER, history));
+  },
+  serviceStopDelete: (APP_ID, VER, history) => {
+    dispatch(actions.serviceStopDelete(APP_ID, VER, history));
   },
 });
 

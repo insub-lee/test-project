@@ -63,7 +63,7 @@ const StyledViewDesigner = styled.div`
               padding-top: 14px;
               padding-left: 10px;
               padding-right: 10px;
-              font-size: 14px;
+              font-size: 12px;
               cursor: pointer !important;
               overflow: hidden;
               text-overflow: ellipsis;
@@ -185,23 +185,22 @@ const StyledViewDesigner = styled.div`
         color: rgb(0, 0, 0);
         /* padding: 5px 10px; */
         &.mdcsTitleCol {
+          text-align: center;
           position: relative;
           background-color: #f1f1f1;
           background-clip: padding-box;
           padding: 4px;
           > div {
-            /* position: absolute;
-            top: 50%;
-            transform: translateY(-50%); */
             height: auto;
-            min-height: auto;
-            /* left: 10px; */
           }
         }
         &.mdcsContentsCol {
           padding: 6px;
           .btnTypeUploader {
             text-align: right;
+          }
+          > div {
+            height: auto;
           }
           .ant-upload.ant-upload-drag {
             .ant-upload-drag-container {
@@ -395,7 +394,7 @@ const StyledViewDesigner = styled.div`
     padding-top: 14px;
     padding-left: 10px;
     padding-right: 10px;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer !important;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -426,8 +425,8 @@ const StyledViewDesigner = styled.div`
     color: #b8c7ce;
   }
   .Side-menu-default *:not(i) {
-    font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
-    font-weight: 300;
+    /* font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; */
+    font-weight: 400;
   }
   .Side-menu-default .divider {
     background-color: #584475;

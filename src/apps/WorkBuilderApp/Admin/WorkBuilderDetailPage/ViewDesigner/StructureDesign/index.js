@@ -17,6 +17,7 @@ import TableGroup from 'components/BizBuilder/Sketch/BasedHtmlTableGroup';
 import CompItem from '../CompItem';
 import HiddenComp from '../CompItem/HiddenComp';
 import CompModal from '../CompItem/CompModal';
+import HiddenModal from '../CompItem/HiddenModal';
 
 const StyledActionBar = styled.div`
   position: relative;
@@ -64,10 +65,12 @@ const StructureDesign = ({
   const [isShowCompConfigModal, setIsShowCompConfigModal] = useState(false);
   const [compConfigType, setCompConfigType] = useState('');
   const [compConfigProps, setCompConfigProps] = useState({});
-  const setCompConfigModal = (cFlag, cType, cProp) => {
+  const [showModalType, setShowModalType] = useState('COMP');
+  const setCompConfigModal = (cFlag, cType, cProp, modalType) => {
     setIsShowCompConfigModal(cFlag);
     setCompConfigType(cType);
     setCompConfigProps(cProp);
+    setShowModalType(modalType);
   };
   return (
     <div key={viewField}>
@@ -181,7 +184,16 @@ const StructureDesign = ({
                 <Row key="heiddenFieldRow" gutter={[0, 0]} type="flex" style={{ width: '100%', minHeight: '44px' }}>
                   <Col key="heiddenFieldCol_" className="heiddenFieldCol" span={1}>
                     {hiddenField.map((node, index) => (
-                      <HiddenComp key={`heiddenFieldComp_${index}`} compItem={node} compIndex={index} removeHiddenComp={action.removeHiddenComp} />
+                      <HiddenComp
+                        key={`heiddenFieldComp_${index}`}
+                        compItem={node}
+                        compIndex={index}
+                        removeHiddenComp={action.removeHiddenComp}
+                        changeCompData={action.changeCompData}
+                        changeViewCompData={action.changeViewCompData}
+                        viewType={viewType}
+                        setCompConfigModal={setCompConfigModal}
+                      />
                     ))}
                   </Col>
                 </Row>
@@ -277,16 +289,30 @@ const StructureDesign = ({
         footer={null}
         visible={isShowCompConfigModal}
         bodyStyle={{ padding: '1px' }}
-        onCancel={() => setCompConfigModal(false, '', {})}
+        onCancel={() => setCompConfigModal(false, '', {}, 'COMP')}
       >
-        <CompModal
-          configType={compConfigType}
-          configProps={compConfigProps}
-          action={action}
-          compPoolList={compPoolList}
-          compGroupList={compGroupList}
-          groups={groups}
-        />
+        {showModalType === 'COMP' ? (
+          <CompModal
+            configType={compConfigType}
+            configProps={compConfigProps}
+            action={action}
+            compPoolList={compPoolList}
+            compGroupList={compGroupList}
+            groups={groups}
+            onCloseModal={() => setCompConfigModal(false, '', {}, 'COMP')}
+          />
+        ) : (
+          <HiddenModal
+            configType={compConfigType}
+            configProps={compConfigProps}
+            action={action}
+            compPoolList={compPoolList}
+            compGroupList={compGroupList}
+            compList={compList}
+            onCloseModal={() => setCompConfigModal(false, '', {}, 'COMP')}
+            hiddenField={hiddenField}
+          />
+        )}
       </Modal>
     </div>
   );

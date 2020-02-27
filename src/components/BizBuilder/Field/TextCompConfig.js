@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Row, Col, Input } from 'antd';
-
-import BizMicroDevBase from 'components/BizMicroDevBase';
+import { debounce } from 'lodash';
 
 class ComponentConfig extends Component {
-  componentDidMount() {}
+  constructor(props) {
+    super(props);
+    this.handleChangeViewCompData = debounce(this.handleChangeViewCompData, 500);
+  }
 
   handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
@@ -21,7 +23,7 @@ class ComponentConfig extends Component {
             <Col span={6}>PlaceHolder 설정</Col>
             <Col span={18}>
               <Input
-                value={(configInfo && configInfo.property && configInfo.property.placeholder) || ''}
+                defaultValue={(configInfo && configInfo.property && configInfo.property.placeholder) || ''}
                 onChange={e => this.handleChangeViewCompData('placeholder', e.target.value)}
               ></Input>
             </Col>
@@ -31,17 +33,5 @@ class ComponentConfig extends Component {
     );
   }
 }
-const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
-  <BizMicroDevBase
-    sagaKey="TextCompConfig"
-    changeViewCompData={changeViewCompData}
-    groupIndex={groupIndex}
-    rowIndex={rowIndex}
-    colIndex={colIndex}
-    configInfo={configInfo}
-    component={ComponentConfig}
-  ></BizMicroDevBase>
-);
 
-// ComponentConfig.defaultProps = {};
-export default configer;
+export default ComponentConfig;

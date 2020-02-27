@@ -11,13 +11,20 @@ import * as constants from './constants';
 import messages from './messages';
 
 // SA권한 확인 - (SA 권한일 경우 모든 업무그룹 수정 권한 부여)
+// 최초 페이지로딩시 권한 확인용 -> 업무그룹 수정가능여부 확인용으로 변경
 export function* getUserRole(payload) {
   const { history } = payload;
   const response = yield call(Axios.post, '/api/bizstore/v1/bizgroup/bizGrpRoleCheck', { data: 'temp' });
   const { code } = response;
+  yield put({
+    type: constants.SET_BIZGRP_AUTH,
+    hasBizGrpAuth: code === 200,
+  });
+  /*
   if (code !== 200) {
     history.push('/error');
   }
+  */
 }
 
 // 업무카드관리의 좌측 트리 - (시스템[SYS_YN],홈[HOME_YN] 설정이 외의 업무그룹 리스트)

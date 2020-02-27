@@ -78,6 +78,10 @@ class ListPage extends Component {
 
   setColumns = cols => {
     const columns = [];
+    columns.push({
+      dataIndex: 'RNUM',
+      title: 'No.',
+    });
     cols.forEach(node => {
       if (node.comp && node.comp.COMP_FIELD) {
         columns.push({
@@ -181,7 +185,7 @@ class ListPage extends Component {
 
   render = () => {
     const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = this.props;
-
+    console.debug(this.props.listData);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {

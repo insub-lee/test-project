@@ -56,8 +56,22 @@ export function* serviceRestart(payload) {
   }
 }
 
+export function* serviceStopDelete(payload) {
+  const { history } = payload.payload;
+  const response = yield call(Axios.post, '/api/bizstore/v1/appmanage/deleteApp/', payload.payload);
+  const { code } = response;
+  if (code === 200) {
+    message.success(<MessageContent>{intlObj.get(messages.serviceDeleteOk)}</MessageContent>, 3);
+    history.push('/admin/adminmain/sysapp');
+  } else {
+    feed.error(`${intlObj.get(messages.serviceDeleteFail)}`);
+  }
+}
+
 export default function* orgSage() {
   yield takeLatest(constants.GET_MY_APP_DETAIL, getMyAppDetail);
   yield takeLatest(constants.SERVICE_STOP, serviceStop);
   yield takeLatest(constants.SERVICE_RESTART, serviceRestart);
+  yield takeLatest(constants.SERVICE_STOP_DELETE, serviceStopDelete);
+  
 }

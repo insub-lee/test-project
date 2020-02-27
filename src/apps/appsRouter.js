@@ -17,16 +17,20 @@ import ApproveBase from './Workflow/User/ApproveBase';
 class AppsRouter extends React.PureComponent {
   componentDidMount() {
     const { selectedApp } = this.props;
-    this.forceUpdate();
-    this.contents = this.getAppsRouter(selectedApp);
+    if (selectedApp.length > 0 && selectedApp[0].APP_YN && selectedApp[0].APP_YN === 'Y') {
+      this.forceUpdate();
+      this.contents = this.getAppsRouter(selectedApp);
+    }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { selectedApp: prevSelectedApp } = prevProps;
     const { selectedApp } = this.props;
     if (selectedApp && prevSelectedApp && JSON.stringify(selectedApp) !== JSON.stringify(prevSelectedApp)) {
-      this.forceUpdate();
-      this.contents = this.getAppsRouter(selectedApp);
+      if (selectedApp.length > 0 && selectedApp[0].APP_YN && selectedApp[0].APP_YN === 'Y') {
+        this.forceUpdate();
+        this.contents = this.getAppsRouter(selectedApp);
+      }
     }
   }
 
@@ -62,7 +66,7 @@ class AppsRouter extends React.PureComponent {
       if (item.SVC_YN !== 'C' && item.SEC_YN === 'Y' && item.CATG_ID !== '') {
         // 해당 앱이 서비스 중이면서, 해당 앱에 대한 권한이 있을 경우
         const authority = item.BIZMENU_AUTH ? item.BIZMENU_AUTH : [];
-        console.debug(item.NAME_KOR, item.legacyPath, 'authority: ', authority);
+        console.debug('APP Name:', item.NAME_KOR, 'APP Path:', item.legacyPath, 'authority:', authority);
         return (
           <div className="AppsRouterWrapper" style={{ height: '100%' }}>
             <Switch>

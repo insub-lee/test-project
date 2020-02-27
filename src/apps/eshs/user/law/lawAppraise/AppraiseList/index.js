@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { Table, message } from 'antd';
 
 import { isJSON } from 'utils/helpers';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import Sketch from 'components/BizBuilder/Sketch';
+import Group from 'components/BizBuilder/Sketch/Group';
+import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import Contents from 'components/BizBuilder/Common/Contents';

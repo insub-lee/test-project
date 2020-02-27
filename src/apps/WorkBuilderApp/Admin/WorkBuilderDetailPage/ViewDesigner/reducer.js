@@ -390,7 +390,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_SELECT_TOOLBAR_ITEM_REDUCER: {
       const { comp } = action;
       const selectedKeys = state.get('selectedKeys').toJS();
-      if (selectedKeys.length > 0) {
+      if (selectedKeys.length === 1 && selectedKeys[0] === '999-0-0') {
+        return addHiddenCompItem(state, comp);
+      }
+      if (selectedKeys.length > 0 && selectedKeys.findIndex(iNode => iNode === '999-0-0') === -1) {
         return addCompItem(state, comp, selectedKeys);
       }
       return state.set('selectedComp', comp);
@@ -532,20 +535,12 @@ const reducer = (state = initialState, action) => {
       let dataValidFlag = false;
       if (layerIdx) {
         const keyGroup = layerIdx.split('-');
-        const colData = state.getIn([
-          'viewData',
-          'CONFIG',
-          'property',
-          'layer',
-          'groups',
-          Number(keyGroup[0]),
-          'rows',
-          Number(keyGroup[1]),
-          'cols',
-          Number(keyGroup[2]),
-        ]);
+        const colData = state
+          .getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2])])
+          .toJS();
         if (!colData || !colData.comp || !colData.comp.CONFIG) {
           dataValidFlag = true;
+          delete compItem.CONFIG.property.layerIdx[layerIdxKey];
         } else {
           dataValidFlag = colData.comp.CONFIG.property.compKey !== compItem.CONFIG.property.compKey;
         }
@@ -1139,6 +1134,16 @@ const reducer = (state = initialState, action) => {
 
       return state.setIn([...condition, groupIndex, 'rows'], fromJS(newRows));
     }
+    case actionTypes.CHANGE_COMP_FIELD_DATA_REDUCER: {
+      const { compKey, key, value } = action;
+      const compData = state.get('compData').toJS();
+      const compIdx = compData.findIndex(iNode => iNode.CONFIG.property.compKey === compKey);
+      return state.setIn(['compData', compIdx, key], value);
+    }
+    case actionTypes.CHANGE_HIDDEN_COMP_DATA_REDUCER: {
+      const { compIdx, key, value } = action;
+      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField', compIdx, key], value);
+    }
     default:
       return state;
   }
@@ -1239,17 +1244,62 @@ const addHiddenComp = (state, compItem) => {
   const compDataIdx = compData.findIndex(
     iNode => iNode.getIn(['CONFIG', 'property', 'compKey']) === compItem.CONFIG.property.compKey && iNode.get('COMP_FIELD') === compItem.COMP_FIELD,
   );
+  const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
   const { layerIdx, compKey } = compItem.CONFIG.property;
+  let layerKeyFlag = false;
+  if (!layerIdx || !layerIdx[layerIdxKey] || layerIdx[layerIdxKey].length === 0) {
+    layerKeyFlag = true;
+  }
   if (!compKey || compKey.length === 0) compItem.CONFIG.property.compKey = `Comp_${getNewKey()}`;
-  if (!hiddenField) {
+  if (!hiddenField && layerKeyFlag) {
     return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], fromJS([compItem])).setIn(['compData', compDataIdx], fromJS(compItem));
   }
-  const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
   const compIdx = hiddenField.findIndex(iNode => iNode.getIn(['CONFIG', 'property', 'compKey']) === compItem.CONFIG.property.compKey);
-  if (compIdx === -1 && (!layerIdx || !layerIdx[layerIdxKey] || layerIdx[layerIdxKey].length === 0)) {
+  if (compIdx === -1 && layerKeyFlag) {
     return state
       .setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField.push(fromJS(compItem)))
       .setIn(['compData', compDataIdx], fromJS(compItem));
+  }
+  return state;
+};
+
+const addHiddenCompItem = (state, selectedComp) => {
+  const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME, COL_TYPE_IDX } = selectedComp;
+  if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
+    const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
+    let compData = state.get('compData');
+    const workSeq = state.getIn(['workInfo', 'workSeq']);
+    const COMP_TYPE = 'FIELD';
+    const COMP_FIELD = '';
+    let info = { type: COL_DB_TYPE, nullable: true, defaultValue: '', size: 0 };
+    let property = {
+      COMP_SRC,
+      COMP_SETTING_SRC,
+      layerIdx: {},
+      compKey: `Comp_${getNewKey()}`,
+      COMP_NAME,
+    };
+    if (COMP_CONFIG && COMP_CONFIG.length > 0 && isJSON(COMP_CONFIG)) {
+      const compConfig = JSON.parse(COMP_CONFIG);
+      if (JSON.parse(COMP_CONFIG).info) info = { ...info, ...compConfig.info };
+      if (JSON.parse(COMP_CONFIG).property) property = { ...property, ...compConfig.property };
+    }
+    const compItem = fromJS({
+      WORK_SEQ: workSeq,
+      COMP_TAG,
+      COMP_TYPE,
+      COMP_FIELD,
+      ORD: compData.size + 1,
+      PRNT_SEQ: workSeq,
+      FIELD_TYPE: 'USER',
+      CONFIG: {
+        info,
+        property,
+        option: {},
+      },
+    });
+    compData = compData.push(compItem);
+    return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField.push(compItem)).set('compData', compData);
   }
   return state;
 };

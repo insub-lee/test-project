@@ -29,7 +29,6 @@ class PageInfo extends Component {
       PAGE_ID: Number(PAGE_ID),
       show: false,
     };
-
     props.handleGetBizInfo(Number(BIZGRP_ID), Number(PAGE_ID));
   }
 
@@ -58,6 +57,9 @@ class PageInfo extends Component {
       // history,
     } = this.props;
 
+    const auth = bizGroupInfo.BIZMENU_ADMIN_AUTH ? bizGroupInfo.BIZMENU_ADMIN_AUTH.AUTH_TYPE : '';
+    const authM = auth.indexOf('M') > -1;
+
     const handleMoveMyWidget = layout => moveMyWidget(PAGE_ID, layout);
 
     const openModal = () => {
@@ -83,11 +85,12 @@ class PageInfo extends Component {
       cWidgetList[i].fixed = false;
       cWidgetList[i].updateWidget = updateWidget;
       cWidgetList[i].deleteWidget = deleteWidget;
-      if (bizGroupInfo.SEC_YN === 'Y') {
+      // if (bizGroupInfo.SEC_YN === 'Y') {
+      if (authM) {
         cWidgetList[i].basic.functions.push('settings');
         cWidgetList[i].basic.functions.push('delete');
       }
-      cWidgetList[i].SEC_YN = bizGroupInfo.SEC_YN;
+      cWidgetList[i].SEC_YN = authM; // bizGroupInfo.SEC_YN;
       cWidgetList[i].basic.path = 'AppMain/BizManage/BizMenuReg/PageInfo/BasicWidget/index';
 
       if (i === length - 1) {
@@ -95,7 +98,8 @@ class PageInfo extends Component {
       }
     }
     // 2. 마지막 순서에 addWidgets Component 추가
-    if (bizGroupInfo.SEC_YN === 'Y') {
+    // if (bizGroupInfo.SEC_YN === 'Y') {
+    if (authM) {
       cWidgetList[length] = {
         PAGE_ID,
         title: '',
@@ -131,10 +135,12 @@ class PageInfo extends Component {
     return (
       <div>
         <ErrorBoundary>
-          <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} />
+          {/* <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={bizGroupInfo} /> */}
+          <Page columns={cWidgetList} moveMyWidget={handleMoveMyWidget} bizGroupInfo={{ ...bizGroupInfo, SEC_YN: authM ? 'Y' : 'N' }} />
         </ErrorBoundary>
 
-        {bizGroupInfo.SEC_YN === 'Y' ? (
+        {/* {bizGroupInfo.SEC_YN === 'Y' ? ( */}
+        {authM ? (
           <ErrorBoundary>
             <AppSelector type="widget" show={this.state.show} closeModal={closeModal} addList={addList} style={{ marginTop: 570 }} />
           </ErrorBoundary>

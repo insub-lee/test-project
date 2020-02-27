@@ -21,6 +21,7 @@ const StyledSelectTable = styled.div`
     /* font-weight: 600; */
     font-size: 12px;
     padding: 5px 5px;
+    border-right: 1px solid #e8e8e8;
     border-bottom: 1px solid #e8e8e8;
     width: 130px;
   }
@@ -29,10 +30,6 @@ const StyledSelectTable = styled.div`
     padding: 5px 5px;
     font-size: 12px;
     width: auto;
-  }
-
-  .subTable {
-    width: 120px;
   }
 
   .ant-checkbox-wrapper {

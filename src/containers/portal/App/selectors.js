@@ -9,6 +9,7 @@ const makeSelectHNotiCnt = () => createSelector(selectPortalAuth, portalState =>
 
 const makeSelectRoleAdmin = () => createSelector(selectPortalAuth, portalState => portalState.profile.SA);
 const makeSelectRoleBizMng = () => createSelector(selectPortalAuth, portalState => portalState.profile.BM);
+const makeSelectBizGrpMngCnt = () => createSelector(selectPortalAuth, portalState => portalState.profile.BizGrpMngCnt);
 
 // ****************** language 스토어에서 가져오는 state ******************
 const selectPortalLanguage = state => state.get('language').toJS();
@@ -95,6 +96,7 @@ export {
   makeUnreadCnt,
   makeSelectRoleAdmin,
   makeSelectRoleBizMng,
+  makeSelectBizGrpMngCnt,
   makeSelectView,
   makeSelectDockAppList,
   makeSelectDockFixedYn,
