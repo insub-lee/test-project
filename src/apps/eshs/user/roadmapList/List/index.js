@@ -8,13 +8,15 @@ import request from 'utils/request';
 import moment from 'moment';
 
 moment.locale('en-US');
-const { RangePicker } = DatePicker;
+const { RangePicker, MonthPicker } = DatePicker;
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       startDate: '',
       endDate: '',
+      startMonth: moment(),
+      isDisabled: true,
       columnDefs: this.columnDefs,
       betweenMonth: [],
       gridOptions: {
@@ -129,24 +131,38 @@ class List extends Component {
     const monthArr = [];
     let startMonth = startDate;
     const endMonth = endDate;
-    console.debug(startMonth === endMonth);
     if (startMonth === endMonth) {
       return;
     }
     while (startMonth <= endMonth) {
       monthArr.push(moment(startMonth).format('YYYYMM'));
       startMonth = moment(startMonth).add(1, 'months');
+      if (monthArr.length > 12) {
+        return;
+      }
     }
     this.setState({
       betweenMonth: monthArr,
     });
   };
 
+  handleDisabledMonth = current => {
+    const month = this.state.startMonth || moment().format('YYYYMM');
+    return (
+      (current.format('YYYYMM') &&
+        current.format('YYYYMM') >
+          moment(month)
+            .add(11, 'months')
+            .format('YYYYMM')) ||
+      current <= moment(month).endOf('day')
+    );
+  };
+
   render() {
-    console.debug(this.state.betweenMonth.slice(0, 12));
     return (
       <div>
-        <RangePicker onChange={this.handleDateChange} />
+        <MonthPicker placeholder="start month" onChange={e => this.setState({ startMonth: e, isDisabled: false })} /> ~{' '}
+        <MonthPicker disabled={this.state.isDisabled} disabledDate={this.handleDisabledMonth} placeholder="end month" />
         <div style={{ width: '100%', height: '100%' }}>
           <div className="ag-theme-balham" style={{ height: '560px' }}>
             <AgGridReact
