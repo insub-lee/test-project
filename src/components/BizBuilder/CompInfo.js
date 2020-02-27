@@ -65,6 +65,9 @@ import TitleModalPlusComp from 'components/BizBuilder/Field/TitleModalPlusComp';
 import CheckableTreeSelectComp from 'components/BizBuilder/Field/CheckableTreeSelectComp';
 import RoadmapCategoryComp from 'components/BizBuilder/Field/RoadmapCategoryComp';
 import ParentTaskSeqComp from 'components/BizBuilder/Field/ParentTaskSeqComp';
+import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+import UnitComp from 'components/BizBuilder/Field/UnitComp';
+import MsdsIngredientComp from 'components/BizBuilder/Field/MsdsIngredientComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -132,4 +135,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/CheckableTreeSelectComp': { renderer: property => <CheckableTreeSelectComp {...property} /> },
   'components/BizBuilder/Field/RoadmapCategoryComp': { renderer: property => <RoadmapCategoryComp {...property} /> },
   'components/BizBuilder/Field/ParentTaskSeqComp': { renderer: property => <ParentTaskSeqComp {...property} /> },
+  'components/BizBuilder/Field/EshsCmpnyComp': { renderer: property => <EshsCmpnyComp {...property} /> },
+  'components/BizBuilder/Field/UnitComp': { renderer: property => <UnitComp {...property} /> },
+  'components/BizBuilder/Field/MsdsIngredientComp': { renderer: property => <MsdsIngredientComp {...property} /> },
 };

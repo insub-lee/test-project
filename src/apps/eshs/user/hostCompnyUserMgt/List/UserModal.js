@@ -16,7 +16,6 @@ class UserModal extends Component {
   }
 
   componentDidMount = () => {
-    console.debug('여기는 componentDIdMount');
     const { id, changeFormData, formData, getCallDataHandler } = this.props;
     const cmpnyList = (formData && formData.cmpnyList) || [];
     changeFormData(id, 'userData', { SITE: '청주', HST_CMPNY_CD: cmpnyList[0].HST_CMPNY_CD });
