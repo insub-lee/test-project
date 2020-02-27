@@ -105,15 +105,15 @@ class InputPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, workFlowConfig, loadingComplete, workInfo, formData } = this.props;
+    const { sagaKey: id, viewLayer, loadingComplete, formData } = this.props;
     // Work Process 사용여부
     // const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-      const {
-        info: { PRC_ID },
-      } = workFlowConfig;
+      // const {
+      //   info: { PRC_ID },
+      // } = workFlowConfig;
 
       // 로딩
       if (this.props.isLoading === false && this.state.initLoading) {
