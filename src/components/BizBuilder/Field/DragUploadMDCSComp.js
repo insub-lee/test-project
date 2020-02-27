@@ -312,7 +312,7 @@ class DragUploadMDCSComp extends Component {
               </Upload>
             </div>
             */}
-            <div className="dragTypeUploader" style={{ height: 100 }}>
+            <div className="dragTypeUploader" style={{ height: 100 }} onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
               <Dragger
                 action="/upload/mdcs"
                 fileList={fileList}

@@ -208,7 +208,7 @@ class DragUploadComp extends Component {
                 </Button>
               </Upload>
             </div>
-            <div className="dragTypeUploader" style={{ height: '138px' }}>
+            <div className="dragTypeUploader" style={{ height: '138px' }} onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
               <Dragger
                 action="/upload"
                 fileList={fileList}
