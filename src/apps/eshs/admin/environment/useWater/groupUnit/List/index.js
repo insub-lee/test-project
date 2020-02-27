@@ -10,6 +10,8 @@ import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import Edit from './Edit';
+import CompanyModal from '../CompanyModal';
 
 const AntdTable = StyledAntdTable(Table);
 const { Option } = Select;
@@ -18,69 +20,74 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      groupUnitCd: '', // 관리단위코드:주로 FAB기준이며,회사단위일 경우도 있슴.정수장
-      groupUnitNm: '', // 관리단위명
-      site: '청주', // 지역
-      companyCd: '', // 회사코드:하이닉스,하이디스,LCD,
+      modalEdit: false,
+      treatmentPlantSBV: '0', // 처리장코드(관리단위가 처리장일 경우만 관리)
+      filterPlantSBV: '0', // 정수장 코드(관리단위가 정수장일 경우만 관리)
+      fabSBV: '0', // 건물FAB(관리단위가 건물FAB일 경우만 관리)
+      siteSBV: '0', // 지역
+      companyCd: '0', // 회사코드:하이닉스,하이디스,LCD,
       companyName: '',
-      gubun: '', // 관리단위구분:정수장,건물FAB,처리장,기타의 구분자 (코드테이블 gubun값, ETC)
-      filterPlant: '0', // 정수장 코드(관리단위가 정수장일 경우만 관리)
-      fab: '0', // 건물FAB(관리단위가 건물FAB일 경우만 관리)
-      treatmentPlant: '0', // 처리장코드(관리단위가 처리장일 경우만 관리)
-      di: '0', // DI생산시설여부
+      gubun: '0', // 관리단위구분:정수장,건물FAB,처리장,기타의 구분자 (코드테이블 gubun값, ETC)
+      di: 'total', // DI생산시설여부
       del: '0', // 삭제여부
-      companyCdS: '0',
-      gubunS: '0',
-      companyNameS: '',
-      diS: 'total',
-      treatmentPlantS: '0',
-      fabS: '0',
-      filterPlantS: '0',
-      siteS: '0',
-      modalBool: false,
-      modalBoolS: false,
-      modalSearchtype: 'HST_CMPNY_NM',
-      modalSearch: '',
-      filterBool: false,
-      fabBool: false,
-      treatBool: false,
+      modalCompany: false,
+      treatmentPlantSB: [],
+      filterPlantSB: [],
+      fabSB: [],
+      siteSB: [],
+      listData: [],
     };
   }
 
   componentDidMount() {
     this.selectCodeApi();
-    this.listDataApi();
+    // this.listDataApi();
   }
 
-  changeInputValue = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  initData = () => {
+    const { result } = this.props;
+    const treatmentPlantSB = result && result.UW && result.UW.categoryMapList.filter(x => x.PARENT_NODE_ID === 363 && x.LVL === 3 && x.USE_YN === 'Y');
+    const filterPlantSB = result && result.UW && result.UW.categoryMapList.filter(x => x.PARENT_NODE_ID === 359 && x.LVL === 3 && x.USE_YN === 'Y');
+    const fabSB = result && result.CM && result.CM.categoryMapList.filter(x => x.PARENT_NODE_ID === 638 && x.LVL === 3 && x.USE_YN === 'Y');
+    const siteSB = result && result.CM && result.CM.categoryMapList.filter(x => x.PARENT_NODE_ID === 635 && x.LVL === 3 && x.USE_YN === 'Y');
+    this.setState({ treatmentPlantSB, filterPlantSB, fabSB, siteSB }, this.searchList);
   };
 
-  callBackApi = () => {
-    this.listDataApi();
+  searchList = () => {
+    const { result } = this.props;
+    const initList =
+      result &&
+      result.eshsGroupUnit &&
+      result.eshsGroupUnit.list.map(item => ({
+        ...item,
+        FILTER_PLANT_NM: item.GUBUN === 'FILTER_PLANT' ? this.state.filterPlantSB.find(f => f.CODE === item.FILTER_PLANT_CD) : '',
+        FAB_NM: item.GUBUN === 'FAB' ? this.state.fabSB.find(f => f.CODE === item.FAB) : '',
+        TREATMENT_PLANT_NM: item.GUBUN === 'TREATMENT_PLANT' ? this.state.treatmentPlantSB.find(f => f.CODE === item.TREATMENT_PLANT_CD) : '',
+      }));
+    const listData =
+      initList &&
+      initList.map(item => ({
+        ...item,
+        FILTER_PLANT_NM: item.FILTER_PLANT_NM ? item.FILTER_PLANT_NM.NAME_KOR : '',
+        FAB_NM: item.FAB_NM ? item.FAB_NM.NAME_KOR : '',
+        TREATMENT_PLANT_NM: item.TREATMENT_PLANT_NM ? item.TREATMENT_PLANT_NM.NAME_KOR : '',
+        IS_DI: item.IS_DI === '1' ? 'O' : 'X',
+        IS_DEL: item.IS_DEL === '0' ? 'O' : 'X',
+      }));
+    this.setState({ listData }, () => this.renderTable());
   };
 
   selectCodeApi() {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
-        key: 'site', // 지역
-        url: '/api/eshs/v1/common/eshsbasiccode/CM?GUBUN=SITE&IS_DEL=0',
+        key: 'CM',
+        url: '/api/admin/v1/common/categoryMapList?MAP_ID=65',
         type: 'GET',
       },
       {
-        key: 'filterPlant', // 정수장
-        url: '/api/eshs/v1/common/eshsbasiccode/UW?GUBUN=FILTER_PLANT&IS_DEL=0',
-        type: 'GET',
-      },
-      {
-        key: 'fab', // 건물  FAB
-        url: '/api/eshs/v1/common/eshsbasiccode/CM?GUBUN=FAB&IS_DEL=0',
-        type: 'GET',
-      },
-      {
-        key: 'treatmentPlant', // 처리장
-        url: '/api/eshs/v1/common/eshsbasiccode/UW?GUBUN=TREATMENT_PLANT&IS_DEL=0',
+        key: 'UW',
+        url: '/api/admin/v1/common/categoryMapList?MAP_ID=47',
         type: 'GET',
       },
       {
@@ -88,30 +95,21 @@ class List extends Component {
         url: '/api/eshs/v1/common/eshsHstCompanyList',
         type: 'GET',
       },
-    ];
-    getCallDataHandler(id, apiAry);
-    this.renderSelect();
-  }
-
-  onModalSearch = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiAry = [
       {
-        key: 'modalData',
-        url: `/api/eshs/v1/common/eshsHstCompanyList?SEARCH_TYPE=${this.state.modalSearchtype}&SEARCH=${this.state.modalSearch}`,
+        key: 'eshsGroupUnit',
+        url: '/api/eshs/v1/common/eshsgroupunit',
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry);
-    this.onShowModalTemplate();
-  };
+    getCallDataHandler(id, apiAry, this.initData);
+  }
 
   listDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
-    const { siteS, companyCdS, filterPlantS, fabS, treatmentPlantS, diS, gubunS } = this.state;
-    let getParam = `SITE=${siteS === '0' ? '' : siteS}&COMPANY_CD=${companyCdS === '0' ? '' : companyCdS}`;
-    getParam += `&FILTER_PLANT_CD=${filterPlantS === '0' ? '' : filterPlantS}&FAB=${fabS === '0' ? '' : fabS}&IS_DI=${diS === 'total' ? '' : diS}`;
-    getParam += `&TREATMENT_PLANT_CD=${treatmentPlantS === '0' ? '' : treatmentPlantS}&GUBUN=${gubunS === '0' ? '' : gubunS}`;
+    const { siteSBV, companyCd, filterPlantSBV, fabSBV, treatmentPlantSBV, di, gubun } = this.state;
+    let getParam = `SITE=${siteSBV === '0' ? '' : siteSBV}&COMPANY_CD=${companyCd === '0' ? '' : companyCd}`;
+    getParam += `&FILTER_PLANT_CD=${filterPlantSBV === '0' ? '' : filterPlantSBV}&FAB=${fabSBV === '0' ? '' : fabSBV}&IS_DI=${di === 'total' ? '' : di}`;
+    getParam += `&TREATMENT_PLANT_CD=${treatmentPlantSBV === '0' ? '' : treatmentPlantSBV}&GUBUN=${gubun === '0' ? '' : gubun}`;
     const apiAry = [
       {
         key: 'eshsGroupUnit',
@@ -119,189 +117,103 @@ class List extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry);
-    this.renderTable();
+    getCallDataHandler(id, apiAry, this.searchList);
   };
 
-  onChangeData = value => {
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-
-    const submitData = {
-      PARAM: {
-        GROUP_UNIT_CD: this.state.groupUnitCd, // 관리단위코드:주로 FAB기준이며,회사단위일 경우도 있슴.정수장
-        GROUP_UNIT_NM: this.state.groupUnitNm, // 관리단위명
-        SITE: this.state.site, // 지역
-        COMPANY_CD: this.state.companyCd, // 회사코드:하이닉스,하이디스,LCD,
-        GUBUN: this.state.gubun, // 관리단위구분:정수장,건물FAB,처리장,기타의 구분자 (코드테이블 gubun값, ETC)
-        FILTER_PLANT_CD: this.state.filterPlant === '0' ? '' : this.state.filterPlant, // 정수장 코드(관리단위가 정수장일 경우만 관리)
-        FAB: this.state.fab === '0' ? '' : this.state.fab, // 건물FAB(관리단위가 건물FAB일 경우만 관리)
-        TREATMENT_PLANT_CD: this.state.treatmentPlant === '0' ? '' : this.state.treatmentPlant, // 처리장코드(관리단위가 처리장일 경우만 관리)
-        IS_DI: this.state.di, // DI생산시설여부
-        IS_DEL: this.state.del, // 삭제여부
-      },
-    };
-    if (this.state.groupUnitNm) {
-      if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsgroupunit', submitData, this.callBackApi);
-      } else if (value === 'D') {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsgroupunit', submitData, this.callBackApi);
-      } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsgroupunit', submitData, this.callBackApi);
-      }
-    } else {
-      message.warning('관리단위명을 올바르게 입력하시오.');
-    }
-
-    this.onReset();
+  changeInputValue = e => {
+    this.setState({ [e.target.name]: e.target.value });
   };
-
-  onReset() {
-    this.setState({
-      groupUnitCd: '',
-      groupUnitNm: '',
-      site: '청주',
-      companyCd: '',
-      companyName: '',
-      gubun: '',
-      filterPlant: '0',
-      fab: '0',
-      treatmentPlant: '0',
-      di: '0',
-      del: '0',
-      filterBool: false,
-      fabBool: false,
-      treatBool: false,
-    });
-  }
 
   onCancel = () => {
     this.setState({
-      modalBool: false,
-      modalBoolS: false,
+      modalEdit: false,
+      modalCompany: false,
+      modalProps: '',
     });
   };
 
   changeSelectValue = (value, option) => {
-    if (option.key === 'filterPlant') {
-      this.setState({
-        filterBool: false,
-        fabBool: true,
-        treatBool: true,
-        gubun: 'FILTER_PLANT_CD',
-      });
-    }
-    if (option.key === 'fab') {
-      this.setState({
-        filterBool: true,
-        fabBool: false,
-        treatBool: true,
-        gubun: 'FAB',
-      });
-    }
-    if (option.key === 'treatmentPlant') {
-      this.setState({
-        filterBool: true,
-        fabBool: true,
-        treatBool: false,
-        gubun: 'TREATMENT_PLANT_CD',
-      });
-    }
     this.setState({
       [option.key]: value,
     });
   };
 
-  selectOptionRender = selectName => {
-    const { result } = this.props;
-    let selectData;
-    if (result && result.site && result[`${selectName}`] && result[`${selectName}`].list) {
-      selectData = result[`${selectName}`].list.map(item => (
-        <Option value={item.CODE} key={selectName}>
-          {item.NAME}
+  selectOptionRender = codegubun => {
+    const selectData =
+      this.state[`${codegubun}`] &&
+      this.state[`${codegubun}`].map(item => (
+        <Option value={item.CODE} key={`${codegubun}V`}>
+          {item.NAME_KOR}
         </Option>
       ));
-    }
-    return selectData;
-  };
-
-  selectOptionSRender = selectName => {
-    const { result } = this.props;
-    let selectData;
-    if (result && result.site && result[`${selectName}`] && result[`${selectName}`].list) {
-      selectData = result[`${selectName}`].list.map(item => (
-        <Option value={item.CODE} key={`${selectName}S`}>
-          {item.NAME}
-        </Option>
-      ));
-    }
     return selectData;
   };
 
   renderSelect() {
     return (
       <StyledSearchWrap>
-        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteS} style={{ width: '130px', margin: '5px' }}>
-          <Option value="0" key="siteS">
+        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV} style={{ width: '130px', margin: '5px' }}>
+          <Option value="0" key="siteSBV">
             지역전체
           </Option>
-          {this.selectOptionSRender('site')}
+          {this.selectOptionRender('siteSB')}
         </Select>
         <span>회사</span>
         <Input
-          style={{ width: '250px', margin: '5px' }}
-          value={this.state.companyNameS}
-          onClick={() => this.setState({ modalBoolS: true })}
-          name="companyNameS"
+          style={{ width: '250px', margin: '5px', cursor: 'pointer' }}
+          value={this.state.companyName}
+          onClick={() => this.setState({ modalCompany: true })}
+          placeholder="여기를 클릭해주세요."
         />
-        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantS} style={{ width: '130px', margin: '5px' }}>
-          <Option value="0" key="filterPlantS">
+        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV} style={{ width: '130px', margin: '5px' }}>
+          <Option value="0" key="filterPlantSBV">
             정수장전체
           </Option>
-          {this.selectOptionSRender('filterPlant')}
+          {this.selectOptionRender('filterPlantSB')}
         </Select>
-        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabS} style={{ width: '130px', margin: '5px' }}>
-          <Option value="0" key="fabS">
+        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV} style={{ width: '130px', margin: '5px' }}>
+          <Option value="0" key="fabSBV">
             FAB전체
           </Option>
-          {this.selectOptionSRender('fab')}
+          {this.selectOptionRender('fabSB')}
         </Select>
         <Select
           onChange={(value, option) => this.changeSelectValue(value, option)}
-          value={this.state.treatmentPlantS}
+          value={this.state.treatmentPlantSBV}
           style={{ width: '130px', margin: '5px' }}
         >
-          <Option value="0" key="treatmentPlantS">
+          <Option value="0" key="treatmentPlantSBV">
             처리장전체
           </Option>
-          {this.selectOptionSRender('treatmentPlant')}
+          {this.selectOptionRender('treatmentPlantSB')}
         </Select>
         <span>DI 시설</span>
-        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.diS} style={{ margin: '5px' }}>
-          <Option value="total" key="diS">
+        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di} style={{ margin: '5px' }}>
+          <Option value="total" key="di">
             전체
           </Option>
-          <Option value="1" key="diS">
+          <Option value="1" key="di">
             O
           </Option>
-          <Option value="0" key="diS">
+          <Option value="0" key="di">
             X
           </Option>
         </Select>
         <span>구분</span>
-        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubunS} style={{ margin: '5px' }}>
-          <Option value="0" key="gubunS">
+        <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun} style={{ margin: '5px' }}>
+          <Option value="0" key="gubun">
             전체
           </Option>
-          <Option value="company" key="gubunS">
+          <Option value="COMPANY" key="gubun">
             회사
           </Option>
-          <Option value="filterPlant" key="gubunS">
+          <Option value="FILTER_PLANT" key="gubun">
             정수장
           </Option>
-          <Option value="fab" key="gubunS">
+          <Option value="FAB" key="gubun">
             FAB
           </Option>
-          <Option value="treatmentPlant" key="gubunS">
+          <Option value="TREATMENT_PLANT" key="gubun">
             처리장
           </Option>
         </Select>
@@ -313,87 +225,14 @@ class List extends Component {
   }
 
   renderTable() {
-    const { result, columns } = this.props;
-    let renderList = [
-      {
-        GROUP_UNIT_CD: this.state.groupUnitCd,
-        GROUP_UNIT_NM: <Input value={this.state.groupUnitNm} onChange={e => this.changeInputValue(e)} name="groupUnitNm" />,
-        SITE: (
-          <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site}>
-            {this.selectOptionRender('site')}
-          </Select>
-        ),
-        COMPANY_NM: <Input value={this.state.companyName} onClick={() => this.setState({ modalBool: true })} />,
-        FILTER_PLANT_CD: (
-          <Select
-            onChange={(value, option) => this.changeSelectValue(value, option)}
-            value={this.state.filterPlant}
-            style={{ width: '130px' }}
-            disabled={this.state.filterBool}
-          >
-            <Option value="0">정수장전체</Option>
-            {this.selectOptionRender('filterPlant')}
-          </Select>
-        ),
-        FAB: (
-          <Select
-            onChange={(value, option) => this.changeSelectValue(value, option)}
-            value={this.state.fab}
-            style={{ width: '130px' }}
-            disabled={this.state.fabBool}
-          >
-            <Option value="0">FAB전체</Option>
-            {this.selectOptionRender('fab')}
-          </Select>
-        ),
-        TREATMENT_PLANT_CD: (
-          <Select
-            onChange={(value, option) => this.changeSelectValue(value, option)}
-            value={this.state.treatmentPlant}
-            style={{ width: '130px' }}
-            disabled={this.state.treatBool}
-          >
-            <Option value="0">처리장전체</Option>
-            {this.selectOptionRender('treatmentPlant')}
-          </Select>
-        ),
-        IS_DI: (
-          <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
-            <Option value="1" key="diS">
-              O
-            </Option>
-            <Option value="0" key="diS">
-              X
-            </Option>
-          </Select>
-        ),
-        IS_DEL: (
-          <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.del}>
-            <Option value="0" key="del">
-              O
-            </Option>
-            <Option value="1" key="del">
-              X
-            </Option>
-          </Select>
-        ),
-      },
-    ];
-    let listData = [];
-    if (result && result.eshsGroupUnit && result.eshsGroupUnit.list) {
-      listData = result.eshsGroupUnit.list.map(item => ({
-        ...item,
-        IS_DI: item.IS_DI === '1' ? 'O' : 'X',
-        IS_DEL: item.IS_DEL === '0' ? 'O' : 'X',
-      }));
-    }
-    renderList = [...renderList, ...listData];
+    const { columns } = this.props;
+    const { listData } = this.state;
     return (
       <AntdTable
-        rowKey={renderList.CLEAN_CD}
-        key={renderList.CLEAN_CD}
+        style={{ cursor: 'pointer' }}
+        rowKey={listData && listData.GROUP_UNIT_CD}
         columns={columns}
-        dataSource={renderList}
+        dataSource={listData}
         bordered
         onRow={record => ({
           onClick: () => {
@@ -402,140 +241,81 @@ class List extends Component {
         })}
         pagination={{ pageSize: 100 }}
         scroll={{ y: 500 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${renderList.length - 1} 건`}</div>}
+        footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length - 1} 건`}</div>}
       />
     );
   }
 
   selectedRecord = record => {
-    if (typeof record.GROUP_UNIT_NM === 'string') {
-      this.setState({
+    this.setState({
+      modalEdit: true,
+      modalProps: {
         groupUnitCd: record.GROUP_UNIT_CD,
         groupUnitNm: record.GROUP_UNIT_NM,
-        site: record.SITE,
+        siteSBV: record.SITE,
         companyName: record.COMPANY_NM,
         companyCd: record.COMPANY_CD,
         gubun: record.GUBUN,
-        filterPlant: record.FILTER_PLANT_CD || '0',
-        fab: record.FAB || '0',
-        treatmentPlant: record.TREATMENT_PLANT_CD || '0',
+        filterPlantSBV: record.FILTER_PLANT_CD || '0',
+        fabSBV: record.FAB || '0',
+        treatmentPlantSBV: record.TREATMENT_PLANT_CD || '0',
         di: record.IS_DI === 'O' ? '1' : '0',
         del: record.IS_DEL === 'O' ? '0' : '1',
-        filterBool: record.GUBUN !== 'FILTER_PLANT_CD',
-        fabBool: record.GUBUN !== 'FAB',
-        treatBool: record.GUBUN !== 'TREATMENT_PLANT',
-      });
-      if (!record.GUBUN) {
-        this.setState({
-          filterBool: false,
-          fabBool: false,
-          treatBool: false,
-        });
-      }
-    }
+      },
+    });
   };
 
-  onShowModalTemplate = type => {
-    const { result } = this.props;
-    let modal;
-    const modalColumns = [
-      {
-        title: '코드',
-        dataIndex: 'HST_CMPNY_CD',
-        align: 'center',
-        width: 100,
-      },
-      {
-        title: '회사명',
-        dataIndex: 'HST_CMPNY_NM',
-        align: 'center',
-        width: 200,
-      },
-    ];
-    if (result && result.modalData && result.modalData.eshsHstCmpnyList) {
-      const modalList = result.modalData.eshsHstCmpnyList;
-      modal = (
-        <>
-          <StyledSearchWrap>
-            <span>검색구분</span>
-            <Select onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.modalSearchtype} style={{ margin: '5px' }}>
-              <Option value="HST_CMPNY_CD" key="modalSearchtype">
-                코드
-              </Option>
-              <Option value="HST_CMPNY_NM" key="modalSearchtype">
-                회사명
-              </Option>
-            </Select>
-            <span>검색어</span>
-            <Input style={{ width: '250px', margin: '5px' }} value={this.state.modalSearch} onChange={e => this.changeInputValue(e)} name="modalSearch" />
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onModalSearch()}>
-              검색
-            </StyledButton>
-          </StyledSearchWrap>
-          <AntdTable
-            rowKey={modalList.HST_CMPNY_CD}
-            key={modalList.HST_CMPNY_CD}
-            columns={modalColumns}
-            dataSource={modalList}
-            bordered
-            onRow={record => ({
-              onClick: () => {
-                this.selectedModalRecord(record, type);
-              },
-            })}
-            pagination={{ pageSize: 100 }}
-            scroll={{ y: 400 }}
-            footer={() => <div style={{ textAlign: 'center' }}>{`${modalList.length} 건`}</div>}
-          />
-        </>
-      );
-    }
-    return modal;
+  selectedModalRecord = record => {
+    this.setState({
+      companyName: record.HST_CMPNY_NM,
+      companyCd: record.HST_CMPNY_CD,
+      modalCompany: false,
+    });
   };
 
-  selectedModalRecord = (record, type) => {
-    if (type === 'table') {
-      this.setState({
-        companyName: record.HST_CMPNY_NM,
-        companyCd: record.HST_CMPNY_CD,
-        modalBool: false,
-      });
-    } else {
-      this.setState({
-        companyNameS: record.HST_CMPNY_NM,
-        companyCdS: record.HST_CMPNY_CD,
-        modalBoolS: false,
-      });
-    }
+  isOpenEdit = () => {
+    this.setState({ modalEdit: true });
   };
+
+  onEditCancel = () => {
+    this.setState({
+      modalEdit: false,
+      modalProps: '',
+    });
+    this.listDataApi();
+  };
+
+  editModalTemplate = record => (
+    <Edit
+      {...this.props}
+      treatmentPlantSB={this.state.treatmentPlantSB}
+      filterPlantSB={this.state.filterPlantSB}
+      fabSB={this.state.fabSB}
+      siteSB={this.state.siteSB}
+      modalProps={this.state.modalProps}
+      onEditCancel={this.onEditCancel}
+    />
+  );
 
   render() {
     const { result } = this.props;
-    console.log(result, '&&&&&&&&&&&&&&');
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledViewDesigner>
           <Sketch>
             <Group>
               {this.renderSelect()}
-              <div style={{ marginLeft: '10px', marginBottom: '10px' }}>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('I')}>
+              <div className="alignRight" style={{ marginBottom: '10px' }}>
+                <StyledButton className="btn-primary btn-first" onClick={() => this.isOpenEdit()}>
                   추가
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-                  수정
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-                  삭제
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
-                  Reset
                 </StyledButton>
               </div>
               {this.renderTable()}
-              <Modal visible={this.state.modalBool || this.state.modalBoolS} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
-                <div>{this.state.modalBool && this.onShowModalTemplate('table')}</div>
-                <div>{this.state.modalBoolS && this.onShowModalTemplate('search')}</div>
+              <Modal visible={this.state.modalEdit} width="800px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+                <div>{this.state.modalEdit && this.editModalTemplate()}</div>
+              </Modal>
+              <Modal visible={this.state.modalCompany} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>
+                <div>{this.state.modalCompany && <CompanyModal {...this.props} selectedModalRecord={this.selectedModalRecord} />}</div>
               </Modal>
             </Group>
           </Sketch>
@@ -575,17 +355,17 @@ List.defaultProps = {
     },
     {
       title: '정수장',
-      dataIndex: 'FILTER_PLANT_CD',
+      dataIndex: 'FILTER_PLANT_NM',
       align: 'center',
     },
     {
       title: '건물/FAB',
-      dataIndex: 'FAB',
+      dataIndex: 'FAB_NM',
       align: 'center',
     },
     {
       title: '처리장',
-      dataIndex: 'TREATMENT_PLANT_CD',
+      dataIndex: 'TREATMENT_PLANT_NM',
       align: 'center',
     },
     {

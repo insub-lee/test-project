@@ -70,7 +70,8 @@ class List extends Component {
     const { changeSelectValue } = this.state;
     const selectBoxData =
       result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === INIT_NODE_ID && x.LVL === 2 && x.USE_YN === 'Y');
-    const listData = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+    const listDataTemp = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+    const listData = listDataTemp && listDataTemp.map(item => ({ ...item, USE_YN: item.USE_YN === 'Y' ? '사용중' : '삭제' }));
     const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
     this.setState({ selectBoxData, listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
     this.codeFomat(listData && listData[0]);
@@ -80,7 +81,8 @@ class List extends Component {
     const { result } = this.props;
     const { changeSelectValue } = this.state;
     if (changeSelectValue) {
-      const listData = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+      const listDataTemp = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+      const listData = listDataTemp && listDataTemp.map(item => ({ ...item, USE_YN: item.USE_YN === 'Y' ? '사용중' : '삭제' }));
       const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
       this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
       this.codeFomat(listData && listData[0]);
@@ -186,7 +188,14 @@ class List extends Component {
             삭제 취소
           </StyledButton>
         ),
-        CODE: <Input readOnly={this.state.codeType !== 'selfTyping'} value={this.state.code} onChange={e => this.changeCodeValue(e.target.value)} />,
+        CODE: (
+          <Input
+            readOnly={this.state.codeType !== 'selfTyping'}
+            onClick={this.state.codeType !== 'selfTyping' ? () => this.warning('입력하는 코드형식이 아닙니다') : ''}
+            value={this.state.code}
+            onChange={e => this.changeCodeValue(e.target.value)}
+          />
+        ),
         NAME_KOR: (
           <>
             <Input style={{ width: '300px' }} value={this.state.name} onChange={e => this.changeInputValue(e.target.value)}></Input>
@@ -206,16 +215,11 @@ class List extends Component {
         ),
       },
     ];
-    const listDataTemp =
-      listData &&
-      listData.map(item => ({
-        ...item,
-        USE_YN: item.USE_YN === 'Y' ? '사용중' : '삭제',
-      }));
 
-    renderList = [...renderList, ...(listDataTemp || [])];
+    renderList = [...renderList, ...(listData || [])];
     return (
       <AntdTable
+        style={{ cursor: 'pointer' }}
         rowKey={renderList.NODE_ID}
         key={renderList.NODE_ID}
         columns={columns}

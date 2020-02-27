@@ -94,6 +94,7 @@ class List extends Component {
     renderList = [...renderList, ...((result && result.eshsexhaust && result.eshsexhaust.list) || [])];
     return (
       <AntdTable
+        style={{ cursor: 'pointer' }}
         rowKey={renderList.EXHAUST_CD}
         key={renderList.EXHAUST_CD}
         columns={columns}
