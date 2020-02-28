@@ -58,7 +58,7 @@ function* getExtraApiData({ id, apiArr, callback }) {
   }
 }
 
-function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
+function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc, etcData }) {
   let httpMethodInfo = Axios.put;
   switch (httpMethod.toUpperCase()) {
     case 'POST':
@@ -76,7 +76,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc 
   }
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, response, etcData);
   }
 }
 

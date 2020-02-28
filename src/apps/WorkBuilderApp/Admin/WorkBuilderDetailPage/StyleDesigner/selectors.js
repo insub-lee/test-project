@@ -36,8 +36,6 @@ const makeSelectSysMetaList = () => createSelector(selectViewDesignerState, stat
 
 const makeSelectIsLoadingContent = () => createSelector(selectViewDesignerState, state => state.get('isLoadingContent'));
 
-const makeSelectClassNameList = () => createSelector(selectViewDesignerState, state => state.get('classNameList').toJS());
-
 export {
   makeSelectIsShowEditor,
   makeSelectGroups,
@@ -56,5 +54,4 @@ export {
   makeSelectSysMetaList,
   makeSelectIsLoadingContent,
   makeSelectCanDivide,
-  makeSelectClassNameList,
 };

@@ -22,11 +22,8 @@ import TableTypeSelectorStyled from './TableTypeSelectorStyled';
 //   { dataIndex: 'MOLECULAR_FORMULA', title: '분자식', search: true, width: 200 },
 //   { dataIndex: 'CAS_NO', title: 'CAS-NO', search: true, width: 150 },
 //   { dataIndex: 'UN_NO', title: 'UN-NO', search: true, width: 100 },
-//   { dataIndex: 'ITEM_NM', title: '제품명', search: true, width: 200 },
-//   { dataIndex: 'WRK_CMPNY_NM', title: 'Vendor', search: true, width: 150 },
-// ],
-// rightTableColumns: [
-//   { dataIndex: 'ITEM_NM', title: 'ITEM' },
+//   { dataIndex: 'ITEM_NM', title: '제품명', search: true, width: 200
+
 //   { dataIndex: 'MOLECULAR_FORMULA', title: '분자식' },
 //   { dataIndex: 'CAS_NO', title: 'CAS-NO' },
 // ]
@@ -184,6 +181,7 @@ class TableTypeSelector extends React.Component {
       }),
       fixed: true,
     };
+
     return (
       <div>
         <Button onClick={this.handleModalVisible}>{btnText}</Button>

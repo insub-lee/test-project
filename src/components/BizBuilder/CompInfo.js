@@ -76,6 +76,9 @@ import LeadBallComp from 'components/BizBuilder/Field/LeadBallComp';
 import RadioCodeValueAsCharComp from 'components/BizBuilder/Field/RadioCodeValueAsCharComp';
 import NumberCompUnit from 'components/BizBuilder/Field/NumberCompUnit';
 import TreeSelectRootKeyComp from 'components/BizBuilder/Field/TreeSelectRootKeyComp';
+import CheckboxNodeIdComp from 'components/BizBuilder/Field/CheckboxNodeIdComp';
+import CheckboxNameKorComp from 'components/BizBuilder/Field/CheckboxNameKorComp';
+import CheckboxCodeComp from 'components/BizBuilder/Field/CheckboxCodeComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -154,4 +157,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioCodeValueAsCharComp': { renderer: property => <RadioCodeValueAsCharComp {...property} /> },
   'components/BizBuilder/Field/NumberCompUnit': { renderer: property => <NumberCompUnit {...property} /> },
   'components/BizBuilder/Field/TreeSelectRootKeyComp': { renderer: property => <TreeSelectRootKeyComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxNodeIdComp': { renderer: property => <CheckboxNodeIdComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxNameKorComp': { renderer: property => <CheckboxNameKorComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxCodeComp': { renderer: property => <CheckboxCodeComp {...property} /> },
 };

@@ -1,4 +1,4 @@
-const prefix = '/apps/ViewDesigner';
+const prefix = '/apps/StyleDesigner';
 
 export const OPEN_JSON_CODE_EDITOR = `${prefix}/OPEN_JSON_CODE_EDITOR`;
 export const CLOSE_JSON_CODE_EDITOR = `${prefix}/CLOSE_JSON_CODE_EDITOR`;
@@ -62,4 +62,3 @@ export const DIVIDE_COL = `${prefix}/DIVIDE_COL`;
 export const ON_CHANGE_TABLE_SIZE = `${prefix}/ON_CHANGE_TABLE_SIZE`;
 export const CHANGE_COMP_FIELD_DATA_REDUCER = `${prefix}/CHANGE_COMP_FIELD_DATA_REDUCER`;
 export const CHANGE_HIDDEN_COMP_DATA_REDUCER = `${prefix}/CHANGE_HIDDEN_COMP_DATA_REDUCER`;
-export const SET_CLASSNAMELIST_REDUCER = `${prefix}/SET_CLASSNAMELIST_REDUCER`;
