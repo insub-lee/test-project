@@ -10,8 +10,6 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
-import { isJSON } from 'utils/helpers';
-import request from 'utils/request';
 import moment from 'moment';
 
 moment.locale('en-US');
@@ -30,9 +28,7 @@ class List extends Component {
           resizable: true,
         },
       },
-      originList: [],
       filteredList: [],
-      colInfo: [],
       defaultColDef: {
         width: 120,
         resizable: true,
@@ -42,7 +38,7 @@ class List extends Component {
 
   columnDefs = [
     {
-      headerName: '구분',
+      headerName: '항목',
       field: 'category',
       filter: true,
       sorter: true,
@@ -66,19 +62,7 @@ class List extends Component {
         }
       },
     },
-    { headerName: '지역', field: 'site', filter: true, sorter: true, pinned: 'left', width: 63 },
-    // { headerName: '1월', field: 'jan' },
-    // { headerName: '2월', field: 'feb' },
-    // { headerName: '3월', field: 'mar' },
-    // { headerName: '4월', field: 'apr' },
-    // { headerName: '5월', field: 'may' },
-    // { headerName: '6월', field: 'jun' },
-    // { headerName: '7월', field: 'jul' },
-    // { headerName: '8월', field: 'aug' },
-    // { headerName: '9월', field: 'sep' },
-    // { headerName: '10월', field: 'oct' },
-    // { headerName: '11월', field: 'nov' },
-    // { headerName: '12월', field: 'dec' },
+    { headerName: '구분', field: 'site', filter: true, sorter: true, pinned: 'left', width: 63 },
     { headerName: '합계', field: 'total', pinned: 'right' },
     { headerName: '비교 Factor', pinned: 'right' },
     { headerName: '단위', pinned: 'right' },
@@ -105,22 +89,18 @@ class List extends Component {
     let startDate = start;
     const endDate = end;
     if (startDate === endDate) {
-      return;
+      return null;
     }
     while (startDate <= endDate) {
       monthArr.push(moment(startDate).format('YYYYMM'));
       startDate = moment(startDate).add(1, 'months');
       if (monthArr.length > 12) {
-        return;
+        return monthArr;
       }
     }
 
     const startMonth = moment(start).format('YYYYMM');
     const endMonth = moment(end).format('YYYYMM');
-
-    this.setState({
-      monthArr,
-    });
 
     const param = {
       startMonth,
@@ -148,7 +128,10 @@ class List extends Component {
     const { columnDefs } = this.state;
     const tempCol = [];
     param.monthArr.map(item => {
-      tempCol.push({ headerName: `${moment(item.substring(0, 4)).format('YYYY')}년 ${moment(item.substring(4)).format('MM')}월`, field: item });
+      tempCol.push({
+        headerName: `${moment(item.substring(0, 4)).format('YYYY')}년 ${moment(item.substring(4)).format('MM')}월`,
+        field: item,
+      });
       const newColumnInfo = [...columnDefs.slice(0, 2), ...tempCol, ...columnDefs.slice(-3)];
       return this.setState({
         columnDefs: newColumnInfo,
@@ -164,7 +147,7 @@ class List extends Component {
           moment(month)
             .add(11, 'months')
             .format('YYYYMM')) ||
-      current <= moment(month).endOf('day')
+      current <= moment(month).startOf('month')
     );
   };
 
@@ -192,19 +175,28 @@ class List extends Component {
     return (
       <StyledViewDesigner>
         <Sketch>
-          <div className="alignRight">
-            <MonthPicker placeholder="start month" value={startMonth} onChange={e => this.setState({ startMonth: e, isDisabled: false })} />
-            {'  ~  '}
-            <MonthPicker
-              disabled={isDisabled}
-              value={endMonth}
-              disabledDate={this.handleDisabledMonth}
-              onChange={this.handleDateChange}
-              placeholder="end month"
-            />
-            <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
-              초기화
-            </StyledButton>
+          <div style={{ margin: '5px' }}>
+            <div className="alignRight">
+              <span style={{ 'margin-right': '10px' }}>기간 별 검색</span>
+              <MonthPicker
+                placeholder="start month"
+                value={startMonth}
+                onChange={e => this.setState({ startMonth: e, isDisabled: false })}
+                style={{ 'margin-right': '5px' }}
+              />
+              {'  ~  '}
+              <MonthPicker
+                disabled={isDisabled}
+                value={endMonth}
+                disabledDate={this.handleDisabledMonth}
+                onChange={this.handleDateChange}
+                placeholder="end month"
+                style={{ 'margin-right': '10px', 'margin-left': '5px' }}
+              />
+              <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
+                초기화
+              </StyledButton>
+            </div>
           </div>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham" style={{ height: '560px' }}>
@@ -224,6 +216,10 @@ class List extends Component {
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  getExtraApiData: PropTypes.func,
+  extraApiData: PropTypes.object,
+};
 
 export default List;
