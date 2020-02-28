@@ -20,7 +20,8 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startMonth: moment(),
+      startMonth: '',
+      endMonth: '',
       isDisabled: true,
       columnDefs: this.columnDefs,
       gridOptions: {
@@ -66,18 +67,18 @@ class List extends Component {
       },
     },
     { headerName: '지역', field: 'site', filter: true, sorter: true, pinned: 'left', width: 63 },
-    { headerName: '1월', field: 'jan' },
-    { headerName: '2월', field: 'feb' },
-    { headerName: '3월', field: 'mar' },
-    { headerName: '4월', field: 'apr' },
-    { headerName: '5월', field: 'may' },
-    { headerName: '6월', field: 'jun' },
-    { headerName: '7월', field: 'jul' },
-    { headerName: '8월', field: 'aug' },
-    { headerName: '9월', field: 'sep' },
-    { headerName: '10월', field: 'oct' },
-    { headerName: '11월', field: 'nov' },
-    { headerName: '12월', field: 'dec' },
+    // { headerName: '1월', field: 'jan' },
+    // { headerName: '2월', field: 'feb' },
+    // { headerName: '3월', field: 'mar' },
+    // { headerName: '4월', field: 'apr' },
+    // { headerName: '5월', field: 'may' },
+    // { headerName: '6월', field: 'jun' },
+    // { headerName: '7월', field: 'jul' },
+    // { headerName: '8월', field: 'aug' },
+    // { headerName: '9월', field: 'sep' },
+    // { headerName: '10월', field: 'oct' },
+    // { headerName: '11월', field: 'nov' },
+    // { headerName: '12월', field: 'dec' },
     { headerName: '합계', field: 'total', pinned: 'right' },
     { headerName: '비교 Factor', pinned: 'right' },
     { headerName: '단위', pinned: 'right' },
@@ -91,6 +92,9 @@ class List extends Component {
 
   handleDateChange = e => {
     const { startMonth } = this.state;
+    this.setState({
+      endMonth: e,
+    });
     const paramMap = this.getMonthBetweenStartToEnd(moment(startMonth), moment(e));
     this.handleGetExtraApi(paramMap);
     this.changeColumnDefs(paramMap);
@@ -164,6 +168,15 @@ class List extends Component {
     );
   };
 
+  handleFilterReset = () => {
+    this.handleGridReady();
+    this.setState({
+      startMonth: '',
+      endMonth: '',
+      isDisabled: true,
+    });
+  };
+
   static getDerivedStateFromProps(nextProps, prevState) {
     const { extraApiData } = nextProps;
     if (extraApiData.filteredData) {
@@ -175,13 +188,24 @@ class List extends Component {
   }
 
   render() {
-    const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs } = this.state;
+    const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs, startMonth, endMonth } = this.state;
     return (
       <StyledViewDesigner>
         <Sketch>
-          <MonthPicker placeholder="start month" onChange={e => this.setState({ startMonth: e, isDisabled: false })} /> ~{' '}
-          <MonthPicker disabled={isDisabled} disabledDate={this.handleDisabledMonth} onChange={this.handleDateChange} placeholder="end month" />
-          <StyledButton className="btn-primary">초기화</StyledButton>
+          <div className="alignRight">
+            <MonthPicker placeholder="start month" value={startMonth} onChange={e => this.setState({ startMonth: e, isDisabled: false })} />
+            {'  ~  '}
+            <MonthPicker
+              disabled={isDisabled}
+              value={endMonth}
+              disabledDate={this.handleDisabledMonth}
+              onChange={this.handleDateChange}
+              placeholder="end month"
+            />
+            <StyledButton className="btn-primary" onClick={this.handleFilterReset}>
+              초기화
+            </StyledButton>
+          </div>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham" style={{ height: '560px' }}>
               <AgGridReact
