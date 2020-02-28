@@ -204,7 +204,13 @@ const StyledViewDesigner = styled.div`
           }
           .ant-upload.ant-upload-drag {
             .ant-upload-drag-container {
-              padding-top: 10px;
+              padding: 2px;
+              .fileZone {
+                display: grid;
+                text-align: left;
+                margin: 10px;
+                font-size: 12px;
+              }
             }
             p.ant-upload-drag-icon {
               margin-bottom: 10px;
@@ -212,6 +218,33 @@ const StyledViewDesigner = styled.div`
             p.ant-upload-text {
               font-size: 12px;
             }
+          }
+
+          .ant-upload-list {
+              -webkit-box-sizing: border-box;
+              box-sizing: border-box;
+              margin: 0;
+              padding-top: 2px;
+              padding-left: 22px;
+              padding-bottom: 2px;
+              padding-right: 50px;
+              color: rgba(0,0,0,.65);
+              font-size: 12px;
+              font-variant: tabular-nums;
+              line-height: 1.5;
+              list-style: none;
+              -webkit-font-feature-settings: "tnum";
+              font-feature-settings: "tnum";
+              zoom: 1;
+              position: absolute;
+              top: 0px;
+
+              .ant-upload-list-item {
+                  position: relative;
+                  height: 22px;
+                  margin: 0;
+                  font-size: 12px;
+              }
           }
         }
         > div > span {
@@ -299,8 +332,7 @@ const StyledViewDesigner = styled.div`
         }
         .ant-textarea {
           height: inherit;
-        }
-      }
+        }        
     }
   }
 

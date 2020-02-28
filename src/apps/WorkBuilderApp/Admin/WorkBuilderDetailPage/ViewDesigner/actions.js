@@ -296,3 +296,8 @@ export const changeHiddenCompDatByReducer = (compIdx, key, value) => ({
   key,
   value,
 });
+
+export const setClassNameListByReducer = list => ({
+  type: actionTypes.SET_CLASSNAMELIST_REDUCER,
+  list,
+});
