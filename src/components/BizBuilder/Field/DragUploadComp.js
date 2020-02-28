@@ -292,15 +292,14 @@ class DragUploadComp extends Component {
               </Upload>
             </div>
             */}
-            <div className="dragTypeUploader" style={{ height: 100 }}>
+            <div className="dragTypeUploader" style={{ height: 100 }} onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
               <Dragger
                 action="/upload"
                 fileList={fileList}
-                disabled={!(successFileList.length <= 5)}
+                // disabled={!(successFileList.length <= 5)}
                 onChange={this.handleChange}
                 customRequest={this.customRequest}
                 showUploadList={false}
-                openFileDialogOnClick
                 multiple
               >
                 <>

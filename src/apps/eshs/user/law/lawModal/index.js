@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Table, Select, Input } from 'antd';
 
 import request from 'utils/request';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import Sketch from 'components/BizBuilder/Sketch';
+import Group from 'components/BizBuilder/Sketch/Group';
+import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
@@ -67,42 +70,46 @@ class LawModal extends Component {
   render = () => {
     const { onCancel, onSelected, sagaKey: id, lawColumns } = this.props;
     return (
-      <>
-        <h2>법규 검색</h2>
-        <hr />
-        <StyledSearchWrap>
-          <div className="seach-group-layer">
-            <span>검색구분 </span>
-            <Select style={{ width: 120 }} onChange={this.onTypeChange} defaultValue="TITLE">
-              <Option value="TITLE">법규명</Option>
-              <Option value="RECH_NO">관리번호</Option>
-              <Option value="REG_USER_NAME">작성자</Option>
-              <Option value="REG_USER_DEPT">작성부서</Option>
-            </Select>
-            <span> 검색어 </span>
-            <Input style={{ width: 200 }} onChange={e => this.onTextChange(e.target.value)} value={this.state.text} />
-            <StyledButton className="btn-primary" onClick={() => this.onLawSeach(this.state.type, this.state.text).then(res => this.initData(res))}>
-              Search
+      <StyledViewDesigner>
+        <Sketch>
+          <Group>
+            <h2>법규 검색</h2>
+            <hr />
+            <StyledSearchWrap>
+              <div className="seach-group-layer">
+                <span>검색구분 </span>
+                <Select style={{ width: 120 }} onChange={this.onTypeChange} defaultValue="TITLE">
+                  <Option value="TITLE">법규명</Option>
+                  <Option value="RECH_NO">관리번호</Option>
+                  <Option value="REG_USER_NAME">작성자</Option>
+                  <Option value="REG_USER_DEPT">작성부서</Option>
+                </Select>
+                <span> 검색어 </span>
+                <Input style={{ width: 200 }} onChange={e => this.onTextChange(e.target.value)} value={this.state.text} />
+                <StyledButton className="btn-primary" onClick={() => this.onLawSeach(this.state.type, this.state.text).then(res => this.initData(res))}>
+                  Search
+                </StyledButton>
+              </div>
+            </StyledSearchWrap>
+            <hr />
+            <AntdTable
+              onRow={record => ({
+                onClick: () => {
+                  onSelected(record);
+                },
+              })}
+              rowKey="TASK_SEQ"
+              key={id}
+              className="view-designer-list"
+              columns={lawColumns}
+              dataSource={this.state.data}
+            />
+            <StyledButton className="btn-primary" onClick={onCancel}>
+              Close
             </StyledButton>
-          </div>
-        </StyledSearchWrap>
-        <hr />
-        <AntdTable
-          onRow={record => ({
-            onClick: () => {
-              onSelected(record);
-            },
-          })}
-          rowKey="TASK_SEQ"
-          key={id}
-          className="view-designer-list"
-          columns={lawColumns}
-          dataSource={this.state.data}
-        />
-        <StyledButton className="btn-primary" onClick={onCancel}>
-          Close
-        </StyledButton>
-      </>
+          </Group>
+        </Sketch>
+      </StyledViewDesigner>
     );
   };
 }

@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 
 import { Table, Button, Popconfirm } from 'antd';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-
+import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import Sketch from 'components/BizBuilder/Sketch';
+import Group from 'components/BizBuilder/Sketch/Group';
+import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import Edit from './Edit';
 
 const AntdTable = StyledAntdTable(Table);
@@ -104,8 +106,14 @@ class List extends Component {
 
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <Edit {...this.props}></Edit>
-        <AntdTable rowKey={totalData => totalData.SIPA_SEQ} pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
+        <StyledViewDesigner>
+          <Sketch>
+            <Group>
+              <Edit {...this.props}></Edit>
+              <AntdTable rowKey={totalData => totalData.SIPA_SEQ} pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
+            </Group>
+          </Sketch>
+        </StyledViewDesigner>
       </div>
     );
   }

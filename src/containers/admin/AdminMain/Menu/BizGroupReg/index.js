@@ -80,9 +80,9 @@ class BizGroupReg extends Component {
   constructor(props) {
     super(props);
 
-    // const { match, getBizGroupInfo, loadingOn } = props;
-    // const { params } = match;
-    // const { BIZGRP_ID } = params;
+    const { match, getBizGroupInfo, loadingOn } = props;
+    const { params } = match;
+    const { BIZGRP_ID } = params;
     this.state = {
       data: {
         BIZGRP_ID: -1,
@@ -126,36 +126,25 @@ class BizGroupReg extends Component {
     this.onChangeData = this.onChangeData.bind(this);
     this.onFileUploadedIcon = this.onFileUploadedIcon.bind(this);
 
-    // getBizGroupInfo(Number(BIZGRP_ID));
-    // loadingOn();
-  }
-
-  componentDidMount() {
-    const { match, getBizGroupInfo, loadingOn } = this.props;
-    const { params } = match;
-    const { BIZGRP_ID } = params;
     getBizGroupInfo(Number(BIZGRP_ID));
     loadingOn();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { match, dataP } = this.props;
+  componentWillReceiveProps(nextProps) {
+    const { match, dataP } = nextProps;
     const { params } = match;
     const { BIZGRP_ID } = params;
 
     const { data } = this.state;
-    if (BIZGRP_ID && Number(prevState.BIZGRP_ID) !== Number(BIZGRP_ID)) {
-      this.setState(
-        {
-          BIZGRP_ID: Number(BIZGRP_ID),
-        },
-        () => {
-          this.props.loadingOn();
-          this.props.getBizGroupInfo(Number(BIZGRP_ID));
-        },
-      );
+
+    if (BIZGRP_ID && Number(this.state.BIZGRP_ID) !== Number(BIZGRP_ID)) {
+      this.setState({
+        BIZGRP_ID: Number(BIZGRP_ID),
+      });
+      this.props.loadingOn();
+      this.props.getBizGroupInfo(Number(BIZGRP_ID));
     }
-    console.debug('2', data.BIZGRP_ID, dataP.BIZGRP_ID);
+
     if (data.BIZGRP_ID !== dataP.BIZGRP_ID) {
       let mData = { ...data, ...dataP };
       if (dataP.I) {
@@ -621,6 +610,7 @@ class BizGroupReg extends Component {
                   {/* </FormItem>
                     </td>
                   </tr> */}
+                  {/* 업무그룹 권한 처리 제외 - 서버에서도 제외처리
                   <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
@@ -779,6 +769,7 @@ class BizGroupReg extends Component {
                       </td>
                     </tr>
                   )}
+                  업무그룹 권한 처리 제외 - 서버에서도 제외처리 */}
                   {data.LVL === 1 ||
                     (data.PARENT_SYS_YN === 'Y' && (
                       <tr>

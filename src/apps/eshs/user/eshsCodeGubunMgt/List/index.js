@@ -3,8 +3,6 @@ import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Select, Input, message } from 'antd';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import { getCallDataHandler } from 'components/BizMicroDevBase/actions';
-import { changeFormData } from 'components/BizBuilderBase/actions';
 import ListSearchStyled from './ListSearchStyled';
 
 const { Option } = Select;
@@ -144,8 +142,6 @@ class List extends Component {
   };
 
   handleEditOnClick = () => {
-    // /api/eshs/v1/common/EshsCodeGubunUpdate
-
     const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
     const submitData = (formData && formData.info) || {};
     changeFormData(id, 'action', 'MODIFY');

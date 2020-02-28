@@ -179,6 +179,7 @@ const initialState = fromJS({
   selectedField: {},
   sysMetaList: [],
   isLoadingContent: true,
+  classNameList: [],
 });
 
 const initialSearchGroup = fromJS({
@@ -1143,6 +1144,10 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CHANGE_HIDDEN_COMP_DATA_REDUCER: {
       const { compIdx, key, value } = action;
       return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField', compIdx, key], value);
+    }
+    case actionTypes.SET_CLASSNAMELIST_REDUCER: {
+      const { list } = action;
+      return state.set('classNameList', fromJS(list));
     }
     default:
       return state;
