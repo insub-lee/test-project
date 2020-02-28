@@ -592,6 +592,7 @@ class BizGroupReg extends Component {
                   {/* </FormItem>
                     </td>
                   </tr> */}
+                  {/* 업무그룹 권한 처리 제외 - 서버에서도 제외처리
                   <tr>
                     <th className="top">
                       <span className="">{intlObj.get(messages.bizGroupManagement)}</span>
@@ -726,7 +727,7 @@ class BizGroupReg extends Component {
                       </FormItem>
                     </td>
                   </tr>
-                  {data.LVL !== 1 ? (
+                  {data.LVL !== 1 && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupParentAuthYn)}</span>
@@ -745,37 +746,35 @@ class BizGroupReg extends Component {
                         </FormItem>
                       </td>
                     </tr>
-                  ) : (
-                    ''
                   )}
-                  {data.LVL === 1 || data.PARENT_SYS_YN === 'Y' ? (
-                    <tr>
-                      <th className="top required">
-                        <span className="">{intlObj.get(messages.bizGroupSystem)}</span>
-                      </th>
-                      <td>
-                        <RadioGroup
-                          className="typeOptions"
-                          onChange={e => {
-                            this.onChangeData({ SYS_YN: e.target.value });
-                          }}
-                          value={data.SYS_YN === 'X' ? 'N' : data.SYS_YN}
-                        >
-                          <Radio value="Y" disabled>
-                            {intlObj.get(messages.yes)}
-                          </Radio>
-                          <Radio value="N" disabled style={{ width: 295 }}>
-                            {intlObj.get(messages.no)}
-                          </Radio>
-                          {/* <Radio value="Y" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'}>{intlObj.get(messages.yes)}</Radio>
-                          <Radio value="N" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'} style={{ width: 295 }}>{intlObj.get(messages.no)}</Radio> */}
-                        </RadioGroup>
-                      </td>
-                    </tr>
-                  ) : (
-                    ''
-                  )}
-                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' ? (
+                  업무그룹 권한 처리 제외 - 서버에서도 제외처리 */}
+                  {data.LVL === 1 || 
+                    (data.PARENT_SYS_YN === 'Y' && (
+                      <tr>
+                        <th className="top required">
+                          <span className="">{intlObj.get(messages.bizGroupSystem)}</span>
+                        </th>
+                        <td>
+                          <RadioGroup
+                            className="typeOptions"
+                            onChange={e => {
+                              this.onChangeData({ SYS_YN: e.target.value });
+                            }}
+                            value={data.SYS_YN === 'X' ? 'N' : data.SYS_YN}
+                          >
+                            <Radio value="Y" disabled>
+                              {intlObj.get(messages.yes)}
+                            </Radio>
+                            <Radio value="N" disabled style={{ width: 295 }}>
+                              {intlObj.get(messages.no)}
+                            </Radio>
+                            {/* <Radio value="Y" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'}>{intlObj.get(messages.yes)}</Radio>
+                            <Radio value="N" disabled={data.LVL !== 1 || dataP.SYS_YN !== 'X'} style={{ width: 295 }}>{intlObj.get(messages.no)}</Radio> */}
+                          </RadioGroup>
+                        </td>
+                      </tr>
+                    ))}
+                  {(data.LVL === 1 || data.PARENT_SYS_YN === 'Y') && data.SYS_YN === 'Y' && (
                     <tr>
                       <th className="top required">
                         <span className="">{intlObj.get(messages.bizGroupHomeYn)}</span>
@@ -795,8 +794,6 @@ class BizGroupReg extends Component {
                         </RadioGroup>
                       </td>
                     </tr>
-                  ) : (
-                    ''
                   )}
                 </tbody>
               </table>
