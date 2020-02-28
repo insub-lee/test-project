@@ -14,7 +14,8 @@ class StdInput extends Component {
     super(props);
     this.state = {
       initLoading: true,
-      isUploadData: false,
+      isUploadDataComplete: false,
+      uploadFileList: [],
     };
   }
 
@@ -36,12 +37,20 @@ class StdInput extends Component {
     }
   }
 
-  realFileBind = (id, response, etcData) => {
+  fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
     const { DETAIL } = response;
-
     const { ATTACH } = formData;
+    const { uploadFileList } = this.state;
     const tmpAttach = { ...ATTACH, DETAIL };
+    console.debug('complete file', etcData, response);
+    changeFormData(id, etcData, tmpAttach);
+    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: true } : file));
+    this.setState({ uploadFileList: tmpFileList }, () => {
+      const { uploadFileList } = this.state;
+      const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
+      console.debug('isUploadComplete', isUploadComplete);
+    });
   };
 
   filterAttach = field => {
@@ -52,10 +61,20 @@ class StdInput extends Component {
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList } = this.props;
     const moveFileApi = '/upload/moveFileToReal';
-    console.debug('saveBeforeProcess');
+    const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+
     attachList.map(attachItem => {
-      const { COMP_FILED } = attachItem;
+      const { COMP_FIELD } = attachItem;
+      const attachInfo = formData[COMP_FIELD];
+      if (attachInfo) {
+        const { DETAIL } = attachInfo;
+        uploadFileList.push({ COMP_FIELD, isComplete: false });
+        this.setState({ uploadFileList }, () => {
+          const param = { PARAM: { DETAIL } };
+          submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+        });
+      }
     });
   };
 
@@ -77,6 +96,8 @@ class StdInput extends Component {
   };
 
   render() {
+    console.debug(this.state);
+
     const {
       sagaKey: id,
       viewLayer,
