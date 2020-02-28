@@ -14,6 +14,7 @@ class StdInput extends Component {
     super(props);
     this.state = {
       initLoading: true,
+      isUploadData: false,
     };
   }
 
@@ -34,6 +35,29 @@ class StdInput extends Component {
       getProcessRule(id, payload);
     }
   }
+
+  realFileBind = (id, response, etcData) => {
+    const { formData, changeFormData } = this.props;
+    const { DETAIL } = response;
+
+    const { ATTACH } = formData;
+    const tmpAttach = { ...ATTACH, DETAIL };
+  };
+
+  filterAttach = field => {
+    const config = JSON.parse(field.CONFIG);
+    return config.info && config.info.isAttach;
+  };
+
+  saveBeforeProcess = (id, reloadId, callBackFunc) => {
+    const { submitExtraHandler, formData, metaList } = this.props;
+    const moveFileApi = '/upload/moveFileToReal';
+    console.debug('saveBeforeProcess');
+    const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+    attachList.map(attachItem => {
+      const { COMP_FILED } = attachItem;
+    });
+  };
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { saveTask } = this.props;
@@ -95,7 +119,7 @@ class StdInput extends Component {
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
                 Save
               </StyledButton>
               <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
