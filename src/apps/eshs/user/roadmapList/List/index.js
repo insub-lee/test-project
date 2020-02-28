@@ -1,31 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { DatePicker } from 'antd';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
+
+import Sketch from 'components/BizBuilder/Sketch';
+import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
+
+import { isJSON } from 'utils/helpers';
 import request from 'utils/request';
 import moment from 'moment';
 
 moment.locale('en-US');
-const { RangePicker, MonthPicker } = DatePicker;
+const { MonthPicker } = DatePicker;
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: '',
-      endDate: '',
       startMonth: moment(),
       isDisabled: true,
       columnDefs: this.columnDefs,
-      betweenMonth: [],
       gridOptions: {
         defaultColDef: {
           width: 100,
           resizable: true,
         },
       },
-      rowData: [],
+      originList: [],
+      filteredList: [],
       defaultColDef: {
         width: 120,
         resizable: true,
@@ -85,6 +90,7 @@ class List extends Component {
       });
       this.setState({
         rowData: result.response.roadmapList,
+        filteredList: result.response.roadmapList,
       });
       return result.response;
     };
@@ -119,31 +125,54 @@ class List extends Component {
 
   // onChange하면 api 호출
   handleDateChange = e => {
-    console.debug(moment(e[0]), moment(e[1])); // 시작일과 종료일이 차이가 12달 넘지 않게 막기
-    this.setState({
-      startDate: e[0],
-      endDate: e[1],
-    });
-    this.getMonthBetweenStartToEnd(moment(e[0]), moment(e[1]));
+    const { startMonth } = this.state;
+    const paramMap = this.getMonthBetweenStartToEnd(moment(startMonth), moment(e));
+    this.handleGetExtraApi(paramMap);
   };
 
-  getMonthBetweenStartToEnd = (startDate, endDate) => {
+  getMonthBetweenStartToEnd = (start, end) => {
     const monthArr = [];
-    let startMonth = startDate;
-    const endMonth = endDate;
-    if (startMonth === endMonth) {
+    let startDate = start;
+    const endDate = end;
+    if (startDate === endDate) {
       return;
     }
-    while (startMonth <= endMonth) {
-      monthArr.push(moment(startMonth).format('YYYYMM'));
-      startMonth = moment(startMonth).add(1, 'months');
+    while (startDate <= endDate) {
+      monthArr.push(moment(startDate).format('YYYYMM'));
+      startDate = moment(startDate).add(1, 'months');
       if (monthArr.length > 12) {
         return;
       }
     }
+
+    const startMonth = moment(start).format('YYYYMM');
+    const endMonth = moment(end).format('YYYYMM');
+
     this.setState({
-      betweenMonth: monthArr,
+      monthArr,
     });
+
+    const param = {
+      startMonth,
+      endMonth,
+      monthArr,
+    };
+    return param;
+  };
+
+  handleGetExtraApi = paramMap => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    console.debug(paramMap);
+    const apiArr = [
+      {
+        key: 'filteredData',
+        type: 'POST',
+        url: '/api/eshs/v1/common/getroadmaplist',
+        params: paramMap,
+      },
+    ];
+    getExtraApiData(id, apiArr);
+    return this.props.extraApiData;
   };
 
   handleDisabledMonth = current => {
@@ -158,24 +187,43 @@ class List extends Component {
     );
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    //  columnDefs도 바꿔줘야 함
+    const { extraApiData } = nextProps;
+    if (extraApiData.filteredData) {
+      if (prevState.filteredList !== extraApiData.filteredData.roadmapList) {
+        return { filteredList: extraApiData.filteredData.roadmapList };
+      }
+    }
+    return null;
+  }
+
   render() {
+    const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs } = this.state;
+    const { sagaKey: id, viewLayer, loadingComplete, formData } = this.props;
+    console.debug(filteredList);
+    console.debug(this.state.monthArr);
+
     return (
-      <div>
-        <MonthPicker placeholder="start month" onChange={e => this.setState({ startMonth: e, isDisabled: false })} /> ~{' '}
-        <MonthPicker disabled={this.state.isDisabled} disabledDate={this.handleDisabledMonth} placeholder="end month" />
-        <div style={{ width: '100%', height: '100%' }}>
-          <div className="ag-theme-balham" style={{ height: '560px' }}>
-            <AgGridReact
-              defaultColDef={this.state.defaultColDef}
-              rowData={this.state.rowData}
-              gridOptions={this.state.gridOptions}
-              columnDefs={this.state.columnDefs}
-              suppressRowTransform
-              onGridReady={this.handleGridReady}
-            />
+      <StyledViewDesigner>
+        <Sketch>
+          <MonthPicker placeholder="start month" onChange={e => this.setState({ startMonth: e, isDisabled: false })} /> ~{' '}
+          <MonthPicker disabled={isDisabled} disabledDate={this.handleDisabledMonth} onChange={this.handleDateChange} placeholder="end month" />
+          <StyledButton className="btn-primary">초기화</StyledButton>
+          <div style={{ width: '100%', height: '100%' }}>
+            <div className="ag-theme-balham" style={{ height: '560px' }}>
+              <AgGridReact
+                defaultColDef={defaultColDef}
+                rowData={filteredList}
+                gridOptions={gridOptions}
+                columnDefs={columnDefs}
+                suppressRowTransform
+                onGridReady={this.handleGridReady}
+              />
+            </div>
           </div>
-        </div>
-      </div>
+        </Sketch>
+      </StyledViewDesigner>
     );
   }
 }
