@@ -74,10 +74,6 @@ class ComponentConfig extends Component {
             this.state.selectableFlag,
           )[0]
         : [];
-    console.log(categoryMapInfo, 'categoryMapInfo');
-    console.log(categoryData, 'categoryData');
-    console.log(categoryData.children, 'categoryData children');
-    console.log(configInfo, 'configInfo');
     return (
       <div>
         <Row>
