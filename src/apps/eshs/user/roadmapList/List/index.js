@@ -127,7 +127,13 @@ class List extends Component {
   // onChange하면 api 호출
   handleDateChange = e => {
     const { startMonth } = this.state;
-    const paramMap = this.getMonthBetweenStartToEnd(moment(startMonth), moment(e));
+    if (startMonth) {
+      const paramMap = this.getMonthBetweenStartToEnd(moment(startMonth), moment(e));
+      this.handleGetExtraApi(paramMap);
+      this.changeColumnDefs(paramMap);
+      return;
+    }
+    const paramMap = this.getMonthBetweenStartToEnd(moment().startOf('year'), moment().endOf('year'));
     this.handleGetExtraApi(paramMap);
     this.changeColumnDefs(paramMap);
   };
@@ -164,7 +170,6 @@ class List extends Component {
 
   handleGetExtraApi = paramMap => {
     const { sagaKey: id, getExtraApiData } = this.props;
-    console.debug(paramMap);
     const apiArr = [
       {
         key: 'filteredData',
@@ -181,8 +186,7 @@ class List extends Component {
     const { columnDefs } = this.state;
     const tempCol = [];
     param.monthArr.map(item => {
-      tempCol.push({ headerName: `${moment(item.substring(0, 4)).format('YYYY')}/${moment(item.substring(4)).format('MM')}`, field: item });
-      console.debug('@@@@CHANGED COLDEFS', tempCol);
+      tempCol.push({ headerName: `${moment(item.substring(0, 4)).format('YYYY')}년 ${moment(item.substring(4)).format('MM')}월`, field: item });
       const newColumnInfo = [...columnDefs.slice(0, 2), ...tempCol, ...columnDefs.slice(-3)];
       return this.setState({
         columnDefs: newColumnInfo,
@@ -215,8 +219,6 @@ class List extends Component {
 
   render() {
     const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs } = this.state;
-    console.debug('@@@@FILTERED LIST@@@@', filteredList);
-    console.debug('@@@@COLINFO@@@@', columnDefs);
     return (
       <StyledViewDesigner>
         <Sketch>
