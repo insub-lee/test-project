@@ -74,6 +74,9 @@ import RadioMdcsChangeComp from 'components/BizBuilder/Field/RadioMdcsChangeComp
 import RadioMultiSelector from 'components/BizBuilder/Field/RadioMultiSelector';
 import LeadBallComp from 'components/BizBuilder/Field/LeadBallComp';
 import RadioCodeValueAsCharComp from 'components/BizBuilder/Field/RadioCodeValueAsCharComp';
+import CheckboxNodeIdComp from 'components/BizBuilder/Field/CheckboxNodeIdComp';
+import CheckboxNameKorComp from 'components/BizBuilder/Field/CheckboxNameKorComp';
+import CheckboxCodeComp from 'components/BizBuilder/Field/CheckboxCodeComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -150,4 +153,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioMultiSelector': { renderer: property => <RadioMultiSelector {...property} /> },
   'components/BizBuilder/Field/LeadBallComp': { renderer: property => <LeadBallComp {...property} /> },
   'components/BizBuilder/Field/RadioCodeValueAsCharComp': { renderer: property => <RadioCodeValueAsCharComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxNodeIdComp': { renderer: property => <CheckboxNodeIdComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxNameKorComp': { renderer: property => <CheckboxNameKorComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxCodeComp': { renderer: property => <CheckboxCodeComp {...property} /> },
 };

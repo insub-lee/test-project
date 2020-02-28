@@ -59,10 +59,13 @@ class MsdsIngredientComp extends React.Component {
   }
 
   setList = sagaKey => {
-    const { extraApiData } = this.props;
-
+    const { extraApiData, viewPageData } = this.props;
+    const viewType = (viewPageData && viewPageData.viewType) || '';
+    let applyList = [];
     const apiList = (extraApiData && extraApiData.MsdsList && extraApiData.MsdsList.list) || [];
-    const applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
+    if (viewType === 'MODIFY') {
+      applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
+    }
     this.setState({
       apiList,
       applyList,
