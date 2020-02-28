@@ -5,7 +5,7 @@ import CheckboxLabelComp from './CheckboxLabelComp';
 
 const CheckboxGroup = Checkbox.Group;
 
-class CheckboxComp extends PureComponent {
+class CheckboxNameKorComp extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,12 +34,12 @@ class CheckboxComp extends PureComponent {
     const categoryMapList = (apiData && apiData.categoryMapList && apiData.categoryMapList.filter(x => x.LVL > 0 && x.USE_YN === 'Y')) || [];
 
     const colData = (this.props && this.props.colData) || '0';
-    const checkedList = [];
     let labelValue = '';
+    let checkedList = [];
     if (colData !== '0') {
-      categoryMapList.forEach((c, index) => {
-        if (colData.charAt(index) === '1') {
-          checkedList.push(c.NODE_ID);
+      checkedList = colData.split(',');
+      categoryMapList.forEach(c => {
+        if (checkedList.indexOf(c.NAME_KOR) >= 0) {
           if (!labelValue) {
             labelValue = c.NAME_KOR;
           } else {
@@ -57,13 +57,12 @@ class CheckboxComp extends PureComponent {
 
   HandleOnChange = checkedList => {
     const { sagaKey: id, CONFIG, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD } = this.props;
-    const { categoryMapList } = this.state;
     let value = '';
-    categoryMapList.forEach(c => {
-      if (checkedList.indexOf(c.NODE_ID) >= 0) {
-        value += '1';
+    checkedList.forEach((c, index) => {
+      if (!index) {
+        value = `${c}`;
       } else {
-        value += '0';
+        value += `,${c}`;
       }
     });
 
@@ -80,7 +79,6 @@ class CheckboxComp extends PureComponent {
   render() {
     const { visible, CONFIG, readOnly } = this.props;
     const { categoryMapList, checkedList, labelValue } = this.state;
-
     return visible ? (
       <>
         {readOnly || CONFIG.property.readOnly ? (
@@ -88,7 +86,7 @@ class CheckboxComp extends PureComponent {
         ) : (
           <CheckboxGroup onChange={this.HandleOnChange} value={checkedList}>
             {categoryMapList.map(c => (
-              <Checkbox value={c.NODE_ID}>{c.NAME_KOR}</Checkbox>
+              <Checkbox value={`${c.NAME_KOR}`}>{c.NAME_KOR}</Checkbox>
             ))}
           </CheckboxGroup>
         )}
@@ -99,7 +97,7 @@ class CheckboxComp extends PureComponent {
   }
 }
 
-CheckboxComp.propTypes = {
+CheckboxNameKorComp.propTypes = {
   sagaKey: PropTypes.string,
   changeFormData: PropTypes.func,
   changeValidationData: PropTypes.func,
@@ -113,7 +111,7 @@ CheckboxComp.propTypes = {
   COMP_FIELD: PropTypes.string,
 };
 
-CheckboxComp.defaultProps = {
+CheckboxNameKorComp.defaultProps = {
   readOnly: false,
   changeFormData: () => false,
   changeValidationData: () => false,
@@ -123,12 +121,8 @@ CheckboxComp.defaultProps = {
     property: {
       isRequired: true,
       mapId: 15, // 분류체계 ID
-      etcIndex: 3, // -1 = 사용않함
-      etcField: 'TestFiled',
-      labelKey: 'NAME_KOR',
-      valueKey: 'NODE_ID',
     },
   },
 };
 
-export default CheckboxComp;
+export default CheckboxNameKorComp;

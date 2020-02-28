@@ -53,7 +53,7 @@ class EshsCmpnyComp extends React.Component {
     const apiValue = [
       {
         key: 'searchList',
-        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType}/${searchText}`,
+        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType || 'null'}/${searchText || 'null'}`,
         type: 'GET',
       },
     ];
