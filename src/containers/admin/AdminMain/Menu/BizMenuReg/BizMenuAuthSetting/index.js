@@ -267,7 +267,7 @@ class BizMenuAuthSetting extends Component {
         params: { BIZGRP_ID, MENU_ID },
       },
     } = this.props;
-    const { CHILD_CNT } = dataP;
+    const { CHILD_CNT, NODE_TYPE } = dataP;
     return (
       <div>
         <div className="title-wrapper">
@@ -409,7 +409,7 @@ class BizMenuAuthSetting extends Component {
             </div>
             {data.SEC_YN === 'Y' && (
               <div className="buttonWrapper">
-                {CHILD_CNT && CHILD_CNT > 0 ? (
+                {NODE_TYPE === 'R' && CHILD_CNT && CHILD_CNT > 0 ? (
                   <>
                     하위메뉴 일괄적용
                     <Switch
