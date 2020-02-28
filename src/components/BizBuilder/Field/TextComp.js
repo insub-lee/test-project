@@ -11,10 +11,10 @@ class TextComp extends React.Component {
   }
 
   handleOnChange = value => {
-    const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
-    if (CONFIG.property.isRequired) {
-      changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
-    }
+    const { sagaKey: id, COMP_FIELD, CONFIG, changeFormData, changeValidationData } = this.props;
+    // if (CONFIG.property.isRequired) {
+    //   changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${COMP_FIELD}항목은 필수 입력입니다.`);
+    // }
     changeFormData(id, COMP_FIELD, value);
   };
 

@@ -26,7 +26,7 @@ import CompFieldList from './CompFieldList';
 
 // const { TabPane } = Tabs;
 
-class ViewDesigner extends Component {
+class StyleDesigner extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -112,7 +112,6 @@ class ViewDesigner extends Component {
       styleMode,
       isLoadingContent,
       workName,
-      classNameList,
     } = this.props;
     return (
       <div style={{ height: '100%' }}>
@@ -120,47 +119,18 @@ class ViewDesigner extends Component {
           <div className="view-designer">
             <div className="view-wrapper">
               <div className="view-inner">
-                <div className="view-sidebar view-sidebar-left">
-                  <div>
-                    <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
-                    <CompToolbar
-                      compPoolList={compPoolList}
-                      compGroupList={compGroupList}
-                      compTreeData={compTreeData}
-                      action={{ ...toolbarAction, ...compListAction }}
-                      compList={compList}
-                      sysMetaList={sysMetaList}
-                      layerIdxKey={viewData.CONFIG.property.layerIdxKey}
-                    />
-                  </div>
-                </div>
                 <div className={`view-content-wrapper ${styleMode ? 'single-wrapper' : ''}`}>
                   <Spin indicator={<Icon type="loading" />} spinning={isLoadingContent}>
-                    <StructureDesign
+                    <StyleDesign
                       isShowEditor={isShowEditor}
                       groups={viewData.CONFIG.property.layer.groups}
-                      selectedKeys={selectedKeys}
-                      canMerge={canMerge}
-                      canDivide={canDivide}
-                      action={structureDesignAction}
+                      selectedKeys={selectedStyleCells}
+                      bodyStyle={viewData.CONFIG.property.bodyStyle}
+                      action={styleDesignAction}
                       tabBodyHeight={tabBodyHeight}
-                      viewType={viewData.COMP_TAG}
-                      viewField={viewData.COMP_FIELD}
-                      compPoolList={compPoolList}
-                      compGroupList={compGroupList}
-                      hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
-                      compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
-                      classNameList={classNameList}
                     />
                   </Spin>
                 </div>
-                {/* {!styleMode && (
-                  <div className="view-sidebar view-sidebar-left">
-                    <div>
-                      <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
-                    </div>
-                  </div>
-                )} */}
               </div>
             </div>
           </div>
@@ -186,6 +156,7 @@ class ViewDesigner extends Component {
               value={viewData.NAME_KOR}
               className="viewNameInput"
               onChange={e => this.handleChangeViewDesignerName(e.target.value)}
+              disabled={styleMode}
             />
             <Button onClick={this.handleSaveMetaData} loading={isButtonLoding}>
               Save
@@ -197,7 +168,7 @@ class ViewDesigner extends Component {
   };
 }
 
-ViewDesigner.propTypes = {
+StyleDesigner.propTypes = {
   workSeq: PropTypes.number,
   viewType: PropTypes.string,
   viewID: PropTypes.number,
@@ -213,11 +184,10 @@ ViewDesigner.propTypes = {
     row: PropTypes.bool,
     col: PropTypes.bool,
   }),
-  classNameList: PropTypes.arrayOf(PropTypes.object),
 };
 
-ViewDesigner.defaultProps = {
-  workSeq: -1,
+StyleDesigner.defaultProps = {
+  workSeq: 1538,
   viewType: 'INPUT',
   viewID: -1,
   styleMode: false,
@@ -232,7 +202,6 @@ ViewDesigner.defaultProps = {
     row: false,
     col: false,
   },
-  classNameList: [],
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -252,7 +221,6 @@ const mapStateToProps = createStructuredSelector({
   isLoadingContent: selectors.makeSelectIsLoadingContent(),
   compTreeData: selectors.makeSelectCompTreeData(),
   canDivide: selectors.makeSelectCanDivide(),
-  classNameList: selectors.makeSelectClassNameList(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -322,8 +290,8 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const withReducer = injectReducer({ key: 'apps-mdcs-admin-ViewDesigner-reducer', reducer });
-const withSaga = injectSaga({ key: 'apps-mdcs-admin-ViewDesigner-saga', saga });
+const withReducer = injectReducer({ key: 'apps-mdcs-admin-StyleDesigner-reducer', reducer });
+const withSaga = injectSaga({ key: 'apps-mdcs-admin-StyleDesigner-saga', saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withSaga, withReducer, withConnect)(ViewDesigner);
+export default compose(withSaga, withReducer, withConnect)(StyleDesigner);

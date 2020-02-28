@@ -316,11 +316,11 @@ class DragUploadMDCSComp extends Component {
               <Dragger
                 action="/upload/mdcs"
                 fileList={fileList}
-                disabled={!(successFileList.length <= 5)}
+                // disabled={!(successFileList.length <= 5)}
                 onChange={this.handleChange}
                 customRequest={this.customRequest}
                 showUploadList={false}
-                openFileDialogOnClick
+                // openFileDialogOnClick
                 multiple
               >
                 <>
