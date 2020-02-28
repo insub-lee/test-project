@@ -148,7 +148,7 @@ class CheckboxConfig extends Component {
             </Select>
           </Col>
         </Row>
-        <Row>
+        {/* <Row>
           <Col span={6}>Value key 선택</Col>
           <Col span={18}>
             <Select
@@ -190,7 +190,7 @@ class CheckboxConfig extends Component {
             </Select>
           </Col>
         </Row>
-        {/* <Row style={{ marginBottom: '10px' }} gutter={16}>
+        <Row style={{ marginBottom: '10px' }} gutter={16}>
             <Col span={5}>리턴타입 설정</Col>
             <Col span={19}>
               <Radio.Group onChange={e => this.onChangeResultData('returnType', e.target.value)} value={jsonResult.returnType}>
@@ -200,7 +200,7 @@ class CheckboxConfig extends Component {
                 <Radio value="ArrayValue">ArrayValue</Radio>
               </Radio.Group>
             </Col>
-          </Row> */}
+          </Row>
         <Row>
           <Col span={6}>기타 텍스트 입력란 사용</Col>
           <Col span={18}>
@@ -251,7 +251,7 @@ class CheckboxConfig extends Component {
               </Row>
             </Col>
           </Row>
-        )}
+        )} */}
       </div>
     );
   }
