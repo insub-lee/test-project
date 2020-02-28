@@ -176,7 +176,7 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList } = this.props;
+    const { configType, configProps, compPoolList, groups, onCloseModal } = this.props;
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
     return (
@@ -327,37 +327,19 @@ class CompModal extends Component {
             </div>
             <div className="popoverItem popoverItemInput">
               <span className="spanLabel">컴포넌트 Class명 설정</span>
-              <Select
-                mode="tags"
-                placeholder="컴포넌트 Class명"
-                style={{ width: '100%' }}
-                className="antdTagSelect"
+              <Input
+                placeholder="컴포넌트 Class명 입력"
                 defaultValue={comp.CONFIG.property.className}
-                onChange={value => this.handleChangeViewConfig('className', value, 'property')}
-              >
-                {classNameList.map(node => (
-                  <Option key={node.CLASS_NAME} value={node.CLASS_NAME}>
-                    {node.CLASS_NAME}
-                  </Option>
-                ))}
-              </Select>
+                onChange={e => this.handleChangeViewConfig('className', e.target.value, 'property')}
+              />
             </div>
             <div className="popoverItem popoverItemInput">
               <span className="spanLabel">컬럼 Class명 설정</span>
-              <Select
-                mode="tags"
-                placeholder="컬럼 Class명"
-                style={{ width: '100%' }}
-                className="antdTagSelect"
-                defaultValue={addonClassName}
-                onChange={value => this.handleChangeColConfig('addonClassName', value)}
-              >
-                {classNameList.map(node => (
-                  <Option key={node.CLASS_NAME} value={node.CLASS_NAME}>
-                    {node.CLASS_NAME}
-                  </Option>
-                ))}
-              </Select>
+              <Input
+                placeholder="컬럼 Class명 입력"
+                defaultValue={addonClassName || ''}
+                onChange={e => this.handleChangeColConfig('addonClassName', e.target.value)}
+              />
             </div>
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
               <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG })}</div>

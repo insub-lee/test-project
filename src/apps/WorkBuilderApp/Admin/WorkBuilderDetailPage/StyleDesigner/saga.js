@@ -21,7 +21,6 @@ function* getMetaData({ workSeq, viewType, viewID }) {
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${workSeq}`);
   const sysResponse = yield call(Axios.get, `/api/builder/v1/work/sysmeta?workSeq=${workSeq}`);
   const compResponse = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
-  const classNameResponse = yield call(Axios.get, '/api/builder/v1/work/classmanage');
   if (response && response.resultType && response.resultType.length > 0 && response[response.resultType] && response[response.resultType].length > 0) {
     let metaList = response[response.resultType].map(node => ({ ...node, CONFIG: JSON.parse(node.CONFIG) }));
     metaList = metaList.map(node => ({
@@ -58,14 +57,6 @@ function* getMetaData({ workSeq, viewType, viewID }) {
     if (compResponse) {
       yield put(actions.setComponentPoolListByReducer(compResponse.compPoolList, compResponse.colGroup));
     }
-  }
-  if (classNameResponse && classNameResponse.list) {
-    yield put(
-      actions.setClassNameListByReducer(
-        classNameResponse.list.filter(fNode => fNode.ISUSED === 'Y'),
-        [],
-      ),
-    );
   }
   yield put(actions.disableContentLoading());
 }

@@ -5,6 +5,7 @@ import Tabs from 'components/Tabs';
 
 import Info from './Info';
 import ViewDesigner from './ViewDesigner';
+import StyleDesigner from './StyleDesigner';
 import Wrapper from './Wrapper';
 import ProcessDesigner from './ProcessDesigner';
 
@@ -40,7 +41,7 @@ const getTabs = (workSeq, workName) => [
     TabComponent: '스타일 디자이너',
     TabPanelComponent: (
       <div style={bodyStyle}>
-        <ViewDesigner workSeq={workSeq} workName={workName} styleMode />
+        <StyleDesigner workSeq={workSeq} workName={workName} />
       </div>
     ),
   },

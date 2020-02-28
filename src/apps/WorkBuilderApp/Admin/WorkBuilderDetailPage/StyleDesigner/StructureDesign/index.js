@@ -61,7 +61,6 @@ const StructureDesign = ({
   viewField,
   hiddenField,
   compList,
-  classNameList,
 }) => {
   const [isShowCompConfigModal, setIsShowCompConfigModal] = useState(false);
   const [compConfigType, setCompConfigType] = useState('');
@@ -300,7 +299,6 @@ const StructureDesign = ({
             compPoolList={compPoolList}
             compGroupList={compGroupList}
             groups={groups}
-            classNameList={classNameList}
             onCloseModal={() => setCompConfigModal(false, '', {}, 'COMP')}
           />
         ) : (

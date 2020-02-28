@@ -130,10 +130,6 @@ const Styled = styled.div`
         border: 1px solid #aaa;
         border-radius: 0;
       }
-      .antdTagSelect input {
-        border: none;
-        padding: 0px;
-      }
     }
     .popoverInnerInput {
       padding-bottom: 10px;
