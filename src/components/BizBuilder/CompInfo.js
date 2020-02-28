@@ -74,6 +74,8 @@ import RadioMdcsChangeComp from 'components/BizBuilder/Field/RadioMdcsChangeComp
 import RadioMultiSelector from 'components/BizBuilder/Field/RadioMultiSelector';
 import LeadBallComp from 'components/BizBuilder/Field/LeadBallComp';
 import RadioCodeValueAsCharComp from 'components/BizBuilder/Field/RadioCodeValueAsCharComp';
+import NumberCompUnit from 'components/BizBuilder/Field/NumberCompUnit';
+import TreeSelectRootKeyComp from 'components/BizBuilder/Field/TreeSelectRootKeyComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -150,4 +152,6 @@ export const CompInfo = {
   'components/BizBuilder/Field/RadioMultiSelector': { renderer: property => <RadioMultiSelector {...property} /> },
   'components/BizBuilder/Field/LeadBallComp': { renderer: property => <LeadBallComp {...property} /> },
   'components/BizBuilder/Field/RadioCodeValueAsCharComp': { renderer: property => <RadioCodeValueAsCharComp {...property} /> },
+  'components/BizBuilder/Field/NumberCompUnit': { renderer: property => <NumberCompUnit {...property} /> },
+  'components/BizBuilder/Field/TreeSelectRootKeyComp': { renderer: property => <TreeSelectRootKeyComp {...property} /> },
 };
