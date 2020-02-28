@@ -84,56 +84,14 @@ class List extends Component {
   ];
 
   handleGridReady = () => {
-    const getList = async () => {
-      const result = await request({
-        method: 'GET',
-        url: `/api/eshs/v1/common/getroadmaplist?year=2020`,
-      });
-      this.setState({
-        rowData: result.response.roadmapList,
-        filteredList: result.response.roadmapList,
-      });
-      return result.response;
-    };
-    getList();
+    const paramMap = this.getMonthBetweenStartToEnd(moment().startOf('year'), moment().endOf('year'));
+    this.handleGetExtraApi(paramMap);
+    this.changeColumnDefs(paramMap);
   };
 
-  // 처음에 전체 리스트 받아와서 slice로 처리
-  // handleDateChange = e => {
-  //   this.setState(
-  //     {
-  //       columnDefs: this.columnDefs,
-  //       startDate: moment(e[0])
-  //         .format('MMM')
-  //         .toLowerCase(),
-  //       endDate: moment(e[1])
-  //         .format('MMM')
-  //         .toLowerCase(),
-  //     },
-  //     this.handleChangeCallback,
-  //   );
-  // };
-
-  // handleChangeCallback = () => {
-  //   const { columnDefs, startDate, endDate } = this.state;
-  //   const startIndex = columnDefs.findIndex(item => item.field === startDate);
-  //   const endIndex = columnDefs.findIndex(item => item.field === endDate) + 1;
-  //   const tempArr = [...columnDefs.slice(0, 2), ...columnDefs.slice(startIndex, endIndex), ...columnDefs.slice(-3)];
-  //   this.setState({
-  //     columnDefs: tempArr,
-  //   });
-  // };
-
-  // onChange하면 api 호출
   handleDateChange = e => {
     const { startMonth } = this.state;
-    if (startMonth) {
-      const paramMap = this.getMonthBetweenStartToEnd(moment(startMonth), moment(e));
-      this.handleGetExtraApi(paramMap);
-      this.changeColumnDefs(paramMap);
-      return;
-    }
-    const paramMap = this.getMonthBetweenStartToEnd(moment().startOf('year'), moment().endOf('year'));
+    const paramMap = this.getMonthBetweenStartToEnd(moment(startMonth), moment(e));
     this.handleGetExtraApi(paramMap);
     this.changeColumnDefs(paramMap);
   };
@@ -207,7 +165,6 @@ class List extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    //  columnDefs도 바꿔줘야 함
     const { extraApiData } = nextProps;
     if (extraApiData.filteredData) {
       if (prevState.filteredList !== extraApiData.filteredData.roadmapList) {
