@@ -129,8 +129,9 @@ class TableTypeSelector extends React.Component {
   };
 
   onRightClick = () => {
+    const { rowKey } = this.props;
     const { selectedRows, applyList, selectedRowKeys } = this.state;
-    const noOverlapRow = applyList.filter(a => selectedRowKeys.indexOf(a.TASK_SEQ) < 0);
+    const noOverlapRow = applyList.filter(a => selectedRowKeys.indexOf(a[`${rowKey}`]) < 0);
     const rightList = selectedRows.concat(noOverlapRow);
     this.setState({
       applyList: rightList,
@@ -138,8 +139,9 @@ class TableTypeSelector extends React.Component {
   };
 
   onLeftClick = () => {
+    const { rowKey } = this.props;
     const { applyList, deleteSeqs } = this.state;
-    const stayList = applyList.filter(r => deleteSeqs.indexOf(r.TASK_SEQ) < 0);
+    const stayList = applyList.filter(r => deleteSeqs.indexOf(r[`${rowKey}`]) < 0);
 
     this.setState({
       applyList: stayList,
@@ -154,7 +156,7 @@ class TableTypeSelector extends React.Component {
   };
 
   render() {
-    const { rightTableColumns, apiList, btnText, modalTitle } = this.props;
+    const { rightTableColumns, apiList, btnText, modalTitle, rowKey } = this.props;
     const { modalVisivle, applyList, leftTableColumnsSearchVersion } = this.state;
     const leftrowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -200,7 +202,7 @@ class TableTypeSelector extends React.Component {
                         dataSource={apiList}
                         style={{ width: '480px' }}
                         scroll={{ x: 'max-content', y: '240px' }}
-                        rowKey="TASK_SEQ"
+                        rowKey={`${rowKey}`}
                         className="leftTable"
                       ></Table>
                     </td>
@@ -230,7 +232,7 @@ class TableTypeSelector extends React.Component {
                         dataSource={applyList}
                         style={{ width: '300px' }}
                         scroll={{ x: 'max-content', y: '240px' }}
-                        rowKey="TASK_SEQ"
+                        rowKey={`${rowKey}`}
                       ></Table>
                     </td>
                   </tr>

@@ -68,9 +68,8 @@ class TreeSelectComp extends Component {
           rootkey,
         )) ||
       [];
-    const categoryData = tempData.length > 0 ? tempData[0] : [];
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer({ ...this.props, searchTreeData: categoryData.children });
+      return searchCompRenderer({ ...this.props, searchTreeData: tempData });
     }
     return visible ? (
       <>

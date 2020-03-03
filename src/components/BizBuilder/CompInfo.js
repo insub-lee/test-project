@@ -80,6 +80,9 @@ import TreeSelectRootKeyComp from 'components/BizBuilder/Field/TreeSelectRootKey
 import CheckboxNodeIdComp from 'components/BizBuilder/Field/CheckboxNodeIdComp';
 import CheckboxNameKorComp from 'components/BizBuilder/Field/CheckboxNameKorComp';
 import CheckboxCodeComp from 'components/BizBuilder/Field/CheckboxCodeComp';
+import MsdsEquipmentUsedComp from 'components/BizBuilder/Field/MsdsEquipmentUsedComp';
+import EshsSearchbar from 'components/BizBuilder/Field/EshsSearchbar';
+import StackCustomComp from 'components/BizBuilder/Field/StackCustomComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -162,4 +165,7 @@ export const CompInfo = {
   'components/BizBuilder/Field/CheckboxNodeIdComp': { renderer: property => <CheckboxNodeIdComp {...property} /> },
   'components/BizBuilder/Field/CheckboxNameKorComp': { renderer: property => <CheckboxNameKorComp {...property} /> },
   'components/BizBuilder/Field/CheckboxCodeComp': { renderer: property => <CheckboxCodeComp {...property} /> },
+  'components/BizBuilder/Field/MsdsEquipmentUsedComp': { renderer: property => <MsdsEquipmentUsedComp {...property} /> },
+  'components/BizBuilder/Field/EshsSearchbar': { renderer: property => <EshsSearchbar {...property} /> },
+  'components/BizBuilder/Field/StackCustomComp': { renderer: property => <StackCustomComp {...property} /> },
 };

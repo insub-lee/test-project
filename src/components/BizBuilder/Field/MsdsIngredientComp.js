@@ -41,7 +41,7 @@ class MsdsIngredientComp extends React.Component {
         },
       ];
     }
-    if (viewType === 'MODIFY') {
+    if (viewType === 'MODIFY' || viewType === 'VIEW') {
       apiValue = [
         {
           key: 'MsdsList',
@@ -63,7 +63,7 @@ class MsdsIngredientComp extends React.Component {
     const viewType = (viewPageData && viewPageData.viewType) || '';
     let applyList = [];
     const apiList = (extraApiData && extraApiData.MsdsList && extraApiData.MsdsList.list) || [];
-    if (viewType === 'MODIFY') {
+    if (viewType === 'MODIFY' || viewType === 'VIEW') {
       applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
     }
     this.setState({
@@ -110,44 +110,44 @@ class MsdsIngredientComp extends React.Component {
             handleApply={this.handleApply}
             btnText="구성성분 등록"
             modalTitle="MSDS 검색"
+            rowKey="TASK_SEQ"
           />
         ) : (
           ''
         )}
         <MsdsIngredientCompStyled>
           <p>구성성분</p>
-          {applyList.length ? (
-            <table className="msdsIngreDientTable">
-              <thead>
-                <tr>
-                  <td>ITEM</td>
-                  <td>분자식</td>
-                  <td>CAS_NO</td>
-                  <td>구성비율</td>
+          <table className="msdsIngreDientTable">
+            <thead>
+              <tr>
+                <td>ITEM</td>
+                <td>분자식</td>
+                <td>CAS_NO</td>
+                <td>구성비율</td>
+              </tr>
+            </thead>
+            <tbody>
+              {applyList.map((a, index) => (
+                <tr key={index}>
+                  <td>{a.ITEM_NM}</td>
+                  <td>{a.MOLECULAR_FORMULA}</td>
+                  <td>{a.CAS_NO}</td>
+                  <td>
+                    {viewType === 'INPUT' || viewType === 'MODIFY' ? (
+                      <p>
+                        <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.RATIO || ''} />%
+                      </p>
+                    ) : (
+                      <span>{a.RATIO || ''} %</span>
+                    )}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {applyList.map((a, index) => (
-                  <tr key={index}>
-                    <td>{a.ITEM_NM}</td>
-                    <td>{a.MOLECULAR_FORMULA}</td>
-                    <td>{a.CAS_NO}</td>
-                    <td>
-                      {viewType === 'INPUT' || viewType === 'MODIFY' ? (
-                        <p>
-                          <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.RATIO || ''} />%
-                        </p>
-                      ) : (
-                        <span>{a.RATIO || ''} %</span>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p>등록된 구성성분이 없습니다.</p>
-          )}
+              ))}
+              <tr className="listCount">
+                <td colSpan={4}>{applyList.length} 건</td>
+              </tr>
+            </tbody>
+          </table>
         </MsdsIngredientCompStyled>
       </>
     ) : (
