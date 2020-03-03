@@ -154,7 +154,7 @@ class TableTypeSelector extends React.Component {
   };
 
   render() {
-    const { rightTableColumns, apiList, btnText, modalTitle } = this.props;
+    const { rightTableColumns, apiList, btnText, modalTitle, rowKey } = this.props;
     const { modalVisivle, applyList, leftTableColumnsSearchVersion } = this.state;
     const leftrowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
@@ -200,7 +200,7 @@ class TableTypeSelector extends React.Component {
                         dataSource={apiList}
                         style={{ width: '480px' }}
                         scroll={{ x: 'max-content', y: '240px' }}
-                        rowKey="TASK_SEQ"
+                        rowKey={`${rowKey}`}
                         className="leftTable"
                       ></Table>
                     </td>

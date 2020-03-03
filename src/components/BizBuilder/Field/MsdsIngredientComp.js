@@ -110,6 +110,7 @@ class MsdsIngredientComp extends React.Component {
             handleApply={this.handleApply}
             btnText="구성성분 등록"
             modalTitle="MSDS 검색"
+            rowKey="TASK_SEQ"
           />
         ) : (
           ''

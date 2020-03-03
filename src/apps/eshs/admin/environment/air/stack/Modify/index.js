@@ -32,13 +32,12 @@ class ModifyPage extends Component {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      changeViewPage(id, workSeq, taskSeq, 'MODIFY');
     }
   };
 
   render = () => {
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage } = this.props;
-    console.log('modify render');
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -56,11 +55,6 @@ class ModifyPage extends Component {
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
-                Save
-              </StyledButton>
-            </div>
           </Sketch>
         </StyledViewDesigner>
       );

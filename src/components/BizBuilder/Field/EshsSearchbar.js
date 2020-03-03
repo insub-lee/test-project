@@ -5,7 +5,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from 'apps/eshs/admin/environment/air/stack/List';
 
-class MsdsHeaderBar extends React.Component {
+class CommonSearchbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -15,12 +15,13 @@ class MsdsHeaderBar extends React.Component {
 
   componentDidMount() {}
 
-  handleSearch = () => {
-    const { sagaKey: id, changeViewPage, formData } = this.props;
-    const task_seq = (formData && formData.selectedRowTaskSeq) || 0;
-    if (task_seq) {
-      console.debug('여기는 handleSearch ', task_seq);
-      changeViewPage(id, 3161, task_seq, 'MODIFY');
+  handleModalVisible = () => {
+    const { readOnly } = this.props;
+    if (!readOnly) {
+      const { modal } = this.state;
+      this.setState({
+        modal: !modal,
+      });
     }
   };
 
@@ -46,25 +47,36 @@ class MsdsHeaderBar extends React.Component {
   };
 
   isModalChange = record => {
-    const { setViewPageData, sagaKey: id, changeViewPage, handleModalVisible } = this.props;
-    handleModalVisible();
+    const { setViewPageData, sagaKey: id, changeViewPage } = this.props;
+    this.handleModalVisible();
     if (record) {
       setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
       changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
     }
   };
 
-  render() {
-    const { viewPageData, sagaKey: id, changeViewPage, formData, handleModalVisible } = this.props;
-    const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
-
+  BizbuilderbaseRender = () => {
+    const { compProps, sagaKey: id } = this.props;
     return (
+      <BizBuilderBase
+        sagaKey={compProps.sagaKey}
+        baseSagaKey={id}
+        CustomListPage={CustomList}
+        workSeq={compProps.workSeq}
+        taskSeq={-1}
+        viewType="LIST"
+        loadingComplete={this.props.loadingComplete}
+        isModalChange={this.isModalChange}
+      />
+    );
+  };
+
+  render() {
+    const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage } = this.props;
+    return visible ? (
       <div>
-        <Input value={selectedRowItemCode} style={{ width: 150 }} onClick={() => handleModalVisible()} />
-        <Button shape="circle" icon="search" onClick={() => handleModalVisible()} />
-        {/* <StyledButton className="btn-primary" onClick={this.handleSearch}>
-          검색
-        </StyledButton> */}
+        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
+        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
         {viewPageData.viewType === 'MODIFY' ? (
           <>
             <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
@@ -85,12 +97,17 @@ class MsdsHeaderBar extends React.Component {
         <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
           Reset
         </StyledButton>
+        <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+          {this.state.modal && this.BizbuilderbaseRender()}
+        </Modal>
       </div>
+    ) : (
+      ''
     );
   }
 }
 
-MsdsHeaderBar.propTypes = {
+CommonSearchbar.propTypes = {
   CONFIG: PropTypes.any,
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
@@ -105,4 +122,4 @@ MsdsHeaderBar.propTypes = {
   deleteTask: PropTypes.func,
 };
 
-export default MsdsHeaderBar;
+export default CommonSearchbar;

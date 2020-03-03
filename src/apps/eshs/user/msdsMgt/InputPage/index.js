@@ -96,6 +96,9 @@ class InputPage extends Component {
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <MsdsHeaderBar {...this.props} customSaveTask={() => this.customSaveTask()} />
+            {/* <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
+              Save
+            </StyledButton> */}
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}

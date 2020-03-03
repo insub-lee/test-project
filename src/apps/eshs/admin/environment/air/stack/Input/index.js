@@ -47,7 +47,7 @@ class InputPage extends Component {
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
     const { onCloseModleHandler, changeViewPage } = this.props;
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, -1, 'INPUT');
+      changeViewPage(id, workSeq, taskSeq, 'MODIFY');
     }
   };
 
@@ -91,11 +91,6 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
-                Save
-              </StyledButton>
-            </div>
           </Sketch>
         </StyledViewDesigner>
       );
