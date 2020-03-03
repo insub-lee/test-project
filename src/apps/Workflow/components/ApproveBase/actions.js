@@ -27,6 +27,10 @@ export const setDraftList = list => ({
   list,
 });
 
+export const setPartialInit = () => ({
+  type: actionTypes.SET_PARTIAL_INIT,
+});
+
 
 
 
