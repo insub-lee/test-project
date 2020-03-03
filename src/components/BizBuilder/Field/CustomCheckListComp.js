@@ -21,8 +21,10 @@ class CustomCheckListComp extends Component {
   };
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, apiArys } = this.props;
+    const { getExtraApiData, sagaKey: id, apiArys, COMP_FIELD, changeFormData, colData } = this.props;
     getExtraApiData(id, apiArys, this.initDataBind);
+    const initColData = colData === '' ? {} : colData;
+    changeFormData(id, COMP_FIELD, initColData);
   }
 
   initDataBind = sagaKey => {
@@ -151,16 +153,14 @@ class CustomCheckListComp extends Component {
       JSON.parse(colData)[0].DETAIL = value;
       return colData;
     }
-    return [
-      {
-        WORK_SEQ,
-        TASK_SEQ: -1,
-        CONT_SEQ: -1,
-        FIELD_NM: COMP_FIELD,
-        TYPE: COMP_TAG,
-        DETAIL: value,
-      },
-    ];
+    return {
+      WORK_SEQ,
+      TASK_SEQ: -1,
+      CONT_SEQ: -1,
+      FIELD_NM: COMP_FIELD,
+      TYPE: COMP_TAG,
+      DETAIL: value,
+    };
   };
 
   render() {

@@ -49,7 +49,9 @@ class StdInput extends Component {
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
       const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
-      console.debug('isUploadComplete', isUploadComplete);
+      if (!isUploadComplete) {
+        this.saveTask(id, id, this.saveTaskAfter);
+      }
     });
   };
 
@@ -64,21 +66,28 @@ class StdInput extends Component {
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
 
-    attachList.map(attachItem => {
-      const { COMP_FIELD } = attachItem;
-      const attachInfo = formData[COMP_FIELD];
-      if (attachInfo) {
-        const { DETAIL } = attachInfo;
-        uploadFileList.push({ COMP_FIELD, isComplete: false });
-        this.setState({ uploadFileList }, () => {
-          const param = { PARAM: { DETAIL } };
-          submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
-        });
-      }
-    });
+    // 첨부파일이 없는 경우 체크
+    const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+    if (isUploadByPass && isUploadByPass.length === 0) {
+      this.saveTask(id, reloadId, this.saveTaskAfter);
+    } else {
+      attachList.map(attachItem => {
+        const { COMP_FIELD } = attachItem;
+        const attachInfo = formData[COMP_FIELD];
+        if (attachInfo) {
+          const { DETAIL } = attachInfo;
+          uploadFileList.push({ COMP_FIELD, isComplete: false });
+          this.setState({ uploadFileList }, () => {
+            const param = { PARAM: { DETAIL } };
+            submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+          });
+        }
+      });
+    }
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
+    console.debug('saveTask', id, reloadId);
     const { saveTask } = this.props;
     saveTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
