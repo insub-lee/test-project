@@ -44,7 +44,7 @@ class AppUpdateForm extends React.Component {
       linkType: 'POPUP',
       // DisLoc: 'd1',
       LINK_METHOD: 'GET',
-      SEC_REQ_YN: 'Y',
+      SEC_REQ_YN: 'N',
       appPlus1: false,
       appList1: [],
       appPlus2: false,
@@ -1207,7 +1207,7 @@ class AppUpdateForm extends React.Component {
                 </Col>
               </Row>
             </section>
-            <h3 className="sectionTitle">{intlObj.get(messages.permissions)}</h3>
+            {/* <h3 className="sectionTitle">{intlObj.get(messages.permissions)}</h3>
             <h4>
               {intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}
             </h4>
@@ -1220,7 +1220,7 @@ class AppUpdateForm extends React.Component {
                 <Radio value="Y">{intlObj.get(messages.authAppYes)}</Radio>
                 <Radio value="N">{intlObj.get(messages.authAppNo)}</Radio>
               </RadioGroup>
-            </FormItem>
+            </FormItem> */}
             <div className="buttonWrapper">
               <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
                 <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>
