@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm } from 'antd';
+import { Table, Popconfirm, Select, Input, Button, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -12,7 +12,9 @@ import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyle
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { debounce } from 'lodash';
 
+const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
 
 class ListPage extends Component {
@@ -22,7 +24,10 @@ class ListPage extends Component {
       initLoading: true,
       isMultiDelete: false,
       isRowNo: false,
+      searchType: '',
+      searchText: '',
     };
+    this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
   componentDidMount = () => {
@@ -99,8 +104,15 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  handleOnRow = record => {
+    const { handleModalVisible, changeFormData } = this.props;
+    changeFormData('MsdsMgt', 'selectedRowItemCode', record.ITEM_CD);
+    changeFormData('MsdsMgt', 'selectedRowTaskSeq', record.TASK_SEQ);
+    handleModalVisible();
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, isModalChange } = this.props;
+    const { listData, listSelectRowKeys } = this.props;
     const { isMultiDelete } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
@@ -121,15 +133,40 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData || []}
             rowSelection={rowSelection}
-            onRow={record => ({
-              onClick: () => {
-                isModalChange(record);
-              },
+            onRow={(record, rowIndex) => ({
+              onClick: event => this.handleOnRow(record),
             })}
           />
         </Group>
       </div>
     );
+  };
+
+  handleSearchSite = e => {
+    const { sagaKey, changeSearchData } = this.props;
+    console.debug('handleSearchSite', e);
+    const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : '';
+    changeSearchData(sagaKey, 'andSearch_1', searchText);
+  };
+
+  onChangeHandler = searchType => {
+    const { sagaKey, changeSearchData } = this.props;
+    const { searchText } = this.state;
+    this.setState({
+      searchType,
+    });
+    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : '';
+    changeSearchData(sagaKey, 'andSearch_2', andSearch2);
+  };
+
+  handleOnChangeSearch = searchText => {
+    const { sagaKey, changeSearchData } = this.props;
+    const { searchType } = this.state;
+    this.setState({
+      searchText,
+    });
+    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : '';
+    changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
   render = () => {
@@ -144,6 +181,7 @@ class ListPage extends Component {
       getListData,
       workSeq,
       removeMultiTask,
+      handleModalVisible,
     } = this.props;
     const { isMultiDelete } = this.state;
 
@@ -181,32 +219,41 @@ class ListPage extends Component {
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
                         <table className={`view-designer-table table-${groupIndex}`}>
                           <tbody>
-                            {group.rows.map((row, rowIndex) => (
-                              <tr key={row.key} className={`view-designer-row row-${rowIndex}`}>
-                                {row.cols &&
-                                  row.cols.map((col, colIndex) => (
-                                    <td
-                                      key={col.key}
-                                      {...col}
-                                      comp=""
-                                      colSpan={col.span}
-                                      className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''}`}
-                                    >
-                                      <Contents>
-                                        {col.comp &&
-                                          this.renderComp(
-                                            col.comp,
-                                            col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
-                                            true,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
-                                            `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
-                                            group.type === 'searchGroup',
-                                          )}
-                                      </Contents>
-                                    </td>
-                                  ))}
-                              </tr>
-                            ))}
+                            <tr className="view-designer-row row-1">
+                              <td>
+                                <Contents>
+                                  <Select style={{ width: 120 }} defaultValue=" " onChange={this.handleSearchSite}>
+                                    <Option key=" ">지역전체</Option>
+                                    <Option key="526">청주</Option>
+                                    <Option key="527">구미</Option>
+                                  </Select>
+                                  <Select defaultValue="W.MTRL_NM" style={{ width: 150 }} onChange={this.onChangeHandler}>
+                                    <Option key="1" value="W.MTRL_NM">
+                                      물질명
+                                    </Option>
+                                    <Option key="2" value="W.ITEM_NM">
+                                      제품명
+                                    </Option>
+                                    <Option key="3" value="W.MOLECULAR_FORMULA">
+                                      분자식
+                                    </Option>
+                                    <Option key="4" value="W.CAS_NO">
+                                      CAS_NO
+                                    </Option>
+                                    <Option key="5" value="W.UN_NO">
+                                      UN_NO
+                                    </Option>
+                                    <Option key="5" value="W.ITEM_CD">
+                                      MSDS코드
+                                    </Option>
+                                    <Option key="6" value="Y.WRK_CMPNY_NM">
+                                      Vendor
+                                    </Option>
+                                  </Select>
+                                  <Input style={{ width: 150 }} onChange={e => this.handleOnChangeSearch(e.target.value)} />
+                                </Contents>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
@@ -222,6 +269,13 @@ class ListPage extends Component {
                 )
               );
             })}
+            <div className="alignRight">
+              {isMultiDelete && (
+                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
+                  <StyledButton className="btn-primary">Delete</StyledButton>
+                </Popconfirm>
+              )}
+            </div>
           </Sketch>
         </StyledViewDesigner>
       );

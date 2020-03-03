@@ -8,6 +8,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import MsdsHeaderBar from '../MsdsHeaderBar';
 
 class InputPage extends Component {
   constructor(props) {
@@ -46,9 +47,16 @@ class InputPage extends Component {
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
     const { onCloseModleHandler, changeViewPage } = this.props;
-    if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'MODIFY');
+    if (typeof onCloseModleHandler === 'function') {
+      onCloseModleHandler();
     }
+    if (typeof changeViewPage === 'function') {
+      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+    }
+  };
+
+  customSaveTask = formData => {
+    console.debug('customSaveTask', formData);
   };
 
   render = () => {
@@ -87,10 +95,15 @@ class InputPage extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
+            <MsdsHeaderBar {...this.props} customSaveTask={() => this.customSaveTask()} />
+            {/* <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
+              Save
+            </StyledButton> */}
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
+            <div className="alignRight"></div>
           </Sketch>
         </StyledViewDesigner>
       );

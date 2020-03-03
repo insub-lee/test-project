@@ -18,6 +18,7 @@ class EshsCmpnyComp extends React.Component {
       searchList: [],
       searchType: 'name',
       searchText: '',
+      listType: 'init',
     };
     // this.handleOnChange = debounce(this.handleOnChange, 300);
   }
@@ -61,9 +62,9 @@ class EshsCmpnyComp extends React.Component {
   };
 
   setSearchList = sagaKey => {
-    const { extraApiData, colData } = this.props;
+    const { extraApiData } = this.props;
     const searchList = (extraApiData && extraApiData.searchList && extraApiData.searchList.list) || [];
-    this.setState({ searchList });
+    this.setState({ searchList, listType: 'search' });
   };
 
   getColumns = () => [
@@ -79,6 +80,9 @@ class EshsCmpnyComp extends React.Component {
       const { cmpnyModal } = this.state;
       this.setState({
         cmpnyModal: !cmpnyModal,
+        listType: 'init',
+        searchType: 'name',
+        searchText: '',
       });
     }
   };
@@ -125,12 +129,12 @@ class EshsCmpnyComp extends React.Component {
 
   render() {
     const { CONFIG, visible, isSearch, searchCompRenderer } = this.props;
-    const { cmpnyModal, cmpny_nm, list, searchList } = this.state;
+    const { cmpnyModal, cmpny_nm, list, searchList, listType } = this.state;
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer(this.props);
     }
     let cmpnyList = [];
-    if (searchList.length) {
+    if (listType === 'search') {
       cmpnyList = searchList;
     } else {
       cmpnyList = list;

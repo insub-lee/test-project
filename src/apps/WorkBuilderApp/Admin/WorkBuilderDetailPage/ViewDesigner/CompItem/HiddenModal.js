@@ -130,6 +130,9 @@ class CompModal extends Component {
   render() {
     const { configProps, onCloseModal, hiddenField } = this.props;
     const comp = hiddenField[hiddenField.findIndex(iNode => iNode.CONFIG.property.compKey === configProps.comp.CONFIG.property.compKey)];
+    if (!comp) {
+      return <div />;
+    }
     const hiddenConfigProps = { ...configProps, changeViewCompData: this.handleChangeCompPersonalConfig };
     return (
       <Styled className="popoverWrapper">
