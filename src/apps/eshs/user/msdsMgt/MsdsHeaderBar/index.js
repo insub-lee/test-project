@@ -6,7 +6,6 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import { froalaEditorConfig } from 'components/FormStuff/config';
 
 class MsdsHeaderBar extends Component {
   constructor(props) {
@@ -37,11 +36,14 @@ class MsdsHeaderBar extends Component {
   };
 
   handleSaveTask = () => {
-    const { sagaKey: id, saveTask } = this.props;
-    saveTask(id, id);
+    console.debug('handleSaveTask  ', this.props);
+    const { sagaKey: id, changeViewPage, viewPageData } = this.props;
+    changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION');
+    console.debug('여기는 오니????');
   };
 
   render = () => {
+    console.debug('this.props', this.props);
     const {
       sagaKey: id,
       viewLayer,
@@ -58,7 +60,6 @@ class MsdsHeaderBar extends Component {
       formData,
     } = this.props;
     const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
-    console.debug('1111111111111111111111111111여기는', this.props);
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {

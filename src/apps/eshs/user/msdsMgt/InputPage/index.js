@@ -55,6 +55,10 @@ class InputPage extends Component {
     }
   };
 
+  customSaveTask = formData => {
+    console.debug('customSaveTask', formData);
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -91,7 +95,7 @@ class InputPage extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            <MsdsHeaderBar {...this.props} />
+            <MsdsHeaderBar {...this.props} customSaveTask={() => this.customSaveTask()} />
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
