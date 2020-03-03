@@ -118,8 +118,8 @@ class UserList extends React.Component {
     let dtDeptName = '';
     let dtPstnName = '';
     let dtStatusCode = 'C';
+
     // 상세에서 넘어온 Data
-    console.log('this.props.history.location.state', this.props.history.location.state);
     if (this.props.history.location.state !== null && this.props.history.location.state !== undefined) {
       const location = this.props.history.location.state;
 
@@ -309,7 +309,6 @@ class UserList extends React.Component {
   };
 
   showModal = (title, type) => {
-    console.log('showModal');
     switch (type) {
       case 'dept':
         this.props.getDeptComboData();
@@ -405,7 +404,7 @@ class UserList extends React.Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           width={400}
-          bodyStyle={{ maxHeight: 500 }}
+          bodyStyle={{ maxHeight: 400 }}
         >
           <UserRegTree
             treeType={this.state.modalType}

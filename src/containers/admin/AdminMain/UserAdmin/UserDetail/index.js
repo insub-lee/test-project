@@ -428,7 +428,7 @@ class UserReg extends React.Component {
           onOk={this.handleOk}
           onCancel={this.handleCancel}
           width={400}
-          bodyStyle={{ maxHeight: 500 }}
+          bodyStyle={{ maxHeight: 400 }}
         >
           <UserRegTree
             treeType={this.state.modalType}

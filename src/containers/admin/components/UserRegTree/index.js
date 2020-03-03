@@ -38,8 +38,9 @@ class UserRegTree extends Component {
     return (
       <div
         style={{
-          height: 'calc(100vh - 167px)',
+          // height: 'calc(100vh - 167px)',
           maxHeight: 400,
+          // overflowY: 'scroll',
         }}
       >
         {isLoading ? (
@@ -59,8 +60,8 @@ class UserRegTree extends Component {
               padding: '0',
               flexDirection: 'column',
               width: '100%',
-              height: 'calc(100vh - 167px)',
-              maxHeight: 400,
+              // height: 'calc(100vh - 167px)',
+              // maxHeight: 400,
             }}
           >
             <Select value={this.state.selectedDept} onChange={e => getSelectDept(e)}>
@@ -71,6 +72,11 @@ class UserRegTree extends Component {
               ))}
             </Select>
             <Tree
+              height={320}
+              style={{
+                height: 320,
+                overflowY: 'scroll',
+              }}
               treeData={this.props.treeData} // 트리데이터
               handleOnClick={this.handleOnClick} // onClick 이벤트
               selectedIndex={selectedIndex} // 선택한 트리노드 KEY
