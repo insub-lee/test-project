@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
@@ -6,16 +7,22 @@ const { Option } = Select;
 class SelectYearComp extends Component {
   state = {
     options: [],
+    currentYear: '',
   };
 
-  componentDidMount() {
+  componentWillMount() {
+    const { defaultValueForSelectYearComp } = this.props;
     const year = new Date().getFullYear();
-    const years = [' '];
+    const years = [];
     for (let i = 2006; i <= year + 1; i++) {
       years.push(String(i));
     }
+    if (defaultValueForSelectYearComp) {
+      years.pop();
+    }
     this.setState({
       options: years,
+      currentYear: String(year),
     });
   }
 
@@ -38,11 +45,11 @@ class SelectYearComp extends Component {
   };
 
   render() {
-    const { colData, visible, CONFIG } = this.props;
-    const { options } = this.state;
+    const { colData, visible, CONFIG, defaultValueForSelectYearComp } = this.props;
+    const { options, currentYear } = this.state;
     return visible ? (
       <Select
-        value={colData || ' '}
+        defaultValue={colData || defaultValueForSelectYearComp ? currentYear : ' '}
         onChange={value => {
           this.onChangeHandler(value);
         }}
@@ -61,4 +68,10 @@ class SelectYearComp extends Component {
   }
 }
 
+SelectYearComp.propTypes = {
+  defaultValueForSelectYearComp: PropTypes.bool,
+};
+SelectYearComp.defaultProps = {
+  defaultValueForSelectYearComp: false,
+};
 export default SelectYearComp;
