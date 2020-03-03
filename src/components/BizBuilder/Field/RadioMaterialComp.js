@@ -87,11 +87,13 @@ class RadioMaterialComp extends Component {
             </Radio.Group>
           </td>
           <td>
-            {this.state.isMeterialView && (
-              <Select onChange={this.onSelectChange} placeholder="자재코드 선택" style={{ width: '180px' }}>
-                {this.state.mList}
-              </Select>
-            )}
+            <div style={{ width: '30%' }}>
+              {this.state.isMeterialView && (
+                <Select onChange={this.onSelectChange} placeholder="자재코드 선택" style={{ width: '180px' }}>
+                  {this.state.mList}
+                </Select>
+              )}
+            </div>
           </td>
           <td>
             {this.state.isMeterialView && (
