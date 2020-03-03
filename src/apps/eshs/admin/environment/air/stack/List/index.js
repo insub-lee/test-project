@@ -100,7 +100,7 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys } = this.props;
+    const { listData, listSelectRowKeys, isModalChange } = this.props;
     const { isMultiDelete } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
@@ -121,6 +121,11 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData || []}
             rowSelection={rowSelection}
+            onRow={record => ({
+              onClick: () => {
+                isModalChange(record);
+              },
+            })}
           />
         </Group>
       </div>
