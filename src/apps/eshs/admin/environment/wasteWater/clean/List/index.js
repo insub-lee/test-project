@@ -100,6 +100,7 @@ class List extends Component {
     renderList = [...renderList, ...((result && result.eshsclean && result.eshsclean.list) || [])];
     return (
       <AntdTable
+        style={{ cursor: 'pointer' }}
         rowKey={renderList.CLEAN_CD}
         key={renderList.CLEAN_CD}
         columns={columns}

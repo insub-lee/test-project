@@ -1,5 +1,4 @@
 import * as actionTypes from './constants';
-import CompItem from './CompItem/index';
 
 export const openJsonCodeEditor = () => ({
   type: actionTypes.OPEN_JSON_CODE_EDITOR,
@@ -194,7 +193,7 @@ export const changeCompDataByReducer = (groupIndex, rowIndex, colIndex, key, val
   value,
 });
 
-export const addMetaDataBySaga = () => ({ type: actionTypes.ADD_METADATA_SAGA });
+export const addMetaDataBySaga = callbackFunc => ({ type: actionTypes.ADD_METADATA_SAGA, callbackFunc });
 
 export const setInitDataByReducer = (workSeq, viewType) => ({ type: actionTypes.SET_INIT_DATA_REDUCER, workSeq, viewType });
 
@@ -281,4 +280,23 @@ export const onChangeTableSize = (groupIndex, tableSize) => ({
   type: actionTypes.ON_CHANGE_TABLE_SIZE,
   groupIndex,
   tableSize,
+});
+
+export const changeCompFieldDataByReducer = (compKey, key, value) => ({
+  type: actionTypes.CHANGE_COMP_FIELD_DATA_REDUCER,
+  compKey,
+  key,
+  value,
+});
+
+export const changeHiddenCompDatByReducer = (compIdx, key, value) => ({
+  type: actionTypes.CHANGE_HIDDEN_COMP_DATA_REDUCER,
+  compIdx,
+  key,
+  value,
+});
+
+export const setClassNameListByReducer = list => ({
+  type: actionTypes.SET_CLASSNAMELIST_REDUCER,
+  list,
 });

@@ -13,22 +13,24 @@ const Header = styled.div`
     left: 10px;
     transform: translateY(-50%);
     text-align: left;
-    .viewNameInput {
-      width: 70%;
-      height: 32px;
-    }
-    button {
-      background: transparent;
-      color: rgba(255, 255, 255, 0.7);
-      margin-left: 10px;
-    }
   }
   > .button--group--right {
     position: absolute;
     top: 50%;
-    right: 0;
+    right: 10px;
     transform: translateY(-50%);
     text-align: right;
+    .viewNameInput {
+      width: 200px;
+      height: 32px;
+      margin-left: 10px;
+    }
+    button {
+      background: #1890ff;
+      border-color: #1890ff;
+      color: #ffffff;
+      margin-left: 10px;
+    }
   }
 `;
 

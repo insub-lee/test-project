@@ -13,10 +13,13 @@ const BzmModal = StyledModal(Modal);
 const BzmTable = StyledAntdTable(Table);
 
 class List extends Component {
-  state = {
-    isRegModal: false,
-    actionType: 'I',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isRegModal: false,
+      actionType: 'I',
+    };
+  }
 
   componentDidMount() {
     const { sagaKey, getCallDataHandler, apiArys, setFormData, initData } = this.props;
@@ -81,6 +84,14 @@ class List extends Component {
       dataIndex: 'API_SRC',
       key: 'API_SRC',
       width: '20%',
+    },
+    {
+      title: '호출유형',
+      align: 'center',
+      dataIndex: 'CALL_TYPE',
+      key: 'CALL_TYPE',
+      width: '10%',
+      render: text => (text === 'A' ? 'After' : 'Before'),
     },
     {
       title: '사용여부',

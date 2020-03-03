@@ -60,3 +60,6 @@ export const MERGE_COL = `${prefix}/MERGE_COL`;
 export const DIVIDE_ROW = `${prefix}/DIVIDE_ROW`;
 export const DIVIDE_COL = `${prefix}/DIVIDE_COL`;
 export const ON_CHANGE_TABLE_SIZE = `${prefix}/ON_CHANGE_TABLE_SIZE`;
+export const CHANGE_COMP_FIELD_DATA_REDUCER = `${prefix}/CHANGE_COMP_FIELD_DATA_REDUCER`;
+export const CHANGE_HIDDEN_COMP_DATA_REDUCER = `${prefix}/CHANGE_HIDDEN_COMP_DATA_REDUCER`;
+export const SET_CLASSNAMELIST_REDUCER = `${prefix}/SET_CLASSNAMELIST_REDUCER`;

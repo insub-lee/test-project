@@ -58,7 +58,7 @@ function* getExtraApiData({ id, apiArr, callback }) {
   }
 }
 
-function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
+function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc, etcData }) {
   let httpMethodInfo = Axios.put;
   switch (httpMethod.toUpperCase()) {
     case 'POST':
@@ -76,7 +76,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc 
   }
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, response, etcData);
   }
 }
 
@@ -176,12 +176,43 @@ function* saveTask({ id, reloadId, callbackFunc }) {
         if (!validationData[node].flag) {
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
+        } else if (validationData[node].requiredFlag === false) {
+          validFlag = validationData[node].requiredFlag;
+          validMsg = `${validationData[node].requiredMsg}1`;
         }
       });
 
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
         return;
+      }
+    }
+  }
+
+  const beforeApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'B');
+  if (beforeApiList.length > 0) {
+    for (let i = 0; i < beforeApiList.length; i += 1) {
+      const item = beforeApiList[i];
+      const beforeResponse = yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+            viewType: 'INPUT',
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+
+      if (beforeResponse) {
+        const { retFlag, retMsg } = beforeResponse;
+        if (retFlag === false) {
+          message.error(<MessageContent>{retMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+          return;
+        }
       }
     }
   }
@@ -254,9 +285,10 @@ function* saveTask({ id, reloadId, callbackFunc }) {
     );
   }
 
-  if (extraApiList.length > 0) {
-    for (let i = 0; i < extraApiList.length; i += 1) {
-      const item = extraApiList[i];
+  const afterApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'A');
+  if (afterApiList.length > 0) {
+    for (let i = 0; i < afterApiList.length; i += 1) {
+      const item = afterApiList[i];
       yield call(
         Axios[item.METHOD_TYPE],
         item.API_SRC,
@@ -312,12 +344,43 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
         if (!validationData[node].flag) {
           validFlag = validationData[node].flag;
           validMsg = validationData[node].msg;
+        } else if (validationData[node].requiredFlag === false) {
+          validFlag = validationData[node].requiredFlag;
+          validMsg = `${validationData[node].requiredMsg}1`;
         }
       });
 
       if (!validFlag) {
         message.error(<MessageContent>{validMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
         return;
+      }
+    }
+  }
+
+  const beforeApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'B');
+  if (beforeApiList.length > 0) {
+    for (let i = 0; i < beforeApiList.length; i += 1) {
+      const item = beforeApiList[i];
+      const beforeResponse = yield call(
+        Axios[item.METHOD_TYPE],
+        item.API_SRC,
+        {
+          PARAM: {
+            ...formData,
+            TASK_SEQ: taskSeq,
+            WORK_SEQ: workSeq,
+            viewType: 'INPUT',
+          },
+        },
+        { BUILDER: 'callApiBysaveBuilder' },
+      );
+
+      if (beforeResponse) {
+        const { retFlag, retMsg } = beforeResponse;
+        if (retFlag === false) {
+          message.error(<MessageContent>{retMsg || '에러가 발생하였습니다. 관리자에게 문의하세요.'}</MessageContent>);
+          return;
+        }
       }
     }
   }
@@ -371,9 +434,10 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     );
   }
 
-  if (extraApiList.length > 0) {
-    for (let i = 0; i < extraApiList.length; i += 1) {
-      const item = extraApiList[i];
+  const afterApiList = extraApiList.filter(fNode => fNode.CALL_TYPE === 'A');
+  if (afterApiList.length > 0) {
+    for (let i = 0; i < afterApiList.length; i += 1) {
+      const item = afterApiList[i];
       yield call(
         Axios[item.METHOD_TYPE],
         item.API_SRC,
@@ -382,7 +446,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
-            viewType: 'MODIFY',
+            viewType: 'INPUT',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },

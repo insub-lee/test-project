@@ -99,8 +99,6 @@ class SearchBar extends Component {
     let is_ok = false;
     const { formData } = this.props;
     const type = (formData && formData.userModalType) || '';
-    console.debug('11111111111', formData);
-    console.debug('222222222222', formData.userData);
 
     if (type === 'INSERT') {
       const userData = (formData && formData.userData) || {};

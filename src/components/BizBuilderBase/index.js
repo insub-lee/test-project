@@ -291,8 +291,8 @@ const mapDispatchToProps = dispatch => ({
   getBuilderData: (id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData) =>
     dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData)),
   getExtraApiData: (id, apiArr, callback) => dispatch(actions.getExtraApiData(id, apiArr, callback)),
-  submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
-    dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc)),
+  submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc, etcData) =>
+    dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc, etcData)),
   getDetailData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
     dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
   getTaskSeq: (id, workSeq) => dispatch(actions.getTaskSeq(id, workSeq)),

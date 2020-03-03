@@ -45,7 +45,7 @@ class AppRegisForm extends React.Component {
       linkType: 'NEW',
       // DisLoc: 'd1',
       LINK_METHOD: 'GET',
-      SEC_REQ_YN: 'Y',
+      SEC_REQ_YN: 'N',
       appPlus1: false,
       appList1: [],
       appPlus2: false,
@@ -742,7 +742,7 @@ class AppRegisForm extends React.Component {
             {/* <h4 className="required">App ID</h4> */}
             <h4 className="required">SRC PATH [앱경로]</h4>
             <FormItem hasFeedback validateStatus={this.state.SRC_PATH_CHK ? 'success' : 'error'}>
-              <Input maxLength="50" onChange={onChangeSrcPath} defaultValue={this.state.SRC_PATH} />
+              <Input maxLength="250" onChange={onChangeSrcPath} defaultValue={this.state.SRC_PATH} />
             </FormItem>
 
             <h3 className="sectionTitle" style={{ padding: '33px 0 20px' }}>
@@ -1083,7 +1083,7 @@ class AppRegisForm extends React.Component {
             </section>
             <h3 className="sectionTitle">{intlObj.get(messages.permissions)}</h3>
             {/* 15. 추천 App */}
-            <h4>
+            {/* <h4>
               {intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}
             </h4>
             <ul className="infoAuthList">
@@ -1095,8 +1095,7 @@ class AppRegisForm extends React.Component {
                 <StyledRadio value="Y">{intlObj.get(messages.authAppYes)}</StyledRadio>
                 <StyledRadio value="N">{intlObj.get(messages.authAppNo)}</StyledRadio>
               </RadioGroup>
-            </FormItem>
-
+            </FormItem> */}
             <div className="buttonWrapper">
               <Link to="/admin/adminmain/sysapp" style={{ float: 'left' }}>
                 <StyledButton className="btn-light">{intlObj.get(messages.list)}</StyledButton>

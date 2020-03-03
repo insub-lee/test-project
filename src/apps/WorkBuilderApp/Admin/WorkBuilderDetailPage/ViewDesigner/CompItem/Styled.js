@@ -130,6 +130,10 @@ const Styled = styled.div`
         border: 1px solid #aaa;
         border-radius: 0;
       }
+      .antdTagSelect input {
+        border: none;
+        padding: 0px;
+      }
     }
     .popoverInnerInput {
       padding-bottom: 10px;
@@ -213,6 +217,10 @@ const Styled = styled.div`
           height: 14px;
           margin-right: 5px;
           display: inline-block;
+        }
+        button {
+          height: 24px;
+          margin-left: 10px;
         }
       }
       .popoverInnerCom {

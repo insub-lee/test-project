@@ -41,7 +41,6 @@ class RadioIFoundryComp extends Component {
 
   onChangeDivision = e => {
     const { sagaKey, COMP_FIELD, changeFormData } = this.props;
-    console.debug('click event');
     if (e.target.value === 'Y') {
       this.setState({ isPopOver: true });
       changeFormData(sagaKey, COMP_FIELD, undefined);

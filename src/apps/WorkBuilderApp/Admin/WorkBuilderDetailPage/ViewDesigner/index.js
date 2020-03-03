@@ -31,6 +31,7 @@ class ViewDesigner extends Component {
     super(props);
     this.state = {
       tabBodyHeight: 0,
+      isButtonLoding: false,
     };
     // this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
   }
@@ -82,8 +83,12 @@ class ViewDesigner extends Component {
     this.props.changeViewDesignerName(value);
   };
 
+  handleSaveMetaData = () => this.setState({ isButtonLoding: true }, () => this.props.addMetaData(this.handleChangeIsButtonLoading));
+
+  handleChangeIsButtonLoading = () => this.setState({ isButtonLoding: false });
+
   render = () => {
-    const { tabBodyHeight } = this.state;
+    const { tabBodyHeight, isButtonLoding } = this.state;
     const {
       activeTabKey,
       isShowEditor,
@@ -96,7 +101,6 @@ class ViewDesigner extends Component {
       styleDesignAction,
       toolbarAction,
       onChangeTab,
-      addMetaData,
       compList,
       compListAction,
       changeViewDesignerName,
@@ -107,85 +111,47 @@ class ViewDesigner extends Component {
       sysMetaList,
       styleMode,
       isLoadingContent,
+      workName,
+      classNameList,
     } = this.props;
     return (
       <div style={{ height: '100%' }}>
-        <Header>
-          <div className="button--group--left">
-            {/* {`${viewData.NAME_KOR || 'New View Design'}(${viewData.COMP_TAG})`} */}
-            {/* <div className="top-button-wrapper"> */}
-            <Input
-              placeholder="페이지명(KO)"
-              value={viewData.NAME_KOR}
-              className="viewNameInput"
-              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
-              disabled={styleMode}
-            />
-            <Button onClick={addMetaData}>Save</Button>
-            {/* </div> */}
-          </div>
-          <div className="button--group--right">
-            <TopMenus
-              topMenus={topMenus}
-              actions={[
-                key => this.handleChangeViewDesigner('INPUT', key),
-                key => this.handleChangeViewDesigner('MODIFY', key),
-                key => this.handleChangeViewDesigner('VIEW', key),
-                key => this.handleChangeViewDesigner('LIST', key),
-              ]}
-              viewType={viewData.COMP_TAG}
-              viewID={viewData.META_SEQ}
-            />
-          </div>
-        </Header>
         <StyledViewDesigner>
           <div className="view-designer">
             <div className="view-wrapper">
               <div className="view-inner">
-                {!styleMode && (
-                  <div className="view-sidebar view-sidebar-left">
-                    <div>
-                      <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
-                      <CompToolbar
-                        compPoolList={compPoolList}
-                        compGroupList={compGroupList}
-                        compTreeData={compTreeData}
-                        action={{ ...toolbarAction, ...compListAction }}
-                        compList={compList}
-                        sysMetaList={sysMetaList}
-                        layerIdxKey={viewData.CONFIG.property.layerIdxKey}
-                      />
-                    </div>
+                <div className="view-sidebar view-sidebar-left">
+                  <div>
+                    <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
+                    <CompToolbar
+                      compPoolList={compPoolList}
+                      compGroupList={compGroupList}
+                      compTreeData={compTreeData}
+                      action={{ ...toolbarAction, ...compListAction }}
+                      compList={compList}
+                      sysMetaList={sysMetaList}
+                      layerIdxKey={viewData.CONFIG.property.layerIdxKey}
+                    />
                   </div>
-                )}
+                </div>
                 <div className={`view-content-wrapper ${styleMode ? 'single-wrapper' : ''}`}>
                   <Spin indicator={<Icon type="loading" />} spinning={isLoadingContent}>
-                    {styleMode ? (
-                      <StyleDesign
-                        isShowEditor={isShowEditor}
-                        groups={viewData.CONFIG.property.layer.groups}
-                        selectedKeys={selectedStyleCells}
-                        bodyStyle={viewData.CONFIG.property.bodyStyle}
-                        action={styleDesignAction}
-                        tabBodyHeight={tabBodyHeight}
-                      />
-                    ) : (
-                      <StructureDesign
-                        isShowEditor={isShowEditor}
-                        groups={viewData.CONFIG.property.layer.groups}
-                        selectedKeys={selectedKeys}
-                        canMerge={canMerge}
-                        canDivide={canDivide}
-                        action={structureDesignAction}
-                        tabBodyHeight={tabBodyHeight}
-                        viewType={viewData.COMP_TAG}
-                        viewField={viewData.COMP_FIELD}
-                        compPoolList={compPoolList}
-                        compGroupList={compGroupList}
-                        hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
-                        compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
-                      />
-                    )}
+                    <StructureDesign
+                      isShowEditor={isShowEditor}
+                      groups={viewData.CONFIG.property.layer.groups}
+                      selectedKeys={selectedKeys}
+                      canMerge={canMerge}
+                      canDivide={canDivide}
+                      action={structureDesignAction}
+                      tabBodyHeight={tabBodyHeight}
+                      viewType={viewData.COMP_TAG}
+                      viewField={viewData.COMP_FIELD}
+                      compPoolList={compPoolList}
+                      compGroupList={compGroupList}
+                      hiddenField={viewData.CONFIG.property.layer.hiddenField || []}
+                      compList={compList.filter(fNode => fNode.COMP_TYPE === 'FIELD' && !fNode.isRemove) || []}
+                      classNameList={classNameList}
+                    />
                   </Spin>
                 </div>
                 {/* {!styleMode && (
@@ -199,6 +165,33 @@ class ViewDesigner extends Component {
             </div>
           </div>
         </StyledViewDesigner>
+        <Header>
+          <div className="button--group--left">
+            <TopMenus
+              topMenus={topMenus}
+              actions={[
+                key => this.handleChangeViewDesigner('INPUT', key),
+                key => this.handleChangeViewDesigner('MODIFY', key),
+                key => this.handleChangeViewDesigner('VIEW', key),
+                key => this.handleChangeViewDesigner('LIST', key),
+              ]}
+              viewType={viewData.COMP_TAG}
+              viewID={viewData.META_SEQ}
+            />
+          </div>
+          <div className="button--group--right">
+            {workName}
+            <Input
+              placeholder="페이지명(KO)"
+              value={viewData.NAME_KOR}
+              className="viewNameInput"
+              onChange={e => this.handleChangeViewDesignerName(e.target.value)}
+            />
+            <Button onClick={this.handleSaveMetaData} loading={isButtonLoding}>
+              Save
+            </Button>
+          </div>
+        </Header>
       </div>
     );
   };
@@ -220,10 +213,11 @@ ViewDesigner.propTypes = {
     row: PropTypes.bool,
     col: PropTypes.bool,
   }),
+  classNameList: PropTypes.arrayOf(PropTypes.object),
 };
 
 ViewDesigner.defaultProps = {
-  workSeq: 1538,
+  workSeq: -1,
   viewType: 'INPUT',
   viewID: -1,
   styleMode: false,
@@ -238,6 +232,7 @@ ViewDesigner.defaultProps = {
     row: false,
     col: false,
   },
+  classNameList: [],
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -257,11 +252,12 @@ const mapStateToProps = createStructuredSelector({
   isLoadingContent: selectors.makeSelectIsLoadingContent(),
   compTreeData: selectors.makeSelectCompTreeData(),
   canDivide: selectors.makeSelectCanDivide(),
+  classNameList: selectors.makeSelectClassNameList(),
 });
 
 const mapDispatchToProps = dispatch => ({
   onChangeTab: activeKey => dispatch(actions.changeActiveTab(activeKey)),
-  addMetaData: () => dispatch(actions.addMetaDataBySaga()),
+  addMetaData: callbackFunc => dispatch(actions.addMetaDataBySaga(callbackFunc)),
   changeViewDesignerName: value => dispatch(actions.changeViewDesignerNameByReducer(value)),
   getMetaData: (workSeq, viewType, viewID) => dispatch(actions.getMetaDataBySaga(workSeq, viewType, viewID)),
   getComponentPoolList: () => dispatch(actions.getComponentPoolListBySaga()),
@@ -301,6 +297,8 @@ const mapDispatchToProps = dispatch => ({
     divideRow: () => dispatch(actions.divideRow()),
     divideCol: () => dispatch(actions.divideCol()),
     onChangeTableSize: (groupIndex, tableSize) => dispatch(actions.onChangeTableSize(groupIndex, tableSize)),
+    changeCompFieldData: (compKey, key, value) => dispatch(actions.changeCompFieldDataByReducer(compKey, key, value)),
+    changeHiddenCompData: (compIdx, key, value) => dispatch(actions.changeHiddenCompDatByReducer(compIdx, key, value)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),

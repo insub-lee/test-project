@@ -17,6 +17,7 @@ import TableGroup from 'components/BizBuilder/Sketch/BasedHtmlTableGroup';
 import CompItem from '../CompItem';
 import HiddenComp from '../CompItem/HiddenComp';
 import CompModal from '../CompItem/CompModal';
+import HiddenModal from '../CompItem/HiddenModal';
 
 const StyledActionBar = styled.div`
   position: relative;
@@ -60,15 +61,9 @@ const StructureDesign = ({
   viewField,
   hiddenField,
   compList,
+  classNameList,
 }) => {
-  const [isShowCompConfigModal, setIsShowCompConfigModal] = useState(false);
-  const [compConfigType, setCompConfigType] = useState('');
-  const [compConfigProps, setCompConfigProps] = useState({});
-  const setCompConfigModal = (cFlag, cType, cProp) => {
-    setIsShowCompConfigModal(cFlag);
-    setCompConfigType(cType);
-    setCompConfigProps(cProp);
-  };
+  const [compConfigModal, setCompConfigModal] = useState([false, '', {}, 'COMP']);
   return (
     <div key={viewField}>
       <StyledActionBar>
@@ -146,7 +141,7 @@ const StructureDesign = ({
                                   groupType={group.type}
                                   action={action}
                                   compPoolList={compPoolList}
-                                  setCompConfigModal={setCompConfigModal}
+                                  setCompConfigModal={(cFlag, cType, cProp, modalType) => setCompConfigModal([cFlag, cType, cProp, modalType])}
                                 />
                               </Contents>
                             </ContextMenuTrigger>
@@ -181,7 +176,16 @@ const StructureDesign = ({
                 <Row key="heiddenFieldRow" gutter={[0, 0]} type="flex" style={{ width: '100%', minHeight: '44px' }}>
                   <Col key="heiddenFieldCol_" className="heiddenFieldCol" span={1}>
                     {hiddenField.map((node, index) => (
-                      <HiddenComp key={`heiddenFieldComp_${index}`} compItem={node} compIndex={index} removeHiddenComp={action.removeHiddenComp} />
+                      <HiddenComp
+                        key={`heiddenFieldComp_${index}`}
+                        compItem={node}
+                        compIndex={index}
+                        removeHiddenComp={action.removeHiddenComp}
+                        changeCompData={action.changeCompData}
+                        changeViewCompData={action.changeViewCompData}
+                        viewType={viewType}
+                        setCompConfigModal={(cFlag, cType, cProp, modalType) => setCompConfigModal([cFlag, cType, cProp, modalType])}
+                      />
                     ))}
                   </Col>
                 </Row>
@@ -275,18 +279,33 @@ const StructureDesign = ({
         centered
         destroyOnClose
         footer={null}
-        visible={isShowCompConfigModal}
+        visible={compConfigModal[0]}
         bodyStyle={{ padding: '1px' }}
-        onCancel={() => setCompConfigModal(false, '', {})}
+        onCancel={() => setCompConfigModal([false, '', {}, 'COMP'])}
       >
-        <CompModal
-          configType={compConfigType}
-          configProps={compConfigProps}
-          action={action}
-          compPoolList={compPoolList}
-          compGroupList={compGroupList}
-          groups={groups}
-        />
+        {compConfigModal[3] === 'COMP' ? (
+          <CompModal
+            configType={compConfigModal[1]}
+            configProps={compConfigModal[2]}
+            action={action}
+            compPoolList={compPoolList}
+            compGroupList={compGroupList}
+            groups={groups}
+            classNameList={classNameList}
+            onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}
+          />
+        ) : (
+          <HiddenModal
+            configType={compConfigModal[1]}
+            configProps={compConfigModal[2]}
+            action={action}
+            compPoolList={compPoolList}
+            compGroupList={compGroupList}
+            compList={compList}
+            onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}
+            hiddenField={hiddenField}
+          />
+        )}
       </Modal>
     </div>
   );

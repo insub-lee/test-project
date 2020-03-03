@@ -9,11 +9,15 @@ import ScrollBar from 'react-custom-scrollbars';
 class MultiSelector extends Component {
   state = {
     checkDataList: [],
+    wid: 100,
   };
 
   componentDidMount() {
     const { dataSource } = this.props;
-    this.setState({ checkDataList: dataSource });
+    const total = dataSource && dataSource.length > 0 ? dataSource.length : 1;
+    const wid = 100 / total;
+
+    this.setState({ checkDataList: dataSource, wid });
   }
 
   onChangeGroup = (groupKey, checkedValue) => {
@@ -35,34 +39,34 @@ class MultiSelector extends Component {
   };
 
   render() {
-    console.debug('render!!!!');
     return (
       <StyledSelectTable>
         <table>
           <tbody>
             <tr>
-              {this.state.checkDataList.map(grp => (
-                <td style={{ padding: '0px', verticalAlign: 'top' }}>
-                  <table className="subTable">
-                    <tr>
-                      <th>
-                        {grp.groupName} <Icon type="close-circle" />
-                      </th>
-                    </tr>
-                    <tr>
-                      <td>
-                        <Checkbox.Group value={grp.selectedValue} onChange={selectedValue => this.onChangeGroup(grp.groupKey, selectedValue)}>
-                          <ScrollBar style={{ width: 100, height: 300 }}>
-                            {grp.dataSet.map(item => (
-                              <Checkbox value={item.NODE_ID}>{item.NAME_KOR}</Checkbox>
-                            ))}
-                          </ScrollBar>
-                        </Checkbox.Group>
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              ))}
+              {this.state.checkDataList &&
+                this.state.checkDataList.map(grp => (
+                  <td style={{ width: `${this.state.wid}%`, padding: '0px', verticalAlign: 'top' }}>
+                    <table className="subTable">
+                      <tr>
+                        <th>
+                          {grp.groupName} <Icon type="close-circle" />
+                        </th>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Checkbox.Group value={grp.selectedValue} onChange={selectedValue => this.onChangeGroup(grp.groupKey, selectedValue)}>
+                            <ScrollBar style={{ width: 100, height: 300 }}>
+                              {grp.dataSet.map(item => (
+                                <Checkbox value={item.NODE_ID}>{item.NAME_KOR}</Checkbox>
+                              ))}
+                            </ScrollBar>
+                          </Checkbox.Group>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                ))}
             </tr>
           </tbody>
         </table>

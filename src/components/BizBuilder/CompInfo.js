@@ -66,8 +66,22 @@ import CheckableTreeSelectComp from 'components/BizBuilder/Field/CheckableTreeSe
 import RoadmapCategoryComp from 'components/BizBuilder/Field/RoadmapCategoryComp';
 import RoadmapNumberComp from 'components/BizBuilder/Field/RoadmapNumberComp';
 import ParentTaskSeqComp from 'components/BizBuilder/Field/ParentTaskSeqComp';
+import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+import UnitComp from 'components/BizBuilder/Field/UnitComp';
+import MsdsIngredientComp from 'components/BizBuilder/Field/MsdsIngredientComp';
 import RadioIFoundryComp from 'components/BizBuilder/Field/RadioIFoundryComp';
 import RadioMdcsChangeComp from 'components/BizBuilder/Field/RadioMdcsChangeComp';
+import RadioMultiSelector from 'components/BizBuilder/Field/RadioMultiSelector';
+import LeadBallComp from 'components/BizBuilder/Field/LeadBallComp';
+import RadioCodeValueAsCharComp from 'components/BizBuilder/Field/RadioCodeValueAsCharComp';
+import NumberCompUnit from 'components/BizBuilder/Field/NumberCompUnit';
+import TreeSelectRootKeyComp from 'components/BizBuilder/Field/TreeSelectRootKeyComp';
+import CheckboxNodeIdComp from 'components/BizBuilder/Field/CheckboxNodeIdComp';
+import CheckboxNameKorComp from 'components/BizBuilder/Field/CheckboxNameKorComp';
+import CheckboxCodeComp from 'components/BizBuilder/Field/CheckboxCodeComp';
+import MsdsEquipmentUsedComp from 'components/BizBuilder/Field/MsdsEquipmentUsedComp';
+import EshsSearchbar from 'components/BizBuilder/Field/EshsSearchbar';
+import StackCustomComp from 'components/BizBuilder/Field/StackCustomComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -136,6 +150,20 @@ export const CompInfo = {
   'components/BizBuilder/Field/RoadmapCategoryComp': { renderer: property => <RoadmapCategoryComp {...property} /> },
   'components/BizBuilder/Field/RoadmapNumberComp': { renderer: property => <RoadmapNumberComp {...property} /> },
   'components/BizBuilder/Field/ParentTaskSeqComp': { renderer: property => <ParentTaskSeqComp {...property} /> },
+  'components/BizBuilder/Field/EshsCmpnyComp': { renderer: property => <EshsCmpnyComp {...property} /> },
+  'components/BizBuilder/Field/UnitComp': { renderer: property => <UnitComp {...property} /> },
+  'components/BizBuilder/Field/MsdsIngredientComp': { renderer: property => <MsdsIngredientComp {...property} /> },
   'components/BizBuilder/Field/RadioIFoundryComp': { renderer: property => <RadioIFoundryComp {...property} /> },
   'components/BizBuilder/Field/RadioMdcsChangeComp': { renderer: property => <RadioMdcsChangeComp {...property} /> },
+  'components/BizBuilder/Field/RadioMultiSelector': { renderer: property => <RadioMultiSelector {...property} /> },
+  'components/BizBuilder/Field/LeadBallComp': { renderer: property => <LeadBallComp {...property} /> },
+  'components/BizBuilder/Field/RadioCodeValueAsCharComp': { renderer: property => <RadioCodeValueAsCharComp {...property} /> },
+  'components/BizBuilder/Field/NumberCompUnit': { renderer: property => <NumberCompUnit {...property} /> },
+  'components/BizBuilder/Field/TreeSelectRootKeyComp': { renderer: property => <TreeSelectRootKeyComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxNodeIdComp': { renderer: property => <CheckboxNodeIdComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxNameKorComp': { renderer: property => <CheckboxNameKorComp {...property} /> },
+  'components/BizBuilder/Field/CheckboxCodeComp': { renderer: property => <CheckboxCodeComp {...property} /> },
+  'components/BizBuilder/Field/MsdsEquipmentUsedComp': { renderer: property => <MsdsEquipmentUsedComp {...property} /> },
+  'components/BizBuilder/Field/EshsSearchbar': { renderer: property => <EshsSearchbar {...property} /> },
+  'components/BizBuilder/Field/StackCustomComp': { renderer: property => <StackCustomComp {...property} /> },
 };
