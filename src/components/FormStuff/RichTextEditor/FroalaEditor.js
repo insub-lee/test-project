@@ -15,20 +15,26 @@ import 'froala-editor/js/plugins/font_family.min';
 import 'froala-editor/js/plugins/colors.min';
 import ReactFroalaEditor from 'react-froala-wysiwyg';
 
-const configSetting = config => {
-  config.imageUploadURL = 'http://192.168.0.35:12082/upload';
-  config.events = {
-    'froalaEditor.image.uploaded': function(e, editor, response) {
-      // console.debug('# Uploaded', response, JSON.parse(response));
+const configSetting = config => ({
+  ...config,
+  key: 'aF4H3C10B7bA4B3A2B2I3H2C4C6B3B1ugjkcolxxbD1wzF-7==',
+  // imageUploadURL: 'http://192.168.0.35:12082/upload',
+  events: {
+    'froalaEditor.image.beforeUpload': function(event, editor, files) {
+      if (files.length) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const { result } = e.target;
+          editor.image.insert(result, null, null, editor.image.get());
+        };
+        // base64 로 인코딩 처리
+        reader.readAsDataURL(files[0]);
+      }
+      editor.popups.hideAll();
+      return false;
     },
-    'froalaEditor.image.inserted': function(e, editor, $img, response) {
-      console.debug('$img : ', $img, response);
-      // Todo - insert file docNo to state
-    },
-  };
-
-  return config;
-};
+  },
+});
 
 const FroalaEditor = ({ config, model, onModelChange }) => <ReactFroalaEditor config={configSetting(config)} model={model} onModelChange={onModelChange} />;
 
