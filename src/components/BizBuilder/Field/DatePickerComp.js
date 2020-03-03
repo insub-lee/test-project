@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { DatePicker as AntdDatePicker } from 'antd';
 import PropTypes from 'prop-types';
-import Moment from 'moment';
 
 class DatePickerComp extends Component {
   onChangeHandler = (date, dateString) => {
@@ -18,9 +17,25 @@ class DatePickerComp extends Component {
   render() {
     const { CONFIG, visible, isSearch, readOnly } = this.props;
     if (isSearch && visible && CONFIG.property.searchType === 'CUSTOM') {
-      return <AntdDatePicker onChange={this.onChangeSearchHandle} placeholder="날짜를 선택하세요." readOnly={readOnly || CONFIG.property.readOnly} />;
+      return (
+        <AntdDatePicker
+          style={{ width: '200px' }}
+          onChange={this.onChangeSearchHandle}
+          placeholder="날짜를 선택하세요."
+          readOnly={readOnly || CONFIG.property.readOnly}
+        />
+      );
     }
-    return visible ? <AntdDatePicker onChange={this.onChangeHandler} placeholder="날짜를 선택하세요." readOnly={readOnly || CONFIG.property.readOnly} /> : '';
+    return visible ? (
+      <AntdDatePicker
+        style={{ width: '200px' }}
+        onChange={this.onChangeHandler}
+        placeholder="날짜를 선택하세요."
+        readOnly={readOnly || CONFIG.property.readOnly}
+      />
+    ) : (
+      ''
+    );
   }
 }
 
