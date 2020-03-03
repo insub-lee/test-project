@@ -79,6 +79,7 @@ import TreeSelectRootKeyComp from 'components/BizBuilder/Field/TreeSelectRootKey
 import CheckboxNodeIdComp from 'components/BizBuilder/Field/CheckboxNodeIdComp';
 import CheckboxNameKorComp from 'components/BizBuilder/Field/CheckboxNameKorComp';
 import CheckboxCodeComp from 'components/BizBuilder/Field/CheckboxCodeComp';
+import MsdsEquipmentUsedComp from 'components/BizBuilder/Field/MsdsEquipmentUsedComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -160,4 +161,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/CheckboxNodeIdComp': { renderer: property => <CheckboxNodeIdComp {...property} /> },
   'components/BizBuilder/Field/CheckboxNameKorComp': { renderer: property => <CheckboxNameKorComp {...property} /> },
   'components/BizBuilder/Field/CheckboxCodeComp': { renderer: property => <CheckboxCodeComp {...property} /> },
+  'components/BizBuilder/Field/MsdsEquipmentUsedComp': { renderer: property => <MsdsEquipmentUsedComp {...property} /> },
 };
