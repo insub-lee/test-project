@@ -3,8 +3,8 @@ import { fromJS } from 'immutable';
 import { takeEvery, takeLatest, call, put, select } from 'redux-saga/effects';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
-import * as feed from 'components/Feedback/functions';
 import MessageContent from 'components/Feedback/message.style2';
+import * as feed from 'components/Feedback/functions';
 import * as actionTypes from './constants';
 import * as actions from './actions';
 import * as selectors from './selectors';
@@ -14,8 +14,29 @@ function* getApproveList() {
   if (response) {
     const { list } = response;
     yield put(actions.setApproveList(list));
+    yield put(actions.setPartialInit());
   }
 }
+
+function* getUnApproveList() {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/unApproveList`, {});
+  if (response) {
+    const { list } = response;
+    yield put(actions.setUnApproveList(list));
+    yield put(actions.setPartialInit());
+  }
+}
+
+function* getDraftList() {
+  const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, {});
+  if (response) {
+    const { list } = response;
+    yield put(actions.setDraftList(list));
+    yield put(actions.setPartialInit());
+  }
+}
+
+
 
 function* reqApprove({ appvStatus }) {
   const reqRow = yield select(selectors.makeSelectSelectedRow());
@@ -50,19 +71,15 @@ function* failApprove({ errMsg }) {
   yield put(actions.getApproveList({ searchType: 'unApproval' }));
 }
 
-function* getDraftList() {
-  const response = yield call(Axios.post, `/api/workflow/v1/common/draftList`, {});
-  if (response) {
-    const { list } = response;
-    yield put(actions.setDraftList(list));
-  }
-}
-
 export default function* watcher() {
   yield takeEvery(actionTypes.GET_APPROVE_LIST, getApproveList);
+  yield takeEvery(actionTypes.GET_UNAPPROVE_LIST, getUnApproveList);
+  yield takeEvery(actionTypes.GET_DRAFT_LIST, getDraftList);
+  
+
+
   yield takeLatest(actionTypes.REQ_APPROVE, reqApprove);
   yield takeEvery(actionTypes.SUCCESS_APPROVE, successApprove);
   yield takeEvery(actionTypes.FAIL_APPROVE, failApprove);
   yield takeLatest(actionTypes.GET_USERINFO, getUserInfo);
-  yield takeEvery(actionTypes.GET_DRAFT_LIST, getDraftList);
 }
