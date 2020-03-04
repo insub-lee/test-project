@@ -6,12 +6,13 @@ const { Option } = Select;
 
 function SelectYearComp(props) {
   const [yearRange, setYearRange] = useState([]);
+  const [currentYear, setCurrentYear] = useState();
 
   useEffect(() => {
     const { minYear, maxYear } = props.CONFIG.property;
 
     const years = [];
-    for (let i = parseInt(minYear, 10); i < parseInt(maxYear, 10) + 1; i++) {
+    for (let i = parseInt(minYear, 10); i <= parseInt(maxYear, 10); i++) {
       years.push(String(i));
     }
     setYearRange(years);
@@ -39,7 +40,7 @@ function SelectYearComp(props) {
 
   return visible ? (
     <Select
-      defaultValue={CONFIG.property.defaultYear}
+      defaultValue={colData !== '' ? colData : CONFIG.property.defaultYear}
       onChange={value => onChangeHandler(value)}
       style={{ width: '100%', marginRight: 10 }}
       className={CONFIG.property.className || ''}
@@ -60,6 +61,7 @@ SelectYearComp.propTypes = {
   CONFIG: PropTypes.objectOf(PropTypes.object),
 };
 SelectYearComp.defaultProps = {
+  colData: '',
   CONFIG: {
     info: {},
     option: {},
@@ -69,8 +71,9 @@ SelectYearComp.defaultProps = {
       COMP_SRC: '',
       compKey: '',
       layerIdx: {},
-      maxYear: String(new Date().getFullYear()),
-      minYear: String(new Date().getFullYear()),
+      maxYear: '',
+      minYear: '',
+      defaultYear: null,
     },
   },
   defaultValueForSelectYearComp: false,
