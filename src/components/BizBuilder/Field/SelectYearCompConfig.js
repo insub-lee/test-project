@@ -16,7 +16,6 @@ function SelectYearCompConfig(props) {
 
   useEffect(() => {
     const { getCallDataHandler, sagaKey: id, apiArray, configInfo } = props;
-    const { minYear, maxYear, defaultYear } = configInfo.property;
     getCallDataHandler(id, apiArray);
 
     const years = [];
