@@ -13,6 +13,9 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
+import BizBuilderBase from 'components/BizBuilderBase';
+import CustomViewPage from '../CustomViewPage';
+import CursorStyled from '../CursorStyled';
 
 const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
@@ -26,12 +29,14 @@ class ListPage extends Component {
       isRowNo: false,
       searchType: 'W.MTRL_NM',
       searchText: '',
+      viewModalVisible: false,
+      viewTaskSeq: -1,
     };
     this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, changeViewPage } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     if (workInfo && workInfo.OPT_INFO) {
@@ -41,7 +46,14 @@ class ListPage extends Component {
       });
       this.setState({ isMultiDelete, isRowNo });
     }
+    changeViewPage('MsdsListView', 3161, -1, 'VIEW');
   };
+
+  // state값 reset테스트
+  // componentWillUnmount() {
+  //   const { removeReduxState, id } = this.props;
+  //   removeReduxState(id);
+  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -100,7 +112,7 @@ class ListPage extends Component {
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, viewModalVisible, viewTaskSeq } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
     if (isMultiDelete) {
@@ -113,22 +125,50 @@ class ListPage extends Component {
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={listData || []}
-            rowSelection={rowSelection}
-          />
+          <CursorStyled>
+            <AntdTable
+              rowKey="TASK_SEQ"
+              key={`${group.key}_list`}
+              className="view-designer-list"
+              columns={columns}
+              dataSource={listData || []}
+              rowSelection={rowSelection}
+              onRow={(record, rowIndex) => ({
+                onClick: event => this.handleViewModalVisible(record.TASK_SEQ),
+              })}
+            />
+          </CursorStyled>
         </Group>
+        <Modal title="MSDS 조회" visible={viewModalVisible} closable onCancel={() => this.handleViewModalVisible(-1)} width={1000} footer={null}>
+          <div>{viewModalVisible && this.handleOnViewModal(viewTaskSeq)}</div>
+        </Modal>
       </div>
     );
   };
 
+  handleViewModalVisible = viewTaskSeq => {
+    const { viewModalVisible } = this.state;
+
+    this.setState({
+      viewModalVisible: !viewModalVisible,
+      viewTaskSeq,
+    });
+  };
+
+  handleOnViewModal = viewTaskSeq => (
+    <BizBuilderBase
+      sagaKey="MsdsListView"
+      workSeq={3161}
+      taskSeq={viewTaskSeq}
+      viewType="VIEW"
+      loadingComplete={this.loadingComplete}
+      CustomViewPage={CustomViewPage}
+    />
+  );
+
   handleSearchSite = e => {
     const { sagaKey, changeSearchData } = this.props;
-    const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : '';
+    const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : ' AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_1', searchText);
   };
 
@@ -167,9 +207,9 @@ class ListPage extends Component {
     changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
   };
 
-  handleModalVisible = () => {
+  searchListModalVisible = () => {
     const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
-    changeViewPage('MsdsSearchList', 3161, -1, 'LIST');
+    changeViewPage('MsdsListSearchList', 3161, -1, 'LIST');
     handleModalVisible();
   };
 
@@ -186,7 +226,7 @@ class ListPage extends Component {
       workSeq,
       removeMultiTask,
     } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, viewTaskSeq, viewModalVisible } = this.state;
 
     const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
     if (selectedRowItemCode) {
@@ -262,7 +302,7 @@ class ListPage extends Component {
                                   &nbsp; &nbsp;
                                   <span>구성성분</span>
                                   <Input style={{ width: 150 }} value={selectedRowItemCode} onChange={e => this.handleInputChange(e.target.value)} />
-                                  <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+                                  <Button shape="circle" icon="search" onClick={this.searchListModalVisible} />
                                 </Contents>
                               </td>
                             </tr>
@@ -273,9 +313,6 @@ class ListPage extends Component {
                         <div className="view-designer-group-search-btn-wrap">
                           <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </StyledButton>
-                          <StyledButton className="btn-primary" onClick={this.handleChangeViewPage}>
-                            Add
                           </StyledButton>
                         </div>
                       )}
@@ -312,6 +349,7 @@ ListPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  handleModalVisible: PropTypes.func,
 };
 
 ListPage.defaultProps = {

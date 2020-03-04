@@ -60,7 +60,11 @@ class UnitComp extends React.Component {
           );
         }
       }
-      const rows = <Row gutter={[0, 0]}>{cols}</Row>;
+      const rows = (
+        <Row gutter={[0, 0]} key={index}>
+          {cols}
+        </Row>
+      );
       modalGrid.push(rows);
     });
     this.setState({
@@ -98,11 +102,8 @@ class UnitComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, isSearch, searchCompRenderer, colData } = this.props;
+    const { CONFIG, visible, colData } = this.props;
     const { unitModal, modalGrid } = this.state;
-    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer(this.props);
-    }
     return visible ? (
       <div>
         <Input value={colData} placeholder={CONFIG.property.placeholder} className={CONFIG.property.className || ''} style={{ width: 150 }} />

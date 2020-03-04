@@ -31,41 +31,28 @@ class MsdsIngredientComp extends React.Component {
     const { getExtraApiData, sagaKey: id, viewPageData } = this.props;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     const task_seq = (viewPageData && viewPageData.taskSeq) || 0;
-    let apiValue = [];
-    if (viewType === 'INPUT') {
-      apiValue = [
-        {
-          key: 'MsdsList',
-          url: '/api/eshs/v1/common/EshsMsds',
-          type: 'GET',
-        },
-      ];
-    }
-    if (viewType === 'MODIFY' || viewType === 'VIEW') {
-      apiValue = [
-        {
-          key: 'MsdsList',
-          url: '/api/eshs/v1/common/EshsMsds',
-          type: 'GET',
-        },
-        {
-          key: 'applyList',
-          url: `/api/eshs/v1/common/EshsMsdsByTaskSeq/${task_seq}`,
-          type: 'GET',
-        },
-      ];
-    }
+
+    const apiValue = [
+      {
+        key: 'MsdsList',
+        url: '/api/eshs/v1/common/EshsMsds',
+        type: 'GET',
+      },
+      {
+        key: 'applyList',
+        url: `/api/eshs/v1/common/EshsMsdsByTaskSeq/${task_seq}`,
+        type: 'GET',
+      },
+    ];
+
     getExtraApiData(id, apiValue, this.setList);
   }
 
   setList = sagaKey => {
     const { extraApiData, viewPageData } = this.props;
     const viewType = (viewPageData && viewPageData.viewType) || '';
-    let applyList = [];
     const apiList = (extraApiData && extraApiData.MsdsList && extraApiData.MsdsList.list) || [];
-    if (viewType === 'MODIFY' || viewType === 'VIEW') {
-      applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
-    }
+    const applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
     this.setState({
       apiList,
       applyList,
@@ -96,9 +83,7 @@ class MsdsIngredientComp extends React.Component {
     const { CONFIG, visible, isSearch, searchCompRenderer, viewPageData } = this.props;
     const { apiList, leftTableColumns, rightTableColumns, applyList } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
-    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer(this.props);
-    }
+
     return visible ? (
       <>
         {viewType === 'INPUT' || viewType === 'MODIFY' ? (
@@ -116,7 +101,6 @@ class MsdsIngredientComp extends React.Component {
           ''
         )}
         <MsdsIngredientCompStyled>
-          <p>구성성분</p>
           <table className="msdsIngreDientTable">
             <thead>
               <tr>

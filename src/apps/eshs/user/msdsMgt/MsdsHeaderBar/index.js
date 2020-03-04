@@ -19,7 +19,6 @@ class MsdsHeaderBar extends React.Component {
     const { sagaKey: id, changeViewPage, formData } = this.props;
     const task_seq = (formData && formData.selectedRowTaskSeq) || 0;
     if (task_seq) {
-      console.debug('여기는 handleSearch ', task_seq);
       changeViewPage(id, 3161, task_seq, 'MODIFY');
     }
   };
@@ -45,27 +44,32 @@ class MsdsHeaderBar extends React.Component {
     changeViewPage(id, workSeq, taskSeq, 'MODIFY');
   };
 
-  isModalChange = record => {
-    const { setViewPageData, sagaKey: id, changeViewPage, handleModalVisible } = this.props;
+  handleModalVisible = () => {
+    const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
+    changeViewPage('MsdsSearchList', 3161, -1, 'LIST');
     handleModalVisible();
-    if (record) {
-      setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
-      changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
-    }
   };
 
   render() {
-    const { viewPageData, sagaKey: id, changeViewPage, formData, handleModalVisible } = this.props;
-    const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
+    const { viewPageData, sagaKey: id, changeViewPage, formData } = this.props;
+    const selectedRowItemCode = (formData && formData.selectedRowItemCode) || (formData && formData.ITEM_CD) || '';
 
     return (
       <div>
-        <Input value={selectedRowItemCode} style={{ width: 150 }} onClick={() => handleModalVisible()} />
-        <Button shape="circle" icon="search" onClick={() => handleModalVisible()} />
-        {/* <StyledButton className="btn-primary" onClick={this.handleSearch}>
+        <span>MSDS 코드</span>&nbsp;
+        <Input value={selectedRowItemCode} style={{ width: 150 }} onClick={this.handleModalVisible} />
+        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+        <StyledButton className="btn-primary" onClick={this.handleSearch}>
           검색
-        </StyledButton> */}
-        {viewPageData.viewType === 'MODIFY' ? (
+        </StyledButton>
+        {viewPageData.viewType === 'INPUT' && (
+          <>
+            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
+              등록
+            </StyledButton>
+          </>
+        )}
+        {viewPageData.viewType === 'MODIFY' && (
           <>
             <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
               저장
@@ -76,15 +80,18 @@ class MsdsHeaderBar extends React.Component {
             <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
               신규등록
             </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              Reset
+            </StyledButton>
           </>
-        ) : (
-          <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
-            등록
-          </StyledButton>
         )}
-        <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-          Reset
-        </StyledButton>
+        {viewPageData.viewType === 'VIEW' && (
+          <>
+            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
+              수정하기
+            </StyledButton>
+          </>
+        )}
       </div>
     );
   }

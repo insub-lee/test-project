@@ -34,31 +34,6 @@ class InputPage extends Component {
     }
   }
 
-  saveTask = (id, reloadId) => {
-    const { saveTask, saveTaskAfterCallbackFunc } = this.props;
-    saveTask(id, reloadId, typeof saveTaskAfterCallbackFunc === 'function' ? saveTaskAfterCallbackFunc : this.saveTaskAfter);
-  };
-
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
-
-  saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
-    }
-    if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
-    }
-  };
-
-  customSaveTask = formData => {
-    console.debug('customSaveTask', formData);
-  };
-
   render = () => {
     const {
       sagaKey: id,
@@ -71,8 +46,9 @@ class InputPage extends Component {
       changeViewPage,
       workInfo,
       CustomWorkProcess,
+      formData,
+      changeFormData,
     } = this.props;
-
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -91,14 +67,10 @@ class InputPage extends Component {
           () => loadingComplete(),
         );
       }
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <MsdsHeaderBar {...this.props} customSaveTask={() => this.customSaveTask()} />
-            {/* <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
-              Save
-            </StyledButton> */}
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}

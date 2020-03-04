@@ -128,20 +128,26 @@ class EshsCmpnyComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, isSearch, searchCompRenderer } = this.props;
+    const { CONFIG, visible, readOnly } = this.props;
     const { cmpnyModal, cmpny_nm, list, searchList, listType } = this.state;
-    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer(this.props);
-    }
     let cmpnyList = [];
     if (listType === 'search') {
       cmpnyList = searchList;
     } else {
       cmpnyList = list;
     }
+    if (readOnly || CONFIG.property.readOnly) {
+      return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
+    }
     return visible ? (
       <div>
-        <Input value={this.state.cmpny_cd} placeholder={CONFIG.property.placeholder} className={CONFIG.property.className || ''} style={{ width: 150 }} />
+        <Input
+          value={this.state.cmpny_cd}
+          readOnly
+          placeholder={CONFIG.property.placeholder}
+          className={CONFIG.property.className || ''}
+          style={{ width: 150 }}
+        />
         <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
         &nbsp; <span>{cmpny_nm}</span>
         <Modal title="Vandor 검색" visible={cmpnyModal} width={800} height={600} onCancel={this.handleModalVisible}>
