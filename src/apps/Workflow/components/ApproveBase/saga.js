@@ -36,8 +36,6 @@ function* getDraftList() {
   }
 }
 
-
-
 function* reqApprove({ appvStatus }) {
   const reqRow = yield select(selectors.makeSelectSelectedRow());
   const opinion = yield select(selectors.makeSelectOpinion());
@@ -63,21 +61,20 @@ function* getUserInfo({ userInfo, callBack }) {
 
 function* successApprove() {
   message.success(<MessageContent>결재에 성공하였습니다.</MessageContent>, 3);
-  yield put(actions.getApproveList({ searchType: 'unApproval' }));
+  // yield put(actions.getApproveList({ searchType: 'unApproval' }));
+  yield put(actions.getUnApproveList());
 }
 
 function* failApprove({ errMsg }) {
   feed.error(errMsg);
-  yield put(actions.getApproveList({ searchType: 'unApproval' }));
+  // yield put(actions.getApproveList({ searchType: 'unApproval' }));
+  yield put(actions.getUnApproveList());
 }
 
 export default function* watcher() {
   yield takeEvery(actionTypes.GET_APPROVE_LIST, getApproveList);
   yield takeEvery(actionTypes.GET_UNAPPROVE_LIST, getUnApproveList);
   yield takeEvery(actionTypes.GET_DRAFT_LIST, getDraftList);
-  
-
-
   yield takeLatest(actionTypes.REQ_APPROVE, reqApprove);
   yield takeEvery(actionTypes.SUCCESS_APPROVE, successApprove);
   yield takeEvery(actionTypes.FAIL_APPROVE, failApprove);
