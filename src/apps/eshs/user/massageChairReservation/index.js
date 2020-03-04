@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import List from './List';
 
-const MassageChairReservation = () => <BizBuilderBase sagaKey="MassageChairReservation" workSeq={4201} viewType="LIST" CustomListPage={List} />;
+class MassageChairReservation extends Component {
+  componentDidMount() {}
+
+  render() {
+    return <BizBuilderBase sagaKey="MassageChairReservation" workSeq={4201} viewType="LIST" CustomListPage={List} />;
+  }
+}
 MassageChairReservation.propTypes = {};
 
 export default MassageChairReservation;

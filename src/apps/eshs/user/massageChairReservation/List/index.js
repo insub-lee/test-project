@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -6,11 +7,13 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import { Table, Row, Col, DatePicker, Checkbox } from 'antd';
 import moment from 'moment';
 
+// moment.locale('ko');
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       checkedIndex: '',
+      userInfo: {},
     };
   }
 
@@ -53,7 +56,8 @@ class List extends Component {
               <Checkbox
                 name="male"
                 onChange={e => this.handleOnCheck(e, index)}
-                disabled={this.state.checkedIndex !== '' && this.state.checkedIndex !== index}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                disabled={this.handleCheckboxDisabled() !== 'm'}
               ></Checkbox>
             ) : (
               ''
@@ -68,7 +72,8 @@ class List extends Component {
               <Checkbox
                 name="male"
                 onChange={e => this.handleOnCheck(e, index)}
-                disabled={this.state.checkedIndex !== '' && this.state.checkedIndex !== index}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                disabled={this.handleCheckboxDisabled() !== 'f'}
               ></Checkbox>
             ) : (
               ''
@@ -78,7 +83,49 @@ class List extends Component {
     },
   ];
 
-  disableDate = current => current && current > moment().startOf('week') && current < moment().endOf('week');
+  componentDidMount() {
+    this.handleGetExtraApiData();
+  }
+
+  handleGetExtraApiData = () => {
+    const { sagaKey: id, getExtraApiData, extraApiData } = this.props;
+    const apiArr = [
+      {
+        key: 'getUserInfo',
+        url: '/api/eshs/v1/common/userinfowithgender',
+        type: 'GET',
+      },
+    ];
+    getExtraApiData(id, apiArr);
+    return extraApiData;
+  };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (nextProps.extraApiData.getUserInfo) {
+      if (prevState.userInfo !== nextProps.extraApiData.getUserInfo) {
+        return { userInfo: nextProps.extraApiData.getUserInfo.userInfo };
+      }
+    }
+    return null;
+  }
+
+  handleCheckboxDisabled = () => {
+    const { userInfo } = this.state;
+    if (userInfo) {
+      return userInfo.gender;
+    }
+    return '';
+  };
+
+  disableDate = current =>
+    moment(current).format('YYYYMMDD') ===
+      moment(current)
+        .startOf('week')
+        .format('YYYYMMDD') ||
+    moment(current).format('YYYYMMDD') ===
+      moment(current)
+        .endOf('week')
+        .format('YYYYMMDD');
 
   handleOnCheck = (e, index) => {
     if (e.target.checked) {
@@ -92,7 +139,7 @@ class List extends Component {
   };
 
   render() {
-    console.debug(this.props);
+    console.debug(this.handleCheckboxDisabled());
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -117,7 +164,21 @@ class List extends Component {
               <Col span={4}>로그인지역</Col>
               <Col span={2}>신청일</Col>
               <Col span={4}>
-                <DatePicker disableDate={this.disableDate} />
+                <DatePicker
+                  disabledDate={this.disableDate}
+                  defaultValue={
+                    moment().format('YYMMDD') ===
+                      moment()
+                        .startOf('week')
+                        .format('YYMMDD') ||
+                    moment().format('YYMMDD') ===
+                      moment()
+                        .endOf('week')
+                        .format('YYMMDD')
+                      ? ''
+                      : moment()
+                  }
+                />
               </Col>
             </Row>
             <hr />
@@ -128,5 +189,11 @@ class List extends Component {
     );
   }
 }
+
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  getExtraApiData: PropTypes.func,
+  extraApiData: PropTypes.object,
+};
 
 export default List;
