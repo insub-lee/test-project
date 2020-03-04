@@ -13,6 +13,7 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
+import CursorStyled from '../CursorStyled';
 
 const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
@@ -106,8 +107,8 @@ class ListPage extends Component {
 
   handleOnRow = record => {
     const { handleModalVisible, changeFormData } = this.props;
-    changeFormData('MsdsMgt', 'selectedRowItemCode', record.ITEM_CD);
-    changeFormData('MsdsMgt', 'selectedRowTaskSeq', record.TASK_SEQ);
+    changeFormData('MsdsListMgt', 'selectedRowItemCode', record.ITEM_CD);
+    changeFormData('MsdsListMgt', 'selectedRowTaskSeq', record.TASK_SEQ);
     handleModalVisible();
   };
 
@@ -126,17 +127,19 @@ class ListPage extends Component {
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={listData || []}
-            rowSelection={rowSelection}
-            onRow={(record, rowIndex) => ({
-              onClick: event => this.handleOnRow(record),
-            })}
-          />
+          <CursorStyled>
+            <AntdTable
+              rowKey="TASK_SEQ"
+              key={`${group.key}_list`}
+              className="view-designer-list"
+              columns={columns}
+              dataSource={listData || []}
+              rowSelection={rowSelection}
+              onRow={(record, rowIndex) => ({
+                onClick: event => this.handleOnRow(record),
+              })}
+            />
+          </CursorStyled>
         </Group>
       </div>
     );
@@ -169,19 +172,7 @@ class ListPage extends Component {
   };
 
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      formData,
-      workFlowConfig,
-      loadingComplete,
-      viewPageData,
-      changeViewPage,
-      getListData,
-      workSeq,
-      removeMultiTask,
-      handleModalVisible,
-    } = this.props;
+    const { sagaKey: id, viewLayer, workFlowConfig, loadingComplete, getListData, workSeq, removeMultiTask } = this.props;
     const { isMultiDelete } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {

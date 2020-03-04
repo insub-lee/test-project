@@ -19,11 +19,9 @@ class MsdsEquipmentUsedComp extends React.Component {
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer(this.props);
     }
-    console.debug('?????????????????////');
     return visible ? (
       <>
         <MsdsIngredientCompStyled>
-          <p>사용장비</p>
           <table className="msdsIngreDientTable">
             <thead>
               <tr>

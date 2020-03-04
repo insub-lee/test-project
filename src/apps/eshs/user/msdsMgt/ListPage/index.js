@@ -24,7 +24,7 @@ class ListPage extends Component {
       initLoading: true,
       isMultiDelete: false,
       isRowNo: false,
-      searchType: '',
+      searchType: 'W.MTRL_NM',
       searchText: '',
     };
     this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
@@ -134,7 +134,6 @@ class ListPage extends Component {
 
   handleSearchSite = e => {
     const { sagaKey, changeSearchData } = this.props;
-    console.debug('handleSearchSite', e);
     const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : '';
     changeSearchData(sagaKey, 'andSearch_1', searchText);
   };
@@ -174,6 +173,12 @@ class ListPage extends Component {
     changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
   };
 
+  handleModalVisible = () => {
+    const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
+    changeViewPage('MsdsSearchList', 3161, -1, 'LIST');
+    handleModalVisible();
+  };
+
   render = () => {
     const {
       sagaKey: id,
@@ -186,7 +191,6 @@ class ListPage extends Component {
       getListData,
       workSeq,
       removeMultiTask,
-      handleModalVisible,
     } = this.props;
     const { isMultiDelete } = this.state;
 
@@ -214,7 +218,6 @@ class ListPage extends Component {
           () => loadingComplete(),
         );
       }
-      console.debug('여기는 리스트...................', this.props);
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -265,7 +268,7 @@ class ListPage extends Component {
                                   &nbsp; &nbsp;
                                   <span>구성성분</span>
                                   <Input style={{ width: 150 }} value={selectedRowItemCode} onChange={e => this.handleInputChange(e.target.value)} />
-                                  <Button shape="circle" icon="search" onClick={() => handleModalVisible()} />
+                                  <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
                                 </Contents>
                               </td>
                             </tr>

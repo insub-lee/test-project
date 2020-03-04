@@ -13,6 +13,9 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
+import BizBuilderBase from 'components/BizBuilderBase';
+import CustomViewPage from '../CustomViewPage';
+import CursorStyled from '../CursorStyled';
 
 const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
@@ -26,12 +29,14 @@ class ListPage extends Component {
       isRowNo: false,
       searchType: '',
       searchText: '',
+      viewModalVisible: false,
+      viewTaskSeq: -1,
     };
     this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
   componentDidMount = () => {
-    const { workInfo } = this.props;
+    const { workInfo, changeViewPage } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
     if (workInfo && workInfo.OPT_INFO) {
@@ -41,6 +46,7 @@ class ListPage extends Component {
       });
       this.setState({ isMultiDelete, isRowNo });
     }
+    changeViewPage('MsdsListView', 3161, -1, 'VIEW');
   };
 
   // state값 reset테스트
@@ -104,16 +110,9 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
-  handleOnRow = record => {
-    const { handleModalVisible, changeFormData } = this.props;
-    changeFormData('MsdsMgt', 'selectedRowItemCode', record.ITEM_CD);
-    changeFormData('MsdsMgt', 'selectedRowTaskSeq', record.TASK_SEQ);
-    handleModalVisible();
-  };
-
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, viewModalVisible, viewTaskSeq } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
     if (isMultiDelete) {
@@ -126,25 +125,50 @@ class ListPage extends Component {
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={listData || []}
-            rowSelection={rowSelection}
-            onRow={(record, rowIndex) => ({
-              onClick: event => this.handleOnRow(record),
-            })}
-          />
+          <CursorStyled>
+            <AntdTable
+              rowKey="TASK_SEQ"
+              key={`${group.key}_list`}
+              className="view-designer-list"
+              columns={columns}
+              dataSource={listData || []}
+              rowSelection={rowSelection}
+              onRow={(record, rowIndex) => ({
+                onClick: event => this.handleViewModalVisible(record.TASK_SEQ),
+              })}
+            />
+          </CursorStyled>
         </Group>
+        <Modal title="MSDS 조회" visible={viewModalVisible} closable onCancel={() => this.handleViewModalVisible(-1)} width={1000} footer={null}>
+          <div>{viewModalVisible && this.handleOnViewModal(viewTaskSeq)}</div>
+        </Modal>
       </div>
     );
   };
 
+  handleViewModalVisible = viewTaskSeq => {
+    const { viewModalVisible } = this.state;
+
+    this.setState({
+      viewModalVisible: !viewModalVisible,
+      viewTaskSeq,
+    });
+  };
+
+  handleOnViewModal = viewTaskSeq => (
+    <BizBuilderBase
+      sagaKey="MsdsListView"
+      workSeq={3161}
+      taskSeq={viewTaskSeq}
+      viewType="VIEW"
+      loadingComplete={this.loadingComplete}
+      CustomViewPage={CustomViewPage}
+    />
+  );
+
   handleSearchSite = e => {
     const { sagaKey, changeSearchData } = this.props;
-    const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : '';
+    const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : ' AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_1', searchText);
   };
 
@@ -154,7 +178,7 @@ class ListPage extends Component {
     this.setState({
       searchType,
     });
-    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : '';
+    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
@@ -164,8 +188,29 @@ class ListPage extends Component {
     this.setState({
       searchText,
     });
-    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : '';
+    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
+  };
+
+  handleInputChange = ITEM_CD => {
+    const { sagaKey, changeSearchData, changeFormData } = this.props;
+    changeFormData(sagaKey, 'selectedRowItemCode', ITEM_CD);
+    const andSearch3 =
+      ITEM_CD.length > 0 ? `AND W.ITEM_CD IN (SELECT ITEM_CD FROM esh_hctb_msds_component WHERE component_item_cd = '${ITEM_CD}')` : 'AND 1 = 1';
+    changeSearchData(sagaKey, 'andSearch_3', andSearch3);
+  };
+
+  handleChangeViewPage = () => {
+    const { sagaKey: id, viewPageData, changeViewPage, changeFormData } = this.props;
+    changeFormData(id, 'selectedRowItemCode', '');
+    changeFormData(id, 'selectedTaskSeq', '');
+    changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
+  };
+
+  handleModalVisible = () => {
+    const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
+    changeViewPage('MsdsListSearchList', 3161, -1, 'LIST');
+    handleModalVisible();
   };
 
   render = () => {
@@ -180,9 +225,13 @@ class ListPage extends Component {
       getListData,
       workSeq,
       removeMultiTask,
-      handleModalVisible,
     } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, viewTaskSeq, viewModalVisible } = this.state;
+
+    const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
+    if (selectedRowItemCode) {
+      this.handleInputChange(selectedRowItemCode);
+    }
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -250,6 +299,10 @@ class ListPage extends Component {
                                     </Option>
                                   </Select>
                                   <Input style={{ width: 150 }} onChange={e => this.handleOnChangeSearch(e.target.value)} />
+                                  &nbsp; &nbsp;
+                                  <span>구성성분</span>
+                                  <Input style={{ width: 150 }} value={selectedRowItemCode} onChange={e => this.handleInputChange(e.target.value)} />
+                                  <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
                                 </Contents>
                               </td>
                             </tr>
