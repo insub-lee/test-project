@@ -24,18 +24,16 @@ class MsdsIngredientComp extends React.Component {
     const { getExtraApiData, sagaKey: id, viewPageData, fromData } = this.props;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     const apiTaskSeq = (viewPageData && viewPageData.taskSeq) || 0;
-    // const apiStackCd = (fromData && fromData.STACK_CD) || '';
     const apiValue = [
       {
         key: 'gasType',
         url: '/api/eshs/v1/common/eshsgastype',
         type: 'GET',
       },
-      viewType === 'MODIFY'
+      viewType === 'MODIFY' || viewType === 'VIEW'
         ? {
             key: 'applyList',
             url: `/api/eshs/v1/common/eshsstackcd?PARENT_TASK_SEQ=${apiTaskSeq}`,
-            // url: `/api/eshs/v1/common/eshsstackcd?STACK_CD=${apiStackCd}`,
             type: 'GET',
           }
         : '',
@@ -47,9 +45,8 @@ class MsdsIngredientComp extends React.Component {
   setList = sagaKey => {
     const { extraApiData, viewPageData } = this.props;
     let applyList = [];
-    console.log(extraApiData && extraApiData.gasType && extraApiData.gasType.list, 'gasType');
     const apiList = (extraApiData && extraApiData.gasType && extraApiData.gasType.list) || [];
-    if (viewPageData && viewPageData.viewType === 'MODIFY') {
+    if ((viewPageData && viewPageData.viewType === 'MODIFY') || (viewPageData && viewPageData.viewType === 'VIEW')) {
       applyList = (extraApiData && extraApiData.applyList && extraApiData.applyList.list) || [];
     }
     this.setState({
@@ -59,9 +56,9 @@ class MsdsIngredientComp extends React.Component {
   };
 
   handleApply = applyList => {
-    const { sagaKey: id, changeFormData, viewPageData } = this.props;
+    const { sagaKey: id, changeFormData, viewPageData, formData } = this.props;
     const taskSeq = (viewPageData && viewPageData.taskSeq) || 0;
-    const newAry = applyList.map(a => ({ ...a, PARENTS_TASK_SEQ: taskSeq }));
+    const newAry = applyList.map(a => ({ ...a, PARENT_TASK_SEQ: taskSeq, STACK_CD: formData && formData.STACK_CD }));
     this.setState({
       applyList: newAry,
     });
@@ -71,7 +68,31 @@ class MsdsIngredientComp extends React.Component {
   handleInputOnChange = (e, data) => {
     const { sagaKey: id, changeFormData } = this.props;
     const { applyList } = this.state;
-    const changeList = applyList.map(a => (a.PARENT_TASK_SEQ === data.PARENT_TASK_SEQ ? { ...a, CHEMICAL_NM: e.target.value } : a));
+    const changeList = applyList.map(a => (a.GAS_CD === data.GAS_CD ? { ...a, CHEMICAL_NM: e.target.value } : a));
+    this.setState(
+      {
+        applyList: changeList,
+      },
+      () => changeFormData(id, 'applyList', this.state.applyList),
+    );
+  };
+
+  handleEFFChange = (e, data) => {
+    const { sagaKey: id, changeFormData } = this.props;
+    const { applyList } = this.state;
+    const changeList = applyList.map(a => (a.GAS_CD === data.GAS_CD ? { ...a, TREAT_EFF: e } : a));
+    this.setState(
+      {
+        applyList: changeList,
+      },
+      () => changeFormData(id, 'applyList', this.state.applyList),
+    );
+  };
+
+  handleDENChange = (e, data) => {
+    const { sagaKey: id, changeFormData } = this.props;
+    const { applyList } = this.state;
+    const changeList = applyList.map(a => (a.GAS_CD === data.GAS_CD ? { ...a, TREAT_DENSITY: e } : a));
     this.setState(
       {
         applyList: changeList,
@@ -84,7 +105,6 @@ class MsdsIngredientComp extends React.Component {
     const { CONFIG, visible, isSearch, searchCompRenderer, viewPageData } = this.props;
     const { apiList, leftTableColumns, rightTableColumns, applyList } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
-
     return visible ? (
       <>
         {viewType === 'INPUT' || viewType === 'MODIFY' ? (
@@ -103,48 +123,50 @@ class MsdsIngredientComp extends React.Component {
         )}
         <MsdsIngredientCompStyled>
           {applyList.length ? (
-            <table className="msdsIngreDientTable" style={{ width: '100%', textAlign: 'center' }}>
-              <thead>
-                <tr>
-                  <td>가스종류</td>
-                  <td>처리농도</td>
-                  <td>처리효율</td>
-                  <td>사용약품</td>
-                </tr>
-              </thead>
-              <tbody>
-                {applyList.map((a, index) => (
-                  <tr key={index}>
-                    <td>{a.GAS_NM}</td>
-                    {viewType === 'INPUT' || viewType === 'MODIFY' ? (
-                      <>
-                        <td>
-                          <InputNumber defaultValue={a.TREAT_DENSITY || 0} min={0} max={10} onChange={e => this.handleInputOnChange(e, a)} />
-                          {a.TREAT_DENSITY_UNIT || ''}
-                        </td>
-                        <td>
-                          <InputNumber defaultValue={a.TREAT_EFF || 0} min={0} max={10} onChange={e => this.handleInputOnChange(e, a)} />
-                        </td>
-                        <td>
-                          <Input style={{ width: '150px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.CHEMICAL_NM || ''} />
-                        </td>
-                      </>
-                    ) : (
-                      <>
-                        <td>
-                          {a.TREAT_DENSITY || 0}
-                          {a.TREAT_DENSITY_UNIT || ''}
-                        </td>
-                        <td>{a.TREAT_EFF || 0}</td>
-                        <td>{a.CHEMICAL_NM || ''}</td>
-                      </>
-                    )}
+            <div style={{ width: '100%', height: '200px', overflowY: 'scroll' }}>
+              <table className="msdsIngreDientTable" style={{ width: '100%', textAlign: 'center' }}>
+                <thead>
+                  <tr>
+                    <td>가스종류</td>
+                    <td>처리농도</td>
+                    <td>처리효율</td>
+                    <td>사용약품</td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {applyList.map((a, index) => (
+                    <tr key={index}>
+                      <td>{a.GAS_CD}</td>
+                      {viewType === 'INPUT' || viewType === 'MODIFY' ? (
+                        <>
+                          <td>
+                            <InputNumber value={a.TREAT_DENSITY || 0} min={0} max={100} onChange={e => this.handleDENChange(e, a)} />
+                            {a.UNIT || ''}
+                          </td>
+                          <td>
+                            <InputNumber value={a.TREAT_EFF || 0} min={0} max={100} onChange={e => this.handleEFFChange(e, a)} />
+                          </td>
+                          <td>
+                            <Input style={{ width: '150px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.CHEMICAL_NM || ''} />
+                          </td>
+                        </>
+                      ) : (
+                        <>
+                          <td>
+                            {a.TREAT_DENSITY || 0}
+                            {a.UNIT || ''}
+                          </td>
+                          <td>{a.TREAT_EFF || 0}</td>
+                          <td>{a.CHEMICAL_NM || ''}</td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           ) : (
-            <p>등록된 구성성분이 없습니다.</p>
+            <p>등록된 배출가스가 없습니다.</p>
           )}
         </MsdsIngredientCompStyled>
       </>

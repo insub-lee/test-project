@@ -12,7 +12,7 @@ class NumberComp extends React.Component {
   handleOnChange = value => {
     const { sagaKey: id, COMP_FIELD, NAME_KOR, CONFIG, changeFormData, changeValidationData } = this.props;
     if (CONFIG.property.isRequired) {
-      changeValidationData(id, COMP_FIELD, value.trim().length > 0, value.trim().length > 0 ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+      changeValidationData(id, COMP_FIELD, !!value, !value ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
   };
@@ -21,16 +21,27 @@ class NumberComp extends React.Component {
     const { CONFIG, colData, readOnly, visible } = this.props;
     return visible ? (
       <>
-        <InputNumber
-          defaultValue={colData}
-          min={0}
-          max={10 ** CONFIG.info.size}
-          placeholder={CONFIG.property.placeholder}
-          onChange={value => this.handleOnChange(value)}
-          readOnly={readOnly || CONFIG.property.readOnly}
-          className={CONFIG.property.className || ''}
-        />
-        {CONFIG && CONFIG.property && CONFIG.property.unit}
+        {readOnly || CONFIG.property.readOnly ? (
+          <>
+            <span>
+              {colData}
+              {CONFIG && CONFIG.property && CONFIG.property.unit}
+            </span>
+          </>
+        ) : (
+          <>
+            <InputNumber
+              defaultValue={colData}
+              min={0}
+              max={10 ** CONFIG.info.size}
+              placeholder={CONFIG.property.placeholder}
+              onChange={value => this.handleOnChange(value)}
+              readOnly={readOnly || CONFIG.property.readOnly}
+              className={CONFIG.property.className || ''}
+            />
+            {CONFIG && CONFIG.property && CONFIG.property.unit}
+          </>
+        )}
       </>
     ) : (
       ''
