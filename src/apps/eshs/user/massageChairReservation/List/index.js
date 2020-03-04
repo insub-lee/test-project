@@ -4,7 +4,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
-import { Table, Row, Col, DatePicker, Checkbox, Alert } from 'antd';
+import { Table, Row, Col, DatePicker, Checkbox } from 'antd';
 import moment from 'moment';
 
 // moment.locale('ko');
