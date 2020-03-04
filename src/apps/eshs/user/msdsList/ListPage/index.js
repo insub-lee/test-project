@@ -27,7 +27,7 @@ class ListPage extends Component {
       initLoading: true,
       isMultiDelete: false,
       isRowNo: false,
-      searchType: '',
+      searchType: 'W.MTRL_NM',
       searchText: '',
       viewModalVisible: false,
       viewTaskSeq: -1,
@@ -207,7 +207,7 @@ class ListPage extends Component {
     changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
   };
 
-  handleModalVisible = () => {
+  searchListModalVisible = () => {
     const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
     changeViewPage('MsdsListSearchList', 3161, -1, 'LIST');
     handleModalVisible();
@@ -302,7 +302,7 @@ class ListPage extends Component {
                                   &nbsp; &nbsp;
                                   <span>구성성분</span>
                                   <Input style={{ width: 150 }} value={selectedRowItemCode} onChange={e => this.handleInputChange(e.target.value)} />
-                                  <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+                                  <Button shape="circle" icon="search" onClick={this.searchListModalVisible} />
                                 </Contents>
                               </td>
                             </tr>
@@ -349,6 +349,7 @@ ListPage.propTypes = {
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
+  handleModalVisible: PropTypes.func,
 };
 
 ListPage.defaultProps = {

@@ -20,19 +20,33 @@ class MsdsMgt extends Component {
     });
   };
 
+  handleModalVisible = () => {
+    const { searchListVisible } = this.state;
+    this.setState({
+      searchListVisible: !searchListVisible,
+    });
+  };
+
   render() {
     const { searchListVisible } = this.state;
     return (
       <>
-        <BizBuilderBase sagaKey="MsdsListMgt" workSeq={3161} viewType="LIST" loadingComplete={this.loadingComplete} CustomListPage={ListPage} />
+        <BizBuilderBase
+          sagaKey="MsdsListMgt"
+          workSeq={3161}
+          viewType="LIST"
+          loadingComplete={this.loadingComplete}
+          CustomListPage={ListPage}
+          handleModalVisible={this.handleModalVisible}
+        />
         <Modal title="MSDS 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           <BizBuilderBase
             sagaKey="MsdsListSearchList"
             workSeq={3161}
             viewType="LIST"
             loadingComplete={this.loadingComplete}
-            handleModalVisible={this.handleModalVisible}
             CustomListPage={SearchListPage}
+            handleModalVisible={this.handleModalVisible}
             listMetaSeq={4141}
           />
         </Modal>
