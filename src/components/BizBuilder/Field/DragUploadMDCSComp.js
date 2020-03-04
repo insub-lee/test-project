@@ -21,7 +21,7 @@ class DragUploadMDCSComp extends Component {
       CONT_SEQ: -1,
       FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
-      DETAIL: colData.DETAIL ? colData.DETAIL : [],
+      DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
     };
     this.setState({ fileInfo: initfiles });
   }
