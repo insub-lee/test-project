@@ -114,7 +114,7 @@ class DragUploadMDCSComp extends Component {
     } = this.state;
 
     return (
-      <>
+      <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
           action="/upload/mdcs"
           // beforeUpload={this.beforeUpload}
@@ -148,7 +148,7 @@ class DragUploadMDCSComp extends Component {
             </div>
           )}
         </Dragger>
-      </>
+      </div>
     );
   }
 }
