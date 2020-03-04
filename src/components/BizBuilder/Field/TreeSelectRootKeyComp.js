@@ -68,26 +68,28 @@ class TreeSelectComp extends Component {
           rootkey,
         )) ||
       [];
-    const categoryData = tempData.length > 0 ? tempData[0] : [];
+    // const categoryData = tempData.length > 0 ? tempData[0] : [];
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer({ ...this.props, searchTreeData: categoryData.children });
+      return searchCompRenderer({ ...this.props, searchTreeData: tempData });
     }
     return visible ? (
       <>
         {colData !== undefined ? (
-          readOnly || CONFIG.property.readOnly ? (
-            <SelectReadComp {...this.props} />
-          ) : (
-            <TreeSelect
-              style={{ width: '100%' }}
-              value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={tempData}
-              onChange={value => this.onChangeHandler(value)}
-              placeholder={placeholder}
-              className={CONFIG.property.className || ''}
-            />
-          )
+          <>
+            {readOnly || CONFIG.property.readOnly ? (
+              <SelectReadComp {...this.props} />
+            ) : (
+              <TreeSelect
+                style={{ width: '100%' }}
+                value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
+                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                treeData={tempData}
+                onChange={value => this.onChangeHandler(value)}
+                placeholder={placeholder}
+                className={CONFIG.property.className || ''}
+              />
+            )}
+          </>
         ) : (
           <TreeSelect style={{ width: '100%' }} value={undefined} placeholder="TreeSelect" className={CONFIG.property.className || ''}></TreeSelect>
         )}

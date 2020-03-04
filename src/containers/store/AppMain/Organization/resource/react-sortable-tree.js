@@ -95,9 +95,9 @@ class ReactSortableTree extends Component {
     this.loadLazyChildren();
     this.search(this.props);
 
-    console.log(`this.props : ${this.props}`);
-    console.log(`this.props : ${this.props}`);
-    console.log(`this.props : ${this.props}`);
+    // console.log(`this.props : ${this.props}`);
+    // console.log(`this.props : ${this.props}`);
+    // console.log(`this.props : ${this.props}`);
 
     // Hook into react-dnd state changes to detect when the drag ends
     // TODO: This is very brittle, so it needs to be replaced if react-dnd

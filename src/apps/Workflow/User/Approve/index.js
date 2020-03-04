@@ -7,7 +7,7 @@ class Approve extends Component {
   componentDidMount() {}
 
   render() {
-    return <ApproveBase id={`draftList`} component={List} />
+    return <ApproveBase id={`approveList`} component={List} />
   }
 }
 
