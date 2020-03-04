@@ -61,17 +61,9 @@ const StructureDesign = ({
   viewField,
   hiddenField,
   compList,
+  classNameList,
 }) => {
-  const [isShowCompConfigModal, setIsShowCompConfigModal] = useState(false);
-  const [compConfigType, setCompConfigType] = useState('');
-  const [compConfigProps, setCompConfigProps] = useState({});
-  const [showModalType, setShowModalType] = useState('COMP');
-  const setCompConfigModal = (cFlag, cType, cProp, modalType) => {
-    setIsShowCompConfigModal(cFlag);
-    setCompConfigType(cType);
-    setCompConfigProps(cProp);
-    setShowModalType(modalType);
-  };
+  const [compConfigModal, setCompConfigModal] = useState([false, '', {}, 'COMP']);
   return (
     <div key={viewField}>
       <StyledActionBar>
@@ -149,7 +141,7 @@ const StructureDesign = ({
                                   groupType={group.type}
                                   action={action}
                                   compPoolList={compPoolList}
-                                  setCompConfigModal={setCompConfigModal}
+                                  setCompConfigModal={(cFlag, cType, cProp, modalType) => setCompConfigModal([cFlag, cType, cProp, modalType])}
                                 />
                               </Contents>
                             </ContextMenuTrigger>
@@ -192,7 +184,7 @@ const StructureDesign = ({
                         changeCompData={action.changeCompData}
                         changeViewCompData={action.changeViewCompData}
                         viewType={viewType}
-                        setCompConfigModal={setCompConfigModal}
+                        setCompConfigModal={(cFlag, cType, cProp, modalType) => setCompConfigModal([cFlag, cType, cProp, modalType])}
                       />
                     ))}
                   </Col>
@@ -287,29 +279,30 @@ const StructureDesign = ({
         centered
         destroyOnClose
         footer={null}
-        visible={isShowCompConfigModal}
+        visible={compConfigModal[0]}
         bodyStyle={{ padding: '1px' }}
-        onCancel={() => setCompConfigModal(false, '', {}, 'COMP')}
+        onCancel={() => setCompConfigModal([false, '', {}, 'COMP'])}
       >
-        {showModalType === 'COMP' ? (
+        {compConfigModal[3] === 'COMP' ? (
           <CompModal
-            configType={compConfigType}
-            configProps={compConfigProps}
+            configType={compConfigModal[1]}
+            configProps={compConfigModal[2]}
             action={action}
             compPoolList={compPoolList}
             compGroupList={compGroupList}
             groups={groups}
-            onCloseModal={() => setCompConfigModal(false, '', {}, 'COMP')}
+            classNameList={classNameList}
+            onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}
           />
         ) : (
           <HiddenModal
-            configType={compConfigType}
-            configProps={compConfigProps}
+            configType={compConfigModal[1]}
+            configProps={compConfigModal[2]}
             action={action}
             compPoolList={compPoolList}
             compGroupList={compGroupList}
             compList={compList}
-            onCloseModal={() => setCompConfigModal(false, '', {}, 'COMP')}
+            onCloseModal={() => setCompConfigModal([false, '', {}, 'COMP'])}
             hiddenField={hiddenField}
           />
         )}

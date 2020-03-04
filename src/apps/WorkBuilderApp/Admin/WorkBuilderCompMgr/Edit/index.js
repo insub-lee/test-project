@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { getTreeFromFlatData } from 'react-sortable-tree';
+import { debounce } from 'lodash';
 
 import FroalaEditor from 'components/FormStuff/RichTextEditor/FroalaEditor';
 import { froalaEditorConfig } from 'components/FormStuff/config';
@@ -20,9 +21,13 @@ const AntdTextArea = StyledTextarea(TextArea);
 
 const { Option } = Select;
 class Edit extends Component {
-  state = {
-    colGroupList: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      colGroupList: [],
+    };
+    this.changeFormData = debounce(this.changeFormData, 500);
+  }
 
   getTreeData = flatData =>
     getTreeFromFlatData({
@@ -43,6 +48,7 @@ class Edit extends Component {
         title: item.COL_GROUP_NAME,
         value: item.COL_GROUP_IDX,
         key: item.COL_GROUP_IDX,
+        selectable: item.COL_GROUP_PIDX > 0,
       }));
 
     const colGroupList = this.getTreeData(aryColList);
@@ -50,6 +56,8 @@ class Edit extends Component {
       colGroupList,
     });
   }
+
+  changeFormData = (id, key, val) => this.props.changeFormData(id, key, val);
 
   changeGroupIdx = val => {
     const { sagaKey: id, formData, changeFormData } = this.props;
@@ -109,40 +117,40 @@ class Edit extends Component {
             <AntdInput
               name="COMP_NAME"
               placeholder="컴포넌트 명"
-              value={formData.COMP_NAME !== null ? formData.COMP_NAME : undefined}
-              onChange={e => this.props.changeFormData(id, 'COMP_NAME', e.target.value)}
+              defaultValue={formData.COMP_NAME !== null ? formData.COMP_NAME : undefined}
+              onChange={e => this.changeFormData(id, 'COMP_NAME', e.target.value)}
             />
           </Descriptions.Item>
           <Descriptions.Item label="컴포넌트 TAG" span={3}>
             <AntdInput
               name="COMP_NAME"
               placeholder="컴포넌트 TAG"
-              value={formData.COMP_TAG !== null ? formData.COMP_TAG : undefined}
-              onChange={e => this.props.changeFormData(id, 'COMP_TAG', e.target.value)}
+              defaultValue={formData.COMP_TAG !== null ? formData.COMP_TAG : undefined}
+              onChange={e => this.changeFormData(id, 'COMP_TAG', e.target.value)}
             />
           </Descriptions.Item>
           <Descriptions.Item label="컴포넌트 경로" span={3}>
             <AntdInput
               name="COMP_SRC"
               placeholder="컴포넌트 경로"
-              value={formData.COMP_SRC !== null ? formData.COMP_SRC : undefined}
-              onChange={e => this.props.changeFormData(id, 'COMP_SRC', e.target.value)}
+              defaultValue={formData.COMP_SRC !== null ? formData.COMP_SRC : undefined}
+              onChange={e => this.changeFormData(id, 'COMP_SRC', e.target.value)}
             />
           </Descriptions.Item>
           <Descriptions.Item label="컴포넌트 설정경로" span={3}>
             <AntdInput
               name="COMP_SETTING_SRC"
               placeholder="컴포넌트 설정경로"
-              value={formData.COMP_SETTING_SRC !== null ? formData.COMP_SETTING_SRC : undefined}
-              onChange={e => this.props.changeFormData(id, 'COMP_SETTING_SRC', e.target.value)}
+              defaultValue={formData.COMP_SETTING_SRC !== null ? formData.COMP_SETTING_SRC : undefined}
+              onChange={e => this.changeFormData(id, 'COMP_SETTING_SRC', e.target.value)}
             />
           </Descriptions.Item>
           <Descriptions.Item label="컴포넌트 설정" span={3}>
             <AntdTextArea
               name="COMP_CONFIG"
               placeholder="컴포넌트 설정"
-              value={formData.COMP_CONFIG !== null ? formData.COMP_CONFIG : undefined}
-              onChange={e => this.props.changeFormData(id, 'COMP_CONFIG', e.target.value)}
+              defaultValue={formData.COMP_CONFIG !== null ? formData.COMP_CONFIG : undefined}
+              onChange={e => this.changeFormData(id, 'COMP_CONFIG', e.target.value)}
             />
           </Descriptions.Item>
           <Descriptions.Item label="컴포넌트 설명" span={3}>

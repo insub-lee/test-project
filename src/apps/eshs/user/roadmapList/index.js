@@ -4,11 +4,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import List from './List';
 
-class roadmapList extends Component {
-  render() {
-    return <BizBuilderBase workSeq={2041} CustomListPage={List} />;
-  }
-}
+const roadmapList = () => <BizBuilderBase sagaKey="roadmapList" viewType="LIST" workSeq={2401} CustomListPage={List} />;
 
 roadmapList.propTypes = {};
 

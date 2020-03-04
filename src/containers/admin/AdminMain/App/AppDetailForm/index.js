@@ -277,14 +277,14 @@ class AppDetailForm extends React.Component {
           <h4>{intlObj.get(messages.recommApp)}</h4>
           <div className="appColWrapper">{loopApp(this.props.recomAppList)}</div>
 
-          <h3 className="appInfo">{intlObj.get(messages.permissions)}</h3>
+          {/* <h3 className="appInfo">{intlObj.get(messages.permissions)}</h3>
           <h4>
             {intlObj.get(messages.authApp)} {intlObj.get(messages.availability)}
           </h4>
           <p className="textValue">
             {setMyAppDetail.SEC_REQ_YN === 'Y' ? intlObj.get(messages.authAppYes) : ''}
             {setMyAppDetail.SEC_REQ_YN === 'N' ? intlObj.get(messages.authAppNo) : ''}
-          </p>
+          </p> */}
         </StyleAppDetailForm>
       </div>
     );

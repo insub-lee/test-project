@@ -4,7 +4,7 @@ import { Button, Dropdown, Menu, Icon } from 'antd';
 
 const DropDownMenu = ({ menus, title, onClick, selected, selectedKey }) => {
   const selectedMenu = selected ? menus.find(({ key }) => key === selectedKey) : undefined;
-  const subTitle = selectedMenu ? selectedMenu.title : '';
+  const subTitle = selectedMenu ? selectedMenu.key : '';
   return (
     <Dropdown
       overlay={

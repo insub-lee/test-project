@@ -179,6 +179,7 @@ const initialState = fromJS({
   selectedField: {},
   sysMetaList: [],
   isLoadingContent: true,
+  classNameList: [],
 });
 
 const initialSearchGroup = fromJS({
@@ -396,27 +397,45 @@ const reducer = (state = initialState, action) => {
       if (selectedKeys.length > 0 && selectedKeys.findIndex(iNode => iNode === '999-0-0') === -1) {
         return addCompItem(state, comp, selectedKeys);
       }
-      return state.set('selectedComp', comp);
+      return state.set('selectedComp', fromJS(comp));
     }
     case actionTypes.CHANGE_COMPDATA_REDUCER: {
       const { groupIndex, rowIndex, colIndex, key, value } = action;
-      const compData = state.get('compData');
+      const setValue = typeof value === 'object' ? fromJS(value) : value;
+      let compData = state.get('compData');
       const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
       const compIdx = compData.findIndex(node => node.getIn(['CONFIG', 'property', 'layerIdx', layerIdxKey]) === `${groupIndex}-${rowIndex}-${colIndex}`);
       if (compIdx > -1) {
         let compItem = compData.get(compIdx);
-        compItem = compItem.set(key, value);
+        compItem = compItem.set(key, setValue);
+        const layerIdxs = compItem.getIn(['CONFIG', 'property', 'layerIdx']);
+        const keySet = Object.keys(layerIdxs.toJS());
+        if (keySet.length > 0) {
+          keySet.forEach(layerKey => {
+            if (layerKey !== layerIdxKey) {
+              const viewIdx = compData.findIndex(iNode => iNode.get('COMP_TYPE') === 'VIEW' && iNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === layerKey);
+              if (viewIdx > -1) {
+                const keys = layerIdxs.get(layerKey).split('-');
+                compData = compData.setIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key], setValue);
+              }
+            }
+          });
+          state = state.set('compData', compData);
+        }
         return state
           .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem)
           .setIn(['compData', compIdx], compItem);
       }
       let compItem = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp']);
-      compItem = compItem.set(key, value);
+      compItem = compItem.set(key, setValue);
       return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'], compItem);
     }
     case actionTypes.CHANGE_VIEW_COMPDATA_REDUCER: {
       const { groupIndex, rowIndex, colIndex, key, value } = action;
-      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', key], value);
+      return state.setIn(
+        ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', key],
+        typeof value === 'object' ? fromJS(value) : value,
+      );
     }
     case actionTypes.SET_INIT_DATA_REDUCER: {
       const { workSeq, viewType } = action;
@@ -860,7 +879,7 @@ const reducer = (state = initialState, action) => {
 
       const canRemoveRow = checkCanRemoveRow({ groupIndex, rowIndex, colIndex }, state.getIn(condition).toJS());
       if (canRemoveRow) {
-        const rowSpanSize = state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols', colIndex, 'rowSpan']);
+        const rowSpanSize = state.getIn([...condition, groupIndex, 'rows', rowIndex, 'cols', colIndex, 'rowSpan']) || 1;
         return state
           .updateIn([...condition, groupIndex, 'rows'], rows => {
             let i = 0;
@@ -1136,13 +1155,19 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.CHANGE_COMP_FIELD_DATA_REDUCER: {
       const { compKey, key, value } = action;
+      const setValue = typeof value === 'object' ? fromJS(value) : value;
       const compData = state.get('compData').toJS();
       const compIdx = compData.findIndex(iNode => iNode.CONFIG.property.compKey === compKey);
-      return state.setIn(['compData', compIdx, key], value);
+      return state.setIn(['compData', compIdx, key], setValue);
     }
     case actionTypes.CHANGE_HIDDEN_COMP_DATA_REDUCER: {
       const { compIdx, key, value } = action;
-      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField', compIdx, key], value);
+      const setValue = typeof value === 'object' ? fromJS(value) : value;
+      return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField', compIdx, key], setValue);
+    }
+    case actionTypes.SET_CLASSNAMELIST_REDUCER: {
+      const { list } = action;
+      return state.set('classNameList', fromJS(list));
     }
     default:
       return state;
@@ -1266,7 +1291,7 @@ const addHiddenComp = (state, compItem) => {
 const addHiddenCompItem = (state, selectedComp) => {
   const { COMP_TAG, COMP_SRC, COMP_SETTING_SRC, COL_DB_TYPE, COL_GROUP_IDX, COMP_CONFIG, COMP_NAME, COL_TYPE_IDX } = selectedComp;
   if (COL_TYPE_IDX !== VIEW_TYPE_IDX) {
-    const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
+    // const hiddenField = state.getIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField']);
     let compData = state.get('compData');
     const workSeq = state.getIn(['workInfo', 'workSeq']);
     const COMP_TYPE = 'FIELD';
@@ -1299,7 +1324,7 @@ const addHiddenCompItem = (state, selectedComp) => {
       },
     });
     compData = compData.push(compItem);
-    return state.setIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField.push(compItem)).set('compData', compData);
+    return state.updateIn(['viewData', 'CONFIG', 'property', 'layer', 'hiddenField'], hiddenField => hiddenField.push(compItem)).set('compData', compData);
   }
   return state;
 };

@@ -9,12 +9,10 @@ class apiSetting extends React.Component {
     const { workInfo } = info;
     const optList = workInfo.OPT_INFO;
     const nOptList = optList.map(opt => (opt.OPT_SEQ === optSeq ? { ...opt, OPT_VALUE: JSON.stringify(val) } : opt));
-    console.debug(val, nOptList);
     setChangeValue('workInfo', 'OPT_INFO', nOptList);
   };
 
   render() {
-    console.debug('settings', this.props);
     const { info, optSeq, optConfig } = this.props;
     const { apiList } = info;
     return (
@@ -28,7 +26,7 @@ class apiSetting extends React.Component {
         {apiList &&
           apiList.map(node => (
             <Option key={`info_api_use_${node.API_SEQ}`} value={node.API_SEQ}>
-              {node.API_NAME}
+              {`${node.API_NAME}(${node.CALL_TYPE === 'B' ? 'Before' : 'After'})`}
             </Option>
           ))}
       </Select>

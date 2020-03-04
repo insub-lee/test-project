@@ -1,5 +1,4 @@
 import * as actionTypes from './constants';
-import CompItem from './CompItem/index';
 
 export const openJsonCodeEditor = () => ({
   type: actionTypes.OPEN_JSON_CODE_EDITOR,
@@ -295,4 +294,9 @@ export const changeHiddenCompDatByReducer = (compIdx, key, value) => ({
   compIdx,
   key,
   value,
+});
+
+export const setClassNameListByReducer = list => ({
+  type: actionTypes.SET_CLASSNAMELIST_REDUCER,
+  list,
 });

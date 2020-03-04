@@ -29,13 +29,14 @@ export const getExtraApiData = (id, apiArr, callback) => ({
   callback,
 });
 
-export const submitExtraHandler = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
+export const submitExtraHandler = (id, httpMethod, apiUrl, submitData, callbackFunc, etcData) => ({
   type: `${actionTypes.SUBMIT_EXTRA}_${id}`,
   id,
   httpMethod,
   apiUrl,
   submitData,
   callbackFunc,
+  etcData,
 });
 
 export const setExtraApiData = (id, apiKey, response) => ({
