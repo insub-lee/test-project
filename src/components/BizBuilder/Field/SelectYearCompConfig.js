@@ -12,18 +12,20 @@ function SelectYearCompConfig(props) {
   const [placeHolderValue, setPlaceHolderValue, apiKey, setApiKey] = useState('');
   const [defaultFlag, setDefaultFlag] = useState(2);
   const [yearRange, setYearRange] = useState([]);
-  const [reversedYearRange, setReversedYearRange] = useState([]);
+  const currentYear = new Date().getFullYear();
 
   useEffect(() => {
-    const { getCallDataHandler, sagaKey: id, apiArray } = props;
+    const { getCallDataHandler, sagaKey: id, apiArray, configInfo } = props;
+    const { minYear, maxYear, defaultYear } = configInfo.property;
     getCallDataHandler(id, apiArray);
 
     const years = [];
-    for (let i = 1990; i < 2031; i++) {
+
+    // foundation Year of MagnaChip 2004
+    for (let i = 2004; i <= currentYear; i++) {
       years.push(String(i));
     }
     setYearRange([...years]);
-    setReversedYearRange([..._.reverse(years)]);
   }, []);
 
   const handleChangeViewCompData = (key, value) => {
@@ -31,6 +33,14 @@ function SelectYearCompConfig(props) {
     configInfo.property[key] = value;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
+
+  function maxYearRange(count) {
+    const years = [];
+    for (let i = currentYear; i < currentYear + count; i++) {
+      years.push(String(i));
+    }
+    return years;
+  }
 
   const debouncedHandleChangeViewCompData = _.debounce(handleChangeViewCompData, 500);
 
@@ -47,8 +57,8 @@ function SelectYearCompConfig(props) {
     <div>
       <Row>
         <div>
-          <Col span={6}>defaultYear 설정 (미사용 시 입력X)</Col>
-          <Col span={18}>
+          <Col span={6}>초기 년도 설정 </Col>
+          <Col span={16} push={2}>
             <Select
               style={{ width: '100%' }}
               placeholder="초기 년도 입력"
@@ -71,11 +81,11 @@ function SelectYearCompConfig(props) {
       </Row>
       <Row>
         <div>
-          <Col span={6}>최소 년도 선택</Col>
-          <Col span={18}>
+          <Col span={6}>최소 선택가능 년도</Col>
+          <Col span={16} push={2}>
             <Select
               style={{ width: '100%' }}
-              placeholder="최소"
+              placeholder="최소 년도"
               defaultValue={minYear || null}
               onChange={value => {
                 debouncedHandleChangeViewCompData('minYear', value);
@@ -92,21 +102,24 @@ function SelectYearCompConfig(props) {
       </Row>
       <Row>
         <div>
-          <Col span={6}>최대 년도 선택</Col>
-          <Col span={18}>
+          <Col span={6}>최대 선택가능 연도 </Col>
+          <Col span={16} push={2}>
             <Select
               style={{ width: '100%' }}
-              placeholder="최대"
+              placeholder="최대 년도"
               defaultValue={maxYear || null}
               onChange={value => {
                 debouncedHandleChangeViewCompData('maxYear', value);
               }}
             >
-              {reversedYearRange.map(year => (
-                <Option key={year} value={year}>
-                  {year}
-                </Option>
-              ))}
+              {maxYearRange(5).map(year => {
+                year = String(year);
+                return (
+                  <Option key={year} value={year}>
+                    {year}
+                  </Option>
+                );
+              })}
             </Select>
           </Col>
         </div>
@@ -140,8 +153,8 @@ SelectYearCompConfig.defaultProps = {
       COMP_SRC: '',
       compKey: '',
       layerIdx: {},
-      maxYear: String(new Date().getFullYear()),
-      minYear: String(new Date().getFullYear()),
+      maxYear: '',
+      minYear: '',
       defaultYear: String(new Date().getFullYear()),
     },
   },
