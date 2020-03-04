@@ -8,7 +8,7 @@ class MassageChairReservation extends Component {
   componentDidMount() {}
 
   render() {
-    return <BizBuilderBase sagaKey="MassageChairReservation" workSeq={4201} viewType="LIST" CustomListPage={List} CustomInputPage={Input} />;
+    return <BizBuilderBase sagaKey="MassageChairReservation" workSeq={4201} viewType="LIST" CustomListPage={List} />;
   }
 }
 MassageChairReservation.propTypes = {};
