@@ -45,7 +45,6 @@ function FireExtinguisher(props) {
       buttonCategory={BUTTON_CATEGORY.FIRE_EXTINGUISHER_MAIN}
       isSearched={false}
       customValues={customValues}
-      defaultValueForSelectYearComp={true}
     />
   );
 }
