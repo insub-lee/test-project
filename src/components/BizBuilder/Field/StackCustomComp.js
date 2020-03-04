@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input } from 'antd';
+import { Input, InputNumber } from 'antd';
 import TableTypeSelector from '../../TableTypeSelector';
 import MsdsIngredientCompStyled from '../styled/compStyled/MsdsIngredientCompStyled';
 
@@ -9,37 +9,38 @@ class MsdsIngredientComp extends React.Component {
     super(props);
     this.state = {
       apiList: [],
-      modalTableColumns: [
+      leftTableColumns: [
         { dataIndex: 'GAS_NM', title: 'Gas 명', search: true, width: 150 },
         { dataIndex: 'GAS_WEIGHT', title: '분자량', search: true, width: 90 },
         { dataIndex: 'PERMISSION_DENSITY', title: '법적배출허용농도', search: true, width: 200 },
         { dataIndex: 'UNIT', title: '단위', search: true, width: 150 },
       ],
+      rightTableColumns: [{ dataIndex: 'GAS_NM', title: 'Gas 명', search: true, width: 150 }],
       applyList: [],
     };
   }
 
   componentDidMount() {
-    const { getExtraApiData, sagaKey: id, viewPageData } = this.props;
+    const { getExtraApiData, sagaKey: id, viewPageData, fromData } = this.props;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     const apiTaskSeq = (viewPageData && viewPageData.taskSeq) || 0;
-    let apiValue = [];
-    if (viewType === 'INPUT') {
-      apiValue = [
-        {
-          key: 'gasType',
-          url: '/api/eshs/v1/common/eshsgastype',
-          type: 'GET',
-        },
-        viewType === 'MODIFY'
-          ? {
-              key: 'applyList',
-              url: `/api/eshs/v1/common/eshsstackcd?TASK_SEQ=${apiTaskSeq}`,
-              type: 'GET',
-            }
-          : '',
-      ];
-    }
+    // const apiStackCd = (fromData && fromData.STACK_CD) || '';
+    const apiValue = [
+      {
+        key: 'gasType',
+        url: '/api/eshs/v1/common/eshsgastype',
+        type: 'GET',
+      },
+      viewType === 'MODIFY'
+        ? {
+            key: 'applyList',
+            url: `/api/eshs/v1/common/eshsstackcd?PARENT_TASK_SEQ=${apiTaskSeq}`,
+            // url: `/api/eshs/v1/common/eshsstackcd?STACK_CD=${apiStackCd}`,
+            type: 'GET',
+          }
+        : '',
+    ];
+
     getExtraApiData(id, apiValue, this.setList);
   }
 
@@ -70,7 +71,7 @@ class MsdsIngredientComp extends React.Component {
   handleInputOnChange = (e, data) => {
     const { sagaKey: id, changeFormData } = this.props;
     const { applyList } = this.state;
-    const changeList = applyList.map(a => (a.STACK_CD === data.STACK_CD && a.GAS_CD === data.GAS_CD ? { ...a, CHEMICAL_NM: e.target.value } : a));
+    const changeList = applyList.map(a => (a.PARENT_TASK_SEQ === data.PARENT_TASK_SEQ ? { ...a, CHEMICAL_NM: e.target.value } : a));
     this.setState(
       {
         applyList: changeList,
@@ -81,28 +82,28 @@ class MsdsIngredientComp extends React.Component {
 
   render() {
     const { CONFIG, visible, isSearch, searchCompRenderer, viewPageData } = this.props;
-    const { apiList, modalTableColumns, applyList } = this.state;
+    const { apiList, leftTableColumns, rightTableColumns, applyList } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
 
     return visible ? (
       <>
         {viewType === 'INPUT' || viewType === 'MODIFY' ? (
           <TableTypeSelector
-            leftTableColumns={modalTableColumns}
-            rightTableColumns={modalTableColumns}
+            leftTableColumns={leftTableColumns}
+            rightTableColumns={rightTableColumns}
             apiList={apiList}
             applyList={applyList}
             handleApply={this.handleApply}
             btnText="배출가스 등록"
             modalTitle="배출가스 검색"
+            rowKey="GAS_CD"
           />
         ) : (
           ''
         )}
         <MsdsIngredientCompStyled>
-          <p>구성성분</p>
           {applyList.length ? (
-            <table className="msdsIngreDientTable">
+            <table className="msdsIngreDientTable" style={{ width: '100%', textAlign: 'center' }}>
               <thead>
                 <tr>
                   <td>가스종류</td>
@@ -115,17 +116,29 @@ class MsdsIngredientComp extends React.Component {
                 {applyList.map((a, index) => (
                   <tr key={index}>
                     <td>{a.GAS_NM}</td>
-                    <td>{a.TREART_DENSITY}</td>
-                    <td>{a.TREAT_EFF}</td>
-                    <td>
-                      {viewType === 'INPUT' || viewType === 'MODIFY' ? (
-                        <p>
-                          <Input style={{ width: '50px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.CHEMICAL_NM || ''} />
-                        </p>
-                      ) : (
-                        <span>{a.RATIO || ''}</span>
-                      )}
-                    </td>
+                    {viewType === 'INPUT' || viewType === 'MODIFY' ? (
+                      <>
+                        <td>
+                          <InputNumber defaultValue={a.TREAT_DENSITY || 0} min={0} max={10} onChange={e => this.handleInputOnChange(e, a)} />
+                          {a.TREAT_DENSITY_UNIT || ''}
+                        </td>
+                        <td>
+                          <InputNumber defaultValue={a.TREAT_EFF || 0} min={0} max={10} onChange={e => this.handleInputOnChange(e, a)} />
+                        </td>
+                        <td>
+                          <Input style={{ width: '150px' }} onChange={e => this.handleInputOnChange(e, a)} value={a.CHEMICAL_NM || ''} />
+                        </td>
+                      </>
+                    ) : (
+                      <>
+                        <td>
+                          {a.TREAT_DENSITY || 0}
+                          {a.TREAT_DENSITY_UNIT || ''}
+                        </td>
+                        <td>{a.TREAT_EFF || 0}</td>
+                        <td>{a.CHEMICAL_NM || ''}</td>
+                      </>
+                    )}
                   </tr>
                 ))}
               </tbody>
