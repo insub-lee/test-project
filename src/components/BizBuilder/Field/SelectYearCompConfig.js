@@ -14,16 +14,9 @@ function SelectYearCompConfig(props) {
   const [yearRange, setYearRange] = useState([]);
   const currentYear = new Date().getFullYear();
 
-  function maxYearRange(count) {
-    const years = [];
-    for (let i = currentYear; i < currentYear + count; i++) {
-      years.push(String(i));
-    }
-    return years;
-  }
-
   useEffect(() => {
-    const { getCallDataHandler, sagaKey: id, apiArray } = props;
+    const { getCallDataHandler, sagaKey: id, apiArray, configInfo } = props;
+    const { minYear, maxYear, defaultYear } = configInfo.property;
     getCallDataHandler(id, apiArray);
 
     const years = [];
@@ -41,6 +34,14 @@ function SelectYearCompConfig(props) {
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
 
+  function maxYearRange(count) {
+    const years = [];
+    for (let i = currentYear; i < currentYear + count; i++) {
+      years.push(String(i));
+    }
+    return years;
+  }
+
   const debouncedHandleChangeViewCompData = _.debounce(handleChangeViewCompData, 500);
 
   const {
@@ -56,8 +57,8 @@ function SelectYearCompConfig(props) {
     <div>
       <Row>
         <div>
-          <Col span={6}>defaultYear 설정 </Col>
-          <Col span={12}>
+          <Col span={6}>초기 년도 설정 </Col>
+          <Col span={16} push={2}>
             <Select
               style={{ width: '100%' }}
               placeholder="초기 년도 입력"
@@ -80,8 +81,8 @@ function SelectYearCompConfig(props) {
       </Row>
       <Row>
         <div>
-          <Col span={6}>최소 년도 선택</Col>
-          <Col span={14}>
+          <Col span={6}>최소 선택가능 년도</Col>
+          <Col span={16} push={2}>
             <Select
               style={{ width: '100%' }}
               placeholder="최소 년도"
@@ -102,7 +103,7 @@ function SelectYearCompConfig(props) {
       <Row>
         <div>
           <Col span={6}>최대 선택가능 연도 </Col>
-          <Col span={16}>
+          <Col span={16} push={2}>
             <Select
               style={{ width: '100%' }}
               placeholder="최대 년도"
@@ -152,8 +153,8 @@ SelectYearCompConfig.defaultProps = {
       COMP_SRC: '',
       compKey: '',
       layerIdx: {},
-      maxYear: String(new Date().getFullYear()),
-      minYear: String(new Date().getFullYear()),
+      maxYear: '',
+      minYear: '',
       defaultYear: String(new Date().getFullYear()),
     },
   },
