@@ -100,7 +100,8 @@ class StdInput extends Component {
     if (typeof changeViewPage === 'function') {
       // changeViewPage(id, workSeq, taskSeq, 'VIEW');
       // page 이동
-      redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
+      // redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
+      redirectUrl(sagaKey, '/apps/Workflow/User/Draft');
     }
   };
 
