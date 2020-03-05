@@ -13,7 +13,6 @@ class List extends Component {
     super(props);
     this.state = {
       checkedIndex: '',
-      checkedTime: '',
     };
   }
 
@@ -55,7 +54,7 @@ class List extends Component {
             record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00' ? (
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
-                checked={this.props.formData.checkedIndex !== '' && this.props.formData.checkedIndex === index}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
                 disabled={this.props.formData.gender !== 'm'}
               ></Checkbox>
             ) : (
@@ -70,7 +69,7 @@ class List extends Component {
             record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00' ? (
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
-                checked={this.props.formData.checkedIndex !== '' && this.props.formData.checkedIndex === index}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
                 disabled={this.props.formData.gender !== 'f'}
               ></Checkbox>
             ) : (
@@ -81,22 +80,19 @@ class List extends Component {
     },
   ];
 
-  componentDidMount() {}
-
   handleOnCheck = (e, index, record) => {
     if (e.target.checked) {
       this.setState(
         {
           checkedIndex: index,
-          checkedTime: moment(record.time.substring(0, 5), 'HH:mm').format('HHmm'),
         },
         this.makeFormData(index, moment(record.time.substring(0, 5), 'HH:mm').format('HHmm')),
       );
+    } else {
+      this.setState({
+        checkedIndex: '',
+      });
     }
-    this.setState({
-      checkedIndex: '',
-      checkedTime: '',
-    });
   };
 
   makeFormData = (index, time) => {
@@ -107,7 +103,6 @@ class List extends Component {
 
   render() {
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
-    console.debug('@@LIST@@', this.state);
     return (
       <div>
         <Input

@@ -125,7 +125,7 @@ class List extends Component {
     });
   };
 
-  handleDisabledMonth = current => {
+  disabledMonth = current => {
     const month = this.state.startMonth || moment().format('YMM');
     return (
       (current.format('YMM') &&
@@ -176,7 +176,7 @@ class List extends Component {
               <MonthPicker
                 disabled={isDisabled}
                 value={endMonth}
-                disabledDate={this.handleDisabledMonth}
+                disabledDate={this.disabledMonth}
                 onChange={this.handleDateChange}
                 placeholder={endPlaceholder}
                 style={{ marginRight: '10px', marginLeft: '5px' }}

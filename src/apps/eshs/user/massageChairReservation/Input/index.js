@@ -49,7 +49,6 @@ class Input extends Component {
     if (extraApiData.getUserInfo) {
       if (prevState.userInfo !== extraApiData.getUserInfo) {
         changeFormData(id, 'gender', extraApiData.getUserInfo.userInfo.gender);
-        console.debug(extraApiData.getUserInfo.userInfo.gender);
         return { userInfo: extraApiData.getUserInfo.userInfo };
       }
     }
@@ -63,6 +62,11 @@ class Input extends Component {
         .format('YYYYMMDD') ||
     moment(current).format('YYYYMMDD') ===
       moment(current)
+        .endOf('week')
+        .format('YYYYMMDD') ||
+    moment(current).format('YYYYMMDD') >
+      moment(this.state.selectedDate)
+        .add(1, 'week')
         .endOf('week')
         .format('YYYYMMDD');
 
@@ -86,10 +90,12 @@ class Input extends Component {
   };
 
   handleButtonClick = () => {
-    const { checkedIndex, checkedTime, selectedDate, userInfo } = this.state;
-    console.debug(checkedTime, selectedDate);
+    // formData 체크해서 시간 비었으면 저장 안하게
+    const { selectedDate, userInfo } = this.state;
+    const { formData } = this.props;
+    console.debug(formData.checkedIndex);
     const { sagaKey: id, changeFormData, saveTask } = this.props;
-    if (checkedIndex === '') {
+    if (formData.checkedIndex === undefined) {
       return;
     }
 
@@ -124,7 +130,6 @@ class Input extends Component {
 
   render() {
     const { userInfo } = this.state;
-    console.debug(this.props.formData);
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -166,6 +171,7 @@ Input.propTypes = {
   extraApiData: PropTypes.object,
   changeFormData: PropTypes.func,
   saveTask: PropTypes.string,
+  formData: PropTypes.object,
 };
 
 export default Input;
