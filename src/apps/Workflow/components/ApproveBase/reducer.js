@@ -2,8 +2,9 @@ import { fromJS } from 'immutable';
 import * as actionTypes from './constants';
 
 const initialState = fromJS({
-  searchType: '',
   approveList: [],
+  unApproveList: [],
+  draftList: [],
   selectedRow: {},
   viewVisible: false,
   opinionVisible: false,
@@ -12,19 +13,29 @@ const initialState = fromJS({
 
 const appReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.GET_APPROVE_LIST: {
-      const { payload } = action;
-      return state.set('searchType', payload.searchType);
-    }
     case actionTypes.SET_APPROVE_LIST: {
       const { list } = action;
+      return state.set('approveList', fromJS(list));
+    }
+    case actionTypes.SET_UNAPPROVE_LIST: {
+      const { list } = action;
+      return state.set('unApproveList', fromJS(list));
+    }
+    case actionTypes.SET_DRAFT_LIST: {
+      const { list } = action;
+      return state.set('draftList', fromJS(list));
+    }
+    case actionTypes.SET_PARTIAL_INIT: {
       return state
-        .set('approveList', fromJS(list))
         .set('viewVisible', false)
         .set('opinionVisible', false)
         .set('selectedRow', fromJS({}))
         .set('opinion', '');
     }
+
+
+
+
     case actionTypes.SET_SELECTED_ROW: {
       const { row } = action;
       console.debug(row);

@@ -37,7 +37,7 @@ class MsdsMgt extends Component {
         <BizBuilderBase
           sagaKey="MsdsMgt"
           workSeq={3161}
-          viewType="LIST"
+          viewType="INPUT"
           loadingComplete={this.loadingComplete}
           CustomListPage={ListPage}
           CustomInputPage={InputPage}

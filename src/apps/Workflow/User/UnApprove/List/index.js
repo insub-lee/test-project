@@ -6,16 +6,15 @@ import moment from 'moment';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 
-import ApproveView from '../ApproveView';
-import MdcsAppvView from '../MdcsAppvView';
+import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
+import MdcsAppvView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView';
 
 const AntdTable = StyledAntdTable(Table);
 const ModalWrapper = StyledModalWrapper(Modal);
 
 class UnApproveList extends Component {
   componentDidMount() {
-    // const { category, getApproveList } = this.props;
-    // getApproveList({ searchType: category });
+    this.props.getUnApproveList();
   }
 
   getTableColumns = () => [
@@ -70,7 +69,7 @@ class UnApproveList extends Component {
   };
 
   render() {
-    const { approveList, selectedRow } = this.props;
+    const { unApproveList, selectedRow } = this.props;
     console.debug(this.props);
     return (
       <div>
@@ -81,7 +80,7 @@ class UnApproveList extends Component {
         </div>
         <AntdTable
           columns={this.getTableColumns()}
-          dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
+          dataSource={unApproveList.map(item => ({ ...item, key: `unApproveList_${item.RNUM}` }))}
           onRow={(record, rowIndex) => ({
             onClick: e => this.onRowClick(record, rowIndex, e),
           })}
@@ -96,17 +95,21 @@ class UnApproveList extends Component {
 }
 
 UnApproveList.propTypes = {
-  category: PropTypes.string,
-  approveList: PropTypes.array,
-  getApproveList: PropTypes.func,
+  unApproveList: PropTypes.array,
+  getUnApproveList: PropTypes.func,
+
+
+
   selectedRow: PropTypes.object,
   setSelectedRow: PropTypes.func,
   setViewVisible: PropTypes.func,
 };
 
 UnApproveList.defaultProps = {
-  category: 'draft',
-  approveList: [],
+  unApproveList: [],
+  getUnApproveList: () => {},
+
+
   selectedRow: {},
 };
 

@@ -26,12 +26,6 @@ class ViewPage extends Component {
     }
   }
 
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
-
   render = () => {
     const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId, deleteTask } = this.props;
 
@@ -55,25 +49,7 @@ class ViewPage extends Component {
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-            <div className="alignRight">
-              <Popconfirm
-                title="Are you sure delete this task?"
-                onConfirm={() => deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <StyledButton className="btn-primary">Delete</StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-                Modify
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                Revision
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                List
-              </StyledButton>
-            </div>
+            <div className="alignRight"></div>
           </Sketch>
         </StyledViewDesigner>
       );

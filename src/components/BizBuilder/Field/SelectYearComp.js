@@ -1,25 +1,24 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
 
-class SelectYearComp extends Component {
-  state = {
-    options: [],
-  };
+function SelectYearComp(props) {
+  const [yearRange, setYearRange] = useState([]);
+  const [currentYear, setCurrentYear] = useState();
 
-  componentDidMount() {
-    const year = new Date().getFullYear();
-    const years = [' '];
-    for (let i = 2006; i <= year + 1; i++) {
+  useEffect(() => {
+    const { minYear, maxYear } = props.CONFIG.property;
+
+    const years = [];
+    for (let i = parseInt(minYear, 10); i <= parseInt(maxYear, 10); i++) {
       years.push(String(i));
     }
-    this.setState({
-      options: years,
-    });
-  }
+    setYearRange(years);
+  }, []);
 
-  onChangeHandler = value => {
+  const onChangeHandler = value => {
     const {
       changeFormData,
       sagaKey: id,
@@ -29,7 +28,7 @@ class SelectYearComp extends Component {
       COMP_FIELD,
       NAME_KOR,
       changeValidationData,
-    } = this.props;
+    } = props;
     if (isRequired) {
       // 기본값인지 체크
       changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
@@ -37,28 +36,46 @@ class SelectYearComp extends Component {
     changeFormData(id, COMP_FIELD, value);
   };
 
-  render() {
-    const { colData, visible, CONFIG } = this.props;
-    const { options } = this.state;
-    return visible ? (
-      <Select
-        value={colData || ' '}
-        onChange={value => {
-          this.onChangeHandler(value);
-        }}
-        style={{ width: '100%', marginRight: 10 }}
-        className={CONFIG.property.className || ''}
-      >
-        {options.map(o => (
-          <Option key={o} value={o} style={{ height: 30 }}>
-            {o}
-          </Option>
-        ))}
-      </Select>
-    ) : (
-      ''
-    );
-  }
+  const { colData, visible, CONFIG } = props;
+
+  return visible ? (
+    <Select
+      defaultValue={colData !== '' ? colData : CONFIG.property.defaultYear}
+      onChange={value => onChangeHandler(value)}
+      style={{ width: '100%', marginRight: 10 }}
+      className={CONFIG.property.className || ''}
+    >
+      {yearRange.map(year => (
+        <Option key={year} value={year} style={{ height: 30 }}>
+          {year}
+        </Option>
+      ))}
+    </Select>
+  ) : (
+    ''
+  );
 }
 
+SelectYearComp.propTypes = {
+  defaultValueForSelectYearComp: PropTypes.bool,
+  CONFIG: PropTypes.objectOf(PropTypes.object),
+};
+SelectYearComp.defaultProps = {
+  colData: '',
+  CONFIG: {
+    info: {},
+    option: {},
+    property: {
+      COMP_NAME: '',
+      COMP_SETTING_SRC: '',
+      COMP_SRC: '',
+      compKey: '',
+      layerIdx: {},
+      maxYear: '',
+      minYear: '',
+      defaultYear: null,
+    },
+  },
+  defaultValueForSelectYearComp: false,
+};
 export default SelectYearComp;

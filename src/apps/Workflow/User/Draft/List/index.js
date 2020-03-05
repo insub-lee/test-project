@@ -5,13 +5,15 @@ import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
-import ApproveView from '../ApproveView';
-import HoldView from '../MdcsAppvView/holdview';
+import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
+import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
 
 const AntdTable = StyledAntdTable(Table);
 const ModalWrapper = StyledModalNofooterLine(Modal);
 class DraftList extends Component {
-  componentDidMount() {}
+  componentDidMount() {
+    this.props.getDraftList();
+  }
 
   getTableColumns = () => [
     {
@@ -61,7 +63,8 @@ class DraftList extends Component {
   };
 
   render() {
-    const { approveList } = this.props;
+    // const { approveList } = this.props;
+    const { draftList } = this.props;
 
     return (
       <div>
@@ -72,9 +75,9 @@ class DraftList extends Component {
         </div>
         <AntdTable
           columns={this.getTableColumns()}
-          dataSource={approveList.map(item => ({
+          dataSource={draftList.map(item => ({
             ...item,
-            key: `approveList_${item.RNUM}`,
+            key: `draftList_${item.RNUM}`,
           }))}
           onRow={(record, rowIndex) => ({
             onClick: e => this.onRowClick(record, rowIndex, e),
@@ -90,17 +93,16 @@ class DraftList extends Component {
 }
 
 DraftList.propTypes = {
-  category: PropTypes.string,
-  approveList: PropTypes.array,
-  getApproveList: PropTypes.func,
+  draftList: PropTypes.array,
+  getDraftList: PropTypes.func,
   selectedRow: PropTypes.object,
   setSelectedRow: PropTypes.func,
   setViewVisible: PropTypes.func,
 };
 
 DraftList.defaultProps = {
-  category: 'draft',
-  approveList: [],
+  draftList: [],
+  getDraftList: () => {},
   selectedRow: {},
 };
 

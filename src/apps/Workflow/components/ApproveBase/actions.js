@@ -1,14 +1,38 @@
 import * as actionTypes from './constants';
 
-export const getApproveList = payload => ({
+export const getApproveList = () => ({
   type: actionTypes.GET_APPROVE_LIST,
-  payload,
 });
 
 export const setApproveList = list => ({
   type: actionTypes.SET_APPROVE_LIST,
   list,
 });
+
+export const getUnApproveList = () => ({
+  type: actionTypes.GET_UNAPPROVE_LIST,
+});
+
+export const setUnApproveList = list => ({
+  type: actionTypes.SET_UNAPPROVE_LIST,
+  list,
+});
+
+export const getDraftList = () => ({
+  type: actionTypes.GET_DRAFT_LIST
+});
+
+export const setDraftList = list => ({
+  type: actionTypes.SET_DRAFT_LIST,
+  list,
+});
+
+export const setPartialInit = () => ({
+  type: actionTypes.SET_PARTIAL_INIT,
+});
+
+
+
 
 export const setSelectedRow = row => ({
   type: actionTypes.SET_SELECTED_ROW,

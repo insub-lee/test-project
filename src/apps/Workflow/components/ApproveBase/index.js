@@ -12,40 +12,25 @@ import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
-import ApproveList from './ApproveList';
-import UnApproveList from './UnApproveList';
-import DraftList from './DraftList';
-
-
 class ApproveBase extends Component {
-  componentDidMount() {
-    const { match, getApproveList } = this.props;
-    const category = match.params.CATE;
-    getApproveList({ searchType: category });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.match.params.CATE !== prevProps.match.params.CATE) {
-      const { match, getApproveList } = this.props;
-      const category = match.params.CATE;
-      getApproveList({ searchType: category });
-    }
-  }
+  componentDidMount() {}
 
   render() {
-    const category = this.props.match.params.CATE || 'draft';
-    return (
-      <div style={{ width: '100%', height: '600px', padding: '10px 15px' }}>
-        {category === 'draft' ? <DraftList {...this.props} category={category} /> : category === 'approval' ? <ApproveList {...this.props} category={category} /> : <UnApproveList {...this.props} category={category} />}
-      </div>
-    );
+    const { component: Component } = this.props;
+    return <Component {...this.props} />;
   }
 }
 
 ApproveBase.propTypes = {
-  match: PropTypes.object,
   approveList: PropTypes.array,
   getApproveList: PropTypes.func,
+  unApproveList: PropTypes.array,
+  getUnApproveList: PropTypes.func,
+  draftList: PropTypes.array,
+  getDraftList: PropTypes.func,
+
+
+
   selectedRow: PropTypes.object,
   setSelectedRow: PropTypes.func,
   viewVisible: PropTypes.bool,
@@ -61,9 +46,15 @@ ApproveBase.propTypes = {
 };
 
 ApproveBase.defaultProps = {
-  match: {},
   approveList: [],
   getApproveList: () => {},
+  unApproveList: [],
+  getUnApproveList: () => {},
+  draftList: [],
+  getDraftList: () => {},
+
+
+
   selectedRow: {},
   viewVisible: false,
   opinionVisible: false,
@@ -75,6 +66,11 @@ ApproveBase.defaultProps = {
 
 const mapStateToProps = createStructuredSelector({
   approveList: selectors.makeSelectApproveList(),
+  unApproveList: selectors.makeSelectUnApproveList(),
+  draftList: selectors.makeSelectDraftList(),
+  
+
+  
   selectedRow: selectors.makeSelectSelectedRow(),
   viewVisible: selectors.makeSelectViewVisible(),
   opinionVisible: selectors.makeSelectOpinionVisible(),
@@ -83,7 +79,13 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  getApproveList: payload => dispatch(actions.getApproveList(payload)),
+  getApproveList: () => dispatch(actions.getApproveList()),
+  getUnApproveList: () => dispatch(actions.getUnApproveList()),
+  getDraftList: () => dispatch(actions.getDraftList()),
+
+  
+  
+  
   setSelectedRow: row => dispatch(actions.setSelectedRow(row)),
   setViewVisible: visible => dispatch(actions.setViewVisible(visible)),
   setOpinionVisible: visible => dispatch(actions.setOpinionVisible(visible)),
@@ -94,12 +96,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const withReducer = injectReducer({
-  key: 'apps.WorkFlow.User.ApproveBase.reducer',
+  key: 'apps.WorkFlow.components.ApproveBase.reducer',
   reducer,
 });
 
 const withSaga = injectSaga({
-  key: 'apps.WorkFlow.User.ApproveBase.saga',
+  key: 'apps.WorkFlow.components.ApproveBase.saga',
   saga,
 });
 

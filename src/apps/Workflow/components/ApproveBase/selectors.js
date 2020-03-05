@@ -1,18 +1,27 @@
 import { createSelector } from 'reselect';
 
-const selectApproveBase = state => state.get('apps.WorkFlow.User.ApproveBase.reducer');
-
-const makeSelectSearchType = () =>
-  createSelector(
-    selectApproveBase,
-    state => state.get('searchType'),
-  );
+const selectApproveBase = state => state.get('apps.WorkFlow.components.ApproveBase.reducer');
 
 const makeSelectApproveList = () =>
   createSelector(
     selectApproveBase,
     state => state.get('approveList').toJS(),
   );
+
+const makeSelectUnApproveList = () =>
+  createSelector(
+    selectApproveBase,
+    state => state.get('unApproveList').toJS(),
+  );
+
+const makeSelectDraftList = () =>
+  createSelector(
+    selectApproveBase,
+    state => state.get('draftList').toJS(),
+  );
+
+
+
 
 const makeSelectSelectedRow = () =>
   createSelector(
@@ -45,8 +54,12 @@ const makeSelectFormData = () =>
   );
 
 export {
-  makeSelectSearchType,
   makeSelectApproveList,
+  makeSelectUnApproveList,
+  makeSelectDraftList,
+
+
+  
   makeSelectSelectedRow,
   makeSelectViewVisible,
   makeSelectOpinionVisible,

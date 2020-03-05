@@ -61,7 +61,6 @@ class RadioCharComp extends Component {
       extraApiData,
       visible,
     } = this.props;
-
     if (this.state.dataFlag && extraApiData[`radio_${mapId}`]) {
       const dataSource = makeDataSource(extraApiData[`radio_${mapId}`]);
       this.setState({ dataFlag: false, dataSource });

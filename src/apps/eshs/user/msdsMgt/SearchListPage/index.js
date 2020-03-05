@@ -13,6 +13,7 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
+import CursorStyled from '../CursorStyled';
 
 const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
@@ -126,17 +127,19 @@ class ListPage extends Component {
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={listData || []}
-            rowSelection={rowSelection}
-            onRow={(record, rowIndex) => ({
-              onClick: event => this.handleOnRow(record),
-            })}
-          />
+          <CursorStyled>
+            <AntdTable
+              rowKey="TASK_SEQ"
+              key={`${group.key}_list`}
+              className="view-designer-list"
+              columns={columns}
+              dataSource={listData || []}
+              rowSelection={rowSelection}
+              onRow={(record, rowIndex) => ({
+                onClick: event => this.handleOnRow(record),
+              })}
+            />
+          </CursorStyled>
         </Group>
       </div>
     );
@@ -144,7 +147,6 @@ class ListPage extends Component {
 
   handleSearchSite = e => {
     const { sagaKey, changeSearchData } = this.props;
-    console.debug('handleSearchSite', e);
     const searchText = e.length > 1 ? `AND W.SITE LIKE '%${e}%'` : '';
     changeSearchData(sagaKey, 'andSearch_1', searchText);
   };

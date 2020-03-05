@@ -57,14 +57,7 @@ class ModifyPage extends Component {
           <Sketch {...bodyStyle}>
             <MsdsHeaderBar {...this.props} />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id, this.saveTaskAfter)}>
-                Save
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                List
-              </StyledButton>
-            </div>
+            <div className="alignRight"></div>
           </Sketch>
         </StyledViewDesigner>
       );

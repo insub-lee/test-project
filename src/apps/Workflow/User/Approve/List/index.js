@@ -5,13 +5,19 @@ import moment from 'moment';
 
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
+import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
 
-import ApproveView from '../ApproveView';
-import HoldView from '../MdcsAppvView/holdview';
+// import ApproveView from '../ApproveView';
+// import HoldView from '../MdcsAppvView/holdview';
 
 const AntdTable = StyledAntdTable(Table);
 const ModalWrapper = StyledModalNofooterLine(Modal);
+
 class ApproveList extends Component {
+  componentDidMount() {
+    this.props.getApproveList();
+  }
+
   getTableColumns = () => [
     {
       title: 'No',
@@ -108,6 +114,7 @@ ApproveList.defaultProps = {
   category: 'draft',
   approveList: [],
   selectedRow: {},
+  getApproveList: () => {},
 };
 
 export default ApproveList;
