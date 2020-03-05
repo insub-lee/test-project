@@ -9,9 +9,8 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-import MsdsHeaderBar from '../MsdsHeaderBar';
 
-class ViewPage extends Component {
+class CustomViewPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,8 +26,7 @@ class ViewPage extends Component {
   }
 
   render = () => {
-    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId, deleteTask } = this.props;
-
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, formData, changeViewPage, draftId, deleteTask } = this.props;
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -45,7 +43,7 @@ class ViewPage extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
-            <MsdsHeaderBar {...this.props} />
+            <span>MSDS 코드 {formData.ITEM_CD}</span>
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
@@ -58,7 +56,7 @@ class ViewPage extends Component {
   };
 }
 
-ViewPage.propTypes = {
+CustomViewPage.propTypes = {
   sagaKey: PropTypes.string,
   draftId: PropTypes.number,
   getDraftProcess: PropTypes.func,
@@ -74,10 +72,10 @@ ViewPage.propTypes = {
   removeReduxState: PropTypes.func,
 };
 
-ViewPage.defaultProps = {
+CustomViewPage.defaultProps = {
   draftId: -1,
   draftProcess: [],
   loadingComplete: () => {},
 };
 
-export default ViewPage;
+export default CustomViewPage;
