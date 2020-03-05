@@ -31,8 +31,7 @@ class Input extends Component {
   componentDidMount() {
     const { currentDate } = this.state;
     const { sagaKey: id, changeFormData, getExtraApiData, apiArr } = this.props;
-    this.props.getExtraApiData(id, apiArr, this.makeFormDataChange);
-
+    getExtraApiData(id, apiArr, this.makeFormDataChange);
     changeFormData(id, 'APP_DT', currentDate);
   }
 
@@ -112,7 +111,7 @@ class Input extends Component {
       case '구미':
         changeFormData(id, 'SITE', 'H3');
         break;
-      case '청수':
+      case '청주':
         changeFormData(id, 'STIE', 'C1');
         break;
       default:
@@ -129,7 +128,6 @@ class Input extends Component {
   render() {
     const { userInfo } = this.state;
     const { formData } = this.props;
-    console.debug(this.props.extraApiData);
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -177,29 +175,12 @@ Input.propTypes = {
   apiArr: PropTypes.array,
 };
 
-const currentDate =
-  moment().format('YYYYMMDD') ===
-    moment()
-      .startOf('week')
-      .format('YYYYMMDD') ||
-  moment().format('YYYYMMDD') ===
-    moment()
-      .endOf('week')
-      .format('YYYYMMDD')
-    ? ''
-    : moment();
-
 Input.defaultProps = {
   apiArr: [
     {
       key: 'getUserInfo',
       url: '/api/eshs/v1/common/userinfowithgender',
       type: 'GET',
-    },
-    {
-      key: 'getTimetable',
-      type: 'GET',
-      url: `/api/eshs/v1/common/getphysicaltherapytimetable?date=${moment(currentDate).format('YYYYMMDD')}`,
     },
   ],
 };

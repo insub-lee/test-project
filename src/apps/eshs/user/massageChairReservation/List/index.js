@@ -49,39 +49,45 @@ class List extends Component {
         {
           title: '안마의자(남)',
           align: 'center',
-          dataIndex: 'male',
-          render: (text, record, index) =>
-            record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00' ? (
-              <Checkbox
-                onChange={e => this.handleOnCheck(e, index, record)}
-                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                disabled={this.props.formData.gender !== 'm' && this.disableCheckbox(record)}
-              ></Checkbox>
-            ) : (
-              ''
-            ),
+          render: (text, record, index) => {
+            if (record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00') {
+              console.debug(this.props.formData.gender);
+              this.disableCheckbox(record);
+              return (
+                <Checkbox
+                  onChange={e => this.handleOnCheck(e, index, record)}
+                  checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                  disabled={this.props.formData.gender !== 'm'}
+                />
+              );
+            }
+            return '';
+          },
         },
         {
           title: '안마의자(여)',
           align: 'center',
-          dataIndex: 'female',
-          render: (text, record, index) =>
-            record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00' ? (
-              <Checkbox
-                onChange={e => this.handleOnCheck(e, index, record)}
-                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                // disabled={this.props.formData.gender !== 'f'}
-                disabled={this.disableCheckbox}
-              ></Checkbox>
-            ) : (
-              ''
-            ),
+          render: (text, record, index) => {
+            if (record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00') {
+              return (
+                <Checkbox
+                  onChange={e => this.handleOnCheck(e, index, record)}
+                  checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                  disabled={this.props.formData.gender !== 'f'}
+                />
+              );
+            }
+            return '';
+          },
         },
       ],
     },
   ];
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { sagaKey: id, getExtraApiData, apiArr } = this.props;
+    getExtraApiData(id, apiArr);
+  }
 
   handleOnCheck = (e, index, record) => {
     if (e.target.checked) {
@@ -104,26 +110,14 @@ class List extends Component {
     changeFormData(id, 'TIME_ZONE', time);
   };
 
-  disableCheckbox = record => {
+  disableCheckbox = (record, index) => {
     // 예약된 자리 체크
-    const { formData } = this.props;
-    if (formData.getTimetable) {
-      console.debug('22222');
-      formData.getTimetable.timetable.map(item => {
-        if (
-          moment(item.app_dt).format('YYYYMMDD') === moment(formData.APP_DT).format('YYYYMMDD') &&
-          item.time_zone === moment(record.time.substring(0, 5), 'HH:mm').format('HHmm')
-        ) {
-          return true;
-        }
-        return false;
-      });
-    }
+    console.debug(this.props.extraApiData);
   };
 
   render() {
+    console.debug(this.props.extraApiData);
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
-    console.debug(formData);
     return (
       <div>
         <Input
@@ -151,6 +145,29 @@ List.propTypes = {
   changeFormData: PropTypes.func,
   formData: PropTypes.object,
   saveTask: PropTypes.string,
+  apiArr: PropTypes.array,
+};
+
+const currentDate =
+  moment().format('YYYYMMDD') ===
+    moment()
+      .startOf('week')
+      .format('YYYYMMDD') ||
+  moment().format('YYYYMMDD') ===
+    moment()
+      .endOf('week')
+      .format('YYYYMMDD')
+    ? ''
+    : moment();
+
+List.defaultProps = {
+  apiArr: [
+    {
+      key: 'getTimetable',
+      type: 'GET',
+      url: `/api/eshs/v1/common/getphysicaltherapytimetable?date=${moment(currentDate).format('YYYYMMDD')}`,
+    },
+  ],
 };
 
 export default List;
