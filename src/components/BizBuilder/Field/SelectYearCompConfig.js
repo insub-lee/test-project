@@ -158,8 +158,6 @@ SelectYearCompConfig.defaultProps = {
       defaultYear: String(new Date().getFullYear()),
     },
   },
-};
-SelectYearCompConfig.defaultProps = {
   apiArray: [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }],
 };
 export default configer;
