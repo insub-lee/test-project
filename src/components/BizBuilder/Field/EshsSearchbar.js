@@ -13,16 +13,18 @@ class CommonSearchbar extends React.Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidUpdate() {
+    const { changeFormData, sagaKey: id, COMP_FIELD, viewPageData } = this.props;
+    if (viewPageData.viewType === 'INPUT') {
+      changeFormData(id, COMP_FIELD, '');
+    }
+  }
 
   handleModalVisible = () => {
-    const { readOnly } = this.props;
-    if (!readOnly) {
-      const { modal } = this.state;
-      this.setState({
-        modal: !modal,
-      });
-    }
+    const { modal } = this.state;
+    this.setState({
+      modal: !modal,
+    });
   };
 
   onChangeSave = type => {
@@ -47,9 +49,12 @@ class CommonSearchbar extends React.Component {
   };
 
   isModalChange = record => {
-    const { setViewPageData, sagaKey: id, changeViewPage } = this.props;
+    const { viewPageData, setViewPageData, sagaKey: id, changeViewPage } = this.props;
     this.handleModalVisible();
-    if (record) {
+    if (viewPageData && viewPageData.viewType === 'VIEW' && record) {
+      setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'VIEW');
+      changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'VIEW');
+    } else if (record) {
       setViewPageData(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
       changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, 'MODIFY');
     }
@@ -71,13 +76,54 @@ class CommonSearchbar extends React.Component {
     );
   };
 
+  ButtonRender() {
+    const { viewPageData, sagaKey: id, changeViewPage } = this.props;
+    let buttonGruop;
+    switch (viewPageData && viewPageData.viewType.toUpperCase()) {
+      case 'INPUT':
+        buttonGruop = (
+          <>
+            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
+              등록
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              Reset
+            </StyledButton>
+          </>
+        );
+        break;
+      case 'MODIFY':
+        buttonGruop = (
+          <>
+            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
+              저장
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('D')}>
+              삭제
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+              신규등록
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              Reset
+            </StyledButton>
+          </>
+        );
+        break;
+      default:
+        buttonGruop = '';
+        break;
+    }
+    return buttonGruop;
+  }
+
   render() {
     const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage } = this.props;
     return visible ? (
       <div>
         <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
         <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        {viewPageData.viewType === 'MODIFY' ? (
+        {/* {viewPageData.viewType === 'MODIFY' ? (
           <>
             <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
               저장
@@ -93,10 +139,11 @@ class CommonSearchbar extends React.Component {
           <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
             등록
           </StyledButton>
-        )}
-        <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+        )} */}
+        {this.ButtonRender()}
+        {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
           Reset
-        </StyledButton>
+        </StyledButton> */}
         <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {this.state.modal && this.BizbuilderbaseRender()}
         </Modal>

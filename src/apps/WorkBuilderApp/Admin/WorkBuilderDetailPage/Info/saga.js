@@ -1,6 +1,10 @@
+import React from 'react';
 import { takeLatest, put, call, select } from 'redux-saga/effects';
 import { fromJS } from 'immutable';
+
 import { Axios } from 'utils/AxiosFunc';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import * as actionTypes from './constants';
 import * as actions from './actions';
@@ -28,6 +32,8 @@ function* fetchData({ id }) {
 
 function* setWorkInfo({ workInfo }) {
   const response = yield call(Axios.put, `/api/builder/v1/work/info/${workInfo.WORK_SEQ}`, workInfo);
+  if (response && response.resultType) message.success(<MessageContent>Save</MessageContent>);
+  else message.error(<MessageContent>Error</MessageContent>);
 }
 
 export default function* watcher() {
