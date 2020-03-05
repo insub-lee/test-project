@@ -12,29 +12,6 @@ function FireExtinguisher(props) {
     setIsLoading(false);
   };
 
-  const customValues = [
-    {
-      field: 'IS_INSPECTED',
-      placeHolder: '점검 유무',
-      defaultValue: undefined,
-      options: [
-        { key: 'T', value: 'T', name: { kor: '점검완료' } },
-        { key: 'F', value: 'F', name: { kor: '미실시' } },
-      ],
-    },
-    {
-      field: 'QUARTER',
-      placeHolder: '분기',
-      defaultValue: '1Q',
-      options: [
-        { key: '1Q', value: '1Q', name: { kor: '1Q' } },
-        { key: '2Q', value: '2Q', name: { kor: '2Q' } },
-        { key: '3Q', value: '3Q', name: { kor: '3Q' } },
-        { key: '4Q', value: '4Q', name: { kor: '4Q' } },
-      ],
-    },
-  ];
-
   return (
     <BizBuilderBase
       sagaKey="FireExtinguisher"
@@ -44,7 +21,6 @@ function FireExtinguisher(props) {
       loadingComplete={loadingComplete}
       buttonCategory={BUTTON_CATEGORY.FIRE_EXTINGUISHER_MAIN}
       isSearched={false}
-      customValues={customValues}
     />
   );
 }
