@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import { Row, Col, DatePicker } from 'antd';
+import { Row, Col, DatePicker, Popconfirm } from 'antd';
 
 import moment from 'moment';
 
@@ -15,38 +15,30 @@ class Input extends Component {
       userInfo: {},
       selectedDate: moment().format('YYYY-MM-DD'),
       currentDate:
-        moment().format('YYMMDD') ===
+        moment().format('YYYYMMDD') ===
           moment()
             .startOf('week')
-            .format('YYMMDD') ||
-        moment().format('YYMMDD') ===
+            .format('YYYYMMDD') ||
+        moment().format('YYYYMMDD') ===
           moment()
             .endOf('week')
-            .format('YYMMDD')
+            .format('YYYYMMDD')
           ? ''
           : moment(),
     };
   }
 
   componentDidMount() {
-    this.handleGetUserInfo();
-  }
+    const { currentDate } = this.state;
+    const { sagaKey: id, changeFormData, getExtraApiData, apiArr } = this.props;
+    this.props.getExtraApiData(id, apiArr, this.makeFormDataChange);
 
-  handleGetUserInfo = () => {
-    const { sagaKey: id, getExtraApiData } = this.props;
-    const apiArr = [
-      {
-        key: 'getUserInfo',
-        url: '/api/eshs/v1/common/userinfowithgender',
-        type: 'GET',
-      },
-    ];
-    getExtraApiData(id, apiArr);
-  };
+    changeFormData(id, 'APP_DT', currentDate);
+  }
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { extraApiData, changeFormData, sagaKey: id } = nextProps;
-    if (extraApiData.getUserInfo) {
+    if (extraApiData.getUserInfo && extraApiData.getTimetable) {
       if (prevState.userInfo !== extraApiData.getUserInfo) {
         changeFormData(id, 'gender', extraApiData.getUserInfo.userInfo.gender);
         return { userInfo: extraApiData.getUserInfo.userInfo };
@@ -71,29 +63,35 @@ class Input extends Component {
         .format('YYYYMMDD');
 
   handleOnDateChange = date => {
-    this.handleGetTimeTable(date.format('YYYYMMDD'));
+    this.getTimetable(date.format('YYYYMMDD'));
     this.setState({
       selectedDate: moment(date).format('YYYY-MM-DD'),
     });
   };
 
-  handleGetTimeTable = date => {
+  getTimetable = date => {
     const { sagaKey: id, getExtraApiData } = this.props;
-    const apiArr = [
+    const newArr = [
       {
         key: 'getTimetable',
         type: 'GET',
         url: `/api/eshs/v1/common/getphysicaltherapytimetable?date=${date}`,
       },
     ];
-    getExtraApiData(id, apiArr);
+    getExtraApiData(id, newArr, this.makeFormDataChange);
+  };
+
+  makeFormDataChange = () => {
+    const { sagaKey: id, changeFormData, extraApiData } = this.props;
+    if (extraApiData.getTimetable) {
+      changeFormData(id, 'timetable', extraApiData.getTimetable.timetable);
+    }
   };
 
   handleButtonClick = () => {
     // formData 체크해서 시간 비었으면 저장 안하게
     const { selectedDate, userInfo } = this.state;
     const { formData } = this.props;
-    console.debug(formData.checkedIndex);
     const { sagaKey: id, changeFormData, saveTask } = this.props;
     if (formData.checkedIndex === undefined) {
       return;
@@ -130,6 +128,8 @@ class Input extends Component {
 
   render() {
     const { userInfo } = this.state;
+    const { formData } = this.props;
+    console.debug(this.props.extraApiData);
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -140,9 +140,11 @@ class Input extends Component {
               <Col span={2}>이름</Col>
               <Col span={2}>{userInfo.name}</Col>
               <Col span={2}>
-                <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
-                  예약
-                </StyledButton>
+                <Popconfirm title="시간을 선택하십시오." disabled={formData.checkedIndex !== undefined}>
+                  <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
+                    예약
+                  </StyledButton>
+                </Popconfirm>
               </Col>
               <Col span={2}>소속</Col>
               <Col span={4}>{userInfo.dept}</Col>
@@ -172,6 +174,34 @@ Input.propTypes = {
   changeFormData: PropTypes.func,
   saveTask: PropTypes.string,
   formData: PropTypes.object,
+  apiArr: PropTypes.array,
+};
+
+const currentDate =
+  moment().format('YYYYMMDD') ===
+    moment()
+      .startOf('week')
+      .format('YYYYMMDD') ||
+  moment().format('YYYYMMDD') ===
+    moment()
+      .endOf('week')
+      .format('YYYYMMDD')
+    ? ''
+    : moment();
+
+Input.defaultProps = {
+  apiArr: [
+    {
+      key: 'getUserInfo',
+      url: '/api/eshs/v1/common/userinfowithgender',
+      type: 'GET',
+    },
+    {
+      key: 'getTimetable',
+      type: 'GET',
+      url: `/api/eshs/v1/common/getphysicaltherapytimetable?date=${moment(currentDate).format('YYYYMMDD')}`,
+    },
+  ],
 };
 
 export default Input;

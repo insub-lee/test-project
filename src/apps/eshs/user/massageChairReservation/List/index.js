@@ -55,7 +55,7 @@ class List extends Component {
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
                 checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                disabled={this.props.formData.gender !== 'm'}
+                disabled={this.props.formData.gender !== 'm' && this.disableCheckbox(record)}
               ></Checkbox>
             ) : (
               ''
@@ -70,7 +70,8 @@ class List extends Component {
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
                 checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                disabled={this.props.formData.gender !== 'f'}
+                // disabled={this.props.formData.gender !== 'f'}
+                disabled={this.disableCheckbox}
               ></Checkbox>
             ) : (
               ''
@@ -79,6 +80,8 @@ class List extends Component {
       ],
     },
   ];
+
+  componentDidMount() {}
 
   handleOnCheck = (e, index, record) => {
     if (e.target.checked) {
@@ -101,8 +104,26 @@ class List extends Component {
     changeFormData(id, 'TIME_ZONE', time);
   };
 
+  disableCheckbox = record => {
+    // 예약된 자리 체크
+    const { formData } = this.props;
+    if (formData.getTimetable) {
+      console.debug('22222');
+      formData.getTimetable.timetable.map(item => {
+        if (
+          moment(item.app_dt).format('YYYYMMDD') === moment(formData.APP_DT).format('YYYYMMDD') &&
+          item.time_zone === moment(record.time.substring(0, 5), 'HH:mm').format('HHmm')
+        ) {
+          return true;
+        }
+        return false;
+      });
+    }
+  };
+
   render() {
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
+    console.debug(formData);
     return (
       <div>
         <Input
