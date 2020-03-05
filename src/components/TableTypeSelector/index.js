@@ -13,6 +13,7 @@ import TableTypeSelectorStyled from './TableTypeSelectorStyled';
 //  btnText="구성성분 등록"  ---- 버튼 텍스트
 //  handleApply={this.handleApply}  ---- 적용시 applyList가 반환된다.
 //  modalTitle="MSDS 검색"  ---- modal title
+//  rowKey="TASK_SEQ"  ---- leftTableRowKey, RightTableRowKey
 //  />
 
 // TableColumns 요소중 search - antd의 Table Column Search 사용할 것인가 지정.

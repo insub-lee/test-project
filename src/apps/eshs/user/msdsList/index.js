@@ -5,9 +5,6 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 import { Modal } from 'antd';
 import ListPage from './ListPage';
-import InputPage from './InputPage';
-import ModifyPage from './ModifyPage';
-import ViewPage from './ViewPage';
 import SearchListPage from './SearchListPage';
 
 class MsdsMgt extends Component {
@@ -35,24 +32,21 @@ class MsdsMgt extends Component {
     return (
       <>
         <BizBuilderBase
-          sagaKey="MsdsMgt"
+          sagaKey="MsdsListMgt"
           workSeq={3161}
-          viewType="INPUT"
+          viewType="LIST"
           loadingComplete={this.loadingComplete}
           CustomListPage={ListPage}
-          CustomInputPage={InputPage}
-          CustomViewPage={ViewPage}
-          CustomModifyPage={ModifyPage}
           handleModalVisible={this.handleModalVisible}
         />
         <Modal title="MSDS 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           <BizBuilderBase
-            sagaKey="MsdsSearchList"
+            sagaKey="MsdsListSearchList"
             workSeq={3161}
             viewType="LIST"
             loadingComplete={this.loadingComplete}
-            handleModalVisible={this.handleModalVisible}
             CustomListPage={SearchListPage}
+            handleModalVisible={this.handleModalVisible}
             listMetaSeq={4141}
           />
         </Modal>

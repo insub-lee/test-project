@@ -13,6 +13,7 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { debounce } from 'lodash';
+import CursorStyled from '../CursorStyled';
 
 const { Option } = Select;
 const AntdTable = StyledAntdTable(Table);
@@ -24,7 +25,7 @@ class ListPage extends Component {
       initLoading: true,
       isMultiDelete: false,
       isRowNo: false,
-      searchType: 'W.MTRL_NM',
+      searchType: '',
       searchText: '',
     };
     this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
@@ -42,6 +43,12 @@ class ListPage extends Component {
       this.setState({ isMultiDelete, isRowNo });
     }
   };
+
+  // state값 reset테스트
+  // componentWillUnmount() {
+  //   const { removeReduxState, id } = this.props;
+  //   removeReduxState(id);
+  // }
 
   renderComp = (comp, colData, visible, rowClass, colClass, isSearch) => {
     if (comp.CONFIG.property.COMP_SRC && comp.CONFIG.property.COMP_SRC.length > 0 && CompInfo[comp.CONFIG.property.COMP_SRC]) {
@@ -98,6 +105,13 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  handleOnRow = record => {
+    const { handleModalVisible, changeFormData } = this.props;
+    changeFormData('MsdsListMgt', 'selectedRowItemCode', record.ITEM_CD);
+    changeFormData('MsdsListMgt', 'selectedRowTaskSeq', record.TASK_SEQ);
+    handleModalVisible();
+  };
+
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys } = this.props;
     const { isMultiDelete } = this.state;
@@ -113,14 +127,19 @@ class ListPage extends Component {
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
         <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <AntdTable
-            rowKey="TASK_SEQ"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={listData || []}
-            rowSelection={rowSelection}
-          />
+          <CursorStyled>
+            <AntdTable
+              rowKey="TASK_SEQ"
+              key={`${group.key}_list`}
+              className="view-designer-list"
+              columns={columns}
+              dataSource={listData || []}
+              rowSelection={rowSelection}
+              onRow={(record, rowIndex) => ({
+                onClick: event => this.handleOnRow(record),
+              })}
+            />
+          </CursorStyled>
         </Group>
       </div>
     );
@@ -138,7 +157,7 @@ class ListPage extends Component {
     this.setState({
       searchType,
     });
-    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
+    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : '';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
@@ -148,50 +167,13 @@ class ListPage extends Component {
     this.setState({
       searchText,
     });
-    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : 'AND 1 = 1';
+    const andSearch2 = searchText.length > 0 ? `AND ${searchType} LIKE '%${searchText}%'` : '';
     changeSearchData(sagaKey, 'andSearch_2', andSearch2);
   };
 
-  handleInputChange = ITEM_CD => {
-    const { sagaKey, changeSearchData, changeFormData } = this.props;
-    changeFormData(sagaKey, 'selectedRowItemCode', ITEM_CD);
-    const andSearch3 =
-      ITEM_CD.length > 0 ? `AND W.ITEM_CD IN (SELECT ITEM_CD FROM esh_hctb_msds_component WHERE component_item_cd = '${ITEM_CD}')` : 'AND 1 = 1';
-    changeSearchData(sagaKey, 'andSearch_3', andSearch3);
-  };
-
-  handleChangeViewPage = () => {
-    const { sagaKey: id, viewPageData, changeViewPage, changeFormData } = this.props;
-    changeFormData(id, 'selectedRowItemCode', '');
-    changeFormData(id, 'selectedTaskSeq', '');
-    changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
-  };
-
-  handleModalVisible = () => {
-    const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
-    changeViewPage('MsdsSearchList', 3161, -1, 'LIST');
-    handleModalVisible();
-  };
-
   render = () => {
-    const {
-      sagaKey: id,
-      viewLayer,
-      formData,
-      workFlowConfig,
-      loadingComplete,
-      viewPageData,
-      changeViewPage,
-      getListData,
-      workSeq,
-      removeMultiTask,
-    } = this.props;
+    const { sagaKey: id, viewLayer, workFlowConfig, loadingComplete, getListData, workSeq, removeMultiTask } = this.props;
     const { isMultiDelete } = this.state;
-
-    const selectedRowItemCode = (formData && formData.selectedRowItemCode) || '';
-    if (selectedRowItemCode) {
-      this.handleInputChange(selectedRowItemCode);
-    }
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -259,10 +241,6 @@ class ListPage extends Component {
                                     </Option>
                                   </Select>
                                   <Input style={{ width: 150 }} onChange={e => this.handleOnChangeSearch(e.target.value)} />
-                                  &nbsp; &nbsp;
-                                  <span>구성성분</span>
-                                  <Input style={{ width: 150 }} value={selectedRowItemCode} onChange={e => this.handleInputChange(e.target.value)} />
-                                  <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
                                 </Contents>
                               </td>
                             </tr>
@@ -273,9 +251,6 @@ class ListPage extends Component {
                         <div className="view-designer-group-search-btn-wrap">
                           <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </StyledButton>
-                          <StyledButton className="btn-primary" onClick={this.handleChangeViewPage}>
-                            Add
                           </StyledButton>
                         </div>
                       )}

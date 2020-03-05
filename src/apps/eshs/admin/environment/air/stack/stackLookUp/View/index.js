@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Popconfirm } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import SignLine from 'apps/Workflow/SignLine';
 import ApproveHistory from 'apps/Workflow/ApproveHistory';
-import WorkflowSketch from 'components/BizBuilder/Sketch/WorkflowSketch';
-import StyledAppvDesigner from 'components/BizBuilder/styled/StyledAppvDesigner';
+import Sketch from 'components/BizBuilder/Sketch';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 
-class AppvView extends Component {
+class ViewPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -24,7 +26,7 @@ class AppvView extends Component {
   }
 
   render = () => {
-    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, draftId } = this.props;
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId, deleteTask } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -40,21 +42,19 @@ class AppvView extends Component {
         );
       }
       return (
-        <StyledAppvDesigner>
-          <WorkflowSketch {...bodyStyle}>
-            {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
+        <StyledViewDesigner>
+          <Sketch {...bodyStyle}>
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
-            {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-          </WorkflowSketch>
-        </StyledAppvDesigner>
+          </Sketch>
+        </StyledViewDesigner>
       );
     }
     return '';
   };
 }
 
-AppvView.propTypes = {
-  sagaKey: PropTypes.string.isRequired,
+ViewPage.propTypes = {
+  sagaKey: PropTypes.string,
   draftId: PropTypes.number,
   getDraftProcess: PropTypes.func,
   extraApiData: PropTypes.object,
@@ -69,10 +69,10 @@ AppvView.propTypes = {
   removeReduxState: PropTypes.func,
 };
 
-AppvView.defaultProps = {
+ViewPage.defaultProps = {
   draftId: -1,
   draftProcess: [],
   loadingComplete: () => {},
 };
 
-export default AppvView;
+export default ViewPage;
