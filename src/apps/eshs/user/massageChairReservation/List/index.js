@@ -52,7 +52,6 @@ class List extends Component {
           render: (text, record, index) => {
             if (record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00') {
               console.debug(this.props.formData.gender);
-              this.disableCheckbox(record);
               return (
                 <Checkbox
                   onChange={e => this.handleOnCheck(e, index, record)}
@@ -84,11 +83,6 @@ class List extends Component {
     },
   ];
 
-  componentDidMount() {
-    const { sagaKey: id, getExtraApiData, apiArr } = this.props;
-    getExtraApiData(id, apiArr);
-  }
-
   handleOnCheck = (e, index, record) => {
     if (e.target.checked) {
       this.setState(
@@ -108,11 +102,6 @@ class List extends Component {
     const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, 'checkedIndex', index);
     changeFormData(id, 'TIME_ZONE', time);
-  };
-
-  disableCheckbox = (record, index) => {
-    // 예약된 자리 체크
-    console.debug(this.props.extraApiData);
   };
 
   render() {
