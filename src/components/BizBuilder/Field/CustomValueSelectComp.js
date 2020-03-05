@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { Select } from 'antd';
@@ -6,7 +6,15 @@ import { Select } from 'antd';
 const { Option } = Select;
 
 function CustomValueSelectComp(props) {
-  const { CONFIG, customValues, COMP_FIELD } = props;
+  const [values, setValues] = useState([]);
+  const [defaultValue, setDefaultValue] = useState({});
+  const { CONFIG, COMP_FIELD } = props;
+
+  useEffect(() => {
+    const { customValues, definedValue } = props.CONFIG.property;
+    setValues(customValues instanceof Array ? [...customValues] : [{ value: null, text: null }]);
+    setDefaultValue(definedValue instanceof Object ? { ...definedValue } : { value: null, text: null });
+  }, []);
 
   const onChangeHandler = value => {
     const {
@@ -26,38 +34,29 @@ function CustomValueSelectComp(props) {
     changeFormData(id, COMP_FIELD, value);
   };
 
-  return customValues.map((value, idx) => {
-    if (value.field === COMP_FIELD) {
-      return (
-        <Select
-          // key={`safety > InspectionTarget > FireExtinguisher > CustomValueSelectComp > ${COMP_FIELD}_${idx}`}
-          defaultValue={value.defaultValue}
-          placeholder={value.placeHolder}
-          style={{ width: 300, marginRight: 10 }}
-          onChange={value => onChangeHandler(value)}
-          className={CONFIG.property.className || ''}
-        >
-          {value.options.map(option => (
-            <Option key={option.key} value={option.value}>
-              {option.name.kor}
-            </Option>
-          ))}
-        </Select>
-      );
-    }
-  });
+  return (
+    <Select
+      className={CONFIG.property.className || ''}
+      onChange={value => onChangeHandler(value)}
+      style={{ width: 300, marginRight: 10 }}
+      value={defaultValue.value}
+    >
+      {values.map(({ text, value }, idx) => (
+        <Option key={`${idx}_${value}_${text}`} value={value}>
+          {text}
+        </Option>
+      ))}
+    </Select>
+  );
 }
 
-CustomValueSelectComp.propTypes = { customValues: PropTypes.arrayOf(PropTypes.object), COMP_FIELD: PropTypes.string };
+CustomValueSelectComp.propTypes = { CONFIG: PropTypes.objectOf(PropTypes.object), COMP_FIELD: PropTypes.string };
 CustomValueSelectComp.defaultProps = {
-  customValues: [
-    {
-      value: undefined,
-      field: '',
-      placeHolder: '',
-      options: [{ key: '', value: '', name: { kor: '' } }],
-    },
-  ],
+  CONFIG: {
+    info: {},
+    option: {},
+    property: { customValues: [{ value: null, text: null }], definedValue: { value: null, text: null } },
+  },
   COMP_FIELD: '',
 };
 export default CustomValueSelectComp;
