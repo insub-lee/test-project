@@ -17,6 +17,7 @@ import DragUploadCompConfig from 'components/BizBuilder/Field/DragUploadCompConf
 import NumberCompUnitConfig from 'components/BizBuilder/Field/NumberCompUnitConfig';
 import TreeSelectRootKeyCompConfig from 'components/BizBuilder/Field/TreeSelectRootKeyCompConfig';
 import SelectYearCompConfig from 'components/BizBuilder/Field/SelectYearCompConfig';
+import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValueSelectCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -36,4 +37,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/NumberCompUnitConfig': { renderer: property => <NumberCompUnitConfig {...property} /> },
   'components/BizBuilder/Field/TreeSelectRootKeyCompConfig': { renderer: property => <TreeSelectRootKeyCompConfig {...property} /> },
   'components/BizBuilder/Field/SelectYearCompConfig': { renderer: property => <SelectYearCompConfig {...property} /> },
+  'components/BizBuilder/Field/CustomValueSelectCompConfig': { renderer: property => <CustomValueSelectCompConfig {...property} /> },
 };

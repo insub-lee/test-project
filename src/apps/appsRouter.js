@@ -12,7 +12,6 @@ import WidgetsWrapper from '../components/Page/WidgetsWrapper';
 // 뷰어 변경 jhkim 20-02-07
 // import WorkBuilderViewer from './WorkBuilderApp/User/WorkBuilderViewerPage';
 import WorkBuilderViewer from './WorkBuilderApp/User/BizBuilderViewer';
-import ApproveBase from './Workflow/User/ApproveBase';
 
 class AppsRouter extends React.PureComponent {
   componentDidMount() {
@@ -75,14 +74,6 @@ class AppsRouter extends React.PureComponent {
                 render={props => (
                   <ErrorBoundary>
                     <WorkBuilderViewer {...props} authority={authority} />
-                  </ErrorBoundary>
-                )}
-              />
-              <Route
-                path={`/${basicPath.APPS}/Workflow/User/ApproveBase/:CATE`}
-                render={props => (
-                  <ErrorBoundary>
-                    <ApproveBase {...props} authority={authority} />
                   </ErrorBoundary>
                 )}
               />

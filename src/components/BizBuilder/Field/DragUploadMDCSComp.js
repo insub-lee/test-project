@@ -21,7 +21,7 @@ class DragUploadMDCSComp extends Component {
       CONT_SEQ: -1,
       FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
-      DETAIL: colData.DETAIL ? colData.DETAIL : [],
+      DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
     };
     this.setState({ fileInfo: initfiles });
   }
@@ -114,7 +114,7 @@ class DragUploadMDCSComp extends Component {
     } = this.state;
 
     return (
-      <>
+      <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
           action="/upload/mdcs"
           // beforeUpload={this.beforeUpload}
@@ -148,7 +148,7 @@ class DragUploadMDCSComp extends Component {
             </div>
           )}
         </Dragger>
-      </>
+      </div>
     );
   }
 }
