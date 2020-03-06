@@ -1,15 +1,25 @@
-import { Col, Input, Row, Button } from 'antd';
+import { Col, Input, Row, Button, Radio } from 'antd';
 import _, { debounce } from 'lodash';
-import PropTypes from 'prop-types';
+import PropTypes, { instanceOf } from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
-const cont = { VALUE: 'VALUE', TEXT: 'TEXT', ADD: 'ADD', RESET: 'RESET', REMOVE: 'REMOVE', definedValue: 'definedValue', customValues: 'customValues' };
+const cont = {
+  setDefault: 'setDefault',
+  VALUE: 'VALUE',
+  TEXT: 'TEXT',
+  ADD: 'ADD',
+  RESET: 'RESET',
+  REMOVE: 'REMOVE',
+  definedValue: 'definedValue',
+  customValues: 'customValues',
+};
 
 function CustomValueSelectCompConfig(props) {
   const [rows, setRows] = useState([]);
   const [definedValue, setDefinedValue] = useState({});
+  const [shouldRegsiter, setShouldRegister] = useState('');
 
   const handleChangeViewCompData = (key, value) => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = props;
@@ -18,9 +28,10 @@ function CustomValueSelectCompConfig(props) {
   };
 
   useEffect(() => {
-    const { customValues, definedValue } = props.configInfo.property;
+    const { customValues, definedValue, setDefault } = props.configInfo.property;
     setRows(customValues instanceof Array ? [...customValues] : [{ value: null, text: null }]);
     setDefinedValue(definedValue instanceof Object ? { ...definedValue } : { value: null, text: null });
+    setShouldRegister(typeof setDefault === 'string' ? setDefault : 'N');
   }, []);
 
   const debouncedHandleChangeViewCompData = debounce(handleChangeViewCompData, 250);
@@ -86,6 +97,27 @@ function CustomValueSelectCompConfig(props) {
   }
   return (
     <div>
+      <Row>
+        <div>
+          <Col span={6}>
+            <p>FormData 등록 여부</p>
+          </Col>
+          <Col span={16} push={2}>
+            <Radio.Group
+              className="alignCenter"
+              value={shouldRegsiter}
+              onChange={e => {
+                const { value } = e.target;
+                setShouldRegister(value);
+                debouncedHandleChangeViewCompData(cont.setDefault, value);
+              }}
+            >
+              <Radio value="Y">Y</Radio>
+              <Radio value="N">N</Radio>
+            </Radio.Group>
+          </Col>
+        </div>
+      </Row>
       <Row>
         <div>
           <Col span={6}>

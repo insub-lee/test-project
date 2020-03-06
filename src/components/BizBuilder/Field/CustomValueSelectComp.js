@@ -4,16 +4,19 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
-
+const init = { value: null, text: null };
 function CustomValueSelectComp(props) {
   const [values, setValues] = useState([]);
   const [defaultValue, setDefaultValue] = useState({});
+
   const { CONFIG, COMP_FIELD } = props;
 
   useEffect(() => {
-    const { customValues, definedValue } = props.CONFIG.property;
-    setValues(customValues instanceof Array ? [...customValues] : [{ value: null, text: null }]);
-    setDefaultValue(definedValue instanceof Object ? { ...definedValue } : { value: null, text: null });
+    const { customValues, definedValue, setDefault } = props.CONFIG.property;
+    setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
+    const isReg = typeof setDefault === 'string' ? setDefault : 'N';
+    setDefaultValue(isReg === 'Y' ? (definedValue instanceof Object ? { ...definedValue } : { ...init }) : { ...init });
+
     onChangeHandler(definedValue.value);
   }, []);
 
