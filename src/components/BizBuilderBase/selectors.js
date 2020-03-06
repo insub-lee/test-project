@@ -174,6 +174,20 @@ const makeSelectConditionalById = id =>
     state.getIn(['bizBuilderBase', id, 'conditional']) !== undefined ? state.getIn(['bizBuilderBase', id, 'conditional']) : '',
   );
 
+const makeSelectIsBuilderModal = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => state.getIn(['bizBuilderBase', id, 'isBuilderModal']),
+  );
+
+const makeSelectBuilderModalSetting = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => state.getIn(['bizBuilderBase', id, 'builderModalSetting']),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -206,4 +220,6 @@ export {
   makeSelectListSelectRowKeys,
   makeSelectListSelectRowKeysById,
   makeSelectConditionalById,
+  makeSelectIsBuilderModal,
+  makeSelectBuilderModalSetting,
 };

@@ -201,6 +201,10 @@ const reducer = (state = initialState, action) => {
       const { id, list } = action;
       return state.setIn(['bizBuilderBase', id, 'listSelectRowKeys'], fromJS(list));
     }
+    case actionTypes.SET_BUILDER_MODAL_REDUCER: {
+      const { id, flag, builderModalSetting } = action;
+      return state.setIn(['bizBuilderBase', id, 'isBuilderModal'], flag).setIn(['bizBuilderBase', id, 'builderModalSetting'], builderModalSetting);
+    }
     default:
       return state;
   }
