@@ -83,16 +83,16 @@ class List extends Component {
               return '';
             }
 
-            if (timetable.length) {
+            if (!this.disableCheckbox(record.time.substring(0, 5))) {
               return (
                 <Checkbox
                   onChange={e => this.handleOnCheck(e, index, record)}
                   checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                  disabled={formData.gender !== 'm' || this.disableCheckbox(record.time.substring(0, 5))}
+                  disabled={formData.gender !== 'm'}
                 />
               );
             }
-            return '';
+            return <span>Reserved</span>;
           },
         },
         {
