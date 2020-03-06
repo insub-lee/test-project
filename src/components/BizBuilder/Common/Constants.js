@@ -6,3 +6,4 @@ export const COMP_EDITOR_SEQ = 25;
 export const COMP_FILE_SEQ = 26;
 export const MULTI_DELETE_OPT_SEQ = 6;
 export const LIST_NO_OPT_SEQ = 8;
+export const BUILDER_MODAL_OPT_SEQ = 9;

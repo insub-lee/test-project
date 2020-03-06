@@ -259,14 +259,6 @@ class ListPage extends Component {
             bordered
             pagination={{ pageSize: 30 }}
             tableLayout="fixed"
-            onRow={record => ({
-              onClick: () => {
-                console.debug(record.TASK_SEQ);
-                console.debug(this.state.modalVisible);
-
-                // this.handleRowClick(record.TASK_SEQ);
-              },
-            })}
           />
         </Group>
         <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
