@@ -32,7 +32,7 @@ class ViewPage extends Component {
   // }
 
   render = () => {
-    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId, deleteTask } = this.props;
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -68,9 +68,11 @@ class ViewPage extends Component {
               <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
                 Revision
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                List
-              </StyledButton>
+              {!isBuilderModal && (
+                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  List
+                </StyledButton>
+              )}
             </div>
           </Sketch>
         </StyledViewDesigner>
