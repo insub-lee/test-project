@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { Spin } from 'antd';
+import { Spin, Modal } from 'antd';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
@@ -17,8 +17,14 @@ import ModifyPage from './viewComponent/ModifyPage';
 import ViewPage from './viewComponent/ViewPage';
 import ListPage from './viewComponent/ListPage';
 import SearchComp from './viewComponent/SearchComp';
+import ModalPopup from './viewComponent/ModalPopup';
 
 class BizBuilderBase extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1 };
+  }
+
   componentDidMount() {
     const {
       getBuilderData,
@@ -97,6 +103,9 @@ class BizBuilderBase extends React.Component {
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData({ ...formData, [key]: val });
   };
 
+  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq) =>
+    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq });
+
   searchCompRenderer = props => <SearchComp {...props} />;
 
   componentRenderer = () => {
@@ -138,6 +147,7 @@ class BizBuilderBase extends React.Component {
         viewLayer,
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
+        changeBuilderModalState: this.changeBuilderModalState,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
@@ -184,10 +194,22 @@ class BizBuilderBase extends React.Component {
   };
 
   render() {
-    const { dataLoading } = this.props;
+    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting } = this.props;
+    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq } = this.state;
     return (
       <div>
         <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
+        <Modal
+          centered
+          destroyOnClose
+          footer={null}
+          maskClosable={false}
+          visible={isShowBuilderModal}
+          {...builderModalSetting}
+          onCancel={() => this.changeBuilderModalState(false, 'INPUT', -1, -1)}
+        >
+          <ModalPopup sagaKey={sagaKey} viewType={builderModalViewType} workSeq={builderModalWorkSeq} taskSeq={builderModalTaskSeq} />
+        </Modal>
       </div>
     );
   }
@@ -285,6 +307,8 @@ const mapStateToProps = createStructuredSelector({
   workInfo: selectors.makeSelectWorkInfo(),
   dataLoading: selectors.makeSelectDataLoading(),
   listSelectRowKeys: selectors.makeSelectListSelectRowKeys(),
+  isBuilderModal: selectors.makeSelectIsBuilderModal(),
+  builderModalSetting: selectors.makeSelectBuilderModalSetting(),
 });
 
 const mapDispatchToProps = dispatch => ({
