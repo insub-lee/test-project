@@ -100,10 +100,12 @@ function* afterLoginProcess(data, action) {
           yield put({
             type: actionTypes.GET_MYAPP_STORE_TREE_SAGA,
           });
-          // getCommonMenuTree 호출 추가 - 2019.07.10
+          // getCommonMenuTree 호출 추가 - 2019.07.10 -> GET_INITIAL_PORTALPAGE 에서 가져오도록 수정
+          /*
           yield put({
             type: actionTypes.GET_COMMON_MENU_TREE_SAGA,
           });
+          */
         }
       }
       yield put(push(action.payload.url));
@@ -276,20 +278,24 @@ export function* getInitialPortalPage(payload) {
     type: actionTypes.SET_MENU_FIXED_YN,
     menuFixedYn: response.menuFixedYn,
   });  
-  // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
+  // REMOVE DOCK - DOCK에서 읽어오던 공통홈, 개인홈 페이지 ID 를 직접 받아옴
+  const { rootPageInfo, myHomePageId, commonMenuTree } = response;
+
   yield put({
     type: actionTypes.SET_HOME_ROOT_PAGE,
-    rootAppYn: response.rootAppYn,
-    rootPageId: response.rootPageId,
-    myHomePageId: response.myHomePageId,
+    rootPageInfo: rootPageInfo,
+    myHomePageId: myHomePageId,
   });  
   yield put({
     type: actionTypes.SET_PORTAL_MENU_TYPE_CODE,
     menuLayoutCode: response.menuLayoutCode,
     menuCompCode: response.menuCompCode,
-  });  
+  }); 
 
-  
+  // 공통메뉴
+  if (Object.keys(commonMenuTree).length > 0) {
+    yield put(actions.setCommonMenuTree(commonMenuTree.children || []));
+  }  
 }
 
 export function* dockSetMyMenuData(payload) {
@@ -1623,6 +1629,7 @@ export function* getSingleModeLoaddata(payload) {
   }
 }
 
+/*
 export function* getCommonMenuTree() {
   const response = yield call(Axios.get, '/api/portal/v1/page/getCommonMenuTree');
   const { result } = response;
@@ -1630,6 +1637,7 @@ export function* getCommonMenuTree() {
     yield put(actions.setCommonMenuTree(result.children || []));
   }
 }
+*/
 
 // REMOVE DOCK - 미사용?? -> containers\portal\App\index.js 에서 사용
 export function* resetLastExecYn() {
@@ -1744,7 +1752,7 @@ export default function* appSaga() {
   yield takeLatest(actionTypes.GET_SINGLEMODE_LOADDATA_SAGA, getSingleModeLoaddata);
 
   // 9-1
-  yield takeLatest(actionTypes.GET_COMMON_MENU_TREE_SAGA, getCommonMenuTree);
+  // yield takeLatest(actionTypes.GET_COMMON_MENU_TREE_SAGA, getCommonMenuTree);
 
   yield takeLatest(actionTypes.RESET_LAST_EXEC_YN, resetLastExecYn);
 
