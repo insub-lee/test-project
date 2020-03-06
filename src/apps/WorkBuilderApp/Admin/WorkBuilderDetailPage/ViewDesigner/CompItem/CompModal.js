@@ -315,6 +315,12 @@ class CompModal extends Component {
             </Button>
           </p>
           <div className="popoverInnerCom">
+            {comp.COMP_TYPE !== 'LABEL' && (
+              <div className="popoverItem popoverItemInput">
+                <span className="spanLabel">컴포넌트 이름(KO)</span>
+                <Input placeholder="컴포넌트 이름(KO)" defaultValue={comp.NAME_KOR} onChange={e => this.handleChangeData('NAME_KOR', e.target.value)} />
+              </div>
+            )}
             <div className="popoverItem popoverItemInput">
               <span className="spanLabel">컴포넌트 설정</span>
               <TreeSelect
