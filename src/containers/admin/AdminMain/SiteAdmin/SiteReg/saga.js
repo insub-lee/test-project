@@ -79,10 +79,10 @@ export function* registSite(payload) {
 
   if (response.code === 200) {
     // const siteId = parseInt(response.SITE_ID, 10);
+    // history.push({ pathname: '/admin/adminmain/siteadmin/SiteDetail', search: 'D', state: { SITE_ID: parseInt(response.SITE_ID, 10) } });
+    history.push({ pathname: '/admin/adminmain/siteadmin' });
 
-    history.push({ pathname: '/admin/adminmain/siteadmin/SiteDetail', search: 'D', state: { SITE_ID: parseInt(response.SITE_ID, 10) } });
     // history.push(`/admin/adminmain/siteadmin/SiteDetail/${response.SITE_ID}`);
-
     // 성공
     message.success(<MessageContent>{intlObj.get(messages.regComplete)}</MessageContent>, 3);
 
