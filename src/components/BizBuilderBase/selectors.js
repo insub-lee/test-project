@@ -70,7 +70,7 @@ const makeSelectWorkFlowConfig = () =>
     (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
     (state, id) => {
       const config = state.getIn(['bizBuilderBase', id, 'workFlow', 'CONFIG']);
-      return config ? JSON.parse(config) : { info: { PRC_ID: 1 } };
+      return config ? JSON.parse(config) : { info: { PRC_ID: -1 } };
     },
   );
 
