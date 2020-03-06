@@ -28,6 +28,8 @@ class Input extends Component {
     };
   }
 
+  date = moment().format('YYYY-MM-DD');
+
   componentDidMount() {
     this.handleGetUserInfo();
   }
@@ -65,7 +67,7 @@ class Input extends Component {
         .endOf('week')
         .format('YYYYMMDD') ||
     moment(current).format('YYYYMMDD') >
-      moment(this.state.selectedDate)
+      moment(this.date)
         .add(1, 'week')
         .endOf('week')
         .format('YYYYMMDD');

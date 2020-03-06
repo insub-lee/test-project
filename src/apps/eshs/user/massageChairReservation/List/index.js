@@ -13,7 +13,32 @@ class List extends Component {
     super(props);
     this.state = {
       checkedIndex: '',
+      validIndexArr: [],
+      timetable: [],
+      currentDate:
+        moment().format('YYYYMMDD') ===
+          moment()
+            .startOf('week')
+            .format('YYYYMMDD') ||
+        moment().format('YYYYMMDD') ===
+          moment()
+            .endOf('week')
+            .format('YYYYMMDD')
+          ? ''
+          : moment(),
     };
+    this.handleGetTimeTable(
+      moment().format('YYYYMMDD') ===
+        moment()
+          .startOf('week')
+          .format('YYYYMMDD') ||
+        moment().format('YYYYMMDD') ===
+          moment()
+            .endOf('week')
+            .format('YYYYMMDD')
+        ? ''
+        : moment().format('YYYYMMDD'),
+    );
   }
 
   timeTable = [
@@ -50,13 +75,20 @@ class List extends Component {
           title: '안마의자(남)',
           align: 'center',
           render: (text, record, index) => {
-            if (record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00') {
-              console.debug(this.props.formData.gender);
+            const { formData } = this.props;
+            const { timetable } = this.state;
+            // timetable.map(item => console.debug(item.time_zone));
+            // this.disableCheckbox(index, record);
+            if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
+              return '';
+            }
+
+            if (timetable.length) {
               return (
                 <Checkbox
                   onChange={e => this.handleOnCheck(e, index, record)}
                   checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                  disabled={this.props.formData.gender !== 'm'}
+                  disabled={formData.gender !== 'm' || this.disableCheckbox(record.time.substring(0, 5))}
                 />
               );
             }
@@ -67,21 +99,58 @@ class List extends Component {
           title: '안마의자(여)',
           align: 'center',
           render: (text, record, index) => {
-            if (record.time !== '12:00 ~ 12:30' && record.time !== '12:30 ~ 13:00') {
-              return (
-                <Checkbox
-                  onChange={e => this.handleOnCheck(e, index, record)}
-                  checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                  disabled={this.props.formData.gender !== 'f'}
-                />
-              );
+            if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
+              return '';
             }
-            return '';
+            // timetable에서 값 비교해서 disable 예약 있는 인덱스들 state에 저장
+            return (
+              <Checkbox
+                onChange={e => this.handleOnCheck(e, index, record)}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                // disabled={this.props.formData.gender !== 'f'}
+                disabled={[]}
+              />
+            );
           },
         },
       ],
     },
   ];
+
+  componentDidMount() {
+    // const { currentDate } = this.state;
+    // this.handleGetTimeTable(moment(currentDate).format('YYYYMMDD'));
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    const { extraApiData } = nextProps;
+    if (extraApiData.getTimetable) {
+      if (prevState.timetable !== nextProps.extraApiData.getTimetable) {
+        return { timetable: nextProps.extraApiData.getTimetable.timetable };
+      }
+    }
+    return null;
+  }
+
+  disableCheckbox = time => {
+    const { timetable } = this.state;
+    const reservedTimes = [];
+    timetable.map(item => reservedTimes.push(moment(item.time_zone, 'HHmm').format('HH:mm')));
+    console.debug(time, reservedTimes);
+    return reservedTimes.includes(time);
+  };
+
+  handleGetTimeTable = date => {
+    const { sagaKey: id, getExtraApiData } = this.props;
+    const apiArr = [
+      {
+        key: 'getTimetable',
+        type: 'GET',
+        url: `/api/eshs/v1/common/getphysicaltherapytimetable?date=${date}`,
+      },
+    ];
+    getExtraApiData(id, apiArr);
+  };
 
   handleOnCheck = (e, index, record) => {
     if (e.target.checked) {
@@ -105,7 +174,8 @@ class List extends Component {
   };
 
   render() {
-    console.debug(this.props.extraApiData);
+    // console.debug(this.state.timetable.timetable);
+    this.disableCheckbox();
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
     return (
       <div>
