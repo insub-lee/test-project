@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 import { Table, Checkbox } from 'antd';
 import moment from 'moment';
@@ -13,19 +14,8 @@ class List extends Component {
     super(props);
     this.state = {
       checkedIndex: '',
-      validIndexArr: [],
+      // currentDate: '',
       timetable: [],
-      currentDate:
-        moment().format('YYYYMMDD') ===
-          moment()
-            .startOf('week')
-            .format('YYYYMMDD') ||
-        moment().format('YYYYMMDD') ===
-          moment()
-            .endOf('week')
-            .format('YYYYMMDD')
-          ? ''
-          : moment(),
     };
     this.handleGetTimeTable(
       moment().format('YYYYMMDD') ===
@@ -75,40 +65,64 @@ class List extends Component {
           title: '안마의자(남)',
           align: 'center',
           render: (text, record, index) => {
-            const { formData } = this.props;
-            const { timetable } = this.state;
-            // timetable.map(item => console.debug(item.time_zone));
-            // this.disableCheckbox(index, record);
+            const { formData, extraApiData } = this.props;
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
-              return '';
+              return <span>점심 휴무</span>;
             }
 
-            if (!this.disableCheckbox(record.time.substring(0, 5))) {
+            if (this.isReserved(record.time) && formData.gender === 'm') {
+              if (
+                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id ||
+                extraApiData.getUserInfo.userInfo.user_id === 1
+              ) {
+                // 관리자이거나 예약자면 취소버튼 나옴
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
+                    <StyledButton className="btn-primary" onClick={this.handleDeleteButtonClick}>
+                      취소
+                    </StyledButton>
+                  </div>
+                );
+              }
               return (
-                <Checkbox
-                  onChange={e => this.handleOnCheck(e, index, record)}
-                  checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                  disabled={formData.gender !== 'm'}
-                />
+                // 관리자가 아니면서 남이 예약한 시간
+                <div>
+                  <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
+                </div>
               );
             }
-            return <span>Reserved</span>;
+
+            return (
+              <Checkbox
+                onChange={e => this.handleOnCheck(e, index, record)}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                // disabled={formData.gender !== 'm' || moment() > moment(record.time, 'HH:mm')}
+                disabled={formData.gender !== 'm'} // 테스트 용
+              />
+            );
           },
         },
         {
           title: '안마의자(여)',
           align: 'center',
           render: (text, record, index) => {
+            const { formData } = this.props;
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
-              return '';
+              return <span>점심 휴무</span>;
             }
-            // timetable에서 값 비교해서 disable 예약 있는 인덱스들 state에 저장
+
+            if (this.isReserved(record.time) && formData.gender === 'f') {
+              // 나중에 권한 체크해서 관리자면 이름 나오게
+              // 아니면 그냥 예약됨만 표시
+              return <span>{this.getBookerName(record.time)}님이 예약</span>;
+            }
+
             return (
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
                 checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                // disabled={this.props.formData.gender !== 'f'}
-                disabled={[]}
+                disabled={formData.gender !== 'f' || moment() > moment(record.time, 'HH:mm')}
               />
             );
           },
@@ -117,10 +131,7 @@ class List extends Component {
     },
   ];
 
-  componentDidMount() {
-    // const { currentDate } = this.state;
-    // this.handleGetTimeTable(moment(currentDate).format('YYYYMMDD'));
-  }
+  componentDidMount() {}
 
   static getDerivedStateFromProps(nextProps, prevState) {
     const { extraApiData } = nextProps;
@@ -132,12 +143,18 @@ class List extends Component {
     return null;
   }
 
-  disableCheckbox = time => {
+  isReserved = time => {
     const { timetable } = this.state;
     const reservedTimes = [];
-    timetable.map(item => reservedTimes.push(moment(item.time_zone, 'HHmm').format('HH:mm')));
-    console.debug(time, reservedTimes);
-    return reservedTimes.includes(time);
+    const startTime = moment(time.substring(0, 5), 'HH:mm').format('HHmm');
+    timetable.map(item => reservedTimes.push(item.time_zone));
+    return reservedTimes.includes(startTime);
+  };
+
+  getBookerInfo = time => {
+    const { timetable } = this.state;
+    const startTime = moment(time.substring(0, 5), 'HH:mm').format('HHmm');
+    return timetable.find(item => item.time_zone === startTime);
   };
 
   handleGetTimeTable = date => {
@@ -161,9 +178,12 @@ class List extends Component {
         this.makeFormData(index, moment(record.time.substring(0, 5), 'HH:mm').format('HHmm')),
       );
     } else {
-      this.setState({
-        checkedIndex: '',
-      });
+      this.setState(
+        {
+          checkedIndex: '',
+        },
+        this.makeFormData(undefined, undefined),
+      );
     }
   };
 
@@ -173,9 +193,11 @@ class List extends Component {
     changeFormData(id, 'TIME_ZONE', time);
   };
 
+  handleDeleteButtonClick = () => {
+    console.debug('@@@DELETE@@@');
+  };
+
   render() {
-    // console.debug(this.state.timetable.timetable);
-    this.disableCheckbox();
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
     return (
       <div>
@@ -186,6 +208,7 @@ class List extends Component {
           saveTask={saveTask}
           formData={formData}
           sagaKey={sagaKey}
+          handleGetTimeTable={this.handleGetTimeTable}
         />
         <StyledViewDesigner>
           <Sketch>
@@ -204,29 +227,6 @@ List.propTypes = {
   changeFormData: PropTypes.func,
   formData: PropTypes.object,
   saveTask: PropTypes.string,
-  apiArr: PropTypes.array,
-};
-
-const currentDate =
-  moment().format('YYYYMMDD') ===
-    moment()
-      .startOf('week')
-      .format('YYYYMMDD') ||
-  moment().format('YYYYMMDD') ===
-    moment()
-      .endOf('week')
-      .format('YYYYMMDD')
-    ? ''
-    : moment();
-
-List.defaultProps = {
-  apiArr: [
-    {
-      key: 'getTimetable',
-      type: 'GET',
-      url: `/api/eshs/v1/common/getphysicaltherapytimetable?date=${moment(currentDate).format('YYYYMMDD')}`,
-    },
-  ],
 };
 
 export default List;
