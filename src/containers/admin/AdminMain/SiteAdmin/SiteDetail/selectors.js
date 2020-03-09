@@ -8,12 +8,8 @@ const makeSelectSiteSecI = () => createSelector(selectSiteInfo, selectSecIState 
 
 const makeSelectSiteSecV = () => createSelector(selectSiteInfo, selectSecVState => selectSecVState.get('secListV').toJS());
 
-const makeHomeList = () =>
-  createSelector(
-    selectSiteInfo,
-    selectSiteHomeList => selectSiteHomeList.get('home').toJS(),
-    // selectSiteRegState => selectSiteRegState.get('theme'),
-  );
+const makeGrpList = () => createSelector(selectSiteInfo, selectSiteHomeList => selectSiteHomeList.get('bizGrpList').toJS());
+const makeHomeList = () => createSelector(selectSiteInfo, selectSiteHomeList => selectSiteHomeList.get('bizHomeList').toJS());
 
 const makeSkinList = () =>
   createSelector(
@@ -42,6 +38,7 @@ export {
   makeSelectSiteInfo,
   makeSelectSiteSecI,
   makeSelectSiteSecV,
+  makeGrpList,
   makeHomeList,
   makeSkinList,
   makeDelRow,

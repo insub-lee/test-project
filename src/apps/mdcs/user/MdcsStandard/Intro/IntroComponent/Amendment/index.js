@@ -1,71 +1,176 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select } from 'antd';
+import { Input, Table } from 'antd';
 
-/* DESC: 개정 기안 */
-const Amendment = ({ options, values, searchValue, action }) => (
-  <>
-    <li>
-      <div className="label-txt">문서번호검색</div>
-      <Input onPressEnter={action.onSearchRevisionData} value={searchValue} onChange={action.onChangeSearchValue} />
-    </li>
-    {/*
-    <li>
-      <div className="label-txt">대분류</div>
-      <Select placeholder="대분류(문서구분)" onChange={action.onChangeByStep1} value={values[0]}>
-        {options[0]}
-      </Select>
-    </li>
-    <li>
-      <div className="label-txt">중분류</div>
-      <Select placeholder="중분류" onChange={action.onChangeByStep2} value={values[1]}>
-        {options[1]}
-      </Select>
-    </li>
-    <li>
-      <div className="label-txt">소분류</div>
-      <Select placeholder="소분류(업무기능)" onChange={action.onChangeByStep3} value={values[2]}>
-        {options[2]}
-      </Select>
-    </li>
-    <li>
-      <div className="label-txt">문서LEVEL</div>
-      <Select placeholder="문서LEVEL/종류" onChange={action.onChangeByStep4} value={values[3]}>
-        {options[3]}
-      </Select>
-    </li>
-    */}
-  </>
-);
+import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
+
+const AntdTable = StyledAntdTable(Table);
+
+const columns = [
+  {
+    dataIndex: 'DOCNUMBER',
+    title: '문서번호',
+    align: 'center',
+    width: '15%',
+  },
+  {
+    dataIndex: 'VERSION',
+    title: 'REV',
+    align: 'center',
+    width: '10%',
+  },
+  {
+    dataIndex: 'TITLE',
+    title: 'Title',
+    ellipsis: true,
+    width: '35%',
+  },
+  {
+    dataIndex: 'REG_DEPT_NAME',
+    title: '기안부서',
+    align: 'center',
+    width: '15%',
+  },
+  {
+    dataIndex: 'REG_USER_NAME',
+    title: '기안자',
+    align: 'center',
+    width: '15%',
+  },
+  {
+    dataIndex: 'CHANGE',
+    title: 'Change',
+    align: 'center',
+    width: '10%',
+    render: text => (text === 88 ? 'MAJOR' : 'MINOR'),
+  },
+];
+class Amendment extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchValue: undefined,
+      revisionList: [],
+      categoryList: [],
+      templateList: [],
+    };
+  }
+
+  initDataBind = id => {
+    const {
+      result: {
+        categoryInfo: { categoryMapList: categoryList },
+        docTemplateInfoByCategory: { list: templateList },
+      },
+    } = this.props;
+
+    this.setState({
+      categoryList,
+      templateList,
+    });
+  };
+
+  componentDidMount() {
+    const { sagaKey, getCallDataHandler, apiArys } = this.props;
+    getCallDataHandler(sagaKey, apiArys, this.initDataBind);
+  }
+
+  onChangeSearchValue = e => {
+    this.setState({ searchValue: e.target.value });
+  };
+
+  onInitDataBind = (id, response) => {
+    const { revisionList } = response;
+    this.setState({ revisionList });
+  };
+
+  onSearchRevisionData = () => {
+    const { sagaKey, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(sagaKey, 'POST', `/api/mdcs/v1/common/mdcsrevisionListHandler`, {}, this.onInitDataBind);
+  };
+
+  onSelectedWorkSeq = selectedNodeIds => {
+    console.debug(selectedNodeIds);
+    if (selectedNodeIds.includes(289)) {
+      return 2921;
+    }
+    if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
+      return 3101;
+    }
+    return undefined;
+  };
+
+  onTableRowClick = (draftType, workSeq, taskSeq, nodeId, fullPath, change) => {
+    const { onShowModal } = this.props;
+
+    const fixed = false;
+    const selectedNodeIds = fullPath
+      .split('|')
+      .slice(1)
+      .map(item => Number(item));
+    const inputMetaSeq = this.onSelectedWorkSeq(selectedNodeIds);
+    const workPrcProps = {
+      draftType,
+      nodeIds: selectedNodeIds,
+      degreeFlag: Number(change),
+    };
+    onShowModal(workSeq, taskSeq, inputMetaSeq, nodeId, 'REVISION', workPrcProps);
+  };
+
+  render() {
+    console.debug(this.state);
+    const { revisionList } = this.state;
+    return (
+      <>
+        <li>
+          <div className="label-txt">문서번호검색</div>
+          <Input onChange={this.onChangeSearchValue} />
+        </li>
+        <div className="btn-wrap">
+          <StyledButton className="btn-primary" onClick={this.onSearchRevisionData}>
+            검색
+          </StyledButton>
+        </div>
+        <AntdTable
+          rowKey={({ TASK_SEQ, WORK_SEQ }) => `${TASK_SEQ}-${WORK_SEQ}`}
+          columns={columns}
+          dataSource={revisionList}
+          onRow={record => ({
+            onClick: () => this.onTableRowClick(DraftType.AMENDMENT, record.WORK_SEQ, record.TASK_SEQ, record.NODE_ID, record.FULLPATH, record.CHANGE),
+          })}
+        />
+      </>
+    );
+  }
+}
 
 Amendment.propTypes = {
-  options: PropTypes.arrayOf(PropTypes.any),
-  values: PropTypes.arrayOf(PropTypes.any),
-  searchValue: PropTypes.string,
-  action: PropTypes.shape({
-    onChangeByStep1: PropTypes.func,
-    onChangeByStep2: PropTypes.func,
-    onChangeByStep3: PropTypes.func,
-    onChangeByStep4: PropTypes.func,
-    onChangeByStep: PropTypes.func,
-    onSearchRevisionData: PropTypes.func,
-    onChangeSearchValue: PropTypes.func,
-  }),
+  apiArys: PropTypes.array,
 };
 
 Amendment.defaultProps = {
-  options: [],
-  values: [],
-  searchValue: '',
-  action: {
-    onChangeByStep1: () => {},
-    onChangeByStep2: () => {},
-    onChangeByStep3: () => {},
-    onChangeByStep4: () => {},
-    onChangeByStep: () => {},
-    onSearchRevisionData: () => {},
-    onChangeSearchValue: () => {},
-  },
+  apiArys: [
+    {
+      key: 'categoryInfo',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=1',
+      type: 'GET',
+      params: {},
+    },
+    {
+      key: 'docTemplateInfoByCategory',
+      url: '/api/mdcs/v1/common/DocCategoryTemplHandler',
+      type: 'GET',
+      params: {},
+    },
+    {
+      key: 'docTemplateInfo',
+      url: '/api/admin/v1/common/categoryMapList?MAP_ID=2',
+      type: 'GET',
+      params: {},
+    },
+  ],
 };
 
 export default Amendment;

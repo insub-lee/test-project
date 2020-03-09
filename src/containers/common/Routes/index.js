@@ -14,12 +14,14 @@ import injectSaga from 'utils/injectSaga';
 import 'style/sortable-tree-biz.css';
 import 'utils/momentLang';
 
+import { basicPath } from 'containers/common/constants';
+import * as authSelector from 'containers/common/Auth/selectors';
+import * as routesSelector from 'containers/common/Routes/selectors';
 import reducer from './reducer';
 import saga from './saga';
 import * as actions from './actions';
 import * as authActions from '../Auth/actions';
 import SignIn from '../Auth/index';
-import * as authSelectors from '../Auth/selectors';
 import RestrictedRoute from './RestrictedRoute';
 import routes from './routes';
 
@@ -75,12 +77,35 @@ class PublicRoutes extends Component {
   }
 
   loadData = () => {
-    const { location, history, getLoaddata, getSingleModeLoaddata } = this.props;
+    const { location, history, getLoaddata, getSingleModeLoaddata, rootPageInfo } = this.props;
     const pathArray = location.pathname.split('/');
     if (location.pathname === '/') {
       // REMOVE DOCK - 주석처리, 기본 루트로 들어왔을 경우 처리 공통홈으로 이동 처리
       // getLoaddata('latest');
-      getLoaddata('commonHome');
+      // getLoaddata('commonHome');
+      const { extras: node } = rootPageInfo;
+      const state = { type: 'execMenu', node, executedDockPageId: node.PAGE_ID };
+
+      if (node.INTL_TYPE === 'Y') {
+        this.props.history.push({
+          pathname: `/${basicPath.APPS}/${node.SRC_PATH}`,
+          execInfo: state,
+        });
+      } else if (node.SRC_PATH === 'legacySVC') {
+        if (node.TARGET.toUpperCase() === 'NEW') {
+          window.open(node.URL, node.NAME_KOR, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
+        } else {
+          this.props.history.push({
+            pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
+            execInfo: state,
+          });
+        }
+      } else {
+        this.props.history.push({
+          pathname: `/${basicPath.PAGE}/${node.PAGE_ID}`,
+          execInfo: state,
+        });
+      }
     } else if (checkPath(pathArray[1], portalPath)) {
       // go to getLoaddata
       const param1 = pathArray[1];
@@ -176,6 +201,8 @@ PublicRoutes.propTypes = {
   boot: PropTypes.func.isRequired,
   // SMSESSION: PropTypes.string,
   // checkSession: PropTypes.func.isRequired,
+  rootPageInfo: PropTypes.object,
+  myHomePageId: PropTypes.number,
 };
 
 PublicRoutes.defaultProps = {
@@ -184,9 +211,11 @@ PublicRoutes.defaultProps = {
 };
 
 const mapStateToProps = createStructuredSelector({
-  isLoggedIn: authSelectors.makeSelectIdToken(),
-  profile: authSelectors.makeSelectProfile(),
-  SMSESSION: authSelectors.makeSMSESSION(),
+  isLoggedIn: authSelector.makeSelectIdToken(),
+  profile: authSelector.makeSelectProfile(),
+  SMSESSION: authSelector.makeSMSESSION(),
+  rootPageInfo: routesSelector.makeSelectRootPageInfo(),
+  myHomePageId: routesSelector.makeSelectMyHomePageID(),
 });
 
 const mapDispatchToProps = dispatch => ({

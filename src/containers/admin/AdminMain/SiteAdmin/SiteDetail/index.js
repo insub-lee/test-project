@@ -59,7 +59,8 @@ class SiteDetail extends React.Component {
       NAME_CHN: props.location.state.NAME_CHN,
       NAME_ENG: props.location.state.NAME_ENG,
       URL: '',
-      BIZGRP_ID: 1,
+      BIZGRP_ID: -1,
+      HOME_MENU_ID: -1,
       THEME_CD: '',
       // siteInfoRow: [],
       managerOrgShow: false,
@@ -89,6 +90,7 @@ class SiteDetail extends React.Component {
     this.getSecInfoFromDB = this.getSecInfoFromDB.bind(this);
     this.getSecInfoFromDBAll = this.getSecInfoFromDBAll.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleSelectHome = this.handleSelectHome.bind(this);
     // this.setReadOnly = this.setReadOnly.bind(this);
     this.onChangeMenuLayout = this.onChangeMenuLayout.bind(this);
     this.onChangeMenuComp = this.onChangeMenuComp.bind(this);
@@ -115,7 +117,8 @@ class SiteDetail extends React.Component {
       NAME_CHN: nextProps.siteInfoRow.NAME_CHN,
       NAME_ENG: nextProps.siteInfoRow.NAME_ENG,
       URL: nextProps.siteInfoRow.URL,
-      BIZGRP_ID: nextProps.siteInfoRow.BIZGRP_ID ? nextProps.siteInfoRow.BIZGRP_ID.toString() : '1',
+      BIZGRP_ID: nextProps.siteInfoRow.BIZGRP_ID ? nextProps.siteInfoRow.BIZGRP_ID.toString() : '-1',
+      HOME_MENU_ID: nextProps.siteInfoRow.HOME_MENU_ID ? nextProps.siteInfoRow.HOME_MENU_ID.toString() : '-1',
       THEME_CD: nextProps.siteInfoRow.THEME_CD,
       // nameValid: false,
       nameValid_Kor: false,
@@ -291,6 +294,8 @@ class SiteDetail extends React.Component {
       this.state.URL !== null &&
       this.state.BIZGRP_ID !== '' &&
       this.state.BIZGRP_ID !== null &&
+      this.state.HOME_MENU_ID !== '' &&
+      this.state.HOME_MENU_ID !== null &&
       this.state.THEME_CD !== '' &&
       this.state.THEME_CD !== null &&
       this.state.MENUTYPE_CD !== '' &&
@@ -336,6 +341,7 @@ class SiteDetail extends React.Component {
       this.state.NAME_CHN,
       this.state.URL.charAt(this.state.URL.length - 1) !== '/' ? `${this.state.URL}/` : `${this.state.URL}`,
       this.state.BIZGRP_ID,
+      this.state.HOME_MENU_ID,
       this.state.THEME_CD,
       this.state.managerSetMembers,
       this.state.userSetMembers,
@@ -388,6 +394,10 @@ class SiteDetail extends React.Component {
   // selectbox 값 변경 시
   handleSelect(e) {
     this.setState({ BIZGRP_ID: e });
+  }
+
+  handleSelectHome(e) {
+    this.setState({ HOME_MENU_ID: e });
   }
 
   getDataFromOrganization = resultObj => {
@@ -504,6 +514,7 @@ class SiteDetail extends React.Component {
                     tmpNameChn: prevState.NAME_CHN,
                     tmpUrl: prevState.URL,
                     tmpBizGrp: prevState.BIZGRP_ID,
+                    tmpHome: prevState.HOME_MENU_ID,
                     tmpTheme: prevState.THEME_CD,
                     tmpManagerSetMembers: prevState.managerSetMembers,
                     tmpUserSetMembersTheme: prevState.userSetMembers,
@@ -556,6 +567,7 @@ class SiteDetail extends React.Component {
                   NAME_CHN: prevState.orgVal.tmpNameChn,
                   URL: prevState.orgVal.tmpUrl,
                   BIZGRP_ID: prevState.orgVal.tmpBizGrp,
+                  HOME_MENU_ID: prevState.orgVal.tmpHome,
                   THEME_CD: prevState.orgVal.tmpTheme,
                   managerSetMembers: prevState.orgVal.tmpManagerSetMembers,
                   userSetMembers: prevState.orgVal.tmpUserSetMembersTheme,
@@ -788,7 +800,8 @@ class SiteDetail extends React.Component {
   render() {
     // 조직도로부터 데이터 가져오는 함수
 
-    const homeRow = this.props.loadHome.map(keycomp => <Option key={keycomp.BIZGRP_ID.toString()}>{lang.get('NAME', keycomp)}</Option>);
+    const grpRow = this.props.loadGrp.map(keycomp => <Option key={keycomp.BIZGRP_ID.toString()}>{lang.get('NAME', keycomp)}</Option>);
+    const homeRow = this.props.loadHome.map(keycomp => <Option key={keycomp.MENU_ID.toString()}>{lang.get('NAME', keycomp)}</Option>);
 
     return (
       <div>
@@ -962,6 +975,7 @@ class SiteDetail extends React.Component {
                           // hasFeedback
                           // validateStatus={this.state.nameValid && !this.props.getNameChk ? 'success' : 'error'}
                         >
+                          <span style={{ padding: '0px 5px 0px 0px' }}>공통메뉴</span>
                           <Select
                             // defaultValue="1"
                             value={this.state.BIZGRP_ID === '-1' ? '' : this.state.BIZGRP_ID}
@@ -974,6 +988,22 @@ class SiteDetail extends React.Component {
                             disabled={this.state.readOnly === 'true'}
                             defaultActiveFirstOption
                           >
+                            {grpRow}
+                          </Select>
+                          <span style={{ padding: '0px 5px 0px 15px' }}>공통홈 폴더</span>
+                          <Select
+                            // defaultValue="1"
+                            value={this.state.HOME_MENU_ID}
+                            onChange={this.handleSelectHome}
+                            className="selectOpt"
+                            style={{ width: 200 }}
+                            dropdownStyle={{ fontSize: 13 }}
+                            notFoundContent="선택하세요"
+                            placeholder="선택하세요"
+                            disabled={this.state.readOnly === 'true'}
+                            defaultActiveFirstOption
+                          >
+                            <Option key="-1">선택안함</Option>
                             {homeRow}
                           </Select>
                           {}
@@ -1053,6 +1083,7 @@ SiteDetail.propTypes = {
   getHomeList: PropTypes.func,
   loadSkin: PropTypes.array,
   loadHome: PropTypes.array,
+  loadGrp: PropTypes.array,
   history: PropTypes.object,
   getNameChk: PropTypes.bool,
   getUrlChk: PropTypes.bool,
@@ -1075,6 +1106,7 @@ const mapDispatchToProps = dispatch => ({
     nameChn,
     url,
     bizGrpId,
+    homeMenuId,
     themeCd,
     managerSetMembers,
     userSetMembers,
@@ -1093,6 +1125,7 @@ const mapDispatchToProps = dispatch => ({
         nameChn,
         url,
         bizGrpId,
+        homeMenuId,
         themeCd,
         managerSetMembers,
         userSetMembers,
@@ -1116,6 +1149,7 @@ const mapStateToProps = createStructuredSelector({
   delList: selectors.makeDelRow(),
   loadSkin: selectors.makeSkinList(),
   loadHome: selectors.makeHomeList(),
+  loadGrp: selectors.makeGrpList(),
   getNameChk: selectors.makeNameCheck(),
   getNameChkK: selectors.makeNameCheckK(),
   getNameChkC: selectors.makeNameCheckC(),
