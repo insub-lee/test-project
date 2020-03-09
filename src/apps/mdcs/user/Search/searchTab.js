@@ -130,7 +130,7 @@ class SearchTab extends Component {
                   treeData={this.state.treeData}
                   sagaKey="STD_NPI_SEARCH"
                   searchTitle="NPI"
-                  workSeq={201}
+                  workSeq={2975}
                   component={SearchDetail}
                 />
               )}
@@ -151,7 +151,7 @@ class SearchTab extends Component {
                   treeData={this.state.treeData}
                   sagaKey="STD_TDS_SEARCH"
                   searchTitle="TDS"
-                  workSeq={201}
+                  workSeq={2941}
                   component={SearchDetail}
                 />
               )}
@@ -172,7 +172,7 @@ class SearchTab extends Component {
                   treeData={this.state.treeData}
                   sagaKey="STD_WP_SEARCH"
                   searchTitle="Work Process"
-                  workSeq={201}
+                  workSeq={3013}
                   component={SearchDetail}
                 />
               )}
