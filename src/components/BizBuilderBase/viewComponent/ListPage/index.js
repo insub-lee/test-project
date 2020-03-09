@@ -86,7 +86,7 @@ class ListPage extends Component {
         columns.push({
           dataIndex: node.comp.CONFIG.property.viewDataKey || node.comp.COMP_FIELD,
           title: node.comp.CONFIG.property.HEADER_NAME_KOR,
-          width: node.style.width,
+          width: (node.style && node.style.width) || undefined,
           render: (text, record) => this.renderCompRow(node.comp, text, record, true),
         });
       }
@@ -139,6 +139,8 @@ class ListPage extends Component {
       getListData,
       workSeq,
       removeMultiTask,
+      isBuilderModal,
+      changeBuilderModalState,
     } = this.props;
     const { isMultiDelete } = this.state;
 
@@ -223,7 +225,12 @@ class ListPage extends Component {
                   <StyledButton className="btn-primary">Delete</StyledButton>
                 </Popconfirm>
               )}
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+              <StyledButton
+                className="btn-primary"
+                onClick={() =>
+                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
+                }
+              >
                 Add
               </StyledButton>
             </div>

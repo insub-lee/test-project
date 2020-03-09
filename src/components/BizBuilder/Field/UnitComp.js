@@ -102,8 +102,11 @@ class UnitComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, colData } = this.props;
+    const { CONFIG, visible, colData, readOnly } = this.props;
     const { unitModal, modalGrid } = this.state;
+    if (readOnly || CONFIG.property.readOnly) {
+      return visible ? <span>&nbsp;{colData || ''}</span> : '';
+    }
     return visible ? (
       <div>
         <Input value={colData} placeholder={CONFIG.property.placeholder} className={CONFIG.property.className || ''} style={{ width: 150 }} />

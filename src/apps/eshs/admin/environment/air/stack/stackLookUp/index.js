@@ -35,10 +35,10 @@ class stackLookUp extends Component {
   isModalPage = (viewType, taskSeq) => (
     <BizBuilderBase
       sagaKey="stackLookUpModal"
-      workSeq={3741}
+      workSeq={4401}
       taskSeq={taskSeq}
       viewType={viewType}
-      compProps={{ sagaKey: 'searchBarData', workSeq: 3741 }}
+      compProps={{ sagaKey: 'searchBarData', workSeq: 4401 }}
       CustomViewPage={CustomView}
       isModalChange={this.isModalChange}
       loadingComplete={this.loadingComplete}
@@ -50,10 +50,10 @@ class stackLookUp extends Component {
       <>
         <BizBuilderBase
           sagaKey="stackLookUp"
-          workSeq={3741}
+          workSeq={4401}
           taskSeq={-1}
           viewType="LIST"
-          listMetaSeq={4301}
+          listMetaSeq={4461}
           CustomListPage={CustomList}
           isModalChange={this.isModalChange}
           loadingComplete={this.loadingComplete}

@@ -4,19 +4,29 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
-
+const init = { value: null, text: null };
 function CustomValueSelectComp(props) {
   const [values, setValues] = useState([]);
   const [defaultValue, setDefaultValue] = useState({});
+
   const { CONFIG, COMP_FIELD } = props;
 
   useEffect(() => {
-    const { customValues, definedValue } = props.CONFIG.property;
-    setValues(customValues instanceof Array ? [...customValues] : [{ value: null, text: null }]);
-    setDefaultValue(definedValue instanceof Object ? { ...definedValue } : { value: null, text: null });
+    const { customValues, definedValue, setDefault } = props.CONFIG.property;
+    setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
+    const isReg = typeof setDefault === 'string' ? setDefault : 'N';
+    setDefaultValue(isReg === 'Y' ? (definedValue instanceof Object ? { ...definedValue } : { ...init }) : { ...init });
+
+    onChangeHandler(definedValue.value);
   }, []);
 
-  const onChangeHandler = value => {
+  function valueHandler(set, idx) {
+    const { value } = set[idx];
+    onChangeHandler(value);
+    setDefaultValue(set[idx]);
+  }
+
+  function onChangeHandler(value) {
     const {
       changeFormData,
       sagaKey: id,
@@ -32,17 +42,17 @@ function CustomValueSelectComp(props) {
       changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
-  };
+  }
 
   return (
     <Select
       className={CONFIG.property.className || ''}
-      onChange={value => onChangeHandler(value)}
+      onChange={value => valueHandler(values, value)}
       style={{ width: 300, marginRight: 10 }}
-      value={defaultValue.value}
+      value={defaultValue.text}
     >
-      {values.map(({ text, value }, idx) => (
-        <Option key={`${idx}_${value}_${text}`} value={value}>
+      {values.map(({ value, text }, idx) => (
+        <Option key={`${idx}_${value}_${text}`} value={idx}>
           {text}
         </Option>
       ))}

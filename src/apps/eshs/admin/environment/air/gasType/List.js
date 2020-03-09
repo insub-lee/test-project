@@ -103,7 +103,6 @@ class List extends Component {
   editModalTemplate = () => <Edit {...this.props} modalProps={this.state.modalProps} onEditCancel={this.onEditCancel} onCancel={this.onCancel} />;
 
   render() {
-    console.log(this.state, 'state');
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledViewDesigner>
