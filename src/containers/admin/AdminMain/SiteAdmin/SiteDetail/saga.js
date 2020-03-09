@@ -139,10 +139,12 @@ export function* getHomeList(payload) {
   const response = yield call(Axios.post, '/api/admin/v1/common/getbizgrplist', payload);
   const resultValue = response;
 
-  if (resultValue.bizGrpList.length > 0) {
-    yield put({ type: constants.SET_HOME, payload: fromJS(resultValue.bizGrpList) });
-  } else {
-    yield put({ type: constants.SET_HOME, payload: fromJS([]) });
+  if (resultValue.code === 200) {
+    yield put({
+      type: constants.SET_HOME,
+      bizGrpList: fromJS(resultValue.bizGrpList.length > 0 ? resultValue.bizGrpList : []),
+      bizHomeList: fromJS(resultValue.bizHomeList.length > 0 ? resultValue.bizHomeList : []),
+    });
   }
 }
 
