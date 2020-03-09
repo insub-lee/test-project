@@ -5,7 +5,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import CustomList from './List';
 import CustomView from './View';
 
-class stackLookUp extends Component {
+class stackStatus extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,8 +66,8 @@ class stackLookUp extends Component {
   }
 }
 
-stackLookUp.propTypes = {};
+stackStatus.propTypes = {};
 
-stackLookUp.defaultProps = {};
+stackStatus.defaultProps = {};
 
-export default stackLookUp;
+export default stackStatus;
