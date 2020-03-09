@@ -306,3 +306,5 @@ export const removeMultiTaskBySaga = (id, reloadId, callbackFunc) => ({
   reloadId,
   callbackFunc,
 });
+
+export const setBuilderModalByReducer = (id, flag, builderModalSetting) => ({ type: actionTypes.SET_BUILDER_MODAL_REDUCER, id, flag, builderModalSetting });
