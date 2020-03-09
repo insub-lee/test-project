@@ -386,29 +386,14 @@ class App extends React.Component {
   };
 
   goCommonHome = () => {
-    // REMOVE DOCK - 주석 처리 rootPageId, myHomePageId 사용
-    // const { commonMenuTreeData } = this.props;
-    /*
-     현재공통메뉴 홈을 구분 해 줄수 있는 구분자가 없음
-     공통메뉴의 첫번째 메뉴를 임의로 공통메뉴 홈으로 설정
-     없을 경우 개인 홈으로 이동
-     */
-    /*
-    if (commonMenuTreeData && commonMenuTreeData.length > 0) {
-      const idx = commonMenuTreeData.findIndex(item => item.extras.APP_YN === 'N');
-      if (idx > -1) {
-        this.execPage(commonMenuTreeData[idx].extras, 'execMenu');
-        return;
-      }
-    }
-    */
-    const { rootPageId, rootAppYn, myHomePageId } = this.props;
+    const { rootPageInfo, myHomePageId } = this.props;
 
-    if (rootPageId && rootPageId > 0) {
-      this.props.history.push(`/${rootAppYn === 'Y' ? basicPath.APPS : basicPath.PAGE}/${rootPageId}`);
+    if (rootPageInfo && rootPageInfo.extras) {
+      this.execPage(rootPageInfo.extras, 'execMenu');
     } else {
       this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
     }
+
   };
 
   getLayoutMarginRight = () =>
@@ -770,8 +755,7 @@ App.propTypes = {
   resetLastExecYn: PropTypes.func.isRequired,
   menuFixedYn: PropTypes.string,
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
-  rootPageId: PropTypes.number,
-  rootAppYn: PropTypes.string,
+  rootPageInfo: PropTypes.object,
   myHomePageId: PropTypes.number,
   menuLayoutCode: PropTypes.string,
   menuCompCode: PropTypes.string,
@@ -792,7 +776,6 @@ App.defaultProps = {
   hasRoleBizMng: false,
   bizGrpMngCnt: 0,
   headerTitle: '',
-  rootAppYn: 'N',
   menuLayoutCode: '1',
   menuCompCode: '1',
 };
@@ -829,8 +812,7 @@ const mapStateToProps = createStructuredSelector({
   commonMenuTreeData: routesSelector.makeCommonMenuTree(),
   menuFixedYn: selectors.makeSelectMenuFixedYn(),
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
-  rootPageId: routesSelector.makeSelectRootPageId(),
-  rootAppYn: routesSelector.makeSelectRootAppYn(),
+  rootPageInfo: routesSelector.makeSelectRootPageInfo(),
   myHomePageId: routesSelector.makeSelectMyHomePageID(),
   menuLayoutCode: selectors.makeSelectMenuLayoutCode(),
   menuCompCode: selectors.makeSelectMenuCompCode(),

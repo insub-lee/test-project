@@ -43,9 +43,7 @@ const makeCommonMenuTree = () => createSelector(selectCommon, portalState => por
 const makeSelectMenuFixedYn = () => createSelector(selectCommon, portalState => portalState.menuFixedYn);
 
 // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
-const makeSelectRootPageId = () => createSelector(selectCommon, portalState => portalState.get('rootPageId'));
-
-const makeSelectRootAppYn = () => createSelector(selectCommon, portalState => portalState.get('rootAppYn'));
+const makeSelectRootPageInfo = () => createSelector(selectCommon, portalState => portalState.get('rootPageInfo'));
 
 const makeSelectMyHomePageID = () => createSelector(selectCommon, portalState => portalState.get('myHomePageId'));
 
@@ -77,7 +75,6 @@ export {
   makeCommonMenuTree,
   makeSelectMenuFixedYn,
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
-  makeSelectRootPageId,
-  makeSelectRootAppYn,
+  makeSelectRootPageInfo,
   makeSelectMyHomePageID,
 };
