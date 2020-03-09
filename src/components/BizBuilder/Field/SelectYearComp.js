@@ -9,7 +9,11 @@ function SelectYearComp(props) {
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
-    const { minYear, maxYear } = props.CONFIG.property;
+    const { minYear, maxYear, setDefault, defaultYear } = props.CONFIG.property;
+    const isReg = typeof setDefault === 'string' ? setDefault : 'N';
+    if (isReg === 'Y') {
+      onChangeHandler(defaultYear);
+    }
 
     const years = [];
     for (let i = parseInt(minYear !== '' ? minYear : currentYear, 10); i <= parseInt(maxYear !== '' ? maxYear : currentYear, 10); i++) {

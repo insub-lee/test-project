@@ -45,12 +45,15 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
+    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');
+    }
+    if (isBuilderModal) {
+      changeViewPage(reloadId, workSeq, -1, 'LIST');
     }
   };
 
@@ -66,6 +69,8 @@ class InputPage extends Component {
       changeViewPage,
       workInfo,
       CustomWorkProcess,
+      reloadId,
+      isBuilderModal,
     } = this.props;
 
     // Work Process 사용여부
@@ -86,7 +91,6 @@ class InputPage extends Component {
           () => loadingComplete(),
         );
       }
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -95,12 +99,14 @@ class InputPage extends Component {
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, id)}>
+              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, reloadId || id)}>
                 Save
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                List
-              </StyledButton>
+              {!isBuilderModal && (
+                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                  List
+                </StyledButton>
+              )}
             </div>
           </Sketch>
         </StyledViewDesigner>
