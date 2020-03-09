@@ -10,6 +10,8 @@ const { Option } = Select;
 class DwStd extends Component {
   state = {
     siteList: [],
+    lead: 0,
+    ball: 0,
   };
 
   componentDidMount() {
@@ -30,12 +32,67 @@ class DwStd extends Component {
     } = this.props;
 
     this.setState({
-      dwItems: dwItems.filter(x => x.LVL !== 0),
-      prdItems: prdItems.filter(x => x.LVL !== 0),
-      pkgItems: pkgItems.filter(x => x.LVL !== 0),
-      lineItems: lineItems.filter(x => x.LVL !== 0),
-      leadItems: leadItems.filter(x => x.LVL !== 0),
-      ballItems: ballItems.filter(x => x.LVL !== 0),
+      dwItems: dwItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+      prdItems: prdItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+      pkgItems: pkgItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+      lineItems: lineItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+      leadItems: leadItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+      ballItems: ballItems.filter(x => x.LVL !== 0).map(item => <Option key={item.NODE_ID}>{item.NAME_KOR}</Option>),
+    });
+  };
+
+  onChangeDwType = value => {
+    const { onChangeSearchValue } = this.props;
+    if (value) {
+      onChangeSearchValue('w.dwtype', ` and w.task_seq in ( select task_seq from mg_commoncode where gubun='DW_TYPE' and node_id=${value})`);
+    } else {
+      onChangeSearchValue('w.dwtype', '', '');
+    }
+  };
+
+  onChangeProduct = value => {
+    const { onChangeSearchValue } = this.props;
+    if (value) {
+      onChangeSearchValue('w.product', ` and w.task_seq in ( select task_seq from mg_commoncode where gubun='PRODUCT' and node_id=${value})`);
+    } else {
+      onChangeSearchValue('w.product', '', '');
+    }
+  };
+
+  onChangePkg = value => {
+    const { onChangeSearchValue } = this.props;
+    if (value) {
+      onChangeSearchValue('w.pkg', ` and w.task_seq in ( select task_seq from mg_commoncode where gubun='PKG' and node_id=${value})`);
+    } else {
+      onChangeSearchValue('w.pkg', '', '');
+    }
+  };
+
+  onChangeFab = value => {
+    const { onChangeSearchValue } = this.props;
+    if (value) {
+      onChangeSearchValue('w.fab', ` and w.task_seq in ( select task_seq from mg_commoncode where gubun='FAB' and node_id=${value})`);
+    } else {
+      onChangeSearchValue('w.fab', '', '');
+    }
+  };
+
+  onChangeLead = value => {
+    const { onChangeSearchValue } = this.props;
+    this.setState({ lead: value || 0 }, () => {
+      const { lead, ball } = this.state;
+      const selectedValue = [lead, ball];
+      onChangeSearchValue('w.fab', ` and w.task_seq in ( select task_seq from mg_commoncode where comp_field ='LB' and node_id in (${selectedValue.join()}))`);
+    });
+  };
+
+  onChangeBall = value => {
+    const { onChangeSearchValue } = this.props;
+    this.setState({ ball: value || 0 }, () => {
+      const { lead, ball } = this.state;
+      const selectedValue = [lead, ball];
+      console.debug('dkdkdk', selectedValue);
+      onChangeSearchValue('w.fab', ` and w.task_seq in ( select task_seq from mg_commoncode where comp_field ='LB' and node_id in (${selectedValue.join()}))`);
     });
   };
 
@@ -58,31 +115,43 @@ class DwStd extends Component {
                     <tr>
                       <th>도면 구분</th>
                       <td>
-                        <Select style={{ width: '300px' }}>{dwItems && dwItems.map(dw => <Option key={dw.NODE_ID}>{dw.NAME_KOR}</Option>)}</Select>
+                        <Select allowClear onChange={this.onChangeDwType} style={{ width: '300px' }}>
+                          {dwItems}
+                        </Select>
                       </td>
                       <th>적용 Product</th>
                       <td>
-                        <Select style={{ width: '150px' }}>{prdItems && prdItems.map(prd => <Option key={prd.NODE_ID}>{prd.NAME_KOR}</Option>)}</Select>
+                        <Select allowClear onChange={this.onChangeProduct} style={{ width: '150px' }}>
+                          {prdItems}
+                        </Select>
                       </td>
                     </tr>
                     <tr>
                       <th>적용 Pkg</th>
                       <td>
-                        <Select style={{ width: '150px' }}>{pkgItems && pkgItems.map(pkg => <Option key={pkg.NODE_ID}>{pkg.NAME_KOR}</Option>)}</Select>
+                        <Select allowClear onChange={this.onChangePkg} style={{ width: '150px' }}>
+                          {pkgItems}
+                        </Select>
                       </td>
                       <th>적용 Line Site</th>
                       <td>
-                        <Select style={{ width: '150px' }}>{lineItems && lineItems.map(line => <Option key={line.NODE_ID}>{line.NAME_KOR}</Option>)}</Select>
+                        <Select allowClear onChange={this.onChangeFab} style={{ width: '150px' }}>
+                          {lineItems}
+                        </Select>
                       </td>
                     </tr>
                     <tr>
                       <th>적용 Lead</th>
                       <td>
-                        <Select style={{ width: '150px' }}>{leadItems && leadItems.map(lead => <Option key={lead.NODE_ID}>{lead.NAME_KOR}</Option>)}</Select>
+                        <Select allowClear onChange={this.onChangeLead} style={{ width: '150px' }}>
+                          {leadItems}
+                        </Select>
                       </td>
                       <th>적용 Ball</th>
                       <td>
-                        <Select style={{ width: '150px' }}>{ballItems && ballItems.map(ball => <Option key={ball.NODE_ID}>{ball.NAME_KOR}</Option>)}</Select>
+                        <Select allowClear onChange={this.onChangeBall} style={{ width: '150px' }}>
+                          {ballItems}
+                        </Select>
                       </td>
                     </tr>
                   </table>
