@@ -170,6 +170,7 @@ class WorkProcessModal extends Component {
     const { processRule } = this.props;
     const { DRAFT_PROCESS_STEP: processStep } = processRule;
     const { selDataList } = this.state;
+
     processStep.map(item => {
       item.APPV_MEMBER.splice(0, item.APPV_MEMBER.length);
       selDataList.forEach(user => {
@@ -179,16 +180,7 @@ class WorkProcessModal extends Component {
       });
     });
 
-    // processRule.DRAFT_RECEIVE.APPV_MEMBER = [];
-    // processRule.DRAFT_REFER.APPV_MEMBER = [];
-    // selDataList.forEach(item => {
-    //   if (processRule.DRAFT_RECEIVE.NODE_ID === item.NODE_ID) {
-    //     processRule.DRAFT_RECEIVE.APPV_MEMBER.push(item);
-    //   }
-    //   if (processRule.DRAFT_REFER.NODE_ID === item.NODE_ID) {
-    //     processRule.DRAFT_REFER.APPV_MEMBER.push(item);
-    //   }
-    // });
+    console.debug('handleComplete', processRule);
 
     this.props.onComplete(processRule);
   };
@@ -210,7 +202,6 @@ class WorkProcessModal extends Component {
       selectedRowKeys,
       onChange: this.onDeptUserCheck,
     };
-    console.debug(this.props);
     return (
       <Modal
         title="결재선지정"
