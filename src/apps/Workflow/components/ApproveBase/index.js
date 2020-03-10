@@ -7,13 +7,16 @@ import { createStructuredSelector } from 'reselect';
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
+import * as authSelectors from 'containers/common/Auth/selectors';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
 
 class ApproveBase extends Component {
-  componentDidMount() {}
+  constructor(props) {
+    super(props);
+  }
 
   render() {
     const { component: Component } = this.props;
@@ -28,8 +31,6 @@ ApproveBase.propTypes = {
   getUnApproveList: PropTypes.func,
   draftList: PropTypes.array,
   getDraftList: PropTypes.func,
-
-
 
   selectedRow: PropTypes.object,
   setSelectedRow: PropTypes.func,
@@ -53,8 +54,6 @@ ApproveBase.defaultProps = {
   draftList: [],
   getDraftList: () => {},
 
-
-
   selectedRow: {},
   viewVisible: false,
   opinionVisible: false,
@@ -68,24 +67,18 @@ const mapStateToProps = createStructuredSelector({
   approveList: selectors.makeSelectApproveList(),
   unApproveList: selectors.makeSelectUnApproveList(),
   draftList: selectors.makeSelectDraftList(),
-  
-
-  
   selectedRow: selectors.makeSelectSelectedRow(),
   viewVisible: selectors.makeSelectViewVisible(),
   opinionVisible: selectors.makeSelectOpinionVisible(),
   opinion: selectors.makeSelectOpinion(),
   formData: selectors.makeSelectFormData(),
+  profile: authSelectors.makeSelectProfile(),
 });
 
 const mapDispatchToProps = dispatch => ({
   getApproveList: () => dispatch(actions.getApproveList()),
   getUnApproveList: () => dispatch(actions.getUnApproveList()),
   getDraftList: () => dispatch(actions.getDraftList()),
-
-  
-  
-  
   setSelectedRow: row => dispatch(actions.setSelectedRow(row)),
   setViewVisible: visible => dispatch(actions.setViewVisible(visible)),
   setOpinionVisible: visible => dispatch(actions.setOpinionVisible(visible)),
@@ -105,13 +98,6 @@ const withSaga = injectSaga({
   saga,
 });
 
-const withConnect = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-);
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(
-  withSaga,
-  withReducer,
-  withConnect,
-)(ApproveBase);
+export default compose(withSaga, withReducer, withConnect)(ApproveBase);
