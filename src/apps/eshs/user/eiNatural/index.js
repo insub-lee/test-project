@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import pages from './pages';
+import MainPage from './MainPage';
 
 class eiNatural extends Component {
   render() {
-    return <BizMicroDevBase component={pages} sagaKey="eiNatural" />;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiNatural" />;
   }
 }
 
