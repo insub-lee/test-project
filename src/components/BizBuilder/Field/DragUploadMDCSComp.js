@@ -25,14 +25,6 @@ class DragUploadMDCSComp extends Component {
     this.setState({ fileInfo: initfiles });
   }
 
-  // onProgress = (step, file) => {
-  //   const { fileInfo } = this.state;
-  //   const { DETAIL: fileList } = fileInfo;
-  //   const tmpDetail = fileList.map(fObj => (fObj.uid === file.uid ? { ...fObj, type: 'LoadingOutlined' } : { ...fObj }));
-  //   const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
-  //   this.setState({ fileInfo: tmpFileInfo });
-  // };
-
   changeFormDataHanlder = () => {
     const { sagaKey, changeFormData, COMP_FIELD, WORK_SEQ } = this.props;
     const { fileInfo } = this.state;
@@ -90,15 +82,10 @@ class DragUploadMDCSComp extends Component {
     this.setState({ fileInfo: tmpFileInfo });
     const formData = new FormData();
     formData.append(file.uid, file);
-
     axios
       .post(action, formData, {
         withCredentials,
         headers,
-        // onUploadProgress: ({ total, loaded }) => {
-        //   const step = Math.round((loaded * 100) / total);
-        //   onProgress(step, file);
-        // },
       })
       .then(({ data: response }) => {
         onSuccess(response, file);
@@ -135,7 +122,6 @@ class DragUploadMDCSComp extends Component {
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
           action="/upload/mdcs"
-          // beforeUpload={this.beforeUpload}
           onProgress={this.onProgress}
           customRequest={this.customRequest}
           onChange={this.onChangeDragger}
@@ -166,20 +152,8 @@ class DragUploadMDCSComp extends Component {
                 ) : (
                   <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px' }} />
                 )}
-                <div
-                  focusable
-                  role="button"
-                  onClick={e => this.onClickDownLoadFile(e, file)}
-                  style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}
-                >
-                  {file.fileName}
-                </div>
+                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
                 <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
-                <Icon
-                  onClick={e => this.onClickDownLoadFile(e, file)}
-                  type="download"
-                  style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '5px' }}
-                />
               </div>
             ))}
           </div>
