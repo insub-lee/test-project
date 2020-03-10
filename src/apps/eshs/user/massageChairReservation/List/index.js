@@ -79,7 +79,7 @@ class List extends Component {
                 return (
                   <div>
                     <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
-                    <Popconfirm title="취소하시겠습니까?" onConfirm={() => this.handleDelete(record, index)}>
+                    <Popconfirm title="취소하시겠습니까?" onConfirm={e => this.handleDelete(e, record.time)}>
                       <StyledButton className="btn-primary">취소</StyledButton>
                     </Popconfirm>
                     <Popconfirm title="확인하시겠습니까?" onConfirm={() => this.handleConfirm(record, 1)}>
@@ -134,8 +134,7 @@ class List extends Component {
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
                 checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                // disabled={formData.gender !== 'm' || moment() > moment(record.time, 'HH:mm')}
-                disabled={formData.gender !== 'm'} // 테스트 용
+                disabled={formData.gender !== 'm' || moment() > moment(record.time, 'HH:mm')}
               />
             );
           },
@@ -144,15 +143,67 @@ class List extends Component {
           title: '안마의자(여)',
           align: 'center',
           render: (text, record, index) => {
-            const { formData } = this.props;
+            const { formData, extraApiData } = this.props;
+
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
               return <span>점심 휴무</span>;
             }
 
             if (this.isReserved(record.time) && formData.gender === 'f') {
-              // 나중에 권한 체크해서 관리자면 이름 나오게
-              // 아니면 그냥 예약됨만 표시
-              return <span>{this.getBookerName(record.time)}님이 예약</span>;
+              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 2) {
+                // 관리자면서 사용확인 안 된 예약
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
+                    <Popconfirm title="취소하시겠습니까?" onConfirm={e => this.handleDelete(e, record.time)}>
+                      <StyledButton className="btn-primary">취소</StyledButton>
+                    </Popconfirm>
+                    <Popconfirm title="확인하시겠습니까?" onConfirm={() => this.handleConfirm(record, 1)}>
+                      <StyledButton className="btn-primary">사용확인</StyledButton>
+                    </Popconfirm>
+                  </div>
+                );
+              }
+
+              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 1) {
+                // 관리자면서 사용확인된 예약
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 사용완료</span>
+                  </div>
+                );
+              }
+
+              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 0) {
+                // 관리자면서 노쇼한 예약
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 노쇼</span>
+                  </div>
+                );
+              }
+
+              if (
+                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id &&
+                extraApiData.getUserInfo.userInfo.user_id !== 1
+              ) {
+                // 예약했지만 관리자가 아니면 취소버튼 나옴
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
+                    <Popconfirm title="취소하시겠습니까?" onConfirm={e => this.handleDelete(e, record, index)}>
+                      <StyledButton className="btn-primary">취소</StyledButton>
+                    </Popconfirm>
+                  </div>
+                );
+              }
+
+              return (
+                // 관리자가 아니면서 남이 예약한 시간
+                <div>
+                  <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
+                </div>
+              );
             }
 
             return (
@@ -230,10 +281,10 @@ class List extends Component {
     changeFormData(id, 'TIME_ZONE', time);
   };
 
-  handleDelete = (e, record) => {
+  handleDelete = (e, time) => {
     const { timetable } = this.state;
     const { sagaKey: id, workSeq, changeViewPage } = this.props;
-    const timeZone = moment(record.time.substring(0, 5), 'HH:mm').format('HHmm');
+    const timeZone = moment(time.substring(0, 5), 'HH:mm').format('HHmm');
     const appDt = moment(timetable[0].app_dt).format('YYYYMMDD');
     const paramMap = {
       timeZone,

@@ -16,6 +16,8 @@ class Input extends Component {
       userInfo: {},
       selectedDate: moment().format('YYYY-MM-DD'),
       noShowCount: 0,
+      noShowDate: '',
+      reserveCount: '',
       currentDate:
         moment().format('YYMMDD') ===
           moment()
@@ -34,11 +36,19 @@ class Input extends Component {
   date = moment().format('YYYY-MM-DD');
 
   componentDidMount() {
+    this.reserveLimitCheck(moment(this.state.selectedDate).format('YYYY-MM-DD')).then(res => this.setState({ reserveCount: res.reservationCount.count }));
+    this.updateNoShow();
     this.getNoShowCount().then(res => {
-      console.debug(res);
-      if (res.noShowCount && res.noShowCount.count !== -1) {
+      console.debug(res.noShowCount);
+      if (res.noShowCount && !res.noShowCount.length) {
         return this.setState({
-          noShowCount: res.noShowCount.count,
+          noShowCount: 0,
+        });
+      }
+      if (res.noShowCount && res.noShowCount.length && res.noShowCount[res.noShowCount.length - 1].count !== -1) {
+        return this.setState({
+          noShowCount: res.noShowCount.length,
+          noShowDate: moment(res.noShowCount[res.noShowCount.length - 1].app_dt).format('YYYYMMDD'),
         });
       }
       return null;
@@ -68,11 +78,6 @@ class Input extends Component {
     return null;
   }
 
-  makeFormData = userInfo => {
-    const { changeFormData, sagaKey: id } = this.props;
-    changeFormData(id, 'userInfo', userInfo);
-  };
-
   disableDate = current =>
     moment(current).format('YYYYMMDD') ===
       moment(current)
@@ -95,16 +100,36 @@ class Input extends Component {
     this.setState({
       selectedDate: moment(date).format('YYYY-MM-DD'),
     });
+    this.reserveLimitCheck(moment(date).format('YYYY-MM-DD')).then(res => this.setState({ reserveCount: res.reservationCount.count }));
   };
 
   handleButtonClick = () => {
-    // formData 체크해서 시간 비었으면 저장 안하게
-    const { selectedDate, userInfo, noShowCount } = this.state;
-    const { sagaKey: id, changeFormData, saveTask, formData, handleGetTimeTable } = this.props;
-    if (formData.checkedIndex === undefined) {
+    const { selectedDate, noShowCount, reserveCount, noShowDate } = this.state;
+    const { sagaKey: id, saveTask, formData, handleGetTimeTable } = this.props;
+    console.debug(reserveCount);
+    if (
+      formData.checkedIndex === undefined ||
+      this.isReservedToday() ||
+      reserveCount >= 3 ||
+      (noShowCount &&
+        moment(selectedDate).format('w') ===
+          moment(noShowDate)
+            .add(1, 'week')
+            .format('w'))
+    ) {
+      // formData 체크해서 시간 선택 안했거나, 노쇼했으면 예약 불가
+      console.debug('불가능');
       return;
     }
 
+    this.makeFormData();
+
+    saveTask(id, id, handleGetTimeTable(moment(selectedDate).format('YYYYMMDD')));
+  };
+
+  makeFormData = () => {
+    const { changeFormData, sagaKey: id } = this.props;
+    const { userInfo, selectedDate } = this.state;
     switch (userInfo.gender) {
       case 'm':
         changeFormData(id, 'BED_NO', '05');
@@ -126,20 +151,30 @@ class Input extends Component {
       default:
         break;
     }
-
     changeFormData(id, 'APP_DT', selectedDate);
     changeFormData(id, 'checkedIndex', 9999);
-    this.setState({
-      currentDate: selectedDate,
-    });
+  };
 
-    this.getNoShowCount().then(res => {
-      console.debug(res);
-      if (res.noShowCount && res.noShowCount.count !== -1) {
-        saveTask(id, id, handleGetTimeTable(moment(selectedDate).format('YYYYMMDD')));
-      }
-      return null;
+  isReservedToday = () => {
+    const { extraApiData } = this.props;
+    const { userInfo } = this.state;
+    return extraApiData.getTimetable.timetable.findIndex(item => item.reg_user_id === userInfo.user_id) !== -1;
+  };
+
+  updateNoShow = async () => {
+    const result = await request({
+      method: 'PATCH',
+      url: `/api/eshs/v1/common/getphysicaltherapynoshowcount?date=${moment().format('YYYYMMDD')}`,
     });
+    return result.response;
+  };
+
+  reserveLimitCheck = async date => {
+    const result = await request({
+      method: 'GET',
+      url: `/api/eshs/v1/common/getphysicaltheraptyreservation?date=${date}`,
+    });
+    return result.response;
   };
 
   getNoShowCount = () => {
@@ -154,19 +189,31 @@ class Input extends Component {
   };
 
   makePopconfirmTitle = () => {
-    const { noShowCount } = this.state;
+    const { noShowCount, reserveCount, selectedDate, noShowDate } = this.state;
     const { formData } = this.props;
     if (formData.checkedIndex === undefined) {
       return '시간을 선택하세요.';
     }
-    if (noShowCount) {
+    if (
+      noShowCount &&
+      moment(selectedDate) <
+        moment(noShowDate)
+          .add(1, 'week')
+          .endOf('week') // 조건에 따라 삭제할 것, 7일 후인지, 다음 주 금요일 까지인지
+    ) {
       return '예약 후 미사용으로 예약이 불가능합니다.';
+    }
+    if (this.isReservedToday()) {
+      return '1일 1회만 예약이 가능합니다.';
+    }
+    if (reserveCount >= 3) {
+      return '1주 3회까지 예약이 가능합니다.';
     }
     return '';
   };
 
   render() {
-    const { userInfo, currentDate } = this.state;
+    const { userInfo, currentDate, reserveCount, selectedDate, noShowDate } = this.state;
     const { formData } = this.props;
     return (
       <StyledViewDesigner>
@@ -193,7 +240,7 @@ class Input extends Component {
             </Row>
             <Row gutter={[24, 48]} type="flex" justify="center">
               <Col span={8}>
-                <Typography>3. 일주일 단위로 예약 ☞1인 1주 3회만 가능</Typography>
+                <Typography>3. 일주일 단위로 예약 ☞1인 1일 1회, 1주 3회만 가능</Typography>
               </Col>
             </Row>
             <Row gutter={[24, 48]} type="flex" justify="center">
@@ -215,7 +262,19 @@ class Input extends Component {
               <Col span={2}>이름</Col>
               <Col span={2}>{userInfo.name}</Col>
               <Col span={2}>
-                <Popconfirm title={this.makePopconfirmTitle()} disabled={formData.checkedIndex !== undefined && !this.state.noShowCount}>
+                <Popconfirm
+                  title={this.makePopconfirmTitle()}
+                  disabled={
+                    formData.checkedIndex !== undefined &&
+                    !this.isReservedToday() &&
+                    reserveCount < 3 &&
+                    moment(selectedDate).format('YYYYMMDD') >
+                      moment(noShowDate)
+                        .add('1', 'week')
+                        .endOf('week') // 조건에 따라 삭제할 것, 7일 후인지, 다음 주 금요일 까지인지
+                        .format('YYYYMMDD')
+                  }
+                >
                   <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
                     예약
                   </StyledButton>
