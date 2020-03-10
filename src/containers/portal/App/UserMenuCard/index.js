@@ -34,7 +34,7 @@ class UserMenuCard extends PureComponent {
     if (pathname.includes('bizManage')) return 'Biz Card Manage';
     // if (pathname.includes('widgetsetting')) return '위젯 설정';
     if (pathname.includes('myPage')) return 'Home Widget';
-    return 'App Store';
+    return 'Biz Card';
   };
 
   render() {

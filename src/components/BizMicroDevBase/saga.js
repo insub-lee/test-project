@@ -24,7 +24,7 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
   }
   const response = yield call(httpMethodInfo, apiUrl, submitData);
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    callbackFunc(id, response);
   }
 }
 

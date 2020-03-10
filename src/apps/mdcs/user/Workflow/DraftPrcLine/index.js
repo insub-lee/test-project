@@ -25,6 +25,14 @@ class DraftPrcLine extends Component {
     this.setState({ processRule, filterRule, filterItem, colSpan });
   }
 
+  componentDidUpdate(prevProps) {
+    const { processRule } = this.props;
+    if (JSON.stringify(processRule) !== JSON.stringify(prevProps.processRule)) {
+      console.debug('props', processRule, prevProps.processRule);
+      this.setState({ processRule });
+    }
+  }
+
   handleOpenModal = () => {
     this.setState({ modalVisible: true });
   };
@@ -34,14 +42,18 @@ class DraftPrcLine extends Component {
   };
 
   onProcessRuleComplete = processRule => {
-    this.setState({ modalVisible: false });
-    // this.props.setProcessStep(this.props.id, processStep);
+    const { DRAFT_PROCESS_STEP } = processRule;
+    const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
+    const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
+    this.setState({ modalVisible: false, processRule, filterRule, filterItem });
+
     this.props.setProcessRule(this.props.id, processRule);
   };
 
   render() {
     const { viewType } = this.props;
     const { processRule, modalVisible, filterRule, filterItem } = this.state;
+    console.debug('draftPrcLine', processRule);
     return (
       <StyledWorkProcess>
         <div>

@@ -208,7 +208,7 @@ class BizMenuTree extends Component {
 
     const pathArr = history.location.pathname.split('/');
     const type = pathArr[3];
-    const { BIZGRP_ID } = bizGroupInfo;
+    const { BIZGRP_ID, HOME_MENU_ID } = bizGroupInfo;
     const rootRowInfo = {};
     rootRowInfo.node = { key: -1, BIZGRP_ID };
 
@@ -425,7 +425,7 @@ class BizMenuTree extends Component {
               canEditName ? <EditBtn title="편집" onClick={() => this.editNode(node)} /> : '',
 
               // [메뉴삭제 버튼]
-              isEmptyFolder ? (
+              isEmptyFolder && HOME_MENU_ID !== node.MENU_ID ? (
                 <RemoveBtn
                   title="삭제"
                   onClick={() => {
