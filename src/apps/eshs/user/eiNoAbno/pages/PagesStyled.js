@@ -36,7 +36,9 @@ const PagesStyled = styled.div`
         border: 1px solid #cccccc;
         border-bottom: none;
         > tr:first-child {
-          background-color: #000000;
+          > td {
+            background-color: transparent;
+          }
           text-align: right;
         }
         > tr {
@@ -52,6 +54,26 @@ const PagesStyled = styled.div`
             border-right: 1px solid #cccccc;
             background-color: #d6ebff;
           }
+        }
+      }
+      tbody {
+        > tr {
+          border: 1px solid #cccccc;
+          :hover {
+            background-color: lightyellow;
+            cursor: Pointer;
+          }
+          > td {
+            border: 1px solid #cccccc;
+          }
+          .text-align-center {
+            text-align: center;
+          }
+        }
+        > tr:last-child {
+          text-align: center;
+          background-color: #f4f4f4;
+          cursor: default;
         }
       }
     }
