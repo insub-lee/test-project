@@ -62,11 +62,15 @@ const styleObj = {
   },
 };
 
-const getSidebarContent = (commonMenuTreeData, execMenu, execPage) => {
+const getSidebarContent = (commonMenuTreeData, rootPageInfo, execMenu, execPage) => {
   const treeData = commonMenuTreeData.map(data => ({
     ...data,
     icon: 'fa-briefcase',
   }));
+  // 공통홈 + 공통메뉴
+  if (rootPageInfo.HOME_MENU_ID > 0 && rootPageInfo.label) {
+    treeData.unshift({ ...rootPageInfo, icon: 'fa-briefcase' });
+  }
   return (
     <div>
       <Menu treeData={treeData} execMenu={execMenu} execPage={execPage} />
@@ -91,11 +95,11 @@ class MenuCategory extends React.Component {
   };
 
   render() {
-    const { open, commonMenuTreeData, execMenu, execPage, children } = this.props;
+    const { open, commonMenuTreeData, rootPageInfo, execMenu, execPage, children } = this.props;
     return (
       <div>
         <Sidebar
-          sidebar={getSidebarContent(commonMenuTreeData, execMenu, execPage)}
+          sidebar={getSidebarContent(commonMenuTreeData, rootPageInfo, execMenu, execPage)}
           open={open}
           styles={styleObj}
           touch
@@ -112,6 +116,7 @@ class MenuCategory extends React.Component {
 MenuCategory.propTypes = {
   open: PropTypes.bool.isRequired,
   commonMenuTreeData: PropTypes.array.isRequired,
+  rootPageInfo: PropTypes.object,
   execMenu: PropTypes.func.isRequired,
   execPage: PropTypes.func.isRequired,
   setMenuClose: PropTypes.func.isRequired,
@@ -120,10 +125,12 @@ MenuCategory.propTypes = {
 
 MenuCategory.defaultProps = {
   children: null,
+  rootPageInfo: {},
 };
 
 const mapStateToProps = createStructuredSelector({
   commonMenuTreeData: routesSelectors.makeCommonMenuTree(),
+  rootPageInfo: routesSelectors.makeSelectRootPageInfo(),
 });
 
 const withConnect = connect(mapStateToProps);
