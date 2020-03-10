@@ -41,7 +41,6 @@ class WorkProcess extends Component {
   render() {
     const { processRule, viewType, CustomWorkProcess } = this.props;
     const { modalVisible } = this.state;
-
     if (typeof CustomWorkProcess === 'function' && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0) {
       return <CustomWorkProcess {...this.props}></CustomWorkProcess>;
     }

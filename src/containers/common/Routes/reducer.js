@@ -41,8 +41,7 @@ const initialState = fromJS({
   menuFixedYn: 'N',
 
   // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
-  rootPageId: -1,
-  rootAppYn: 'N',
+  rootPageInfo: {},
   myHomePageId: -1,
 });
 
@@ -259,10 +258,7 @@ const windowResizeReducer = (state = initialState, action) => {
       return state.set('menuFixedYn', action.menuFixedYn);
     // REMOVE DOCK - 공통홈, 개인홈 페이지 ID
     case actionTypes.SET_HOME_ROOT_PAGE:
-      return state
-        .set('rootPageId', action.rootPageId)
-        .set('rootAppYn', action.rootAppYn)
-        .set('myHomePageId', action.myHomePageId);
+      return state.set('rootPageInfo', action.rootPageInfo).set('myHomePageId', action.myHomePageId);
     default:
       return state;
   }
