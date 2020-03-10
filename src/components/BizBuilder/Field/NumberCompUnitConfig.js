@@ -23,7 +23,7 @@ class ComponentConfig extends Component {
             <Col span={6}>단위 설정</Col>
             <Col span={18}>
               <Input
-                defaultValue={(configInfo && configInfo.property && configInfo.property.placeholder) || ''}
+                defaultValue={(configInfo && configInfo.property && configInfo.property.unit) || ''}
                 onChange={e => this.handleChangeViewCompData('unit', e.target.value)}
               ></Input>
             </Col>
