@@ -8,12 +8,12 @@ const { SHOW_PARENT } = TreeSelect;
 class CheckableTreeSelectComp extends Component {
   state = {
     scopeTreeData: [],
+    selectedValue: [],
   };
 
   componentDidMount() {
     const { sagaKey, getExtraApiData, apiArys } = this.props;
     getExtraApiData(sagaKey, apiArys, this.initDatBind);
-    console.debug(this.props);
   }
 
   getTreeData = (categoryMapList, rootId) =>
@@ -35,6 +35,7 @@ class CheckableTreeSelectComp extends Component {
 
   initDatBind = sagaKey => {
     const {
+      colData,
       extraApiData: {
         list: { categoryMapList: scopeList },
       },
@@ -49,17 +50,23 @@ class CheckableTreeSelectComp extends Component {
         parentValue: scope.PARENT_NODE_ID,
         children: this.getTreeData(scopeList, scope.NODE_ID),
       }));
+
+    if (colData) {
+      const selectedValue = colData.split(',').map(col => Number(col));
+      this.setState({ selectedValue });
+    }
     this.setState({ scopeTreeData });
   };
 
   onChangeTree = nodeIds => {
     const { changeFormData, COMP_FIELD, sagaKey } = this.props;
+    this.setState({ selectedValue: nodeIds });
     changeFormData(sagaKey, COMP_FIELD, nodeIds.join());
   };
 
   render() {
-    const { scopeTreeData } = this.state;
-    return <TreeSelect SHOW_PARENT onChange={this.onChangeTree} treeData={scopeTreeData} treeCheckable />;
+    const { scopeTreeData, selectedValue } = this.state;
+    return <TreeSelect SHOW_PARENT value={selectedValue} onChange={this.onChangeTree} treeData={scopeTreeData} treeCheckable />;
   }
 }
 
