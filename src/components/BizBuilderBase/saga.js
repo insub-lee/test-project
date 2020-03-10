@@ -5,8 +5,9 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import { TOTAL_DATA_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
+import { isJSON } from 'utils/helpers';
 
 import * as actionTypes from './constants';
 import * as actions from './actions';
@@ -19,7 +20,21 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, conditional, changeWo
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData, apiList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
-
+  const builderModalOptIdx = (work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y')) || -1;
+  const isBuilderModal = !!(builderModalOptIdx > -1);
+  let builderModalSetting;
+  if (isBuilderModal) {
+    const tempObj = isJSON(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) ? JSON.parse(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) : undefined;
+    if (tempObj) {
+      builderModalSetting = { bodyStyle: { padding: '20px 1px 1px 1px', overflow: 'auto' } };
+      if (tempObj.width && tempObj.width > 0) {
+        builderModalSetting.width = tempObj.width + tempObj.widthType;
+      }
+      if (tempObj.height && tempObj.height > 0) {
+        builderModalSetting.bodyStyle.height = tempObj.height + tempObj.heightType;
+      }
+    }
+  }
   if (taskSeq === -1) {
     // yield put(actions.initFormData(id, workSeq, formData));
     yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList, formData, validationData));
@@ -27,6 +42,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, conditional, changeWo
   } else {
     yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
   }
+  yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting));
   if (viewType === 'LIST') {
     yield put(actions.getListDataBySaga(id, workSeq, conditional));
     // const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
@@ -178,7 +194,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
           validMsg = validationData[node].msg;
         } else if (validationData[node].requiredFlag === false) {
           validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}1`;
+          validMsg = `${validationData[node].requiredMsg}`;
         }
       });
 
@@ -346,7 +362,7 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
           validMsg = validationData[node].msg;
         } else if (validationData[node].requiredFlag === false) {
           validFlag = validationData[node].requiredFlag;
-          validMsg = `${validationData[node].requiredMsg}1`;
+          validMsg = `${validationData[node].requiredMsg}`;
         }
       });
 

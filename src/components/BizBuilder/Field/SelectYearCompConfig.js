@@ -7,16 +7,23 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 
 const { Option } = Select;
 
+const cont = {
+  setDefault: 'setDefault',
+};
 function SelectYearCompConfig(props) {
   const [rootMapValue, setRootMapValue, selectValue, setSelectValue, selectDefaultValue, setSelectDefaultValue, apiArray, setApiArray] = useState(undefined);
   const [placeHolderValue, setPlaceHolderValue, apiKey, setApiKey] = useState('');
   const [defaultFlag, setDefaultFlag] = useState(2);
   const [yearRange, setYearRange] = useState([]);
   const currentYear = new Date().getFullYear();
+  const [shouldRegsiter, setShouldRegister] = useState('');
 
   useEffect(() => {
     const { getCallDataHandler, sagaKey: id, apiArray, configInfo } = props;
     const { minYear, maxYear, defaultYear } = configInfo.property;
+    const { setDefault } = configInfo.property;
+    setShouldRegister(typeof setDefault === 'string' ? setDefault : 'N');
+
     getCallDataHandler(id, apiArray);
 
     const years = [];
@@ -55,6 +62,27 @@ function SelectYearCompConfig(props) {
 
   return (
     <div>
+      <Row>
+        <div>
+          <Col span={6}>
+            <p>FormData 등록 여부</p>
+          </Col>
+          <Col span={16} push={2}>
+            <Radio.Group
+              className="alignCenter"
+              value={shouldRegsiter}
+              onChange={e => {
+                const { value } = e.target;
+                setShouldRegister(value);
+                debouncedHandleChangeViewCompData(cont.setDefault, value);
+              }}
+            >
+              <Radio value="Y">Y</Radio>
+              <Radio value="N">N</Radio>
+            </Radio.Group>
+          </Col>
+        </div>
+      </Row>
       <Row>
         <div>
           <Col span={6}>초기 년도 설정 </Col>
@@ -158,8 +186,6 @@ SelectYearCompConfig.defaultProps = {
       defaultYear: String(new Date().getFullYear()),
     },
   },
-};
-SelectYearCompConfig.defaultProps = {
   apiArray: [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }],
 };
 export default configer;
