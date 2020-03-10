@@ -25,7 +25,7 @@ const Wrapper = styled.div`
             }
             .ant-select {
               margin-top: 12px;
-              width: 90% !important;
+              width: 90%;
             }
           }
         }
