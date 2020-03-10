@@ -37,10 +37,11 @@ class DeptSearchBar extends Component {
   };
 
   handleAppStart = () => {
-    const { result, profile, id, changeFormData } = this.props;
+    const { result, profile, id, changeFormData, handleSearchOnClick } = this.props;
     const deptList = (result && result.deptList && result.deptList.result) || [];
     const myDept = deptList.find(d => d.DEPT_ID === profile.DEPT_ID);
     changeFormData(id, 'myDept', myDept);
+    handleSearchOnClick();
   };
 
   handleModal = () => {
@@ -62,12 +63,13 @@ class DeptSearchBar extends Component {
   };
 
   handleDeptSearch = () => {
-    const { id, formData, changeFormData } = this.props;
+    const { id, formData, changeFormData, handleSearchOnClick } = this.props;
     const searchDeptId = (formData && formData.searchRow && formData.searchRow.DEPT_ID) || '';
     if (searchDeptId) {
       const searchFlag = !(formData.myDept.DEPT_ID === searchDeptId);
       changeFormData(id, 'searchFlag', searchFlag);
     }
+    handleSearchOnClick();
   };
 
   render() {
@@ -78,29 +80,27 @@ class DeptSearchBar extends Component {
     const searchRow = (formData && formData.searchRow) || {};
 
     return (
-      <Row>
-        <Col span={10}>
-          <div>
-            <span>평가년도</span>
-            <Select value={formData.CHK_YEAR} style={{ width: 130, padding: 3 }} onChange={this.handleYearChange}>
-              {years.map(y => (
-                <Option key={y} value={y}>
-                  {y}
-                </Option>
-              ))}
-            </Select>
-            &nbsp; <span>부서코드 </span>
-            <Input name="DEPT_CD" value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD} style={{ width: 150 }} readOnly placeholder="부서코드" />
-            <Button shape="circle" icon="search" onClick={this.handleModal} />
-            <Modal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
-              <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
-            </Modal>
-            <Input value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
-            <Button onClick={this.handleDeptSearch}>검색</Button>
-          </div>
-          <hr />
-        </Col>
-      </Row>
+      <>
+        <div>
+          <span>평가년도</span>
+          <Select value={formData.CHK_YEAR} style={{ width: 130, padding: 3 }} onChange={this.handleYearChange}>
+            {years.map(y => (
+              <Option key={y} value={y}>
+                {y}
+              </Option>
+            ))}
+          </Select>
+          &nbsp; <span>부서코드 </span>
+          <Input name="DEPT_CD" value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD} style={{ width: 150 }} readOnly placeholder="부서코드" />
+          <Button shape="circle" icon="search" onClick={this.handleModal} />
+          <Modal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
+            <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
+          </Modal>
+          <Input value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
+          <Button onClick={this.handleDeptSearch}>검색</Button>
+        </div>
+        <hr />
+      </>
     );
   }
 }
