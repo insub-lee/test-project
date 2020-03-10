@@ -17,8 +17,8 @@ class Stack extends Component {
     return (
       <BizBuilderBase
         sagaKey="stack"
-        workSeq={3741}
-        compProps={{ sagaKey: 'searchBarData', workSeq: 3741 }}
+        workSeq={4401}
+        compProps={{ sagaKey: 'searchBarData', workSeq: 4401 }}
         onReset={this.onReset}
         taskSeq={-1}
         viewType="INPUT"

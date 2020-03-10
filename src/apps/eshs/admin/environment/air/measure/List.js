@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Table, message, Select } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
-
+import Moment from 'moment';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
@@ -12,6 +12,7 @@ import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyle
 
 const AntdTable = StyledAntdTable(Table);
 const { Option } = Select;
+Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
@@ -20,11 +21,11 @@ class List extends Component {
       columnsPlus: [],
       siteList: [],
       measureList: [],
-      yyyy: '',
-      mm: '',
-      seq: '',
-      site: '',
-      selectGubun: '',
+      yyyy: Moment().format('YYYY'),
+      mm: Moment().format('MM'),
+      seq: '1',
+      site: 716,
+      selectGubun: '1',
     };
   }
 
@@ -114,11 +115,6 @@ class List extends Component {
         columns={columnsPlus}
         dataSource={measureList || []}
         bordered
-        onRow={record => ({
-          onClick: () => {
-            console.log(record, 'recordData');
-          },
-        })}
         pagination={{ pageSize: 100 }}
         scroll={{ y: 500 }}
         footer={() => <div style={{ textAlign: 'center' }}>{`${measureList && measureList[0] ? measureList.length : 0} 건`}</div>}
@@ -166,9 +162,6 @@ class List extends Component {
   };
 
   render() {
-    console.log(this.props.result, 'result');
-    console.log(this.props, 'props');
-    console.log(this.state, 'state');
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledViewDesigner>
@@ -176,7 +169,7 @@ class List extends Component {
             <Group>
               <div>
                 조회구분
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)}>
+                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
                   <Option value="1" key="selectGubun">
                     농도
                   </Option>
@@ -185,18 +178,18 @@ class List extends Component {
                   </Option>
                 </Select>
                 지역
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)}>
+                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
                   {this.siteOption()}
                 </Select>
                 기간(년 월)
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)}>
+                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
                   {this.yearOption()}
                 </Select>
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)}>
+                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
                   {this.monthOption()}
                 </Select>
                 측정회차(월)
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)}>
+                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
                   <Option value="1" key="seq">
                     1
                   </Option>
