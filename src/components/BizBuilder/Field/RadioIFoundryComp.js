@@ -18,6 +18,12 @@ class RadioIFoundryComp extends Component {
     lineHeight: '30px',
   };
 
+  componentDidMount() {
+    const { colData, formData } = this.props;
+    const { DIVISION, PLACE: place } = formData;
+    this.setState({ foundry_flag: colData, division: DIVISION.split(','), place });
+  }
+
   onClickFoundry = () => {
     const { changeFormData, sagaKey, COMP_FIELD } = this.props;
     const { division, place } = this.state;
@@ -40,26 +46,27 @@ class RadioIFoundryComp extends Component {
   };
 
   onChangeDivision = e => {
-    const { sagaKey, COMP_FIELD, changeFormData } = this.props;
+    const { sagaKey, COMP_FIELD, changeFormData, formData } = this.props;
+    this.setState({ foundry_flag: e.target.value });
     if (e.target.value === 'Y') {
-      this.setState({ isPopOver: true });
-      changeFormData(sagaKey, COMP_FIELD, undefined);
+      const { DIVISION, PLACE: place } = formData;
+      this.setState({ isPopOver: true, foundry_flag: e.target.value, division: DIVISION.split(','), place });
     } else {
-      this.setState({ foundry_flag: 'N', division: [], place: '', isPopOver: false }, () => {
-        const { division, place } = this.state;
-        changeFormData(sagaKey, COMP_FIELD, 'N');
-        changeFormData(sagaKey, 'DIVISION', division.join());
-        changeFormData(sagaKey, 'PLACE', place);
-      });
+      this.setState({ foundry_flag: e.target.value, division: [], place: '', isPopOver: false });
+      changeFormData(sagaKey, COMP_FIELD, 'N');
+      changeFormData(sagaKey, 'DIVISION', '');
+      changeFormData(sagaKey, 'PLACE', '');
     }
   };
 
-  onInitData = () => {
-    console.debug('initdata');
+  onCancel = () => {
+    this.setState({ isPopOver: false });
   };
 
   render() {
     const { colData, formData } = this.props;
+    const { foundry_flag } = this.state;
+    const { DIVISION, PLACE } = formData;
     console.debug('colData', colData);
     const content = (
       <StyledHtmlTable>
@@ -93,34 +100,38 @@ class RadioIFoundryComp extends Component {
             </tr>
             <tr>
               <td colSpan={2} style={{ textAlign: 'right' }}>
-                <Button onClick={this.onClickFoundry}>적용</Button>
-                <Button>취소</Button>
+                <Button style={{ marginRight: '5px' }} type="primary" onClick={this.onClickFoundry}>
+                  적용
+                </Button>
+                <Button onClick={this.onCancel}>취소</Button>
               </td>
             </tr>
           </tbody>
         </table>
       </StyledHtmlTable>
     );
-
     return (
       <>
-        <Radio.Group onChange={this.onChangeDivision} value={colData}>
+        <Checkbox.Group value={foundry_flag}>
           <Popover placement="bottom" visible={this.state.isPopOver} style={{ width: '500px' }} content={content}>
-            <Radio value="Y">Y</Radio>
+            <Checkbox onChange={this.onChangeDivision} value="Y">
+              Y
+            </Checkbox>
           </Popover>
-          <Radio value="N">N</Radio>
-          <Button>초기화</Button>
-        </Radio.Group>
-        <StyledHtmlTable style={{ display: colData === 'Y' ? 'inline-block' : 'none', marginTop: '2px' }}>
+          <Checkbox onChange={this.onChangeDivision} value="N">
+            N
+          </Checkbox>
+        </Checkbox.Group>
+        <StyledHtmlTable style={{ display: foundry_flag === 'Y' ? 'inline-block' : 'none', marginTop: '2px', width: '100%' }}>
           <table>
             <tbody>
               <tr>
                 <th>Application Division</th>
-                <td>{this.state.division.join()}</td>
+                <td>{DIVISION && DIVISION.split(',').join()}</td>
               </tr>
               <tr>
                 <th>Registration Place</th>
-                <td>{this.state.place}</td>
+                <td>{PLACE}</td>
               </tr>
             </tbody>
           </table>
