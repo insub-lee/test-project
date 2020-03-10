@@ -23,6 +23,7 @@ class CustomCheckListComp extends Component {
   componentDidMount() {
     const { getExtraApiData, sagaKey: id, apiArys, COMP_FIELD, changeFormData, colData } = this.props;
     getExtraApiData(id, apiArys, this.initDataBind);
+    console.debug('componentDidMount', colData);
     // const initColData = colData === '' ? [] : colData;
     // changeFormData(id, COMP_FIELD, initColData);
   }
@@ -40,6 +41,7 @@ class CustomCheckListComp extends Component {
         TECH: { categoryMapList: techList },
         CUSTOMER: { categoryMapList: customList },
       },
+      colData,
     } = this.props;
 
     dataSource = [
@@ -48,7 +50,7 @@ class CustomCheckListComp extends Component {
         groupKey: 'REGION',
         selectedValue: [],
         selectedItem: [],
-        dataSet: regionList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0).map(item => ({ ...item, checked: true })),
+        dataSet: regionList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'Line/Site',
@@ -62,52 +64,68 @@ class CustomCheckListComp extends Component {
         groupKey: 'PRODUCT',
         selectedValue: [],
         selectedItem: [],
-        dataSet: prdList.filter(x => x.USE_YN === 'Y'),
+        dataSet: prdList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'Tech.',
         groupKey: 'TECH',
         selectedValue: [],
         selectedItem: [],
-        dataSet: techList.filter(x => x.USE_YN === 'Y'),
+        dataSet: techList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'Generation',
         groupKey: 'GEN',
         selectedValue: [],
         selectedItem: [],
-        dataSet: genList.filter(x => x.USE_YN === 'Y'),
+        dataSet: genList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'Memory Density',
         groupKey: 'DENSITY',
         selectedValue: [],
         selectedItem: [],
-        dataSet: densityList.filter(x => x.USE_YN === 'Y'),
+        dataSet: densityList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'PKG',
         groupKey: 'PKG',
         selectedValue: [],
         selectedItem: [],
-        dataSet: pkgList.filter(x => x.USE_YN === 'Y'),
+        dataSet: pkgList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'Module',
         groupKey: 'MODULE',
         selectedValue: [],
         selectedItem: [],
-        dataSet: moduleList.filter(x => x.USE_YN === 'Y'),
+        dataSet: moduleList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
       {
         groupName: 'Customer',
         groupKey: 'CUSTOMER',
         selectedValue: [],
         selectedItem: [],
-        dataSet: customList.filter(x => x.USE_YN === 'Y'),
+        dataSet: customList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
     ];
-    this.setState({ dataSource });
+
+    // colData Read 후 selectedValue bind 하기
+    if (colData && colData.length > 0) {
+      const { DETAIL } = colData[0];
+      const selectedGrp = JSON.parse(DETAIL);
+      const tempDataSource = dataSource.map(grp => {
+        const idx = selectedGrp.findIndex(f => f.groupKey === grp.groupKey);
+        if (idx !== -1) {
+          const sGrp = selectedGrp[idx];
+          return { ...grp, ...sGrp };
+        }
+        return grp;
+      });
+      this.setState({ dataSource: tempDataSource, selectedCheckList: tempDataSource });
+    } else {
+      this.setState({ dataSource });
+    }
   };
 
   onClickSelectedWin = () => {
@@ -145,7 +163,7 @@ class CustomCheckListComp extends Component {
   };
 
   setFormDataValue = (value, colData, COMP_FIELD, COMP_TAG, WORK_SEQ) => {
-    if (typeof colData === 'object') {
+    if (colData && typeof colData === 'object') {
       colData[0].DETAIL = value;
       return colData;
     }
@@ -153,14 +171,16 @@ class CustomCheckListComp extends Component {
       JSON.parse(colData)[0].DETAIL = value;
       return colData;
     }
-    return [{
-      WORK_SEQ,
-      TASK_SEQ: -1,
-      CONT_SEQ: -1,
-      FIELD_NM: COMP_FIELD,
-      TYPE: COMP_TAG,
-      DETAIL: value,
-    }];
+    return [
+      {
+        WORK_SEQ,
+        TASK_SEQ: -1,
+        CONT_SEQ: -1,
+        FIELD_NM: COMP_FIELD,
+        TYPE: COMP_TAG,
+        DETAIL: value,
+      },
+    ];
   };
 
   render() {
@@ -170,16 +190,17 @@ class CustomCheckListComp extends Component {
         <StyledMultiSelector>
           <div className="wrapper">
             <div className="draftWrapper">
-              {this.state.dataSource.map(grp =>
-                grp.selectedItem.map(item => (
-                  <div className="draftInfoBox">
-                    <Icon type="code" />
-                    <span className="infoTxt">
-                      {grp.groupName}: {item.title}
-                    </span>
-                  </div>
-                )),
-              )}
+              {this.state.dataSource &&
+                this.state.dataSource.map(grp =>
+                  grp.selectedItem.map(item => (
+                    <div className="draftInfoBox">
+                      <Icon type="code" />
+                      <span className="infoTxt">
+                        {grp.groupName}: {item.title}
+                      </span>
+                    </div>
+                  )),
+                )}
             </div>
             <Button onClick={this.onClickSelectedWin}>
               <Icon type="select" /> 선택
