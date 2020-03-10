@@ -20,7 +20,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, conditional, changeWo
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
   const { work, metaList, formData, validationData, apiList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
-  const builderModalOptIdx = (work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y')) || -1;
+  const builderModalOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y');
   const isBuilderModal = !!(builderModalOptIdx > -1);
   let builderModalSetting;
   if (isBuilderModal) {
