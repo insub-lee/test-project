@@ -6,7 +6,8 @@ const initialState = fromJS({
   secListI: [],
   secListV: [],
   siteUdt: [],
-  home: [],
+  bizGrpList: [],
+  bizHomeList: [],
   theme: [],
   delList: [],
   nameChk: false,
@@ -37,7 +38,7 @@ const SiteInfoReducer = (state = initialState, action) => {
     case constants.SET_SITE_CHECK:
       return state.set('siteList', action.payload);
     case constants.SET_HOME:
-      return state.set('home', action.payload);
+      return state.set('bizGrpList', action.bizGrpList).set('bizHomeList', action.bizHomeList);
     case constants.SET_SKIN:
       return state.set('theme', action.payload);
     case constants.SET_SITE_UPDATE:
