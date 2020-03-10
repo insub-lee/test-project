@@ -56,7 +56,7 @@ class View extends Component {
                                     {col.comp &&
                                       this.renderComp(
                                         col.comp,
-                                        col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : '',
+                                        col.comp.COMP_FIELD ? formData[col.comp.COMP_FIELD] : undefined,
                                         true,
                                         `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}`,
                                         `${viewLayer[0].COMP_FIELD}-${groupIndex}-${rowIndex}-${colIndex}`,
@@ -77,7 +77,9 @@ class View extends Component {
               </Group>
             </div>
           ))}
-          {hiddenField && hiddenField.length > 0 && hiddenField.map(node => this.renderComp(node, node.COMP_FIELD ? formData[node.COMP_FIELD] : '', false))}
+          {hiddenField &&
+            hiddenField.length > 0 &&
+            hiddenField.map(node => this.renderComp(node, node.COMP_FIELD ? formData[node.COMP_FIELD] : undefined, false))}
         </>
       );
     }
