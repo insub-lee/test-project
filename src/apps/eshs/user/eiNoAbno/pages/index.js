@@ -161,25 +161,20 @@ class pages extends Component {
       },
     ];
 
-    console.debug('여기는 itemListReload', formData.REQ_NO, formData.CHK_YEAR);
     getCallDataHandler(id, apiAry, this.setEiMaterialItemList);
   };
 
   setEiMaterialItemList = () => {
     const { result } = this.props;
     const eiMaterialItemList = (result && result.eiMaterialItemList && result.eiMaterialItemList.result) || [];
-    console.debug('eiMaterialItemList', eiMaterialItemList);
     this.setState({ eiMaterialItemList });
   };
 
   render() {
     const { profile, id, submitHandlerBySaga, formData, changeFormData, getCallDataHandler, setFormData } = this.props;
     const { years, searchRow, deptFirstUserInfo, eiMaterialData, searchFlag, initEiMaterial, eiMaterialItemList } = this.state;
-    console.debug('currentYear', currentYear);
-    console.debug('this.state', this.state);
     const { state } = this;
     const { props } = this;
-    console.debug('props !! ', props);
     return (
       <PagesStyled>
         <StyledViewDesigner>

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Input, Select, Button, InputNumber, Checkbox, Popconfirm, message } from 'antd';
 
 const { Option } = Select;
+const numberFormat = /(\d+)(\d{3})/;
 class MaterialItemTable extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +43,9 @@ class MaterialItemTable extends Component {
     const { id, changeFormData, formData, submitHandlerBySaga, getCallDataHandler } = this.props;
     switch (type) {
       case 'SAVE':
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiNoAbnoItem', formData, this.handleFormReset);
+        if (this.validationCheck()) {
+          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiNoAbnoItem', formData, this.handleFormReset);
+        }
         break;
       case 'UPDATE':
         if (!formData.SEQ) {
@@ -86,6 +89,47 @@ class MaterialItemTable extends Component {
       rowSelections.push(seq);
       this.setState({ rowSelections });
     }
+  };
+
+  validationCheck = () => {
+    const { formData } = this.props;
+    if (!formData.REQ_NO) {
+      message.warning('상단의 내용을 먼저 입력해주세요.');
+      return false;
+    }
+    if (!formData.GUBUN) {
+      message.warning('구분을 입력해주세요.');
+      return false;
+    }
+    if (!formData.MATTER) {
+      message.warning('물질명을 입력해주세요.');
+      return false;
+    }
+    if (!formData.INGREDIENT) {
+      message.warning('구성성분을 입력해주세요.');
+      return false;
+    }
+    if (!formData.VOLUME) {
+      message.warning('사용량을 입력해주세요.');
+      return false;
+    }
+    if (!formData.UNIT) {
+      message.warning('단위를 입력해주세요.');
+      return false;
+    }
+    if (!formData.INPUT_TYPE) {
+      message.warning('투입형태를 입력해주세요.');
+      return false;
+    }
+    if (!formData.OUTPUT_TYPE) {
+      message.warning('배출형태를 입력해주세요.');
+      return false;
+    }
+    if (!formData.DISCHRGE) {
+      message.warning('배출처를 입력해주세요.');
+      return false;
+    }
+    return true;
   };
 
   render() {
@@ -230,7 +274,7 @@ class MaterialItemTable extends Component {
                 <td className="text-align-center">{m.STATUS}</td>
                 <td>{m.MATTER}</td>
                 <td>{m.INGREDIENT}</td>
-                <td>{m.VOLUME}</td>
+                <td>{m.VOLUME.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
                 <td>{m.UNIT}</td>
                 <td>{m.INPUT_TYPE}</td>
                 <td>{m.OUTPUT_TYPE}</td>
