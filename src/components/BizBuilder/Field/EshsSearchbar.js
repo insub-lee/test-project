@@ -123,27 +123,7 @@ class CommonSearchbar extends React.Component {
       <div>
         <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
         <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        {/* {viewPageData.viewType === 'MODIFY' ? (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-              신규등록
-            </StyledButton>
-          </>
-        ) : (
-          <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
-            등록
-          </StyledButton>
-        )} */}
         {this.ButtonRender()}
-        {/* <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-          Reset
-        </StyledButton> */}
         <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {this.state.modal && this.BizbuilderbaseRender()}
         </Modal>
