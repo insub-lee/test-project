@@ -314,7 +314,7 @@ class DragUploadComp extends Component {
                   {fileList.length > 0 && (
                     <div className="uploadList" style={{ margin: 0, padding: 20, height: 80, overflowY: 'auto' }}>
                       {fileList.map((file, index) => (
-                        <div className="uploadFileRow" style={{ position: 'relative', height: '25px' }}>
+                        <div className="uploadFileRow" style={{ position: 'absolute', height: '25px' }}>
                           <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
                             <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
                           </div>

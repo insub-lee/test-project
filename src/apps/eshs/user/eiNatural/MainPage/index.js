@@ -1,7 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Modal, Button, Input, Select, Row, Col } from 'antd';
+import { Row, Col } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
@@ -16,22 +16,40 @@ class MainPage extends Component {
     this.state = {};
   }
 
+  handleSearchOnClick = () => {
+    const { id, getCallDataHandler, formData } = this.props;
+    const chk_year = (formData && formData.CHK_YEAR) || '0';
+    const dept_cd = (formData && formData.searchRow && formData.searchRow.DEPT_CD) || (formData && formData.myDept && formData.myDept.DEPT_CD) || '0';
+    const apiAry = [
+      {
+        key: 'itemList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsEiNaturalItemListHandler/${chk_year}/${dept_cd}`,
+      },
+    ];
+    getCallDataHandler(id, apiAry, this.handleSetItemList);
+  };
+
+  handleSetItemList = () => {
+    const { id, result, changeFormData } = this.props;
+    const itemList = (result && result.itemList && result.itemList.list) || [];
+    changeFormData(id, 'itemList', itemList);
+  };
+
   render() {
     return (
       <PagesStyled>
         <StyledViewDesigner>
           <Sketch>
             <Row>
-              <DeptSearchBar {...this.props} />
+              <Col span={10}>
+                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+              </Col>
             </Row>
             <Row>
               <Col span={24}>
-                <NaturalItemTable {...this.props} />
+                <NaturalItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
               </Col>
-            </Row>
-            <br />
-            <Row>
-              <Col span={24}></Col>
             </Row>
           </Sketch>
         </StyledViewDesigner>
