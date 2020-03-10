@@ -71,6 +71,7 @@ class InputPage extends Component {
       CustomWorkProcess,
       reloadId,
       isBuilderModal,
+      CustomButtons,
     } = this.props;
 
     // Work Process 사용여부
@@ -98,16 +99,20 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveTask(id, reloadId || id)}>
-                Save
-              </StyledButton>
-              {!isBuilderModal && (
-                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
+            {CustomButtons ? (
+              <CustomButtons {...this.props} />
+            ) : (
+              <div className="alignRight">
+                <StyledButton className="btn-primary" onClick={() => this.saveTask(id, reloadId || id)}>
+                  Save
                 </StyledButton>
-              )}
-            </div>
+                {!isBuilderModal && (
+                  <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </StyledButton>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );
