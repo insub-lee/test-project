@@ -1,6 +1,6 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Table, Button, Modal, Icon, Input } from 'antd';
+import { Table, Button, Modal, Icon, Input, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import TableTypeSelectorStyled from './TableTypeSelectorStyled';
 
@@ -55,14 +55,29 @@ class TableTypeSelector extends React.Component {
 
   handleModalVisible = () => {
     const { modalVisivle } = this.state;
-    const { applyList } = this.props;
-
-    this.setState({
-      applyList,
-      searchText: '',
-      searchedColumn: '',
-      modalVisivle: !modalVisivle,
-    });
+    const { applyList, customVisible, customWarning } = this.props;
+    if (typeof customVisible === 'string') {
+      if (customVisible) {
+        this.setState({
+          applyList,
+          searchText: '',
+          searchedColumn: '',
+          modalVisivle: !modalVisivle,
+          selectedRows: [],
+          selectedRowKeys: [],
+          deleteSeqs: [],
+        });
+      } else {
+        message.warning(customWarning);
+      }
+    } else {
+      this.setState({
+        applyList,
+        searchText: '',
+        searchedColumn: '',
+        modalVisivle: !modalVisivle,
+      });
+    }
   };
 
   getColumnSearchProps = dataIndex => ({
@@ -152,8 +167,8 @@ class TableTypeSelector extends React.Component {
   handleModalOk = () => {
     const { handleApply } = this.props;
     const { applyList } = this.state;
-    this.handleModalVisible();
     handleApply(applyList);
+    this.handleModalVisible();
   };
 
   render() {
@@ -184,7 +199,6 @@ class TableTypeSelector extends React.Component {
       }),
       fixed: true,
     };
-
     return (
       <div>
         <Button onClick={this.handleModalVisible}>{btnText}</Button>

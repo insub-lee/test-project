@@ -138,9 +138,70 @@ class DragUploadComp extends Component {
                   ) : (
                     <Progress type="circle" width={23} percent={file.percent} style={{ marginRight: '10px' }}></Progress>
                   )}
-                  <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block' }}>{file.fileName}</div>
-                  <Icon type="delete" style={{ fontSize: '16px', verticalAlign: 'baseline', marginLeft: '10px' }} />
-                  <Icon type="download" style={{ fontSize: '16px', verticalAlign: 'baseline', marginLeft: '5px' }} />
+                  {fileList.length > 0 && (
+                    <div className="uploadList" style={{ margin: 0, padding: 20, height: 80, overflowY: 'auto' }}>
+                      {fileList.map((file, index) => (
+                        <div className="uploadFileRow" style={{ position: 'absolute', height: '25px' }}>
+                          <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
+                            <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
+                          </div>
+                          {file.status === 'done' ? (
+                            <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
+                              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
+                                <Icon type="download" />
+                              </StyledButton>
+                              <StyledButton className="btn-light btn-xs" onClick={e => this.onRemove(index, e)}>
+                                <Icon type="close" />
+                              </StyledButton>
+                            </div>
+                          ) : (
+                            <>
+                              {file.status === 'error' ? (
+                                <div className="uploadFileStatus" style={{ position: 'absolute', top: 4, right: 10 }}>
+                                  <sapn style={{ color: 'red' }}>업로드 실패</sapn>
+                                  {'  '}
+                                  <StyledButton className="btn-light btn-xs" onClick={() => this.onRemove(index)}>
+                                    <Icon type="close" />
+                                  </StyledButton>
+                                </div>
+                              ) : (
+                                <div className="uploadFileStatus" style={{ position: 'absolute', top: '0px', right: '15px', width: '35%' }}>
+                                  <Progress percent={this.state.percent} status="active" />
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              </Dragger>
+            </div>
+          </>
+        )}
+        {view && (
+          <div className="uploadFileList">
+            {fileList.length > 0 ? (
+              fileList.map((file, index) => (
+                <div className="uploadFileRow" style={{ padding: '10px 10px 10px', position: 'relative', height: '25px' }}>
+                  <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
+                    <Tooltip placement="topLeft" title={`${file.name}(${this.bytesToSize(file.size)})`} trigger="hover">
+                      <Icon type="paper-clip" />
+                      {file.name} ({this.bytesToSize(file.size)})
+                    </Tooltip>
+                  </div>
+                  <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
+                    <StyledButton
+                      className="btn-primary btn-xs btn-first"
+                      onClick={e => {
+                        e.stopPropagation();
+                        window.location.href = `${file.down}`;
+                      }}
+                    >
+                      <Icon type="download" />
+                    </StyledButton>
+                  </div>
                 </div>
               ))}
             </div>
