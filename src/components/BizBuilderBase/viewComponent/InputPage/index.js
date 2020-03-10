@@ -14,6 +14,7 @@ class InputPage extends Component {
     super(props);
     this.state = {
       initLoading: true,
+      uploadFileList: [],
     };
   }
 
@@ -32,6 +33,53 @@ class InputPage extends Component {
       getProcessRule(id, payload);
     }
   }
+
+  fileUploadComplete = (id, response, etcData) => {
+    const { formData, changeFormData } = this.props;
+    const { DETAIL } = response;
+    const selectedAttach = formData[etcData];
+    const { uploadFileList } = this.state;
+    const tmpAttach = { ...selectedAttach, DETAIL };
+    changeFormData(id, etcData, tmpAttach);
+    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: true } : file));
+    this.setState({ uploadFileList: tmpFileList }, () => {
+      const { uploadFileList } = this.state;
+      const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
+      if (!isUploadComplete) {
+        this.saveTask(id, id, this.saveTaskAfter);
+      }
+    });
+  };
+
+  filterAttach = field => {
+    const config = JSON.parse(field.CONFIG);
+    return config.info && config.info.isAttach;
+  };
+
+  saveBeforeProcess = (id, reloadId, callBackFunc) => {
+    const { submitExtraHandler, formData, metaList } = this.props;
+    const moveFileApi = '/upload/moveFileToReal';
+    const { uploadFileList } = this.state;
+    const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+    // 첨부파일이 없는 경우 체크
+    const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+    if (isUploadByPass && isUploadByPass.length === 0) {
+      this.saveTask(id, reloadId, this.saveTaskAfter);
+    } else {
+      attachList.map(attachItem => {
+        const { COMP_FIELD } = attachItem;
+        const attachInfo = formData[COMP_FIELD];
+        if (attachInfo) {
+          const { DETAIL } = attachInfo;
+          uploadFileList.push({ COMP_FIELD, isComplete: false });
+          this.setState({ uploadFileList }, () => {
+            const param = { PARAM: { DETAIL } };
+            submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+          });
+        }
+      });
+    }
+  };
 
   saveTask = (id, reloadId) => {
     const { saveTask, saveTaskAfterCallbackFunc } = this.props;
@@ -103,7 +151,7 @@ class InputPage extends Component {
               <CustomButtons {...this.props} />
             ) : (
               <div className="alignRight">
-                <StyledButton className="btn-primary" onClick={() => this.saveTask(id, reloadId || id)}>
+                <StyledButton className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
                   Save
                 </StyledButton>
                 {!isBuilderModal && (
