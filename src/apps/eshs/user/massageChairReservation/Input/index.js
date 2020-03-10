@@ -7,6 +7,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import { Row, Col, DatePicker, Typography, Popconfirm } from 'antd';
 
 import moment from 'moment';
+import request from 'utils/request';
 
 class Input extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ class Input extends Component {
     this.state = {
       userInfo: {},
       selectedDate: moment().format('YYYY-MM-DD'),
+      noShowCount: 0,
       currentDate:
         moment().format('YYMMDD') ===
           moment()
@@ -31,7 +33,17 @@ class Input extends Component {
 
   date = moment().format('YYYY-MM-DD');
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.getNoShowCount().then(res => {
+      console.debug(res);
+      if (res.noShowCount && res.noShowCount.count !== -1) {
+        return this.setState({
+          noShowCount: res.noShowCount.count,
+        });
+      }
+      return null;
+    });
+  }
 
   handleGetUserInfo = () => {
     const { sagaKey: id, getExtraApiData } = this.props;
@@ -87,7 +99,7 @@ class Input extends Component {
 
   handleButtonClick = () => {
     // formData 체크해서 시간 비었으면 저장 안하게
-    const { selectedDate, userInfo } = this.state;
+    const { selectedDate, userInfo, noShowCount } = this.state;
     const { sagaKey: id, changeFormData, saveTask, formData, handleGetTimeTable } = this.props;
     if (formData.checkedIndex === undefined) {
       return;
@@ -120,7 +132,37 @@ class Input extends Component {
     this.setState({
       currentDate: selectedDate,
     });
-    saveTask(id, id, handleGetTimeTable(moment(selectedDate).format('YYYYMMDD')));
+
+    this.getNoShowCount().then(res => {
+      console.debug(res);
+      if (res.noShowCount && res.noShowCount.count !== -1) {
+        saveTask(id, id, handleGetTimeTable(moment(selectedDate).format('YYYYMMDD')));
+      }
+      return null;
+    });
+  };
+
+  getNoShowCount = () => {
+    const getCount = async () => {
+      const result = await request({
+        url: `/api/eshs/v1/common/getphysicaltherapynoshowcount`,
+        method: 'GET',
+      });
+      return result.response;
+    };
+    return getCount();
+  };
+
+  makePopconfirmTitle = () => {
+    const { noShowCount } = this.state;
+    const { formData } = this.props;
+    if (formData.checkedIndex === undefined) {
+      return '시간을 선택하세요.';
+    }
+    if (noShowCount) {
+      return '예약 후 미사용으로 예약이 불가능합니다.';
+    }
+    return '';
   };
 
   render() {
@@ -173,17 +215,11 @@ class Input extends Component {
               <Col span={2}>이름</Col>
               <Col span={2}>{userInfo.name}</Col>
               <Col span={2}>
-                {formData.checkedIndex === undefined ? (
-                  <Popconfirm title="시간을 선택하세요">
-                    <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
-                      예약
-                    </StyledButton>
-                  </Popconfirm>
-                ) : (
+                <Popconfirm title={this.makePopconfirmTitle()} disabled={formData.checkedIndex !== undefined && !this.state.noShowCount}>
                   <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
                     예약
                   </StyledButton>
-                )}
+                </Popconfirm>
               </Col>
               <Col span={2}>소속</Col>
               <Col span={4}>{userInfo.dept}</Col>

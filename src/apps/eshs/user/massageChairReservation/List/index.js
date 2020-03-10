@@ -4,8 +4,10 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
-import { Table, Checkbox } from 'antd';
+import { Table, Checkbox, Popconfirm } from 'antd';
 import moment from 'moment';
+import request from 'utils/request';
+
 import Input from '../Input';
 
 // moment.locale('ko');
@@ -18,16 +20,16 @@ class List extends Component {
       timetable: [],
     };
     this.handleGetTimeTable(
-      moment().format('YYYYMMDD') ===
+      moment().format('YYYYMMDD HH:mm:ss') ===
         moment()
           .startOf('week')
-          .format('YYYYMMDD') ||
-        moment().format('YYYYMMDD') ===
+          .format('YYYYMMDD HH:mm:ss') ||
+        moment().format('YYYYMMDD HH:mm:ss') ===
           moment()
             .endOf('week')
-            .format('YYYYMMDD')
+            .format('YYYYMMDD HH:mm:ss')
         ? ''
-        : moment().format('YYYYMMDD'),
+        : moment().format('YYYYMMDD HH:mm:ss'),
     );
   }
 
@@ -66,25 +68,60 @@ class List extends Component {
           align: 'center',
           render: (text, record, index) => {
             const { formData, extraApiData } = this.props;
+
             if (record.time === '12:00 ~ 12:30' || record.time === '12:30 ~ 13:00') {
               return <span>점심 휴무</span>;
             }
 
             if (this.isReserved(record.time) && formData.gender === 'm') {
-              if (
-                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id ||
-                extraApiData.getUserInfo.userInfo.user_id === 1
-              ) {
-                // 관리자이거나 예약자면 취소버튼 나옴
+              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 2) {
+                // 관리자면서 사용확인 안 된 예약
                 return (
                   <div>
                     <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
-                    <StyledButton className="btn-primary" onClick={this.handleDeleteButtonClick}>
-                      취소
-                    </StyledButton>
+                    <Popconfirm title="취소하시겠습니까?" onConfirm={() => this.handleDelete(record, index)}>
+                      <StyledButton className="btn-primary">취소</StyledButton>
+                    </Popconfirm>
+                    <Popconfirm title="확인하시겠습니까?" onConfirm={() => this.handleConfirm(record, 1)}>
+                      <StyledButton className="btn-primary">사용확인</StyledButton>
+                    </Popconfirm>
                   </div>
                 );
               }
+
+              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 1) {
+                // 관리자면서 사용확인된 예약
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 사용완료</span>
+                  </div>
+                );
+              }
+
+              if (extraApiData.getUserInfo.userInfo.user_id === 1 && this.getBookerInfo(record.time).is_chk === 0) {
+                // 관리자면서 노쇼한 예약
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 노쇼</span>
+                  </div>
+                );
+              }
+
+              if (
+                extraApiData.getUserInfo.userInfo.user_id === this.getBookerInfo(record.time).reg_user_id &&
+                extraApiData.getUserInfo.userInfo.user_id !== 1
+              ) {
+                // 예약했지만 관리자가 아니면 취소버튼 나옴
+                return (
+                  <div>
+                    <span>{this.getBookerInfo(record.time).name_kor}님이 예약</span>
+                    <Popconfirm title="취소하시겠습니까?" onConfirm={e => this.handleDelete(e, record, index)}>
+                      <StyledButton className="btn-primary">취소</StyledButton>
+                    </Popconfirm>
+                  </div>
+                );
+              }
+
               return (
                 // 관리자가 아니면서 남이 예약한 시간
                 <div>
@@ -136,7 +173,7 @@ class List extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const { extraApiData } = nextProps;
     if (extraApiData.getTimetable) {
-      if (prevState.timetable !== nextProps.extraApiData.getTimetable) {
+      if (prevState.timetable !== nextProps.extraApiData.getTimetable.timetable) {
         return { timetable: nextProps.extraApiData.getTimetable.timetable };
       }
     }
@@ -193,8 +230,46 @@ class List extends Component {
     changeFormData(id, 'TIME_ZONE', time);
   };
 
-  handleDeleteButtonClick = () => {
-    console.debug('@@@DELETE@@@');
+  handleDelete = (e, record) => {
+    const { timetable } = this.state;
+    const { sagaKey: id, workSeq, changeViewPage } = this.props;
+    const timeZone = moment(record.time.substring(0, 5), 'HH:mm').format('HHmm');
+    const appDt = moment(timetable[0].app_dt).format('YYYYMMDD');
+    const paramMap = {
+      timeZone,
+      appDt,
+    };
+
+    request({
+      method: 'DELETE',
+      url: '/api/eshs/v1/common/getphysicaltherapytimetable',
+      params: paramMap,
+    });
+    changeViewPage(id, workSeq, -1, 'LIST');
+  };
+
+  handleConfirm = (record, isChk) => {
+    if (typeof isChk !== 'number') {
+      return;
+    }
+
+    const { timetable } = this.state;
+    const { sagaKey: id, workSeq, changeViewPage } = this.props;
+    const paramMap = {
+      timeZone: moment(record.time.substring(0, 5), 'HH:mm').format('HHmm'),
+      appDt: moment(timetable[0].app_dt).format('YYYYMMDD'),
+      isChk,
+    };
+
+    request({
+      method: 'POST',
+      url: `/api/eshs/v1/common/getphysicaltherapytimetable`,
+      params: paramMap,
+    });
+
+    if (isChk) {
+      changeViewPage(id, workSeq, -1, 'LIST');
+    }
   };
 
   render() {
@@ -227,6 +302,8 @@ List.propTypes = {
   changeFormData: PropTypes.func,
   formData: PropTypes.object,
   saveTask: PropTypes.string,
+  workSeq: PropTypes.number,
+  changeViewPage: PropTypes.func,
 };
 
 export default List;
