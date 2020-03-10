@@ -36,10 +36,11 @@ class Input extends Component {
   date = moment().format('YYYY-MM-DD');
 
   componentDidMount() {
+    const { sagaKey: id, changeFormData } = this.props;
+    changeFormData(id, 'APP_DT', this.state.selectedDate);
     this.reserveLimitCheck(moment(this.state.selectedDate).format('YYYY-MM-DD')).then(res => this.setState({ reserveCount: res.reservationCount.count }));
     this.updateNoShow();
     this.getNoShowCount().then(res => {
-      console.debug(res.noShowCount);
       if (res.noShowCount && !res.noShowCount.length) {
         return this.setState({
           noShowCount: 0,
@@ -95,18 +96,22 @@ class Input extends Component {
     (current && current < moment().startOf('day'));
 
   handleOnDateChange = date => {
-    const { handleGetTimeTable } = this.props;
+    const { handleGetTimeTable, sagaKey: id, changeFormData } = this.props;
     handleGetTimeTable(date.format('YYYYMMDD') || moment().format('YYYYMMDD'));
-    this.setState({
-      selectedDate: moment(date).format('YYYY-MM-DD'),
-    });
+    this.setState(
+      {
+        selectedDate: moment(date).format('YYYY-MM-DD'),
+      },
+      changeFormData(id, 'APP_DT', moment(date).format('YYYY-MM-DD')),
+      // changeFormData(id, 'checkedIndex', -1),
+    );
     this.reserveLimitCheck(moment(date).format('YYYY-MM-DD')).then(res => this.setState({ reserveCount: res.reservationCount.count }));
+    return this.props.dateChange();
   };
 
   handleButtonClick = () => {
     const { selectedDate, noShowCount, reserveCount, noShowDate } = this.state;
     const { sagaKey: id, saveTask, formData, handleGetTimeTable } = this.props;
-    console.debug(reserveCount);
     if (
       formData.checkedIndex === undefined ||
       this.isReservedToday() ||
@@ -118,7 +123,6 @@ class Input extends Component {
             .format('w'))
     ) {
       // formData 체크해서 시간 선택 안했거나, 노쇼했으면 예약 불가
-      console.debug('불가능');
       return;
     }
 
@@ -268,11 +272,10 @@ class Input extends Component {
                     formData.checkedIndex !== undefined &&
                     !this.isReservedToday() &&
                     reserveCount < 3 &&
-                    moment(selectedDate).format('YYYYMMDD') >
+                    moment(selectedDate).format('w') !==
                       moment(noShowDate)
                         .add('1', 'week')
-                        .endOf('week') // 조건에 따라 삭제할 것, 7일 후인지, 다음 주 금요일 까지인지
-                        .format('YYYYMMDD')
+                        .format('w')
                   }
                 >
                   <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
@@ -309,6 +312,7 @@ Input.propTypes = {
   saveTask: PropTypes.string,
   formData: PropTypes.object,
   handleGetTimeTable: PropTypes.func,
+  dateChange: PropTypes.func,
 };
 
 export default Input;

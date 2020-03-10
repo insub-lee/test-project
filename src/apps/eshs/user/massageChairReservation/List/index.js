@@ -134,7 +134,10 @@ class List extends Component {
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
                 checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                disabled={formData.gender !== 'm' || moment() > moment(record.time, 'HH:mm')}
+                disabled={
+                  formData.gender !== 'm' ||
+                  (moment() > moment(record.time.substring(0, 5), 'HH:mm') && moment().format('YYYY-MM-DD') >= moment(formData.APP_DT).format('YYYY-MM-DD'))
+                }
               />
             );
           },
@@ -210,7 +213,7 @@ class List extends Component {
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
                 checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
-                disabled={formData.gender !== 'f' || moment() > moment(record.time, 'HH:mm')}
+                disabled={formData.gender !== 'f' || (moment() > moment(record.time, 'HH:mm') && this.state.selectedDate < moment())}
               />
             );
           },
@@ -323,6 +326,12 @@ class List extends Component {
     }
   };
 
+  dateChange = () => {
+    this.setState({
+      checkedIndex: '',
+    });
+  };
+
   render() {
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
     return (
@@ -335,6 +344,7 @@ class List extends Component {
           formData={formData}
           sagaKey={sagaKey}
           handleGetTimeTable={this.handleGetTimeTable}
+          dateChange={this.dateChange}
         />
         <StyledViewDesigner>
           <Sketch>
