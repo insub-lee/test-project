@@ -57,11 +57,11 @@ class TreeSelectComp extends Component {
     } = this.props;
 
     const apiData = extraApiData[`treeSelect_${mapId}`];
-    let tempData;
+    let categoryData;
     if (readOnly || CONFIG.property.readOnly) {
-      tempData = apiData && apiData.categoryMapList && apiData.categoryMapList.find(item => item.NODE_ID === Number(colData));
+      categoryData = apiData && apiData.categoryMapList && apiData.categoryMapList.find(item => item.NODE_ID === Number(colData));
     } else {
-      tempData =
+      categoryData =
         (apiData &&
           apiData.categoryMapList &&
           getCategoryMapListAsTree(
@@ -74,20 +74,20 @@ class TreeSelectComp extends Component {
     }
     // const categoryData = tempData.length > 0 ? tempData[0] : [];
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer({ ...this.props, searchTreeData: tempData });
+      return searchCompRenderer({ ...this.props, searchTreeData: categoryData });
     }
     return visible ? (
       <>
         {colData !== undefined ? (
           <>
             {readOnly || CONFIG.property.readOnly ? (
-              <span>{tempData && tempData.NAME_KOR}</span>
+              <span>{categoryData && categoryData.NAME_KOR}</span>
             ) : (
               <TreeSelect
                 style={{ width: '100%' }}
                 value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                treeData={tempData}
+                treeData={categoryData}
                 onChange={value => this.onChangeHandler(value)}
                 placeholder={placeholder}
                 className={CONFIG.property.className || ''}
