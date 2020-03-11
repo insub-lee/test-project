@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Icon, Progress, Upload, Button, Tooltip } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import { isJSON } from 'utils/helpers';
 import StyledDragger from 'components/CommonStyled/StyledDragger';
@@ -31,14 +32,6 @@ class DragUploadComp extends Component {
     this.setState({ fileInfo: initfiles });
   }
 
-  onProgress = (step, file) => {
-    const { fileInfo } = this.state;
-    const { DETAIL: fileList } = fileInfo;
-    const tmpDetail = fileList.map(fObj => (fObj.uid === file.uid ? { ...fObj, percent: step } : { ...fObj }));
-    const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
-    this.setState({ fileInfo: tmpFileInfo });
-  };
-
   changeFormDataHanlder = () => {
     const { sagaKey, changeFormData, COMP_FIELD, WORK_SEQ } = this.props;
     const { fileInfo } = this.state;
@@ -48,7 +41,7 @@ class DragUploadComp extends Component {
   onUploadComplete = (response, file) => {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
-    const { fileExt } = response;
+    const { fileExt, down } = response;
     let doctype = 'file-unknown';
     switch (fileExt) {
       case 'pdf':
@@ -81,7 +74,7 @@ class DragUploadComp extends Component {
       default:
         break;
     }
-    const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype } : fl));
+    const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype, down } : fl));
     const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
     this.setState({ fileInfo: tmpFileInfo }, () => this.changeFormDataHanlder());
   };
@@ -90,27 +83,41 @@ class DragUploadComp extends Component {
     const { fileInfo } = this.state;
     const { DETAIL: fileList } = fileInfo;
 
-    const fileItem = { uid: file.uid, seq: 0, fileName: file.name, fileType: 1, size: file.size, fileExt: '', down: '', percent: 0, type: '' };
+    const fileItem = { uid: file.uid, seq: 0, fileName: file.name, fileType: 1, size: file.size, fileExt: '', down: '', percent: 0, type: 'LoadingOutlined' };
     fileList.push(fileItem);
     const tmpFileInfo = { ...fileInfo, DETAIL: fileList };
     this.setState({ fileInfo: tmpFileInfo });
     const formData = new FormData();
     formData.append(file.uid, file);
-
     axios
       .post(action, formData, {
         withCredentials,
         headers,
-        onUploadProgress: ({ total, loaded }) => {
-          const step = Math.round((loaded * 100) / total);
-          onProgress(step, file);
-        },
       })
       .then(({ data: response }) => {
         onSuccess(response, file);
         this.onUploadComplete(response, file);
       })
       .catch(onError);
+  };
+
+  onClickRemoveFile = file => {
+    const { fileInfo } = this.state;
+    const { DETAIL: fileList } = fileInfo;
+    const idx = fileList.indexOf(file);
+    const newFileList = fileList.slice();
+    newFileList.splice(idx, 1);
+    const newFileInfo = { ...fileInfo, DETAIL: newFileList };
+    this.setState({ fileInfo: newFileInfo }, () => {
+      const { sagaKey, changeFormData, COMP_FIELD } = this.props;
+      const { fileInfo } = this.state;
+      changeFormData(sagaKey, COMP_FIELD, fileInfo);
+    });
+  };
+
+  onClickDownLoadFile = (e, file) => {
+    e.stopPropagation();
+    window.location.href = `${file.down}`;
   };
 
   render() {
@@ -122,7 +129,6 @@ class DragUploadComp extends Component {
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
           action="/upload/mdcs"
-          // beforeUpload={this.beforeUpload}
           onProgress={this.onProgress}
           customRequest={this.customRequest}
           onChange={this.onChangeDragger}
@@ -132,77 +138,7 @@ class DragUploadComp extends Component {
           {fileList && fileList.length > 0 ? (
             <div className="fileZone">
               {fileList.map(file => (
-                <div style={{ height: '25px' }}>
-                  {file.percent === 100 ? (
-                    <Icon type={file.type} style={{ fontSize: '20px', marginRight: '5px' }} />
-                  ) : (
-                    <Progress type="circle" width={23} percent={file.percent} style={{ marginRight: '10px' }}></Progress>
-                  )}
-                  {fileList.length > 0 && (
-                    <div className="uploadList" style={{ margin: 0, padding: 20, height: 80, overflowY: 'auto' }}>
-                      {fileList.map((file, index) => (
-                        <div className="uploadFileRow" style={{ position: 'absolute', height: '25px' }}>
-                          <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
-                            <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
-                          </div>
-                          {file.status === 'done' ? (
-                            <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
-                                <Icon type="download" />
-                              </StyledButton>
-                              <StyledButton className="btn-light btn-xs" onClick={e => this.onRemove(index, e)}>
-                                <Icon type="close" />
-                              </StyledButton>
-                            </div>
-                          ) : (
-                            <>
-                              {file.status === 'error' ? (
-                                <div className="uploadFileStatus" style={{ position: 'absolute', top: 4, right: 10 }}>
-                                  <sapn style={{ color: 'red' }}>업로드 실패</sapn>
-                                  {'  '}
-                                  <StyledButton className="btn-light btn-xs" onClick={() => this.onRemove(index)}>
-                                    <Icon type="close" />
-                                  </StyledButton>
-                                </div>
-                              ) : (
-                                <div className="uploadFileStatus" style={{ position: 'absolute', top: '0px', right: '15px', width: '35%' }}>
-                                  <Progress percent={this.state.percent} status="active" />
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              </Dragger>
-            </div>
-          </>
-        )}
-        {view && (
-          <div className="uploadFileList">
-            {fileList.length > 0 ? (
-              fileList.map((file, index) => (
-                <div className="uploadFileRow" style={{ padding: '10px 10px 10px', position: 'relative', height: '25px' }}>
-                  <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
-                    <Tooltip placement="topLeft" title={`${file.name}(${this.bytesToSize(file.size)})`} trigger="hover">
-                      <Icon type="paper-clip" />
-                      {file.name} ({this.bytesToSize(file.size)})
-                    </Tooltip>
-                  </div>
-                  <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                    <StyledButton
-                      className="btn-primary btn-xs btn-first"
-                      onClick={e => {
-                        e.stopPropagation();
-                        window.location.href = `${file.down}`;
-                      }}
-                    >
-                      <Icon type="download" />
-                    </StyledButton>
-                  </div>
-                </div>
+                <div style={{ height: '25px' }}></div>
               ))}
             </div>
           ) : (
@@ -214,6 +150,21 @@ class DragUploadComp extends Component {
             </div>
           )}
         </Dragger>
+        {fileList && fileList.length > 0 && (
+          <div className="fileZone" style={{ position: 'absolute', top: '10px', marginLeft: '10px' }}>
+            {fileList.map(file => (
+              <div style={{ height: '25px' }}>
+                {file.type === 'LoadingOutlined' ? (
+                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px' }} />
+                ) : (
+                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px' }} />
+                )}
+                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
+                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     );
   }
