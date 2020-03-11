@@ -68,6 +68,7 @@ class ProcessMgr extends Component {
   onSaveComplete = fid => {
     const { getCallDataHandler, apiArray } = this.props;
     getCallDataHandler(fid, apiArray);
+    console.debug('message 완료');
   };
 
   onFlowChartSave = (id, result) => {

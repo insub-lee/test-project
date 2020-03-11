@@ -41,6 +41,7 @@ class EditorActionPanel extends React.Component {
       appMember: node.appMember,
       appvAuth: node.appvAuth,
       ruleConfig: node.ruleConfig,
+      isRequired: node.isRequired,
       parentId: '0',
       rejectId: '0',
       appvMethod: 1,
@@ -66,7 +67,8 @@ class EditorActionPanel extends React.Component {
         result[idx].rejectId = e.target;
         result[idx].appvMethod = 1;
       }
-      if (e.process === 'review') {        const idx = _.findIndex(result, r => r.id === e.target);
+      if (e.process === 'review') {
+        const idx = _.findIndex(result, r => r.id === e.target);
         result[idx].parentId = e.source;
         result[idx].appvMethod = 99;
       }
@@ -74,16 +76,11 @@ class EditorActionPanel extends React.Component {
     return result;
   };
 
-  onClickEvent = () => {
+  onClickSave = () => {
     const { id, propsAPI } = this.props;
-    // propsAPI.read((data) => {
-    //     console.log('data : ',data);
-    // });
-    const data = propsAPI.save();
+    const { save } = propsAPI;
+    const data = save();
     if (this.isValid(data)) {
-      /*
-        데이터 가공
-      */
       const obj = this.convertData(data);
       const result = {
         FLOWCHART_INFO: obj,
@@ -103,7 +100,7 @@ class EditorActionPanel extends React.Component {
   render() {
     return (
       <div style={{ padding: '10px', margin: 'auto' }}>
-        <Button type="primary" onClick={this.onClickEvent} style={{ marginRight: '10px', width: '100px' }}>
+        <Button type="primary" onClick={this.onClickSave} style={{ marginRight: '10px', width: '100px' }}>
           <Icon type="save" />
           Save
         </Button>

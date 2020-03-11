@@ -11,19 +11,31 @@ const ModalWrapper = StyledModalWrapper(Modal);
 class MdcsContentView extends Component {
   state = {
     modalVisible: false,
+    fullPathNm: undefined,
+  };
+
+  initDataBind = (id, response) => {
+    const { fullPath_Nm } = response;
+    const FULLPATH_NM = fullPath_Nm && fullPath_Nm.FULLPATH_NM;
+    this.setState({ fullPathNm: FULLPATH_NM });
   };
 
   componentDidMount = () => {
-    const { sagaKey, getExtraApiData, formData } = this.props;
-    const apiArys = [
-      {
-        key: 'fullPathName',
-        url: '/api/admin/v1/common/categoryFullPathNm',
-        type: 'POST',
-        params: { PARAM: { NODE_ID: formData.NODE_ID } },
-      },
-    ];
-    getExtraApiData(sagaKey, apiArys);
+    console.debug('this.props componentDidMount', this.props);
+    const { sagaKey, submitExtraHandler, formData } = this.props;
+    const submitUrl = '/api/admin/v1/common/categoryFullPathNm';
+    const submitData = { PARAM: { NODE_ID: formData.NODE_ID } };
+    submitExtraHandler(sagaKey, 'POST', submitUrl, submitData, this.initDataBind);
+  };
+
+  componentDidUpdate = prevProps => {
+    const { sagaKey, submitExtraHandler, formData } = this.props;
+    const { viewType } = this.props;
+    if (viewType && viewType !== prevProps.viewType) {
+      const submitUrl = '/api/admin/v1/common/categoryFullPathNm';
+      const submitData = { PARAM: { NODE_ID: formData.NODE_ID } };
+      submitExtraHandler(sagaKey, 'POST', submitUrl, submitData, this.initDataBind);
+    }
   };
 
   onDocCoverClick = () => {
@@ -35,7 +47,8 @@ class MdcsContentView extends Component {
   };
 
   render() {
-    const { formData, selectedRow, extraApiData } = this.props;
+    const { formData, selectedRow } = this.props;
+    const { fullPathNm } = this.state;
     return (
       <>
         <StyledTable>
@@ -43,9 +56,7 @@ class MdcsContentView extends Component {
             <tbody>
               <tr>
                 <th style={{ width: '100px' }}>문서종류</th>
-                <td colSpan={3}>
-                  {extraApiData && extraApiData.fullPathName && extraApiData.fullPathName.fullPath_Nm && extraApiData.fullPathName.fullPath_Nm.FULLPATH_NM}
-                </td>
+                <td colSpan={3}>{fullPathNm}</td>
               </tr>
               <tr>
                 <th style={{ width: '100px' }}>제목</th>
