@@ -15,9 +15,11 @@ function CustomValueSelectComp(props) {
     const { customValues, definedValue, setDefault } = props.CONFIG.property;
     setValues(customValues instanceof Array ? [...customValues] : [{ ...init }]);
     const isReg = typeof setDefault === 'string' ? setDefault : 'N';
-    setDefaultValue(isReg === 'Y' ? (definedValue instanceof Object ? { ...definedValue } : { ...init }) : { ...init });
+    setDefaultValue(definedValue instanceof Object ? { ...definedValue } : { ...init });
 
-    onChangeHandler(definedValue.value);
+    if (isReg === 'Y') {
+      onChangeHandler(definedValue.value);
+    }
   }, []);
 
   function valueHandler(set, idx) {
