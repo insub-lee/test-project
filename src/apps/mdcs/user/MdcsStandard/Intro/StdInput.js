@@ -39,10 +39,9 @@ class StdInput extends Component {
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
     const { DETAIL } = response;
-    const { ATTACH } = formData;
+    const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
-    const tmpAttach = { ...ATTACH, DETAIL };
-    console.debug('complete file', etcData, response);
+    const tmpAttach = { ...selectedAttach, DETAIL };
     changeFormData(id, etcData, tmpAttach);
     const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: true } : file));
     this.setState({ uploadFileList: tmpFileList }, () => {
@@ -64,7 +63,6 @@ class StdInput extends Component {
     const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
-
     // 첨부파일이 없는 경우 체크
     const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
     if (isUploadByPass && isUploadByPass.length === 0) {
@@ -86,7 +84,6 @@ class StdInput extends Component {
   };
 
   saveTask = (id, reloadId, callbackFunc) => {
-    console.debug('saveTask', id, reloadId);
     const { saveTask } = this.props;
     saveTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
@@ -148,7 +145,7 @@ class StdInput extends Component {
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
+              <StyledButton className="btn-primary btn-first" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
                 Save
               </StyledButton>
               <StyledButton className="btn-primary" onClick={() => onCloseModal()}>

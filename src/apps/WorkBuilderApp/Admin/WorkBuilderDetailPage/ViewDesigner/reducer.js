@@ -416,7 +416,12 @@ const reducer = (state = initialState, action) => {
               const viewIdx = compData.findIndex(iNode => iNode.get('COMP_TYPE') === 'VIEW' && iNode.getIn(['CONFIG', 'property', 'layerIdxKey']) === layerKey);
               if (viewIdx > -1) {
                 const keys = layerIdxs.get(layerKey).split('-');
-                compData = compData.setIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key], setValue);
+                if (compData.getIn([viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key])) {
+                  compData = compData.setIn(
+                    [viewIdx, 'CONFIG', 'property', 'layer', 'groups', keys[0], 'rows', keys[1], 'cols', keys[2], 'comp', key],
+                    setValue,
+                  );
+                }
               }
             }
           });
