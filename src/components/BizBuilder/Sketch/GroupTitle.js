@@ -106,11 +106,11 @@ class GroupTitle extends Component {
             </Checkbox>
             <Form ref={this.formRef} layout="inline" onSubmit={this.sendTableSize}>
               <Form.Item label="테이블 사이즈">
-                <InputNumber id="table-rowSize" name="rowSize" min={1} max={10} step={1} size="small" style={{ width: 50 }} defaultValue={tableSize[0]} />
+                <InputNumber id="table-rowSize" name="rowSize" min={1} max={40} step={1} size="small" style={{ width: 50 }} defaultValue={tableSize[0]} />
                 <span style={{ marginLeft: 10, marginRight: 10 }}>
                   <i className="fa fa-times" />
                 </span>
-                <InputNumber id="table-colSize" name="colSize" min={1} max={10} step={1} size="small" style={{ width: 50 }} defaultValue={tableSize[1]} />
+                <InputNumber id="table-colSize" name="colSize" min={1} max={40} step={1} size="small" style={{ width: 50 }} defaultValue={tableSize[1]} />
                 <Button type="primary" htmlType="submit" size="small" style={{ marginLeft: 10 }}>
                   반영
                 </Button>
