@@ -82,10 +82,17 @@ class ExternalDistView extends Component {
 
   onExternalDistribute = e => {
     e.preventDefault();
-    const { id, formData, submitHandlerBySaga, onExternalDistComplete } = this.props;
+    const { id, formData, setFormData, submitHandlerBySaga, onExternalDistComplete } = this.props;
     if (formData.selectedUserList.length > 0) {
       submitHandlerBySaga(id, 'POST', '/api/mdcs/v1/common/externalDistribute', { PARAM: { ...formData } }, (id, response) => {
         if (response && response.result > 0) {
+          setFormData(id, {
+            docList: [],
+            selectedUserList: [],
+            referrer: '',
+            distribute_reason: '',
+            comment: '',
+          });
           onExternalDistComplete();
         } else {
           message.error(<MessageContent>{`외부배포에 실패하였습니다.`}</MessageContent>);
