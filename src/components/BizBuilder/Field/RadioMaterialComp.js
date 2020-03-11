@@ -17,6 +17,8 @@ class RadioMaterialComp extends Component {
   state = {
     mList: [],
     isMeterialView: true,
+    meterialType: undefined,
+    meterialText: undefined,
   };
 
   componentDidMount() {
@@ -38,6 +40,8 @@ class RadioMaterialComp extends Component {
 
   initDataBind = id => {
     const {
+      formData,
+      colData,
       extraApiData: { meterialList },
     } = this.props;
     const tempMatList = meterialList.categoryMapList
@@ -47,7 +51,8 @@ class RadioMaterialComp extends Component {
           {item.CODE}({item.NAME_KOR})
         </Option>
       ));
-    this.setState({ mList: tempMatList });
+    const isMeterialView = colData === 'Y';
+    this.setState({ mList: tempMatList, isMeterialView });
   };
 
   onChangeHandler = e => {
@@ -89,7 +94,7 @@ class RadioMaterialComp extends Component {
           <td>
             <div style={{ width: '30%' }}>
               {this.state.isMeterialView && (
-                <Select onChange={this.onSelectChange} placeholder="자재코드 선택" style={{ width: '180px' }}>
+                <Select value={formData.MATERIAL_TYPE} onChange={this.onSelectChange} placeholder="자재코드 선택" style={{ width: '180px' }}>
                   {this.state.mList}
                 </Select>
               )}
