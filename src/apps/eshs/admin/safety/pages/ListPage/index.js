@@ -13,11 +13,9 @@ import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyle
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-
 import request from 'utils/request';
-import InputPage from 'apps/eshs/admin/safety/pages/InputPage';
 
-import { address, VIEW_TYPE, META_SEQ, BUTTON_CATEGORY } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
+import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -25,10 +23,16 @@ function ListPage(props) {
   const [activeModel, setActiveModel] = useState(false);
   const [selectedTaskSeq, setSelectedTaskSeq] = useState(0);
   const [viewType, setViewType] = useState('');
-  const [buttonCategory, setButtonCategory] = useState(props.buttonCategory);
   const [isSearched, setIsSearched] = useState(props.isSearched);
   const [isMultiDelete, setIsMultiDelete] = useState(false);
   const [isRowNo, setIsRowNo] = useState(false);
+
+  useEffect(() => {
+    if (isSearched) {
+      const { sagaKey: id, workSeq, formData } = props;
+      getListData(id, workSeq);
+    }
+  }, [isSearched]);
 
   // saveTask // C
   // modifyTask // U
@@ -52,7 +56,7 @@ function ListPage(props) {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
       });
-      setIsMultiDelete(isMultiDelete);
+      setIsMultiDelete(isMultiDelete);  
       setIsRowNo(isRowNo);
     }
   }, []);
@@ -60,7 +64,6 @@ function ListPage(props) {
   function clickRegister() {
     setActiveModel(true);
     setSelectedTaskSeq(-1);
-    setViewType(VIEW_TYPE.INPUT);
   }
 
   const openModal = (changedSagaKey, taskSeq) => {
@@ -69,18 +72,22 @@ function ListPage(props) {
       taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
       viewType: INPUT, MODIFY, VIEW
     */
-    const { workSeq, sagaKey, loadingComplete } = props;
+    const { workSeq, sagaKey, CustomButtons, loadingComplete } = props;
+    const { InputButtons } = CustomButtons;
+
     return [
       <BizBuilderBase
+        key={`${changedSagaKey}_MODAL_INPUT`}
         sagaKey={`${changedSagaKey}_MODAL_INPUT`}
         workSeq={workSeq} // metadata binding
         viewType={VIEW_TYPE.INPUT}
         taskSeq={taskSeq} // data binding
-        CustomInputPage={InputPage}
         onCloseModleHandler={() => setActiveModel(false)}
         baseSagaKey={sagaKey}
+        CustomButtons={InputButtons}
       />,
       <BizBuilderBase
+        key={`${changedSagaKey}_MODAL_LIST`}
         sagaKey={`${changedSagaKey}_MODAL_LIST`}
         workSeq={workSeq}
         viewType={VIEW_TYPE.LIST}
@@ -89,7 +96,6 @@ function ListPage(props) {
         onCloseModleHandler={() => setActiveModel(false)}
         baseSagaKey={sagaKey}
         listMetaSeq={META_SEQ.LIST} // meta SEQ
-        buttonCategory="none"
         isSearched
       />,
     ];
@@ -175,36 +181,8 @@ function ListPage(props) {
     return null;
   }
 
-  function bottomButtonRenderer(buttonCategory) {
-    let comp = () => '';
-    switch (buttonCategory) {
-      case BUTTON_CATEGORY.FIRE_EXTINGUISHER_MAIN: {
-        comp = [
-          <StyledButton key={`safety > pages > ListPage > 현황`} className="btn-primary">
-            현황
-          </StyledButton>,
-          <StyledButton key={`safety > pages > ListPage > 신규등록`} className="btn-primary" onClick={() => clickRegister()}>
-            신규 등록
-          </StyledButton>,
-          <StyledButton key={`safety > pages > ListPage > 검색`} className="btn-primary">
-            검색
-          </StyledButton>,
-          <StyledButton key={`safety > pages > ListPage > 엑셀받기`} className="btn-primary">
-            엑셀받기
-          </StyledButton>,
-          <StyledButton key={`safety > pages > ListPage > 미사용등록`} className="btn-primary">
-            미사용등록
-          </StyledButton>,
-        ];
-        break;
-      }
-      default:
-        break;
-    }
-    return comp;
-  }
-
-  const { sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = props;
+  const { CustomButtons, sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = props;
+  const { ViewButtons } = CustomButtons || false;
   if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
     const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
     const {
@@ -277,7 +255,7 @@ function ListPage(props) {
               )
             );
           })}
-          <div className="alignRight">{bottomButtonRenderer(buttonCategory)}</div>
+          {ViewButtons && <ViewButtons {...props} clickRegister={clickRegister} />}
           <Modal visible={activeModel} closable onCancel={() => setActiveModel(false)} width={900} footer={null}>
             <div>{activeModel && openModal(`modal${id}`, selectedTaskSeq)}</div>
           </Modal>
