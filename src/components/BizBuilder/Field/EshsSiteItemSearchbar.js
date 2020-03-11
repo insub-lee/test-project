@@ -2,9 +2,6 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Button, Modal, Table, Select, message } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
@@ -16,7 +13,7 @@ class EshsSiteItemSearchbar extends React.Component {
     this.state = {
       modal: false,
       siteList: [],
-      listData: [],
+      itemData: [],
       siteItemList: [],
     };
   }
@@ -39,7 +36,7 @@ class EshsSiteItemSearchbar extends React.Component {
     const { extraApiData, sagaKey: id } = this.props;
     this.setState({
       siteList: extraApiData && extraApiData.site && extraApiData.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
-      listData: extraApiData && extraApiData.item && extraApiData.item.list,
+      itemData: extraApiData && extraApiData.item && extraApiData.item.list,
       siteItemList: extraApiData && extraApiData.siteItem && extraApiData.siteItem.list,
     });
   };
@@ -56,36 +53,15 @@ class EshsSiteItemSearchbar extends React.Component {
     }
   };
 
-  onChangeSave = type => {
-    const { saveTask, modifyTask, deleteTask, sagaKey: id, changeViewPage, viewPageData } = this.props;
-    if (type === 'S') {
-      saveTask(id, id, this.saveTaskAfter);
-    } else if (type === 'M') {
-      modifyTask(id, this.saveTaskAfter);
-    } else if (type === 'D') {
-      deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.deleteCallBack);
-    }
-  };
-
-  deleteCallBack = () => {
-    const { sagaKey: id, changeViewPage, viewPageData } = this.props;
-    changeViewPage(id, viewPageData.workSeq, -1, 'INPUT');
-  };
-
-  saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { changeViewPage } = this.props;
-    changeViewPage(id, workSeq, taskSeq, 'MODIFY');
-  };
-
   modalTableRender = () => {
     const { columns, sagaKey: id } = this.props;
-    const { listData } = this.state;
+    const { itemData } = this.state;
     return (
       <AntdTable
-        rowKey={listData && listData.ITEM_CD}
-        key={listData && listData.ITEM_CD}
+        rowKey={itemData && itemData.ITEM_CD}
+        key={itemData && itemData.ITEM_CD}
         columns={columns}
-        dataSource={listData || []}
+        dataSource={itemData || []}
         onRow={record => ({
           onClick: () => {
             this.modalSelected(record);
@@ -111,48 +87,9 @@ class EshsSiteItemSearchbar extends React.Component {
     this.handleModalVisible();
   };
 
-  ButtonRender() {
-    const { viewPageData, sagaKey: id, changeViewPage } = this.props;
-    let buttonGruop;
-    switch (viewPageData && viewPageData.viewType.toUpperCase()) {
-      case 'INPUT':
-        buttonGruop = (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('S')}>
-              등록
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
-            </StyledButton>
-          </>
-        );
-        break;
-      case 'MODIFY':
-        buttonGruop = (
-          <>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('M')}>
-              저장
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => this.onChangeSave('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
-              Reset
-            </StyledButton>
-          </>
-        );
-        break;
-      default:
-        buttonGruop = '';
-        break;
-    }
-    return buttonGruop;
-  }
-
   render() {
     const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage, changeFormData, formData } = this.props;
     const { siteList } = this.state;
-    console.log(this.state, 'state state');
     return visible ? (
       <div>
         지역
@@ -165,7 +102,9 @@ class EshsSiteItemSearchbar extends React.Component {
         </Select>
         <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
         <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        {this.ButtonRender()}
+        <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')}>
+          Reset
+        </StyledButton>
         <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
           {this.state.modal && this.modalTableRender()}
         </Modal>
@@ -206,5 +145,4 @@ EshsSiteItemSearchbar.defaultProps = {
     },
   ],
 };
-
 export default EshsSiteItemSearchbar;
