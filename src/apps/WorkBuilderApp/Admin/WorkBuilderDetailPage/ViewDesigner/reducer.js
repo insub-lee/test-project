@@ -559,9 +559,19 @@ const reducer = (state = initialState, action) => {
       let dataValidFlag = false;
       if (layerIdx) {
         const keyGroup = layerIdx.split('-');
-        const colData = state
-          .getIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', Number(keyGroup[0]), 'rows', Number(keyGroup[1]), 'cols', Number(keyGroup[2])])
-          .toJS();
+        const tempColData = state.getIn([
+          'viewData',
+          'CONFIG',
+          'property',
+          'layer',
+          'groups',
+          Number(keyGroup[0]),
+          'rows',
+          Number(keyGroup[1]),
+          'cols',
+          Number(keyGroup[2]),
+        ]);
+        const colData = tempColData ? tempColData.toJS() : null;
         if (!colData || !colData.comp || !colData.comp.CONFIG) {
           dataValidFlag = true;
           delete compItem.CONFIG.property.layerIdx[layerIdxKey];
