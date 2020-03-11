@@ -16,11 +16,17 @@ const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
 class DragUploadComp extends Component {
   state = {
     fileInfo: [],
+    options: {
+      MULTIPLE_UPLOAD: 'N', // 복수 업로드 여부
+      MULTIPLE_SELECT: 'N', // 복수 파일 선택 여부
+      FILTER_EXTENSION: 'N', // 파일 확장자 검열
+      EXTENSION_LIST: undefined, // 검열 대상 확장자 목록
+    },
+    uploadedFiles: '',
   };
 
   componentDidMount() {
-    console.debug('componentDidMount');
-    const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData } = this.props;
+    const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData, CONFIG } = this.props;
     const initfiles = {
       WORK_SEQ,
       TASK_SEQ: -1,
@@ -29,7 +35,9 @@ class DragUploadComp extends Component {
       TYPE: COMP_TAG,
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
     };
-    this.setState({ fileInfo: initfiles });
+
+    const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST } = CONFIG.property;
+    this.setState({ fileInfo: initfiles, options: { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST } });
   }
 
   changeFormDataHanlder = () => {
@@ -120,33 +128,85 @@ class DragUploadComp extends Component {
     window.location.href = `${file.down}`;
   };
 
+  preProcessor = value => {
+    const { name, size } = value.file;
+
+    if (size > 0 && typeof name === 'string' && name !== '') {
+      const {
+        options,
+        fileInfo: { DETAIL: fileList },
+      } = this.state;
+
+      const { MULTIPLE_UPLOAD } = options;
+
+      // 단일 업로드인 경우
+      if (MULTIPLE_UPLOAD === 'N' && fileList.length > 0) {
+        return;
+      }
+
+      const { FILTER_EXTENSION } = options;
+      if (FILTER_EXTENSION === 'Y') {
+        let uploadable = false;
+        const { EXTENSION_LIST } = options;
+        const allowExtensions = EXTENSION_LIST.split(',');
+        const originName = name.toUpperCase();
+
+        allowExtensions.forEach(extension => {
+          if (originName.indexOf(extension) > -1) {
+            uploadable = true;
+          }
+        });
+
+        if (uploadable) {
+          this.customRequest(value);
+        } else {
+          alert(`${allowExtensions} ${originName}`);
+        }
+      } else {
+        this.customRequest(value);
+      }
+    }
+  };
+
   render() {
     const {
       fileInfo: { DETAIL: fileList },
+      options,
     } = this.state;
+
+    const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST } = options;
+    const IS_MULTIPLE_UPLOAD_AVAILBE = MULTIPLE_UPLOAD === 'Y';
 
     return (
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
           action="/upload/mdcs"
           onProgress={this.onProgress}
-          customRequest={this.customRequest}
+          customRequest={this.preProcessor}
           onChange={this.onChangeDragger}
           showUploadList={false}
-          multiple
+          multiple={MULTIPLE_SELECT === 'Y'}
         >
           {fileList && fileList.length > 0 ? (
             <div className="fileZone">
-              {fileList.map(file => (
-                <div style={{ height: '25px' }}></div>
+              {fileList.map((file, idx) => (
+                <div key={`DragUploadComp > FileList > ${idx}`} style={{ height: '25px' }}></div>
               ))}
             </div>
           ) : (
-            <div>
-              <p className="ant-upload-drag-icon">
-                <Icon type="inbox" />
+            <div className="fileZone">
+              {IS_MULTIPLE_UPLOAD_AVAILBE && (
+                <p className="ant-upload-drag-icon">
+                  <Icon type="inbox" />
+                </p>
+              )}
+              <p className={IS_MULTIPLE_UPLOAD_AVAILBE ? `ant-upload-text` : ''}>
+                {IS_MULTIPLE_UPLOAD_AVAILBE
+                  ? FILTER_EXTENSION === 'Y'
+                    ? `복수개의 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
+                    : `단일 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
+                  : '클릭 혹은 드래그하세요.'}
               </p>
-              <p className="ant-upload-text">Click or drag file to this area to upload</p>
             </div>
           )}
         </Dragger>
@@ -170,8 +230,16 @@ class DragUploadComp extends Component {
   }
 }
 
-DragUploadComp.propTypes = {};
+DragUploadComp.propTypes = {
+  CONFIG: PropTypes.objectOf(PropTypes.object),
+};
 
-DragUploadComp.defaultProps = {};
+DragUploadComp.defaultProps = {
+  CONFIG: {
+    info: {},
+    property: { MULTIPLE_UPLOAD: 'N', MULTIPLE_SELECT: 'N', FILTER_EXTENSION: 'N', EXTENSION_LIST: '' },
+    option: {},
+  },
+};
 
 export default DragUploadComp;
