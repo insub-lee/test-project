@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -126,6 +127,7 @@ class List extends Component {
 
   render() {
     const { columnDefs, rowData } = this.state;
+    const { changeBuilderModalState, viewPageData } = this.props;
     const { initGridData, gridOptions, handleSelectChange, handleInputChange } = this;
     return (
       <StyledViewDesigner>
@@ -140,7 +142,9 @@ class List extends Component {
               style={{ width: '300px', marginRight: '10px', marginLeft: '10px', marginBottom: '10px' }}
               placeholder="품목을 입력하세요."
             />
-            <StyledButton className="btn-primary">등록</StyledButton>
+            <StyledButton className="btn-primary" onClick={() => changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1)}>
+              등록
+            </StyledButton>
           </div>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham" style={{ height: '560px' }}>
@@ -159,5 +163,10 @@ class List extends Component {
     );
   }
 }
+
+List.propTypes = {
+  changeBuilderModalState: PropTypes.func,
+  viewPageData: PropTypes.object,
+};
 
 export default List;
