@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { TreeSelect } from 'antd';
-import SelectReadComp from './SelectReadComp';
 
 const getCategoryMapListAsTree = (flatData, flag, viewLang, rootkey) =>
   getTreeFromFlatData({
@@ -58,16 +57,21 @@ class TreeSelectComp extends Component {
     } = this.props;
 
     const apiData = extraApiData[`treeSelect_${mapId}`];
-    const tempData =
-      (apiData &&
-        apiData.categoryMapList &&
-        getCategoryMapListAsTree(
-          apiData.categoryMapList.filter(x => x.USE_YN === 'Y'),
-          selectableFlag,
-          viewLang,
-          rootkey,
-        )) ||
-      [];
+    let tempData;
+    if (readOnly || CONFIG.property.readOnly) {
+      tempData = apiData && apiData.categoryMapList && apiData.categoryMapList.find(item => item.NODE_ID === Number(colData));
+    } else {
+      tempData =
+        (apiData &&
+          apiData.categoryMapList &&
+          getCategoryMapListAsTree(
+            apiData.categoryMapList.filter(x => x.USE_YN === 'Y'),
+            selectableFlag,
+            viewLang,
+            rootkey,
+          )) ||
+        [];
+    }
     // const categoryData = tempData.length > 0 ? tempData[0] : [];
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
       return searchCompRenderer({ ...this.props, searchTreeData: tempData });
@@ -77,7 +81,7 @@ class TreeSelectComp extends Component {
         {colData !== undefined ? (
           <>
             {readOnly || CONFIG.property.readOnly ? (
-              <SelectReadComp {...this.props} />
+              <span>{tempData && tempData.NAME_KOR}</span>
             ) : (
               <TreeSelect
                 style={{ width: '100%' }}
