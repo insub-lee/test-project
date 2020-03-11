@@ -141,6 +141,7 @@ class PubCompleteDocList extends Component {
       isExternalDistShow: false,
       selectedRowKeys: [],
     });
+    message.success(<MessageContent>{`외부배포에 성공하였습니다.`}</MessageContent>);
   }
 
   render() {
