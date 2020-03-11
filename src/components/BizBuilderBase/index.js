@@ -65,7 +65,7 @@ class BizBuilderBase extends React.Component {
       conditional,
     } = this.props;
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    if (prevProps.sagaKey !== this.props.sagaKey) {
+    if (prevProps.sagaKey !== this.props.sagaKey || (prevProps.viewType && prevProps.viewType !== viewType)) {
       if (viewType !== prevProps.viewType) setViewPageData(id, workSeq, taskSeq, retViewType); // setViewType(id, viewType);
       if (taskSeq !== -1 && viewType === 'REVISION') {
         revisionTask(id, workSeq, taskSeq, retViewType, revisionType);

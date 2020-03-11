@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Input, Button, Select, Modal } from 'antd';
-
 import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
 import StyledButton from 'components/CommonStyled/StyledButton';
@@ -17,6 +16,7 @@ class HoldView extends Component {
     userInfo: [],
     selectedUser: undefined,
     nextApprover: undefined,
+    selectedViewType: 'VIEW',
   };
 
   componentDidMount() {
@@ -57,15 +57,20 @@ class HoldView extends Component {
     this.props.setViewVisible(false);
   };
 
+  onClickModify = () => {
+    this.setState({ selectedViewType: 'MODIFY' });
+  };
+
   render() {
     const { selectedRow, opinionVisible } = this.props;
-    console.debug(this.props);
+    const { selectedViewType } = this.state;
     return (
       <>
         <div style={{ padding: '10px' }}>
+          {console.debug('selectedViewType', selectedViewType)}
           <BizBuilderBase
             sagaKey="approveBase_approveView"
-            viewType="VIEW"
+            viewType={selectedViewType}
             CustomViewPage={MdcsContentView}
             workSeq={selectedRow && selectedRow.WORK_SEQ}
             taskSeq={selectedRow && selectedRow.TASK_SEQ}
@@ -89,13 +94,16 @@ class HoldView extends Component {
           )}
         </ModalWrapper>
         <div style={{ textAlign: 'center' }} className="btn-group">
+          <StyledButton style={{ marginRight: '5px' }} key="appvBtn1" className="btn-primary" onClick={() => this.onClickModify()}>
+            표지수정
+          </StyledButton>
           {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 30) && selectedRow.NODE_ID !== 114 && (
-            <StyledButton style={{ marginRight: '5px' }} key="appvBtn" className="btn-primary" onClick={() => this.onHoldRelase()}>
+            <StyledButton style={{ marginRight: '5px' }} key="appvBtn2" className="btn-primary" onClick={() => this.onHoldRelase()}>
               홀드해제
             </StyledButton>
           )}
           {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-            <StyledButton style={{ marginRight: '5px' }} key="appvBtn" className="btn-primary" onClick={() => this.onMDCSHoldRelase()}>
+            <StyledButton style={{ marginRight: '5px' }} key="appvBtn3" className="btn-primary" onClick={() => this.onMDCSHoldRelase()}>
               홀드해제
             </StyledButton>
           )}

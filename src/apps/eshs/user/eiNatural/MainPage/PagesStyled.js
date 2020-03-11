@@ -7,28 +7,7 @@ const PagesStyled = styled.div`
   .text-align-center {
     text-align: center;
   }
-  .MaterialTable {
-    width: 100%;
-    table {
-      width: 100%;
-      border: 1px solid #cccccc;
-      thead > tr {
-        text-align: right;
-        border: 1px solid #cccccc;
-      }
-      tbody {
-        > tr > td:nth-child(2n-1) {
-          background-color: #d6ebff;
-        }
-        > tr > td {
-          width: 12.5%;
-          text-align: center;
-          border: 1px solid #cccccc;
-        }
-      }
-    }
-  }
-  .MaterialItemTable {
+  .itemsTable {
     width: 100%;
     table {
       width: 100%;
@@ -43,7 +22,6 @@ const PagesStyled = styled.div`
         }
         > tr {
           border-bottom: 1px solid #cccccc;
-          text-align: center;
           > td:first-child {
             width: 3%;
           }
@@ -66,15 +44,15 @@ const PagesStyled = styled.div`
           > td {
             border: 1px solid #cccccc;
           }
-          .text-align-center {
-            text-align: center;
-          }
         }
         > tr:last-child {
           text-align: center;
           background-color: #f4f4f4;
           cursor: default;
         }
+      }
+      .text-align-center {
+        text-align: center;
       }
     }
   }
