@@ -8,10 +8,10 @@ const makeMapList = () => createSelector(selectOrg, org => org.get('mapList').to
 
 const makeSearchword = () => createSelector(selectOrg, org => org.get('searchword'));
 
-const makeCategoryComboData = () => createSelector(selectOrg, org => org.get('categoryComboData').toJS());
+const makeCategoryFlatData = () => createSelector(selectOrg, org => org.get('categoryFlatData').toJS());
 
 const selectView = state => state.get('common');
 
 const currentView = () => createSelector(selectView, viewState => viewState.get('view'));
 
-export { selectOrg, makeInitType, makeMapList, makeSearchword, makeCategoryComboData, currentView };
+export { selectOrg, makeInitType, makeMapList, makeSearchword, makeCategoryFlatData, currentView };
