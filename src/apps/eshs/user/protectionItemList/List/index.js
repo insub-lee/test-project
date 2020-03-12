@@ -147,15 +147,8 @@ class List extends Component {
             </StyledButton>
           </div>
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '560px' }}>
-              <AgGridReact
-                // defaultColDef={columnDefs}
-                columnDefs={columnDefs}
-                rowData={rowData}
-                onGridReady={initGridData}
-                gridOptions={gridOptions}
-                suppressRowTransform
-              />
+            <div className="ag-theme-balham" style={{ height: '540px' }}>
+              <AgGridReact columnDefs={columnDefs} rowData={rowData} onGridReady={initGridData} gridOptions={gridOptions} suppressRowTransform />
             </div>
           </div>
         </Sketch>
