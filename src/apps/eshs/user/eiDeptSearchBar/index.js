@@ -1,8 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Modal, Button, Input, Select, Row, Col } from 'antd';
-import { createStructuredSelector } from 'reselect';
 import DeptModal from './DeptModal';
 
 const { Option } = Select;
@@ -106,7 +104,6 @@ class DeptSearchBar extends Component {
 }
 
 DeptSearchBar.defaultProps = {
-  id: 'eiNatural',
   getCallDataHandler: () => {},
   result: {},
 };
