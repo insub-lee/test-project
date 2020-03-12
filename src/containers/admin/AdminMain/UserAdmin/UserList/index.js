@@ -11,6 +11,7 @@ import ReactDataGrid from 'react-data-grid';
 
 import { Select, Input, Modal } from 'antd';
 
+import Footer from 'containers/admin/App/Footer';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
@@ -487,6 +488,7 @@ class UserList extends React.Component {
             </StyledButton>
           </div>
         </StyleUserList>
+        <Footer />
       </div>
     );
   }
