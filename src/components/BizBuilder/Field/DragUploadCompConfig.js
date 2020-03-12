@@ -75,53 +75,45 @@ function DragUploadCompConfig(props) {
   return (
     <div>
       <Row>
-        <div>
-          <Col span={6}>
-            <p>복수 업로드</p>
-          </Col>
-          <Col span={16} push={2}>
-            <Radio.Group className="alignCenter" value={multipleUpload} onChange={e => radioHandler(e, cont.MULTIPLE_UPLOAD)}>
-              <Radio value="Y">Y</Radio>
-              <Radio value="N">N</Radio>
-            </Radio.Group>
-          </Col>
-        </div>
+        <Col span={6}>
+          <p>복수 업로드</p>
+        </Col>
+        <Col span={16} push={2}>
+          <Radio.Group value={multipleUpload} onChange={e => radioHandler(e, cont.MULTIPLE_UPLOAD)}>
+            <Radio value="Y">Y</Radio>
+            <Radio value="N">N</Radio>
+          </Radio.Group>
+        </Col>
       </Row>
       <Row>
-        <div>
-          <Col span={6}>
-            <p>파일 복수 선택</p>
-          </Col>
-          <Col span={16} push={2}>
-            <Radio.Group className="alignCenter" value={multipleSelect} onChange={e => radioHandler(e, cont.MULTIPLE_SELECT)}>
-              <Radio value="Y">Y</Radio>
-              <Radio value="N">N</Radio>
-            </Radio.Group>
-          </Col>
-        </div>
+        <Col span={6}>
+          <p>파일 복수 선택</p>
+        </Col>
+        <Col span={16} push={2}>
+          <Radio.Group value={multipleSelect} onChange={e => radioHandler(e, cont.MULTIPLE_SELECT)}>
+            <Radio value="Y">Y</Radio>
+            <Radio value="N">N</Radio>
+          </Radio.Group>
+        </Col>
       </Row>
       <Row>
-        <div>
-          <Col span={6}>
-            <p>확장자 검사</p>
-          </Col>
-          <Col span={16} push={2}>
-            <Radio.Group className="alignCenter" value={filterExtension} onChange={e => radioHandler(e, cont.FILTER_EXTENSION)}>
-              <Radio value="Y">Y</Radio>
-              <Radio value="N">N</Radio>
-            </Radio.Group>
-          </Col>
-        </div>
+        <Col span={6}>
+          <p>확장자 검사</p>
+        </Col>
+        <Col span={16} push={2}>
+          <Radio.Group value={filterExtension} onChange={e => radioHandler(e, cont.FILTER_EXTENSION)}>
+            <Radio value="Y">Y</Radio>
+            <Radio value="N">N</Radio>
+          </Radio.Group>
+        </Col>
       </Row>
       <Row>
-        <div>
-          <Col span={6}>
-            <p>확장자 목록</p>
-          </Col>
-          <Col span={16} push={2}>
-            <Input style={{ width: '100%' }} value={extensionList} onChange={e => radioHandler(e, cont.EXTENSION_LIST)} placeholder=",로 구분합니다." />
-          </Col>
-        </div>
+        <Col span={6}>
+          <p>확장자 목록</p>
+        </Col>
+        <Col span={16} push={2}>
+          <Input style={{ width: '100%' }} value={extensionList} onChange={e => radioHandler(e, cont.EXTENSION_LIST)} placeholder=",로 구분합니다." />
+        </Col>
       </Row>
     </div>
   );
