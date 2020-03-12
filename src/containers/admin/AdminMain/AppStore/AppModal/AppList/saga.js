@@ -73,7 +73,6 @@ export function* initPage(payload) {
       type: constants.SET_CATEGORY_DATA,
       categoryData: fromJS(categoryData),
       categoryFlatData: fromJS(categoryFlatData),
-      categoryComboData: fromJS(result),
     });
   }
 

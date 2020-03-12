@@ -181,6 +181,12 @@ const StyleUserList = styled.div`
   .react-grid-Cell__value div span hltext {
     cursor: pointer;
   }
+
+  .buttonWrapper {
+    width: 100%;
+    padding: 20px 0 0 0;
+    height: 60px;
+  }
 `;
 
 export default StyleUserList;

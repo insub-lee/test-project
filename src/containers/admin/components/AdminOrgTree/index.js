@@ -219,7 +219,7 @@ class AdminOrgTree extends Component {
               // 트리 노드 타이틀
 
               // 버튼 노출 조건(아이콘 별)
-              const btnCondition1 = true; // 마지막노드X 업무그룹X
+              const btnCondition1 = node.DEPT_ID || node.NODE_TYPE === 'R' || node.LVL === 1; // 마지막노드X 업무그룹X
               // 삭제는 자신 것만, 하위가 없는 것만 삭제 가능 , 최상위는 제외
               const btnCondition3 = node.SUBCNT === 0 && node.GRPCNT === 0 && node.CATGCNT === 0 && node.LVL !== 0;
 

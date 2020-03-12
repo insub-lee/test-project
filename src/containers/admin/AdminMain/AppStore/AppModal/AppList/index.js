@@ -106,8 +106,8 @@ class AppList extends Component {
   };
 
   render() {
-    const { history, initType, mapList, handleGetMapAppListMore, handleRegistBiz, handleGetMapListOne, categoryComboData, searchword } = this.props;
-
+    const { history, initType, mapList, handleGetMapAppListMore, handleRegistBiz, handleGetMapListOne, categoryFlatData, searchword } = this.props;
+    const categoryComboData = Object.values(categoryFlatData);
     let selectedCategoryId = 0;
     const pn = history.location.pathname;
     const str = 'list/';
@@ -119,9 +119,16 @@ class AppList extends Component {
       <div>
         <div className="topPart">
           <Select value={selectedCategoryId} style={{ width: 200, float: 'right' }} onChange={this.handleOnChange}>
-            {categoryComboData.map(item => (
-              <Option value={item.NODE_TYPE === 'R' ? 0 : item.CATG_ID}>{item.NAME_KOR}</Option>
-            ))}
+            <Option value={0}>App Category</Option>
+            {categoryComboData.map(
+              item =>
+                (item.LVL < 2 || item.CATG_ID === selectedCategoryId) && (
+                  <Option value={item.CATG_ID}>
+                    {item.LVL > 1 ? <>&nbsp;&nbsp;&gt;&nbsp;&nbsp;</> : ''}
+                    {item.NAME_KOR}
+                  </Option>
+                ),
+            )}
           </Select>
           <Input
             type="text"
@@ -163,7 +170,7 @@ AppList.propTypes = {
   match: PropTypes.object.isRequired,
   history: PropTypes.object.isRequired,
   searchword: PropTypes.string.isRequired,
-  categoryComboData: PropTypes.array.isRequired,
+  categoryFlatData: PropTypes.array.isRequired,
   handleInitPage: PropTypes.func.isRequired,
   handleGetMapListOne: PropTypes.func.isRequired,
   handleGetMapAppListMore: PropTypes.func.isRequired,
@@ -197,7 +204,7 @@ const mapStateToProps = createStructuredSelector({
   initType: selectors.makeInitType(),
   mapList: selectors.makeMapList(),
   searchword: selectors.makeSearchword(),
-  categoryComboData: selectors.makeCategoryComboData(),
+  categoryFlatData: selectors.makeCategoryFlatData(),
 });
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
