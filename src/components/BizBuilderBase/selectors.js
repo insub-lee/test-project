@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-const selectorBizBuilderBase = state => state.get('apps.mdcs.components.BizBuilderBase');
+const selectorBizBuilderBase = state => state.get('apps.bizmicro.components.BizBuilderBase');
 
 const makeSelectWorkSeq = () =>
   createSelector(
@@ -102,7 +102,7 @@ const makeSelectLoading = () =>
   createSelector(
     selectorBizBuilderBase,
     (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
-    (state, id) => (state.getIn(['bizBuilderBase', id, 'isLoading']) !== undefined ? state.getIn(['bizBuilderBase', id, 'isLoading']) : true),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'isLoading']) !== undefined ? state.getIn(['bizBuilderBase', id, 'isLoading']) : false),
   );
 
 const makeSelectDraftProcess = () =>
@@ -188,6 +188,27 @@ const makeSelectBuilderModalSetting = () =>
     (state, id) => state.getIn(['bizBuilderBase', id, 'builderModalSetting']),
   );
 
+const makeSelectViewProcessList = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'viewProcessList']) !== undefined ? state.getIn(['bizBuilderBase', id, 'viewProcessList']).toJS() : []),
+  );
+
+const makeSelectViewSeq = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => state.getIn(['bizBuilderBase', id, 'viewSeq']) || -1,
+  );
+
+const makeSelectViewLayer = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => (state.getIn(['bizBuilderBase', id, 'viewLayer']) !== undefined ? state.getIn(['bizBuilderBase', id, 'viewLayer']).toJS() : []),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -222,4 +243,7 @@ export {
   makeSelectConditionalById,
   makeSelectIsBuilderModal,
   makeSelectBuilderModalSetting,
+  makeSelectViewProcessList,
+  makeSelectViewSeq,
+  makeSelectViewLayer,
 };
