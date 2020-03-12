@@ -6,8 +6,8 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
 import * as selectors from '../../../../../containers/common/Auth/selectors';
-import DeptSearchBar from '../DeptSearchBar';
-import NaturalItemTable from '../NaturalItemTable';
+import DeptSearchBar from '../../eiDeptSearchBar';
+import ItemTable from '../ItemTable';
 import PagesStyled from './PagesStyled';
 
 class MainPage extends Component {
@@ -24,7 +24,7 @@ class MainPage extends Component {
       {
         key: 'itemList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsEiNaturalItemListHandler/${chk_year}/${dept_cd}`,
+        url: `/api/eshs/v1/common/EshsEiNaturaList/${chk_year}/${dept_cd}`,
       },
     ];
     getCallDataHandler(id, apiAry, this.handleSetItemList);
@@ -48,7 +48,7 @@ class MainPage extends Component {
             </Row>
             <Row>
               <Col span={24}>
-                <NaturalItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+                <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
               </Col>
             </Row>
           </Sketch>

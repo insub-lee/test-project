@@ -35,12 +35,15 @@ class MaterialItemTable extends Component {
   handleFormReset = sagaKey => {
     const { id, setFormData, formData, handleItemListReload } = this.props;
     const { REQ_NO, FROM_BUILDING_NM, TO_BUILDING_NM, CHK_YEAR } = formData;
+    const { rowSelections } = this.state;
     setFormData(id, { REQ_NO, FROM_BUILDING_NM, TO_BUILDING_NM, CHK_YEAR, STATUS: '정상' });
+    this.setState({ rowSelections: [] });
     handleItemListReload();
   };
 
   handleAction = type => {
     const { id, changeFormData, formData, submitHandlerBySaga, getCallDataHandler } = this.props;
+    const { rowSelections } = this.state;
     switch (type) {
       case 'SAVE':
         if (this.validationCheck()) {
@@ -55,7 +58,6 @@ class MaterialItemTable extends Component {
         submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiNoAbnoItem', formData, this.handleFormReset);
         break;
       case 'DELETE':
-        const { rowSelections } = this.state;
         if (!rowSelections.length) {
           message.warning('삭제 하실 항목을 한개라도 선택하세요.');
           break;

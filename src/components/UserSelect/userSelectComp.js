@@ -70,13 +70,13 @@ class UserSelectComp extends Component {
 
   componentDidMount() {
     console.debug('component didmount');
-    const { initUserList, treeDataSource } = this.props;
+    const { initUserList, treeDataSource, selectedUserList } = this.props;
     this.setState({
       checkUserList: [],
-      selectedUserList: [],
+      selectedUserList,
     });
     !treeDataSource && this.onInitTreeData();
-    initUserList && this.onInitUserSelect();
+    !initUserList && this.onInitUserSelect();
   }
 
   getColumns = () => [
@@ -151,7 +151,7 @@ class UserSelectComp extends Component {
         <Row gutter={24}>
           <Col span={6} style={{ width: '250px' }}>
             {treeDataSource ? (
-              <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.props.onTreeSelect} treeData={getTreeData(treeDataSource)} />
+              <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
             ) : (
               result &&
               result.deptList &&
@@ -207,7 +207,7 @@ class UserSelectComp extends Component {
             <StyledButton className="btn-sm btn-gray" onClick={this.props.onCancel}>
               취소
             </StyledButton>
-            <StyledButton className="btn-sm btn-" onClick={() => this.props.onUserSelectedComplete(this.state.selectedUserList)}>
+            <StyledButton className="btn-sm btn-primary" onClick={() => this.props.onUserSelectedComplete(this.state.selectedUserList)}>
               등록
             </StyledButton>
           </Col>

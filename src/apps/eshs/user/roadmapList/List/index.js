@@ -15,6 +15,7 @@ import moment from 'moment';
 
 const { MonthPicker } = DatePicker;
 class List extends Component {
+  // 날짜 바꿔줄 때 마다 입력값 초기화해야 함
   constructor(props) {
     super(props);
     this.state = {
@@ -49,7 +50,7 @@ class List extends Component {
       cellClassRules: { 'cell-span': "value=== 'WF 생산량 (장)'" },
     },
     { headerName: '구분', field: 'site', filter: true, sorter: true, pinned: 'left', width: 63 },
-    { headerName: '합계', field: 'total', pinned: 'right' },
+    { headerName: '합계', field: 'total', pinned: 'right', valueFormatter: this.numberFormatter },
     { headerName: '비교 Factor', pinned: 'right' },
     { headerName: '단위', field: 'unit', pinned: 'right' },
   ];
@@ -117,6 +118,7 @@ class List extends Component {
       tempCol.push({
         headerName: `${moment(item.substring(0, 4)).format('Y')}년 ${moment(item.substring(4)).format('MMMM')}`,
         field: item,
+        valueFormatter: this.numberFormatter,
       });
       const newColumnInfo = [...columnDefs.slice(0, 2), ...tempCol, ...columnDefs.slice(-3)];
       return this.setState({
@@ -156,6 +158,8 @@ class List extends Component {
     }
     return null;
   }
+
+  numberFormatter = params => params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   render() {
     const { isDisabled, defaultColDef, filteredList, gridOptions, columnDefs, startMonth, endMonth, endPlaceholder } = this.state;

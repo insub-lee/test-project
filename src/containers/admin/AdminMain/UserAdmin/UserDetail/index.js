@@ -12,6 +12,7 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 import * as feed from 'components/Feedback/functions';
 import Upload from 'components/Upload';
+import Footer from 'containers/admin/App/Footer';
 import * as actions from './actions';
 
 import reducer from './reducer';
@@ -746,6 +747,7 @@ class UserReg extends React.Component {
           </StyleUserForm>
           <div className="buttonWrapper">{this.button()}</div>
         </StyleUserDtl>
+        <Footer />
       </div>
     );
   }
