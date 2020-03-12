@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { TreeSelect } from 'antd';
-import SelectReadComp from './SelectReadComp';
 
 const getCategoryMapListAsTree = (flatData, flag, viewLang, rootkey) =>
   getTreeFromFlatData({
@@ -58,32 +57,37 @@ class TreeSelectComp extends Component {
     } = this.props;
 
     const apiData = extraApiData[`treeSelect_${mapId}`];
-    const tempData =
-      (apiData &&
-        apiData.categoryMapList &&
-        getCategoryMapListAsTree(
-          apiData.categoryMapList.filter(x => x.USE_YN === 'Y'),
-          selectableFlag,
-          viewLang,
-          rootkey,
-        )) ||
-      [];
+    let categoryData;
+    if (readOnly || CONFIG.property.readOnly) {
+      categoryData = apiData && apiData.categoryMapList && apiData.categoryMapList.find(item => item.NODE_ID === Number(colData));
+    } else {
+      categoryData =
+        (apiData &&
+          apiData.categoryMapList &&
+          getCategoryMapListAsTree(
+            apiData.categoryMapList.filter(x => x.USE_YN === 'Y'),
+            selectableFlag,
+            viewLang,
+            rootkey,
+          )) ||
+        [];
+    }
     // const categoryData = tempData.length > 0 ? tempData[0] : [];
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer({ ...this.props, searchTreeData: tempData });
+      return searchCompRenderer({ ...this.props, searchTreeData: categoryData });
     }
     return visible ? (
       <>
         {colData !== undefined ? (
           <>
             {readOnly || CONFIG.property.readOnly ? (
-              <SelectReadComp {...this.props} />
+              <span>{categoryData && categoryData.NAME_KOR}</span>
             ) : (
               <TreeSelect
                 style={{ width: '100%' }}
                 value={colData === 0 || (typeof colData === 'string' && colData.trim() === '') ? undefined : colData}
                 dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                treeData={tempData}
+                treeData={categoryData}
                 onChange={value => this.onChangeHandler(value)}
                 placeholder={placeholder}
                 className={CONFIG.property.className || ''}
