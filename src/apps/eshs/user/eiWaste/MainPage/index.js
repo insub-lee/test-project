@@ -24,7 +24,7 @@ class MainPage extends Component {
       {
         key: 'itemList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsEiNaturaList/${chk_year}/${dept_cd}`,
+        url: `/api/eshs/v1/common/EshsEiWasteList/${chk_year}/${dept_cd}`,
       },
     ];
     getCallDataHandler(id, apiAry, this.handleSetItemList);
@@ -59,7 +59,7 @@ class MainPage extends Component {
 }
 
 MainPage.defaultProps = {
-  id: 'eiNatural',
+  id: 'eiWaste',
   getCallDataHandler: () => {},
   result: {},
 };
