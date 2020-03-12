@@ -5,7 +5,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community';
-import { Select, Input } from 'antd';
+import { Select, Input, InputNumber, Modal } from 'antd';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
@@ -21,6 +21,20 @@ class List extends Component {
     this.state = {
       selectedSite: '',
       input: '',
+      visible: false,
+      requestValue: {
+        site: '',
+        kind: '',
+        model: '',
+        size1: '',
+        app_no: '',
+        vendor_nm: '',
+        maker_nm: '',
+        unit: '',
+        validity_term: '',
+        properstock: '',
+        comments: '',
+      },
       columnDefs: [
         {
           headerName: '품목',
@@ -66,7 +80,7 @@ class List extends Component {
         {
           headerName: '비고',
           field: 'comments',
-          width: 300,
+          width: 930,
         },
       ],
       rowData: [],
@@ -123,26 +137,65 @@ class List extends Component {
     this.changeGridData(result);
   };
 
+  modalContent = [
+    { title: '사진', content: '' },
+    {
+      title: '지역',
+      content: (
+        <Select defaultValue="청주" width="300px">
+          <Option value="313">청주</Option>
+          <Option value="314">구미</Option>
+        </Select>
+      ),
+    },
+    { title: '품목', content: <Input name="kind" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => this.handleChange(e)} /> },
+    { title: '모델', content: <Input name="model" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => this.handleChange(e)} /> },
+    { title: 'Size', content: <Input name="size1" style={{ width: '500px' }} placeholder="사이즈를 입력하세요." onChange={e => this.handleChange(e)} /> },
+    { title: '검정번호', content: <Input style={{ width: '500px' }} placeholder="검정번호를 입력하세요." /> },
+    { title: 'Vendor', content: '' },
+    { title: 'Maker', content: '' },
+    { title: '단위', content: <Input style={{ width: '500px' }} placeholder="단위를 입력하세요." onChange={e => this.handleChange(e)} /> },
+    { title: '유효기간', content: <Input style={{ width: '500px' }} placeholder="유효기간을 입력하세요." onChange={e => this.handleChange(e)} /> },
+    { title: '적정재고', content: <InputNumber style={{ width: '500px' }} placeholder="적정재고를 입력하세요." /> },
+    { title: '비고', content: <Input.TextArea style={{ width: '500px' }} placeholder="비고를 입력하세요." onChange={e => this.handleChange(e)} /> },
+    { title: '첨부', content: '' },
+  ];
+
+  handleChange = e => {
+    const valueObj = { [e.target.name]: e.target.value };
+    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
+  };
+
+  handleOk = () => {
+    const { getCallDataHandler } = this.props;
+    console.debug(getCallDataHandler);
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
   numberFormatter = params => params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   render() {
-    const { columnDefs, rowData } = this.state;
-    const { changeBuilderModalState, viewPageData } = this.props;
-    const { initGridData, gridOptions, handleSelectChange, handleInputChange } = this;
+    const { columnDefs, rowData, visible } = this.state;
+    const { initGridData, gridOptions, handleSelectChange, handleInputChange, handleOk, handleCancel } = this;
     return (
       <StyledViewDesigner>
         <Sketch>
           <div>
             <Select defaultValue="청주" onChange={handleSelectChange}>
-              <Option value="청주">청주</Option>
-              <Option value="구미">구미</Option>
+              <Option value="313">청주</Option>
+              <Option value="314">구미</Option>
             </Select>
             <Input
               onChange={handleInputChange}
               style={{ width: '300px', marginRight: '10px', marginLeft: '10px', marginBottom: '10px' }}
               placeholder="품목을 입력하세요."
             />
-            <StyledButton className="btn-primary" onClick={() => changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1)}>
+            <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true })}>
               등록
             </StyledButton>
           </div>
@@ -151,6 +204,14 @@ class List extends Component {
               <AgGridReact columnDefs={columnDefs} rowData={rowData} onGridReady={initGridData} gridOptions={gridOptions} suppressRowTransform />
             </div>
           </div>
+          <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable>
+            {this.modalContent.map(item => (
+              <div>
+                <div>{item.title}</div>
+                <div>{item.content}</div>
+              </div>
+            ))}
+          </Modal>
         </Sketch>
       </StyledViewDesigner>
     );
@@ -158,8 +219,7 @@ class List extends Component {
 }
 
 List.propTypes = {
-  changeBuilderModalState: PropTypes.func,
-  viewPageData: PropTypes.object,
+  getCallDataHandler: PropTypes.func,
 };
 
 export default List;
