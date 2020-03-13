@@ -180,6 +180,12 @@ const initialState = fromJS({
   sysMetaList: [],
   isLoadingContent: true,
   classNameList: [],
+  viewList: [],
+  inputViewList: [],
+  modifyViewList: [],
+  viewViewList: [],
+  listViewList: [],
+  viewChangeProcesslist: [],
 });
 
 const initialSearchGroup = fromJS({
@@ -1183,6 +1189,20 @@ const reducer = (state = initialState, action) => {
     case actionTypes.SET_CLASSNAMELIST_REDUCER: {
       const { list } = action;
       return state.set('classNameList', fromJS(list));
+    }
+    case actionTypes.SET_VIEW_LIST_REDUCER: {
+      const { list, viewChangeProcesslist } = action;
+      return state
+        .set('viewList', fromJS(list))
+        .set('inputViewList', fromJS(list.filter(fNode => fNode.COMP_TAG === 'INPUT')))
+        .set('modifyViewList', fromJS(list.filter(fNode => fNode.COMP_TAG === 'MODIFY')))
+        .set('viewViewList', fromJS(list.filter(fNode => fNode.COMP_TAG === 'VIEW')))
+        .set('listViewList', fromJS(list.filter(fNode => fNode.COMP_TAG === 'LIST')))
+        .set('viewChangeProcesslist', fromJS(viewChangeProcesslist));
+    }
+    case actionTypes.SET_VIEW_CHANGE_PROCESS_LIST_REDUCER: {
+      const { list } = action;
+      return state.set('viewChangeProcesslist', fromJS(list));
     }
     default:
       return state;

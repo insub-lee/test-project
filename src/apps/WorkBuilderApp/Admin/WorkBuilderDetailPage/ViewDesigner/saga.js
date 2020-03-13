@@ -23,6 +23,7 @@ function* getMetaData({ workSeq, viewType, viewID }) {
   const compResponse = yield call(Axios.get, '/api/builder/v1/work/ComponentPool');
   const classNameResponse = yield call(Axios.get, '/api/builder/v1/work/classmanage');
   if (response && response.resultType && response.resultType.length > 0 && response[response.resultType] && response[response.resultType].length > 0) {
+    const { viewChangeProcesslist } = response;
     let metaList = response[response.resultType].map(node => ({ ...node, CONFIG: JSON.parse(node.CONFIG) }));
     metaList = metaList.map(node => ({
       ...node,
@@ -37,6 +38,7 @@ function* getMetaData({ workSeq, viewType, viewID }) {
       }
       yield put(actions.setViewDataByReducer(viewList[viewDataIdx]));
       yield put(actions.setWorkInfoByReducer(workSeq, viewType));
+      yield put(actions.setViewListByReducer(viewList, viewChangeProcesslist));
     } else if (viewType === 'LIST') {
       yield put(actions.setInitListDataByReducer(workSeq, viewType));
     } else {
@@ -217,9 +219,24 @@ function* getSysMetaList() {
   yield put(actions.disableContentLoading());
 }
 
+function* saveViewChangeProcess({ formData, callbackFunc }) {
+  const response = yield call(Axios.post, '/api/builder/v1/work/viewchangeprocess', {
+    PARAM: { ...formData },
+  });
+  if (response && response.list && response.list.length > 0) {
+    const { list, VIEW_CHANGE_PROCESS_SEQ } = response;
+    yield put(actions.setViewChangeProcessListByReducer(list));
+    message.success(<MessageContent>Save</MessageContent>);
+    if (typeof callbackFunc === 'function') callbackFunc(VIEW_CHANGE_PROCESS_SEQ);
+  } else {
+    message.error(<MessageContent>Error</MessageContent>);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(constantTypes.GET_METADATA_SAGA, getMetaData);
   yield takeLatest(constantTypes.ADD_METADATA_SAGA, addMetaData);
   yield takeLatest(constantTypes.GET_COMPONENT_POOL_SAGA, getComponentPoolList);
   yield takeLatest(constantTypes.GET_SYSMETA_LIST_SAGA, getSysMetaList);
+  yield takeLatest(constantTypes.SAVE_VIEW_CHANGE_PROCESS_SAGA, saveViewChangeProcess);
 }
