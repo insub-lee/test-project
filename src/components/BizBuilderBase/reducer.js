@@ -32,6 +32,13 @@ const reducer = (state = initialState, action) => {
       const reduxFormData = state.getIn(['bizBuilderBase', id, 'formData']) ? state.getIn(['bizBuilderBase', id, 'formData']).toJS() : {};
       const upperCaseViewType = viewType && viewType.length > 0 ? viewType.toUpperCase() : state.getIn(['bizBuilderBase', id, 'viewPageData', 'viewType']);
       let viewChangeProcessSeq = -1;
+
+      if (formData && validationData) {
+        state = state
+          .setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}))
+          .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData || {}));
+      }
+
       if (formData && formData.VIEW_CHANGE_PROCESS_SEQ && formData.VIEW_CHANGE_PROCESS_SEQ > -1) {
         viewChangeProcessSeq = formData.VIEW_CHANGE_PROCESS_SEQ;
       } else if (reduxFormData && reduxFormData.VIEW_CHANGE_PROCESS_SEQ && reduxFormData.VIEW_CHANGE_PROCESS_SEQ > -1) {
@@ -50,42 +57,26 @@ const reducer = (state = initialState, action) => {
         const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === customViewChangeProcessSeq);
         if (findIdx > -1) {
           const viewChangeProcessInfo = viewProcessList[findIdx];
-          viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`];
+          viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
+          state = state.setIn(['bizBuilderBase', id, 'formData', 'VIEW_CHANGE_PROCESS_SEQ'], customViewChangeProcessSeq);
         }
       } else if (viewChangeProcessSeq > -1) {
         const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === viewChangeProcessSeq);
         if (findIdx > -1) {
           const viewChangeProcessInfo = viewProcessList[findIdx];
-          viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`];
+          viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
         }
       } else if (work.VIEW_CHANGE_PROCESS_SEQ && work.VIEW_CHANGE_PROCESS_SEQ > -1) {
         const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === work.VIEW_CHANGE_PROCESS_SEQ);
         if (findIdx > -1) {
           const viewChangeProcessInfo = viewProcessList[findIdx];
-          viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`];
+          viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
         }
       } else {
         viewSeq = work[`VW_${upperCaseViewType}`];
       }
       const viewLayer = metaList.filter(fNode => fNode.COMP_TYPE === 'VIEW' && fNode.COMP_TAG === upperCaseViewType && fNode.META_SEQ === viewSeq);
 
-      if (formData && validationData) {
-        return state
-          .setIn(['bizBuilderBase', id, 'responseData'], fromJS(response))
-          .setIn(['bizBuilderBase', id, 'workInfo'], fromJS(work))
-          .setIn(['bizBuilderBase', id, 'metaList'], fromJS(metaList))
-          .setIn(['bizBuilderBase', id, 'workFlow'], fromJS(workFlow || {}))
-          .setIn(['bizBuilderBase', id, 'apiList'], fromJS(apiList || []))
-          .setIn(['bizBuilderBase', id, 'formData'], fromJS(formData || {}))
-          .setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData || {}))
-          .setIn(['bizBuilderBase', id, 'viewProcessList'], fromJS(viewProcessList || []))
-          .setIn(['bizBuilderBase', id, 'viewPageData', 'workSeq'], workSeq)
-          .setIn(['bizBuilderBase', id, 'viewPageData', 'taskSeq'], taskSeq)
-          .setIn(['bizBuilderBase', id, 'viewPageData', 'viewType'], upperCaseViewType)
-          .setIn(['bizBuilderBase', id, 'viewSeq'], viewSeq)
-          .setIn(['bizBuilderBase', id, 'viewLayer'], fromJS(viewLayer || []))
-          .setIn(['bizBuilderBase', id, 'isLoading'], false);
-      }
       return state
         .setIn(['bizBuilderBase', id, 'responseData'], fromJS(response))
         .setIn(['bizBuilderBase', id, 'workInfo'], fromJS(work))
