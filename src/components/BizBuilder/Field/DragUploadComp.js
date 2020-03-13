@@ -159,8 +159,6 @@ class DragUploadComp extends Component {
 
         if (uploadable) {
           this.customRequest(value);
-        } else {
-          alert(`${allowExtensions} ${originName}`);
         }
       } else {
         this.customRequest(value);
@@ -180,7 +178,7 @@ class DragUploadComp extends Component {
     return (
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
-          action="/upload/mdcs"
+          action="/upload"
           onProgress={this.onProgress}
           customRequest={this.preProcessor}
           onChange={this.onChangeDragger}
@@ -203,8 +201,10 @@ class DragUploadComp extends Component {
               <p className={IS_MULTIPLE_UPLOAD_AVAILBE ? `ant-upload-text` : ''}>
                 {IS_MULTIPLE_UPLOAD_AVAILBE
                   ? FILTER_EXTENSION === 'Y'
-                    ? `복수개의 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
-                    : `단일 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
+                    ? `복수의 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
+                    : `복수의 파일 업로드가 가능합니다.`
+                  : FILTER_EXTENSION === 'Y'
+                  ? `단일 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
                   : '클릭 혹은 드래그하세요.'}
               </p>
             </div>
