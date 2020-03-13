@@ -87,6 +87,7 @@ class ModalTableComp extends React.Component {
       sagaKey: id,
       COMP_FIELD,
       CONFIG: { property },
+      changeValidationData,
     } = this.props;
     if (property && property.columns) {
       property.columns.forEach(item => {
@@ -94,6 +95,14 @@ class ModalTableComp extends React.Component {
           changeFormData(id, item.dataIndex, record[item.dataIndex]);
         }
       });
+    }
+    if (property && property.isRequired) {
+      changeValidationData(
+        id,
+        COMP_FIELD,
+        record[COMP_FIELD].trim().length > 0,
+        record[COMP_FIELD].trim().length > 0 ? '' : `${COMP_FIELD}항목은 필수 입력입니다.`,
+      );
     }
     changeFormData(id, COMP_FIELD, record[COMP_FIELD]);
     this.handleModalVisible();
@@ -164,15 +173,21 @@ class ModalTableComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, colData } = this.props;
+    const { CONFIG, visible, colData, readOnly } = this.props;
     return visible ? (
-      <div>
-        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
-          {this.state.modal && this.modalTableRender()}
-        </Modal>
-      </div>
+      <>
+        {readOnly || CONFIG.property.readOnly ? (
+          <span>{colData}</span>
+        ) : (
+          <>
+            <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
+            <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+            <Modal visible={this.state.modal} width={800} onCancel={this.handleModalVisible} footer={[]}>
+              {this.state.modal && this.modalTableRender()}
+            </Modal>
+          </>
+        )}
+      </>
     ) : (
       ''
     );
@@ -189,6 +204,7 @@ ModalTableComp.propTypes = {
   changeFormData: PropTypes.func,
   columns: PropTypes.array,
   extraApiData: PropTypes.any,
+  readOnly: PropTypes.bool,
 };
 ModalTableComp.defaultProps = {
   columns: [
