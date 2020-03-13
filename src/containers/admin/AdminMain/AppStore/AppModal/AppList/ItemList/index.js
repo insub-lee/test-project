@@ -26,6 +26,7 @@ class ItemList extends Component {
       appList, // 카테고리에 등록된 앱 리스트
       showReadMoreBtn, // 앱 리스트 더보기버튼 유무
       childList, // 하위 카테고리 리스트
+      children,
       // searchword, // 검색어
     } = map;
 
@@ -62,7 +63,7 @@ class ItemList extends Component {
       //     </div>
       //   );
       // } else
-      if (appList.length > 0) {
+      if ((appList.length > 0 || children) && type !== 'ONE') {
         jsx = (
           <div className="storeListTitle">
             <h3>{lang.get('NAME', map)}</h3>

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -8,10 +7,11 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 
-class ModifyPage extends Component {
+class StdModify extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      initLoading: true,
       uploadFileList: [],
     };
   }
@@ -65,39 +65,51 @@ class ModifyPage extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask } = this.props;
-    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    modifyTask(id, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage } = this.props;
+    const { onCloseModleHandler, changeViewPage, onChangeForm } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');
     }
+    onChangeForm();
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, isBuilderModal, isLoading, reloadId } = this.props;
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, isBuilderModal, onCloseModal } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-
+      // 로딩
+      if (this.props.isLoading === false && this.state.initLoading) {
+        this.setState(
+          {
+            initLoading: false,
+          },
+          () => loadingComplete(),
+        );
+      }
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div className="alignRight">
-              <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+              <StyledButton className="btn-primary" onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
                 Save
-              </Button>
+              </StyledButton>
               {!isBuilderModal && (
-                <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                   List
-                </Button>
+                </StyledButton>
               )}
+              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
+                닫기
+              </StyledButton>
             </div>
           </Sketch>
         </StyledViewDesigner>
@@ -107,14 +119,12 @@ class ModifyPage extends Component {
   };
 }
 
-ModifyPage.propTypes = {
-  isLoading: PropTypes.bool,
-  // loadingComplete: PropTypes.func,
+StdModify.propTypes = {
+  loadingComplete: PropTypes.func,
 };
 
-ModifyPage.defaultProps = {
-  isLoading: false,
-  // loadingComplete: () => {},
+StdModify.defaultProps = {
+  loadingComplete: () => {},
 };
 
-export default ModifyPage;
+export default StdModify;
