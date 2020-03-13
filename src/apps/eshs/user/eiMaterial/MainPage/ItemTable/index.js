@@ -41,7 +41,7 @@ class ItemTable extends Component {
           message.warning(msg);
           break;
         }
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiMaterialItem', itemData, this.handleFormReset);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiMaterialItem', { ...itemData, CHK_YEAR, DEPT_CD }, this.handleFormReset);
         break;
       case 'DELETE':
         if (!rowSelections.length) {

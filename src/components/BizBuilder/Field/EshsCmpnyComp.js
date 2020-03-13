@@ -53,13 +53,20 @@ class EshsCmpnyComp extends React.Component {
   handleOnSearch = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
     const { searchType, searchText } = this.state;
-    const apiValue = [
-      {
+    const apiValue = [];
+    if (searchText) {
+      apiValue.push({
         key: 'searchList',
-        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType || 'null'}/${searchText || 'null'}`,
+        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType}/${searchText}`,
         type: 'GET',
-      },
-    ];
+      });
+    } else {
+      apiValue.push({
+        key: 'searchList',
+        url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
+        type: 'GET',
+      });
+    }
     getExtraApiData(id, apiValue, this.setSearchList);
   };
 
