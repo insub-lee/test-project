@@ -11,6 +11,13 @@ import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsApp
 const AntdTable = StyledAntdTable(Table);
 const ModalWrapper = StyledModalNofooterLine(Modal);
 class DraftList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalWidth: 600,
+    };
+  }
+
   componentDidMount() {
     this.props.getDraftList();
   }
@@ -62,10 +69,14 @@ class DraftList extends Component {
     this.props.setViewVisible(true);
   };
 
+  onResizeModal = modalWidth => {
+    this.setState({ modalWidth });
+  };
+
   render() {
     // const { approveList } = this.props;
     const { draftList } = this.props;
-
+    const { modalWidth } = this.state;
     return (
       <div>
         <div style={{ marginBottom: '10px' }}>
@@ -84,8 +95,8 @@ class DraftList extends Component {
           })}
           bordered
         />
-        <ModalWrapper title="기안함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <HoldView {...this.props} />
+        <ModalWrapper title="기안함" width={modalWidth} visible={this.props.viewVisible} destroyOnClose footer={[]}>
+          <HoldView {...this.props} onResizeModal={this.onResizeModal} />
         </ModalWrapper>
       </div>
     );
