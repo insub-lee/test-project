@@ -151,15 +151,17 @@ export const successSaveTask = id => ({
   id,
 });
 
-export const modifyTask = (id, callbackFunc) => ({
+export const modifyTask = (id, reloadId, callbackFunc) => ({
   type: `${actionTypes.MODIFY_TASK}_${id}`,
   id,
+  reloadId,
   callbackFunc,
 });
 
-export const modifyTaskBySeq = (id, workSeq, taskSeq, callbackFunc) => ({
+export const modifyTaskBySeq = (id, reloadId, workSeq, taskSeq, callbackFunc) => ({
   type: `${actionTypes.MODIFY_TASK_BY_SEQ}_${id}`,
   id,
+  reloadId,
   workSeq,
   taskSeq,
   callbackFunc,
