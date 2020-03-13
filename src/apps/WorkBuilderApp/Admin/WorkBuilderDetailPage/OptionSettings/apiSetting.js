@@ -1,9 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd';
 
 const { Option } = Select;
 
 class apiSetting extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nApiList: [],
+    };
+  }
+
+  componentDidMount() {
+    const { info } = this.props;
+    this.setState({
+      nApiList: info.apiList.filter(item => item.CALL_TYPE !== 'F'),
+    });
+  }
+
   onChange = (val, optSeq) => {
     const { info, setChangeValue } = this.props;
     const { workInfo } = info;
@@ -13,8 +28,8 @@ class apiSetting extends React.Component {
   };
 
   render() {
-    const { info, optSeq, optConfig } = this.props;
-    const { apiList } = info;
+    const { optSeq, optConfig } = this.props;
+    const { nApiList } = this.state;
     return (
       <Select
         mode="multiple"
@@ -23,8 +38,8 @@ class apiSetting extends React.Component {
         placeholder="API를 선택해 주세요"
         onChange={val => this.onChange(val, optSeq)}
       >
-        {apiList &&
-          apiList.map(node => (
+        {nApiList &&
+          nApiList.map(node => (
             <Option key={`info_api_use_${node.API_SEQ}`} value={node.API_SEQ}>
               {`${node.API_NAME}(${node.CALL_TYPE === 'B' ? 'Before' : 'After'})`}
             </Option>
@@ -33,5 +48,12 @@ class apiSetting extends React.Component {
     );
   }
 }
+
+apiSetting.propTypes = {
+  info: PropTypes.any,
+  setChangeValue: PropTypes.func,
+  optSeq: PropTypes.number,
+  optConfig: PropTypes.any,
+};
 
 export default apiSetting;
