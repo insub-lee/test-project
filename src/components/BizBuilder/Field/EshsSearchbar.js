@@ -69,6 +69,7 @@ class CommonSearchbar extends React.Component {
         CustomListPage={CustomList}
         workSeq={compProps.workSeq}
         taskSeq={-1}
+        listMetaSeq={compProps.ListMetaSeq || undefined}
         viewType="LIST"
         loadingComplete={this.props.loadingComplete}
         isModalChange={this.isModalChange}
