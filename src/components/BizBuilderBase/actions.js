@@ -1,23 +1,43 @@
 import * as actionTypes from './constants';
 
-export const getBuilderData = (id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData) => ({
+export const getBuilderData = (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData) => ({
   type: `${actionTypes.GET_BUILDER_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
+  extraProps,
   conditional,
   changeWorkflowFormData,
 });
 
-export const setBuilderData = (id, response, work, metaList, workFlow, apiList, formData, validationData) => ({
-  type: actionTypes.SET_BUILDER_DATA,
+export const setBuilderData = (
   id,
+  workSeq,
+  taskSeq,
+  viewType,
+  extraProps,
   response,
   work,
   metaList,
   workFlow,
   apiList,
+  viewProcessList,
+  formData,
+  validationData,
+) => ({
+  type: actionTypes.SET_BUILDER_DATA,
+  id,
+  workSeq,
+  taskSeq,
+  viewType,
+  extraProps,
+  response,
+  work,
+  metaList,
+  workFlow,
+  apiList,
+  viewProcessList,
   formData,
   validationData,
 });
@@ -46,12 +66,13 @@ export const setExtraApiData = (id, apiKey, response) => ({
   response,
 });
 
-export const getDetailData = (id, workSeq, taskSeq, viewType, changeWorkflowFormData) => ({
+export const getDetailData = (id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData) => ({
   type: `${actionTypes.GET_DETAIL_DATA}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
+  extraProps,
   changeWorkflowFormData,
 });
 
@@ -192,12 +213,13 @@ export const addNotifyBuilder = (id, workSeq, taskSeq, titleKey, contentKey) => 
   contentKey,
 });
 
-export const revisionTask = (id, workSeq, taskSeq, viewType, revisionType, callbackFunc) => ({
+export const revisionTask = (id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc) => ({
   type: `${actionTypes.REVISION_TASK}_${id}`,
   id,
   workSeq,
   taskSeq,
   viewType,
+  extraProps,
   revisionType,
   callbackFunc,
 });
@@ -308,3 +330,5 @@ export const removeMultiTaskBySaga = (id, reloadId, callbackFunc) => ({
 });
 
 export const setBuilderModalByReducer = (id, flag, builderModalSetting) => ({ type: actionTypes.SET_BUILDER_MODAL_REDUCER, id, flag, builderModalSetting });
+
+export const setIsLoadingByReducer = (id, flag) => ({ type: actionTypes.SET_IS_LOADING_REDUCER, id, flag });
