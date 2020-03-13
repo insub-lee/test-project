@@ -91,7 +91,16 @@ class List extends Component {
       dataIndex: 'CALL_TYPE',
       key: 'CALL_TYPE',
       width: '10%',
-      render: text => (text === 'A' ? 'After' : 'Before'),
+      render: text => {
+        switch (text) {
+          case 'A':
+            return 'After';
+          case 'F':
+            return 'Field';
+          default:
+            return 'Before';
+        }
+      },
     },
     {
       title: '사용여부',
