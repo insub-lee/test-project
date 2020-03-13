@@ -39,7 +39,7 @@ class EshsCmpnyComp extends React.Component {
     getExtraApiData(id, apiValue, this.setList);
   }
 
-  onChange = () => this.props.extraApiData;
+  // onChange = () => this.props.extraApiData;
 
   // setList = sagaKey => {
   setList = () => {
@@ -104,7 +104,6 @@ class EshsCmpnyComp extends React.Component {
 
   onRowClick = e => {
     const { rowData } = e;
-    const { eshsCmpnyCompResult } = this.props;
     this.setState({
       cmpny_cd: rowData.WRK_CMPNY_CD,
       cmpny_nm: rowData.WRK_CMPNY_NM,
@@ -123,6 +122,7 @@ class EshsCmpnyComp extends React.Component {
       COMP_FIELD,
       NAME_KOR,
       changeValidationData,
+      eshsCmpnyCompResult,
     } = this.props;
     if (isRequired) {
       // 기본값인지 체크
@@ -130,7 +130,7 @@ class EshsCmpnyComp extends React.Component {
     }
     changeFormData(id, COMP_FIELD, rowData.WRK_CMPNY_CD);
     if (eshsCmpnyCompResult) {
-      eshsCmpnyCompResult(rowData);
+      eshsCmpnyCompResult(rowData, COMP_FIELD);
     }
   };
 
