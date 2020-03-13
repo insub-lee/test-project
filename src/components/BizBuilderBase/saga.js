@@ -15,10 +15,10 @@ import * as selectors from './selectors';
 
 // BuilderBase 에서 API 호출시 HEADER 에 값을 추가하여 별도로 로그관리를 함 (필요할 경우 workSeq, taskSeq 추가)
 
-function* getBuilderData({ id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData }) {
+function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData }) {
   if (taskSeq === -1) yield put(actions.removeReduxState(id));
   const response = yield call(Axios.get, `/api/builder/v1/work/workBuilder/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
-  const { work, metaList, formData, validationData, apiList } = response;
+  const { work, metaList, formData, validationData, apiList, viewProcessList } = response;
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   const builderModalOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y');
   const isBuilderModal = !!(builderModalOptIdx > -1);
@@ -37,10 +37,26 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, conditional, changeWo
   }
   if (taskSeq === -1) {
     // yield put(actions.initFormData(id, workSeq, formData));
-    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList, formData, validationData));
+    yield put(
+      actions.setBuilderData(
+        id,
+        workSeq,
+        taskSeq,
+        viewType,
+        extraProps,
+        response,
+        work,
+        metaList,
+        workFlow,
+        apiList,
+        viewProcessList,
+        formData,
+        validationData,
+      ),
+    );
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
   } else {
-    yield put(actions.setBuilderData(id, response, work, metaList, workFlow, apiList));
+    yield put(actions.setBuilderData(id, workSeq, taskSeq, viewType, extraProps, response, work, metaList, workFlow, apiList, viewProcessList));
   }
   yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting));
   if (viewType === 'LIST') {
@@ -96,7 +112,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc,
   }
 }
 
-function* getDetailData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData }) {
+function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData }) {
   /* Enable Data Loading */
   yield put(actions.enableDataLoading());
   /* Redux Reset By Id */
@@ -112,7 +128,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, changeWorkflowFormData
   if (formData) {
     yield put(actions.setDetailData(id, formData));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
-    yield put(actions.getBuilderData(id, workSeq, taskSeq));
+    yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
   }
   /* Disable Data Loading */
   yield put(actions.disableDataLoading());
@@ -343,7 +359,7 @@ function* saveTask({ id, reloadId, callbackFunc }) {
   }
 }
 
-function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
+function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
   const modifyWorkSeq = workSeq && workSeq > 0 ? workSeq : yield select(selectors.makeSelectWorkSeqById(id));
   const modifyTaskSeq = taskSeq && taskSeq > 0 ? taskSeq : yield select(selectors.makeSelectTaskSeqById(id));
   const formData = yield select(selectors.makeSelectFormDataById(id));
@@ -470,19 +486,21 @@ function* modifyTaskBySeq({ id, workSeq, taskSeq, callbackFunc }) {
     }
   }
 
-  yield put(actions.getBuilderData(id, modifyWorkSeq, modifyTaskSeq));
+  yield put(actions.successSaveTask(id));
+
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, modifyWorkSeq, modifyTaskSeq, formData);
     // 이런 형태로도 가능 함수, 파라미터...
     // yield call(callbackFunc, id, modifyWorkSeq, modifyTaskSeq, formData);
+  } else {
+    yield put(actions.getBuilderData(reloadId || id, modifyWorkSeq, modifyTaskSeq));
   }
-  yield put(actions.successSaveTask(id));
 }
 
-function* modifyTask({ id, callbackFunc }) {
+function* modifyTask({ id, reloadId, callbackFunc }) {
   const workSeq = yield select(selectors.makeSelectWorkSeqById(id));
   const taskSeq = yield select(selectors.makeSelectTaskSeqById(id));
-  yield put(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc));
+  yield put(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc));
 }
 
 function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc }) {
@@ -508,7 +526,7 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
   }
 
   const conditional = yield select(selectors.makeSelectConditionalById(id));
-  yield put(actions.getBuilderData(reloadId || id, workSeq, -1, 'LIST', conditional));
+  yield put(actions.getBuilderData(reloadId || id, workSeq, -1, 'LIST', null, conditional));
 
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, taskSeq);
@@ -531,14 +549,14 @@ function* deleteExtraTask({ id, url, params, apiArr }) {
   yield put(actions.getExtraApiData(id, apiArr));
 }
 
-function* revisionTask({ id, workSeq, taskSeq, viewType, revisionType, callbackFunc }) {
+function* revisionTask({ id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc }) {
   const response = yield call(Axios.post, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, { PARAM: { revisionType } }, { BUILDER: 'revisionTask' });
   const newTaskSeq = response.data.TASK_SEQ;
   yield put(actions.setTaskSeq(id, newTaskSeq));
   yield put(actions.setDetailData(id, response.data));
-  yield put(actions.getBuilderData(id, workSeq, newTaskSeq));
+  yield put(actions.getBuilderData(id, workSeq, newTaskSeq, viewType, extraProps));
   if (typeof callbackFunc === 'function') {
-    callbackFunc(id, workSeq, newTaskSeq, viewType);
+    callbackFunc(id, workSeq, newTaskSeq, viewType, extraProps);
   }
 }
 
@@ -620,7 +638,7 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
       if (typeof callbackFunc === 'function') {
         callbackFunc(id, workSeq, taskSeq);
       } else {
-        yield put(actions.getBuilderData(reloadId || id, workSeq, -1, viewPageData.viewType, conditional));
+        yield put(actions.getBuilderData(reloadId || id, workSeq, -1, viewPageData.viewType, null, conditional));
       }
     }
   } else {
