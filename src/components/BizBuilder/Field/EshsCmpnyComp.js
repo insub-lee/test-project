@@ -118,6 +118,7 @@ class EshsCmpnyComp extends React.Component {
   };
 
   handleOnChange = e => {
+    console.debug(e.target.value);
     this.setState({
       searchText: e.target.value,
     });
@@ -179,6 +180,7 @@ class EshsCmpnyComp extends React.Component {
                   name="searchName"
                   onChange={this.handleOnChange}
                   placeholder="검색어를 입력하시오"
+                  onSearch={this.handleOnSearch}
                 />
               </InputGroup>
               {/* &nbsp;&nbsp;
