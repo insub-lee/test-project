@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Input, Button, Checkbox, Popconfirm, message } from 'antd';
 
-class NaturalItemTable extends Component {
+class ItemTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -11,7 +11,7 @@ class NaturalItemTable extends Component {
   }
 
   handleAction = type => {
-    const { id, formData, submitHandlerBySaga } = this.props;
+    const { id, formData, submitHandlerBySaga, tb_name } = this.props;
     const { rowSelections } = this.state;
     const itemList = (formData && formData.itemList) || [];
     const itemData = (formData && formData.itemData) || {};
@@ -25,13 +25,7 @@ class NaturalItemTable extends Component {
             message.warning(msg);
             break;
           }
-          submitHandlerBySaga(
-            id,
-            'POST',
-            '/api/eshs/v1/common/EshsEiNaturalItemListHandler/NULL/NULL',
-            { ...itemData, CHK_YEAR, DEPT_CD },
-            this.handleFormReset,
-          );
+          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/EshsEiItem', { itemData: { ...itemData, CHK_YEAR, DEPT_CD }, tb_name }, this.handleFormReset);
           break;
         }
         message.warning('이미 동일한 Data가 존재합니다');
@@ -41,10 +35,14 @@ class NaturalItemTable extends Component {
           message.warning(msg);
           break;
         }
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsEiNaturalItemListHandler/NULL/NULL', itemData, this.handleFormReset);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsEiItem', { itemData, tb_name }, this.handleFormReset);
         break;
       case 'DELETE':
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiNaturalItemListHandler/NULL/NULL', { rowSelections }, this.handleFormReset);
+        if (!rowSelections.length) {
+          message.warning('삭제 하실 항목을 한개라도 선택하세요.');
+          break;
+        }
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tb_name }, this.handleFormReset);
         break;
       case 'RESET':
         this.handleFormReset();
@@ -63,6 +61,7 @@ class NaturalItemTable extends Component {
   handleFormReset = () => {
     const { id, setFormData, formData, handleSearchOnClick } = this.props;
     setFormData(id, { ...formData, itemData: {} });
+    this.setState({ rowSelections: [] });
     handleSearchOnClick();
   };
 
@@ -118,6 +117,7 @@ class NaturalItemTable extends Component {
 
   render() {
     const { formData } = this.props;
+    const { rowSelections } = this.state;
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
     const itemData = (formData && formData.itemData) || {};
@@ -202,7 +202,7 @@ class NaturalItemTable extends Component {
             {itemList.map(i => (
               <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)}>
                 <td className="text-align-center">
-                  <Checkbox onChange={() => this.handleRowSelection(i.REQ_NO)} />
+                  <Checkbox checked={rowSelections.indexOf(i.REQ_NO) > -1} onChange={() => this.handleRowSelection(i.REQ_NO)} />
                 </td>
                 <td>{i.FIRST_DEPTH}</td>
                 <td>{i.SECOND_DEPTH}</td>
@@ -221,5 +221,5 @@ class NaturalItemTable extends Component {
     );
   }
 }
-NaturalItemTable.defaultProps = {};
-export default NaturalItemTable;
+ItemTable.defaultProps = {};
+export default ItemTable;

@@ -1,7 +1,7 @@
 import React from 'react';
-import BizBuilderBase from 'components/BizBuilderBase';
+import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
 
-const ProtectionItemList = () => <BizBuilderBase sagaKey="protectionItemList" workSeq={4561} viewType="LIST" CustomListPage={List} />;
+const ProtectionItemList = () => <BizMicroDevBase sagaKey="protectionItemList" component={List} />;
 
 export default ProtectionItemList;
