@@ -333,8 +333,8 @@ const mapDispatchToProps = dispatch => ({
   // saveTempContents: (id, detail, fieldName, compType, contSeq) => dispatch(actions.saveTempContents(id, detail, fieldName, compType, contSeq)),
   tempSaveTask: (id, callbackFunc) => dispatch(actions.tempSaveTask(id, callbackFunc)),
   saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
-  modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
-  modifyTaskBySeq: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc)),
+  modifyTask: (id, reloadId, callbackFunc) => dispatch(actions.modifyTask(id, reloadId, callbackFunc)),
+  modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc)),
   deleteTask: (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) =>
     dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc)),
   deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),

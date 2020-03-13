@@ -53,13 +53,20 @@ class EshsCmpnyComp extends React.Component {
   handleOnSearch = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
     const { searchType, searchText } = this.state;
-    const apiValue = [
-      {
+    const apiValue = [];
+    if (searchText) {
+      apiValue.push({
         key: 'searchList',
-        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType || 'null'}/${searchText || 'null'}`,
+        url: `/api/eshs/v1/common/EshsCmpnyList/${searchType}/${searchText}`,
         type: 'GET',
-      },
-    ];
+      });
+    } else {
+      apiValue.push({
+        key: 'searchList',
+        url: `/api/eshs/v1/common/EshsCmpnyList/null/null`,
+        type: 'GET',
+      });
+    }
     getExtraApiData(id, apiValue, this.setSearchList);
   };
 
@@ -118,6 +125,7 @@ class EshsCmpnyComp extends React.Component {
   };
 
   handleOnChange = e => {
+    console.debug(e.target.value);
     this.setState({
       searchText: e.target.value,
     });
@@ -179,6 +187,7 @@ class EshsCmpnyComp extends React.Component {
                   name="searchName"
                   onChange={this.handleOnChange}
                   placeholder="검색어를 입력하시오"
+                  onSearch={this.handleOnSearch}
                 />
               </InputGroup>
               {/* &nbsp;&nbsp;
