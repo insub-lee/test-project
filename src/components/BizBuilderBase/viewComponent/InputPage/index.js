@@ -138,18 +138,18 @@ class InputPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             {CustomButtons ? (
               <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            ) : ( 
-            <div className="alignRight">
-              <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                Save
-              </Button>
-              {!isBuilderModal && (
-                <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
+            ) : (
+              <div className="alignRight">
+                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                  Save
                 </Button>
-              )}
-            </div>
-             )} 
+                {!isBuilderModal && (
+                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </Button>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );
