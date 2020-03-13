@@ -10,6 +10,12 @@ class ItemTable extends Component {
     };
   }
 
+  componentDidMount = () => {
+    const { id, changeFormData, formData } = this.props;
+    const itemData = (formData && formData.itemData) || {};
+    changeFormData(id, 'itemData', { ...itemData, STATUS: '정상' });
+  };
+
   handleAction = type => {
     const { id, formData, submitHandlerBySaga } = this.props;
     const { rowSelections } = this.state;

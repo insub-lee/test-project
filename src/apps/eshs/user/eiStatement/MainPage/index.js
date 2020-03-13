@@ -44,13 +44,13 @@ class MainPage extends Component {
 
   itemListReload = () => {
     const { id, getCallDataHandler, formData } = this.props;
-    const req_no = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
+    const from_dept_cd = (formData && formData.materialData && formData.materialData.FROM_DEPT_CD) || '';
     const chk_year = (formData && formData.CHK_YEAR) || '0';
     const apiAry = [
       {
         key: 'itemList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsEiMaterialItemList/${chk_year}/${req_no}`,
+        url: `/api/eshs/v1/common/eshsEiStatementList/${chk_year}/${from_dept_cd}`,
       },
     ];
 
@@ -60,7 +60,16 @@ class MainPage extends Component {
   setItemList = () => {
     const { result, id, changeFormData } = this.props;
     const itemList = (result && result.itemList && result.itemList.list) || [];
-    changeFormData(id, 'itemList', itemList);
+
+    changeFormData(
+      id,
+      'itemList',
+      itemList.map(i =>
+        i.MANAGE_INPUT_OUPUT
+          ? i
+          : { ...i, MANAGE_INPUT_OUPUT: '1', IMPROVEMENT_PLAN_REPORT: '0', DOCUMENTATION: '0', HAPPEN_PULSE: '0', IMPORTANT_ENV_IMPACT_SELECTION: 'N' },
+      ),
+    );
   };
 
   render() {
@@ -95,7 +104,7 @@ class MainPage extends Component {
 }
 
 MainPage.defaultProps = {
-  id: 'eiMaterial',
+  id: 'eiStatement',
   getCallDataHandler: () => {},
   result: {},
 };
