@@ -51,6 +51,7 @@ const ApiInput = ({ sagaKey, formData, changeFormData }) => (
               >
                 <Option value="B">Before</Option>
                 <Option value="A">After</Option>
+                <Option value="F">Field</Option>
               </Select>
             </td>
           </tr>
