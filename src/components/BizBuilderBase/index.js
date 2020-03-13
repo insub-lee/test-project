@@ -199,7 +199,7 @@ class BizBuilderBase extends React.Component {
   };
 
   render() {
-    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting } = this.props;
+    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting, customViewChangeProcessSeqByModal } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq } = this.state;
     return (
       <div>
@@ -213,7 +213,13 @@ class BizBuilderBase extends React.Component {
           {...builderModalSetting}
           onCancel={() => this.changeBuilderModalState(false, 'INPUT', -1, -1)}
         >
-          <ModalPopup sagaKey={sagaKey} viewType={builderModalViewType} workSeq={builderModalWorkSeq} taskSeq={builderModalTaskSeq} />
+          <ModalPopup
+            sagaKey={sagaKey}
+            viewType={builderModalViewType}
+            workSeq={builderModalWorkSeq}
+            taskSeq={builderModalTaskSeq}
+            customViewChangeProcessSeq={customViewChangeProcessSeqByModal}
+          />
         </Modal>
       </div>
     );
@@ -266,6 +272,7 @@ BizBuilderBase.propTypes = {
   viewMetaSeq: PropTypes.number,
   listMetaSeq: PropTypes.number,
   customViewChangeProcessSeq: PropTypes.number,
+  customViewChangeProcessSeqByModal: PropTypes.number,
 };
 
 BizBuilderBase.defaultProps = {
@@ -297,6 +304,7 @@ BizBuilderBase.defaultProps = {
   viewMetaSeq: -1,
   listMetaSeq: -1,
   customViewChangeProcessSeq: -1,
+  customViewChangeProcessSeqByModal: -1,
 };
 
 const mapStateToProps = createStructuredSelector({

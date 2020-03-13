@@ -77,76 +77,22 @@ class Info extends Component {
           </div>
 
           <div className="item">
-            <div className="item-title">화면</div>
+            <div className="item-title">기본 화면 전환 그룹</div>
             <div className="item-cont cont-row-wrapper">
-              <Row gutter={24}>
-                <Col span={3} className="ant-col-bgcolor">
-                  입력
-                </Col>
-                <Col span={9}>
-                  <Select placeholder="화면선택" onChange={val => this.onChangeValue('workInfo', 'VW_INPUT', val)} value={workInfo && workInfo.VW_INPUT}>
-                    {workInfo &&
-                      workInfo.compList &&
-                      workInfo.compList
-                        .filter(x => x.COMP_TAG === 'INPUT')
-                        .map(comp => (
-                          <Option key={`VW_INPUT_${comp.META_SEQ}`} value={comp.META_SEQ}>
-                            {comp.NAME_KOR}
-                          </Option>
-                        ))}
-                  </Select>
-                </Col>
-                <Col span={3} className="ant-col-bgcolor">
-                  수정
-                </Col>
-                <Col span={9}>
-                  <Select placeholder="화면선택" value={workInfo && workInfo.VW_MODIFY}>
-                    {workInfo &&
-                      workInfo.compList &&
-                      workInfo.compList
-                        .filter(x => x.COMP_TAG === 'MODIFY')
-                        .map(comp => (
-                          <Option key={`VW_MODIFY_${comp.META_SEQ}`} value={comp.META_SEQ}>
-                            {comp.NAME_KOR}
-                          </Option>
-                        ))}
-                  </Select>
-                </Col>
-              </Row>
-              <Row gutter={24}>
-                <Col span={3} className="ant-col-bgcolor">
-                  조회
-                </Col>
-                <Col span={9}>
-                  <Select placeholder="화면선택" value={workInfo && workInfo.VW_VIEW}>
-                    {workInfo &&
-                      workInfo.compList &&
-                      workInfo.compList
-                        .filter(x => x.COMP_TAG === 'VIEW')
-                        .map(comp => (
-                          <Option key={`VW_VIEW_${comp.META_SEQ}`} value={comp.META_SEQ}>
-                            {comp.NAME_KOR}
-                          </Option>
-                        ))}
-                  </Select>
-                </Col>
-                <Col span={3} className="ant-col-bgcolor">
-                  목록
-                </Col>
-                <Col span={9}>
-                  <Select placeholder="화면선택" value={workInfo && workInfo.VW_LIST}>
-                    {workInfo &&
-                      workInfo.compList &&
-                      workInfo.compList
-                        .filter(x => x.COMP_TAG === 'LIST')
-                        .map(comp => (
-                          <Option key={`VW_LIST_${comp.META_SEQ}`} value={comp.META_SEQ}>
-                            {comp.NAME_KOR}
-                          </Option>
-                        ))}
-                  </Select>
-                </Col>
-              </Row>
+              <Select
+                placeholder="화면선택"
+                style={{ width: '200px' }}
+                onChange={val => this.onChangeValue('workInfo', 'VIEW_CHANGE_PROCESS_SEQ', val)}
+                value={workInfo && workInfo.VIEW_CHANGE_PROCESS_SEQ}
+              >
+                {workInfo &&
+                  workInfo.viewChangeProcessList &&
+                  workInfo.viewChangeProcessList.map(item => (
+                    <Option key={`VCPS_${item.VIEW_CHANGE_PROCESS_SEQ}`} value={item.VIEW_CHANGE_PROCESS_SEQ}>
+                      {item.VIEW_CHANGE_PROCESS_NAME}
+                    </Option>
+                  ))}
+              </Select>
             </div>
           </div>
 
