@@ -19,6 +19,7 @@ import TreeSelectRootKeyCompConfig from 'components/BizBuilder/Field/TreeSelectR
 import SelectYearCompConfig from 'components/BizBuilder/Field/SelectYearCompConfig';
 import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValueSelectCompConfig';
 import ViewUploadedFileCompConfig from 'components/BizBuilder/Field/ViewUploadedFileCompConfig';
+import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConfig';
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
   'components/BizBuilder/Field/TreeSelectCompConfig': { renderer: property => <TreeSelectCompConfig {...property} /> },
@@ -39,4 +40,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/SelectYearCompConfig': { renderer: property => <SelectYearCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectCompConfig': { renderer: property => <CustomValueSelectCompConfig {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileCompConfig': { renderer: property => <ViewUploadedFileCompConfig {...property} /> },
+  'components/BizBuilder/Field/ModalTableCompConfig': { renderer: property => <ModalTableCompConfig {...property} /> },
 };

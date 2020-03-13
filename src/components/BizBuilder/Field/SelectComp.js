@@ -19,6 +19,7 @@ class SelectComp extends Component {
   }
 
   onChangeHandler = value => {
+    console.debug(value);
     const {
       changeFormData,
       sagaKey: id,
@@ -31,7 +32,7 @@ class SelectComp extends Component {
     } = this.props;
     if (isRequired) {
       // 기본값인지 체크
-      changeValidationData(id, COMP_FIELD, value.trim() !== '', value.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
+      changeValidationData(id, COMP_FIELD, value.toString().trim() !== '', value.toString().trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, value);
   };

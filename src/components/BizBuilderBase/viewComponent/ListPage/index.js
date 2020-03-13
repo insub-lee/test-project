@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm } from 'antd';
+import { Table, Popconfirm, Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -19,7 +19,6 @@ class ListPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initLoading: true,
       isMultiDelete: false,
       isRowNo: false,
     };
@@ -133,7 +132,6 @@ class ListPage extends Component {
       viewLayer,
       formData,
       workFlowConfig,
-      loadingComplete,
       viewPageData,
       changeViewPage,
       getListData,
@@ -154,15 +152,6 @@ class ListPage extends Component {
         info: { PRC_ID },
       } = workFlowConfig;
 
-      // 로딩
-      if (this.props.isLoading === false && this.state.initLoading) {
-        this.setState(
-          {
-            initLoading: false,
-          },
-          () => loadingComplete(),
-        );
-      }
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -209,9 +198,9 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </StyledButton>
+                          </Button>
                         </div>
                       )}
                     </Group>
@@ -222,17 +211,20 @@ class ListPage extends Component {
             <div className="alignRight">
               {isMultiDelete && (
                 <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <StyledButton className="btn-primary">Delete</StyledButton>
+                  <Button type="primary" className="btn-primary">
+                    Delete
+                  </Button>
                 </Popconfirm>
               )}
-              <StyledButton
+              <Button
+                type="primary"
                 className="btn-primary"
                 onClick={() =>
                   isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
                 }
               >
                 Add
-              </StyledButton>
+              </Button>
             </div>
           </Sketch>
         </StyledViewDesigner>
@@ -254,7 +246,6 @@ ListPage.propTypes = {
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
-  loadingComplete: PropTypes.func,
 };
 
 ListPage.defaultProps = {
@@ -263,7 +254,6 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
-  loadingComplete: () => {},
 };
 
 export default ListPage;

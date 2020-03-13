@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Card, Form, Input, Select } from 'antd';
+import { Card, Form, Input, Select, Checkbox } from 'antd';
 import { withPropsAPI } from 'gg-editor';
 import upperFirst from 'lodash/upperFirst';
 
@@ -94,6 +94,15 @@ class DetailForm extends React.Component {
     });
   };
 
+  isRequiredTypeHanlde = e => {
+    const { propsAPI } = this.props;
+    const { getSelected, update } = propsAPI;
+    const item = getSelected()[0];
+    update(item, {
+      isRequired: e,
+    });
+  };
+
   renderEdgeShapeSelect = () => (
     <Select onChange={this.handleSubmit}>
       <Option value="flow-smooth">Smooth</Option>
@@ -104,8 +113,8 @@ class DetailForm extends React.Component {
 
   renderNodeDetail = () => {
     const { form } = this.props;
-    const { label, step, SRC_PATH, stepType, agreeType } = this.item.getModel();
-
+    const { label, step, SRC_PATH, stepType, agreeType, isRequired } = this.item.getModel();
+    console.debug('form', form);
     return (
       <>
         <Item label="Label" {...inlineFormItemLayout}>
@@ -160,6 +169,16 @@ class DetailForm extends React.Component {
               <Option value="SA">순차</Option>
               <Option value="PO">병렬(OR)</Option>
               <Option value="PA">병렬(AND)</Option>
+            </Select>,
+          )}
+        </Item>
+        <Item label="필수체크" {...inlineFormItemLayout}>
+          {form.getFieldDecorator('isRequired', {
+            initialValue: isRequired,
+          })(
+            <Select onChange={this.isRequiredTypeHanlde}>
+              <Option value="0">불필요</Option>
+              <Option value="1">필요</Option>
             </Select>,
           )}
         </Item>
