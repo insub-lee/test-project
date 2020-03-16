@@ -23,9 +23,11 @@ class List extends Component {
       selectedSite: '',
       input: '',
       visible: false,
+      viewType: '',
       requestValue: this.requestValueOrigin,
       columnDefs: this.columnDefsOrigin,
       rowData: [],
+      detailData: {},
     };
     this.getNewRowData = debounce(this.getNewRowData, 300);
   }
@@ -148,94 +150,134 @@ class List extends Component {
 
   data = this.props.result;
 
-  modalContent = () => [
-    { title: '사진', content: '' },
-    {
-      title: '지역',
-      content: (
-        <Select
-          name="site"
-          defaultValue="313"
-          width="300px"
-          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { site: e }) }))}
-        >
-          <Option value="313">청주</Option>
-          <Option value="314">구미</Option>
-        </Select>
-      ),
-    },
-    {
-      title: '품목',
-      content: (
-        <Input
-          name="kind"
-          value={this.state.requestValue.kind}
-          style={{ width: '500px' }}
-          placeholder="품목명을 입력하세요."
-          onChange={e => this.handleChange(e)}
-        />
-      ),
-    },
-    { title: '모델', content: <Input name="model" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => this.handleChange(e)} /> },
-    { title: 'Size', content: <Input name="size1" style={{ width: '500px' }} placeholder="사이즈를 입력하세요." onChange={e => this.handleChange(e)} /> },
-    {
-      title: '검정번호',
-      content: <Input name="app_no" style={{ width: '500px' }} placeholder="검정번호를 입력하세요." onChange={e => this.handleChange(e)} />,
-    },
-    {
-      title: 'Vendor',
-      content: (
-        <EshsCmpnyComp
-          sagaKey={this.props.sagaKey}
-          getExtraApiData={this.props.getCallDataHandler}
-          extraApiData={this.props.result}
-          readOnly={false}
-          visible
-          CONFIG={{ property: { isRequired: false } }}
-          changeFormData={this.props.changeFormData}
-          COMP_FIELD="VENDOR_CD"
-          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-        />
-      ),
-    },
-    {
-      title: 'Maker',
-      content: (
-        <EshsCmpnyComp
-          sagaKey={this.props.sagaKey}
-          getExtraApiData={this.props.getCallDataHandler}
-          extraApiData={this.props.result}
-          readOnly={false}
-          visible
-          CONFIG={{ property: { isRequired: false } }}
-          changeFormData={this.props.changeFormData}
-          COMP_FIELD="MAKER_CD"
-          eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-        />
-      ),
-    },
-    { title: '단위', content: <Input name="unit" style={{ width: '500px' }} placeholder="단위를 입력하세요." onChange={e => this.handleChange(e)} /> },
-    {
-      title: '유효기간',
-      content: <Input name="validity_term" style={{ width: '500px' }} placeholder="유효기간을 입력하세요." onChange={e => this.handleChange(e)} />,
-    },
-    {
-      title: '적정재고',
-      content: (
-        <InputNumber
-          name="properstock"
-          style={{ width: '500px' }}
-          placeholder="적정재고를 입력하세요."
-          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { properstock: e }) }))}
-        />
-      ),
-    },
-    {
-      title: '비고',
-      content: <Input.TextArea name="comments" style={{ width: '500px' }} placeholder="비고를 입력하세요." onChange={e => this.handleChange(e)} />,
-    },
-    { title: '첨부', content: '' },
-  ];
+  modalContent = () => {
+    const a = 1;
+    return [
+      { title: '사진', content: '' },
+      {
+        title: '지역',
+        content: (
+          <Select
+            name="site"
+            // defaultValue="313"
+            value={this.state.detailData.site || '313'}
+            width="300px"
+            onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { site: e }) }))}
+          >
+            <Option value="313">청주</Option>
+            <Option value="314">구미</Option>
+          </Select>
+        ),
+      },
+      {
+        title: '품목',
+        content: (
+          <Input
+            name="kind"
+            value={this.state.requestValue.kind}
+            style={{ width: '500px' }}
+            placeholder="품목명을 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
+      },
+      { title: '모델', content: <Input name="model" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => this.handleChange(e)} /> },
+      { title: 'Size', content: <Input name="size1" style={{ width: '500px' }} placeholder="사이즈를 입력하세요." onChange={e => this.handleChange(e)} /> },
+      {
+        title: '검정번호',
+        content: <Input name="app_no" style={{ width: '500px' }} placeholder="검정번호를 입력하세요." onChange={e => this.handleChange(e)} />,
+      },
+      {
+        title: 'Vendor',
+        content: (
+          <EshsCmpnyComp
+            sagaKey={this.props.sagaKey}
+            getExtraApiData={this.props.getCallDataHandler}
+            extraApiData={this.props.result}
+            readOnly={false}
+            visible
+            CONFIG={{ property: { isRequired: false } }}
+            changeFormData={this.props.changeFormData}
+            COMP_FIELD="VENDOR_CD"
+            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+          />
+        ),
+      },
+      {
+        title: 'Maker',
+        content: (
+          <EshsCmpnyComp
+            sagaKey={this.props.sagaKey}
+            getExtraApiData={this.props.getCallDataHandler}
+            extraApiData={this.props.result}
+            readOnly={false}
+            visible
+            CONFIG={{ property: { isRequired: false } }}
+            changeFormData={this.props.changeFormData}
+            COMP_FIELD="MAKER_CD"
+            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+          />
+        ),
+      },
+      { title: '단위', content: <Input name="unit" style={{ width: '500px' }} placeholder="단위를 입력하세요." onChange={e => this.handleChange(e)} /> },
+      {
+        title: '유효기간',
+        content: <Input name="validity_term" style={{ width: '500px' }} placeholder="유효기간을 입력하세요." onChange={e => this.handleChange(e)} />,
+      },
+      {
+        title: '적정재고',
+        content: (
+          <InputNumber
+            name="properstock"
+            style={{ width: '500px' }}
+            placeholder="적정재고를 입력하세요."
+            onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { properstock: e }) }))}
+          />
+        ),
+      },
+      {
+        title: '비고',
+        content: <Input.TextArea name="comments" style={{ width: '500px' }} placeholder="비고를 입력하세요." onChange={e => this.handleChange(e)} />,
+      },
+      { title: '첨부', content: '' },
+    ];
+  };
+
+  createModal = (viewType, data) => {
+    const { handleOk, handleCancel, modalContent } = this;
+    const { visible } = this.state;
+    const titles = Object.keys(data || {});
+    const values = Object.values(data || {});
+    console.debug(titles, values);
+    switch (viewType.toUpperCase()) {
+      case 'INPUT':
+        return modalContent().map(item => (
+          <div>
+            <div>{item.title}</div>
+            <div>{item.content}</div>
+          </div>
+        ));
+      case 'VIEW':
+        return Object.entries(data).map(item => (
+          <div>
+            <div>{item[0]}</div>
+            <div>{item[1]}</div>
+          </div>
+        ));
+      case 'MODIFY':
+        return <div>MODIFY</div>;
+      // return (
+      //     modalContent().map(item => (
+      //       <div>
+      //         <div>{item.title}</div>
+      //         <div>{item.content}</div>
+      //       </div>
+      //     ))
+      // );
+      default:
+        return null;
+    }
+  };
 
   handleEshsCmpnyCompChange = (data, fieldName) => {
     const valueObj = { [fieldName.toLowerCase()]: data.WRK_CMPNY_CD };
@@ -264,7 +306,7 @@ class List extends Component {
   };
 
   render() {
-    const { visible, columnDefs, rowData } = this.state;
+    const { visible, columnDefs, rowData, viewType } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent } = this;
     return (
       <StyledViewDesigner>
@@ -279,7 +321,7 @@ class List extends Component {
               style={{ width: '300px', marginRight: '10px', marginLeft: '10px', marginBottom: '10px' }}
               placeholder="품목을 입력하세요."
             />
-            <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true })}>
+            <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
               등록
             </StyledButton>
           </div>
@@ -291,18 +333,15 @@ class List extends Component {
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
                 suppressRowTransform
-                // onRowClicked={() => this.setState({ visible: true })}
-                onRowClicked={e => console.debug(e)}
+                onRowClicked={e => {
+                  this.setState({ visible: true, viewType: 'VIEW', viewData: e.data });
+                }}
+                onCellMouseOver={e => console.debug(Object.entries(e.data))}
               />
             </div>
           </div>
           <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable>
-            {modalContent().map(item => (
-              <div>
-                <div>{item.title}</div>
-                <div>{item.content}</div>
-              </div>
-            ))}
+            {this.createModal(this.state.viewType, this.state.viewData || {})}
           </Modal>
         </Sketch>
       </StyledViewDesigner>
