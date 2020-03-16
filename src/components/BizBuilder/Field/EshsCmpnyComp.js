@@ -39,7 +39,7 @@ class EshsCmpnyComp extends React.Component {
     getExtraApiData(id, apiValue, this.setList);
   }
 
-  onChange = () => this.props.extraApiData;
+  // onChange = () => this.props.extraApiData;
 
   // setList = sagaKey => {
   setList = () => {
@@ -54,6 +54,16 @@ class EshsCmpnyComp extends React.Component {
     }
     this.setState({ list });
   };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // colData가 바뀔 때 마다 state 바꿔서 다시 렌더링
+    const list = (nextProps.extraApiData && nextProps.extraApiData.cmpnyList && nextProps.extraApiData.cmpnyList.list) || [];
+    const data = list.filter(c => c.WRK_CMPNY_CD === nextProps.colData);
+    if (prevState.cmpny_cd !== nextProps.colData && data.length) {
+      return { cmpny_cd: nextProps.colData, cmpny_nm: data[0].WRK_CMPNY_NM };
+    }
+    return null;
+  }
 
   handleOnSearch = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
@@ -104,7 +114,6 @@ class EshsCmpnyComp extends React.Component {
 
   onRowClick = e => {
     const { rowData } = e;
-    const { eshsCmpnyCompResult } = this.props;
     this.setState({
       cmpny_cd: rowData.WRK_CMPNY_CD,
       cmpny_nm: rowData.WRK_CMPNY_NM,
@@ -123,6 +132,7 @@ class EshsCmpnyComp extends React.Component {
       COMP_FIELD,
       NAME_KOR,
       changeValidationData,
+      eshsCmpnyCompResult,
     } = this.props;
     if (isRequired) {
       // 기본값인지 체크
@@ -130,7 +140,7 @@ class EshsCmpnyComp extends React.Component {
     }
     changeFormData(id, COMP_FIELD, rowData.WRK_CMPNY_CD);
     if (eshsCmpnyCompResult) {
-      eshsCmpnyCompResult(rowData);
+      eshsCmpnyCompResult(rowData, COMP_FIELD);
     }
   };
 
