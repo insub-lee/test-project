@@ -136,20 +136,20 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            {/* {CustomButtons ? (
+            {CustomButtons ? (
               <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            ) : ( */}
-            <div className="alignRight">
-              <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                Save
-              </Button>
-              {!isBuilderModal && (
-                <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
+            ) : (
+              <div className="alignRight">
+                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                  Save
                 </Button>
-              )}
-            </div>
-            {/* )} */}
+                {!isBuilderModal && (
+                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </Button>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );

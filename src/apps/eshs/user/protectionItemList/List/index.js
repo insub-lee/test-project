@@ -6,16 +6,17 @@ import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community';
 import { Select, Input, InputNumber, Modal } from 'antd';
+import request from 'utils/request';
+import { debounce } from 'lodash';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
-import request from 'utils/request';
-import { debounce } from 'lodash';
+import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 
 const { Option } = Select;
-const List = ({ sagaKey: id, getCallDataHandler }) => {
+const List = ({ sagaKey: id, getCallDataHandler, result, changeFormData }) => {
   const columnDefsOrigin = [
     {
       headerName: '품목',
@@ -129,6 +130,10 @@ const List = ({ sagaKey: id, getCallDataHandler }) => {
     changeGridData(result);
   }, 300);
 
+  const CONFIG = {
+    property: { isRequired: false },
+  };
+
   const modalContent = [
     { title: '사진', content: '' },
     {
@@ -144,7 +149,21 @@ const List = ({ sagaKey: id, getCallDataHandler }) => {
     { title: '모델', content: <Input name="model" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => handleChange(e)} /> },
     { title: 'Size', content: <Input name="size1" style={{ width: '500px' }} placeholder="사이즈를 입력하세요." onChange={e => handleChange(e)} /> },
     { title: '검정번호', content: <Input name="app_no" style={{ width: '500px' }} placeholder="검정번호를 입력하세요." /> },
-    { title: 'Vendor', content: '' },
+    {
+      title: 'Vendor',
+      content: (
+        <EshsCmpnyComp
+          sagaKey={id}
+          getExtraApiData={getCallDataHandler}
+          extraApiData={result}
+          readOnly={false}
+          visible
+          CONFIG={CONFIG}
+          changeFormData={changeFormData}
+          COMP_FIELD="VENDOR_CD"
+        />
+      ),
+    },
     { title: 'Maker', content: '' },
     { title: '단위', content: <Input name="unit" style={{ width: '500px' }} placeholder="단위를 입력하세요." onChange={e => handleChange(e)} /> },
     {
@@ -169,7 +188,7 @@ const List = ({ sagaKey: id, getCallDataHandler }) => {
     setVisible(false);
     setRequestValue(requestValueOrigin);
   };
-
+  console.debug(changeFormData);
   return (
     <StyledViewDesigner>
       <Sketch>

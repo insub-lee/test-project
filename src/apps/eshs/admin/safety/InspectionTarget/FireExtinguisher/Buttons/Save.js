@@ -6,11 +6,11 @@ import { address } from 'apps/eshs/admin/safety/InspectionTarget/internal_consta
 
 export default function Save({ saveTask, saveBeforeProcess, onCloseModleHandler, formData, workSeq, sagaKey: id, reloadId, getListData }) {
   function position_no_generator(formData) {
-    const { BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION } = formData;
+    const { BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO } = formData;
     request({
       method: 'POST',
       url: `${address.generatePositionNo}`,
-      params: { BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION },
+      params: { BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
     }).then(({ response }) => {
       console.info('@@@ res : ', response);
     });
