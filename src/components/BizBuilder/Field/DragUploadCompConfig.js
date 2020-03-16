@@ -9,6 +9,7 @@ const cont = {
   MULTIPLE_SELECT: 'MULTIPLE_SELECT',
   FILTER_EXTENSION: 'FILTER_EXTENSION',
   EXTENSION_LIST: 'EXTENSION_LIST',
+  PREVIEW_SETTING: 'PREVIEW_SETTING',
 };
 
 function DragUploadCompConfig(props) {
@@ -16,12 +17,14 @@ function DragUploadCompConfig(props) {
   const [multipleSelect, setMultipleSelect] = useState();
   const [filterExtension, setFilterExtension] = useState();
   const [extensionList, setExtensionList] = useState();
+  const [previewSetting, setPreviewSetting] = useState();
 
   useEffect(() => {
-    const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST } = props.configInfo.property;
+    const { MULTIPLE_UPLOAD, PREVIEW_SETTING, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST } = props.configInfo.property;
     setMultipleUpload(MULTIPLE_UPLOAD || 'N');
     setMultipleSelect(MULTIPLE_SELECT || 'N');
     setFilterExtension(FILTER_EXTENSION || 'N');
+    setPreviewSetting(PREVIEW_SETTING || 'N');
     setExtensionList(EXTENSION_LIST || undefined);
   }, []);
 
@@ -52,6 +55,11 @@ function DragUploadCompConfig(props) {
         setFilterExtension(value);
         break;
       }
+      case cont.PREVIEW_SETTING: {
+        key = cont.PREVIEW_SETTING;
+        setPreviewSetting(value);
+        break;
+      }
       case cont.EXTENSION_LIST: {
         key = cont.EXTENSION_LIST;
         // ENGLISH INPUT ONLY
@@ -74,6 +82,17 @@ function DragUploadCompConfig(props) {
 
   return (
     <div>
+      <Row>
+        <Col span={6}>
+          <p>프리뷰 사용</p>
+        </Col>
+        <Col span={16} push={2}>
+          <Radio.Group value={previewSetting} onChange={e => radioHandler(e, cont.PREVIEW_SETTING)}>
+            <Radio value="Y">Y</Radio>
+            <Radio value="N">N</Radio>
+          </Radio.Group>
+        </Col>
+      </Row>
       <Row>
         <Col span={6}>
           <p>복수 업로드</p>

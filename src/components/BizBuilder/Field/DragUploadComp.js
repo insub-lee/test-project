@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Icon, Progress, Upload, Button, Tooltip } from 'antd';
+import { Icon, Progress, Upload, Button, Tooltip, Modal } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { isJSON } from 'utils/helpers';
@@ -22,7 +22,9 @@ class DragUploadComp extends Component {
       FILTER_EXTENSION: 'N', // 파일 확장자 검열
       EXTENSION_LIST: undefined, // 검열 대상 확장자 목록
     },
-    uploadedFiles: '',
+    previewImage: [],
+    previewVisible: false,
+    shouldUpload: false,
   };
 
   componentDidMount() {
@@ -36,8 +38,8 @@ class DragUploadComp extends Component {
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
     };
 
-    const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST } = CONFIG.property;
-    this.setState({ fileInfo: initfiles, options: { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST } });
+    const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = CONFIG.property;
+    this.setState({ fileInfo: initfiles, options: { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } });
   }
 
   changeFormDataHanlder = () => {
@@ -84,7 +86,10 @@ class DragUploadComp extends Component {
     }
     const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype, down } : fl));
     const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
-    this.setState({ fileInfo: tmpFileInfo }, () => this.changeFormDataHanlder());
+    this.setState({ fileInfo: tmpFileInfo }, () => {
+      this.changeFormDataHanlder();
+      this.handlePreview(file);
+    });
   };
 
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
@@ -110,13 +115,15 @@ class DragUploadComp extends Component {
   };
 
   onClickRemoveFile = file => {
-    const { fileInfo } = this.state;
+    const { fileInfo, previewImage } = this.state;
     const { DETAIL: fileList } = fileInfo;
     const idx = fileList.indexOf(file);
     const newFileList = fileList.slice();
+    const temp = [...previewImage];
     newFileList.splice(idx, 1);
+    temp.splice(idx, 1);
     const newFileInfo = { ...fileInfo, DETAIL: newFileList };
-    this.setState({ fileInfo: newFileInfo }, () => {
+    this.setState({ fileInfo: newFileInfo, previewImage: temp }, () => {
       const { sagaKey, changeFormData, COMP_FIELD } = this.props;
       const { fileInfo } = this.state;
       changeFormData(sagaKey, COMP_FIELD, fileInfo);
@@ -145,19 +152,9 @@ class DragUploadComp extends Component {
       }
 
       const { FILTER_EXTENSION } = options;
+
       if (FILTER_EXTENSION === 'Y') {
-        let uploadable = false;
-        const { EXTENSION_LIST } = options;
-        const allowExtensions = EXTENSION_LIST.split(',');
-        const originName = name.toUpperCase();
-
-        allowExtensions.forEach(extension => {
-          if (originName.indexOf(extension) > -1) {
-            uploadable = true;
-          }
-        });
-
-        if (uploadable) {
+        if (this.extensionChecker(name)) {
           this.customRequest(value);
         }
       } else {
@@ -166,40 +163,93 @@ class DragUploadComp extends Component {
     }
   };
 
+  extensionChecker = name => {
+    const { EXTENSION_LIST } = this.state.options;
+    const allowExtensions = EXTENSION_LIST.split(',');
+    const originName = name.toUpperCase();
+
+    let uploadable = false;
+
+    allowExtensions.forEach(extension => {
+      if (originName.indexOf(extension) > -1) {
+        uploadable = true;
+      }
+    });
+    return uploadable;
+  };
+
+  getBase64 = file =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
+  handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await this.getBase64(file);
+    }
+    const { previewImage } = this.state;
+    const temp = [...previewImage];
+    temp.push(file.url || file.preview);
+    this.setState({
+      previewImage: [...temp],
+      previewVisible: true,
+    });
+  };
+
   render() {
     const {
       fileInfo: { DETAIL: fileList },
       options,
+      previewVisible,
+      previewImage,
     } = this.state;
 
-    const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST } = options;
-    const IS_MULTIPLE_UPLOAD_AVAILBE = MULTIPLE_UPLOAD === 'Y';
-
+    const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = options;
+    const IS_MULTIPLE_UPLOAD_ON = MULTIPLE_UPLOAD === 'Y';
+    const IS_PREVIEW_ON = PREVIEW_SETTING === 'Y';
     return (
       <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
         <Dragger
           action="/upload"
           onProgress={this.onProgress}
           customRequest={this.preProcessor}
-          onChange={this.onChangeDragger}
+          onChange={this.onChangeHandler}
           showUploadList={false}
           multiple={MULTIPLE_SELECT === 'Y'}
         >
           {fileList && fileList.length > 0 ? (
             <div className="fileZone">
               {fileList.map((file, idx) => (
-                <div key={`DragUploadComp > FileList > ${idx}`} style={{ height: '25px' }}></div>
+                <div key={`DragUploadComp > FileList > ${idx}`} style={IS_PREVIEW_ON ? { height: '25px', display: 'inline' } : { height: '25px' }}>
+                  <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
+                  <Icon
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.onClickRemoveFile(file);
+                    }}
+                    type="delete"
+                    style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }}
+                  />
+                  {IS_PREVIEW_ON &&
+                    previewVisible &&
+                    !IS_MULTIPLE_UPLOAD_ON &&
+                    previewImage.length > 0 &&
+                    previewImage.map(url => <img alt="example" style={{ width: '100%' }} src={url} />)}
+                </div>
               ))}
             </div>
           ) : (
             <div className="fileZone">
-              {IS_MULTIPLE_UPLOAD_AVAILBE && (
+              {IS_MULTIPLE_UPLOAD_ON && (
                 <p className="ant-upload-drag-icon">
                   <Icon type="inbox" />
                 </p>
               )}
-              <p className={IS_MULTIPLE_UPLOAD_AVAILBE ? `ant-upload-text` : ''}>
-                {IS_MULTIPLE_UPLOAD_AVAILBE
+              <p className={IS_MULTIPLE_UPLOAD_ON ? `ant-upload-text` : ''}>
+                {IS_MULTIPLE_UPLOAD_ON
                   ? FILTER_EXTENSION === 'Y'
                     ? `복수의 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
                     : `복수의 파일 업로드가 가능합니다.`
@@ -210,8 +260,8 @@ class DragUploadComp extends Component {
             </div>
           )}
         </Dragger>
-        {fileList && fileList.length > 0 && (
-          <div className="fileZone" style={{ position: 'absolute', top: '10px', marginLeft: '10px' }}>
+        {/* {fileList && fileList.length > 0 && (
+          <div className="fileZone" style={{ top: '10px', marginLeft: '10px' }}>
             {fileList.map(file => (
               <div style={{ height: '25px' }}>
                 {file.type === 'LoadingOutlined' ? (
@@ -221,10 +271,14 @@ class DragUploadComp extends Component {
                 )}
                 <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
                 <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
+                {PREVIEW_SETTING === 'Y' &&
+                  previewVisible &&
+                  previewImage.length > 0 &&
+                  previewImage.map(url => <img alt="example" style={{ width: '100%' }} src={url} />)}
               </div>
             ))}
           </div>
-        )}
+        )} */}
       </div>
     );
   }
