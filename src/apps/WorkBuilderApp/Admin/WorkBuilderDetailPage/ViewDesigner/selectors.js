@@ -38,6 +38,16 @@ const makeSelectIsLoadingContent = () => createSelector(selectViewDesignerState,
 
 const makeSelectClassNameList = () => createSelector(selectViewDesignerState, state => state.get('classNameList').toJS());
 
+const makeSelectInputViewList = () => createSelector(selectViewDesignerState, state => state.get('inputViewList').toJS());
+
+const makeSelectModifyViewList = () => createSelector(selectViewDesignerState, state => state.get('modifyViewList').toJS());
+
+const makeSelectViewViewList = () => createSelector(selectViewDesignerState, state => state.get('viewViewList').toJS());
+
+const makeSelectListViewList = () => createSelector(selectViewDesignerState, state => state.get('listViewList').toJS());
+
+const makeSelectViewChangeProcesslist = () => createSelector(selectViewDesignerState, state => state.get('viewChangeProcesslist').toJS());
+
 export {
   makeSelectIsShowEditor,
   makeSelectGroups,
@@ -57,4 +67,9 @@ export {
   makeSelectIsLoadingContent,
   makeSelectCanDivide,
   makeSelectClassNameList,
+  makeSelectInputViewList,
+  makeSelectModifyViewList,
+  makeSelectViewViewList,
+  makeSelectListViewList,
+  makeSelectViewChangeProcesslist,
 };
