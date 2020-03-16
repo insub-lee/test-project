@@ -1,11 +1,8 @@
 import styled from 'styled-components';
 
-const PagesStyled = styled.div`
+const MainPageStyled = styled.div`
   .text-background {
     background-color: #d6ebff;
-  }
-  .text-align-center {
-    text-align: center;
   }
   .MaterialTable {
     width: 100%;
@@ -28,7 +25,7 @@ const PagesStyled = styled.div`
       }
     }
   }
-  .MaterialItemTable {
+  .itemTable {
     width: 100%;
     table {
       width: 100%;
@@ -66,9 +63,6 @@ const PagesStyled = styled.div`
           > td {
             border: 1px solid #cccccc;
           }
-          .text-align-center {
-            text-align: center;
-          }
         }
         > tr:last-child {
           text-align: center;
@@ -79,4 +73,4 @@ const PagesStyled = styled.div`
     }
   }
 `;
-export default PagesStyled;
+export default MainPageStyled;

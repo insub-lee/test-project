@@ -28,6 +28,7 @@ const AttachComp = ({ CONFIG, colData, changeFormData, sagaKey: id, changeValida
         readOnly={view}
         className={CONFIG.property.className || ''}
         saveTempContents={detail => {
+          console.debug(detail);
           handlerAttachChange(detail, CONFIG, id, changeFormData, changeValidationData, NAME_KOR, COMP_FIELD);
         }}
       ></FileUpload>
