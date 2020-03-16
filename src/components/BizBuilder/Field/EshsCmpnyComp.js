@@ -55,6 +55,16 @@ class EshsCmpnyComp extends React.Component {
     this.setState({ list });
   };
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // colData가 바뀔 때 마다 state 바꿔서 다시 렌더링
+    const list = (nextProps.extraApiData && nextProps.extraApiData.cmpnyList && nextProps.extraApiData.cmpnyList.list) || [];
+    const data = list.filter(c => c.WRK_CMPNY_CD === nextProps.colData);
+    if (prevState.cmpny_cd !== nextProps.colData && data.length) {
+      return { cmpny_cd: nextProps.colData, cmpny_nm: data[0].WRK_CMPNY_NM };
+    }
+    return null;
+  }
+
   handleOnSearch = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
     const { searchType, searchText } = this.state;
