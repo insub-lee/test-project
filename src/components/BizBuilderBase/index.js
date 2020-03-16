@@ -219,6 +219,7 @@ class BizBuilderBase extends React.Component {
             workSeq={builderModalWorkSeq}
             taskSeq={builderModalTaskSeq}
             customViewChangeProcessSeq={customViewChangeProcessSeqByModal}
+            changeBuilderModalState={this.changeBuilderModalState}
           />
         </Modal>
       </div>
@@ -327,6 +328,7 @@ const mapStateToProps = createStructuredSelector({
   viewProcessList: selectors.makeSelectViewProcessList(),
   viewSeq: selectors.makeSelectViewSeq(),
   viewLayer: selectors.makeSelectViewLayer(),
+  isSaveModalClose: selectors.makeSelectIsSaveModalClose(),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -331,6 +331,12 @@ export const removeMultiTaskBySaga = (id, reloadId, callbackFunc) => ({
   callbackFunc,
 });
 
-export const setBuilderModalByReducer = (id, flag, builderModalSetting) => ({ type: actionTypes.SET_BUILDER_MODAL_REDUCER, id, flag, builderModalSetting });
+export const setBuilderModalByReducer = (id, flag, builderModalSetting, isSaveModalClose) => ({
+  type: actionTypes.SET_BUILDER_MODAL_REDUCER,
+  id,
+  flag,
+  builderModalSetting,
+  isSaveModalClose,
+});
 
 export const setIsLoadingByReducer = (id, flag) => ({ type: actionTypes.SET_IS_LOADING_REDUCER, id, flag });

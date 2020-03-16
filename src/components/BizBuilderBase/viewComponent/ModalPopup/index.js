@@ -2,7 +2,7 @@ import React from 'react';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
-const ModalPopup = ({ sagaKey, viewType, workSeq, taskSeq, customViewChangeProcessSeq }) => (
+const ModalPopup = ({ sagaKey, viewType, workSeq, taskSeq, customViewChangeProcessSeq, changeBuilderModalState }) => (
   <BizBuilderBase
     sagaKey={`BizBuilderModalPopup_${sagaKey}_${workSeq || '-1'}`}
     reloadId={sagaKey}
@@ -10,6 +10,7 @@ const ModalPopup = ({ sagaKey, viewType, workSeq, taskSeq, customViewChangeProce
     taskSeq={taskSeq}
     viewType={viewType}
     customViewChangeProcessSeq={customViewChangeProcessSeq}
+    changeBuilderModalStateByParent={changeBuilderModalState}
   />
 );
 
