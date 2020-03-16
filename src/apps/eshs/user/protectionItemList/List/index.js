@@ -62,7 +62,7 @@ class List extends Component {
     {
       headerName: '단가',
       field: 'unitprice',
-      valueFormatter: params => params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ','),
+      valueFormatter: params => (params.value ? params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0),
     },
     {
       headerName: '유효기간',
@@ -116,7 +116,7 @@ class List extends Component {
 
   getProtectionItemList = async () => {
     const data = await request({
-      url: '/api/eshs/v1/common/geteshsprotectionitems',
+      url: `/api/eshs/v1/common/geteshsprotectionitems?site=${313}`,
       method: 'GET',
     });
     return data;
@@ -146,7 +146,9 @@ class List extends Component {
     this.changeGridData(data);
   };
 
-  modalContent = [
+  data = this.props.result;
+
+  modalContent = () => [
     { title: '사진', content: '' },
     {
       title: '지역',
@@ -162,7 +164,18 @@ class List extends Component {
         </Select>
       ),
     },
-    { title: '품목', content: <Input name="kind" style={{ width: '500px' }} placeholder="품목명을 입력하세요." onChange={e => this.handleChange(e)} /> },
+    {
+      title: '품목',
+      content: (
+        <Input
+          name="kind"
+          value={this.state.requestValue.kind}
+          style={{ width: '500px' }}
+          placeholder="품목명을 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
     { title: '모델', content: <Input name="model" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => this.handleChange(e)} /> },
     { title: 'Size', content: <Input name="size1" style={{ width: '500px' }} placeholder="사이즈를 입력하세요." onChange={e => this.handleChange(e)} /> },
     {
@@ -213,7 +226,7 @@ class List extends Component {
           name="properstock"
           style={{ width: '500px' }}
           placeholder="적정재고를 입력하세요."
-          onChange={e => this.setState(prevState => ({ requestValue: Object.assing(prevState.requestValue, { properstock: e }) }))}
+          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { properstock: e }) }))}
         />
       ),
     },
@@ -236,6 +249,10 @@ class List extends Component {
 
   handleOk = () => {
     const { requestValue } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () =>
+      this.setState(prevState => ({ visible: false, rowData: prevState.rowData.concat(requestValue), requestValue: this.requestValueOrigin })),
+    );
     console.debug(requestValue);
   };
 
@@ -249,7 +266,6 @@ class List extends Component {
   render() {
     const { visible, columnDefs, rowData } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent } = this;
-
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -269,11 +285,19 @@ class List extends Component {
           </div>
           <div style={{ width: '100%', height: '100%' }}>
             <div className="ag-theme-balham" style={{ height: '540px' }}>
-              <AgGridReact columnDefs={columnDefs} rowData={rowData} onGridReady={initGridData} gridOptions={gridOptions} suppressRowTransform />
+              <AgGridReact
+                columnDefs={columnDefs}
+                rowData={rowData}
+                onGridReady={initGridData}
+                gridOptions={gridOptions}
+                suppressRowTransform
+                // onRowClicked={() => this.setState({ visible: true })}
+                onRowClicked={e => console.debug(e)}
+              />
             </div>
           </div>
           <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable>
-            {modalContent.map(item => (
+            {modalContent().map(item => (
               <div>
                 <div>{item.title}</div>
                 <div>{item.content}</div>
@@ -291,6 +315,7 @@ List.propTypes = {
   sagaKey: PropTypes.string,
   result: PropTypes.object,
   changeFormData: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
 };
 
 export default List;
