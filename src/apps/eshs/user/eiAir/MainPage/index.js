@@ -8,7 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import * as selectors from '../../../../../containers/common/Auth/selectors';
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
-import PagesStyled from './PagesStyled';
+import MainPageStyled from './MainPageStyled';
 
 class MainPage extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class MainPage extends Component {
       {
         key: 'itemList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsEiNaturaList/${chk_year}/${dept_cd}`,
+        url: `/api/eshs/v1/common/EshsEiAirList/${chk_year}/${dept_cd}`,
       },
     ];
     getCallDataHandler(id, apiAry, this.handleSetItemList);
@@ -38,7 +38,7 @@ class MainPage extends Component {
 
   render() {
     return (
-      <PagesStyled>
+      <MainPageStyled>
         <StyledViewDesigner>
           <Sketch>
             <Row>
@@ -53,13 +53,13 @@ class MainPage extends Component {
             </Row>
           </Sketch>
         </StyledViewDesigner>
-      </PagesStyled>
+      </MainPageStyled>
     );
   }
 }
 
 MainPage.defaultProps = {
-  id: 'eiNatural',
+  id: 'eiAir',
   getCallDataHandler: () => {},
   result: {},
 };

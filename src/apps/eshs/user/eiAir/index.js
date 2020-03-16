@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 import MainPage from './MainPage';
 
-class eiNatural extends Component {
+class eiAir extends Component {
   render() {
-    return <BizMicroDevBase component={MainPage} sagaKey="eiNatural" tb_name="NATURAL" />;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiAir" tb_name="AIR" />;
   }
 }
 
-export default eiNatural;
+export default eiAir;
