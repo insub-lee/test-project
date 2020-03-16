@@ -12,17 +12,7 @@ class Contract extends Component {
   };
 
   render() {
-    return (
-      <BizBuilderBase
-        sagaKey="contract"
-        workSeq={4661}
-        compProps={{ sagaKey: 'contractSearchBar', workSeq: 4661 }}
-        // onReset={this.onReset}
-        taskSeq={-1}
-        viewType="INPUT"
-        loadingComplete={this.loadingComplete}
-      />
-    );
+    return <BizBuilderBase sagaKey="contract" workSeq={4661} taskSeq={-1} viewType="INPUT" loadingComplete={this.loadingComplete} />;
   }
 }
 
