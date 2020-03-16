@@ -151,7 +151,7 @@ class List extends Component {
   data = this.props.result;
 
   modalContent = () => {
-    const a = 1;
+    const { viewData } = this.state;
     return [
       { title: '사진', content: '' },
       {
@@ -160,7 +160,7 @@ class List extends Component {
           <Select
             name="site"
             // defaultValue="313"
-            value={this.state.detailData.site || '313'}
+            value={viewData ? viewData.site : '313'}
             width="300px"
             onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { site: e }) }))}
           >
@@ -174,18 +174,48 @@ class List extends Component {
         content: (
           <Input
             name="kind"
-            value={this.state.requestValue.kind}
+            value={viewData ? viewData.kind : ''}
             style={{ width: '500px' }}
             placeholder="품목명을 입력하세요."
             onChange={e => this.handleChange(e)}
           />
         ),
       },
-      { title: '모델', content: <Input name="model" style={{ width: '500px' }} placeholder="모델명을 입력하세요." onChange={e => this.handleChange(e)} /> },
-      { title: 'Size', content: <Input name="size1" style={{ width: '500px' }} placeholder="사이즈를 입력하세요." onChange={e => this.handleChange(e)} /> },
+      {
+        title: '모델',
+        content: (
+          <Input
+            name="model"
+            value={viewData ? viewData.model : ''}
+            style={{ width: '500px' }}
+            placeholder="모델명을 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
+      },
+      {
+        title: 'Size',
+        content: (
+          <Input
+            name="size1"
+            value={viewData ? viewData.size1 : ''}
+            style={{ width: '500px' }}
+            placeholder="사이즈를 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
+      },
       {
         title: '검정번호',
-        content: <Input name="app_no" style={{ width: '500px' }} placeholder="검정번호를 입력하세요." onChange={e => this.handleChange(e)} />,
+        content: (
+          <Input
+            name="app_no"
+            value={viewData ? viewData.app_no : ''}
+            style={{ width: '500px' }}
+            placeholder="검정번호를 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
       },
       {
         title: 'Vendor',
@@ -219,16 +249,36 @@ class List extends Component {
           />
         ),
       },
-      { title: '단위', content: <Input name="unit" style={{ width: '500px' }} placeholder="단위를 입력하세요." onChange={e => this.handleChange(e)} /> },
+      {
+        title: '단위',
+        content: (
+          <Input
+            name="unit"
+            value={viewData ? viewData.unit : ''}
+            style={{ width: '500px' }}
+            placeholder="단위를 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
+      },
       {
         title: '유효기간',
-        content: <Input name="validity_term" style={{ width: '500px' }} placeholder="유효기간을 입력하세요." onChange={e => this.handleChange(e)} />,
+        content: (
+          <Input
+            name="validity_term"
+            value={viewData ? viewData.validity_term : ''}
+            style={{ width: '500px' }}
+            placeholder="유효기간을 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
       },
       {
         title: '적정재고',
         content: (
           <InputNumber
             name="properstock"
+            value={viewData ? viewData.properstock : ''}
             style={{ width: '500px' }}
             placeholder="적정재고를 입력하세요."
             onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { properstock: e }) }))}
@@ -237,46 +287,18 @@ class List extends Component {
       },
       {
         title: '비고',
-        content: <Input.TextArea name="comments" style={{ width: '500px' }} placeholder="비고를 입력하세요." onChange={e => this.handleChange(e)} />,
+        content: (
+          <Input.TextArea
+            name="comments"
+            value={viewData ? viewData.comments : ''}
+            style={{ width: '500px' }}
+            placeholder="비고를 입력하세요."
+            onChange={e => this.handleChange(e)}
+          />
+        ),
       },
       { title: '첨부', content: '' },
     ];
-  };
-
-  createModal = (viewType, data) => {
-    const { handleOk, handleCancel, modalContent } = this;
-    const { visible } = this.state;
-    const titles = Object.keys(data || {});
-    const values = Object.values(data || {});
-    console.debug(titles, values);
-    switch (viewType.toUpperCase()) {
-      case 'INPUT':
-        return modalContent().map(item => (
-          <div>
-            <div>{item.title}</div>
-            <div>{item.content}</div>
-          </div>
-        ));
-      case 'VIEW':
-        return Object.entries(data).map(item => (
-          <div>
-            <div>{item[0]}</div>
-            <div>{item[1]}</div>
-          </div>
-        ));
-      case 'MODIFY':
-        return <div>MODIFY</div>;
-      // return (
-      //     modalContent().map(item => (
-      //       <div>
-      //         <div>{item.title}</div>
-      //         <div>{item.content}</div>
-      //       </div>
-      //     ))
-      // );
-      default:
-        return null;
-    }
   };
 
   handleEshsCmpnyCompChange = (data, fieldName) => {
@@ -302,8 +324,17 @@ class List extends Component {
     this.setState({
       visible: false,
       requestValue: this.requestValueOrigin,
+      viewData: {},
     });
   };
+
+  inputFooter = [<StyledButton className="btn-primary">등록</StyledButton>, <StyledButton className="btn-primary">취소</StyledButton>];
+
+  viewFooter = [
+    <StyledButton className="btn-primary">수정</StyledButton>,
+    <StyledButton className="btn-primary">삭제</StyledButton>,
+    <StyledButton className="btn-primary">닫기</StyledButton>,
+  ];
 
   render() {
     const { visible, columnDefs, rowData, viewType } = this.state;
@@ -336,12 +367,24 @@ class List extends Component {
                 onRowClicked={e => {
                   this.setState({ visible: true, viewType: 'VIEW', viewData: e.data });
                 }}
-                onCellMouseOver={e => console.debug(Object.entries(e.data))}
+                // onCellMouseOver={e => console.debug(Object.entries(e.data))}
               />
             </div>
           </div>
-          <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable>
-            {this.createModal(this.state.viewType, this.state.viewData || {})}
+          <Modal
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            width="600px"
+            closable
+            footer={viewType === 'INPUT' ? this.inputFooter : this.viewFooter}
+          >
+            {modalContent().map(item => (
+              <div>
+                <div>{item.title}</div>
+                <div>{item.content}</div>
+              </div>
+            ))}
           </Modal>
         </Sketch>
       </StyledViewDesigner>
