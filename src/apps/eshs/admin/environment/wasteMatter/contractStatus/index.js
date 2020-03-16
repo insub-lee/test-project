@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 
-class Contract extends Component {
+class ContractStatus extends Component {
   componentDidMount() {}
 
   loadingComplete = () => {
@@ -17,17 +17,17 @@ class Contract extends Component {
         sagaKey="contract"
         workSeq={4661}
         compProps={{ sagaKey: 'contractSearchBar', workSeq: 4661 }}
-        // onReset={this.onReset}
+        listMetaSeq={4761}
         taskSeq={-1}
-        viewType="INPUT"
+        viewType="LIST"
         loadingComplete={this.loadingComplete}
       />
     );
   }
 }
 
-Contract.propTypes = {};
+ContractStatus.propTypes = {};
 
-Contract.defaultProps = {};
+ContractStatus.defaultProps = {};
 
-export default Contract;
+export default ContractStatus;

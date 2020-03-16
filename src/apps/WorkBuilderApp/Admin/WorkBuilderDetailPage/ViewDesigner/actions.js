@@ -300,3 +300,20 @@ export const setClassNameListByReducer = list => ({
   type: actionTypes.SET_CLASSNAMELIST_REDUCER,
   list,
 });
+
+export const setViewListByReducer = (list, viewChangeProcesslist) => ({
+  type: actionTypes.SET_VIEW_LIST_REDUCER,
+  list,
+  viewChangeProcesslist,
+});
+
+export const saveViewChangeProcessBySaga = (formData, callbackFunc) => ({
+  type: actionTypes.SAVE_VIEW_CHANGE_PROCESS_SAGA,
+  formData,
+  callbackFunc,
+});
+
+export const setViewChangeProcessListByReducer = list => ({
+  type: actionTypes.SET_VIEW_CHANGE_PROCESS_LIST_REDUCER,
+  list,
+});

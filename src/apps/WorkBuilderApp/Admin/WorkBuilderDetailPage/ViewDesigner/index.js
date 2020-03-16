@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Tabs, Button, Input, Spin, Icon } from 'antd';
+import { Tabs, Button, Input, Spin, Icon, Popover } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
@@ -23,6 +23,7 @@ import CompToolbar from './CompToolbar';
 import StructureDesign from './StructureDesign';
 import StyleDesign from './StyleDesign';
 import CompFieldList from './CompFieldList';
+import ViewChangeProcessSetting from './ViewChangeProcessSetting';
 
 // const { TabPane } = Tabs;
 
@@ -86,6 +87,31 @@ class ViewDesigner extends Component {
   handleSaveMetaData = () => this.setState({ isButtonLoding: true }, () => this.props.addMetaData(this.handleChangeIsButtonLoading));
 
   handleChangeIsButtonLoading = () => this.setState({ isButtonLoding: false });
+
+  renderViewChangeProcessPopup = () => {
+    const {
+      workSeq,
+      inputViewList,
+      modifyViewList,
+      viewViewList,
+      listViewList,
+      viewChangeProcessList,
+      viewChangeProcessAction,
+      selectedViewChangeProcess,
+    } = this.props;
+    return (
+      <ViewChangeProcessSetting
+        workSeq={workSeq}
+        inputViewList={inputViewList}
+        modifyViewList={modifyViewList}
+        viewViewList={viewViewList}
+        listViewList={listViewList}
+        viewChangeProcessList={viewChangeProcessList}
+        selectedViewChangeProcess={selectedViewChangeProcess}
+        action={viewChangeProcessAction}
+      />
+    );
+  };
 
   render = () => {
     const { tabBodyHeight, isButtonLoding } = this.state;
@@ -178,6 +204,9 @@ class ViewDesigner extends Component {
               viewType={viewData.COMP_TAG}
               viewID={viewData.META_SEQ}
             />
+            <Popover content={this.renderViewChangeProcessPopup()} title="화면 전환 그룹 설정" trigger="click">
+              <Button style={{ verticalAlign: 'top' }}>화면 전환 그룹 설정</Button>
+            </Popover>
           </div>
           <div className="button--group--right">
             {workName}
@@ -253,6 +282,11 @@ const mapStateToProps = createStructuredSelector({
   compTreeData: selectors.makeSelectCompTreeData(),
   canDivide: selectors.makeSelectCanDivide(),
   classNameList: selectors.makeSelectClassNameList(),
+  inputViewList: selectors.makeSelectInputViewList(),
+  modifyViewList: selectors.makeSelectModifyViewList(),
+  viewViewList: selectors.makeSelectViewViewList(),
+  listViewList: selectors.makeSelectListViewList(),
+  viewChangeProcessList: selectors.makeSelectViewChangeProcesslist(),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -319,6 +353,9 @@ const mapDispatchToProps = dispatch => ({
     removeCompItem: (layerIdx, compKey) => dispatch(actions.removeCompItemByReducer(layerIdx, compKey)),
     setViewDataCompItem: compItem => dispatch(actions.setViewDataCompItemByReducer(compItem)),
     setSysCompItem: compItem => dispatch(actions.setSysCompItemByReducer(compItem)),
+  },
+  viewChangeProcessAction: {
+    saveViewChangeProcess: (formData, callbackFunc) => dispatch(actions.saveViewChangeProcessBySaga(formData, callbackFunc)),
   },
 });
 
