@@ -171,6 +171,7 @@ class ComponentConfig extends Component {
     if (!value) {
       this.handleChangeViewCompData('scrollSet', undefined);
     }
+    message.info('등록되었습니다.');
   };
 
   render() {
