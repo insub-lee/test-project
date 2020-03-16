@@ -93,7 +93,7 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId } = this.props;
+    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
@@ -102,6 +102,7 @@ class InputPage extends Component {
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
+      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
   };
 
