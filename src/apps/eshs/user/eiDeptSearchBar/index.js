@@ -1,6 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Modal, Button, Input, Select, Row, Col } from 'antd';
+import { Modal, Button, Input, Select, Popconfirm, message } from 'antd';
 import DeptModal from './DeptModal';
 
 const { Option } = Select;
@@ -73,7 +73,26 @@ class DeptSearchBar extends Component {
   handleFinsh = () => {
     const { id, formData, submitHandlerBySaga, handleSearchOnClick } = this.props;
     const REQ_NO = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
-    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO }, this.handleFormReset);
+    const CHK_YEAR = (formData && formData.materialData && formData.materialData.CHK_YEAR) || '';
+    const DEPT_CD = (formData && formData.materialData && formData.materialData.FROM_DEPT_CD) || '';
+    const materialCnt = (formData && formData.materialCnt) || 0;
+    const itemList = (formData && formData.itemList) || [];
+
+    if (id === 'eiStatement') {
+      const validationCheck = itemList.filter(item => !item.ENV_IMPACT_SIZE && item);
+      if (validationCheck.length) {
+        message.warning('모든 내용을 입력하셔야 합니다.');
+        return;
+      }
+      console.debug('return 했누? ');
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiStatementComplete', { REQ_NO, CHK_YEAR, DEPT_CD }, this.handleFormReset);
+    } else if (id === 'eiMaterial') {
+      if (!materialCnt || !itemList.length) {
+        message.warning('저장된 자료가 없습니다.');
+        return;
+      }
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO }, this.handleFormReset);
+    }
     handleSearchOnClick();
   };
 
@@ -105,7 +124,11 @@ class DeptSearchBar extends Component {
           </Modal>
           <Input value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
           <Button onClick={this.handleDeptSearch}>검색</Button>
-          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && <Button onClick={this.handleFinsh}>완료</Button>}
+          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
+            <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
+              <Button>완료</Button>
+            </Popconfirm>
+          )}
         </div>
         <hr />
       </>

@@ -10,17 +10,12 @@ class ItemTable extends Component {
     };
   }
 
-  componentDidMount = () => {
-    const { id, changeFormData, formData } = this.props;
-    const itemData = (formData && formData.itemData) || {};
-    changeFormData(id, 'itemData', { ...itemData, STATUS: '정상' });
-  };
-
   handleAction = type => {
     const { id, formData, submitHandlerBySaga } = this.props;
     const { rowSelections } = this.state;
     const REQ_NO = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
     const itemData = (formData && formData.itemData) || {};
+    const STATUS = (itemData && itemData.STATUS) || '정상';
     const itemList = (formData && formData.itemList) || [];
     const CHK_YEAR = (formData && formData.CHK_YEAR) || '';
     const materialCnt = (formData && formData.materialCnt) || '';
@@ -37,7 +32,7 @@ class ItemTable extends Component {
             message.warning('상단의 내용을 먼저 입력해주세요.');
             break;
           }
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiMaterialItem', { ...itemData, CHK_YEAR, DEPT_CD, REQ_NO }, this.handleFormReset);
+          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiMaterialItem', { ...itemData, STATUS, CHK_YEAR, DEPT_CD, REQ_NO }, this.handleFormReset);
           break;
         }
         message.warning('이미 동일한 Data가 존재합니다.');
@@ -126,7 +121,6 @@ class ItemTable extends Component {
 
   validationCheck = itemData => {
     if (!itemData.GUBUN) return '구분값을 입력해주세요.';
-    if (!itemData.STATUS) return '영향구분을 입력해주세요.';
     if (!itemData.MATTER) return '물질명을 입력해주세요.';
     if (!itemData.INGREDIENT) return '구성성분을 입력해주세요.';
     if (!itemData.VOLUME) return '사용량을 입력해주세요.';

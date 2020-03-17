@@ -45,18 +45,18 @@ class MainPage extends Component {
   itemListReload = () => {
     const { id, getCallDataHandler, formData, changeFormData } = this.props;
     const materialCnt = (formData && formData.materialCnt) || 0;
-    console.debug('materialCnt 111 ', materialCnt);
     if (!materialCnt) {
       changeFormData(id, 'itemList', []);
       return;
     }
     const from_dept_cd = (formData && formData.materialData && formData.materialData.FROM_DEPT_CD) || '';
+    const req_no = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
     const chk_year = (formData && formData.CHK_YEAR) || '0';
     const apiAry = [
       {
         key: 'itemList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshsEiStatementList/${chk_year}/${from_dept_cd}`,
+        url: `/api/eshs/v1/common/eshsEiImportantAssesmentList/${chk_year}/${from_dept_cd}/${req_no}`,
       },
     ];
     getCallDataHandler(id, apiAry, this.setItemList);
@@ -69,11 +69,7 @@ class MainPage extends Component {
     changeFormData(
       id,
       'itemList',
-      itemList.map(i =>
-        i.MANAGE_INPUT_OUPUT
-          ? i
-          : { ...i, MANAGE_INPUT_OUPUT: '1', IMPROVEMENT_PLAN_REPORT: '0', DOCUMENTATION: '0', HAPPEN_PULSE: '1', IMPORTANT_ENV_IMPACT_SELECTION: 'N' },
-      ),
+      itemList.map(item => (item.PLAN_REVIEW === '' || item.PLAN_REVIEW === null ? { ...item, PLAN_REVIEW: 'N' } : item)),
     );
   };
 
@@ -106,7 +102,7 @@ class MainPage extends Component {
 }
 
 MainPage.defaultProps = {
-  id: 'eiStatement',
+  id: 'eiImportantAssesment',
   getCallDataHandler: () => {},
   result: {},
 };
