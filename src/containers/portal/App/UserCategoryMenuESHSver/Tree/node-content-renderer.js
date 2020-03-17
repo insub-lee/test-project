@@ -13,12 +13,12 @@ class CustomThemeNodeContentRenderer extends Component {
     const { toggleChildrenVisibility, node, scaffoldBlockPxWidth, path, treeIndex, isDragging } = this.props;
     if (toggleChildrenVisibility) {
       if (
-        node.NODE_TYPE === 'F' ||
+        // node.NODE_TYPE === 'F' ||
         (node.REF_TYPE === 'B' && node.NODE_TYPE === 'R') ||
         (node.children && (node.children.length > 0 || typeof node.children === 'function'))
       ) {
         jsx = (
-          <div>
+          <>
             <button
               // 추가버튼명 ordinary (임시) / 가장 하위 목록일 시 버튼
               // rst__lineHalfHorizontalRight 전부 안보이도록
@@ -27,7 +27,7 @@ class CustomThemeNodeContentRenderer extends Component {
               type="button"
               aria-label={node.expanded ? 'Collapse' : 'Expand'}
               className={node.expanded ? `${styles.collapseButton} rstcustom__collapseButton` : `${styles.expandButton} rstcustom__expandButton`}
-              style={{ left: -0.5 * scaffoldBlockPxWidth }}
+              style={{ right: scaffoldBlockPxWidth }}
               onClick={() =>
                 toggleChildrenVisibility({
                   node,
@@ -43,19 +43,19 @@ class CustomThemeNodeContentRenderer extends Component {
                 // className={styles.lineChildren}
               />
             )}
-          </div>
+          </>
         );
       } else {
         jsx = (
-          <div>
+          <>
             <button
               type="button"
               aria-label="ordinary"
               // className={styles.ordinaryButton}
               className={`${styles.ordinaryButton} rstcustom__ordinaryButton ${node.active ? 'active' : ''}`}
-              style={{ left: -0.5 * scaffoldBlockPxWidth }}
+              style={{ right: scaffoldBlockPxWidth }}
             />
-          </div>
+          </>
         );
       }
     }
@@ -99,17 +99,17 @@ class CustomThemeNodeContentRenderer extends Component {
 
     const isDraggedDescendant = draggedNode && isDescendant(draggedNode, node);
     const isLandingPadActive = !didDrop && isDragging;
-
     const nodeContent = connectDragPreview(
       <div
         className={`${styles.row} rstcustom__row ${isLandingPadActive ? ` ${styles.rowLandingPad} rstcustom__rowLandingPad` : ''} ${
           isLandingPadActive && !canDrop ? ` ${styles.rowCancelPad} rstcustom__rowCancelPad` : ''
         } ${isSearchMatch ? ` ${styles.rowSearchMatch} rstcustom__rowSearchMatch` : ''} ${
           isSearchFocus ? ` ${styles.rowSearchFocus} rstcustom__rowSearchFocus` : ''
-        } ${className ? ` ${className}` : ''}`}
+        } ${className ? ` ${className}` : ''} essh_tree_depth${node.LVL}`}
         style={{
           opacity: isDraggedDescendant ? 0.5 : 1,
           ...style,
+          paddingLeft: 10 * node.LVL,
         }}
       >
         <div className={styles.rowContents + (!canDrag ? ` ${styles.rowContentsDragDisabled} rstcustom__rowContentsDragDisabled` : '')}>
@@ -124,12 +124,13 @@ class CustomThemeNodeContentRenderer extends Component {
                 })
               }
             >
+              {' '}
               {typeof nodeTitle === 'function'
                 ? nodeTitle({
-                  node,
-                  path,
-                  treeIndex,
-                })
+                    node,
+                    path,
+                    treeIndex,
+                  })
                 : nodeTitle}
             </span>
 
@@ -137,10 +138,10 @@ class CustomThemeNodeContentRenderer extends Component {
               <span className={`${styles.rowSubtitle} rstcustom__rowSubtitle`}>
                 {typeof nodeSubtitle === 'function'
                   ? nodeSubtitle({
-                    node,
-                    path,
-                    treeIndex,
-                  })
+                      node,
+                      path,
+                      treeIndex,
+                    })
                   : nodeSubtitle}
               </span>
             )}
@@ -162,10 +163,10 @@ class CustomThemeNodeContentRenderer extends Component {
 
     return (
       <div style={{ height: '100%' }} {...otherProps}>
-        {this.buttonRenderer()}
         <div className={styles.rowWrapper + (!canDrag ? ` ${styles.rowWrapperDragDisabled}` : '')}>
           {canDrag ? connectDragSource(nodeContent, { dropEffect: 'copy' }) : nodeContent}
         </div>
+        {this.buttonRenderer()}
       </div>
     );
   }

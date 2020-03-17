@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import iconSearch from 'images/common/icon-search2.png';
+import iconArrBtm from 'images/portal/icon-arrow-bt.png';
+import iconArrTop from 'images/portal/icon-arrow-top.png';
 
 const TreeWrapper = styled.div`
   display: flex;
@@ -79,6 +81,9 @@ const TreeWrapper = styled.div`
 
     > button {
       background-color: transparent;
+      i:before {
+        color: ${props => (props.blackThema ? '#000' : '#fff')};
+      }
     }
   }
 
@@ -86,22 +91,107 @@ const TreeWrapper = styled.div`
     background-color: #1f8c02;
   }
 
+  .rst__lineBlock,
+  .rst__absoluteLineBlock {
+    display: none;
+  }
+
   /* UserMenu > Badge 오른쪽 고정하기 */
   .sortableTreeWrapper.sidebar > div > .rst__virtualScrollOverride {
     overflow: hidden !important;
   }
+  .sortableTreeWrapper.sidebar .rst__nodeContent {
+    width: 100%;
+  }
+  .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open {
+    .essh_tree_depth1 {
+      background: #4491e0;
+      .rstcustom__rowTitle button {
+        opacity: 1;
+      }
+    }
+  }
+
+  .sortableTreeWrapper.sidebar .rst__nodeContent:hover {
+    .essh_tree_depth1 {
+      background: #4491e0;
+      .rstcustom__rowTitle button {
+        opacity: 1;
+      }
+    }
+    .essh_tree_depth2 {
+      .rstcustom__rowTitle button {
+        opacity: 1;
+      }
+    }
+    .essh_tree_depth3 {
+      .rstcustom__rowTitle button {
+        opacity: 1;
+      }
+    }
+    .essh_tree_depth4 {
+      .rstcustom__rowTitle button {
+        opacity: 1;
+      }
+    }
+  }
+
+  .sortableTreeWrapper.sidebar .rst__nodeContent {
+    .essh_tree_depth1 {
+      .rstcustom__rowTitle button {
+        &.active {
+          opacity: 1;
+        }
+        i {
+          margin-right: 10px;
+          &:before {
+            font-size: 15px;
+          }
+        }
+      }
+    }
+
+    .essh_tree_depth2 {
+      .rstcustom__rowTitle button {
+        &.active {
+          opacity: 1;
+        }
+      }
+    }
+
+    .essh_tree_depth3 {
+      .rstcustom__rowTitle button {
+        &.active {
+          opacity: 1;
+        }
+      }
+    }
+
+    .essh_tree_depth4 {
+      .rstcustom__rowTitle button {
+        &.active {
+          opacity: 1;
+        }
+        padding-left: 10px;
+      }
+    }
+  }
+
   /* .sortableTreeWrapper .rst__nodeContent {width: calc(100% - 30px);} */
   .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__rowWrapper {
     max-width: 270px;
     overflow: hidden;
   }
+
   .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__rowTitle button {
-    width: 320px;
     text-align: left;
+    color: #fff;
+    opacity: 0.5;
     & > i {
       margin-right: 5px;
-      height: 23px;
+      height: 10px;
       margin-top: 0;
+      vertical-align: baseline;
     }
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent .inTree.ant-badge .ant-badge-count {
@@ -144,6 +234,23 @@ const TreeWrapper = styled.div`
     width: 100%;
     height: 100%;
     overflow-x: hidden !important;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
+  }
+
+  .node-content-renderer_rowWrapperDragDisabled__2LViB {
+    padding: 0;
+  }
+
+  .sortableTreeWrapper .rstcustom__expandButton {
+    background-image: url(${iconArrBtm});
+    background-size: 12px;
+  }
+  .sortableTreeWrapper .rstcustom__collapseButton {
+    background-image: url(${iconArrTop});
+    background-size: 12px;
   }
 `;
 

@@ -122,8 +122,7 @@ class TreeNode extends Component {
         {scaffold}
 
         <div
-          className="rst__nodeContent"
-          style={{ left: scaffoldBlockPxWidth * scaffoldBlockCount }}
+          className={`rst__nodeContent ${node.expanded ? 'tree_open' : 'tree_close'}`}
         >
           {Children.map(children, child =>
             cloneElement(child, {

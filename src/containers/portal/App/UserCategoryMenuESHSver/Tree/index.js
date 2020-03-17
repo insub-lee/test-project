@@ -111,6 +111,16 @@ class Tree extends Component {
   generateNodeProps = ({ node }) => {
     const { selectedIndex } = this.props;
     const nodeData = { ...node, active: node.key === selectedIndex };
+    let menuIconClassName = ''; 
+    if(node.LVL === 1){
+      menuIconClassName = 'fa fa-lg fa-building'; 
+    } else if(node.LVL === 2){
+      menuIconClassName = 'icon-bullet';
+    }else if(node.LVL === 3){
+      menuIconClassName = 'icon-hyphen'
+    }
+
+    /*
     let menuIconClassName = 'icon-workCard';
     if (node.MENU_NODE_TYPE === 'BIZ') {
       // 업무폴더일 경우
@@ -128,6 +138,7 @@ class Tree extends Component {
       // 'icon-menuApp' 앱 아이콘
       // 'icon-menuPage' 페이지 아이콘
     }
+    */
 
     return {
       title: (
@@ -171,7 +182,7 @@ class Tree extends Component {
             </div>
             <div className="myMenuEdit">
               <button type="button" onClick={this.onSetEditClick} title="메뉴수정">
-                <i className={`${editMenuMode ? 'fa fa-unlock' : 'fa fa-lock'}`} />
+                <i blackThema className={`${editMenuMode ? 'fa fa-unlock' : 'fa fa-lock'}`} />
               </button>
             </div>
           </div>
@@ -190,7 +201,6 @@ class Tree extends Component {
             style={{
               width: '100%',
               height: 'calc(100% - 50px)',
-              padding: '0 10px',
             }}
           >
             <AutoSizer>
@@ -217,7 +227,7 @@ class Tree extends Component {
                       isVirtualized={false}
                       generateNodeProps={this.generateNodeProps}
                       rowHeight={35}
-                      scaffoldBlockPxWidth={20}
+                      scaffoldBlockPxWidth={10}
                       className="sortableTreeWrapper sidebar CustomSCRB"
                       ref={ref => {
                         this.tree = ref;
