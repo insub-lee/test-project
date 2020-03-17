@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { AllCommuinityModules } from 'ag-grid-community';
+// import { AllCommuinityModules } from 'ag-grid-community';
 import { Select, Input, InputNumber, Modal } from 'antd';
 import request from 'utils/request';
 import { debounce } from 'lodash';
@@ -14,13 +14,15 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modules: AllCommuinityModules,
+      // modules: AllCommuinityModules,
+      frameworkComponents: { customTooltip: CustomTooltip },
       selectedSite: '',
       input: '',
       visible: false,
@@ -37,47 +39,57 @@ class List extends Component {
       headerName: '품목',
       field: 'kind',
       width: 170,
+      tooltipField: 'kind',
     },
     {
       headerName: '모델',
       field: 'model',
       width: 200,
+      tooltipField: 'kind',
     },
     {
       headerName: 'Size',
       field: 'size1',
       width: 130,
+      tooltipField: 'kind',
     },
     {
       headerName: '검정#',
       field: 'app_no',
+      tooltipField: 'kind',
     },
     {
       headerName: 'Vendor',
       field: 'vendor_nm',
       width: 130,
+      tooltipField: 'kind',
     },
     {
       headerName: 'Maker',
       field: 'maker_nm',
+      tooltipField: 'kind',
     },
     {
       headerName: '단가',
       field: 'unitprice',
       valueFormatter: params => (params.value ? params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0),
+      tooltipField: 'kind',
     },
     {
       headerName: '유효기간',
       field: 'validity_term',
+      tooltipField: 'kind',
     },
     {
       headerName: '적정재고',
       field: 'properstock',
+      tooltipField: 'kind',
     },
     {
       headerName: '비고',
       field: 'comments',
       width: 930,
+      tooltipField: 'kind',
     },
   ];
 
@@ -99,6 +111,7 @@ class List extends Component {
     defaultColDef: {
       width: 100,
       resizable: true,
+      tooltipComponent: 'customTooltip',
     },
   };
 
@@ -191,7 +204,7 @@ class List extends Component {
             sagaKey={this.props.sagaKey}
             getExtraApiData={this.props.getCallDataHandler}
             extraApiData={this.props.result}
-            colData={this.state.requestValue.maker_cd}
+            colData={this.state.requestValue.vendor_cd}
             visible
             CONFIG={{ property: { isRequired: false } }}
             changeFormData={this.props.changeFormData}
@@ -336,6 +349,7 @@ class List extends Component {
 
   handleEshsCmpnyCompChange = (data, fieldName) => {
     const valueObj = { [`${fieldName.toLowerCase()}_cd`]: data.WRK_CMPNY_CD, [`${fieldName.toLowerCase()}_nm`]: data.WRK_CMPNY_NM }; // 키값 바꾸기
+    this.setState({ [fieldName.toLowerCase()]: data.WRK_CMPNY_NM, [`${fieldName.toLowerCase()}name`]: data.WRK_CMPNY_CD });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
@@ -411,7 +425,6 @@ class List extends Component {
   render() {
     const { visible, columnDefs, rowData, viewType } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
-    console.debug(this.gridApi);
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -436,11 +449,13 @@ class List extends Component {
                 rowData={rowData}
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
+                defaultColDef={gridOptions.defaultColDef}
                 suppressRowTransform
                 onRowClicked={e => {
                   this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
                 }}
-                // onCellMouseOver={e => console.debug(e.data)}
+                frameworkComponents={this.state.frameworkComponents}
+                // onCellMouseOver="ds"
               />
             </div>
           </div>
