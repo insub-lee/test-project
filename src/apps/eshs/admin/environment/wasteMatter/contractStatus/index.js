@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import CustomInput from './Input';
-import CustomModify from './Modify';
 
-class Stack extends Component {
+class ContractStatus extends Component {
   componentDidMount() {}
 
   loadingComplete = () => {
@@ -16,21 +14,20 @@ class Stack extends Component {
   render() {
     return (
       <BizBuilderBase
-        sagaKey="stack"
-        workSeq={4401}
-        onReset={this.onReset}
+        sagaKey="contract"
+        workSeq={4661}
+        compProps={{ sagaKey: 'contractSearchBar', workSeq: 4661 }}
+        listMetaSeq={4761}
         taskSeq={-1}
-        viewType="INPUT"
-        CustomInputPage={CustomInput}
-        CustomModifyPage={CustomModify}
+        viewType="LIST"
         loadingComplete={this.loadingComplete}
       />
     );
   }
 }
 
-Stack.propTypes = {};
+ContractStatus.propTypes = {};
 
-Stack.defaultProps = {};
+ContractStatus.defaultProps = {};
 
-export default Stack;
+export default ContractStatus;

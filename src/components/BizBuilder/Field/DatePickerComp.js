@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { DatePicker as AntdDatePicker } from 'antd';
 import PropTypes from 'prop-types';
 
+// coldata 로 넣기, readonly 체크
 class DatePickerComp extends Component {
   onChangeHandler = (date, dateString) => {
     const { sagaKey: id, changeFormData, COMP_FIELD } = this.props;
