@@ -159,7 +159,7 @@ class StdInput extends Component {
           () => loadingComplete(),
         );
       }
-      console.debug('input processRule change', processRule);
+
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>

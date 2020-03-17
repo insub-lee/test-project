@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon } from 'antd';
-
+import { Table, Modal, Icon, Button, message } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import UserSelect from 'components/UserSelect';
@@ -9,15 +9,39 @@ import UserSelect from 'components/UserSelect';
 const AntdTable = StyledAntdTable(Table);
 
 class List extends Component {
-  state = {
-    isShow: false,
-    selectedDeptId: -1,
-    selectedUserList: [],
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShow: false,
+      selectedDeptId: -1,
+      selectedUserList: [],
+      selectedRowKeys: [],
+      selectedRows: [],
+      requiredDeptList: [],
+      distDeptList: undefined,
+    };
+  }
+
+  initDataBind = sagaKey => {
+    const {
+      result: { distDeptList, requiredDeptList },
+    } = this.props;
+    const { list: totalDeptList } = distDeptList;
+    const { deptList } = requiredDeptList;
+
+    const deptIds = deptList.map(dept => dept.DEPT_ID);
+    const selectedRowKeys = totalDeptList.reduce((retValue, item, idx) => {
+      if (deptIds.includes(item.DEPT_ID)) {
+        retValue.push(idx);
+      }
+      return retValue;
+    }, []);
+    this.setState({ distDeptList: totalDeptList, requiredDeptList: deptList, selectedRowKeys, selectedRows: deptList });
   };
 
   componentDidMount() {
-    const { id, apiAry, getCallDataHandler } = this.props;
-    getCallDataHandler(id, apiAry, () => {});
+    const { sagaKey: id, apiAry, getCallDataHandler } = this.props;
+    getCallDataHandler(id, apiAry, this.initDataBind);
   }
 
   onClickDept = dept => {
@@ -53,7 +77,7 @@ class List extends Component {
   ];
 
   onTreeSelect = selectKeys => {
-    const { id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
         key: 'userList',
@@ -86,7 +110,7 @@ class List extends Component {
   };
 
   onUserSelectedComplete = result => {
-    const { id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
     const apiUrl = '/api/mdcs/v1/common/distribute/DistributeDeptMgnt';
     const userIds = result.map(userInfo => userInfo.USER_ID);
     const submitData = {
@@ -98,24 +122,46 @@ class List extends Component {
     submitHandlerBySaga(id, 'POST', apiUrl, submitData, this.onSaveComplete);
   };
 
-  render() {
-    const { result, id } = this.props;
-    const { distDeptList } = result;
-    console.debug('propsinfo!!!', this.props);
-    if (distDeptList !== undefined) {
-      const { list } = distDeptList;
+  onSelectChange = (selectedRowKeys, selectedRows) => {
+    this.setState({ selectedRowKeys, selectedRows });
+  };
 
+  onSaveCompleteDept = () => {
+    message.success('적용 완료!');
+  };
+
+  onClickSave = () => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { selectedRows } = this.state;
+    const url = '/api/mdcs/v1/common/distribute/distributeDeptHandler';
+    const param = { PARAM: { deptList: selectedRows } };
+    submitHandlerBySaga(id, 'POST', url, param, this.onSaveCompleteDept);
+  };
+
+  render() {
+    const { result, sagaKey: id } = this.props;
+    const { distDeptList } = this.state;
+
+    const rowSelection = {
+      selectedRowKeys: this.state.selectedRowKeys,
+      onChange: this.onSelectChange,
+    };
+
+    if (distDeptList !== undefined) {
       return (
         <div style={{ padding: '10px 15px' }}>
           <div style={{ marginBottom: '10px' }}>
             <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
               <Icon type="form" /> 배포부서 담당자
+              <Button type="primary" style={{ marginLeft: '40px' }} onClick={this.onClickSave}>
+                <SaveOutlined /> 필수 배포부서적용
+              </Button>
             </p>
           </div>
           <Modal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
             <UserSelect
               initUserList={this.state.selectedUserList}
-              treeDataSource={list}
+              treeDataSource={distDeptList}
               userDataList={result.userList && result.userList.list}
               onTreeSelect={this.onTreeSelect}
               onUserSelectHandler={this.onUserSelect}
@@ -123,7 +169,7 @@ class List extends Component {
               onCancel={this.onCancel}
             />
           </Modal>
-          <AntdTable columns={this.getTableColumns()} dataSource={list} pagination={false} bordered />
+          <AntdTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
         </div>
       );
     }
@@ -146,6 +192,12 @@ List.defaultProps = {
     {
       key: 'distDeptList',
       url: '/api/mdcs/v1/common/distribute/DistributeDeptMgnt',
+      type: 'GET',
+      params: {},
+    },
+    {
+      key: 'requiredDeptList',
+      url: '/api/mdcs/v1/common/distribute/distributeDeptHandler',
       type: 'GET',
       params: {},
     },

@@ -180,8 +180,7 @@ class Enactment extends Component {
       draftType: DraftType.ENACTMENT,
       nodeIds: selectedNodeIds,
       degreeFlag: ModifyType.MAJOR,
-    };
-    console.debug('workPrcProps', workPrcProps);
+    };    
     this.props.onShowModal(selectedworkSeq, inputMetaSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
     this.initStateData();
   };
