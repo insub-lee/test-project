@@ -61,14 +61,18 @@ class CommonSearchbar extends React.Component {
   };
 
   BizbuilderbaseRender = () => {
-    const { compProps, sagaKey: id } = this.props;
+    const {
+      sagaKey: id,
+      CONFIG: { property },
+    } = this.props;
     return (
       <BizBuilderBase
-        sagaKey={compProps.sagaKey}
+        sagaKey={`searchbar_${id}`}
         baseSagaKey={id}
         CustomListPage={CustomList}
-        workSeq={compProps.workSeq}
+        workSeq={property.searchbarWorkSeq}
         taskSeq={-1}
+        listMetaSeq={property.listMetaSeq || undefined}
         viewType="LIST"
         loadingComplete={this.props.loadingComplete}
         isModalChange={this.isModalChange}

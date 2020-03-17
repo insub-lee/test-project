@@ -1,8 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Modal, Button, Input, Select, Row, Col } from 'antd';
-import { createStructuredSelector } from 'reselect';
 import DeptModal from './DeptModal';
 
 const { Option } = Select;
@@ -72,13 +70,22 @@ class DeptSearchBar extends Component {
     handleSearchOnClick();
   };
 
+  handleFinsh = () => {
+    const { id, formData, submitHandlerBySaga, handleSearchOnClick } = this.props;
+    const REQ_NO = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
+    submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO }, this.handleFormReset);
+    handleSearchOnClick();
+  };
+
   render() {
-    const { formData, result } = this.props;
+    const { formData, result, id } = this.props;
     const { years } = this.state;
     const deptList = (result && result.deptList && result.deptList.result) || [];
     const myDept = (formData && formData.myDept) || {};
     const searchRow = (formData && formData.searchRow) || {};
-
+    const eiMaterialCnt = (formData && formData.materialCnt) || 0;
+    const searchFlag = (formData && formData.searchFlag) || false;
+    const itemList = (formData && formData.itemList) || [];
     return (
       <>
         <div>
@@ -98,6 +105,7 @@ class DeptSearchBar extends Component {
           </Modal>
           <Input value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
           <Button onClick={this.handleDeptSearch}>검색</Button>
+          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && <Button onClick={this.handleFinsh}>완료</Button>}
         </div>
         <hr />
       </>
@@ -106,7 +114,6 @@ class DeptSearchBar extends Component {
 }
 
 DeptSearchBar.defaultProps = {
-  id: 'eiNatural',
   getCallDataHandler: () => {},
   result: {},
 };

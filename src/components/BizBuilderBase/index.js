@@ -22,7 +22,7 @@ import ModalPopup from './viewComponent/ModalPopup';
 class BizBuilderBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1 };
+    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1, taskRowData: {} };
   }
 
   componentDidMount() {
@@ -33,20 +33,24 @@ class BizBuilderBase extends React.Component {
       workSeq,
       taskSeq,
       viewType,
-      setViewPageData,
       revisionTask,
       revisionType,
       changeWorkflowFormData,
       conditional,
+      inputMetaSeq,
+      modifyMetaSeq,
+      viewMetaSeq,
+      listMetaSeq,
+      customViewChangeProcessSeq,
     } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    if (viewType) setViewPageData(id, workSeq, taskSeq, retViewType);
+    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
-      revisionTask(id, workSeq, taskSeq, retViewType, revisionType);
+      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
     } else if (taskSeq !== -1) {
-      getDetailData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
+      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '', changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -58,24 +62,28 @@ class BizBuilderBase extends React.Component {
       workSeq,
       taskSeq,
       viewType,
-      setViewPageData,
       revisionTask,
       revisionType,
       changeWorkflowFormData,
       conditional,
+      inputMetaSeq,
+      modifyMetaSeq,
+      viewMetaSeq,
+      listMetaSeq,
+      customViewChangeProcessSeq,
     } = this.props;
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
+    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq };
     if (prevProps.sagaKey !== this.props.sagaKey || (prevProps.viewType && prevProps.viewType !== viewType)) {
-      if (viewType !== prevProps.viewType) setViewPageData(id, workSeq, taskSeq, retViewType); // setViewType(id, viewType);
       if (taskSeq !== -1 && viewType === 'REVISION') {
-        revisionTask(id, workSeq, taskSeq, retViewType, revisionType);
+        revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
       } else if (taskSeq !== -1) {
-        getDetailData(id, workSeq, taskSeq, retViewType, changeWorkflowFormData);
+        getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
       } else if (workSeq !== -1) {
-        getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '', changeWorkflowFormData);
+        getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
       }
     } else if (conditional !== prevProps.conditional && retViewType === 'LIST' && workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '', changeWorkflowFormData);
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
     }
   }
 
@@ -85,15 +93,26 @@ class BizBuilderBase extends React.Component {
   };
 
   changeViewPage = (id, workSeq, taskSeq, viewType, revisionType) => {
-    const { getBuilderData, getDetailData, setViewPageData, revisionTask, conditional } = this.props; // id: widget_id+@
+    const {
+      getBuilderData,
+      getDetailData,
+      revisionTask,
+      changeWorkflowFormData,
+      conditional,
+      inputMetaSeq,
+      modifyMetaSeq,
+      viewMetaSeq,
+      listMetaSeq,
+      customViewChangeProcessSeq,
+    } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    if (viewType) setViewPageData(id, workSeq, taskSeq, retViewType);
+    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
-      revisionTask(id, workSeq, taskSeq, retViewType, revisionType);
+      revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
     } else if (taskSeq !== -1) {
-      getDetailData(id, workSeq, taskSeq, retViewType);
+      getDetailData(id, workSeq, taskSeq, retViewType, extraProps, changeWorkflowFormData);
     } else if (workSeq !== -1) {
-      getBuilderData(id, workSeq, taskSeq, retViewType, conditional || '');
+      getBuilderData(id, workSeq, taskSeq, retViewType, extraProps, conditional || '', changeWorkflowFormData);
     }
   };
 
@@ -103,8 +122,8 @@ class BizBuilderBase extends React.Component {
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData({ ...formData, [key]: val });
   };
 
-  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq) =>
-    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq });
+  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) =>
+    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData });
 
   searchCompRenderer = props => <SearchComp {...props} />;
 
@@ -121,26 +140,12 @@ class BizBuilderBase extends React.Component {
       sagaKey: id,
       workInfo,
       listData,
-      inputMetaSeq,
-      modifyMetaSeq,
-      viewMetaSeq,
-      listMetaSeq,
+      viewSeq,
+      viewLayer,
     } = this.props;
     let component = <div style={{ minHeight: 300 }} />;
-    if (viewPageData && viewPageData.viewType && metaList && workInfo) {
-      let viewSeq = -1;
-      if (viewPageData.viewType.toUpperCase() === 'INPUT' && inputMetaSeq > -1) {
-        viewSeq = inputMetaSeq;
-      } else if (viewPageData.viewType.toUpperCase() === 'MODIFY' && modifyMetaSeq > -1) {
-        viewSeq = modifyMetaSeq;
-      } else if (viewPageData.viewType.toUpperCase() === 'VIEW' && viewMetaSeq > -1) {
-        viewSeq = viewMetaSeq;
-      } else if (viewPageData.viewType.toUpperCase() === 'LIST' && listMetaSeq > -1) {
-        viewSeq = listMetaSeq;
-      } else {
-        viewSeq = workInfo[`VW_${viewPageData.viewType}`];
-      }
-      const viewLayer = metaList.filter(fNode => fNode.COMP_TYPE === 'VIEW' && fNode.COMP_TAG === viewPageData.viewType && fNode.META_SEQ === viewSeq);
+    // if (viewPageData && viewPageData.viewType && metaList && workInfo) {
+    if (viewSeq > -1 && viewLayer && viewLayer.length > 0) {
       const nextProps = {
         ...this.props,
         key: `${id}_${viewPageData.viewType}_${viewSeq}`,
@@ -194,8 +199,8 @@ class BizBuilderBase extends React.Component {
   };
 
   render() {
-    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting } = this.props;
-    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq } = this.state;
+    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting, customViewChangeProcessSeqByModal } = this.props;
+    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
     return (
       <div>
         <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
@@ -208,7 +213,15 @@ class BizBuilderBase extends React.Component {
           {...builderModalSetting}
           onCancel={() => this.changeBuilderModalState(false, 'INPUT', -1, -1)}
         >
-          <ModalPopup sagaKey={sagaKey} viewType={builderModalViewType} workSeq={builderModalWorkSeq} taskSeq={builderModalTaskSeq} />
+          <ModalPopup
+            sagaKey={sagaKey}
+            viewType={builderModalViewType}
+            workSeq={builderModalWorkSeq}
+            taskSeq={builderModalTaskSeq}
+            taskRowData={taskRowData}
+            customViewChangeProcessSeq={customViewChangeProcessSeqByModal}
+            changeBuilderModalState={this.changeBuilderModalState}
+          />
         </Modal>
       </div>
     );
@@ -260,6 +273,9 @@ BizBuilderBase.propTypes = {
   modifyMetaSeq: PropTypes.number,
   viewMetaSeq: PropTypes.number,
   listMetaSeq: PropTypes.number,
+  customViewChangeProcessSeq: PropTypes.number,
+  customViewChangeProcessSeqByModal: PropTypes.number,
+  taskRowData: PropTypes.object,
 };
 
 BizBuilderBase.defaultProps = {
@@ -290,6 +306,9 @@ BizBuilderBase.defaultProps = {
   modifyMetaSeq: -1,
   viewMetaSeq: -1,
   listMetaSeq: -1,
+  customViewChangeProcessSeq: -1,
+  customViewChangeProcessSeqByModal: -1,
+  taskRowData: undefined,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -309,30 +328,34 @@ const mapStateToProps = createStructuredSelector({
   listSelectRowKeys: selectors.makeSelectListSelectRowKeys(),
   isBuilderModal: selectors.makeSelectIsBuilderModal(),
   builderModalSetting: selectors.makeSelectBuilderModalSetting(),
+  viewProcessList: selectors.makeSelectViewProcessList(),
+  viewSeq: selectors.makeSelectViewSeq(),
+  viewLayer: selectors.makeSelectViewLayer(),
+  isSaveModalClose: selectors.makeSelectIsSaveModalClose(),
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBuilderData: (id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData) =>
-    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, conditional, changeWorkflowFormData)),
+  getBuilderData: (id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData) =>
+    dispatch(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps, conditional, changeWorkflowFormData)),
   getExtraApiData: (id, apiArr, callback) => dispatch(actions.getExtraApiData(id, apiArr, callback)),
   submitExtraHandler: (id, httpMethod, apiUrl, submitData, callbackFunc, etcData) =>
     dispatch(actions.submitExtraHandler(id, httpMethod, apiUrl, submitData, callbackFunc, etcData)),
-  getDetailData: (id, workSeq, taskSeq, viewType, changeWorkflowFormData) =>
-    dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, changeWorkflowFormData)),
+  getDetailData: (id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData) =>
+    dispatch(actions.getDetailData(id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData)),
   getTaskSeq: (id, workSeq) => dispatch(actions.getTaskSeq(id, workSeq)),
   // saveTempContents: (id, detail, fieldName, compType, contSeq) => dispatch(actions.saveTempContents(id, detail, fieldName, compType, contSeq)),
   tempSaveTask: (id, callbackFunc) => dispatch(actions.tempSaveTask(id, callbackFunc)),
   saveTask: (id, reloadId, callbackFunc) => dispatch(actions.saveTask(id, reloadId, callbackFunc)),
-  modifyTask: (id, callbackFunc) => dispatch(actions.modifyTask(id, callbackFunc)),
-  modifyTaskBySeq: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, workSeq, taskSeq, callbackFunc)),
+  modifyTask: (id, reloadId, callbackFunc) => dispatch(actions.modifyTask(id, reloadId, callbackFunc)),
+  modifyTaskBySeq: (id, reloadId, workSeq, taskSeq, callbackFunc) => dispatch(actions.modifyTaskBySeq(id, reloadId, workSeq, taskSeq, callbackFunc)),
   deleteTask: (id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc) =>
     dispatch(actions.deleteTask(id, reloadId, workSeq, taskSeq, changeViewPage, callbackFunc)),
   deleteExtraTask: (id, url, params, apiArr) => dispatch(actions.deleteExtraTask(id, url, params, apiArr)),
   deleteFav: (id, apiArr, callbackFunc) => dispatch(actions.deleteFav(id, apiArr, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   addNotifyBuilder: (id, workSeq, taskSeq, titleKey, contentKey) => dispatch(actions.addNotifyBuilder(id, workSeq, taskSeq, titleKey, contentKey)),
-  revisionTask: (id, workSeq, taskSeq, viewType, revisionType, callbackFunc) =>
-    dispatch(actions.revisionTask(id, workSeq, taskSeq, viewType, revisionType, callbackFunc)),
+  revisionTask: (id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc) =>
+    dispatch(actions.revisionTask(id, workSeq, taskSeq, viewType, revisionType, extraProps, callbackFunc)),
   getRevisionHistory: (id, workSeq, taskSeq, callbackFunc) => dispatch(actions.getRevisionHistory(id, workSeq, taskSeq, callbackFunc)),
   removeReduxState: id => dispatch(actions.removeReduxState(id)),
   changeValidationData: (id, key, flag, msg) => dispatch(actions.changeValidationDataByReducr(id, key, flag, msg)),
@@ -348,10 +371,11 @@ const mapDispatchToProps = dispatch => ({
   destroyReducer: id => dispatch(actions.destroyReducerByReducer(id)),
   setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
+  setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
 });
 
-const withReducer = injectReducer({ key: `apps.mdcs.components.BizBuilderBase`, reducer });
-const withSaga = injectSaga({ key: `apps.mdcs.components.BizBuilderBase`, saga });
+const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });
+const withSaga = injectSaga({ key: `apps.bizmicro.components.BizBuilderBase`, saga });
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 export default compose(withReducer, withSaga, withConnect)(BizBuilderBase);
