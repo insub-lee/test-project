@@ -14,6 +14,8 @@ import iconworkCard from 'images/portal/icon-workCard.png';
 import iconworkFolder from 'images/portal/icon-folder.png';
 import iconMenuApp from 'images/portal/icon-menu-app.png';
 import iconMenuPage from 'images/portal/icon-menu-page.png';
+import iconBullet from 'images/portal/icon-bullet.png';
+import iconHyphen from 'images/portal/icon-hyphen.png';
 
 const Styled = styled.i`
   display: inline-block;
@@ -117,6 +119,16 @@ const Styled = styled.i`
     width: 15px;
     height: 15px;
     background-size: 100%;
+  }
+  &.icon-bullet {
+    background: url(${iconBullet}) no-repeat center;
+    width: 15px;
+    height: 15px;
+  }
+  &.icon-hyphen {
+    background: url(${iconHyphen}) no-repeat center;
+    width: 15px;
+    height: 15px;
   }
 `;
 
