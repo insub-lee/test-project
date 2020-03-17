@@ -171,7 +171,7 @@ class List extends Component {
         content: (
           <Input
             name="kind"
-            value={viewType === 'VIEW' ? viewData.kind : this.state.kind}
+            defaultValue={viewType === 'VIEW' ? viewData.kind : this.state.kind}
             style={{ width: '500px' }}
             placeholder="품목명을 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -183,7 +183,7 @@ class List extends Component {
         content: (
           <Input
             name="model"
-            value={viewType === 'VIEW' ? viewData.model : this.state.model}
+            defaultValue={viewType === 'VIEW' ? viewData.model : this.state.model}
             style={{ width: '500px' }}
             placeholder="모델명을 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -195,7 +195,7 @@ class List extends Component {
         content: (
           <Input
             name="size1"
-            value={viewType === 'VIEW' ? viewData.size1 : this.state.size1}
+            defaultValue={viewType === 'VIEW' ? viewData.size1 : this.state.size1}
             style={{ width: '500px' }}
             placeholder="사이즈를 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -207,7 +207,7 @@ class List extends Component {
         content: (
           <Input
             name="app_no"
-            value={viewType === 'VIEW' ? viewData.app_no : this.state.app_no}
+            defaultValue={viewType === 'VIEW' ? viewData.app_no : this.state.app_no}
             style={{ width: '500px' }}
             placeholder="검정번호를 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -252,7 +252,7 @@ class List extends Component {
               sagaKey={this.props.sagaKey}
               getExtraApiData={this.props.getCallDataHandler}
               extraApiData={this.props.result}
-              colData={this.state.viewData.maker_cd ? this.state.viewData.maker_cd : ''}
+              colData={this.state.viewData && this.state.viewData.maker_cd ? this.state.viewData.maker_cd : ''}
               readOnly={false}
               visible
               CONFIG={{ property: { isRequired: false } }}
@@ -279,7 +279,7 @@ class List extends Component {
         content: (
           <Input
             name="unit"
-            value={viewType === 'VIEW' ? viewData.unit : this.state.unit}
+            defaultValue={viewType === 'VIEW' ? viewData.unit : this.state.unit}
             style={{ width: '500px' }}
             placeholder="단위를 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -291,7 +291,7 @@ class List extends Component {
         content: (
           <Input
             name="validity_term"
-            value={viewType === 'VIEW' ? viewData.validity_term : this.state.validity_term}
+            defaultValue={viewType === 'VIEW' ? viewData.validity_term : this.state.validity_term}
             style={{ width: '500px' }}
             placeholder="유효기간을 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -303,7 +303,7 @@ class List extends Component {
         content: (
           <InputNumber
             name="properstock"
-            value={viewType === 'VIEW' ? viewData.properstock : this.state.properstock}
+            defaultValue={viewType === 'VIEW' ? viewData.properstock : this.state.properstock}
             style={{ width: '500px' }}
             placeholder="적정재고를 입력하세요."
             onChange={value => this.handleNumberChange(value)}
@@ -315,7 +315,7 @@ class List extends Component {
         content: (
           <Input.TextArea
             name="comments"
-            value={viewType === 'VIEW' ? viewData.comments : this.state.comments}
+            defaultValue={viewType === 'VIEW' ? viewData.comments : this.state.comments}
             style={{ width: '500px' }}
             placeholder="비고를 입력하세요."
             onChange={e => this.handleChange(e)}
@@ -356,7 +356,6 @@ class List extends Component {
     submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () =>
       this.setState(prevState => ({ visible: false, rowData: prevState.rowData.concat(requestValue), requestValue: this.requestValueOrigin })),
     );
-    console.debug(requestValue);
   };
 
   handleCancel = () => {
@@ -366,6 +365,19 @@ class List extends Component {
       viewData: {},
     });
     return <EshsCmpnyComp colData="" />;
+  };
+
+  handleModifyClick = () => {
+    const { viewData } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    // submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, viewData);
+    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, prevState.viewData) }));
+    console.debug(this.state.requestValue);
+  };
+
+  handleDeleteClick = () => {
+    const { viewData } = this.state;
+    console.debug(viewData.hitem_cd);
   };
 
   inputFooter = [
@@ -378,8 +390,12 @@ class List extends Component {
   ];
 
   viewFooter = [
-    <StyledButton className="btn-primary">수정</StyledButton>,
-    <StyledButton className="btn-primary">삭제</StyledButton>,
+    <StyledButton className="btn-primary" onClick={this.handleModifyClick}>
+      수정
+    </StyledButton>,
+    <StyledButton className="btn-primary" onClick={this.handleDeleteClick}>
+      삭제
+    </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleCancel}>
       닫기
     </StyledButton>,
@@ -388,7 +404,6 @@ class List extends Component {
   render() {
     const { visible, columnDefs, rowData, viewType } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent } = this;
-    console.debug(this.state.viewData);
     return (
       <StyledViewDesigner>
         <Sketch>
