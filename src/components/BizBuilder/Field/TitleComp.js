@@ -8,7 +8,7 @@ const TitleComp = ({ colData, sagaKey: id, rowData, changeViewPage, visible, CON
       onKeyPress={() => false}
       onClick={() =>
         isBuilderModal
-          ? changeBuilderModalState(true, 'VIEW', rowData.WORK_SEQ, rowData.TASK_SEQ)
+          ? changeBuilderModalState(true, 'VIEW', rowData.WORK_SEQ, rowData.TASK_SEQ, rowData)
           : changeViewPage(id, rowData.WORK_SEQ, rowData.TASK_SEQ, 'VIEW')
       }
       style={{ cursor: 'pointer' }}
