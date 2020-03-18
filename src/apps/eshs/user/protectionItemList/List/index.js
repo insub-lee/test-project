@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-// import { AllCommuinityModules } from 'ag-grid-community';
+import { AllCommuinityModules } from 'ag-grid-community';
 import { Select, Input, InputNumber, Modal } from 'antd';
 import request from 'utils/request';
 import { debounce } from 'lodash';
@@ -12,8 +12,9 @@ import { debounce } from 'lodash';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+import CustomTooltipStyled from './styled';
+
 import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
@@ -21,7 +22,7 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // modules: AllCommuinityModules,
+      modules: AllCommuinityModules,
       frameworkComponents: { customTooltip: CustomTooltip },
       selectedSite: '',
       input: '',
@@ -423,7 +424,7 @@ class List extends Component {
   ];
 
   render() {
-    const { visible, columnDefs, rowData, viewType } = this.state;
+    const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
     return (
       <StyledViewDesigner>
@@ -442,23 +443,26 @@ class List extends Component {
               등록
             </StyledButton>
           </div>
-          <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '540px' }}>
-              <AgGridReact
-                columnDefs={columnDefs}
-                rowData={rowData}
-                onGridReady={initGridData}
-                gridOptions={gridOptions}
-                defaultColDef={gridOptions.defaultColDef}
-                suppressRowTransform
-                onRowClicked={e => {
-                  this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
-                }}
-                frameworkComponents={this.state.frameworkComponents}
-                // onCellMouseOver="ds"
-              />
+          <CustomTooltipStyled>
+            <div style={{ width: '100%', height: '100%' }}>
+              <div className="ag-theme-balham" style={{ height: '540px' }}>
+                <AgGridReact
+                  modules={this.state.modules}
+                  columnDefs={columnDefs}
+                  rowData={rowData}
+                  onGridReady={initGridData}
+                  gridOptions={gridOptions}
+                  defaultColDef={gridOptions.defaultColDef}
+                  suppressRowTransform
+                  onRowClicked={e => {
+                    this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
+                  }}
+                  frameworkComponents={frameworkComponents}
+                  // onCellMouseOver="ds"
+                />
+              </div>
             </div>
-          </div>
+          </CustomTooltipStyled>
           <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable footer={viewType === 'INPUT' ? inputFooter : viewFooter}>
             {modalContent().map(item => (
               <div>
