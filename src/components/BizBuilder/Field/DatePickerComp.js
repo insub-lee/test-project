@@ -3,10 +3,9 @@ import { DatePicker as AntdDatePicker } from 'antd';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
-// coldata 로 넣기, readonly 체크, modify일 때, view일 때 수정해서 날짜형 라벨로 쓸 수 있게 수정
+// coldata 로 넣기, readonly 체크, modify일 때, view일 때 수정해서 날짜형 라벨로 쓸 수 있게 수정, setViewPage 날려라
 class DatePickerComp extends Component {
-  onChangeHandler = (date, dateString) => {
-    console.debug(moment(date).format('YYYY-MM-DD HH:mm:SS'), moment(date).unix());
+  onChangeHandler = date => {
     const { sagaKey: id, changeFormData, COMP_FIELD } = this.props;
     changeFormData(id, COMP_FIELD, moment(date).format('YYYY-MM-DD HH:mm:SS'));
   };
@@ -18,9 +17,13 @@ class DatePickerComp extends Component {
   };
 
   render() {
-    const { CONFIG, visible, isSearch, readOnly } = this.props;
-    console.debug(this.props.colData);
-    if (isSearch && visible && CONFIG.property.searchType === 'CUSTOM') {
+    const { CONFIG, visible, isSearch, readOnly, viewPageData, colData } = this.props;
+    if (!visible) {
+      return '';
+    }
+
+    if (isSearch && CONFIG.property.searchType === 'CUSTOM') {
+      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
       return (
         <AntdDatePicker
           style={{ width: '200px' }}
@@ -30,16 +33,42 @@ class DatePickerComp extends Component {
         />
       );
     }
-    return visible ? (
-      <AntdDatePicker
-        style={{ width: '200px' }}
-        onChange={this.onChangeHandler}
-        placeholder="날짜를 선택하세요."
-        readOnly={readOnly || CONFIG.property.readOnly}
-      />
-    ) : (
-      ''
-    );
+
+    if (viewPageData.viewType.toUpperCase() === 'INPUT') {
+      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase().toUpperCase()}`);
+      return (
+        <AntdDatePicker
+          style={{ width: '200px' }}
+          onChange={this.onChangeHandler}
+          placeholder="날짜를 선택하세요."
+          readOnly={readOnly || CONFIG.property.readOnly}
+        />
+      );
+    }
+
+    if (viewPageData.viewType.toUpperCase() === 'MODIFY') {
+      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
+      return (
+        <AntdDatePicker
+          style={{ width: '200px' }}
+          onChange={this.onChangeHandler}
+          placeholder="날짜를 선택하세요."
+          defaultValue={moment(colData)}
+          readOnly={readOnly || CONFIG.property.readOnly}
+        />
+      );
+    }
+
+    if (viewPageData.viewType.toUpperCase() === 'VIEW') {
+      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
+      return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+    }
+
+    if (viewPageData.viewType.toUpperCase() === 'LIST') {
+      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
+      return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+    }
+    return '';
   }
 }
 
@@ -52,6 +81,8 @@ DatePickerComp.propTypes = {
   visible: PropTypes.bool,
   isSearch: PropTypes.bool,
   readOnly: PropTypes.bool,
+  viewPageData: PropTypes.string,
+  colData: PropTypes.object,
 };
 
 export default DatePickerComp;
