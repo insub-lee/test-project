@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import { DatePicker as AntdDatePicker } from 'antd';
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
-// coldata 로 넣기, readonly 체크
+// coldata 로 넣기, readonly 체크, modify일 때, view일 때 수정해서 날짜형 라벨로 쓸 수 있게 수정
 class DatePickerComp extends Component {
   onChangeHandler = (date, dateString) => {
+    console.debug(moment(date).format('YYYY-MM-DD HH:mm:SS'), moment(date).unix());
     const { sagaKey: id, changeFormData, COMP_FIELD } = this.props;
-    changeFormData(id, COMP_FIELD, dateString);
+    changeFormData(id, COMP_FIELD, moment(date).format('YYYY-MM-DD HH:mm:SS'));
   };
 
   onChangeSearchHandle = (date, dateString) => {
@@ -17,6 +19,7 @@ class DatePickerComp extends Component {
 
   render() {
     const { CONFIG, visible, isSearch, readOnly } = this.props;
+    console.debug(this.props.colData);
     if (isSearch && visible && CONFIG.property.searchType === 'CUSTOM') {
       return (
         <AntdDatePicker

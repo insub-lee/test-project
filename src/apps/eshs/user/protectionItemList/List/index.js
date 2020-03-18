@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import 'ag-grid-community';
+// import { AllCommuinityModules } from 'ag-grid-community';
 import { Select, Input, InputNumber, Modal } from 'antd';
 import request from 'utils/request';
 import { debounce } from 'lodash';
@@ -14,12 +14,15 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // modules: AllCommuinityModules,
+      frameworkComponents: { customTooltip: CustomTooltip },
       selectedSite: '',
       input: '',
       visible: false,
@@ -36,47 +39,57 @@ class List extends Component {
       headerName: '품목',
       field: 'kind',
       width: 170,
+      tooltipField: 'kind',
     },
     {
       headerName: '모델',
       field: 'model',
       width: 200,
+      tooltipField: 'kind',
     },
     {
       headerName: 'Size',
       field: 'size1',
       width: 130,
+      tooltipField: 'kind',
     },
     {
       headerName: '검정#',
       field: 'app_no',
+      tooltipField: 'kind',
     },
     {
       headerName: 'Vendor',
       field: 'vendor_nm',
       width: 130,
+      tooltipField: 'kind',
     },
     {
       headerName: 'Maker',
       field: 'maker_nm',
+      tooltipField: 'kind',
     },
     {
       headerName: '단가',
       field: 'unitprice',
       valueFormatter: params => (params.value ? params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0),
+      tooltipField: 'kind',
     },
     {
       headerName: '유효기간',
       field: 'validity_term',
+      tooltipField: 'kind',
     },
     {
       headerName: '적정재고',
       field: 'properstock',
+      tooltipField: 'kind',
     },
     {
       headerName: '비고',
       field: 'comments',
       width: 930,
+      tooltipField: 'kind',
     },
   ];
 
@@ -98,10 +111,197 @@ class List extends Component {
     defaultColDef: {
       width: 100,
       resizable: true,
+      tooltipComponent: 'customTooltip',
     },
   };
 
-  initGridData = () => {
+  modalContent = () => [
+    { title: '사진', content: '' },
+    {
+      title: '지역',
+      content: (
+        <Select
+          name="site"
+          defaultValue="313"
+          width="300px"
+          onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { site: e }) }))}
+        >
+          <Option value="313">청주</Option>
+          <Option value="314">구미</Option>
+        </Select>
+      ),
+    },
+    {
+      title: '품목',
+      content: (
+        <Input
+          name="kind"
+          defaultValue={this.state.requestValue.kind}
+          value={this.state.requestValue.kind}
+          style={{ width: '500px' }}
+          placeholder="품목명을 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
+    {
+      title: '모델',
+      content: (
+        <Input
+          name="model"
+          defaultValue={this.state.requestValue.model}
+          value={this.state.requestValue.model}
+          style={{ width: '500px' }}
+          placeholder="모델명을 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
+    {
+      title: 'Size',
+      content: (
+        <Input
+          name="size1"
+          defaultValue={this.state.requestValue.size1}
+          value={this.state.requestValue.size1}
+          style={{ width: '500px' }}
+          placeholder="사이즈를 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
+    {
+      title: '검정번호',
+      content: (
+        <Input
+          name="app_no"
+          defaultValue={this.state.requestValue.app_no}
+          value={this.state.requestValue.app_no}
+          style={{ width: '500px' }}
+          placeholder="검정번호를 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
+    {
+      title: 'Vendor',
+      content:
+        this.state.viewType === 'VIEW' ? (
+          <EshsCmpnyComp
+            sagaKey={this.props.sagaKey}
+            getExtraApiData={this.props.getCallDataHandler}
+            extraApiData={this.props.result}
+            colData={this.state.requestValue.vendor_cd ? this.state.requestValue.vendor_cd : ''}
+            readOnly={false}
+            visible
+            CONFIG={{ property: { isRequired: false } }}
+            changeFormData={this.props.changeFormData}
+            COMP_FIELD="VENDOR"
+            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+          />
+        ) : (
+          <EshsCmpnyComp
+            sagaKey={this.props.sagaKey}
+            getExtraApiData={this.props.getCallDataHandler}
+            extraApiData={this.props.result}
+            colData={this.state.requestValue.vendor_cd}
+            visible
+            CONFIG={{ property: { isRequired: false } }}
+            changeFormData={this.props.changeFormData}
+            COMP_FIELD="VENDOR"
+            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+          />
+        ),
+    },
+    {
+      title: 'Maker',
+      content:
+        this.state.viewType === 'VIEW' ? (
+          <EshsCmpnyComp
+            sagaKey={this.props.sagaKey}
+            getExtraApiData={this.props.getCallDataHandler}
+            extraApiData={this.props.result}
+            colData={this.state.requestValue && this.state.requestValue.maker_cd ? this.state.requestValue.maker_cd : ''}
+            readOnly={false}
+            visible
+            CONFIG={{ property: { isRequired: false } }}
+            changeFormData={this.props.changeFormData}
+            COMP_FIELD="MAKER"
+            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+          />
+        ) : (
+          <EshsCmpnyComp
+            sagaKey={this.props.sagaKey}
+            getExtraApiData={this.props.getCallDataHandler}
+            extraApiData={this.props.result}
+            colData={this.state.requestValue.maker_cd}
+            visible
+            CONFIG={{ property: { isRequired: false } }}
+            changeFormData={this.props.changeFormData}
+            COMP_FIELD="MAKER"
+            eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+          />
+        ),
+    },
+    {
+      title: '단위',
+      content: (
+        <Input
+          name="unit"
+          defaultValue={this.state.requestValue.unit}
+          value={this.state.requestValue.unit}
+          style={{ width: '500px' }}
+          placeholder="단위를 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
+    {
+      title: '유효기간',
+      content: (
+        <Input
+          name="validity_term"
+          defaultValue={this.state.requestValue.validity_term}
+          value={this.state.requestValue.validity_term}
+          style={{ width: '500px' }}
+          placeholder="유효기간을 입력하세요."
+          onChange={e => this.handleChange(e)}
+        />
+      ),
+    },
+    {
+      title: '적정재고',
+      content: (
+        <InputNumber
+          name="properstock"
+          defaultValue={this.state.requestValue.properstock}
+          value={this.state.requestValue.properstock}
+          style={{ width: '500px' }}
+          placeholder="적정재고를 입력하세요."
+          onChange={value => this.handleNumberChange(value)}
+        />
+      ),
+    },
+    {
+      title: '비고',
+      content: (
+        <Input.TextArea
+          name="comments"
+          defaultValue={this.state.requestValue.comments}
+          value={this.state.requestValue.comments}
+          style={{ width: '500px' }}
+          placeholder="비고를 입력하세요."
+          onChange={e => this.handleChange(e)}
+          autoSize
+        />
+      ),
+    },
+    { title: '첨부', content: '' },
+  ];
+
+  initGridData = params => {
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
     this.getProtectionItemList().then(res =>
       this.setState({
         rowData: res.response.list,
@@ -147,188 +347,8 @@ class List extends Component {
     this.changeGridData(data);
   };
 
-  modalContent = () => {
-    const { viewData, viewType } = this.state;
-    return [
-      { title: '사진', content: '' },
-      {
-        title: '지역',
-        content: (
-          <Select
-            name="site"
-            // defaultValue="313"
-            value={viewType === 'VIEW' ? viewData.site : '313'}
-            width="300px"
-            onChange={e => this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { site: e }) }))}
-          >
-            <Option value="313">청주</Option>
-            <Option value="314">구미</Option>
-          </Select>
-        ),
-      },
-      {
-        title: '품목',
-        content: (
-          <Input
-            name="kind"
-            value={viewType === 'VIEW' ? viewData.kind : this.state.kind}
-            style={{ width: '500px' }}
-            placeholder="품목명을 입력하세요."
-            onChange={e => this.handleChange(e)}
-          />
-        ),
-      },
-      {
-        title: '모델',
-        content: (
-          <Input
-            name="model"
-            value={viewType === 'VIEW' ? viewData.model : this.state.model}
-            style={{ width: '500px' }}
-            placeholder="모델명을 입력하세요."
-            onChange={e => this.handleChange(e)}
-          />
-        ),
-      },
-      {
-        title: 'Size',
-        content: (
-          <Input
-            name="size1"
-            value={viewType === 'VIEW' ? viewData.size1 : this.state.size1}
-            style={{ width: '500px' }}
-            placeholder="사이즈를 입력하세요."
-            onChange={e => this.handleChange(e)}
-          />
-        ),
-      },
-      {
-        title: '검정번호',
-        content: (
-          <Input
-            name="app_no"
-            value={viewType === 'VIEW' ? viewData.app_no : this.state.app_no}
-            style={{ width: '500px' }}
-            placeholder="검정번호를 입력하세요."
-            onChange={e => this.handleChange(e)}
-          />
-        ),
-      },
-      {
-        title: 'Vendor',
-        content:
-          this.state.viewType === 'VIEW' ? (
-            <EshsCmpnyComp
-              sagaKey={this.props.sagaKey}
-              getExtraApiData={this.props.getCallDataHandler}
-              extraApiData={this.props.result}
-              colData={this.state.viewData.vendor_cd ? this.state.viewData.vendor_cd : ''}
-              readOnly={false}
-              visible
-              CONFIG={{ property: { isRequired: false } }}
-              changeFormData={this.props.changeFormData}
-              COMP_FIELD="VENDOR_CD"
-              eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-            />
-          ) : (
-            <EshsCmpnyComp
-              sagaKey={this.props.sagaKey}
-              getExtraApiData={this.props.getCallDataHandler}
-              extraApiData={this.props.result}
-              colData=""
-              visible
-              CONFIG={{ property: { isRequired: false } }}
-              changeFormData={this.props.changeFormData}
-              COMP_FIELD="VENDOR_CD"
-              eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-            />
-          ),
-      },
-      {
-        title: 'Maker',
-        content:
-          this.state.viewType === 'VIEW' ? (
-            <EshsCmpnyComp
-              sagaKey={this.props.sagaKey}
-              getExtraApiData={this.props.getCallDataHandler}
-              extraApiData={this.props.result}
-              colData={this.state.viewData.maker_cd ? this.state.viewData.maker_cd : ''}
-              readOnly={false}
-              visible
-              CONFIG={{ property: { isRequired: false } }}
-              changeFormData={this.props.changeFormData}
-              COMP_FIELD="MAKER_CD"
-              eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-            />
-          ) : (
-            <EshsCmpnyComp
-              sagaKey={this.props.sagaKey}
-              getExtraApiData={this.props.getCallDataHandler}
-              extraApiData={this.props.result}
-              colData=""
-              visible
-              CONFIG={{ property: { isRequired: false } }}
-              changeFormData={this.props.changeFormData}
-              COMP_FIELD="MAKER_CD"
-              eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-            />
-          ),
-      },
-      {
-        title: '단위',
-        content: (
-          <Input
-            name="unit"
-            value={viewType === 'VIEW' ? viewData.unit : this.state.unit}
-            style={{ width: '500px' }}
-            placeholder="단위를 입력하세요."
-            onChange={e => this.handleChange(e)}
-          />
-        ),
-      },
-      {
-        title: '유효기간',
-        content: (
-          <Input
-            name="validity_term"
-            value={viewType === 'VIEW' ? viewData.validity_term : this.state.validity_term}
-            style={{ width: '500px' }}
-            placeholder="유효기간을 입력하세요."
-            onChange={e => this.handleChange(e)}
-          />
-        ),
-      },
-      {
-        title: '적정재고',
-        content: (
-          <InputNumber
-            name="properstock"
-            value={viewType === 'VIEW' ? viewData.properstock : this.state.properstock}
-            style={{ width: '500px' }}
-            placeholder="적정재고를 입력하세요."
-            onChange={value => this.handleNumberChange(value)}
-          />
-        ),
-      },
-      {
-        title: '비고',
-        content: (
-          <Input.TextArea
-            name="comments"
-            value={viewType === 'VIEW' ? viewData.comments : this.state.comments}
-            style={{ width: '500px' }}
-            placeholder="비고를 입력하세요."
-            onChange={e => this.handleChange(e)}
-            autoSize
-          />
-        ),
-      },
-      { title: '첨부', content: '' },
-    ];
-  };
-
   handleEshsCmpnyCompChange = (data, fieldName) => {
-    const valueObj = { [fieldName.toLowerCase()]: data.WRK_CMPNY_CD };
+    const valueObj = { [`${fieldName.toLowerCase()}_cd`]: data.WRK_CMPNY_CD, [`${fieldName.toLowerCase()}_nm`]: data.WRK_CMPNY_NM }; // 키값 바꾸기
     this.setState({ [fieldName.toLowerCase()]: data.WRK_CMPNY_NM, [`${fieldName.toLowerCase()}name`]: data.WRK_CMPNY_CD });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
@@ -344,28 +364,41 @@ class List extends Component {
       return;
     }
     const valueObj = { properstock: value };
-    this.setState({
-      properstock: value,
-    });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
   handleOk = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () =>
-      this.setState(prevState => ({ visible: false, rowData: prevState.rowData.concat(requestValue), requestValue: this.requestValueOrigin })),
+    this.setState({ visible: false, requestValue: this.requestValueOrigin });
+    submitHandlerBySaga(
+      id,
+      'POST',
+      `/api/eshs/v1/common/geteshsprotectionitems`,
+      requestValue,
+      this.gridApi.updateRowData({ add: [requestValue], addIndex: 0 }),
     );
-    console.debug(requestValue);
   };
 
   handleCancel = () => {
     this.setState({
       visible: false,
       requestValue: this.requestValueOrigin,
-      viewData: {},
     });
-    return <EshsCmpnyComp colData="" />;
+  };
+
+  handleModifyClick = () => {
+    const { requestValue } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, this.gridApi.redrawRows());
+    this.setState({ requestValue: this.requestValueOrigin, visible: false });
+  };
+
+  handleDeleteClick = () => {
+    const { requestValue } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/geteshsprotectionitems`, { hitem_cd: requestValue.hitem_cd }, this.gridApi.redrawRows());
+    this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.hitem_cd !== prevState.requestValue.hitem_cd), visible: false }));
   };
 
   inputFooter = [
@@ -378,8 +411,12 @@ class List extends Component {
   ];
 
   viewFooter = [
-    <StyledButton className="btn-primary">수정</StyledButton>,
-    <StyledButton className="btn-primary">삭제</StyledButton>,
+    <StyledButton className="btn-primary" onClick={this.handleModifyClick}>
+      수정
+    </StyledButton>,
+    <StyledButton className="btn-primary" onClick={this.handleDeleteClick}>
+      삭제
+    </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleCancel}>
       닫기
     </StyledButton>,
@@ -387,8 +424,7 @@ class List extends Component {
 
   render() {
     const { visible, columnDefs, rowData, viewType } = this.state;
-    const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent } = this;
-    console.debug(this.state.viewData);
+    const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -413,23 +449,17 @@ class List extends Component {
                 rowData={rowData}
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
+                defaultColDef={gridOptions.defaultColDef}
                 suppressRowTransform
                 onRowClicked={e => {
-                  console.debug(e.data);
-                  this.setState({ visible: true, viewType: 'VIEW', viewData: e.data });
+                  this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
                 }}
-                // onCellMouseOver={e => console.debug(e.data)}
+                frameworkComponents={this.state.frameworkComponents}
+                // onCellMouseOver="ds"
               />
             </div>
           </div>
-          <Modal
-            visible={visible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width="600px"
-            closable
-            footer={viewType === 'INPUT' ? this.inputFooter : this.viewFooter}
-          >
+          <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable footer={viewType === 'INPUT' ? inputFooter : viewFooter}>
             {modalContent().map(item => (
               <div>
                 <div>{item.title}</div>
