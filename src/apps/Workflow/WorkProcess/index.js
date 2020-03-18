@@ -19,22 +19,12 @@ class WorkProcess extends Component {
 
   componentDidMount() {
     const { processRule, viewType, CustomWorkProcess } = this.props;
+    console.debug('1', processRule);
     const { DRAFT_PROCESS_STEP } = processRule;
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
     this.setState({ processRule, filterRule, filterItem });
   }
-
-  // componentDidUpdate(prevProps) {
-  //   const { processRule } = this.props;
-  //   console.debug(' componentDidUpdateprocessrule', prevProps, this.props);
-  //   if (JSON.stringify(processRule) !== JSON.stringify(prevProps.processRule)) {
-  //     const { DRAFT_PROCESS_STEP } = processRule;
-  //     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
-  //     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
-  //     this.setState({ processRule, filterRule, filterItem });
-  //   }
-  // }
 
   handleOpenModal = () => {
     this.setState({ modalVisible: true });
@@ -49,8 +39,7 @@ class WorkProcess extends Component {
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
     this.setState({ modalVisible: false, processRule, filterRule, filterItem });
-
-    // this.props.setProcessRule(this.props.id, processRule);
+    this.props.setProcessRule(this.props.id, processRule);
   };
 
   render() {

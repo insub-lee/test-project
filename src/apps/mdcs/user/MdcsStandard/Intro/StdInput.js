@@ -164,7 +164,7 @@ class StdInput extends Component {
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess id={id} PRC_ID={prcId} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
+              <WorkProcess id={id} PRC_ID={Number(prcId)} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>

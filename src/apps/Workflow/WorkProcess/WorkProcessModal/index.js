@@ -50,13 +50,14 @@ class WorkProcessModal extends Component {
   }
 
   initDeptList = deptList => {
-    const rootKey = deptList.filter(f => f.PRNT_ID === -1).map(n => n.DEPT_ID);
-    this.setState({ deptList, orgDeptList: deptList, rootKey });
+    const rootKey = deptList.filter(f => f.PRNT_ID === -1).map(n => n.DEPT_ID.toString());
+    this.setState({ deptList, rootKey });
   };
 
   componentDidMount() {
     const { getDeptList, processRuleProc } = this.props;
     const processStep = fromJS(processRuleProc.DRAFT_PROCESS_STEP).toJS();
+    console.debug('2', processStep);
     const tmpPrcStep = processStep.filter(f => f.APPV_METHOD === 1 && f.PARENT_PRC_RULE_ID !== 0 && f.NODE_TYPE !== 'NS');
     this.setState({ prcStep: tmpPrcStep });
     getDeptList(this.initDeptList);
@@ -121,16 +122,23 @@ class WorkProcessModal extends Component {
         return retDist;
       }, deptIds);
     const tmpPrcStep = prcStep.map(step => (step.NODE_ID === DraftNode.DIST_NODE ? { ...step, APPV_MEMBER: distDeptList } : { ...step }));
-    const tmpProc = { ...processRuleProc, DRAFT_PROCESS_STEP: tmpPrcStep };
+    const { DRAFT_PROCESS_STEP } = processRuleProc;
+    const nProcStep = DRAFT_PROCESS_STEP.map(step => {
+      const idx = tmpPrcStep.findIndex(f => f.PRC_RULE_ID === step.PRC_RULE_ID);
+      if (idx > -1) return tmpPrcStep[idx];
+      return step;
+    });
+    const tmpProc = { ...processRuleProc, DRAFT_PROCESS_STEP: nProcStep };
     onComplete(tmpProc);
   };
 
-  handleAddUser = (nodeId, nodeType) => {
+  handleAddUser = (prcRuleId, nodeId, nodeType) => {
     const { prcStep, selectedDeptKeys, deptList, selectedUserKeys, deptUserList } = this.state;
+
     const tmpPrcStep = prcStep.map(step => {
       const { APPV_MEMBER: appvMember } = step;
-      if (step.NODE_ID === nodeId) {
-        if (nodeType === 'ND') {
+      if (step.PRC_RULE_ID === prcRuleId) {
+        if (step.NODE_ID === DraftNode.DIST_NODE) {
           // 부서정보 처리 하기
           const selectDeptIds = deptList.filter(f => selectedDeptKeys.includes(f.DEPT_ID.toString()));
           const selectDeptMember = selectDeptIds.reduce((retIds, deptId) => {
@@ -157,10 +165,9 @@ class WorkProcessModal extends Component {
         }, appvMember);
         return { ...step, APPV_MEMBER: selectMember };
       }
-
       return step;
     });
-    this.setState({ prcStep: tmpPrcStep, selectedDeptKeys: [] });
+    this.setState({ prcStep: tmpPrcStep, selectedDeptKeys: [], selectedUserKeys: [] });
   };
 
   handleDeleteSelectedUser = (user, nodeId) => {
@@ -178,7 +185,6 @@ class WorkProcessModal extends Component {
 
   render() {
     const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
-    console.debug('proc', prcStep);
     const rowSelection = {
       selectedUserKeys,
       onChange: this.onDeptUserCheck,
@@ -218,6 +224,7 @@ class WorkProcessModal extends Component {
                     ...item,
                     key: item.USER_ID,
                   }))}
+                  rowKey="USER_ID"
                   pagination={false}
                   size="small"
                   // scroll
@@ -235,7 +242,7 @@ class WorkProcessModal extends Component {
                       type="primary"
                       ghost
                       style={{ width: '150px', float: 'right', margin: '5px' }}
-                      onClick={() => this.handleAddUser(item.NODE_ID, item.NODE_TYPE)}
+                      onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
                     >
                       {item.NODE_NAME_KOR}
                       <Icon type="double-right" style={{ float: 'right', marginTop: '4px' }} />
@@ -257,7 +264,7 @@ class WorkProcessModal extends Component {
                   <ul>
                     {item.APPV_MEMBER.length > 0 ? (
                       item.APPV_MEMBER.map(user => (
-                        <li>
+                        <li key={user.USER_ID}>
                           <span>
                             {item.NODE_TYPE === 'ND' ? (
                               <div>
