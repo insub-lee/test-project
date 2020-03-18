@@ -81,6 +81,7 @@ class WorkProcessModal extends Component {
   };
 
   onDeptUserCheck = selectedUserKeys => {
+    console.debug('onDeptUserCheck', selectedUserKeys);
     this.setState({ selectedUserKeys });
   };
 
@@ -186,7 +187,7 @@ class WorkProcessModal extends Component {
   render() {
     const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
     const rowSelection = {
-      selectedUserKeys,
+      selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
     };
     return (
