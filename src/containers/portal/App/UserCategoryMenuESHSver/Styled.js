@@ -25,7 +25,7 @@ const Styled = styled.div`
     padding: 10px 15px;
     font-size: 18px;
     font-weight: 600;
-    color: #000;
+    color: ${props => (props.blackThema ? '#000' : '#fff')};
   }
 
   .divider {
