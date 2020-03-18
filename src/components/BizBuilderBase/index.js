@@ -22,7 +22,7 @@ import ModalPopup from './viewComponent/ModalPopup';
 class BizBuilderBase extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1 };
+    this.state = { isShowBuilderModal: false, builderModalViewType: 'INPUT', builderModalWorkSeq: -1, builderModalTaskSeq: -1, taskRowData: {} };
   }
 
   componentDidMount() {
@@ -122,8 +122,8 @@ class BizBuilderBase extends React.Component {
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData({ ...formData, [key]: val });
   };
 
-  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq) =>
-    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq });
+  changeBuilderModalState = (isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData) =>
+    this.setState({ isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData });
 
   searchCompRenderer = props => <SearchComp {...props} />;
 
@@ -199,8 +199,8 @@ class BizBuilderBase extends React.Component {
   };
 
   render() {
-    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting } = this.props;
-    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq } = this.state;
+    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting, customViewChangeProcessSeqByModal } = this.props;
+    const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
     return (
       <div>
         <Spin spinning={dataLoading}>{this.componentRenderer()}</Spin>
@@ -213,7 +213,15 @@ class BizBuilderBase extends React.Component {
           {...builderModalSetting}
           onCancel={() => this.changeBuilderModalState(false, 'INPUT', -1, -1)}
         >
-          <ModalPopup sagaKey={sagaKey} viewType={builderModalViewType} workSeq={builderModalWorkSeq} taskSeq={builderModalTaskSeq} />
+          <ModalPopup
+            sagaKey={sagaKey}
+            viewType={builderModalViewType}
+            workSeq={builderModalWorkSeq}
+            taskSeq={builderModalTaskSeq}
+            taskRowData={taskRowData}
+            customViewChangeProcessSeq={customViewChangeProcessSeqByModal}
+            changeBuilderModalState={this.changeBuilderModalState}
+          />
         </Modal>
       </div>
     );
@@ -266,6 +274,8 @@ BizBuilderBase.propTypes = {
   viewMetaSeq: PropTypes.number,
   listMetaSeq: PropTypes.number,
   customViewChangeProcessSeq: PropTypes.number,
+  customViewChangeProcessSeqByModal: PropTypes.number,
+  taskRowData: PropTypes.object,
 };
 
 BizBuilderBase.defaultProps = {
@@ -297,6 +307,8 @@ BizBuilderBase.defaultProps = {
   viewMetaSeq: -1,
   listMetaSeq: -1,
   customViewChangeProcessSeq: -1,
+  customViewChangeProcessSeqByModal: -1,
+  taskRowData: undefined,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -319,6 +331,7 @@ const mapStateToProps = createStructuredSelector({
   viewProcessList: selectors.makeSelectViewProcessList(),
   viewSeq: selectors.makeSelectViewSeq(),
   viewLayer: selectors.makeSelectViewLayer(),
+  isSaveModalClose: selectors.makeSelectIsSaveModalClose(),
 });
 
 const mapDispatchToProps = dispatch => ({
