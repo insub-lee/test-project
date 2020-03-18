@@ -112,20 +112,20 @@ class HoldView extends Component {
         </ModalWrapper>
         {selectedViewType !== 'MODIFY' && (
           <div style={{ textAlign: 'center' }} className="btn-group">
-            <StyledButton style={{ marginRight: '5px' }} key="appvBtn1" className="btn-primary" onClick={() => this.onClickModify()}>
+            <StyledButton style={{ marginRight: '5px' }} key="appvBtn1" className="btn-primary btn-sm" onClick={() => this.onClickModify()}>
               표지수정
             </StyledButton>
             {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 30) && selectedRow.NODE_ID !== 114 && (
-              <StyledButton style={{ marginRight: '5px' }} key="appvBtn2" className="btn-primary" onClick={() => this.onHoldRelase()}>
+              <StyledButton style={{ marginRight: '5px' }} key="appvBtn2" className="btn-primary btn-sm" onClick={() => this.onHoldRelase()}>
                 홀드해제
               </StyledButton>
             )}
             {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
-              <StyledButton style={{ marginRight: '5px' }} key="appvBtn3" className="btn-primary" onClick={() => this.onMDCSHoldRelase()}>
+              <StyledButton style={{ marginRight: '5px' }} key="appvBtn3" className="btn-primary btn-sm" onClick={() => this.onMDCSHoldRelase()}>
                 홀드해제
               </StyledButton>
             )}
-            <StyledButton key="close" className="btn-light" onClick={() => this.onCloseModal()}>
+            <StyledButton key="close" className="btn-light btn-sm" onClick={() => this.onCloseModal()}>
               닫기
             </StyledButton>
           </div>

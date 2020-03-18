@@ -185,6 +185,7 @@ const StyledViewDesigner = styled.div`
         color: rgb(0, 0, 0);
         /* padding: 5px 10px; */
         &.mdcsTitleCol {
+          width: 180px;
           text-align: center;
           position: relative;
           background-color: #f1f1f1;
@@ -249,7 +250,7 @@ const StyledViewDesigner = styled.div`
         }
         > div > span {
           display: block;
-          font-size: 12px;
+          font-size: 0.8rem;
         }
         .ant-radio-group {
           -webkit-box-sizing: border-box;
