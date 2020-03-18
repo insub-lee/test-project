@@ -219,6 +219,7 @@ class TableTypeSelector extends React.Component {
                         scroll={{ x: 'max-content', y: '240px' }}
                         rowKey={`${rowKey}`}
                         className="leftTable"
+                        locale={{ emptyText: this.props.noDataText }}
                       ></Table>
                     </td>
                     <td style={{ padding: '0 10px' }}>

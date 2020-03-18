@@ -86,6 +86,7 @@ import StackCustomComp from 'components/BizBuilder/Field/StackCustomComp';
 import EshsSiteItemSearchbar from 'components/BizBuilder/Field/EshsSiteItemSearchbar';
 import ViewUploadedFileComp from 'components/BizBuilder/Field/ViewUploadedFileComp';
 import ModalTableComp from 'components/BizBuilder/Field/ModalTableComp';
+import TakeOutCustomComp from 'components/BizBuilder/Field/TakeOutCustomComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -174,4 +175,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/EshsSiteItemSearchbar': { renderer: property => <EshsSiteItemSearchbar {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileComp': { renderer: property => <ViewUploadedFileComp {...property} /> },
   'components/BizBuilder/Field/ModalTableComp': { renderer: property => <ModalTableComp {...property} /> },
+  'components/BizBuilder/Field/TakeOutCustomComp': { renderer: property => <TakeOutCustomComp {...property} /> },
 };
