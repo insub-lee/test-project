@@ -15,7 +15,7 @@ class apiSetting extends React.Component {
   componentDidMount() {
     const { info } = this.props;
     this.setState({
-      nApiList: info.apiList.filter(item => item.CALL_TYPE !== 'F'),
+      nApiList: info.apiList.filter(item => item.CALL_TYPE !== 'F' && item.ISUSED === 'Y'),
     });
   }
 
