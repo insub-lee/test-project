@@ -123,31 +123,32 @@ class Enactment extends Component {
   };
 
   onSelectedWorkSeq = (docType, selectedNodeIds) => {
-    let inputMetaSeq;
+    let viewChangeSeq;
     if (selectedNodeIds.includes(289)) {
-      inputMetaSeq = 2921;
+      viewChangeSeq = 28;
     } else if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
-      inputMetaSeq = 3101;
+      viewChangeSeq = 31;
     } else {
-      inputMetaSeq = undefined;
+      viewChangeSeq = undefined;
     }
+    console.debug('viewchangeseq', viewChangeSeq);
     switch (docType) {
       case 'BS':
-        return { selectedworkSeq: 901, inputMetaSeq };
+        return { selectedworkSeq: 901, viewChangeSeq };
       case 'TS':
-        return { selectedworkSeq: 1921, inputMetaSeq };
+        return { selectedworkSeq: 1921, viewChangeSeq };
       case 'DW':
-        return { selectedworkSeq: 1881, inputMetaSeq };
+        return { selectedworkSeq: 1881, viewChangeSeq };
       case 'PM':
-        return { selectedworkSeq: 3401, inputMetaSeq };
+        return { selectedworkSeq: 3401, viewChangeSeq };
       case 'WD':
-        return { selectedworkSeq: 2941, inputMetaSeq };
+        return { selectedworkSeq: 2941, viewChangeSeq };
       case 'NP':
-        return { selectedworkSeq: 2975, inputMetaSeq };
+        return { selectedworkSeq: 2975, viewChangeSeq };
       case 'WP':
-        return { selectedworkSeq: 3013, inputMetaSeq };
+        return { selectedworkSeq: 3013, viewChangeSeq };
       default:
-        return { selectedworkSeq: 901, inputMetaSeq };
+        return { selectedworkSeq: 901, viewChangeSeq };
     }
   };
 
@@ -168,8 +169,8 @@ class Enactment extends Component {
           return 0;
         })[0];
         const docType = templateCode.DOCTEMPLATECODE;
-        const { selectedworkSeq, inputMetaSeq } = this.onSelectedWorkSeq(docType, selectedNodeIds);
-        this.setState({ selectedworkSeq, inputMetaSeq });
+        const { selectedworkSeq, viewChangeSeq } = this.onSelectedWorkSeq(docType, selectedNodeIds);
+        this.setState({ selectedworkSeq, viewChangeSeq });
       }
     });
   };
@@ -180,7 +181,7 @@ class Enactment extends Component {
       draftType: DraftType.ENACTMENT,
       nodeIds: selectedNodeIds,
       degreeFlag: ModifyType.MAJOR,
-    };    
+    };
     this.props.onShowModal(selectedworkSeq, inputMetaSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
     this.initStateData();
   };
