@@ -209,6 +209,13 @@ const makeSelectViewLayer = () =>
     (state, id) => (state.getIn(['bizBuilderBase', id, 'viewLayer']) !== undefined ? state.getIn(['bizBuilderBase', id, 'viewLayer']).toJS() : []),
   );
 
+const makeSelectIsSaveModalClose = () =>
+  createSelector(
+    selectorBizBuilderBase,
+    (state, props) => (props && props.sagaKey ? props.sagaKey : -1),
+    (state, id) => state.getIn(['bizBuilderBase', id, 'isSaveModalClose']),
+  );
+
 export {
   makeSelectWorkSeq,
   makeSelectWorkSeqById,
@@ -246,4 +253,5 @@ export {
   makeSelectViewProcessList,
   makeSelectViewSeq,
   makeSelectViewLayer,
+  makeSelectIsSaveModalClose,
 };
