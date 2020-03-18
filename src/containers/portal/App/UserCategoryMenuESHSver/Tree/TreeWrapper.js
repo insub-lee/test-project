@@ -240,10 +240,6 @@ const TreeWrapper = styled.div`
     }
   }
 
-  .node-content-renderer_rowWrapperDragDisabled__2LViB {
-    padding: 0;
-  }
-
   .sortableTreeWrapper .rstcustom__expandButton {
     background-image: url(${iconArrBtm});
     background-size: 12px;
