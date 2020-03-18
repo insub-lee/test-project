@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Row, Col, Tree, Table, Button, Icon } from 'antd';
+
+import { fromJS } from 'immutable';
+import { Row, Col, Tree, Table, Button, Icon, Input } from 'antd';
+import { CloseCircleOutlined, AuditOutlined, WarningOutlined, TeamOutlined, UserOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { createStructuredSelector } from 'reselect';
-import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
 
+import { getTreeFromFlatData } from 'react-sortable-tree';
+import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
+import * as DraftNode from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
-import StyledWorkProcessModal from './StyledWorkProcessModal';
 
 const getTreeData = deptList =>
   deptList.length > 0
@@ -35,343 +38,269 @@ class WorkProcessModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      checkedKeys: [],
-      selectedRowKeys: [],
-      selDataList: [],
+      rootKey: [],
+      prcStep: [],
+      selectedUserKeys: [],
+      selectedDeptKeys: [],
+      deptList: [],
+      deptUserList: [],
+      visible: false,
+      curDistDeptList: [],
     };
   }
 
+  initDeptList = deptList => {
+    const rootKey = deptList.filter(f => f.PRNT_ID === -1).map(n => n.DEPT_ID.toString());
+    this.setState({ deptList, rootKey });
+  };
+
   componentDidMount() {
-    this.props.getDeptList({});
-    const tempUserList = [];
-    const { processRule } = this.props;
-    const { DRAFT_PROCESS_STEP: processStep } = processRule;
-    processStep.forEach(item => {
-      item.APPV_MEMBER.forEach(user => {
-        tempUserList.push({
-          ...user,
-          NODE_ID: item.NODE_ID,
-        });
-      });
-    });
-
-    if (processRule.DRAFT_RECEIVE !== undefined && processRule.DRAFT_RECEIVE.APPV_MEMBER.length > 0) {
-      processRule.DRAFT_RECEIVE.APPV_MEMBER.forEach(user => {
-        tempUserList.push({
-          ...user,
-          NODE_ID: processRule.DRAFT_RECEIVE.NODE_ID,
-        });
-      });
-    }
-
-    if (processRule.DRAFT_REFER !== undefined && processRule.DRAFT_REFER.APPV_MEMBER.length > 0) {
-      processRule.DRAFT_REFER.APPV_MEMBER.forEach(user => {
-        tempUserList.push({
-          ...user,
-          NODE_ID: processRule.DRAFT_REFER.NODE_ID,
-        });
-      });
-    }
-
-    this.setState({ selDataList: tempUserList });
+    const { getDeptList, processRuleProc } = this.props;
+    const processStep = fromJS(processRuleProc.DRAFT_PROCESS_STEP).toJS();
+    console.debug('2', processStep);
+    const tmpPrcStep = processStep.filter(f => f.APPV_METHOD === 1 && f.PARENT_PRC_RULE_ID !== 0 && f.NODE_TYPE !== 'NS');
+    this.setState({ prcStep: tmpPrcStep });
+    getDeptList(this.initDeptList);
   }
 
+  initDeptUserList = deptUserList => {
+    this.setState({ deptUserList });
+  };
+
   onTreeNodeSelect = (selectedKeys, info) => {
+    const { getDeptUserList } = this.props;
     if (selectedKeys !== undefined && selectedKeys.length > 0) {
-      this.props.getDeptUserList(selectedKeys[0]);
+      getDeptUserList(selectedKeys[0], this.initDeptUserList);
     } else {
-      this.props.initDeptUserList();
+      this.setState({ deptUserList: [] });
     }
   };
 
-  onTreeNodeCheck = (checkedKeys, info) => {
-    this.setState({ checkedKeys });
+  onTreeNodeCheck = checkedKeys => {
+    this.setState({ selectedDeptKeys: checkedKeys });
   };
 
-  onDeptUserCheck = selectedRowKeys => {
-    this.setState({ selectedRowKeys });
-  };
-
-  handleAddUser = (nodeId, nodeType) => {
-    if (nodeType === 'ND') {
-      const { checkedKeys } = this.state;
-      const { deptList } = this.props;
-      const selectedDept = deptList.filter(dept => checkedKeys.includes(`${dept.DEPT_ID}`));
-
-      this.setState(prevState => {
-        const { selDataList } = prevState;
-        selectedDept.forEach(dept => {
-          if (selDataList.filter(item => item.NODE_ID === nodeId && dept.DEPT_ID === item.DEPT_ID).length === 0) {
-            selDataList.push({
-              NODE_ID: nodeId,
-              DEPT_ID: dept.DEPT_ID,
-              DEPT_NAME_KOR: dept.NAME_KOR,
-            });
-          }
-        });
-        return {
-          selDataList,
-          checkedKeys: [],
-        };
-      });
-    } else {
-      const { selectedRowKeys } = this.state;
-      const { deptUserList } = this.props;
-      const selectedUser = deptUserList.filter(user => selectedRowKeys.includes(user.USER_ID));
-
-      this.setState(prevState => {
-        const { selDataList } = prevState;
-        selectedUser.forEach(user => {
-          if (selDataList.filter(item => item.NODE_ID === nodeId && user.USER_ID === item.USER_ID).length === 0) {
-            selDataList.push({
-              NODE_ID: nodeId,
-              USER_ID: user.USER_ID,
-              NAME_KOR: user.NAME_KOR,
-              PSTN_NAME_KOR: user.PSTN_NAME_KOR,
-              DEPT_ID: user.DEPT_ID,
-              DEPT_NAME_KOR: user.DEPT_NAME_KOR,
-            });
-          }
-        });
-        return {
-          selDataList,
-          selectedRowKeys: [],
-        };
-      });
-    }
-  };
-
-  handleDeleteSelectedUser = (row, nodeType) => {
-    this.setState(prevState => {
-      const { selDataList } = prevState;
-      let selectedIdx = -1;
-      if (nodeType === 'ND') {
-        selectedIdx = selDataList.findIndex(item => item.NODE_ID === row.NODE_ID && item.DEPT_ID === row.DEPT_ID);
-      } else {
-        selectedIdx = selDataList.findIndex(item => item.NODE_ID === row.NODE_ID && item.USER_ID === row.USER_ID);
-      }
-      selDataList.splice(selectedIdx, 1);
-      return {
-        selDataList,
-      };
-    });
-  };
-
-  handleCloseModal = () => {
-    this.setState({
-      selectedRowKeys: [],
-      selDataList: [],
-    });
-    this.props.initDeptUserList();
-    this.props.onCloseModal();
-  };
-
-  handleComplete = () => {
-    const { processRule } = this.props;
-    const { DRAFT_PROCESS_STEP: processStep } = processRule;
-    const { selDataList } = this.state;
-
-    processStep.map(item => {
-      item.APPV_MEMBER.splice(0, item.APPV_MEMBER.length);
-      selDataList.forEach(user => {
-        if (item.NODE_ID === user.NODE_ID) {
-          item.APPV_MEMBER.push(user);
-        }
-      });
-    });
-
-    console.debug('handleComplete', processRule);
-
-    this.props.onComplete(processRule);
+  onDeptUserCheck = selectedUserKeys => {
+    console.debug('onDeptUserCheck', selectedUserKeys);
+    this.setState({ selectedUserKeys });
   };
 
   getColumns = () => [
     {
-      title: '',
+      title: '사용자 정보',
       dataIndex: 'USER_ID',
       key: 'USER_ID',
-      render: (text, record) => <span>{`${record.NAME_KOR} ${record.PSTN_NAME_KOR}`}</span>,
+      render: (text, record) => (
+        <span>
+          {' '}
+          <UserOutlined />
+          {`${record.NAME_KOR}/${record.DEPT_NAME_KOR}/${record.PSTN_NAME_KOR}`}
+        </span>
+      ),
     },
   ];
 
+  handleCloseModal = () => {
+    this.setState({ visible: false });
+  };
+
+  handleComplete = () => {
+    const { onComplete, processRuleProc } = this.props;
+    const { prcStep } = this.state;
+
+    const fidx = prcStep.findIndex(f => f.NODE_ID === DraftNode.DIST_NODE);
+    // 배포부서 정보
+    const { APPV_MEMBER: deptIds } = prcStep[fidx];
+    const distDeptList = prcStep
+      .filter(f => f.NODE_ID !== DraftNode.DCC_NODE && f.NODE_ID !== DraftNode.DIST_NODE)
+      .reduce((prevDeptIds, curDept) => {
+        const { APPV_MEMBER: userInfo } = curDept;
+        const retDist = userInfo.reduce((prevUser, user) => {
+          const fidx = prevUser.findIndex(f => f.DEPT_ID === user.DEPT_ID);
+          if (fidx === -1) prevUser.splice(0, 0, { DEPT_ID: user.DEPT_ID, DEPT_NAME_KOR: user.DEPT_NAME_KOR });
+          return prevUser;
+        }, prevDeptIds);
+        return retDist;
+      }, deptIds);
+    const tmpPrcStep = prcStep.map(step => (step.NODE_ID === DraftNode.DIST_NODE ? { ...step, APPV_MEMBER: distDeptList } : { ...step }));
+    const { DRAFT_PROCESS_STEP } = processRuleProc;
+    const nProcStep = DRAFT_PROCESS_STEP.map(step => {
+      const idx = tmpPrcStep.findIndex(f => f.PRC_RULE_ID === step.PRC_RULE_ID);
+      if (idx > -1) return tmpPrcStep[idx];
+      return step;
+    });
+    const tmpProc = { ...processRuleProc, DRAFT_PROCESS_STEP: nProcStep };
+    onComplete(tmpProc);
+  };
+
+  handleAddUser = (prcRuleId, nodeId, nodeType) => {
+    const { prcStep, selectedDeptKeys, deptList, selectedUserKeys, deptUserList } = this.state;
+
+    const tmpPrcStep = prcStep.map(step => {
+      const { APPV_MEMBER: appvMember } = step;
+      if (step.PRC_RULE_ID === prcRuleId) {
+        if (step.NODE_ID === DraftNode.DIST_NODE) {
+          // 부서정보 처리 하기
+          const selectDeptIds = deptList.filter(f => selectedDeptKeys.includes(f.DEPT_ID.toString()));
+          const selectDeptMember = selectDeptIds.reduce((retIds, deptId) => {
+            const idx = retIds.findIndex(f => f.DEPT_ID === deptId.DEPT_ID);
+            if (idx === -1) retIds.splice(0, 0, { DEPT_ID: deptId.DEPT_ID, DEPT_NAME_KOR: deptId.NAME_KOR, ISFIXED: 'N' });
+            return retIds;
+          }, appvMember);
+          return { ...step, APPV_MEMBER: selectDeptMember };
+        }
+        // 사용자 처리
+        const selectUserIds = deptUserList.filter(f => selectedUserKeys.includes(f.USER_ID));
+        const selectMember = selectUserIds.reduce((retIds, userId) => {
+          const idx = retIds.findIndex(f => f.USER_ID === userId.USER_ID);
+          if (idx === -1)
+            retIds.splice(0, 0, {
+              USER_ID: userId.USER_ID,
+              NAME_KOR: userId.NAME_KOR,
+              PSTN_NAME_KOR: userId.PSTN_NAME_KOR,
+              DEPT_ID: userId.DEPT_ID,
+              DEPT_NAME_KOR: userId.DEPT_NAME_KOR,
+              ISFIXED: 'N',
+            });
+          return retIds;
+        }, appvMember);
+        return { ...step, APPV_MEMBER: selectMember };
+      }
+      return step;
+    });
+    this.setState({ prcStep: tmpPrcStep, selectedDeptKeys: [], selectedUserKeys: [] });
+  };
+
+  handleDeleteSelectedUser = (user, nodeId) => {
+    const { prcStep } = this.state;
+    const tempPrcStep = prcStep.map(step => {
+      if (step.NODE_ID === nodeId) {
+        const { APPV_MEMBER: appvList } = step;
+        const idx = appvList.findIndex(f => f.USER_ID === user.USER_ID);
+        if (idx > -1) appvList.splice(idx, 1);
+      }
+      return step;
+    });
+    this.setState({ prcStep: tempPrcStep });
+  };
+
   render() {
-    const { visible, processRule, deptList, deptUserList } = this.props;
-    const { checkedKeys, selectedRowKeys, selDataList } = this.state;
-    const { DRAFT_PROCESS_STEP: processStep } = processRule;
+    const { prcStep, selectedUserKeys, selectedDeptKeys, deptList, deptUserList, rootKey } = this.state;
     const rowSelection = {
-      selectedRowKeys,
+      selectedRowKeys: selectedUserKeys,
       onChange: this.onDeptUserCheck,
     };
     return (
-      <Modal
-        title="결재선지정"
-        visible={visible}
-        onOk={this.handleComplete}
-        onCancel={this.handleCloseModal}
-        width="70%"
-        style={{ top: 50, height: '500px' }}
-        footer={[
-          <StyledButton key="close" onClick={this.handleCloseModal}>
-            취소
-          </StyledButton>,
-          <StyledButton key="ok" className="btn-primary" onClick={this.handleComplete}>
-            확인
-          </StyledButton>,
-        ]}
-        destroyOnClose
-        maskClosable={false}
-      >
-        <StyledWorkProcessModal>
-          <Row gutter={0}>
-            <Col span={6}>
-              <div className="basicWrapper deptWrapper">
-                <div className="deptTree">
-                  {deptList.length > 0 && (
+      <StyledWorkProcessModal>
+        <Row gutter={0}>
+          <Col span={8}>
+            <div className="basicWrapper deptWrapper">
+              <div>
+                <Button>전체</Button>
+                <Button>사용자</Button>
+                <Button>부서</Button>
+              </div>
+              <div className="deptTree">
+                {deptList.length > 0 && (
+                  <>
+                    {/* <Search style={{ margin: '2px' }} placeholder="부서검색" onChange={this.onChangeSearch} onPressEnter={this.onPressEnterSearch} /> */}
                     <Tree
                       checkable
-                      defaultExpandedKeys={[`${deptList[0].DEPT_ID}`]}
-                      checkedKeys={checkedKeys}
+                      autoExpandParent={false}
+                      defaultExpandedKeys={rootKey}
+                      checkedKeys={selectedDeptKeys}
                       onSelect={this.onTreeNodeSelect}
                       onCheck={this.onTreeNodeCheck}
                       treeData={getTreeData(deptList)}
+                      onExpand={this.onExpand}
                     />
-                  )}
-                </div>
-                <div className="userList">
-                  <Table
-                    rowSelection={rowSelection}
-                    columns={this.getColumns()}
-                    dataSource={deptUserList.map(item => ({
-                      ...item,
-                      key: item.USER_ID,
-                    }))}
-                    pagination={false}
-                    size="small"
-                    // scroll
-                    scroll={{ y: 296 }}
-                  />
-                </div>
-              </div>
-            </Col>
-            <Col span={4}>
-              <div className="btnWrapper">
-                <ul>
-                  {processStep.length > 0 &&
-                    processStep
-                      .filter(x => x.APPV_METHOD == 1)
-                      .map(item => {
-                        if (item.PARENT_PRC_RULE_ID !== 0 && item.NODE_TYPE !== 'NS') {
-                          return (
-                            <li key={`btn_${item.NODE_ID}`}>
-                              <Button
-                                type="primary"
-                                ghost
-                                style={{ width: '150px', float: 'right', margin: '5px' }}
-                                onClick={() => this.handleAddUser(item.NODE_ID, item.NODE_TYPE)}
-                              >
-                                {item.NODE_NAME_KOR}
-                                <Icon type="double-right" style={{ float: 'right', marginTop: '4px' }} />
-                              </Button>
-                            </li>
-                          );
-                        }
-                      })}
-                  {/* {processRule.DRAFT_RECEIVE !== undefined && (
-                    <li>
-                      <StyledButton
-                        className="btn-gray btn_sm"
-                        onClick={() => this.handleAddUser(processRule.DRAFT_RECEIVE.NODE_ID, processRule.DRAFT_RECEIVE.NODE_TYPE)}
-                      >
-                        {processRule.DRAFT_RECEIVE.NODE_NAME_KOR} 추가
-                      </StyledButton>
-                    </li>
-                  )}
-                  {processRule.DRAFT_REFER !== undefined && (
-                    <li>
-                      <StyledButton
-                        className="btn-gray btn_sm"
-                        onClick={() => this.handleAddUser(processRule.DRAFT_REFER.NODE_ID, processRule.DRAFT_REFER.NODE_TYPE)}
-                      >
-                        {processRule.DRAFT_REFER.NODE_NAME_KOR} 추가
-                      </StyledButton>
-                    </li>
-                  )} */}
-                </ul>
-              </div>
-            </Col>
-            <Col span={14}>
-              <div className="basicWrapper selectedWrapper">
-                {processStep.length > 0 &&
-                  processStep
-                    .filter(x => x.APPV_METHOD == 1)
-                    .map(item => {
-                      if (item.PARENT_PRC_RULE_ID !== 0 && item.NODE_TYPE !== 'NS') {
-                        return (
-                          <React.Fragment key={`node_${item.NODE_ID}`}>
-                            <h4>{item.NODE_NAME_KOR}</h4>
-                            <ul>
-                              {selDataList.map(user => {
-                                if (item.NODE_ID === user.NODE_ID) {
-                                  return (
-                                    <li>
-                                      <span>{item.NODE_TYPE === 'ND' ? `- ${user.DEPT_NAME_KOR}` : `- ${user.NAME_KOR} ${user.PSTN_NAME_KOR}`}</span>
-                                      <button type="button" onClick={() => this.handleDeleteSelectedUser(user, item.NODE_TYPE)}>
-                                        {` X `}
-                                      </button>
-                                    </li>
-                                  );
-                                }
-                              })}
-                            </ul>
-                          </React.Fragment>
-                        );
-                      }
-                    })}
-                {/* {processRule.DRAFT_RECEIVE !== undefined && (
-                  <React.Fragment>
-                    <h4>{processRule.DRAFT_RECEIVE.NODE_NAME_KOR}</h4>
-                    <ul>
-                      {selDataList.map(item => {
-                        if (processRule.DRAFT_RECEIVE.NODE_ID === item.NODE_ID) {
-                          return (
-                            <li>
-                              <span>
-                                {processRule.DRAFT_RECEIVE.NODE_TYPE === 'ND' ? `- ${item.DEPT_NAME_KOR}` : `- ${item.NAME_KOR} ${item.PSTN_NAME_KOR}`}
-                              </span>
-                              <button type="button" onClick={() => this.handleDeleteSelectedUser(item, processRule.DRAFT_RECEIVE.NODE_TYPE)}>
-                                {` X `}
-                              </button>
-                            </li>
-                          );
-                        }
-                      })}
-                    </ul>
-                  </React.Fragment>
+                  </>
                 )}
-                {processRule.DRAFT_REFER !== undefined && (
-                  <React.Fragment>
-                    <h4>{processRule.DRAFT_REFER.NODE_NAME_KOR}</h4>
-                    <ul>
-                      {selDataList.map(item => {
-                        if (processRule.DRAFT_REFER.NODE_ID === item.NODE_ID) {
-                          return (
-                            <li>
-                              <span>{processRule.DRAFT_REFER.NODE_TYPE === 'ND' ? `- ${item.DEPT_NAME_KOR}` : `- ${item.NAME_KOR} ${item.PSTN_NAME_KOR}`}</span>
-                              <button type="button" onClick={() => this.handleDeleteSelectedUser(item, processRule.DRAFT_REFER.NODE_TYPE)}>
-                                {` X `}
-                              </button>
-                            </li>
-                          );
-                        }
-                      })}
-                    </ul>
-                  </React.Fragment>
-                )} */}
               </div>
-            </Col>
-          </Row>
-        </StyledWorkProcessModal>
-      </Modal>
+              <div className="userList">
+                <Table
+                  rowSelection={rowSelection}
+                  columns={this.getColumns()}
+                  dataSource={deptUserList.map(item => ({
+                    ...item,
+                    key: item.USER_ID,
+                  }))}
+                  rowKey="USER_ID"
+                  pagination={false}
+                  size="small"
+                  // scroll
+                  scroll={{ y: 190 }}
+                />
+              </div>
+            </div>
+          </Col>
+          <Col span={6}>
+            <div className="btnWrapper">
+              <ul>
+                {prcStep.map(item => (
+                  <li key={`btn_${item.NODE_ID}`}>
+                    <Button
+                      type="primary"
+                      ghost
+                      style={{ width: '150px', float: 'right', margin: '5px' }}
+                      onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
+                    >
+                      {item.NODE_NAME_KOR}
+                      <Icon type="double-right" style={{ float: 'right', marginTop: '4px' }} />
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </Col>
+          <Col span={10}>
+            <div className="basicWrapper selectedWrapper">
+              {prcStep.map(item => (
+                <React.Fragment key={`node_${item.NODE_ID}`}>
+                  <h4>
+                    <AuditOutlined />
+                    {'  '}
+                    {item.NODE_NAME_KOR}
+                  </h4>
+                  <ul>
+                    {item.APPV_MEMBER.length > 0 ? (
+                      item.APPV_MEMBER.map(user => (
+                        <li key={user.USER_ID}>
+                          <span>
+                            {item.NODE_TYPE === 'ND' ? (
+                              <div>
+                                <TeamOutlined /> {user.DEPT_NAME_KOR}
+                              </div>
+                            ) : (
+                              <div>
+                                <UserOutlined /> {`${user.NAME_KOR}/${user.PSTN_NAME_KOR} (${user.DEPT_NAME_KOR}) `}
+                              </div>
+                            )}
+                          </span>
+                          {user.ISFIXED !== 'Y' && (
+                            <button type="button" onClick={() => this.handleDeleteSelectedUser(user, item.NODE_ID)}>
+                              <CloseCircleOutlined />
+                            </button>
+                          )}
+                        </li>
+                      ))
+                    ) : (
+                      <li>
+                        <span>
+                          <WarningOutlined /> 선택 결재정보 없음
+                        </span>
+                      </li>
+                    )}
+                  </ul>
+                </React.Fragment>
+              ))}
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Button onClick={this.handleComplete}>적용</Button>
+        </Row>
+      </StyledWorkProcessModal>
     );
   }
 }
@@ -402,8 +331,10 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getDeptList: payload => dispatch(actions.getDeptList(payload)),
-  getDeptUserList: deptId => dispatch(actions.getDeptUserList(deptId)),
+  getDeptUserList: (deptId, callbackFunc) => dispatch(actions.getDeptUserList(deptId, callbackFunc)),
   initDeptUserList: () => dispatch(actions.initDeptUserList()),
+  submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
+    dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
 });
 
 const withReducer = injectReducer({

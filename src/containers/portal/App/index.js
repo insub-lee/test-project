@@ -44,7 +44,8 @@ import ErrorPage from './ErrorPage';
 
 /* Code Split */
 const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
-const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
+// const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
+const UserCategoryMenuESHSver = Loadable({ loader: () => import('./UserCategoryMenuESHSver') });
 const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
 const UserSetting = Loadable({ loader: () => import('./UserSetting') });
 const UserStore = Loadable({ loader: () => import('./UserStore') });
@@ -393,7 +394,6 @@ class App extends React.Component {
     } else {
       this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
     }
-
   };
 
   getLayoutMarginRight = () =>
@@ -487,6 +487,26 @@ class App extends React.Component {
           />
           {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
+          <UserCategoryMenuESHSver
+            isShow={open}
+            setOpen={this.setOpen}
+            setFixedOpenMenu={this.setFixedOpenMenu}
+            execMenu={this.execMenu}
+            execPage={this.execPage}
+            myMNotiCnt={myMNotiCnt}
+            myHNotiCnt={myHNotiCnt}
+            myMNotiList={myMNotiList}
+            selectedIndex={selectedIndex}
+            menuName={menuName}
+            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+            setMyMenuData={setMyMenuData}
+            visible={this.state.visible}
+            setMenuClose={this.setMenuClose}
+            view={view}
+            history={this.props.history}
+            fixedMenu={menuFixedYn === 'Y'}
+          />
+          {/* 
           <UserCategoryMenu
             isShow={open}
             setOpen={this.setOpen}
@@ -506,6 +526,7 @@ class App extends React.Component {
             history={this.props.history}
             fixedMenu={menuFixedYn === 'Y'}
           />
+          */}
           <SideMenu>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="Home">
@@ -527,7 +548,7 @@ class App extends React.Component {
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
             </div>
-            {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능)*/}
+            {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능) */}
             {(hasRoleAdmin || hasRoleBizMng || bizGrpMngCnt > 0) && (
               <div className="iconPositon" style={{ marginTop: '20px' }}>
                 <Tooltip placement="right" title="Biz Card">

@@ -7,13 +7,13 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
 import StyledWorkProcess from 'apps/Workflow/WorkProcess/StyledWorkProcess';
+import SelectApprovePage from 'apps/mdcs/user/Workflow/SelectApprovePage';
 
 class DraftPrcLine extends Component {
   state = {
     processRule: {},
     filterRule: [],
     filterItem: [],
-    colSpan: 6,
   };
 
   componentDidMount() {
@@ -21,15 +21,17 @@ class DraftPrcLine extends Component {
     const { DRAFT_PROCESS_STEP } = processRule;
     const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
-    const colSpan = Math.floor(24 / filterRule.length);
-    this.setState({ processRule, filterRule, filterItem, colSpan });
+    this.setState({ processRule, filterRule, filterItem });
   }
 
   componentDidUpdate(prevProps) {
     const { processRule } = this.props;
+    console.debug(' componentDidUpdateprocessrule', prevProps, this.props);
     if (JSON.stringify(processRule) !== JSON.stringify(prevProps.processRule)) {
-      console.debug('props', processRule, prevProps.processRule);
-      this.setState({ processRule });
+      const { DRAFT_PROCESS_STEP } = processRule;
+      const filterRule = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.NODE_GUBUN === 1 && item.VIEW_TYPE === 1); // 결재, 인장
+      const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
+      this.setState({ processRule, filterRule, filterItem });
     }
   }
 
@@ -47,13 +49,13 @@ class DraftPrcLine extends Component {
     const filterItem = DRAFT_PROCESS_STEP && DRAFT_PROCESS_STEP.filter(item => item.VIEW_TYPE === 2); // 시스템, 항목
     this.setState({ modalVisible: false, processRule, filterRule, filterItem });
 
-    this.props.setProcessRule(this.props.id, processRule);
+    // this.props.setProcessRule(this.props.id, processRule);
   };
 
   render() {
     const { viewType } = this.props;
     const { processRule, modalVisible, filterRule, filterItem } = this.state;
-    console.debug('draftPrcLine', processRule);
+    console.debug('processRule', processRule);
     return (
       <StyledWorkProcess>
         <div>
@@ -87,7 +89,7 @@ class DraftPrcLine extends Component {
                       ) : (
                         <div className="draftInfoBox">
                           <Icon type="user" />
-                          <span className="infoTxt">{user.NAME_KOR}</span>
+                          <span className="infoTxt">{`${user.NAME_KOR} (${user.DEPT_NAME_KOR})`}</span>
                         </div>
                       ),
                     )}
@@ -125,7 +127,13 @@ class DraftPrcLine extends Component {
         </div>
 
         {modalVisible && (
-          <WorkProcessModal processRule={processRule} visible={modalVisible} onComplete={this.onProcessRuleComplete} onCloseModal={this.handleCloseModal} />
+          <WorkProcessModal
+            CustomWorkProcessModal={SelectApprovePage}
+            processRule={processRule}
+            visible={modalVisible}
+            onComplete={this.onProcessRuleComplete}
+            onCloseModal={this.handleCloseModal}
+          />
         )}
       </StyledWorkProcess>
     );
