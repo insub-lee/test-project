@@ -244,10 +244,10 @@ class EshsCmpnyComp extends React.Component {
 }
 
 EshsCmpnyComp.propTypes = {
-  COMP_FIELD: PropTypes.object,
+  COMP_FIELD: PropTypes.string,
   NAME_KOR: PropTypes.string,
   CONFIG: PropTypes.object,
-  colData: PropTypes.object,
+  colData: PropTypes.string,
   changeFormData: PropTypes.func,
   sagaKey: PropTypes.string,
   changeValidationData: PropTypes.func,
