@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 const CustomTooltipStyled = styled.div`
   .custom-tooltip {
-    width: 150px;
-    height: 70px;
+    width: 250px;
+    height: 300px;
     border: 1px solid cornflowerblue;
     overflow: hidden;
     pointer-events: none;
@@ -16,8 +16,8 @@ const CustomTooltipStyled = styled.div`
 
   .custom-tooltip p {
     margin: 5px;
-    color: #2f486b;
-    font-size: 72px;
+    color: #000000;
+    font-size: 12px;
     white-space: nowrap;
   }
 
