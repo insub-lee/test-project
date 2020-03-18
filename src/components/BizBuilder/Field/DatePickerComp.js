@@ -7,12 +7,13 @@ import moment from 'moment';
 class DatePickerComp extends Component {
   onChangeHandler = date => {
     const { sagaKey: id, changeFormData, COMP_FIELD } = this.props;
-    changeFormData(id, COMP_FIELD, moment(date).format('YYYY-MM-DD HH:mm:SS'));
+    changeFormData(id, COMP_FIELD, moment(date).format('YYYY-MM-DD'));
   };
 
-  onChangeSearchHandle = (date, dateString) => {
+  onChangeSearchHandle = date => {
     const { sagaKey: id, COMP_FIELD, changeSearchData } = this.props;
-    const searchDate = dateString.length > 0 ? `AND W.${COMP_FIELD} = '${dateString}'::TIMESTAMP` : '';
+    const searchDate = moment(date).format('YYYY-MM-DD').length > 0 ? `AND W.${COMP_FIELD} = '${moment(date).format('YYYY-MM-DD')}'::TIMESTAMP` : '';
+    // const searchDate = dateString.length > 0 ? `AND W.${COMP_FIELD} = '${dateString}'::TIMESTAMP` : '';
     changeSearchData(id, COMP_FIELD, searchDate);
   };
 
@@ -23,7 +24,6 @@ class DatePickerComp extends Component {
     }
 
     if (isSearch && CONFIG.property.searchType === 'CUSTOM') {
-      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
       return (
         <AntdDatePicker
           style={{ width: '200px' }}
@@ -35,7 +35,6 @@ class DatePickerComp extends Component {
     }
 
     if (viewPageData.viewType.toUpperCase() === 'INPUT') {
-      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase().toUpperCase()}`);
       return (
         <AntdDatePicker
           style={{ width: '200px' }}
@@ -47,7 +46,6 @@ class DatePickerComp extends Component {
     }
 
     if (viewPageData.viewType.toUpperCase() === 'MODIFY') {
-      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
       return (
         <AntdDatePicker
           style={{ width: '200px' }}
@@ -60,12 +58,10 @@ class DatePickerComp extends Component {
     }
 
     if (viewPageData.viewType.toUpperCase() === 'VIEW') {
-      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
       return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
     }
 
     if (viewPageData.viewType.toUpperCase() === 'LIST') {
-      console.debug(`@@@@@@${viewPageData.viewType.toUpperCase()}`);
       return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
     }
     return '';
