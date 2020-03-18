@@ -37,7 +37,7 @@ const reducer = (state = initialState, action) => {
       }
 
       if (extraProps) {
-        const { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq } = extraProps;
+        const { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq } = extraProps;
         const reduxFormData = state.getIn(['bizBuilderBase', id, 'formData']) ? state.getIn(['bizBuilderBase', id, 'formData']).toJS() : {};
         let viewChangeProcessSeq = -1;
         if (formData && formData.VIEW_CHANGE_PROCESS_SEQ && formData.VIEW_CHANGE_PROCESS_SEQ > -1) {
@@ -54,12 +54,12 @@ const reducer = (state = initialState, action) => {
           viewSeq = viewMetaSeq;
         } else if (upperCaseViewType === 'LIST' && listMetaSeq > -1) {
           viewSeq = listMetaSeq;
-        } else if (customViewChangeProcessSeq && customViewChangeProcessSeq > 0) {
-          const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === customViewChangeProcessSeq);
+        } else if (viewChangeSeq && viewChangeSeq > 0) {
+          const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === viewChangeSeq);
           if (findIdx > -1) {
             const viewChangeProcessInfo = viewProcessList[findIdx];
             viewSeq = viewChangeProcessInfo[`${upperCaseViewType}_META_SEQ`] || -1;
-            state = state.setIn(['bizBuilderBase', id, 'formData', 'VIEW_CHANGE_PROCESS_SEQ'], customViewChangeProcessSeq);
+            state = state.setIn(['bizBuilderBase', id, 'formData', 'VIEW_CHANGE_PROCESS_SEQ'], viewChangeSeq);
           }
         } else if (viewChangeProcessSeq > -1) {
           const findIdx = viewProcessList.findIndex(iNode => iNode.VIEW_CHANGE_PROCESS_SEQ === viewChangeProcessSeq);

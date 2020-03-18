@@ -41,10 +41,10 @@ class BizBuilderBase extends React.Component {
       modifyMetaSeq,
       viewMetaSeq,
       listMetaSeq,
-      customViewChangeProcessSeq,
+      viewChangeSeq,
     } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq };
+    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
       revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
     } else if (taskSeq !== -1) {
@@ -70,10 +70,10 @@ class BizBuilderBase extends React.Component {
       modifyMetaSeq,
       viewMetaSeq,
       listMetaSeq,
-      customViewChangeProcessSeq,
+      viewChangeSeq,
     } = this.props;
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq };
+    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (prevProps.sagaKey !== this.props.sagaKey || (prevProps.viewType && prevProps.viewType !== viewType)) {
       if (taskSeq !== -1 && viewType === 'REVISION') {
         revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
@@ -103,10 +103,10 @@ class BizBuilderBase extends React.Component {
       modifyMetaSeq,
       viewMetaSeq,
       listMetaSeq,
-      customViewChangeProcessSeq,
+      viewChangeSeq,
     } = this.props; // id: widget_id+@
     const retViewType = viewType === 'REVISION' ? 'INPUT' : viewType;
-    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, customViewChangeProcessSeq };
+    const extraProps = { inputMetaSeq, modifyMetaSeq, viewMetaSeq, listMetaSeq, viewChangeSeq };
     if (taskSeq !== -1 && viewType === 'REVISION') {
       revisionTask(id, workSeq, taskSeq, retViewType, revisionType, extraProps);
     } else if (taskSeq !== -1) {
@@ -199,7 +199,7 @@ class BizBuilderBase extends React.Component {
   };
 
   render() {
-    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting, customViewChangeProcessSeqByModal } = this.props;
+    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting, viewChangeSeqByModal } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
     return (
       <div>
@@ -219,7 +219,7 @@ class BizBuilderBase extends React.Component {
             workSeq={builderModalWorkSeq}
             taskSeq={builderModalTaskSeq}
             taskRowData={taskRowData}
-            customViewChangeProcessSeq={customViewChangeProcessSeqByModal}
+            viewChangeSeq={viewChangeSeqByModal}
             changeBuilderModalState={this.changeBuilderModalState}
           />
         </Modal>
@@ -273,8 +273,8 @@ BizBuilderBase.propTypes = {
   modifyMetaSeq: PropTypes.number,
   viewMetaSeq: PropTypes.number,
   listMetaSeq: PropTypes.number,
-  customViewChangeProcessSeq: PropTypes.number,
-  customViewChangeProcessSeqByModal: PropTypes.number,
+  viewChangeSeq: PropTypes.number,
+  viewChangeSeqByModal: PropTypes.number,
   taskRowData: PropTypes.object,
 };
 
@@ -306,8 +306,8 @@ BizBuilderBase.defaultProps = {
   modifyMetaSeq: -1,
   viewMetaSeq: -1,
   listMetaSeq: -1,
-  customViewChangeProcessSeq: -1,
-  customViewChangeProcessSeqByModal: -1,
+  viewChangeSeq: -1,
+  viewChangeSeqByModal: -1,
   taskRowData: undefined,
 };
 
