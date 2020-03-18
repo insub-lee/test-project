@@ -176,13 +176,13 @@ class Enactment extends Component {
   };
 
   onModalShow = () => {
-    const { selectedworkSeq, docNumber, selectedNodeIds, inputMetaSeq } = this.state;
+    const { selectedworkSeq, docNumber, selectedNodeIds, viewChangeSeq } = this.state;
     const workPrcProps = {
       draftType: DraftType.ENACTMENT,
       nodeIds: selectedNodeIds,
       degreeFlag: ModifyType.MAJOR,
     };
-    this.props.onShowModal(selectedworkSeq, inputMetaSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
+    this.props.onShowModal(selectedworkSeq, viewChangeSeq, docNumber.join(''), selectedNodeIds[3], 'INPUT', workPrcProps);
     this.initStateData();
   };
 
