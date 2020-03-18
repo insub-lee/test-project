@@ -239,12 +239,7 @@ class WorkProcessModal extends Component {
               <ul>
                 {prcStep.map(item => (
                   <li key={`btn_${item.NODE_ID}`}>
-                    <Button
-                      type="primary"
-                      ghost
-                      style={{ width: '150px', float: 'right', margin: '5px' }}
-                      onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
-                    >
+                    <Button type="primary" ghost style={{ width: '150px' }} onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}>
                       {item.NODE_NAME_KOR}
                       <Icon type="double-right" style={{ float: 'right', marginTop: '4px' }} />
                     </Button>

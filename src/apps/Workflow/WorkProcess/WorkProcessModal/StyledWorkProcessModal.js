@@ -88,6 +88,7 @@ const StyledWorkProcessModal = styled.div`
     height: 500px;
     text-align: center;
     display: flex;
+    align-items: center;
 
     ul {
       margin: auto;
