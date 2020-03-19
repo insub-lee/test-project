@@ -6,7 +6,7 @@ const StyledHeader = styled.header`
   &.portalHeader {
     max-width: 100%;
     width: 100%;
-    padding: 10px 15px;
+    padding: 0px 15px;
     border-bottom: 1px solid #ccc;
     //background: ${props => props.theme.header.backgroundColor};
     /* background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
