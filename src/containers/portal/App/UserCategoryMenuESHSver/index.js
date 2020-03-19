@@ -85,7 +85,6 @@ class UserCategoryMenu extends Component {
           <Profile blackThema profile={profile} setFixedOpenMenu={setFixedOpenMenu} fixedMenu={fixedMenu} />
         </div>
         <div className="category-menu-area">
-          <div className="area-title">{profile.DEPT_NAME_KOR}</div>
           <Tree
             treeData={myAppTreeData}
             saveData={saveData}

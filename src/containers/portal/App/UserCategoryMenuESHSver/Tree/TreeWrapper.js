@@ -21,9 +21,8 @@ const TreeWrapper = styled.div`
     position: relative;
     display: inline-block;
     width: 80%;
-    margin-bottom: 9px;
-    margin-left: 9px;
-    height: 32px;
+    margin-bottom: 20px;
+    margin-left: 10px;
 
     & > span.ant-input-affix-wrapper > input.ant-input.ant-input-sm {
       position: relative;
@@ -217,11 +216,13 @@ const TreeWrapper = styled.div`
     outline: none;
   }
 
-  .sortableTreeWrapper .rstcustom__rowSearchMatch .rstcustom__rowTitle button {
-    color: #ff0000;
+  .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__rowSearchMatch .rstcustom__rowTitle button {
+    opacity: 1;
+    color: #ff0;
   }
-  .sortableTreeWrapper .rstcustom__rowSearchFocus .rstcustom__rowTitle button {
-    color: #ff0000;
+  .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__rowSearchFocus .rstcustom__rowTitle button {
+    opacity: 1;
+    color: #ff0;
   }
 
   /* 임시 */

@@ -3,7 +3,6 @@ import styled from 'styled-components';
 const StyledSideMenu = styled.div`
   height: 100%;
   position: fixed;
-  margin-top: 40px;
   left: 0;
   flex: 0 0 45px;
   max-width: 45px;
