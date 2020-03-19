@@ -84,7 +84,7 @@ class PublicRoutes extends Component {
       // getLoaddata('latest');
       // getLoaddata('commonHome');
 
-      if (!rootPageInfo) { 
+      if (!rootPageInfo) {
         // 공통홈이 없을 경우 개인홈으로
         this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
       } else {
