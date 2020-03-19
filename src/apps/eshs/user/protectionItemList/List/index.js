@@ -308,7 +308,7 @@ class List extends React.Component {
           action="/upload"
           listType="picture-card"
           // customRequest={file => this.handleUploadFileRequest(file)}
-          handleChange={file => this.handleUploadFileChange(file)}
+          handleChange={this.handleUploadFileChange}
           fileList={this.state.fileList}
         />
       ),
