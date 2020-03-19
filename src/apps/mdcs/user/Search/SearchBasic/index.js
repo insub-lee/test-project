@@ -19,22 +19,24 @@ const AntdLineTable = StyledLineTable(Table);
 const FormItem = Form.Item;
 
 const columns = [
+  { title: 'No.', key: 'id', width: '11%', dataIndex: 'id' },
+  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
+  { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
+  { title: 'Title', align: 'left', key: 'title', width: '35%', dataIndex: 'title' },
   {
     title: '종류',
     key: 'fullPathStr',
     dataIndex: 'fullPathStr',
+
+    width: '21%',
     render: (text, row, index) => {
       if (text) {
         return <text>{text.replace(/&gt;/g, ' > ')}</text>;
       }
     },
   },
-  { title: 'No.', key: 'id', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', dataIndex: 'VERSION' },
-  { title: 'Effect Date', key: 'END_DTTM', dataIndex: 'END_DTTM' },
-  { title: 'Title', key: 'title', dataIndex: 'title' },
-  { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
-  { title: '기안자', key: 'name', dataIndex: 'name' },
+  { title: '기안부서', key: 'deptName', width: '10%', dataIndex: 'deptName' },
+  { title: '기안자', key: 'name', width: '7%', dataIndex: 'name' },
 ];
 
 // Table NODE_ID 값
@@ -295,7 +297,7 @@ class SearchBasic extends Component {
             okButtonProps={null}
           >
             <>
-              <div className="pop_tit">적용 범위 선택z</div>
+              <div className="pop_tit">검색 결과</div>
               <div className="pop_con">
                 <AntdLineTable
                   columns={columns}
