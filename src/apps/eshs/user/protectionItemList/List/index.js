@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-// import { AllCommuinityModules } from 'ag-grid-community';
 import { Select, Input, InputNumber, Modal } from 'antd';
 import request from 'utils/request';
 import { debounce } from 'lodash';
@@ -12,16 +11,18 @@ import { debounce } from 'lodash';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
+// import CustomTooltipStyled from './styled';
 
+import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
+// import DefaultUploader from 'manual/components/Upload';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
-class List extends Component {
+class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // modules: AllCommuinityModules,
       frameworkComponents: { customTooltip: CustomTooltip },
       selectedSite: '',
       input: '',
@@ -30,6 +31,9 @@ class List extends Component {
       requestValue: this.requestValueOrigin,
       columnDefs: this.columnDefsOrigin,
       rowData: [],
+      tooltipShowDelay: 0,
+      fileList: [],
+      responseList: [],
     };
     this.getNewRowData = debounce(this.getNewRowData, 300);
   }
@@ -45,51 +49,51 @@ class List extends Component {
       headerName: '모델',
       field: 'model',
       width: 200,
-      tooltipField: 'kind',
+      tooltipField: 'model',
     },
     {
       headerName: 'Size',
       field: 'size1',
       width: 130,
-      tooltipField: 'kind',
+      tooltipField: 'size1',
     },
     {
       headerName: '검정#',
       field: 'app_no',
-      tooltipField: 'kind',
+      tooltipField: 'app_no',
     },
     {
       headerName: 'Vendor',
       field: 'vendor_nm',
       width: 130,
-      tooltipField: 'kind',
+      tooltipField: 'vendor_nm',
     },
     {
       headerName: 'Maker',
       field: 'maker_nm',
-      tooltipField: 'kind',
+      tooltipField: 'maker_nm',
     },
     {
       headerName: '단가',
       field: 'unitprice',
       valueFormatter: params => (params.value ? params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0),
-      tooltipField: 'kind',
+      tooltipField: 'unitprice',
     },
     {
       headerName: '유효기간',
       field: 'validity_term',
-      tooltipField: 'kind',
+      tooltipField: 'validity_term',
     },
     {
       headerName: '적정재고',
       field: 'properstock',
-      tooltipField: 'kind',
+      tooltipField: 'properstock',
     },
     {
       headerName: '비고',
       field: 'comments',
       width: 930,
-      tooltipField: 'kind',
+      tooltipField: 'comments',
     },
   ];
 
@@ -103,7 +107,7 @@ class List extends Component {
     maker_cd: '',
     unit: '',
     validity_term: '',
-    properstock: '',
+    properstock: 0,
     comments: '',
   };
 
@@ -112,11 +116,16 @@ class List extends Component {
       width: 100,
       resizable: true,
       tooltipComponent: 'customTooltip',
+      tooltipShowDelay: 0,
     },
   };
 
   modalContent = () => [
-    { title: '사진', content: '' },
+    {
+      title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
+      content:
+        this.state.viewType.toUpperCase() === 'VIEW' ? <img src="http://eshs-dev.magnachip.com/down/file/164288" alt={this.state.requestValue.kind} /> : '',
+    },
     {
       title: '지역',
       content: (
@@ -296,7 +305,10 @@ class List extends Component {
         />
       ),
     },
-    { title: '첨부', content: '' },
+    {
+      title: '첨부',
+      content: <ImageUploader action="/upload" listType="picture-card" handleChange={this.handleUploadFileChange} fileList={this.state.fileList} />,
+    },
   ];
 
   initGridData = params => {
@@ -370,7 +382,7 @@ class List extends Component {
   handleOk = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    this.setState({ visible: false, requestValue: this.requestValueOrigin });
+    this.setState({ visible: false, requestValue: this.requestValueOrigin, responseList: [], fileList: [] });
     submitHandlerBySaga(
       id,
       'POST',
@@ -384,6 +396,7 @@ class List extends Component {
     this.setState({
       visible: false,
       requestValue: this.requestValueOrigin,
+      fileList: [],
     });
   };
 
@@ -401,8 +414,22 @@ class List extends Component {
     this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.hitem_cd !== prevState.requestValue.hitem_cd), visible: false }));
   };
 
+  handleUploadFileChange = ({ fileList }) => {
+    const responseList = [];
+    fileList.map(item => responseList.push(item.response));
+    this.setState({ fileList, responseList });
+  };
+
+  BeforeSaveTask = () => {
+    const { responseList } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const uploadFile = submitHandlerBySaga(id, 'POST', `/upload/moveFileToReal`, { PARAM: { DETAIL: responseList } }, this.handleOk());
+    const uploadFileList = uploadFile.submitData.PARAM.DETAIL;
+    this.setState({ uploadFileList });
+  };
+
   inputFooter = [
-    <StyledButton className="btn-primary" onClick={this.handleOk}>
+    <StyledButton className="btn-primary" onClick={this.BeforeSaveTask}>
       등록
     </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleCancel}>
@@ -423,8 +450,9 @@ class List extends Component {
   ];
 
   render() {
-    const { visible, columnDefs, rowData, viewType } = this.state;
+    const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
+    console.debug(this.props);
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -442,23 +470,26 @@ class List extends Component {
               등록
             </StyledButton>
           </div>
+          {/* <CustomTooltipStyled> */}
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '540px' }}>
+            <div id="myGrid" className="ag-theme-balham" style={{ height: '540px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
                 defaultColDef={gridOptions.defaultColDef}
+                tooltipShowDelay={this.state.tooltipShowDelay}
                 suppressRowTransform
                 onRowClicked={e => {
                   this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
                 }}
-                frameworkComponents={this.state.frameworkComponents}
+                frameworkComponents={frameworkComponents}
                 // onCellMouseOver="ds"
               />
             </div>
           </div>
+          {/* </CustomTooltipStyled> */}
           <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable footer={viewType === 'INPUT' ? inputFooter : viewFooter}>
             {modalContent().map(item => (
               <div>

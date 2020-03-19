@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { message } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -168,10 +168,10 @@ class StdInput extends Component {
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
-                Save
+              <StyledButton className="btn-primary btn-first btn-sm" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
+                <SaveOutlined /> Save
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
+              <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
                 닫기
               </StyledButton>
             </div>

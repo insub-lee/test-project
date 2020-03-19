@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
 import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
 const ModalWrapper = StyledModalNofooterLine(Modal);
 class DraftList extends Component {
   constructor(props) {
@@ -84,7 +84,7 @@ class DraftList extends Component {
             <Icon type="form" /> 기안함
           </p>
         </div>
-        <AntdTable
+        <AntdLineTable
           columns={this.getTableColumns()}
           dataSource={draftList.map(item => ({
             ...item,
