@@ -18,10 +18,13 @@ const UploadButton = () => (
 );
 
 class ImageUploader extends Component {
-  state = {
-    previewVisible: false,
-    previewImage: '',
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      previewVisible: false,
+      previewImage: '',
+    };
+  }
 
   handleCancel = () => this.setState({ previewVisible: false });
 
