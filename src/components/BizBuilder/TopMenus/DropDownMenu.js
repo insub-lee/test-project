@@ -4,6 +4,7 @@ import { Button, Dropdown, Menu, Icon } from 'antd';
 
 const DropDownMenu = ({ menus, title, onClick, selected, selectedKey }) => {
   const selectedMenu = selected ? menus.find(({ key }) => key === selectedKey) : undefined;
+  const selectedTitle = selectedMenu ? selectedMenu.title : '';
   const subTitle = selectedMenu ? selectedMenu.key : '';
   return (
     <Dropdown
@@ -22,8 +23,8 @@ const DropDownMenu = ({ menus, title, onClick, selected, selectedKey }) => {
       trigger={['click']}
       placement="bottomLeft"
     >
-      <Button>
-        {`${title} ${subTitle ? `- ${subTitle}` : ''}`} <Icon type="down" />
+      <Button title={`${selectedTitle || title} ${subTitle ? `- ${subTitle}` : ''}`}>
+        {`${selectedTitle || title} ${subTitle ? `- ${subTitle}` : ''}`} <Icon type="down" />
       </Button>
     </Dropdown>
   );
