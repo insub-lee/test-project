@@ -11,6 +11,7 @@ import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import useEventListener from '@use-it/event-listener';
 import SearchViewer from '../SearchViewer';
 import CoverViewer from '../CoverViewer';
 
@@ -27,7 +28,6 @@ const columns = [
     title: '종류',
     key: 'fullPathStr',
     dataIndex: 'fullPathStr',
-
     width: '21%',
     render: (text, row, index) => {
       if (text) {
@@ -57,6 +57,7 @@ const initState = {
   status: 2, // 현재 Revision, 폐기
   docNo: '',
   keyword: '',
+  gubun: 1,
   type: 'title',
   drafter: '',
   draftDept: '',
@@ -82,10 +83,6 @@ const { Option } = Select;
 
 class SearchBasic extends Component {
   state = initState;
-
-  // componentDidMount() {
-  //   this.callApi();
-  // }
 
   callApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -113,8 +110,7 @@ class SearchBasic extends Component {
     this.setState({ nodeIdList: checkedValues });
   };
 
-  onChangeInput = (key, e) => {
-    const { value } = e.target;
+  onChangeInput = (key, value) => {
     this.setState({ [key]: value });
   };
 
@@ -188,7 +184,7 @@ class SearchBasic extends Component {
   };
 
   render() {
-    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView } = this.state;
+    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView, gubun } = this.state;
     const { result } = this.props;
     const { listData = {} } = result;
     const listDataArr = listData.arr || [];
@@ -216,7 +212,7 @@ class SearchBasic extends Component {
                     <td>
                       <Input
                         onChange={e => {
-                          this.onChangeValue('docNumber', e.target.value);
+                          this.onChangeInput('docNo', e.target.value);
                         }}
                       />
                     </td>
@@ -224,13 +220,14 @@ class SearchBasic extends Component {
                     <td>
                       <Radio.Group
                         size="default"
+                        value={gubun}
                         onChange={e => {
-                          this.onChangeRev(e.target.value);
+                          this.onChangeRadio('gubun', e);
                         }}
                       >
-                        <StyledRadio value={2}>현재 Revision</StyledRadio>
-                        <StyledRadio value={0}>과거 Rev. 포함</StyledRadio>
-                        <StyledRadio value={8}>폐기</StyledRadio>
+                        <StyledRadio value={1}>현재 버전</StyledRadio>
+                        <StyledRadio value={2}>과거 Rev. 포함</StyledRadio>
+                        <StyledRadio value={3}>폐기</StyledRadio>
                       </Radio.Group>
                     </td>
                   </tr>
@@ -245,7 +242,7 @@ class SearchBasic extends Component {
                         <Input
                           style={{ width: '60%' }}
                           onChange={e => {
-                            this.onChangeKeyword(e.target.value);
+                            this.onChangeInput('keyword', e.target.value);
                           }}
                         />
                       </InputGroup>
@@ -256,7 +253,7 @@ class SearchBasic extends Component {
                     <td colSpan={3}>
                       <StyledInput
                         onChange={e => {
-                          this.onChangeValue('regUserName', e.target.value);
+                          this.onChangeInput('drafter', e.target.value);
                         }}
                       />
                     </td>
@@ -266,7 +263,7 @@ class SearchBasic extends Component {
                     <td colSpan={3}>
                       <StyledInput
                         onChange={e => {
-                          this.onChangeValue('regDeptName', e.target.value);
+                          this.onChangeInput('draftDept', e.target.value);
                         }}
                       />
                     </td>
