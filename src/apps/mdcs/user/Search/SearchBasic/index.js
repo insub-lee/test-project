@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { Table, Radio, Form, Modal, Input, Select } from 'antd';
 
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
@@ -11,7 +12,6 @@ import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import useEventListener from '@use-it/event-listener';
 import SearchViewer from '../SearchViewer';
 import CoverViewer from '../CoverViewer';
 
@@ -321,7 +321,7 @@ class SearchBasic extends Component {
             destroyOnClose
           >
             <>
-              <div className="pop_tit">선택 내용 보기</div>
+              <div className="pop_tit">검색 내용 보기</div>
               <div className="pop_con">
                 <SearchViewer
                   workSeq={SearchView.workSeq}
@@ -348,7 +348,7 @@ class SearchBasic extends Component {
             destroyOnClose
           >
             <>
-              <div className="pop_tit">선택 내용 보기</div>
+              <div className="pop_tit">검색 내용 보기</div>
               <div className="pop_con">
                 <CoverViewer nodeId={SearchView.nodeId} taskSeq={SearchView.taskSeq} workSeq={SearchView.workSeq} />
               </div>

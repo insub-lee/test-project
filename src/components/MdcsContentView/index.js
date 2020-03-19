@@ -81,15 +81,12 @@ class MdcsContentView extends Component {
       default:
         break;
     }
-    console.debug('dkdkdk', doctype, fileName);
     return (
       <div>
         <Icon type={doctype} style={{ fontSize: '18px', marginRight: '5px' }} />
         {fileName}
-        <StyledButton className="btn-primary  btn-sm">
-          <FileProtectOutlined />
-          원본파일
-        </StyledButton>
+        <FileProtectOutlined style={{ fontSize: '18px', marginRight: '5px', marginLeft: '5px' }} />
+        원본파일
       </div>
     );
   };
