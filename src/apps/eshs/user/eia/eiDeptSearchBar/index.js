@@ -72,27 +72,33 @@ class DeptSearchBar extends Component {
 
   handleFinsh = () => {
     const { id, formData, submitHandlerBySaga, handleSearchOnClick } = this.props;
+    const materialData = (formData && formData.materialData) || '';
     const REQ_NO = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
     const CHK_YEAR = (formData && formData.materialData && formData.materialData.CHK_YEAR) || '';
     const DEPT_CD = (formData && formData.materialData && formData.materialData.FROM_DEPT_CD) || '';
     const materialCnt = (formData && formData.materialCnt) || 0;
     const itemList = (formData && formData.itemList) || [];
 
-    if (id === 'eiStatement') {
+    if (id === 'eiMaterial') {
+      if (!materialCnt || !itemList.length) {
+        message.warning('저장된 자료가 없습니다.');
+        return;
+      }
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO });
+    } else if (id === 'eiStatement') {
       const validationCheck = itemList.filter(item => !item.ENV_IMPACT_SIZE && item);
       if (validationCheck.length) {
         message.warning('모든 내용을 입력하셔야 합니다.');
         return;
       }
-      console.debug('return 했누? ');
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiStatementComplete', { REQ_NO, CHK_YEAR, DEPT_CD }, this.handleFormReset);
-    } else if (id === 'eiMaterial') {
-      if (!materialCnt || !itemList.length) {
-        message.warning('저장된 자료가 없습니다.');
-        return;
-      }
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiUpdateComplete', { REQ_NO }, this.handleFormReset);
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiStatementComplete', { REQ_NO, CHK_YEAR, DEPT_CD });
+    } else if (id === 'eiImportantAssesment') {
+      const { saveBeforeProcess } = this.props;
+      // 완료시 ImportantAssesment 입력후 저장이 안된경우 저장후 완료처리
+      saveBeforeProcess();
+      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList });
     }
+
     handleSearchOnClick();
   };
 

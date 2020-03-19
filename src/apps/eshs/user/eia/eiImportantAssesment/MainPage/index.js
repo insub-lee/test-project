@@ -1,7 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'antd';
+import { Row, Col, message } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
@@ -9,12 +9,14 @@ import * as selectors from '../../../../../../containers/common/Auth/selectors';
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
 import MaterialTable from '../../eiMaterialTable';
-import MainPageStyled from './MainPageStyled';
+import MainPageStyled from '../../styled/MainPageStyled';
 
 class MainPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      uploadFileList: [],
+    };
   }
 
   handleSearchOnClick = () => {
@@ -73,6 +75,75 @@ class MainPage extends Component {
     );
   };
 
+  onFileUploaded = (file, SEQ) => {
+    const { changeFormData, formData, id } = this.props;
+    // one file upload 최신 파일만 업로드 되게
+    const { uploadFileList } = this.state;
+    const itemList = (formData && formData.itemList) || [];
+    const fileList = uploadFileList.filter(u => u.originSeq !== SEQ && u);
+    fileList.push({ ...file, originSeq: SEQ });
+    this.setState({
+      uploadFileList: fileList,
+    });
+    changeFormData(
+      id,
+      'itemList',
+      itemList.map(item => (Number(item.SEQ) === Number(SEQ) ? { ...item, FILE_SEQ: file.seq, FILE_NAME: file.fileName, FILE_TYPE: -1 } : item)),
+    );
+  };
+
+  saveBeforeProcess = () => {
+    const { id, getCallDataHandler, submitHandlerBySaga, formData } = this.props;
+    const { uploadFileList } = this.state;
+    const materialData = (formData && formData.materialData) || '';
+    const itemList = (formData && formData.itemList) || [];
+    if (!uploadFileList.length) {
+      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
+      return;
+    }
+    const param = { PARAM: { DETAIL: uploadFileList } };
+    const apiAry = [
+      {
+        key: 'realFile',
+        type: 'POST',
+        url: '/upload/moveFileToReal',
+        params: param,
+      },
+    ];
+    this.setState({
+      uploadFileList: [],
+    });
+    getCallDataHandler(id, apiAry, this.fileUploadComplete);
+  };
+
+  fileUploadComplete = () => {
+    const { id, result, formData, submitHandlerBySaga } = this.props;
+    const materialData = (formData && formData.materialData) || '';
+    const realFileList = (result && result.realFile && result.realFile.DETAIL) || [];
+
+    const itemList =
+      (formData &&
+        formData.itemList.map(i => {
+          if ((i.PLAN_REVIEW === 'Y' && i.IMPROVEMENT_PLAN !== '') || i.IMPROVEMENT_PLAN !== null || i.IMPROVEMENT_PLAN !== undefined) {
+            const a = realFileList.find(r => r.originSeq === i.SEQ) || null;
+            if (a !== null) {
+              return { ...i, IMPROVEMENT_PLAN: a.seq, FILE_SEQ: a.seq, FILE_NAME: a.name };
+            }
+            return i;
+          }
+          return i;
+        })) ||
+      [];
+
+    // data 저장
+    submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
+  };
+
+  updateComplete = () => {
+    this.handleSearchOnClick();
+    message.success('저장되었습니다.');
+  };
+
   render() {
     const { formData } = this.props;
     return (
@@ -81,7 +152,7 @@ class MainPage extends Component {
           <Sketch>
             <Row>
               <Col span={10}>
-                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} saveBeforeProcess={this.saveBeforeProcess} />
               </Col>
             </Row>
             <Row>
@@ -91,7 +162,7 @@ class MainPage extends Component {
             </Row>
             <Row>
               <Col span={24}>
-                <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+                <ItemTable {...this.props} onFileUploaded={this.onFileUploaded} saveBeforeProcess={this.saveBeforeProcess} />
               </Col>
             </Row>
           </Sketch>
