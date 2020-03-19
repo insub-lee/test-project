@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { Select, Input, InputNumber, Modal } from 'antd';
+import { Select, Input, InputNumber, Modal, Upload } from 'antd';
 import request from 'utils/request';
 import { debounce } from 'lodash';
 
@@ -29,6 +29,15 @@ class List extends React.Component {
       requestValue: this.requestValueOrigin,
       columnDefs: this.columnDefsOrigin,
       rowData: [],
+      tooltipShowDelay: 0,
+      filesInfo: [
+        {
+          uid: '-1',
+          // name: '3541.png',
+          // status: 'done',
+          // url: 'http://eshs-dev.magnachip.com/down/file/159668',
+        },
+      ],
     };
     this.getNewRowData = debounce(this.getNewRowData, 300);
   }
@@ -55,33 +64,40 @@ class List extends React.Component {
     {
       headerName: '검정#',
       field: 'app_no',
+      tooltipField: 'app_no',
     },
     {
       headerName: 'Vendor',
       field: 'vendor_nm',
       width: 130,
+      tooltipField: 'vendor_nm',
     },
     {
       headerName: 'Maker',
       field: 'maker_nm',
+      tooltipField: 'maker_nm',
     },
     {
       headerName: '단가',
       field: 'unitprice',
       valueFormatter: params => (params.value ? params.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0),
+      tooltipField: 'unitprice',
     },
     {
       headerName: '유효기간',
       field: 'validity_term',
+      tooltipField: 'validity_term',
     },
     {
       headerName: '적정재고',
       field: 'properstock',
+      tooltipField: 'properstock',
     },
     {
       headerName: '비고',
       field: 'comments',
       width: 930,
+      tooltipField: 'comments',
     },
   ];
 
@@ -289,7 +305,10 @@ class List extends React.Component {
         />
       ),
     },
-    { title: '첨부', content: '' },
+    {
+      title: '첨부',
+      content: <Upload action={`http://eshs-dev.magnachip.com/upload/files/${161010}`} listType="picture-card" fileList={this.state.filesInfo} />,
+    },
   ];
 
   initGridData = params => {
@@ -442,15 +461,14 @@ class List extends React.Component {
           </div>
           {/* <CustomTooltipStyled> */}
           <div style={{ width: '100%', height: '100%' }}>
-            <div className="ag-theme-balham" style={{ height: '540px' }}>
+            <div id="myGrid" className="ag-theme-balham" style={{ height: '540px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
                 defaultColDef={gridOptions.defaultColDef}
-                enableBrowerTooltips={false}
-                tooltipShowDelay={0}
+                tooltipShowDelay={this.state.tooltipShowDelay}
                 suppressRowTransform
                 onRowClicked={e => {
                   this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
