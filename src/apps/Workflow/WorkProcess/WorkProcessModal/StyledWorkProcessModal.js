@@ -14,6 +14,10 @@ const StyledWorkProcessModal = styled.div`
         height: 250px;
         border-bottom: 1px solid rgb(217, 224, 231);
         overflow-y: auto;
+        padding: 5px;
+        .site-tree-search-value {
+          color: #f50;
+        }
       }
 
       .userList {
@@ -30,13 +34,17 @@ const StyledWorkProcessModal = styled.div`
       overflow-y: auto;
 
       > h4 {
-        text-align: center;
+        padding: 7px;
+        text-align: left;
         background-color: #e6e6e6;
       }
 
       ul > li {
-        padding-left: 10px;
-        padding-top: 3px;
+        margin-top: 5px;
+        margin-left: 10px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+
         font-size: 12px;
         position: relative;
 
@@ -80,6 +88,7 @@ const StyledWorkProcessModal = styled.div`
     height: 500px;
     text-align: center;
     display: flex;
+    align-items: center;
 
     ul {
       margin: auto;

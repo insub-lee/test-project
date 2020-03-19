@@ -35,7 +35,7 @@ class IntroComponent extends Component {
       isLoading: true,
       docType: '',
       selectedworkSeq: 0,
-      inputMetaSeq: undefined,
+      viewChangeSeq: undefined,
       selectedtaskSeq: undefined,
       isInitState: false,
       selectedNodeId: 0,
@@ -55,7 +55,7 @@ class IntroComponent extends Component {
     this.setState({ docNumber, isShow: true });
   };
 
-  onShowModalEnactment = (selectedworkSeq, inputMetaSeq, docNumber, selectedNodeId, viewType, workPrcProps) => {
+  onShowModalEnactment = (selectedworkSeq, viewChangeSeq, docNumber, selectedNodeId, viewType, workPrcProps) => {
     const { sagaKey, submitHandlerBySaga } = this.props;
     this.setState(
       {
@@ -64,7 +64,7 @@ class IntroComponent extends Component {
         selectedNodeId,
         viewType,
         workPrcProps,
-        inputMetaSeq,
+        viewChangeSeq,
       },
       () => {
         submitHandlerBySaga(sagaKey, 'GET', `/api/mdcs/v1/common/DocNumberHanlder/${docNumber}`, {}, this.onMakeNumber);
@@ -72,7 +72,7 @@ class IntroComponent extends Component {
     );
   };
 
-  onShowModalAmendment = (selectedworkSeq, selectedTaskSeq, inputMetaSeq, selectedNodeId, viewType, workPrcProps) => {
+  onShowModalAmendment = (selectedworkSeq, selectedTaskSeq, viewChangeSeq, selectedNodeId, viewType, workPrcProps) => {
     this.setState({
       isShow: true,
       selectedworkSeq,
@@ -80,7 +80,7 @@ class IntroComponent extends Component {
       selectedNodeId,
       viewType,
       workPrcProps,
-      inputMetaSeq,
+      viewChangeSeq,
     });
   };
 
@@ -93,8 +93,8 @@ class IntroComponent extends Component {
   };
 
   render() {
-    const { selectedDraft, isShow, isLoading, selectedworkSeq, selectedTaskSeq, docNumber, selectedNodeId, viewType, workPrcProps, inputMetaSeq } = this.state;
-    console.debug('selectedWorkSeq', selectedworkSeq, selectedTaskSeq, docNumber, workPrcProps);
+    const { selectedDraft, isShow, isLoading, selectedworkSeq, selectedTaskSeq, docNumber, selectedNodeId, viewType, workPrcProps, viewChangeSeq } = this.state;
+    console.debug('selectedWorkSeq', selectedworkSeq, selectedTaskSeq, docNumber, workPrcProps, viewChangeSeq);
     return (
       <StyledContents>
         <div className="contentWrapper">
@@ -151,7 +151,7 @@ class IntroComponent extends Component {
                 CustomInputPage={StdInput}
                 CustomViewPage={StdView}
                 CustomWorkProcess={DraftPrcLine}
-                inputMetaSeq={inputMetaSeq}
+                viewChangeSeq={viewChangeSeq}
                 taskSeq={selectedTaskSeq}
                 workPrcProps={workPrcProps}
                 viewType={viewType}

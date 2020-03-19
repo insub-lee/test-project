@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const Styled = styled.div`
   position: relative;
   width: 290px;
-  background-color: #e7e1f0;
+  background-color: ${props => (props.blackThema ? '#e7e1f0' : 'transparent')};
   padding: 20px;
   & > div {
     display: table;
@@ -38,11 +38,11 @@ const Styled = styled.div`
           display: block;
           &.user-info-name {
             font-size: 18px;
-            color: #000;
+            color: ${props => (props.blackThema ? '#000' : '#fff')};
           }
           &.user-info-belong {
             font-size: 12px;
-            color: #666;
+            color: ${props => (props.blackThema ? '#666' : '#999')};
           }
         }
       }

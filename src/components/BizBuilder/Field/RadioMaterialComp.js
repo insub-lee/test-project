@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Radio, Select, Input } from 'antd';
+import { Radio, Select, Button } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
-
+import { SearchOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import LabelComp from './LabelComp';
 
@@ -116,6 +116,12 @@ class RadioMaterialComp extends Component {
                 }}
               />
             )}{' '}
+          </td>
+          <td>
+            <Button type="primary">
+              <SearchOutlined />
+              유효성체크
+            </Button>
           </td>
         </tr>
       </table>

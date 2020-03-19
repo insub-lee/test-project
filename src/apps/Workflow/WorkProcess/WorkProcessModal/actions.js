@@ -1,8 +1,8 @@
 import * as actionTypes from './constants';
 
-export const getDeptList = payload => ({
+export const getDeptList = callbackFunc => ({
   type: actionTypes.GET_DEPT_LIST,
-  payload,
+  callbackFunc,
 });
 
 export const setDeptList = list => ({
@@ -10,9 +10,10 @@ export const setDeptList = list => ({
   list,
 });
 
-export const getDeptUserList = deptId => ({
+export const getDeptUserList = (deptId, callbackFunc) => ({
   type: actionTypes.GET_DEPT_USER_LIST,
   deptId,
+  callbackFunc,
 });
 
 export const setDeptUserList = list => ({
@@ -22,4 +23,13 @@ export const setDeptUserList = list => ({
 
 export const initDeptUserList = () => ({
   type: actionTypes.INIT_DEPT_USER_LIST,
+});
+
+export const submitHandlerBySaga = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
+  type: actionTypes.PUBLIC_ACTIONMETHOD_SAGA,
+  id,
+  httpMethod,
+  apiUrl,
+  submitData,
+  callbackFunc,
 });
