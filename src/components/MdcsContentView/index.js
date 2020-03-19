@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Button, Modal } from 'antd';
 import { FileSearchOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledTable from 'components/CommonStyled/StyledTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
@@ -53,7 +53,7 @@ class MdcsContentView extends Component {
     const { fullPathNm } = this.state;
     return (
       <>
-        <StyledTable>
+        <StyledHtmlTable>
           <table>
             <tbody>
               <tr>
@@ -86,7 +86,7 @@ class MdcsContentView extends Component {
               </tr>
             </tbody>
           </table>
-        </StyledTable>
+        </StyledHtmlTable>
         <ModalWrapper
           title="문서표지"
           style={{ padding: '10px' }}
