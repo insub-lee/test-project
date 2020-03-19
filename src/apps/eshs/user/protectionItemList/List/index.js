@@ -33,6 +33,7 @@ class List extends React.Component {
       rowData: [],
       tooltipShowDelay: 0,
       fileList: [],
+      responseList: [],
     };
     this.getNewRowData = debounce(this.getNewRowData, 300);
   }
@@ -106,7 +107,7 @@ class List extends React.Component {
     maker_cd: '',
     unit: '',
     validity_term: '',
-    properstock: '',
+    properstock: 0,
     comments: '',
   };
 
@@ -120,7 +121,11 @@ class List extends React.Component {
   };
 
   modalContent = () => [
-    { title: '사진', content: '' },
+    {
+      title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
+      content:
+        this.state.viewType.toUpperCase() === 'VIEW' ? <img src="http://eshs-dev.magnachip.com/down/file/164288" alt={this.state.requestValue.kind} /> : '',
+    },
     {
       title: '지역',
       content: (
@@ -302,16 +307,7 @@ class List extends React.Component {
     },
     {
       title: '첨부',
-      // content: <Upload action={`http://eshs-dev.magnachip.com/upload/files/${161010}`} listType="picture-card" fileList={this.state.filesInfo} />,
-      content: (
-        <ImageUploader
-          action="/upload"
-          listType="picture-card"
-          // customRequest={file => this.handleUploadFileRequest(file)}
-          handleChange={this.handleUploadFileChange}
-          fileList={this.state.fileList}
-        />
-      ),
+      content: <ImageUploader action="/upload" listType="picture-card" handleChange={this.handleUploadFileChange} fileList={this.state.fileList} />,
     },
   ];
 
@@ -386,7 +382,7 @@ class List extends React.Component {
   handleOk = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    this.setState({ visible: false, requestValue: this.requestValueOrigin });
+    this.setState({ visible: false, requestValue: this.requestValueOrigin, responseList: [], fileList: [] });
     submitHandlerBySaga(
       id,
       'POST',
@@ -418,19 +414,22 @@ class List extends React.Component {
     this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.hitem_cd !== prevState.requestValue.hitem_cd), visible: false }));
   };
 
-  handleUploadFileRequest = file => {
-    console.debug(file.data);
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(id, 'POST', '/upload', file);
+  handleUploadFileChange = ({ fileList }) => {
+    const responseList = [];
+    fileList.map(item => responseList.push(item.response));
+    this.setState({ fileList, responseList });
   };
 
-  handleUploadFileChange = ({ file }) => {
-    console.debug('@@@@ONCHANGE', file);
-    this.setState(prevState => ({ fileList: prevState.fileList.concat(file) }));
+  BeforeSaveTask = () => {
+    const { responseList } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const uploadFile = submitHandlerBySaga(id, 'POST', `/upload/moveFileToReal`, { PARAM: { DETAIL: responseList } }, this.handleOk());
+    const uploadFileList = uploadFile.submitData.PARAM.DETAIL;
+    this.setState({ uploadFileList });
   };
 
   inputFooter = [
-    <StyledButton className="btn-primary" onClick={this.handleOk}>
+    <StyledButton className="btn-primary" onClick={this.BeforeSaveTask}>
       등록
     </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleCancel}>
@@ -453,7 +452,7 @@ class List extends React.Component {
   render() {
     const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
-    console.debug(this.state.fileList);
+    console.debug(this.props);
     return (
       <StyledViewDesigner>
         <Sketch>

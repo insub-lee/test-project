@@ -52,7 +52,8 @@ class ImageUploader extends Component {
           fileList={fileList}
           onPreview={this.handlePreview}
           onChange={handleChange}
-          customRequest={customRequest}
+          // customRequest 가 없어도 얘를 실행해서 잘못된 request를 날림
+          // customRequest={customRequest}
         >
           {fileList.length >= 3 ? null : <UploadButton />}
         </Upload>

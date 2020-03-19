@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class CustomTooltip extends Component {
+class CustomTooltip extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      param: '',
+    };
+  }
+
   getReactContainerClasses() {
     return ['custom-tooltip'];
   }
 
   render() {
     const { data } = this.props.api.getDisplayedRowAtIndex(this.props.rowIndex);
+    const { param } = this.state;
+    const url = `http://eshs-dev.magnachip.com/down/file/${param}`;
     return (
       <div className="custom-tooltip">
-        <img src="http://eshs-dev.magnachip.com/down/file/159668" alt={data.kind} width="150px" />
+        <img src={url} alt={data.kind} width="150px" />
       </div>
       // <div className="custom-tooltip" style={{ backgroundColor: this.props.color || 'white' }}>
       //   <p>
@@ -31,3 +40,5 @@ CustomTooltip.propTypes = {
   api: PropTypes.object,
   rowIndex: PropTypes.number,
 };
+
+export default CustomTooltip;
