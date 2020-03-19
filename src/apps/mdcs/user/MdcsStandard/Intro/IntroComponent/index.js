@@ -147,12 +147,12 @@ class IntroComponent extends Component {
               <BizBuilderBase
                 sagaKey={`BizDoc_${selectedworkSeq}`}
                 workSeq={selectedworkSeq}
+                taskSeq={selectedTaskSeq}
                 compProps={{ docNumber, NODE_ID: selectedNodeId, onCloseModleHandler: this.onCompleteCloseModal }}
                 CustomInputPage={StdInput}
                 CustomViewPage={StdView}
                 CustomWorkProcess={DraftPrcLine}
                 viewChangeSeq={viewChangeSeq}
-                taskSeq={selectedTaskSeq}
                 workPrcProps={workPrcProps}
                 viewType={viewType}
                 loadingComplete={this.loadingComplete}
