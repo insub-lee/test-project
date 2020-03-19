@@ -6,12 +6,11 @@ const StyledHeader = styled.header`
   &.portalHeader {
     max-width: 100%;
     width: 100%;
-    height: 42px;
-    padding: 0;
-    border-top: ${props => props.theme.header.borderTop};
+    padding: 10px 15px;
+    border-bottom: 1px solid #ccc;
     //background: ${props => props.theme.header.backgroundColor};
-    background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
-    background-color: ${props => props.theme.header.backgroundColor};
+    /* background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
+    background-color: ${props => props.theme.header.backgroundColor}; */
     
     z-index: 1010;
 
@@ -21,7 +20,7 @@ const StyledHeader = styled.header`
       height: 100%;
 
       > ul {
-        padding: 4px 0 4px 15px;
+        padding: 4px 0 4px 2px;
       }
 
       .leftBottom {
@@ -42,7 +41,7 @@ const StyledHeader = styled.header`
             line-height: 30px;
 
             &:before {
-              color: ${props => props.theme.header.iconMenuColor}
+              color: #fff;
             }
           }
 
@@ -56,7 +55,7 @@ const StyledHeader = styled.header`
           display: inline-block;
           height: 33px;
           line-height: 33px;
-          color: #ffffff;
+          color: #000;
           font-size: 16px;
         }
 
@@ -167,27 +166,30 @@ const StyledHeader = styled.header`
           font-size: 21px;
 
           &:before {
-            color: ${props => props.theme.header.iconAlarmColor};
-            opacity: 0.5;
+            color: #666;
           }
         }
 
         .icon-setting {
           font-size: 19px;
+
+          &:before {
+            color: #666;
+            opacity: 1;
+          }
         }
 
         .icon-full {
           font-size: 17px;
 
           &:before {
-            color: ${props => props.theme.header.iconFullScreenColor};
-            opacity: 0.5;
+            color: #666;
           }
         }
 
         .iconMenuWrapper > li {
           float: left;
-          display: inline-block;
+          display: block;
           width: 49px;
           height: 27px;
           line-height: 27px;
@@ -216,11 +218,12 @@ const StyledHeader = styled.header`
             height: 27px;
             padding: 5px;
             line-height: 1;
-            border-radius: 3px;
+            border-radius: 0px;
             border: none;
-            color: ${props => props.theme.header.memberSearch.fontColor};
+            color: #333;
             font-size: ${props => props.theme.header.memberSearch.fontSize};
             background: ${props => props.theme.header.memberSearch.inputBackgroundColor};
+            border-bottom: 1px solid #aaa;
           }
 
           .mInputBox::placeholder {color: #fff !important; font-weight: 400;}
@@ -259,7 +262,7 @@ const StyledHeader = styled.header`
             margin-top: 3px;
     
             .myPicture {
-              display: inline-block;
+              display: block;
               width: 25px;
               height: 25px;
               float: left;
@@ -280,7 +283,7 @@ const StyledHeader = styled.header`
             }
     
             .myInfo {
-              display: inline-block;
+              display: block;
               width: calc(100% - 38px);
               height: 30px;
               float: right;
