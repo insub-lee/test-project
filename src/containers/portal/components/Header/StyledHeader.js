@@ -4,7 +4,6 @@ import { borderRadius } from '../../../../config/style-util';
 
 const StyledHeader = styled.header`
   &.portalHeader {
-    position: fixed;
     max-width: 100%;
     width: 100%;
     height: 42px;
@@ -22,7 +21,7 @@ const StyledHeader = styled.header`
       height: 100%;
 
       > ul {
-        padding: 4px 0 4px 2px;
+        padding: 4px 0 4px 15px;
       }
 
       .leftBottom {
