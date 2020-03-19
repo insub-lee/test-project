@@ -24,6 +24,9 @@ const StyledLineTable = Component => styled(Component)`
         border-bottom: 2px solid #aeb4be;
         font-size: 0.85rem;
       }
+      .ant-table-tbody > tr > td {
+        cursor: pointer;
+      }
     }
   }
   /* table 끝 */
