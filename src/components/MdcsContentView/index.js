@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Button, Modal, Icon } from 'antd';
-import { FileSearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { FileSearchOutlined, ExclamationCircleOutlined, FileProtectOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -86,6 +86,10 @@ class MdcsContentView extends Component {
       <div>
         <Icon type={doctype} style={{ fontSize: '18px', marginRight: '5px' }} />
         {fileName}
+        <StyledButton className="btn-primary  btn-sm">
+          <FileProtectOutlined />
+          원본파일
+        </StyledButton>
       </div>
     );
   };
