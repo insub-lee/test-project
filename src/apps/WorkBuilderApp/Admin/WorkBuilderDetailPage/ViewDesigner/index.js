@@ -37,10 +37,12 @@ class ViewDesigner extends Component {
       viewType: '',
     };
     // this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount = () => {
     const { workSeq, viewType, viewID, getMetaData, getComponentPoolList, getSysMetaList } = this.props;
+    window.addEventListener('keydown', this.handleKeyDown);
     getMetaData(workSeq, viewType, viewID);
     // getComponentPoolList();
     // getSysMetaList();
@@ -50,6 +52,7 @@ class ViewDesigner extends Component {
 
   componentWillUnmount() {
     // window.removeEventListener('resize', this.handleSize);
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   getSize = () => {
@@ -103,6 +106,21 @@ class ViewDesigner extends Component {
       message.warning(<MessageContent>페이지명은 필수입니다.</MessageContent>);
     }
   };
+
+  handleKeyDown(event) {
+    // event.keyCode === 83
+    const charCode = String.fromCharCode(event.which).toLowerCase();
+    if (event.ctrlKey && charCode === 's') {
+      event.preventDefault();
+      this.handleSaveMetaData();
+    }
+
+    // For MAC we can use metaKey to detect cmd key
+    if (event.metaKey && charCode === 's') {
+      event.preventDefault();
+      this.handleSaveMetaData();
+    }
+  }
 
   renderViewChangeProcessPopup = () => {
     const {
