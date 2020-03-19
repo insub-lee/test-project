@@ -89,7 +89,7 @@ class ExternalDistributeMgntList extends Component {
       key: 'mail',
       width: '5%',
       align: 'center',
-    render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
+      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
     },
   ]
 
