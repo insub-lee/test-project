@@ -8,7 +8,7 @@ import { createStructuredSelector } from 'reselect';
 import * as selectors from '../../../../../../containers/common/Auth/selectors';
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
-import MainPageStyled from './MainPageStyled';
+import MainPageStyled from '../../styled/MainPageStyled';
 
 class MainPage extends Component {
   constructor(props) {
