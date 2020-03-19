@@ -125,7 +125,7 @@ class TakeOutCustomComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, isSearch, searchCompRenderer, viewPageData } = this.props;
+    const { CONFIG, visible, isSearch, searchCompRenderer, viewPageData, readOnly } = this.props;
     const { apiList, leftTableColumns, rightTableColumns, applyList } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     return visible ? (
@@ -171,13 +171,19 @@ class TakeOutCustomComp extends React.Component {
                         </td>
                         <td>{a.CONTRACT_CD || ''}</td>
                         <td>
-                          <InputNumber style={{ width: '100px' }} onChange={e => this.handleInputOnChange(e, a, 'TAKEOUT_QTY')} value={a.TAKEOUT_QTY || ''} />
+                          <InputNumber
+                            style={{ width: '100px' }}
+                            onChange={e => this.handleInputOnChange(e, a, 'TAKEOUT_QTY')}
+                            value={a.TAKEOUT_QTY || ''}
+                            readOnly
+                          />
                         </td>
                         <td>
                           <Input
                             style={{ width: '100px' }}
                             onChange={e => this.handleInputOnChange(e.target.value, a, 'TAKEOUT_UNIT')}
                             value={a.TAKEOUT_UNIT || ''}
+                            readOnly
                           />
                         </td>
                         <td>
@@ -185,15 +191,16 @@ class TakeOutCustomComp extends React.Component {
                             style={{ width: '100px' }}
                             onChange={e => this.handleInputOnChange(e.target.value, a, 'TAKEOUT_REASON')}
                             value={a.TAKEOUT_REASON || ''}
+                            readOnly
                           />
                         </td>
                         <td>
-                          <InputNumber style={{ width: '100px' }} onChange={e => this.handleInputOnChange(e, a, 'WEIGH')} value={a.WEIGH || ''} />
+                          <InputNumber style={{ width: '100px' }} onChange={e => this.handleInputOnChange(e, a, 'WEIGH')} value={a.WEIGH || ''} readOnly />
                           {a.PRICE_UNIT_NM || ''}
                         </td>
                         <td>
-                          {Number(a.DISP_UNIT_PRICE) * Number(a.WEIGH) || ''}
-                          {a.MONEY_UNIT || ''}
+                          {Number(a.DISP_UNIT_PRICE) * Number(a.WEIGH)}
+                          {a.MONEY_UNIT_NM}
                         </td>
                       </>
                     </tr>
