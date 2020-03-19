@@ -496,6 +496,26 @@ const StyledViewDesigner = styled.div`
   .Side-menu-default .item.item-level-1.active {
     //border-left: 4px solid #584475;
   }
+
+  .ant-modal.makeNewViewModal {
+    .ant-modal-close {
+      margin: 10px;
+      .ant-modal-close-x {
+        width: 58px;
+        height: 33px;
+        line-height: 33px;
+      }
+    }
+    .ant-modal-body {
+      span.makeNewViewModalTitle {
+        padding-right: 10px;
+      }
+      .makeNewViewModalInput {
+        width: 312px;
+        margin-right: 10px;
+      }
+    }
+  }
 `;
 
 export default StyledViewDesigner;
