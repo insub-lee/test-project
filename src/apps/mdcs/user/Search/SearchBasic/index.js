@@ -10,10 +10,12 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import SearchViewer from '../SearchViewer';
 import CoverViewer from '../CoverViewer';
 
 const AntdModal = StyledModalWrapper(Modal);
+const AntdLineTable = StyledLineTable(Table);
 const FormItem = Form.Item;
 
 const columns = [
@@ -293,9 +295,9 @@ class SearchBasic extends Component {
             okButtonProps={null}
           >
             <>
-              <div className="pop_tit">적용 범위 선택</div>
+              <div className="pop_tit">적용 범위 선택z</div>
               <div className="pop_con">
-                <Table
+                <AntdLineTable
                   columns={columns}
                   size="middle"
                   dataSource={listDataArr}

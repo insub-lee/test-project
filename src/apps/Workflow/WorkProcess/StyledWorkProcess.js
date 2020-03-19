@@ -105,7 +105,7 @@ const StyledWorkProcess = styled.div`
         position: relative;
         border-right: 1px solid #ddd;
         background-color: #f7f7f7;
-        height: 32px;
+        min-height: 32px;
         text-align: center;
         line-height: 32px;
         span {

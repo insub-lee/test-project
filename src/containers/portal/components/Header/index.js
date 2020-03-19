@@ -15,7 +15,7 @@ import AlarmPopover from '../../App/UserNotice';
 import ManagerInfo from '../ManagerInfo';
 // import messages from './messages';
 import StyledHeader from './StyledHeader';
-import Trigger from '../../App/Trigger';
+// import Trigger from '../../App/Trigger';
 import Button from '../../../../components/Button';
 
 const Header = ({
@@ -23,7 +23,7 @@ const Header = ({
   managerInfo,
   view,
   hasRoleAdmin,
-  setOpen: showMenu,
+  // setOpen: showMenu,
   handleClick: showFullScreen,
   execPage: gotoHome,
   setMyMenuData,
@@ -53,12 +53,6 @@ const Header = ({
       <div className="onLeft">
         <ul>
           <li className="leftBottom">
-            <Trigger>
-              <span className="trigger icon icon-menu" onClick={showMenu} onKeyDown={showMenu} role="button" tabIndex="0" />
-              {/* <Badge count={myHNotiCnt} overflowCount={99}>
-                <Link to="/" className="badgeLink" />
-              </Badge> */}
-            </Trigger>
             <h1 className="siteHeader">
               <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
                 {view !== 'Mobile' && headerTitle}

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
 import { Button, Modal } from 'antd';
+import { FileSearchOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledTable from 'components/CommonStyled/StyledTable';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
 
@@ -71,9 +73,9 @@ class MdcsContentView extends Component {
               <tr>
                 <th style={{ width: '100px' }}>표지보기</th>
                 <td style={{ width: '200px' }}>
-                  <Button icon="file-text" onClick={this.onDocCoverClick}>
-                    표지보기
-                  </Button>
+                  <StyledButton className="btn-primary  btn-sm" onClick={this.onDocCoverClick}>
+                    <FileSearchOutlined /> 표지보기
+                  </StyledButton>
                 </td>
                 <th style={{ width: '100px' }}>결재상태</th>
                 <td style={{ width: '200px' }}></td>
