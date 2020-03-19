@@ -20,12 +20,6 @@ const MainPageStyled = styled.div`
         > tr {
           border-bottom: 1px solid #cccccc;
           text-align: center;
-          > td:first-child {
-            width: 3%;
-          }
-          > td:nth-child(2) {
-            width: 3%;
-          }
           > td {
             border-right: 1px solid #cccccc;
             background-color: #d6ebff;
