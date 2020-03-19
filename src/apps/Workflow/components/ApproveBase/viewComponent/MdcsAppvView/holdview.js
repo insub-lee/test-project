@@ -60,6 +60,7 @@ class HoldView extends Component {
 
   onCloseModal = () => {
     const { onResizeModal } = this.props;
+    console.debug('modal close');
     onResizeModal(600);
     this.props.setViewVisible(false);
   };
