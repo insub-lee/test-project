@@ -1,13 +1,16 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal, Table } from 'antd';
+import { Input, Button, Modal, Table, DatePicker } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-
+import moment from 'moment';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
 const AntdTable = StyledAntdTable(Table);
+const { RangePicker } = DatePicker;
 
 class TakeOutSearchComp extends React.Component {
   constructor(props) {
@@ -15,20 +18,23 @@ class TakeOutSearchComp extends React.Component {
     this.state = {
       modal: false,
       modalList: [],
+      dates: [moment(), moment()],
+      dateStrings: [],
     };
   }
 
-  componentDidMount() {
+  searchList = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
+    const { dateStrings } = this.state;
     const apiValue = [
       {
         key: 'TakeOutList',
-        url: `/api/eshs/v1/common/eshsTakeOutList`,
+        url: `/api/eshs/v1/common/eshsTakeOutList?FROM_DATE=${dateStrings[0] || ''}&TO_DATE=${dateStrings[1] || ''}`,
         type: 'GET',
       },
     ];
     getExtraApiData(id, apiValue, this.setList);
-  }
+  };
 
   componentDidUpdate() {
     const { changeFormData, sagaKey: id, COMP_FIELD, viewPageData } = this.props;
@@ -83,17 +89,78 @@ class TakeOutSearchComp extends React.Component {
     }
   };
 
-  BizbuilderbaseRender = () => {
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={node => {
+            this.searchInput = node;
+          }}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes(value.toLowerCase()),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text =>
+      this.state.searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[this.state.searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  modalTableRender = () => {
     const { columns } = this.props;
     const { modalList } = this.state;
-    console.log(modalList);
+    const nColumns = columns.map(nItem => ({ ...nItem, ...this.getColumnSearchProps(nItem.dataIndex) }));
     return (
       <StyledViewDesigner>
         <Sketch>
+          <RangePicker defaultValue={this.state.dates} format={['YYYY-MM-DD', 'YYYY-MM-DD']} onChange={(date, dateStrings) => this.dateChange(dateStrings)} />
+          <Button onClick={this.searchList}>검색</Button>
           <AntdTable
             rowKey={modalList.TAKEOUT_CD}
             key={`${modalList.TAKEOUT_CD}_list`}
-            columns={columns}
+            columns={nColumns}
             dataSource={modalList || []}
             onRow={record => ({
               onClick: () => {
@@ -104,6 +171,10 @@ class TakeOutSearchComp extends React.Component {
         </Sketch>
       </StyledViewDesigner>
     );
+  };
+
+  dateChange = dateStrings => {
+    this.setState({ dateStrings });
   };
 
   ButtonRender() {
@@ -155,7 +226,7 @@ class TakeOutSearchComp extends React.Component {
         <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
         {this.ButtonRender()}
         <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-          {this.state.modal && this.BizbuilderbaseRender()}
+          {this.state.modal && this.modalTableRender()}
         </Modal>
       </div>
     ) : (

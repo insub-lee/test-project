@@ -1,8 +1,12 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Button, Checkbox, message, Popover, Modal } from 'antd';
 import Upload from 'components/Upload';
 import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
 import * as popoverContent from './PopoverContent';
 
 const appIconUploadArea = {
@@ -25,12 +29,10 @@ class ItemTable extends Component {
   }
 
   handleAction = type => {
-    const { id, formData, submitHandlerBySaga } = this.props;
-    const materialData = (formData && formData.materialData) || '';
-    const itemList = (formData && formData.itemList) || [];
+    const { saveBeforeProcess } = this.props;
     switch (type) {
       case 'UPDATE':
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsEiImportantAssesment', { ...materialData, itemList }, this.updateComplete);
+        saveBeforeProcess();
         break;
       case 'EXCEL_DOWNLOAD':
         message.warning('미구현');
@@ -38,10 +40,6 @@ class ItemTable extends Component {
       default:
         break;
     }
-  };
-
-  updateComplete = () => {
-    message.success('저장되었습니다.');
   };
 
   handleInputOnchange = (e, SEQ) => {
@@ -82,34 +80,23 @@ class ItemTable extends Component {
     this.setState({ modalVisible: !modalVisible });
   };
 
-  onFileUploaded = (file, SEQ) => {
-    const { changeFormData, formData, id } = this.props;
-    // one file upload 최신 파일만 업로드 되게
-    const itemList = (formData && formData.itemList) || [];
+  handlePopoverContet = text => <div>{text}</div>;
 
-    changeFormData(
-      id,
-      'itemList',
-      itemList.map(item => (Number(item.SEQ) === Number(SEQ) ? { ...item, FILESEQ: file.seq, DOWN: file.down, FILE_NAME: file.fileName } : item)),
-    );
-    console.debug('fillllle', file);
-    console.debug('seq', SEQ);
-    // this.handleChangeImage(tmpArr[0].seq);
-  };
-
-  handleDown = (e, fileSeq) => {
-    // tempFile...
+  handleDown = (e, fileSeq, type) => {
     e.stopPropagation();
-    window.location.href = `/down/tempfile/${Number(fileSeq)}`;
+    if (type > 0) {
+      window.location.href = `/down/file/${Number(fileSeq)}`;
+    } else {
+      window.location.href = `/down/tempfile/${Number(fileSeq)}`;
+    }
   };
 
   render() {
-    const { formData } = this.props;
+    const { formData, onFileUploaded } = this.props;
     const searchFlag = (formData && formData.searchFlag) || false;
     const itemList = (formData && formData.itemList) || [];
     const btnOk = itemList.length >= 1;
     const { modalVisible } = this.state;
-    console.debug('1111111111111');
     return (
       <div className="itemTable">
         <br />
@@ -132,7 +119,13 @@ class ItemTable extends Component {
           <thead>
             <tr>
               <td colSpan={13}>
-                <Button onClick={() => this.handleAction('UPDATE')}>저장</Button>
+                {itemList.length > 0 && (
+                  <>
+                    <font color="#ff0000">저장 버튼은 상신되지 않고 DATABASE에 저장만 됩니다.</font>
+                    &nbsp;
+                    <Button onClick={() => this.handleAction('UPDATE')}>저장</Button>
+                  </>
+                )}
               </td>
             </tr>
             <tr>
@@ -211,45 +204,66 @@ class ItemTable extends Component {
               <tr key={item.SEQ}>
                 <td align="center">{index + 1}</td>
                 <td>
-                  <Input name="MATTER" defaultValue={item.MATTER} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <span>{item.MATTER}</span>
                 </td>
                 <td>
-                  <Input name="APPLY_PROCESS" defaultValue={item.APPLY_PROCESS} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.APPLY_PROCESS}</span>} title={null}>
+                    <Input name="APPLY_PROCESS" defaultValue={item.APPLY_PROCESS} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="APPLY_EQUIPMENT" defaultValue={item.APPLY_EQUIPMENT} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.APPLY_EQUIPMENT}</span>} title={null}>
+                    <Input name="APPLY_EQUIPMENT" defaultValue={item.APPLY_EQUIPMENT} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="LAWS_REVIEW" defaultValue={item.LAWS_REVIEW} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.LAWS_REVIEW}</span>} title={null}>
+                    <Input name="LAWS_REVIEW" defaultValue={item.LAWS_REVIEW} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="CRITICAL_ENVIRONMENT" defaultValue={item.CRITICAL_ENVIRONMENT} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.CRITICAL_ENVIRONMENT}</span>} title={null}>
+                    <Input name="CRITICAL_ENVIRONMENT" defaultValue={item.CRITICAL_ENVIRONMENT} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="TECH_REVIEW" defaultValue={item.TECH_REVIEW} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.TECH_REVIEW}</span>} title={null}>
+                    <Input name="TECH_REVIEW" defaultValue={item.TECH_REVIEW} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="FINANCIAL_SIDE" defaultValue={item.FINANCIAL_SIDE} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.FINANCIAL_SIDE}</span>} title={null}>
+                    <Input name="FINANCIAL_SIDE" defaultValue={item.FINANCIAL_SIDE} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="OPERATION_SIDE" defaultValue={item.OPERATION_SIDE} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.OPERATION_SIDE}</span>} title={null}>
+                    <Input name="OPERATION_SIDE" defaultValue={item.OPERATION_SIDE} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="BUSINESS_SIDE" defaultValue={item.BUSINESS_SIDE} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.BUSINESS_SIDE}</span>} title={null}>
+                    <Input name="BUSINESS_SIDE" defaultValue={item.BUSINESS_SIDE} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td>
-                  <Input name="STAKEHOLDERS" defaultValue={item.STAKEHOLDERS} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  <Popover content={<span>{item.STAKEHOLDERS}</span>} title={null}>
+                    <Input name="STAKEHOLDERS" defaultValue={item.STAKEHOLDERS} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                  </Popover>
                 </td>
                 <td align="center">
                   <Checkbox checked={item.PLAN_REVIEW === 'Y'} onChange={() => this.handleCheckBoxOnChange(item.SEQ)} />
                 </td>
                 <td align="center">
                   {item.PLAN_REVIEW === 'N' ? (
-                    <Input name="IMPROVEMENT_PLAN" defaultValue={item.IMPROVEMENT_PLAN} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                    <>
+                      <span>{item.IMPROVEMENT_PLAN}</span>
+                      <Input name="IMPROVEMENT_PLAN" defaultValue={item.IMPROVEMENT_PLAN} onChange={e => this.handleInputOnchange(e, item.SEQ)} />
+                    </>
                   ) : (
                     <div style={appIconUploadArea}>
                       <Upload
-                        onFileUploaded={obj => this.onFileUploaded(obj, item.SEQ)}
+                        onFileUploaded={obj => onFileUploaded(obj, item.SEQ)}
                         multiple={false} // default true
                         width={150}
                         height={32}
@@ -259,13 +273,10 @@ class ItemTable extends Component {
                       >
                         <span>Upload</span>
                         <div style={{ width: '100%', height: '100%', textAlign: 'center' }}>
-                          {item.FILESEQ && (
-                            <a onClick={e => this.handleDown(e, item.FILESEQ)} download>
+                          {item.FILE_SEQ && (
+                            <a onClick={e => this.handleDown(e, item.FILE_SEQ, item.FILE_TYPE)} download>
                               {item.FILE_NAME}
                             </a>
-                            // <a onClick={e => this.handleDown(e, item.DOWN)} download>
-                            //   {item.FILE_NAME}
-                            // </a> tempFile -> real로 옮겨야함
                           )}
                         </div>
                       </Upload>
@@ -299,5 +310,10 @@ class ItemTable extends Component {
     );
   }
 }
+
+ItemTable.propTypes = {
+  saveBeforeProcess: PropTypes.func,
+  onFileUploaded: PropTypes.func,
+};
 ItemTable.defaultProps = {};
 export default ItemTable;

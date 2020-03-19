@@ -132,30 +132,32 @@ const reducer = (state = initialState, action) => {
     case actionTypes.CHANGE_FORMDATA: {
       const { id, key, val } = action;
       const metaList = state.getIn(['bizBuilderBase', id, 'metaList']);
-      const compConfig = metaList.getIn([metaList.findIndex(iNode => iNode.get('COMP_FIELD') === key), 'CONFIG']);
-      if (isJSON(compConfig)) {
-        const compConfigObject = JSON.parse(compConfig);
-        const { isRequired } = compConfigObject.property;
-        if (isRequired) {
-          let requiredFlag = false;
-          const requiredMsg = `${key}항목은 필수 입력입니다.`;
-          switch (typeof val) {
-            case 'string':
-              requiredFlag = !!(val && val.length > 0);
-              break;
-            case 'number':
-            case 'bigint':
-              requiredFlag = !!val;
-              break;
-            case 'undefined':
-              requiredFlag = false;
-              break;
-            default:
-              requiredFlag = !!val;
+      if (metaList && metaList.size > 0) {
+        const compConfig = metaList.getIn([metaList.findIndex(iNode => iNode.get('COMP_FIELD') === key), 'CONFIG']);
+        if (isJSON(compConfig)) {
+          const compConfigObject = JSON.parse(compConfig);
+          const { isRequired } = compConfigObject.property;
+          if (isRequired) {
+            let requiredFlag = false;
+            const requiredMsg = `${key}항목은 필수 입력입니다.`;
+            switch (typeof val) {
+              case 'string':
+                requiredFlag = !!(val && val.length > 0);
+                break;
+              case 'number':
+              case 'bigint':
+                requiredFlag = !!val;
+                break;
+              case 'undefined':
+                requiredFlag = false;
+                break;
+              default:
+                requiredFlag = !!val;
+            }
+            state = state
+              .setIn(['bizBuilderBase', id, 'validationData', key, 'requiredFlag'], requiredFlag)
+              .setIn(['bizBuilderBase', id, 'validationData', key, 'requiredMsg'], requiredMsg);
           }
-          state = state
-            .setIn(['bizBuilderBase', id, 'validationData', key, 'requiredFlag'], requiredFlag)
-            .setIn(['bizBuilderBase', id, 'validationData', key, 'requiredMsg'], requiredMsg);
         }
       }
       return state.setIn(['bizBuilderBase', id, 'formData', key], val);
