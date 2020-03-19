@@ -4,16 +4,18 @@ import PropTypes from 'prop-types';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
-import { Select, Input, InputNumber, Modal, Upload } from 'antd';
+import { Select, Input, InputNumber, Modal } from 'antd';
 import request from 'utils/request';
 import { debounce } from 'lodash';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 // import CustomTooltipStyled from './styled';
 
+import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
+// import DefaultUploader from 'manual/components/Upload';
+import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
@@ -30,14 +32,7 @@ class List extends React.Component {
       columnDefs: this.columnDefsOrigin,
       rowData: [],
       tooltipShowDelay: 0,
-      filesInfo: [
-        {
-          uid: '-1',
-          // name: '3541.png',
-          // status: 'done',
-          // url: 'http://eshs-dev.magnachip.com/down/file/159668',
-        },
-      ],
+      fileList: [],
     };
     this.getNewRowData = debounce(this.getNewRowData, 300);
   }
@@ -307,7 +302,16 @@ class List extends React.Component {
     },
     {
       title: '첨부',
-      content: <Upload action={`http://eshs-dev.magnachip.com/upload/files/${161010}`} listType="picture-card" fileList={this.state.filesInfo} />,
+      // content: <Upload action={`http://eshs-dev.magnachip.com/upload/files/${161010}`} listType="picture-card" fileList={this.state.filesInfo} />,
+      content: (
+        <ImageUploader
+          action="/upload"
+          listType="picture-card"
+          // customRequest={file => this.handleUploadFileRequest(file)}
+          handleChange={file => this.handleUploadFileChange(file)}
+          fileList={this.state.fileList}
+        />
+      ),
     },
   ];
 
@@ -396,6 +400,7 @@ class List extends React.Component {
     this.setState({
       visible: false,
       requestValue: this.requestValueOrigin,
+      fileList: [],
     });
   };
 
@@ -413,9 +418,15 @@ class List extends React.Component {
     this.setState(prevState => ({ rowData: prevState.rowData.filter(item => item.hitem_cd !== prevState.requestValue.hitem_cd), visible: false }));
   };
 
-  handledataRequest = (id, method, callbackfunc) => {
-    const { submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(id, method, `/api/eshs/v1/common/geteshsprotectionitems`, () => callbackfunc);
+  handleUploadFileRequest = file => {
+    console.debug(file.data);
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    submitHandlerBySaga(id, 'POST', '/upload', file);
+  };
+
+  handleUploadFileChange = ({ file }) => {
+    console.debug('@@@@ONCHANGE', file);
+    this.setState(prevState => ({ fileList: prevState.fileList.concat(file) }));
   };
 
   inputFooter = [
@@ -442,6 +453,7 @@ class List extends React.Component {
   render() {
     const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
+    console.debug(this.state.fileList);
     return (
       <StyledViewDesigner>
         <Sketch>
