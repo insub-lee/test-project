@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const Styled = styled.div`
-  margin-top: 40px;
   height: 100%;
   position: fixed;
   left: -245px;
@@ -35,7 +34,9 @@ const Styled = styled.div`
   }
 
   .profile-area {
-    height: 110px;
+    > div {
+      padding: 40px 20px 30px;
+    }
   }
 
   .category-menu-area {

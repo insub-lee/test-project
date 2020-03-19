@@ -449,20 +449,22 @@ const reducer = (state = initialState, action) => {
       );
     }
     case actionTypes.SET_INIT_DATA_REDUCER: {
-      const { workSeq, viewType } = action;
-      const reloadState = initialState;
-      return reloadState
-        .set('workInfo', fromJS({ workSeq, viewType }))
-        .setIn(['viewData', 'WORK_SEQ'], workSeq)
-        .setIn(['viewData', 'COMP_TAG'], viewType);
-    }
-    case actionTypes.SET_INIT_LIST_DATA_REDUCER: {
-      const { workSeq, viewType } = action;
+      const { workSeq, viewType, viewName } = action;
       const reloadState = initialState;
       return reloadState
         .set('workInfo', fromJS({ workSeq, viewType }))
         .setIn(['viewData', 'WORK_SEQ'], workSeq)
         .setIn(['viewData', 'COMP_TAG'], viewType)
+        .setIn(['viewData', 'NAME_KOR'], viewName || '기본 입력 화면');
+    }
+    case actionTypes.SET_INIT_LIST_DATA_REDUCER: {
+      const { workSeq, viewType, viewName } = action;
+      const reloadState = initialState;
+      return reloadState
+        .set('workInfo', fromJS({ workSeq, viewType }))
+        .setIn(['viewData', 'WORK_SEQ'], workSeq)
+        .setIn(['viewData', 'COMP_TAG'], viewType)
+        .setIn(['viewData', 'NAME_KOR'], viewName)
         .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups'], fromJS([initialSearchGroup, initialListGroup]));
     }
     case actionTypes.SET_WORK_INFO_REDUCER: {
