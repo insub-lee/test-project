@@ -4,7 +4,7 @@ import { Input, Button, Icon, Modal } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 
 import UserSelect from 'components/UserSelect';
-import StyledTable from 'components/CommonStyled/StyledTable';
+import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledModal from 'commonStyled/Modal/StyledModal';
 import message from 'components/Feedback/message';
