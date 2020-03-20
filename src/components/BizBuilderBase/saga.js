@@ -116,7 +116,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc,
 
 function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData }) {
   /* Enable Data Loading */
-  yield put(actions.enableDataLoading());
+  // yield put(actions.enableDataLoading());
   /* Redux Reset By Id */
   yield put(actions.removeReduxState(id));
   let formData = {};
@@ -133,7 +133,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
     yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
   }
   /* Disable Data Loading */
-  yield put(actions.disableDataLoading());
+  // yield put(actions.disableDataLoading());
 }
 
 // processRule  조회

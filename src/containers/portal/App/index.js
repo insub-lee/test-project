@@ -19,13 +19,13 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Rodal from 'rodal';
 
 import Loadable from 'components/Loadable';
-
 import * as routesAction from 'containers/common/Routes/actions';
 import { basicPath } from 'containers/common/constants';
 import * as routesSelector from 'containers/common/Routes/selectors';
 import * as authSelector from 'containers/common/Auth/selectors';
 import Fullscreen from 'components/Fullscreen';
 import SideMenu from 'components/SideMenu';
+import Trigger from './Trigger';
 import { BtnMyhome } from './UserStore/components/uielements/buttons.style';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
@@ -44,7 +44,8 @@ import ErrorPage from './ErrorPage';
 
 /* Code Split */
 const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
-const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
+// const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
+const UserCategoryMenuESHSver = Loadable({ loader: () => import('./UserCategoryMenuESHSver') });
 const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
 const UserSetting = Loadable({ loader: () => import('./UserSetting') });
 const UserStore = Loadable({ loader: () => import('./UserStore') });
@@ -393,7 +394,6 @@ class App extends React.Component {
     } else {
       this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
     }
-
   };
 
   getLayoutMarginRight = () =>
@@ -413,7 +413,6 @@ class App extends React.Component {
     desktopMode
       ? {
           // height: '100%',
-          marginTop: 42,
           marginLeft: this.getLayoutMarginLeft(),
           marginRight: this.getLayoutMarginRight(),
           transition: 'margin-left 0.3s ease-out 0s',
@@ -469,24 +468,28 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
-          {/* Header */}
-          <Header
-            className="portalHeader"
-            setOpen={this.setMenuOpen}
-            execPage={this.execPage}
-            handleClick={this.handleClick}
-            setMyMenuData={setMyMenuData}
-            location={history.location}
-            myHNotiCnt={myHNotiCnt}
-            managerInfo={managerInfo}
-            view={view}
-            hasRoleAdmin={hasRoleAdmin}
-            headerTitle={headerTitle}
-            siteId={profile.SITE_ID}
-          />
           {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
+          <UserCategoryMenuESHSver
+            isShow={open}
+            setOpen={this.setOpen}
+            setFixedOpenMenu={this.setFixedOpenMenu}
+            execMenu={this.execMenu}
+            execPage={this.execPage}
+            myMNotiCnt={myMNotiCnt}
+            myHNotiCnt={myHNotiCnt}
+            myMNotiList={myMNotiList}
+            selectedIndex={selectedIndex}
+            menuName={menuName}
+            handleSetMenuNameSelectedIndex={handleSetMenuNameSelectedIndex}
+            setMyMenuData={setMyMenuData}
+            visible={this.state.visible}
+            setMenuClose={this.setMenuClose}
+            view={view}
+            history={this.props.history}
+            fixedMenu={menuFixedYn === 'Y'}
+          />
+          {/* 
           <UserCategoryMenu
             isShow={open}
             setOpen={this.setOpen}
@@ -506,7 +509,16 @@ class App extends React.Component {
             history={this.props.history}
             fixedMenu={menuFixedYn === 'Y'}
           />
+          */}
           <SideMenu>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Trigger>
+                <span className="trigger icon icon-menu" onClick={this.setMenuOpen} onKeyDown={this.setMenuOpen} role="button" tabIndex="0" />
+                {/* <Badge count={myHNotiCnt} overflowCount={99}>
+                  <Link to="/" className="badgeLink" />
+                </Badge> */}
+              </Trigger>
+            </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="Home">
                 <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
@@ -527,7 +539,7 @@ class App extends React.Component {
                 <Icon type="appstore" theme="filled" style={{ color: 'white', fontSize: '20px' }} onClick={this.goStore} />
               </Tooltip>
             </div>
-            {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능)*/}
+            {/* SA BM 권한이 있을 경우에만 노출 되도록 (SA권한 OR BM권한 + 업무그룹담당자 일 경우 업무그룹수정가능) */}
             {(hasRoleAdmin || hasRoleBizMng || bizGrpMngCnt > 0) && (
               <div className="iconPositon" style={{ marginTop: '20px' }}>
                 <Tooltip placement="right" title="Biz Card">
@@ -555,6 +567,22 @@ class App extends React.Component {
                       setMyMenuData={setMyMenuData}
                     >
                       <div id="child" className={this.getChildDivClassName(setMyMenuData, history, isFullSize)} style={{ height: '100%' }}>
+                        {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
+                        {/* Header */}
+                        <Header
+                          className="portalHeader"
+                          // setOpen={this.setMenuOpen}
+                          execPage={this.execPage}
+                          handleClick={this.handleClick}
+                          setMyMenuData={setMyMenuData}
+                          location={history.location}
+                          myHNotiCnt={myHNotiCnt}
+                          managerInfo={managerInfo}
+                          view={view}
+                          hasRoleAdmin={hasRoleAdmin}
+                          headerTitle={headerTitle}
+                          siteId={profile.SITE_ID}
+                        />
                         <Content
                           className="portalContent"
                           style={{

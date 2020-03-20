@@ -16,25 +16,6 @@ const StyledModalWrapper = Component => styled(Component)`
     }
     .ant-modal-body {
       padding: 0;
-      .ant-table-wrapper {
-        background-color: #fff;
-        border-radius: 4px;
-        &.tableCustom {
-          .ant-table-tbody > tr > td,
-          .ant-table-thead > tr > th {
-            padding: 10px 16px;
-            border-radius: 0;
-            font-size: 12px;
-          }
-          .ant-table-thead > tr > th {
-            background-color: #f7f7f7;
-            color: #000;
-            border-top: 1px solid #999;
-            font-size: 13px;
-          }
-        }
-      }
-      /* table 끝 */
     }
   }
   &.modalWrapper .ant-modal-body {

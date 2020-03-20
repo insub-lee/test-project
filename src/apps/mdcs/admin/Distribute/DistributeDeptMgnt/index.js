@@ -8,7 +8,7 @@ class DistributeDeptMgnt extends Component {
   componentDidMount() {}
 
   render() {
-    return <BizMicroDevBase id="distMgntList" component={List} />;
+    return <BizMicroDevBase sagaKey="distMgntList" component={List} />;
   }
 }
 

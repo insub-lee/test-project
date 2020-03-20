@@ -209,7 +209,8 @@ class ListPage extends Component {
 
   searchListModalVisible = () => {
     const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
-    changeViewPage('MsdsListSearchList', 3161, -1, 'LIST');
+    changeViewPage('MsdsListView', 3161, -1, 'LIST');
+
     handleModalVisible();
   };
 
