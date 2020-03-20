@@ -65,7 +65,7 @@ class StdModify extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask } = this.props;
-    modifyTask(id, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {

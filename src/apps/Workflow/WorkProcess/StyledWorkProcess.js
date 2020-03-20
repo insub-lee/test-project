@@ -100,18 +100,17 @@ const StyledWorkProcess = styled.div`
     }
     .ant-row-flex {
       /* display: flex; */
-      min-height: 28px;
+      min-height: 32px;
       .ant-col.dataLabel {
         position: relative;
         border-right: 1px solid #ddd;
         background-color: #f7f7f7;
+        min-height: 32px;
+        text-align: center;
+        line-height: 32px;
         span {
           font-size: 12px;
           color: #000;
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          left: 10px;
         }
       }
       .ant-col.dataContents {

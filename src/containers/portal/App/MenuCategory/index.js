@@ -19,7 +19,7 @@ const styleObj = {
   sidebar: {
     zIndex: 2000,
     position: 'fixed',
-    top: 42,
+    top: 0,
     bottom: 0,
     transition: 'transform .3s ease-out',
     WebkitTransition: '-webkit-transform .3s ease-out',
@@ -44,7 +44,7 @@ const styleObj = {
   overlay: {
     zIndex: 1999,
     position: 'fixed',
-    top: 42,
+    top: 0,
     left: 0,
     right: 0,
     bottom: 0,

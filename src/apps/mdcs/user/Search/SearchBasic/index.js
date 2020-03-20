@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { Table, Radio, Form, Modal, Input, Select } from 'antd';
 
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
@@ -10,29 +11,32 @@ import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import SearchViewer from '../SearchViewer';
 import CoverViewer from '../CoverViewer';
 
 const AntdModal = StyledModalWrapper(Modal);
+const AntdLineTable = StyledLineTable(Table);
 const FormItem = Form.Item;
 
 const columns = [
+  { title: 'No.', key: 'id', width: '11%', dataIndex: 'id' },
+  { title: 'REV.', key: 'VERSION', align: 'center', width: '6%', dataIndex: 'VERSION' },
+  { title: 'Effect Date', align: 'center', key: 'END_DTTM', width: '10%', dataIndex: 'END_DTTM' },
+  { title: 'Title', align: 'left', key: 'title', width: '35%', dataIndex: 'title' },
   {
     title: '종류',
     key: 'fullPathStr',
     dataIndex: 'fullPathStr',
+    width: '21%',
     render: (text, row, index) => {
       if (text) {
         return <text>{text.replace(/&gt;/g, ' > ')}</text>;
       }
     },
   },
-  { title: 'No.', key: 'id', dataIndex: 'id' },
-  { title: 'REV.', key: 'VERSION', dataIndex: 'VERSION' },
-  { title: 'Effect Date', key: 'END_DTTM', dataIndex: 'END_DTTM' },
-  { title: 'Title', key: 'title', dataIndex: 'title' },
-  { title: '기안부서', key: 'deptName', dataIndex: 'deptName' },
-  { title: '기안자', key: 'name', dataIndex: 'name' },
+  { title: '기안부서', key: 'deptName', width: '10%', dataIndex: 'deptName' },
+  { title: '기안자', key: 'name', width: '7%', dataIndex: 'name' },
 ];
 
 // Table NODE_ID 값
@@ -53,6 +57,7 @@ const initState = {
   status: 2, // 현재 Revision, 폐기
   docNo: '',
   keyword: '',
+  gubun: 1,
   type: 'title',
   drafter: '',
   draftDept: '',
@@ -78,10 +83,6 @@ const { Option } = Select;
 
 class SearchBasic extends Component {
   state = initState;
-
-  // componentDidMount() {
-  //   this.callApi();
-  // }
 
   callApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -109,8 +110,7 @@ class SearchBasic extends Component {
     this.setState({ nodeIdList: checkedValues });
   };
 
-  onChangeInput = (key, e) => {
-    const { value } = e.target;
+  onChangeInput = (key, value) => {
     this.setState({ [key]: value });
   };
 
@@ -184,7 +184,7 @@ class SearchBasic extends Component {
   };
 
   render() {
-    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView } = this.state;
+    const { nodeIdList, status, docNo, keyword, type, drafter, draftDept, startDateTemp, endDateTemp, visible, SearchView, coverView, gubun } = this.state;
     const { result } = this.props;
     const { listData = {} } = result;
     const listDataArr = listData.arr || [];
@@ -212,7 +212,7 @@ class SearchBasic extends Component {
                     <td>
                       <Input
                         onChange={e => {
-                          this.onChangeValue('docNumber', e.target.value);
+                          this.onChangeInput('docNo', e.target.value);
                         }}
                       />
                     </td>
@@ -220,13 +220,14 @@ class SearchBasic extends Component {
                     <td>
                       <Radio.Group
                         size="default"
+                        value={gubun}
                         onChange={e => {
-                          this.onChangeRev(e.target.value);
+                          this.onChangeRadio('gubun', e);
                         }}
                       >
-                        <StyledRadio value={2}>현재 Revision</StyledRadio>
-                        <StyledRadio value={0}>과거 Rev. 포함</StyledRadio>
-                        <StyledRadio value={8}>폐기</StyledRadio>
+                        <StyledRadio value={1}>현재 버전</StyledRadio>
+                        <StyledRadio value={2}>과거 Rev. 포함</StyledRadio>
+                        <StyledRadio value={3}>폐기</StyledRadio>
                       </Radio.Group>
                     </td>
                   </tr>
@@ -241,7 +242,7 @@ class SearchBasic extends Component {
                         <Input
                           style={{ width: '60%' }}
                           onChange={e => {
-                            this.onChangeKeyword(e.target.value);
+                            this.onChangeInput('keyword', e.target.value);
                           }}
                         />
                       </InputGroup>
@@ -252,7 +253,7 @@ class SearchBasic extends Component {
                     <td colSpan={3}>
                       <StyledInput
                         onChange={e => {
-                          this.onChangeValue('regUserName', e.target.value);
+                          this.onChangeInput('drafter', e.target.value);
                         }}
                       />
                     </td>
@@ -262,7 +263,7 @@ class SearchBasic extends Component {
                     <td colSpan={3}>
                       <StyledInput
                         onChange={e => {
-                          this.onChangeValue('regDeptName', e.target.value);
+                          this.onChangeInput('draftDept', e.target.value);
                         }}
                       />
                     </td>
@@ -293,9 +294,9 @@ class SearchBasic extends Component {
             okButtonProps={null}
           >
             <>
-              <div className="pop_tit">적용 범위 선택</div>
+              <div className="pop_tit">검색 결과</div>
               <div className="pop_con">
-                <Table
+                <AntdLineTable
                   columns={columns}
                   size="middle"
                   dataSource={listDataArr}
@@ -320,7 +321,7 @@ class SearchBasic extends Component {
             destroyOnClose
           >
             <>
-              <div className="pop_tit">선택 내용 보기</div>
+              <div className="pop_tit">검색 내용 보기</div>
               <div className="pop_con">
                 <SearchViewer
                   workSeq={SearchView.workSeq}
@@ -347,7 +348,7 @@ class SearchBasic extends Component {
             destroyOnClose
           >
             <>
-              <div className="pop_tit">선택 내용 보기</div>
+              <div className="pop_tit">검색 내용 보기</div>
               <div className="pop_con">
                 <CoverViewer nodeId={SearchView.nodeId} taskSeq={SearchView.taskSeq} workSeq={SearchView.workSeq} />
               </div>
