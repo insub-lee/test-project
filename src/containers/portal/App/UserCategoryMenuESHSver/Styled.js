@@ -3,11 +3,11 @@ import styled from 'styled-components';
 const Styled = styled.div`
   height: 100%;
   position: fixed;
-  left: -245px;
-  flex: 0 0 290px;
-  max-width: 290px;
-  min-width: 290px;
-  width: 290px;
+  left: -190px;
+  flex: 0 0 235px;
+  max-width: 235px;
+  min-width: 235px;
+  width: 235px;
   opacity: 1;
   background-color: #152434;
 
@@ -35,7 +35,7 @@ const Styled = styled.div`
 
   .profile-area {
     > div {
-      padding: 40px 20px 30px;
+      padding: 30px 20px 20px;
     }
   }
 
