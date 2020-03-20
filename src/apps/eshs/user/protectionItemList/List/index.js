@@ -124,7 +124,7 @@ class List extends React.Component {
     {
       title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
       content:
-        this.state.viewType.toUpperCase() === 'VIEW' ? <img src="http://eshs-dev.magnachip.com/down/file/164288" alt={this.state.requestValue.kind} /> : '',
+        this.state.viewType.toUpperCase() === 'VIEW' ? this.state.uploadFileList.map(item => <img src={item.down} alt={this.state.requestValue.kind} />) : '',
     },
     {
       title: '지역',
@@ -307,7 +307,7 @@ class List extends React.Component {
     },
     {
       title: '첨부',
-      content: <ImageUploader action="/upload" listType="picture-card" handleChange={this.handleUploadFileChange} fileList={this.state.fileList} />,
+      content: <ImageUploader action="/upload" listType="picture-card" handleChange={this.handleUploadFileChange} fileList={this.state.fileList} multiple />,
     },
   ];
 
@@ -316,14 +316,14 @@ class List extends React.Component {
     this.gridColumnApi = params.columnApi;
     this.getProtectionItemList().then(res =>
       this.setState({
-        rowData: res.response.list,
+        rowData: (res.response && res.response.list) || [],
       }),
     );
   };
 
   changeGridData = func => {
     this.setState({
-      rowData: func.response.list,
+      rowData: (func.response && func.response.list) || [],
     });
   };
 
@@ -425,6 +425,7 @@ class List extends React.Component {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const uploadFile = submitHandlerBySaga(id, 'POST', `/upload/moveFileToReal`, { PARAM: { DETAIL: responseList } }, this.handleOk());
     const uploadFileList = uploadFile.submitData.PARAM.DETAIL;
+    console.debug(uploadFileList, responseList, uploadFileList === responseList);
     this.setState({ uploadFileList });
   };
 
@@ -452,7 +453,6 @@ class List extends React.Component {
   render() {
     const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
-    console.debug(this.props);
     return (
       <StyledViewDesigner>
         <Sketch>

@@ -406,7 +406,7 @@ class App extends React.Component {
     // REMOVE DOCK - 주석 처리
     const { open } = this.state;
     const { menuFixedYn } = this.props;
-    return open && menuFixedYn === 'Y' ? 335 : 45;
+    return open && menuFixedYn === 'Y' ? 280 : 45;
   };
 
   getLayoutStyle = desktopMode =>

@@ -8,6 +8,7 @@
     "@loadable/component": "^5.12.0",
     "@opuscapita/react-filemanager": "^1.1.0-beta.6",
     "@opuscapita/react-filemanager-connector-node-v1": "^1.1.0-beta.6",
+    "@use-it/event-listener": "^0.1.3",
     "ag-grid-community": "^20.0.0",
     "ag-grid-enterprise": "^20.1.0",
     "ag-grid-react": "^20.0.0",

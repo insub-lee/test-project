@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import { Button, Modal } from 'antd';
-import { FileSearchOutlined } from '@ant-design/icons';
+import { Button, Modal, Icon } from 'antd';
+import { FileSearchOutlined, ExclamationCircleOutlined, FileProtectOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -48,9 +48,53 @@ class MdcsContentView extends Component {
     this.setState({ modalVisible: false });
   };
 
+  onRenderFileItem = (fileName, fileExt) => {
+    let doctype = 'file-unknown';
+    switch (fileExt) {
+      case 'pdf':
+        doctype = 'file-pdf';
+        break;
+      case 'xls':
+        doctype = 'file-excel';
+        break;
+      case 'xlsx':
+        doctype = 'file-excel';
+        break;
+      case 'txt':
+        doctype = 'file-text';
+        break;
+      case 'doc':
+        doctype = 'file-word';
+        break;
+      case 'docx':
+        doctype = 'file-word';
+        break;
+      case 'ppt':
+        doctype = 'file-ppt';
+        break;
+      case 'pptx':
+        doctype = 'file-ppt';
+        break;
+      case 'zip':
+        doctype = 'file-zip';
+        break;
+      default:
+        break;
+    }
+    return (
+      <div>
+        <Icon type={doctype} style={{ fontSize: '18px', marginRight: '5px' }} />
+        {fileName}
+        <FileProtectOutlined style={{ fontSize: '18px', marginRight: '5px', marginLeft: '5px' }} />
+        원본파일
+      </div>
+    );
+  };
+
   render() {
     const { formData, selectedRow } = this.props;
     const { fullPathNm } = this.state;
+
     return (
       <>
         <StyledHtmlTable>
@@ -82,7 +126,27 @@ class MdcsContentView extends Component {
               </tr>
               <tr>
                 <th style={{ width: '100px' }}>본문내용</th>
-                <td colSpan={3}></td>
+                <td colSpan={3}>
+                  {formData.ATTACH && formData.ATTACH.DETAIL ? (
+                    formData.ATTACH.DETAIL.map(file => this.onRenderFileItem(file.fileName, file.fileExt))
+                  ) : (
+                    <div>
+                      <ExclamationCircleOutlined /> 파일이 존재하지 않습니다.
+                    </div>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th style={{ width: '100px' }}>별첨</th>
+                <td colSpan={3}>
+                  {formData.ATTACH2 && formData.ATTACH2.DETAIL ? (
+                    formData.ATTACH2.DETAIL.map(file => this.onRenderFileItem(file.fileName, file.fileExt))
+                  ) : (
+                    <div>
+                      <ExclamationCircleOutlined /> 파일이 존재하지 않습니다.
+                    </div>
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>

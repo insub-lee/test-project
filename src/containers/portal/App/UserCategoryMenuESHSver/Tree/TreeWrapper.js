@@ -20,22 +20,22 @@ const TreeWrapper = styled.div`
   .searchWrapper {
     position: relative;
     display: inline-block;
-    width: 80%;
-    margin-bottom: 20px;
+    width: 75%;
+    margin-bottom: 10px;
     margin-left: 10px;
 
     & > span.ant-input-affix-wrapper > input.ant-input.ant-input-sm {
       position: relative;
       border: 1px solid #e5e5e5;
       border-radius: 4px;
-      padding: 0.5rem 0.875rem;
-      font-size: 0.8125rem;
+      padding: 0.5rem 0.6rem;
+      font-size: 0.8rem;
       font-weight: 400;
       line-height: 1.47;
       color: #495057;
       background-color: #fff;
       background-clip: padding-box;
-      height: calc(1.47em + 0.9rem + 2px);
+      height: calc(1em + 0.9rem + 2px);
       &:focus {
         color: #495057;
         background-color: #fff;
@@ -153,7 +153,7 @@ const TreeWrapper = styled.div`
     .essh_tree_depth2 {
       .rstcustom__rowTitle button {
         &.active {
-          opacity: 1;
+          text-decoration: underline;
         }
       }
     }
@@ -161,7 +161,7 @@ const TreeWrapper = styled.div`
     .essh_tree_depth3 {
       .rstcustom__rowTitle button {
         &.active {
-          opacity: 1;
+          text-decoration: underline;
         }
       }
     }
@@ -169,7 +169,7 @@ const TreeWrapper = styled.div`
     .essh_tree_depth4 {
       .rstcustom__rowTitle button {
         &.active {
-          opacity: 1;
+          text-decoration: underline;
         }
         padding-left: 10px;
       }
@@ -185,7 +185,6 @@ const TreeWrapper = styled.div`
   .sortableTreeWrapper.sidebar .rst__nodeContent .rstcustom__rowTitle button {
     text-align: left;
     color: #fff;
-    opacity: 0.5;
     & > i {
       margin-right: 5px;
       height: 10px;
