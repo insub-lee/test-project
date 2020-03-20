@@ -93,7 +93,7 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId } = this.props;
+    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
@@ -102,6 +102,7 @@ class InputPage extends Component {
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
+      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
   };
 
@@ -136,20 +137,20 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            {/* {CustomButtons ? (
+            {CustomButtons ? (
               <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            ) : ( */}
-            <div className="alignRight">
-              <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                Save
-              </Button>
-              {!isBuilderModal && (
-                <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
+            ) : (
+              <div className="alignRight">
+                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                  Save
                 </Button>
-              )}
-            </div>
-            {/* )} */}
+                {!isBuilderModal && (
+                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </Button>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );

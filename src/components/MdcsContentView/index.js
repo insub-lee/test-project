@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 
-import { Button, Modal } from 'antd';
+import { Button, Modal, Icon } from 'antd';
+import { FileSearchOutlined, ExclamationCircleOutlined, FileProtectOutlined } from '@ant-design/icons';
 import BizBuilderBase from 'components/BizBuilderBase';
-import StyledTable from 'components/CommonStyled/StyledTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledModalWrapper from 'components/CommonStyled/StyledModalWrapper';
 import ContentView from './ContentView';
 
@@ -46,12 +48,56 @@ class MdcsContentView extends Component {
     this.setState({ modalVisible: false });
   };
 
+  onRenderFileItem = (fileName, fileExt) => {
+    let doctype = 'file-unknown';
+    switch (fileExt) {
+      case 'pdf':
+        doctype = 'file-pdf';
+        break;
+      case 'xls':
+        doctype = 'file-excel';
+        break;
+      case 'xlsx':
+        doctype = 'file-excel';
+        break;
+      case 'txt':
+        doctype = 'file-text';
+        break;
+      case 'doc':
+        doctype = 'file-word';
+        break;
+      case 'docx':
+        doctype = 'file-word';
+        break;
+      case 'ppt':
+        doctype = 'file-ppt';
+        break;
+      case 'pptx':
+        doctype = 'file-ppt';
+        break;
+      case 'zip':
+        doctype = 'file-zip';
+        break;
+      default:
+        break;
+    }
+    return (
+      <div>
+        <Icon type={doctype} style={{ fontSize: '18px', marginRight: '5px' }} />
+        {fileName}
+        <FileProtectOutlined style={{ fontSize: '18px', marginRight: '5px', marginLeft: '5px' }} />
+        원본파일
+      </div>
+    );
+  };
+
   render() {
     const { formData, selectedRow } = this.props;
     const { fullPathNm } = this.state;
+
     return (
       <>
-        <StyledTable>
+        <StyledHtmlTable>
           <table>
             <tbody>
               <tr>
@@ -71,20 +117,40 @@ class MdcsContentView extends Component {
               <tr>
                 <th style={{ width: '100px' }}>표지보기</th>
                 <td style={{ width: '200px' }}>
-                  <Button icon="file-text" onClick={this.onDocCoverClick}>
-                    표지보기
-                  </Button>
+                  <StyledButton className="btn-primary  btn-sm" onClick={this.onDocCoverClick}>
+                    <FileSearchOutlined /> 표지보기
+                  </StyledButton>
                 </td>
                 <th style={{ width: '100px' }}>결재상태</th>
                 <td style={{ width: '200px' }}></td>
               </tr>
               <tr>
                 <th style={{ width: '100px' }}>본문내용</th>
-                <td colSpan={3}></td>
+                <td colSpan={3}>
+                  {formData.ATTACH && formData.ATTACH.DETAIL ? (
+                    formData.ATTACH.DETAIL.map(file => this.onRenderFileItem(file.fileName, file.fileExt))
+                  ) : (
+                    <div>
+                      <ExclamationCircleOutlined /> 파일이 존재하지 않습니다.
+                    </div>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <th style={{ width: '100px' }}>별첨</th>
+                <td colSpan={3}>
+                  {formData.ATTACH2 && formData.ATTACH2.DETAIL ? (
+                    formData.ATTACH2.DETAIL.map(file => this.onRenderFileItem(file.fileName, file.fileExt))
+                  ) : (
+                    <div>
+                      <ExclamationCircleOutlined /> 파일이 존재하지 않습니다.
+                    </div>
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>
-        </StyledTable>
+        </StyledHtmlTable>
         <ModalWrapper
           title="문서표지"
           style={{ padding: '10px' }}

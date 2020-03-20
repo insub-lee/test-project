@@ -86,6 +86,11 @@ import StackCustomComp from 'components/BizBuilder/Field/StackCustomComp';
 import EshsSiteItemSearchbar from 'components/BizBuilder/Field/EshsSiteItemSearchbar';
 import ViewUploadedFileComp from 'components/BizBuilder/Field/ViewUploadedFileComp';
 import ModalTableComp from 'components/BizBuilder/Field/ModalTableComp';
+import TakeOutCustomComp from 'components/BizBuilder/Field/TakeOutCustomComp';
+import TakeOutSearchComp from 'components/BizBuilder/Field/TakeOutSearchComp';
+import BareaLabel from 'components/BizBuilder/Field/BareaLabel';
+import CompNmLabel from 'components/BizBuilder/Field/CompNmLabel';
+import SRDReqCustomSelectComp from 'components/BizBuilder/Field/SRDReqCustomSelectComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -174,4 +179,9 @@ export const CompInfo = {
   'components/BizBuilder/Field/EshsSiteItemSearchbar': { renderer: property => <EshsSiteItemSearchbar {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileComp': { renderer: property => <ViewUploadedFileComp {...property} /> },
   'components/BizBuilder/Field/ModalTableComp': { renderer: property => <ModalTableComp {...property} /> },
+  'components/BizBuilder/Field/TakeOutCustomComp': { renderer: property => <TakeOutCustomComp {...property} /> },
+  'components/BizBuilder/Field/TakeOutSearchComp': { renderer: property => <TakeOutSearchComp {...property} /> },
+  'components/BizBuilder/Field/BareaLabel': { renderer: property => <BareaLabel {...property} /> },
+  'components/BizBuilder/Field/CompNmLabel': { renderer: property => <CompNmLabel {...property} /> },
+  'components/BizBuilder/Field/SRDReqCustomSelectComp': { renderer: property => <SRDReqCustomSelectComp {...property} /> },
 };
