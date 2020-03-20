@@ -52,11 +52,10 @@ class SRDReqCustomSelectComp extends Component {
     } = this.props;
 
     const apiData = extraApiData[`select_${mapId}`];
-    let categoryData;
+    const categoryData = apiData && apiData.categoryMapList.filter(f => f.PARENT_NODE_ID === rootkey);
+    let nameData;
     if (readOnly || CONFIG.property.readOnly) {
-      categoryData = apiData && apiData.categoryMapList.find(f => f.NODE_ID === colData);
-    } else {
-      categoryData = apiData && apiData.categoryMapList.filter(f => f.PARENT_NODE_ID === rootkey);
+      nameData = apiData && apiData.categoryMapList.find(f => f.NODE_ID === colData);
     }
 
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
@@ -67,7 +66,7 @@ class SRDReqCustomSelectComp extends Component {
         {colData !== undefined ? (
           <>
             {readOnly || CONFIG.property.readOnly ? (
-              <span>{categoryData && categoryData.NAME_KOR}</span>
+              <span>{nameData && nameData.NAME_KOR}</span>
             ) : (
               <Select
                 style={{ width: '50%' }}
