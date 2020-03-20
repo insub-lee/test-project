@@ -10,8 +10,7 @@ const Styled = styled.div`
   width: 235px;
   opacity: 1;
   background-color: #152434;
-
-  box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 4px;
+  border-left: 1px solid #35414e;
   z-index: 2;
   transition: left 0.3s ease-out 0s;
 

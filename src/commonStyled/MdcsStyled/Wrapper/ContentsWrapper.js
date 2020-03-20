@@ -14,6 +14,11 @@ const ContentsWrapper = styled.div`
   .tableWrapper {
     padding: 20px;
   }
+
+  .selSaveWrapper {
+    padding: 20px 20px 0px 20px;
+    text-align: right;
+  }
 `;
 
 export default ContentsWrapper;
