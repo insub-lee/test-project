@@ -53,11 +53,12 @@ class TextComp extends React.Component {
               }}
               className={CONFIG.property.className || ''}
             >
-              {searchSelectData.map(item => (
-                <Option key={`selectMap_${item.NODE_ID}`} value={item.NODE_ID}>
-                  {item.NAME_KOR}
-                </Option>
-              ))}
+              {searchSelectData &&
+                searchSelectData.map(item => (
+                  <Option key={`selectMap_${item.NODE_ID}`} value={item.NODE_ID}>
+                    {item.NAME_KOR}
+                  </Option>
+                ))}
             </Select>
           );
         case 'TREESELECT':
