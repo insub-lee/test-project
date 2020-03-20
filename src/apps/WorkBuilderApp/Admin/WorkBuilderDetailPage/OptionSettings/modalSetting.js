@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input, Select } from 'antd';
+import { Input, Select, Switch, Icon } from 'antd';
 import { debounce } from 'lodash';
 
 import { isJSON } from 'utils/helpers';
@@ -98,6 +98,15 @@ class modalSetting extends React.Component {
             <Select.Option value="%">%</Select.Option>
             <Select.Option value="px">px</Select.Option>
           </Select>
+        </Wrapper>
+        <Wrapper>
+          <Switch
+            onChange={checked => this.onChange('saveModalClose', checked)}
+            defaultChecked={optValue.saveModalClose}
+            checkedChildren={<Icon type="check" />}
+            unCheckedChildren={<Icon type="close" />}
+          />{' '}
+          <span>저장 후 모달팝업 닫기 사용여부</span>
         </Wrapper>
       </>
     );

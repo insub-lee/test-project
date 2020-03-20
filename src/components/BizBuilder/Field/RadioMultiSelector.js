@@ -7,8 +7,6 @@ import { isJSON } from 'utils/helpers';
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
-import message from 'components/Feedback/message';
-import MessageContent from 'components/Feedback/message.style2';
 
 const AntdModal = StyledModalWrapper(Modal);
 
@@ -19,7 +17,7 @@ class RadioMultiSelector extends Component {
     apiFlag: true,
     dataSource: [],
     selectedCheckList: [],
-    selectedCheckListValue: {},
+    selectedCheckListValue: [],
   };
 
   componentDidMount() {
@@ -31,20 +29,23 @@ class RadioMultiSelector extends Component {
         property: { mapId },
       },
     } = this.props;
+
     const apiArys = [{ key: `${COMP_FIELD}`, url: `/api/admin/v1/common/categoryMapList?MAP_ID=${mapId}`, type: 'GET' }];
     getExtraApiData(id, apiArys, this.initDataBind);
   }
 
   initDataBind = sagaKey => {
-    const { COMP_FIELD, extraApiData } = this.props;
+    const { COMP_FIELD, extraApiData, colData } = this.props;
     const { categoryMapList: dataList } = extraApiData[COMP_FIELD];
+    const selectedValue = colData.split(',').map(val => Number(val));
+    const selectedItem = dataList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
     dataSource = [
       {
         groupName: COMP_FIELD,
         groupKey: COMP_FIELD,
-        selectedValue: [],
-        selectedItem: [],
-        dataSet: dataList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0).map(item => ({ ...item, checked: true })),
+        selectedValue,
+        selectedItem,
+        dataSet: dataList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0),
       },
     ];
     this.setState({ dataSource });
@@ -59,6 +60,7 @@ class RadioMultiSelector extends Component {
   };
 
   onChangeMultiSelector = (dataList, selectedValue) => {
+    console.debug('dataList', dataList, 'selectedValue', selectedValue);
     this.setState({ selectedCheckList: dataList, selectedCheckListValue: selectedValue });
   };
 
@@ -77,11 +79,6 @@ class RadioMultiSelector extends Component {
   };
 
   render() {
-    const {
-      CONFIG: {
-        property: { COMP_NAME },
-      },
-    } = this.props;
     return (
       <>
         <StyledMultiSelector>

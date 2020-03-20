@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { message } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -138,7 +138,7 @@ class StdInput extends Component {
       CustomWorkProcess,
       onCloseModal,
     } = this.props;
-
+    console.debug('this.', this.props);
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
@@ -159,19 +159,19 @@ class StdInput extends Component {
           () => loadingComplete(),
         );
       }
-      console.debug('input processRule change', processRule);
+
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess id={id} PRC_ID={prcId} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
+              <WorkProcess id={id} PRC_ID={Number(prcId)} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
-                Save
+              <StyledButton className="btn-primary btn-first btn-sm" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
+                <SaveOutlined /> Save
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
+              <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
                 닫기
               </StyledButton>
             </div>

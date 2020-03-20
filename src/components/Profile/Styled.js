@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 const Styled = styled.div`
   position: relative;
-  width: 290px;
-  background-color: #e7e1f0;
+  background-color: ${props => (props.blackThema ? '#e7e1f0' : 'transparent')};
   padding: 20px;
   & > div {
     display: table;
@@ -17,11 +16,11 @@ const Styled = styled.div`
       &.user-img {
         position: relative;
         overflow: hidden;
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         text-align: center;
         border-radius: 100%;
-        margin-right: 15px;
+        margin-right: 10px;
         img {
           position: absolute;
           top: 0;
@@ -37,12 +36,12 @@ const Styled = styled.div`
         span {
           display: block;
           &.user-info-name {
-            font-size: 18px;
-            color: #000;
+            font-size: 15px;
+            color: ${props => (props.blackThema ? '#000' : '#fff')};
           }
           &.user-info-belong {
             font-size: 12px;
-            color: #666;
+            color: ${props => (props.blackThema ? '#666' : '#999')};
           }
         }
       }

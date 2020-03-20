@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Scrollbars from 'react-custom-scrollbars';
 import { Popover } from 'antd';
 import Organization from 'containers/portal/components/Organization';
-import IconManager from 'images/portal/icon-manager.png';
 import Button from '../../../../components/Button';
 import UserProfile from '../UserProfile';
 import StyleManagerInfo from './StyleManagerInfo';
@@ -86,11 +85,7 @@ class ManagerInfo extends React.Component {
         >
           <Button
             style={{
-              width: '24px',
-              height: '24px',
-              background: `url(${IconManager}) no-repeat 50% 2px`,
               verticalAlign: 'middle',
-              // opacity: '0.8',
             }}
           />
         </Popover>

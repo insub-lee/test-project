@@ -3,23 +3,23 @@ import PropTypes from 'prop-types';
 import { Input, Table } from 'antd';
 
 import StyledButton from 'apps/mdcs/styled/StyledButton';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdTable = StyledLineTable(Table);
 
 const columns = [
   {
     dataIndex: 'DOCNUMBER',
     title: '문서번호',
     align: 'center',
-    width: '15%',
+    width: '16%',
   },
   {
     dataIndex: 'VERSION',
     title: 'REV',
     align: 'center',
-    width: '10%',
+    width: '9%',
   },
   {
     dataIndex: 'TITLE',
@@ -37,14 +37,14 @@ const columns = [
     dataIndex: 'REG_USER_NAME',
     title: '기안자',
     align: 'center',
-    width: '15%',
+    width: '12%',
   },
   {
     dataIndex: 'CHANGE',
     title: 'Change',
     align: 'center',
-    width: '10%',
-    render: text => (text === 88 ? 'MAJOR' : 'MINOR'),
+    width: '13%',
+    render: text => (text === 27 ? 'MAJOR' : 'MINOR'),
   },
 ];
 class Amendment extends Component {
@@ -92,12 +92,11 @@ class Amendment extends Component {
   };
 
   onSelectedWorkSeq = selectedNodeIds => {
-    console.debug(selectedNodeIds);
     if (selectedNodeIds.includes(289)) {
-      return 2921;
+      return 28;
     }
     if (selectedNodeIds.includes(423) || selectedNodeIds.includes(424) || selectedNodeIds.includes(425) || selectedNodeIds.includes(426)) {
-      return 3101;
+      return 31;
     }
     return undefined;
   };
@@ -110,13 +109,13 @@ class Amendment extends Component {
       .split('|')
       .slice(1)
       .map(item => Number(item));
-    const inputMetaSeq = this.onSelectedWorkSeq(selectedNodeIds);
+    const viewChangeSeq = this.onSelectedWorkSeq(selectedNodeIds);
     const workPrcProps = {
       draftType,
       nodeIds: selectedNodeIds,
       degreeFlag: Number(change),
     };
-    onShowModal(workSeq, taskSeq, inputMetaSeq, nodeId, 'REVISION', workPrcProps);
+    onShowModal(workSeq, taskSeq, viewChangeSeq, nodeId, 'REVISION', workPrcProps);
   };
 
   render() {

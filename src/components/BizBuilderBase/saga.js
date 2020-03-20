@@ -22,6 +22,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
   const workFlow = metaList.find(meta => meta.COMP_TYPE === 'WORKFLOW');
   const builderModalOptIdx = work && work.OPT_INFO && work.OPT_INFO.findIndex(opt => opt.OPT_SEQ === BUILDER_MODAL_OPT_SEQ && opt.ISUSED === 'Y');
   const isBuilderModal = !!(builderModalOptIdx > -1);
+  let isSaveModalClose = false;
   let builderModalSetting;
   if (isBuilderModal) {
     const tempObj = isJSON(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) ? JSON.parse(work.OPT_INFO[builderModalOptIdx].OPT_VALUE) : undefined;
@@ -33,6 +34,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
       if (tempObj.height && tempObj.height > 0) {
         builderModalSetting.bodyStyle.height = tempObj.height + tempObj.heightType;
       }
+      isSaveModalClose = tempObj.saveModalClose || false;
     }
   }
   if (taskSeq === -1) {
@@ -58,7 +60,7 @@ function* getBuilderData({ id, workSeq, taskSeq, viewType, extraProps, condition
   } else {
     yield put(actions.setBuilderData(id, workSeq, taskSeq, viewType, extraProps, response, work, metaList, workFlow, apiList, viewProcessList));
   }
-  yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting));
+  yield put(actions.setBuilderModalByReducer(id, isBuilderModal, builderModalSetting, isSaveModalClose));
   if (viewType === 'LIST') {
     yield put(actions.getListDataBySaga(id, workSeq, conditional));
     // const responseList = yield call(Axios.get, `/api/builder/v1/work/taskList/${workSeq}`, {}, { BUILDER: 'getBuilderData' });
@@ -114,7 +116,7 @@ function* submitExtraHandler({ id, httpMethod, apiUrl, submitData, callbackFunc,
 
 function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWorkflowFormData }) {
   /* Enable Data Loading */
-  yield put(actions.enableDataLoading());
+  // yield put(actions.enableDataLoading());
   /* Redux Reset By Id */
   yield put(actions.removeReduxState(id));
   let formData = {};
@@ -131,7 +133,7 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
     yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
   }
   /* Disable Data Loading */
-  yield put(actions.disableDataLoading());
+  // yield put(actions.disableDataLoading());
 }
 
 // processRule  조회
