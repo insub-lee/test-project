@@ -253,15 +253,16 @@ class SearchDetail extends Component {
           }}
           okButtonProps={null}
         >
-          <div className="pop_tit">검색 결과 11111</div>
-          <div className="pop_con"></div>
-          <BizBuilderBase
-            sagaKey={`BizDoc_${workSeq}`}
-            CustomListPage={SearchList}
-            viewType="LIST"
-            conditional={this.state.whereStr}
-            workSeq={workSeq}
-          ></BizBuilderBase>
+          <div className="pop_tit">검색 결과</div>
+          <div className="pop_con">
+            <BizBuilderBase
+              sagaKey={`BizDoc_${workSeq}`}
+              CustomListPage={SearchList}
+              viewType="LIST"
+              conditional={this.state.whereStr}
+              workSeq={workSeq}
+            ></BizBuilderBase>
+          </div>
         </AntdModal>
       </StyledSearch>
     );
