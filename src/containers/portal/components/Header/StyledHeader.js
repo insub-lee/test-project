@@ -7,7 +7,7 @@ const StyledHeader = styled.header`
     max-width: 100%;
     width: 100%;
     padding: 0px 15px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ddd;
     //background: ${props => props.theme.header.backgroundColor};
     /* background-image: linear-gradient(-90deg,rgba(51,148,225,.18),transparent);
     background-color: ${props => props.theme.header.backgroundColor}; */

@@ -16,9 +16,9 @@ const StyledModalNofooterLine = Component => styled(Component)`
     }
     .ant-modal-footer {
       padding: 10px 16px;      
-      backGround: rgba(0,0,0,0);
+      background: rgba(0,0,0,0);
       border: 0px;
-      borderRadius: 0 0 4px 4px;}
+      border-radius: 0 0 4px 4px;}
     }
     .ant-modal-body {
       padding: 0;
