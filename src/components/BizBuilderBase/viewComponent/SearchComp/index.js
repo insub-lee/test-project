@@ -1,8 +1,11 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, TreeSelect, Select } from 'antd';
+import { Input, TreeSelect, Select, DatePicker } from 'antd';
 import { debounce } from 'lodash';
+import moment from 'moment';
+
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 class TextComp extends React.Component {
   constructor(props) {
@@ -22,6 +25,9 @@ class TextComp extends React.Component {
         case 'NUMBER':
           searchVal = value;
           break;
+        case 'DATETIME':
+          searchVal = value.map(val => moment(val).format('YYYY-MM-DD'));
+          break;
         default:
       }
       switch (CONFIG.property.searchCondition) {
@@ -30,6 +36,9 @@ class TextComp extends React.Component {
           break;
         case 'LIKE':
           searchText = `AND W.${COMP_FIELD} LIKE '%${value}%'`;
+          break;
+        case 'RANGE':
+          searchText = `AND W.${COMP_FIELD} <![CDATA[>=]]> '${searchVal[0]}::TIMESTAMP' AND W.${COMP_FIELD} <![CDATA[<=]]> '${searchVal[1]}::TIMESTAMP'`;
           break;
         default:
       }
@@ -67,6 +76,16 @@ class TextComp extends React.Component {
               style={{ width: '100%' }}
               dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
               treeData={searchTreeData}
+              onChange={value => this.handleOnChangeSearch(value)}
+              className={CONFIG.property.className || ''}
+            />
+          );
+        case 'RANGEDATE':
+          return (
+            <RangePicker
+              style={{ width: '100%' }}
+              defaultValue={[moment(), moment()]}
+              format="YYYY-MM-DD"
               onChange={value => this.handleOnChangeSearch(value)}
               className={CONFIG.property.className || ''}
             />
