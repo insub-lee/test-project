@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Button, Modal } from 'antd';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
 
 import DistributeCompany from './DistributeCompany';
