@@ -60,7 +60,7 @@ class SRDReqCustomSelectComp extends Component {
     }
 
     if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
-      return searchCompRenderer({ ...this.props, searchTreeData: categoryData });
+      return searchCompRenderer({ ...this.props, searchSelectData: categoryData });
     }
     return visible ? (
       <>
