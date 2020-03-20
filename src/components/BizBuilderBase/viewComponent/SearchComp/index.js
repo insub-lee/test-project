@@ -16,6 +16,7 @@ class TextComp extends React.Component {
   handleOnChangeSearch = value => {
     const { sagaKey, COMP_FIELD, changeSearchData, CONFIG } = this.props;
     let searchText = '';
+    const temp = [];
     if (value && (value.length > 0 || value > 0)) {
       let searchVal = '';
       switch (CONFIG.property.searchDataType) {
@@ -26,7 +27,7 @@ class TextComp extends React.Component {
           searchVal = value;
           break;
         case 'DATETIME':
-          searchVal = value.map(val => moment(val).format('YYYY-MM-DD'));
+          searchVal = value.map((val, index) => (index !== 0 ? moment(val).format('YYYY-MM-DD 24:00:00') : moment(val).format('YYYY-MM-DD 00:00:00')));
           break;
         default:
       }
@@ -38,7 +39,7 @@ class TextComp extends React.Component {
           searchText = `AND W.${COMP_FIELD} LIKE '%${value}%'`;
           break;
         case 'RANGE':
-          searchText = `AND W.${COMP_FIELD} <![CDATA[>=]]> '${searchVal[0]}::TIMESTAMP' AND W.${COMP_FIELD} <![CDATA[<=]]> '${searchVal[1]}::TIMESTAMP'`;
+          searchText = `AND W.${COMP_FIELD} >= '${searchVal[0]}'::TIMESTAMP AND W.${COMP_FIELD} <= '${searchVal[1]}'::TIMESTAMP`;
           break;
         default:
       }
