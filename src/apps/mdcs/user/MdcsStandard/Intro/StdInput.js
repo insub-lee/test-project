@@ -63,7 +63,7 @@ class StdInput extends Component {
     const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
-
+    console.debug('metaList', metaList);
     // workflow 결재 체크 하기
     const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
     let isByPass = true;
@@ -88,7 +88,7 @@ class StdInput extends Component {
       // 첨부파일이 없는 경우 체크
       const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
       if (isUploadByPass && isUploadByPass.length === 0) {
-        this.saveTask(id, reloadId, this.saveTaskAfter);
+        // this.saveTask(id, reloadId, this.saveTaskAfter);
       } else {
         attachList.map(attachItem => {
           const { COMP_FIELD } = attachItem;
@@ -98,7 +98,7 @@ class StdInput extends Component {
             uploadFileList.push({ COMP_FIELD, isComplete: false });
             this.setState({ uploadFileList }, () => {
               const param = { PARAM: { DETAIL } };
-              submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+              // submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
             });
           }
         });

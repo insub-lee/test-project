@@ -36,6 +36,7 @@ const getTreeData = deptList =>
 
 class UserSelectComp extends Component {
   state = {
+    deptUserList: [],
     checkUserList: [],
     selectedUserList: [],
   };
@@ -69,14 +70,13 @@ class UserSelectComp extends Component {
   };
 
   componentDidMount() {
-    console.debug('component didmount');
-    const { initUserList, treeDataSource, selectedUserList } = this.props;
+    const { initUserList, treeDataSource } = this.props;
     this.setState({
       checkUserList: [],
-      selectedUserList,
+      selectedUserList: [],
     });
     !treeDataSource && this.onInitTreeData();
-    !initUserList && this.onInitUserSelect();
+    initUserList && this.onInitUserSelect();
   }
 
   getColumns = () => [
@@ -144,8 +144,25 @@ class UserSelectComp extends Component {
     }
   };
 
+  onRegist = () => {
+    this.props.onUserSelectedComplete(this.state.selectedUserList);
+    this.clearPropData();
+  };
+
+  onCancelUserSelect = () => {
+    this.clearPropData();
+    this.props.onCancel();
+  };
+
+  clearPropData = () => {
+    const { sagaKey, removeResponseDataReduxStateByKey } = this.props;
+    this.setState({ selectedUserList: [] });
+    removeResponseDataReduxStateByKey(sagaKey, 'userList');
+  };
+
   render() {
     const { treeDataSource, userDataList, result } = this.props;
+
     return (
       <div>
         <Row gutter={24}>
@@ -203,11 +220,11 @@ class UserSelectComp extends Component {
           </Col>
         </Row>
         <Row>
-          <Col style={{ textAlign: 'right' }}>
-            <StyledButton className="btn-sm btn-gray" onClick={this.props.onCancel}>
+          <Col style={{ textAlign: 'right', marginTop: '10px' }}>
+            <StyledButton className="btn-sm btn-gray btn-first" onClick={this.onCancelUserSelect}>
               취소
             </StyledButton>
-            <StyledButton className="btn-sm btn-primary" onClick={() => this.props.onUserSelectedComplete(this.state.selectedUserList)}>
+            <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
               등록
             </StyledButton>
           </Col>
@@ -219,11 +236,11 @@ class UserSelectComp extends Component {
 UserSelectComp.propTypes = {
   selectedDeptId: PropTypes.number,
   selectedUserList: PropTypes.array,
+  initUserList: PropTypes.array,
 };
 
 UserSelectComp.defaultProps = {
   selectedDeptId: -1,
-  selectedUserList: [],
 };
 
 export default UserSelectComp;

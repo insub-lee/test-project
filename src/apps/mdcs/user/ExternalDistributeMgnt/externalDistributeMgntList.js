@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Button, Input } from 'antd';
+import { Table, Icon, Button, Modal } from 'antd';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+
+import DistributeCompany from './DistributeCompany';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdModal = StyledModalWrapper(Modal);
 
 class ExternalDistributeMgntList extends Component {
-  state = {};
+  state = {
+    isShow: false,
+    selectedRow: {},
+  };
 
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
@@ -18,8 +25,31 @@ class ExternalDistributeMgntList extends Component {
     window.alert('개발중');
   };
 
-  onClickNew = () => {
-    window.alert('개발중');
+  onClickNew = row => {
+    this.setState({ 
+      isShow: true,
+      selectedRow: {
+        ...row,
+        RECV_DEPT_ID: -1,
+        RECV_DEPT_NAME: '',
+      },
+    });
+  };
+
+  onClickDept = row => {
+    this.setState({ 
+      isShow: true,
+      selectedRow: row,
+    });
+  };
+
+  onCancelPopup = () => {
+    this.setState({ 
+      isShow: false,
+      selectedRow: [],
+    });
+    const { id, apiAry, getCallDataHandler } = this.props;
+    getCallDataHandler(id, apiAry, () => {});
   };
 
   columns = [
@@ -47,8 +77,8 @@ class ExternalDistributeMgntList extends Component {
       title: '업체명',
       dataIndex: 'RECV_DEPT_NAME',
       key: 'RECV_DEPT_NAME',
-      width: '10%',
-      ellipsis: true,
+      width: '15%',
+      render: (text, record) => <Button type="link" onClick={() => this.onClickDept(record)}>{text}</Button>
     },
     {
       title: '수신자',
@@ -67,13 +97,14 @@ class ExternalDistributeMgntList extends Component {
       dataIndex: 'REG_DATE',
       key: 'REG_DATE',
       width: '12%',
-      render: (text, record) => `${record.REG_DATE}(${record.DISTRIBUTE_CNT})`,
+      render: (text, record) => record.REG_DATE && `${record.REG_DATE}(${record.DISTRIBUTE_CNT})`,
     },
     {
       title: '구매담당자',
-      dataIndex: 'STATUS',
-      key: 'STATUS',
-      width: '15%',
+      dataIndex: 'PURCHASE_USER_NAME',
+      key: 'PURCHASE_USER_NAME',
+      width: '10%',
+      ellipsis: true,
     },
     {
       title: 'New',
@@ -81,7 +112,7 @@ class ExternalDistributeMgntList extends Component {
       key: 'new',
       width: '5%',
       align: 'center',
-      render: (text, record) => <Button type="default" size="small" onClick={this.onClickNew}>추가</Button>,
+      render: (text, record) => <Button type="default" size="small" onClick={() => this.onClickNew(record)}>추가</Button>,
     },
     {
       title: 'Mail',
@@ -115,6 +146,16 @@ class ExternalDistributeMgntList extends Component {
           </p> */}
         </div>
         <AntdTable dataSource={list.map(item => ({ ...item, key: `${item.DOCNUMBER}_${item.RECV_DEPT_ID}` }))} columns={this.columns} />
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="외부배포 회사"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <DistributeCompany selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
       </div>
     )
   }
