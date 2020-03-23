@@ -1,0 +1,23 @@
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import BizBuilderBase from 'components/BizBuilderBase';
+
+class SubResourceDispReq extends Component {
+  componentDidMount() {}
+
+  loadingComplete = () => {
+    this.setState({
+      isLoading: false,
+    });
+  };
+
+  render() {
+    return <BizBuilderBase sagaKey="subResourceDispReq" workSeq={4981} viewType="LIST" loadingComplete={this.loadingComplete} />;
+  }
+}
+
+SubResourceDispReq.propTypes = {};
+
+SubResourceDispReq.defaultProps = {};
+
+export default SubResourceDispReq;
