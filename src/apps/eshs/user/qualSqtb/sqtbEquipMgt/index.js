@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 
+import InputPage from './pages/InputPage';
+
 class SqtbEquipMgt extends Component {
   state = {
     isLoading: true,
@@ -16,7 +18,7 @@ class SqtbEquipMgt extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="SqtbEquipMgt" workSeq={4941} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="SqtbEquipMgt" workSeq={4941} viewType="INPUT" CustomInputPage={InputPage} loadingComplete={this.loadingComplete} />;
   }
 }
 
