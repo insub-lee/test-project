@@ -7,7 +7,7 @@ import { isJSON } from 'utils/helpers';
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
