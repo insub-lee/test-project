@@ -88,24 +88,24 @@ class ModalTableComp extends React.Component {
       COMP_FIELD,
       CONFIG: { property },
       changeValidationData,
-      formData,
     } = this.props;
 
     if (property && property.columns) {
       property.columns.forEach(item => {
         if (item.changeFormDataYN === true) {
           changeFormData(id, item.targetIndex || item.dataIndex, record[item.dataIndex]);
+          if ((item.targetIndex || item.dataIndex) === COMP_FIELD && property && property.isRequired) {
+            changeValidationData(
+              id,
+              COMP_FIELD,
+              record[item.dataIndex].trim().length > 0,
+              record[item.dataIndex].trim().length > 0 ? '' : `${COMP_FIELD}항목은 필수 입력입니다.`,
+            );
+          }
         }
       });
     }
-    if (property && property.isRequired) {
-      changeValidationData(
-        id,
-        COMP_FIELD,
-        formData[COMP_FIELD].trim().length > 0,
-        formData[COMP_FIELD].trim().length > 0 ? '' : `${COMP_FIELD}항목은 필수 입력입니다.`,
-      );
-    }
+
     this.handleModalVisible();
   };
 
@@ -206,7 +206,6 @@ ModalTableComp.propTypes = {
   changeValidationData: PropTypes.func,
   columns: PropTypes.array,
   extraApiData: PropTypes.any,
-  formData: PropTypes.any,
   readOnly: PropTypes.bool,
 };
 ModalTableComp.defaultProps = {
