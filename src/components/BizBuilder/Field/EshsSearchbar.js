@@ -122,21 +122,15 @@ class CommonSearchbar extends React.Component {
   }
 
   render() {
-    const { CONFIG, visible, colData, readOnly } = this.props;
+    const { CONFIG, visible, colData } = this.props;
     return visible ? (
       <div>
-        {readOnly || CONFIG.property.readOnly ? (
-          <span>{colData}</span>
-        ) : (
-          <>
-            <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
-            <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-            {this.ButtonRender()}
-            <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-              {this.state.modal && this.BizbuilderbaseRender()}
-            </Modal>
-          </>
-        )}
+        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
+        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+        {this.ButtonRender()}
+        <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+          {this.state.modal && this.BizbuilderbaseRender()}
+        </Modal>
       </div>
     ) : (
       ''
