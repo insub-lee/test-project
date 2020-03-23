@@ -25,7 +25,6 @@ const StyledModal = Component => styled(Component)`
     background: rgba(0, 0, 0, 0);
     border-top: 1px solid #e8e8e8;
     border-radius: 0 0 4px 4px;
-    background: lavender;
   }
 `;
 

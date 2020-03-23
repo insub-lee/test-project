@@ -172,7 +172,7 @@ class Tree extends Component {
                 type="text"
                 size="small"
                 value={searchString}
-                placeholder="메뉴에서 My App을 검색하세요."
+                placeholder="검색어 입력"
                 onChange={event => {
                   this.setSearchString(event.target.value);
                 }}

@@ -179,6 +179,7 @@ const Styled = styled.div`
         }
       }
       > .popoverInnerTable {
+        width: 100%;
         th {
           padding: 4px;
           background-color: #f1f3f5;
