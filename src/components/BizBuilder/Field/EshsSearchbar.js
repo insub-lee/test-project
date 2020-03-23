@@ -122,15 +122,21 @@ class CommonSearchbar extends React.Component {
   }
 
   render() {
-    const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage } = this.props;
+    const { CONFIG, visible, colData, readOnly } = this.props;
     return visible ? (
       <div>
-        <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        {this.ButtonRender()}
-        <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-          {this.state.modal && this.BizbuilderbaseRender()}
-        </Modal>
+        {readOnly || CONFIG.property.readOnly ? (
+          <span>{colData}</span>
+        ) : (
+          <>
+            <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
+            <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
+            {this.ButtonRender()}
+            <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
+              {this.state.modal && this.BizbuilderbaseRender()}
+            </Modal>
+          </>
+        )}
       </div>
     ) : (
       ''
@@ -143,7 +149,6 @@ CommonSearchbar.propTypes = {
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
   readOnly: PropTypes.bool,
-  compProps: PropTypes.any,
   visible: PropTypes.bool,
   viewPageData: PropTypes.func,
   changeViewPage: PropTypes.func,
