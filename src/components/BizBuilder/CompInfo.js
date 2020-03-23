@@ -88,6 +88,7 @@ import ViewUploadedFileComp from 'components/BizBuilder/Field/ViewUploadedFileCo
 import ModalTableComp from 'components/BizBuilder/Field/ModalTableComp';
 import TakeOutCustomComp from 'components/BizBuilder/Field/TakeOutCustomComp';
 import TakeOutSearchComp from 'components/BizBuilder/Field/TakeOutSearchComp';
+import CustomEditorComp from 'components/BizBuilder/Field/CustomEditorComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -178,4 +179,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/ModalTableComp': { renderer: property => <ModalTableComp {...property} /> },
   'components/BizBuilder/Field/TakeOutCustomComp': { renderer: property => <TakeOutCustomComp {...property} /> },
   'components/BizBuilder/Field/TakeOutSearchComp': { renderer: property => <TakeOutSearchComp {...property} /> },
+  'components/BizBuilder/Field/CustomEditorComp': { renderer: property => <CustomEditorComp {...property} /> },
 };
