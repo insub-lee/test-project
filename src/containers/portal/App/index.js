@@ -298,7 +298,6 @@ class App extends React.Component {
         // 2. 외부서비스 /apps/PAGE_ID ex) 큐브
         // 3. 페이지 /page/PAGE_ID
         if (node) {
-          console.debug('nodenodenodenodenode', node);
           const state = {
             type,
             node,
