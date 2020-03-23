@@ -13,7 +13,14 @@ class DragUploadPdfComp extends Component {
 
   componentDidMount() {
     console.debug('componentDidMount');
-    const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData } = this.props;
+    const {
+      WORK_SEQ,
+      COMP_FIELD,
+      COMP_TAG,
+      colData,
+      CONFIG: { property },
+    } = this.props;
+    const { selectedValue: MOVEFILEAPI } = property;
     const initfiles = {
       WORK_SEQ,
       TASK_SEQ: -1,
@@ -21,6 +28,7 @@ class DragUploadPdfComp extends Component {
       FIELD_NM: COMP_FIELD,
       TYPE: COMP_TAG,
       DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
+      MOVEFILEAPI,
     };
     this.setState({ fileInfo: initfiles });
   }

@@ -22,6 +22,7 @@ import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValue
 import ViewUploadedFileCompConfig from 'components/BizBuilder/Field/ViewUploadedFileCompConfig';
 import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConfig';
 import EshsSearchbarConfig from 'components/BizBuilder/Field/EshsSearchbarConfig';
+import DragUploadMDCSViewCompConfig from 'components/BizBuilder/Field/DragUploadMDCSViewCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -46,4 +47,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/ViewUploadedFileCompConfig': { renderer: property => <ViewUploadedFileCompConfig {...property} /> },
   'components/BizBuilder/Field/ModalTableCompConfig': { renderer: property => <ModalTableCompConfig {...property} /> },
   'components/BizBuilder/Field/EshsSearchbarConfig': { renderer: property => <EshsSearchbarConfig {...property} /> },
+  'components/BizBuilder/Field/DragUploadMDCSViewCompConfig': { renderer: property => <DragUploadMDCSViewCompConfig {...property} /> },
 };
