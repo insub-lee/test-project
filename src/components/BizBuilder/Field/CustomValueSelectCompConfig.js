@@ -1,6 +1,6 @@
 import { Col, Input, Row, Button, Radio } from 'antd';
 import _, { debounce } from 'lodash';
-import PropTypes, { instanceOf } from 'prop-types';
+import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
