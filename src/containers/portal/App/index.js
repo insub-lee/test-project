@@ -299,7 +299,6 @@ class App extends React.Component {
         // 2. 외부서비스 /apps/PAGE_ID ex) 큐브
         // 3. 페이지 /page/PAGE_ID
         if (node) {
-          console.debug('nodenodenodenodenode', node);
           const state = {
             type,
             node,
@@ -406,7 +405,7 @@ class App extends React.Component {
     // REMOVE DOCK - 주석 처리
     const { open } = this.state;
     const { menuFixedYn } = this.props;
-    return open && menuFixedYn === 'Y' ? 335 : 45;
+    return open && menuFixedYn === 'Y' ? 280 : 45;
   };
 
   getLayoutStyle = desktopMode =>

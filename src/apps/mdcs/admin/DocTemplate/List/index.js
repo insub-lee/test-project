@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'antd';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledButton from 'apps/mdcs/styled/StyledButton';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
 class List extends Component {
   state = {
     searchText: '',
@@ -316,13 +318,13 @@ class List extends Component {
     }
     console.debug('docCategoryTempListExtra', docCategoryTempListExtra);
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+      <ContentsWrapper>
+        <div className="pageTitle">
+          <p>
             <Icon type="form" /> 표준문서 템플릿관리
           </p>
         </div>
-        <div style={{ padding: '10px 0' }}>
+        <div className="selSaveWrapper">
           <TreeSelect
             name="code1"
             style={{ width: 300, marginRight: 10 }}
@@ -347,9 +349,13 @@ class List extends Component {
             onChange={this.onDocTemplateTreeChange}
             onTreeExpand={this.onDocTemplateExpend}
           />
-          <Button style={{ display: this.state.actionType === 'I' ? 'inline' : 'none', marginRight: 10 }} onClick={this.onSave}>
+          <StyledButton
+            className="btn-primary btn-sm"
+            style={{ display: this.state.actionType === 'I' ? 'inline' : 'none', marginRight: 10 }}
+            onClick={this.onSave}
+          >
             저장하기
-          </Button>
+          </StyledButton>
 
           <Button style={{ display: this.state.actionType === 'I' ? 'none' : 'inline', marginRight: 10 }} onClick={this.onUpdate}>
             수정
@@ -359,8 +365,8 @@ class List extends Component {
           </Button>
         </div>
 
-        <AntdTable rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} />
-      </div>
+        <AntdLineTable rowKey="DT_IDX" pagination={false} columns={this.columns} dataSource={totalData} className="tableWrapper" />
+      </ContentsWrapper>
     );
   }
 }

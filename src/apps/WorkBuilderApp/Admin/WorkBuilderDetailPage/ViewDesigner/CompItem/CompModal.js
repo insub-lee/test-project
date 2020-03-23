@@ -176,9 +176,10 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList } = this.props;
+    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList, action } = this.props;
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
+    const { submitHandlerBySaga } = action;
     return (
       <Styled className="popoverWrapper">
         <div className="popoverInnerInput">
@@ -271,6 +272,7 @@ class CompModal extends Component {
                   <Option value="INPUT">Input</Option>
                   <Option value="SELECT">Select</Option>
                   <Option value="TREESELECT">Tree Select</Option>
+                  <Option value="RANGEDATE">Range Date</Option>
                   <Option value="CUSTOM">Custom</Option>
                 </Select>
               </div>
@@ -289,6 +291,7 @@ class CompModal extends Component {
                   <Option value="<">&lt;</Option>
                   <Option value="LIKE">Like</Option>
                   <Option value="BETWEEN">Between</Option>
+                  <Option value="RANGE">Range</Option>
                 </Select>
               </div>
               <div className="popoverItem popoverItemInput">
@@ -366,7 +369,7 @@ class CompModal extends Component {
               </Select>
             </div>
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
-              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG })}</div>
+              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG, submitHandlerBySaga })}</div>
             )}
           </div>
         </div>

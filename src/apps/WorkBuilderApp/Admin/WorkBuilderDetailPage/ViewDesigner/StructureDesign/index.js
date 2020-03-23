@@ -280,6 +280,7 @@ const StructureDesign = ({
         destroyOnClose
         footer={null}
         visible={compConfigModal[0]}
+        width="1000px"
         bodyStyle={{ padding: '1px' }}
         onCancel={() => setCompConfigModal([false, '', {}, 'COMP'])}
       >

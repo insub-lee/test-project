@@ -16,6 +16,7 @@ const AntdModal = StyledModal(Modal);
 class ExternalDistView extends Component {
   state = {
     isShow: false,
+    initUserList: [],
   };
 
   columns = [
@@ -59,7 +60,10 @@ class ExternalDistView extends Component {
 
   onUserSelectedComplete = result => {
     this.props.changeFormData(this.props.id, 'selectedUserList', result);
-    this.setState({ isShow: false });
+    this.setState({
+      isShow: false,
+      initUserList: result.map(item => item.USER_ID),
+    });
   };
 
   onCancel = () => {
@@ -73,6 +77,10 @@ class ExternalDistView extends Component {
     const findIdx = selectedUserList.findIndex(item => item.USER_ID === user.USER_ID);
     selectedUserList.splice(findIdx, 1);
     changeFormData(id, 'selectedUserList', selectedUserList);
+    
+    this.setState({
+      initUserList: selectedUserList.map(item => item.USER_ID),
+    });
   };
 
   onChangeFormData = (key, e) => {
@@ -111,6 +119,8 @@ class ExternalDistView extends Component {
         list = distDeptList.list.filter(item => item.DEPT_ID === 1461 || item.PRNT_ID === 1461);
       }
     }
+
+    console.debug('##### state >> ', this.state);
       
     return (
       <div>
@@ -151,7 +161,7 @@ class ExternalDistView extends Component {
               <Col style={{ height: '129px'}}>
                 {formData.selectedUserList && formData.selectedUserList.length > 0 && (
                   formData.selectedUserList.map(user => (
-                    <Tag closable onClose={e => this.onCloseTag(e, user)}>{`${user.NAME_KOR}(${user.EMAIL})`}</Tag>
+                    <Tag key={`tag_${user.USER_ID}`} closable onClose={e => this.onCloseTag(e, user)}>{`${user.NAME_KOR}(${user.EMAIL})`}</Tag>
                   ))
                 )}
               </Col>
@@ -181,8 +191,7 @@ class ExternalDistView extends Component {
         {list !== undefined && (
           <AntdModal title="담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
             <UserSelect
-              selectedUserList={formData.selectedUserList}
-              // initUserList={this.state.selectedUserList}
+              initUserList={this.state.initUserList}
               treeDataSource={list}
               // userDataList={result.userList && result.userList.list}
               // onTreeSelect={this.onTreeSelect}

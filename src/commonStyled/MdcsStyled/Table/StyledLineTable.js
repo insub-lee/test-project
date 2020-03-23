@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 const primaryColor = '#886ab5';
-const primaryColor2 = '#6a60b9';
-const reversePrimaryColor = '#c1b2d9';
 
 const StyledLineTable = Component => styled(Component)`
   padding: 10px;
@@ -84,6 +82,9 @@ const StyledLineTable = Component => styled(Component)`
     min-width: 28px;
     height: 28px;
     line-height: 28px;
+    a {
+      color: #666;
+    }
   }
 
   .ant-pagination-jump-next,
@@ -95,18 +96,14 @@ const StyledLineTable = Component => styled(Component)`
     line-height: 28px;
   }
 
-  .ant-pagination-item a {
-    color: ${reversePrimaryColor};
-  }
-
   .ant-pagination-item-active {
-    border-color: ${primaryColor2};
-    background-color: ${primaryColor2};
+    border: 0;
+    background-color: #636a78;
     color: #ffffff;
-  }
-
-  .ant-pagination-item-active a {
-    color: ${reversePrimaryColor};
+    border-radius: 50%;
+    a {
+      color: #fff;
+    }
   }
 
   .ant-table-pagination.ant-pagination {
@@ -116,8 +113,13 @@ const StyledLineTable = Component => styled(Component)`
     font-size: 11px;
   }
 
-  .ant-pagination-item-link .anticon {
-    vertical-align: inherit;
+  .ant-pagination-item-link {
+    border-radius: 50%;
+    background: #f9f9f9;
+    border: 0;
+    .anticon {
+      vertical-align: inherit;
+    }
   }
 `;
 
