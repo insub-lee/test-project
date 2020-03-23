@@ -58,7 +58,6 @@ class InputPage extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList } = this.props;
-    const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
 
@@ -72,10 +71,11 @@ class InputPage extends Component {
         const { COMP_FIELD } = attachItem;
         const attachInfo = formData[COMP_FIELD];
         if (attachInfo) {
-          const { DETAIL } = attachInfo;
+          const { DETAIL, MOVEFILEAPI } = attachInfo;
           uploadFileList.push({ COMP_FIELD, isComplete: false });
           this.setState({ uploadFileList }, () => {
             const param = { PARAM: { DETAIL } };
+            const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
             submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
           });
         }
