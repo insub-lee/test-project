@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Table, Icon, Modal, Button } from 'antd';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
 import ContentView from './ContentView';
 

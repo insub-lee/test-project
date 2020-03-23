@@ -71,6 +71,13 @@ class List extends Component {
 
   columns = [
     {
+      title: '옵션 코드',
+      dataIndex: 'OPT_CODE',
+      key: 'OPT_CODE',
+      width: '7%',
+      align: 'center',
+    },
+    {
       title: '옵션명',
       dataIndex: 'OPT_NAME',
       key: 'OPT_NAME',
@@ -86,7 +93,7 @@ class List extends Component {
       title: '관리자 설정화면 경로',
       dataIndex: 'OPT_APP_SETTING_SRC',
       key: 'OPT_APP_SETTING_SRC',
-      width: '20%',
+      width: '16%',
     },
     {
       title: '옵션사용여부',
@@ -122,7 +129,7 @@ class List extends Component {
   render() {
     const { result } = this.props;
     return (
-      <div>
+      <div style={{ margin: '10px' }}>
         <StyledButton style={{ textAlign: 'right' }} onClick={() => this.onRegOption()}>
           옵션등록
         </StyledButton>
@@ -165,6 +172,7 @@ List.defaultProps = {
   result: {},
   initData: {
     OPT_SEQ: -1,
+    OPT_CODE: undefined,
     OPT_NAME: '',
     OPT_APP_SRC: '',
     OPT_APP_SETTING_SRC: '',

@@ -18,14 +18,13 @@ class ViewPage extends Component {
     }
   }
 
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
+  builderModalClose = () => {
+    const { changeBuilderModalStateByParent } = this.props;
+    changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+  };
 
   render = () => {
-    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, CustomButtons } = this.props;
+    const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, CustomButtons } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -43,7 +42,9 @@ class ViewPage extends Component {
               <div className="alignRight">
                 <Popconfirm
                   title="Are you sure delete this task?"
-                  onConfirm={() => deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
+                  onConfirm={() =>
+                    deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, !isBuilderModal ? changeViewPage : this.builderModalClose)
+                  }
                   okText="Yes"
                   cancelText="No"
                 >
@@ -55,6 +56,14 @@ class ViewPage extends Component {
                 <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
                   Revision
                 </StyledButton>
+                {!isBuilderModal && [
+                  <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </StyledButton>,
+                  <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                    Revision
+                  </StyledButton>,
+                ]}
                 {!isBuilderModal && (
                   <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     List

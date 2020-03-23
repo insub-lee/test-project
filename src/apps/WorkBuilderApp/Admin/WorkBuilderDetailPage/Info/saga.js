@@ -25,7 +25,6 @@ function* fetchData({ id }) {
     optList: list,
     apiList: apiMasterList,
   };
-
   yield put(actions.successFetchData(result));
   yield put(actions.disableoading());
 }

@@ -1,8 +1,10 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal, Select } from 'antd';
+// import { Input, Button, Modal, Select } from 'antd';
+import { Input, Modal, Select } from 'antd';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
-import { Table, Column, AutoSizer } from 'react-virtualized';
+// import { Table, Column, AutoSizer } from 'react-virtualized';
+import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
 const { Option } = Select;
@@ -37,7 +39,10 @@ class EshsCmpnyComp extends React.Component {
     getExtraApiData(id, apiValue, this.setList);
   }
 
-  setList = sagaKey => {
+  // onChange = () => this.props.extraApiData;
+
+  // setList = sagaKey => {
+  setList = () => {
     const { extraApiData, colData } = this.props;
     const list = (extraApiData && extraApiData.cmpnyList && extraApiData.cmpnyList.list) || [];
     const data = list.filter(c => c.WRK_CMPNY_CD === colData);
@@ -49,6 +54,19 @@ class EshsCmpnyComp extends React.Component {
     }
     this.setState({ list });
   };
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // colData가 바뀔 때 마다 state 바꿔서 다시 렌더링
+    const list = (nextProps.extraApiData && nextProps.extraApiData.cmpnyList && nextProps.extraApiData.cmpnyList.list) || [];
+    const data = list.filter(c => c.WRK_CMPNY_CD === nextProps.colData);
+    if (!data.length) {
+      return { cmpny_cd: '', cmpny_nm: '' };
+    }
+    if (prevState.cmpny_cd !== nextProps.colData && data.length) {
+      return { cmpny_cd: nextProps.colData, cmpny_nm: data[0].WRK_CMPNY_NM };
+    }
+    return null;
+  }
 
   handleOnSearch = () => {
     const { getExtraApiData, sagaKey: id } = this.props;
@@ -70,7 +88,8 @@ class EshsCmpnyComp extends React.Component {
     getExtraApiData(id, apiValue, this.setSearchList);
   };
 
-  setSearchList = sagaKey => {
+  // setSearchList = sagaKey => {
+  setSearchList = () => {
     const { extraApiData } = this.props;
     const searchList = (extraApiData && extraApiData.searchList && extraApiData.searchList.list) || [];
     this.setState({ searchList, listType: 'search' });
@@ -116,16 +135,19 @@ class EshsCmpnyComp extends React.Component {
       COMP_FIELD,
       NAME_KOR,
       changeValidationData,
+      eshsCmpnyCompResult,
     } = this.props;
     if (isRequired) {
       // 기본값인지 체크
       changeValidationData(id, COMP_FIELD, rowData.WRK_CMPNY_CD.trim() !== '', rowData.WRK_CMPNY_CD.trim() !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
     changeFormData(id, COMP_FIELD, rowData.WRK_CMPNY_CD);
+    if (eshsCmpnyCompResult) {
+      eshsCmpnyCompResult(rowData, COMP_FIELD);
+    }
   };
 
   handleOnChange = e => {
-    console.debug(e.target.value);
     this.setState({
       searchText: e.target.value,
     });
@@ -222,16 +244,18 @@ class EshsCmpnyComp extends React.Component {
 }
 
 EshsCmpnyComp.propTypes = {
-  COMP_FIELD: PropTypes.any,
-  NAME_KOR: PropTypes.any,
-  CONFIG: PropTypes.any,
-  colData: PropTypes.any,
-  changeFormData: PropTypes.any,
-  id: PropTypes.any,
-  changeValidationData: PropTypes.any,
-  readOnly: PropTypes.any,
-  compProp: PropTypes.any,
-  changeSearchData: PropTypes.any,
+  COMP_FIELD: PropTypes.string,
+  NAME_KOR: PropTypes.string,
+  CONFIG: PropTypes.object,
+  colData: PropTypes.string,
+  changeFormData: PropTypes.func,
+  sagaKey: PropTypes.string,
+  changeValidationData: PropTypes.func,
+  readOnly: PropTypes.bool,
+  eshsCmpnyCompResult: PropTypes.func,
+  visible: PropTypes.bool,
+  extraApiData: PropTypes.object,
+  getExtraApiData: PropTypes.func,
 };
 
 export default EshsCmpnyComp;

@@ -45,24 +45,36 @@ class LeadBallComp extends Component {
         LeadFrame: { categoryMapList: leadframeList },
         Ball: { categoryMapList: ballList },
       },
+      colData,
+      formData,
     } = this.props;
+    const { LB_TYPE } = formData;
+
+    const selectedValue = colData.split(',').map(val => Number(val));
+    let selectedItem;
+    if (LB_TYPE === 'L') {
+      selectedItem = leadframeList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
+    } else {
+      selectedItem = ballList.filter(data => selectedValue.includes(data.NODE_ID)).map(item => ({ title: item.NAME_KOR, value: item.NODE_ID }));
+    }
 
     dataSource = [
       {
         groupName: 'LeadFrame',
         groupKey: 'L',
-        selectedValue: [],
-        selectedItem: [],
+        selectedValue: LB_TYPE === 'L' ? selectedValue : [],
+        selectedItem: LB_TYPE === 'L' ? selectedItem : [],
         dataSet: leadframeList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0).map(item => ({ ...item, checked: true })),
       },
       {
         groupName: 'Ball',
         groupKey: 'B',
-        selectedValue: [],
-        selectedItem: [],
+        selectedValue: LB_TYPE === 'B' ? selectedValue : [],
+        selectedItem: LB_TYPE === 'B' ? selectedItem : [],
         dataSet: ballList.filter(x => x.USE_YN === 'Y' && x.LVL !== 0).map(item => ({ ...item, checked: true })),
       },
     ];
+    console.debug('dataSource', dataSource);
     this.setState({ dataSource });
   };
 
@@ -95,11 +107,6 @@ class LeadBallComp extends Component {
   };
 
   render() {
-    const {
-      CONFIG: {
-        property: { COMP_NAME },
-      },
-    } = this.props;
     return (
       <>
         <StyledMultiSelector>
