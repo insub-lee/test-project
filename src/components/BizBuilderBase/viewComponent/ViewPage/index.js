@@ -24,7 +24,7 @@ class ViewPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, CustomButtons } = this.props;
+    const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, ViewCustomButtons } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -36,8 +36,8 @@ class ViewPage extends Component {
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-            {CustomButtons ? (
-              <CustomButtons {...this.props} />
+            {ViewCustomButtons ? (
+              <ViewCustomButtons {...this.props} />
             ) : (
               <div className="alignRight">
                 <Popconfirm
