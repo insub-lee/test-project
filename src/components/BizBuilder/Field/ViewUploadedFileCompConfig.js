@@ -5,19 +5,22 @@ import _, { debounce } from 'lodash';
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
 function ViewUploadedFileCompConfig(props) {
-  useEffect(() => {}, []);
+  const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = props;
 
   const handleChangeViewCompData = (key, value) => {
-    const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = props;
     configInfo.property[key] = value;
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
   const debouncedHandleChangeViewCompData = debounce(handleChangeViewCompData, 250);
 
-  function radioHandler() {}
   return (
-    <div>
-      <Row>
+    <div className="popoverItem popoverItemInput">
+      <span className="spanLabel">컬럼명</span>
+      <Input
+        defaultValue={(configInfo && configInfo.property && configInfo.property.file_col_name) || ''}
+        onChange={e => debouncedHandleChangeViewCompData('file_col_name', e.target.value)}
+      ></Input>
+      {/* <Row>
         <div>
           <Col span={6}>
             <p>테스트지롱</p>
@@ -29,7 +32,7 @@ function ViewUploadedFileCompConfig(props) {
             </Radio.Group>
           </Col>
         </div>
-      </Row>
+      </Row> */}
     </div>
   );
 }
