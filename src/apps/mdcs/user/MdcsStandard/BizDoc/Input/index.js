@@ -134,7 +134,7 @@ class BizDocListInput extends Component {
                   <div className="rightTable">
                     <Col span={4}>Revision</Col>
                     <Col span={8}>
-                      <Input value={'0'} readOnly />
+                      <Input value="0" readOnly />
                     </Col>
                   </div>
                 </Row>
