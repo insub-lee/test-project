@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import request from 'utils/request';
 
 class CustomTooltip extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      param: '',
+      fileSeqList: [],
     };
   }
 
@@ -13,26 +14,32 @@ class CustomTooltip extends Component {
     return ['custom-tooltip'];
   }
 
-  render() {
+  componentDidMount() {
     const { data } = this.props.api.getDisplayedRowAtIndex(this.props.rowIndex);
-    const { param } = this.state;
-    const url = `http://eshs-dev.magnachip.com/down/file/${param}`;
-    return (
-      <div className="custom-tooltip">
-        <img src={url} alt={data.kind} width="150px" />
-      </div>
-      // <div className="custom-tooltip" style={{ backgroundColor: this.props.color || 'white' }}>
-      //   <p>
-      //     <span>{data.kind}</span>
-      //   </p>
-      //   <p>
-      //     <span>모델: </span> {data.model}
-      //   </p>
-      //   <p>
-      //     <span>사이즈: </span> {data.size1}
-      //   </p>
-      // </div>
-    );
+    const hitemCd = data.hitem_cd;
+    const getData = request({
+      method: 'GET',
+      url: `/api/eshs/v1/common/geteshsprotectionitemsattach?hitem_cd=${hitemCd}`,
+    });
+    this.makeFileList(getData);
+  }
+
+  makeFileList = data => {
+    data.then(res => this.setState({ fileSeqList: res.response.fileList }));
+  };
+
+  render() {
+    const { fileSeqList } = this.state;
+    if (fileSeqList.length) {
+      return (
+        <div>
+          {fileSeqList.map(item => (
+            <img src={`http://192.168.251.14:10197/down/file/${item.file_seq}`} alt="사진이 없습니다." width="150px" />
+          ))}
+        </div>
+      );
+    }
+    return <div>등록된 사진이 없습니다.</div>;
   }
 }
 
