@@ -25,7 +25,7 @@ class ViewPage extends Component {
   // }
 
   render = () => {
-    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal } = this.props;
+    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal, CustomButtons } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -37,27 +37,31 @@ class ViewPage extends Component {
             {draftId !== -1 && <SignLine id={id} draftId={draftId} />}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
-            <div className="alignRight">
-              <Popconfirm
-                title="Are you sure delete this task?"
-                onConfirm={() => deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <StyledButton className="btn-primary">Delete</StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
-                Modify
-              </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                Revision
-              </StyledButton>
-              {!isBuilderModal && (
-                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
+            {CustomButtons ? (
+              <CustomButtons {...this.props} />
+            ) : (
+              <div className="alignRight">
+                <Popconfirm
+                  title="Are you sure delete this task?"
+                  onConfirm={() => deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <StyledButton className="btn-primary">Delete</StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
+                  Modify
                 </StyledButton>
-              )}
-            </div>
+                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
+                  Revision
+                </StyledButton>
+                {!isBuilderModal && (
+                  <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </StyledButton>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );
