@@ -20,6 +20,7 @@ import TreeSelectRootKeyCompConfig from 'components/BizBuilder/Field/TreeSelectR
 import SelectYearCompConfig from 'components/BizBuilder/Field/SelectYearCompConfig';
 import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValueSelectCompConfig';
 import ViewUploadedFileCompConfig from 'components/BizBuilder/Field/ViewUploadedFileCompConfig';
+import FlexTableCompConfig from 'components/BizBuilder/Field/FlexTableCompConfig';
 import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConfig';
 import EshsSearchbarConfig from 'components/BizBuilder/Field/EshsSearchbarConfig';
 
@@ -44,6 +45,7 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/SelectYearCompConfig': { renderer: property => <SelectYearCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectCompConfig': { renderer: property => <CustomValueSelectCompConfig {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileCompConfig': { renderer: property => <ViewUploadedFileCompConfig {...property} /> },
+  'components/BizBuilder/Field/FlexTableCompConfig': { renderer: property => <FlexTableCompConfig {...property} /> },
   'components/BizBuilder/Field/ModalTableCompConfig': { renderer: property => <ModalTableCompConfig {...property} /> },
   'components/BizBuilder/Field/EshsSearchbarConfig': { renderer: property => <EshsSearchbarConfig {...property} /> },
 };
