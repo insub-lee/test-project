@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -20,6 +21,14 @@ class ModifyPage extends Component {
   //   removeReduxState(id);
   // }
 
+  // componentDidMount() {
+  //   const { sagaKey: id, setViewType, workSeq, taskSeq, setViewPageData } = this.props;
+  //   console.debug(this.props.viewType, this.props.viewPageData.viewType);
+  //   setViewType(id, 'MODIFY');
+  //   setViewPageData(id, workSeq, taskSeq, 'MODIFY');
+  //   console.debug(this.props.viewType, this.props.viewPageData.viewType);
+  // }
+
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask } = this.props;
     modifyTask(id, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
@@ -34,8 +43,8 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage } = this.props;
-
+    const { sagaKey: id, viewLayer, loadingComplete, viewPageData } = this.props;
+    console.debug('@@@@@MODIFY PAGE', this.props.viewPageData.viewType);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -65,5 +74,20 @@ class ModifyPage extends Component {
     return '';
   };
 }
+
+ModifyPage.propTypes = {
+  sagaKey: PropTypes.string,
+  viewLayer: PropTypes.array,
+  isLoading: PropTypes.bool,
+  loadingComplete: PropTypes.func,
+  viewPageData: PropTypes.func,
+  changeViewPage: PropTypes.func,
+  taskSeq: PropTypes.string,
+  formData: PropTypes.object,
+  setViewType: PropTypes.func,
+  onCloseModleHandler: PropTypes.func,
+  baseSagaKey: PropTypes.string,
+  modifyTask: PropTypes.func,
+};
 
 export default ModifyPage;

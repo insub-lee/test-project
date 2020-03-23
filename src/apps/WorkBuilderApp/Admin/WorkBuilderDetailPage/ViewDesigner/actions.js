@@ -180,7 +180,7 @@ export const changeUseGroupTitle = (groupIndex, useTitle) => ({
   useTitle,
 });
 
-export const getMetaDataBySaga = (workSeq, viewType, viewID) => ({ type: actionTypes.GET_METADATA_SAGA, workSeq, viewType, viewID });
+export const getMetaDataBySaga = (workSeq, viewType, viewID, viewName) => ({ type: actionTypes.GET_METADATA_SAGA, workSeq, viewType, viewID, viewName });
 
 export const setSelectToolbarItemByReducer = comp => ({ type: actionTypes.SET_SELECT_TOOLBAR_ITEM_REDUCER, comp });
 
@@ -195,7 +195,7 @@ export const changeCompDataByReducer = (groupIndex, rowIndex, colIndex, key, val
 
 export const addMetaDataBySaga = callbackFunc => ({ type: actionTypes.ADD_METADATA_SAGA, callbackFunc });
 
-export const setInitDataByReducer = (workSeq, viewType) => ({ type: actionTypes.SET_INIT_DATA_REDUCER, workSeq, viewType });
+export const setInitDataByReducer = (workSeq, viewType, viewName) => ({ type: actionTypes.SET_INIT_DATA_REDUCER, workSeq, viewType, viewName });
 
 export const setWorkInfoByReducer = (workSeq, viewType) => ({ type: actionTypes.SET_WORK_INFO_REDUCER, workSeq, viewType });
 
@@ -213,7 +213,7 @@ export const setTopMenusByReducer = topMenus => ({ type: actionTypes.SET_TOP_MEN
 
 export const setViewDataCompItemByReducer = compItem => ({ type: actionTypes.SET_VIEW_DATA_COMP_ITEM_REDUCER, compItem });
 
-export const setInitListDataByReducer = (workSeq, viewType) => ({ type: actionTypes.SET_INIT_LIST_DATA_REDUCER, workSeq, viewType });
+export const setInitListDataByReducer = (workSeq, viewType, viewName) => ({ type: actionTypes.SET_INIT_LIST_DATA_REDUCER, workSeq, viewType, viewName });
 
 export const getComponentPoolListBySaga = () => ({ type: actionTypes.GET_COMPONENT_POOL_SAGA });
 
@@ -298,5 +298,22 @@ export const changeHiddenCompDatByReducer = (compIdx, key, value) => ({
 
 export const setClassNameListByReducer = list => ({
   type: actionTypes.SET_CLASSNAMELIST_REDUCER,
+  list,
+});
+
+export const setViewListByReducer = (list, viewChangeProcesslist) => ({
+  type: actionTypes.SET_VIEW_LIST_REDUCER,
+  list,
+  viewChangeProcesslist,
+});
+
+export const saveViewChangeProcessBySaga = (formData, callbackFunc) => ({
+  type: actionTypes.SAVE_VIEW_CHANGE_PROCESS_SAGA,
+  formData,
+  callbackFunc,
+});
+
+export const setViewChangeProcessListByReducer = list => ({
+  type: actionTypes.SET_VIEW_CHANGE_PROCESS_LIST_REDUCER,
   list,
 });

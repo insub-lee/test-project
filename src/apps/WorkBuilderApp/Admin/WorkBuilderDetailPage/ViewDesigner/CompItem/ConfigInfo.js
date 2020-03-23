@@ -14,10 +14,14 @@ import DocStatusLabelConfig from 'components/BizBuilder/Field/DocStatusLabelConf
 import RadioCharCompConfig from 'components/BizBuilder/Field/RadioCharCompConfig';
 import JoinReadCompConfig from 'components/BizBuilder/Field/JoinReadCompConfig';
 import DragUploadCompConfig from 'components/BizBuilder/Field/DragUploadCompConfig';
+import DragUploadPdfCompConfig from 'components/BizBuilder/Field/DragUploadPdfCompConfig';
 import NumberCompUnitConfig from 'components/BizBuilder/Field/NumberCompUnitConfig';
 import TreeSelectRootKeyCompConfig from 'components/BizBuilder/Field/TreeSelectRootKeyCompConfig';
 import SelectYearCompConfig from 'components/BizBuilder/Field/SelectYearCompConfig';
 import CustomValueSelectCompConfig from 'components/BizBuilder/Field/CustomValueSelectCompConfig';
+import ViewUploadedFileCompConfig from 'components/BizBuilder/Field/ViewUploadedFileCompConfig';
+import ModalTableCompConfig from 'components/BizBuilder/Field/ModalTableCompConfig';
+import EshsSearchbarConfig from 'components/BizBuilder/Field/EshsSearchbarConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -34,8 +38,12 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/RadioCharCompConfig': { renderer: property => <RadioCharCompConfig {...property} /> },
   'components/BizBuilder/Field/JoinReadCompConfig': { renderer: property => <JoinReadCompConfig {...property} /> },
   'components/BizBuilder/Field/DragUploadCompConfig': { renderer: property => <DragUploadCompConfig {...property} /> },
+  'components/BizBuilder/Field/DragUploadPdfCompConfig': { renderer: property => <DragUploadPdfCompConfig {...property} /> },
   'components/BizBuilder/Field/NumberCompUnitConfig': { renderer: property => <NumberCompUnitConfig {...property} /> },
   'components/BizBuilder/Field/TreeSelectRootKeyCompConfig': { renderer: property => <TreeSelectRootKeyCompConfig {...property} /> },
   'components/BizBuilder/Field/SelectYearCompConfig': { renderer: property => <SelectYearCompConfig {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectCompConfig': { renderer: property => <CustomValueSelectCompConfig {...property} /> },
+  'components/BizBuilder/Field/ViewUploadedFileCompConfig': { renderer: property => <ViewUploadedFileCompConfig {...property} /> },
+  'components/BizBuilder/Field/ModalTableCompConfig': { renderer: property => <ModalTableCompConfig {...property} /> },
+  'components/BizBuilder/Field/EshsSearchbarConfig': { renderer: property => <EshsSearchbarConfig {...property} /> },
 };

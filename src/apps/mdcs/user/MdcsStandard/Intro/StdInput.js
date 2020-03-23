@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { message } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -14,7 +15,6 @@ class StdInput extends Component {
     super(props);
     this.state = {
       initLoading: true,
-      isUploadDataComplete: false,
       uploadFileList: [],
     };
   }
@@ -59,27 +59,50 @@ class StdInput extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList } = this.props;
+    const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
     const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
-    const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
-    // 첨부파일이 없는 경우 체크
-    const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
-    if (isUploadByPass && isUploadByPass.length === 0) {
-      this.saveTask(id, reloadId, this.saveTaskAfter);
-    } else {
-      attachList.map(attachItem => {
-        const { COMP_FIELD } = attachItem;
-        const attachInfo = formData[COMP_FIELD];
-        if (attachInfo) {
-          const { DETAIL } = attachInfo;
-          uploadFileList.push({ COMP_FIELD, isComplete: false });
-          this.setState({ uploadFileList }, () => {
-            const param = { PARAM: { DETAIL } };
-            submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+    const { OPT_INFO } = workInfo;
+    console.debug('metaList', metaList);
+    // workflow 결재 체크 하기
+    const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
+    let isByPass = true;
+    // eslint-disable-next-line no-unused-expressions
+    IsWorkProcess &&
+      IsWorkProcess.forEach(opt => {
+        if (opt.ISUSED === 'Y') {
+          // workProces validation check
+          const { DRAFT_PROCESS_STEP } = processRule;
+          const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+          ruleCheckList.forEach(rule => {
+            if (rule.APPV_MEMBER.length === 0) {
+              isByPass = false;
+              message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+            }
           });
         }
       });
+
+    if (isByPass) {
+      const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+      // 첨부파일이 없는 경우 체크
+      const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+      if (isUploadByPass && isUploadByPass.length === 0) {
+        // this.saveTask(id, reloadId, this.saveTaskAfter);
+      } else {
+        attachList.map(attachItem => {
+          const { COMP_FIELD } = attachItem;
+          const attachInfo = formData[COMP_FIELD];
+          if (attachInfo) {
+            const { DETAIL } = attachInfo;
+            uploadFileList.push({ COMP_FIELD, isComplete: false });
+            this.setState({ uploadFileList }, () => {
+              const param = { PARAM: { DETAIL } };
+              // submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+            });
+          }
+        });
+      }
     }
   };
 
@@ -115,7 +138,7 @@ class StdInput extends Component {
       CustomWorkProcess,
       onCloseModal,
     } = this.props;
-
+    console.debug('this.', this.props);
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
@@ -136,19 +159,19 @@ class StdInput extends Component {
           () => loadingComplete(),
         );
       }
-      console.debug('input processRule change', processRule);
+
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
-              <WorkProcess id={id} PRC_ID={prcId} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
+              <WorkProcess id={id} PRC_ID={Number(prcId)} CustomWorkProcess={CustomWorkProcess} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
-                Save
+              <StyledButton className="btn-primary btn-first btn-sm" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
+                <SaveOutlined /> Save
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
+              <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
                 닫기
               </StyledButton>
             </div>

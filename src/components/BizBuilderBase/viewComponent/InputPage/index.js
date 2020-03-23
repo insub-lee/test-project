@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
@@ -13,7 +14,6 @@ class InputPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      initLoading: true,
       uploadFileList: [],
     };
   }
@@ -93,7 +93,7 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId } = this.props;
+    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
@@ -102,6 +102,7 @@ class InputPage extends Component {
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
+      if (isSaveModalClose) changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
     }
   };
 
@@ -112,15 +113,15 @@ class InputPage extends Component {
       workFlowConfig,
       processRule,
       setProcessRule,
-      loadingComplete,
       viewPageData,
       changeViewPage,
       workInfo,
       CustomWorkProcess,
       reloadId,
       isBuilderModal,
+      isLoading,
+      CustomButtons,
     } = this.props;
-
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -129,16 +130,6 @@ class InputPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-
-      // 로딩
-      if (this.props.isLoading === false && this.state.initLoading) {
-        this.setState(
-          {
-            initLoading: false,
-          },
-          () => loadingComplete(),
-        );
-      }
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -146,16 +137,20 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <StyledButton className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}>
-                Save
-              </StyledButton>
-              {!isBuilderModal && (
-                <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
-                </StyledButton>
-              )}
-            </div>
+            {CustomButtons ? (
+              <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+            ) : (
+              <div className="alignRight">
+                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                  Save
+                </Button>
+                {!isBuilderModal && (
+                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </Button>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );
@@ -175,9 +170,8 @@ InputPage.propTypes = {
   onCloseModleHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
-  isLoading: PropTypes.bool,
-  loadingComplete: PropTypes.func,
   CustomWorkProcess: PropTypes.func,
+  isLoading: PropTypes.bool,
 };
 
 InputPage.defaultProps = {
@@ -186,8 +180,8 @@ InputPage.defaultProps = {
       PRC_ID: -1,
     },
   },
-  loadingComplete: () => {},
   CustomWorkProcess: undefined,
+  isLoading: false,
 };
 
 export default InputPage;

@@ -11,13 +11,6 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import View from 'components/BizBuilder/PageComp/view';
 
 class ViewPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      initLoading: true,
-    };
-  }
-
   componentDidMount() {
     const { sagaKey: id, draftId } = this.props;
     if (draftId !== -1) {
@@ -25,28 +18,18 @@ class ViewPage extends Component {
     }
   }
 
-  // state값 reset테스트
-  // componentWillUnmount() {
-  //   const { removeReduxState, id } = this.props;
-  //   removeReduxState(id);
-  // }
+  builderModalClose = () => {
+    const { changeBuilderModalStateByParent } = this.props;
+    changeBuilderModalStateByParent(false, 'INPUT', -1, -1);
+  };
 
   render = () => {
-    const { sagaKey: id, viewLayer, loadingComplete, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal } = this.props;
+    const { sagaKey: id, reloadId, viewLayer, viewPageData, changeViewPage, draftId, deleteTask, isBuilderModal } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
 
-      // 로딩
-      if (this.props.isLoading === false && this.state.initLoading) {
-        this.setState(
-          {
-            initLoading: false,
-          },
-          () => loadingComplete(),
-        );
-      }
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -56,7 +39,9 @@ class ViewPage extends Component {
             <div className="alignRight">
               <Popconfirm
                 title="Are you sure delete this task?"
-                onConfirm={() => deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
+                onConfirm={() =>
+                  deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, !isBuilderModal ? changeViewPage : this.builderModalClose)
+                }
                 okText="Yes"
                 cancelText="No"
               >
@@ -94,14 +79,12 @@ ViewPage.propTypes = {
   draftProcess: PropTypes.array,
   viewType: PropTypes.string,
   isLoading: PropTypes.bool,
-  loadingComplete: PropTypes.func,
   removeReduxState: PropTypes.func,
 };
 
 ViewPage.defaultProps = {
   draftId: -1,
   draftProcess: [],
-  loadingComplete: () => {},
 };
 
 export default ViewPage;

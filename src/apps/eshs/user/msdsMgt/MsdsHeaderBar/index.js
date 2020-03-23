@@ -46,7 +46,7 @@ class MsdsHeaderBar extends React.Component {
 
   handleModalVisible = () => {
     const { handleModalVisible, sagaKey: id, changeViewPage } = this.props;
-    changeViewPage('MsdsSearchList', 3161, -1, 'LIST');
+    changeViewPage('MsdsListView', 3161, -1, 'LIST');
     handleModalVisible();
   };
 

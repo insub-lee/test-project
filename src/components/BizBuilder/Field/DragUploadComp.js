@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Icon, Progress, Upload, Button, Tooltip } from 'antd';
+import { Icon, Progress, Upload, Button, Tooltip, Modal } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import { isJSON } from 'utils/helpers';
 import StyledDragger from 'components/CommonStyled/StyledDragger';
@@ -13,384 +14,286 @@ const { Dragger } = Upload;
 const imgExts = ['jpg', 'png', 'gif', 'jpeg'];
 
 class DragUploadComp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      percent: 0,
-      fileList: [],
-    };
-  }
+  state = {
+    fileInfo: [],
+    options: {
+      MULTIPLE_UPLOAD: 'N', // 복수 업로드 여부
+      MULTIPLE_SELECT: 'N', // 복수 파일 선택 여부
+      FILTER_EXTENSION: 'N', // 파일 확장자 검열
+      EXTENSION_LIST: undefined, // 검열 대상 확장자 목록
+    },
+    previewImage: [],
+    previewVisible: false,
+    shouldUpload: false,
+  };
 
   componentDidMount() {
-    const { colData, formData } = this.props;
-    let fileList = [];
-    if (colData && colData.DETAIL) {
-      fileList = colData.DETAIL;
-    }
+    const { WORK_SEQ, COMP_FIELD, COMP_TAG, colData, CONFIG } = this.props;
+    const initfiles = {
+      WORK_SEQ,
+      TASK_SEQ: -1,
+      CONT_SEQ: -1,
+      FIELD_NM: COMP_FIELD,
+      TYPE: COMP_TAG,
+      DETAIL: colData && colData.DETAIL ? colData.DETAIL : [],
+    };
 
-    if (fileList) {
-      this.setState({
-        fileList: fileList.map(file => ({
-          ...file,
-          uid: file.seq,
-          url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
-          status: 'done',
-        })),
-      });
-    }
+    const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = CONFIG.property;
+    this.setState({ fileInfo: initfiles, options: { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } });
   }
 
-  // componentDidUpdate(prevProps) {
-  //   const { colData: prevColData, COMP_FIELD: compField } = prevProps;
-  //   const { colData, COMP_FIELD } = this.props;
-  //
-  //   if (colData && colData.DETAIL && COMP_FIELD) {
-  //     if (!prevColData || !prevColData.DETAIL) {
-  //       const fileList = colData.DETAIL;
-  //       console.debug('@@@ ', fileList);
-  //       if (fileList) {
-  //         console.debug('@@ fileList', fileList);
-  //         this.setState({
-  //           fileList: fileList.map(file => ({
-  //             ...file,
-  //             uid: file.seq,
-  //             url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
-  //             status: 'done',
-  //           })),
-  //         });
-  //       }
-  //     } else {
-  //       let isValid = true;
-  //       colData.DETAIL.forEach(node => {
-  //         if (prevColData.DETAIL.findIndex(iNode => iNode.seq === node.seq) === -1) isValid = false;
-  //       });
-  //       if (!isValid) {
-  //         const fileList = colData.DETAIL;
-  //
-  //         if (fileList) {
-  //           this.setState({
-  //             fileList: fileList.map(file => ({
-  //               ...file,
-  //               uid: file.seq,
-  //               url: imgExts.includes(file.fileExt.toLowerCase()) ? file.link : file.down,
-  //               status: 'done',
-  //             })),
-  //           });
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  changeFormDataHanlder = () => {
+    const { sagaKey, changeFormData, COMP_FIELD, WORK_SEQ } = this.props;
+    const { fileInfo } = this.state;
+    changeFormData(sagaKey, COMP_FIELD, fileInfo);
+  };
 
-  getCurrentValueJson = fileList =>
-    fileList
-      .filter(fileObj => fileObj.status === 'done')
-      .map(fileObj => ({
-        ...fileObj,
-        uid: undefined,
-        thumbUrl: undefined,
-        status: undefined,
-      }));
-
-  getCurrentValue = () => {
-    const { fileList } = this.state;
-    const { name, workSeq, taskSeq, contSeq } = this.props;
-    return JSON.stringify({
-      WORK_SEQ: workSeq,
-      TASK_SEQ: taskSeq,
-      CONT_SEQ: contSeq,
-      FIELD_NM: name,
-      ORD: 0,
-      TYPE: 'rich-text-editor',
-      DETAIL: fileList
-        .filter(fileObj => fileObj.status === 'done')
-        .map(fileObj => ({
-          ...fileObj,
-          uid: undefined,
-          thumbUrl: undefined,
-          status: undefined,
-        })),
+  onUploadComplete = (response, file) => {
+    const { fileInfo } = this.state;
+    const { DETAIL: fileList } = fileInfo;
+    const { fileExt, down } = response;
+    let doctype = 'file-unknown';
+    switch (fileExt) {
+      case 'pdf':
+        doctype = 'file-pdf';
+        break;
+      case 'xls':
+        doctype = 'file-excel';
+        break;
+      case 'xlsx':
+        doctype = 'file-excel';
+        break;
+      case 'txt':
+        doctype = 'file-text';
+        break;
+      case 'doc':
+        doctype = 'file-word';
+        break;
+      case 'docx':
+        doctype = 'file-word';
+        break;
+      case 'ppt':
+        doctype = 'file-ppt';
+        break;
+      case 'pptx':
+        doctype = 'file-ppt';
+        break;
+      case 'zip':
+        doctype = 'file-zip';
+        break;
+      default:
+        break;
+    }
+    const tmpDetail = fileList.map(fl => (fl.uid === file.uid ? { ...fl, ...response, type: doctype, down } : fl));
+    const tmpFileInfo = { ...fileInfo, DETAIL: tmpDetail };
+    this.setState({ fileInfo: tmpFileInfo }, () => {
+      this.changeFormDataHanlder();
+      this.handlePreview(file);
     });
   };
 
-  onRemove = (itemindex, e) => {
-    e.stopPropagation();
-    const { sagaKey: id, changeFormData, colData, COMP_FIELD, CONFIG } = this.props;
-    this.setState(
-      prevState => {
-        const { fileList } = prevState;
-        return {
-          fileList: fileList.filter((item, index) => index !== itemindex),
-        };
-      },
-      () => {
-        // const nextColDataDetail = colData.DETAIL.filter((item, index) => index !== itemindex);
-        // changeFormData(id, COMP_FIELD, nextColDataDetail);
-        // desc - 'done'상태인것만 리듀서에 푸쉬
-        changeFormData(id, COMP_FIELD, { ...colData, DETAIL: this.state.fileList.filter(file => file.status === 'done') });
-      },
-    );
-  };
-
-  handleChange = ({ file, fileList }) => {
-    const { uid, response, thumbUrl } = file;
-    const limitSize = 5;
-    // if (fileList.length <= 5) {
-    if (true) {
-      if (response && response.code === 300) {
-        const uploadedFile = {
-          ...response,
-          name: response.fileName,
-          code: undefined,
-        };
-        const fileIndex = fileList.findIndex(fileObj => fileObj.uid === uid);
-        const nextFileList = fileList.map((fileObj, index) => {
-          if (index === fileIndex) {
-            return {
-              ...uploadedFile,
-              uid,
-              thumbUrl,
-              status: 'done',
-            };
-          }
-          return {
-            ...fileObj,
-          };
-        });
-        this.setState({ fileList: nextFileList }, () => {
-          this.handlerAttachChange(this.state.fileList);
-        });
-      } else {
-        this.setState({ fileList }, () => {
-          if (file.status === 'removed') {
-            this.handlerAttachChange(this.state.fileList);
-          }
-        });
-      }
-
-      this.setState({
-        percent: 0,
-      });
-    } else {
-      message.error(<MessageContent>최대 업로드 갯수를 초과하였습니다.</MessageContent>, 2);
-    }
-  };
-
-  handlerAttachChange = fileList => {
-    const { CONFIG, sagaKey: id, changeFormData, changeValidationData, COMP_FIELD, NAME_KOR, WORK_SEQ, colData, COMP_TAG } = this.props;
-    let retVal = [];
-    if (CONFIG.property.isRequired) {
-      changeValidationData(id, COMP_FIELD, fileList.length > 0, fileList.length > 0 ? '' : `${NAME_KOR}는 필수항목 입니다.`);
-    }
-
-    if (colData && typeof colData === 'object' && colData.DETAIL && colData.DETAIL.length > 0) {
-      colData.DETAIL = fileList;
-      retVal = colData;
-    } else if (colData && typeof colData === 'string' && colData.length > 0 && colData.indexOf('{') === 0 && isJSON(colData)) {
-      JSON.parse(colData).DETAIL = fileList;
-      retVal = colData;
-    } else {
-      // retVal = fileList.filter(file => file.status === 'done');
-      retVal = {
-        WORK_SEQ,
-        TASK_SEQ: -1,
-        CONT_SEQ: -1,
-        FIELD_NM: COMP_FIELD,
-        TYPE: COMP_TAG,
-        DETAIL: fileList.filter(file => file.status === 'done'),
-      };
-      // retVal = {
-      //   WORK_SEQ,
-      //   TASK_SEQ: -1,
-      //   CONT_SEQ: -1,
-      //   FIELD_NM: COMP_FIELD,
-      //   TYPE: COMP_TAG,
-      //   DETAIL: detail,
-      // };
-    }
-    changeFormData(id, COMP_FIELD, retVal);
-  };
-
   customRequest = ({ action, data, file, filename, headers, onError, onProgress, onSuccess, withCredentials }) => {
-    const { fileList } = this.state;
-    const size = fileList.length;
-    // limiter
-    const limit = 5;
-    // if (size + 1 <= 5) {
-    if (true) {
-      const formData = new FormData();
-      if (data) {
-        Object.keys(data).forEach(key => {
-          formData.append(key, data[key]);
-        });
-      }
-      formData.append(filename, file);
+    const { fileInfo } = this.state;
+    const { DETAIL: fileList } = fileInfo;
 
-      const interval = setInterval(() => this.setState({ percent: this.state.percent + 1 }), 1000);
-
-      axios
-        .post(action, formData, {
-          withCredentials,
-          headers,
-          onUploadProgress: ({ total, loaded }) => {
-            onProgress({ percent: Number(Math.round((loaded / total) * 100).toFixed(2)) }, file);
-            this.setState({
-              percent: Number(Math.round((loaded / total) * 100).toFixed(2)),
-            });
-          },
-        })
-        .then(({ data: response }) => {
-          onSuccess(response, file);
-          clearInterval(interval);
-        })
-        .catch(onError);
-    }
-
-    return {
-      abort() {
-        // console.debug('upload progress is aborted.');
-      },
-    };
+    const fileItem = { uid: file.uid, seq: 0, fileName: file.name, fileType: 1, size: file.size, fileExt: '', down: '', percent: 0, type: 'LoadingOutlined' };
+    fileList.push(fileItem);
+    const tmpFileInfo = { ...fileInfo, DETAIL: fileList };
+    this.setState({ fileInfo: tmpFileInfo });
+    const formData = new FormData();
+    formData.append(file.uid, file);
+    axios
+      .post(action, formData, {
+        withCredentials,
+        headers,
+      })
+      .then(({ data: response }) => {
+        onSuccess(response, file);
+        this.onUploadComplete(response, file);
+      })
+      .catch(onError);
   };
 
-  bytesToSize = bytes => {
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes === 0) return '0 Byte';
-    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-    return `${Math.round(bytes / Math.pow(1024, i), 2)} ${sizes[i]}`;
+  onClickRemoveFile = file => {
+    const { fileInfo, previewImage } = this.state;
+    const { DETAIL: fileList } = fileInfo;
+    const idx = fileList.indexOf(file);
+    const newFileList = fileList.slice();
+    const temp = [...previewImage];
+    newFileList.splice(idx, 1);
+    temp.splice(idx, 1);
+    const newFileInfo = { ...fileInfo, DETAIL: newFileList };
+    this.setState({ fileInfo: newFileInfo, previewImage: temp }, () => {
+      const { sagaKey, changeFormData, COMP_FIELD } = this.props;
+      const { fileInfo } = this.state;
+      changeFormData(sagaKey, COMP_FIELD, fileInfo);
+    });
+  };
+
+  onClickDownLoadFile = (e, file) => {
+    e.stopPropagation();
+    window.location.href = `${file.down}`;
+  };
+
+  preProcessor = value => {
+    const { name, size } = value.file;
+
+    if (size > 0 && typeof name === 'string' && name !== '') {
+      const {
+        options,
+        fileInfo: { DETAIL: fileList },
+      } = this.state;
+
+      const { MULTIPLE_UPLOAD } = options;
+
+      // 단일 업로드인 경우
+      if (MULTIPLE_UPLOAD === 'N' && fileList.length > 0) {
+        return;
+      }
+
+      const { FILTER_EXTENSION } = options;
+
+      if (FILTER_EXTENSION === 'Y') {
+        if (this.extensionChecker(name)) {
+          this.customRequest(value);
+        }
+      } else {
+        this.customRequest(value);
+      }
+    }
+  };
+
+  extensionChecker = name => {
+    const { EXTENSION_LIST } = this.state.options;
+    const allowExtensions = EXTENSION_LIST.split(',');
+    const originName = name.toUpperCase();
+
+    let uploadable = false;
+
+    allowExtensions.forEach(extension => {
+      if (originName.indexOf(extension) > -1) {
+        uploadable = true;
+      }
+    });
+    return uploadable;
+  };
+
+  getBase64 = file =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+
+  handlePreview = async file => {
+    if (!file.url && !file.preview) {
+      file.preview = await this.getBase64(file);
+    }
+    const { previewImage } = this.state;
+    const temp = [...previewImage];
+    temp.push(file.url || file.preview);
+    this.setState({
+      previewImage: [...temp],
+      previewVisible: true,
+    });
   };
 
   render() {
-    const { readOnly, visible } = this.props;
-    const { fileList } = this.state;
+    const {
+      fileInfo: { DETAIL: fileList },
+      options,
+      previewVisible,
+      previewImage,
+    } = this.state;
 
-    let view = false;
-    if (readOnly !== undefined && readOnly) {
-      view = readOnly;
-    }
-
-    const successFileList = fileList.filter(item => item.status === 'done');
-
-    return visible ? (
-      <StyledDragger>
-        {!view && (
-          <>
-            {/*
-            <div className="btnTypeUploader" style={{ marginBottom: '10px' }}>
-              <Upload
-                action="/upload"
-                fileList={fileList}
-                disabled={!(successFileList.length <= 5)}
-                onChange={this.handleChange}
-                customRequest={this.customRequest}
-                showUploadList={false}
-                multiple
-              >
-                <StyledButton className="btn-light btn-sm">
-                  <Icon type="upload" /> Click to Upload
-                </StyledButton>
-              </Upload>
-            </div>
-            */}
-            <div className="dragTypeUploader" style={{ height: 100 }} onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
-              <Dragger
-                action="/upload"
-                fileList={fileList}
-                // disabled={!(successFileList.length <= 5)}
-                onChange={this.handleChange}
-                customRequest={this.customRequest}
-                showUploadList={false}
-                multiple
-              >
-                <>
-                  {fileList.length === 0 && (
-                    <>
-                      <p className="ant-upload-drag-icon">
-                        <Icon type="inbox" />
-                      </p>
-                      <p className="ant-upload-text">드래그 앤 드롭 또는 클릭</p>
-                    </>
-                  )}
-                  {fileList.length > 0 && (
-                    <div className="uploadList" style={{ margin: 0, padding: 20, height: 80, overflowY: 'auto' }}>
-                      {fileList.map((file, index) => (
-                        <div className="uploadFileRow" style={{ position: 'absolute', height: '25px' }}>
-                          <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
-                            <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
-                          </div>
-                          {file.status === 'done' ? (
-                            <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
-                                <Icon type="download" />
-                              </StyledButton>
-                              <StyledButton className="btn-light btn-xs" onClick={e => this.onRemove(index, e)}>
-                                <Icon type="close" />
-                              </StyledButton>
-                            </div>
-                          ) : (
-                            <>
-                              {file.status === 'error' ? (
-                                <div className="uploadFileStatus" style={{ position: 'absolute', top: 4, right: 10 }}>
-                                  <sapn style={{ color: 'red' }}>업로드 실패</sapn>
-                                  {'  '}
-                                  <StyledButton className="btn-light btn-xs" onClick={() => this.onRemove(index)}>
-                                    <Icon type="close" />
-                                  </StyledButton>
-                                </div>
-                              ) : (
-                                <div className="uploadFileStatus" style={{ position: 'absolute', top: '0px', right: '15px', width: '35%' }}>
-                                  <Progress percent={this.state.percent} status="active" />
-                                </div>
-                              )}
-                            </>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              </Dragger>
-            </div>
-          </>
-        )}
-        {view && (
-          <div className="uploadFileList">
-            {fileList.length > 0 ? (
-              fileList.map((file, index) => (
-                <div className="uploadFileRow" style={{ padding: '10px 10px 10px', position: 'relative', height: '25px' }}>
-                  <div className="uploadFileInfo" style={{ position: 'absolute', top: 1, left: 10, fontSize: '0.8rem' }}>
-                    <Tooltip placement="topLeft" title={`${file.name}(${this.bytesToSize(file.size)})`} trigger="hover">
-                      <Icon type="paper-clip" />
-                      {file.name} ({this.bytesToSize(file.size)})
-                    </Tooltip>
-                  </div>
-                  <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                    <StyledButton
-                      className="btn-primary btn-xs btn-first"
-                      onClick={e => {
-                        e.stopPropagation();
-                        window.location.href = `${file.down}`;
-                      }}
-                    >
-                      <Icon type="download" />
-                    </StyledButton>
-                  </div>
+    const { MULTIPLE_SELECT, MULTIPLE_UPLOAD, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = options;
+    const IS_MULTIPLE_UPLOAD_ON = MULTIPLE_UPLOAD === 'Y';
+    const IS_PREVIEW_ON = PREVIEW_SETTING === 'Y';
+    return (
+      <div onDragEnter={e => e.stopPropagation()} onDragOver={e => e.stopPropagation()}>
+        <Dragger
+          action="/upload"
+          onProgress={this.onProgress}
+          customRequest={this.preProcessor}
+          onChange={this.onChangeHandler}
+          showUploadList={false}
+          multiple={MULTIPLE_SELECT === 'Y'}
+        >
+          {fileList && fileList.length > 0 ? (
+            <div className="fileZone">
+              {fileList.map((file, idx) => (
+                <div key={`DragUploadComp > FileList > ${idx}`} style={IS_PREVIEW_ON ? { height: '25px', display: 'inline' } : { height: '25px' }}>
+                  <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
+                  <Icon
+                    onClick={e => {
+                      e.stopPropagation();
+                      this.onClickRemoveFile(file);
+                    }}
+                    type="delete"
+                    style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }}
+                  />
+                  {IS_PREVIEW_ON &&
+                    previewVisible &&
+                    !IS_MULTIPLE_UPLOAD_ON &&
+                    previewImage.length > 0 &&
+                    previewImage.map(url => <img alt="example" style={{ width: '100%' }} src={url} />)}
                 </div>
-              ))
-            ) : (
-              <span>첨부된 파일이 없습니다.</span>
-            )}
+              ))}
+            </div>
+          ) : (
+            <div className="fileZone">
+              {IS_MULTIPLE_UPLOAD_ON && (
+                <p className="ant-upload-drag-icon">
+                  <Icon type="inbox" />
+                </p>
+              )}
+              <p className={IS_MULTIPLE_UPLOAD_ON ? `ant-upload-text` : ''}>
+                {IS_MULTIPLE_UPLOAD_ON
+                  ? FILTER_EXTENSION === 'Y'
+                    ? `복수의 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
+                    : `복수의 파일 업로드가 가능합니다.`
+                  : FILTER_EXTENSION === 'Y'
+                  ? `단일 ${EXTENSION_LIST} 파일만 업로드 가능합니다.`
+                  : '클릭 혹은 드래그하세요.'}
+              </p>
+            </div>
+          )}
+        </Dragger>
+        {/* {fileList && fileList.length > 0 && (
+          <div className="fileZone" style={{ top: '10px', marginLeft: '10px' }}>
+            {fileList.map(file => (
+              <div style={{ height: '25px' }}>
+                {file.type === 'LoadingOutlined' ? (
+                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px' }} />
+                ) : (
+                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px' }} />
+                )}
+                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
+                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
+                {PREVIEW_SETTING === 'Y' &&
+                  previewVisible &&
+                  previewImage.length > 0 &&
+                  previewImage.map(url => <img alt="example" style={{ width: '100%' }} src={url} />)}
+              </div>
+            ))}
           </div>
-        )}
-      </StyledDragger>
-    ) : (
-      ''
+        )} */}
+      </div>
     );
   }
 }
 
-DragUploadComp.propTypes = {};
+DragUploadComp.propTypes = {
+  CONFIG: PropTypes.objectOf(PropTypes.object),
+};
 
-DragUploadComp.defaultProps = {};
+DragUploadComp.defaultProps = {
+  CONFIG: {
+    info: {},
+    property: { MULTIPLE_UPLOAD: 'N', MULTIPLE_SELECT: 'N', FILTER_EXTENSION: 'N', EXTENSION_LIST: '' },
+    option: {},
+  },
+};
 
 export default DragUploadComp;

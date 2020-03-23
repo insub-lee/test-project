@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { Tabs, Button, Input, Spin, Icon } from 'antd';
+import { Tabs, Button, Input, Spin, Icon, Popover, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 
@@ -23,6 +23,7 @@ import CompToolbar from './CompToolbar';
 import StructureDesign from './StructureDesign';
 import StyleDesign from './StyleDesign';
 import CompFieldList from './CompFieldList';
+import ViewChangeProcessSetting from './ViewChangeProcessSetting';
 
 // const { TabPane } = Tabs;
 
@@ -32,12 +33,16 @@ class ViewDesigner extends Component {
     this.state = {
       tabBodyHeight: 0,
       isButtonLoding: false,
+      isMakeNewViewModal: false,
+      viewType: '',
     };
     // this.handleChangeViewDesignerName = debounce(this.handleChangeViewDesignerName, 300);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   componentDidMount = () => {
     const { workSeq, viewType, viewID, getMetaData, getComponentPoolList, getSysMetaList } = this.props;
+    window.addEventListener('keydown', this.handleKeyDown);
     getMetaData(workSeq, viewType, viewID);
     // getComponentPoolList();
     // getSysMetaList();
@@ -47,6 +52,7 @@ class ViewDesigner extends Component {
 
   componentWillUnmount() {
     // window.removeEventListener('resize', this.handleSize);
+    window.removeEventListener('keydown', this.handleKeyDown);
   }
 
   getSize = () => {
@@ -71,9 +77,11 @@ class ViewDesigner extends Component {
     const { workSeq, getMetaData, compList, getComponentPoolList, getSysMetaList } = this.props;
     const viewCnt = compList.filter(fNode => fNode.COMP_TYPE === 'VIEW').length;
     if (viewCnt > 0) {
-      getMetaData(workSeq, viewType, key);
-      // getComponentPoolList();
-      // getSysMetaList();
+      if (key === 0) {
+        this.setState({ isMakeNewViewModal: true, viewType });
+      } else {
+        getMetaData(workSeq, viewType, key);
+      }
     } else {
       message.warning(<MessageContent>기본 INPUT 페이지부터 생성해주세요.</MessageContent>);
     }
@@ -87,8 +95,60 @@ class ViewDesigner extends Component {
 
   handleChangeIsButtonLoading = () => this.setState({ isButtonLoding: false });
 
+  handleSetViewTitle = () => {
+    const viewName = document.querySelector('.makeNewViewModalInput').value;
+    if (viewName && viewName.length > 0) {
+      const { viewType } = this.state;
+      const { workSeq, getMetaData } = this.props;
+      getMetaData(workSeq, viewType, 0, viewName);
+      this.setState({ isMakeNewViewModal: false, viewType: '' });
+    } else {
+      message.warning(<MessageContent>페이지명은 필수입니다.</MessageContent>);
+    }
+  };
+
+  handleKeyDown(event) {
+    // event.keyCode === 83
+    const charCode = String.fromCharCode(event.which).toLowerCase();
+    if (event.ctrlKey && charCode === 's') {
+      event.preventDefault();
+      this.handleSaveMetaData();
+    }
+
+    // For MAC we can use metaKey to detect cmd key
+    if (event.metaKey && charCode === 's') {
+      event.preventDefault();
+      this.handleSaveMetaData();
+    }
+  }
+
+  renderViewChangeProcessPopup = () => {
+    const {
+      workSeq,
+      inputViewList,
+      modifyViewList,
+      viewViewList,
+      listViewList,
+      viewChangeProcessList,
+      viewChangeProcessAction,
+      selectedViewChangeProcess,
+    } = this.props;
+    return (
+      <ViewChangeProcessSetting
+        workSeq={workSeq}
+        inputViewList={inputViewList}
+        modifyViewList={modifyViewList}
+        viewViewList={viewViewList}
+        listViewList={listViewList}
+        viewChangeProcessList={viewChangeProcessList}
+        selectedViewChangeProcess={selectedViewChangeProcess}
+        action={viewChangeProcessAction}
+      />
+    );
+  };
+
   render = () => {
-    const { tabBodyHeight, isButtonLoding } = this.state;
+    const { tabBodyHeight, isButtonLoding, isMakeNewViewModal } = this.state;
     const {
       activeTabKey,
       isShowEditor,
@@ -116,7 +176,7 @@ class ViewDesigner extends Component {
     } = this.props;
     return (
       <div style={{ height: '100%' }}>
-        <StyledViewDesigner>
+        <StyledViewDesigner id="builderViewDesigner">
           <div className="view-designer">
             <div className="view-wrapper">
               <div className="view-inner">
@@ -154,16 +214,26 @@ class ViewDesigner extends Component {
                     />
                   </Spin>
                 </div>
-                {/* {!styleMode && (
-                  <div className="view-sidebar view-sidebar-left">
-                    <div>
-                      <CompFieldList compList={compList} sysMetaList={sysMetaList} layerIdxKey={viewData.CONFIG.property.layerIdxKey} action={compListAction} />
-                    </div>
-                  </div>
-                )} */}
               </div>
             </div>
           </div>
+          <Modal
+            className="makeNewViewModal"
+            centered
+            destroyOnClose
+            footer={null}
+            visible={isMakeNewViewModal}
+            bodyStyle={{ padding: '10px' }}
+            onCancel={() => this.setState({ isMakeNewViewModal: false })}
+            closeIcon={<Button type="primary">취소</Button>}
+            getContainer={() => document.querySelector('#builderViewDesigner')}
+          >
+            <span className="makeNewViewModalTitle">페이지명</span>
+            <Input className="makeNewViewModalInput" />
+            <Button type="primary" onClick={this.handleSetViewTitle}>
+              확인
+            </Button>
+          </Modal>
         </StyledViewDesigner>
         <Header>
           <div className="button--group--left">
@@ -178,6 +248,9 @@ class ViewDesigner extends Component {
               viewType={viewData.COMP_TAG}
               viewID={viewData.META_SEQ}
             />
+            <Popover content={this.renderViewChangeProcessPopup()} title="화면 전환 설정" trigger="click">
+              <Button style={{ verticalAlign: 'top' }}>화면 전환 설정</Button>
+            </Popover>
           </div>
           <div className="button--group--right">
             {workName}
@@ -253,13 +326,18 @@ const mapStateToProps = createStructuredSelector({
   compTreeData: selectors.makeSelectCompTreeData(),
   canDivide: selectors.makeSelectCanDivide(),
   classNameList: selectors.makeSelectClassNameList(),
+  inputViewList: selectors.makeSelectInputViewList(),
+  modifyViewList: selectors.makeSelectModifyViewList(),
+  viewViewList: selectors.makeSelectViewViewList(),
+  listViewList: selectors.makeSelectListViewList(),
+  viewChangeProcessList: selectors.makeSelectViewChangeProcesslist(),
 });
 
 const mapDispatchToProps = dispatch => ({
   onChangeTab: activeKey => dispatch(actions.changeActiveTab(activeKey)),
   addMetaData: callbackFunc => dispatch(actions.addMetaDataBySaga(callbackFunc)),
   changeViewDesignerName: value => dispatch(actions.changeViewDesignerNameByReducer(value)),
-  getMetaData: (workSeq, viewType, viewID) => dispatch(actions.getMetaDataBySaga(workSeq, viewType, viewID)),
+  getMetaData: (workSeq, viewType, viewID, viewName) => dispatch(actions.getMetaDataBySaga(workSeq, viewType, viewID, viewName)),
   getComponentPoolList: () => dispatch(actions.getComponentPoolListBySaga()),
   // getSysMetaList: () => dispatch(actions.getSysMetaListBySaga()),
   structureDesignAction: {
@@ -319,6 +397,9 @@ const mapDispatchToProps = dispatch => ({
     removeCompItem: (layerIdx, compKey) => dispatch(actions.removeCompItemByReducer(layerIdx, compKey)),
     setViewDataCompItem: compItem => dispatch(actions.setViewDataCompItemByReducer(compItem)),
     setSysCompItem: compItem => dispatch(actions.setSysCompItemByReducer(compItem)),
+  },
+  viewChangeProcessAction: {
+    saveViewChangeProcess: (formData, callbackFunc) => dispatch(actions.saveViewChangeProcessBySaga(formData, callbackFunc)),
   },
 });
 

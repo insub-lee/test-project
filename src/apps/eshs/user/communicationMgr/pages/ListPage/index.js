@@ -150,7 +150,7 @@ class ListPage extends Component {
             align: 'center',
             width: 150,
             ellipsis: 'true',
-            render: (key, record, index) => (
+            render: (key, record) => (
               <TitleModalComp
                 colData={key}
                 sagaKey={this.props.sagaKey}
@@ -167,7 +167,7 @@ class ListPage extends Component {
             key: 'TITLE',
             align: 'center',
             ellipsis: 'true',
-            render: (key, record, index) => (
+            render: (key, record) => (
               <TitleModalComp
                 colData={key}
                 sagaKey={this.props.sagaKey}
@@ -196,7 +196,7 @@ class ListPage extends Component {
             key: 'REPLY_CONTENT',
             align: 'center',
             ellipsis: 'true',
-            render: (key, record, index) => (
+            render: (key, record) => (
               <TitleModalComp
                 colData={key}
                 sagaKey={this.props.sagaKey}
@@ -213,7 +213,7 @@ class ListPage extends Component {
             key: 'UPLOAD_FILE',
             align: 'center',
             width: 100,
-            render: (text, record, index) => (
+            render: (text, record) => (
               <AttachDownComp
                 colData={text}
                 readOnly={false}

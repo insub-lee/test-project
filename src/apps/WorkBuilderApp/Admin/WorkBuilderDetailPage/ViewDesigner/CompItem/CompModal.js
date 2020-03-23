@@ -271,6 +271,7 @@ class CompModal extends Component {
                   <Option value="INPUT">Input</Option>
                   <Option value="SELECT">Select</Option>
                   <Option value="TREESELECT">Tree Select</Option>
+                  <Option value="RANGEDATE">Range Date</Option>
                   <Option value="CUSTOM">Custom</Option>
                 </Select>
               </div>
@@ -289,6 +290,7 @@ class CompModal extends Component {
                   <Option value="<">&lt;</Option>
                   <Option value="LIKE">Like</Option>
                   <Option value="BETWEEN">Between</Option>
+                  <Option value="RANGE">Range</Option>
                 </Select>
               </div>
               <div className="popoverItem popoverItemInput">

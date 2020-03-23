@@ -4,7 +4,9 @@ import { Button, Dropdown, Menu, Icon } from 'antd';
 
 const DropDownMenu = ({ menus, title, onClick, selected, selectedKey }) => {
   const selectedMenu = selected ? menus.find(({ key }) => key === selectedKey) : undefined;
+  const selectedTitle = selectedMenu ? selectedMenu.title : '';
   const subTitle = selectedMenu ? selectedMenu.key : '';
+  const buttonStyle = selected ? { background: '#ffffff', color: 'rgba(0,0,0,0.65)' } : {};
   return (
     <Dropdown
       overlay={
@@ -22,8 +24,8 @@ const DropDownMenu = ({ menus, title, onClick, selected, selectedKey }) => {
       trigger={['click']}
       placement="bottomLeft"
     >
-      <Button>
-        {`${title} ${subTitle ? `- ${subTitle}` : ''}`} <Icon type="down" />
+      <Button title={`${selectedTitle || title} ${subTitle ? `- ${subTitle}` : ''}`} style={buttonStyle}>
+        {`${selectedTitle || title} ${subTitle ? `- ${subTitle}` : ''}`} <Icon type="down" />
       </Button>
     </Dropdown>
   );

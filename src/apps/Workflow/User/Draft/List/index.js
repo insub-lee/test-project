@@ -3,14 +3,22 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
 import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
 const ModalWrapper = StyledModalNofooterLine(Modal);
 class DraftList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      modalWidth: 600,
+    };
+  }
+
   componentDidMount() {
     this.props.getDraftList();
   }
@@ -62,18 +70,22 @@ class DraftList extends Component {
     this.props.setViewVisible(true);
   };
 
+  onResizeModal = modalWidth => {
+    this.setState({ modalWidth });
+  };
+
   render() {
     // const { approveList } = this.props;
     const { draftList } = this.props;
-
+    const { modalWidth } = this.state;
     return (
-      <div>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+      <ContentsWrapper>
+        <div className="pageTitle">
+          <p>
             <Icon type="form" /> 기안함
           </p>
         </div>
-        <AntdTable
+        <AntdLineTable
           columns={this.getTableColumns()}
           dataSource={draftList.map(item => ({
             ...item,
@@ -83,11 +95,12 @@ class DraftList extends Component {
             onClick: e => this.onRowClick(record, rowIndex, e),
           })}
           bordered
+          className="tableWrapper"
         />
-        <ModalWrapper title="기안함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
-          <HoldView {...this.props} />
+        <ModalWrapper title="기안함" width={modalWidth} visible={this.props.viewVisible} destroyOnClose footer={[]}>
+          <HoldView {...this.props} onResizeModal={this.onResizeModal} />
         </ModalWrapper>
-      </div>
+      </ContentsWrapper>
     );
   }
 }

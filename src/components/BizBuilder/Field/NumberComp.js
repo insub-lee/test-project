@@ -22,7 +22,6 @@ class NumberComp extends React.Component {
     return visible ? (
       <InputNumber
         defaultValue={colData}
-        min={0}
         max={10 ** CONFIG.info.size}
         placeholder={CONFIG.property.placeholder}
         onChange={value => this.handleOnChange(value)}

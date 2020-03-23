@@ -55,7 +55,6 @@ class WorkBuilderListPage extends Component {
       onCell: ({ WORK_SEQ, NAME_KOR }) => ({
         onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ, workName: NAME_KOR }),
       }),
-      align: 'center',
     },
     {
       title: '업무빌더명',
@@ -64,7 +63,6 @@ class WorkBuilderListPage extends Component {
       onCell: ({ WORK_SEQ }) => ({
         onClick: () => this.setState({ isShow: true, workSeq: WORK_SEQ }),
       }),
-      align: 'center',
     },
     {
       title: '등록일',

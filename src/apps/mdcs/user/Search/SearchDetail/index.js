@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 
-import { Table, Radio, Form, Tree, Select, Modal, Input } from 'antd';
+import { Radio, Form, Tree, Select, Modal, Input } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import moment from 'moment';
 
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
-import StyledInput from 'components/FormStuff/Input';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import SearchViewer from '../SearchViewer';
-import CoverViewer from '../CoverViewer';
+import SearchList from './SearchList';
 
 import BizStd from './BizStd';
 import TechStd from './TechStd';
@@ -30,6 +27,7 @@ class SearchDetail extends Component {
     stdTreeData: [],
     conditionItems: { 'w.status': { sql: 'and w.status in (1,2)', realValue: 2 }, 'w.islast_ver': { sql: "and w.islast_ver='Y'", realValue: 'Y' } },
     whereStr: '',
+    visible: false,
   };
 
   componentDidMount() {
@@ -115,7 +113,7 @@ class SearchDetail extends Component {
     Object.keys(conditionItems).map(x => {
       whereStr += ` ${conditionItems[x].realValue !== '' ? conditionItems[x].sql : ''}`;
     });
-    this.setState({ whereStr });
+    this.setState({ whereStr, visible: true });
   };
 
   onSelectCategory = value => {
@@ -129,7 +127,7 @@ class SearchDetail extends Component {
 
   render() {
     const { searchTitle, workSeq } = this.props;
-    const { stdTreeData } = this.state;
+    const { stdTreeData, visible } = this.state;
     return (
       <StyledSearch>
         <div className="searchPage searchDetail">
@@ -242,7 +240,30 @@ class SearchDetail extends Component {
             </div>
           </div>
         </div>
-        <BizBuilderBase sagaKey={`BizDoc_${workSeq}`} viewType="LIST" conditional={this.state.whereStr} workSeq={workSeq}></BizBuilderBase>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          visible={visible}
+          footer={null}
+          width={1080}
+          onCancel={() => {
+            this.setState({ visible: false });
+          }}
+          onOk={() => {
+            this.setState({ visible: false });
+          }}
+          okButtonProps={null}
+        >
+          <div className="pop_tit">검색 결과</div>
+          <div className="pop_con">
+            <BizBuilderBase
+              sagaKey={`BizDoc_${workSeq}`}
+              CustomListPage={SearchList}
+              viewType="LIST"
+              conditional={this.state.whereStr}
+              workSeq={workSeq}
+            ></BizBuilderBase>
+          </div>
+        </AntdModal>
       </StyledSearch>
     );
   }
