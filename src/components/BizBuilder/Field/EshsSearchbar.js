@@ -122,7 +122,7 @@ class CommonSearchbar extends React.Component {
   }
 
   render() {
-    const { CONFIG, visible, colData, viewPageData, sagaKey: id, changeViewPage } = this.props;
+    const { CONFIG, visible, colData } = this.props;
     return visible ? (
       <div>
         <Input value={colData} readOnly className={CONFIG.property.className || ''} style={{ width: 150 }} onClick={this.handleModalVisible} />
@@ -143,7 +143,6 @@ CommonSearchbar.propTypes = {
   colData: PropTypes.string,
   sagaKey: PropTypes.string,
   readOnly: PropTypes.bool,
-  compProps: PropTypes.any,
   visible: PropTypes.bool,
   viewPageData: PropTypes.func,
   changeViewPage: PropTypes.func,

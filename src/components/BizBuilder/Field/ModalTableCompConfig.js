@@ -63,7 +63,8 @@ class ComponentConfig extends Component {
       configInfo: { property },
     } = this.props;
     const { title, dataIndex, targetIndex, align, width, columnList, changeFormDataYN, columnHiddenYN } = this.state;
-    const overlab = property && property.columns && property.columns.findIndex(item => item.dataIndex === dataIndex || item.targetIndex === targetIndex);
+    const overlab =
+      property && property.columns && property.columns.findIndex(item => item.dataIndex === dataIndex || (targetIndex && item.targetIndex === targetIndex));
     if ((overlab === -1 || overlab === undefined) && title && dataIndex) {
       columnList.push({
         title,
@@ -74,7 +75,7 @@ class ComponentConfig extends Component {
         changeFormDataYN: changeFormDataYN || false,
         columnHiddenYN: columnHiddenYN || false,
       });
-      this.setState({ columnList, title: '', dataIndex: '', targetIndex: '', align: 'center', width: 0, changeFormDataYN: false, columnHiddenYN: false });
+      this.setState({ columnList });
       this.handleChangeViewCompData('columns', columnList);
       message.info('등록되었습니다.');
       this.handleModalVisible();
@@ -103,7 +104,7 @@ class ComponentConfig extends Component {
         changeFormDataYN: changeFormDataYN || false,
         columnHiddenYN: columnHiddenYN || false,
       });
-      this.setState({ columnList, title: '', dataIndex: '', targetIndex: '', align: 'center', width: 0, changeFormDataYN: false, columnHiddenYN: false });
+      this.setState({ columnList });
       this.handleChangeViewCompData('columns', columnList);
       message.info('수정되었습니다.');
       this.handleModalVisible();
@@ -125,8 +126,8 @@ class ComponentConfig extends Component {
       width: col.width,
       changeFormDataYN: col.changeFormDataYN,
       columnHiddenYN: col.columnHiddenYN,
+      modal: true,
     });
-    this.handleModalVisible();
   };
 
   deleteColumn = () => {
@@ -137,18 +138,6 @@ class ComponentConfig extends Component {
     this.handleChangeViewCompData('columns', columnList);
     this.handleModalVisible();
   };
-
-  // onChangeInputT = value => {
-  //   this.setState({
-  //     title: value,
-  //   });
-  // };
-
-  // onChangeInputI = value => {
-  //   this.setState({
-  //     dataIndex: value,
-  //   });
-  // };
 
   onChangeInput = e => {
     this.setState({
@@ -189,6 +178,13 @@ class ComponentConfig extends Component {
     const { modal } = this.state;
     this.setState({
       modal: !modal,
+      title: '',
+      dataIndex: '',
+      targetIndex: '',
+      align: 'center',
+      width: 0,
+      changeFormDataYN: false,
+      columnHiddenYN: false,
     });
   };
 

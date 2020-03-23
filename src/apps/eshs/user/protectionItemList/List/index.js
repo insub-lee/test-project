@@ -123,8 +123,16 @@ class List extends React.Component {
   modalContent = () => [
     {
       title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
+      // content:
+      //   this.state.viewType.toUpperCase() === 'VIEW'
+      //     ? this.state.realFileList.map(item => <img src={item.down} alt={this.state.requestValue.kind} width="400px" />)
+      //     : '',
       content:
-        this.state.viewType.toUpperCase() === 'VIEW' ? this.state.uploadFileList.map(item => <img src={item.down} alt={this.state.requestValue.kind} />) : '',
+        this.state.viewType.toUpperCase() === 'VIEW' && this.props.result.attachs && this.props.result.attachs.fileList.length
+          ? this.props.result.attachs.fileList.map(item => (
+              <img src={`http://192.168.251.14:10197/down/file/${item.file_seq}`} alt={this.state.requestValue.kind} width="150px" />
+            ))
+          : '',
     },
     {
       title: '지역',
@@ -367,7 +375,7 @@ class List extends React.Component {
 
   handleChange = e => {
     const valueObj = { [e.target.name]: e.target.value };
-    this.setState({ [e.target.name]: e.target.value });
+    // this.setState({ [e.target.name]: e.target.value });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 
@@ -381,30 +389,49 @@ class List extends React.Component {
 
   handleOk = () => {
     const { requestValue } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    this.setState({ visible: false, requestValue: this.requestValueOrigin, responseList: [], fileList: [] });
-    submitHandlerBySaga(
-      id,
-      'POST',
-      `/api/eshs/v1/common/geteshsprotectionitems`,
-      requestValue,
-      this.gridApi.updateRowData({ add: [requestValue], addIndex: 0 }),
-    );
+    const { sagaKey: id, submitHandlerBySaga, result } = this.props;
+    const fileSeqArr = [];
+    if (result.realFile && result.realFile.DETAIL.length) {
+      result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
+    }
+    if (fileSeqArr.length) {
+      this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { file_seq: fileSeqArr }) }));
+    }
+    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
+      this.gridApi.updateRowData({ add: [requestValue], addIndex: 0 });
+      this.getNewRowData('', '');
+      this.setState({ visible: false, requestValue: { site: '313' }, responseList: [], fileList: [] });
+    });
   };
 
   handleCancel = () => {
     this.setState({
       visible: false,
-      requestValue: this.requestValueOrigin,
+      requestValue: { site: '313' },
       fileList: [],
     });
   };
 
   handleModifyClick = () => {
     const { requestValue } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, this.gridApi.redrawRows());
-    this.setState({ requestValue: this.requestValueOrigin, visible: false });
+    const { sagaKey: id, submitHandlerBySaga, result } = this.props;
+    const fileSeqArr = [];
+    if (result.realFile && result.realFile.DETAIL.length) {
+      // 수정화면에서 사진을 추가했다면
+      result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
+      this.setState(prevState => ({
+        // file_seq = 새로 올라온 파일, attachedFile = 기존 파일 (삭제해야 함)
+        requestValue: Object.assign(prevState.requestValue, { file_seq: fileSeqArr }, { attachedFile: result.attachs.fileList }),
+      }));
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
+        this.gridApi.redrawRows();
+        this.setState({ requestValue: { site: '313' }, visible: false });
+      });
+    }
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
+      this.gridApi.redrawRows();
+      this.setState({ requestValue: { site: '313' }, visible: false });
+    });
   };
 
   handleDeleteClick = () => {
@@ -421,16 +448,37 @@ class List extends React.Component {
   };
 
   BeforeSaveTask = () => {
-    const { responseList } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const uploadFile = submitHandlerBySaga(id, 'POST', `/upload/moveFileToReal`, { PARAM: { DETAIL: responseList } }, this.handleOk());
-    const uploadFileList = uploadFile.submitData.PARAM.DETAIL;
-    console.debug(uploadFileList, responseList, uploadFileList === responseList);
-    this.setState({ uploadFileList });
+    const { responseList, viewType } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'realFile',
+        type: 'POST',
+        url: `/upload/moveFileToReal`,
+        params: { PARAM: { DETAIL: responseList } },
+      },
+    ];
+    if (viewType.toUpperCase() === 'INPUT') {
+      return getCallDataHandler(id, apiArr, () => this.handleOk());
+    }
+    return getCallDataHandler(id, apiArr, () => this.handleModifyClick());
   };
 
-  inputFooter = [
-    <StyledButton className="btn-primary" onClick={this.BeforeSaveTask}>
+  handleRowClick = rowData => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    this.setState({ requestValue: rowData, visible: true, viewType: 'VIEW' });
+    const apiArr = [
+      {
+        key: 'attachs',
+        type: 'GET',
+        url: `/api/eshs/v1/common/geteshsprotectionitemsattach?hitem_cd=${rowData.hitem_cd}`,
+      },
+    ];
+    getCallDataHandler(id, apiArr);
+  };
+
+  inputFooter = () => [
+    <StyledButton className="btn-primary" onClick={this.state.responseList.length ? this.BeforeSaveTask : this.handleOk}>
       등록
     </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleCancel}>
@@ -438,8 +486,8 @@ class List extends React.Component {
     </StyledButton>,
   ];
 
-  viewFooter = [
-    <StyledButton className="btn-primary" onClick={this.handleModifyClick}>
+  viewFooter = () => [
+    <StyledButton className="btn-primary" onClick={this.state.responseList.length ? this.BeforeSaveTask : this.handleModifyClick}>
       수정
     </StyledButton>,
     <StyledButton className="btn-primary" onClick={this.handleDeleteClick}>
@@ -481,16 +529,20 @@ class List extends React.Component {
                 defaultColDef={gridOptions.defaultColDef}
                 tooltipShowDelay={this.state.tooltipShowDelay}
                 suppressRowTransform
-                onRowClicked={e => {
-                  this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
-                }}
+                onRowClicked={e => this.handleRowClick(e.data)}
                 frameworkComponents={frameworkComponents}
-                // onCellMouseOver="ds"
               />
             </div>
           </div>
-          {/* </CustomTooltipStyled> */}
-          <Modal visible={visible} onOk={handleOk} onCancel={handleCancel} width="600px" closable footer={viewType === 'INPUT' ? inputFooter : viewFooter}>
+          <Modal
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleCancel}
+            width="600px"
+            closable
+            destroyOnClose
+            footer={viewType === 'INPUT' ? inputFooter() : viewFooter()}
+          >
             {modalContent().map(item => (
               <div>
                 <div>{item.title}</div>
