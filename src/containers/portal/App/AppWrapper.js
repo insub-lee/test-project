@@ -123,8 +123,6 @@ const AppWrapper = styled.div`
   }
 
   .portalContent {
-    //padding-top: 42px;
-    padding: 20px;
     position: relative;
 
     iframe {
