@@ -377,6 +377,7 @@ const mapDispatchToProps = dispatch => ({
     onChangeTableSize: (groupIndex, tableSize) => dispatch(actions.onChangeTableSize(groupIndex, tableSize)),
     changeCompFieldData: (compKey, key, value) => dispatch(actions.changeCompFieldDataByReducer(compKey, key, value)),
     changeHiddenCompData: (compIdx, key, value) => dispatch(actions.changeHiddenCompDatByReducer(compIdx, key, value)),
+    submitHandlerBySaga: (httpMethod, apiUrl, submitData, callbackFunc) => dispatch(actions.submitHandlerBySaga(httpMethod, apiUrl, submitData, callbackFunc)),
   },
   styleDesignAction: {
     openJsonCodeEditor: () => dispatch(actions.openJsonCodeEditor()),
