@@ -7,6 +7,7 @@ import { isJSON } from 'utils/helpers';
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
+import StyledButton from 'apps/mdcs/styled/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -16,6 +17,7 @@ let dataSource;
 class CustomCheckListComp extends Component {
   state = {
     isShowModal: false,
+    isItem: false,
     apiFlag: true,
     dataSource: [],
   };
@@ -111,20 +113,22 @@ class CustomCheckListComp extends Component {
     ];
 
     // colData Read 후 selectedValue bind 하기
+    let isItem = false;
     if (colData && colData.length > 0) {
       const { DETAIL } = colData[0];
       const selectedGrp = JSON.parse(DETAIL);
       const tempDataSource = dataSource.map(grp => {
         const idx = selectedGrp.findIndex(f => f.groupKey === grp.groupKey);
         if (idx !== -1) {
+          isItem = true;
           const sGrp = selectedGrp[idx];
           return { ...grp, ...sGrp };
         }
         return grp;
       });
-      this.setState({ dataSource: tempDataSource, selectedCheckList: tempDataSource });
+      this.setState({ dataSource: tempDataSource, selectedCheckList: tempDataSource, isItem });
     } else {
-      this.setState({ dataSource });
+      this.setState({ dataSource, isItem });
     }
   };
 
@@ -137,7 +141,8 @@ class CustomCheckListComp extends Component {
   };
 
   onChangeMultiSelector = (dataList, selectedValue) => {
-    this.setState({ selectedCheckList: dataList });
+    console.debug('dataList', dataList);
+    this.setState({ selectedCheckList: dataList, isItem: true });
   };
 
   onClickScope = () => {
@@ -184,11 +189,11 @@ class CustomCheckListComp extends Component {
   };
 
   render() {
-    console.debug(this.state);
+    const { isItem } = this.state;
     return (
       <>
         <StyledMultiSelector>
-          <div className="wrapper">
+          <div className={isItem ? 'wrapper active' : 'wrapper'}>
             <div className="draftWrapper">
               {this.state.dataSource &&
                 this.state.dataSource.map(grp =>
@@ -202,9 +207,9 @@ class CustomCheckListComp extends Component {
                   )),
                 )}
             </div>
-            <Button onClick={this.onClickSelectedWin}>
+            <StyledButton className="btn-sm2 btn-primary" onClick={this.onClickSelectedWin}>
               <Icon type="select" /> 선택
-            </Button>
+            </StyledButton>
           </div>
         </StyledMultiSelector>
         <AntdModal
