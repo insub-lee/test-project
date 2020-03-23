@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-import { Row, Col, DatePicker, Typography, Popconfirm } from 'antd';
+import { Row, Col, DatePicker, Popconfirm } from 'antd';
 
 import moment from 'moment';
 import request from 'utils/request';
@@ -38,15 +38,17 @@ class Input extends Component {
   componentDidMount() {
     const { sagaKey: id, changeFormData } = this.props;
     changeFormData(id, 'APP_DT', this.state.selectedDate);
-    this.reserveLimitCheck(moment(this.state.selectedDate).format('YYYY-MM-DD')).then(res => this.setState({ reserveCount: res.reservationCount.count }));
+    this.reserveLimitCheck(moment(this.state.selectedDate || '').format('YYYY-MM-DD')).then(res =>
+      this.setState({ reserveCount: res && res.reservationCount ? res.reservationCount.count : '' }),
+    );
     this.updateNoShow();
     this.getNoShowCount().then(res => {
-      if (res.noShowCount && !res.noShowCount.length) {
+      if (res && res.noShowCount && !res.noShowCount.length) {
         return this.setState({
           noShowCount: 0,
         });
       }
-      if (res.noShowCount && res.noShowCount.length && res.noShowCount[res.noShowCount.length - 1].count !== -1) {
+      if (res && res.noShowCount && res.noShowCount.length && res.noShowCount[res.noShowCount.length - 1].count !== -1) {
         return this.setState({
           noShowCount: res.noShowCount.length,
           noShowDate: moment(res.noShowCount[res.noShowCount.length - 1].app_dt).format('YYYYMMDD'),
@@ -134,16 +136,6 @@ class Input extends Component {
   makeFormData = () => {
     const { changeFormData, sagaKey: id } = this.props;
     const { userInfo, selectedDate } = this.state;
-    switch (userInfo.gender) {
-      case 'm':
-        changeFormData(id, 'BED_NO', '05');
-        break;
-      case 'f':
-        changeFormData(id, 'BED_NO', '06');
-        break;
-      default:
-        break;
-    }
 
     switch (userInfo.barea_cd) {
       case '구미':
@@ -156,7 +148,7 @@ class Input extends Component {
         break;
     }
     changeFormData(id, 'APP_DT', selectedDate);
-    changeFormData(id, 'checkedIndex', 9999);
+    changeFormData(id, 'checkedIndex', -1);
   };
 
   isReservedToday = () => {
@@ -168,7 +160,7 @@ class Input extends Component {
   updateNoShow = async () => {
     const result = await request({
       method: 'PATCH',
-      url: `/api/eshs/v1/common/getphysicaltherapynoshowcount?date=${moment().format('YYYYMMDD')}`,
+      url: `/api/eshs/v1/common/getresilencereservationnoshowcount?date=${moment().format('YYYYMMDD')}`,
     });
     return result.response;
   };
@@ -176,7 +168,7 @@ class Input extends Component {
   reserveLimitCheck = async date => {
     const result = await request({
       method: 'GET',
-      url: `/api/eshs/v1/common/getphysicaltheraptyreservation?date=${date}`,
+      url: `/api/eshs/v1/common/getresiliencereservation?date=${date}`,
     });
     return result.response;
   };
@@ -184,7 +176,7 @@ class Input extends Component {
   getNoShowCount = () => {
     const getCount = async () => {
       const result = await request({
-        url: `/api/eshs/v1/common/getphysicaltherapynoshowcount`,
+        url: `/api/eshs/v1/common/getresilencereservationnoshowcount`,
         method: 'GET',
       });
       return result.response;
@@ -222,43 +214,6 @@ class Input extends Component {
     return (
       <StyledViewDesigner>
         <Sketch>
-          <div style={{ marginBottom: '10px' }}>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography.Title level={1} style={{ textAlign: 'center' }}>
-                  사용수칙
-                </Typography.Title>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>
-                  1. 건강관리실 내 건강증진실(안마의자)은 <span style={{ color: '#0000ff' }}>남/여 ROOM구분</span>
-                </Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>2. 운영시간 :월~금 08:30 ~ 17:30 (점심시간 제외 :12:00~13:00) </Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>3. 일주일 단위로 예약 ☞1인 1일 1회, 1주 3회만 가능</Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>4. 예약 후 사용하지 못할 시 예약 취소.</Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography style={{ color: '#0000ff' }}>☞ 예약 후 미사용 시 다음주는 예약 불가 </Typography>
-              </Col>
-            </Row>
-            <hr />
-          </div>
           <div style={{ marginBottom: '10px' }}>
             <Row gutter={[24, 48]} type="flex" justify="center">
               <Col span={2}>사번</Col>
