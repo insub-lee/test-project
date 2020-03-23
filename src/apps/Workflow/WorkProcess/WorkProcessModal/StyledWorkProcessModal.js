@@ -18,6 +18,9 @@ const StyledWorkProcessModal = styled.div`
         .site-tree-search-value {
           color: #f50;
         }
+        li .ant-tree-node-content-wrapper {
+          font-size: 12px;
+        }
       }
 
       .userList {
@@ -65,7 +68,6 @@ const StyledWorkProcessModal = styled.div`
         margin-bottom: 4px;
 
         .ant-table {
-          webkit-box-sizing: border-box;
           box-sizing: border-box;
           margin: 0;
           padding: 0;
