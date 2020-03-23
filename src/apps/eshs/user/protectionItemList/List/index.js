@@ -405,14 +405,11 @@ class List extends React.Component {
   };
 
   handleCancel = () => {
-    this.setState(
-      {
-        visible: false,
-        requestValue: { site: '313' },
-        fileList: [],
-      },
-      console.debug('@@@@@CANCEL', this.state.requestValue),
-    );
+    this.setState({
+      visible: false,
+      requestValue: { site: '313' },
+      fileList: [],
+    });
   };
 
   handleModifyClick = () => {
@@ -426,7 +423,10 @@ class List extends React.Component {
         // file_seq = 새로 올라온 파일, attachedFile = 기존 파일 (삭제해야 함)
         requestValue: Object.assign(prevState.requestValue, { file_seq: fileSeqArr }, { attachedFile: result.attachs.fileList }),
       }));
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, this.gridApi.redrawRows());
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
+        this.gridApi.redrawRows();
+        this.setState({ requestValue: { site: '313' }, visible: false });
+      });
     }
     return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/geteshsprotectionitems`, requestValue, () => {
       this.gridApi.redrawRows();
