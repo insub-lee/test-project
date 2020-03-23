@@ -2,8 +2,6 @@ import styled from 'styled-components';
 
 const StyledSearch = styled.div`
   .searchTabs {
-    background-color: white;
-    border: 1px solid #e5e5e5;
     .ant-tabs-bar {
       border-bottom: 0;
       margin: 0;

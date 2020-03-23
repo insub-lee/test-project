@@ -60,8 +60,10 @@ class InputPage extends Component {
     const { submitExtraHandler, formData, metaList } = this.props;
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+
     // 첨부파일이 없는 경우 체크
     const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+
     if (isUploadByPass && isUploadByPass.length === 0) {
       this.saveTask(id, reloadId, this.saveTaskAfter);
     } else {

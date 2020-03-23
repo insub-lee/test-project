@@ -18,7 +18,7 @@ class DatePickerComp extends Component {
   };
 
   render() {
-    const { CONFIG, visible, isSearch, readOnly, viewPageData, colData } = this.props;
+    const { CONFIG, visible, isSearch, readOnly, viewPageData, colData, searchCompRenderer } = this.props;
     if (!visible) {
       return '';
     }
@@ -32,6 +32,9 @@ class DatePickerComp extends Component {
           readOnly={readOnly || CONFIG.property.readOnly}
         />
       );
+    }
+    if (isSearch && visible && CONFIG.property.searchType !== 'CUSTOM') {
+      return searchCompRenderer(this.props);
     }
 
     if (viewPageData.viewType.toUpperCase() === 'INPUT') {
@@ -71,6 +74,7 @@ class DatePickerComp extends Component {
 DatePickerComp.propTypes = {
   sagaKey: PropTypes.string,
   changeFormData: PropTypes.func,
+  searchCompRenderer: PropTypes.func,
   COMP_FIELD: PropTypes.string,
   changeSearchData: PropTypes.func,
   CONFIG: PropTypes.object,

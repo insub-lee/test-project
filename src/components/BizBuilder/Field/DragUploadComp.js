@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
-import { Icon, Progress, Upload, Button, Tooltip, Modal } from 'antd';
+import { Icon, Upload } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 
 import { isJSON } from 'utils/helpers';
@@ -237,7 +237,7 @@ class DragUploadComp extends Component {
                     previewVisible &&
                     !IS_MULTIPLE_UPLOAD_ON &&
                     previewImage.length > 0 &&
-                    previewImage.map(url => <img alt="example" style={{ width: '100%' }} src={url} />)}
+                    previewImage.map((url, idx) => <img key={idx + url.substring(0, 15)} alt="example" style={{ width: '100%' }} src={url} />)}
                 </div>
               ))}
             </div>
@@ -260,25 +260,6 @@ class DragUploadComp extends Component {
             </div>
           )}
         </Dragger>
-        {/* {fileList && fileList.length > 0 && (
-          <div className="fileZone" style={{ top: '10px', marginLeft: '10px' }}>
-            {fileList.map(file => (
-              <div style={{ height: '25px' }}>
-                {file.type === 'LoadingOutlined' ? (
-                  <LoadingOutlined style={{ fontSize: '18px', marginRight: '5px' }} />
-                ) : (
-                  <Icon type={file.type} style={{ fontSize: '18px', marginRight: '5px' }} />
-                )}
-                <div style={{ verticalAlign: 'middle', height: '28px', display: 'inline-block', cursor: 'pointer' }}>{file.fileName}</div>
-                <Icon onClick={() => this.onClickRemoveFile(file)} type="delete" style={{ fontSize: '15px', verticalAlign: 'baseline', marginLeft: '10px' }} />
-                {PREVIEW_SETTING === 'Y' &&
-                  previewVisible &&
-                  previewImage.length > 0 &&
-                  previewImage.map(url => <img alt="example" style={{ width: '100%' }} src={url} />)}
-              </div>
-            ))}
-          </div>
-        )} */}
       </div>
     );
   }
