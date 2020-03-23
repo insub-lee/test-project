@@ -38,7 +38,8 @@ class StdInput extends Component {
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
-    const { DETAIL } = response;
+    const { DETAIL, code } = response;
+    console.debug('response', response);
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
@@ -47,8 +48,10 @@ class StdInput extends Component {
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
       const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
-      if (!isUploadComplete) {
+      if (!isUploadComplete && code !== 500) {
         this.saveTask(id, id, this.saveTaskAfter);
+      } else {
+        message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!!!');
       }
     });
   };
@@ -60,10 +63,9 @@ class StdInput extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
-    const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
-    console.debug('metaList', metaList);
+
     // workflow 결재 체크 하기
     const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
     let isByPass = true;
@@ -88,17 +90,18 @@ class StdInput extends Component {
       // 첨부파일이 없는 경우 체크
       const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
       if (isUploadByPass && isUploadByPass.length === 0) {
-        // this.saveTask(id, reloadId, this.saveTaskAfter);
+        this.saveTask(id, reloadId, this.saveTaskAfter);
       } else {
         attachList.map(attachItem => {
           const { COMP_FIELD } = attachItem;
           const attachInfo = formData[COMP_FIELD];
           if (attachInfo) {
-            const { DETAIL } = attachInfo;
+            const { DETAIL, MOVEFILEAPI } = attachInfo;
             uploadFileList.push({ COMP_FIELD, isComplete: false });
             this.setState({ uploadFileList }, () => {
               const param = { PARAM: { DETAIL } };
-              // submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+              const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
+              submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
             });
           }
         });

@@ -317,3 +317,11 @@ export const setViewChangeProcessListByReducer = list => ({
   type: actionTypes.SET_VIEW_CHANGE_PROCESS_LIST_REDUCER,
   list,
 });
+
+export const submitHandlerBySaga = (httpMethod, apiUrl, submitData, callbackFunc) => ({
+  type: actionTypes.PUBLIC_ACTIONMETHOD_SAGA,
+  httpMethod,
+  apiUrl,
+  submitData,
+  callbackFunc,
+});
