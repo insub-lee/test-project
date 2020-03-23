@@ -233,10 +233,33 @@ function* saveViewChangeProcess({ formData, callbackFunc }) {
   }
 }
 
+function* submitHandlerBySaga({ httpMethod, apiUrl, submitData, callbackFunc }) {
+  let httpMethodInfo = Axios.put;
+  switch (httpMethod.toUpperCase()) {
+    case 'POST':
+      httpMethodInfo = Axios.post;
+      break;
+    case 'PUT':
+      httpMethodInfo = Axios.put;
+      break;
+    case 'DELETE':
+      httpMethodInfo = Axios.delete;
+      break;
+    default:
+      httpMethodInfo = Axios.get;
+      break;
+  }
+  const response = yield call(httpMethodInfo, apiUrl, submitData);
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(response);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(constantTypes.GET_METADATA_SAGA, getMetaData);
   yield takeLatest(constantTypes.ADD_METADATA_SAGA, addMetaData);
   yield takeLatest(constantTypes.GET_COMPONENT_POOL_SAGA, getComponentPoolList);
   yield takeLatest(constantTypes.GET_SYSMETA_LIST_SAGA, getSysMetaList);
   yield takeLatest(constantTypes.SAVE_VIEW_CHANGE_PROCESS_SAGA, saveViewChangeProcess);
+  yield takeLatest(constantTypes.PUBLIC_ACTIONMETHOD_SAGA, submitHandlerBySaga);
 }
