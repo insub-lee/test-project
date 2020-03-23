@@ -50,7 +50,6 @@ class CustomEditorComp extends Component {
 
   render = () => {
     const { COMP_FIELD, CONFIG, changeFormData, sagaKey: id, colData, COMP_TAG, WORK_SEQ, visible } = this.props;
-    console.debug('확인');
     return visible ? (
       <RichTextEditor
         name={COMP_FIELD}

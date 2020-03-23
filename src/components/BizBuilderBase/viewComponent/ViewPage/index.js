@@ -29,7 +29,7 @@ class ViewPage extends Component {
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
-      console.debug('바디스타일?', bodyStyle);
+
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
