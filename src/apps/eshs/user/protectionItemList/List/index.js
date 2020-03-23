@@ -123,8 +123,18 @@ class List extends React.Component {
   modalContent = () => [
     {
       title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
+      // content:
+      //   this.state.viewType.toUpperCase() === 'VIEW'
+      //     ? this.state.realFileList.map(item => <img src={item.down} alt={this.state.requestValue.kind} width="400px" />)
+      //     : '',
       content:
-        this.state.viewType.toUpperCase() === 'VIEW' ? this.state.uploadFileList.map(item => <img src={item.down} alt={this.state.requestValue.kind} />) : '',
+        this.state.viewType.toUpperCase() === 'VIEW' && this.props.result.attachs && this.props.result.attachs.fileList.length ? (
+          this.props.result.attachs.fileList.map(item => (
+            <img src={`http://192.168.251.14:10197/down/file/${item.file_seq}`} alt={this.state.request.kind} width="150px" />
+          ))
+        ) : (
+          <div>등록된 사진이 없습니다.</div>
+        ),
     },
     {
       title: '지역',
@@ -381,8 +391,14 @@ class List extends React.Component {
 
   handleOk = () => {
     const { requestValue } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { sagaKey: id, submitHandlerBySaga, result } = this.props;
+    const fileSeqArr = [];
+    if (result.realFile && result.realFile.DETAIL.length) {
+      result.realFile.DETAIL.map(item => fileSeqArr.push(item.seq));
+    }
+
     this.setState({ visible: false, requestValue: this.requestValueOrigin, responseList: [], fileList: [] });
+    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, { fileSeq: fileSeqArr }) }));
     submitHandlerBySaga(
       id,
       'POST',
@@ -422,11 +438,33 @@ class List extends React.Component {
 
   BeforeSaveTask = () => {
     const { responseList } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const uploadFile = submitHandlerBySaga(id, 'POST', `/upload/moveFileToReal`, { PARAM: { DETAIL: responseList } }, this.handleOk());
-    const uploadFileList = uploadFile.submitData.PARAM.DETAIL;
-    console.debug(uploadFileList, responseList, uploadFileList === responseList);
-    this.setState({ uploadFileList });
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'realFile',
+        type: 'POST',
+        url: `/upload/moveFileToReal`,
+        params: { PARAM: { DETAIL: responseList } },
+      },
+    ];
+    // const uploadFile = submitHandlerBySaga(id, 'POST', `/upload/moveFileToReal`, { PARAM: { DETAIL: responseList } }, this.handleOk());
+    getCallDataHandler(id, apiArr, () => {
+      console.debug(this.props.result.realFile);
+      this.setState({ realFileList: this.props.result.realFile.DETAIL }, this.handleOk());
+    });
+  };
+
+  handleRowClick = rowData => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    this.setState({ requestValue: rowData, visible: true, viewType: 'VIEW' });
+    const apiArr = [
+      {
+        key: 'attachs',
+        type: 'GET',
+        url: `/api/eshs/v1/common/geteshsprotectionitemsattach?hitem_cd=${rowData.hitem_cd}`,
+      },
+    ];
+    getCallDataHandler(id, apiArr);
   };
 
   inputFooter = [
@@ -453,6 +491,7 @@ class List extends React.Component {
   render() {
     const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
+    console.debug((this.props.result.attachs && this.props.result.attachs.fileList) || 'dd');
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -481,9 +520,10 @@ class List extends React.Component {
                 defaultColDef={gridOptions.defaultColDef}
                 tooltipShowDelay={this.state.tooltipShowDelay}
                 suppressRowTransform
-                onRowClicked={e => {
-                  this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
-                }}
+                onRowClicked={e => this.handleRowClick(e.data)}
+                // onRowClicked={e => {
+                //   this.setState({ visible: true, viewType: 'VIEW', requestValue: e.data });
+                // }}
                 frameworkComponents={frameworkComponents}
                 // onCellMouseOver="ds"
               />
