@@ -105,7 +105,7 @@ class SearchList extends Component {
               sagaKey="SearchView"
               viewType="VIEW"
               workSeq={SearchView.workSeq}
-              CustomButtons={() => <Button>수정</Button>}
+              // CustomButtons={() => <Button>수정</Button>}
               taskSeq={SearchView.taskSeq}
               draftId={SearchView.draftId}
               closeBtnFunc={this.closeBtnFunc}
