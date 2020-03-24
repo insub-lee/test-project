@@ -213,7 +213,7 @@ class CustomCheckListComp extends Component {
           </div>
         </StyledMultiSelector>
         <AntdModal
-          title="적용범위 및 조회정보 선택"
+          title="적용범위 및 조회정보 선택ㅇㅇ"
           width={1100}
           visible={this.state.isShowModal}
           onCancel={this.onCancelModal}
