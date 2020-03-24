@@ -4,7 +4,7 @@ import { Input, Checkbox, InputNumber, Select, TreeSelect, Button } from 'antd';
 import { debounce } from 'lodash';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import { ConfigInfo } from './ConfigInfo';
+import { ConfigInfo } from 'components/BizBuilder/ConfigInfo';
 
 import Styled from './Styled';
 
@@ -291,21 +291,30 @@ class CompModal extends Component {
                   <Option value="<">&lt;</Option>
                   <Option value="LIKE">Like</Option>
                   <Option value="BETWEEN">Between</Option>
-                  <Option value="RANGE">Range</Option>
                 </Select>
               </div>
               <div className="popoverItem popoverItemInput">
                 <span className="spanLabel">검색 데이터 구분</span>
-                <Select
-                  style={{ width: '100%' }}
-                  placeholder="Select component"
-                  defaultValue={comp.CONFIG.property.searchDataType || ''}
-                  onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
-                >
-                  <Option value="STRING">String</Option>
-                  <Option value="NUMBER">Number</Option>
-                  <Option value="DATETIME">Datetime</Option>
-                </Select>
+                {comp && comp.CONFIG && comp.CONFIG.property && comp.CONFIG.property.searchCondition === 'BETWEEN' ? (
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="Select component"
+                    defaultValue={comp.CONFIG.property.searchDataType || ''}
+                    onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
+                  >
+                    <Option value="DATETIME">Datetime</Option>
+                  </Select>
+                ) : (
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="Select component"
+                    defaultValue={comp.CONFIG.property.searchDataType || ''}
+                    onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
+                  >
+                    <Option value="STRING">String</Option>
+                    <Option value="NUMBER">Number</Option>
+                  </Select>
+                )}
               </div>
             </div>
           </div>

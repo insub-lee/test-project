@@ -91,7 +91,7 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, isBuilderModal, CustomButtons, isLoading, reloadId } = this.props;
+    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, isBuilderModal, ModifyCustomButtons, isLoading, reloadId } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -101,8 +101,8 @@ class ModifyPage extends Component {
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            {CustomButtons ? (
-              <CustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
+            {ModifyCustomButtons ? (
+              <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
             ) : (
               <div className="alignRight">
                 <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
