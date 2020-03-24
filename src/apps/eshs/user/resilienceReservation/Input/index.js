@@ -138,11 +138,11 @@ class Input extends Component {
     const { userInfo, selectedDate } = this.state;
 
     switch (userInfo.barea_cd) {
-      case '구미':
-        changeFormData(id, 'SITE', 'H3');
+      case 'GP':
+        changeFormData(id, 'SITE', 'GP');
         break;
-      case '청주':
-        changeFormData(id, 'STIE', 'C1');
+      case 'CP':
+        changeFormData(id, 'STIE', 'CP');
         break;
       default:
         break;
