@@ -250,11 +250,19 @@ const StyledViewDesigner = styled.div`
         }
         &.mdcsContentsSelectCol {
           position: relative;
-          button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            right: 20px;
+          .wrapper {
+            button {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              left: 0;
+            }
+            &.active {
+              button {
+                right: 0px;
+                left: inherit;
+              }
+            }
           }
         }
         > div > span {
