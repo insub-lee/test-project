@@ -5,7 +5,7 @@ import React from 'react';
 import { Axios } from 'utils/AxiosFunc';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
-import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { TOTAL_DATA_OPT_SEQ, BUILDER_MODAL_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import history from 'utils/history';
 import { isJSON } from 'utils/helpers';
 
@@ -533,7 +533,14 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, taskSeq);
   } else {
-    changeViewPage(id, workSeq, taskSeq, 'LIST');
+    const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
+    if (changeViewOptIdx !== -1) {
+      const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
+      const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
+      changeViewPage(id, workSeq, taskSeq, optValue.DELETE);
+    } else {
+      changeViewPage(id, workSeq, taskSeq, 'LIST');
+    }
   }
 }
 

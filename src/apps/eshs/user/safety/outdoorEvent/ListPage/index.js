@@ -1,12 +1,9 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
+import CustomBtn from './customBtn';
 
-const customBtn = () => <div className="alignRight" />;
-
-const outdoorEvent = () => <BizBuilderBase sagaKey="outdoorEvent" viewType="LIST" workSeq={4821} viewChangeSeqByModal={38} CustomButtonsByModal={customBtn} />;
+const outdoorEvent = () => <BizBuilderBase sagaKey="outdoorEvent" viewType="LIST" workSeq={4821} viewChangeSeqByModal={38} CustomButtonsByModal={CustomBtn} />;
 
 // roadmapList.propTypes = {};
-// eshs/admin/environment/wasteMatter/contractStatus
-// eshs/user/safety/outdoorEvent
 export default outdoorEvent;
