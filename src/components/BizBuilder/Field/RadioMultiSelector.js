@@ -101,7 +101,7 @@ class RadioMultiSelector extends Component {
         </StyledMultiSelector>
         <AntdModal
           title="기술표준적용"
-          width={200}
+          width={250}
           visible={this.state.isShowModal}
           onCancel={this.onCancelModal}
           destroyOnClose
