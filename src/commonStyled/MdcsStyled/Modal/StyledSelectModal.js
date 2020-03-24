@@ -29,7 +29,8 @@ const StyledSelectModal = Component => styled(Component)`
     }
     .ant-modal-footer {
       border-top: 0;
-      padding: 10px 15px;
+      padding: 0px 15px 10px;
+      text-align: center;
     }
   }
 `;

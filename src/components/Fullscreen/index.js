@@ -36,7 +36,7 @@ const style = {
 const defaultStyle = {
   // minHeight: 'calc(100%)',
   height: '100%',
-  overflowY: 'auto',
+  // overflowY: 'auto',
   position: 'relative',
 };
 
