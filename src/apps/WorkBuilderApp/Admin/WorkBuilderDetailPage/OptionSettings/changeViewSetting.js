@@ -15,7 +15,10 @@ const Wrapper = styled.div`
 
 /*
   목적 : Task 등록, 수정, 삭제시 발생하는 changeView 이벤트에 대해 이동될 ViewPage를 지정함
-  기존로직 : Task 등록 -> ViewChange ->  
+  기존로직 : Task 등록 -> ViewChange -> View Page 이동
+             Task 수정 -> ViewChange -> View Page 이동
+             Task 삭제 -> ViewChange -> List Page 이동
+  Create by. Lee Jeong Hyun
 */
 
 class changeViewSetting extends React.Component {
@@ -29,7 +32,7 @@ class changeViewSetting extends React.Component {
           // JSON 타입이 아닐 경우는 전체 값을 디폴트로 지정
           return { ...opt, OPT_VALUE: JSON.stringify({ INPUT: 'VIEW', MODIFY: 'VIEW', DELETE: 'LIST' }) };
         }
-        // JSON 타입일 시 리턴
+        // JSON 타입일 시 설정값이 존재함으로 초기값 설정없이 리턴
         return opt;
       }
       return opt;
@@ -56,6 +59,7 @@ class changeViewSetting extends React.Component {
     setChangeValue('workInfo', 'OPT_INFO', nOptList);
   };
 
+  // key(입력, 수정, 삭제)별 select 렌더
   renderSelect = (key, options, optValue) => (
     <Select defaultValue={optValue} onChange={value => this.onChange(key, value)}>
       {options.map(option => (
