@@ -1,41 +1,53 @@
 import styled from 'styled-components';
 
 const StyledSelectTable = styled.div`
-  > table {
+  table {
+    border: 1px solid #e8e8e8;
     border-top: 1px solid #999999;
     border-spacing: 0;
     width: 100%;
-  }
-  table thead th {
-    background: #e7e1f0;
-    font-size: 14px;
-    text-align: center;
-    /* font-weight: 600; */
-    color: #000;
-    padding: 10px;
-  }
-  table tbody th {
-    background: #f7f7f7;
-    text-align: center;
-    color: rgba(0, 0, 0, 0.65);
-    /* font-weight: 600; */
-    font-size: 12px;
-    padding: 5px 5px;
-    border-right: 1px solid #e8e8e8;
-    border-bottom: 1px solid #e8e8e8;
-    width: 130px;
-  }
-  table tbody td {
-    border-right: 1px solid #e8e8e8;
-    padding: 5px 5px;
-    font-size: 12px;
-    width: auto;
+    thead th {
+      background: #e7e1f0;
+      font-size: 14px;
+      text-align: center;
+      color: #000;
+      padding: 10px;
+    }
+    tbody {
+      th {
+        background: #f7f7f7;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.65);
+        font-size: 12px;
+        padding: 8px 0px;
+      }
+      td {
+        padding: 8px;
+        font-size: 12px;
+        width: auto;
+        table.subTable {
+          border: 0;
+          th {
+            border-right: 1px solid #e8e8e8;
+            border-bottom: 1px solid #e8e8e8;
+          }
+          td {
+            border-right: 1px solid #e8e8e8;
+          }
+        }
+        &:last-child table.subTable {
+          th,
+          td {
+            border-right: 0;
+          }
+        }
+      }
+    }
   }
 
   .ant-checkbox-wrapper {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    margin-bottom: 4px;
     padding: 0;
     color: rgba(0, 0, 0, 0.65);
     display: table-row-group;
@@ -47,6 +59,8 @@ const StyledSelectTable = styled.div`
     font-feature-settings: 'tnum';
     width: 100px;
     cursor: pointer;
+    height: 24px;
+    line-height: 24px;
 
     &.ant-checkbox-wrapper-checked {
       color: #ffffff;
