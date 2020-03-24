@@ -101,6 +101,13 @@ const TreeWrapper = styled.div`
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent {
     width: 100%;
+    .essh_tree_depth2,
+    .essh_tree_depth3,
+    .essh_tree_depth24 {
+      .rstcustom__rowTitle button {
+        opacity: 0.5;
+      }
+    }
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open {
     .essh_tree_depth1 {
@@ -152,6 +159,7 @@ const TreeWrapper = styled.div`
 
     .essh_tree_depth2 {
       .rstcustom__rowTitle button {
+        opacity: 1;
         &.active {
           text-decoration: underline;
         }
@@ -160,6 +168,7 @@ const TreeWrapper = styled.div`
 
     .essh_tree_depth3 {
       .rstcustom__rowTitle button {
+        opacity: 1;
         &.active {
           text-decoration: underline;
         }
@@ -168,6 +177,7 @@ const TreeWrapper = styled.div`
 
     .essh_tree_depth4 {
       .rstcustom__rowTitle button {
+        opacity: 1;
         &.active {
           text-decoration: underline;
         }
