@@ -10,7 +10,7 @@ class List extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      inputCode: '',
+      inputCode: 'czxczxczczxcz',
       columns: [
         {
           title: '상태',
@@ -32,47 +32,49 @@ class List extends React.Component {
           key: 'name_kor',
         },
       ],
-      dataSource: [
-        // {
-        //   key: 0,
-        //   status: '',
-        //   code: '',
-        //   name_kor: (
-        //     <div>
-        //       <Input
-        //         placeholder="코드명을 입력하세요."
-        //         style={{ width: 300 }}
-        //         // value={this.state.inputCode}
-        //         onChange={e => this.setState({ inputCode: e.target.value })}
-        //       />
-        //       <StyledButton className="btn-primary" onClick={this.handleAddClick}>
-        //         추가
-        //       </StyledButton>
-        //       <StyledButton className="btn-primary" onClick={this.handleModifyClick}>
-        //         수정
-        //       </StyledButton>
-        //       <StyledButton className="btn-primary" onClick={this.handleDeleteClick}>
-        //         삭제
-        //       </StyledButton>
-        //       <StyledButton className="btn-primary" onClick={() => this.setState({ inputCode: '' })}>
-        //         Reset
-        //       </StyledButton>
-        //     </div>
-        //   ),
-        // },
-      ],
+      dataSource: [],
     };
   }
 
   componentDidMount() {
     const { inputCode } = this.state;
-    const inputRow = {
+    this.setState({
+      // dataSource: prevState.dataSource.concat(this.inputRow),
+      dataSource: [
+        {
+          key: 0,
+          status: '',
+          code: '',
+          name_kor: (
+            <div>
+              <Input placeholder="코드명을 입력하세요." style={{ width: 300 }} value={inputCode} onChange={this.handleInputChange} />
+              <StyledButton className="btn-primary" onClick={this.handleAddClick}>
+                추가
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.handleModifyClick}>
+                수정
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.handleDeleteClick}>
+                삭제
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.setState({ inputCode: '' })}>
+                Reset
+              </StyledButton>
+            </div>
+          ),
+        },
+      ],
+    });
+  }
+
+  inputRow = () => [
+    {
       key: 0,
       status: '',
       code: '',
       name_kor: (
         <div>
-          <Input placeholder="코드명을 입력하세요." style={{ width: 300 }} value={inputCode} onChange={this.handleInputChange} />
+          <Input placeholder="코드명을 입력하세요." style={{ width: 300 }} value={this.state.inputCode} onChange={this.handleInputChange} />
           <StyledButton className="btn-primary" onClick={this.handleAddClick}>
             추가
           </StyledButton>
@@ -87,17 +89,15 @@ class List extends React.Component {
           </StyledButton>
         </div>
       ),
-    };
-
-    this.setState(prevState => ({
-      dataSource: prevState.dataSource.concat(inputRow),
-    }));
-  }
+    },
+  ];
 
   handleInputChange = e => {
+    console.debug('@@ONCHANGE ', e.target.value, this.state.inputCode);
     this.setState({
       inputCode: e.target.value,
     });
+    return e.target.value;
   };
 
   handleAddClick = () => {
@@ -119,6 +119,7 @@ class List extends React.Component {
 
   render() {
     const { columns, dataSource } = this.state;
+    console.debug('@@RENDER');
     return (
       <StyledViewDesigner>
         <Sketch>
