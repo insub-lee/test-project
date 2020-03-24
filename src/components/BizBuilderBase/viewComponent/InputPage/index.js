@@ -8,7 +8,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 class InputPage extends Component {
   constructor(props) {
@@ -95,12 +95,19 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
+    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
+      if (changeViewOptIdx !== -1) {
+        const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
+        const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
+        changeViewPage(id, workSeq, taskSeq, optValue.INPUT);
+      } else {
+        changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      }
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
