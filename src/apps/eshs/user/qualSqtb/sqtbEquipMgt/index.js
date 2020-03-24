@@ -5,6 +5,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 
 import InputPage from './pages/InputPage';
+import ModifyPage from './pages/ModifyPage';
 
 class SqtbEquipMgt extends Component {
   state = {
@@ -18,7 +19,16 @@ class SqtbEquipMgt extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="SqtbEquipMgt" workSeq={4941} viewType="INPUT" CustomInputPage={InputPage} loadingComplete={this.loadingComplete} />;
+    return (
+      <BizBuilderBase
+        sagaKey="SqtbEquipMgt"
+        workSeq={4941}
+        viewType="INPUT"
+        CustomInputPage={InputPage}
+        CustomModifyPage={ModifyPage}
+        loadingComplete={this.loadingComplete}
+      />
+    );
   }
 }
 

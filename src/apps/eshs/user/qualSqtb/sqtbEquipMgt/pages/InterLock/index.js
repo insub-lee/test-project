@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import * as PropTypes from 'prop-types';
 import { TreeSelect, Input, Button, Checkbox } from 'antd';
-import InterLockStyled from '../../styled/InterLockStyled';
+import EquipTableStyled from '../../styled/EquipTableStyled';
 
-const getCategoryMapListAsTree = flatData => {
-  console.debug('flatData', flatData);
-  return getTreeFromFlatData({
+const getCategoryMapListAsTree = flatData =>
+  getTreeFromFlatData({
     flatData: flatData.map(item => ({
       title: item.NAME_KOR,
       value: item.NODE_ID,
@@ -19,7 +18,6 @@ const getCategoryMapListAsTree = flatData => {
     getParentKey: node => node.parentValue,
     rootKey: 633,
   });
-};
 class InterLock extends Component {
   constructor(props) {
     super(props);
@@ -30,13 +28,13 @@ class InterLock extends Component {
   }
 
   componentDidMount() {
-    const { getExtraApiData, id, apiArray, formData } = this.props;
+    const { getExtraApiData, id, apiArray, formData, viewType } = this.props;
     const task_seq = (formData && formData.TASK_SEQ) || '';
     if (task_seq) {
       apiArray.push({
         key: 'interLockList',
         type: 'GET',
-        url: `/api/admin/v1/common/categoryMapList/${task_seq}`,
+        url: `/api/eshs/v1/common/eshsGetInterLockList/${task_seq}`,
       });
     }
     getExtraApiData(id, apiArray, this.setTreeSelect);
@@ -47,9 +45,9 @@ class InterLock extends Component {
     const treeData = (extraApiData && extraApiData.treeData && extraApiData.treeData.categoryMapList) || [];
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
     if (!interLockList.length) {
-      interLockList.push({ IS_DEL: 0, IL_KIND_FROM: '', IL_FUNC: '' });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FROM: '', IL_FUNC: '' });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FROM: '', IL_FUNC: '' });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
     }
     const td = getCategoryMapListAsTree(treeData.filter(x => x.USE_YN === 'Y'));
     const categoryData = td.length > 0 ? td[0] : [];
@@ -63,7 +61,7 @@ class InterLock extends Component {
     changeFormData(
       id,
       'interLockList',
-      interLockList.map((i, index) => (index === key ? { ...i, IL_KIND_FROM: value } : i)),
+      interLockList.map((i, index) => (index === key ? { ...i, IL_KIND_FORM: value } : i)),
     );
   };
 
@@ -80,9 +78,9 @@ class InterLock extends Component {
   handlePlusTd = () => {
     const { id, changeFormData, formData } = this.props;
     const { interLockList } = formData;
-    interLockList.push({ IS_DEL: 0, IL_KIND_FROM: '', IL_FUNC: '' });
-    interLockList.push({ IS_DEL: 0, IL_KIND_FROM: '', IL_FUNC: '' });
-    interLockList.push({ IS_DEL: 0, IL_KIND_FROM: '', IL_FUNC: '' });
+    interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+    interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+    interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
     changeFormData(id, 'interLockList', interLockList);
   };
 
@@ -91,12 +89,12 @@ class InterLock extends Component {
     const { treeData } = this.state;
     const interLockList = (formData && formData.interLockList) || [];
     return (
-      <InterLockStyled>
-        <div className="InterLockTable">
+      <EquipTableStyled>
+        <div className="equipTable">
           <span>
             InterLock <Button onClick={this.handlePlusTd}>[+3]</Button>
           </span>
-          <table align="center" className="InterLockTable">
+          <table align="center">
             <colgroup>
               <col width="5%" />
               <col width="8%" />
@@ -124,8 +122,8 @@ class InterLock extends Component {
                         style={{ width: '100%' }}
                         dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
                         treeData={treeData}
+                        value={i.IL_KIND_FORM || ''}
                         onChange={value => this.onChangeHandler(value, index)}
-                        value={i.IL_KIND_FROM || ''}
                       />
                     </td>
                     <td>
@@ -136,7 +134,7 @@ class InterLock extends Component {
             </tbody>
           </table>
         </div>
-      </InterLockStyled>
+      </EquipTableStyled>
     );
   }
 }

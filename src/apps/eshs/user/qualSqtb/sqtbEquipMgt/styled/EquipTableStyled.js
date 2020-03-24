@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 
-const InterLockStyled = styled.div`
-  .InterLockTable {
+const EquipTableStyled = styled.div`
+  .equipTable {
+    margin-top: 10px;
+    margin-bottom: 15px;
     width: 100%;
     table {
       width: 100%;
@@ -28,4 +30,4 @@ const InterLockStyled = styled.div`
     }
   }
 `;
-export default InterLockStyled;
+export default EquipTableStyled;
