@@ -4,15 +4,13 @@ import { Table, Radio, Form, Modal, Input, Select, Button } from 'antd';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
-import { CheckboxGroup } from 'components/FormStuff/Checkbox';
+
 import StyledInput from 'components/FormStuff/Input';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledDatePicker from 'components/FormStuff/DatePicker';
 import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
 import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import SearchViewer from '../SearchViewer';
-import CoverViewer from '../CoverViewer';
 
 const AntdModal = StyledModalWrapper(Modal);
 const AntdLineTable = StyledLineTable(Table);
@@ -73,6 +71,9 @@ const initState = {
   },
   coverView: {
     visible: false,
+    workSeq: undefined,
+    taskSeq: undefined,
+    viewMetaSeq: undefined,
   },
   isLastVer: 'Y',
 };
@@ -174,8 +175,19 @@ class SearchBasic extends Component {
     });
   };
 
-  clickCoverView = (workSeq, taskSeq) => {
-    console.debug('coverview', workSeq, taskSeq);
+  onCloseCoverView = () => {
+    this.setState({
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
+    });
+  };
+
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    this.setState({ coverView: { visible: true, workSeq, taskSeq, viewMetaSeq } });
   };
 
   render() {
@@ -325,6 +337,13 @@ class SearchBasic extends Component {
                   taskSeq={SearchView.taskSeq}
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
+                  ViewCustomButtons={({ closeBtnFunc }) => (
+                    <div style={{ textAlign: 'center' }}>
+                      <StyledButton className="btn-primary" onClick={closeBtnFunc}>
+                        닫기
+                      </StyledButton>
+                    </div>
+                  )}
                 />
               </div>
             </>
@@ -333,22 +352,29 @@ class SearchBasic extends Component {
             className="modalWrapper modalTechDoc modalCustom"
             visible={coverView.visible}
             footer={null}
-            width={1080}
-            onCancel={() => {
-              this.setState({ coverView: { ...this.state.coverView, visible: false } });
-            }}
-            onOk={() => {
-              this.setState({ coverView: { ...this.state.coverView, visible: false } });
-            }}
+            width={800}
             okButtonProps={null}
+            onCancel={this.onCloseCoverView}
             destroyOnClose
           >
-            <>
-              <div className="pop_tit">검색 내용 보기</div>
-              <div className="pop_con">
-                <CoverViewer nodeId={SearchView.nodeId} taskSeq={SearchView.taskSeq} workSeq={SearchView.workSeq} />
-              </div>
-            </>
+            <div className="pop_tit">검색 내용 보기</div>
+            <div className="SearchContentLayer">
+              <BizBuilderBase
+                sagaKey="CoverView"
+                viewType="VIEW"
+                workSeq={coverView.workSeq}
+                taskSeq={coverView.taskSeq}
+                viewMetaSeq={coverView.viewMetaSeq}
+                onCloseCoverView={this.onCloseCoverView}
+                ViewCustomButtons={({ onCloseCoverView }) => (
+                  <div style={{ textAlign: 'center' }}>
+                    <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                      닫기
+                    </StyledButton>
+                  </div>
+                )}
+              />
+            </div>
           </AntdModal>
         </div>
       </StyledSearch>
