@@ -53,6 +53,7 @@ BareaLabel.propTypes = {
   COMP_FIELD: PropTypes.string,
   visible: PropTypes.bool,
   changeFormData: PropTypes.func,
+  viewPageData: PropTypes.object,
 };
 
 BareaLabel.defaultProps = {};
