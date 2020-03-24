@@ -176,9 +176,10 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList } = this.props;
+    const { configType, configProps, compPoolList, groups, onCloseModal, classNameList, action } = this.props;
     const { viewType, groupType, groupIndex, rowIndex, colIndex } = configProps;
     const { comp, addonClassName } = groups[groupIndex].rows[rowIndex].cols[colIndex];
+    const { submitHandlerBySaga } = action;
     return (
       <Styled className="popoverWrapper">
         <div className="popoverInnerInput">
@@ -290,21 +291,30 @@ class CompModal extends Component {
                   <Option value="<">&lt;</Option>
                   <Option value="LIKE">Like</Option>
                   <Option value="BETWEEN">Between</Option>
-                  <Option value="RANGE">Range</Option>
                 </Select>
               </div>
               <div className="popoverItem popoverItemInput">
                 <span className="spanLabel">검색 데이터 구분</span>
-                <Select
-                  style={{ width: '100%' }}
-                  placeholder="Select component"
-                  defaultValue={comp.CONFIG.property.searchDataType || ''}
-                  onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
-                >
-                  <Option value="STRING">String</Option>
-                  <Option value="NUMBER">Number</Option>
-                  <Option value="DATETIME">Datetime</Option>
-                </Select>
+                {comp && comp.CONFIG && comp.CONFIG.property && comp.CONFIG.property.searchCondition === 'BETWEEN' ? (
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="Select component"
+                    defaultValue={comp.CONFIG.property.searchDataType || ''}
+                    onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
+                  >
+                    <Option value="DATETIME">Datetime</Option>
+                  </Select>
+                ) : (
+                  <Select
+                    style={{ width: '100%' }}
+                    placeholder="Select component"
+                    defaultValue={comp.CONFIG.property.searchDataType || ''}
+                    onChange={value => this.handleChangeViewConfig('searchDataType', value, 'property')}
+                  >
+                    <Option value="STRING">String</Option>
+                    <Option value="NUMBER">Number</Option>
+                  </Select>
+                )}
               </div>
             </div>
           </div>
@@ -368,7 +378,7 @@ class CompModal extends Component {
               </Select>
             </div>
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
-              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG })}</div>
+              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...configProps, configInfo: comp.CONFIG, submitHandlerBySaga })}</div>
             )}
           </div>
         </div>

@@ -48,8 +48,8 @@ class View extends Component {
                                   colSpan={col.span}
                                   className={`view-designer-col col-${colIndex}${col.className && col.className.length > 0 ? ` ${col.className}` : ''} ${
                                     viewLayer[0].COMP_FIELD
-                                  }-${groupIndex}-${rowIndex}-${colIndex} ${
-                                    col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName}` : ''
+                                  }-${groupIndex}-${rowIndex}-${colIndex}${
+                                    col.addonClassName && col.addonClassName.length > 0 ? ` ${col.addonClassName.toString().replaceAll(',', ' ')}` : ''
                                   }`}
                                 >
                                   <Contents>
