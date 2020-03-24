@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledSelectTable = styled.div`
-  > table {
+  table {
     border-top: 1px solid #999999;
     border-spacing: 0;
     width: 100%;
