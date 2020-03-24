@@ -80,7 +80,7 @@ function ListPage(props) {
         taskSeq={taskSeq} // data binding
         onCloseModleHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
-        CustomButtons={InputButtons}
+        InputCustomButtons={InputButtons}
       />,
       <BizBuilderBase
         key={`${changedSagaKey}_MODAL_LIST`}
@@ -110,7 +110,7 @@ function ListPage(props) {
         onCloseModleHandler={() => setActivateDetailModal(false)}
         viewMetaSeq={META_SEQ.VIEW_BASIC}
         baseSagaKey={sagaKey}
-        CustomButtons={CustomButtons.Button1}
+        ViewCustomButtons={CustomButtons.Button1}
       />,
       // <div style={{ display: 'flex' }}>
       //   <div style={{ width: '50%' }}>
