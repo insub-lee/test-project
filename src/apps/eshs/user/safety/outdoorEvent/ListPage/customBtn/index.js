@@ -21,14 +21,14 @@ class CustomButtons extends Component {
     // console.debug('viewPageData.taskSeq', viewPageData.taskSeq);
     return (
       <div className="alignRight">
-        {viewPageData.taskSeq !== -1 && (
+        {viewPageData.taskSeq !== -1 && viewPageData.viewType === 'VIEW' && (
           <>
-            <StyledButton className="btn-primary" onClick={() => alert('결재서비스 준비중')}>
-              결재
+            <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'MODIFY')}>
+              수정
             </StyledButton>
             <Popconfirm
               title="Are you sure delete this task?"
-              onConfirm={() => deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
+              onConfirm={() => deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, !isBuilderModal ? changeViewPage : this.builderModalClose)}
               okText="Yes"
               cancelText="No"
             >

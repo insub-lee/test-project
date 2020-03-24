@@ -11,17 +11,16 @@ class SearchViewer extends Component {
     console.debug(this.props);
     const { workSeq, taskSeq, draftId } = this.props;
     return (
-      <BizBuilderBase
-        sagaKey="SearchView"
-        viewType="VIEW"
-        CustomViewPage={MdcsContentView}
-        workSeq={workSeq}
-        taskSeq={taskSeq}
-        draftId={draftId}
-        // metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
-        selectedRow={{ WORK_SEQ: workSeq, TASK_SEQ: taskSeq, DRAFT_ID: draftId, RULE_CONFIG: {} }}
-        // changeWorkflowFormData={this.changeWorkflowFormData}
-      />
+      <div className="SearchLayer">
+        <BizBuilderBase
+          sagaKey="SearchView"
+          viewType="VIEW"
+          workSeq={workSeq}
+          taskSeq={taskSeq}
+          CustomButtons={() => false}
+          selectedRow={{ WORK_SEQ: workSeq, TASK_SEQ: taskSeq, DRAFT_ID: draftId, RULE_CONFIG: {} }}
+        />
+      </div>
     );
   }
 }

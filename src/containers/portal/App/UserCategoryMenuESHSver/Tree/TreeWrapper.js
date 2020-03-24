@@ -152,7 +152,9 @@ const TreeWrapper = styled.div`
 
     .essh_tree_depth2 {
       .rstcustom__rowTitle button {
+        opacity: 0.5;
         &.active {
+          opacity: 1;
           text-decoration: underline;
         }
       }
@@ -160,7 +162,9 @@ const TreeWrapper = styled.div`
 
     .essh_tree_depth3 {
       .rstcustom__rowTitle button {
+        opacity: 0.5;
         &.active {
+          opacity: 1;
           text-decoration: underline;
         }
       }
@@ -168,7 +172,9 @@ const TreeWrapper = styled.div`
 
     .essh_tree_depth4 {
       .rstcustom__rowTitle button {
+        opacity: 0.5;
         &.active {
+          opacity: 1;
           text-decoration: underline;
         }
         padding-left: 10px;
