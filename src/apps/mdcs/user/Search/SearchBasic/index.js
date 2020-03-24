@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
-import { Table, Radio, Form, Modal, Input, Select } from 'antd';
-
+import { Table, Radio, Form, Modal, Input, Select, Button } from 'antd';
+import BizBuilderBase from 'components/BizBuilderBase';
 import StyledSearch from 'apps/mdcs/styled/StyledSearch';
 import StyledRadio from 'components/FormStuff/Radio';
 import { CheckboxGroup } from 'components/FormStuff/Checkbox';
@@ -175,12 +174,8 @@ class SearchBasic extends Component {
     });
   };
 
-  clickCoverView = () => {
-    this.setState({
-      coverView: {
-        visible: true,
-      },
-    });
+  clickCoverView = (workSeq, taskSeq) => {
+    console.debug('coverview', workSeq, taskSeq);
   };
 
   render() {
@@ -322,12 +317,13 @@ class SearchBasic extends Component {
           >
             <>
               <div className="pop_tit">검색 내용 보기</div>
-              <div className="pop_con">
-                <SearchViewer
+              <div className="SearchContentLayer">
+                <BizBuilderBase
+                  sagaKey="SearchView"
+                  viewType="VIEW"
                   workSeq={SearchView.workSeq}
                   taskSeq={SearchView.taskSeq}
-                  draftId={SearchView.draftId}
-                  closeBtnFunc={closeBtnFunc}
+                  closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
                 />
               </div>
