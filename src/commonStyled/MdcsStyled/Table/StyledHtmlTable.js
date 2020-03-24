@@ -32,6 +32,7 @@ const StyledHtmlTable = styled.div`
     padding: 5px 5px;
     font-size: 12px;
     width: auto;
+    background-color: #ffffff;
   }  
 
   .ant-checkbox-wrapper {

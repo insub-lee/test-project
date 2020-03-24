@@ -39,7 +39,6 @@ class StdInput extends Component {
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
     const { DETAIL, code } = response;
-    console.debug('response', response);
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };

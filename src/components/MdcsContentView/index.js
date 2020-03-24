@@ -17,6 +17,9 @@ class MdcsContentView extends Component {
   };
 
   initDataBind = (id, response) => {
+    console.debug('this.props', this.props);
+    const { viewLayer } = this.props;
+    console.debug('viewLayer', JSON.parse(viewLayer));
     const { fullPath_Nm } = response;
     const FULLPATH_NM = fullPath_Nm && fullPath_Nm.FULLPATH_NM;
     this.setState({ fullPathNm: FULLPATH_NM });
