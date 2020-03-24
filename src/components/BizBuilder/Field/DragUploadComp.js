@@ -199,6 +199,15 @@ class DragUploadComp extends Component {
     });
   };
 
+  beforeUpload = (file, fileList) => {
+    const { size, name } = file;
+    if (size === 0) {
+      message.error(`${name} 0 byte 파일은 업로드 할 수 없습니다 `);
+      return false;
+    }
+    return true;
+  };
+
   render() {
     const {
       fileInfo: { DETAIL: fileList },
@@ -215,6 +224,7 @@ class DragUploadComp extends Component {
         <Dragger
           action="/upload"
           onProgress={this.onProgress}
+          beforeUpload={this.beforeUpload}
           customRequest={this.preProcessor}
           onChange={this.onChangeHandler}
           showUploadList={false}

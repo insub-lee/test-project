@@ -5,13 +5,13 @@ import { Modal, Button, Icon } from 'antd';
 import { isJSON } from 'utils/helpers';
 
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
+import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledSelectModal(Modal);
 
 let dataSource;
 class CustomCheckListComp extends Component {
@@ -218,7 +218,11 @@ class CustomCheckListComp extends Component {
           visible={this.state.isShowModal}
           onCancel={this.onCancelModal}
           destroyOnClose
-          footer={[<Button onClick={this.onClickScope}>선택</Button>]}
+          footer={[
+            <StyledButton className="btn-sm btn-primary" onClick={this.onClickScope}>
+              선택
+            </StyledButton>,
+          ]}
         >
           <MultiSelector onChange={this.onChangeMultiSelector} dataSource={this.state.dataSource}></MultiSelector>
         </AntdModal>

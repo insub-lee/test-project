@@ -95,8 +95,12 @@ import CustomEditorComp from 'components/BizBuilder/Field/CustomEditorComp';
 import BareaLabel from 'components/BizBuilder/Field/BareaLabel';
 import CompNmLabel from 'components/BizBuilder/Field/CompNmLabel';
 import SRDReqCustomSelectComp from 'components/BizBuilder/Field/SRDReqCustomSelectComp';
+import CoverViewComp from 'components/BizBuilder/Field/CoverViewComp';
+import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
 
 export const CompInfo = {
+  'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
+  'components/BizBuilder/Field/CoverViewComp': { renderer: property => <CoverViewComp {...property} /> },
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
   'components/BizBuilder/Field/FmeaLabelComp': { renderer: property => <FmeaLabelComp {...property} /> },
   'components/BizBuilder/Field/LabelWithCopyComp': { renderer: property => <LabelWithCopyComp {...property} /> },

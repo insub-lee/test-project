@@ -74,13 +74,13 @@ class SelectApprovePage extends Component {
   handleAddUser = (nodeId, nodeType) => {
     const { prcStep, selectedDeptKeys } = this.state;
     const { deptList } = this.props;
-    const tmpPrcStep = prcStep.map(prc => {
+    const tmpPrcStep = prcStep.map(step => {
       let selectMember = [];
-      if (prc.NODE_ID === nodeId) {
+      if (step.NODE_ID === nodeId) {
         if (nodeType === 'ND') {
           // 부서정보 처리 하기
           const selectDeptIds = deptList.filter(f => selectedDeptKeys.includes(f.DEPT_ID.toString()));
-          const { APPV_MEMBER: appvMember } = prc;
+          const { APPV_MEMBER: appvMember } = step;
           selectMember = selectDeptIds.reduce((retIds, deptId) => {
             const idx = retIds.findIndex(f => f.DEPT_ID === deptId.DEPT_ID);
             if (idx === -1) retIds.splice(0, 0, { DEPT_ID: deptId.DEPT_ID, DEPT_NAME_KOR: deptId.NAME_KOR, ISFIXED: 'N' });
@@ -90,7 +90,7 @@ class SelectApprovePage extends Component {
           // 사용자 정보 처리 하기
         }
       }
-      return { ...prc, APPV_MEMBER: selectMember };
+      return { ...step, APPV_MEMBER: selectMember };
     });
     this.setState({ prcStep: tmpPrcStep, selectedDeptKeys: [] });
   };

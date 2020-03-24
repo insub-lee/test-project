@@ -250,6 +250,13 @@ const StyledViewDesigner = styled.div`
         }
         &.mdcsContentsSelectCol {
           position: relative;
+          padding: 6px;
+          .ant-select {
+            font-size: 12px;
+            .ant-select-selection {
+              border: 1px solid rgb(217, 224, 231);
+            }
+          }
           .wrapper {
             button {
               position: absolute;

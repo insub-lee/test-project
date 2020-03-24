@@ -4,7 +4,7 @@ import { Input, Checkbox, InputNumber, Select, TreeSelect, Button } from 'antd';
 import { debounce } from 'lodash';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import { ConfigInfo } from './ConfigInfo';
+import { ConfigInfo } from 'components/BizBuilder/ConfigInfo';
 
 import Styled from './Styled';
 

@@ -137,6 +137,27 @@ UnitComp.propTypes = {
   readOnly: PropTypes.any,
   compProp: PropTypes.any,
   changeSearchData: PropTypes.any,
+  visible: PropTypes.bool,
+  sagaKey: PropTypes.object,
+};
+
+UnitComp.defaultProps = {
+  sagaKey: { id: '' },
+  colData: '',
+  visible: true,
+  readOnly: false,
+  COMP_FIELD: '',
+  NAME_KOR: '',
+  CONFIG: {
+    property: {
+      readOnly: false,
+      placeholder: '',
+      className: '',
+      isRequired: false,
+    },
+  },
+  changeFormData: () => {},
+  changeValidationData: () => {},
 };
 
 export default UnitComp;

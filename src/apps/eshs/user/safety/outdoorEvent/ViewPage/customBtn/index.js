@@ -16,9 +16,9 @@ class CustomButtons extends Component {
   render() {
     // eslint-disable-next-line react/prop-types
     const { sagaKey: id, reloadId, viewPageData, changeViewPage, deleteTask, isBuilderModal } = this.props;
-    console.debug('changeViewPage-체크', changeViewPage);
-    console.debug('isBuilderModal-체크', isBuilderModal);
-    console.debug('viewPageData.taskSeq', viewPageData.taskSeq);
+    // console.debug('changeViewPage-체크', changeViewPage);
+    // console.debug('isBuilderModal-체크', isBuilderModal);
+    // console.debug('viewPageData.taskSeq', viewPageData.taskSeq);
     return (
       <div className="alignRight">
         {viewPageData.taskSeq !== -1 && (
@@ -28,7 +28,7 @@ class CustomButtons extends Component {
             </StyledButton>
             <Popconfirm
               title="Are you sure delete this task?"
-              onConfirm={() => deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, !isBuilderModal ? changeViewPage : this.builderModalClose)}
+              onConfirm={() => deleteTask(id, reloadId, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage)}
               okText="Yes"
               cancelText="No"
             >
