@@ -42,15 +42,37 @@ class StdInput extends Component {
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
+    console.debug('### 1 : ', id, response, etcData);
+    console.debug('### 2 : ', selectedAttach);
+    console.debug('### 3 : ', response);
+    console.debug('### 4 : ', tmpAttach);
+
     changeFormData(id, etcData, tmpAttach);
-    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: true } : file));
+    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200, isAttempted: true } : file));
+
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
-      const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
-      if (!isUploadComplete && code !== 500) {
-        this.saveTask(id, id, this.saveTaskAfter);
-      } else {
-        message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!!!');
+      console.debug('### 4 : ', tmpFileList);
+
+      let AttemptionCount = 0;
+      let isCompleteCount = 0;
+      const limit = uploadFileList.length || 0;
+
+      uploadFileList.forEach(e => {
+        if (e.isAttempted === true) {
+          AttemptionCount++;
+        }
+        if (e.isComplete === true) {
+          isCompleteCount++;
+        }
+      });
+
+      if (AttemptionCount === limit) {
+        if (isCompleteCount === limit) {
+          this.saveTask(id, id, this.saveTaskAfter);
+        } else {
+          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다람쥐.!!!');
+        }
       }
     });
   };
@@ -88,6 +110,7 @@ class StdInput extends Component {
       const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
       // 첨부파일이 없는 경우 체크
       const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+
       if (isUploadByPass && isUploadByPass.length === 0) {
         this.saveTask(id, reloadId, this.saveTaskAfter);
       } else {
@@ -96,7 +119,7 @@ class StdInput extends Component {
           const attachInfo = formData[COMP_FIELD];
           if (attachInfo) {
             const { DETAIL, MOVEFILEAPI } = attachInfo;
-            uploadFileList.push({ COMP_FIELD, isComplete: false });
+            uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
             this.setState({ uploadFileList }, () => {
               const param = { PARAM: { DETAIL } };
               const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
@@ -140,7 +163,6 @@ class StdInput extends Component {
       CustomWorkProcess,
       onCloseModal,
     } = this.props;
-    console.debug('this.', this.props);
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
