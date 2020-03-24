@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Checkbox, Icon } from 'antd';
 
-import StyledSelectTable from 'commonStyled/Table/StyledSelectTable';
+import StyledSelectTable from 'commonStyled/MdcsStyled/Table/StyledSelectTable';
 import ScrollBar from 'react-custom-scrollbars';
 
 class MultiSelector extends Component {
