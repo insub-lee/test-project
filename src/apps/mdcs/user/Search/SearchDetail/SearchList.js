@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Button } from 'antd';
 import moment from 'moment';
 
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'apps/mdcs/styled/Modals/StyledModalWrapper';
+import StyledModalWrapper from 'commonStyled/MdcsStyled/Modal/StyleModalWrapper';
 
-import SearchViewer from '../SearchViewer';
+import BizBuilderBase from 'components/BizBuilderBase';
 import CoverViewer from '../CoverViewer';
 
 const AntdModal = StyledModalWrapper(Modal);
@@ -76,7 +76,6 @@ class SearchList extends Component {
   render() {
     const { listData } = this.props;
     const { SearchView, coverView } = this.state;
-    console.debug('list', listData);
     return (
       <>
         <AntdLineTable
@@ -101,9 +100,12 @@ class SearchList extends Component {
           destroyOnClose
         >
           <div className="pop_tit">검색 내용 보기</div>
-          <div className="pop_con">
-            <SearchViewer
+          <div className="SearchContentLayer">
+            <BizBuilderBase
+              sagaKey="SearchView"
+              viewType="VIEW"
               workSeq={SearchView.workSeq}
+              // CustomButtons={() => <Button>수정</Button>}
               taskSeq={SearchView.taskSeq}
               draftId={SearchView.draftId}
               closeBtnFunc={this.closeBtnFunc}

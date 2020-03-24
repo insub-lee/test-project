@@ -443,10 +443,32 @@ const reducer = (state = initialState, action) => {
     }
     case actionTypes.CHANGE_VIEW_COMPDATA_REDUCER: {
       const { groupIndex, rowIndex, colIndex, key, value } = action;
-      return state.setIn(
-        ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', key],
-        typeof value === 'object' ? fromJS(value) : value,
-      );
+      let compData = state.get('compData');
+      const layerIdxKey = state.getIn(['viewData', 'CONFIG', 'property', 'layerIdxKey']);
+      const compKey = state.getIn([
+        'viewData',
+        'CONFIG',
+        'property',
+        'layer',
+        'groups',
+        groupIndex,
+        'rows',
+        rowIndex,
+        'cols',
+        colIndex,
+        'comp',
+        'CONFIG',
+        'property',
+        'compKey',
+      ]);
+      const compIdx = compData.findIndex(iNode => iNode.getIn(['CONFIG', 'property', 'compKey']) === compKey);
+      compData = compData.setIn([compIdx, 'CONFIG', 'property', 'viewLayerConfig', layerIdxKey, key], typeof value === 'object' ? fromJS(value) : value);
+      return state
+        .setIn(
+          ['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp', key],
+          typeof value === 'object' ? fromJS(value) : value,
+        )
+        .set('compData', compData);
     }
     case actionTypes.SET_INIT_DATA_REDUCER: {
       const { workSeq, viewType, viewName } = action;
@@ -495,6 +517,7 @@ const reducer = (state = initialState, action) => {
       return state
         .deleteIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'comp'])
         .deleteIn(['compData', compIdx, 'CONFIG', 'property', 'layerIdx', layerIdxKey])
+        .deleteIn(['compData', compIdx, 'CONFIG', 'property', 'viewLayerConfig', layerIdxKey])
         .setIn(['viewData', 'CONFIG', 'property', 'layer', 'groups', groupIndex, 'rows', rowIndex, 'cols', colIndex, 'className'], '');
     }
     case actionTypes.REMOVE_COMPITEM_REDUCER: {

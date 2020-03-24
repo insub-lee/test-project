@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Select } from 'antd';
+import StyledSelect from 'commonStyled/MdcsStyled/Select/StyledSelect';
 import SelectReadComp from './SelectReadComp';
 
 const { Option } = Select;
@@ -62,6 +63,7 @@ class SelectIntComp extends Component {
               }}
               disabled={readOnly || CONFIG.property.readOnly}
               className={CONFIG.property.className || ''}
+              dropdownRender={menu => <StyledSelect>{menu}</StyledSelect>}
             >
               {apiData &&
                 apiData.categoryMapList &&
