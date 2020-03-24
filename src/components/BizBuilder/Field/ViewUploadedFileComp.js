@@ -36,7 +36,7 @@ function ViewUploadedFileComp(props) {
     if (DETAIL !== undefined) {
       down = DETAIL[0].down;
     }
-    const { viewType } = viewPageData;
+    const { viewType } = viewPageData || '';
     setIsModify(viewType === 'MODIFY');
     setPreviewImage(down);
     setFileInfo({ ...temp });
@@ -50,6 +50,7 @@ function ViewUploadedFileComp(props) {
       } else {
         setVisible(false);
       }
+      changeFormDataHanlder();
     }
   }, [fileInfo]);
 
@@ -165,7 +166,6 @@ function ViewUploadedFileComp(props) {
         const DETAIL = [{ ...response, uid: file.uid, type: doctype, down }];
         setFileInfo({ ...temp, DETAIL });
         handlePreview(file);
-        changeFormDataHanlder();
       })
       .catch(onError);
   };
