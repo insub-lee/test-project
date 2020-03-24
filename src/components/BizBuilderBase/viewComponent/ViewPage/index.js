@@ -37,7 +37,7 @@ class ViewPage extends Component {
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} readOnly />
             {draftId !== -1 && <ApproveHistory draftId={draftId} />}
             {CustomButtons ? (
-              <CustomButtons {...this.props} />
+              <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
               <div className="alignRight">
                 <Popconfirm
