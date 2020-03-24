@@ -248,6 +248,23 @@ const StyledViewDesigner = styled.div`
             }
           }
         }
+        &.mdcsContentsSelectCol {
+          position: relative;
+          .wrapper {
+            button {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              left: 0;
+            }
+            &.active {
+              button {
+                right: 0px;
+                left: inherit;
+              }
+            }
+          }
+        }
         > div > span {
           display: block;
           font-size: 0.8rem;

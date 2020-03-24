@@ -199,7 +199,16 @@ class BizBuilderBase extends React.Component {
   };
 
   render() {
-    const { sagaKey, dataLoading, isBuilderModal, builderModalSetting, viewChangeSeqByModal } = this.props;
+    const {
+      sagaKey,
+      dataLoading,
+      isBuilderModal,
+      builderModalSetting,
+      viewChangeSeqByModal,
+      InputCustomButtonsByModal,
+      ModifyCustomButtonsByModal,
+      ViewCustomButtonsByModal,
+    } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
     return (
       <div>
@@ -221,6 +230,10 @@ class BizBuilderBase extends React.Component {
             taskRowData={taskRowData}
             viewChangeSeq={viewChangeSeqByModal}
             changeBuilderModalState={this.changeBuilderModalState}
+            InputCustomButtons={InputCustomButtonsByModal} // 기존 ViewPage에서 지원하는 CustomBtns Props가 필요한 모달이 있을 경우가 있어, 동일한 방식으로 커스텀 Btn Props를 받을 수 있도록 수정 (by. 정현)
+            ModifyCustomButtons={ModifyCustomButtonsByModal}
+            ViewCustomButtons={ViewCustomButtonsByModal}
+            // ListCustomButtons={CustomButtonsByModal}
           />
         </Modal>
       </div>
@@ -276,6 +289,10 @@ BizBuilderBase.propTypes = {
   viewChangeSeq: PropTypes.number,
   viewChangeSeqByModal: PropTypes.number,
   taskRowData: PropTypes.object,
+  InputCustomButtonsByModal: PropTypes.func,
+  ModifyCustomButtonsByModal: PropTypes.func,
+  ViewCustomButtonsByModal: PropTypes.func,
+  ListCustomButtonsByModal: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -309,6 +326,10 @@ BizBuilderBase.defaultProps = {
   viewChangeSeq: -1,
   viewChangeSeqByModal: -1,
   taskRowData: undefined,
+  InputCustomButtonsByModal: undefined,
+  ModifyCustomButtonsByModal: undefined,
+  ViewCustomButtonsByModal: undefined,
+  ListCustomButtonsByModal: undefined,
 };
 
 const mapStateToProps = createStructuredSelector({
