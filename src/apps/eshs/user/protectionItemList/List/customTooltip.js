@@ -1,24 +1,51 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import request from 'utils/request';
 
-export default class CustomTooltip extends Component {
+class CustomTooltip extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      fileSeqList: [],
+    };
+  }
+
   getReactContainerClasses() {
     return ['custom-tooltip'];
   }
 
-  render() {
+  componentDidMount() {
     const { data } = this.props.api.getDisplayedRowAtIndex(this.props.rowIndex);
-    console.debug(data);
-    return (
-      <div className="custom-tooltip">
-        <span>ㅇㅁ너ㅏㅣ춤니ㅜㅊㄴㅁ</span>
-        <span>ㅇㅁ너ㅏㅣ춤니ㅜㅊㄴㅁ</span>
-        <span>ㅇㅁ너ㅏㅣ춤니ㅜㅊㄴㅁ</span>
-      </div>
-      // <img
-      //   src="https://blogsimages.adobe.com/creativedialogue/files/2018/12/Adobe-Photoshop-Bestmoments2018-Blog-Tutorial-1-819x10w224.jpg"
-      //   alt={data.kind}
-      //   width="200px"
-      // />
-    );
+    const hitemCd = data.hitem_cd;
+    const getData = request({
+      method: 'GET',
+      url: `/api/eshs/v1/common/geteshsprotectionitemsattach?hitem_cd=${hitemCd}`,
+    });
+    this.makeFileList(getData);
+  }
+
+  makeFileList = data => {
+    data.then(res => this.setState({ fileSeqList: res.response.fileList }));
+  };
+
+  render() {
+    const { fileSeqList } = this.state;
+    if (fileSeqList.length) {
+      return (
+        <div>
+          {fileSeqList.map(item => (
+            <img src={`http://192.168.251.14:10197/down/file/${item.file_seq}`} alt="사진이 없습니다." width="150px" />
+          ))}
+        </div>
+      );
+    }
+    return <div>등록된 사진이 없습니다.</div>;
   }
 }
+
+CustomTooltip.propTypes = {
+  api: PropTypes.object,
+  rowIndex: PropTypes.number,
+};
+
+export default CustomTooltip;

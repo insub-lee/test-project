@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
+import { message } from 'antd';
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
@@ -18,17 +18,20 @@ class StdModify extends Component {
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
-    const { DETAIL } = response;
+    const { DETAIL, code } = response;
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
     changeFormData(id, etcData, tmpAttach);
-    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: true } : file));
+    console.debug('code', code);
+    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: code !== 500 } : file));
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
       const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
-      if (!isUploadComplete) {
+      if (!isUploadComplete && code !== 500) {
         this.saveTask(id, id, this.saveTaskAfter);
+      } else {
+        message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!!!');
       }
     });
   };
@@ -40,7 +43,6 @@ class StdModify extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList } = this.props;
-    const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
     // 첨부파일이 없는 경우 체크
@@ -52,10 +54,11 @@ class StdModify extends Component {
         const { COMP_FIELD } = attachItem;
         const attachInfo = formData[COMP_FIELD];
         if (attachInfo) {
-          const { DETAIL } = attachInfo;
+          const { DETAIL, MOVEFILEAPI } = attachInfo;
           uploadFileList.push({ COMP_FIELD, isComplete: false });
           this.setState({ uploadFileList }, () => {
             const param = { PARAM: { DETAIL } };
+            const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
             submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
           });
         }
@@ -65,7 +68,7 @@ class StdModify extends Component {
 
   saveTask = (id, reloadId, callbackFunc) => {
     const { modifyTask } = this.props;
-    modifyTask(id, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
+    modifyTask(id, reloadId, typeof callbackFunc === 'function' ? callbackFunc : this.saveTaskAfter);
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {

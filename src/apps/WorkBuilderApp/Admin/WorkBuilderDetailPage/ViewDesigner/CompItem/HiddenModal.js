@@ -128,7 +128,8 @@ class CompModal extends Component {
   };
 
   render() {
-    const { configProps, onCloseModal, hiddenField } = this.props;
+    const { configProps, onCloseModal, hiddenField, action } = this.props;
+    const { submitHandlerBySaga } = action;
     const comp = hiddenField[hiddenField.findIndex(iNode => iNode.CONFIG.property.compKey === configProps.comp.CONFIG.property.compKey)];
     if (!comp) {
       return <div />;
@@ -206,7 +207,7 @@ class CompModal extends Component {
               />
             </div>
             {ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC] && (
-              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...hiddenConfigProps, configInfo: comp.CONFIG })}</div>
+              <div>{ConfigInfo[comp.CONFIG.property.COMP_SETTING_SRC].renderer({ ...hiddenConfigProps, configInfo: comp.CONFIG, submitHandlerBySaga })}</div>
             )}
           </div>
         </div>

@@ -16,7 +16,7 @@ import { setGroupsLayerIdxKey, setInitListGroups } from './helper';
 
 const getNewKey = () => uuid();
 
-function* getMetaData({ workSeq, viewType, viewID }) {
+function* getMetaData({ workSeq, viewType, viewID, viewName }) {
   yield put(actions.enableContentLoading());
   const response = yield call(Axios.get, `/api/builder/v1/work/meta?workSeq=${workSeq}`);
   const sysResponse = yield call(Axios.get, `/api/builder/v1/work/sysmeta?workSeq=${workSeq}`);
@@ -40,9 +40,9 @@ function* getMetaData({ workSeq, viewType, viewID }) {
       yield put(actions.setWorkInfoByReducer(workSeq, viewType));
       yield put(actions.setViewListByReducer(viewList, viewChangeProcesslist));
     } else if (viewType === 'LIST') {
-      yield put(actions.setInitListDataByReducer(workSeq, viewType));
+      yield put(actions.setInitListDataByReducer(workSeq, viewType, viewName));
     } else {
-      yield put(actions.setInitDataByReducer(workSeq, viewType));
+      yield put(actions.setInitDataByReducer(workSeq, viewType, viewName));
     }
     yield put(actions.setCompDataByReducer(metaList));
     yield put(actions.setTopMenusByReducer(topMenus));
@@ -140,7 +140,7 @@ function* addMetaData({ callbackFunc }) {
     if (viewCnt === 0) {
       const modifyIdxKey = `layerIdx_${getNewKey()}`;
       const modifyData = cloneJSON(viewData);
-      modifyData.NAME_KOR = 'BASIC';
+      modifyData.NAME_KOR = '기본 수정 화면';
       modifyData.COMP_TAG = 'MODIFY';
       modifyData.ORD = compData.length + 1;
       modifyData.CONFIG.property.layerIdxKey = modifyIdxKey;
@@ -149,7 +149,7 @@ function* addMetaData({ callbackFunc }) {
 
       const viewIdxKey = `layerIdx_${getNewKey()}`;
       const newViewData = cloneJSON(viewData);
-      newViewData.NAME_KOR = 'BASIC';
+      newViewData.NAME_KOR = '기본 조회 화면';
       newViewData.COMP_TAG = 'VIEW';
       newViewData.ORD = compData.length + 1;
       newViewData.CONFIG.property.layerIdxKey = viewIdxKey;
@@ -158,7 +158,7 @@ function* addMetaData({ callbackFunc }) {
 
       const listIdxKey = `layerIdx_${getNewKey()}`;
       const newListData = cloneJSON(viewData);
-      newListData.NAME_KOR = 'BASIC';
+      newListData.NAME_KOR = '기본 목록 화면';
       newListData.COMP_TAG = 'LIST';
       newListData.ORD = compData.length + 1;
       newListData.CONFIG.property.layerIdxKey = listIdxKey;
@@ -233,10 +233,33 @@ function* saveViewChangeProcess({ formData, callbackFunc }) {
   }
 }
 
+function* submitHandlerBySaga({ httpMethod, apiUrl, submitData, callbackFunc }) {
+  let httpMethodInfo = Axios.put;
+  switch (httpMethod.toUpperCase()) {
+    case 'POST':
+      httpMethodInfo = Axios.post;
+      break;
+    case 'PUT':
+      httpMethodInfo = Axios.put;
+      break;
+    case 'DELETE':
+      httpMethodInfo = Axios.delete;
+      break;
+    default:
+      httpMethodInfo = Axios.get;
+      break;
+  }
+  const response = yield call(httpMethodInfo, apiUrl, submitData);
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(response);
+  }
+}
+
 export default function* watcher() {
   yield takeLatest(constantTypes.GET_METADATA_SAGA, getMetaData);
   yield takeLatest(constantTypes.ADD_METADATA_SAGA, addMetaData);
   yield takeLatest(constantTypes.GET_COMPONENT_POOL_SAGA, getComponentPoolList);
   yield takeLatest(constantTypes.GET_SYSMETA_LIST_SAGA, getSysMetaList);
   yield takeLatest(constantTypes.SAVE_VIEW_CHANGE_PROCESS_SAGA, saveViewChangeProcess);
+  yield takeLatest(constantTypes.PUBLIC_ACTIONMETHOD_SAGA, submitHandlerBySaga);
 }

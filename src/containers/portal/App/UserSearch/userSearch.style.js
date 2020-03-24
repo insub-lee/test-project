@@ -159,8 +159,7 @@ const UserSearch = styled.div`
 
   .icon-search {
     &:before {
-      color: ${props => props.theme.header.memberSearch.iconSearchButtonColor};
-      opacity: 0.5;
+      color: #666;
     }
   }
 `;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal } from 'antd';
+import { Table, Modal, Tooltip } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -20,12 +20,14 @@ import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionT
 const AntdTable = StyledAntdTable(Table);
 
 function ListPage(props) {
-  const [activeModel, setActiveModel] = useState(false);
+  const [activateRegModal, setActivateRegModal] = useState(false);
+  const [activateDetailModal, setActivateDetailModal] = useState(false);
   const [selectedTaskSeq, setSelectedTaskSeq] = useState(0);
   const [viewType, setViewType] = useState('');
   const [isSearched, setIsSearched] = useState(props.isSearched);
   const [isMultiDelete, setIsMultiDelete] = useState(false);
   const [isRowNo, setIsRowNo] = useState(false);
+  const [rowClickable, setRowClickable] = useState(true);
 
   useEffect(() => {
     if (isSearched) {
@@ -34,18 +36,12 @@ function ListPage(props) {
     }
   }, [isSearched]);
 
-  // saveTask // C
-  // modifyTask // U
-  // deleteTask // D
-  //
-  // useEffect(() => {
-  //   request({
-  //     method: 'GET',
-  //     url: `${address.selectAllData}`,
-  //   }).then(({ response }) => {
-  //     console.info('@@@ res : ', response);
-  //   });
-  // }, []);
+  useEffect(() => {
+    const { viewSeq } = props;
+    if (META_SEQ.MODAL_LIST === viewSeq) {
+      setRowClickable(false);
+    }
+  }, []);
 
   useEffect(() => {
     const { workInfo } = props;
@@ -56,17 +52,17 @@ function ListPage(props) {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
       });
-      setIsMultiDelete(isMultiDelete);  
+      setIsMultiDelete(isMultiDelete);
       setIsRowNo(isRowNo);
     }
   }, []);
 
   function clickRegister() {
-    setActiveModel(true);
+    setActivateRegModal(true);
     setSelectedTaskSeq(-1);
   }
 
-  const openModal = (changedSagaKey, taskSeq) => {
+  const openRegModal = (changedSagaKey, taskSeq) => {
     /* 
       changedSagaKey: modal쓰려고 바꾼 sagaKey, modal${id}
       taskSeq: 글 번호, INPUT 할 땐 -1, 나머지는 onRow{onClick}
@@ -82,7 +78,7 @@ function ListPage(props) {
         workSeq={workSeq} // metadata binding
         viewType={VIEW_TYPE.INPUT}
         taskSeq={taskSeq} // data binding
-        onCloseModleHandler={() => setActiveModel(false)}
+        onCloseModleHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
         CustomButtons={InputButtons}
       />,
@@ -93,11 +89,57 @@ function ListPage(props) {
         viewType={VIEW_TYPE.LIST}
         taskSeq={taskSeq}
         CustomListPage={ListPage}
-        onCloseModleHandler={() => setActiveModel(false)}
+        onCloseModleHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
-        listMetaSeq={META_SEQ.LIST} // meta SEQ
+        listMetaSeq={META_SEQ.MODAL_LIST} // meta SEQ
         isSearched
       />,
+    ];
+  };
+
+  const openDetailModal = (changedSagaKey, taskSeq) => {
+    const { workSeq, sagaKey, CustomButtons, loadingComplete } = props;
+
+    return [
+      <BizBuilderBase
+        key={`${changedSagaKey}_MODAL_DETAIL`}
+        sagaKey={`${changedSagaKey}_MODAL_DETAIL`}
+        workSeq={workSeq} // metadata binding
+        viewType={VIEW_TYPE.VIEW}
+        taskSeq={taskSeq} // data binding
+        onCloseModleHandler={() => setActivateDetailModal(false)}
+        viewMetaSeq={META_SEQ.VIEW_BASIC}
+        baseSagaKey={sagaKey}
+        CustomButtons={CustomButtons.Button1}
+      />,
+      <div></div>,
+
+      // <div style={{ display: 'flex' }}>
+      //   <div style={{ width: '50%' }}>
+      //     <BizBuilderBase
+      //       key={`${changedSagaKey}_MODAL_DETAIL_1`}
+      //       sagaKey={`${changedSagaKey}_MODAL_DETAIL_1`}
+      //       workSeq={workSeq} // metadata binding
+      //       viewType={VIEW_TYPE.VIEW}
+      //       taskSeq={taskSeq} // data binding
+      //       onCloseModleHandler={() => setActivateDetailModal(false)}
+      //       viewMetaSeq={META_SEQ.INSPECTION}
+      //       baseSagaKey={sagaKey}
+      //     />
+      //   </div>
+      //   <div style={{ width: '50%' }}>
+      //     <BizBuilderBase
+      //       key={`${changedSagaKey}_MODAL_DETAIL_2`}
+      //       sagaKey={`${changedSagaKey}_MODAL_DETAIL_2`}
+      //       workSeq={workSeq} // metadata binding
+      //       viewType={VIEW_TYPE.VIEW}
+      //       taskSeq={taskSeq} // data binding
+      //       onCloseModleHandler={() => setActivateDetailModal(false)}
+      //       viewMetaSeq={META_SEQ.ISSUE}
+      //       baseSagaKey={sagaKey}
+      //     />
+      //   </div>
+      // </div>,
     ];
   };
 
@@ -151,8 +193,8 @@ function ListPage(props) {
   };
 
   const handleRowClick = taskSeq => {
-    // setActiveModel(true);
-    // setSelectedTaskSeq(taskSeq);
+    setSelectedTaskSeq(taskSeq);
+    setActivateDetailModal(true);
     // setViewType('View');
   };
 
@@ -170,8 +212,9 @@ function ListPage(props) {
               className="view-designer-list"
               columns={columns}
               dataSource={listData || []}
+              // LOCATION_DESC
               onRow={record => ({
-                onClick: () => handleRowClick(record.TASK_SEQ),
+                onClick: () => (rowClickable ? handleRowClick(record.TASK_SEQ) : null),
               })}
             />
           </Group>
@@ -256,8 +299,11 @@ function ListPage(props) {
             );
           })}
           {ViewButtons && <ViewButtons {...props} clickRegister={clickRegister} />}
-          <Modal visible={activeModel} closable onCancel={() => setActiveModel(false)} width={900} footer={null}>
-            <div>{activeModel && openModal(`modal${id}`, selectedTaskSeq)}</div>
+          <Modal destroyOnClose visible={activateRegModal} closable onCancel={() => setActivateRegModal(false)} width={900} footer={null}>
+            <div>{activateRegModal && openRegModal(`modal${id}`, selectedTaskSeq)}</div>
+          </Modal>
+          <Modal destroyOnClose visible={activateDetailModal} closable onCancel={() => setActivateDetailModal(false)} width={900} footer={null}>
+            <div>{activateDetailModal && openDetailModal(`modal${id}`, selectedTaskSeq)}</div>
           </Modal>
         </Sketch>
       </StyledViewDesigner>

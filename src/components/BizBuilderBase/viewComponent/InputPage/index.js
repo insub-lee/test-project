@@ -58,11 +58,12 @@ class InputPage extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList } = this.props;
-    const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+
     // 첨부파일이 없는 경우 체크
     const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+
     if (isUploadByPass && isUploadByPass.length === 0) {
       this.saveTask(id, reloadId, this.saveTaskAfter);
     } else {
@@ -70,10 +71,11 @@ class InputPage extends Component {
         const { COMP_FIELD } = attachItem;
         const attachInfo = formData[COMP_FIELD];
         if (attachInfo) {
-          const { DETAIL } = attachInfo;
+          const { DETAIL, MOVEFILEAPI } = attachInfo;
           uploadFileList.push({ COMP_FIELD, isComplete: false });
           this.setState({ uploadFileList }, () => {
             const param = { PARAM: { DETAIL } };
+            const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
             submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
           });
         }
@@ -120,7 +122,7 @@ class InputPage extends Component {
       reloadId,
       isBuilderModal,
       isLoading,
-      CustomButtons,
+      InputCustomButtons,
     } = this.props;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -137,8 +139,8 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            {CustomButtons ? (
-              <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+            {InputCustomButtons ? (
+              <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
               <div className="alignRight">
                 <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>

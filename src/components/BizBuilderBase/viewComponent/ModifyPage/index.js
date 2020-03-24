@@ -40,7 +40,6 @@ class ModifyPage extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList } = this.props;
-    const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
     // 첨부파일이 없는 경우 체크
@@ -52,10 +51,11 @@ class ModifyPage extends Component {
         const { COMP_FIELD } = attachItem;
         const attachInfo = formData[COMP_FIELD];
         if (attachInfo) {
-          const { DETAIL } = attachInfo;
+          const { DETAIL, MOVEFILEAPI } = attachInfo;
           uploadFileList.push({ COMP_FIELD, isComplete: false });
           this.setState({ uploadFileList }, () => {
             const param = { PARAM: { DETAIL } };
+            const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
             submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
           });
         }
@@ -83,7 +83,7 @@ class ModifyPage extends Component {
   };
 
   render = () => {
-    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, isBuilderModal, isLoading, reloadId } = this.props;
+    const { sagaKey: id, viewLayer, viewPageData, changeViewPage, isBuilderModal, ModifyCustomButtons, isLoading, reloadId } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -93,16 +93,20 @@ class ModifyPage extends Component {
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            <div className="alignRight">
-              <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                Save
-              </Button>
-              {!isBuilderModal && (
-                <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                  List
+            {ModifyCustomButtons ? (
+              <ModifyCustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
+            ) : (
+              <div className="alignRight">
+                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
+                  Save
                 </Button>
-              )}
-            </div>
+                {!isBuilderModal && (
+                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+                    List
+                  </Button>
+                )}
+              </div>
+            )}
           </Sketch>
         </StyledViewDesigner>
       );

@@ -185,6 +185,7 @@ const StyledViewDesigner = styled.div`
         color: rgb(0, 0, 0);
         /* padding: 5px 10px; */
         &.mdcsTitleCol {
+          width: 180px;
           text-align: center;
           position: relative;
           background-color: #f1f1f1;
@@ -247,9 +248,26 @@ const StyledViewDesigner = styled.div`
             }
           }
         }
+        &.mdcsContentsSelectCol {
+          position: relative;
+          .wrapper {
+            button {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              left: 0;
+            }
+            &.active {
+              button {
+                right: 0px;
+                left: inherit;
+              }
+            }
+          }
+        }
         > div > span {
           display: block;
-          font-size: 12px;
+          font-size: 0.8rem;
         }
         .ant-radio-group {
           -webkit-box-sizing: border-box;
@@ -494,6 +512,26 @@ const StyledViewDesigner = styled.div`
   .Side-menu-default .item.item-level-1:hover,
   .Side-menu-default .item.item-level-1.active {
     //border-left: 4px solid #584475;
+  }
+
+  .ant-modal.makeNewViewModal {
+    .ant-modal-close {
+      margin: 10px;
+      .ant-modal-close-x {
+        width: 58px;
+        height: 33px;
+        line-height: 33px;
+      }
+    }
+    .ant-modal-body {
+      span.makeNewViewModalTitle {
+        padding-right: 10px;
+      }
+      .makeNewViewModalInput {
+        width: 312px;
+        margin-right: 10px;
+      }
+    }
   }
 `;
 

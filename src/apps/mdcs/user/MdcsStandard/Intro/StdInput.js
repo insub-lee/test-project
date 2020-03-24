@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-
 import { message } from 'antd';
+import { SaveOutlined } from '@ant-design/icons';
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -38,7 +38,8 @@ class StdInput extends Component {
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
-    const { DETAIL } = response;
+    const { DETAIL, code } = response;
+    console.debug('response', response);
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
@@ -47,8 +48,10 @@ class StdInput extends Component {
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
       const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
-      if (!isUploadComplete) {
+      if (!isUploadComplete && code !== 500) {
         this.saveTask(id, id, this.saveTaskAfter);
+      } else {
+        message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!!!');
       }
     });
   };
@@ -60,7 +63,6 @@ class StdInput extends Component {
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
     const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
-    const moveFileApi = '/upload/moveFileToReal';
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
 
@@ -94,10 +96,11 @@ class StdInput extends Component {
           const { COMP_FIELD } = attachItem;
           const attachInfo = formData[COMP_FIELD];
           if (attachInfo) {
-            const { DETAIL } = attachInfo;
+            const { DETAIL, MOVEFILEAPI } = attachInfo;
             uploadFileList.push({ COMP_FIELD, isComplete: false });
             this.setState({ uploadFileList }, () => {
               const param = { PARAM: { DETAIL } };
+              const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
               submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
             });
           }
@@ -138,7 +141,7 @@ class StdInput extends Component {
       CustomWorkProcess,
       onCloseModal,
     } = this.props;
-
+    console.debug('this.', this.props);
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
@@ -168,10 +171,10 @@ class StdInput extends Component {
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <div style={{ textAlign: 'right' }}>
-              <StyledButton className="btn-primary btn-first" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
-                Save
+              <StyledButton className="btn-primary btn-first btn-sm" loading={this.state.loading} onClick={() => this.saveBeforeProcess(id, id, this.saveTask)}>
+                <SaveOutlined /> Save
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => onCloseModal()}>
+              <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
                 닫기
               </StyledButton>
             </div>

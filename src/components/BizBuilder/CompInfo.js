@@ -11,6 +11,8 @@ import ModalInsertBtnComp from 'components/BizBuilder/Field/ModalInsertBtnComp';
 import AttachComp from 'components/BizBuilder/Field/AttachComp';
 import DragUploadComp from 'components/BizBuilder/Field/DragUploadComp';
 import DragUploadMDCSComp from 'components/BizBuilder/Field/DragUploadMDCSComp';
+import DragUploadMDCSViewComp from 'components/BizBuilder/Field/DragUploadMDCSViewComp';
+import DragUploadPdfComp from 'components/BizBuilder/Field/DragUploadPdfComp';
 import TreeSelectComp from 'components/BizBuilder/Field/TreeSelectComp';
 import SelectComp from 'components/BizBuilder/Field/SelectComp';
 import CustomValueSelectComp from 'components/BizBuilder/Field/CustomValueSelectComp';
@@ -85,9 +87,14 @@ import EshsSearchbar from 'components/BizBuilder/Field/EshsSearchbar';
 import StackCustomComp from 'components/BizBuilder/Field/StackCustomComp';
 import EshsSiteItemSearchbar from 'components/BizBuilder/Field/EshsSiteItemSearchbar';
 import ViewUploadedFileComp from 'components/BizBuilder/Field/ViewUploadedFileComp';
+import FlexTableComp from 'components/BizBuilder/Field/FlexTableComp';
 import ModalTableComp from 'components/BizBuilder/Field/ModalTableComp';
 import TakeOutCustomComp from 'components/BizBuilder/Field/TakeOutCustomComp';
 import TakeOutSearchComp from 'components/BizBuilder/Field/TakeOutSearchComp';
+import CustomEditorComp from 'components/BizBuilder/Field/CustomEditorComp';
+import BareaLabel from 'components/BizBuilder/Field/BareaLabel';
+import CompNmLabel from 'components/BizBuilder/Field/CompNmLabel';
+import SRDReqCustomSelectComp from 'components/BizBuilder/Field/SRDReqCustomSelectComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/LabelComp': { renderer: property => <LabelComp {...property} /> },
@@ -101,6 +108,8 @@ export const CompInfo = {
   'components/BizBuilder/Field/AttachComp': { renderer: property => <AttachComp {...property} /> },
   'components/BizBuilder/Field/DragUploadComp': { renderer: property => <DragUploadComp {...property} /> },
   'components/BizBuilder/Field/DragUploadMDCSComp': { renderer: property => <DragUploadMDCSComp {...property} /> },
+  'components/BizBuilder/Field/DragUploadMDCSViewComp': { renderer: property => <DragUploadMDCSViewComp {...property} /> },
+  'components/BizBuilder/Field/DragUploadPdfComp': { renderer: property => <DragUploadPdfComp {...property} /> },
   'components/BizBuilder/Field/TreeSelectComp': { renderer: property => <TreeSelectComp {...property} /> },
   'components/BizBuilder/Field/SelectComp': { renderer: property => <SelectComp {...property} /> },
   'components/BizBuilder/Field/CustomValueSelectComp': { renderer: property => <CustomValueSelectComp {...property} /> },
@@ -175,7 +184,12 @@ export const CompInfo = {
   'components/BizBuilder/Field/StackCustomComp': { renderer: property => <StackCustomComp {...property} /> },
   'components/BizBuilder/Field/EshsSiteItemSearchbar': { renderer: property => <EshsSiteItemSearchbar {...property} /> },
   'components/BizBuilder/Field/ViewUploadedFileComp': { renderer: property => <ViewUploadedFileComp {...property} /> },
+  'components/BizBuilder/Field/FlexTableComp': { renderer: property => <FlexTableComp {...property} /> },
   'components/BizBuilder/Field/ModalTableComp': { renderer: property => <ModalTableComp {...property} /> },
   'components/BizBuilder/Field/TakeOutCustomComp': { renderer: property => <TakeOutCustomComp {...property} /> },
   'components/BizBuilder/Field/TakeOutSearchComp': { renderer: property => <TakeOutSearchComp {...property} /> },
+  'components/BizBuilder/Field/CustomEditorComp': { renderer: property => <CustomEditorComp {...property} /> },
+  'components/BizBuilder/Field/BareaLabel': { renderer: property => <BareaLabel {...property} /> },
+  'components/BizBuilder/Field/CompNmLabel': { renderer: property => <CompNmLabel {...property} /> },
+  'components/BizBuilder/Field/SRDReqCustomSelectComp': { renderer: property => <SRDReqCustomSelectComp {...property} /> },
 };

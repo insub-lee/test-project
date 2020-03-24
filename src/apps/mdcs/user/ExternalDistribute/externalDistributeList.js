@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Icon, Button, Input } from 'antd';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 
 const AntdTable = StyledAntdTable(Table);
 

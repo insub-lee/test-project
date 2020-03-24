@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { SearchOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
+import StyledSelect from 'commonStyled/MdcsStyled/Select/StyledSelect';
 import LabelComp from './LabelComp';
 
 const { Option } = Select;
@@ -94,7 +95,14 @@ class RadioMaterialComp extends Component {
           <td>
             <div style={{ width: '30%' }}>
               {this.state.isMeterialView && (
-                <Select value={formData.MATERIAL_TYPE} onChange={this.onSelectChange} placeholder="자재코드 선택" style={{ width: '180px' }}>
+                <Select
+                  value={formData.MATERIAL_TYPE}
+                  onChange={this.onSelectChange}
+                  placeholder="자재코드 선택"
+                  className="mdcsSelect"
+                  style={{ width: '180px' }}
+                  dropdownRender={menu => <StyledSelect>{menu}</StyledSelect>}
+                >
                   {this.state.mList}
                 </Select>
               )}

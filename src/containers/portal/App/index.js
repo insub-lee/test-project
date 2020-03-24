@@ -19,13 +19,13 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import Rodal from 'rodal';
 
 import Loadable from 'components/Loadable';
-
 import * as routesAction from 'containers/common/Routes/actions';
 import { basicPath } from 'containers/common/constants';
 import * as routesSelector from 'containers/common/Routes/selectors';
 import * as authSelector from 'containers/common/Auth/selectors';
 import Fullscreen from 'components/Fullscreen';
 import SideMenu from 'components/SideMenu';
+import Trigger from './Trigger';
 import { BtnMyhome } from './UserStore/components/uielements/buttons.style';
 
 import * as boardAction from '../../../apps/boards/widgets/actions';
@@ -299,7 +299,6 @@ class App extends React.Component {
         // 2. 외부서비스 /apps/PAGE_ID ex) 큐브
         // 3. 페이지 /page/PAGE_ID
         if (node) {
-          console.debug('nodenodenodenodenode', node);
           const state = {
             type,
             node,
@@ -406,14 +405,13 @@ class App extends React.Component {
     // REMOVE DOCK - 주석 처리
     const { open } = this.state;
     const { menuFixedYn } = this.props;
-    return open && menuFixedYn === 'Y' ? 335 : 45;
+    return open && menuFixedYn === 'Y' ? 280 : 45;
   };
 
   getLayoutStyle = desktopMode =>
     desktopMode
       ? {
           // height: '100%',
-          marginTop: 42,
           marginLeft: this.getLayoutMarginLeft(),
           marginRight: this.getLayoutMarginRight(),
           transition: 'margin-left 0.3s ease-out 0s',
@@ -469,22 +467,6 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={theme}>
         <Layout className="portalLayout">
-          {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
-          {/* Header */}
-          <Header
-            className="portalHeader"
-            setOpen={this.setMenuOpen}
-            execPage={this.execPage}
-            handleClick={this.handleClick}
-            setMyMenuData={setMyMenuData}
-            location={history.location}
-            myHNotiCnt={myHNotiCnt}
-            managerInfo={managerInfo}
-            view={view}
-            hasRoleAdmin={hasRoleAdmin}
-            headerTitle={headerTitle}
-            siteId={profile.SITE_ID}
-          />
           {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
           <UserCategoryMenuESHSver
@@ -528,6 +510,14 @@ class App extends React.Component {
           />
           */}
           <SideMenu>
+            <div className="iconPositon" style={{ marginTop: '20px' }}>
+              <Trigger>
+                <span className="trigger icon icon-menu" onClick={this.setMenuOpen} onKeyDown={this.setMenuOpen} role="button" tabIndex="0" />
+                {/* <Badge count={myHNotiCnt} overflowCount={99}>
+                  <Link to="/" className="badgeLink" />
+                </Badge> */}
+              </Trigger>
+            </div>
             <div className="iconPositon" style={{ marginTop: '20px' }}>
               <Tooltip placement="right" title="Home">
                 <Icon type="home" style={{ color: 'white', fontSize: '20px' }} onClick={() => this.goCommonHome()} />
@@ -576,6 +566,22 @@ class App extends React.Component {
                       setMyMenuData={setMyMenuData}
                     >
                       <div id="child" className={this.getChildDivClassName(setMyMenuData, history, isFullSize)} style={{ height: '100%' }}>
+                        {/* TODO menuLayoutCode, menuCompCode값에 따라 메뉴 타입 (레이아웃 + 컴포넌트 형태) */}
+                        {/* Header */}
+                        <Header
+                          className="portalHeader"
+                          // setOpen={this.setMenuOpen}
+                          execPage={this.execPage}
+                          handleClick={this.handleClick}
+                          setMyMenuData={setMyMenuData}
+                          location={history.location}
+                          myHNotiCnt={myHNotiCnt}
+                          managerInfo={managerInfo}
+                          view={view}
+                          hasRoleAdmin={hasRoleAdmin}
+                          headerTitle={headerTitle}
+                          siteId={profile.SITE_ID}
+                        />
                         <Content
                           className="portalContent"
                           style={{

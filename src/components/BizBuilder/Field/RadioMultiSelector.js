@@ -7,6 +7,7 @@ import { isJSON } from 'utils/helpers';
 import MultiSelector from 'components/MdcsComponents/MultiSelector';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const AntdModal = StyledModalWrapper(Modal);
 
@@ -93,9 +94,9 @@ class RadioMultiSelector extends Component {
                 )),
               )}
             </div>
-            <Button onClick={this.onClickSelectedWin}>
+            <StyledButton className="btn-sm2 btn-primary" onClick={this.onClickSelectedWin}>
               <Icon type="select" /> 선택
-            </Button>
+            </StyledButton>
           </div>
         </StyledMultiSelector>
         <AntdModal
