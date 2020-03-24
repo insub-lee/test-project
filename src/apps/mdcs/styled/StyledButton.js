@@ -12,6 +12,12 @@ const btnSmall = css`
   line-height: 1.5;
 `;
 
+const btnSmallMid = css`
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+`;
+
 const btnXsmall = css`
   padding: 1px 0.844rem;
   font-size: 0.7rem;
@@ -85,6 +91,10 @@ const StyledButton = styled.button`
 
   &.btn-sm {
     ${btnSmall}
+  }
+
+  &.btn-sm2 {
+    ${btnSmallMid}
   }
 
   &.btn-xs {

@@ -122,7 +122,7 @@ class InputPage extends Component {
       reloadId,
       isBuilderModal,
       isLoading,
-      CustomButtons,
+      InputCustomButtons,
     } = this.props;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -139,8 +139,8 @@ class InputPage extends Component {
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
-            {CustomButtons ? (
-              <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
+            {InputCustomButtons ? (
+              <InputCustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
             ) : (
               <div className="alignRight">
                 <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
