@@ -43,6 +43,7 @@ class DatePickerComp extends Component {
           style={{ width: '200px' }}
           onChange={this.onChangeHandler}
           placeholder="날짜를 선택하세요."
+          defaultValue={colData && moment(colData)}
           readOnly={readOnly || CONFIG.property.readOnly}
         />
       );
