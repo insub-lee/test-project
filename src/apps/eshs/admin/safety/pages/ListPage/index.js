@@ -112,8 +112,6 @@ function ListPage(props) {
         baseSagaKey={sagaKey}
         CustomButtons={CustomButtons.Button1}
       />,
-      <div></div>,
-
       // <div style={{ display: 'flex' }}>
       //   <div style={{ width: '50%' }}>
       //     <BizBuilderBase
@@ -123,8 +121,11 @@ function ListPage(props) {
       //       viewType={VIEW_TYPE.VIEW}
       //       taskSeq={taskSeq} // data binding
       //       onCloseModleHandler={() => setActivateDetailModal(false)}
-      //       viewMetaSeq={META_SEQ.INSPECTION}
+      //       // viewMetaSeq={META_SEQ.VIEW_INSPECTION}
+      //       // modifyMetaSeq={META_SEQ.MODIFY_INSPECTION}
+      //       viewChangeSeq={39}
       //       baseSagaKey={sagaKey}
+      //       CustomButtons={CustomButtons.Button2}
       //     />
       //   </div>
       //   <div style={{ width: '50%' }}>
@@ -135,8 +136,11 @@ function ListPage(props) {
       //       viewType={VIEW_TYPE.VIEW}
       //       taskSeq={taskSeq} // data binding
       //       onCloseModleHandler={() => setActivateDetailModal(false)}
-      //       viewMetaSeq={META_SEQ.ISSUE}
+      //       // viewMetaSeq={META_SEQ.VIEW_ISSUE}
+      //       // modifyMetaSeq={META_SEQ.MODIFY_ISSUE}
+      //       viewChangeSeq={40}
       //       baseSagaKey={sagaKey}
+      //       CustomButtons={CustomButtons.Button3}
       //     />
       //   </div>
       // </div>,
