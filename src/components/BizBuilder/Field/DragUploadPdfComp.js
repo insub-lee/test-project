@@ -121,6 +121,15 @@ class DragUploadPdfComp extends Component {
     window.location.href = `${file.down}`;
   };
 
+  beforeUpload = (file, fileList) => {
+    const { size, name } = file;
+    if (size === 0) {
+      message.error(`${name} 0 byte 파일은 업로드 할 수 없습니다 `);
+      return false;
+    }
+    return true;
+  };
+
   render() {
     const {
       fileInfo: { DETAIL: fileList },
@@ -131,6 +140,7 @@ class DragUploadPdfComp extends Component {
         <Dragger
           action="/upload/mdcs"
           onProgress={this.onProgress}
+          beforeUpload={this.beforeUpload}
           customRequest={this.customRequest}
           onChange={this.onChangeDragger}
           showUploadList={false}
