@@ -53,7 +53,13 @@ class TextComp extends React.Component {
     if (isSearch) {
       switch (CONFIG.property.searchType) {
         case 'INPUT':
-          return <Input onChange={e => this.handleOnChangeSearch(e.target.value)} className={CONFIG.property.className || ''} />;
+          return (
+            <Input
+              onChange={e => this.handleOnChangeSearch(e.target.value)}
+              className={CONFIG.property.className || ''}
+              placeholder={CONFIG.property.placeholder}
+            />
+          );
         case 'SELECT':
           return (
             <Select
