@@ -6,8 +6,11 @@ import { Row, Col, Modal, Icon } from 'antd';
 import StyledButton from 'apps/mdcs/styled/StyledButton';
 
 import WorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal';
+import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledWorkProcess from 'apps/Workflow/WorkProcess/StyledWorkProcess';
 import SelectApprovePage from 'apps/mdcs/user/Workflow/SelectApprovePage';
+
+const AntdModal = StyledSelectModal(Modal);
 
 class WorkProcess extends Component {
   state = {
@@ -114,8 +117,8 @@ class WorkProcess extends Component {
             ))}
           </div>
         </div>
-        <Modal
-          title="결재선지정"
+        <AntdModal
+          title="결재선지정ㅋㅋ"
           visible={modalVisible}
           // onOk={this.handleComplete}
           onCancel={this.handleCloseModal}
@@ -126,7 +129,7 @@ class WorkProcess extends Component {
           maskClosable={false}
         >
           <WorkProcessModal processRuleProc={processRule} visible={modalVisible} onComplete={this.onProcessRuleComplete} onCloseModal={this.handleCloseModal} />
-        </Modal>
+        </AntdModal>
       </StyledWorkProcess>
     );
   }
