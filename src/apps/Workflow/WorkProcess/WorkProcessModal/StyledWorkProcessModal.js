@@ -6,62 +6,57 @@ const StyledWorkProcessModal = styled.div`
   .basicWrapper {
     width: 100%;
     height: 510px;
-    border: 1px solid #e8e8e8;
-    padding: 10px;
 
     &.deptWrapper {
       .tabButtonWrapper {
+        border: 1px solid #e8e8e8;
+        border-bottom: 0;
+        border-top: 0;
+        border-radius: 3px 3px 0 0;
         button {
-          width: 32.5%;
+          width: 33.33%;
           background: #e8e8e8;
           border: 0;
-          border-radius: 3px;
+          border-radius: 0;
           font-size: 13px;
           height: auto;
           padding: 5px;
-          border: 1px solid #e8e8e8;
-          margin-right: 1%;
+          border-bottom: 1px solid #e8e8e8;
+          border-top: 2px solid #e8e8e8;
+          box-shadow: none;
           &:hover,
           &:active,
-          &:focus {
-            background: #767c89;
-            color: #fff;
-          }
-          &:last-child {
-            margin-right: 0;
+          &:focus,
+          &.on {
+            background: #fff;
+            color: #333;
+            border-bottom: 1px solid #fff;
+            border-top: 2px solid #4491e0;
+            border-radius: 3px 3px 0 0;
           }
         }
       }
-      .deptTree {
-        width: 100%;
-        height: 250px;
-        overflow-y: auto;
-        padding: 5px;
-        .site-tree-search-value {
-          color: #f50;
-        }
-        li .ant-tree-node-content-wrapper {
-          font-size: 12px;
-        }
-      }
-
-      .userList {
-        width: 100%;
-        height: 350px;
-        .ant-table {
-          border-radius: 3px;
-          .ant-table-header {
-            background: #e8e8e8;
+      .tabContentsWrapper {
+        border: 1px solid #e8e8e8;
+        padding: 10px;
+        height: 480px;
+        border-top: 0;
+        .deptTree {
+          width: 100%;
+          height: 250px;
+          overflow-y: auto;
+          padding: 5px;
+          .site-tree-search-value {
+            color: #f50;
           }
-          .ant-table-thead {
-            font-size: 14px;
-            tr th {
-              padding: 7px;
-            }
-          }
-          .ant-table-tbody {
+          li .ant-tree-node-content-wrapper {
             font-size: 12px;
           }
+        }
+
+        .userList {
+          width: 100%;
+          height: 350px;
         }
       }
     }
@@ -72,6 +67,8 @@ const StyledWorkProcessModal = styled.div`
 
     &.selectedWrapper {
       overflow-y: auto;
+      border: 1px solid #e8e8e8;
+      padding: 10px;
 
       > h4 {
         padding: 7px;
@@ -155,8 +152,8 @@ const StyledWorkProcessModal = styled.div`
     }
   }
   .applyButtonWrapper {
-    text-align: center;
-    margin-top: 30px;
+    text-align: right;
+    margin-top: 25px;
   }
 `;
 
