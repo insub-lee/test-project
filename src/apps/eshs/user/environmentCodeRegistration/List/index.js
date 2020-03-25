@@ -129,11 +129,19 @@ class List extends Component {
     const { selectedIndex, dataSource, inputCode } = this.state;
     const modifiedRow = Object.assign(dataSource[selectedIndex], { NAME_KOR: inputCode });
     this.commonDataHandler('updateData', 'put', modifiedRow);
+    this.setState({
+      inputCode: '',
+      selectedIndex: -1,
+    });
   };
 
   handleDeleteClick = () => {
     const { selectedIndex, dataSource } = this.state;
     this.commonDataHandler('deleteData', 'delete', { CODE: dataSource[selectedIndex].CODE, IS_DELETE: 'Y' });
+    this.setState({
+      inputCode: '',
+      selectedIndex: -1,
+    });
   };
 
   handleResetClick = () => {
