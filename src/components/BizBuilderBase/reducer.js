@@ -118,8 +118,8 @@ const reducer = (state = initialState, action) => {
       return state.setIn(['bizBuilderBase', id, 'extraApiData', apiKey], response);
     }
     case actionTypes.SET_DETAIL_DATA: {
-      const { id, data } = action;
-      return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(data));
+      const { id, data, validationData } = action;
+      return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(data)).setIn(['bizBuilderBase', id, 'validationData'], fromJS(validationData));
     }
     case actionTypes.SET_TASK_SEQ: {
       const { id, taskSeq } = action;
