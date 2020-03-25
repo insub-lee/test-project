@@ -13,6 +13,49 @@ class TextComp extends React.Component {
     this.handleOnChangeSearch = debounce(this.handleOnChangeSearch, 300);
   }
 
+  // RangeDate 초기값이 있으나 정상적으로 SearchData에 입력되지 않고 있는 것을 확인하여 didMount 추가 by. JeongHyun
+  componentDidMount() {
+    const { CONFIG } = this.props;
+    const { searchType } = CONFIG.property;
+    if (searchType === 'RANGEDATE') {
+      const rangeDateSearchType = CONFIG.property.rangeDateSearchType || 'default';
+      this.handleOnChangeSearch(this.makeRangeDefaultValue(rangeDateSearchType));
+    }
+  }
+
+  /* 
+      개발목적 : RangeDate(기간 내 검색) 컴포넌트를 위한 value 값 생성
+      파라미터 : rangeDateSearchType (빌더/업무디자이너/LIST페이지/SearchArea 내에서 설정한 값) || 
+                 'default' : 시작일, 종료일 모두 오늘날짜
+                 'autoMonth' : 현재 달의 시작일, 말일
+                 'custom' : 사용자가 지정한 날짜
+      리턴정보 : Array(Date) / [startDate, endDate]
+      create by. JeongHyun
+  */
+  makeRangeDefaultValue = rangeDateSearchType => {
+    const { CONFIG } = this.props;
+    switch (rangeDateSearchType) {
+      case 'default': {
+        return [moment(), moment()];
+      }
+      case 'autoMonth': {
+        const startOfMonth = moment().startOf('month');
+        const endOfMonth = moment().endOf('month');
+        return [startOfMonth, endOfMonth];
+      }
+      case 'custom': {
+        return [
+          (CONFIG.property.searchStartDate && moment(CONFIG.property.searchStartDate)) || moment(),
+          (CONFIG.property.searchStartDate && moment(CONFIG.property.searchStartDate)) ||
+            (CONFIG.property.searchStartDate && moment(CONFIG.property.searchStartDate)) ||
+            moment(),
+        ];
+      }
+      default:
+        return [moment(), moment()];
+    }
+  };
+
   handleOnChangeSearch = value => {
     const { sagaKey, COMP_FIELD, changeSearchData, CONFIG } = this.props;
     let searchText = '';
@@ -93,7 +136,7 @@ class TextComp extends React.Component {
           return (
             <RangePicker
               style={{ width: '100%' }}
-              defaultValue={[moment(), moment()]}
+              defaultValue={this.makeRangeDefaultValue(CONFIG.property.rangeDateSearchType || 'default')}
               format="YYYY-MM-DD"
               onChange={value => this.handleOnChangeSearch(value)}
               className={CONFIG.property.className || ''}
