@@ -81,7 +81,6 @@ class WorkProcessModal extends Component {
   };
 
   onDeptUserCheck = selectedUserKeys => {
-    console.debug('onDeptUserCheck', selectedUserKeys);
     this.setState({ selectedUserKeys });
   };
 

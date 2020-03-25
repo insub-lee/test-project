@@ -3,8 +3,8 @@ import * as PropTypes from 'prop-types';
 import { Input, Popover, Checkbox, InputNumber, Popconfirm, Select } from 'antd';
 import { debounce } from 'lodash';
 
+import { ConfigInfo } from 'components/BizBuilder/ConfigInfo';
 import Styled from './Styled';
-import { ConfigInfo } from './ConfigInfo';
 
 const { Option } = Select;
 
