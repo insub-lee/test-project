@@ -20,12 +20,16 @@ class DragUploadMDCSViewComp extends Component {
         property: { selectedValue },
       },
     } = this.props;
+    const { drmInfo } = selectedValue;
+    console.debug('selectedValue', selectedValue, drmInfo);
+
     const acl = base64.encode(JSON.stringify(selectedValue));
     window.location.href = `${url}/${acl}`;
   };
 
   componentDidMount() {
-    const { colData } = this.props;
+    const { colData, CONFIG } = this.props;
+    console.debug('config', CONFIG);
     const attachList = colData && colData.DETAIL ? colData.DETAIL : [];
     const tmpList = attachList.map(file => {
       let doctype = 'file-unknown';
