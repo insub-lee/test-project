@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Select, Table, Input, Popconfirm } from 'antd';
+import { Table, Input, Popconfirm, TreeSelect } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
-const { Option } = Select;
+import selectTree from './industrialSafetyLawList';
+
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedIndex: -1,
-      selectedCategory: 'HM',
+      selectedCategory: 'HC',
       inputCode: '',
       dataSource: [
         {
@@ -115,6 +116,7 @@ class List extends Component {
     const data = {
       NAME_KOR: inputCode,
       CATEGORY: selectedCategory.toUpperCase(),
+      CODE_VALUE: selectedCategory.substring(0, 2),
     };
     this.setState({
       inputCode: '',
@@ -168,18 +170,7 @@ class List extends Component {
     return (
       <StyledViewDesigner>
         <Sketch>
-          <Select defaultValue="HC" onChange={this.handleSelectChange} style={{ width: 200, marginBottom: 10 }}>
-            {/**
-                FM: Harmful material Classification (위험물 분류)
-                WH: Workplace environment Harmful factor (작업환경측정 대상 유해인자)
-                MH: Managed Harmful material (관리대상 유해물질)
-                HH: special Health diagnosis Harmful factor (특수건강진단 대상 유해인자)
-            */}
-            <Option value="HC">위험물 분류</Option>
-            <Option value="WH">작업환경측정 대상 유해인자</Option>
-            <Option value="MH">관리대상 유해물질</Option>
-            <Option value="HH">특수건강진단 대상 유해인자</Option>
-          </Select>
+          <TreeSelect treeData={selectTree} value={this.state.selectedCategory} treeDefaultExpandAll onChange={this.handleSelectChange} />
           <Table columns={columns} dataSource={dataSource} bordered pagination={false} onRow={this.handleRowClick} />
           <div className="alignCenter">{`총 ${dataLength.toLocaleString()} 건`}</div>
         </Sketch>
