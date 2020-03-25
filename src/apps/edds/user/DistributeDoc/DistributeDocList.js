@@ -4,14 +4,31 @@ import { Table, Icon, Button, Modal } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
 
 class DistributeDocList extends Component {
+  state = {
+    isShow: false,
+    selectedRow: {},
+  }
+  
   componentDidMount() {
     const { id, apiAry, getCallDataHandler } = this.props;
     getCallDataHandler(id, apiAry, () => {});
+  }
+
+  onClickRow = row => {
+    this.setState({
+      selectedRow: row,
+      isShow: true,
+    });
+  }
+
+  onCancelPopup = () => {
+    this.setState({ isShow: false });
   }
 
   columns = [
@@ -41,7 +58,7 @@ class DistributeDocList extends Component {
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
-      render: (text, record) => <Button type="link">{text}</Button>
+      render: (text, record) => <Button type="link" onClick={() => this.onClickRow(record)}>{text}</Button>
     },
     {
       title: '배포자',
@@ -89,6 +106,16 @@ class DistributeDocList extends Component {
           </p>
         </div>
         <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+        <AntdModal
+          width={700}
+          visible={this.state.isShow}
+          title="배포문서 다운로드"
+          onCancel={this.onCancelPopup}
+          destroyOnClose
+          footer={null}
+        >
+          <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+        </AntdModal>
       </div>
     );
   }
