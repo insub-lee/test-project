@@ -43,9 +43,8 @@ const StyledWorkProcessModal = styled.div`
         border-top: 0;
         .deptTree {
           width: 100%;
-          height: 250px;
+          height: 200px;
           overflow-y: auto;
-          padding: 5px;
           .site-tree-search-value {
             color: #f50;
           }
@@ -56,7 +55,7 @@ const StyledWorkProcessModal = styled.div`
 
         .userList {
           width: 100%;
-          height: 350px;
+          height: 260px;
         }
       }
     }

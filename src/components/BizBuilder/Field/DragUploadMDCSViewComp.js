@@ -19,12 +19,18 @@ class DragUploadMDCSViewComp extends Component {
       CONFIG: {
         property: { selectedValue },
       },
+      COMP_FIELD,
     } = this.props;
     const { drmInfo } = selectedValue;
-    console.debug('selectedValue', selectedValue, drmInfo);
+    console.debug('selectedValue', this.props, selectedValue, drmInfo);
 
     const acl = base64.encode(JSON.stringify(selectedValue));
-    window.location.href = `${url}/${acl}`;
+    // window.location.href = `${url}/${acl}`;
+    const downarea = document.querySelector(`#${COMP_FIELD}`);
+    const iframe = document.createElement('iframe');
+    iframe.style = 'display: none';
+    iframe.src = `${url}/${acl}`;
+    downarea.appendChild(iframe);
   };
 
   componentDidMount() {
@@ -70,17 +76,20 @@ class DragUploadMDCSViewComp extends Component {
   }
 
   render() {
+    const { COMP_FIELD } = this.props;
     const { fileList } = this.state;
 
     return (
-      <ul>
-        {fileList.map(file => (
-          <li className={file.fileExt} onClick={() => this.onClickDownLoad(file.down)}>
-            {file.icon}
-            {file.fileName}
-          </li>
-        ))}
-      </ul>
+      <div id={COMP_FIELD}>
+        <ul>
+          {fileList.map(file => (
+            <li className={file.fileExt} onClick={() => this.onClickDownLoad(file.down)}>
+              {file.icon}
+              {file.fileName}
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 }

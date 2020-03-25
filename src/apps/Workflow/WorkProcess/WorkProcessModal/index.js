@@ -95,9 +95,8 @@ class WorkProcessModal extends Component {
       key: 'USER_ID',
       render: (text, record) => (
         <span>
-          {' '}
           <UserOutlined />
-          {`${record.NAME_KOR}/${record.DEPT_NAME_KOR}/${record.PSTN_NAME_KOR}`}
+          {`${record.NAME_KOR}/${record.PSTN_NAME_KOR}`}
         </span>
       ),
     },
