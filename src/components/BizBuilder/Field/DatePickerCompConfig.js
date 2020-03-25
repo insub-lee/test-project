@@ -24,7 +24,7 @@ class ComponentConfig extends Component {
   };
 
   render() {
-    const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    const { configInfo } = this.props;
     return (
       <>
         <div className="popoverItem popoverItemInput">
@@ -32,7 +32,7 @@ class ComponentConfig extends Component {
           <Select
             placeholder="기본값을 선택하십시오."
             style={{ width: '100%' }}
-            defaultValue={configInfo && configInfo.property && configInfo.property.defaultValue || 'default'}
+            defaultValue={configInfo && configInfo.property && configInfo.property.defaultType || 'default'}
             onChange={value => this.handleChangeViewCompData('defaultType', value)}
           >
             <Option value="default">Default</Option>
