@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 const StyledMultiSelector = styled.div`
   .wrapper {
-    position: relative;
     font-size: 0;
     width: 100%;
   }

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Radio, Popover, Checkbox, Button } from 'antd';
 
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 
 class RadioIFoundryComp extends Component {
@@ -69,11 +70,11 @@ class RadioIFoundryComp extends Component {
     const { DIVISION, PLACE } = formData;
     console.debug('colData', colData);
     const content = (
-      <StyledHtmlTable>
+      <StyledHtmlTable className="radioFoundry">
         <table>
           <tbody>
             <tr>
-              <th>Application Division</th>
+              <th>Application Divisiondd</th>
               <td>
                 <Checkbox.Group value={this.state.division} onChange={this.onChangeAppDivision}>
                   <Checkbox value="CE">CE</Checkbox>
@@ -98,16 +99,16 @@ class RadioIFoundryComp extends Component {
                 </Radio.Group>
               </td>
             </tr>
-            <tr>
-              <td colSpan={2} style={{ textAlign: 'right' }}>
-                <Button style={{ marginRight: '5px' }} type="primary" onClick={this.onClickFoundry}>
-                  적용
-                </Button>
-                <Button onClick={this.onCancel}>취소</Button>
-              </td>
-            </tr>
           </tbody>
         </table>
+        <div className="applyButtonWrapper">
+          <StyledButton className="btn-primary btn-sm" style={{ marginRight: '5px' }} type="primary" onClick={this.onClickFoundry}>
+            적용
+          </StyledButton>
+          <StyledButton className="btn-light btn-sm" onClick={this.onCancel}>
+            취소
+          </StyledButton>
+        </div>
       </StyledHtmlTable>
     );
     return (
