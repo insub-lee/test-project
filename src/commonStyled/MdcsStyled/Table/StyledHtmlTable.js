@@ -62,10 +62,13 @@ const StyledHtmlTable = styled.div`
     cursor: pointer;
   }
   &.radioFoundry {
+    margin-top: 7px;
     .applyButtonWrapper {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 10px;
     }
+  }
+  &.radioFoundryResult {
   }
 `;
 
