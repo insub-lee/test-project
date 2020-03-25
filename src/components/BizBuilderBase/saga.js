@@ -120,15 +120,17 @@ function* getDetailData({ id, workSeq, taskSeq, viewType, extraProps, changeWork
   /* Redux Reset By Id */
   yield put(actions.removeReduxState(id));
   let formData = {};
+  let validationData = {};
   if (viewType === 'MODIFY') {
     const response = yield call(Axios.post, `/api/builder/v1/work/taskEdit/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.data;
+    validationData = response.validationData;
   } else {
     const response = yield call(Axios.get, `/api/builder/v1/work/task/${workSeq}/${taskSeq}`, {}, { BUILDER: 'getDetailData' });
     formData = response.result;
   }
   if (formData) {
-    yield put(actions.setDetailData(id, formData));
+    yield put(actions.setDetailData(id, formData, validationData));
     if (typeof changeWorkflowFormData === 'function') changeWorkflowFormData(formData);
     yield put(actions.getBuilderData(id, workSeq, taskSeq, viewType, extraProps));
   }
@@ -562,7 +564,7 @@ function* revisionTask({ id, workSeq, taskSeq, viewType, revisionType, extraProp
   const response = yield call(Axios.post, `/api/builder/v1/work/revision/${workSeq}/${taskSeq}`, { PARAM: { revisionType } }, { BUILDER: 'revisionTask' });
   const newTaskSeq = response.data.TASK_SEQ;
   yield put(actions.setTaskSeq(id, newTaskSeq));
-  yield put(actions.setDetailData(id, response.data));
+  yield put(actions.setDetailData(id, response.data, response.validationData));
   yield put(actions.getBuilderData(id, workSeq, newTaskSeq, viewType, extraProps));
   if (typeof callbackFunc === 'function') {
     callbackFunc(id, workSeq, newTaskSeq, viewType, extraProps);

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
+import base64 from 'base-64';
 
 class DragUploadMDCSViewComp extends Component {
   constructor(props) {
@@ -9,25 +10,23 @@ class DragUploadMDCSViewComp extends Component {
     };
   }
 
-  download = response => {
+  download = (sagaKey, response) => {
     console.debug(response);
   };
 
   onClickDownLoad = url => {
     const {
-      submitExtraHandler,
-      sagaKey,
       CONFIG: {
         property: { selectedValue },
       },
     } = this.props;
-    submitExtraHandler(sagaKey, 'GET', url, selectedValue, this.download);
+    const acl = base64.encode(JSON.stringify(selectedValue));
+    window.location.href = `${url}/${acl}`;
   };
 
   componentDidMount() {
     const { colData } = this.props;
-    console.debug('this.props', this.props);
-    const { DETAIL: attachList } = colData;
+    const attachList = colData && colData.DETAIL ? colData.DETAIL : [];
     const tmpList = attachList.map(file => {
       let doctype = 'file-unknown';
       switch (file.fileExt) {

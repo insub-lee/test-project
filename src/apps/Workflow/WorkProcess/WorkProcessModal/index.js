@@ -12,12 +12,16 @@ import injectReducer from 'utils/injectReducer';
 import injectSaga from 'utils/injectSaga';
 
 import { getTreeFromFlatData } from 'react-sortable-tree';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledFillTable from 'commonStyled/MdcsStyled/Table/StyledFillTable';
 import StyledWorkProcessModal from 'apps/Workflow/WorkProcess/WorkProcessModal/StyledWorkProcessModal';
 import * as DraftNode from 'apps/Workflow/WorkFlowBase/Nodes/Constants/approveconst';
 import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
+
+const AntdFillTable = StyledFillTable(Table);
 
 const getTreeData = deptList =>
   deptList.length > 0
@@ -192,62 +196,64 @@ class WorkProcessModal extends Component {
     return (
       <StyledWorkProcessModal>
         <Row gutter={0}>
-          <Col span={8}>
+          <Col span={7}>
             <div className="basicWrapper deptWrapper">
-              <div>
-                <Button>전체</Button>
+              <div className="tabButtonWrapper">
+                <Button className="on">전체</Button>
                 <Button>사용자</Button>
                 <Button>부서</Button>
               </div>
-              <div className="deptTree">
-                {deptList.length > 0 && (
-                  <>
-                    {/* <Search style={{ margin: '2px' }} placeholder="부서검색" onChange={this.onChangeSearch} onPressEnter={this.onPressEnterSearch} /> */}
-                    <Tree
-                      checkable
-                      autoExpandParent={false}
-                      defaultExpandedKeys={rootKey}
-                      checkedKeys={selectedDeptKeys}
-                      onSelect={this.onTreeNodeSelect}
-                      onCheck={this.onTreeNodeCheck}
-                      treeData={getTreeData(deptList)}
-                      onExpand={this.onExpand}
-                    />
-                  </>
-                )}
-              </div>
-              <div className="userList">
-                <Table
-                  rowSelection={rowSelection}
-                  columns={this.getColumns()}
-                  dataSource={deptUserList.map(item => ({
-                    ...item,
-                    key: item.USER_ID,
-                  }))}
-                  rowKey="USER_ID"
-                  pagination={false}
-                  size="small"
-                  // scroll
-                  scroll={{ y: 190 }}
-                />
+              <div className="tabContentsWrapper">
+                <div className="deptTree">
+                  {deptList.length > 0 && (
+                    <>
+                      {/* <Search style={{ margin: '2px' }} placeholder="부서검색" onChange={this.onChangeSearch} onPressEnter={this.onPressEnterSearch} /> */}
+                      <Tree
+                        checkable
+                        autoExpandParent={false}
+                        defaultExpandedKeys={rootKey}
+                        checkedKeys={selectedDeptKeys}
+                        onSelect={this.onTreeNodeSelect}
+                        onCheck={this.onTreeNodeCheck}
+                        treeData={getTreeData(deptList)}
+                        onExpand={this.onExpand}
+                      />
+                    </>
+                  )}
+                </div>
+                <div className="userList">
+                  <AntdFillTable
+                    rowSelection={rowSelection}
+                    columns={this.getColumns()}
+                    dataSource={deptUserList.map(item => ({
+                      ...item,
+                      key: item.USER_ID,
+                    }))}
+                    rowKey="USER_ID"
+                    pagination={false}
+                    size="small"
+                    // scroll
+                    scroll={{ y: 160 }}
+                  />
+                </div>
               </div>
             </div>
           </Col>
-          <Col span={6}>
+          <Col span={5}>
             <div className="btnWrapper">
               <ul>
                 {prcStep.map(item => (
                   <li key={`btn_${item.NODE_ID}`}>
                     <Button type="primary" ghost style={{ width: '150px' }} onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}>
                       {item.NODE_NAME_KOR}
-                      <Icon type="double-right" style={{ float: 'right', marginTop: '4px' }} />
+                      <Icon type="double-right" />
                     </Button>
                   </li>
                 ))}
               </ul>
             </div>
           </Col>
-          <Col span={10}>
+          <Col span={12}>
             <div className="basicWrapper selectedWrapper">
               {prcStep.map(item => (
                 <React.Fragment key={`node_${item.NODE_ID}`}>
@@ -291,9 +297,11 @@ class WorkProcessModal extends Component {
             </div>
           </Col>
         </Row>
-        <Row>
-          <Button onClick={this.handleComplete}>적용</Button>
-        </Row>
+        <div className="applyButtonWrapper">
+          <StyledButton className="btn-primary" onClick={this.handleComplete}>
+            적용
+          </StyledButton>
+        </div>
       </StyledWorkProcessModal>
     );
   }
