@@ -266,7 +266,7 @@ const StyledViewDesigner = styled.div`
             }
             &.active {
               button {
-                right: 0px;
+                right: 5px;
                 left: inherit;
               }
             }
