@@ -48,7 +48,6 @@ const StyledWorkProcessModal = styled.div`
           width: 100%;
           height: 220px;
           overflow-y: auto;
-          padding: 5px;
           .site-tree-search-value {
             color: #f50;
           }
