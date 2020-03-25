@@ -122,7 +122,7 @@ class WorkProcess extends Component {
           visible={modalVisible}
           // onOk={this.handleComplete}
           onCancel={this.handleCloseModal}
-          width="70%"
+          width="62%"
           style={{ top: 50, height: '500px' }}
           footer={[]}
           destroyOnClose

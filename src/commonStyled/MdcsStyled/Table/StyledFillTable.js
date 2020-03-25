@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const StyledFillTable = Component => styled(Component)`
-  .ant-table-wrapper {
+  &.ant-table-wrapper {
     .ant-table {
       border-radius: 3px;
       border: 1px solid #e8e8e8;
@@ -14,6 +14,9 @@ const StyledFillTable = Component => styled(Component)`
             padding: 7px;
           }
         }
+      }
+      .ant-table-tbody {
+        font-size: 12px;
       }
     }
   }

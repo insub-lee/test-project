@@ -196,14 +196,14 @@ class WorkProcessModal extends Component {
     return (
       <StyledWorkProcessModal>
         <Row gutter={0}>
-          <Col span={9}>
+          <Col span={7}>
             <div className="basicWrapper deptWrapper">
-              <div className="tabTreeWrapper">
-                <div className="tabButtonWrapper">
-                  <Button>전체</Button>
-                  <Button>사용자</Button>
-                  <Button>부서</Button>
-                </div>
+              <div className="tabButtonWrapper">
+                <Button className="on">전체</Button>
+                <Button>사용자</Button>
+                <Button>부서</Button>
+              </div>
+              <div className="tabContentsWrapper">
                 <div className="deptTree">
                   {deptList.length > 0 && (
                     <>
@@ -221,25 +221,25 @@ class WorkProcessModal extends Component {
                     </>
                   )}
                 </div>
-              </div>
-              <div className="userList">
-                <AntdFillTable
-                  rowSelection={rowSelection}
-                  columns={this.getColumns()}
-                  dataSource={deptUserList.map(item => ({
-                    ...item,
-                    key: item.USER_ID,
-                  }))}
-                  rowKey="USER_ID"
-                  pagination={false}
-                  size="small"
-                  // scroll
-                  scroll={{ y: 160 }}
-                />
+                <div className="userList">
+                  <AntdFillTable
+                    rowSelection={rowSelection}
+                    columns={this.getColumns()}
+                    dataSource={deptUserList.map(item => ({
+                      ...item,
+                      key: item.USER_ID,
+                    }))}
+                    rowKey="USER_ID"
+                    pagination={false}
+                    size="small"
+                    // scroll
+                    scroll={{ y: 160 }}
+                  />
+                </div>
               </div>
             </div>
           </Col>
-          <Col span={6}>
+          <Col span={5}>
             <div className="btnWrapper">
               <ul>
                 {prcStep.map(item => (
@@ -253,7 +253,7 @@ class WorkProcessModal extends Component {
               </ul>
             </div>
           </Col>
-          <Col span={9}>
+          <Col span={12}>
             <div className="basicWrapper selectedWrapper">
               {prcStep.map(item => (
                 <React.Fragment key={`node_${item.NODE_ID}`}>
