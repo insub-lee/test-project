@@ -123,7 +123,7 @@ class RadioIFoundryComp extends Component {
             N
           </Checkbox>
         </Checkbox.Group>
-        <StyledHtmlTable style={{ display: foundry_flag === 'Y' ? 'inline-block' : 'none', marginTop: '2px', width: '100%' }}>
+        <StyledHtmlTable className="radioFoundryResult" style={{ display: foundry_flag === 'Y' ? 'inline-block' : 'none', marginTop: '8px', width: '100%' }}>
           <table>
             <tbody>
               <tr>
