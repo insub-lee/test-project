@@ -33,6 +33,12 @@ class SqtbEquipMgt extends Component {
     this.handleModalVisible();
   };
 
+  setRowSelected = modalSelectedRow => {
+    this.setState({
+      modalSelectedRow,
+    });
+  };
+
   handleModalVisible = () => {
     const { searchListVisible } = this.state;
     this.setState({
@@ -75,6 +81,7 @@ class SqtbEquipMgt extends Component {
           handleModalVisible={this.handleModalVisible}
           modalSelectedRow={modalSelectedRow}
           searchListId="SqtbSearchList"
+          setModalRowSelected={obj => this.setRowSelected(obj)}
         />
         <Modal title="장비 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}

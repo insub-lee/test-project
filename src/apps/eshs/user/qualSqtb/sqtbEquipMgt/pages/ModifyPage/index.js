@@ -19,6 +19,12 @@ class ModifyPage extends Component {
     };
   }
 
+  componentDidMount() {
+    const { setModalRowSelected, formData } = this.props;
+    setModalRowSelected(formData);
+    console.debug('componentDidMount');
+  }
+
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
     const { DETAIL } = response;
@@ -42,6 +48,7 @@ class ModifyPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
+    console.debug('saveBeforeProcess');
     const { submitExtraHandler, formData, metaList } = this.props;
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
@@ -101,8 +108,9 @@ class ModifyPage extends Component {
       extraApiData,
       handleModalVisible,
       modalSelectedRow,
+      deleteTask,
+      setModalRowSelected,
     } = this.props;
-
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -113,10 +121,12 @@ class ModifyPage extends Component {
             <Header
               handleModalVisible={handleModalVisible}
               modalSelectedRow={modalSelectedRow}
-              modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              modifySaveTask={() => this.saveTask(id, reloadId || id, this.saveTaskAfter)}
               loading={isLoading}
               viewPageData={viewPageData}
               changeViewPage={changeViewPage}
+              deleteTask={deleteTask}
+              setModalRowSelected={setModalRowSelected}
               id={id}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
@@ -160,11 +170,15 @@ class ModifyPage extends Component {
 
 ModifyPage.propTypes = {
   isLoading: PropTypes.bool,
+  setModalRowSelected: PropTypes.func,
+  formData: PropTypes.object,
   // loadingComplete: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
   isLoading: false,
+  setModalRowSelected: () => {},
+  formData: {},
   // loadingComplete: () => {},
 };
 

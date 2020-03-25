@@ -107,7 +107,7 @@ class Material extends Component {
           render: (text, record) => (
             <span key={record.INDEX}>
               <Select key={record.INDEX} defaultValue={record.PIPE_TYPE} style={{ width: 90 }}></Select>
-              <Input name="PIPE_NO" dafaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+              <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
               <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
             </span>
           ),
