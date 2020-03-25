@@ -8,6 +8,8 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import InterLock from '../InterLock';
+import Material from '../Material';
+import Header from '../Header';
 
 class ModifyPage extends Component {
   constructor(props) {
@@ -75,7 +77,7 @@ class ModifyPage extends Component {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      changeViewPage(id, workSeq, taskSeq, 'MODIFY');
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
@@ -97,6 +99,8 @@ class ModifyPage extends Component {
       changeFormData,
       getExtraApiData,
       extraApiData,
+      handleModalVisible,
+      modalSelectedRow,
     } = this.props;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
@@ -106,8 +110,25 @@ class ModifyPage extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
+            <Header
+              handleModalVisible={handleModalVisible}
+              modalSelectedRow={modalSelectedRow}
+              modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              loading={isLoading}
+              viewPageData={viewPageData}
+              changeViewPage={changeViewPage}
+              id={id}
+            />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <InterLock
+              id={id}
+              formData={formData}
+              changeFormData={changeFormData}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              viewType="MODIFY"
+            />
+            <Material
               id={id}
               formData={formData}
               changeFormData={changeFormData}
