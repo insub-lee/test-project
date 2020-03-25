@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Checkbox, Icon, Radio } from 'antd';
 
-import StyledSelectTable from 'commonStyled/Table/StyledSelectTable';
+import StyledSelectTable from 'commonStyled/MdcsStyled/Table/StyledSelectTable';
 import ScrollBar from 'react-custom-scrollbars';
 import { ValueService } from '../../../../node_modules/ag-grid-community/main';
 
@@ -73,7 +73,7 @@ class SingleGroupChoice extends Component {
                               value={grp.selectedValue}
                               onChange={selectedValue => this.onChangeGroup(grp.groupKey, selectedValue)}
                             >
-                              <ScrollBar style={{ width: 100, height: 300 }}>
+                              <ScrollBar style={{ width: 105, height: 300 }}>
                                 {grp.dataSet.map(item => (
                                   <Checkbox value={item.NODE_ID}>{item.NAME_KOR}</Checkbox>
                                 ))}

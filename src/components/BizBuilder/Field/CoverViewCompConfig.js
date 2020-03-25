@@ -36,6 +36,7 @@ class CoverViewCompConfig extends Component {
   onChangeView = value => {
     const { changeViewCompData, groupIndex, rowIndex, colIndex, configInfo } = this.props;
     configInfo.property.selectedValue = value;
+    this.setState({ selectedValue: value });
     changeViewCompData(groupIndex, rowIndex, colIndex, 'CONFIG', configInfo);
   };
 
