@@ -1,4 +1,4 @@
-/**
+/*
   코드 구분
     HC: Harmful material Classification (위험물 분류)
     WH: Workplace environment Harmful factor (작업환경측정 대상 유해인자)
@@ -54,7 +54,7 @@ const selectTree = [
             key: 'WHCG',
           },
           {
-            title: '영 제 30조에 따른 허가 대상 유해물질', // 영 제 30조에 따른 허가 대상 유해물질
+            title: '영 제 30조에 따른 허가 대상 유해물질',
             value: 'WHCP',
             key: 'WHCP',
           },
