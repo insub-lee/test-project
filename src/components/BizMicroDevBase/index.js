@@ -32,6 +32,7 @@ BizMicroDevBase.propTypes = {
   changeFormData: PropTypes.func,
   setFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
+  getFileDownload: PropTypes.func,
 };
 
 BizMicroDevBase.defaultProps = {
@@ -41,6 +42,7 @@ BizMicroDevBase.defaultProps = {
   changeFormData: () => false,
   setFormData: () => false,
   submitHandlerBySaga: () => false,
+  getFileDownload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -59,6 +61,7 @@ const mapDispatchToProps = dispatch => ({
   removeResponseDataReduxStateByKey: (id, key) => dispatch(actions.removeResponseDataReduxStateByKey(id, key)),
   removeFormDataReduxStateByKey: (id, key) => dispatch(actions.removeFormDataReduxStateByKey(id, key)),
   resetCalledData: id => dispatch(actions.resetCalledData(id)),
+  getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
 });
 
 const withReducer = injectReducer({ key: `apps.mdcs.components.BizMicroDevBase`, reducer });
