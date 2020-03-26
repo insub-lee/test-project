@@ -98,16 +98,14 @@ const StyledWorkProcess = styled.div`
       border-bottom: 1px solid #ddd;
     }
     .ant-row-flex {
-      /* display: flex; */
-      min-height: 32px;
       .ant-col.dataLabel {
         position: relative;
         border-right: 1px solid #ddd;
         background-color: #f7f7f7;
-        min-height: 32px;
         text-align: center;
-        line-height: 32px;
+        padding: 4px;
         span {
+          vertical-align: middle;
           font-size: 12px;
           color: #000;
         }
@@ -115,6 +113,7 @@ const StyledWorkProcess = styled.div`
       .ant-col.dataContents {
         font-size: 12px;
         display: inline-block;
+        padding: 4px;
 
         input {
           border: 0;
@@ -127,10 +126,7 @@ const StyledWorkProcess = styled.div`
         .draftInfoBox {
           background: #ffffff;
           border: 1px solid #dadada;
-          margin-top: 3px;
-          margin-left: 10px;
-          margin-bottom: 3px;
-
+          margin-right: 5px;
           border-radius: 5px;
           text-align: center;
           padding: 3px 10px;
