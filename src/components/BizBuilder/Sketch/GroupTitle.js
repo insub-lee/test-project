@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Checkbox, InputNumber, Form, Button } from 'antd';
+import { EditOutlined, FileDoneOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { debounce } from 'lodash';
 
@@ -83,7 +84,8 @@ class GroupTitle extends Component {
   };
 
   render() {
-    const { title, onChange, onChangeUseTitle, useOption, useTitle, tableSize, onChangeTableSize } = this.props;
+    const { title, onChange, onChangeUseTitle, useOption, useTitle, tableSize, onChangeTableSize, viewType } = this.props;
+    console.debug('this.props', this.props);
     return (
       <Styled>
         <h2>
@@ -96,7 +98,9 @@ class GroupTitle extends Component {
               placeholder="Insert Title..."
             />
           ) : (
-            title
+            <div>
+              {viewType === 'INPUT' || viewType === 'MODIFY' ? <EditOutlined /> : <FileDoneOutlined />} {title}
+            </div>
           )}
         </h2>
         {useOption && (
