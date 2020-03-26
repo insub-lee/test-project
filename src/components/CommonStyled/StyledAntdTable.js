@@ -146,6 +146,9 @@ export const CustomStyledAntdTable = Component => styled(Component)`
   .ant-pagination-item-link .anticon {
     vertical-align: inherit;
   }
+  .builderRowOnClickOpt:hover {
+    cursor: pointer;
+  }
 `;
 
 export default StyledAntdTable;
