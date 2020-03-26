@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, message } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import UserSelect from 'components/UserSelect';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
 const AntdModal = StyledSelectModal(Modal);
 
 class List extends Component {
@@ -61,7 +61,7 @@ class List extends Component {
       title: '부서',
       dataIndex: 'NAME_KOR',
       key: 'nameKor',
-      width: '15%',
+      width: '30%',
       render: (text, record) => (
         <div>
           {text}
@@ -171,7 +171,7 @@ class List extends Component {
               onCancel={this.onCancel}
             />
           </AntdModal>
-          <AntdTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
+          <AntdLineTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
         </div>
       );
     }
