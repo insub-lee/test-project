@@ -64,14 +64,14 @@ class WorkProcess extends Component {
               )}
             </div>
           </div>
-          <div style={{ marginBottom: '10px', marginTop: '2px' }}>
+          <div style={{ marginBottom: '10px' }}>
             {filterRule.map(item => (
               <div className="dataWrapper_mdcs">
                 <Row type="flex">
-                  <Col span={6} className="dataLabel">
+                  <Col span={4} className="dataLabel">
                     <span>{item.NODE_NAME_KOR}</span>
                   </Col>
-                  <Col span={18} className="dataContents">
+                  <Col span={20} className="dataContents">
                     {item.APPV_MEMBER.map(user =>
                       item.NODE_TYPE === 'ND' ? (
                         <div className="draftInfoBox">
@@ -94,10 +94,10 @@ class WorkProcess extends Component {
             {this.state.filterItem.map(item => (
               <div className="dataWrapper_mdcs">
                 <Row type="flex">
-                  <Col span={6} className="dataLabel">
+                  <Col span={4} className="dataLabel">
                     <span>{item.NODE_NAME_KOR}</span>
                   </Col>
-                  <Col span={18} className="dataContents">
+                  <Col span={20} className="dataContents">
                     {item.APPV_MEMBER.map(user =>
                       item.NODE_TYPE === 'ND' ? (
                         <div className="draftInfoBox">

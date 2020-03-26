@@ -6,10 +6,10 @@ import moment from 'moment';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledModalWrapper from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 
 const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
 
 class DraftList extends Component {
   constructor(props) {
