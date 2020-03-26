@@ -157,7 +157,7 @@ const StyledWorkProcessModal = styled.div`
   }
   .applyButtonWrapper {
     text-align: right;
-    margin-top: 25px;
+    margin-top: 15px;
   }
 `;
 
