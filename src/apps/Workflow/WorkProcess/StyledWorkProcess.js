@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const StyledWorkProcess = styled.div`
   width: 100%;
+  margin-bottom: 20px;
   .signLineWrapper {
     width: 100%;
     margin-bottom: 20px;
@@ -74,17 +75,17 @@ const StyledWorkProcess = styled.div`
   }
 
   .draftTitleLayout {
-    border-bottom: 1px solid;
-    display: inline-block;
+    position: relative;
     width: 100%;
-    .draftTitle{
-      float: left;
-      padding: 7px;
+    margin-bottom: 10px;
+    .draftTitle {
       font-size: 16px;
+      color: #333;
     }
-    .draftButton{
-      float: right;
-      padding: 4px;
+    .draftButton {
+      position: absolute;
+      top: -3px;
+      right: 0px;
     }
   }
 
@@ -114,7 +115,7 @@ const StyledWorkProcess = styled.div`
       .ant-col.dataContents {
         font-size: 12px;
         display: inline-block;
-       
+
         input {
           border: 0;
           height: auto;
@@ -124,8 +125,8 @@ const StyledWorkProcess = styled.div`
         }
 
         .draftInfoBox {
-          background: #FFFFFF;
-          border: 1px solid #DADADA;
+          background: #ffffff;
+          border: 1px solid #dadada;
           margin-top: 3px;
           margin-left: 10px;
           margin-bottom: 3px;
@@ -133,9 +134,8 @@ const StyledWorkProcess = styled.div`
           border-radius: 5px;
           text-align: center;
           padding: 3px 10px;
-          display: inline-block;          
+          display: inline-block;
           box-sizing: border-box;
-          
         }
         .draftInfoBox span {
           display: inline-block;
@@ -143,8 +143,9 @@ const StyledWorkProcess = styled.div`
           margin-left: 4px;
           font-size: 12px;
         }
+      }
     }
-  } 
+  }
 
   .btnWrapper {
     width: 100%;
