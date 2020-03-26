@@ -95,9 +95,8 @@ class WorkProcessModal extends Component {
       key: 'USER_ID',
       render: (text, record) => (
         <span>
-          {' '}
           <UserOutlined />
-          {`${record.NAME_KOR}/${record.DEPT_NAME_KOR}/${record.PSTN_NAME_KOR}`}
+          {`${record.NAME_KOR}/${record.PSTN_NAME_KOR}`}
         </span>
       ),
     },
@@ -233,7 +232,7 @@ class WorkProcessModal extends Component {
                     pagination={false}
                     size="small"
                     // scroll
-                    scroll={{ y: 160 }}
+                    scroll={{ y: 220 }}
                   />
                 </div>
               </div>
@@ -244,10 +243,15 @@ class WorkProcessModal extends Component {
               <ul>
                 {prcStep.map(item => (
                   <li key={`btn_${item.NODE_ID}`}>
-                    <Button type="primary" ghost style={{ width: '150px' }} onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}>
+                    <StyledButton
+                      className="btn-light btn-sm"
+                      ghost
+                      style={{ width: '150px' }}
+                      onClick={() => this.handleAddUser(item.PRC_RULE_ID, item.NODE_ID, item.NODE_TYPE)}
+                    >
                       {item.NODE_NAME_KOR}
                       <Icon type="double-right" />
-                    </Button>
+                    </StyledButton>
                   </li>
                 ))}
               </ul>

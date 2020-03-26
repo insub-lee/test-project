@@ -118,7 +118,7 @@ class WorkProcess extends Component {
           </div>
         </div>
         <AntdModal
-          title="결재선지정ㅋㅋ"
+          title="결재선지정"
           visible={modalVisible}
           // onOk={this.handleComplete}
           onCancel={this.handleCloseModal}
