@@ -5,20 +5,25 @@ import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
-
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledModalWrapper from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 
 const AntdLineTable = StyledLineTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
 
 class DraftList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalWidth: 800,
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
     };
   }
 
@@ -78,18 +83,25 @@ class DraftList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
-    console.debug(viewMetaSeq);
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true };
+    this.setState({ coverView });
   };
 
   closeBtnFunc = () => {
     this.props.setViewVisible(false);
   };
 
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow } = this.props;
-    const { modalWidth } = this.state;
-    console.debug('draftList', this.props);
+    const { modalWidth, coverView } = this.state;
+    console.debug('state', coverView);
     return (
       <>
         <ContentsWrapper>
@@ -137,9 +149,33 @@ class DraftList extends Component {
                 </StyledButton>
               </div>
             )}
-            // changeWorkflowFormData={this.changeWorkflowFormData}
           />
           {/* <HoldView {...this.props} onResizeModal={this.onResizeModal} /> */}
+        </AntdModal>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="표지 보기"
+          width={modalWidth}
+          destroyOnClose
+          visible={coverView.visible}
+          onCancel={this.onCloseCoverView}
+          footer={[]}
+        >
+          <BizBuilderBase
+            sagaKey="CoverView"
+            viewType="VIEW"
+            workSeq={coverView.workSeq}
+            taskSeq={coverView.taskSeq}
+            viewMetaSeq={coverView.viewMetaSeq}
+            onCloseCoverView={this.onCloseCoverView}
+            ViewCustomButtons={({ onCloseCoverView }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+          />
         </AntdModal>
       </>
     );
