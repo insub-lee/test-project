@@ -2,8 +2,6 @@ import styled from 'styled-components';
 
 const StyledWorkProcess = styled.div`
   width: 100%;
-  margin-bottom: 30px;
-
   .signLineWrapper {
     width: 100%;
     margin-bottom: 20px;

@@ -161,7 +161,7 @@ class List extends Component {
           <Modal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
             <UserSelect
               initUserList={this.state.selectedUserList}
-              treeDataSource={distDeptList}
+              // treeDataSource={distDeptList}
               userDataList={result.userList && result.userList.list}
               onTreeSelect={this.onTreeSelect}
               onUserSelectHandler={this.onUserSelect}
