@@ -272,6 +272,23 @@ const StyledViewDesigner = styled.div`
             }
           }
         }
+        &.mdcsAttachedFileCol {
+          ul li {
+            margin-bottom: 5px;
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline;
+            }
+            &:last-child {
+              margin-bottom: 0;
+            }
+            i {
+              vertical-align: -3px;
+              color: #444;
+              font-size: 16px !important;
+            }
+          }
+        }
         > div > span {
           display: block;
           font-size: 0.8rem;
