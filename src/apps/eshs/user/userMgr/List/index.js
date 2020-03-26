@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce';
 
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -16,155 +17,101 @@ class List extends Component {
     super(props);
     this.state = {
       hqList: [],
-      hqId: 0,
-      deptId: 0,
-      bAreaCode: '',
       deptList: [],
       userList: [],
-      filteredUserList: [],
-      filteredDeptList: [],
-      isSelected: false,
       searchType: 'name_kor',
       searchValue: '',
+      selectedDept: '',
+      selectedHq: 72761,
+      selectedBaseareaCode: '',
     };
     this.handleFindData = debounce(this.handleFindData, 500);
   }
 
   componentDidMount() {
-    const { id, getCallDataHandler, apiAry } = this.props;
-    getCallDataHandler(id, apiAry, this.handleAppStart);
+    this.getUserData();
   }
 
-  handleAppStart = () => {
-    const { deptList, userList } = this.props.result;
-    if (userList) {
-      this.setState({
-        hqList: deptList.dept.filter(item => item.prnt_id === 900),
-        deptList: deptList.dept.filter(item => item.prnt_id !== 900),
-        userList: userList.users,
-        filteredUserList: userList.users,
-      });
-    }
+  getUserData = () => {
+    const { selectedHq } = this.state;
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'userList',
+        type: 'GET',
+        url: '/api/eshs/v1/common/AllEshsUsers',
+        params: {},
+      },
+      {
+        key: 'deptList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsHqAndDeptList?dept_id=${selectedHq}`,
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.changeListData);
+  };
+
+  changeListData = () => {
+    const { result } = this.props;
+    const { selectedHq } = this.state;
+    this.setState({
+      userList: (result.userList && result.userList.users) || [],
+      hqList: (result.deptList && result.deptList.dept && result.deptList.dept.filter(item => item.PRNT_ID === selectedHq)) || [],
+    });
+  };
+
+  getSearchListData = () => {
+    const { result } = this.props;
+    this.setState({
+      userList: (result.searchUser && result.searchUser.searchResult) || [],
+    });
   };
 
   handleBaseareaChange = e => {
-    const { userList, hqId, deptId } = this.state;
-    if (e !== 'ZZ') {
-      if (hqId) {
-        if (!deptId) {
-          this.setState({
-            filteredUserList: userList.filter(item => item.b_area_code === e && item.hq_id === hqId),
-            bAreaCode: e,
-          });
-        } else {
-          this.setState({
-            filteredUserList: userList.filter(item => item.b_area_code === e && item.hq_id === hqId && item.dept_id === deptId),
-            bAreaCode: e,
-          });
-        }
-      } else {
-        this.setState({
-          bAreaCode: e,
-          filteredUserList: userList.filter(item => item.b_area_code === e),
-        });
-      }
-    } else if (hqId) {
-      if (!deptId) {
-        this.setState({
-          filteredUserList: userList.filter(item => item.b_area_code === e && item.hq_id === hqId),
-          bAreaCode: '',
-        });
-      } else {
-        this.setState({
-          filteredUserList: userList.filter(item => item.b_area_code === e && item.hq_id === hqId && item.dept_id === deptId),
-          bAreaCode: '',
-        });
-      }
-    } else {
-      this.setState({
-        bAreaCode: '',
-        filteredUserList: userList,
-      });
-    }
+    this.setState({
+      selectedBaseareaCode: e,
+    });
+    this.handleFindData();
   };
 
-  handleHqOnChange = e => {
-    const { bAreaCode, userList, deptList } = this.state;
-    if (e === 900) {
-      if (bAreaCode) {
-        this.setState({
-          hqId: 0,
-          deptId: 0,
-          filteredUserList: userList.filter(item => item.b_area_code === bAreaCode),
-          isSelected: false,
-        });
-      } else {
-        this.setState({
-          hqId: 0,
-          deptId: 0,
-          filteredUserList: userList,
-          isSelected: false,
-        });
-      }
-      return;
-    }
-    if (e !== 900) {
-      if (bAreaCode) {
-        this.setState({
-          hqId: e,
-          isSelected: true,
-          filteredUserList: userList.filter(item => item.b_area_code === bAreaCode && item.hq_id === e),
-          filteredDeptList: deptList.filter(item => item.prnt_id === e),
-        });
-      } else {
-        this.setState({
-          hqId: e,
-          isSelected: true,
-          filteredUserList: userList.filter(item => item.hq_id === e),
-          filteredDeptList: deptList.filter(item => item.prnt_id === e),
-        });
-      }
-    }
+  handleHqChange = e => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    this.setState({
+      selectedHq: e,
+    });
+    const apiArr = [
+      {
+        key: 'deptListUnderHq',
+        type: 'GET',
+        url: `/api/eshs/v1/common/EshsHqAndDeptList?dept_id=${e}`,
+      },
+    ];
+    getCallDataHandler(id, apiArr, this.getDeptList);
   };
 
-  handleDeptOnChange = e => {
-    const { hqId, bAreaCode, userList } = this.state;
-    if (e === 9999) {
-      if (bAreaCode) {
-        this.setState({
-          deptId: 0,
-          filteredUserList: userList.filter(item => item.b_area_code === bAreaCode && item.hq_id === hqId),
-        });
-      } else {
-        this.setState({
-          deptId: 0,
-          filteredUserList: userList.filter(item => item.hq_id === hqId),
-        });
-      }
-      return;
-    }
-    if (e !== 9999) {
-      if (bAreaCode) {
-        this.setState({
-          deptId: e,
-          filteredUserList: userList.filter(item => item.b_area_code === bAreaCode && item.hq_id === hqId && item.dept_id === e),
-        });
-      } else {
-        this.setState({
-          deptId: e,
-          filteredUserList: userList.filter(item => item.hq_id === hqId && item.dept_id === e),
-        });
-      }
-    }
+  getDeptList = () => {
+    const { result } = this.props;
+    this.setState({
+      isHqSelect: true,
+      deptList: (result.deptListUnderHq && result.deptListUnderHq.dept) || [],
+    });
   };
 
-  handleSearchTypeOnChange = e => {
+  handleDeptChange = e => {
+    this.setState({
+      selectedDept: e,
+    });
+    this.handleFindData();
+  };
+
+  handleSearchTypeChange = e => {
     this.setState({
       searchType: e,
     });
   };
 
-  handleOnChange = e => {
+  handleSearchValueChange = e => {
     this.setState({
       searchValue: e.target.value,
     });
@@ -172,82 +119,37 @@ class List extends Component {
   };
 
   handleFindData = () => {
-    const { id, getCallDataHandler } = this.props;
-    const { searchType, searchValue } = this.state;
-
-    const api = [
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { searchType, searchValue, selectedBaseareaCode, selectedDept } = this.state;
+    const apiArr = [
       {
         key: 'searchUser',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=%25${searchValue}%25`,
+        url: `/api/eshs/v1/common/EshsUserSearch?searchType=${searchType}&keyword=${searchValue}&barea_cd=${selectedBaseareaCode}&dept_cd=${selectedDept}`,
       },
     ];
-    getCallDataHandler(id, api, this.handleOnCallBack);
+    getCallDataHandler(id, apiArr, this.getSearchListData);
   };
 
-  handleOnCallBack = () => {
-    const { hqId, deptId, bAreaCode, searchValue, userList } = this.state;
+  handleListReset = () => {
     const { result } = this.props;
     this.setState({
-      filteredUserList: result.searchUser.searchResult,
+      userList: (result.userList && result.userList.users) || [],
+      isHqSelect: false,
+      selectedHq: 72761,
+      searchValue: '',
     });
-
-    if (!searchValue) {
-      if ((!bAreaCode && !hqId) || (bAreaCode === 'ZZ' && hqId === 900)) {
-        this.setState({
-          filteredUserList: userList,
-        });
-      }
-    }
-    if (!bAreaCode || bAreaCode === 'ZZ') {
-      if (hqId && hqId !== 900) {
-        if (deptId && deptId !== 9999) {
-          this.setState({
-            filteredUserList: result.searchUser.searchResult.filter(item => item.hq_id === hqId && item.dept_id === deptId),
-          });
-        } else if (!deptId || deptId === 9999) {
-          this.setState({
-            filteredUserList: result.searchUser.searchResult.filter(item => item.hq_id === hqId),
-          });
-        }
-        return;
-      }
-      if (!hqId || hqId === 900) {
-        this.setState({
-          filteredUserList: result.searchUser.searchResult,
-        });
-      }
-    }
-    if (bAreaCode && bAreaCode !== 'ZZ') {
-      if (hqId && hqId !== 900) {
-        if (deptId && deptId !== 9999) {
-          this.setState({
-            filteredUserList: result.searchUser.searchResult.filter(item => item.b_area_code === bAreaCode && item.hq_id === hqId && item.dept_id === deptId),
-          });
-        } else if (!deptId || deptId === 9999) {
-          this.setState({
-            filteredUserList: result.searchUser.searchResult.filter(item => item.b_area_code === bAreaCode && item.hq_id === hqId),
-          });
-        }
-        return;
-      }
-      if (!hqId || hqId === 900) {
-        this.setState({
-          filteredUserList: result.searchUser.searchResult.filter(item => item.b_area_code === bAreaCode),
-        });
-      }
-    }
   };
 
   getColumns = () => [
-    { label: '소속', dataKey: 'department', width: 150, ratio: 20 },
-    { label: '사번', dataKey: 'employee_num', width: 100, ratio: 10 },
-    { label: '이름', dataKey: 'name', width: 100, ratio: 10 },
-    { label: '직위', dataKey: 'pstn', width: 100, ratio: 10 },
-    { label: '직책', dataKey: 'duty', width: 100, ratio: 10 },
-    { label: '근무지', dataKey: 'base_area', width: 100, ratio: 10 },
-    { label: '전화번호', dataKey: 'tel', width: 100, ratio: 15 },
-    { label: '권한', dataKey: 'auth', width: 150, ratio: 15 },
+    { label: '소속', dataKey: 'DEPARTMENT', width: 150, ratio: 20 },
+    { label: '사번', dataKey: 'EMPLOYEE_NUM', width: 100, ratio: 10 },
+    { label: '이름', dataKey: 'NAME', width: 100, ratio: 10 },
+    { label: '직위', dataKey: 'PSTN', width: 100, ratio: 10 },
+    { label: '직책', dataKey: 'DUTY', width: 100, ratio: 10 },
+    { label: '근무지', dataKey: 'BASE_AREA', width: 100, ratio: 10 },
+    { label: '전화번호', dataKey: 'TEL', width: 100, ratio: 15 },
+    { label: '권한', dataKey: 'AUTH', width: 150, ratio: 15 },
   ];
 
   getTableWidth = () =>
@@ -256,62 +158,49 @@ class List extends Component {
       .reduce((a, b) => a + b);
 
   render() {
-    const { isSelected, hqList, filteredDeptList, filteredUserList, searchValue } = this.state;
+    const { isHqSelect, hqList, deptList, searchValue, userList, selectedDept } = this.state;
     return (
       <div>
         <StyledSearchWrap>
           <div className="search-group-layer">
             <Select defaultValue="지역 전체" className="search-item input-width120" onChange={this.handleBaseareaChange}>
-              <Option value="ZZ">지역 전체</Option>
-              <Option value="C1">청주</Option>
-              <Option value="H3">구미</Option>
+              <Option value="">지역 전체</Option>
+              <Option value="CP">청주</Option>
+              <Option value="GP">구미</Option>
             </Select>
-            <Select defaultValue="본부 전체" className="search-item input-width120" onChange={this.handleHqOnChange}>
+            <Select defaultValue="본부 전체" className="search-item input-width120" onChange={this.handleHqChange}>
               <Option value={900}>본부 전체</Option>
               {hqList.map(item => (
-                <Option value={item.dept_id}>{item.name_kor}</Option>
+                <Option value={item.DEPT_ID}>{item.NAME_KOR}</Option>
               ))}
             </Select>
-            <Select defaultValue="팀 전체" className="search-item input-width160" disabled={!isSelected} onChange={this.handleDeptOnChange}>
-              <Option value={9999}>팀 전체</Option>
-              {filteredDeptList.map(item => (
-                <Option value={item.dept_id}>{item.name_kor}</Option>
+            <Select defaultValue={selectedDept} className="search-item input-width160" disabled={!isHqSelect} onChange={this.handleDeptChange}>
+              <Option value="">팀 전체</Option>
+              {deptList.map(item => (
+                <Option value={item.DEPT_CD}>{item.NAME_KOR}</Option>
               ))}
             </Select>
             <InputGroup className="search-item search-input-group" compact>
-              <Select defaultValue="이름" onChange={this.handleSearchTypeOnChange}>
+              <Select defaultValue="이름" onChange={this.handleSearchTypeChange}>
                 <Option value="name_kor">이름</Option>
                 <Option value="emp_no">사번</Option>
               </Select>
-              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleOnChange} value={searchValue} />
+              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchValueChange} value={searchValue} />
             </InputGroup>
           </div>
         </StyledSearchWrap>
-
+        <div className="alignRight">
+          <StyledButton className="btn-primary" onClick={this.handleListReset}>
+            검색 초기화
+          </StyledButton>
+        </div>
         <StyledVirtualizedTable>
           <AutoSizer disableHeight>
             {({ width }) => (
-              <Table
-                width={width}
-                height={500}
-                headerHeight={40}
-                rowHeight={53}
-                rowCount={filteredUserList.length}
-                rowGetter={({ index }) => filteredUserList[index]}
-              >
+              <Table width={width} height={500} headerHeight={40} rowHeight={53} rowCount={userList.length} rowGetter={({ index }) => userList[index]}>
                 {this.getColumns().map(({ label, dataKey, ratio }) => (
                   <Column key={dataKey} label={label} dataKey={dataKey} width={(width / 100) * ratio} />
                 ))}
-                {/* 
-            <Column label="소속" dataKey="department" width={150} />
-            <Column label="사번" dataKey="employee_num" width={100} />
-            <Column label="이름" dataKey="name" width={100} />
-            <Column label="직위" dataKey="pstn" width={100} />
-            <Column label="직책" dataKey="duty" width={100} />
-            <Column label="근무지" dataKey="base_area" width={100} />
-            <Column label="전화번호" dataKey="tel" width={100} />
-            <Column label="권한" dataKey="auth" width={150} />
-            */}
               </Table>
             )}
           </AutoSizer>
@@ -321,31 +210,14 @@ class List extends Component {
   }
 }
 List.propTypes = {
-  id: PropTypes.string,
+  sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
-  apiAry: PropTypes.array,
-  result: PropTypes.func,
+  result: PropTypes.object,
 };
 
-// const prntId = 900;
-
 List.defaultProps = {
-  id: 'EshsUserManager',
+  sagaKey: '',
   getCallDataHandler: () => {},
-  apiAry: [
-    {
-      key: 'userList',
-      type: 'GET',
-      url: '/api/eshs/v1/common/AllEshsUsers',
-      params: {},
-    },
-    {
-      key: 'deptList',
-      type: 'GET',
-      url: `/api/eshs/v1/common/EshsHqAndDeptList?key=900`,
-      // param: { key: '900' },
-    },
-  ],
 };
 
 export default List;
