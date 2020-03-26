@@ -14,7 +14,7 @@ import Styled from './Styled';
 import Tree from './Tree';
 // import WorkTimeLine from '../WorkTimeLine';
 
-class UserCategoryMenu extends Component {
+class UserCategoryMenuBak extends Component {
   constructor(props) {
     super(props);
 
@@ -123,7 +123,7 @@ class UserCategoryMenu extends Component {
   }
 }
 
-UserCategoryMenu.propTypes = {
+UserCategoryMenuBak.propTypes = {
   isShow: PropTypes.bool,
   // toggleMenu: PropTypes.func,
   // open: PropTypes.bool.isRequired,
@@ -153,7 +153,7 @@ UserCategoryMenu.propTypes = {
   fixedMenu: PropTypes.bool.isRequired,
 };
 
-UserCategoryMenu.defaultProps = {
+UserCategoryMenuBak.defaultProps = {
   isShow: false,
   // toggleMenu: () => false,
   setClose: undefined,
@@ -175,4 +175,4 @@ const mapDispatchToProps = dispatch => ({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(UserCategoryMenu);
+export default compose(withConnect)(UserCategoryMenuBak);

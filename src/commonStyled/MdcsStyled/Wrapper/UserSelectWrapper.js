@@ -26,6 +26,7 @@ const UserSelectWrapper = styled.div`
           border-radius: 0;
           .ant-list-header {
             font-size: 13px;
+            color: #000;
           }
           .ant-list-items {
             overflow-y: scroll;
@@ -41,10 +42,10 @@ const UserSelectWrapper = styled.div`
       }
     }
     &.selectedUserWrapper {
-      padding: 10px;
       overflow-y: scroll;
       .ant-list-bordered {
         border-radius: 0;
+        border: 0;
         .ant-list-header {
           font-size: 13px;
           background: #e8e8e8;
