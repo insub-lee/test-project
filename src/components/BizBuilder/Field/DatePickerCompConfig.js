@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import * as PropTypes from 'prop-types';
 import { Select, DatePicker as AntdDatePicker } from 'antd';
 import { debounce } from 'lodash';
 import moment from 'moment';
-import BizMicroDevBase from 'components/BizMicroDevBase';
 
 const { Option } = Select;
 
@@ -11,7 +11,7 @@ const { Option } = Select;
     기본값 타입 설정 : default (초기값 없음), System Date (현재날짜), Custom Date(사용자 지정일)
     create by. JeongHyun
 */
-class ComponentConfig extends Component {
+class configer extends Component {
   constructor(props) {
     super(props);
     this.handleChangeViewCompData = debounce(this.handleChangeViewCompData, 500);
@@ -65,16 +65,12 @@ class ComponentConfig extends Component {
   }
 }
 
-const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configInfo }) => (
-  <BizMicroDevBase
-    id="componentConfig"
-    changeViewCompData={changeViewCompData}
-    groupIndex={groupIndex}
-    rowIndex={rowIndex}
-    colIndex={colIndex}
-    configInfo={configInfo}
-    component={ComponentConfig}
-  ></BizMicroDevBase>
-);
+configer.propTypes = {
+  configInfo: PropTypes.object,
+  changeViewCompData: PropTypes.func,
+  groupIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  colIndex: PropTypes.number,
+};
 
 export default configer;
