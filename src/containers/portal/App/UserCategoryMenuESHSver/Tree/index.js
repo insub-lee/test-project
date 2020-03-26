@@ -98,7 +98,7 @@ class Tree extends Component {
       execMenu(node.PAGE_ID, node.TARGET);
     } else if ((node.NODE_TYPE === 'F' || node.NODE_TYPE === 'R') && node.APP_YN === 'F') {
       // 폴더 클릭 이벤트
-      this.handleClickMenuFolder(node);
+      // this.handleClickMenuFolder(node);
     } else {
       // onClick(node);
       if (node.NODE_TYPE !== 'F' && node.APP_YN !== 'F') {
@@ -146,7 +146,7 @@ class Tree extends Component {
           type="button"
           className={`${nodeData.active ? 'active' : ''}`}
           onClick={e => {
-            e.stopPropagation();
+            // e.stopPropagation();
             this.clickEvent(node);
           }}
           style={{ cursor: 'pointer' }}

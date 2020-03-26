@@ -120,7 +120,7 @@ class MdcsContentView extends Component {
               <tr>
                 <th style={{ width: '100px' }}>표지보기</th>
                 <td style={{ width: '200px' }}>
-                  <StyledButton className="btn-primary  btn-sm" onClick={this.onDocCoverClick}>
+                  <StyledButton className="btn-primary btn-sm" onClick={this.onDocCoverClick}>
                     <FileSearchOutlined /> 표지보기
                   </StyledButton>
                 </td>
