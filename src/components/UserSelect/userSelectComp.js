@@ -65,7 +65,7 @@ class UserSelectComp extends Component {
   onInitTreeData = () => {
     const { sagaKey, getCallDataHandler, removeReduxState } = this.props;
     removeReduxState(sagaKey);
-    const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/getDeptList', type: 'GET', params: {} }];
+    const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/deptSelectList', type: 'POST', params: { PARAM: { ROOT_DEPT_ID: 72761 } } }];
     getCallDataHandler(sagaKey, apiAry);
   };
 
@@ -162,7 +162,7 @@ class UserSelectComp extends Component {
 
   render() {
     const { treeDataSource, userDataList, result } = this.props;
-
+    console.debug('userselect', result);
     return (
       <div>
         <Row gutter={24}>

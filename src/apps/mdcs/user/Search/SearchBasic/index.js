@@ -338,7 +338,7 @@ class SearchBasic extends Component {
                   closeBtnFunc={this.closeBtnFunc}
                   clickCoverView={this.clickCoverView}
                   ViewCustomButtons={({ closeBtnFunc }) => (
-                    <div style={{ textAlign: 'center' }}>
+                    <div style={{ textAlign: 'center', marginTop: '12px' }}>
                       <StyledButton className="btn-primary" onClick={closeBtnFunc}>
                         닫기
                       </StyledButton>
@@ -367,7 +367,7 @@ class SearchBasic extends Component {
                 viewMetaSeq={coverView.viewMetaSeq}
                 onCloseCoverView={this.onCloseCoverView}
                 ViewCustomButtons={({ onCloseCoverView }) => (
-                  <div style={{ textAlign: 'center' }}>
+                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
                     <StyledButton className="btn-primary" onClick={onCloseCoverView}>
                       닫기
                     </StyledButton>

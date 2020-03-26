@@ -8,10 +8,10 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
+import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import Contents from 'components/BizBuilder/Common/Contents';
-import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -21,6 +21,8 @@ class ListPage extends Component {
     this.state = {
       isMultiDelete: false,
       isRowNo: false,
+      isOnRowClick: false,
+      rowClickView: 'VIEW',
     };
   }
 
@@ -28,12 +30,18 @@ class ListPage extends Component {
     const { workInfo } = this.props;
     let isMultiDelete = false;
     let isRowNo = false;
+    let isOnRowClick = false;
+    let rowClickView = 'VIEW';
     if (workInfo && workInfo.OPT_INFO) {
       workInfo.OPT_INFO.forEach(opt => {
         if (opt.OPT_SEQ === MULTI_DELETE_OPT_SEQ && opt.ISUSED === 'Y') isMultiDelete = true;
         if (opt.OPT_SEQ === LIST_NO_OPT_SEQ && opt.ISUSED === 'Y') isRowNo = true;
+        if (opt.OPT_SEQ === ON_ROW_CLICK_OPT_SEQ && opt.ISUSED === 'Y') {
+          isOnRowClick = true;
+          rowClickView = opt.OPT_VALUE === '' ? 'VIEW' : opt.OPT_VALUE;
+        }
       });
-      this.setState({ isMultiDelete, isRowNo });
+      this.setState({ isMultiDelete, isRowNo, isOnRowClick, rowClickView });
     }
   };
 
@@ -98,16 +106,40 @@ class ListPage extends Component {
     setListSelectRowKeys(sagaKey, selectedRowKeys);
   };
 
+  /* 
+      신규추가 
+      목적 : ListGroup 내에서 Row를 클릭시 원하는 뷰로 이동할 수 있는 Config를 지원하기 위해 생성
+      타입 : func (추가사항. antd - Table Props 참조)
+      create by. JeongHyun
+  */
+  onRowClick = record => {
+    const { sagaKey: id, isBuilderModal, changeBuilderModalState, changeViewPage } = this.props;
+    const { rowClickView } = this.state;
+    return {
+      onClick: () => {
+        if (isBuilderModal) {
+          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
+        } else {
+          changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
+        }
+      },
+    };
+  };
+
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys } = this.props;
-    const { isMultiDelete } = this.state;
+    const { listData, listSelectRowKeys, workInfo } = this.props;
+    const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
+    let onRow = false;
     if (isMultiDelete) {
       rowSelection = {
         selectedRowKeys: listSelectRowKeys,
         onChange: this.onSelectChange,
       };
+    }
+    if (isOnRowClick) {
+      onRow = this.onRowClick;
     }
     return (
       <div key={group.key}>
@@ -120,6 +152,8 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData || []}
             rowSelection={rowSelection}
+            rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
+            onRow={onRow}
           />
         </Group>
       </div>
@@ -239,6 +273,7 @@ class ListPage extends Component {
 }
 
 ListPage.propTypes = {
+  workInfo: PropTypes.object,
   sagaKey: PropTypes.string,
   workFlowConfig: PropTypes.object,
   workPrcProps: PropTypes.object,
@@ -250,6 +285,9 @@ ListPage.propTypes = {
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
+  isBuilderModal: PropTypes.bool,
+  changeBuilderModalState: PropTypes.func,
+  changeViewPage: PropTypes.func,
 };
 
 ListPage.defaultProps = {
