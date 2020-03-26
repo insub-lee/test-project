@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
 import base64 from 'base-64';
-import uuid from 'react-uuid';
+import uuid from 'uuid/v1';
 class DragUploadMDCSViewComp extends Component {
   constructor(props) {
     super(props);

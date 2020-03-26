@@ -3,19 +3,19 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
-import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
-import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledModalWrapper from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 
 const AntdLineTable = StyledLineTable(Table);
-const ModalWrapper = StyledModalNofooterLine(Modal);
+const AntdModal = StyledModalWrapper(Modal);
+
 class DraftList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalWidth: 600,
+      modalWidth: 800,
     };
   }
 
@@ -79,28 +79,37 @@ class DraftList extends Component {
     const { draftList } = this.props;
     const { modalWidth } = this.state;
     return (
-      <ContentsWrapper>
-        <div className="pageTitle">
-          <p>
-            <Icon type="form" /> 기안함
-          </p>
-        </div>
-        <AntdLineTable
-          columns={this.getTableColumns()}
-          dataSource={draftList.map(item => ({
-            ...item,
-            key: `draftList_${item.RNUM}`,
-          }))}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-          className="tableWrapper"
-        />
-        <ModalWrapper title="기안함" width={modalWidth} visible={this.props.viewVisible} destroyOnClose footer={[]}>
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 기안함
+            </p>
+          </div>
+          <AntdLineTable
+            columns={this.getTableColumns()}
+            dataSource={draftList.map(item => ({
+              ...item,
+              key: `draftList_${item.RNUM}`,
+            }))}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
+            className="tableWrapper"
+          />
+        </ContentsWrapper>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="기안함"
+          width={modalWidth}
+          visible={this.props.viewVisible}
+          destroyOnClose
+          footer={[]}
+        >
           <HoldView {...this.props} onResizeModal={this.onResizeModal} />
-        </ModalWrapper>
-      </ContentsWrapper>
+        </AntdModal>
+      </>
     );
   }
 }
