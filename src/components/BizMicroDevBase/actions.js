@@ -63,3 +63,9 @@ export const resetCalledData = id => ({
   type: `${actionTypes.RESET_CALLED_DATA}_${id}`,
   id,
 });
+
+export const getFileDownload = (id, url, fileName) => ({
+  type: `${actionTypes.GET_FILE_DOWNLOAD}_${id}`,
+  url,
+  fileName,
+});

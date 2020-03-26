@@ -99,11 +99,34 @@ function* deleteAxios(fullUrl, payload, headers) {
   return {};
 }
 
+function* getFileDownAxios(fullUrl, payload, headers) {
+  try {
+    const response = yield Promise.resolve(
+      axios({
+        method: 'get',
+        url: fullUrl,
+        param: { ...payload },
+        headers: { ...headers, META: yield makeRequestHeader() },
+        responseType: 'blob',
+      }),
+    );
+
+    if (response.statusText !== 'OK') {
+      return Promise.reject(response.data);
+    }
+    return response.data;
+  } catch (error) {
+    errorAxiosProcess(error);
+  }
+  return {};
+};
+
 export const Axios = {
   get: (fullUrl, payload, headers) => getAxios(fullUrl, payload, headers),
   post: (fullUrl, payload, headers) => postAxios(fullUrl, payload, headers),
   put: (fullUrl, payload, headers) => putAxios(fullUrl, payload, headers),
   delete: (fullUrl, payload, headers) => deleteAxios(fullUrl, payload, headers),
+  getDown: (fullUrl, payload, headers) => getFileDownAxios(fullUrl, payload, headers),
 };
 
 export default Axios;
