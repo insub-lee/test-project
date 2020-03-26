@@ -22,8 +22,15 @@ const StyledLineTable = Component => styled(Component)`
         border-bottom: 2px solid #aeb4be;
         font-size: 0.85rem;
       }
-      .ant-table-tbody > tr > td {
-        cursor: pointer;
+      .ant-table-tbody > tr {
+        &.ant-table-row-selected {
+          td {
+            background: #e6f7ff;
+          }
+        }
+        td {
+          cursor: pointer;
+        }
       }
     }
   }
