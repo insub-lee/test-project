@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Input } from 'antd';
+import * as PropTypes from 'prop-types';
+import { Input } from 'antd';
 import { debounce } from 'lodash';
 
 class ComponentConfig extends Component {
@@ -15,23 +16,27 @@ class ComponentConfig extends Component {
   };
 
   render() {
-    const { groupIndex, rowIndex, colIndex, configInfo } = this.props;
+    const { configInfo } = this.props;
     return (
-      <div>
-        <Row>
-          <div>
-            <Col span={6}>단위 설정</Col>
-            <Col span={18}>
-              <Input
-                defaultValue={(configInfo && configInfo.property && configInfo.property.unit) || ''}
-                onChange={e => this.handleChangeViewCompData('unit', e.target.value)}
-              ></Input>
-            </Col>
-          </div>
-        </Row>
+      <div className="popoverItem popoverItemInput">
+        <span className="spanLabel">단위 설정</span>
+        <Input
+          defaultValue={(configInfo && configInfo.property && configInfo.property.unit) || ''}
+          onChange={e => this.handleChangeViewCompData('unit', e.target.value)}
+        ></Input>
       </div>
     );
   }
 }
+
+ComponentConfig.propTypes = {
+  configInfo: PropTypes.any,
+  changeViewCompData: PropTypes.func,
+  groupIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  colIndex: PropTypes.number,
+};
+
+ComponentConfig.defaultProps = {};
 
 export default ComponentConfig;
