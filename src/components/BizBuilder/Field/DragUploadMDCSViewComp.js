@@ -10,29 +10,22 @@ class DragUploadMDCSViewComp extends Component {
     };
   }
 
-  download = (sagaKey, response) => {
-    console.debug(response);
-  };
-
-  onClickDownLoad = url => {
+  onClickDownLoad = (url, fileName) => {
     const {
+      sagaKey,
       CONFIG: {
         property: { selectedValue },
       },
-      COMP_FIELD,
+      getFileDownload,
     } = this.props;
     const tempSelectedValue = { [uuid()]: 1, ...selectedValue };
     const acl = base64.encode(JSON.stringify(tempSelectedValue));
-    const downarea = document.querySelector(`#${COMP_FIELD}`);
-    const iframe = document.createElement('iframe');
-    iframe.style = 'display: none';
-    iframe.src = `${url}/${acl}`;
-    downarea.appendChild(iframe);
+    const fileUrl = `${url}/${acl}`;
+    getFileDownload(sagaKey, fileUrl, fileName);
   };
 
   componentDidMount() {
     const { colData, CONFIG } = this.props;
-    console.debug('config', CONFIG);
     const attachList = colData && colData.DETAIL ? colData.DETAIL : [];
     const tmpList = attachList.map(file => {
       let doctype = 'file-unknown';
@@ -80,7 +73,7 @@ class DragUploadMDCSViewComp extends Component {
       <div id={COMP_FIELD}>
         <ul>
           {fileList.map(file => (
-            <li className={file.fileExt} onClick={() => this.onClickDownLoad(file.down)}>
+            <li className={file.fileExt} onClick={() => this.onClickDownLoad(file.down, file.fileName)}>
               {file.icon}
               {file.fileName}
             </li>
