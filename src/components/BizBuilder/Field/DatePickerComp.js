@@ -83,11 +83,12 @@ class DatePickerComp extends Component {
     }
 
     if (viewPageData.viewType.toUpperCase() === 'VIEW') {
-      return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+      return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
     }
 
     if (viewPageData.viewType.toUpperCase() === 'LIST') {
-      return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+      return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
+      // return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
     }
     return '';
   }

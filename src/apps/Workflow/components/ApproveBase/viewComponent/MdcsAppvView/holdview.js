@@ -54,7 +54,7 @@ class HoldView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     e.preventDefault();
-    this.props.reqApprove(appvStatus);
+    this.props.reqApprove({});
     this.props.setOpinionVisible(false);
   };
 

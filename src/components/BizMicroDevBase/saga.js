@@ -60,7 +60,24 @@ function* getCallDataHandler({ id, apiArys, callbackFunc }) {
   }
 }
 
+function* getFileDownload({ url, fileName }) {
+  const blobResponse = yield call(Axios.getDown, url);
+
+  if (window.navigator && window.navigator.msSaveBlob){
+    window.navigator.msSaveBlob(blobResponse, fileName);
+  } else {
+    const fileUrl = window.URL.createObjectURL(blobResponse);
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey || arg.id}`, submitHandlerBySaga);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey || arg.id}`, getCallDataHandler);
+  yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
 }
