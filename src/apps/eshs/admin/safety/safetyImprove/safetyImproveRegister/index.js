@@ -11,7 +11,7 @@ class SafetyImprove extends Component {
   };
 
   render() {
-    return <BizBuilderBase sagaKey="safetyImprove" workSeq={5262} onReset={this.onReset} viewType="INPUT" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="safetyImprove" workSeq={5262} viewType="INPUT" loadingComplete={this.loadingComplete} />;
   }
 }
 
