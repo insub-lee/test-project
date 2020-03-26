@@ -1,21 +1,29 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon } from 'antd';
+import { Table, Modal, Icon, Button } from 'antd';
 import moment from 'moment';
 
-import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
-import ApproveView from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView';
+import BizBuilderBase from 'components/BizBuilderBase';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 
 const AntdLineTable = StyledLineTable(Table);
-const ModalWrapper = StyledModalNofooterLine(Modal);
+const AntdModal = StyledContentsModal(Modal);
+
 class DraftList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      modalWidth: 600,
+      modalWidth: 800,
+      coverView: {
+        visible: false,
+        workSeq: undefined,
+        taskSeq: undefined,
+        viewMetaSeq: undefined,
+      },
     };
   }
 
@@ -74,33 +82,102 @@ class DraftList extends Component {
     this.setState({ modalWidth });
   };
 
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true };
+    this.setState({ coverView });
+  };
+
+  closeBtnFunc = () => {
+    this.props.setViewVisible(false);
+  };
+
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
   render() {
     // const { approveList } = this.props;
-    const { draftList } = this.props;
-    const { modalWidth } = this.state;
+    const { draftList, selectedRow } = this.props;
+    const { modalWidth, coverView } = this.state;
+    console.debug('state', coverView);
     return (
-      <ContentsWrapper>
-        <div className="pageTitle">
-          <p>
-            <Icon type="form" /> 기안함
-          </p>
-        </div>
-        <AntdLineTable
-          columns={this.getTableColumns()}
-          dataSource={draftList.map(item => ({
-            ...item,
-            key: `draftList_${item.RNUM}`,
-          }))}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-          className="tableWrapper"
-        />
-        <ModalWrapper title="기안함" width={modalWidth} visible={this.props.viewVisible} destroyOnClose footer={[]}>
-          <HoldView {...this.props} onResizeModal={this.onResizeModal} />
-        </ModalWrapper>
-      </ContentsWrapper>
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 기안함
+            </p>
+          </div>
+          <AntdLineTable
+            columns={this.getTableColumns()}
+            dataSource={draftList.map(item => ({
+              ...item,
+              key: `draftList_${item.RNUM}`,
+            }))}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
+            className="tableWrapper"
+          />
+        </ContentsWrapper>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="내용 보기"
+          width={modalWidth}
+          visible={this.props.viewVisible}
+          destroyOnClose
+          onCancel={this.closeBtnFunc}
+          footer={[]}
+        >
+          <BizBuilderBase
+            sagaKey="approveBase_approveView"
+            viewType="VIEW"
+            onCloseModal={this.onCloseModal}
+            onChangeForm={this.onChangeForm}
+            closeBtnFunc={this.closeBtnFunc}
+            clickCoverView={this.clickCoverView}
+            workSeq={selectedRow && selectedRow.WORK_SEQ}
+            taskSeq={selectedRow && selectedRow.TASK_SEQ}
+            selectedRow={selectedRow}
+            ViewCustomButtons={({ closeBtnFunc }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={closeBtnFunc}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+          />
+          {/* <HoldView {...this.props} onResizeModal={this.onResizeModal} /> */}
+        </AntdModal>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="표지 보기"
+          width={modalWidth}
+          destroyOnClose
+          visible={coverView.visible}
+          onCancel={this.onCloseCoverView}
+          footer={[]}
+        >
+          <BizBuilderBase
+            sagaKey="CoverView"
+            viewType="VIEW"
+            workSeq={coverView.workSeq}
+            taskSeq={coverView.taskSeq}
+            viewMetaSeq={coverView.viewMetaSeq}
+            onCloseCoverView={this.onCloseCoverView}
+            ViewCustomButtons={({ onCloseCoverView }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+          />
+        </AntdModal>
+      </>
     );
   }
 }

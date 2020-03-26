@@ -179,6 +179,7 @@ const StyledViewDesigner = styled.div`
     width: 100%;
     .view-designer-row {
       border: 1px solid #ddd;
+      border-left: 0;
       .view-designer-col {
         border: 0;
         font-size: 12px;
@@ -188,9 +189,12 @@ const StyledViewDesigner = styled.div`
           width: 180px;
           text-align: center;
           position: relative;
-          background-color: #f1f1f1;
+          background-color: #f7f7f7;
           background-clip: padding-box;
           padding: 4px;
+          border: 1px solid #ddd;
+          border-top: 0;
+          border-bottom: 0;
           > div {
             height: auto;
           }
@@ -266,9 +270,26 @@ const StyledViewDesigner = styled.div`
             }
             &.active {
               button {
-                right: 0px;
+                right: 5px;
                 left: inherit;
               }
+            }
+          }
+        }
+        &.mdcsAttachedFileCol {
+          ul li {
+            margin-bottom: 5px;
+            cursor: pointer;
+            &:hover {
+              text-decoration: underline;
+            }
+            &:last-child {
+              margin-bottom: 0;
+            }
+            i {
+              vertical-align: -3px;
+              color: #444;
+              font-size: 16px !important;
             }
           }
         }
