@@ -4,11 +4,11 @@ import * as actionTypes from './constants';
 import * as actions from './actions';
 
 function* getDeptList({ callbackFunc }) {
-  const response = yield call(Axios.post, `/api/common/v1/account/deptListByMyDeptId`, {});
-  const { list } = response;
+  const response = yield call(Axios.post, `/api/common/v1/account/deptSelectList`, { PARAM: { ROOT_DEPT_ID: 72761 } });
+  const { result } = response;
 
   if (typeof callbackFunc === 'function') {
-    callbackFunc(list);
+    callbackFunc(result);
   }
 }
 

@@ -64,7 +64,7 @@ class WorkProcess extends Component {
               )}
             </div>
           </div>
-          <div style={{ marginBottom: '10px', marginTop: '2px' }}>
+          <div style={{ marginBottom: '10px' }}>
             {filterRule.map(item => (
               <div className="dataWrapper_mdcs">
                 <Row type="flex">

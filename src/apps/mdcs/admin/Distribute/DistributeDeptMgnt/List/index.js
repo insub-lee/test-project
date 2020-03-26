@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Modal, Icon, Button, message } from 'antd';
 import { SaveOutlined } from '@ant-design/icons';
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import UserSelect from 'components/UserSelect';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
+const AntdModal = StyledSelectModal(Modal);
 
 class List extends Component {
   constructor(props) {
@@ -59,11 +61,11 @@ class List extends Component {
       title: '부서',
       dataIndex: 'NAME_KOR',
       key: 'nameKor',
-      width: '15%',
+      width: '30%',
       render: (text, record) => (
         <div>
           {text}
-          <StyledButton style={{ float: 'right' }} className="btn-primary btn-first btn-sm" onClick={() => this.onClickDept(record)}>
+          <StyledButton style={{ float: 'right' }} className="btn-light btn-sm2 btn-radius" onClick={() => this.onClickDept(record)}>
             <Icon type="edit" />
           </StyledButton>
         </div>
@@ -153,23 +155,23 @@ class List extends Component {
           <div style={{ marginBottom: '10px' }}>
             <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
               <Icon type="form" /> 배포부서 담당자
-              <Button type="primary" style={{ marginLeft: '40px' }} onClick={this.onClickSave}>
+              <StyledButton className="btn-gray btn-sm" style={{ marginLeft: '40px' }} onClick={this.onClickSave}>
                 <SaveOutlined /> 필수 배포부서적용
-              </Button>
+              </StyledButton>
             </p>
           </div>
-          <Modal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
+          <AntdModal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
             <UserSelect
               initUserList={this.state.selectedUserList}
-              treeDataSource={distDeptList}
+              // treeDataSource={distDeptList}
               userDataList={result.userList && result.userList.list}
               onTreeSelect={this.onTreeSelect}
               onUserSelectHandler={this.onUserSelect}
               onUserSelectedComplete={this.onUserSelectedComplete}
               onCancel={this.onCancel}
             />
-          </Modal>
-          <AntdTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
+          </AntdModal>
+          <AntdLineTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
         </div>
       );
     }

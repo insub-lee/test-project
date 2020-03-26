@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
 import base64 from 'base-64';
-
+import uuid from 'uuid/v1';
 class DragUploadMDCSViewComp extends Component {
   constructor(props) {
     super(props);
@@ -21,11 +21,8 @@ class DragUploadMDCSViewComp extends Component {
       },
       COMP_FIELD,
     } = this.props;
-    const { drmInfo } = selectedValue;
-    console.debug('selectedValue', this.props, selectedValue, drmInfo);
-
-    const acl = base64.encode(JSON.stringify(selectedValue));
-    // window.location.href = `${url}/${acl}`;
+    const tempSelectedValue = { [uuid()]: 1, ...selectedValue };
+    const acl = base64.encode(JSON.stringify(tempSelectedValue));
     const downarea = document.querySelector(`#${COMP_FIELD}`);
     const iframe = document.createElement('iframe');
     iframe.style = 'display: none';
