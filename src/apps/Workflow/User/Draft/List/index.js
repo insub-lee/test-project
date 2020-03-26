@@ -1,18 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Modal, Icon, Button } from 'antd';
+import { Table, Modal, Icon, Button, Input } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
+import OpinionModal from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView/OpinionModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
-
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 const AntdLineTable = StyledLineTable(Table);
 const AntdModal = StyledContentsModal(Modal);
-
+const { TextArea } = Input;
 class DraftList extends Component {
   constructor(props) {
     super(props);
@@ -97,11 +98,25 @@ class DraftList extends Component {
     this.setState({ coverView: tempCoverView });
   };
 
+  onHoldRelase = () => {
+    const { selectedRow, setSelectedRow, setOpinionVisible } = this.props;
+    const APPV_STATUS = selectedRow.PROC_STATUS === 3 ? 4 : 40;
+    const nSelectedRow = { ...selectedRow, APPV_STATUS };
+    setSelectedRow(nSelectedRow);
+    setOpinionVisible(true);
+  };
+
+  handleReqApprove = e => {
+    e.preventDefault();
+    this.props.reqApprove({});
+    this.props.setOpinionVisible(false);
+  };
+
   render() {
     // const { approveList } = this.props;
-    const { draftList, selectedRow } = this.props;
+    const { draftList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
     const { modalWidth, coverView } = this.state;
-    console.debug('state', coverView);
+    console.debug('기안함', this.props);
     return (
       <>
         <ContentsWrapper>
@@ -144,7 +159,12 @@ class DraftList extends Component {
             selectedRow={selectedRow}
             ViewCustomButtons={({ closeBtnFunc }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary" onClick={closeBtnFunc}>
+                {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
+                  <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
+                    홀드해제
+                  </StyledButton>
+                )}
+                <StyledButton className="btn-light" onClick={closeBtnFunc}>
                   닫기
                 </StyledButton>
               </div>
@@ -176,6 +196,36 @@ class DraftList extends Component {
               </div>
             )}
           />
+        </AntdModal>
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="홀드해제 의견"
+          width={500}
+          destroyOnClose
+          visible={opinionVisible}
+          onCancel={() => setOpinionVisible(false)}
+          footer={[]}
+        >
+          <StyledHtmlTable>
+            <table>
+              <tbody>
+                <tr>
+                  <th>의견</th>
+                  <td>
+                    <TextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+          <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
+            <StyledButton className="btn-primary btn-first" onClick={this.handleReqApprove}>
+              저장
+            </StyledButton>
+            <StyledButton className="btn-light" onClick={() => setOpinionVisible(false)}>
+              닫기
+            </StyledButton>
+          </div>
         </AntdModal>
       </>
     );

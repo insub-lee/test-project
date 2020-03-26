@@ -8,3 +8,4 @@ export const MULTI_DELETE_OPT_SEQ = 6;
 export const LIST_NO_OPT_SEQ = 8;
 export const BUILDER_MODAL_OPT_SEQ = 9;
 export const CHANGE_VIEW_OPT_SEQ = 12;
+export const ON_ROW_CLICK_OPT_SEQ = 13;

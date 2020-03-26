@@ -22,6 +22,7 @@ const TitleComp = ({ colData, sagaKey: id, rowData, changeViewPage, visible, CON
 
 TitleComp.propTypes = {
   setViewPageData: PropTypes.func,
+  CONFIG: PropTypes.object,
 };
 
 TitleComp.defaultProps = {
