@@ -95,7 +95,7 @@ class ListPage extends Component {
         CustomInputPage={Input}
         CustomModifyPage={Modify}
         loadingComplete={loadingComplete}
-        onCloseModleHandler={this.handleModalClose}
+        onCloseModalHandler={this.handleModalClose}
         baseSagaKey={sagaKey}
       />
     );
@@ -367,7 +367,7 @@ ListPage.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,

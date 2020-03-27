@@ -201,7 +201,7 @@ class DraftList extends Component {
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
             onCloseCoverView={this.onCloseCoverView}
-            onCloseModleHandler={this.onClickModifyDoCoverView}
+            onCloseModalHandler={this.onClickModifyDoCoverView}
             ViewCustomButtons={({ onCloseCoverView }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 <StyledButton className="btn-primary" onClick={onCloseCoverView}>
