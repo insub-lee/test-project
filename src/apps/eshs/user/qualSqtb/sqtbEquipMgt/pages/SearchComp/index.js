@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
+import ModalTableComp from 'components/BizBuilder/Field/ModalTableComp';
+
 import { debounce } from 'lodash';
 import { Select, Input, Button, Row, Col, message } from 'antd';
+
 const { Option } = Select;
 let rowKey = 0;
 class SearchComp extends Component {
@@ -25,6 +28,8 @@ class SearchComp extends Component {
         </StyledButton>
       ),
       searchGroupData: { type: 'all', text: '' },
+      extraApiData: {},
+      modalTableColData: '',
     };
     this.debounceHandelChangeSearchData = debounce(this.debounceHandelChangeSearchData, 300);
   }
@@ -125,72 +130,87 @@ class SearchComp extends Component {
     this.setState({ searchGrid });
   };
 
-  handleMakeRow1 = ({ selectSite = [], selectFab = [], selectArea = [] }) => (
-    <Row gutter={[0, 8]} key={rowKey++}>
-      <Col span={2} align="right">
-        <span>설비위치</span>
-      </Col>
-      <Col span={2}>
-        <Select
-          defaultValue="all"
-          style={{ width: '100%' }}
-          onChange={value => this.handleChangeSearchData('selectArea', value === 'all' ? 'AND 1 = 1' : `AND MM.SITE = '${value}'`)}
-        >
-          <Option value="all">지역전체</Option>
-          {selectSite.length > 0 &&
-            selectSite.map(s => (
-              <Option value={s.NAME_KOR} key={s.NODE_ID}>
-                {s.NAME_KOR}
-              </Option>
-            ))}
-        </Select>
-      </Col>
-      <Col span={2}>
-        <Select
-          defaultValue="all"
-          style={{ width: '100%' }}
-          onChange={value => this.handleChangeSearchData('selectFab', value === 'all' ? 'AND 1 = 1' : `AND MM.FAB = '${value}'`)}
-        >
-          <Option value="all">FAB전체</Option>
-          {selectFab.length > 0 &&
-            selectFab.map(s => (
-              <Option value={s.NAME_KOR} key={s.NODE_ID}>
-                {s.NAME_KOR}
-              </Option>
-            ))}
-        </Select>
-      </Col>
-      <Col span={2}>
-        <Select
-          defaultValue="all"
-          style={{ width: '100%' }}
-          onChange={value => this.handleChangeSearchData('selectArea', value === 'all' ? 'AND 1 = 1' : `AND W.AREA = '${value}'`)}
-        >
-          <Option value="all">공정전체</Option>
-          {selectArea.length > 0 &&
-            selectArea.map(s => (
-              <Option value={s.NODE_ID} key={s.NODE_ID}>
-                {s.NAME_KOR}
-              </Option>
-            ))}
-        </Select>
-      </Col>
-      <Col span={2} align="right">
-        <span>Maker</span>
-      </Col>
-      <Col span={2}>MakerComp</Col>
-      <Col span={2}>Model</Col>
-      <Col span={2}>
-        <Input
-          defaultValue=""
-          name="MODEL"
-          width="100%"
-          onChange={e => this.handleChangeSearchData(e.target.name, e.target.value === '' ? 'AND 1 = 1' : `AND W.MODEL LIKE '${e.target.value}%'`)}
-        />
-      </Col>
-      <Col span={8}></Col>
-    </Row>
-  );
+  handleMakeRow1 = ({ selectSite = [], selectFab = [], selectArea = [] }) => {
+    const { makerCdConfig, extraApiData, id } = this.props;
+
+    return (
+      <Row gutter={[0, 8]} key={rowKey++}>
+        <Col span={2} align="right">
+          <span>설비위치</span>
+        </Col>
+        <Col span={2}>
+          <Select
+            defaultValue="all"
+            style={{ width: '100%' }}
+            onChange={value => this.handleChangeSearchData('selectArea', value === 'all' ? 'AND 1 = 1' : `AND MM.SITE = '${value}'`)}
+          >
+            <Option value="all">지역전체</Option>
+            {selectSite.length > 0 &&
+              selectSite.map(s => (
+                <Option value={s.NAME_KOR} key={s.NODE_ID}>
+                  {s.NAME_KOR}
+                </Option>
+              ))}
+          </Select>
+        </Col>
+        <Col span={2}>
+          <Select
+            defaultValue="all"
+            style={{ width: '100%' }}
+            onChange={value => this.handleChangeSearchData('selectFab', value === 'all' ? 'AND 1 = 1' : `AND MM.FAB = '${value}'`)}
+          >
+            <Option value="all">FAB전체</Option>
+            {selectFab.length > 0 &&
+              selectFab.map(s => (
+                <Option value={s.NAME_KOR} key={s.NODE_ID}>
+                  {s.NAME_KOR}
+                </Option>
+              ))}
+          </Select>
+        </Col>
+        <Col span={2}>
+          <Select
+            defaultValue="all"
+            style={{ width: '100%' }}
+            onChange={value => this.handleChangeSearchData('selectArea', value === 'all' ? 'AND 1 = 1' : `AND W.AREA = '${value}'`)}
+          >
+            <Option value="all">공정전체</Option>
+            {selectArea.length > 0 &&
+              selectArea.map(s => (
+                <Option value={s.NODE_ID} key={s.NODE_ID}>
+                  {s.NAME_KOR}
+                </Option>
+              ))}
+          </Select>
+        </Col>
+        <Col span={2} align="right">
+          <ModalTableComp
+            CONFIG={makerCdConfig}
+            getExtraApiData={() => {}}
+            extraApiData={extraApiData}
+            sagaKey={id}
+            visible
+            colData={(this.state && this.state.modalTableColData) || ''}
+            isSearch
+            COMP_FIELD="MAKER_CD"
+            customListChangeFormData={record => this.setState({ modalTableColData: record })}
+            changeSearchData={(sagaKey, COMP_FIELD, searchText) => this.handleChangeSearchData(COMP_FIELD, searchText)}
+          />
+        </Col>
+        <Col span={2}>MakerComp</Col>
+        <Col span={2}>Model</Col>
+        <Col span={2}>
+          <Input
+            defaultValue=""
+            name="MODEL"
+            width="100%"
+            onChange={e => this.handleChangeSearchData(e.target.name, e.target.value === '' ? 'AND 1 = 1' : `AND W.MODEL LIKE '${e.target.value}%'`)}
+          />
+        </Col>
+        <Col span={8}></Col>
+      </Row>
+    );
+  };
 
   handleMakeRow2 = ({ selectQualReq = [], selectIsQual = [], selectSearchNm = [] }) => (
     <Row gutter={[0, 8]} key={rowKey++}>
@@ -328,9 +348,7 @@ class SearchComp extends Component {
   };
 
   render() {
-    const { searchGrid, selectObj, aaa = 0, searchGroupData } = this.state;
-    console.debug('여기는 render', selectObj);
-    console.debug('searchGroupData', searchGroupData);
+    const { searchGrid, selectObj, searchGroupData } = this.state;
     return <>{searchGrid}</>;
   }
 }
@@ -341,6 +359,7 @@ SearchComp.propTypes = {
   changeSearchData: PropTypes.func,
   handleSearch: PropTypes.func,
   extraApiData: PropTypes.object,
+  makerCdConfig: PropTypes.object,
 };
 
 SearchComp.defaultProps = {
@@ -355,5 +374,43 @@ SearchComp.defaultProps = {
   },
   extraApiData: {},
   handleSearch: () => {},
+  makerCdConfig: {
+    info: { type: 'VARCHAR', nullable: true, defaultValue: "''", size: 20 },
+    property: {
+      apiData: {
+        apiSeq: [26],
+        apiInfo: [
+          {
+            API_SEQ: 26,
+            API_NAME: 'Eshs 거래처 리스트',
+            API_SRC: '/api/eshs/v1/common/EshsCmpnyList/null/null',
+            METHOD_TYPE: 'get',
+            CALL_TYPE: 'F',
+            ISUSED: 'Y',
+            REG_DTTM: 1584085598264,
+          },
+        ],
+      },
+      COMP_SETTING_SRC: 'components/BizBuilder/Field/ModalTableCompConfig',
+      isRequired: false,
+      layerIdx: {
+        'layerIdx_6c6bbc40-69ad-11ea-a692-f713e12f7584': '0-2-2',
+        'layerIdx_75cc0680-69af-11ea-a692-f713e12f7584': '0-2-2',
+        'layerIdx_75cc2d90-69af-11ea-a692-f713e12f7584': '0-2-2',
+      },
+      viewLayerConfig: {},
+      compKey: 'Comp_ebf60cf0-6a6a-11ea-96d7-c39768b8e40a',
+      COMP_SRC: 'components/BizBuilder/Field/ModalTableComp',
+      scrollSet: { xline: 350, yline: 500 },
+      COMP_NAME: 'ModalTableComp',
+      columns: [
+        { title: '코드', dataIndex: 'WRK_CMPNY_CD', targetIndex: 'MAKER_CD', align: 'center', width: 50, changeFormDataYN: true, columnHiddenYN: false },
+        { title: '이름', dataIndex: 'WRK_CMPNY_NM', align: 'center', width: 100, changeFormDataYN: true, columnHiddenYN: false },
+        { title: '사업자등록번호', dataIndex: 'BIZ_REG_NO', align: 'center', width: 100, changeFormDataYN: false, columnHiddenYN: false },
+        { title: '전화번호', dataIndex: 'TEL', align: 'center', width: 100, changeFormDataYN: false, columnHiddenYN: false },
+      ],
+    },
+    option: {},
+  },
 };
 export default SearchComp;

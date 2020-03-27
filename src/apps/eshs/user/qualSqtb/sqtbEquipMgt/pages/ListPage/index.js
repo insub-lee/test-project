@@ -62,13 +62,18 @@ class ListPage extends Component {
         url: '/api/admin/v1/common/categoryMapList',
         params: { PARAM: { NODE_ID: 1048 } },
       },
+      {
+        key: 'item_26',
+        type: 'GET',
+        url: '/api/eshs/v1/common/EshsCmpnyList/null/null',
+      },
     ];
 
     getExtraApiData(id, apiArr, this.handleAppStart);
   };
 
   handleAppStart = () => {
-    const { sagaKey: id, changeSearchData, extraApiData, getListData, workSeq } = this.props;
+    const { sagaKey: id, changeSearchData, extraApiData, getListData, workSeq, getExtraApiData } = this.props;
     const SearchConfig = {
       SearchRow1: true,
       SearchRow2: true,
@@ -82,6 +87,7 @@ class ListPage extends Component {
         extraApiData={extraApiData}
         changeSearchData={changeSearchData}
         handleSearch={() => getListData(id, workSeq)}
+        getExtraApiData={getExtraApiData}
       />,
     );
     this.setState({ searchBar });
@@ -209,6 +215,7 @@ class ListPage extends Component {
                   {group.useTitle && <GroupTitle title={group.title} />}
                   <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                     <Contents>{searchBar}</Contents>
+                    <Button onClick={() => changeViewPage(id, workSeq, -1, 'INPUT')}>INPUT GO</Button>
                   </Group>
                 </div>
               );

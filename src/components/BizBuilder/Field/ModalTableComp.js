@@ -89,6 +89,7 @@ class ModalTableComp extends React.Component {
       CONFIG: { property },
       changeValidationData,
       isSearch,
+      customListChangeFormData,
     } = this.props;
 
     if (property && property.columns) {
@@ -105,6 +106,7 @@ class ModalTableComp extends React.Component {
             this.handleOnChangeSearch(record[item.dataIndex]);
           }
           if ((item.targetIndex || item.dataIndex) === COMP_FIELD.trim() && isSearch) {
+            customListChangeFormData(record[item.dataIndex]);
             this.handleOnChangeSearch(record[item.dataIndex]);
           }
         }
@@ -219,6 +221,7 @@ ModalTableComp.propTypes = {
   extraApiData: PropTypes.any,
   readOnly: PropTypes.bool,
   isSearch: PropTypes.bool,
+  customListChangeFormData: PropTypes.func,
 };
 ModalTableComp.defaultProps = {
   columns: [
@@ -235,5 +238,8 @@ ModalTableComp.defaultProps = {
       width: 250,
     },
   ],
+  changeValidationData: () => {},
+  changeFormData: () => {},
+  customListChangeFormData: () => {},
 };
 export default ModalTableComp;
