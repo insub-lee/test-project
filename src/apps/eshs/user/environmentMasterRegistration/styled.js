@@ -48,6 +48,18 @@ const Styled = styled.div`
   .col-set {
     border: 1px solid #aaaaaa;
   }
+
+  div .company-comp {
+    margin-left: 11px; /* 1px 어긋남 */
+  }
+
+  .alignRight {
+    margin: 20px 10px;
+  }
+
+  .data-modal {
+    width: 700px;
+  }
 `;
 
 export default Styled;
