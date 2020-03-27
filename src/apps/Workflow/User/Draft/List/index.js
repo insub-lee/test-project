@@ -107,16 +107,29 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
+    const [setOpinionVisible] = this.props;
     e.preventDefault();
     this.props.reqApprove({});
-    this.props.setOpinionVisible(false);
+    setOpinionVisible(false);
+  };
+
+  onClickModify = payload => {
+    const { selectedRow } = this.props;
+    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+    this.setState({ coverView });
+  };
+
+  onClickModifyDoCoverView = () => {
+    const { getDraftList } = this.props;
+    const { coverView } = this.state;
+    this.setState({ coverView: { ...coverView, visible: false } });
+    getDraftList();
   };
 
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
     const { modalWidth, coverView } = this.state;
-    console.debug('기안함', this.props);
     return (
       <>
         <ContentsWrapper>
@@ -188,8 +201,19 @@ class DraftList extends Component {
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
             onCloseCoverView={this.onCloseCoverView}
+            onCloseModleHandler={this.onClickModifyDoCoverView}
             ViewCustomButtons={({ onCloseCoverView }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+            ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                  저장
+                </StyledButton>
                 <StyledButton className="btn-primary" onClick={onCloseCoverView}>
                   닫기
                 </StyledButton>
