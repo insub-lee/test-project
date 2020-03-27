@@ -118,7 +118,7 @@ class ListPage extends Component {
     return {
       onClick: () => {
         if (isBuilderModal) {
-          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ, record);
+          changeBuilderModalState(true, rowClickView, record.WORK_SEQ, record.TASK_SEQ);
         } else {
           changeViewPage(id, record.WORK_SEQ, record.TASK_SEQ, rowClickView);
         }

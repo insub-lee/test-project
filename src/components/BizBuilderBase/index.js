@@ -208,6 +208,7 @@ class BizBuilderBase extends React.Component {
       InputCustomButtonsByModal,
       ModifyCustomButtonsByModal,
       ViewCustomButtonsByModal,
+      ListCustomButtonsByModal,
     } = this.props;
     const { isShowBuilderModal, builderModalViewType, builderModalWorkSeq, builderModalTaskSeq, taskRowData } = this.state;
     return (
@@ -233,7 +234,7 @@ class BizBuilderBase extends React.Component {
             InputCustomButtons={InputCustomButtonsByModal} // 기존 ViewPage에서 지원하는 CustomBtns Props가 필요한 모달이 있을 경우가 있어, 동일한 방식으로 커스텀 Btn Props를 받을 수 있도록 수정 (by. 정현)
             ModifyCustomButtons={ModifyCustomButtonsByModal}
             ViewCustomButtons={ViewCustomButtonsByModal}
-            // ListCustomButtons={CustomButtonsByModal}
+            ListCustomButtons={ListCustomButtonsByModal}
           />
         </Modal>
       </div>

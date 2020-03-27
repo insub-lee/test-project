@@ -10,7 +10,7 @@ const outdoorEvent = () => (
     viewType="LIST"
     workSeq={4821}
     viewChangeSeqByModal={38}
-    ModifyCustomButtons={ModifyCustomButtons}
+    ModifyCustomButtonsByModal={ModifyCustomButtons}
     ListCustomButtons={ListCustomButtons}
   />
 );
