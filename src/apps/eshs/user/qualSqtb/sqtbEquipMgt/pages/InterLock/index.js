@@ -6,7 +6,6 @@ import { getTreeFromFlatData } from 'react-sortable-tree';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
-
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
     flatData: flatData.map(item => ({
@@ -37,22 +36,33 @@ class InterLock extends Component {
           dataIndex: 'IL_KIND_FORM',
           width: 655,
           align: 'center',
-          render: (text, record) => (
-            <TreeSelect
-              style={{ width: '100%' }}
-              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-              treeData={(this && this.state && this.state.treeData) || ''}
-              value={record.IL_KIND_FORM || ''}
-              onChange={value => this.onChangeHandler(value, record.INDEX)}
-            />
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <TreeSelect
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  treeData={(this && this.state && this.state.treeData) || ''}
+                  value={record.IL_KIND_FORM || ''}
+                  onChange={value => this.onChangeHandler(value, record.INDEX)}
+                />
+              );
+            }
+            return <span>{record.FULL_PATH || ''}</span>;
+          },
         },
         {
           title: '세부기능',
           dataIndex: 'IL_FUNC',
           align: 'center',
           width: 655,
-          render: (text, record) => <Input defaultValue={record.IL_FUNC || ''} onChange={e => this.handleInputChange(e, record.INDEX)} />,
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return <Input defaultValue={record.IL_FUNC || ''} onChange={e => this.handleInputChange(e, record.INDEX)} />;
+            }
+
+            return <span>{record.IL_FUNC || ''}</span>;
+          },
         },
       ],
     };
@@ -64,19 +74,26 @@ class InterLock extends Component {
     const { getExtraApiData, id, apiArray, formData, viewType } = this.props;
     const taskSeq = (formData && formData.TASK_SEQ) || 0;
     if (taskSeq > 0) {
-      apiArray.push({
-        key: 'interLockList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsGetInterLockList/${taskSeq}`,
-      });
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'interLockList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetInterLockList/${taskSeq}`,
+        }),
+        this.appStart,
+      );
+    } else {
+      getExtraApiData(id, apiArray, this.appStart);
     }
-    getExtraApiData(id, apiArray, this.appStart);
   }
 
   appStart = () => {
     const { extraApiData, id, changeFormData } = this.props;
     const treeData = (extraApiData && extraApiData.treeData && extraApiData.treeData.categoryMapList) || [];
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
+
+    console.debug('ID ::: ', id, '  extraApiData :::: ', extraApiData);
     if (!interLockList.length) {
       interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 0 });
       interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 1 });
@@ -137,6 +154,7 @@ class InterLock extends Component {
           bordered
           pagination={{ pageSize: 100 }}
           scroll={{ x: 1500, y: 200 }}
+          pagination={false}
         />,
       ],
     });
@@ -161,7 +179,6 @@ class InterLock extends Component {
     const { viewPageData } = this.props;
     const { interLockTable } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
-
     return (
       <>
         <hr />
