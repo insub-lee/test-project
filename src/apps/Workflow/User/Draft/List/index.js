@@ -107,6 +107,7 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
+    const [setOpinionVisible] = this.props;
     e.preventDefault();
     this.props.reqApprove({});
     setOpinionVisible(false);
