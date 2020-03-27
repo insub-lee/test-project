@@ -45,7 +45,7 @@ import ErrorPage from './ErrorPage';
 /* Code Split */
 const MenuCategory = Loadable({ loader: () => import('./MenuCategory') });
 // const UserCategoryMenu = Loadable({ loader: () => import('./UserCategoryMenu') });
-const UserCategoryMenuESHSver = Loadable({ loader: () => import('./UserCategoryMenuESHSver') });
+const UserCategoryLeftMenu = Loadable({ loader: () => import('./UserCategoryLeftMenu') });
 const UserMenuCard = Loadable({ loader: () => import('./UserMenuCard') });
 const UserSetting = Loadable({ loader: () => import('./UserSetting') });
 const UserStore = Loadable({ loader: () => import('./UserStore') });
@@ -469,7 +469,7 @@ class App extends React.Component {
         <Layout className="portalLayout">
           {/* <HeaderMenu execMenu={this.execMenu} execPage={this.execPage} /> */}
           {/* SideBar */}
-          <UserCategoryMenuESHSver
+          <UserCategoryLeftMenu
             isShow={open}
             setOpen={this.setOpen}
             setFixedOpenMenu={this.setFixedOpenMenu}

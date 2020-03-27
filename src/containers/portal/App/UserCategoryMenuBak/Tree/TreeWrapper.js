@@ -8,7 +8,7 @@ const TreeWrapper = styled.div`
   .tree-contents {
     display: flex;
     flex-direction: column;
-    height: cacl(100vh - 45px);
+    height: calc(100vh - 45px);
     width: 100%;
     .show-noti {
       height: calc(100vh - 87px);
