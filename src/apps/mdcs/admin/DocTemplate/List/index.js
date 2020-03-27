@@ -4,7 +4,7 @@ import { TreeSelect, Button, Table, Popconfirm, Icon, Input, message } from 'ant
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const AntdLineTable = StyledLineTable(Table);
 class List extends Component {
@@ -323,6 +323,11 @@ class List extends Component {
           <p>
             <Icon type="form" /> 표준문서 템플릿관리
           </p>
+          <div className="btnPositonMid">
+            <StyledButton className="btn-light btn-sm" onClick={this.onClickExternalDist}>
+              외부배포
+            </StyledButton>
+          </div>
         </div>
         <div className="selSaveWrapper">
           <TreeSelect
