@@ -114,16 +114,23 @@ class DraftList extends Component {
     setOpinionVisible(false);
   };
 
-  onClickModify = (workSeq, taskSeq, viewMetaSeq) => {
-    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'MODIFY' };
+  onClickModify = payload => {
+    const { selectedRow } = this.props;
+    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
     this.setState({ coverView });
+  };
+
+  onClickModifyDoCoverView = () => {
+    const { getDraftList } = this.props;
+    const { coverView } = this.state;
+    this.setState({ coverView: { ...coverView, visible: false } });
+    getDraftList();
   };
 
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
     const { modalWidth, coverView } = this.state;
-    console.debug('state', this.state);
     return (
       <>
         <ContentsWrapper>
@@ -200,8 +207,19 @@ class DraftList extends Component {
             viewMetaSeq={coverView.viewMetaSeq}
             modifyMetaSeq={coverView.modifyMetaSeq}
             onCloseCoverView={this.onCloseCoverView}
+            onCloseModleHandler={this.onClickModifyDoCoverView}
             ViewCustomButtons={({ onCloseCoverView }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                  닫기
+                </StyledButton>
+              </div>
+            )}
+            ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
+              <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                <StyledButton className="btn-primary" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                  저장
+                </StyledButton>
                 <StyledButton className="btn-primary" onClick={onCloseCoverView}>
                   닫기
                 </StyledButton>
