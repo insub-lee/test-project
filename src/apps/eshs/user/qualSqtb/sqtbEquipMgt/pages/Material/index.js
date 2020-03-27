@@ -222,7 +222,7 @@ class Material extends Component {
         <span key={record.INDEX}>
           <Select
             key={record.INDEX}
-            defaultValue={record.PIPE_TYPE}
+            defaultValue={record.PIPE_TYPE || String(556)}
             onChange={value => this.handleSelectOnChange(value, 'PIPE_TYPE', record.INDEX)}
             style={{ width: 90 }}
           >

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Input, Button } from 'antd';
+import { Input, Button, Popconfirm } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 const { Search } = Input;
@@ -8,9 +8,21 @@ const { Search } = Input;
 class Header extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      SETUP_EMPNO: '',
+      SETUP_PERSON: '',
+    };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const { modalSelectedRow } = this.props;
+    const SETUP_EMPNO = (modalSelectedRow && modalSelectedRow.SETUP_EMPNO) || '';
+    const SETUP_PERSON = (modalSelectedRow && modalSelectedRow.SETUP_PERSON) || '';
+    this.setState({
+      SETUP_EMPNO,
+      SETUP_PERSON,
+    });
+  }
 
   handleAction = type => {
     const { saveTask, modifySaveTask, changeViewPage, viewPageData, modalSelectedRow, id, deleteTask, setModalRowSelected } = this.props;
@@ -55,9 +67,13 @@ class Header extends Component {
   render() {
     const { handleModalVisible, modalSelectedRow, viewPageData } = this.props;
     const viewType = (viewPageData && viewPageData.viewType) || '';
+    const { SETUP_EMPNO, SETUP_PERSON } = this.state;
     return (
-      <>
-        <Search value={modalSelectedRow.EQUIP_CD || ''} readOnly onClick={handleModalVisible} />
+      <div align="left">
+        <span>장비코드</span>
+        &nbsp;
+        <Search value={modalSelectedRow.EQUIP_CD || ''} readOnly onClick={handleModalVisible} style={{ width: '8%' }} />
+        &nbsp;
         <StyledButton className="btn-primary" onClick={() => this.handleAction('SEARCH')}>
           검색
         </StyledButton>
@@ -66,18 +82,21 @@ class Header extends Component {
         </StyledButton>
         {viewType === 'MODIFY' && (
           <>
-            <StyledButton className="btn-primary" onClick={() => this.handleAction('DELETE')}>
-              삭제
-            </StyledButton>
+            <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
+              <StyledButton className="btn-primary">삭제</StyledButton>
+            </Popconfirm>
             <StyledButton className="btn-primary" onClick={() => this.handleAction('REVISION')}>
               신규등록
             </StyledButton>
             <StyledButton className="btn-primary" onClick={() => this.handleAction('RESET')}>
               Reset
             </StyledButton>
+            <div align="right">
+              <span>{`[등록자] ${SETUP_EMPNO} ${SETUP_PERSON}`} </span>
+            </div>
           </>
         )}
-      </>
+      </div>
     );
   }
 }

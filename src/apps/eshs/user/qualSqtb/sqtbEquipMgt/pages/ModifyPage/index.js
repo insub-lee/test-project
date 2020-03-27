@@ -146,20 +146,6 @@ class ModifyPage extends Component {
               extraApiData={extraApiData}
               viewType="MODIFY"
             />
-            {CustomButtons ? (
-              <CustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
-            ) : (
-              <div className="alignRight">
-                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                  Save
-                </Button>
-                {!isBuilderModal && (
-                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
-                  </Button>
-                )}
-              </div>
-            )}
           </Sketch>
         </StyledViewDesigner>
       );

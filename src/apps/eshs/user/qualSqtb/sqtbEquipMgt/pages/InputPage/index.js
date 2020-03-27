@@ -144,6 +144,9 @@ class InputPage extends Component {
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
+            <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
+              [TEST용 - LIST]
+            </Button>
             <Header
               handleModalVisible={handleModalVisible}
               modalSelectedRow={modalSelectedRow}
@@ -170,20 +173,6 @@ class InputPage extends Component {
               extraApiData={extraApiData}
               viewPageData={viewPageData}
             />
-            {CustomButtons ? (
-              <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            ) : (
-              <div className="alignRight">
-                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                  Save
-                </Button>
-                {!isBuilderModal && (
-                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
-                  </Button>
-                )}
-              </div>
-            )}
           </Sketch>
         </StyledViewDesigner>
       );

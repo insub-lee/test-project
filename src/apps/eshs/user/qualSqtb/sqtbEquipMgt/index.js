@@ -7,6 +7,7 @@ import { Modal } from 'antd';
 import InputPage from './pages/InputPage';
 import ModifyPage from './pages/ModifyPage';
 import SearchListPage from './pages/SearchListPage';
+import ListPage from './pages/ListPage';
 
 class SqtbEquipMgt extends Component {
   state = {
@@ -74,9 +75,10 @@ class SqtbEquipMgt extends Component {
         <BizBuilderBase
           sagaKey="SqtbEquipMgt"
           workSeq={4941}
-          viewType="INPUT"
+          viewType="LIST"
           CustomInputPage={InputPage}
           CustomModifyPage={ModifyPage}
+          CustomListPage={ListPage}
           loadingComplete={this.loadingComplete}
           handleModalVisible={this.handleModalVisible}
           modalSelectedRow={modalSelectedRow}
