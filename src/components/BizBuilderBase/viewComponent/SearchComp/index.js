@@ -17,7 +17,7 @@ class TextComp extends React.Component {
   componentDidMount() {
     const { CONFIG } = this.props;
     const { searchType } = CONFIG.property;
-    if (searchType === 'RANGEDATE') {
+    if (searchType === 'RANGEDATE' && CONFIG.property.rangeDateSearchType !== ('default' && undefined)) {
       const rangeDateSearchType = CONFIG.property.rangeDateSearchType || 'default';
       this.handleOnChangeSearch(this.makeRangeDefaultValue(rangeDateSearchType));
     }
@@ -35,7 +35,7 @@ class TextComp extends React.Component {
   makeRangeDefaultValue = rangeDateSearchType => {
     const { CONFIG } = this.props;
     switch (rangeDateSearchType) {
-      case 'default': {
+      case 'sysdate': {
         return [moment(), moment()];
       }
       case 'autoMonth': {
@@ -52,7 +52,7 @@ class TextComp extends React.Component {
         ];
       }
       default:
-        return [moment(), moment()];
+        return [undefined, undefined];
     }
   };
 

@@ -88,24 +88,28 @@ class ModalTableComp extends React.Component {
       COMP_FIELD,
       CONFIG: { property },
       changeValidationData,
+      isSearch,
     } = this.props;
 
     if (property && property.columns) {
       property.columns.forEach(item => {
         if (item.changeFormDataYN === true) {
           changeFormData(id, item.targetIndex || item.dataIndex, record[item.dataIndex]);
-          if ((item.targetIndex || item.dataIndex) === COMP_FIELD && property && property.isRequired) {
+          if ((item.targetIndex || item.dataIndex) === COMP_FIELD.trim() && property && property.isRequired) {
             changeValidationData(
               id,
               COMP_FIELD,
               record[item.dataIndex].trim().length > 0,
               record[item.dataIndex].trim().length > 0 ? '' : `${COMP_FIELD}항목은 필수 입력입니다.`,
             );
+            this.handleOnChangeSearch(record[item.dataIndex]);
+          }
+          if ((item.targetIndex || item.dataIndex) === COMP_FIELD.trim() && isSearch) {
+            this.handleOnChangeSearch(record[item.dataIndex]);
           }
         }
       });
     }
-
     this.handleModalVisible();
   };
 
@@ -173,6 +177,12 @@ class ModalTableComp extends React.Component {
     this.setState({ searchText: '' });
   };
 
+  handleOnChangeSearch = value => {
+    const { sagaKey, COMP_FIELD, changeSearchData } = this.props;
+    const searchText = value.length > 0 ? `AND W.${COMP_FIELD} = '${value}'` : '';
+    changeSearchData(sagaKey, COMP_FIELD, searchText);
+  };
+
   render() {
     const { CONFIG, visible, colData, readOnly } = this.props;
     return visible ? (
@@ -204,9 +214,11 @@ ModalTableComp.propTypes = {
   getExtraApiData: PropTypes.func,
   changeFormData: PropTypes.func,
   changeValidationData: PropTypes.func,
+  changeSearchData: PropTypes.func,
   columns: PropTypes.array,
   extraApiData: PropTypes.any,
   readOnly: PropTypes.bool,
+  isSearch: PropTypes.bool,
 };
 ModalTableComp.defaultProps = {
   columns: [
