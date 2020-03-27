@@ -46,7 +46,7 @@ class DistributeDocView extends Component {
       dataIndex: 'RNUM',
       key: 'RNUM',
       align: 'center',
-      width: '10%',
+      width: '5%',
     },
     {
       title: '파일명',
@@ -65,7 +65,7 @@ class DistributeDocView extends Component {
       title: '다운로드 일자',
       dataIndex: 'DOWN_DATE',
       key: 'DOWN_DATE',
-      width: '20%',
+      width: '30%',
       align: 'center',
       render: (text, record) => record.DOWN_DATE && moment(record.DOWN_DATE).format('YYYY-MM-DD HH:mm:ss'),
     },
