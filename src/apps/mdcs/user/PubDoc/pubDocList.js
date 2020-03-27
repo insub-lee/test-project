@@ -5,6 +5,7 @@ import { Table, Icon, Modal, Button } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import ContentView from './ContentView';
 
 const AntdTable = StyledAntdTable(Table);
@@ -96,13 +97,16 @@ class PubDocList extends Component {
 
   render() {
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-            <Icon type="form" /> 접수/배포 대기함
-          </p>
-        </div>
-        <AntdTable dataSource={this.state.pubDocList} columns={this.columns} />
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 접수/배포 대기함
+            </p>
+          </div>
+          <AntdTable dataSource={this.state.pubDocList} columns={this.columns} />
+        </ContentsWrapper>
+
         <AntdModal
           width={700}
           visible={this.state.isShow}
@@ -117,7 +121,7 @@ class PubDocList extends Component {
         >
           <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
         </AntdModal>
-      </div>
+      </>
     );
   }
 }

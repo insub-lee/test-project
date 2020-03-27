@@ -5,6 +5,7 @@ import { Table, Icon, Modal, Button } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -150,18 +151,21 @@ class PubCompleteDocList extends Component {
       onChange: this.onSelectChange,
     };
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white', height: '100%' }}>
-        <div style={{ marginBottom: '10px', clear: 'both', overflow: 'hidden', width: '100%' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000', paddingBottom: '10px', float: 'left' }}>
-            <Icon type="form" /> 접수/배포 완료함
-          </p>
-          <p style={{ float: 'right', marginTop: '5px' }}>
-            <Button icon="export" onClick={this.onClickExternalDist}>
-              외부배포
-            </Button>
-          </p>
-        </div>
-        <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} />
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 접수/배포 완료함
+            </p>
+            <p>
+              <Button icon="export" onClick={this.onClickExternalDist}>
+                외부배포
+              </Button>
+            </p>
+          </div>
+          <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} />
+        </ContentsWrapper>
+
         <AntdModal width={700} visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[<Button onClick={this.onCancel}>취소</Button>]}>
           <ContentView workSeq={this.state.workSeq} taskSeq={this.state.taskSeq} pubDocInfo={this.state.pubDocInfo} />
         </AntdModal>
@@ -175,7 +179,7 @@ class PubCompleteDocList extends Component {
         >
           <ExternalDist docList={this.state.selectedPubDocList} onExternalDistComplete={this.onExternalDistComplete} />
         </AntdModal>
-      </div>
+      </>
     );
   }
 }
