@@ -8,7 +8,7 @@ String.prototype.rtrim = function() {
   return this.replace(/(\s*$)/, '');
 };
 
-export default function Save({ saveTask, saveBeforeProcess, onCloseModleHandler, changeFormData, formData, workSeq, sagaKey: id, reloadId, getListData }) {
+export default function Save({ saveTask, saveBeforeProcess, onCloseModalHandler, changeFormData, formData, workSeq, sagaKey: id, reloadId, getListData }) {
   function position_no_generator(formData) {
     const { BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO } = formData;
 

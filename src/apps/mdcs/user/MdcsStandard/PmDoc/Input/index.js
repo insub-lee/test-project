@@ -601,7 +601,7 @@ class PmDoc extends Component {
                       isDraftModal={this.state.isDraftModal}
                       setIsDraftModal={this.setIsDraftModal}
                       selectedInitDraft={{ REL_TYPE: 1, REL_KEY: { WORK_SEQ: workSeq, TASK_SEQ: this.state.taskSeq }, PRC_ID: 138, TITLE: this.state.title }}
-                      draftCompleteFunc={this.props.onCloseModleHandler}
+                      draftCompleteFunc={this.props.onCloseModalHandler}
                       externalData={{ draftType, fullNodeIds, degree: this.state.degree }}
                       formData={this.state.formData}
                     />

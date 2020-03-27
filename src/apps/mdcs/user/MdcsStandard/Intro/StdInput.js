@@ -137,9 +137,9 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
+    const { onCloseModalHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler();
     }
     if (typeof changeViewPage === 'function') {
       // changeViewPage(id, workSeq, taskSeq, 'VIEW');
@@ -215,7 +215,7 @@ StdInput.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,

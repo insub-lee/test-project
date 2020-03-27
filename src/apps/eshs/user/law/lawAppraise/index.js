@@ -155,7 +155,7 @@ class lawClause extends Component {
       CustomInputPage={ModalInput}
       CustomViewPage={OnlyView}
       viewMetaSeq={2621}
-      onCloseModleHandler={this.onCancel}
+      onCloseModalHandler={this.onCancel}
     />
   );
 
@@ -180,7 +180,7 @@ class lawClause extends Component {
               viewType="VIEW"
               CustomViewPage={OnlyView}
               loadingComplete={this.loadingComplete}
-              onCloseModleHandler={this.onCancel}
+              onCloseModalHandler={this.onCancel}
             />
           </td>
         </tr>
@@ -288,7 +288,7 @@ class lawClause extends Component {
         viewType={viewType}
         loadingComplete={this.loadingComplete}
         CustomListPage={RevisionHistory}
-        onCloseModleHandler={this.onCancel}
+        onCloseModalHandler={this.onCancel}
         isOpenModalChange={this.isOpenRevisionDetailModal}
         isOpenAppraiseDetailModal={this.isOpenAppraiseDetailModal}
         taskSeqReal={this.state.taskSeqReal}

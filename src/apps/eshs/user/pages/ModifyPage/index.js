@@ -27,9 +27,9 @@ class ModifyPage extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, baseSagaKey } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
+    const { onCloseModalHandler, changeViewPage, baseSagaKey } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler();
       changeViewPage(baseSagaKey, workSeq, -1, 'LIST');
     }
   };

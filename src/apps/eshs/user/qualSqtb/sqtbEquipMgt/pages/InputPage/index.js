@@ -94,9 +94,9 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
+    const { onCloseModalHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler();
     }
     if (typeof changeViewPage === 'function') {
       changeViewPage(id, workSeq, taskSeq, 'VIEW');
@@ -189,7 +189,7 @@ InputPage.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   CustomWorkProcess: PropTypes.func,
