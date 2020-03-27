@@ -657,6 +657,22 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
   }
 }
 
+function* getFileDownload({ url, fileName }) {
+  const blobResponse = yield call(Axios.getDown, url);
+
+  if (window.navigator && window.navigator.msSaveBlob){
+    window.navigator.msSaveBlob(blobResponse, fileName);
+  } else {
+    const fileUrl = window.URL.createObjectURL(blobResponse);
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.GET_BUILDER_DATA}_${arg.sagaKey}`, getBuilderData);
   yield takeEvery(`${actionTypes.GET_EXTRA_API_DATA}_${arg.sagaKey}`, getExtraApiData);
@@ -679,6 +695,7 @@ export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.SUBMIT_EXTRA}_${arg.sagaKey || arg.id}`, submitExtraHandler);
   yield takeLatest(`${actionTypes.REDIRECT_URL}_${arg.sagaKey || arg.id}`, redirectUrl);
   yield takeLatest(`${actionTypes.REMOVE_MULTI_TASK_SAGA}_${arg.sagaKey}`, removeMultiTask);
+  yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
   // yield takeLatest(actionTypes.POST_DATA, postData);
   // yield takeLatest(actionTypes.OPEN_EDIT_MODAL, getEditData);
   // yield takeLatest(actionTypes.SAVE_TASK_CONTENTS, saveTaskContents);

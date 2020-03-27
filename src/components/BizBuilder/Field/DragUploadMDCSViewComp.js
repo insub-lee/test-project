@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
-
+import base64 from 'base-64';
+import uuid from 'uuid/v1';
 class DragUploadMDCSViewComp extends Component {
   constructor(props) {
     super(props);
@@ -9,25 +10,23 @@ class DragUploadMDCSViewComp extends Component {
     };
   }
 
-  download = response => {
-    console.debug(response);
-  };
-
-  onClickDownLoad = url => {
+  onClickDownLoad = (url, fileName) => {
     const {
-      submitExtraHandler,
       sagaKey,
       CONFIG: {
         property: { selectedValue },
       },
+      getFileDownload,
     } = this.props;
-    submitExtraHandler(sagaKey, 'GET', url, selectedValue, this.download);
+    const tempSelectedValue = { [uuid()]: 1, ...selectedValue };
+    const acl = base64.encode(JSON.stringify(tempSelectedValue));
+    const fileUrl = `${url}/${acl}`;
+    getFileDownload(sagaKey, fileUrl, fileName);
   };
 
   componentDidMount() {
-    const { colData } = this.props;
-    console.debug('this.props', this.props);
-    const { DETAIL: attachList } = colData;
+    const { colData, CONFIG } = this.props;
+    const attachList = colData && colData.DETAIL ? colData.DETAIL : [];
     const tmpList = attachList.map(file => {
       let doctype = 'file-unknown';
       switch (file.fileExt) {
@@ -67,17 +66,20 @@ class DragUploadMDCSViewComp extends Component {
   }
 
   render() {
+    const { COMP_FIELD } = this.props;
     const { fileList } = this.state;
 
     return (
-      <ul>
-        {fileList.map(file => (
-          <li className={file.fileExt} onClick={() => this.onClickDownLoad(file.down)}>
-            {file.icon}
-            {file.fileName}
-          </li>
-        ))}
-      </ul>
+      <div id={COMP_FIELD}>
+        <ul>
+          {fileList.map(file => (
+            <li className={file.fileExt} onClick={() => this.onClickDownLoad(file.down, file.fileName)}>
+              {file.icon}
+              {file.fileName}
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   }
 }

@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 const StyledWorkProcess = styled.div`
   width: 100%;
-  margin-bottom: 30px;
-
+  margin-bottom: 20px;
   .signLineWrapper {
     width: 100%;
     margin-bottom: 20px;
@@ -76,17 +75,17 @@ const StyledWorkProcess = styled.div`
   }
 
   .draftTitleLayout {
-    border-bottom: 1px solid;
-    display: inline-block;
+    position: relative;
     width: 100%;
-    .draftTitle{
-      float: left;
-      padding: 7px;
+    margin-bottom: 10px;
+    .draftTitle {
       font-size: 16px;
+      color: #333;
     }
-    .draftButton{
-      float: right;
-      padding: 4px;
+    .draftButton {
+      position: absolute;
+      top: -3px;
+      right: 0px;
     }
   }
 
@@ -99,16 +98,14 @@ const StyledWorkProcess = styled.div`
       border-bottom: 1px solid #ddd;
     }
     .ant-row-flex {
-      /* display: flex; */
-      min-height: 32px;
       .ant-col.dataLabel {
         position: relative;
         border-right: 1px solid #ddd;
         background-color: #f7f7f7;
-        min-height: 32px;
         text-align: center;
-        line-height: 32px;
+        padding: 4px;
         span {
+          vertical-align: middle;
           font-size: 12px;
           color: #000;
         }
@@ -116,7 +113,8 @@ const StyledWorkProcess = styled.div`
       .ant-col.dataContents {
         font-size: 12px;
         display: inline-block;
-       
+        padding: 4px;
+
         input {
           border: 0;
           height: auto;
@@ -126,18 +124,14 @@ const StyledWorkProcess = styled.div`
         }
 
         .draftInfoBox {
-          background: #FFFFFF;
-          border: 1px solid #DADADA;
-          margin-top: 3px;
-          margin-left: 10px;
-          margin-bottom: 3px;
-
+          background: #ffffff;
+          border: 1px solid #dadada;
+          margin-right: 5px;
           border-radius: 5px;
           text-align: center;
           padding: 3px 10px;
-          display: inline-block;          
+          display: inline-block;
           box-sizing: border-box;
-          
         }
         .draftInfoBox span {
           display: inline-block;
@@ -145,8 +139,9 @@ const StyledWorkProcess = styled.div`
           margin-left: 4px;
           font-size: 12px;
         }
+      }
     }
-  } 
+  }
 
   .btnWrapper {
     width: 100%;

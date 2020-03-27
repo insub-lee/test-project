@@ -21,7 +21,7 @@ class View extends Component {
   };
 
   render() {
-    const { viewLayer, formData } = this.props;
+    const { viewLayer, formData, viewType } = this.props;
     if (viewLayer && viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const {
@@ -31,7 +31,7 @@ class View extends Component {
         <>
           {groups.map((group, groupIndex) => (
             <div key={group.key}>
-              {group.useTitle && <GroupTitle title={group.title} />}
+              {group.useTitle && <GroupTitle viewType={viewType} title={group.title} />}
               <Group key={group.key} className={`view-designer-group group-${groupIndex} ${viewLayer[0].COMP_FIELD}-${groupIndex}`}>
                 <table className={`view-designer-table table-${groupIndex}`}>
                   <tbody>

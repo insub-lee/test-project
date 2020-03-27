@@ -64,7 +64,7 @@ class WorkProcess extends Component {
               )}
             </div>
           </div>
-          <div style={{ marginBottom: '10px', marginTop: '2px' }}>
+          <div style={{ marginBottom: '10px' }}>
             {filterRule.map(item => (
               <div className="dataWrapper_mdcs">
                 <Row type="flex">
@@ -118,11 +118,11 @@ class WorkProcess extends Component {
           </div>
         </div>
         <AntdModal
-          title="결재선지정ㅋㅋ"
+          title="결재선지정"
           visible={modalVisible}
           // onOk={this.handleComplete}
           onCancel={this.handleCloseModal}
-          width="70%"
+          width="62%"
           style={{ top: 50, height: '500px' }}
           footer={[]}
           destroyOnClose

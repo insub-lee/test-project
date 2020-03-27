@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Row, Col, Select, Input, TreeSelect, Radio } from 'antd';
+import * as PropTypes from 'prop-types';
+import { Select, Input, TreeSelect, Radio } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
 import BizMicroDevBase from 'components/BizMicroDevBase';
 
 const { Option } = Select;
-const { SHOW_PARENT } = TreeSelect;
 
 const getCategoryMapListAsTree = (flatData, flag) =>
   getTreeFromFlatData({
@@ -23,14 +23,12 @@ const getCategoryMapListAsTree = (flatData, flag) =>
   });
 
 class ComponentConfig extends Component {
-  state = {
-    rootMapValue: undefined,
-    selectableFlag: 'Y',
-    defaultFlag: 2,
-    treeSelectDefaultValue: undefined,
-    apiArray: '',
-    apiKey: '',
-  };
+  constructor(prop) {
+    super(prop);
+    this.state = {
+      selectableFlag: 'Y',
+    };
+  }
 
   componentDidMount() {
     const { getCallDataHandler, sagaKey: id, apiArray, configInfo } = this.props;
@@ -61,9 +59,6 @@ class ComponentConfig extends Component {
   render() {
     const {
       result: { rootMap, categoryMapInfo },
-      groupIndex,
-      rowIndex,
-      colIndex,
       configInfo,
     } = this.props;
 
@@ -75,114 +70,80 @@ class ComponentConfig extends Component {
           )[0]
         : [];
     return (
-      <div>
-        <Row>
-          <Col span={6}>분류체계설정</Col>
-          <Col span={18}>
-            <Select
-              style={{ width: '100%' }}
-              placeholder="분류체계를 설정해주세요"
-              value={(configInfo && configInfo.property && configInfo.property.mapId) || undefined}
-              onChange={value => {
-                this.handleChangeViewCompData('mapId', value);
-                this.getCategorieMapList(value);
-                this.setState({
-                  rootMapValue: value,
-                  treeSelectDefaultValue: undefined,
-                });
-              }}
-            >
-              {rootMap &&
-                rootMap.rootMapList &&
-                rootMap.rootMapList
-                  .filter(x => x.USE_YN === 'Y' && x.CHILDREN_CNT !== 0)
-                  .map(item => (
-                    <Option key={`RootMap_${item.MAP_ID}`} value={item.MAP_ID}>
-                      {item.NAME_KOR}
-                    </Option>
-                  ))}
-            </Select>
-          </Col>
-        </Row>
+      <>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">분류체계설정</span>
+          <Select
+            style={{ width: '100%' }}
+            placeholder="분류체계를 설정해주세요"
+            value={(configInfo && configInfo.property && configInfo.property.mapId) || undefined}
+            onChange={value => {
+              this.handleChangeViewCompData('mapId', value);
+              this.getCategorieMapList(value);
+            }}
+          >
+            {rootMap &&
+              rootMap.rootMapList &&
+              rootMap.rootMapList
+                .filter(x => x.USE_YN === 'Y' && x.CHILDREN_CNT !== 0)
+                .map(item => (
+                  <Option key={`RootMap_${item.MAP_ID}`} value={item.MAP_ID}>
+                    {item.NAME_KOR}
+                  </Option>
+                ))}
+          </Select>
+        </div>
         {configInfo && configInfo.property && configInfo.property.mapId ? (
-          <Row>
-            <Col span={6}>RootKey설정</Col>
-            <Col span={18}>
-              <TreeSelect
-                style={{ width: '100%' }}
-                value={(configInfo && configInfo.property && configInfo.property.rootkey) || undefined}
-                dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                treeData={categoryData.children}
-                onChange={value => {
-                  this.handleChangeViewCompData('rootkey', value);
-                }}
-                placeholder="Root key를 설정해주세요"
-              />
-            </Col>
-          </Row>
+          <div className="popoverItem popoverItemInput">
+            <span className="spanLabel">RootKey설정</span>
+            <TreeSelect
+              style={{ width: '100%' }}
+              value={(configInfo && configInfo.property && configInfo.property.rootkey) || undefined}
+              dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+              treeData={categoryData.children}
+              onChange={value => {
+                this.handleChangeViewCompData('rootkey', value);
+              }}
+              placeholder="Root key를 설정해주세요"
+            />
+          </div>
         ) : (
           ''
         )}
-        <Row>
-          <Col span={6}>PlaceHolder 설정</Col>
-          <Col span={18}>
-            <Input
-              value={configInfo && configInfo.property && configInfo.property.placeholder}
-              onChange={e => this.handleChangeViewCompData('placeholder', e.target.value)}
-            ></Input>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={6}>상위노드 선택 가능여부</Col>
-          <Col span={18}>
-            {' '}
-            <Radio.Group
-              value={(configInfo && configInfo.property && configInfo.property.selectableFlag) || undefined}
-              onChange={e => {
-                this.handleChangeViewCompData('selectableFlag', e.target.value);
-              }}
-            >
-              <Radio value="Y">가능</Radio>
-              <Radio value="N">불가능</Radio>
-            </Radio.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col span={6}>표시 언어</Col>
-          <Col span={18}>
-            {' '}
-            <Select
-              style={{ width: '100%' }}
-              placeholder="표시 언어를 선택해주세요"
-              value={(configInfo && configInfo.property && configInfo.property.viewLang) || 'KOR'}
-              onChange={value => {
-                this.handleChangeViewCompData('viewLang', value);
-              }}
-            >
-              <Option value="KOR">한국어</Option>
-              <Option value="ENG">영어</Option>
-            </Select>
-          </Col>
-        </Row>
-        {/* 
-              <Row>
-                <div className="w100Table">
-                  <Col span={6}>기본값 설정</Col>
-                  <Col span={18}>
-                    <TreeSelect
-                      style={{ width: 300, marginRight: 10 }}
-                     value={configInfo && configInfo.defaultValue || undefined}
-                      disabled={this.state.defaultFlag === 2}
-                      dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                      treeData={categoryData.children}
-                      onChange={value =>    changeCompData(groupIndex, rowIndex, colIndex, 'defaultValue', e.target.value);)}
-                      placeholder="기본값 설정"
-                    />
-                  </Col>
-                </div>
-              </Row>
-*/}
-      </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">PlaceHolder 설정</span>
+          <Input
+            value={configInfo && configInfo.property && configInfo.property.placeholder}
+            onChange={e => this.handleChangeViewCompData('placeholder', e.target.value)}
+          ></Input>
+        </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">상위노드 선택 가능여부</span>
+          <Radio.Group
+            value={(configInfo && configInfo.property && configInfo.property.selectableFlag) || undefined}
+            onChange={e => {
+              this.handleChangeViewCompData('selectableFlag', e.target.value);
+            }}
+          >
+            <Radio value="Y">가능</Radio>
+            <Radio value="N">불가능</Radio>
+          </Radio.Group>
+        </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">표시 언어</span>
+          <Select
+            style={{ width: '100%' }}
+            placeholder="표시 언어를 선택해주세요"
+            value={(configInfo && configInfo.property && configInfo.property.viewLang) || 'KOR'}
+            onChange={value => {
+              this.handleChangeViewCompData('viewLang', value);
+            }}
+          >
+            <Option value="KOR">한국어</Option>
+            <Option value="ENG">영어</Option>
+          </Select>
+        </div>
+      </>
     );
   }
 }
@@ -197,6 +158,26 @@ const configer = ({ changeViewCompData, groupIndex, rowIndex, colIndex, configIn
     component={ComponentConfig}
   ></BizMicroDevBase>
 );
+
+configer.propTypes = {
+  configInfo: PropTypes.any,
+  changeViewCompData: PropTypes.func,
+  groupIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  colIndex: PropTypes.number,
+};
+
+ComponentConfig.propTypes = {
+  configInfo: PropTypes.any,
+  result: PropTypes.any,
+  sagaKey: PropTypes.string,
+  getCallDataHandler: PropTypes.func,
+  apiArray: PropTypes.array,
+  changeViewCompData: PropTypes.func,
+  groupIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  colIndex: PropTypes.number,
+};
 
 ComponentConfig.defaultProps = {
   apiArray: [{ key: 'rootMap', url: `/api/admin/v1/common/categoryRootMap`, type: 'GET' }],

@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 const Group = styled.div`
   position: relative;
-  padding: 5px;
-  margin-bottom: 3px;
+  margin-bottom: 10px;
   /* border: 1px solid #ddd; */
 
   /* :hover {
