@@ -328,9 +328,10 @@ class CompModal extends Component {
                       <Select
                         placeholder="기본값을 선택하십시오."
                         style={{ width: '100%' }}
-                        defaultValue={(comp.CONFIG.property.rangeDateSearchType) || 'default'}
+                        defaultValue={comp.CONFIG.property.rangeDateSearchType || 'default'}
                         onChange={value => this.handleChangeViewConfig('rangeDateSearchType', value, 'property')}
                       >
+                        <Option value="sysdate">sysdate</Option>
                         <Option value="default">Default</Option>
                         <Option value="autoMonth">auto Month(startOfMonth, endOfMonth)</Option>
                         <Option value="custom">User Custom</Option>
