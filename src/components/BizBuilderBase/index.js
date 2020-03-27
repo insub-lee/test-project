@@ -293,6 +293,7 @@ BizBuilderBase.propTypes = {
   ModifyCustomButtonsByModal: PropTypes.func,
   ViewCustomButtonsByModal: PropTypes.func,
   ListCustomButtonsByModal: PropTypes.func,
+  getFileDownload: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -330,6 +331,7 @@ BizBuilderBase.defaultProps = {
   ModifyCustomButtonsByModal: undefined,
   ViewCustomButtonsByModal: undefined,
   ListCustomButtonsByModal: undefined,
+  getFileDownload: () => false,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -393,6 +395,7 @@ const mapDispatchToProps = dispatch => ({
   setListSelectRowKeys: (id, list) => dispatch(actions.setListSelectRowKeysByReducer(id, list)),
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
   setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
+  getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

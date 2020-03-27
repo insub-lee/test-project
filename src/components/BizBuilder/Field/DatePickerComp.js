@@ -20,6 +20,7 @@ class DatePickerComp extends Component {
           break;
         }
         default:
+          changeFormData(id, COMP_FIELD, undefined);
           break;
       }
     }
@@ -64,7 +65,6 @@ class DatePickerComp extends Component {
           onChange={this.onChangeHandler}
           placeholder="날짜를 선택하세요."
           value={(colData && moment(colData)) || undefined}
-          defaultValue={colData && moment(colData)}
           readOnly={readOnly || CONFIG.property.readOnly}
         />
       );

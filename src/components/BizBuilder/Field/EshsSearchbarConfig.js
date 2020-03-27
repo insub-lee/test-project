@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Col, Input, InputNumber } from 'antd';
+import * as PropTypes from 'prop-types';
+import { InputNumber } from 'antd';
 import { debounce } from 'lodash';
 
 class ComponentConfig extends Component {
@@ -17,32 +18,44 @@ class ComponentConfig extends Component {
   render() {
     const { configInfo } = this.props;
     return (
-      <div>
-        <Row>
-          <Col span={6}>WORK_SEQ 설정</Col>
-          <Col span={18}>
-            <InputNumber
-              style={{ width: '100%' }}
-              defaultValue={(configInfo && configInfo.property && configInfo.property.searchbarWorkSeq) || ''}
-              min={0}
-              onChange={value => this.handleChangeViewCompData('searchbarWorkSeq', value)}
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={6}>ListMetaSeq 설정</Col>
-          <Col span={18}>
-            <InputNumber
-              style={{ width: '100%' }}
-              defaultValue={(configInfo && configInfo.property && configInfo.property.listMetaSeq) || ''}
-              min={0}
-              onChange={value => this.handleChangeViewCompData('listMetaSeq', value)}
-            />
-          </Col>
-        </Row>
-      </div>
+      <>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">WORK_SEQ 설정</span>
+          <InputNumber
+            style={{ width: '100%' }}
+            defaultValue={(configInfo && configInfo.property && configInfo.property.searchbarWorkSeq) || ''}
+            min={0}
+            onChange={value => this.handleChangeViewCompData('searchbarWorkSeq', value)}
+          />
+        </div>
+        <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">ListMetaSeq 설정</span>
+          <InputNumber
+            style={{ width: '100%' }}
+            defaultValue={(configInfo && configInfo.property && configInfo.property.listMetaSeq) || ''}
+            min={0}
+            onChange={value => this.handleChangeViewCompData('listMetaSeq', value)}
+          />
+        </div>
+      </>
     );
   }
 }
+
+ComponentConfig.propTypes = {
+  configInfo: PropTypes.any,
+  changeViewCompData: PropTypes.func,
+  groupIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  colIndex: PropTypes.number,
+};
+
+ComponentConfig.propTypes = {
+  configInfo: PropTypes.any,
+  changeViewCompData: PropTypes.func,
+  groupIndex: PropTypes.number,
+  rowIndex: PropTypes.number,
+  colIndex: PropTypes.number,
+};
 
 export default ComponentConfig;

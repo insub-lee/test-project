@@ -341,3 +341,9 @@ export const setBuilderModalByReducer = (id, flag, builderModalSetting, isSaveMo
 });
 
 export const setIsLoadingByReducer = (id, flag) => ({ type: actionTypes.SET_IS_LOADING_REDUCER, id, flag });
+
+export const getFileDownload = (id, url, fileName) => ({
+  type: `${actionTypes.GET_FILE_DOWNLOAD}_${id}`,
+  url,
+  fileName,
+});
