@@ -30,16 +30,13 @@ class Header extends Component {
     const searchTaskSeq = (modalSelectedRow && modalSelectedRow.TASK_SEQ) || -1;
     switch (type) {
       case 'INPUT':
-        console.debug('여기는 INPUT', saveTask);
         saveTask();
         break;
       case 'MODIFY':
-        console.debug('여기는 MODIFY', modifySaveTask);
         modifySaveTask();
         break;
       case 'SEARCH':
         if (searchTaskSeq > -1) {
-          console.debug('여기는 changeViewPage');
           changeViewPage(id, workSeq, searchTaskSeq, 'MODIFY');
         }
         break;
