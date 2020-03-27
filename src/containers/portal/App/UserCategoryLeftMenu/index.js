@@ -14,7 +14,7 @@ import Styled from './Styled';
 import Tree from './Tree';
 // import WorkTimeLine from '../WorkTimeLine';
 
-class UserCategoryMenu extends Component {
+class UserCategoryLeftMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -82,10 +82,9 @@ class UserCategoryMenu extends Component {
     return (
       <Styled className={isShow ? 'active' : ''} onMouseLeave={setMenuClose}>
         <div className="profile-area">
-          <Profile profile={profile} setFixedOpenMenu={setFixedOpenMenu} fixedMenu={fixedMenu} />
+          <Profile blackThema profile={profile} setFixedOpenMenu={setFixedOpenMenu} fixedMenu={fixedMenu} />
         </div>
         <div className="category-menu-area">
-          <div className="area-title">{profile.DEPT_NAME_KOR}</div>
           <Tree
             treeData={myAppTreeData}
             saveData={saveData}
@@ -123,7 +122,7 @@ class UserCategoryMenu extends Component {
   }
 }
 
-UserCategoryMenu.propTypes = {
+UserCategoryLeftMenu.propTypes = {
   isShow: PropTypes.bool,
   // toggleMenu: PropTypes.func,
   // open: PropTypes.bool.isRequired,
@@ -153,7 +152,7 @@ UserCategoryMenu.propTypes = {
   fixedMenu: PropTypes.bool.isRequired,
 };
 
-UserCategoryMenu.defaultProps = {
+UserCategoryLeftMenu.defaultProps = {
   isShow: false,
   // toggleMenu: () => false,
   setClose: undefined,
@@ -175,4 +174,4 @@ const mapDispatchToProps = dispatch => ({
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose(withConnect)(UserCategoryMenu);
+export default compose(withConnect)(UserCategoryLeftMenu);
