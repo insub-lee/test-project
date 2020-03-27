@@ -78,7 +78,7 @@ function ListPage(props) {
         workSeq={workSeq} // metadata binding
         viewType={VIEW_TYPE.INPUT}
         taskSeq={taskSeq} // data binding
-        onCloseModleHandler={() => setActivateRegModal(false)}
+        onCloseModalHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
         CustomButtons={InputButtons}
       />,
@@ -89,7 +89,7 @@ function ListPage(props) {
         viewType={VIEW_TYPE.LIST}
         taskSeq={taskSeq}
         CustomListPage={ListPage}
-        onCloseModleHandler={() => setActivateRegModal(false)}
+        onCloseModalHandler={() => setActivateRegModal(false)}
         baseSagaKey={sagaKey}
         listMetaSeq={META_SEQ.MODAL_LIST} // meta SEQ
         isSearched
@@ -107,7 +107,7 @@ function ListPage(props) {
         workSeq={workSeq} // metadata binding
         viewType={VIEW_TYPE.VIEW}
         taskSeq={taskSeq} // data binding
-        onCloseModleHandler={() => setActivateDetailModal(false)}
+        onCloseModalHandler={() => setActivateDetailModal(false)}
         viewMetaSeq={META_SEQ.VIEW_BASIC}
         baseSagaKey={sagaKey}
         CustomButtons={CustomButtons.Button1}
@@ -122,7 +122,7 @@ function ListPage(props) {
       //       workSeq={workSeq} // metadata binding
       //       viewType={VIEW_TYPE.VIEW}
       //       taskSeq={taskSeq} // data binding
-      //       onCloseModleHandler={() => setActivateDetailModal(false)}
+      //       onCloseModalHandler={() => setActivateDetailModal(false)}
       //       viewMetaSeq={META_SEQ.INSPECTION}
       //       baseSagaKey={sagaKey}
       //     />
@@ -134,7 +134,7 @@ function ListPage(props) {
       //       workSeq={workSeq} // metadata binding
       //       viewType={VIEW_TYPE.VIEW}
       //       taskSeq={taskSeq} // data binding
-      //       onCloseModleHandler={() => setActivateDetailModal(false)}
+      //       onCloseModalHandler={() => setActivateDetailModal(false)}
       //       viewMetaSeq={META_SEQ.ISSUE}
       //       baseSagaKey={sagaKey}
       //     />

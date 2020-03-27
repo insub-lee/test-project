@@ -93,9 +93,9 @@ class ModifyPage extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { reloadId, onCloseModleHandler, changeViewPage, isBuilderModal, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
+    const { reloadId, onCloseModalHandler, changeViewPage, isBuilderModal, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler();
     }
     if (typeof changeViewPage === 'function') {
       const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);

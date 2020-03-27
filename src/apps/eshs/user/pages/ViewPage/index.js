@@ -36,7 +36,7 @@ class ViewPage extends Component {
   };
 
   customDeleteCallback = workSeq => {
-    this.props.onCloseModleHandler();
+    this.props.onCloseModalHandler();
     this.props.changeViewPage(this.props.baseSagaKey, workSeq, -1, 'LIST');
   };
 
@@ -65,7 +65,7 @@ class ViewPage extends Component {
             <div className="alignRight">
               <Popconfirm
                 title="Are you sure delete this task?"
-                // onConfirm={() => this.customDeleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.props.onCloseModleHandler)}
+                // onConfirm={() => this.customDeleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, changeViewPage, this.props.onCloseModalHandler)}
                 onConfirm={() => this.props.deleteTask(id, id, viewPageData.workSeq, viewPageData.taskSeq, this.customDeleteCallback(viewPageData.workSeq))}
                 okText="Yes"
                 cancelText="No"

@@ -26,9 +26,9 @@ class ViewPage extends Component {
   }
 
   deleteTaskModal = (id, workSeq, taskSeq, changeViewPage) => {
-    const { deleteTask, baseid, onCloseModleHandler } = this.props;
+    const { deleteTask, baseid, onCloseModalHandler } = this.props;
     deleteTask(id, baseid, workSeq, taskSeq, changeViewPage);
-    onCloseModleHandler();
+    onCloseModalHandler();
   };
 
   // state값 reset테스트

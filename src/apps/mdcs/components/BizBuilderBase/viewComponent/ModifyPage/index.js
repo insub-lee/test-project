@@ -31,9 +31,9 @@ class ModifyPage extends Component {
   };
 
   saveTaskAfter = (id, taskSeq, formData) => {
-    const { onCloseModleHandler } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
+    const { onCloseModalHandler } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler();
     }
   };
 

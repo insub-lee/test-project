@@ -57,7 +57,7 @@ class Suggest extends Component {
         CustomViewPage={View}
         CustomInputPage={Input}
         CustomModifyPage={Modify}
-        onCloseModleHandler={this.onCancel}
+        onCloseModalHandler={this.onCancel}
         onReplyChange={this.onReplyModalChange}
       />
       <Modal visible={this.state.isReplyModal} width="1000px" onCancel={this.onReplyCancel} destroyOnClose footer={[]}>
@@ -75,7 +75,7 @@ class Suggest extends Component {
         viewType="VIEW"
         loadingComplete={this.loadingComplete}
         CustomViewPage={OnlyView}
-        onCloseModleHandler={this.onReplyCancel}
+        onCloseModalHandler={this.onReplyCancel}
       />
       <BizBuilderBase
         sagaKey="SuggestReply"
@@ -87,7 +87,7 @@ class Suggest extends Component {
         compProps={{ PARENT_TASK_SEQ: this.state.parentTaskSeq, TITLE: this.state.replyTitle, TYPE: this.state.replyType }}
         loadingComplete={this.loadingComplete}
         CustomInputPage={Input}
-        onCloseModleHandler={this.onReplyCancel}
+        onCloseModalHandler={this.onReplyCancel}
       />
     </>
   );

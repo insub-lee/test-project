@@ -48,7 +48,7 @@ class law extends Component {
       loadingComplete={this.loadingComplete}
       CustomModifyPage={ModalModify}
       CustomInputPage={ModalInput}
-      onCloseModleHandler={this.onCancel}
+      onCloseModalHandler={this.onCancel}
     />
   );
 

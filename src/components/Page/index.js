@@ -296,7 +296,7 @@ class Page extends Component {
     return (
       <div style={!isFullSize && setMyMenuData.SRC_PATH !== 'legacySVC' ? { width: `${layoutConfig.width}px`, margin: '0 auto' } : {}}>
         {!setMyMenuData ? (
-          <GridLayout className="layout" layout={layout} cols={layoutConfig.col} rowHeight={270} width={layoutConfig.width} compactType="horizontal">
+          <GridLayout className="layout saaa" layout={layout} cols={layoutConfig.col} rowHeight={270} width={layoutConfig.width} compactType="horizontal">
             {nextColumns.map(createComponents)}
           </GridLayout>
         ) : (

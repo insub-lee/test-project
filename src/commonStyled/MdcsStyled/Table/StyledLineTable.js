@@ -25,7 +25,7 @@ const StyledLineTable = Component => styled(Component)`
       .ant-table-tbody > tr {
         &.ant-table-row-selected {
           td {
-            background: #e6f7ff;
+            background: #fffbf1;
           }
         }
         td {
