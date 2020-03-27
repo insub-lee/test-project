@@ -11,10 +11,8 @@ import { debounce } from 'lodash';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
-// import CustomTooltipStyled from './styled';
 
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
-// import DefaultUploader from 'manual/components/Upload';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import CustomTooltip from './customTooltip';
 
@@ -123,10 +121,6 @@ class List extends React.Component {
   modalContent = () => [
     {
       title: this.state.viewType.toUpperCase() === 'VIEW' ? '사진' : '',
-      // content:
-      //   this.state.viewType.toUpperCase() === 'VIEW'
-      //     ? this.state.realFileList.map(item => <img src={item.down} alt={this.state.requestValue.kind} width="400px" />)
-      //     : '',
       content:
         this.state.viewType.toUpperCase() === 'VIEW' && this.props.result.attachs && this.props.result.attachs.fileList.length
           ? this.props.result.attachs.fileList.map(item => (
@@ -375,7 +369,6 @@ class List extends React.Component {
 
   handleChange = e => {
     const valueObj = { [e.target.name]: e.target.value };
-    // this.setState({ [e.target.name]: e.target.value });
     this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
   };
 

@@ -5,7 +5,8 @@ import PropTypes from 'prop-types';
 import { List, Tree, Row, Col, Checkbox, Button, Icon, Modal } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import UserSelectWrapper from 'commonStyled/MdcsStyled/Wrapper/UserSelectWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <UserSelect
@@ -65,7 +66,7 @@ class UserSelectComp extends Component {
   onInitTreeData = () => {
     const { sagaKey, getCallDataHandler, removeReduxState } = this.props;
     removeReduxState(sagaKey);
-    const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/getDeptList', type: 'GET', params: {} }];
+    const apiAry = [{ key: 'deptList', url: '/api/common/v1/account/deptSelectList', type: 'POST', params: { PARAM: { ROOT_DEPT_ID: 72761 } } }];
     getCallDataHandler(sagaKey, apiAry);
   };
 
@@ -162,74 +163,80 @@ class UserSelectComp extends Component {
 
   render() {
     const { treeDataSource, userDataList, result } = this.props;
-
+    console.debug('userselect', result);
     return (
-      <div>
-        <Row gutter={24}>
-          <Col span={6} style={{ width: '250px' }}>
-            {treeDataSource ? (
-              <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
-            ) : (
-              result &&
-              result.deptList &&
-              result.deptList.result && (
-                <Tree
-                  defaultExpandedKeys={[`${getTreeData(result.deptList.result)[0].key}`]}
-                  onSelect={this.onTreeSelect}
-                  treeData={getTreeData(result.deptList.result)}
+      <UserSelectWrapper>
+        <Row gutter={0}>
+          <Col span={7}>
+            <div className="basicWrapper treeWrapper">
+              <div className="depthTree">
+                {treeDataSource ? (
+                  <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
+                ) : (
+                  result &&
+                  result.deptList &&
+                  result.deptList.result && (
+                    <Tree
+                      defaultExpandedKeys={[`${getTreeData(result.deptList.result)[0].key}`]}
+                      onSelect={this.onTreeSelect}
+                      treeData={getTreeData(result.deptList.result)}
+                    />
+                  )
+                )}
+              </div>
+              <div className="userList">
+                <List
+                  header="사용자 선택"
+                  size="small"
+                  dataSource={userDataList || (result && result.userList && result.userList.list)}
+                  bordered
+                  renderItem={item => (
+                    <List.Item>
+                      <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
+                        {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ]
+                      </Checkbox>
+                    </List.Item>
+                  )}
                 />
-              )
-            )}
+              </div>
+            </div>
           </Col>
-          <Col span={6}>
-            <List
-              header="사용자 선택"
-              size="small"
-              dataSource={userDataList || (result && result.userList && result.userList.list)}
-              bordered
-              renderItem={item => (
-                <List.Item>
-                  <Checkbox onChange={this.onCheckUser} checked={this.state.checkUserList.filter(x => item.USER_ID === x).length > 0} value={item.USER_ID}>
-                    {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ]
-                  </Checkbox>
-                </List.Item>
-              )}
-            />
+          <Col span={5}>
+            <div className="userAddWrapper">
+              <StyledButton className="btn-light btn-sm" onClick={() => this.onSelectedUser()}>
+                Add
+                <Icon type="double-right" />
+              </StyledButton>
+            </div>
           </Col>
-          <Col style={{ width: '120px' }} span={4}>
-            <Button type="primary" onClick={() => this.onSelectedUser()}>
-              Add
-              <Icon type="double-right" />
-            </Button>
-          </Col>
-          <Col span={8}>
-            <List
-              header="선택된 사용자"
-              size="small"
-              dataSource={this.state.selectedUserList}
-              bordered
-              renderItem={item => (
-                <List.Item>
-                  <Checkbox>
-                    {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
-                  </Checkbox>
-                  <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
-                </List.Item>
-              )}
-            />
+          <Col span={12}>
+            <div className="basicWrapper selectedUserWrapper">
+              <List
+                header="선택된 사용자"
+                size="small"
+                dataSource={this.state.selectedUserList}
+                bordered
+                renderItem={item => (
+                  <List.Item>
+                    <Checkbox>
+                      {item.NAME_KOR} [ {item.PSTN_NAME_KOR} ] / {item.DEPT_NAME_KOR}
+                    </Checkbox>
+                    <Icon type="delete" onClick={() => this.onDelete(item.USER_ID)}></Icon>
+                  </List.Item>
+                )}
+              />
+            </div>
           </Col>
         </Row>
-        <Row>
-          <Col style={{ textAlign: 'right', marginTop: '10px' }}>
-            <StyledButton className="btn-sm btn-gray btn-first" onClick={this.onCancelUserSelect}>
-              취소
-            </StyledButton>
-            <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
-              등록
-            </StyledButton>
-          </Col>
-        </Row>
-      </div>
+        <div className="applyButtonWrapper">
+          <StyledButton className="btn-sm btn-gray btn-first" onClick={this.onCancelUserSelect}>
+            취소
+          </StyledButton>
+          <StyledButton className="btn-sm btn-primary" onClick={this.onRegist}>
+            등록
+          </StyledButton>
+        </div>
+      </UserSelectWrapper>
     );
   }
 }

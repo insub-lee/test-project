@@ -26,6 +26,7 @@ import EshsSearchbarConfig from 'components/BizBuilder/Field/EshsSearchbarConfig
 import DragUploadMDCSViewCompConfig from 'components/BizBuilder/Field/DragUploadMDCSViewCompConfig';
 import CoverViewCompConfig from 'components/BizBuilder/Field/CoverViewCompConfig';
 import DatePickerCompConfig from 'components/BizBuilder/Field/DatePickerCompConfig';
+import TitleCompConfig from 'components/BizBuilder/Field/TitleCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -54,4 +55,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/DragUploadMDCSViewCompConfig': { renderer: property => <DragUploadMDCSViewCompConfig {...property} /> },
   'components/BizBuilder/Field/CoverViewCompConfig': { renderer: property => <CoverViewCompConfig {...property} /> },
   'components/BizBuilder/Field/DatePickerCompConfig': { renderer: property => <DatePickerCompConfig {...property} /> },
+  'components/BizBuilder/Field/TitleCompConfig': { renderer: property => <TitleCompConfig {...property} /> },
 };

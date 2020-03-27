@@ -8,8 +8,8 @@ const TitleComp = ({ colData, sagaKey: id, rowData, changeViewPage, visible, CON
       onKeyPress={() => false}
       onClick={() =>
         isBuilderModal
-          ? changeBuilderModalState(true, 'VIEW', rowData.WORK_SEQ, rowData.TASK_SEQ, rowData)
-          : changeViewPage(id, rowData.WORK_SEQ, rowData.TASK_SEQ, 'VIEW')
+          ? changeBuilderModalState(true, CONFIG.property.changeViewType || 'VIEW', rowData.WORK_SEQ, rowData.TASK_SEQ, rowData)
+          : changeViewPage(id, rowData.WORK_SEQ, rowData.TASK_SEQ, CONFIG.property.changeViewType || 'VIEW')
       }
       style={{ cursor: 'pointer' }}
       className={CONFIG.property.className || ''}
@@ -22,6 +22,7 @@ const TitleComp = ({ colData, sagaKey: id, rowData, changeViewPage, visible, CON
 
 TitleComp.propTypes = {
   setViewPageData: PropTypes.func,
+  CONFIG: PropTypes.object,
 };
 
 TitleComp.defaultProps = {

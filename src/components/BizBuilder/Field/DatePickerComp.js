@@ -20,6 +20,7 @@ class DatePickerComp extends Component {
           break;
         }
         default:
+          changeFormData(id, COMP_FIELD, undefined);
           break;
       }
     }
@@ -64,7 +65,6 @@ class DatePickerComp extends Component {
           onChange={this.onChangeHandler}
           placeholder="날짜를 선택하세요."
           value={(colData && moment(colData)) || undefined}
-          defaultValue={colData && moment(colData)}
           readOnly={readOnly || CONFIG.property.readOnly}
         />
       );
@@ -83,11 +83,12 @@ class DatePickerComp extends Component {
     }
 
     if (viewPageData.viewType.toUpperCase() === 'VIEW') {
-      return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+      return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
     }
 
     if (viewPageData.viewType.toUpperCase() === 'LIST') {
-      return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
+      return <span className={CONFIG.property.className || ''}>{moment(colData).year() !== 1 ? moment(colData).format('YYYY-MM-DD') : ''}</span>;
+      // return <span className={CONFIG.property.className || ''}>{moment(colData).format('YYYY-MM-DD')}</span>;
     }
     return '';
   }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import base64 from 'base-64';
 import { Input, Table } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
@@ -10,6 +11,35 @@ const AntdTable = StyledAntdTable(Table);
 
 class DistributeDocView extends Component {
   
+  componentDidMount() {
+    const { id, apiAry, getCallDataHandler, selectedRow } = this.props;
+    apiAry.push({
+      key: 'distributeDocView',
+      url: '/api/edds/v1/common/distributeDoc',
+      type: 'POST',
+      params: { PARAM: { ...selectedRow } },
+    })
+    getCallDataHandler(id, apiAry, () => {});
+  }
+
+  onClickDownload = row => {
+    const { id, getFileDownload } = this.props;
+    const {
+      result: {
+        distributeDocView: { detail },
+      },
+    } = this.props;
+    const drmInfo = {
+      pr: detail.PR,
+      uc: detail.UC,
+      bk: detail.BK,
+      ed: detail.ED,
+    };
+    const acl = base64.encode(JSON.stringify({ drmInfo: { ...drmInfo } }));
+    const url = `/down/eddsfile/${row.SEQ}/${acl}`;
+    getFileDownload(id, url, row.NAME);
+  };
+
   columns = [
     {
       title: 'No',
@@ -19,51 +49,41 @@ class DistributeDocView extends Component {
       width: '10%',
     },
     {
-      title: '파일명(횟수)',
+      title: '파일명',
       dataIndex: 'NAME',
       key: 'NAME',
+      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{text}</li>
     },
     {
       title: '다운',
       dataIndex: 'DOWN_CNT',
       key: 'DOWN_CNT',
       width: '10%',
+      render: (text, record) => `${text}회`
     },
     {
       title: '다운로드 일자',
-      dataIndex: 'DOWNLOAD_DTTM',
-      key: 'DOWNLOAD_DTTM',
+      dataIndex: 'DOWN_DATE',
+      key: 'DOWN_DATE',
       width: '20%',
       align: 'center',
+      render: (text, record) => record.DOWN_DATE && moment(record.DOWN_DATE).format('YYYY-MM-DD HH:mm:ss'),
     },
   ]
-  
-  componentDidMount() {
-    const { id, apiAry, getCallDataHandler, selectedRow } = this.props;
-    console.debug('selectedRow >> ', selectedRow);
-    apiAry.push({
-      key: 'distributeDoc',
-      url: '/api/edds/v1/common/distributeDoc',
-      type: 'POST',
-      params: { PARAM: { ...selectedRow } },
-    })
-    getCallDataHandler(id, apiAry, () => {});
-  }
 
   render() {
-    const { result: { distributeDoc } } = this.props;
+    const { result: { distributeDocView } } = this.props;
     let detail = {};
-    if (distributeDoc && distributeDoc !== undefined) {
-      if (distributeDoc.detail !== undefined) {
-        detail = distributeDoc.detail;
+    if (distributeDocView && distributeDocView !== undefined) {
+      if (distributeDocView.detail !== undefined) {
+        detail = distributeDocView.detail;
       }
     }
 
     return (
-      <div>
+      <div id="EDDS_DOWN">
         {Object.keys(detail).length > 0 && (
           <React.Fragment>
-
             <StyledTable>
               <table>
                 <colgroup>
@@ -75,7 +95,7 @@ class DistributeDocView extends Component {
                 <tbody>
                   <tr>
                     <th>문서명</th>
-                    <td colSpan={3}>{detail.TITLE}</td>
+                    <td colSpan={3}>{detail.TITLE} / {detail.TASK_SEQ}</td>
                   </tr>
                   <tr>
                     <th>발송번호</th>
@@ -103,7 +123,9 @@ class DistributeDocView extends Component {
                   </tr>
                   <tr>
                     <th>DRM 권한</th>
-                    <td colSpan={3}></td>
+                    <td colSpan={3}>
+                      <p>Print Option: <span style={{ color : 'red' }}>{detail.PR === '0' ? 'disable' : 'enable' }</span>, Effective days : <span style={{ color : 'red' }}>{detail.ED}</span></p>
+                    </td>
                   </tr>
                   <tr>
                     <th>전달사항</th>
@@ -131,10 +153,10 @@ DistributeDocView.propTypes = {
 };
 
 DistributeDocView.defaultProps = {
-  id: 'distributeDoc',
+  id: 'distributeDocView',
   apiAry: [],
   result: {
-    distributeDoc: {
+    distributeDocView: {
       detail: {},
     },
   },
