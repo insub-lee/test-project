@@ -14,6 +14,7 @@ const UserSearch = styled.div`
     left: -65px;
     background-color: #ffffff;
     box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.3);
+    z-index: 2;
 
     @media only screen and (max-width: 1024px) {
       left: -101px;

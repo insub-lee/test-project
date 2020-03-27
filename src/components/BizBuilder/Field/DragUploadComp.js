@@ -39,7 +39,16 @@ class DragUploadComp extends Component {
     };
 
     const { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } = CONFIG.property;
-    this.setState({ fileInfo: initfiles, options: { MULTIPLE_UPLOAD, MULTIPLE_SELECT, FILTER_EXTENSION, EXTENSION_LIST, PREVIEW_SETTING } });
+    this.setState({
+      fileInfo: initfiles,
+      options: {
+        MULTIPLE_UPLOAD: MULTIPLE_UPLOAD || 'N',
+        MULTIPLE_SELECT: MULTIPLE_SELECT || 'N',
+        FILTER_EXTENSION: FILTER_EXTENSION || 'N',
+        EXTENSION_LIST: EXTENSION_LIST || 'N',
+        PREVIEW_SETTING: PREVIEW_SETTING || 'N',
+      },
+    });
   }
 
   changeFormDataHanlder = () => {
@@ -199,6 +208,15 @@ class DragUploadComp extends Component {
     });
   };
 
+  beforeUpload = (file, fileList) => {
+    const { size, name } = file;
+    if (size === 0) {
+      message.error(`${name} 0 byte 파일은 업로드 할 수 없습니다 `);
+      return false;
+    }
+    return true;
+  };
+
   render() {
     const {
       fileInfo: { DETAIL: fileList },
@@ -215,6 +233,7 @@ class DragUploadComp extends Component {
         <Dragger
           action="/upload"
           onProgress={this.onProgress}
+          beforeUpload={this.beforeUpload}
           customRequest={this.preProcessor}
           onChange={this.onChangeHandler}
           showUploadList={false}

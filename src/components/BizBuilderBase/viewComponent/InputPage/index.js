@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import WorkProcess from 'apps/Workflow/WorkProcess';
@@ -8,7 +8,7 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
-import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
+import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
 class InputPage extends Component {
   constructor(props) {
@@ -36,17 +36,40 @@ class InputPage extends Component {
 
   fileUploadComplete = (id, response, etcData) => {
     const { formData, changeFormData } = this.props;
-    const { DETAIL } = response;
+    const { DETAIL, code } = response;
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
     changeFormData(id, etcData, tmpAttach);
-    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: true } : file));
+    const tmpFileList = uploadFileList.map(file =>
+      file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200 || code === 300, isAttempted: true } : file,
+    );
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
-      const isUploadComplete = uploadFileList.find(f => f.isComplete === false);
-      if (!isUploadComplete) {
-        this.saveTask(id, id, this.saveTaskAfter);
+
+      let AttemptionCount = 0; // API 찌른 횟수
+      let isCompleteCount = 0; // API 성공 횟수
+      const limit = uploadFileList.length || 0; // 총 파일 갯수
+
+      uploadFileList.forEach(e => {
+        if (e.isAttempted === true) {
+          // API 찌른 경우
+          AttemptionCount++;
+        }
+        if (e.isComplete === true) {
+          // API 성공 횟수
+          isCompleteCount++;
+        }
+      });
+
+      if (AttemptionCount === limit) {
+        // 총 파일 갯수만큼 API를 찔렀는지
+        if (isCompleteCount === limit) {
+          // 총 파일 갯수만큼 API 정상 작동했는지
+          this.saveTask(id, id, this.saveTaskAfter);
+        } else {
+          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!');
+        }
       }
     });
   };
@@ -72,7 +95,7 @@ class InputPage extends Component {
         const attachInfo = formData[COMP_FIELD];
         if (attachInfo) {
           const { DETAIL, MOVEFILEAPI } = attachInfo;
-          uploadFileList.push({ COMP_FIELD, isComplete: false });
+          uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
           this.setState({ uploadFileList }, () => {
             const param = { PARAM: { DETAIL } };
             const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
@@ -95,12 +118,19 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent } = this.props;
+    const { onCloseModleHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      const changeViewOptIdx = workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === CHANGE_VIEW_OPT_SEQ);
+      if (changeViewOptIdx !== -1) {
+        const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
+        const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
+        changeViewPage(id, workSeq, taskSeq, optValue.INPUT);
+      } else {
+        changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      }
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');

@@ -5,13 +5,13 @@ import { Modal, Button, Icon } from 'antd';
 import { isJSON } from 'utils/helpers';
 
 import SingleGroupChoice from 'components/MdcsComponents/SingleGroupChoice';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModalWrapper';
+import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledMultiSelector from 'apps/mdcs/styled/StyledMultiSelector';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledSelectModal(Modal);
 
 let dataSource;
 class LeadBallComp extends Component {
@@ -133,7 +133,11 @@ class LeadBallComp extends Component {
           visible={this.state.isShowModal}
           onCancel={this.onCancelModal}
           destroyOnClose
-          footer={[<Button onClick={this.onClickScope}>선택</Button>]}
+          footer={[
+            <StyledButton className="btn-sm btn-primary" onClick={this.onClickScope}>
+              선택
+            </StyledButton>,
+          ]}
         >
           <SingleGroupChoice
             onChange={this.onChangeSelector}

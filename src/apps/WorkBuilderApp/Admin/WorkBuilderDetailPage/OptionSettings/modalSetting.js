@@ -6,17 +6,20 @@ import { isJSON } from 'utils/helpers';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  display: flex;
   input[type='text'] {
-    width: 70%;
-    border-radius: 3px 0px 0px 3px;
+    width: 100px;
   }
   .ant-select-selection {
-    height: 35px;
-    border-radius: 0px 3px 3px 0px;
-    border-left: none;
     &:hover {
       border-color: #d9d9d9;
     }
+  }
+  .setter {
+    margin-right: 5px;
+    width: 35%;
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 `;
 class modalSetting extends React.Component {
@@ -78,26 +81,28 @@ class modalSetting extends React.Component {
     return (
       <>
         <Wrapper>
-          <Input defaultValue={optValue.width || undefined} placeholder="넓이 입력" onChange={e => this.onChange('width', e.target.value)} />
-          <Select
-            style={{ width: '70px', verticalAlign: 'top', margin: '0px' }}
-            defaultValue={optValue.widthType || 'px'}
-            onChange={value => this.onChange('widthType', value)}
-          >
-            <Select.Option value="%">%</Select.Option>
-            <Select.Option value="px">px</Select.Option>
-          </Select>
-        </Wrapper>
-        <Wrapper>
-          <Input defaultValue={optValue.height || undefined} placeholder="높이 입력" onChange={e => this.onChange('height', e.target.value)} />
-          <Select
-            style={{ width: '70px', verticalAlign: 'top', margin: '0px' }}
-            defaultValue={optValue.heightType || 'px'}
-            onChange={value => this.onChange('heightType', value)}
-          >
-            <Select.Option value="%">%</Select.Option>
-            <Select.Option value="px">px</Select.Option>
-          </Select>
+          <Input.Group compact className="setter">
+            <Input defaultValue={optValue.width || undefined} placeholder="넓이 입력" onChange={e => this.onChange('width', e.target.value)} />
+            <Select
+              style={{ width: '70px', verticalAlign: 'top', margin: '0px' }}
+              defaultValue={optValue.widthType || 'px'}
+              onChange={value => this.onChange('widthType', value)}
+            >
+              <Select.Option value="%">%</Select.Option>
+              <Select.Option value="px">px</Select.Option>
+            </Select>
+          </Input.Group>
+          <Input.Group compact className="setter">
+            <Input defaultValue={optValue.height || undefined} placeholder="높이 입력" onChange={e => this.onChange('height', e.target.value)} />
+            <Select
+              style={{ width: '70px', verticalAlign: 'top', margin: '0px' }}
+              defaultValue={optValue.heightType || 'px'}
+              onChange={value => this.onChange('heightType', value)}
+            >
+              <Select.Option value="%">%</Select.Option>
+              <Select.Option value="px">px</Select.Option>
+            </Select>
+          </Input.Group>
         </Wrapper>
         <Wrapper>
           <Switch

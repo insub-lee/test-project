@@ -1,5 +1,13 @@
 import styled, { css } from 'styled-components';
 
+const btnRadiusNone = css`
+  border-radius: 0;
+`;
+
+const btnRadius = css`
+  border-radius: 30px;
+`;
+
 const btnLarge = css`
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
@@ -74,8 +82,8 @@ const StyledButton = styled.button`
   padding: 0.5rem 1.125rem;
   font-size: 0.8125rem;
   line-height: 1.47;
-  border-radius: 30px;
   font-weight: 400;
+  border-radius: 3px;
   color: #212529;
   text-align: center;
   vertical-align: middle;
@@ -83,6 +91,14 @@ const StyledButton = styled.button`
 
   &:focus {
     border: 1px solid transparent;
+  }
+
+  &.btn-radius-none {
+    ${btnRadiusNone}
+  }
+
+  &.btn-radius {
+    ${btnRadius}
   }
 
   &.btn-lg {

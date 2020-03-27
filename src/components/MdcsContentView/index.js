@@ -17,6 +17,9 @@ class MdcsContentView extends Component {
   };
 
   initDataBind = (id, response) => {
+    console.debug('this.props', this.props);
+    const { viewLayer } = this.props;
+    console.debug('viewLayer', JSON.parse(viewLayer));
     const { fullPath_Nm } = response;
     const FULLPATH_NM = fullPath_Nm && fullPath_Nm.FULLPATH_NM;
     this.setState({ fullPathNm: FULLPATH_NM });
@@ -117,7 +120,7 @@ class MdcsContentView extends Component {
               <tr>
                 <th style={{ width: '100px' }}>표지보기</th>
                 <td style={{ width: '200px' }}>
-                  <StyledButton className="btn-primary  btn-sm" onClick={this.onDocCoverClick}>
+                  <StyledButton className="btn-primary btn-sm" onClick={this.onDocCoverClick}>
                     <FileSearchOutlined /> 표지보기
                   </StyledButton>
                 </td>
