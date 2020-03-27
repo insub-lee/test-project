@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { getTreeFromFlatData } from 'react-sortable-tree';
 import * as PropTypes from 'prop-types';
-import { TreeSelect, Input, Button, Checkbox } from 'antd';
-import EquipTableStyled from '../../styled/EquipTableStyled';
+import { debounce } from 'lodash';
+import { TreeSelect, Input, Button, Checkbox, Table } from 'antd';
+import { getTreeFromFlatData } from 'react-sortable-tree';
+import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
+const AntdTable = StyledAntdTable(Table);
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
     flatData: flatData.map(item => ({
@@ -18,41 +20,90 @@ const getCategoryMapListAsTree = flatData =>
     getParentKey: node => node.parentValue,
     rootKey: 633,
   });
+
 class InterLock extends Component {
   constructor(props) {
     super(props);
     this.state = {
       treeData: [],
-      interLockTable: {},
+      interLockTable: [],
+      initInterLock: { IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' },
+      columns: [
+        { title: '삭제', dataIndex: '', align: 'center', width: 50, render: (text, record) => <Checkbox key={record.INDEX}></Checkbox> },
+        { title: '해제취소', dataIndex: '', align: 'center', width: 90, render: (text, record) => <span></span> },
+        {
+          title: '종류/형식',
+          dataIndex: 'IL_KIND_FORM',
+          width: 655,
+          align: 'center',
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <TreeSelect
+                  style={{ width: '100%' }}
+                  dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  treeData={(this && this.state && this.state.treeData) || ''}
+                  value={record.IL_KIND_FORM || ''}
+                  onChange={value => this.onChangeHandler(value, record.INDEX)}
+                />
+              );
+            }
+            return <span>{record.FULL_PATH || ''}</span>;
+          },
+        },
+        {
+          title: '세부기능',
+          dataIndex: 'IL_FUNC',
+          align: 'center',
+          width: 655,
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return <Input defaultValue={record.IL_FUNC || ''} onChange={e => this.handleInputChange(e, record.INDEX)} />;
+            }
+
+            return <span>{record.IL_FUNC || ''}</span>;
+          },
+        },
+      ],
     };
+    this.debounceHandelSetTable = debounce(this.debounceHandelSetTable, 300);
+    this.debounceHandelInputChange = debounce(this.debounceHandelInputChange, 300);
   }
 
   componentDidMount() {
     const { getExtraApiData, id, apiArray, formData, viewType } = this.props;
-    const task_seq = (formData && formData.TASK_SEQ) || '';
-    if (task_seq) {
-      apiArray.push({
-        key: 'interLockList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsGetInterLockList/${task_seq}`,
-      });
+    const taskSeq = (formData && formData.TASK_SEQ) || 0;
+    if (taskSeq > 0) {
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'interLockList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetInterLockList/${taskSeq}`,
+        }),
+        this.appStart,
+      );
+    } else {
+      getExtraApiData(id, apiArray, this.appStart);
     }
-    getExtraApiData(id, apiArray, this.setTreeSelect);
   }
 
-  setTreeSelect = () => {
+  appStart = () => {
     const { extraApiData, id, changeFormData } = this.props;
     const treeData = (extraApiData && extraApiData.treeData && extraApiData.treeData.categoryMapList) || [];
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
+
+    console.debug('ID ::: ', id, '  extraApiData :::: ', extraApiData);
     if (!interLockList.length) {
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 0 });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 1 });
+      interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 2 });
     }
     const td = getCategoryMapListAsTree(treeData.filter(x => x.USE_YN === 'Y'));
     const categoryData = td.length > 0 ? td[0] : [];
     this.setState({ treeData: categoryData.children });
     changeFormData(id, 'interLockList', interLockList);
+    this.debounceHandelSetTable();
   };
 
   onChangeHandler = (value, key) => {
@@ -63,6 +114,7 @@ class InterLock extends Component {
       'interLockList',
       interLockList.map((i, index) => (index === key ? { ...i, IL_KIND_FORM: value } : i)),
     );
+    this.debounceHandelSetTable();
   };
 
   handleInputChange = (e, key) => {
@@ -77,64 +129,62 @@ class InterLock extends Component {
 
   handlePlusTd = () => {
     const { id, changeFormData, formData } = this.props;
+    const { initInterLock } = this.state;
     const { interLockList } = formData;
-    interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-    interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-    interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '' });
-    changeFormData(id, 'interLockList', interLockList);
+    let index = interLockList.length;
+    const initInterLockList = [
+      { ...initInterLock, INDEX: index++ },
+      { ...initInterLock, INDEX: index++ },
+      { ...initInterLock, INDEX: index++ },
+    ];
+    changeFormData(id, 'interLockList', interLockList.concat(initInterLockList));
+    this.debounceHandelSetTable();
+  };
+
+  debounceHandelSetTable = () => {
+    const { formData } = this.props;
+    const { columns } = this.state;
+    const { interLockList } = formData;
+    return this.setState({
+      interLockTable: [
+        <AntdTable
+          rowKey={interLockList && interLockList.INDEX}
+          columns={columns}
+          dataSource={interLockList || []}
+          bordered
+          pagination={{ pageSize: 100 }}
+          scroll={{ x: 1500, y: 200 }}
+          pagination={false}
+        />,
+      ],
+    });
+  };
+
+  handleInputChange = (e, rowIndex) => {
+    e.persist();
+    this.debounceHandelInputChange(e, rowIndex);
+  };
+
+  debounceHandelInputChange = (e, rowIndex) => {
+    const { id, changeFormData, formData } = this.props;
+    const { interLockList } = formData;
+    changeFormData(
+      id,
+      'interLockList',
+      interLockList.map((i, index) => (index === rowIndex ? { ...i, IL_FUNC: e.target.value } : i)),
+    );
   };
 
   render() {
-    const { viewType, formData } = this.props;
-    const { treeData } = this.state;
-    const interLockList = (formData && formData.interLockList) || [];
+    const { viewPageData } = this.props;
+    const { interLockTable } = this.state;
+    const viewType = (viewPageData && viewPageData.viewType) || '';
     return (
-      <EquipTableStyled>
-        <div className="equipTable">
-          <span>
-            InterLock <Button onClick={this.handlePlusTd}>[+3]</Button>
-          </span>
-          <table align="center">
-            <colgroup>
-              <col width="5%" />
-              <col width="8%" />
-              <col width="20%" />
-              <col width="67%" />
-            </colgroup>
-            <thead>
-              <tr>
-                <td>삭제</td>
-                <td>해제취소</td>
-                <td>종류/형식</td>
-                <td>세부기능</td>
-              </tr>
-            </thead>
-            <tbody>
-              {interLockList.length > 0 &&
-                interLockList.map((i, index) => (
-                  <tr key={index}>
-                    <td>
-                      <Checkbox />
-                    </td>
-                    <td></td>
-                    <td>
-                      <TreeSelect
-                        style={{ width: '100%' }}
-                        dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-                        treeData={treeData}
-                        value={i.IL_KIND_FORM || ''}
-                        onChange={value => this.onChangeHandler(value, index)}
-                      />
-                    </td>
-                    <td>
-                      <Input value={i.IL_FUNC || ''} onChange={e => this.handleInputChange(e, index)} />
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </EquipTableStyled>
+      <>
+        <hr />
+        <span>InterLock {viewType !== 'VIEW' && <Button onClick={this.handlePlusTd}>[+3]</Button>}</span>
+        {interLockTable}
+      </>
     );
   }
 }
@@ -147,6 +197,7 @@ InterLock.propTypes = {
   formData: PropTypes.object,
   apiArray: PropTypes.array,
   extraApiData: PropTypes.object,
+  viewPageData: PropTypes.object,
 };
 
 InterLock.defaultProps = {
