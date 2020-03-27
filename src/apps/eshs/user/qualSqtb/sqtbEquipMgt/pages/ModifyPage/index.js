@@ -8,6 +8,8 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import InterLock from '../InterLock';
+import Material from '../Material';
+import Header from '../Header';
 
 class ModifyPage extends Component {
   constructor(props) {
@@ -15,6 +17,12 @@ class ModifyPage extends Component {
     this.state = {
       uploadFileList: [],
     };
+  }
+
+  componentDidMount() {
+    const { setModalRowSelected, formData } = this.props;
+    setModalRowSelected(formData);
+    console.debug('componentDidMount');
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -40,6 +48,7 @@ class ModifyPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
+    console.debug('saveBeforeProcess');
     const { submitExtraHandler, formData, metaList } = this.props;
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
@@ -75,7 +84,7 @@ class ModifyPage extends Component {
       onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      changeViewPage(id, workSeq, taskSeq, 'MODIFY');
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
@@ -97,8 +106,11 @@ class ModifyPage extends Component {
       changeFormData,
       getExtraApiData,
       extraApiData,
+      handleModalVisible,
+      modalSelectedRow,
+      deleteTask,
+      setModalRowSelected,
     } = this.props;
-
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
       const { bodyStyle } = viewLayerData;
@@ -106,6 +118,17 @@ class ModifyPage extends Component {
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
+            <Header
+              handleModalVisible={handleModalVisible}
+              modalSelectedRow={modalSelectedRow}
+              modifySaveTask={() => this.saveTask(id, reloadId || id, this.saveTaskAfter)}
+              loading={isLoading}
+              viewPageData={viewPageData}
+              changeViewPage={changeViewPage}
+              deleteTask={deleteTask}
+              setModalRowSelected={setModalRowSelected}
+              id={id}
+            />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <InterLock
               id={id}
@@ -115,20 +138,14 @@ class ModifyPage extends Component {
               extraApiData={extraApiData}
               viewType="MODIFY"
             />
-            {CustomButtons ? (
-              <CustomButtons saveBeforeProcess={this.saveBeforeProcess} {...this.props} />
-            ) : (
-              <div className="alignRight">
-                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                  Save
-                </Button>
-                {!isBuilderModal && (
-                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
-                  </Button>
-                )}
-              </div>
-            )}
+            <Material
+              id={id}
+              formData={formData}
+              changeFormData={changeFormData}
+              getExtraApiData={getExtraApiData}
+              extraApiData={extraApiData}
+              viewType="MODIFY"
+            />
           </Sketch>
         </StyledViewDesigner>
       );
@@ -139,11 +156,15 @@ class ModifyPage extends Component {
 
 ModifyPage.propTypes = {
   isLoading: PropTypes.bool,
+  setModalRowSelected: PropTypes.func,
+  formData: PropTypes.object,
   // loadingComplete: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
   isLoading: false,
+  setModalRowSelected: () => {},
+  formData: {},
   // loadingComplete: () => {},
 };
 
