@@ -4,7 +4,8 @@ import { Table, Modal, Icon, Button, Input } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-
+import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
+import OpinionModal from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView/OpinionModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
@@ -19,12 +20,10 @@ class DraftList extends Component {
     this.state = {
       modalWidth: 800,
       coverView: {
-        viewType: 'VIEW',
         visible: false,
         workSeq: undefined,
         taskSeq: undefined,
         viewMetaSeq: undefined,
-        modifyMetaSeq: undefined,
       },
     };
   }
@@ -85,7 +84,7 @@ class DraftList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
-    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true };
     this.setState({ coverView });
   };
 
@@ -108,7 +107,6 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
-    const { setOpinionVisible } = this.props;
     e.preventDefault();
     this.props.reqApprove({});
     setOpinionVisible(false);
@@ -168,20 +166,16 @@ class DraftList extends Component {
             onChangeForm={this.onChangeForm}
             closeBtnFunc={this.closeBtnFunc}
             clickCoverView={this.clickCoverView}
-            onClickModify={this.onClickModify}
             workSeq={selectedRow && selectedRow.WORK_SEQ}
             taskSeq={selectedRow && selectedRow.TASK_SEQ}
             selectedRow={selectedRow}
-            ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
+            ViewCustomButtons={({ closeBtnFunc }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                   <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
                     홀드해제
                   </StyledButton>
                 )}
-                <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
-                  표지수정
-                </StyledButton>
                 <StyledButton className="btn-light" onClick={closeBtnFunc}>
                   닫기
                 </StyledButton>
@@ -201,11 +195,10 @@ class DraftList extends Component {
         >
           <BizBuilderBase
             sagaKey="CoverView"
-            viewType={coverView.viewType}
+            viewType="VIEW"
             workSeq={coverView.workSeq}
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
-            modifyMetaSeq={coverView.modifyMetaSeq}
             onCloseCoverView={this.onCloseCoverView}
             onCloseModleHandler={this.onClickModifyDoCoverView}
             ViewCustomButtons={({ onCloseCoverView }) => (

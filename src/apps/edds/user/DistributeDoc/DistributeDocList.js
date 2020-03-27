@@ -107,7 +107,7 @@ class DistributeDocList extends Component {
         </div>
         <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
         <AntdModal
-          width={800}
+          width={700}
           visible={this.state.isShow}
           title="배포문서 다운로드"
           onCancel={this.onCancelPopup}
