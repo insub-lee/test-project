@@ -29,6 +29,7 @@ function* getUnApproveList() {
 
 function* getDraftList() {
   const response = yield call(Axios.post, `/api/workflow/v1/common/approve/draftList`, {});
+  console.debug('getDraftList', response);
   if (response) {
     const { list } = response;
     yield put(actions.setDraftList(list));
@@ -48,7 +49,6 @@ function* reqApprove({ appvStatus }) {
     QUE_DATA: reqRow,
     FORM_DATA: formData,
   };
-
   const response = yield call(Axios.post, `/api/workflow/v1/common/workprocess/draftApprove`, { PARAM: { ...payload } });
 }
 
@@ -59,10 +59,10 @@ function* getUserInfo({ userInfo, callBack }) {
   typeof callBack === 'function' && callBack(JSON.parse(list));
 }
 
-function* successApprove() {
-  message.success(<MessageContent>결재에 성공하였습니다.</MessageContent>, 3);
-  // yield put(actions.getApproveList({ searchType: 'unApproval' }));
+function* successApprove({ message: msg }) {
+  message.success(msg, 3);
   yield put(actions.getUnApproveList());
+  yield put(actions.getDraftList());
 }
 
 function* failApprove({ errMsg }) {
