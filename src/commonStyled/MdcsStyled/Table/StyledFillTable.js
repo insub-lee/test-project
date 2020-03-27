@@ -4,9 +4,9 @@ const StyledFillTable = Component => styled(Component)`
   &.ant-table-wrapper {
     .ant-table {
       background: #fff;
+      border: 0;
       border-top: 1px solid #4491e0;
       border-radius: 0;
-      border-bottom: 0;
       .ant-table-header {
         .ant-table-thead {
           font-size: 13px;
