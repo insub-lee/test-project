@@ -1,4 +1,4 @@
-/**
+/*
   코드 구분
     HC: Harmful material Classification (위험물 분류)
     WH: Workplace environment Harmful factor (작업환경측정 대상 유해인자)
@@ -6,15 +6,21 @@
     HH: special Health diagnosis Harmful factor (특수건강진단 대상 유해인자)
 
     - C: Chemical factor (화학적 인자)
+      - O: Organic compounds (유기화합물)
+      - M: Metals (금속류)
+      - A: Acid and alkali (산 및 알칼리류)
+      - G: Gas (가스 상태 물질류)
+      - P: Permissioned harmful material (허가 대상 유해물질)
+      - F: metal working Fluids (금속가공유)
+      
     - P: Physical factor (물리적 인자)
+      - N: Noise (소음)
+      - H: High temperature (고열)
+      
     - D: Dust (분진)
-
-    - O: Organic compounds (유기화합물)
-    - M: Metals (금속류)
-    - A: Acid and alkali (산 및 알칼리류)
-    - G: Gas (가스 상태 물질류)
-    - P: Premissioned harmful material (허가 대상 유해물질)
-    - F: metal working Fluids (금속가공유)
+      - M: Mineral dust (광물성 분진)
+      
+    - O: Others (그 밖에 고용노동부장관이 정하여 고시하는 인체에 해로운 유해인자)
 */
 
 const selectTree = [
@@ -54,7 +60,7 @@ const selectTree = [
             key: 'WHCG',
           },
           {
-            title: '영 제 30조에 따른 허가 대상 유해물질', // 영 제 30조에 따른 허가 대상 유해물질
+            title: '영 제 30조에 따른 허가 대상 유해물질',
             value: 'WHCP',
             key: 'WHCP',
           },
@@ -93,6 +99,11 @@ const selectTree = [
             key: 'WHDM',
           },
         ],
+      },
+      {
+        title: '그 밖에 고용노동부장관이 정하여 고시하는 인체에 해로운 유해인자',
+        value: 'WHO',
+        key: 'WHO',
       },
     ],
   },
