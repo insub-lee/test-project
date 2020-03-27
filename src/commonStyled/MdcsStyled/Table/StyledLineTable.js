@@ -18,8 +18,8 @@ const StyledLineTable = Component => styled(Component)`
       .ant-table-thead > tr > th {
         background-color: #fff;
         color: #000;
-        border-top: 1px solid #aeb4be;
-        border-bottom: 2px solid #aeb4be;
+        border-top: 1px solid #bbb;
+        border-bottom: 1px solid #e4e4e4;
         font-size: 0.85rem;
       }
       .ant-table-tbody > tr {
@@ -31,6 +31,11 @@ const StyledLineTable = Component => styled(Component)`
         td {
           cursor: pointer;
         }
+      }
+      .ant-table-placeholder {
+        border-radius: 0;
+        border-top: 1px solid #e4e4e4;
+        border-bottom: 1px solid #eee;
       }
     }
   }
