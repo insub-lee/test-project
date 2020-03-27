@@ -23,12 +23,11 @@ class SearchComp extends Component {
       ),
       selectObj: {},
       searchBtn: (
-        <StyledButton className="btn-primary" onClick={() => this.props.handleSearch()}>
+        <StyledButton key={rowKey++} className="btn-primary" onClick={() => this.props.handleSearch()}>
           검색
         </StyledButton>
       ),
       searchGroupData: { type: 'all', text: '' },
-      extraApiData: {},
       modalTableColData: '',
     };
     this.debounceHandelChangeSearchData = debounce(this.debounceHandelChangeSearchData, 300);
@@ -137,6 +136,7 @@ class SearchComp extends Component {
       <Row gutter={[0, 8]} key={rowKey++}>
         <Col span={2} align="right">
           <span>설비위치</span>
+          &nbsp;
         </Col>
         <Col span={2}>
           <Select
@@ -184,21 +184,25 @@ class SearchComp extends Component {
           </Select>
         </Col>
         <Col span={2} align="right">
+          <span>Maker</span>
+          &nbsp;
+        </Col>
+        <Col span={3}>
           <ModalTableComp
             CONFIG={makerCdConfig}
             getExtraApiData={() => {}}
             extraApiData={extraApiData}
             sagaKey={id}
             visible
-            colData={(this.state && this.state.modalTableColData) || ''}
             isSearch
             COMP_FIELD="MAKER_CD"
-            customListChangeFormData={record => this.setState({ modalTableColData: record })}
+            customListColdataFlag
             changeSearchData={(sagaKey, COMP_FIELD, searchText) => this.handleChangeSearchData(COMP_FIELD, searchText)}
           />
         </Col>
-        <Col span={2}>MakerComp</Col>
-        <Col span={2}>Model</Col>
+        <Col span={2} align="right">
+          <span>Model</span>&nbsp;
+        </Col>
         <Col span={2}>
           <Input
             defaultValue=""
@@ -207,7 +211,7 @@ class SearchComp extends Component {
             onChange={e => this.handleChangeSearchData(e.target.name, e.target.value === '' ? 'AND 1 = 1' : `AND W.MODEL LIKE '${e.target.value}%'`)}
           />
         </Col>
-        <Col span={8}></Col>
+        <Col span={7}></Col>
       </Row>
     );
   };
@@ -216,6 +220,7 @@ class SearchComp extends Component {
     <Row gutter={[0, 8]} key={rowKey++}>
       <Col span={2} align="right">
         <span>신청구분</span>
+        &nbsp;
       </Col>
       <Col span={2}>
         <Select defaultValue="EQ" style={{ width: '100%' }} onChange={value => message.warning(`승인관련 미구현...  value [ ${value} ]`)}>
@@ -229,6 +234,7 @@ class SearchComp extends Component {
       </Col>
       <Col span={2} align="right">
         <span>인허가대상</span>
+        &nbsp;
       </Col>
       <Col span={2}>
         <Select
@@ -246,6 +252,7 @@ class SearchComp extends Component {
       </Col>
       <Col span={2} align="right">
         <span>검색구분</span>
+        &nbsp;
       </Col>
       <Col span={2}>
         <Select
@@ -283,6 +290,7 @@ class SearchComp extends Component {
     <Row gutter={[0, 8]} key={rowKey++}>
       <Col span={2} align="right">
         <span>Material</span>
+        &nbsp;
       </Col>
       <Col span={2}>
         <Select
@@ -300,6 +308,7 @@ class SearchComp extends Component {
       </Col>
       <Col span={2} align="right">
         <span>-코드 미구현</span>
+        &nbsp;
       </Col>
       <Col span={2}>
         <Select defaultValue="all" style={{ width: '100%' }} onChange={value => message.warning(`sqtb_mtrl 테이블에서 조회 미구현...  value [ ${value} ]`)}>
@@ -348,7 +357,7 @@ class SearchComp extends Component {
   };
 
   render() {
-    const { searchGrid, selectObj, searchGroupData } = this.state;
+    const { searchGrid } = this.state;
     return <>{searchGrid}</>;
   }
 }

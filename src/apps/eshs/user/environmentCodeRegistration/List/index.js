@@ -77,7 +77,7 @@ class List extends Component {
       {
         key,
         type: type.toUpperCase(),
-        url: `/api/eshs/v1/common/eshschemicalmaterial`,
+        url: `/api/eshs/v1/common/eshschemicalmaterialcode`,
         params: { PARAM: param },
       },
     ];
@@ -91,7 +91,7 @@ class List extends Component {
       {
         key: 'chemicalMaterialList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshschemicalmaterial?category=${selectedCategory}`,
+        url: `/api/eshs/v1/common/eshschemicalmaterialcode?category=${selectedCategory}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.changeDataSource);
