@@ -4,8 +4,7 @@ import { Table, Modal, Icon, Button, Input } from 'antd';
 import moment from 'moment';
 
 import BizBuilderBase from 'components/BizBuilderBase';
-import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
-import OpinionModal from 'apps/Workflow/components/ApproveBase/viewComponent/ApproveView/OpinionModal';
+
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
@@ -107,16 +106,16 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
+    const { setOpinionVisible } = this.props;
     e.preventDefault();
     this.props.reqApprove({});
-    this.props.setOpinionVisible(false);
+    setOpinionVisible(false);
   };
 
   render() {
     // const { approveList } = this.props;
     const { draftList, selectedRow, opinionVisible, setOpinionVisible } = this.props;
     const { modalWidth, coverView } = this.state;
-    console.debug('기안함', this.props);
     return (
       <>
         <ContentsWrapper>
