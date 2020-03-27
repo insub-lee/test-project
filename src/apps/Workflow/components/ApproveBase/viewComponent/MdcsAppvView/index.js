@@ -105,8 +105,6 @@ class MdcsAppvView extends Component {
 
   render() {
     const { selectedRow } = this.props;
-    console.debug('render', selectedRow.CURRENT_STATUS);
-    console.debug('this.prosp', this.props);
     return (
       <>
         <StyledTable style={{ padding: '10px' }}>
@@ -191,21 +189,15 @@ class MdcsAppvView extends Component {
               닫기
             </StyledButton>
           </div>
-          <div className="sub_title">※ 상세내용</div>
         </StyledTable>
-        <div style={{ padding: '10px' }}>
-          <BizBuilderBase
-            sagaKey="approveBase_approveView"
-            viewType="VIEW"
-            CustomViewPage={MdcsContentView}
-            workSeq={selectedRow && selectedRow.WORK_SEQ}
-            taskSeq={selectedRow && selectedRow.TASK_SEQ}
-            draftId={selectedRow && selectedRow.DRAFT_ID}
-            metaSeq={selectedRow && selectedRow.RULE_CONFIG.META_SEQ}
-            selectedRow={selectedRow}
-            // changeWorkflowFormData={this.changeWorkflowFormData}
-          />
-        </div>
+        <BizBuilderBase
+          sagaKey="approveBase_approveView"
+          viewType="VIEW"
+          workSeq={selectedRow && selectedRow.WORK_SEQ}
+          taskSeq={selectedRow && selectedRow.TASK_SEQ}
+          selectedRow={selectedRow}
+          ViewCustomButtons={() => false}
+        />
       </>
     );
   }
