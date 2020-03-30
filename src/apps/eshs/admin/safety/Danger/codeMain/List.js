@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Row, Table, Select, Input, message } from 'antd';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import Moment from 'moment';
 
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
@@ -29,6 +29,8 @@ class List extends Component {
       remark: '',
       ref01: '',
       ref02: '',
+      selectedMajor: '',
+      readType: false,
     };
   }
 
@@ -36,7 +38,7 @@ class List extends Component {
     const { sagaKey: id, getCallDataHandler, dangerMainYN } = this.props;
     const apiAry = [
       {
-        key: 'dangerList',
+        key: dangerMainYN ? 'dangerList' : 'dangerSelect',
         url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`,
         type: 'GET',
       },
@@ -48,31 +50,42 @@ class List extends Component {
     const { result } = this.props;
     this.setState({
       dangerList: result && result.dangerList && result.dangerList.list,
+      dangerSelect: result && result.dangerSelect && result.dangerSelect.list,
     });
   };
 
   searchData = () => {
     const { sagaKey: id, getCallDataHandler, dangerMainYN } = this.props;
+    const { selectedMajor } = this.state;
     const apiAry = [
       {
         key: 'dangerList',
-        url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`,
+        url: dangerMainYN ? `/api/eshs/v1/common/eshsDanger/${dangerMainYN}` : `/api/eshs/v1/common/eshsDanger/${dangerMainYN}?SELECTED_CODE=${selectedMajor}`,
         type: 'GET',
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
   };
 
-  changeSelectValue = (value, option) => {
-    this.setState({
-      [option.key]: value,
-    });
+  changeSelectedData = value => {
+    const { sagaKey: id, getCallDataHandler, dangerMainYN } = this.props;
+    const apiAry = [
+      {
+        key: 'dangerList',
+        url: `/api/eshs/v1/common/eshsDanger/${dangerMainYN}?SELECTED_CODE=${value}`,
+        type: 'GET',
+      },
+    ];
+    getCallDataHandler(id, apiAry, this.initData);
   };
 
-  changeInputValue = (name, value) => {
+  changeValue = (name, value) => {
     this.setState({
       [name]: value,
     });
+    if (name === 'selectedMajor') {
+      this.changeSelectedData(value);
+    }
   };
 
   warning = value => {
@@ -80,8 +93,14 @@ class List extends Component {
   };
 
   insertOverlab = () => {
-    const { dangerList, majorCd, minorCd } = this.state;
-    const overlab = dangerList.find(item => item.MAJOR_CD === majorCd && item.MINOR_CD === minorCd);
+    const { dangerMainYN } = this.props;
+    const { dangerList, majorCd, minorCd, selectedMajor } = this.state;
+    let overlab;
+    if (dangerMainYN) {
+      overlab = dangerList.find(item => item.MAJOR_CD === majorCd && item.MINOR_CD === '*');
+    } else {
+      overlab = dangerList.find(item => item.MAJOR_CD === selectedMajor && item.MINOR_CD === minorCd);
+    }
     if (overlab) {
       this.warning('중복된 값이 존재합니다.');
     } else {
@@ -91,31 +110,55 @@ class List extends Component {
 
   onChangeData = value => {
     const { sagaKey: id, submitHandlerBySaga, dangerMainYN } = this.props;
-    const { majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02 } = this.state;
+    const { majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, selectedMajor } = this.state;
+    let nUseYn;
+    switch (value) {
+      case 'R':
+        nUseYn = 'Y';
+        break;
+      case 'D':
+        nUseYn = 'N';
+        break;
+      default:
+        nUseYn = useYN;
+        break;
+    }
 
     const submitData = {
       PARAM: {
-        MAJOR_CD: value === 'I' && !dangerMainYN ? '' : majorCd,
-        MINOR_CD: value === 'I' ? '*' : minorCd,
+        MAJOR_CD: value === 'I' && !dangerMainYN ? selectedMajor : majorCd,
+        MINOR_CD: value === 'I' && dangerMainYN ? '*' : minorCd,
         CD_NM: cdNm,
-        USE_YN: useYN,
+        USE_YN: nUseYn,
         SYS_YN: sysYN,
         REMARK: remark,
         REF01: ref01,
         REF02: ref02,
       },
     };
-    // sys 기능 구현중 퇴근
-    if (cdNm) {
+    if (cdNm && (dangerMainYN ? majorCd : minorCd)) {
       if (value === 'U') {
         submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`, submitData, this.searchData);
-      } else if (value === 'D') {
+      } else if (value === 'D' || value === 'R') {
         submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`, submitData, this.searchData);
       } else if (value === 'I') {
         submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshsDanger/${dangerMainYN}`, submitData, this.searchData);
       } else if (value === 'S') {
-        submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshsSysChange`, submitData, this.searchData);
+        submitHandlerBySaga(
+          id,
+          'PUT',
+          `/api/eshs/v1/common/eshsSysChange`,
+          {
+            PARAM: {
+              MAJOR_CD: majorCd,
+              SYS_YN: sysYN === 'Y' ? 'N' : 'Y',
+            },
+          },
+          this.searchData,
+        );
       }
+    } else if (cdNm) {
+      this.warning('코드를 올바르게 입력하시오.');
     } else {
       this.warning('코드명을 올바르게 입력하시오.');
     }
@@ -132,12 +175,13 @@ class List extends Component {
       remark: '',
       ref01: '',
       ref02: '',
+      readType: false,
     });
   }
 
   renderTable = () => {
     const { dangerMainYN } = this.props;
-    const { majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, dangerList } = this.state;
+    const { majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, dangerList, readType } = this.state;
     const columns = [
       {
         title: (
@@ -156,7 +200,19 @@ class List extends Component {
           <>
             <span style={{ align: 'center' }}>상태</span>
             <br />
-            {useYN ? <>{useYN === 'Y' ? '사용' : '삭제'}</> : ''}
+            {useYN ? (
+              <>
+                {useYN === 'Y' ? (
+                  '사용'
+                ) : (
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('R')}>
+                    삭제 취소
+                  </StyledButton>
+                )}
+              </>
+            ) : (
+              ''
+            )}
           </>
         ),
         dataIndex: 'USE_YN',
@@ -169,7 +225,11 @@ class List extends Component {
           <>
             <span style={{ align: 'center' }}>코드</span>
             <br />
-            {dangerMainYN ? <Input value={majorCd} onChange={e => this.changeInputValue('majorCd', e.target.value)} /> : minorCd}
+            <Input
+              value={dangerMainYN ? majorCd : minorCd}
+              onChange={e => this.changeValue(dangerMainYN ? 'majorCd' : 'minorCd', e.target.value)}
+              readOnly={readType}
+            />
           </>
         ),
         dataIndex: dangerMainYN ? 'MAJOR_CD' : 'MINOR_CD',
@@ -181,7 +241,7 @@ class List extends Component {
           <>
             <span style={{ align: 'center' }}>코드명</span>
             <br />
-            <Input value={cdNm} onChange={e => this.changeInputValue('cdNm', e.target.value)} />
+            <Input value={cdNm} onChange={e => this.changeValue('cdNm', e.target.value)} />
           </>
         ),
         dataIndex: 'CD_NM',
@@ -193,7 +253,7 @@ class List extends Component {
           <>
             <span style={{ align: 'center' }}>참고1</span>
             <br />
-            <Input value={ref01} onChange={e => this.changeInputValue('ref01', e.target.value)} />
+            <Input value={ref01} onChange={e => this.changeValue('ref01', e.target.value)} />
           </>
         ),
         dataIndex: 'REF01',
@@ -205,7 +265,7 @@ class List extends Component {
           <>
             <span style={{ align: 'center' }}>참고2</span>
             <br />
-            <Input value={ref02} onChange={e => this.changeInputValue('ref02', e.target.value)} />
+            <Input value={ref02} onChange={e => this.changeValue('ref02', e.target.value)} />
           </>
         ),
         dataIndex: 'REF02',
@@ -217,7 +277,7 @@ class List extends Component {
           <>
             <span style={{ align: 'center' }}>비고</span>
             <br />
-            <Input value={remark} style={{ width: '300px' }} onChange={e => this.changeInputValue('remark', e.target.value)} />
+            <Input value={remark} style={{ width: '300px' }} onChange={e => this.changeValue('remark', e.target.value)} />
             <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
               추가
             </StyledButton>
@@ -227,12 +287,16 @@ class List extends Component {
             <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('S')}>
-              SYS CHANGE
-            </StyledButton>
             <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
               Reset
             </StyledButton>
+            {dangerMainYN ? (
+              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('S')}>
+                SYS
+              </StyledButton>
+            ) : (
+              ''
+            )}
           </>
         ),
         dataIndex: 'REMARK',
@@ -269,12 +333,13 @@ class List extends Component {
       remark: record.REMARK,
       ref01: record.REF01,
       ref02: record.REF02,
+      readType: true,
     });
   };
 
   render() {
     const { dangerMainYN } = this.props;
-    const { dangerList } = this.state;
+    const { dangerSelect, selectedMajor } = this.state;
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <StyledViewDesigner>
@@ -284,12 +349,8 @@ class List extends Component {
                 {dangerMainYN ? (
                   ''
                 ) : (
-                  <Select
-                    style={{ width: '100px' }}
-                    onChange={(value, option) => this.changeSelectValue(value, option)}
-                    value={dangerList && dangerList.MAJOR_CD}
-                  >
-                    {dangerList && dangerList.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
+                  <Select style={{ width: '200px' }} onChange={value => this.changeValue('selectedMajor', value)} value={selectedMajor}>
+                    {dangerSelect && dangerSelect.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
                   </Select>
                 )}
                 <StyledButton className="btn-primary btn-first" onClick={this.searchData}>
