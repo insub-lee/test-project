@@ -59,10 +59,11 @@ function* getUserInfo({ userInfo, callBack }) {
   typeof callBack === 'function' && callBack(JSON.parse(list));
 }
 
-function* successApprove() {
-  message.success(<MessageContent>결재에 성공하였습니다.</MessageContent>, 3);
-  // yield put(actions.getApproveList({ searchType: 'unApproval' }));
+function* successApprove({ message: msg }) {
+  message.success(msg, 3);
+  yield put(actions.getApproveList());
   yield put(actions.getUnApproveList());
+  yield put(actions.getDraftList());
 }
 
 function* failApprove({ errMsg }) {
@@ -71,7 +72,30 @@ function* failApprove({ errMsg }) {
   yield put(actions.getUnApproveList());
 }
 
+function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc }) {
+  let httpMethodInfo = Axios.put;
+  switch (httpMethod.toUpperCase()) {
+    case 'POST':
+      httpMethodInfo = Axios.post;
+      break;
+    case 'PUT':
+      httpMethodInfo = Axios.put;
+      break;
+    case 'DELETE':
+      httpMethodInfo = Axios.delete;
+      break;
+    default:
+      httpMethodInfo = Axios.get;
+      break;
+  }
+  const response = yield call(httpMethodInfo, apiUrl, submitData);
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id, response);
+  }
+}
+
 export default function* watcher() {
+  yield takeEvery(actionTypes.PUBLIC_ACTIONMETHOD_SAGA, submitHandlerBySaga);
   yield takeEvery(actionTypes.GET_APPROVE_LIST, getApproveList);
   yield takeEvery(actionTypes.GET_UNAPPROVE_LIST, getUnApproveList);
   yield takeEvery(actionTypes.GET_DRAFT_LIST, getDraftList);
