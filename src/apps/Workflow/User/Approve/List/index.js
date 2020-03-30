@@ -3,14 +3,14 @@ import PropTypes from 'prop-types';
 import { Table, Modal, Icon } from 'antd';
 import moment from 'moment';
 
-import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalNofooterLine from 'components/CommonStyled/StyledModalNofooterLine';
 import HoldView from 'apps/Workflow/components/ApproveBase/viewComponent/MdcsAppvView/holdview';
-
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 // import ApproveView from '../ApproveView';
 // import HoldView from '../MdcsAppvView/holdview';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
 const ModalWrapper = StyledModalNofooterLine(Modal);
 
 class ApproveList extends Component {
@@ -79,24 +79,27 @@ class ApproveList extends Component {
     const { approveList, selectedRow } = this.props;
 
     return (
-      <div>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-            <Icon type="form" /> 기결함
-          </p>
-        </div>
-        <AntdTable
-          columns={this.getTableColumns()}
-          dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
-          onRow={(record, rowIndex) => ({
-            onClick: e => this.onRowClick(record, rowIndex, e),
-          })}
-          bordered
-        />
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 기결함
+            </p>
+          </div>
+          <AntdLineTable
+            columns={this.getTableColumns()}
+            dataSource={approveList.map(item => ({ ...item, key: `approveList_${item.RNUM}` }))}
+            onRow={(record, rowIndex) => ({
+              onClick: e => this.onRowClick(record, rowIndex, e),
+            })}
+            bordered
+          />
+        </ContentsWrapper>
+
         <ModalWrapper title="표준문서 기결함" width={680} visible={this.props.viewVisible} destroyOnClose onCancel={this.onModalClose} footer={[]}>
           <HoldView {...this.props} />
         </ModalWrapper>
-      </div>
+      </>
     );
   }
 }

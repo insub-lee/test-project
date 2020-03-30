@@ -333,7 +333,7 @@ export function* loadingGridDataGrp(payload) {
   if (grpUsers.length / PAGE_CNT === PAGE) {
     return;
   }
-  const response = yield call(Axios.get, `/api/common/v1/account/grpUser/${GRP_ID}/${SITE_ID}/${PAGE_CNT}`, data);
+  const response = yield call(Axios.post, `/api/common/v1/account/grpUser/${GRP_ID}/${SITE_ID}/${PAGE_CNT}`, data);
   const concatedList = grpUsers.slice().concat(fromJS(response.list));
   yield put({
     type: actionType.SET_GRP_USERS,

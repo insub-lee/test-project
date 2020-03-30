@@ -405,7 +405,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
-            viewType: 'INPUT',
+            viewType: 'MODIFY',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },
@@ -482,7 +482,7 @@ function* modifyTaskBySeq({ id, reloadId, workSeq, taskSeq, callbackFunc }) {
             ...formData,
             TASK_SEQ: taskSeq,
             WORK_SEQ: workSeq,
-            viewType: 'INPUT',
+            viewType: 'MODIFY',
           },
         },
         { BUILDER: 'callApiBysaveBuilder' },
@@ -660,7 +660,7 @@ function* removeMultiTask({ id, reloadId, callbackFunc }) {
 function* getFileDownload({ url, fileName }) {
   const blobResponse = yield call(Axios.getDown, url);
 
-  if (window.navigator && window.navigator.msSaveBlob){
+  if (window.navigator && window.navigator.msSaveBlob) {
     window.navigator.msSaveBlob(blobResponse, fileName);
   } else {
     const fileUrl = window.URL.createObjectURL(blobResponse);

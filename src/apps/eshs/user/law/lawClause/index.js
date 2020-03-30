@@ -67,7 +67,7 @@ class lawClause extends Component {
       CustomModifyPage={ModalModify}
       CustomInputPage={ModalInput}
       CustomViewPage={OnlyView}
-      onCloseModleHandler={this.onCancel}
+      onCloseModalHandler={this.onCancel}
       revisionType="MAJOR"
     />
   );
@@ -84,7 +84,7 @@ class lawClause extends Component {
         viewType={viewType}
         loadingComplete={this.loadingComplete}
         CustomListPage={RevisionHistory}
-        onCloseModleHandler={this.onCancel}
+        onCloseModalHandler={this.onCancel}
         isOpenModalChange={this.isOpenRevisionDetailModal}
         taskSeqReal={this.state.taskSeqReal}
       />
