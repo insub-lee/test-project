@@ -6,9 +6,11 @@ import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner'
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
-import { Table, Input, Row, Col, InputNumber } from 'antd';
+import { Table, Input, Row, Col, InputNumber, Select } from 'antd';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
+import moment from 'moment';
 
+const { Option } = Select;
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -26,9 +28,6 @@ class List extends React.Component {
         SEC_UNIT_EXCHANGE: 0,
       },
       dataSource: [],
-      isModified: false,
-      originSapNo: '',
-      originCasNo: '',
     };
   }
 
@@ -69,11 +68,37 @@ class List extends React.Component {
     this.setState({
       requestValue: record,
       visible: false,
-      isModified: true,
-      originSapNo: record.SAP_NO,
-      originCasNo: record.CAS_NO,
+    });
+    this.getSapUsage(record);
+  };
+
+  getSapUsage = ({ SAP_NO }) => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'sapUsage',
+        url: `/api/eshs/v1/common/eshschemicalmaterialsapusage?SAP_NO=${SAP_NO}`,
+        type: 'GET',
+      },
+    ];
+
+    getCallDataHandler(id, apiArr, this.setDataSource());
+  };
+
+  setDataSource = () => {
+    const { result } = this.props;
+    this.setState({
+      dataSource: [...this.inputRow(), ...((result.sapUsage && result.sapUsage.list) || [])],
     });
   };
+
+  inputRow = () => [
+    {
+      YEAR: <Select defaultValue={moment().year()} onChange={this.handleSelectChange}></Select>,
+      SHIPMENT: <Input placeholder="출고량을 입력하세요." />,
+      USAGE: '',
+    },
+  ];
 
   handleInputChange = e => {
     let valueObj = {};
@@ -109,8 +134,25 @@ class List extends React.Component {
     }
   };
 
+  handleResetClick = () => {
+    this.setState({
+      requestValue: {
+        SAP_NO: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        NAME_SAP: '',
+        NAME_ETC: '',
+        UNIT: '',
+        FIR_UNIT_EXCHANGE: 0,
+        SEC_UNIT_EXCHANGE: 0,
+      },
+      dataSource: [],
+    });
+  };
+
   render() {
-    const { columns, handleInputChange, handleInputNumberChange, handleModalClose, setRequestValue, handleSearchClick } = this;
+    const { columns, handleInputChange, handleInputNumberChange, handleModalClose, setRequestValue, handleSearchClick, handleResetClick } = this;
     const { requestValue, visible, dataSource } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData } = this.props;
     return (
@@ -121,8 +163,10 @@ class List extends React.Component {
             <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
           <div className="alignRight">
-            <StyledButton className="btn-primary">저장/수정</StyledButton>
-            <StyledButton className="btn-primary">초기화</StyledButton>
+            <StyledButton className="btn-primary">수정</StyledButton>
+            <StyledButton className="btn-primary" onClick={handleResetClick}>
+              초기화
+            </StyledButton>
           </div>
           <div className="data-grid">
             <Row className="data-grid-row">
@@ -130,13 +174,13 @@ class List extends React.Component {
                 SAP NO.
               </Col>
               <Col span={4} className="col-input">
-                <Input name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
+                <div>{requestValue.SAP_NO}</div>
               </Col>
               <Col span={2} className="col-label">
                 CAS NO.
               </Col>
               <Col span={4} className="col-input">
-                <Input name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                <div>{requestValue.CAS_NO}</div>
               </Col>
             </Row>
             <Row className="data-grid-row">
@@ -144,25 +188,25 @@ class List extends React.Component {
                 화학물질명_국문
               </Col>
               <Col span={4} className="col-input">
-                <Input name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
+                <div>{requestValue.NAME_KOR}</div>
               </Col>
               <Col span={2} className="col-label">
                 화학물질명_영문
               </Col>
               <Col span={4} className="col-input">
-                <Input name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
+                <div>{requestValue.NAME_ENG}</div>
               </Col>
               <Col span={2} className="col-label">
                 화학물질명_SAP
               </Col>
               <Col span={4} className="col-input">
-                <Input name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
+                <div>{requestValue.NAME_SAP}</div>
               </Col>
               <Col span={2} className="col-label">
                 관용명 및 이명.
               </Col>
               <Col span={4} className="col-input">
-                <Input name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                <div>{requestValue.NAME_ETC}</div>
               </Col>
             </Row>
             <Row className="data-grid-row">
@@ -201,8 +245,9 @@ class List extends React.Component {
             </Row>
           </div>
           <div className="alignRight div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
+          <hr style={{ width: '100%' }} />
           <StyledButton className="btn-primary">항목 추가</StyledButton>
-          <Table columns={columns} dataSource={dataSource} />
+          <Table columns={columns} dataSource={dataSource} pagination={false} />
           <div className="alignRight div-comment">제품사용량: 당해출고량 * kg환산계수</div>
           <Modal
             sagaKey={sagaKey}
