@@ -148,7 +148,7 @@ class IntroComponent extends Component {
                 sagaKey={`BizDoc_${selectedworkSeq}`}
                 workSeq={selectedworkSeq}
                 taskSeq={selectedTaskSeq}
-                compProps={{ docNumber, NODE_ID: selectedNodeId, onCloseModleHandler: this.onCompleteCloseModal }}
+                compProps={{ docNumber, NODE_ID: selectedNodeId, onCloseModalHandler: this.onCompleteCloseModal }}
                 CustomInputPage={StdInput}
                 CustomViewPage={StdView}
                 CustomWorkProcess={DraftPrcLine}

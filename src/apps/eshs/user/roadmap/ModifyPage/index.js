@@ -64,7 +64,7 @@ class ModifyPage extends Component {
       method: 'PATCH',
       url: `/api/eshs/v1/common/updateroadmapvalue?value=${value.h3Value}&taskSeq=${taskSeq.h3_task_seq}`,
     });
-    this.props.onCloseModleHandler();
+    this.props.onCloseModalHandler();
   };
 
   render = () => {
@@ -141,7 +141,7 @@ ModifyPage.propTypes = {
   c1Value: PropTypes.number,
   h3Value: PropTypes.number,
   formData: PropTypes.object,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
 };
 
 export default ModifyPage;
