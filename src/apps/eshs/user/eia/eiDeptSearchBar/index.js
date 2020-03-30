@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Modal, Button, Input, Select, Popconfirm, message } from 'antd';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import DeptModal from './DeptModal';
 
 const { Option } = Select;
@@ -124,15 +125,17 @@ class DeptSearchBar extends Component {
           </Select>
           &nbsp; <span>부서코드 </span>
           <Input name="DEPT_CD" value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD} style={{ width: 150 }} readOnly placeholder="부서코드" />
-          <Button shape="circle" icon="search" onClick={this.handleModal} />
+          <StyledButton className="btn-primary" shape="circle" icon="search" onClick={this.handleModal} />
           <Modal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
             <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
           </Modal>
           <Input value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
-          <Button onClick={this.handleDeptSearch}>검색</Button>
+          <StyledButton className="btn-primary" onClick={this.handleDeptSearch}>
+            검색
+          </StyledButton>
           {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
             <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
-              <Button>완료</Button>
+              <StyledButton className="btn-primary">완료</StyledButton>
             </Popconfirm>
           )}
         </div>
