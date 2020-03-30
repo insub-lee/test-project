@@ -7,6 +7,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -179,14 +180,14 @@ class MdcsAppvView extends Component {
               </tr>
             </tbody>
           </table>
-          <div className="btn-group">
+          <StyledButtonWrapper className="btn-wrap-center">
             <StyledButton key="ok" className="btn-primary btn-first" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
             <StyledButton key="close" className="btn-light" onClick={this.onModalClose}>
               닫기
             </StyledButton>
-          </div>
+          </StyledButtonWrapper>
         </StyledHtmlTable>
         <BizBuilderBase
           sagaKey="approveBase_approveView"
