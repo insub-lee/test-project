@@ -175,6 +175,7 @@ class EshsCmpnyComp extends React.Component {
     const { CONFIG, visible, readOnly } = this.props;
     const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor } = this.state;
     let cmpnyList = [];
+    console.debug('확인해라 핫산', visible);
     if (listType === 'search') {
       cmpnyList = searchList;
     } else {
