@@ -717,7 +717,7 @@ const reducer = (state = initialState, action) => {
 
       const tempSize = state
         .getIn([...condition, 0, 'cols'])
-        .map(col => col.get('span'))
+        .map(col => (col ? col.get('span') || 1 : 0))
         .reduce((acc, curt) => acc + curt);
 
       compList = compList.map(node => {
@@ -858,7 +858,7 @@ const reducer = (state = initialState, action) => {
       const colSpanSizes = rows
         .map(row => {
           const currentCol = row.getIn(['cols', colIndex]);
-          return currentCol ? currentCol.get('span') : 0;
+          return currentCol ? currentCol.get('span') || 1 : 0;
         })
         .filter(size => size !== 0);
 
