@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Table, Icon, Modal, Button } from 'antd';
-
+import { ExportOutlined } from '@ant-design/icons';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ContentView from './ContentView';
 import ExternalDist from './ExternalDist';
@@ -157,11 +158,11 @@ class PubCompleteDocList extends Component {
             <p>
               <Icon type="form" /> 접수/배포 완료함
             </p>
-            <p>
-              <Button icon="export" onClick={this.onClickExternalDist}>
-                외부배포
-              </Button>
-            </p>
+            <div className="btnPositonMid">
+              <StyledButton className="btn-primary btn-sm" onClick={this.onClickExternalDist}>
+                <ExportOutlined /> 외부배포
+              </StyledButton>
+            </div>
           </div>
           <AntdTable rowSelection={rowSelection} dataSource={this.state.pubDocList} columns={this.columns} />
         </ContentsWrapper>

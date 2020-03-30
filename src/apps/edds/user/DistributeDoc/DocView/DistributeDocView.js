@@ -12,13 +12,13 @@ const AntdTable = StyledAntdTable(Table);
 class DistributeDocView extends Component {
   
   componentDidMount() {
-    const { id, apiAry, getCallDataHandler, selectedRow } = this.props;
-    apiAry.push({
+    const { id, getCallDataHandler, selectedRow } = this.props;
+    const apiAry = [{
       key: 'distributeDocView',
       url: '/api/edds/v1/common/distributeDoc',
       type: 'POST',
       params: { PARAM: { ...selectedRow } },
-    })
+    }];
     getCallDataHandler(id, apiAry, () => {});
   }
 

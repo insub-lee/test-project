@@ -72,7 +72,7 @@ class UnApproveList extends Component {
   };
 
   render() {
-    const { unApproveList, selectedRow } = this.props;
+    const { unApproveList } = this.props;
     return (
       <>
         <ContentsWrapper>

@@ -83,33 +83,33 @@ class PublicRoutes extends Component {
       // REMOVE DOCK - 주석처리, 기본 루트로 들어왔을 경우 처리 공통홈으로 이동 처리
       // getLoaddata('latest');
       // getLoaddata('commonHome');
-
       if (!rootPageInfo) {
         // 공통홈이 없을 경우 개인홈으로
         this.props.history.push(`/${basicPath.PAGE}/${myHomePageId}`);
       } else {
         const { extras: node } = rootPageInfo;
-        const state = { type: 'execMenu', node, executedDockPageId: node.PAGE_ID };
-
-        if (node.INTL_TYPE === 'Y') {
-          this.props.history.push({
-            pathname: `/${basicPath.APPS}/${node.SRC_PATH}`,
-            execInfo: state,
-          });
-        } else if (node.SRC_PATH === 'legacySVC') {
-          if (node.TARGET.toUpperCase() === 'NEW') {
-            window.open(node.URL, node.NAME_KOR, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
+        if (node) {
+          const state = { type: 'execMenu', node, executedDockPageId: node.PAGE_ID };
+          if (node.INTL_TYPE === 'Y') {
+            this.props.history.push({
+              pathname: `/${basicPath.APPS}/${node.SRC_PATH}`,
+              execInfo: state,
+            });
+          } else if (node.SRC_PATH === 'legacySVC') {
+            if (node.TARGET.toUpperCase() === 'NEW') {
+              window.open(node.URL, node.NAME_KOR, 'width=1280, height=720, toolbar=yes, resizable=yes, menubar=yes, status=yes, location=yes');
+            } else {
+              this.props.history.push({
+                pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
+                execInfo: state,
+              });
+            }
           } else {
             this.props.history.push({
-              pathname: `/${basicPath.APPS}/${node.PAGE_ID}`,
+              pathname: `/${basicPath.PAGE}/${node.PAGE_ID}`,
               execInfo: state,
             });
           }
-        } else {
-          this.props.history.push({
-            pathname: `/${basicPath.PAGE}/${node.PAGE_ID}`,
-            execInfo: state,
-          });
         }
       }
     } else if (checkPath(pathArray[1], portalPath)) {

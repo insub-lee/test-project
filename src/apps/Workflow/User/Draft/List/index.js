@@ -84,7 +84,7 @@ class DraftList extends Component {
   };
 
   clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
-    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true };
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
     this.setState({ coverView });
   };
 
@@ -107,13 +107,13 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
-    const [setOpinionVisible] = this.props;
+    const { reqApprove, setOpinionVisible } = this.props;
     e.preventDefault();
-    this.props.reqApprove({});
+    reqApprove({});
     setOpinionVisible(false);
   };
 
-  onClickModify = payload => {
+  onClickModify = () => {
     const { selectedRow } = this.props;
     const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
     this.setState({ coverView });
@@ -163,20 +163,24 @@ class DraftList extends Component {
           <BizBuilderBase
             sagaKey="approveBase_approveView"
             viewType="VIEW"
-            onCloseModal={this.onCloseModal}
-            onChangeForm={this.onChangeForm}
+            // onCloseModal={this.onCloseModal}
+            // onChangeForm={this.onChangeForm}
             closeBtnFunc={this.closeBtnFunc}
             clickCoverView={this.clickCoverView}
+            onClickModify={this.onClickModify}
             workSeq={selectedRow && selectedRow.WORK_SEQ}
             taskSeq={selectedRow && selectedRow.TASK_SEQ}
             selectedRow={selectedRow}
-            ViewCustomButtons={({ closeBtnFunc }) => (
+            ViewCustomButtons={({ closeBtnFunc, onClickModify }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
                 {(selectedRow.PROC_STATUS === 3 || selectedRow.PROC_STATUS === 300) && (
                   <StyledButton className="btn-primary btn-first" onClick={this.onHoldRelase}>
                     홀드해제
                   </StyledButton>
                 )}
+                <StyledButton className="btn-primary btn-first" onClick={onClickModify}>
+                  표지수정
+                </StyledButton>
                 <StyledButton className="btn-light" onClick={closeBtnFunc}>
                   닫기
                 </StyledButton>
@@ -196,7 +200,7 @@ class DraftList extends Component {
         >
           <BizBuilderBase
             sagaKey="CoverView"
-            viewType="VIEW"
+            viewType={coverView.viewType}
             workSeq={coverView.workSeq}
             taskSeq={coverView.taskSeq}
             viewMetaSeq={coverView.viewMetaSeq}
@@ -211,10 +215,10 @@ class DraftList extends Component {
             )}
             ModifyCustomButtons={({ onCloseCoverView, saveBeforeProcess, sagaKey, reloadId }) => (
               <div style={{ textAlign: 'center', marginTop: '12px' }}>
-                <StyledButton className="btn-primary" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
                   저장
                 </StyledButton>
-                <StyledButton className="btn-primary" onClick={onCloseCoverView}>
+                <StyledButton className="btn-light" onClick={onCloseCoverView}>
                   닫기
                 </StyledButton>
               </div>

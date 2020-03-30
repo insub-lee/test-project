@@ -172,7 +172,7 @@ class EshsCmpnyComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, readOnly } = this.props;
+    const { CONFIG, visible, readOnly, searchWidth } = this.props;
     const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor } = this.state;
     let cmpnyList = [];
     console.debug('확인해라 핫산', visible);
@@ -191,7 +191,7 @@ class EshsCmpnyComp extends React.Component {
           readOnly
           placeholder={CONFIG.property.placeholder}
           className={CONFIG.property.className || ''}
-          style={{ width: 150 }}
+          style={{ width: searchWidth }}
           onSearch={this.handleModalVisible}
         />
         {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
@@ -257,6 +257,11 @@ EshsCmpnyComp.propTypes = {
   visible: PropTypes.bool,
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
+  searchWidth: PropTypes.any,
+};
+
+EshsCmpnyComp.defaultProps = {
+  searchWidth: 150,
 };
 
 export default EshsCmpnyComp;

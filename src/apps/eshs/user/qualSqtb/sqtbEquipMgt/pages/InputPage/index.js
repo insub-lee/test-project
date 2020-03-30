@@ -8,8 +8,9 @@ import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-import InterLock from '../InterLock';
 import Material from '../Material';
+import InterLock from '../InterLock';
+import Header from '../Header';
 
 class InputPage extends Component {
   constructor(props) {
@@ -99,7 +100,7 @@ class InputPage extends Component {
       onCloseModalHandler();
     }
     if (typeof changeViewPage === 'function') {
-      changeViewPage(id, workSeq, taskSeq, 'VIEW');
+      changeViewPage(id, workSeq, taskSeq, 'MODIFY');
     }
     if (isBuilderModal) {
       changeViewPage(reloadId, workSeq, -1, 'LIST');
@@ -126,6 +127,8 @@ class InputPage extends Component {
       changeFormData,
       getExtraApiData,
       extraApiData,
+      handleModalVisible,
+      modalSelectedRow,
     } = this.props;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -135,13 +138,21 @@ class InputPage extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
+            <Header
+              handleModalVisible={handleModalVisible}
+              modalSelectedRow={modalSelectedRow}
+              saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+              loading={isLoading}
+              viewPageData={viewPageData}
+              changeViewPage={changeViewPage}
+              id={id}
+            />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <InterLock
               id={id}
@@ -149,7 +160,7 @@ class InputPage extends Component {
               changeFormData={changeFormData}
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
-              viewType="INPUT"
+              viewPageData={viewPageData}
             />
             <Material
               id={id}
@@ -157,22 +168,8 @@ class InputPage extends Component {
               changeFormData={changeFormData}
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
-              viewType="INPUT"
+              viewPageData={viewPageData}
             />
-            {CustomButtons ? (
-              <CustomButtons {...this.props} saveBeforeProcess={this.saveBeforeProcess} />
-            ) : (
-              <div className="alignRight">
-                <Button type="primary" className="btn-primary" onClick={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)} loading={isLoading}>
-                  Save
-                </Button>
-                {!isBuilderModal && (
-                  <Button type="primary" className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
-                  </Button>
-                )}
-              </div>
-            )}
           </Sketch>
         </StyledViewDesigner>
       );
@@ -194,6 +191,9 @@ InputPage.propTypes = {
   setProcessRule: PropTypes.func,
   CustomWorkProcess: PropTypes.func,
   isLoading: PropTypes.bool,
+  handleModalVisible: PropTypes.func,
+  modalSelectedRow: PropTypes.object,
+  searchListId: PropTypes.string,
 };
 
 InputPage.defaultProps = {
@@ -202,8 +202,11 @@ InputPage.defaultProps = {
       PRC_ID: -1,
     },
   },
+  handleModalVisible: () => {},
   CustomWorkProcess: undefined,
   isLoading: false,
+  modalSelectedRow: {},
+  searchListId: 'SqtbSearchList',
 };
 
 export default InputPage;

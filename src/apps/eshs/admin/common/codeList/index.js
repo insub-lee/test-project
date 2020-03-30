@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col, Table, Select, Input, message } from 'antd';
+import { Row, Table, Select, Input, message } from 'antd';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import Moment from 'moment';
 
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
@@ -12,6 +14,7 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
 const AntdTable = StyledAntdTable(Table);
+const AntdInput = StyledInput(Input);
 
 const { Option } = Select;
 
@@ -189,7 +192,7 @@ class List extends Component {
           </StyledButton>
         ),
         CODE: (
-          <Input
+          <AntdInput
             readOnly={this.state.codeType !== 'selfTyping'}
             onClick={this.state.codeType !== 'selfTyping' ? () => this.warning('입력하는 코드형식이 아닙니다') : ''}
             value={this.state.code}
@@ -198,19 +201,21 @@ class List extends Component {
         ),
         NAME_KOR: (
           <>
-            <Input style={{ width: '300px' }} value={this.state.name} onChange={e => this.changeInputValue(e.target.value)}></Input>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
-              추가
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-              수정
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
-              Reset
-            </StyledButton>
+            <AntdInput className="ant-input-inline" style={{ width: '300px' }} value={this.state.name} onChange={e => this.changeInputValue(e.target.value)} />
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
+                추가
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                수정
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
+                삭제
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={() => this.onReset()}>
+                Reset
+              </StyledButton>
+            </StyledButtonWrapper>
           </>
         ),
       },
@@ -251,46 +256,47 @@ class List extends Component {
   renderSelect = () => {
     const { selectBoxData } = this.state;
     return (
-      <Col span={4}>
-        <Select style={{ width: '200px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
-          <Option value="0" disabled>
-            선택
-          </Option>
-          {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-        </Select>
-      </Col>
+      <Select style={{ width: '200px', marginRight: '10px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+        <Option value="0" disabled>
+          선택
+        </Option>
+        {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+      </Select>
     );
   };
 
   render() {
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                {this.renderSelect()}
-                <Col span={4}>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.selectCode()}>
-                    검색
-                  </StyledButton>
-                  <StyledButton className="btn-primary btn-first">엑셀받기</StyledButton>
-                </Col>
-              </Row>
-              {this.renderTable()}
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <StyledViewDesigner>
+        <Sketch>
+          <Group>
+            <Row>
+              {this.renderSelect()}
+              <StyledButton className="btn-primary btn-first" onClick={() => this.selectCode()}>
+                검색
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first">엑셀받기</StyledButton>
+            </Row>
+            {this.renderTable()}
+          </Group>
+        </Sketch>
+      </StyledViewDesigner>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  columns: PropTypes.array,
+  sagaKey: PropTypes.string,
+  submitHandlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  MAP_ID: PropTypes.string,
+  result: PropTypes.any,
+  INIT_NODE_ID: PropTypes.number,
+};
 
 List.defaultProps = {
   getCallDataHandler: () => {},
-  formData: {},
   columns: [
     {
       title: '상태',
