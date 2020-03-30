@@ -14,7 +14,6 @@ import DocStatusLabelConfig from 'components/BizBuilder/Field/DocStatusLabelConf
 import RadioCharCompConfig from 'components/BizBuilder/Field/RadioCharCompConfig';
 import JoinReadCompConfig from 'components/BizBuilder/Field/JoinReadCompConfig';
 import DragUploadCompConfig from 'components/BizBuilder/Field/DragUploadCompConfig';
-import CoverViewCompConfig from 'components/BizBuilder/Field/CoverViewCompConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
