@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Row, Col, DatePicker } from 'antd';
+import { Input, InputNumber, Select, Row, Col, Popconfirm } from 'antd';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
@@ -8,6 +8,7 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
+import Modal from '../InputModal';
 
 class List extends React.Component {
   constructor(props) {
@@ -15,20 +16,24 @@ class List extends React.Component {
     this.state = {
       visible: false,
       requestValue: {
-        sapNo: '',
-        casNo: '',
-        name_kor: '',
-        name_eng: '',
-        name_sap: '',
-        name_etc: '',
-        isImport: 'N',
-        vendorCd: '',
-        contentExpression: '',
-        contentDose: 0,
-        unit: '',
-        firstUnitExchange: '',
-        secondUnitExchange: '',
+        SAP_NO: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        NAME_SAP: '',
+        NAME_ETC: '',
+        IS_IMPORT: 'N',
+        VENDOR_CD: '',
+        CONTENT_EXP: '',
+        CONTENT_DOSE: 0,
+        UNIT: '',
+        FIR_UNIT_EXCHANGE: 0,
+        SEC_UNIT_EXCHANGE: 0,
       },
+      isModified: false,
+      originSapNo: '',
+      originCasNo: '',
+      deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
 
@@ -39,35 +44,143 @@ class List extends React.Component {
   };
 
   handleInputChange = e => {
-    console.debug(toString.call(e));
     let valueObj = {};
     if (!!e && typeof e === 'object') {
       valueObj = { [e.target.name]: e.target.value };
     }
     if (typeof e === 'string') {
-      valueObj = { isImport: e };
+      valueObj = { IS_IMPORT: e };
     }
     return this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
   };
 
-  handleInputNumberChange = value => {
+  handleInputNumberChange = (value, name) => {
+    const { requestValue } = this.state;
     if (typeof value !== 'number') {
-      const valueObj = { contentDose: '' };
+      const valueObj = { [name]: '' };
       this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
-    const valueObj = { contentDose: value };
+    const valueObj = { [name]: value };
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
+
+    if (name === 'firstUnitExchange' || name === 'secondUnitExchange') {
+      const kgConvertValue = Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100;
+      this.setState(prevState => ({
+        requestValue: Object.assign(prevState.requestValue, { kgConvertValue }),
+      }));
+    }
+  };
+
+  handleInputClick = () => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { requestValue, isModified, originSapNo, originCasNo } = this.state;
+    if (isModified) {
+      this.setState({
+        isModified: false,
+      });
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, { requestValue, originSapNo, originCasNo }, this.getMaterialList);
+    }
+    this.setState({
+      isModified: false,
+    });
+    return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
+  };
+
+  handleDeleteClick = () => {
+    const { originSapNo, originCasNo } = this.state;
+    if (!originSapNo && !originCasNo) {
+      return this.setState({
+        deleteConfirmMessage: '선택된 항목이 없습니다.',
+      });
+    }
+    return this.setState({
+      deleteConfirmMessage: '삭제하시겠습니까?',
+    });
+  };
+
+  handleDeleteConfirm = () => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { originSapNo, originCasNo } = this.state;
+    const params = { SAP_NO: originSapNo, CAS_NO: originCasNo };
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, params, this.getMaterialList);
+  };
+
+  getMaterialList = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiArr = [
+      {
+        key: 'materialList',
+        type: 'GET',
+        url: '/api/eshs/v1/common/eshschemicalmaterialMaster',
+      },
+    ];
+    getCallDataHandler(id, apiArr, this.handleResetClick);
+  };
+
+  handleResetClick = () => {
+    this.setState({
+      requestValue: {
+        SAP_NO: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        NAME_SAP: '',
+        NAME_ETC: '',
+        IS_IMPORT: 'N',
+        VENDOR_CD: '',
+        CONTENT_EXP: '',
+        CONTENT_DOSE: 0,
+        UNIT: '',
+        FIR_UNIT_EXCHANGE: 0,
+        SEC_UNIT_EXCHANGE: 0,
+      },
+      isModified: false,
+      originSapNo: '',
+      originCasNo: '',
+    });
+  };
+
+  handleEshsCmpnyCompChange = data => {
+    const valueObj = { VENDOR_CD: data.WRK_CMPNY_CD }; // 키값 바꾸기
+    this.setState(prevState => ({ requestValue: Object.assign(prevState.requestValue, valueObj) }));
+  };
+
+  handleModalClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  setRequestValue = record => {
+    this.setState({
+      requestValue: record,
+      visible: false,
+      isModified: true,
+      originSapNo: record.SAP_NO,
+      originCasNo: record.CAS_NO,
+    });
   };
 
   render() {
-    const { handleSearchClick, handleInputChange, handleInputNumberChange } = this;
-    const { requestValue } = this.state;
+    const {
+      handleSearchClick,
+      handleInputChange,
+      handleInputNumberChange,
+      handleInputClick,
+      handleModalClose,
+      setRequestValue,
+      handleResetClick,
+      handleDeleteConfirm,
+      handleDeleteClick,
+    } = this;
+    const { requestValue, visible, deleteConfirmMessage } = this.state;
+    const { sagaKey, getCallDataHandler, result, changeFormData } = this.props;
     return (
       <StyledViewDesigner>
         <Sketch>
@@ -76,7 +189,17 @@ class List extends React.Component {
             <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} />
           </StyledSearchWrap>
           <div className="alignRight">
-            <StyledButton className="btn-primary">저장/수정</StyledButton>
+            <StyledButton className="btn-primary" onClick={handleInputClick}>
+              저장/수정
+            </StyledButton>
+            <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+              <StyledButton className="btn-primary" onClick={handleDeleteClick}>
+                삭제
+              </StyledButton>
+            </Popconfirm>
+            <StyledButton className="btn-primary" onClick={handleResetClick}>
+              초기화
+            </StyledButton>
           </div>
           <div className="data-grid">
             <Row className="data-grid-row">
@@ -84,25 +207,25 @@ class List extends React.Component {
                 SAP NO.
               </Col>
               <Col span={4} className="col-input">
-                <Input name="sapNo" value={requestValue.sapNo} onChange={handleInputChange} />
+                <Input name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
               </Col>
               <Col span={2} className="col-label">
                 CAS NO.
               </Col>
               <Col span={4} className="col-input">
-                <Input name="casNo" value={requestValue.casNo} onChange={handleInputChange} />
+                <Input name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
               </Col>
               <Col span={2} className="col-label">
                 화학물질명_국문
               </Col>
               <Col span={4} className="col-input">
-                <Input name="name_kor" value={requestValue.name_kor} onChange={handleInputChange} />
+                <Input name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
               </Col>
               <Col span={2} className="col-label">
                 화학물질명_영문
               </Col>
               <Col span={4} className="col-input">
-                <Input name="name_eng" value={requestValue.name_eng} onChange={handleInputChange} />
+                <Input name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
               </Col>
             </Row>
             <Row className="data-grid-row">
@@ -110,19 +233,19 @@ class List extends React.Component {
                 화학물질명_SAP
               </Col>
               <Col span={4} className="col-input">
-                <Input name="name_sap" value={requestValue.name_sap} onChange={handleInputChange} />
+                <Input name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
               </Col>
               <Col span={2} className="col-label">
                 관용명 및 이명
               </Col>
               <Col span={4} className="col-input">
-                <Input name="name_etc" value={requestValue.name_etc} onChange={handleInputChange} />
+                <Input name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
               </Col>
               <Col span={2} className="col-label">
                 수입구분
               </Col>
               <Col span={4} className="col-input">
-                <Select className="col-select" defaultValue="Y" onChange={handleInputChange}>
+                <Select className="col-select" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
                   <Select.Option value="N">내수</Select.Option>
                   <Select.Option value="Y">수입</Select.Option>
                 </Select>
@@ -132,31 +255,37 @@ class List extends React.Component {
               <Col span={2} className="col-label">
                 공급업체
               </Col>
-              <Col span={4} className="col-input">
-                <EshsCmpnyComp
-                  className="col-select"
-                  sagaKey={this.props.sagaKey}
-                  getExtraApiData={this.props.getCallDataHandler}
-                  extraApiData={this.props.result}
-                  // colData={this.state.requestValue.maker_cd}
-                  visible
-                  CONFIG={{ property: { isRequired: false } }}
-                  changeFormData={this.props.changeFormData}
-                  COMP_FIELD="VENDOR"
-                  eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                />
+              <Col span={10}>
+                <div className="alignLeft company-comp">
+                  <EshsCmpnyComp
+                    searchWidth="50%"
+                    sagaKey={sagaKey}
+                    getExtraApiData={getCallDataHandler}
+                    extraApiData={result}
+                    colData={requestValue.VENDOR_CD}
+                    visible
+                    CONFIG={{ property: { isRequired: false } }}
+                    changeFormData={changeFormData}
+                    COMP_FIELD="VENDOR_CD"
+                    eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                  />
+                </div>
               </Col>
               <Col span={2} className="col-label">
                 함량(%) 표현값
               </Col>
               <Col span={4} className="col-input">
-                <Input name="contentExpression" value={requestValue.contentExpression} onChange={handleInputChange} className="col-input-number" />
+                <Input name="CONTENT_EXP" value={requestValue.CONTENT_EXP} onChange={handleInputChange} className="col-input-number" />
               </Col>
               <Col span={2} className="col-label">
                 함량(%) 정량
               </Col>
               <Col span={4} className="col-input">
-                <InputNumber value={requestValue.contentDose} onChange={handleInputNumberChange} className="col-input-number" />
+                <InputNumber
+                  value={requestValue.CONTENT_DOSE}
+                  onChange={value => handleInputNumberChange(value, 'CONTENT_DOSE')}
+                  className="col-input-number"
+                />
               </Col>
             </Row>
             <Row className="data-grid-row">
@@ -164,30 +293,38 @@ class List extends React.Component {
                 단위
               </Col>
               <Col span={4} className="col-input">
-                <Input name="unit" value={requestValue.unit} onChange={handleInputChange} />
+                <Input name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
               </Col>
               <Col span={2} className="col-label">
                 단위환산1
               </Col>
               <Col span={4} className="col-input">
-                <Input name="firstUnitExchange" value={requestValue.firstUnitExchange} onChange={handleInputChange} />
+                <InputNumber
+                  value={requestValue.FIR_UNIT_EXCHANGE}
+                  onChange={value => handleInputNumberChange(value, 'FIR_UNIT_EXCHANGE')}
+                  className="col-input-number"
+                />
               </Col>
               <Col span={2} className="col-label">
                 단위환산2
               </Col>
               <Col span={4} className="col-input">
-                <Input name="secondUnitExchange" value={requestValue.secondUnitExchange} onChange={handleInputChange} />
+                <InputNumber
+                  value={requestValue.SEC_UNIT_EXCHANGE}
+                  onChange={value => handleInputNumberChange(value, 'SEC_UNIT_EXCHANGE')}
+                  className="col-input-number"
+                />
               </Col>
               <Col span={2} className="col-label">
                 kg환산계수
               </Col>
               <Col span={4} className="col-input">
-                <div />
+                <div>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100}</div>
               </Col>
             </Row>
           </div>
-          <div className="alignRight">kg환산계수: 단위환산1 * 단위환산2</div>
-          <DatePicker defaultValue="" />
+          <div className="alignRight div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
+          <Modal visible={visible} modalClose={handleModalClose} getCallDataHandler={getCallDataHandler} result={result} setRequestValue={setRequestValue} />
         </Sketch>
       </StyledViewDesigner>
     );
@@ -199,12 +336,15 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
   changeFormData: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
 };
+
 List.defaultProps = {
   sagaKey: '',
   getCallDataHandler: () => {},
   result: {},
   changeFormData: () => {},
+  submitHandlerBySaga: () => {},
 };
 
 export default List;
