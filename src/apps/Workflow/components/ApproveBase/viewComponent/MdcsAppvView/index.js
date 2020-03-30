@@ -5,8 +5,8 @@ import { Radio, Input, Button, Icon, Select } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
-import StyledTable from 'components/CommonStyled/StyledTable';
-import StyledButton from 'components/CommonStyled/StyledButton';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -107,7 +107,7 @@ class MdcsAppvView extends Component {
     const { selectedRow } = this.props;
     return (
       <>
-        <StyledTable style={{ padding: '10px' }}>
+        <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
           <table>
             <tbody>
               <tr>
@@ -179,17 +179,15 @@ class MdcsAppvView extends Component {
               </tr>
             </tbody>
           </table>
-        </StyledTable>
-        <StyledTable style={{ fontSize: '14px', paddingLeft: '10px' }}>
           <div className="btn-group">
-            <StyledButton style={{ marginRight: '5px' }} key="ok" className="btn-primary" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
+            <StyledButton key="ok" className="btn-primary btn-first" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
             <StyledButton key="close" className="btn-light" onClick={this.onModalClose}>
               닫기
             </StyledButton>
           </div>
-        </StyledTable>
+        </StyledHtmlTable>
         <BizBuilderBase
           sagaKey="approveBase_approveView"
           viewType="VIEW"
