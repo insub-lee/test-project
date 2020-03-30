@@ -2,14 +2,24 @@ import styled from 'styled-components';
 
 const UserSelectWrapper = styled.div`
   width: 100%;
+  .ant-col {
+    padding: 10px;
+  }
   .basicWrapper {
     width: 100%;
-    height: 510px;
+    height: 260px;
     border: 1px solid #e8e8e8;
+    border-top: 1px solid #4491e0;
     &.treeWrapper {
+      .basicTitle {
+        font-size: 13px;
+        color: #000;
+        padding: 8px 16px;
+        border-bottom: 1px solid #e8e8e8;
+      }
       .depthTree {
         width: 100%;
-        height: 250px;
+        max-height: 222px;
         overflow-y: auto;
         .site-tree-search-value {
           color: #f50;
@@ -18,19 +28,24 @@ const UserSelectWrapper = styled.div`
           font-size: 12px;
         }
       }
+    }
+    &.userListWrapper,
+    &.selectedUserWrapper {
       .userList {
         width: 100%;
-        .ant-list-bordered {
-          border: 0;
-          border-top: 1px solid #4491e0;
-          border-radius: 0;
-          .ant-list-header {
-            font-size: 13px;
-            color: #000;
-          }
+      }
+      .ant-list-bordered {
+        border: 0;
+        border-radius: 0;
+        .ant-list-header {
+          font-size: 13px;
+          color: #000;
+        }
+        .ant-spin-nested-loading {
+          overflow-y: scroll;
+          height: 222px;
           .ant-list-items {
-            overflow-y: scroll;
-            max-height: 221px;
+            max-height: 222px;
             li {
               .ant-checkbox-wrapper + span,
               .ant-checkbox + span {
@@ -41,31 +56,11 @@ const UserSelectWrapper = styled.div`
         }
       }
     }
-    &.selectedUserWrapper {
-      overflow-y: scroll;
-      .ant-list-bordered {
-        border-radius: 0;
-        border: 0;
-        .ant-list-header {
-          font-size: 13px;
-          background: #e8e8e8;
-          color: #000;
-        }
-        .ant-list-items {
-          li {
-            .ant-checkbox-wrapper + span,
-            .ant-checkbox + span {
-              font-size: 13px;
-            }
-          }
-        }
-      }
-    }
   }
 
   .userAddWrapper {
     width: 100%;
-    height: 510px;
+    height: 251px;
     text-align: center;
     display: flex;
     align-items: center;
