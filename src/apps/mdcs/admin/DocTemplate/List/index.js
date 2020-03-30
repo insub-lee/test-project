@@ -323,11 +323,6 @@ class List extends Component {
           <p>
             <Icon type="form" /> 표준문서 템플릿관리
           </p>
-          <div className="btnPositonMid">
-            <StyledButton className="btn-light btn-sm" onClick={this.onClickExternalDist}>
-              외부배포
-            </StyledButton>
-          </div>
         </div>
         <div className="selSaveWrapper">
           <TreeSelect

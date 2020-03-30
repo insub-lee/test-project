@@ -4,6 +4,7 @@ import { Table, Icon, Button, Modal } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
@@ -112,7 +113,7 @@ class DistributeDocList extends Component {
           title="배포문서 다운로드"
           onCancel={this.onCancelPopup}
           destroyOnClose
-          footer={null}
+          footer={[<Button onClick={this.onCancelPopup}>취소</Button>]}
         >
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>

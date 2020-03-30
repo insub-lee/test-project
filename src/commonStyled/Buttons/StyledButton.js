@@ -79,7 +79,7 @@ const StyledButton = styled.button`
   border: 1px solid transparent;
   background-color: transparent;
   cursor: pointer;
-  padding: 0.5rem 1.125rem;
+  padding: 0.4rem 1.125rem;
   font-size: 0.8125rem;
   line-height: 1.47;
   font-weight: 400;

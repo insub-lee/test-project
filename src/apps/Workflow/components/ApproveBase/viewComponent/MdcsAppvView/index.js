@@ -5,8 +5,9 @@ import { Radio, Input, Button, Icon, Select } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
-import StyledTable from 'components/CommonStyled/StyledTable';
-import StyledButton from 'components/CommonStyled/StyledButton';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -21,6 +22,7 @@ class MdcsAppvView extends Component {
 
   componentDidMount() {
     const { selectedRow, setSelectedRow, APPV_STATUS } = this.props;
+    console.debug('this.props', this.props);
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);
@@ -107,7 +109,7 @@ class MdcsAppvView extends Component {
     const { selectedRow } = this.props;
     return (
       <>
-        <StyledTable style={{ padding: '10px' }}>
+        <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
           <table>
             <tbody>
               <tr>
@@ -179,17 +181,15 @@ class MdcsAppvView extends Component {
               </tr>
             </tbody>
           </table>
-        </StyledTable>
-        <StyledTable style={{ fontSize: '14px', paddingLeft: '10px' }}>
-          <div className="btn-group">
-            <StyledButton style={{ marginRight: '5px' }} key="ok" className="btn-primary" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
+          <StyledButtonWrapper className="btn-wrap-center">
+            <StyledButton key="ok" className="btn-primary btn-first" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
             <StyledButton key="close" className="btn-light" onClick={this.onModalClose}>
               닫기
             </StyledButton>
-          </div>
-        </StyledTable>
+          </StyledButtonWrapper>
+        </StyledHtmlTable>
         <BizBuilderBase
           sagaKey="approveBase_approveView"
           viewType="VIEW"
