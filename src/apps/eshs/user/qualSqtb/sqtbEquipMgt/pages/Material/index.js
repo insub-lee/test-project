@@ -27,7 +27,7 @@ class Material extends Component {
       },
       columns: [
         {
-          title: '식제',
+          title: '삭제',
           dataIndex: '',
           align: 'center',
           width: 50,
@@ -38,31 +38,41 @@ class Material extends Component {
           dataIndex: 'IS_INPUT',
           align: 'center',
           width: 90,
-          render: (text, record) => (
-            <>
-              <Select
-                key={record.INDEX}
-                defaultValue={record.IS_INPUT}
-                style={{ width: 70 }}
-                onChange={value => this.handleSelectOnChange(value, 'IS_INPUT', record.INDEX)}
-              >
-                <Option value="1">IN</Option>
-                <Option value="0">OUT</Option>
-              </Select>
-            </>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <>
+                  <Select
+                    key={record.INDEX}
+                    defaultValue={record.IS_INPUT}
+                    style={{ width: 70 }}
+                    onChange={value => this.handleSelectOnChange(value, 'IS_INPUT', record.INDEX)}
+                  >
+                    <Option value="1">IN</Option>
+                    <Option value="0">OUT</Option>
+                  </Select>
+                </>
+              );
+            }
+            return <span>{record.IS_INPUT === '1' ? 'IN' : 'OUT'}</span>;
+          },
         },
         {
           title: 'Bath명/Size',
           dataIndex: '',
           align: 'center',
           width: 240,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Input name="BATH_NM" defaultValue={record.BATH_NM} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <Input name="BATH_SIZE" defaultValue={record.BATH_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> ℓ
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Input name="BATH_NM" defaultValue={record.BATH_NM} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <Input name="BATH_SIZE" defaultValue={record.BATH_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> ℓ
+                </span>
+              );
+            }
+            return <span>{`${record.BATH_NM || ''}/${record.BATH_SIZE || ''}ℓ`}</span>;
+          },
         },
         {
           title: 'Material',
@@ -104,88 +114,118 @@ class Material extends Component {
           dataIndex: '',
           align: 'center',
           width: 250,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Select key={record.INDEX} defaultValue={record.PIPE_TYPE} style={{ width: 90 }}></Select>
-              <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Select key={record.INDEX} defaultValue={record.PIPE_TYPE} style={{ width: 90 }}></Select>
+                  <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
+                </span>
+              );
+            }
+            return <span>{`${record.PIPE_TYPE_NM || ''}/${record.PIPE_NO || ''}/${record.PIPE_SIZE || ''}mm`}</span>;
+          },
         },
         {
           title: '사용량/단위',
           dataIndex: '',
           align: 'center',
           width: 300,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Input name="QUANTITY" defaultValue={record.QUANTITY} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <UnitComp
-                colData={record.QUANTITY_UNIT}
-                sagaKey={{ id: record.INDEX }}
-                COMP_FIELD="QUANTITY_UNIT"
-                changeFormData={(key, COMP_FIELD, value) => this.handleUnitComp(key, COMP_FIELD, value)}
-              />
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Input name="QUANTITY" defaultValue={record.QUANTITY} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <UnitComp
+                    colData={record.QUANTITY_UNIT}
+                    sagaKey={{ id: record.INDEX }}
+                    COMP_FIELD="QUANTITY_UNIT"
+                    changeFormData={(key, COMP_FIELD, value) => this.handleUnitComp(key, COMP_FIELD, value)}
+                  />
+                </span>
+              );
+            }
+            return <span>{`${record.QUANTITY || ''} ${record.QUANTITY_UNIT || ''}`}</span>;
+          },
         },
         {
           title: '농도/단위',
           dataIndex: '',
           align: 'center',
           width: 300,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Input name="DENSITY" defaultValue={record.DENSITY} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <UnitComp
-                colData={record.DENSITY_UNIT}
-                sagaKey={{ id: record.INDEX }}
-                COMP_FIELD="DENSITY_UNIT"
-                changeFormData={(key, COMP_FIELD, value) => this.handleUnitComp(key, COMP_FIELD, value)}
-              />
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Input name="DENSITY" defaultValue={record.DENSITY} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <UnitComp
+                    colData={record.DENSITY_UNIT}
+                    sagaKey={{ id: record.INDEX }}
+                    COMP_FIELD="DENSITY_UNIT"
+                    changeFormData={(key, COMP_FIELD, value) => this.handleUnitComp(key, COMP_FIELD, value)}
+                  />
+                </span>
+              );
+            }
+            return <span>{`${record.DENSITY || ''} ${record.DENSITY_UNIT || ''}`}</span>;
+          },
         },
         {
           title: 'Di사용량/단위',
           dataIndex: '',
           align: 'center',
           width: 300,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Input name="DI" defaultValue={record.DI} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <UnitComp
-                colData={record.DI_UNIT}
-                sagaKey={{ id: record.INDEX }}
-                COMP_FIELD="DI_UNIT"
-                changeFormData={(key, COMP_FIELD, value) => this.handleUnitComp(key, COMP_FIELD, value)}
-              />
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Input name="DI" defaultValue={record.DI} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <UnitComp
+                    colData={record.DI_UNIT}
+                    sagaKey={{ id: record.INDEX }}
+                    COMP_FIELD="DI_UNIT"
+                    changeFormData={(key, COMP_FIELD, value) => this.handleUnitComp(key, COMP_FIELD, value)}
+                  />
+                </span>
+              );
+            }
+            return <span>{`${record.DI || ''} ${record.DI_UNIT || ''}`}</span>;
+          },
         },
         {
           title: '회수율',
           dataIndex: '',
           align: 'center',
           width: 100,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Input name="RECYCLE_RT" defaultValue={record.RECYCLE_RT} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> %
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Input name="RECYCLE_RT" defaultValue={record.RECYCLE_RT} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> %
+                </span>
+              );
+            }
+            return <span>{`${record.RECYCLE_RT || ''}%`}</span>;
+          },
         },
         {
           title: '집결지-탱크/저장소/명',
           dataIndex: '',
           align: 'center',
           width: 250,
-          render: (text, record) => (
-            <span key={record.INDEX}>
-              <Input name="STORAGETANK_CD" defaultValue={record.STORAGETANK_CD} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <Input name="STORAGEHOUSE_CD" defaultValue={record.STORAGEHOUSE_CD} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-              <Input name="STORAGEPLACE_NM" defaultValue={record.STORAGEPLACE_NM} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-            </span>
-          ),
+          render: (text, record) => {
+            if (this.props.viewPageData.viewType !== 'VIEW') {
+              return (
+                <span key={record.INDEX}>
+                  <Input name="STORAGETANK_CD" defaultValue={record.STORAGETANK_CD} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <Input name="STORAGEHOUSE_CD" defaultValue={record.STORAGEHOUSE_CD} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                  <Input name="STORAGEPLACE_NM" defaultValue={record.STORAGEPLACE_NM} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+                </span>
+              );
+            }
+            return <span>{`${record.STORAGETANK_CD || ''}/${record.STORAGEHOUSE_CD || ''}/${record.STORAGEPLACE_NM || ''}`}</span>;
+          },
         },
       ],
     };
@@ -195,16 +235,21 @@ class Material extends Component {
   }
 
   componentDidMount() {
-    const { id, formData, apiArray, getExtraApiData } = this.props;
-    const taskSeq = (formData && formData.TASK_SEQ) || 0;
+    const { id, formData, apiArray, getExtraApiData, viewPageData } = this.props;
+    const taskSeq = (viewPageData && viewPageData.taskSeq) || 0;
     if (taskSeq > 0) {
-      apiArray.push({
-        key: 'mtrlList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsGetMtrlList/${taskSeq}`,
-      });
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'mtrlList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetMtrlList/${taskSeq}`,
+        }),
+        this.handleStart,
+      );
+    } else {
+      getExtraApiData(id, apiArray, this.handleStart);
     }
-    getExtraApiData(id, apiArray, this.handleStart);
   }
 
   handleStart = () => {
@@ -212,32 +257,36 @@ class Material extends Component {
     const { columns, initMaterialRow } = this.state;
 
     const pipeType = (extraApiData && extraApiData.pipe_type && extraApiData.pipe_type.categoryMapList) || [];
-
     const newColumn = {
       title: '배관재질/No/Size',
       dataIndex: '',
       align: 'center',
       width: 250,
-      render: (text, record) => (
-        <span key={record.INDEX}>
-          <Select
-            key={record.INDEX}
-            defaultValue={record.PIPE_TYPE || String(556)}
-            onChange={value => this.handleSelectOnChange(value, 'PIPE_TYPE', record.INDEX)}
-            style={{ width: 90 }}
-          >
-            {pipeType
-              .filter(p => p.LVL > 0 && p.USE_YN === 'Y')
-              .map(item => (
-                <Option key={String(item.NODE_ID)} value={String(item.NODE_ID)}>
-                  {item.NAME_KOR}
-                </Option>
-              ))}
-          </Select>
-          <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
-          <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
-        </span>
-      ),
+      render: (text, record) => {
+        if (this.props.viewPageData.viewType !== 'VIEW') {
+          return (
+            <span key={record.INDEX}>
+              <Select
+                key={record.INDEX}
+                defaultValue={record.PIPE_TYPE || String(556)}
+                onChange={value => this.handleSelectOnChange(value, 'PIPE_TYPE', record.INDEX)}
+                style={{ width: 90 }}
+              >
+                {pipeType
+                  .filter(p => p.LVL > 0 && p.USE_YN === 'Y')
+                  .map(item => (
+                    <Option key={String(item.NODE_ID)} value={String(item.NODE_ID)}>
+                      {item.NAME_KOR}
+                    </Option>
+                  ))}
+              </Select>
+              <Input name="PIPE_NO" defaultValue={record.PIPE_NO} onChange={e => this.handleInputOnChange(e, record.INDEX)} />
+              <Input name="PIPE_SIZE" defaultValue={record.PIPE_SIZE} onChange={e => this.handleInputOnChange(e, record.INDEX)} /> mm
+            </span>
+          );
+        }
+        return <span>{`${record.PIPE_TYPE_NM || ''}/${record.PIPE_NO || ''}/${record.PIPE_SIZE || ''}mm`}</span>;
+      },
     };
 
     const mtrlList = (extraApiData && extraApiData.mtrlList && extraApiData.mtrlList.list) || [];
@@ -299,6 +348,7 @@ class Material extends Component {
           bordered
           pagination={{ pageSize: 100 }}
           scroll={{ x: 1500, y: 200 }}
+          pagination={false}
         />,
       ],
     });

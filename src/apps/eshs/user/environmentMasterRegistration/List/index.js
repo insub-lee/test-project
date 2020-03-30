@@ -69,7 +69,7 @@ class List extends React.Component {
       requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
 
-    if (name === 'firstUnitExchange' || name === 'secondUnitExchange') {
+    if (name === 'FIR_UNIT_EXCHANGE' || name === 'SEC_UNIT_EXCHANGE') {
       const kgConvertValue = Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100;
       this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, { kgConvertValue }),
@@ -186,7 +186,7 @@ class List extends React.Component {
         <Sketch>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} />
+            <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
           <div className="alignRight">
             <StyledButton className="btn-primary" onClick={handleInputClick}>
@@ -324,7 +324,14 @@ class List extends React.Component {
             </Row>
           </div>
           <div className="alignRight div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
-          <Modal visible={visible} modalClose={handleModalClose} getCallDataHandler={getCallDataHandler} result={result} setRequestValue={setRequestValue} />
+          <Modal
+            sagaKey={sagaKey}
+            visible={visible}
+            modalClose={handleModalClose}
+            getCallDataHandler={getCallDataHandler}
+            result={result}
+            setRequestValue={setRequestValue}
+          />
         </Sketch>
       </StyledViewDesigner>
     );
