@@ -4,11 +4,10 @@ import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 import { Modal } from 'antd';
-import InputPage from './pages/InputPage';
-import ModifyPage from './pages/ModifyPage';
-import SearchListPage from './pages/SearchListPage';
+import SearchListPage from '../sqtbEquipMgt/pages/SearchListPage';
+import ListPage from './pages/ListPage';
 
-class SqtbEquipMgt extends Component {
+class SqtbEquipList extends Component {
   state = {
     isLoading: true,
   };
@@ -73,11 +72,10 @@ class SqtbEquipMgt extends Component {
     return (
       <>
         <BizBuilderBase
-          sagaKey="SqtbEquipMgt"
+          sagaKey="sqtbEquipList"
           workSeq={4941}
-          viewType="INPUT"
-          CustomInputPage={InputPage}
-          CustomModifyPage={ModifyPage}
+          viewType="LIST"
+          CustomListPage={ListPage}
           loadingComplete={this.loadingComplete}
           handleModalVisible={this.handleModalVisible}
           modalSelectedRow={modalSelectedRow}
@@ -92,8 +90,8 @@ class SqtbEquipMgt extends Component {
   }
 }
 
-SqtbEquipMgt.propTypes = {};
+SqtbEquipList.propTypes = {};
 
-SqtbEquipMgt.defaultProps = {};
+SqtbEquipList.defaultProps = {};
 
-export default SqtbEquipMgt;
+export default SqtbEquipList;

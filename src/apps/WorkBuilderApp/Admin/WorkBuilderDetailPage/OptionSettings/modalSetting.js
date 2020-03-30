@@ -8,7 +8,8 @@ import styled from 'styled-components';
 const Wrapper = styled.div`
   display: flex;
   input[type='text'] {
-    width: 100px;
+    min-width: 25%;
+    width: 50%;
   }
   .ant-select-selection {
     &:hover {
@@ -84,7 +85,7 @@ class modalSetting extends React.Component {
           <Input.Group compact className="setter">
             <Input defaultValue={optValue.width || undefined} placeholder="넓이 입력" onChange={e => this.onChange('width', e.target.value)} />
             <Select
-              style={{ width: '70px', verticalAlign: 'top', margin: '0px' }}
+              style={{ width: '50%', verticalAlign: 'top', margin: '0px' }}
               defaultValue={optValue.widthType || 'px'}
               onChange={value => this.onChange('widthType', value)}
             >
@@ -95,7 +96,7 @@ class modalSetting extends React.Component {
           <Input.Group compact className="setter">
             <Input defaultValue={optValue.height || undefined} placeholder="높이 입력" onChange={e => this.onChange('height', e.target.value)} />
             <Select
-              style={{ width: '70px', verticalAlign: 'top', margin: '0px' }}
+              style={{ width: '50%', verticalAlign: 'top', margin: '0px' }}
               defaultValue={optValue.heightType || 'px'}
               onChange={value => this.onChange('heightType', value)}
             >

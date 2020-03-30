@@ -22,7 +22,6 @@ class ModifyPage extends Component {
   componentDidMount() {
     const { setModalRowSelected, formData } = this.props;
     setModalRowSelected(formData);
-    console.debug('componentDidMount');
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -48,7 +47,6 @@ class ModifyPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    console.debug('saveBeforeProcess');
     const { submitExtraHandler, formData, metaList } = this.props;
     const { uploadFileList } = this.state;
     const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
@@ -136,6 +134,7 @@ class ModifyPage extends Component {
               changeFormData={changeFormData}
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
+              viewPageData={viewPageData}
               viewType="MODIFY"
             />
             <Material
@@ -143,6 +142,7 @@ class ModifyPage extends Component {
               formData={formData}
               changeFormData={changeFormData}
               getExtraApiData={getExtraApiData}
+              viewPageData={viewPageData}
               extraApiData={extraApiData}
               viewType="MODIFY"
             />
