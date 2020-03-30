@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import BizMicroDevBase from 'components/BizMicroDevBase';
-import List from './List';
+import CodeList from './List';
 
 class CodeMain extends Component {
   componantDidMount() {}
 
   render() {
-    return <BizMicroDevBase sagaKey="codeMain" component={List} dangerMainYN />;
+    return <BizMicroDevBase sagaKey="codeMain" component={CodeList} dangerMainYN />;
   }
 }
 
