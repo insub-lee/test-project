@@ -3,11 +3,7 @@ import PropTypes from 'prop-types';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-<<<<<<< HEAD
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-=======
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
->>>>>>> eshs_environment_chemicalMaterial_sapUsage
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
 import { Table, Input, Row, Col, InputNumber } from 'antd';
