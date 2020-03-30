@@ -42,36 +42,36 @@ class StdInput extends Component {
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
+    console.debug('### 1 : ', id, response, etcData);
+    console.debug('### 2 : ', selectedAttach);
+    console.debug('### 3 : ', response);
+    console.debug('### 4 : ', tmpAttach);
+
     changeFormData(id, etcData, tmpAttach);
-    const tmpFileList = uploadFileList.map(file =>
-      file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200 || code === 300, isAttempted: true } : file,
-    );
+    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200, isAttempted: true } : file));
 
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
+      console.debug('### 4 : ', tmpFileList);
 
-      let AttemptionCount = 0; // API 찌른 횟수
-      let isCompleteCount = 0; // API 성공 횟수
-      const limit = uploadFileList.length || 0; // 총 파일 갯수
+      let AttemptionCount = 0;
+      let isCompleteCount = 0;
+      const limit = uploadFileList.length || 0;
 
       uploadFileList.forEach(e => {
         if (e.isAttempted === true) {
-          // API 찌른 경우
           AttemptionCount++;
         }
         if (e.isComplete === true) {
-          // API 성공 횟수
           isCompleteCount++;
         }
       });
 
       if (AttemptionCount === limit) {
-        // 총 파일 갯수만큼 API를 찔렀는지
         if (isCompleteCount === limit) {
-          // 총 파일 갯수만큼 API 정상 작동했는지
           this.saveTask(id, id, this.saveTaskAfter);
         } else {
-          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!');
+          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다람쥐.!!!');
         }
       }
     });
@@ -137,14 +137,11 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModalHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
-    if (typeof onCloseModalHandler === 'function') {
-      onCloseModalHandler();
+    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
+    if (typeof onCloseModleHandler === 'function') {
+      onCloseModleHandler();
     }
     if (typeof changeViewPage === 'function') {
-      // changeViewPage(id, workSeq, taskSeq, 'VIEW');
-      // page 이동
-      // redirectUrl(sagaKey, '/apps/Workflow/User/ApproveBase/draft');
       redirectUrl(sagaKey, '/apps/Workflow/User/Draft');
     }
   };
@@ -215,7 +212,7 @@ StdInput.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModalHandler: PropTypes.func,
+  onCloseModleHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,

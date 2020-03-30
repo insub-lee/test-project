@@ -22,6 +22,7 @@ class MdcsAppvView extends Component {
 
   componentDidMount() {
     const { selectedRow, setSelectedRow, APPV_STATUS } = this.props;
+    console.debug('this.props', this.props);
     const appvStatus = selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS == 10 ? 20 : 2;
     const nSelectRow = { ...selectedRow, APPV_STATUS: appvStatus };
     setSelectedRow(nSelectRow);

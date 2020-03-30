@@ -19,7 +19,7 @@ export const setUnApproveList = list => ({
 });
 
 export const getDraftList = () => ({
-  type: actionTypes.GET_DRAFT_LIST
+  type: actionTypes.GET_DRAFT_LIST,
 });
 
 export const setDraftList = list => ({
@@ -31,8 +31,14 @@ export const setPartialInit = () => ({
   type: actionTypes.SET_PARTIAL_INIT,
 });
 
-
-
+export const submitHandlerBySaga = (id, httpMethod, apiUrl, submitData, callbackFunc) => ({
+  type: `${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${id}`,
+  id,
+  httpMethod,
+  apiUrl,
+  submitData,
+  callbackFunc,
+});
 
 export const setSelectedRow = row => ({
   type: actionTypes.SET_SELECTED_ROW,
