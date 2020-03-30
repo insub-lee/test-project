@@ -5,7 +5,7 @@ import { Input, InputNumber, Select, Row, Col, Popconfirm } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from '../InputModal';
