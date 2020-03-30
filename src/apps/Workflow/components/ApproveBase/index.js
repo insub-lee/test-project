@@ -79,6 +79,8 @@ const mapDispatchToProps = dispatch => ({
   getApproveList: () => dispatch(actions.getApproveList()),
   getUnApproveList: () => dispatch(actions.getUnApproveList()),
   getDraftList: () => dispatch(actions.getDraftList()),
+  submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>
+    dispatch(actions.submitHandlerBySaga(id, httpMethod, apiUrl, submitData, callbackFunc)),
   setSelectedRow: row => dispatch(actions.setSelectedRow(row)),
   setViewVisible: visible => dispatch(actions.setViewVisible(visible)),
   setOpinionVisible: visible => dispatch(actions.setOpinionVisible(visible)),
