@@ -32,6 +32,13 @@ class InputModal extends React.Component {
     getCallDataHandler(id, apiArr, this.setDataSource);
   };
 
+  setDataSource = () => {
+    const { result } = this.props;
+    this.setState({
+      dataSource: (result.materialList && result.materialList.list) || [],
+    });
+  };
+
   static getDerivedStateFromProps(nextProps, prevState) {
     if (nextProps.result.materialList && nextProps.result.materialList.list) {
       if (nextProps.result.materialList.list !== prevState.dataSource) {
@@ -40,13 +47,6 @@ class InputModal extends React.Component {
     }
     return null;
   }
-
-  setDataSource = () => {
-    const { result } = this.props;
-    this.setState({
-      dataSource: (result.materialList && result.materialList.list) || [],
-    });
-  };
 
   columns = [
     {
@@ -164,7 +164,7 @@ InputModal.propTypes = {
 };
 
 InputModal.defaultProps = {
-  sagaKey: 'EnvironmentMasterRegistration',
+  sagaKey: '',
   visible: false,
   modalClose: () => {},
   getCallDataHandler: () => {},
