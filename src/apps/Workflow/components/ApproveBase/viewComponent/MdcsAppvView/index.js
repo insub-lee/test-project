@@ -5,8 +5,9 @@ import { Radio, Input, Button, Icon, Select } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
-import StyledButton from 'components/CommonStyled/StyledButton';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -108,7 +109,7 @@ class MdcsAppvView extends Component {
     const { selectedRow } = this.props;
     return (
       <>
-        <StyledHtmlTable style={{ padding: '20px' }}>
+        <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
           <table>
             <tbody>
               <tr>
@@ -180,14 +181,14 @@ class MdcsAppvView extends Component {
               </tr>
             </tbody>
           </table>
-          <div style={{ width: '100%', textAlign: 'center', marginTop: '12px' }}>
-            <StyledButton style={{ marginRight: '5px' }} key="ok" className="btn-primary" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
+          <StyledButtonWrapper className="btn-wrap-center">
+            <StyledButton key="ok" className="btn-primary btn-first" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
             <StyledButton key="close" className="btn-light" onClick={this.onModalClose}>
               닫기
             </StyledButton>
-          </div>
+          </StyledButtonWrapper>
         </StyledHtmlTable>
         <BizBuilderBase
           sagaKey="approveBase_approveView"
