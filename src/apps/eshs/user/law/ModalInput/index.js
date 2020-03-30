@@ -45,9 +45,9 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModleHandler, changeViewPage, baseSagaKey, baseWorkSeq } = this.props;
-    if (typeof onCloseModleHandler === 'function') {
-      onCloseModleHandler();
+    const { onCloseModalHandler, changeViewPage, baseSagaKey, baseWorkSeq } = this.props;
+    if (typeof onCloseModalHandler === 'function') {
+      onCloseModalHandler();
       changeViewPage(baseSagaKey, baseWorkSeq || workSeq, -1, 'LIST');
     }
     if (typeof changeViewPage === 'function') {
@@ -118,7 +118,7 @@ InputPage.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,

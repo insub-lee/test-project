@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button } from 'antd';
+import { Table, Popconfirm, Button, Modal } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -13,7 +13,9 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import { getExtraApiData } from 'apps/Workflow/User/Draft_Backup/DraftBase/actions';
+import BizBuilderBase from 'components/BizBuilderBase';
 import SearchComp from '../SearchComp';
+import CustomViewPage from '../ViewPage';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -24,6 +26,8 @@ class ListPage extends Component {
       isMultiDelete: false,
       isRowNo: false,
       searchBar: [],
+      viewModalVisible: false,
+      viewTaskSeq: -1,
     };
   }
 
@@ -82,6 +86,7 @@ class ListPage extends Component {
     const searchBar = [];
     searchBar.push(
       <SearchComp
+        key={id}
         SearchConfig={SearchConfig}
         id={id}
         extraApiData={extraApiData}
@@ -150,7 +155,7 @@ class ListPage extends Component {
 
   renderList = (group, groupIndex) => {
     const { listData, listSelectRowKeys } = this.props;
-    const { isMultiDelete } = this.state;
+    const { isMultiDelete, viewModalVisible, viewTaskSeq } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
     if (isMultiDelete) {
@@ -170,11 +175,37 @@ class ListPage extends Component {
             columns={columns}
             dataSource={listData || []}
             rowSelection={rowSelection}
+            onRow={record => ({
+              onClick: event => this.handleViewModalVisible(record.TASK_SEQ),
+            })}
           />
         </Group>
+        <Modal title="장비 조회" visible={viewModalVisible} closable onCancel={() => this.handleViewModalVisible(-1)} width={1000} footer={null}>
+          <div>{viewModalVisible && this.handleOnViewModal(viewTaskSeq)}</div>
+        </Modal>
       </div>
     );
   };
+
+  handleViewModalVisible = viewTaskSeq => {
+    const { viewModalVisible } = this.state;
+
+    this.setState({
+      viewModalVisible: !viewModalVisible,
+      viewTaskSeq,
+    });
+  };
+
+  handleOnViewModal = viewTaskSeq => (
+    <BizBuilderBase
+      sagaKey="SqtbEquipMgtView"
+      workSeq={4941}
+      taskSeq={viewTaskSeq}
+      viewType="VIEW"
+      loadingComplete={this.loadingComplete}
+      CustomViewPage={CustomViewPage}
+    />
+  );
 
   render = () => {
     const {
@@ -215,7 +246,6 @@ class ListPage extends Component {
                   {group.useTitle && <GroupTitle title={group.title} />}
                   <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                     <Contents>{searchBar}</Contents>
-                    <Button onClick={() => changeViewPage(id, workSeq, -1, 'INPUT')}>INPUT GO</Button>
                   </Group>
                 </div>
               );

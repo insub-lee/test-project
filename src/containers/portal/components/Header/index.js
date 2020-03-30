@@ -41,7 +41,7 @@ const Header = ({
     // home txt 삭제 0422
     appName = '';
   } else if (lang.get('NAME', setMyMenuData)) {
-    appName = view !== 'Mobile' ? `: ${lang.get('NAME', setMyMenuData)}` : lang.get('NAME', setMyMenuData);
+    appName = view !== 'Mobile' ? lang.get('NAME', setMyMenuData) : lang.get('NAME', setMyMenuData);
   }
 
   if (setMyMenuData.length === 0) {
@@ -57,9 +57,14 @@ const Header = ({
               <span className="gotoHome" onClick={() => gotoHome('common')} onKeyDown={() => gotoHome('common')} role="button" tabIndex="0">
                 {view !== 'Mobile' && headerTitle}
               </span>
-              <span> {appName} </span>
               {/* 담당자 popover */}
-              {menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE' && view !== 'Mobile' && <ManagerInfo managerInfo={managerInfo} />}
+              {menuData.APP_YN === 'Y' && menuData.SRC_PATH !== 'PAGE' && view !== 'Mobile' && (
+                <>
+                  <span> : </span>
+                  <ManagerInfo managerInfo={managerInfo} />
+                </>
+              )}
+              <span> {appName} </span>
             </h1>
           </li>
         </ul>
