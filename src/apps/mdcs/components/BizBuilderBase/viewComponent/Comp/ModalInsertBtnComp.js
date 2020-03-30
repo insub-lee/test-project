@@ -7,7 +7,7 @@ const ModalInsertBtnComp = ({ id, saveTask, compProps, changeFormData, formData 
     className="btn-primary"
     onClick={() => {
       formData.NODE_ID === 0 && changeFormData(id, 'NODE_ID', compProps.NODE_ID);
-      saveTask(id, id, compProps.onCloseModleHandler);
+      saveTask(id, id, compProps.onCloseModalHandler);
     }}
   >
     Save
