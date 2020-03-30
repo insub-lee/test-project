@@ -27,7 +27,7 @@ class Material extends Component {
       },
       columns: [
         {
-          title: '식제',
+          title: '삭제',
           dataIndex: '',
           align: 'center',
           width: 50,
