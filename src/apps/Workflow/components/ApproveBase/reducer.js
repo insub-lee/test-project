@@ -32,10 +32,6 @@ const appReducer = (state = initialState, action) => {
         .set('selectedRow', fromJS({}))
         .set('opinion', '');
     }
-
-
-
-
     case actionTypes.SET_SELECTED_ROW: {
       const { row } = action;
       console.debug(row);
