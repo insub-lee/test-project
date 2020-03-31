@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Table, Select, Input, message } from 'antd';
-
-import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
+import { Table, Select, Input, message } from 'antd';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+
 import Moment from 'moment';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
-
-const AntdTable = StyledAntdTable(Table);
 const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
 
 const { Option } = Select;
 
@@ -223,7 +223,8 @@ class List extends Component {
 
     renderList = [...renderList, ...(listData || [])];
     return (
-      <AntdTable
+      <AntdLineTable
+        className="tableWrapper"
         style={{ cursor: 'pointer' }}
         rowKey={renderList.NODE_ID}
         key={renderList.NODE_ID}
@@ -253,34 +254,34 @@ class List extends Component {
     }
   };
 
-  renderSelect = () => {
-    const { selectBoxData } = this.state;
-    return (
-      <Select style={{ width: '200px', marginRight: '10px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
-        <Option value="0" disabled>
-          선택
-        </Option>
-        {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
-      </Select>
-    );
-  };
+  // renderSelect = () => {
+  //   const { selectBoxData } = this.state;
+  //   return (
+  //     // <AntdSelect style={{ width: '200px', marginRight: '10px' }} onChange={value => this.changeSelectValue(value)} defaultValue="0">
+
+  //   );
+  // };
 
   render() {
+    const { selectBoxData } = this.state;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <Group>
-            <Row>
-              {this.renderSelect()}
-              <StyledButton className="btn-primary btn-first" onClick={() => this.selectCode()}>
-                검색
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first">엑셀받기</StyledButton>
-            </Row>
-            {this.renderTable()}
-          </Group>
-        </Sketch>
-      </StyledViewDesigner>
+      <ContentsWrapper>
+        <div className="selSaveWrapperL">
+          <AntdSelect onChange={value => this.changeSelectValue(value)} defaultValue="0">
+            <Option value="0" disabled>
+              선택
+            </Option>
+            {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
+          </AntdSelect>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={() => this.selectCode()}>
+              검색
+            </StyledButton>
+            <StyledButton className="btn-primary btn-first">엑셀받기</StyledButton>
+          </StyledButtonWrapper>
+        </div>
+        {this.renderTable()}
+      </ContentsWrapper>
     );
   }
 }
