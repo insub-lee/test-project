@@ -7,6 +7,7 @@ import { Input, Button, Checkbox, message, Popover, Modal } from 'antd';
 import Upload from 'components/Upload';
 import { debounce } from 'lodash';
 import PropTypes from 'prop-types';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import * as popoverContent from './PopoverContent';
 
 const appIconUploadArea = {
@@ -123,7 +124,9 @@ class ItemTable extends Component {
                   <>
                     <font color="#ff0000">저장 버튼은 상신되지 않고 DATABASE에 저장만 됩니다.</font>
                     &nbsp;
-                    <Button onClick={() => this.handleAction('UPDATE')}>저장</Button>
+                    <StyledButton className="btn-primary" onClick={() => this.handleAction('UPDATE')}>
+                      저장
+                    </StyledButton>
                   </>
                 )}
               </td>
@@ -303,7 +306,9 @@ class ItemTable extends Component {
             <img src={popoverContent.Em1} alt="EM" />
             <br />
             <br />
-            <Button onClick={this.handleModalVisible}>닫기</Button>
+            <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+              닫기
+            </StyledButton>
           </div>
         </Modal>
       </div>
