@@ -260,6 +260,10 @@ const reducer = (state = initialState, action) => {
       const { id, flag } = action;
       return state.setIn(['bizBuilderBase', id, 'isLoading'], flag);
     }
+    case actionTypes.SET_FORMDATA_REDUCER: {
+      const { id, formData } = action;
+      return state.setIn(['bizBuilderBase', id, 'formData'], fromJS(formData));
+    }
     default:
       return state;
   }
