@@ -5,6 +5,7 @@ import { SaveOutlined } from '@ant-design/icons';
 import StyledLineTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledSelectModal from 'commonStyled/MdcsStyled/Modal/StyledSelectModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import UserSelect from 'components/UserSelect';
 
 const AntdLineTable = StyledLineTable(Table);
@@ -151,13 +152,15 @@ class List extends Component {
 
     if (distDeptList !== undefined) {
       return (
-        <div style={{ padding: '10px 15px' }}>
-          <div style={{ marginBottom: '10px' }}>
-            <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
               <Icon type="form" /> 배포부서 담당자
-              <StyledButton className="btn-gray btn-sm" style={{ marginLeft: '40px' }} onClick={this.onClickSave}>
-                <SaveOutlined /> 필수 배포부서적용
-              </StyledButton>
+              <div className="btnPositonMid">
+                <StyledButton className="btn-gray btn-sm" onClick={this.onClickSave}>
+                  <SaveOutlined /> 필수 배포부서적용
+                </StyledButton>
+              </div>
             </p>
           </div>
           <AntdModal title="부서담당자 선택" width="1000px" visible={this.state.isShow} onCancel={this.onCancel} destroyOnClose footer={[]}>
@@ -171,8 +174,15 @@ class List extends Component {
               onCancel={this.onCancel}
             />
           </AntdModal>
-          <AntdLineTable rowSelection={rowSelection} columns={this.getTableColumns()} dataSource={distDeptList} pagination={false} bordered />
-        </div>
+          <AntdLineTable
+            rowSelection={rowSelection}
+            columns={this.getTableColumns()}
+            dataSource={distDeptList}
+            pagination={false}
+            bordered
+            className="tableWrapper"
+          />
+        </ContentsWrapper>
       );
     }
 
