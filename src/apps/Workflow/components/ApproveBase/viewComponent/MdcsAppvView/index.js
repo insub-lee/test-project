@@ -184,13 +184,13 @@ class MdcsAppvView extends Component {
                         </Option>
                       ))}
                   </Select>
-                  <Button type="primary" style={{ marginRight: '5px' }} onClick={this.onApplyUSer}>
+                  <StyledButton className="btn-gray btn-sm btn-first" onClick={this.onApplyUSer}>
                     적용
-                  </Button>
-                  <Button>
+                  </StyledButton>
+                  <StyledButton className="btn-light btn-sm">
                     <Icon type="search" />
                     조직도 검색
-                  </Button>
+                  </StyledButton>
                 </td>
               </tr>
               <tr

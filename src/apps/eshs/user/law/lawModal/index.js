@@ -29,7 +29,7 @@ class LawModal extends Component {
   callList = () => {
     const fetchData = async () => {
       const result = await request({
-        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
+        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist',
         method: 'GET',
       });
       return result.response.list;
@@ -40,9 +40,8 @@ class LawModal extends Component {
   onLawSeach = (type, text) => {
     const fetchData = async () => {
       const result = await request({
-        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
-        method: 'POST',
-        params: { TYPE: type, TEXT: text },
+        url: `http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist?TYPE=${type}&TEXT=${text}`,
+        method: 'GET',
       });
       return result.response.list;
     };
