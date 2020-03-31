@@ -46,7 +46,7 @@ class ListPage extends Component {
   callList = () => {
     const fetchData = async () => {
       const result = await request({
-        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
+        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist',
         method: 'GET',
       });
       if (result.response) {
@@ -68,7 +68,7 @@ class ListPage extends Component {
     }
     const fetchData = async r => {
       await request({
-        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
+        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist',
         method: 'DELETE',
         params: { TASK_SEQ: r },
       });
@@ -111,19 +111,12 @@ class ListPage extends Component {
   };
 
   searchData() {
+    const { title, rechInstitution, rechGubun, regUserName, regUserDept, content } = this.state;
+    const params = `SEARCHYN=${1}&TITLE=${title}&RECH_INSTITUTION=${rechInstitution}&RECH_GUBUN=${rechGubun}&REG_USER_NAME=${regUserName}&REG_USER_DEPT=${regUserDept}&CONTENT=${content}`;
     const fetchData = async () => {
       const result = await request({
-        url: 'http://eshs-dev.magnachip.com/api/eshs/v1/common/eshlawlist',
-        method: 'POST',
-        params: {
-          SEARCHYN: 1,
-          TITLE: this.state.title,
-          RECH_INSTITUTION: this.state.rechInstitution,
-          RECH_GUBUN: this.state.rechGubun,
-          REG_USER_NAME: this.state.regUserName,
-          REG_USER_DEPT: this.state.regUserDept,
-          CONTENT: this.state.content,
-        },
+        url: `http://eshs-dev.magnachip.com/api/eshs/v1/common/eshslawlist?${params}`,
+        method: 'GET',
       });
       if (result.response) {
         this.setState({

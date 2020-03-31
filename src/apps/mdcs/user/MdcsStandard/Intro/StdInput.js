@@ -141,7 +141,7 @@ class StdInput extends Component {
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
-    if (typeof changeViewPage === 'function') {
+    if (typeof redirectUrl === 'function') {
       redirectUrl(sagaKey, '/apps/Workflow/User/Draft');
     }
   };
