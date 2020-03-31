@@ -124,9 +124,9 @@ class StdInput extends Component {
   };
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModalHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
-    if (typeof onCloseModalHandler === 'function') {
-      onCloseModalHandler();
+    const { onCloseModleHandler, changeViewPage, sagaKey, redirectUrl } = this.props;
+    if (typeof onCloseModleHandler === 'function') {
+      onCloseModleHandler();
     }
     redirectUrl(sagaKey, '/apps/Workflow/User/Draft');
   };
