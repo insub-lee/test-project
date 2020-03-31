@@ -26,6 +26,11 @@ const ContentsWrapper = styled.div`
     padding: 20px 20px 0px 20px;
     text-align: right;
   }
+
+  .selSaveWrapperL {
+    padding: 20px 20px 0px 20px;
+    text-align: left;
+  }
 `;
 
 export default ContentsWrapper;
