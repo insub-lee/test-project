@@ -347,3 +347,5 @@ export const getFileDownload = (id, url, fileName) => ({
   url,
   fileName,
 });
+
+export const setFormDataByReducer = (id, formData) => ({ type: actionTypes.SET_FORMDATA_REDUCER, id, formData });
