@@ -21,7 +21,7 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps, changeFormData, formData } = this.props;
+    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
     const {
       info: { PRC_ID },
     } = workFlowConfig;
@@ -34,10 +34,6 @@ class InputPage extends Component {
       };
       getProcessRule(id, payload);
     }
-    changeFormData(id, 'AAA', '1111');
-    changeFormData(id, 'BBB', '2222');
-    changeFormData(id, 'CCC', '33333');
-    changeFormData(id, 'DDD', '44444');
   }
 
   fileUploadComplete = (id, response, etcData) => {
@@ -198,6 +194,7 @@ InputPage.propTypes = {
   handleModalVisible: PropTypes.func,
   modalSelectedRow: PropTypes.object,
   searchListId: PropTypes.string,
+  saveTaskAfterCallbackFunc: PropTypes.any,
 };
 
 InputPage.defaultProps = {
@@ -211,6 +208,7 @@ InputPage.defaultProps = {
   isLoading: false,
   modalSelectedRow: {},
   searchListId: 'SqtbSearchList',
+  saveTaskAfterCallbackFunc: undefined,
 };
 
 export default InputPage;
