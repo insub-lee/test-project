@@ -1,23 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Radio, Input, Button, Icon, Select } from 'antd';
+import { Radio, Input, Button, Icon, Select, message, Modal } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 
+const AntdModal = StyledContentsModal(Modal);
 const { Option } = Select;
 const { TextArea } = Input;
 let timeout;
 
 class MdcsAppvView extends Component {
   state = {
+    modalWidth: 800,
     userInfo: [],
     selectedUser: undefined,
     nextApprover: undefined,
+    coverView: {
+      visible: false,
+      workSeq: undefined,
+      taskSeq: undefined,
+      viewMetaSeq: undefined,
+    },
   };
 
   componentDidMount() {
@@ -74,6 +83,12 @@ class MdcsAppvView extends Component {
 
   onApplyUSer = () => {
     const { selectedRow, setSelectedRow } = this.props;
+    const { selectedUser } = this.state;
+
+    if (!selectedUser) {
+      message.error('실무자를 선택해 주세요');
+      return;
+    }
     this.setState(
       prevState => ({
         nextApprover: prevState.selectedUser,
@@ -88,7 +103,6 @@ class MdcsAppvView extends Component {
             NEXT_APPV_USER_ID: this.state.nextApprover.value,
           },
         };
-        console.debug('next', nSelectedRow);
         setSelectedRow(nSelectedRow);
       },
     );
@@ -96,7 +110,6 @@ class MdcsAppvView extends Component {
 
   handleReqApprove = (e, appvStatus) => {
     e.preventDefault();
-    console.debug('handleReqApprove call!! ');
     this.props.reqApprove(appvStatus);
     this.props.setOpinionVisible(false);
   };
@@ -105,8 +118,30 @@ class MdcsAppvView extends Component {
     this.props.setViewVisible(false);
   };
 
+  clearUser = e => {
+    this.setState({ selectedUser: undefined, nextApprover: undefined });
+  };
+
+  clickCoverView = (workSeq, taskSeq, viewMetaSeq) => {
+    const coverView = { workSeq, taskSeq, viewMetaSeq, visible: true, viewType: 'VIEW' };
+    this.setState({ coverView });
+  };
+
+  onCloseCoverView = () => {
+    const { coverView } = this.state;
+    const tempCoverView = { ...coverView, visible: false };
+    this.setState({ coverView: tempCoverView });
+  };
+
+  onClickModify = () => {
+    const { selectedRow } = this.props;
+    const coverView = { workSeq: selectedRow.WORK_SEQ, taskSeq: selectedRow.TASK_SEQ, visible: true, viewType: 'MODIFY' };
+    this.setState({ coverView });
+  };
+
   render() {
     const { selectedRow } = this.props;
+    const { modalWidth, coverView } = this.state;
     return (
       <>
         <StyledHtmlTable style={{ padding: '20px 20px 0' }}>
@@ -168,6 +203,7 @@ class MdcsAppvView extends Component {
                   <Input
                     prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
                     allowClear
+                    onChange={this.clearUser}
                     placeholder="실무자를 선택해주세요"
                     value={this.state.nextApprover && this.state.nextApprover.text}
                   ></Input>
@@ -182,6 +218,9 @@ class MdcsAppvView extends Component {
             </tbody>
           </table>
           <StyledButtonWrapper className="btn-wrap-center">
+            <StyledButton key="ok" className="btn-primary btn-first" onClick={e => false}>
+              표지 수정
+            </StyledButton>
             <StyledButton key="ok" className="btn-primary btn-first" onClick={e => this.handleReqApprove(e, selectedRow.APPV_STATUS)}>
               승인
             </StyledButton>
@@ -198,6 +237,29 @@ class MdcsAppvView extends Component {
           selectedRow={selectedRow}
           ViewCustomButtons={() => false}
         />
+        <AntdModal
+          className="modalWrapper modalTechDoc modalCustom"
+          title="표지 보기"
+          width={modalWidth}
+          destroyOnClose
+          visible={coverView.visible}
+          onCancel={this.onCloseCoverView}
+          footer={[]}
+        >
+          <BizBuilderBase
+            sagaKey="CoverView"
+            viewType={coverView.viewType}
+            workSeq={coverView.workSeq}
+            taskSeq={coverView.taskSeq}
+            viewMetaSeq={coverView.viewMetaSeq}
+            onCloseCoverView={this.onCloseCoverView}
+            ViewCustomButtons={({ onCloseCoverView }) => (
+              <StyledButton className="btn-light" onClick={onCloseCoverView}>
+                닫기
+              </StyledButton>
+            )}
+          />
+        </AntdModal>
       </>
     );
   }
