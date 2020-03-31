@@ -58,6 +58,17 @@ const StyledHtmlTable = styled.div`
           }
         }
         /* select */
+        /* input */
+        .ant-input-affix-wrapper {
+          .ant-input {
+            font-size: 12px;
+            color: #666;
+            height: 30px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+          }
+        }
+        /* input */
       }
     }
   }
