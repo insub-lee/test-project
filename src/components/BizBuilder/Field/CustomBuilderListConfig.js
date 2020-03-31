@@ -67,6 +67,17 @@ class CustomBuilderListConfig extends Component {
           </Select>
         </div>
         <div className="popoverItem popoverItemInput">
+          <span className="spanLabel">선택한 ROW FormData값 설정</span>
+          <Select
+            defaultValue={(configInfo && configInfo.property && configInfo.property.isFormData) || 'N'}
+            style={{ width: '100%' }}
+            onChange={value => this.handleChangeViewCompData('isFormData', value)}
+          >
+            <Option value="N">미사용</Option>
+            <Option value="Y">사용</Option>
+          </Select>
+        </div>
+        <div className="popoverItem popoverItemInput">
           <span className="spanLabel">Modal Width</span>
           <Input
             style={{ width: '100%' }}
