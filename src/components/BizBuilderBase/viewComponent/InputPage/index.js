@@ -19,13 +19,13 @@ class InputPage extends Component {
   }
 
   componentDidMount() {
-    const { sagaKey: id, getProcessRule, workFlowConfig, workPrcProps } = this.props;
-    const {
-      info: { PRC_ID },
-    } = workFlowConfig;
-    if (PRC_ID !== -1) {
+    const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
+    const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
+    const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
+    const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
+    if (isWorkflowUsed && prcId !== -1) {
       const payload = {
-        PRC_ID,
+        PRC_ID: Number(prcId),
         DRAFT_DATA: {
           ...workPrcProps,
         },
@@ -80,29 +80,48 @@ class InputPage extends Component {
   };
 
   saveBeforeProcess = (id, reloadId, callBackFunc) => {
-    const { submitExtraHandler, formData, metaList } = this.props;
+    const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
     const { uploadFileList } = this.state;
-    const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
-
-    // 첨부파일이 없는 경우 체크
-    const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
-
-    if (isUploadByPass && isUploadByPass.length === 0) {
-      this.saveTask(id, reloadId, this.saveTaskAfter);
-    } else {
-      attachList.map(attachItem => {
-        const { COMP_FIELD } = attachItem;
-        const attachInfo = formData[COMP_FIELD];
-        if (attachInfo) {
-          const { DETAIL, MOVEFILEAPI } = attachInfo;
-          uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
-          this.setState({ uploadFileList }, () => {
-            const param = { PARAM: { DETAIL } };
-            const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
-            submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+    const { OPT_INFO } = workInfo;
+    // workflow 결재 체크 하기
+    const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
+    let isByPass = true;
+    // eslint-disable-next-line no-unused-expressions
+    IsWorkProcess &&
+      IsWorkProcess.forEach(opt => {
+        if (opt.ISUSED === 'Y') {
+          // workProces validation check
+          const { DRAFT_PROCESS_STEP } = processRule;
+          const ruleCheckList = DRAFT_PROCESS_STEP.filter(rule => rule.ISREQUIRED === 1);
+          ruleCheckList.forEach(rule => {
+            if (rule.APPV_MEMBER.length === 0) {
+              isByPass = false;
+              message.error(`${rule.NODE_NAME_KOR} 단계의 결재를 선택해 주세요`);
+            }
           });
         }
       });
+    if (isByPass) {
+      const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
+      // 첨부파일이 없는 경우 체크
+      const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
+      if (isUploadByPass && isUploadByPass.length === 0) {
+        this.saveTask(id, reloadId, this.saveTaskAfter);
+      } else {
+        attachList.map(attachItem => {
+          const { COMP_FIELD } = attachItem;
+          const attachInfo = formData[COMP_FIELD];
+          if (attachInfo) {
+            const { DETAIL, MOVEFILEAPI } = attachInfo;
+            uploadFileList.push({ COMP_FIELD, isComplete: false, isAttempted: false });
+            this.setState({ uploadFileList }, () => {
+              const param = { PARAM: { DETAIL } };
+              const moveFileApi = MOVEFILEAPI || '/upload/moveFileToReal';
+              submitExtraHandler(id, 'POST', moveFileApi, param, this.fileUploadComplete, COMP_FIELD);
+            });
+          }
+        });
+      }
     }
   };
 
@@ -118,7 +137,16 @@ class InputPage extends Component {
   // }
 
   saveTaskAfter = (id, workSeq, taskSeq, formData) => {
-    const { onCloseModalHandler, changeViewPage, isBuilderModal, reloadId, isSaveModalClose, changeBuilderModalStateByParent, workInfo } = this.props;
+    const {
+      onCloseModalHandler,
+      changeViewPage,
+      isBuilderModal,
+      reloadId,
+      isSaveModalClose,
+      changeBuilderModalStateByParent,
+      workInfo,
+      redirectUrl,
+    } = this.props;
     if (typeof onCloseModalHandler === 'function') {
       onCloseModalHandler();
     }
