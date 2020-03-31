@@ -315,13 +315,13 @@ upstream mdcs-common {
     server 192.168.251.14:10198;
 }
 upstream edds-common {
-    server 192.168.251.14:10410;
+    server 192.168.251.14:10401;
 }
 upstream manual-common {
     server 192.168.251.14:10500;
 }
 upstream eshs-common {
-    server 192.168.251.14:10510;
+    server 192.168.251.14:10501;
 }
 upstream portal-download {
     server 192.168.251.14:10200;
