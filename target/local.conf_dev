@@ -314,6 +314,9 @@ upstream workflow-common {
 upstream mdcs-common {
     server 192.168.251.14:10198;
 }
+upstream edds-common {
+    server 192.168.251.14:10410;
+}
 upstream manual-common {
     server 192.168.251.14:10500;
 }
