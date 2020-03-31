@@ -7,10 +7,13 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import MdcsContentView from 'components/MdcsContentView';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledTextarea from 'commonStyled/Form/StyledTextarea';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 
 const { Option } = Select;
 const { TextArea } = Input;
+const AntdTextArea = StyledTextarea(Input.TextArea);
+
 let timeout;
 
 class MdcsAppvView extends Component {
@@ -153,7 +156,7 @@ class MdcsAppvView extends Component {
                     적용
                   </StyledButton>
                   <StyledButton className="btn-light btn-sm">
-                    <Icon type="search" />
+                    <Icon type="search" style={{ marginRight: '5px' }} />
                     조직도 검색
                   </StyledButton>
                 </td>
@@ -176,7 +179,7 @@ class MdcsAppvView extends Component {
               <tr>
                 <th>의견 </th>
                 <td>
-                  <TextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
+                  <AntdTextArea rows={4} onChange={e => this.props.setOpinion(e.target.value)} />
                 </td>
               </tr>
             </tbody>
