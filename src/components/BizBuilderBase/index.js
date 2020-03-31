@@ -18,6 +18,7 @@ import ViewPage from './viewComponent/ViewPage';
 import ListPage from './viewComponent/ListPage';
 import SearchComp from './viewComponent/SearchComp';
 import ModalPopup from './viewComponent/ModalPopup';
+import ExtraBuilder from './viewComponent/ExtraBuilder';
 
 class BizBuilderBase extends React.Component {
   constructor(props) {
@@ -153,6 +154,7 @@ class BizBuilderBase extends React.Component {
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
         changeBuilderModalState: this.changeBuilderModalState,
+        ExtraBuilder,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':
@@ -396,6 +398,7 @@ const mapDispatchToProps = dispatch => ({
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
   setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
   getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
+  setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

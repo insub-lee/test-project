@@ -200,7 +200,7 @@ class Tree extends Component {
             className="treeBox"
             style={{
               width: '100%',
-              height: 'calc(100% - 50px)',
+              height: '100%',
             }}
           >
             <AutoSizer>

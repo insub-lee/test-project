@@ -24,6 +24,10 @@ const StyledInput = Component => styled(Component)`
       box-shadow: 0 0 0 0.2rem transparent;
     }
   }
+  &.ant-input-inline {
+    display: inline-block;
+    vertical-align: middle;
+  }
 `;
 
 export default StyledInput;
