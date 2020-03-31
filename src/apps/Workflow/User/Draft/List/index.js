@@ -107,9 +107,9 @@ class DraftList extends Component {
   };
 
   handleReqApprove = e => {
-    const [setOpinionVisible] = this.props;
+    const { reqApprove, setOpinionVisible } = this.props;
     e.preventDefault();
-    this.props.reqApprove({});
+    reqApprove({});
     setOpinionVisible(false);
   };
 
@@ -163,8 +163,8 @@ class DraftList extends Component {
           <BizBuilderBase
             sagaKey="approveBase_approveView"
             viewType="VIEW"
-            onCloseModal={this.onCloseModal}
-            onChangeForm={this.onChangeForm}
+            // onCloseModal={this.onCloseModal}
+            // onChangeForm={this.onChangeForm}
             closeBtnFunc={this.closeBtnFunc}
             clickCoverView={this.clickCoverView}
             onClickModify={this.onClickModify}

@@ -56,14 +56,6 @@ class ViewPage extends Component {
                 <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
                   Revision
                 </StyledButton>
-                {!isBuilderModal && [
-                  <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
-                    List
-                  </StyledButton>,
-                  <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, viewPageData.taskSeq, 'REVISION')}>
-                    Revision
-                  </StyledButton>,
-                ]}
                 {!isBuilderModal && (
                   <StyledButton className="btn-primary" onClick={() => changeViewPage(id, viewPageData.workSeq, -1, 'LIST')}>
                     List

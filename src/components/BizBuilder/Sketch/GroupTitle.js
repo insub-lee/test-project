@@ -55,7 +55,6 @@ class GroupTitle extends Component {
 
   render() {
     const { title, onChange, onChangeUseTitle, useOption, useTitle, tableSize, onChangeTableSize, viewType } = this.props;
-    console.debug('this.props', this.props);
     return (
       <Styled>
         <h2>

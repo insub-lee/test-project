@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Button, Checkbox, Popconfirm, message } from 'antd';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 class ItemTable extends Component {
   constructor(props) {
@@ -142,23 +143,33 @@ class ItemTable extends Component {
           <thead>
             <tr>
               <td colSpan={15}>
-                <Button onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>Excel Download</Button>
+                <StyledButton className="btn-primary" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+                  Excel Download
+                </StyledButton>
                 {!searchFlag && (
                   <>
-                    <Button onClick={() => this.handleAction('EXCEL_UPLOAD')}>Excel Upload</Button>
-                    <Button onClick={() => this.handleAction('SAVE')}>추가</Button>
+                    <StyledButton className="btn-primary" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+                      Excel Upload
+                    </StyledButton>
+                    <StyledButton className="btn-primary" onClick={() => this.handleAction('SAVE')}>
+                      추가
+                    </StyledButton>
                     {btnOk && (
                       <>
-                        <Button onClick={() => this.handleAction('UPDATE')}>수정</Button>
+                        <StyledButton className="btn-primary" onClick={() => this.handleAction('UPDATE')}>
+                          수정
+                        </StyledButton>
                         <Popconfirm
                           title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
                           onConfirm={() => this.handleAction('DELETE')}
                           okText="확인"
                           cancelText="취소"
                         >
-                          <Button>삭제</Button>
+                          <StyledButton className="btn-primary">삭제</StyledButton>
                         </Popconfirm>
-                        <Button onClick={() => this.handleAction('RESET')}>Reset</Button>
+                        <StyledButton className="btn-primary" onClick={() => this.handleAction('RESET')}>
+                          Reset
+                        </StyledButton>
                       </>
                     )}
                   </>

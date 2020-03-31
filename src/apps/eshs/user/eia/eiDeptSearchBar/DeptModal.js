@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Select, Button, Table } from 'antd';
+import { Input, Select, Table } from 'antd';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import DeptModalStyled from '../styled/DeptModalStyled';
 
 const { Option } = Select;
@@ -112,8 +113,8 @@ class DeptModal extends Component {
           </Select>
           <span>&nbsp; 검색어</span>
           <Input value={searchText} style={{ width: 150 }} onChange={e => this.handleSearchInput(e.target.value)} placeholder="검색어" />
-          <Button onClick={this.handleSearch}>검색</Button>
-          <Button onClick={this.handleReset}>Reset</Button>
+          <StyledButton onClick={this.handleSearch}>검색</StyledButton>
+          <StyledButton onClick={this.handleReset}>Reset</StyledButton>
         </div>
         <DeptModalStyled>
           <Table
