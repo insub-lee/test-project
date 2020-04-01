@@ -31,6 +31,17 @@ const ContentsWrapper = styled.div`
     padding: 20px 20px 0px 20px;
     text-align: left;
   }
+
+  .div-comment {
+    text-align: right;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #ff5f5f;
+    &.div-comment-antd {
+      margin-top: 0;
+      padding-right: 10px;
+    }
+  }
 `;
 
 export default ContentsWrapper;
