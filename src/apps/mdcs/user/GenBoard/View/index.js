@@ -41,7 +41,7 @@ class View extends Component {
                 공지알림
               </th>
               <td className="manual-descriptions-item-content" colSpan="3">
-                <Button className="btn-primary btn-xs" onClick={() => addNotifyBuilder(id, workSeq, taskSeq, 'TITLE', 'CONTENT')}>
+                <Button className="btn-primary btn-xxs" onClick={() => addNotifyBuilder(id, workSeq, taskSeq, 'TITLE', 'CONTENT')}>
                   알람보내기
                 </Button>
               </td>
