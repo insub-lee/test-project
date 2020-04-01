@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const { Option } = Select;
 const { Search } = Input;

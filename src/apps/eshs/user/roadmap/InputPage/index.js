@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { InputNumber, Row, Col } from 'antd';
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 // import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import Moment from 'moment';
