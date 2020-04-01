@@ -7,9 +7,9 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
-import { Table, Input, Row, Col, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
+import { Table, Input, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import moment from 'moment';
 import request from 'utils/request';
@@ -436,10 +436,10 @@ class List extends React.Component {
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th colSpan={2}>SAP NO.</th>
-                    <td colSpan={2}>{requestValue.SAP_NO}</td>
-                    <th colSpan={2}>CAS NO.</th>
-                    <td colSpan={2}>{requestValue.CAS_NO}</td>
+                    <th colSpan={1}>SAP NO.</th>
+                    <td colSpan={3}>{requestValue.SAP_NO}</td>
+                    <th colSpan={1}>CAS NO.</th>
+                    <td colSpan={3}>{requestValue.CAS_NO}</td>
                   </tr>
                   <tr>
                     <th>화학물질명_국문</th>
@@ -454,7 +454,7 @@ class List extends React.Component {
                   <tr>
                     <th>단위</th>
                     <td>
-                      <AntdInput name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
+                      <AntdInput className="input-sm" name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
                     </td>
                     <th>단위환산1</th>
                     <td>
