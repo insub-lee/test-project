@@ -14,7 +14,7 @@ class DocNumberComp extends Component {
     if (formData && formData.DOCNUMBER && formData.DOCNUMBER.trim().length > 0) {
       return visible ? formData.DOCNUMBER : '';
     }
-    return visible ? compProps && compProps.docNumber : '';
+    return visible ? (compProps && compProps.docNumber) || '' : '';
   }
 }
 

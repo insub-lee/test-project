@@ -9,7 +9,7 @@ const CoverViewComp = ({ CONFIG, colData, formData, clickCoverView }) => {
   } = CONFIG;
   const { WORK_SEQ } = formData;
   return (
-    <StyledButton className="btn-light btn-sm2 btn-radius" onClick={() => clickCoverView(WORK_SEQ, colData, selectedValue)}>
+    <StyledButton className="btn-light btn-xs btn-radius" onClick={() => clickCoverView(WORK_SEQ, colData, selectedValue)}>
       <FileSearchOutlined /> 표지보기
     </StyledButton>
   );

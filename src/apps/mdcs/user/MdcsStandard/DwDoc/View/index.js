@@ -300,7 +300,7 @@ class DwDocView extends Component {
                     <div className="w100Table">
                       <Col span={3}>
                         제정이력
-                        <StyledButton className="btn-gray btn-xs" onClick={this.onCopyDesc}>
+                        <StyledButton className="btn-gray btn-xxs" onClick={this.onCopyDesc}>
                           Copy Description
                         </StyledButton>
                       </Col>

@@ -18,7 +18,6 @@ import ViewPage from './viewComponent/ViewPage';
 import ListPage from './viewComponent/ListPage';
 import SearchComp from './viewComponent/SearchComp';
 import ModalPopup from './viewComponent/ModalPopup';
-import ExtraBuilder from './viewComponent/ExtraBuilder';
 
 class BizBuilderBase extends React.Component {
   constructor(props) {
@@ -154,7 +153,6 @@ class BizBuilderBase extends React.Component {
         changeViewPage: this.changeViewPage,
         changeFormData: this.changeFormData,
         changeBuilderModalState: this.changeBuilderModalState,
-        ExtraBuilder,
       };
       switch (viewPageData.viewType.toUpperCase()) {
         case 'INPUT':

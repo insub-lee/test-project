@@ -9,7 +9,7 @@ import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
@@ -127,7 +127,7 @@ class ListPage extends Component {
   };
 
   renderList = (group, groupIndex) => {
-    const { listData, listSelectRowKeys, workInfo } = this.props;
+    const { listData, listSelectRowKeys, workInfo, customOnRowClick } = this.props;
     const { isMultiDelete, isOnRowClick } = this.state;
     const columns = this.setColumns(group.rows[0].cols);
     let rowSelection = false;
@@ -138,9 +138,13 @@ class ListPage extends Component {
         onChange: this.onSelectChange,
       };
     }
+    if (typeof customOnRowClick === 'function') {
+      onRow = record => ({ onClick: () => customOnRowClick(record) });
+    }
     if (isOnRowClick) {
       onRow = this.onRowClick;
     }
+
     return (
       <div key={group.key}>
         {group.useTitle && <GroupTitle title={group.title} />}
@@ -288,6 +292,7 @@ ListPage.propTypes = {
   isBuilderModal: PropTypes.bool,
   changeBuilderModalState: PropTypes.func,
   changeViewPage: PropTypes.func,
+  customOnRowClick: PropTypes.any,
 };
 
 ListPage.defaultProps = {
@@ -296,6 +301,7 @@ ListPage.defaultProps = {
       PRC_ID: -1,
     },
   },
+  customOnRowClick: undefined,
 };
 
 export default ListPage;
