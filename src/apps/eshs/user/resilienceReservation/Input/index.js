@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { Row, Col, DatePicker, Popconfirm } from 'antd';
 
 import moment from 'moment';
