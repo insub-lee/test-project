@@ -207,7 +207,7 @@ class CustomCheckListComp extends Component {
                   )),
                 )}
             </div>
-            <StyledButton className="btn-sm2 btn-primary" onClick={this.onClickSelectedWin}>
+            <StyledButton className="btn-xs btn-primary" onClick={this.onClickSelectedWin}>
               <Icon type="select" /> 선택
             </StyledButton>
           </div>

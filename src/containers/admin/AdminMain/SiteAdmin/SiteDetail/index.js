@@ -614,7 +614,7 @@ class SiteDetail extends React.Component {
             </ErrorBoundary>
           </div>
           <ErrorBoundary>
-            <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.managerOrgOpen}>
+            <StyledButton className="textLinkBtn btn-xxs btn-secondary" onClick={this.managerOrgOpen}>
               &lt; {intlObj.get(messages.lblEdit)}
             </StyledButton>
           </ErrorBoundary>
@@ -671,7 +671,7 @@ class SiteDetail extends React.Component {
             </ErrorBoundary>
           </div>
           <ErrorBoundary>
-            <StyledButton className="textLinkBtn btn-xs btn-secondary" onClick={this.allOrgOpen}>
+            <StyledButton className="textLinkBtn btn-xxs btn-secondary" onClick={this.allOrgOpen}>
               &lt; {intlObj.get(messages.lblEdit)}
             </StyledButton>
           </ErrorBoundary>
@@ -787,7 +787,7 @@ class SiteDetail extends React.Component {
       <Radio value={item.CODE_CD} disabled={this.state.readOnly === 'true'}>
         {`${lang.get('NAME', item)} (샘플 이미지 필요)`}
       </Radio>
-  ));
+    ));
 
   onChangeMenuLayout(e) {
     this.setState({ MENU_LAYOUT_CD: e.target.value });

@@ -8,7 +8,7 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import 'ag-grid-community';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import './styled.css';
 
 import moment from 'moment';
