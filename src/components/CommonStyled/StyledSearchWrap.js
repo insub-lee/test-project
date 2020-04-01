@@ -19,6 +19,14 @@ const StyledSearchWrap = styled.div`
     }
   }
 
+  .use-label {
+    margin-left: 10px;
+  }
+
+  .input-first {
+    margin-right: 5px;
+  }
+
   .input-width100 {
     width: 100px;
   }
@@ -65,7 +73,7 @@ const StyledSearchWrap = styled.div`
     .ant-input {
       display: inline-block;
       vertical-align: top;
-      width: 300px;
+      width: 100%;
     }
   }
 `;
