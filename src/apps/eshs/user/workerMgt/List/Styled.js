@@ -21,6 +21,12 @@ const Styled = styled.div`
   .customBtn {
     margin-bottom: 5px;
   }
+
+  .ant-table-tbody > tr {
+    td {
+      cursor: default !important;
+    }
+  }
 `;
 
 export default Styled;
