@@ -63,6 +63,8 @@ class SearchBar extends Component {
   };
 
   handleUserOk = e => {
+    console.debug('1111111111111111111');
+    console.debug('eeeeeeeeeeee', e);
     if (this.validationCheck()) {
       const { id, submitHandlerBySaga, formData } = this.props;
       const type = (formData && formData.userModalType) || '';
@@ -145,7 +147,7 @@ class SearchBar extends Component {
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
     return (
       <div>
-        <div className="selSaveWrapperL">
+        <div className="selSaveWrapper alignLeft">
           <AntdSelect
             style={{ width: '10%' }}
             defaultValue={formData.searchSite && formData.searchSite === 'all' ? formData.searchSite : '지역 전체'}

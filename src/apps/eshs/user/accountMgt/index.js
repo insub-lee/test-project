@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
+import CustomList from './pages/CustomList';
 
 class AccountMgt extends Component {
   state = {
@@ -16,12 +17,7 @@ class AccountMgt extends Component {
   };
 
   render() {
-    // const {
-    //   match: { params },
-    //   item,
-    // } = this.props;
-    // const { ID } = params;
-    return <BizBuilderBase sagaKey="AccountMgt" workSeq={401} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return <BizBuilderBase sagaKey="AccountMgt" workSeq={401} viewType="LIST" CustomListPage={CustomList} loadingComplete={this.loadingComplete} />;
   }
 }
 
