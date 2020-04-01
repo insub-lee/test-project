@@ -6,11 +6,12 @@ const StyledHtmlTable = styled.div`
     border-spacing: 0;
     width: 100%;
     thead th {
-      background: #e7e1f0;
+      background: #f7f7f7;
       font-size: 14px;
       text-align: center;
       color: #000;
       padding: 10px;
+      border-bottom: 1px solid #e8e8e8;
     }
     tbody {
       th {
