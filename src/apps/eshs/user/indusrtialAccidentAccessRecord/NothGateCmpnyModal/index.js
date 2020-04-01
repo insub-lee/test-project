@@ -4,7 +4,8 @@ import { Select, Input, DatePicker, message } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import debounce from 'lodash/debounce';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import moment from 'moment';
 import { changeFormData } from 'components/BizBuilderBase/actions';
@@ -14,6 +15,8 @@ const { Option } = Select;
 const { Search } = Input;
 const InputGroup = Input.Group;
 const format = 'YYYY-MM-DD HH:mm:ss';
+const AntdSearch = StyledSearchInput(Input.Search);
+
 moment.locale('ko');
 
 class NothGateCmpnyModal extends Component {
@@ -383,7 +386,12 @@ class NothGateCmpnyModal extends Component {
                   <Option value="BIZ_REG_NO">사업자등록번호</Option>
                   <Option value="WRK_CMPNY_NM">업체명</Option>
                 </Select>
-                <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchOnChange} value={searchText} className="search-item input-width200" />
+                <AntdSearch
+                  placeholder=" 검색어를 입력하세요"
+                  onChange={this.handleSearchOnChange}
+                  value={searchText}
+                  className="search-item input-width200 ant-search-inline input-search-mid"
+                />
               </div>
             </StyledSearchWrap>
 
