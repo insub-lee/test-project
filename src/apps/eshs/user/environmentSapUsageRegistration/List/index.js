@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
 
 import { Table, Input, Row, Col, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
@@ -13,6 +13,7 @@ import moment from 'moment';
 import request from 'utils/request';
 
 const { Option } = Select;
+const AntdTable = StyledLineTable(Table);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -55,27 +56,31 @@ class List extends React.Component {
       render: (text, record, index) => {
         if (index === 0) {
           return (
-            <Select
-              defaultValue={moment()
-                .year()
-                .toString()}
-              onChange={this.handleYearChange}
-              style={{ width: '50%' }}
-              disabled={this.state.isModified && !index}
-            >
-              {this.makeYearRange().map(item => (
-                <Option value={item.toString()}>{item.toString()}</Option>
-              ))}
-            </Select>
+            <StyledSelect>
+              <Select
+                defaultValue={moment()
+                  .year()
+                  .toString()}
+                onChange={this.handleYearChange}
+                style={{ width: '50%' }}
+                disabled={this.state.isModified && !index}
+              >
+                {this.makeYearRange().map(item => (
+                  <Option value={item.toString()}>{item.toString()}</Option>
+                ))}
+              </Select>
+            </StyledSelect>
           );
         }
         if (index === this.state.selectedIndex) {
           return (
-            <Select defaultValue={record.YEAR} onChange={this.handleYearChange} style={{ width: '50%' }} disabled={this.state.isModified && !index}>
-              {this.makeYearRange().map(item => (
-                <Option value={item.toString()}>{item.toString()}</Option>
-              ))}
-            </Select>
+            <StyledSelect>
+              <Select defaultValue={record.YEAR} onChange={this.handleYearChange} style={{ width: '50%' }} disabled={this.state.isModified && !index}>
+                {this.makeYearRange().map(item => (
+                  <Option value={item.toString()}>{item.toString()}</Option>
+                ))}
+              </Select>
+            </StyledSelect>
           );
         }
         return <div>{text}</div>;
@@ -140,17 +145,24 @@ class List extends React.Component {
         const { selectedIndex } = this.state;
         if (index === 0) {
           return (
-            <StyledButton className="btn-primary btn-first" onClick={this.handleInputClick}>
-              저장
-            </StyledButton>
+            <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
+              <StyledButton className="btn-primary btn-first" onClick={this.isValid() ? this.handleInputClick : null}>
+                저장
+              </StyledButton>
+            </Popconfirm>
           );
         }
         if (index === selectedIndex) {
           return (
             <>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.updateSapUsage(record, index)}>
-                저장
-              </StyledButton>
+              <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
+                <StyledButton
+                  className="btn-primary btn-first"
+                  onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : null}
+                >
+                  저장
+                </StyledButton>
+              </Popconfirm>
               <StyledButton className="btn-primary btn-first" onClick={this.handleCancelClick}>
                 취소
               </StyledButton>
@@ -169,12 +181,12 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    if (this.validationCheck()) {
-      submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
-      this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, { SHIPMENT: 0, USAGE: 0, YEAR: moment().year() }),
-      }));
-    }
+    // if (this.isValid()) {
+    submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
+    this.setState(prevState => ({
+      requestValue: Object.assign(prevState.requestValue, { SHIPMENT: 0, USAGE: 0, YEAR: moment().year() }),
+    }));
+    // }
   };
 
   handleModifyClick = (record, index) => {
@@ -193,24 +205,38 @@ class List extends React.Component {
       YEAR: requestValue.YEAR,
       SHIPMENT: requestValue.SHIPMENT,
       USAGE: requestValue.USAGE,
-      SAP_NO: requestValue.SAP_NO,
-      originYear,
+      SAP_ID: requestValue.SAP_ID,
     };
 
-    if (this.validationCheck()) {
-      submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, valueObj, () => this.getSapUsage(requestValue));
-      this.setState(prevState => ({
-        isModified: false,
-        selectedIndex: -1,
-        requestValue: Object.assign(prevState.requestValue, { YEAR: moment().year(), SHIPMENT: 0 }),
-      }));
-    }
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, valueObj, () => this.getSapUsage(requestValue));
+    this.setState(prevState => ({
+      isModified: false,
+      selectedIndex: -1,
+      requestValue: Object.assign(prevState.requestValue, { YEAR: moment().year(), SHIPMENT: 0 }),
+    }));
   };
 
-  validationCheck = () => {
-    // 저장할 때 체크해서 popconfirm 나오도록
+  isValid = () => {
     const { requestValue, dataSource } = this.state;
     return dataSource.findIndex(item => item.YEAR === requestValue.YEAR) === -1;
+  };
+
+  isModifyValid = () => {
+    const { requestValue, dataSource, selectedIndex } = this.state;
+    return dataSource[selectedIndex].YEAR === requestValue.YEAR;
+  };
+
+  handleSapDeleteClick = () => {
+    const { requestValue, selectedRecord } = this.state;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const params = { SAP_ID: selectedRecord.SAP_ID };
+    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, params, () => this.getSapUsage(requestValue));
+    this.setState({
+      checkedIndex: -1,
+      selectedRecord: {},
+      selectedIndex: -1,
+      isModified: false,
+    });
   };
 
   handleCancelClick = () => {
@@ -252,6 +278,9 @@ class List extends React.Component {
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, record),
       visible: false,
+      isModified: false,
+      selectedIndex: -1,
+      checkedIndex: -1,
     }));
     this.getSapUsage(record);
   };
@@ -266,6 +295,9 @@ class List extends React.Component {
 
   setDataSource = data => {
     data.then(res => this.setState({ dataSource: [{}, ...(res.response && res.response.list)] }));
+    // data.then(res =>
+    //   this.setState(prevState => ({ dataSource: prevState.dataSource.concat((res.response && res.response.list && [{}, ...res.response.list]) || []) })),
+    // );
   };
 
   handleShipmentChange = value => {
@@ -347,17 +379,6 @@ class List extends React.Component {
     return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, params);
   };
 
-  handleSapDeleteClick = () => {
-    const { requestValue, selectedRecord } = this.state;
-    const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const params = { SAP_NO: requestValue.SAP_NO, CAS_NO: requestValue.CAS_NO, YEAR: selectedRecord.YEAR };
-    submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, params, () => this.getSapUsage(requestValue));
-    this.setState({
-      checkedIndex: -1,
-      selectedRecord: {},
-    });
-  };
-
   handleCheckboxChange = (e, index, record) => {
     if (e.target.checked) {
       this.setState({
@@ -387,13 +408,13 @@ class List extends React.Component {
     const { requestValue, visible, dataSource, checkedIndex } = this.state;
     const { sagaKey, getCallDataHandler, result } = this.props;
     return (
-      <StyledViewDesigner>
-        <Sketch>
+      <>
+        <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
             <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
-          <div className="alignRight">
+          <div className="selSaveWrapper">
             <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
               수정
             </StyledButton>
@@ -477,26 +498,28 @@ class List extends React.Component {
               </Col>
             </Row>
           </div>
-          <div className="alignRight div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
+          <div className="selSaveWrapper div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
           <hr style={{ width: '100%' }} />
-          <Popconfirm
-            title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
-            onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
-          >
-            <StyledButton className="btn-primary">선택 삭제</StyledButton>
-          </Popconfirm>
-          <Table columns={columns} dataSource={dataSource} pagination={false} />
-          <div className="alignRight div-comment">제품사용량: 당해출고량 * kg환산계수</div>
-          <Modal
-            sagaKey={sagaKey}
-            visible={visible}
-            modalClose={handleModalClose}
-            getCallDataHandler={getCallDataHandler}
-            result={result}
-            setRequestValue={setRequestValue}
-          />
-        </Sketch>
-      </StyledViewDesigner>
+          <div className="selSaveWrapper">
+            <Popconfirm
+              title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
+              onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
+            >
+              <StyledButton className="btn-primary">선택 삭제</StyledButton>
+            </Popconfirm>
+          </div>
+          <AntdTable columns={columns} dataSource={dataSource} pagination={false} />
+          <div className="selSaveWrapper div-comment">제품사용량: 당해출고량 * kg환산계수</div>
+        </ContentsWrapper>
+        <Modal
+          sagaKey={sagaKey}
+          visible={visible}
+          modalClose={handleModalClose}
+          getCallDataHandler={getCallDataHandler}
+          result={result}
+          setRequestValue={setRequestValue}
+        />
+      </>
     );
   }
 }
