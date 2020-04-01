@@ -33,6 +33,9 @@ const ContentsWrapper = styled.div`
     &.alignLeft {
       text-align: left;
     }
+    .ant-select {
+      vertical-align: middle;
+    }
   }
 `;
 
