@@ -1,3 +1,5 @@
+// MDCS styled components 사용하지 말 것
+
 import styled from 'styled-components';
 
 const StyledSelectModal = Component => styled(Component)`
