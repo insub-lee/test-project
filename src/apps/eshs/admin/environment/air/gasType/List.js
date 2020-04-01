@@ -36,28 +36,7 @@ class List extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry, this.renderTable);
-  };
-
-  renderTable = () => {
-    const { columns, result } = this.props;
-    return (
-      <AntdLineTable
-        style={{ cursor: 'pointer' }}
-        rowKey={result && result.gasType && result.gasType.list && result.gasType.list.GAS_CD}
-        columns={columns}
-        dataSource={result && result.gasType && result.gasType.list}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedRecord(record);
-          },
-        })}
-        pagination={{ pageSize: 100 }}
-        scroll={{ y: 500 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${result && result.gasType && result.gasType.list && result.gasType.list.length - 1} 건`}</div>}
-      />
-    );
+    getCallDataHandler(id, apiAry);
   };
 
   selectedRecord = record => {
@@ -123,29 +102,51 @@ class List extends Component {
   };
 
   render() {
-    const { sagaKey: id, formData, changeFormData } = this.props;
+    const { sagaKey: id, formData, changeFormData, columns, result } = this.props;
     return (
-      <ContentsWrapper>
-        <div className="selSaveWrapper">
-          <StyledButton className="btn-primary" onClick={this.onModalChange}>
-            추가
-          </StyledButton>
-        </div>
-        {this.renderTable()}
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper">
+            <StyledButton className="btn-primary" onClick={this.onModalChange}>
+              추가
+            </StyledButton>
+          </div>
+          <AntdLineTable
+            className="tableWrapper"
+            style={{ cursor: 'pointer' }}
+            rowKey={result && result.gasType && result.gasType.list && result.gasType.list.GAS_CD}
+            columns={columns}
+            dataSource={result && result.gasType && result.gasType.list}
+            bordered
+            onRow={record => ({
+              onClick: () => {
+                this.selectedRecord(record);
+              },
+            })}
+            pagination={{ pageSize: 100 }}
+            scroll={{ y: 500 }}
+            footer={() => (
+              <div style={{ textAlign: 'center' }}>{`${result && result.gasType && result.gasType.list && result.gasType.list.length - 1} 건`}</div>
+            )}
+          />
+        </ContentsWrapper>
         <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
+          className="modal-table-pad"
           title="가스종류 등록"
           visible={this.state.modalEdit}
           width={600}
           onCancel={this.onModalChange}
           destroyOnClose
           afterClose={this.onReset}
-          footer={[]}
+          footer={null}
         >
           <StyledHtmlTable>
             <table>
+              <colgroup>
+                <col width="20%" />
+                <col width="80%" />
+              </colgroup>
               <tbody>
-                <colgroup></colgroup>
                 {formData.GAS_CD ? (
                   <tr>
                     <th>가스종류코드</th>
@@ -218,7 +219,7 @@ class List extends Component {
             </StyledButtonWrapper>
           </StyledHtmlTable>
         </AntdModal>
-      </ContentsWrapper>
+      </>
     );
   }
 }
@@ -245,7 +246,7 @@ List.defaultProps = {
     {
       title: '가스분자량',
       dataIndex: 'PERMISSION_DENSITY',
-      align: 'right',
+      align: 'center',
     },
     {
       title: '법적허용 농도(PPM)',
@@ -255,7 +256,7 @@ List.defaultProps = {
     {
       title: '단위',
       dataIndex: 'UNIT',
-      align: 'left',
+      align: 'center',
     },
   ],
 };
