@@ -575,7 +575,7 @@ class PmDoc extends Component {
                   <div className="w100Table">
                     <Col span={4}>
                       Short Description(Including the Para./clause)
-                      <StyledButton className="btn-gray btn-xs" onClick={this.handlerCopyDesc}>
+                      <StyledButton className="btn-gray btn-xxs" onClick={this.handlerCopyDesc}>
                         Copy Description
                       </StyledButton>
                     </Col>

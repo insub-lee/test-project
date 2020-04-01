@@ -237,10 +237,10 @@ class DragUploadComp extends Component {
                           </div>
                           {file.status === 'done' ? (
                             <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                              <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
+                              <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
                                 <Icon type="download" />
                               </StyledButton>
-                              <StyledButton className="btn-light btn-xs" onClick={() => this.onRemove(index)}>
+                              <StyledButton className="btn-light btn-xxs" onClick={() => this.onRemove(index)}>
                                 <Icon type="close" />
                               </StyledButton>
                             </div>
@@ -250,7 +250,7 @@ class DragUploadComp extends Component {
                                 <div className="uploadFileStatus" style={{ position: 'absolute', top: 4, right: 10 }}>
                                   <sapn style={{ color: 'red' }}>업로드 실패</sapn>
                                   {'  '}
-                                  <StyledButton className="btn-light btn-xs" onClick={() => this.onRemove(index)}>
+                                  <StyledButton className="btn-light btn-xxs" onClick={() => this.onRemove(index)}>
                                     <Icon type="close" />
                                   </StyledButton>
                                 </div>
@@ -279,7 +279,7 @@ class DragUploadComp extends Component {
                     <Icon type="paper-clip" /> {file.name} ({this.bytesToSize(file.size)})
                   </div>
                   <div className="uploadFileBtn" style={{ position: 'absolute', top: 0, right: 10 }}>
-                    <StyledButton className="btn-primary btn-xs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
+                    <StyledButton className="btn-primary btn-xxs btn-first" onClick={() => (window.location.href = `${file.down}`)}>
                       <Icon type="download" />
                     </StyledButton>
                   </div>
