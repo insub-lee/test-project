@@ -28,6 +28,13 @@ const StyledInput = Component => styled(Component)`
     display: inline-block;
     vertical-align: middle;
   }
+  &.mr5 {
+    margin-right: 5px;
+  }
+  &.inputMid {
+    padding: 0.4rem 0.875rem;
+    height: auto;
+  }
 `;
 
 export default StyledInput;
