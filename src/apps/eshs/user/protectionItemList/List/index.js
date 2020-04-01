@@ -10,7 +10,7 @@ import { debounce } from 'lodash';
 
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
