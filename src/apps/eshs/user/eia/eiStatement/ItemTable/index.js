@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Input, Button, Checkbox, message, Select, Popover } from 'antd';
 import { debounce } from 'lodash';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import * as popoverContent from './PopoverContent';
 
 const { Option } = Select;
@@ -147,12 +148,16 @@ class ItemTable extends Component {
           <thead>
             <tr>
               <td colSpan={13}>
-                <Button onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>Excel Download</Button>
+                <StyledButton className="btn-primary" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+                  Excel Download
+                </StyledButton>
                 {!searchFlag && (
                   <>
                     {btnOk && (
                       <>
-                        <Button onClick={() => this.handleAction('UPDATE')}>저장</Button>
+                        <StyledButton className="btn-primary" onClick={() => this.handleAction('UPDATE')}>
+                          저장
+                        </StyledButton>
                       </>
                     )}
                   </>

@@ -194,6 +194,7 @@ InputPage.propTypes = {
   handleModalVisible: PropTypes.func,
   modalSelectedRow: PropTypes.object,
   searchListId: PropTypes.string,
+  saveTaskAfterCallbackFunc: PropTypes.any,
 };
 
 InputPage.defaultProps = {
@@ -207,6 +208,7 @@ InputPage.defaultProps = {
   isLoading: false,
   modalSelectedRow: {},
   searchListId: 'SqtbSearchList',
+  saveTaskAfterCallbackFunc: undefined,
 };
 
 export default InputPage;

@@ -27,6 +27,7 @@ import DragUploadMDCSViewCompConfig from 'components/BizBuilder/Field/DragUpload
 import CoverViewCompConfig from 'components/BizBuilder/Field/CoverViewCompConfig';
 import DatePickerCompConfig from 'components/BizBuilder/Field/DatePickerCompConfig';
 import TitleCompConfig from 'components/BizBuilder/Field/TitleCompConfig';
+import CustomBuilderListConfig from 'components/BizBuilder/Field/CustomBuilderListConfig';
 
 export const ConfigInfo = {
   'components/BizBuilder/Field/TextCompConfig': { renderer: property => <TextCompConfig {...property} /> },
@@ -56,4 +57,5 @@ export const ConfigInfo = {
   'components/BizBuilder/Field/CoverViewCompConfig': { renderer: property => <CoverViewCompConfig {...property} /> },
   'components/BizBuilder/Field/DatePickerCompConfig': { renderer: property => <DatePickerCompConfig {...property} /> },
   'components/BizBuilder/Field/TitleCompConfig': { renderer: property => <TitleCompConfig {...property} /> },
+  'components/BizBuilder/Field/CustomBuilderListConfig': { renderer: property => <CustomBuilderListConfig {...property} /> },
 };
