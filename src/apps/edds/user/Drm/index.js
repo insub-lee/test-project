@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Icon } from 'antd';
 
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import pngInstall from 'images/edds/install.png';
 import pngInstallBox from 'images/edds/install_box.png';
 import pngUnInstall from 'images/edds/uninstall.png';
@@ -10,9 +11,9 @@ import StyledDrmInstall from './StyledDrmInstall';
 class Drm extends Component {
   render() {
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
+      <ContentsWrapper>
+        <div className="pageTitle">
+          <p>
             <Icon type="form" /> DRM 설치 / 삭제
           </p>
         </div>
@@ -58,7 +59,7 @@ class Drm extends Component {
             </div>
           </div>
         </StyledDrmInstall>
-      </div>
+      </ContentsWrapper>
     );
   }
 }
