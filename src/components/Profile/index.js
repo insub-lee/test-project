@@ -8,7 +8,7 @@ const User = ({ profile, setFixedOpenMenu, fixedMenu }) => (
   <Styled>
     <div>
       <button type="button" className="btn-pin" onClick={setFixedOpenMenu}>
-        <IconCollection className={fixedMenu ? 'icon-pin-pill' : 'icon-pin'} />
+        <IconCollection className={fixedMenu ? 'icon-pin-fill' : 'icon-pin'} />
       </button>
       <div className="user-img">
         <img

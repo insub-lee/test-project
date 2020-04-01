@@ -136,6 +136,10 @@ const StyledButton = styled.button`
   &.btn-first {
     margin-right: 5px;
   }
+
+  &.mr5 {
+    margin-right: 5px;
+  }
 `;
 
 export default StyledButton;

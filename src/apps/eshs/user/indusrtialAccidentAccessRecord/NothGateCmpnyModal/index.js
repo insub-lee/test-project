@@ -4,10 +4,12 @@ import { Select, Input, DatePicker, message } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
 import { debounce } from 'lodash';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import moment from 'moment';
 import { changeFormData } from 'components/BizBuilderBase/actions';
 
-import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
@@ -16,9 +18,10 @@ import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
-const { Search } = Input;
 
 const format = 'YYYY-MM-DD HH:mm:ss';
+const AntdSearch = StyledSearchInput(Input.Search);
+
 moment.locale('ko');
 
 class NothGateCmpnyModal extends Component {
@@ -411,13 +414,20 @@ class NothGateCmpnyModal extends Component {
         </div>
         {modalType === 'INSERT' && (
           <>
-            <div className="selSaveWrapper">
-              <AntdSelect defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange} style={{ width: '20%' }}>
-                <Option value="BIZ_REG_NO">사업자등록번호</Option>
-                <Option value="WRK_CMPNY_NM">업체명</Option>
-              </AntdSelect>
-              <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchOnChange} value={searchText} style={{ width: '30%' }} />
-            </div>
+            <StyledSearchWrap>
+              <div className="selSaveWrapper">
+                <AntdSelect defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange} style={{ width: '20%' }}>
+                  <Option value="BIZ_REG_NO">사업자등록번호</Option>
+                  <Option value="WRK_CMPNY_NM">업체명</Option>
+                </AntdSelect>
+                <AntdSearch
+                  placeholder=" 검색어를 입력하세요"
+                  onChange={this.handleSearchOnChange}
+                  value={searchText}
+                  className="search-item input-width200 ant-search-inline input-search-mid"
+                />
+              </div>
+            </StyledSearchWrap>
 
             <StyledVirtualizedTable>
               <AutoSizer disableHeight>

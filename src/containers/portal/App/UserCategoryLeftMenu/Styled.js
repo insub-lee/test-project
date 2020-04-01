@@ -68,6 +68,14 @@ const Styled = styled.div`
     background-repeat: no-repeat;
     border-radius: 0;
   }
+
+  .btn-page-move {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 40px;
+    background: transparent;
+  }
 `;
 
 export default Styled;
