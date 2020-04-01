@@ -25,11 +25,14 @@ const ContentsWrapper = styled.div`
   .selSaveWrapper {
     padding: 20px 20px 0px 20px;
     text-align: right;
-  }
-
-  .selSaveWrapperL {
-    padding: 20px 20px 0px 20px;
-    text-align: left;
+    .textLabel {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 12px;
+    }
+    &.alignLeft {
+      text-align: left;
+    }
   }
 `;
 
