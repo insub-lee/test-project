@@ -4,7 +4,7 @@ import { Select, Modal, Radio, Table, Spin } from 'antd';
 
 import draftImg1 from 'apps/mdcs/images/draft_img1.png';
 import message from 'components/Feedback/message';
-
+import history from 'utils/history';
 import StyledAntdTable from 'components/CommonStyled/StyledAntdTable';
 import * as DraftType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/draftconst';
 import * as ModifyType from 'apps/Workflow/WorkFlowBase/Nodes/Constants/modifyconst';
@@ -32,7 +32,7 @@ class IntroComponent extends Component {
     this.state = {
       selectedDraft: DraftType.ENACTMENT,
       isShow: false,
-      isLoading: true,
+      isLoading: false,
       docType: '',
       selectedworkSeq: 0,
       viewChangeSeq: undefined,
@@ -88,13 +88,18 @@ class IntroComponent extends Component {
     this.setState({ isLoading: false });
   };
 
+  onCloseModalHandler = () => {
+    this.setState({ isShow: false });
+    message.success('기안 완료');
+    history.push('/apps/Workflow/User/Draft');
+  };
+
   onCloseModal = () => {
     this.setState({ isShow: false });
   };
 
   render() {
     const { selectedDraft, isShow, isLoading, selectedworkSeq, selectedTaskSeq, docNumber, selectedNodeId, viewType, workPrcProps, viewChangeSeq } = this.state;
-    console.debug('selectedWorkSeq', selectedworkSeq, selectedTaskSeq, docNumber, workPrcProps, viewChangeSeq);
     return (
       <StyledContents>
         <div className="contentWrapper">
@@ -148,16 +153,22 @@ class IntroComponent extends Component {
                 sagaKey={`BizDoc_${selectedworkSeq}`}
                 workSeq={selectedworkSeq}
                 taskSeq={selectedTaskSeq}
-                compProps={{ docNumber, NODE_ID: selectedNodeId, onCloseModalHandler: this.onCompleteCloseModal }}
-                CustomInputPage={StdInput}
-                CustomViewPage={StdView}
-                CustomWorkProcess={DraftPrcLine}
                 viewChangeSeq={viewChangeSeq}
-                workPrcProps={workPrcProps}
+                CustomWorkProcess={DraftPrcLine}
                 viewType={viewType}
-                loadingComplete={this.loadingComplete}
-                onCloseModal={this.onCloseModal}
-                // revisionType={revisionType}
+                workPrcProps={workPrcProps}
+                onCloseModalHandler={this.onCloseModalHandler}
+                compProps={{ docNumber, NODE_ID: selectedNodeId }}
+                InputCustomButtons={({ saveBeforeProcess, onCloseModal, sagaKey, reloadId }) => (
+                  <div style={{ textAlign: 'center', marginTop: '12px' }}>
+                    <StyledButton className="btn-primary btn-first" onClick={() => saveBeforeProcess(sagaKey, reloadId)}>
+                      저장
+                    </StyledButton>
+                    <StyledButton className="btn-light btn-sm" onClick={() => onCloseModal()}>
+                      닫기
+                    </StyledButton>
+                  </div>
+                )}
               />
             </div>
           </StyledInputView>

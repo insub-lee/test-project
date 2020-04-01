@@ -11,14 +11,14 @@ import SearchListPage from './pages/SearchListPage';
 class SqtbEquipMgt extends Component {
   state = {
     isLoading: true,
+    searchListVisible: false,
+    modalSelectedRow: {},
+    searchList: [],
   };
 
   loadingComplete = () => {
     this.setState({
       isLoading: false,
-      searchListVisible: false,
-      modalSelectedRow: {},
-      searchList: [],
     });
   };
 
@@ -69,6 +69,7 @@ class SqtbEquipMgt extends Component {
   };
 
   render() {
+    const { saveTaskAfterCallbackFunc } = this.props;
     const { searchListVisible, modalSelectedRow, searchList } = this.state;
     return (
       <>
@@ -83,6 +84,7 @@ class SqtbEquipMgt extends Component {
           modalSelectedRow={modalSelectedRow}
           searchListId="SqtbSearchList"
           setModalRowSelected={obj => this.setRowSelected(obj)}
+          saveTaskAfterCallbackFunc={saveTaskAfterCallbackFunc}
         />
         <Modal title="장비 검색" visible={searchListVisible} width={1000} height={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}
@@ -92,8 +94,12 @@ class SqtbEquipMgt extends Component {
   }
 }
 
-SqtbEquipMgt.propTypes = {};
+SqtbEquipMgt.propTypes = {
+  saveTaskAfterCallbackFunc: PropTypes.any,
+};
 
-SqtbEquipMgt.defaultProps = {};
+SqtbEquipMgt.defaultProps = {
+  saveTaskAfterCallbackFunc: undefined,
+};
 
 export default SqtbEquipMgt;

@@ -89,7 +89,7 @@ class AppvActionComp extends Component {
   render() {
     const { selectedRow } = this.props;
     return (
-      <React.Fragment>
+      <>
         <Radio.Group onChange={this.onChange} defaultValue={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>
           <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 20 : 2}>승인</Radio>
           <Radio value={selectedRow && selectedRow.CURRENT_STATUS && selectedRow.CURRENT_STATUS === 10 ? 30 : 3}>Hold</Radio>
@@ -147,7 +147,7 @@ class AppvActionComp extends Component {
             </td>
           </tr>
         </table>
-      </React.Fragment>
+      </>
     );
   }
 }

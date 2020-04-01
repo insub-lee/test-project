@@ -9,7 +9,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
-
 class StdInput extends Component {
   constructor(props) {
     super(props);
@@ -21,7 +20,6 @@ class StdInput extends Component {
 
   componentDidMount() {
     const { sagaKey: id, getProcessRule, workInfo, workPrcProps } = this.props;
-
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
     const workflowOpt = workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.filter(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ);
     const prcId = workflowOpt && workflowOpt.length > 0 ? workflowOpt[0].OPT_VALUE : -1;
@@ -42,22 +40,15 @@ class StdInput extends Component {
     const selectedAttach = formData[etcData];
     const { uploadFileList } = this.state;
     const tmpAttach = { ...selectedAttach, DETAIL };
-    console.debug('### 1 : ', id, response, etcData);
-    console.debug('### 2 : ', selectedAttach);
-    console.debug('### 3 : ', response);
-    console.debug('### 4 : ', tmpAttach);
-
     changeFormData(id, etcData, tmpAttach);
-    const tmpFileList = uploadFileList.map(file => (file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200, isAttempted: true } : file));
-
+    const tmpFileList = uploadFileList.map(file =>
+      file.COMP_FIELD === etcData ? { ...file, isComplete: code === 200 || code === 300, isAttempted: true } : file,
+    );
     this.setState({ uploadFileList: tmpFileList }, () => {
       const { uploadFileList } = this.state;
-      console.debug('### 4 : ', tmpFileList);
-
       let AttemptionCount = 0;
       let isCompleteCount = 0;
       const limit = uploadFileList.length || 0;
-
       uploadFileList.forEach(e => {
         if (e.isAttempted === true) {
           AttemptionCount++;
@@ -66,12 +57,11 @@ class StdInput extends Component {
           isCompleteCount++;
         }
       });
-
       if (AttemptionCount === limit) {
         if (isCompleteCount === limit) {
           this.saveTask(id, id, this.saveTaskAfter);
         } else {
-          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다람쥐.!!!');
+          message.error('file upload 에러 발생 , 관리자에게 문의 바랍니다.!');
         }
       }
     });
@@ -86,7 +76,6 @@ class StdInput extends Component {
     const { submitExtraHandler, formData, metaList, workInfo, processRule } = this.props;
     const { uploadFileList } = this.state;
     const { OPT_INFO } = workInfo;
-
     // workflow 결재 체크 하기
     const IsWorkProcess = OPT_INFO.filter(f => f.OPT_SEQ === WORKFLOW_OPT_SEQ);
     let isByPass = true;
@@ -105,12 +94,10 @@ class StdInput extends Component {
           });
         }
       });
-
     if (isByPass) {
       const attachList = metaList && metaList.filter(mata => this.filterAttach(mata));
       // 첨부파일이 없는 경우 체크
       const isUploadByPass = attachList.filter(f => formData[f.COMP_FIELD]);
-
       if (isUploadByPass && isUploadByPass.length === 0) {
         this.saveTask(id, reloadId, this.saveTaskAfter);
       } else {
@@ -141,9 +128,7 @@ class StdInput extends Component {
     if (typeof onCloseModleHandler === 'function') {
       onCloseModleHandler();
     }
-    if (typeof changeViewPage === 'function') {
-      redirectUrl(sagaKey, '/apps/Workflow/User/Draft');
-    }
+    redirectUrl(sagaKey, '/apps/Workflow/User/Draft');
   };
 
   render() {
@@ -170,7 +155,6 @@ class StdInput extends Component {
       const {
         info: { PRC_ID },
       } = workFlowConfig;
-
       // 로딩
       if (this.props.isLoading === false && this.state.initLoading) {
         this.setState(
@@ -180,7 +164,6 @@ class StdInput extends Component {
           () => loadingComplete(),
         );
       }
-
       return (
         <StyledViewDesigner>
           <Sketch {...bodyStyle}>
@@ -203,7 +186,6 @@ class StdInput extends Component {
     return '';
   }
 }
-
 StdInput.propTypes = {
   sagaKey: PropTypes.string.isRequired,
   workFlowConfig: PropTypes.object,
@@ -212,13 +194,12 @@ StdInput.propTypes = {
   formData: PropTypes.object,
   processRule: PropTypes.object,
   getProcessRule: PropTypes.func,
-  onCloseModleHandler: PropTypes.func,
+  onCloseModalHandler: PropTypes.func,
   saveTask: PropTypes.func,
   setProcessRule: PropTypes.func,
   isLoading: PropTypes.bool,
   loadingComplete: PropTypes.func,
 };
-
 StdInput.defaultProps = {
   workFlowConfig: {
     info: {
@@ -226,5 +207,4 @@ StdInput.defaultProps = {
     },
   },
 };
-
 export default StdInput;

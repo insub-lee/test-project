@@ -177,13 +177,12 @@ const StyledViewDesigner = styled.div`
   }
   .view-designer-table {
     width: 100%;
+    border-top: 2px solid #888;
     .view-designer-row {
-      border: 1px solid #ddd;
-      border-left: 0;
+      border-bottom: 1px solid #ddd;
       .view-designer-col {
         border: 0;
         font-size: 12px;
-        color: rgb(0, 0, 0);
         /* padding: 5px 10px; */
         &.mdcsTitleCol {
           width: 180px;
@@ -191,16 +190,16 @@ const StyledViewDesigner = styled.div`
           position: relative;
           background-color: #f7f7f7;
           background-clip: padding-box;
-          padding: 4px;
-          border: 1px solid #ddd;
-          border-top: 0;
-          border-bottom: 0;
+          padding: 6px 8px;
+          border-right: 1px solid #ddd;
+          color: rgb(0, 0, 0);
           > div {
             height: auto;
           }
         }
         &.mdcsContentsCol {
-          padding: 6px;
+          padding: 6px 9px;
+          color: #666;
           .btnTypeUploader {
             text-align: right;
           }

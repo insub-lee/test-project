@@ -169,6 +169,7 @@ class UserSelectComp extends Component {
         <Row gutter={0}>
           <Col span={7}>
             <div className="basicWrapper treeWrapper">
+              <div className="basicTitle">부서 선택</div>
               <div className="depthTree">
                 {treeDataSource ? (
                   <Tree defaultExpandedKeys={[`${getTreeData(treeDataSource)[0].key}`]} onSelect={this.onTreeSelect} treeData={getTreeData(treeDataSource)} />
@@ -184,6 +185,10 @@ class UserSelectComp extends Component {
                   )
                 )}
               </div>
+            </div>
+          </Col>
+          <Col span={7}>
+            <div className="basicWrapper userListWrapper">
               <div className="userList">
                 <List
                   header="사용자 선택"
@@ -201,7 +206,7 @@ class UserSelectComp extends Component {
               </div>
             </div>
           </Col>
-          <Col span={5}>
+          <Col span={3}>
             <div className="userAddWrapper">
               <StyledButton className="btn-light btn-sm" onClick={() => this.onSelectedUser()}>
                 Add
@@ -209,7 +214,7 @@ class UserSelectComp extends Component {
               </StyledButton>
             </div>
           </Col>
-          <Col span={12}>
+          <Col span={7}>
             <div className="basicWrapper selectedUserWrapper">
               <List
                 header="선택된 사용자"

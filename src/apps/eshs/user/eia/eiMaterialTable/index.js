@@ -1,6 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Select, Button, Table } from 'antd';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import MaterialTableStyled from '../styled/MaterialTableStyled';
 
 class MaterialTable extends Component {
@@ -43,7 +44,13 @@ class MaterialTable extends Component {
           <table>
             <thead>
               <tr align="right">
-                <td colSpan={8}>{!searchFlag && <Button onClick={() => this.handleSaveOnClick()}>저장</Button>}</td>
+                <td colSpan={8}>
+                  {!searchFlag && (
+                    <StyledButton className="btn-primary" onClick={() => this.handleSaveOnClick()}>
+                      저장
+                    </StyledButton>
+                  )}
+                </td>
               </tr>
             </thead>
             <tbody>
