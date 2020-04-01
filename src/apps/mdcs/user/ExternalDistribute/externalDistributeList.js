@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Table, Icon, Button, Input } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 const AntdTable = StyledAntdTable(Table);
 
@@ -129,20 +130,20 @@ class ExternalDistributeList extends Component {
     }
 
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white', height: '100%' }}>
-        <div style={{ marginBottom: '10px', clear: 'both', overflow: 'hidden', width: '100%' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000', paddingBottom: '10px', float: 'left' }}>
-            <Icon type="form" /> 외부배포 현황
-          </p>
-          {/* <p style={{ float: 'right', marginTop: '5px' }}>
-            <Button icon="export" onClick={this.onClickExternalDist}>
-              외부배포
-            </Button>
-          </p> */}
-        </div>
-        <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
-      </div>
-    )
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 외부배포 현황
+            </p>
+          </div>
+          <AntdTable
+            dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
+            columns={this.columns}
+          />
+        </ContentsWrapper>
+      </>
+    );
   }
 }
 
