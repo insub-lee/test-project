@@ -107,7 +107,7 @@ class Suggest extends Component {
           viewType="LIST"
           loadingComplete={this.loadingComplete}
           isOpenModalChange={this.isOpenViewModal}
-          CustomListPage={List}
+          // CustomListPage={List} //버튼 위치 떄문에 custom 만듬
           onInputModalChange={this.onInputModalChange}
         />
         <Modal visible={this.state.isViewModal || this.state.isInputModal} width="1000px" onCancel={this.onCancel} destroyOnClose footer={[]}>

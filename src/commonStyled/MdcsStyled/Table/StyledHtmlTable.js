@@ -46,32 +46,6 @@ const StyledHtmlTable = styled.div`
             padding-left: 5px;
           }
         }
-        /* select */
-        .ant-select {
-          vertical-align: middle;
-          .ant-select-selection {
-            height: 30px;
-            .ant-select-selection__placeholder {
-              margin-top: -11px;
-              font-size: 12px;
-            }
-            .ant-select-search__field {
-              font-size: 12px;
-            }
-          }
-        }
-        /* select */
-        /* input */
-        .ant-input-affix-wrapper {
-          .ant-input {
-            font-size: 12px;
-            color: #666;
-            height: 30px;
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
-          }
-        }
-        /* input */
       }
     }
   }
