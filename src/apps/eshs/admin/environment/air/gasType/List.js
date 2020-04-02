@@ -102,7 +102,14 @@ class List extends Component {
   };
 
   render() {
-    const { sagaKey: id, formData, changeFormData, columns, result } = this.props;
+    const {
+      sagaKey: id,
+      formData,
+      changeFormData,
+      columns,
+      result: { gasType },
+    } = this.props;
+    const dataSource = gasType && gasType.list;
     return (
       <>
         <ContentsWrapper>
@@ -113,21 +120,16 @@ class List extends Component {
           </div>
           <AntdLineTable
             className="tableWrapper"
-            style={{ cursor: 'pointer' }}
-            rowKey={result && result.gasType && result.gasType.list && result.gasType.list.GAS_CD}
+            rowKey={dataSource && dataSource.GAS_CD}
             columns={columns}
-            dataSource={result && result.gasType && result.gasType.list}
+            dataSource={dataSource || []}
             bordered
             onRow={record => ({
               onClick: () => {
                 this.selectedRecord(record);
               },
             })}
-            pagination={{ pageSize: 100 }}
-            scroll={{ y: 500 }}
-            footer={() => (
-              <div style={{ textAlign: 'center' }}>{`${result && result.gasType && result.gasType.list && result.gasType.list.length - 1} 건`}</div>
-            )}
+            footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
           />
         </ContentsWrapper>
         <AntdModal
