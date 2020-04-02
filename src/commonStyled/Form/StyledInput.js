@@ -23,6 +23,9 @@ const StyledInput = Component => styled(Component)`
       outline: 0;
       box-shadow: 0 0 0 0.2rem transparent;
     }
+    &:disabled {
+      background: #e5e5e5;
+    }
   }
   &.ant-input-inline {
     display: inline-block;
@@ -46,6 +49,18 @@ const StyledInput = Component => styled(Component)`
     font-size: 0.75rem;
     line-height: 1.5;
     height: auto;
+  }
+  &.input-pointer {
+    cursor: pointer;
+  }
+  &.input-center {
+    text-align: center;
+  }
+  &.input-left {
+    text-align: left;
+  }
+  &.input-right {
+    text-align: right;
   }
 `;
 
