@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Form, Checkbox, TreeSelect } from 'antd';
 import PropTypes from 'prop-types';
 
-import StyledHtmlTable from 'commonStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledCheckbox from 'components/FormStuff/Checkbox';
 
 const FormItem = Form.Item;

@@ -5,15 +5,19 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledSelect from 'commonStyled/EshsStyled/Select/StyledSelect';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
-import { Table, Input, Row, Col, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
+import { Table, Input, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import moment from 'moment';
 import request from 'utils/request';
 
 const { Option } = Select;
 const AntdTable = StyledLineTable(Table);
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -56,31 +60,27 @@ class List extends React.Component {
       render: (text, record, index) => {
         if (index === 0) {
           return (
-            <StyledSelect>
-              <Select
-                defaultValue={moment()
-                  .year()
-                  .toString()}
-                onChange={this.handleYearChange}
-                style={{ width: '50%' }}
-                disabled={this.state.isModified && !index}
-              >
-                {this.makeYearRange().map(item => (
-                  <Option value={item.toString()}>{item.toString()}</Option>
-                ))}
-              </Select>
-            </StyledSelect>
+            <AntdSelect
+              defaultValue={moment()
+                .year()
+                .toString()}
+              onChange={this.handleYearChange}
+              style={{ width: '50%' }}
+              disabled={this.state.isModified && !index}
+            >
+              {this.makeYearRange().map(item => (
+                <Option value={item.toString()}>{item.toString()}</Option>
+              ))}
+            </AntdSelect>
           );
         }
         if (index === this.state.selectedIndex) {
           return (
-            <StyledSelect>
-              <Select defaultValue={record.YEAR} onChange={this.handleYearChange} style={{ width: '50%' }} disabled={this.state.isModified && !index}>
-                {this.makeYearRange().map(item => (
-                  <Option value={item.toString()}>{item.toString()}</Option>
-                ))}
-              </Select>
-            </StyledSelect>
+            <AntdSelect defaultValue={record.YEAR} onChange={this.handleYearChange} style={{ width: '50%' }} disabled={this.state.isModified && !index}>
+              {this.makeYearRange().map(item => (
+                <Option value={item.toString()}>{item.toString()}</Option>
+              ))}
+            </AntdSelect>
           );
         }
         return <div>{text}</div>;
@@ -194,12 +194,11 @@ class List extends React.Component {
       isModified: true,
       selectedIndex: index,
       requestValue: Object.assign(prevState.requestValue, record),
-      originYear: record.YEAR,
     }));
   };
 
   updateSapUsage = () => {
-    const { requestValue, originYear } = this.state;
+    const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const valueObj = {
       YEAR: requestValue.YEAR,
@@ -412,7 +411,7 @@ class List extends React.Component {
         <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
+            <AntdInput.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
           <div className="selSaveWrapper">
             <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
@@ -422,84 +421,65 @@ class List extends React.Component {
               초기화
             </StyledButton>
           </div>
-          <div className="data-grid">
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                SAP NO.
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{requestValue.SAP_NO}</div>
-              </Col>
-              <Col span={2} className="col-label">
-                CAS NO.
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{requestValue.CAS_NO}</div>
-              </Col>
-            </Row>
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                화학물질명_국문
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{requestValue.NAME_KOR}</div>
-              </Col>
-              <Col span={2} className="col-label">
-                화학물질명_영문
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{requestValue.NAME_ENG}</div>
-              </Col>
-              <Col span={2} className="col-label">
-                화학물질명_SAP
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{requestValue.NAME_SAP}</div>
-              </Col>
-              <Col span={2} className="col-label">
-                관용명 및 이명.
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{requestValue.NAME_ETC}</div>
-              </Col>
-            </Row>
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                단위
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                단위환산1
-              </Col>
-              <Col span={4} className="col-input">
-                <InputNumber
-                  value={requestValue.FIR_UNIT_EXCHANGE}
-                  onChange={value => handleInputNumberChange(value, 'FIR_UNIT_EXCHANGE')}
-                  className="col-input-number"
-                />
-              </Col>
-              <Col span={2} className="col-label">
-                단위환산2
-              </Col>
-              <Col span={4} className="col-input">
-                <InputNumber
-                  value={requestValue.SEC_UNIT_EXCHANGE}
-                  onChange={value => handleInputNumberChange(value, 'SEC_UNIT_EXCHANGE')}
-                  className="col-input-number"
-                />
-              </Col>
-              <Col span={2} className="col-label">
-                kg환산계수
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100}</div>
-              </Col>
-            </Row>
+          <div className="tableWrapper">
+            <StyledHtmlTable>
+              <table>
+                <colgroup>
+                  <col width="180px" />
+                  <col width="180px" />
+                  <col width="180px" />
+                  <col width="180px" />
+                  <col width="180px" />
+                  <col width="180px" />
+                  <col width="180px" />
+                  <col width="180px" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th colSpan={1}>SAP NO.</th>
+                    <td colSpan={3}>{requestValue.SAP_NO}</td>
+                    <th colSpan={1}>CAS NO.</th>
+                    <td colSpan={3}>{requestValue.CAS_NO}</td>
+                  </tr>
+                  <tr>
+                    <th>화학물질명_국문</th>
+                    <td>{requestValue.NAME_KOR}</td>
+                    <th>화학물질명_영문</th>
+                    <td>{requestValue.NAME_ENG}</td>
+                    <th>화학물질명_SAP</th>
+                    <td>{requestValue.NAME_SAP}</td>
+                    <th>관용명 및 이명</th>
+                    <td>{requestValue.NAME_ETC}</td>
+                  </tr>
+                  <tr>
+                    <th>단위</th>
+                    <td>
+                      <AntdInput className="input-sm" name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
+                    </td>
+                    <th>단위환산1</th>
+                    <td>
+                      <InputNumber
+                        value={requestValue.FIR_UNIT_EXCHANGE}
+                        onChange={value => handleInputNumberChange(value, 'FIR_UNIT_EXCHANGE')}
+                        className="col-input-number"
+                      />
+                    </td>
+                    <th>단위환산2</th>
+                    <td>
+                      <InputNumber
+                        value={requestValue.SEC_UNIT_EXCHANGE}
+                        onChange={value => handleInputNumberChange(value, 'SEC_UNIT_EXCHANGE')}
+                        className="col-input-number"
+                      />
+                    </td>
+                    <th>kg환산계수</th>
+                    <td>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </StyledHtmlTable>
+            <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
           </div>
-          <div className="selSaveWrapper div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
-          <hr style={{ width: '100%' }} />
           <div className="selSaveWrapper">
             <Popconfirm
               title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
@@ -509,7 +489,7 @@ class List extends React.Component {
             </Popconfirm>
           </div>
           <AntdTable columns={columns} dataSource={dataSource} pagination={false} />
-          <div className="selSaveWrapper div-comment">제품사용량: 당해출고량 * kg환산계수</div>
+          <div className="div-comment div-comment-antd">제품사용량: 당해출고량 * kg환산계수</div>
         </ContentsWrapper>
         <Modal
           sagaKey={sagaKey}

@@ -2,36 +2,40 @@ import styled from 'styled-components';
 
 const StyledHtmlTable = styled.div`
   table {
-    border-top: 1px solid #999999;
+    border-top: 2px solid #888;
     border-spacing: 0;
     width: 100%;
+    table-layout: fixed;
     thead th {
-      background: #e7e1f0;
+      background: #f7f7f7;
       font-size: 14px;
       text-align: center;
-      /* font-weight: 600; */
       color: #000;
       padding: 10px;
+      border-bottom: 1px solid #e8e8e8;
     }
     tbody {
       th {
         background: #f7f7f7;
         text-align: center;
-        color: rgba(0, 0, 0, 0.65);
-        /* font-weight: 600; */
-        font-size: 12px;
-        padding: 5px 5px;
-        border-bottom: 1px solid #e8e8e8;
+        color: #000;
+        font-size: 0.8rem;
+        padding: 6px 8px;
+        border-bottom: 1px solid #ddd;
         width: 130px;
+        font-weight: 500;
+        border-right: 1px solid #ddd;
       }
       td {
-        border-bottom: 1px solid #e8e8e8;
-        padding: 5px 5px;
+        border-bottom: 1px solid #ddd;
+        padding: 6px 8px;
         font-size: 12px;
         width: auto;
         background-color: #ffffff;
-        &:first {
-          border-left: 1px solid #e8e8e8;
+        color: #666;
+        border-right: 1px solid #ddd;
+        &:last-child {
+          border-right: 0;
         }
         .ant-radio-wrapper,
         .ant-checkbox-wrapper {
@@ -42,6 +46,32 @@ const StyledHtmlTable = styled.div`
             padding-left: 5px;
           }
         }
+        /* select */
+        .ant-select {
+          vertical-align: middle;
+          .ant-select-selection {
+            height: 30px;
+            .ant-select-selection__placeholder {
+              margin-top: -11px;
+              font-size: 12px;
+            }
+            .ant-select-search__field {
+              font-size: 12px;
+            }
+          }
+        }
+        /* select */
+        /* input */
+        .ant-input-affix-wrapper {
+          .ant-input {
+            font-size: 12px;
+            color: #666;
+            height: 30px;
+            border: 1px solid #d9d9d9;
+            border-radius: 4px;
+          }
+        }
+        /* input */
       }
     }
   }
