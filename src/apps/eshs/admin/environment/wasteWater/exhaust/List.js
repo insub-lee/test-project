@@ -86,29 +86,44 @@ class List extends Component {
     const { exhuastNm, exhuastCd } = this.state;
     const columns = [
       {
-        title: (
-          <>
-            <span className="th-label">상태</span>
-            <div className="td-input-wrapper">
-              <span className="span-item">{exhuastCd}</span>
-            </div>
-          </>
-        ),
-        dataIndex: 'EXHAUST_CD',
+        title: '상태',
         align: 'center',
         width: 150,
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <span className="span-item">{exhuastCd}</span>
+                </div>
+              </>
+            ),
+            dataIndex: 'EXHAUST_CD',
+            className: 'th-form',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span className="th-label">코드</span>
-            <div className="td-input-wrapper">
-              <AntdInput className="input-sm input-center" style={{ width: '300px' }} value={exhuastNm} onChange={e => this.changeInputValue(e.target.value)} />
-            </div>
-          </>
-        ),
-        dataIndex: 'EXHAUST_NM',
-        align: 'left',
+        title: '코드',
+        align: 'center',
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <AntdInput
+                    className="input-sm input-center"
+                    style={{ width: '300px' }}
+                    value={exhuastNm}
+                    onChange={e => this.changeInputValue(e.target.value)}
+                  />
+                </div>
+              </>
+            ),
+            dataIndex: 'EXHAUST_NM',
+            className: 'th-form',
+          },
+        ],
       },
     ];
     this.setState({ columns });

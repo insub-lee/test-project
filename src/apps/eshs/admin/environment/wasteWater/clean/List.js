@@ -89,51 +89,66 @@ class List extends Component {
     const { cleanCd, cleanNm, treatmentMethod } = this.state;
     const columns = [
       {
-        title: (
-          <>
-            <span className="th-label">코드</span>
-            <div className="td-input-wrapper">
-              <span className="span-item">{cleanCd}</span>
-            </div>
-          </>
-        ),
-        dataIndex: 'CLEAN_CD',
+        title: '코드',
         align: 'center',
         width: 150,
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <span className="span-item">{cleanCd}</span>
+                </div>
+              </>
+            ),
+            dataIndex: 'CLEAN_CD',
+            className: 'th-form',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span className="th-label">방지시설명</span>
-            <div className="td-input-wrapper">
-              <AntdInput
-                className="input-sm input-center"
-                style={{ width: '300px' }}
-                value={cleanNm}
-                onChange={e => this.onChangeValue('cleanNm', e.target.value)}
-              />
-            </div>
-          </>
-        ),
-        dataIndex: 'CLEAN_NM',
+        title: '방지시설명',
         align: 'left',
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <AntdInput
+                    className="input-sm input-center"
+                    style={{ width: '300px' }}
+                    value={cleanNm}
+                    onChange={e => this.onChangeValue('cleanNm', e.target.value)}
+                  />
+                </div>
+              </>
+            ),
+            dataIndex: 'CLEAN_NM',
+            className: 'th-form',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span className="th-label">처리방법</span>
-            <div className="td-input-wrapper">
-              <AntdInput
-                className="input-sm input-center"
-                style={{ width: '300px' }}
-                value={treatmentMethod}
-                onChange={e => this.onChangeValue('treatmentMethod', e.target.value)}
-              />
-            </div>
-          </>
-        ),
-        dataIndex: 'TREATMENT_METHOD',
+        title: '처리방법',
         align: 'left',
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <AntdInput
+                    className="input-sm input-center"
+                    style={{ width: '300px' }}
+                    value={treatmentMethod}
+                    onChange={e => this.onChangeValue('treatmentMethod', e.target.value)}
+                  />
+                </div>
+              </>
+            ),
+            dataIndex: 'TREATMENT_METHOD',
+            className: 'th-form',
+          },
+        ],
       },
     ];
     this.setState({ columns });
