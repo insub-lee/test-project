@@ -7,7 +7,6 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
-import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 
@@ -222,8 +221,8 @@ class List extends Component {
           <>
             <span>코드명</span>
             <br />
-            <div style={{ float: 'left' }}>
-              <AntdInput style={{ width: '200px' }} value={this.state.warehouseNm} onChange={e => this.changeInputValue(e)} name="warehouseNm" />
+            <AntdInput style={{ width: '200px' }} value={this.state.warehouseNm} onChange={e => this.changeInputValue(e)} name="warehouseNm" />
+            <StyledButtonWrapper className="btn-wrap-inline">
               <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
                 추가
               </StyledButton>
@@ -236,10 +235,8 @@ class List extends Component {
               <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
                 Reset
               </StyledButton>
-            </div>
-            <div style={{ float: 'left' }}>
               <TableTypeSelector
-                style={{ float: 'left' }}
+                style={{ float: 'left', display: '' }}
                 leftTableColumns={leftTableColumns}
                 rightTableColumns={rightTableColumns}
                 apiList={itemList}
@@ -251,18 +248,16 @@ class List extends Component {
                 customVisible={this.state.warehouseCd}
                 customWarning="코드를 선택해주세요"
               />
-            </div>
+            </StyledButtonWrapper>
           </>
         ),
         dataIndex: 'WAREHOUSE_NM',
         align: 'left',
-        // width: 600,
       },
     ];
 
     return (
       <AntdLineTable
-        style={{ cursor: 'pointer' }}
         rowKey={wareHouseList && wareHouseList.WAREHOUSE_CD}
         columns={columns}
         dataSource={wareHouseList || []}
@@ -272,9 +267,7 @@ class List extends Component {
             this.selectedRecord(record);
           },
         })}
-        pagination={{ pageSize: 50 }}
-        scroll={{ y: 600 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${wareHouseList && wareHouseList.length} 건`}</div>}
+        footer={() => <span>{`${wareHouseList && wareHouseList.length} 건`}</span>}
       />
     );
   }
@@ -309,45 +302,24 @@ class List extends Component {
   render() {
     const { siteList } = this.state;
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <ContentsWrapper>
-          <StyledHtmlTable>
-            <table>
-              <colgroup>
-                <col width="20%" />
-                <col width="40%" />
-                <col width="40%" />
-              </colgroup>
-              <tbody>
-                <tr>
-                  <th>지역</th>
-                  <td>
-                    <AntdSelect
-                      style={{ width: '100px', margin: '10px' }}
-                      onChange={(value, option) => this.changeSelectValue(value, option)}
-                      value={this.state.site}
-                    >
-                      {siteList.map(item => (
-                        <Option value={item.NODE_ID} key="site">
-                          {item.NAME_KOR}
-                        </Option>
-                      ))}
-                    </AntdSelect>
-                  </td>
-                  <td>
-                    <StyledButtonWrapper>
-                      <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
-                        검색
-                      </StyledButton>
-                    </StyledButtonWrapper>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </StyledHtmlTable>
+      <ContentsWrapper>
+        <div>
+          <span>지역</span>
+          <AntdSelect onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site}>
+            {siteList.map(item => (
+              <Option value={item.NODE_ID} key="site">
+                {item.NAME_KOR}
+              </Option>
+            ))}
+          </AntdSelect>
+          <StyledButtonWrapper>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
+              검색
+            </StyledButton>
+          </StyledButtonWrapper>
           {this.renderTable()}
-        </ContentsWrapper>
-      </div>
+        </div>
+      </ContentsWrapper>
     );
   }
 }

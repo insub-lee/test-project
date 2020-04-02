@@ -198,7 +198,7 @@ class List extends Component {
                     <th>지역</th>
                     <td>
                       <AntdSelect
-                        className="selectMid"
+                        className="select-mid"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.siteSB}
@@ -223,7 +223,7 @@ class List extends Component {
                     <th>정수장</th>
                     <td>
                       <AntdSelect
-                        className="selectMid"
+                        className="select-mid"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.filterPlantSB}
@@ -240,7 +240,7 @@ class List extends Component {
                     <th>건물/FAB</th>
                     <td>
                       <AntdSelect
-                        className="selectMid"
+                        className="select-mid"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.fabSB}
@@ -257,7 +257,7 @@ class List extends Component {
                     <th>처리장</th>
                     <td>
                       <AntdSelect
-                        className="selectMid"
+                        className="select-mid"
                         style={{ width: '100%' }}
                         onChange={(value, option) => this.changeSelectValue(value, option)}
                         value={this.state.treatmentPlantSB}

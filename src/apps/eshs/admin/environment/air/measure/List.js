@@ -158,7 +158,7 @@ class List extends Component {
             ))}
           </AntdSelect>
           <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
             <Option value="1" key="seq">
               1
             </Option>
