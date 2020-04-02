@@ -7,12 +7,13 @@ const StyledLineTable = Component => styled(Component)`
 
   .ant-table .ant-table-content {
     .ant-table-body {
+      border-top: 1px solid #bbb;
       border-bottom: 1px solid #eee;
       table {
         border: 0;
         .ant-table-tbody > tr > td,
         .ant-table-thead > tr > th {
-          padding: 8px 16px;
+          padding: 6px 8px;
           border-radius: 0;
           font-size: 12px;
           border-right: 0;
@@ -20,7 +21,6 @@ const StyledLineTable = Component => styled(Component)`
         .ant-table-thead > tr > th {
           background-color: #fff;
           color: #000;
-          border-top: 1px solid #bbb;
           border-bottom: 1px solid #e4e4e4;
           font-size: 0.85rem;
         }
@@ -147,6 +147,8 @@ const StyledLineTable = Component => styled(Component)`
       vertical-align: inherit;
     }
   }
+  /* 안 쓰지만 지우지 말 것 */
+  /*
   &.tableCodeWrapper {
     .ant-table .ant-table-content .ant-table-body table .ant-table-thead > tr > th {
       padding: 0;
@@ -174,6 +176,8 @@ const StyledLineTable = Component => styled(Component)`
       }
     }
   }
+  */
+  /* 안 쓰지만 지우지 말 것 */
 `;
 
 export default StyledLineTable;
