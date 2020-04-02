@@ -141,7 +141,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
-              <StyledButton className="btn-primary btn-first" onClick={this.isValid() ? this.handleInputClick : null}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.isValid() ? this.handleInputClick : null}>
                 저장
               </StyledButton>
             </Popconfirm>
@@ -152,20 +152,20 @@ class List extends React.Component {
             <>
               <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
                 <StyledButton
-                  className="btn-primary btn-first"
+                  className="btn-primary btn-first btn-sm"
                   onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : null}
                 >
                   저장
                 </StyledButton>
               </Popconfirm>
-              <StyledButton className="btn-primary btn-first" onClick={this.handleCancelClick}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handleCancelClick}>
                 취소
               </StyledButton>
             </>
           );
         }
         return (
-          <StyledButton className="btn-primary btn-first" onClick={() => this.handleModifyClick(record, index)}>
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleModifyClick(record, index)}>
             수정
           </StyledButton>
         );
@@ -435,7 +435,13 @@ class List extends React.Component {
                     <td>{requestValue.NAME_SAP}</td>
                     <th>단위</th>
                     <td>
-                      <AntdInput className="input-sm" name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} disabled={!isSelectSapMaterial()} />
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="UNIT"
+                        value={requestValue.UNIT}
+                        onChange={handleInputChange}
+                        disabled={!isSelectSapMaterial()}
+                      />
                     </td>
                     <th>kg환산계수</th>
                     <td>

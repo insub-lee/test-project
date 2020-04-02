@@ -39,7 +39,7 @@ class RequesterView extends Component {
         },
       },
     ];
-    getCallDataHandler(id, arrApi)
+    getCallDataHandler(id, arrApi);
   }
 
   onChangeEmpCode = val => {
@@ -65,7 +65,7 @@ class RequesterView extends Component {
     //   compCd: this.state.compCd,
     // };
     // /api/admin/v1/common/registUser/
-  }
+  };
 
   onClickDelete = e => {
     e.preventDefault();
@@ -73,10 +73,12 @@ class RequesterView extends Component {
     submitHandlerBySaga(id, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
       onCancelPopup();
     });
-  }
+  };
 
   render() {
-    const { result: { requesterView, distDeptList, empStatusCodeList } } = this.props;
+    const {
+      result: { requesterView, distDeptList, empStatusCodeList },
+    } = this.props;
     let detail = {};
     let deptList = [];
     let empCodeList = [];
@@ -93,7 +95,7 @@ class RequesterView extends Component {
     return (
       <div>
         {Object.keys(detail).length > 0 && (
-          <React.Fragment>
+          <>
             <StyledTable>
               <table>
                 <colgroup>
@@ -113,7 +115,7 @@ class RequesterView extends Component {
                   <tr>
                     <th>상태</th>
                     <td colSpan="2">
-                      <AntdSelect value={this.state.statusCd} onChange={val => this.onChangeEmpCode(val)} className="selectMid" style={{ width: '100px' }}>
+                      <AntdSelect value={this.state.statusCd} onChange={val => this.onChangeEmpCode(val)} className="select-mid" style={{ width: '100px' }}>
                         {empCodeList.map(code => (
                           <Option value={code.CODE_CD}>{code.NAME_KOR}</Option>
                         ))}
@@ -143,15 +145,19 @@ class RequesterView extends Component {
                     <th>이메일</th>
                     <td colSpan="2">{detail.EMAIL}</td>
                   </tr>
-                </tbody>  
+                </tbody>
               </table>
             </StyledTable>
             <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
-              <StyledButton className="btn-gray mr5" onClick={e => this.onClickDelete(e)}>삭제</StyledButton>
-              <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
+              <StyledButton className="btn-gray mr5" onClick={e => this.onClickDelete(e)}>
+                삭제
+              </StyledButton>
+              <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>
+                닫기
+              </StyledButton>
               <StyledButton className="btn-primary">승인</StyledButton>
             </StyledButtonWrapper>
-          </React.Fragment>
+          </>
         )}
       </div>
     );
@@ -165,7 +171,7 @@ RequesterView.propTypes = {
   getCallDataHandler: PropTypes.func,
   selectedRow: PropTypes.object,
   formData: PropTypes.object,
-}
+};
 
 RequesterView.defaultProps = {
   id: 'requesterView',
@@ -177,6 +183,6 @@ RequesterView.defaultProps = {
   getCallDataHandler: () => {},
   selectedRow: {},
   formData: {},
-}
+};
 
 export default RequesterView;
