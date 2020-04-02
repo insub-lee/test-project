@@ -181,15 +181,16 @@ class List extends Component {
       {
         title: (
           <>
-            <span style={{ align: 'center' }}>상태</span>
-            <br />
-            {useYN === 'Y' ? (
-              <span style={{ align: 'center' }}>사용</span>
-            ) : (
-              <StyledButton className="btn-gray btn-sm" onClick={() => this.onChangeData('R')}>
-                삭제 취소
-              </StyledButton>
-            )}
+            <span className="th-label">상태</span>
+            <div className="td-input-wrapper">
+              {useYN === 'Y' ? (
+                <span className="span-item">사용</span>
+              ) : (
+                <StyledButton className="btn-gray btn-sm" onClick={() => this.onChangeData('R')}>
+                  삭제 취소
+                </StyledButton>
+              )}
+            </div>
           </>
         ),
         dataIndex: 'USE_YN',
@@ -200,15 +201,16 @@ class List extends Component {
       {
         title: (
           <>
-            <span style={{ align: 'center' }}>코드</span>
-            <br />
-            <AntdInput
-              className="input-sm"
-              readOnly={codeType !== 'selfTyping'}
-              onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
-              value={code}
-              onChange={e => this.onChangeValue('code', e.target.value)}
-            />
+            <span className="th-label">코드</span>
+            <div className="td-input-wrapper">
+              <AntdInput
+                className="input-sm input-center"
+                readOnly={codeType !== 'selfTyping'}
+                onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
+                value={code}
+                onChange={e => this.onChangeValue('code', e.target.value)}
+              />
+            </div>
           </>
         ),
         dataIndex: 'CODE',
@@ -218,28 +220,29 @@ class List extends Component {
       {
         title: (
           <>
-            <span style={{ align: 'center' }}>코드명</span>
-            <br />
-            <AntdInput
-              className="ant-input-inline input-sm"
-              style={{ width: '300px' }}
-              value={name}
-              onChange={e => this.onChangeValue('code', e.target.value)}
-            />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-gray btn-sm btn-first" onClick={this.insertOverlab}>
-                추가
-              </StyledButton>
-              <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('U')}>
-                수정
-              </StyledButton>
-              <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('D')}>
-                삭제
-              </StyledButton>
-              <StyledButton className="btn-light btn-sm" onClick={this.onReset}>
-                Reset
-              </StyledButton>
-            </StyledButtonWrapper>
+            <span className="th-label th-label-left">코드명</span>
+            <div className="td-input-wrapper">
+              <AntdInput
+                className="ant-input-inline input-sm input-left"
+                style={{ width: '300px' }}
+                value={name}
+                onChange={e => this.onChangeValue('code', e.target.value)}
+              />
+              <StyledButtonWrapper className="btn-wrap-inline">
+                <StyledButton className="btn-gray btn-sm btn-first" onClick={this.insertOverlab}>
+                  추가
+                </StyledButton>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                  수정
+                </StyledButton>
+                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                  삭제
+                </StyledButton>
+                <StyledButton className="btn-light btn-sm" onClick={this.onReset}>
+                  Reset
+                </StyledButton>
+              </StyledButtonWrapper>
+            </div>
           </>
         ),
         dataIndex: 'NAME_KOR',
@@ -267,21 +270,21 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect onChange={value => this.changeSelectValue(value)} defaultValue="0">
+          <AntdSelect className="selectMid mr5" onChange={value => this.changeSelectValue(value)} defaultValue="0">
             <Option value="0" disabled>
               선택
             </Option>
             {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+            <StyledButton className="btn-primary btn-first btn-light btn-sm" onClick={this.selectCode}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary">엑셀받기</StyledButton>
+            <StyledButton className="btn-primary btn-light btn-sm">엑셀받기</StyledButton>
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper"
+          className="tableWrapper tableCodeWrapper"
           rowKey={listData.NODE_ID}
           key={listData.NODE_ID}
           columns={columns}
@@ -292,11 +295,8 @@ class List extends Component {
               this.selectedRecord(record);
             },
           })}
-          footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
+          footer={() => <span>{`${listData && listData.length} 건`}</span>}
         />
-        <StyledButton className="btn-light btn-sm" onClick={this.onReset}>
-          Reset
-        </StyledButton>
       </ContentsWrapper>
     );
   }

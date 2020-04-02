@@ -22,24 +22,6 @@ class DistributeDocView extends Component {
     getCallDataHandler(id, apiAry, () => {});
   }
 
-  onClickDownload = row => {
-    const { id, getFileDownload } = this.props;
-    const {
-      result: {
-        distributeDocView: { detail },
-      },
-    } = this.props;
-    const drmInfo = {
-      pr: detail.PR,
-      uc: detail.UC,
-      bk: detail.BK,
-      ed: detail.ED,
-    };
-    const acl = base64.encode(JSON.stringify({ drmInfo: { ...drmInfo } }));
-    const url = `/down/eddsfile/${row.SEQ}/${acl}`;
-    getFileDownload(id, url, row.NAME);
-  };
-
   columns = [
     {
       title: 'No',
@@ -52,14 +34,6 @@ class DistributeDocView extends Component {
       title: '파일명',
       dataIndex: 'NAME',
       key: 'NAME',
-      render: (text, record) => <li style={{ cursor: 'pointer' }} onClick={() => this.onClickDownload(record)}>{text}</li>
-    },
-    {
-      title: '다운',
-      dataIndex: 'DOWN_CNT',
-      key: 'DOWN_CNT',
-      width: '10%',
-      render: (text, record) => `${text}회`
     },
     {
       title: '다운로드 일자',
@@ -81,7 +55,7 @@ class DistributeDocView extends Component {
     }
 
     return (
-      <div id="EDDS_DOWN">
+      <div>
         {Object.keys(detail).length > 0 && (
           <React.Fragment>
             <StyledTable>
