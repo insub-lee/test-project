@@ -24,7 +24,7 @@ const StyledInput = Component => styled(Component)`
       box-shadow: 0 0 0 0.2rem transparent;
     }
     &:disabled {
-      background: #e5e5e5;
+      background: #f5f5f5;
     }
   }
   &.ant-input-inline {

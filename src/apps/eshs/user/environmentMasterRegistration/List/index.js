@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Row, Col, Popconfirm } from 'antd';
+import { Input, InputNumber, Select, Popconfirm } from 'antd';
 
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
-import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
@@ -120,8 +119,7 @@ class List extends React.Component {
         url: '/api/eshs/v1/common/eshschemicalmaterialMaster',
       },
     ];
-    // getCallDataHandler(id, apiArr, this.handleResetClick);
-    getCallDataHandler(id, apiArr);
+    getCallDataHandler(id, apiArr, this.handleResetClick);
   };
 
   handleResetClick = () => {
@@ -142,8 +140,6 @@ class List extends React.Component {
         SEC_UNIT_EXCHANGE: 0,
       },
       isModified: false,
-      originSapNo: '',
-      originCasNo: '',
     });
   };
 
@@ -163,10 +159,47 @@ class List extends React.Component {
       requestValue: record,
       visible: false,
       isModified: true,
-      originSapNo: record.SAP_NO,
-      originCasNo: record.CAS_NO,
     });
   };
+
+  columns = [
+    {
+      title: 'SAP_NO',
+      dataIndex: 'SAP_NO',
+      key: 'SAP_NO',
+      align: 'center',
+    },
+    {
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_국문',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_SAP',
+      dataIndex: 'NAME_SAP',
+      key: 'NAME_SAP',
+      align: 'center',
+    },
+    {
+      title: '관용명 및 이명',
+      dataIndex: 'NAME_ETC',
+      key: 'NAME_ETC',
+      align: 'center',
+    },
+  ];
 
   render() {
     const {
@@ -180,6 +213,7 @@ class List extends React.Component {
       handleDeleteConfirm,
       handleDeleteClick,
     } = this;
+    const { columns } = this;
     const { requestValue, visible, deleteConfirmMessage } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData } = this.props;
     return (
@@ -293,6 +327,8 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
+          apiUrl="/api/eshs/v1/common/eshschemicalmaterialMaster"
+          tableColumns={columns}
         />
       </>
     );
