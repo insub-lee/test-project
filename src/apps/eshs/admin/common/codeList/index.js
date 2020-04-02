@@ -189,7 +189,7 @@ class List extends Component {
                 {useYN === 'Y' ? (
                   <span className="span-item">사용</span>
                 ) : (
-                  <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
+                  <StyledButton className="btn-gray btn-sm" onClick={() => this.onChangeData('R')}>
                     삭제 취소
                   </StyledButton>
                 )}
@@ -210,7 +210,7 @@ class List extends Component {
               <>
                 <div className="td-input-wrapper">
                   <AntdInput
-                    className="input-sm input-center"
+                    className="ant-input-sm input-center"
                     readOnly={codeType !== 'selfTyping'}
                     onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
                     value={code}
@@ -234,22 +234,22 @@ class List extends Component {
               <>
                 <div className="td-input-wrapper">
                   <AntdInput
-                    className="ant-input-inline input-sm input-left"
+                    className="ant-input-inline ant-input-sm input-left"
                     style={{ width: '300px' }}
                     value={name}
                     onChange={e => this.onChangeValue('code', e.target.value)}
                   />
                   <StyledButtonWrapper className="btn-wrap-inline">
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={this.insertOverlab}>
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={this.insertOverlab}>
                       추가
                     </StyledButton>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onChangeData('U')}>
                       수정
                     </StyledButton>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onChangeData('D')}>
                       삭제
                     </StyledButton>
-                    <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                    <StyledButton className="btn-gray btn-sm" onClick={this.onReset}>
                       Reset
                     </StyledButton>
                   </StyledButtonWrapper>
@@ -291,14 +291,14 @@ class List extends Component {
             {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
+            <StyledButton className="btn-gray btn-first" onClick={this.selectCode}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary">엑셀받기</StyledButton>
+            <StyledButton className="btn-gray">엑셀받기</StyledButton>
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper tableCodeWrapper"
+          className="tableWrapper"
           rowKey={listData.NODE_ID}
           key={listData.NODE_ID}
           columns={columns}
