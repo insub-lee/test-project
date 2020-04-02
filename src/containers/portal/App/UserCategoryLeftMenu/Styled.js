@@ -68,6 +68,10 @@ const Styled = styled.div`
     background-repeat: no-repeat;
     border-radius: 0;
   }
+
+  .btn-page-move {
+    background: transparent;
+  }
 `;
 
 export default Styled;

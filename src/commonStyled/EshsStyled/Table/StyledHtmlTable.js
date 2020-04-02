@@ -5,6 +5,7 @@ const StyledHtmlTable = styled.div`
     border-top: 2px solid #888;
     border-spacing: 0;
     width: 100%;
+    table-layout: fixed;
     thead th {
       background: #f7f7f7;
       font-size: 14px;
@@ -24,7 +25,6 @@ const StyledHtmlTable = styled.div`
         width: 130px;
         font-weight: 500;
         border-right: 1px solid #ddd;
-        height: 40px;
       }
       td {
         border-bottom: 1px solid #ddd;
@@ -34,7 +34,6 @@ const StyledHtmlTable = styled.div`
         background-color: #ffffff;
         color: #666;
         border-right: 1px solid #ddd;
-        height: 40px;
         &:last-child {
           border-right: 0;
         }
