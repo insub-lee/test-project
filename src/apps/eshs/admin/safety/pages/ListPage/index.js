@@ -14,10 +14,12 @@ import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import request from 'utils/request';
+import _ from 'lodash';
 
 import { address, VIEW_TYPE, META_SEQ } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
 
 const AntdTable = StyledAntdTable(Table);
+
 
 function ListPage(props) {
   const [activateRegModal, setActivateRegModal] = useState(false);
@@ -29,12 +31,7 @@ function ListPage(props) {
   const [isRowNo, setIsRowNo] = useState(false);
   const [rowClickable, setRowClickable] = useState(true);
 
-  useEffect(() => {
-    if (isSearched) {
-      const { sagaKey: id, workSeq, formData } = props;
-      getListData(id, workSeq);
-    }
-  }, [isSearched]);
+
 
   useEffect(() => {
     const { viewSeq } = props;
@@ -42,6 +39,24 @@ function ListPage(props) {
       setRowClickable(false);
     }
   }, []);
+
+  useEffect(() => {
+    const { listData, formData } = props;
+    if (listData instanceof Array) {
+      const { QUARTER, INSPECTION_DATE, IS_INSPECTED } = formData;
+      console.debug("£££ was i ever fired?", QUARTER, INSPECTION_DATE);
+      if (QUARTER && INSPECTION_DATE) {
+        request({
+          method: 'POST',
+          url: address.search,
+          // FIRE_CODE: FE (소화기)
+          params: { listData, QUARTER, INSPECTION_DATE, IS_INSPECTED },
+        }).then(({ response }) => {
+          console.debug('### response: ', response);
+        });
+      }
+    }
+  }, [props.listData]);
 
   useEffect(() => {
     const { workInfo } = props;
@@ -202,7 +217,7 @@ function ListPage(props) {
     // setViewType('View');
   };
 
-  function renderList(group, groupIndex) {
+  const renderList = (group, groupIndex) => {
     if (isSearched) {
       const { listData, sagaKey: id, changeFormData, COMP_FIELD } = props;
       const columns = setColumns(group.rows[0].cols);
@@ -226,9 +241,10 @@ function ListPage(props) {
       );
     }
     return null;
-  }
+  };
 
-  const { CustomButtons, sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq } = props;
+
+  const { CustomButtons, sagaKey: id, viewLayer, formData, workFlowConfig, loadingComplete, viewPageData, changeViewPage, getListData, workSeq, listData } = props;
   const { ViewButtons } = CustomButtons || false;
   if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
     const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};

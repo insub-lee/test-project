@@ -4,7 +4,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import request from 'utils/request';
 import { address } from 'apps/eshs/admin/safety/InspectionTarget/internal_constants';
 
-String.prototype.rtrim = function() {
+String.prototype.rtrim = function () {
   return this.replace(/(\s*$)/, '');
 };
 
@@ -18,12 +18,12 @@ export default function Save({ saveTask, saveBeforeProcess, onCloseModleHandler,
       // FIRE_CODE: FE (소화기)
       params: { FIRE_CODE: 'FE', BUILDING_CODE, STAIR_NO, INSTALLED_LOCATION, CHIP_NO },
     }).then(({ response }) => {
-      const { result } = response;
-      const { data } = response;
+      const { result } = response || 1;
+      const { data } = response || 1;
       if (result === 0) {
         changeFormData(id, data.COMP_FIELD, data.POSITION_NO);
         saveBeforeProcess(id, reloadId || id, afterProcessing(formData, data.POSITION_NO));
-      } else if (result === 1) {
+      } else if (result === 1 || data === 1) {
         alert(data.comment);
       }
     });
