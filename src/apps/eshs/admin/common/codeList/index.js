@@ -204,7 +204,7 @@ class List extends Component {
             <span className="th-label">코드</span>
             <div className="td-input-wrapper">
               <AntdInput
-                className="input-sm input-center"
+                className="ant-input-sm input-center"
                 readOnly={codeType !== 'selfTyping'}
                 onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
                 value={code}
@@ -223,7 +223,7 @@ class List extends Component {
             <span className="th-label th-label-left">코드명</span>
             <div className="td-input-wrapper">
               <AntdInput
-                className="ant-input-inline input-sm input-left"
+                className="ant-input-inline ant-input-sm input-left"
                 style={{ width: '300px' }}
                 value={name}
                 onChange={e => this.onChangeValue('code', e.target.value)}
@@ -270,7 +270,7 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect className="selectMid mr5" onChange={value => this.changeSelectValue(value)} defaultValue="0">
+          <AntdSelect className="select-mid mr5" onChange={value => this.changeSelectValue(value)} defaultValue="0">
             <Option value="0" disabled>
               선택
             </Option>

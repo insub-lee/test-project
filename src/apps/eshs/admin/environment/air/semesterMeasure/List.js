@@ -123,7 +123,7 @@ class List extends Component {
       <>
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft">
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
               <Option value="" key="site">
                 지역전체
               </Option>
@@ -133,14 +133,14 @@ class List extends Component {
                 </Option>
               ))}
             </AntdSelect>
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.year}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.year}>
               {yearArray.map(item => (
                 <Option value={`${item}`} key="year">
                   {item}
                 </Option>
               ))}
             </AntdSelect>
-            <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
+            <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
               {monthArray.map(i => (
                 <Option value={i} key="mm">
                   {`${i}월`}

@@ -125,7 +125,7 @@ class List extends Component {
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">조회구분</span>
           <AntdSelect
-            className="selectMid"
+            className="select-mid"
             style={{ width: '100px' }}
             onChange={(value, option) => this.chagneSelect(value, option)}
             value={this.state.selectGubun}
@@ -147,7 +147,7 @@ class List extends Component {
               ))}
           </AntdSelect>
           <span className="textLabel">기간(년 월)</span>
-          <AntdSelect className="selectMid" style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
+          <AntdSelect className="select-mid" style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
             {yearArray &&
               yearArray.map(item => (
                 <Option value={`${item}`} key="yyyy">
@@ -155,7 +155,7 @@ class List extends Component {
                 </Option>
               ))}
           </AntdSelect>
-          <AntdSelect className="selectMid" style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
+          <AntdSelect className="select-mid" style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
             {monthArray.map(i => (
               <Option value={i} key="mm">
                 {`${i}월`}
@@ -163,7 +163,7 @@ class List extends Component {
             ))}
           </AntdSelect>
           <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
             <Option value="1" key="seq">
               1
             </Option>
