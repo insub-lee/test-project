@@ -1,16 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, message, Select, Row, Input, Button, Modal } from 'antd';
+import { Table, message, Select, Input, Modal } from 'antd';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+
 import Moment from 'moment';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdLineTable = StyledLineTable(Table);
+const AntdSelect = StyledSelect(Select);
+const AntdInput = StyledInput(Input);
+const AntdModal = StyledContentsModal(Modal);
+
 const { Option } = Select;
 Moment.locale('ko');
 
@@ -18,10 +25,8 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      startYear: 2000,
-      endYear: 2015,
-      monthArr: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
-      yearArr: [],
+      monthArray: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'],
+      yearArray: [],
       siteList: [],
       semesterMeasureList: [],
       gasTypeList: [],
@@ -33,10 +38,6 @@ class List extends Component {
   }
 
   componentDidMount() {
-    this.listDataApi();
-  }
-
-  listDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
@@ -51,30 +52,32 @@ class List extends Component {
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
-  };
+  }
 
   initData = () => {
     const { result } = this.props;
-    const { startYear, endYear, yearArr } = this.state;
+    const startYear = 2005;
+    const endYear = Number(Moment().format('YYYY')) + 1;
+    const yearArray = [];
     for (let i = startYear; i <= endYear; i += 1) {
-      yearArr.push(i);
+      yearArray.push(i);
     }
     this.setState({
       siteList: result && result.introCode && result.introCode.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
       gasTypeList: result && result.gasTypeList && result.gasTypeList.list,
-      yearArr,
+      yearArray,
     });
   };
 
   isSearch = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { site, year, mm, gasType } = this.state;
-    console.log(site, year, mm, gasType, 'site, year, mm, gasTypesite, year, mm, gasTypesite, year, mm, gasType');
+    const params = `SITE=${site}&YEAR=${year}&MM=${mm}&&GAS_TYPE=${gasType}`;
     if (gasType) {
       const apiAry = [
         {
           key: 'semesterMmeasure',
-          url: `/api/eshs/v1/common/semestermeasure?`,
+          url: `/api/eshs/v1/common/semestermeasure?${params}`,
           type: 'GET',
         },
       ];
@@ -95,76 +98,11 @@ class List extends Component {
     });
   };
 
-  renderTable = () => {
-    const { columns } = this.props;
-    const { semesterMeasureList } = this.state;
-
-    return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
-        rowKey={semesterMeasureList && `${(semesterMeasureList.STACK_CD, semesterMeasureList.STACK_CD1)}`}
-        columns={columns}
-        dataSource={semesterMeasureList || []}
-        bordered
-        pagination={{ pageSize: 100 }}
-        scroll={{ y: 500 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${semesterMeasureList && semesterMeasureList[0] ? semesterMeasureList.length : 0} 건`}</div>}
-      />
-    );
-  };
-
-  isExcelUpload = () => {
-    message.info('개발 중 입니다.');
-  };
-
   handleModalVisible = () => {
     const { modal } = this.state;
     this.setState({
       modal: !modal,
     });
-  };
-
-  modalRender = () => {
-    const { gasTypeList } = this.state;
-    const columns = [
-      {
-        title: '가스종류명',
-        dataIndex: 'GAS_NM',
-        align: 'center',
-      },
-      {
-        title: '가스분자량',
-        dataIndex: 'PERMISSION_DENSITY',
-        align: 'right',
-      },
-      {
-        title: '법적허용 농도(PPM)',
-        dataIndex: 'GAS_WEIGHT',
-        align: 'center',
-      },
-      {
-        title: '단위',
-        dataIndex: 'UNIT',
-        align: 'left',
-      },
-    ];
-    return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
-        rowKey={gasTypeList && gasTypeList.GAS_CD}
-        columns={columns}
-        dataSource={gasTypeList || []}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedModalRecord(record);
-          },
-        })}
-        pagination={{ pageSize: 100 }}
-        scroll={{ y: 500 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${gasTypeList.length - 1 || 0} 건`}</div>}
-      />
-    );
   };
 
   selectedModalRecord = record => {
@@ -174,70 +112,102 @@ class List extends Component {
     this.handleModalVisible();
   };
 
+  isExcelUpload = () => {
+    message.info('개발 중 입니다.');
+  };
+
   render() {
-    console.log(this.props.result, 'result');
-    console.log(this.props, 'props');
-    console.log(this.state, 'state');
-    const { siteList, monthArr, yearArr } = this.state;
+    const { columns, modalColumns } = this.props;
+    const { siteList, monthArray, yearArray, semesterMeasureList, gasTypeList } = this.state;
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
-                  <Option value="" key="site">
-                    지역전체
-                  </Option>
-                  {siteList.map(item => (
-                    <Option value={item.NODE_ID} key="site">
-                      {item.NAME_KOR}
-                    </Option>
-                  ))}
-                </Select>
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.year}>
-                  {yearArr.map(item => (
-                    <Option value={`${item}`} key="year">
-                      {item}
-                    </Option>
-                  ))}
-                </Select>
-                <Select style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
-                  {monthArr.map(i => (
-                    <Option value={i} key="mm">
-                      {i}
-                    </Option>
-                  ))}
-                </Select>
-                가스종류
-                <Input readOnly style={{ width: 150 }} onClick={this.handleModalVisible} value={this.state.gasType} />
-                <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-                <StyledButton className="btn-primary btn-first" onClick={() => this.isSearch()}>
-                  검색
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.isExcelUpload()}>
-                  저장
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.isExcelUpload()}>
-                  엑셀받기(전체)
-                </StyledButton>
-                <StyledButton className="btn-primary btn-first" onClick={() => this.isExcelUpload()}>
-                  엑셀받기(평균)
-                </StyledButton>
-              </Row>
-              {this.renderTable()}
-              <Modal visible={this.state.modal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-                {this.state.modal && this.modalRender()}
-              </Modal>
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper alignLeft">
+            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
+              <Option value="" key="site">
+                지역전체
+              </Option>
+              {siteList.map(item => (
+                <Option value={item.NODE_ID} key="site">
+                  {item.NAME_KOR}
+                </Option>
+              ))}
+            </AntdSelect>
+            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.year}>
+              {yearArray.map(item => (
+                <Option value={`${item}`} key="year">
+                  {item}
+                </Option>
+              ))}
+            </AntdSelect>
+            <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
+              {monthArray.map(i => (
+                <Option value={i} key="mm">
+                  {`${i}월`}
+                </Option>
+              ))}
+            </AntdSelect>
+            <span className="textLabel">오염물질 종류</span>
+            <AntdInput style={{ width: '250px' }} className="ant-input-inline inputMid" readOnly onClick={this.handleModalVisible} value={this.state.gasType} />
+            <StyledButtonWrapper className="btn-wrap-inline">
+              <StyledButton className="btn-primary btn-first" onClick={this.isSearch}>
+                검색
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first" onClick={this.isExcelUpload}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-primary btn-first" onClick={this.isExcelUpload}>
+                엑셀받기(전체)
+              </StyledButton>
+              <StyledButton className="btn-primary" onClick={this.isExcelUpload}>
+                엑셀받기(평균)
+              </StyledButton>
+            </StyledButtonWrapper>
+          </div>
+          <AntdLineTable
+            className="tableWrapper"
+            rowKey={semesterMeasureList && `${(semesterMeasureList.STACK_CD, semesterMeasureList.STACK_CD1)}`}
+            columns={columns}
+            dataSource={semesterMeasureList || []}
+            footer={() => <div style={{ textAlign: 'center' }}>{`${semesterMeasureList && semesterMeasureList[0] ? semesterMeasureList.length : 0} 건`}</div>}
+          />
+        </ContentsWrapper>
+        <AntdModal
+          className="modal-table-pad"
+          title="오염물질 종류 선택"
+          visible={this.state.modal}
+          width={800}
+          height={600}
+          onCancel={this.handleModalVisible}
+          footer={null}
+        >
+          {this.state.modal && (
+            <AntdLineTable
+              className="tableWrapper"
+              rowKey={gasTypeList && gasTypeList.GAS_CD}
+              columns={modalColumns}
+              dataSource={gasTypeList || []}
+              onRow={record => ({
+                onClick: () => {
+                  this.selectedModalRecord(record);
+                },
+              })}
+              footer={() => <div style={{ textAlign: 'center' }}>{`${gasTypeList.length - 1 || 0} 건`}</div>}
+            />
+          )}
+        </AntdModal>
+      </>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  columns: PropTypes.array,
+  modalColumns: PropTypes.array,
+  result: PropTypes.any,
+  sagaKey: PropTypes.string,
+  getCallDataHandler: PropTypes.func,
+};
 
 List.defaultProps = {
   columns: [
@@ -290,6 +260,28 @@ List.defaultProps = {
       title: '반기 확정 배출량',
       dataIndex: 'CMM_CAPA9',
       align: 'center',
+    },
+  ],
+  modalColumns: [
+    {
+      title: '가스종류명',
+      dataIndex: 'GAS_NM',
+      align: 'center',
+    },
+    {
+      title: '가스분자량',
+      dataIndex: 'PERMISSION_DENSITY',
+      align: 'right',
+    },
+    {
+      title: '법적허용 농도(PPM)',
+      dataIndex: 'GAS_WEIGHT',
+      align: 'center',
+    },
+    {
+      title: '단위',
+      dataIndex: 'UNIT',
+      align: 'left',
     },
   ],
 };

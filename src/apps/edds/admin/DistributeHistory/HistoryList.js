@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Icon, Button, Modal } from 'antd';
+import { Table, Icon, Modal, Button } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 import DocView from './DocView';
@@ -12,7 +11,7 @@ import DocView from './DocView';
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
 
-class DistributeDocList extends Component {
+class HistoryList extends Component {
   state = {
     isShow: false,
     selectedRow: {},
@@ -67,28 +66,30 @@ class DistributeDocList extends Component {
       title: '배포자',
       dataIndex: 'DIST_USER_NAME',
       key: 'DIST_USER_NAME',
-      width: '10%',
+      width: '7%',
+      align: 'center',
+    },
+    {
+      title: '수신자',
+      dataIndex: 'EMAIL',
+      key: 'EMAIL',
+      width: '13%',
+      align: 'center',
     },
     {
       title: '배포일',
       dataIndex: 'TRANS_DATE',
       key: 'TRANS_DATE',
       width: '10%',
+      align: 'center',
     },
     {
       title: '다운로드',
       dataIndex: 'STATUS',
       key: 'STATUS',
       width: '10%',
-      render: (text, record) => record.STATUS === 0 ? '  In progress' : 'Completed',
-    },
-    {
-      title: '재배포요청',
-      dataIndex: 'TRANS_NO',
-      key: 'RE_DIST',
-      width: '10%',
       align: 'center',
-      render: (text, record) => <Icon type="mail" style={{ cursor: 'pointer' }} onClick={this.onClickMail} />,
+      render: (text, record) => record.STATUS === 0 ? '  In progress' : 'Completed',
     },
   ]
 
@@ -106,7 +107,7 @@ class DistributeDocList extends Component {
         <ContentsWrapper>
           <div className="pageTitle">
             <p>
-              <Icon type="form" /> 배포문서 목록
+              <Icon type="form" /> 배포 이력
             </p>
           </div>
           <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
@@ -114,7 +115,7 @@ class DistributeDocList extends Component {
         <AntdModal
           width={700}
           visible={this.state.isShow}
-          title="배포문서 다운로드"
+          title="배포문서 상세"
           onCancel={this.onCancelPopup}
           destroyOnClose
           footer={[<Button onClick={this.onCancelPopup}>닫기</Button>]}
@@ -126,19 +127,19 @@ class DistributeDocList extends Component {
   }
 }
 
-DistributeDocList.propTypes = {
+HistoryList.propTypes = {
   id: PropTypes.string,
   result: PropTypes.object,
   getCallDataHandler: PropTypes.func,
 };
 
-DistributeDocList.defaultProps = {
-  id: 'distributeDoc',
+HistoryList.defaultProps = {
+  id: 'distributeHistory',
   apiAry: [
     {
       key: 'distributeDocList',
       url: '/api/edds/v1/common/distributeDocList',
-      type: 'POST',
+      type: 'GET',
       params: {},
     },
   ],
@@ -150,4 +151,4 @@ DistributeDocList.defaultProps = {
   getCallDataHandler: () => {},
 };
 
-export default DistributeDocList;
+export default HistoryList;

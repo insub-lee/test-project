@@ -101,6 +101,13 @@ const TreeWrapper = styled.div`
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent {
     width: 100%;
+    .rstcustom__rowTitle {
+      vertical-align: middle;
+      display: inline-block;
+      button {
+        padding-right: 5px;
+      }
+    }
   }
   .sortableTreeWrapper.sidebar .rst__nodeContent.tree_open {
     .essh_tree_depth1 {

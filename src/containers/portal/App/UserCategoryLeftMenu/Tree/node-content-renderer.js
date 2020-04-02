@@ -146,6 +146,10 @@ class CustomThemeNodeContentRenderer extends Component {
                   : nodeSubtitle}
               </span>
             )}
+
+            <button type="button" className="btn-page-move">
+              <IconCollection className="icon-page-move" />
+            </button>
           </div>
 
           <div className={`${styles.rowToolbar} rstcustom__rowToolbar`}>
@@ -159,9 +163,6 @@ class CustomThemeNodeContentRenderer extends Component {
             ))}
           </div>
         </div>
-        <button type="button" className="btn-page-move">
-          <IconCollection className="icon-page-move" />
-        </button>
       </div>,
     );
 

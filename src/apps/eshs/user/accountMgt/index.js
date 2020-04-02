@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
+import CustomInput from './pages/CustomInput';
+import CustomModify from './pages/CustomModify';
 
 class AccountMgt extends Component {
   state = {
@@ -16,12 +18,16 @@ class AccountMgt extends Component {
   };
 
   render() {
-    // const {
-    //   match: { params },
-    //   item,
-    // } = this.props;
-    // const { ID } = params;
-    return <BizBuilderBase sagaKey="AccountMgt" workSeq={401} viewType="LIST" loadingComplete={this.loadingComplete} />;
+    return (
+      <BizBuilderBase
+        sagaKey="AccountMgt"
+        workSeq={401}
+        viewType="INPUT"
+        CustomInputPage={CustomInput}
+        CustomModifyPage={CustomModify}
+        loadingComplete={this.loadingComplete}
+      />
+    );
   }
 }
 
