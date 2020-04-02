@@ -186,7 +186,7 @@ class List extends Component {
               {useYN === 'Y' ? (
                 <span className="span-item">사용</span>
               ) : (
-                <StyledButton className="btn-gray btn-sm" onClick={() => this.onChangeData('R')}>
+                <StyledButton className="btn-primary btn-sm" onClick={() => this.onChangeData('R')}>
                   삭제 취소
                 </StyledButton>
               )}
@@ -229,16 +229,16 @@ class List extends Component {
                 onChange={e => this.onChangeValue('code', e.target.value)}
               />
               <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-gray btn-sm btn-first" onClick={this.insertOverlab}>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={this.insertOverlab}>
                   추가
                 </StyledButton>
-                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
                   수정
                 </StyledButton>
-                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
                   삭제
                 </StyledButton>
-                <StyledButton className="btn-light btn-sm" onClick={this.onReset}>
+                <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
                   Reset
                 </StyledButton>
               </StyledButtonWrapper>
@@ -277,10 +277,10 @@ class List extends Component {
             {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-light btn-sm" onClick={this.selectCode}>
+            <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-light btn-sm">엑셀받기</StyledButton>
+            <StyledButton className="btn-primary">엑셀받기</StyledButton>
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
