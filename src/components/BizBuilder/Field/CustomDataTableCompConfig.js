@@ -63,7 +63,7 @@ function CustomDataTableCompConfig(props) {
     switch (type) {
       // add Column
       case ADD_: {
-        const tempColumns = { name: undefined, group: undefined, option: TEXT_ };
+        const tempColumns = { title: undefined, dataIndex: undefined, order: undefined, option: TEXT_ };
         temp.push(tempColumns);
         break;
       }
@@ -82,7 +82,7 @@ function CustomDataTableCompConfig(props) {
     switch (type) {
       // add Group
       case ADD_: {
-        const tempColumns = { title: undefined, group: undefined, option: TEXT_ };
+        const tempColumns = { title: undefined, order: undefined };
         temp.push(tempColumns);
         break;
       }
