@@ -36,6 +36,12 @@ const StyledSelect = Component => styled(Component)`
       }
       .ant-select-selection__rendered {
         line-height: normal;
+        margin-left: 0;
+      }
+    }
+    &.ant-select-disabled {
+      .ant-select-selection {
+        background: #e5e5e5;
       }
     }
   }
