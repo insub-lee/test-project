@@ -422,9 +422,10 @@ class NothGateCmpnyModal extends Component {
                 </AntdSelect>
                 <AntdSearch
                   placeholder=" 검색어를 입력하세요"
+                  style={{ width: '30%' }}
                   onChange={this.handleSearchOnChange}
                   value={searchText}
-                  className="search-item input-width200 ant-search-inline input-search-mid"
+                  className="ant-search-inline input-search-mid mr5"
                 />
               </div>
             </StyledSearchWrap>

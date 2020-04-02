@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Table, Popconfirm, Button, Modal } from 'antd';
-import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import { Table, Popconfirm, Button } from 'antd';
 
 import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
@@ -14,7 +13,6 @@ import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import Contents from 'components/BizBuilder/Common/Contents';
 import { MULTI_DELETE_OPT_SEQ, LIST_NO_OPT_SEQ, ON_ROW_CLICK_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 
-const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledAntdTable(Table);
 
 class CustomList extends Component {
@@ -25,8 +23,6 @@ class CustomList extends Component {
       isRowNo: false,
       isOnRowClick: false,
       rowClickView: 'VIEW',
-      extraBuilder: [],
-      modalVisible: false,
     };
   }
 
@@ -161,45 +157,11 @@ class CustomList extends Component {
             dataSource={listData || []}
             rowSelection={rowSelection}
             rowClassName={isOnRowClick ? 'builderRowOnClickOpt' : ''}
-            onRow={record => ({ onClick: () => this.handleOnRow(record) })}
+            onRow={onRow}
           />
         </Group>
       </div>
     );
-  };
-
-  handleModalVisible = () => {
-    const { modalVisible } = this.state;
-    this.setState({ modalVisible: !modalVisible });
-  };
-
-  handleOnRow = record => {
-    console.debug('111111111111', record);
-    this.extraBuilderRender('VIEW', record.TASK_SEQ);
-  };
-
-  extraBuilderRender = (viewType, taskSeq) => {
-    const {
-      sagaKey: id,
-      extraBuilder,
-      loadingComplete,
-      viewPageData: { workSeq },
-    } = this.props;
-
-    this.setState({
-      extraBuilder: [
-        <ExtraBuilder
-          key={`${id}_key`}
-          sagaKey={`${id}_modal`}
-          workSeq={workSeq}
-          taskSeq={taskSeq}
-          viewType={viewType}
-          loadingComplete={loadingComplete}
-          saveTaskAfterCallbackFunc={() => this.extraBuilderRender('VIEW', taskSeq)}
-        />,
-      ],
-    });
-    return this.handleModalVisible();
   };
 
   render = () => {
@@ -216,7 +178,7 @@ class CustomList extends Component {
       isBuilderModal,
       changeBuilderModalState,
     } = this.props;
-    const { isMultiDelete, extraBuilder, modalVisible } = this.state;
+    const { isMultiDelete } = this.state;
 
     if (viewLayer.length === 1 && viewLayer[0].CONFIG && viewLayer[0].CONFIG.length > 0 && isJSON(viewLayer[0].CONFIG)) {
       const viewLayerData = JSON.parse(viewLayer[0].CONFIG).property || {};
@@ -288,27 +250,6 @@ class CustomList extends Component {
                 )
               );
             })}
-            <div className="alignRight">
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <Button type="primary" className="btn-primary">
-                    Delete
-                  </Button>
-                </Popconfirm>
-              )}
-              <Button
-                type="primary"
-                className="btn-primary"
-                onClick={() =>
-                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
-                }
-              >
-                Add
-              </Button>
-            </div>
-            <AntdModal title="거래처 관리" visible={modalVisible} onCancel={this.handleModalVisible} width={900} height={600} footer={[null]}>
-              {extraBuilder}
-            </AntdModal>
           </Sketch>
         </StyledViewDesigner>
       );
