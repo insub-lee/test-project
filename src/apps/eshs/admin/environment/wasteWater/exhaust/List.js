@@ -27,24 +27,19 @@ class List extends Component {
   }
 
   changeInputValue = value => {
-    this.setState({ exhuastNm: value });
-  };
-
-  callBackApi = () => {
-    this.listDataApi();
+    this.setState({ exhuastNm: value }, this.setColumns);
   };
 
   listDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const apiAry = [
       {
-        key: 'eshsexhaust',
+        key: 'eshsExhaust',
         url: '/api/eshs/v1/common/eshsexhaust',
         type: 'GET',
       },
     ];
     getCallDataHandler(id, apiAry);
-    this.renderTable();
   };
 
   onChangeData = value => {
@@ -55,33 +50,36 @@ class List extends Component {
     };
     if (this.state.exhuastNm) {
       if (value === 'U') {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsexhaust', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsexhaust', submitData, this.listDataApi);
       } else if (value === 'D') {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsexhaust', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsexhaust', submitData, this.listDataApi);
       } else {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsexhaust', submitData, this.callBackApi);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsexhaust', submitData, this.listDataApi);
       }
     } else {
       message.warning('배출시설명을 올바르게 입력하시오.');
     }
-
     this.onCancel();
   };
 
   onCancel() {
-    this.setState({
-      exhuastNm: '',
-      exhuastCd: '',
-    });
+    this.setState(
+      {
+        exhuastNm: '',
+        exhuastCd: '',
+      },
+      this.setColumns,
+    );
   }
 
   selectedRecord = record => {
-    if (typeof record.EXHAUST_NM === 'string') {
-      this.setState({
+    this.setState(
+      {
         exhuastNm: record.EXHAUST_NM,
         exhuastCd: record.EXHAUST_CD,
-      });
-    }
+      },
+      this.setColumns,
+    );
   };
 
   setColumns = () => {
@@ -99,14 +97,13 @@ class List extends Component {
         dataIndex: 'EXHAUST_CD',
         align: 'center',
         width: 150,
-        render: item => <span>{item === 'Y' ? '사용중' : '삭제'}</span>,
       },
       {
         title: (
           <>
             <span className="th-label">코드</span>
             <div className="td-input-wrapper">
-              <AntdInput style={{ width: '300px' }} value={exhuastNm} onChange={e => this.changeInputValue(e.target.value)} />
+              <AntdInput className="input-sm input-center" style={{ width: '300px' }} value={exhuastNm} onChange={e => this.changeInputValue(e.target.value)} />
             </div>
           </>
         ),
@@ -120,36 +117,38 @@ class List extends Component {
   render() {
     const { columns } = this.state;
     const {
-      result: { renderList },
+      result: { eshsExhaust },
     } = this.props;
+    const dataSource = eshsExhaust && eshsExhaust.list;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <StyledButtonWrapper>
-            <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('I')}>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('I')}>
               추가
             </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-light btn-sm" onClick={() => this.onChangeData('U')}>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
               수정
             </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-light btn-sm" onClick={() => this.onChangeData('D')}>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
               삭제
             </StyledButton>
-            <StyledButton className="btn-primary btn-first btn-light btn-sm" onClick={() => this.onCancel()}>
+            <StyledButton className="btn-primary" onClick={this.onCancel}>
               Reset
             </StyledButton>
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          rowKey={renderList && renderList.EXHAUST_CD}
+          className="tableWrapper tableCodeWrapper"
+          rowKey={dataSource && dataSource.EXHAUST_CD}
           columns={columns}
-          dataSource={renderList || []}
+          dataSource={dataSource || []}
           onRow={record => ({
             onClick: () => {
               this.selectedRecord(record);
             },
           })}
-          footer={() => <div style={{ textAlign: 'center' }}>{`${renderList && renderList.length} 건`}</div>}
+          footer={() => <span>{`${(dataSource && dataSource.length) || 0} 건`}</span>}
         />
       </ContentsWrapper>
     );
