@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { Table, Icon, Modal, Button } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 import RequesterView from './RequesterView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
 
 class RequesterList extends Component {
   state = {
