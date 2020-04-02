@@ -41,7 +41,7 @@ const StyledSelect = Component => styled(Component)`
     }
     &.ant-select-disabled {
       .ant-select-selection {
-        background: #e5e5e5;
+        background: #f5f5f5;
       }
     }
   }

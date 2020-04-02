@@ -1,7 +1,15 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-import { Input, Button, Modal, Row, Col } from 'antd';
-import UnitCompStyled from '../styled/compStyled/UnitCompStyled';
+import { Input, Modal } from 'antd';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'components/BizBuilder/styled/StyledButton';
+
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class UnitComp extends React.Component {
   constructor(props) {
@@ -41,29 +49,21 @@ class UnitComp extends React.Component {
       for (i = 0; i < 11; i++) {
         const col = u[`col${i}`] || ' ';
         if (!i) {
-          cols.push(
-            <Col span={2} key={`${index}_${i}`} className="unit-title">
-              {col}
-            </Col>,
-          );
+          cols.push(<th key={`${index}_${i}`}>{col}</th>);
         } else if (col.trim()) {
           cols.push(
-            <Col span={2} key={`${index}_${i}`} className="unit-cols" onClick={() => this.handleOnclick(col)}>
+            <td key={`${index}_${i}`} className="td-pointer" onClick={() => this.handleOnclick(col)}>
               {col}
-            </Col>,
+            </td>,
           );
         } else {
-          cols.push(
-            <Col span={2} key={`${index}_${i}`} className="unit-noCols">
-              {col}
-            </Col>,
-          );
+          cols.push(<td key={`${index}_${i}`}>{col}</td>);
         }
       }
       const rows = (
-        <Row gutter={[0, 0]} key={index}>
+        <tr gutter={[0, 0]} key={index}>
           {cols}
-        </Row>
+        </tr>
       );
       modalGrid.push(rows);
     });
@@ -109,16 +109,39 @@ class UnitComp extends React.Component {
     }
     return visible ? (
       <div>
-        <Input value={colData} placeholder={CONFIG.property.placeholder} className={CONFIG.property.className || ''} style={{ width: 150 }} />
-        <Button shape="circle" icon="search" onClick={this.handleModalVisible} />
-        <Modal title="* 단위" visible={unitModal} width={800} height={600} onCancel={this.handleModalVisible} footer={[null]}>
-          <UnitCompStyled>
-            {modalGrid}
-            <div className="cancelBtn">
-              <Button onClick={this.handleModalVisible}>취소</Button>
-            </div>
-          </UnitCompStyled>
-        </Modal>
+        <AntdSearch
+          value={colData}
+          placeholder={CONFIG.property.placeholder}
+          className={CONFIG.property.className || ''}
+          style={{ width: '100%' }}
+          onClick={this.handleModalVisible}
+          onSearch={this.handleModalVisible}
+        />
+        <AntdModal title="* 단위" visible={unitModal} width={600} height={400} onCancel={this.handleModalVisible} footer={[null]}>
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="10%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+                <col width="9%" />
+              </colgroup>
+              <tbody>{modalGrid}</tbody>
+            </table>
+          </StyledHtmlTable>
+          <StyledButtonWrapper className="btn-wrap-center">
+            <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+              취소
+            </StyledButton>
+          </StyledButtonWrapper>
+        </AntdModal>
       </div>
     ) : (
       ''

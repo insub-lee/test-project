@@ -6,10 +6,12 @@ import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTab
 // import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
 const { Option } = Select;
 const { Search } = Input;
 const InputGroup = Input.Group;
+const AntdSearchInput = StyledSearchInput(Input.Search);
 class EshsCmpnyComp extends React.Component {
   constructor(props) {
     super(props);
@@ -185,11 +187,11 @@ class EshsCmpnyComp extends React.Component {
     }
     return visible ? (
       <div>
-        <Search
+        <AntdSearchInput
           value={this.state.cmpny_cd}
           readOnly
           placeholder={CONFIG.property.placeholder}
-          className={CONFIG.property.className || ''}
+          className={CONFIG.property.className}
           style={{ width: searchWidth }}
           onSearch={this.handleModalVisible}
         />
