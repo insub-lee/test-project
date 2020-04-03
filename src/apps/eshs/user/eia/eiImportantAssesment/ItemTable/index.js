@@ -108,10 +108,8 @@ class ItemTable extends Component {
       <ContentsWrapper>
         <StyledHtmlTable className="tableWrapper">
           {itemList.length > 0 && (
-            <StyledButtonWrapper className="btn-wrap-right">
-              <font className="textLabel" color="red">
-                저장 버튼은 상신되지 않고 DATABASE에 저장만 됩니다.
-              </font>
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <span className="btn-comment">저장 버튼은 상신되지 않고 DATABASE에 저장만 됩니다.</span>
               &nbsp;
               <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('UPDATE')}>
                 저장
@@ -153,15 +151,15 @@ class ItemTable extends Component {
                 <th rowSpan={2}>개선계획서</th>
               </tr>
               <tr>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     1.
                     <br />
                     법규검토
                   </span>
                 </th>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     2.
                     <br />
                     심각한
@@ -169,36 +167,36 @@ class ItemTable extends Component {
                     환경측면
                   </span>
                 </th>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     3.
                     <br />
                     기술검토
                   </span>
                 </th>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     4.
                     <br />
                     재정측면
                   </span>
                 </th>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     5.
                     <br />
                     운영측면
                   </span>
                 </th>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     6.
                     <br />
                     사업적측면
                   </span>
                 </th>
-                <th>
-                  <span className="td-pointer" onClick={this.handleModalVisible}>
+                <th className="th-pointer" onClick={this.handleModalVisible}>
+                  <span>
                     7.
                     <br />
                     이해관계자
@@ -213,12 +211,12 @@ class ItemTable extends Component {
             </tfoot>
             <tbody>
               {itemList.map((item, index) => (
-                <tr key={item.SEQ}>
+                <tr key={item.SEQ} className="tr-center">
                   <td>{index + 1}</td>
                   <td>
                     <span>{item.MATTER}</span>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.APPLY_PROCESS}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -228,7 +226,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.APPLY_EQUIPMENT}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -238,7 +236,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.LAWS_REVIEW}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -248,7 +246,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.CRITICAL_ENVIRONMENT}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -258,7 +256,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.TECH_REVIEW}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -268,7 +266,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.FINANCIAL_SIDE}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -278,7 +276,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.OPERATION_SIDE}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -288,7 +286,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.BUSINESS_SIDE}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -298,7 +296,7 @@ class ItemTable extends Component {
                       />
                     </Popover>
                   </td>
-                  <td>
+                  <td className="td-pointer">
                     <Popover content={<span>{item.STAKEHOLDERS}</span>} title={null}>
                       <AntdInput
                         className="ant-input-inline ant-input-sm input-left"
@@ -349,9 +347,10 @@ class ItemTable extends Component {
               ))}
             </tbody>
           </table>
-          <AntdModal className="modal-table-pad" width={780} height={480} visible={modalVisible} onCancel={this.handleModalVisible} footer={null}>
+          <AntdModal className="modal-table-pad" width={780} height={480} closable={false} visible={modalVisible} footer={null}>
             <div>
               <img src={popoverContent.Em1} alt="EM" />
+              <br />
               <StyledButtonWrapper className="btn-wrap-center">
                 <StyledButton className="btn-primary btn-sm" onClick={this.handleModalVisible}>
                   닫기

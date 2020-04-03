@@ -52,19 +52,13 @@ const StyledHtmlTable = styled.div`
               padding-left: 5px;
             }
           }
-          &.td-pointer {
-            cursor: pointer;
-            &:hover {
-              background: #e6f7ff;
-            }
-          }
         }
         &.tr-center td {
           text-align: center;
         }
         &.tr-pointer {
-          cursor: pointer;
           &:hover td {
+            cursor: pointer;
             background: #e6f7ff;
           }
         }
@@ -80,6 +74,16 @@ const StyledHtmlTable = styled.div`
         text-align: center;
         padding: 5px;
       }
+    }
+
+    th.th-pointer:hover {
+      cursor: pointer;
+      color: #1fb5ad;
+    }
+
+    td.td-pointer:hover {
+      cursor: pointer;
+      background: #e6f7ff;
     }
 
     /* border 있는 버전 */

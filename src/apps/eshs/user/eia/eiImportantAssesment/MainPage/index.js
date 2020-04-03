@@ -148,7 +148,7 @@ class MainPage extends Component {
     const { formData } = this.props;
     return (
       <ContentsWrapper>
-        <div className="selSaveWrapper">
+        <div>
           <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} saveBeforeProcess={this.saveBeforeProcess} />
         </div>
         <div>

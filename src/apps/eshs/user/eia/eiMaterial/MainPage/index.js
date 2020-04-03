@@ -70,7 +70,7 @@ class MainPage extends Component {
     const searchFlag = (formData && formData.searchFlag) || false;
     return (
       <ContentsWrapper>
-        <div className="selSaveWrapper">
+        <div>
           <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
         </div>
         <div>
