@@ -287,7 +287,15 @@ class List extends Component {
             footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
           />
         </ContentsWrapper>
-        <AntdModal visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
+        <AntdModal
+          className="modal-table-pad"
+          visible={this.state.modalEdit}
+          width="600px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={null}
+          title="관리 단위 등록/수정"
+        >
           <div>
             {this.state.modalEdit && (
               <Edit
@@ -305,7 +313,15 @@ class List extends Component {
             )}
           </div>
         </AntdModal>
-        <AntdModal visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
+        <AntdModal
+          className="modal-table-pad"
+          visible={this.state.modalCompany}
+          width="600px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={null}
+          title="회사 선택"
+        >
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />

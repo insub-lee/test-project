@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Input, Select, Modal } from 'antd';
 
 import DeptSelect from 'components/DeptSelect';
+import PostionSelect from 'components/PostionSelect';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
 
@@ -20,7 +21,8 @@ const { Option } = Select;
 
 class RequesterView extends Component {
   state = {
-    isShow: false,
+    isDeptShow: false,
+    isPstnShow: false,
     userInfo: {
       statusCd: 'C',  //재직
       empType: 'E',   //본사협력사
@@ -77,8 +79,12 @@ class RequesterView extends Component {
   };
 
   onClickCompany = () => {
-    this.setState({ isShow: true });
+    this.setState({ isDeptShow: true });
   };
+
+  onClickPostion = () => {
+    this.setState({ isPstnShow: true });
+  }
 
   onCompleteDeptPopup = result => {
     if (result) {
@@ -88,17 +94,37 @@ class RequesterView extends Component {
         userInfo.deptName = result.NAME_KOR;
         return { 
           userInfo,
-          isShow: false,
+          isDeptShow: false,
         }
       })
     } else {
-      this.setState({ isShow: false });
+      this.setState({ isDeptShow: false });
+    }
+  };
+
+  onCompletePstnPopup = result => {
+    if (result) {
+      this.setState(prevState => {
+        const { userInfo } = prevState;
+        userInfo.pstnId = result.PSTN_ID;
+        userInfo.pstnName = result.NAME_KOR;
+        return { 
+          userInfo,
+          isPstnShow: false,
+        }
+      })
+    } else {
+      this.setState({ isPstnShow: false });
     }
   };
 
   onCancelDeptPopup = () => {
-    this.setState({ isShow: false });
+    this.setState({ isDeptShow: false });
   };
+
+  onCancelPstnPopup = () => {
+    this.setState({ isPstnShow: false });
+  }
 
   render() {
     const { result: { requesterView } } = this.props;
@@ -141,7 +167,9 @@ class RequesterView extends Component {
                   <tr>
                     <th>직위명</th>
                     <td>{detail.PSTN_NAME}</td>
-                    <td></td>
+                    <td>
+                      <AntdInput value={this.state.userInfo.pstnName} className="input-mid" placeholder="직위선택" onClick={this.onClickPostion}  readOnly/>
+                    </td>
                   </tr>
                   <tr>
                     <th>전화번호</th>
@@ -155,14 +183,14 @@ class RequesterView extends Component {
                 </tbody>  
               </table>
             </StyledTable>
-            <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
+            <StyledButtonWrapper className="btn-wrap-center">
               <StyledButton className="btn-gray mr5" onClick={e => this.onClickDelete(e)}>삭제</StyledButton>
               <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
               <StyledButton className="btn-primary" onClick={this.onClickApproval}>승인</StyledButton>
             </StyledButtonWrapper>
             <AntdModal
               width={300}
-              visible={this.state.isShow}
+              visible={this.state.isDeptShow}
               title="회사 검색"
               onCancel={this.onCancelDeptPopup}
               destroyOnClose
@@ -173,6 +201,19 @@ class RequesterView extends Component {
                 defaultRootDeptId={1461}  // EDDS 외부업체
                 onComplete={this.onCompleteDeptPopup}
                 onCancel={this.onCancelDeptPopup}
+              />
+            </AntdModal>
+            <AntdModal
+              width={300}
+              visible={this.state.isPstnShow}
+              title="직위 검색"
+              onCancel={this.onCancelPstnPopup}
+              destroyOnClose
+              footer={null}
+            >
+              <PostionSelect
+                onComplete={this.onCompletePstnPopup}
+                onCancel={this.onCancelPstnPopup}
               />
             </AntdModal>
           </>
