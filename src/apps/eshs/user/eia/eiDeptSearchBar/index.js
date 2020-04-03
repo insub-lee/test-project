@@ -160,7 +160,6 @@ class DeptSearchBar extends Component {
             )}
           </StyledButtonWrapper>
         </div>
-        <hr />
       </>
     );
   }
