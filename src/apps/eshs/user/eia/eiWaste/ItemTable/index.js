@@ -12,7 +12,7 @@ class ItemTable extends Component {
   }
 
   handleAction = type => {
-    const { id, formData, submitHandlerBySaga, tb_name } = this.props;
+    const { id, formData, submitHandlerBySaga, tbName } = this.props;
     const { rowSelections } = this.state;
     const itemList = (formData && formData.itemList) || [];
     const itemData = (formData && formData.itemData) || {};
@@ -26,7 +26,7 @@ class ItemTable extends Component {
             message.warning(msg);
             break;
           }
-          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/EshsEiItem', { itemData: { ...itemData, CHK_YEAR, DEPT_CD }, tb_name }, this.handleFormReset);
+          submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/EshsEiItem', { itemData: { ...itemData, CHK_YEAR, DEPT_CD }, tbName }, this.handleFormReset);
           break;
         }
         message.warning('이미 동일한 Data가 존재합니다');
@@ -36,14 +36,14 @@ class ItemTable extends Component {
           message.warning(msg);
           break;
         }
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsEiItem', { itemData, tb_name }, this.handleFormReset);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/EshsEiItem', { itemData, tbName }, this.handleFormReset);
         break;
       case 'DELETE':
         if (!rowSelections.length) {
           message.warning('삭제 하실 항목을 한개라도 선택하세요.');
           break;
         }
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tb_name }, this.handleFormReset);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/EshsEiItem', { rowSelections, tbName }, this.handleFormReset);
         break;
       case 'RESET':
         this.handleFormReset();
