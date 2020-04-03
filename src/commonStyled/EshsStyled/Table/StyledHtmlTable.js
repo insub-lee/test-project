@@ -10,11 +10,12 @@ const StyledHtmlTable = styled.div`
     thead th,
     thead td {
       background: #f7f7f7;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
       color: #000;
       padding: 10px;
       border-bottom: 1px solid #ddd;
+      font-weight: 500;
     }
 
     tbody {
@@ -51,9 +52,21 @@ const StyledHtmlTable = styled.div`
               padding-left: 5px;
             }
           }
+          &.td-pointer {
+            cursor: pointer;
+            &:hover {
+              background: #e6f7ff;
+            }
+          }
         }
-        &.td-center td {
+        &.tr-center td {
           text-align: center;
+        }
+        &.tr-pointer {
+          cursor: pointer;
+          &:hover td {
+            background: #e6f7ff;
+          }
         }
       }
     }
