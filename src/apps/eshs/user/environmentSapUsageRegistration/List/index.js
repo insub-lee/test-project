@@ -25,8 +25,7 @@ class List extends React.Component {
       visible: false,
       requestValue: {
         UNIT: '',
-        FIR_UNIT_EXCHANGE: 0,
-        SEC_UNIT_EXCHANGE: 0,
+        CONVERT_COEFFICIENT: '',
         SHIPMENT: 0,
         YEAR: moment()
           .year()
@@ -37,7 +36,6 @@ class List extends React.Component {
       checkedIndex: -1,
       selectedIndex: -1,
       isModified: false,
-      originYear: -1,
     };
   }
 
@@ -111,7 +109,6 @@ class List extends React.Component {
               defaultValue={record.SHIPMENT}
               style={{ width: '70%' }}
               onChange={this.handleShipmentChange}
-              // value={requestValue.SHIPMENT}
               disabled={isModified && !index}
             />
           );
@@ -127,12 +124,10 @@ class List extends React.Component {
       render: (text, record, index) => {
         const { requestValue, selectedIndex, isModified } = this.state;
         if (index === 0) {
-          return (
-            <div>{Math.floor(isModified ? 0 : requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * requestValue.SHIPMENT * 100) / 100 || 0}</div>
-          );
+          return <div>{Math.floor(isModified ? 0 : requestValue.SHIPMENT * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0}</div>;
         }
         if (index === selectedIndex) {
-          return <div>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * requestValue.SHIPMENT * 100) / 100 || 0}</div>;
+          return <div>{Math.floor(!isModified ? 0 : requestValue.SHIPMENT * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0}</div>;
         }
         return <div>{text}</div>;
       },
@@ -146,7 +141,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
-              <StyledButton className="btn-primary btn-first" onClick={this.isValid() ? this.handleInputClick : null}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.isValid() ? this.handleInputClick : null}>
                 저장
               </StyledButton>
             </Popconfirm>
@@ -157,20 +152,20 @@ class List extends React.Component {
             <>
               <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
                 <StyledButton
-                  className="btn-primary btn-first"
+                  className="btn-primary btn-first btn-sm"
                   onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : null}
                 >
                   저장
                 </StyledButton>
               </Popconfirm>
-              <StyledButton className="btn-primary btn-first" onClick={this.handleCancelClick}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handleCancelClick}>
                 취소
               </StyledButton>
             </>
           );
         }
         return (
-          <StyledButton className="btn-primary btn-first" onClick={() => this.handleModifyClick(record, index)}>
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleModifyClick(record, index)}>
             수정
           </StyledButton>
         );
@@ -181,12 +176,11 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
-    // if (this.isValid()) {
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
     submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, { SHIPMENT: 0, USAGE: 0, YEAR: moment().year() }),
     }));
-    // }
   };
 
   handleModifyClick = (record, index) => {
@@ -200,14 +194,9 @@ class List extends React.Component {
   updateSapUsage = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const valueObj = {
-      YEAR: requestValue.YEAR,
-      SHIPMENT: requestValue.SHIPMENT,
-      USAGE: requestValue.USAGE,
-      SAP_ID: requestValue.SAP_ID,
-    };
 
-    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, valueObj, () => this.getSapUsage(requestValue));
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
     this.setState(prevState => ({
       isModified: false,
       selectedIndex: -1,
@@ -228,7 +217,7 @@ class List extends React.Component {
   handleSapDeleteClick = () => {
     const { requestValue, selectedRecord } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const params = { SAP_ID: selectedRecord.SAP_ID };
+    const params = { USAGE_ID: selectedRecord.USAGE_ID };
     submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, params, () => this.getSapUsage(requestValue));
     this.setState({
       checkedIndex: -1,
@@ -294,15 +283,13 @@ class List extends React.Component {
 
   setDataSource = data => {
     data.then(res => this.setState({ dataSource: [{}, ...(res.response && res.response.list)] }));
-    // data.then(res =>
-    //   this.setState(prevState => ({ dataSource: prevState.dataSource.concat((res.response && res.response.list && [{}, ...res.response.list]) || []) })),
-    // );
   };
 
   handleShipmentChange = value => {
+    const { requestValue } = this.state;
     const valueObj = {
       SHIPMENT: value,
-      USAGE: Math.floor(this.state.requestValue.FIR_UNIT_EXCHANGE * this.state.requestValue.SEC_UNIT_EXCHANGE * value * 100) / 100,
+      USAGE: Math.floor(value * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0,
     };
 
     this.setState(prevState => ({
@@ -331,33 +318,18 @@ class List extends React.Component {
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
-    const valueObj = { [name]: value };
+    const valueObj = { [name]: value, USAGE: Math.floor(value * requestValue.SHIPMENT * 100) / 100 || 0 };
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
-
-    if (name === 'FIR_UNIT_EXCHANGE' || name === 'SEC_UNIT_EXCHANGE') {
-      const CONVERT_COEFFICIENT = Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100;
-      const USAGE =
-        Math.floor(this.state.requestValue.FIR_UNIT_EXCHANGE * this.state.requestValue.SEC_UNIT_EXCHANGE * this.state.requestValue.SHIPMENT * 100) / 100;
-      this.setState(prevState => ({
-        requestValue: Object.assign(prevState.requestValue, { CONVERT_COEFFICIENT, USAGE }),
-      }));
-    }
   };
 
   handleResetClick = () => {
     this.setState({
       requestValue: {
         SAP_NO: '',
-        CAS_NO: '',
-        NAME_KOR: '',
-        NAME_ENG: '',
         NAME_SAP: '',
-        NAME_ETC: '',
         UNIT: '',
-        FIR_UNIT_EXCHANGE: 0,
-        SEC_UNIT_EXCHANGE: 0,
       },
       dataSource: [],
       isModified: false,
@@ -374,8 +346,7 @@ class List extends React.Component {
   handleMasterModifyClick = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const params = { requestValue, originSapNo: requestValue.SAP_NO, originCasNo: requestValue.CAS_NO };
-    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, params);
+    return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
   };
 
   handleCheckboxChange = (e, index, record) => {
@@ -392,9 +363,30 @@ class List extends React.Component {
     }
   };
 
+  isSelectSapMaterial = () => {
+    const { requestValue } = this.state;
+    return !!requestValue.SAP_ID;
+  };
+
+  ModalColumns = [
+    {
+      title: 'SAP_NO',
+      dataIndex: 'SAP_NO',
+      key: 'SAP_NO',
+      align: 'center',
+    },
+    {
+      title: 'NAME_SAP',
+      dataIndex: 'NAME_SAP',
+      key: 'NAME_SAP',
+      align: 'center',
+    },
+  ];
+
   render() {
     const {
       columns,
+      ModalColumns,
       handleInputChange,
       handleInputNumberChange,
       handleModalClose,
@@ -403,6 +395,7 @@ class List extends React.Component {
       handleResetClick,
       handleMasterModifyClick,
       handleSapDeleteClick,
+      isSelectSapMaterial,
     } = this;
     const { requestValue, visible, dataSource, checkedIndex } = this.state;
     const { sagaKey, getCallDataHandler, result } = this.props;
@@ -425,55 +418,40 @@ class List extends React.Component {
             <StyledHtmlTable>
               <table>
                 <colgroup>
-                  <col width="180px" />
-                  <col width="180px" />
-                  <col width="180px" />
-                  <col width="180px" />
-                  <col width="180px" />
-                  <col width="180px" />
-                  <col width="180px" />
-                  <col width="180px" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
                 </colgroup>
                 <tbody>
                   <tr>
-                    <th colSpan={1}>SAP NO.</th>
-                    <td colSpan={3}>{requestValue.SAP_NO}</td>
-                    <th colSpan={1}>CAS NO.</th>
-                    <td colSpan={3}>{requestValue.CAS_NO}</td>
-                  </tr>
-                  <tr>
-                    <th>화학물질명_국문</th>
-                    <td>{requestValue.NAME_KOR}</td>
-                    <th>화학물질명_영문</th>
-                    <td>{requestValue.NAME_ENG}</td>
+                    <th>SAP NO.</th>
+                    <td>{requestValue.SAP_NO}</td>
                     <th>화학물질명_SAP</th>
                     <td>{requestValue.NAME_SAP}</td>
-                    <th>관용명 및 이명</th>
-                    <td>{requestValue.NAME_ETC}</td>
-                  </tr>
-                  <tr>
                     <th>단위</th>
                     <td>
-                      <AntdInput className="input-sm" name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
-                    </td>
-                    <th>단위환산1</th>
-                    <td>
-                      <InputNumber
-                        value={requestValue.FIR_UNIT_EXCHANGE}
-                        onChange={value => handleInputNumberChange(value, 'FIR_UNIT_EXCHANGE')}
-                        className="col-input-number"
-                      />
-                    </td>
-                    <th>단위환산2</th>
-                    <td>
-                      <InputNumber
-                        value={requestValue.SEC_UNIT_EXCHANGE}
-                        onChange={value => handleInputNumberChange(value, 'SEC_UNIT_EXCHANGE')}
-                        className="col-input-number"
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="UNIT"
+                        value={requestValue.UNIT}
+                        onChange={handleInputChange}
+                        disabled={!isSelectSapMaterial()}
                       />
                     </td>
                     <th>kg환산계수</th>
-                    <td>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100}</td>
+                    <td>
+                      <InputNumber
+                        value={requestValue.CONVERT_COEFFICIENT}
+                        onChange={value => handleInputNumberChange(value, 'CONVERT_COEFFICIENT')}
+                        className="col-input-number"
+                        disabled={!isSelectSapMaterial()}
+                      />
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -498,6 +476,8 @@ class List extends React.Component {
           getCallDataHandler={getCallDataHandler}
           result={result}
           setRequestValue={setRequestValue}
+          tableColumns={ModalColumns}
+          apiUrl="/api/eshs/v1/common/eshschemicalmaterialsap"
         />
       </>
     );

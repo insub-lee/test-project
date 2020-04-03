@@ -33,28 +33,9 @@ class List extends Component {
   }
 
   componentDidMount() {
-    this.listDataApi();
     this.yearOption();
+    this.listDataApi();
   }
-
-  initData = () => {
-    const { result, columns } = this.props;
-    const colPlus = result && result.gasType && result.gasType.list;
-    const setCol = columns;
-    colPlus.forEach(itme => {
-      setCol.push({
-        dataIndex: itme.GAS_CD.toLowerCase(),
-        title: itme.GAS_NM,
-        align: 'center',
-      });
-    });
-
-    this.setState({
-      siteList: result && result.site && result.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
-      measureList: result && result.measure && result.measure.list,
-      columnsPlus: setCol,
-    });
-  };
 
   listDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -77,6 +58,25 @@ class List extends Component {
       },
     ];
     getCallDataHandler(id, apiAry, this.initData);
+  };
+
+  initData = () => {
+    const { result, columns } = this.props;
+    const colPlus = result && result.gasType && result.gasType.list;
+    const setCol = [];
+    colPlus.forEach(itme => {
+      setCol.push({
+        dataIndex: itme.GAS_CD.toLowerCase(),
+        title: itme.GAS_NM,
+        align: 'center',
+      });
+    });
+    const nCol = [...columns, ...setCol];
+    this.setState({
+      siteList: result && result.site && result.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
+      measureList: result && result.measure && result.measure.list,
+      columnsPlus: nCol,
+    });
   };
 
   isSearch = () => {
@@ -124,12 +124,7 @@ class List extends Component {
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">조회구분</span>
-          <AntdSelect
-            className="selectMid"
-            style={{ width: '100px' }}
-            onChange={(value, option) => this.chagneSelect(value, option)}
-            value={this.state.selectGubun}
-          >
+          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.selectGubun}>
             <Option value="1" key="selectGubun">
               농도
             </Option>
@@ -138,7 +133,7 @@ class List extends Component {
             </Option>
           </AntdSelect>
           <span className="textLabel">지역</span>
-          <AntdSelect style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
+          <AntdSelect onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.site}>
             {siteList &&
               siteList.map(item => (
                 <Option value={item.NODE_ID} key="site">
@@ -147,7 +142,7 @@ class List extends Component {
               ))}
           </AntdSelect>
           <span className="textLabel">기간(년 월)</span>
-          <AntdSelect className="selectMid" style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
+          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.yyyy}>
             {yearArray &&
               yearArray.map(item => (
                 <Option value={`${item}`} key="yyyy">
@@ -155,7 +150,7 @@ class List extends Component {
                 </Option>
               ))}
           </AntdSelect>
-          <AntdSelect className="selectMid" style={{ width: '100px' }} onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
+          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.mm}>
             {monthArray.map(i => (
               <Option value={i} key="mm">
                 {`${i}월`}
@@ -163,7 +158,7 @@ class List extends Component {
             ))}
           </AntdSelect>
           <span className="textLabel">측정회차(월)</span>
-          <AntdSelect className="selectMid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
+          <AntdSelect className="select-mid" onChange={(value, option) => this.chagneSelect(value, option)} value={this.state.seq}>
             <Option value="1" key="seq">
               1
             </Option>

@@ -1,19 +1,36 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Input, Select } from 'antd';
+import { Input, Select, Modal } from 'antd';
+
+import DeptSelect from 'components/DeptSelect';
+import message from 'components/Feedback/message';
+import MessageContent from 'components/Feedback/message.style2';
 
 import StyledTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 
 const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledContentsModal(Modal);
+const AntdInput = StyledInput(Input);
 const { Option } = Select;
 
 class RequesterView extends Component {
   state = {
-    statusCd: '',
+    isShow: false,
+    userInfo: {
+      statusCd: 'C',  //재직
+      empType: 'E',   //본사협력사
+      deptId: -1,
+      deptName: '',
+      pstnId: -1,
+      pstnName: '',
+      dutyId: -1,
+      rankId: -1,
+    }
   };
 
   componentDidMount() {
@@ -24,22 +41,8 @@ class RequesterView extends Component {
         url: `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`,
         type: 'GET',
       },
-      {
-        key: 'distDeptList',
-        url: '/api/mdcs/v1/common/distribute/DistributeDeptMgnt',
-        type: 'GET',
-        params: {},
-      },
-      {
-        key: 'empStatusCodeList',
-        url: '/api/admin/v1/common/codeadmindtl',
-        type: 'POST',
-        params: {
-          codeGrpCd: 'EMPSTATUS',
-        },
-      },
     ];
-    getCallDataHandler(id, arrApi)
+    getCallDataHandler(id, arrApi);
   }
 
   onChangeEmpCode = val => {
@@ -47,25 +50,23 @@ class RequesterView extends Component {
   };
 
   onClickApproval = () => {
-    // const userInfo = {
-    //   userId: Number(this.state.userId),
-    //   empNo: this.state.empNo.toUpperCase(),
-    //   nameKor: this.state.nameKor,
-    //   nameEng: this.state.nameEng,
-    //   nameChn: this.state.nameChn,
-    //   photo: this.state.photo,
-    //   email: this.state.email,
-    //   statusCd: this.state.statusCd,
-    //   deptId: this.state.deptId,
-    //   pstnId: this.state.pstnId,
-    //   dutyId: this.state.dutyId,
-    //   rankId: this.state.rankId,
-    //   officeTel: this.state.officeTel,
-    //   mobileTel: this.state.mobileTel,
-    //   compCd: this.state.compCd,
-    // };
-    // /api/admin/v1/common/registUser/
-  }
+    const { id, result: { requesterView: { detail } }, submitHandlerBySaga, onCancelPopup } = this.props;
+    if (this.state.userInfo.deptId !== -1 &&  this.state.userInfo.pstnId !== -1) {
+      const userInfo = {
+        ...this.state.userInfo,
+        deptName: detail.DEPT_ID,
+        empNo: detail.REQUEST_ID,
+        nameKor: detail.REQUESTER_NAME,
+        email: detail.EMAIL,
+      };
+      console.debug('userInfo >> ', userInfo);
+      // submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/registUser/', userInfo, () => {
+      //   onCancelPopup();
+      // });
+    } else {
+      message.info(<MessageContent>회사와 직위를 선택해주세요.</MessageContent>);
+    }
+  };
 
   onClickDelete = e => {
     e.preventDefault();
@@ -73,27 +74,43 @@ class RequesterView extends Component {
     submitHandlerBySaga(id, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
       onCancelPopup();
     });
-  }
+  };
+
+  onClickCompany = () => {
+    this.setState({ isShow: true });
+  };
+
+  onCompleteDeptPopup = result => {
+    if (result) {
+      this.setState(prevState => {
+        const { userInfo } = prevState;
+        userInfo.deptId = result.DEPT_ID;
+        userInfo.deptName = result.NAME_KOR;
+        return { 
+          userInfo,
+          isShow: false,
+        }
+      })
+    } else {
+      this.setState({ isShow: false });
+    }
+  };
+
+  onCancelDeptPopup = () => {
+    this.setState({ isShow: false });
+  };
 
   render() {
-    const { result: { requesterView, distDeptList, empStatusCodeList } } = this.props;
+    const { result: { requesterView } } = this.props;
     let detail = {};
-    let deptList = [];
-    let empCodeList = [];
     if (requesterView && requesterView !== undefined && requesterView.detail !== undefined) {
       detail = requesterView.detail;
-    }
-    if (distDeptList && distDeptList !== undefined && distDeptList.list !== undefined) {
-      deptList = requesterView.list;
-    }
-    if (empStatusCodeList && empStatusCodeList !== undefined && empStatusCodeList.codeadmindtl !== undefined) {
-      empCodeList = empStatusCodeList.codeadmindtl;
     }
 
     return (
       <div>
         {Object.keys(detail).length > 0 && (
-          <React.Fragment>
+          <>
             <StyledTable>
               <table>
                 <colgroup>
@@ -111,26 +128,18 @@ class RequesterView extends Component {
                     <td colSpan="2">{detail.REQUESTER_NAME}</td>
                   </tr>
                   <tr>
-                    <th>상태</th>
-                    <td colSpan="2">
-                      <AntdSelect value={this.state.statusCd} onChange={val => this.onChangeEmpCode(val)} className="selectMid" style={{ width: '100px' }}>
-                        {empCodeList.map(code => (
-                          <Option value={code.CODE_CD}>{code.NAME_KOR}</Option>
-                        ))}
-                      </AntdSelect>
-                    </td>
-                  </tr>
-                  <tr>
                     <th>회사명</th>
                     <td>{detail.COMPANY_NAME}</td>
-                    <td></td>
+                    <td>
+                      <AntdInput value={this.state.userInfo.deptName} className="input-mid" placeholder="회사선택" onClick={this.onClickCompany}  readOnly/>
+                    </td>
                   </tr>
                   <tr>
                     <th>부서명</th>
                     <td colSpan="2">{detail.DEPT_NAME}</td>
                   </tr>
                   <tr>
-                    <th>직급명</th>
+                    <th>직위명</th>
                     <td>{detail.PSTN_NAME}</td>
                     <td></td>
                   </tr>
@@ -149,9 +158,24 @@ class RequesterView extends Component {
             <StyledButtonWrapper className="btn-wrap-center btn-wrap-mt-20">
               <StyledButton className="btn-gray mr5" onClick={e => this.onClickDelete(e)}>삭제</StyledButton>
               <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
-              <StyledButton className="btn-primary">승인</StyledButton>
+              <StyledButton className="btn-primary" onClick={this.onClickApproval}>승인</StyledButton>
             </StyledButtonWrapper>
-          </React.Fragment>
+            <AntdModal
+              width={300}
+              visible={this.state.isShow}
+              title="회사 검색"
+              onCancel={this.onCancelDeptPopup}
+              destroyOnClose
+              footer={null}
+            >
+              <DeptSelect
+                rootDeptChange={false}
+                defaultRootDeptId={1461}  // EDDS 외부업체
+                onComplete={this.onCompleteDeptPopup}
+                onCancel={this.onCancelDeptPopup}
+              />
+            </AntdModal>
+          </>
         )}
       </div>
     );
@@ -165,7 +189,7 @@ RequesterView.propTypes = {
   getCallDataHandler: PropTypes.func,
   selectedRow: PropTypes.object,
   formData: PropTypes.object,
-}
+};
 
 RequesterView.defaultProps = {
   id: 'requesterView',
@@ -177,6 +201,6 @@ RequesterView.defaultProps = {
   getCallDataHandler: () => {},
   selectedRow: {},
   formData: {},
-}
+};
 
 export default RequesterView;

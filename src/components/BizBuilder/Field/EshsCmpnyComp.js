@@ -6,10 +6,12 @@ import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTab
 // import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
 const { Option } = Select;
 const { Search } = Input;
 const InputGroup = Input.Group;
+const AntdSearchInput = StyledSearchInput(Input.Search);
 class EshsCmpnyComp extends React.Component {
   constructor(props) {
     super(props);
@@ -184,7 +186,7 @@ class EshsCmpnyComp extends React.Component {
       return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
     }
     return visible ? (
-      <div>
+      <>
         {directSearchTable ? (
           <>
             <StyledSearchWrap>
@@ -226,12 +228,12 @@ class EshsCmpnyComp extends React.Component {
             </StyledVirtualizedTable>
           </>
         ) : (
-          <>
-            <Search
+          <div>
+            <AntdSearchInput
               value={this.state.cmpny_cd}
               readOnly
               placeholder={CONFIG.property.placeholder}
-              className={CONFIG.property.className || ''}
+              className={CONFIG.property.className}
               style={{ width: searchWidth }}
               onSearch={this.handleModalVisible}
             />
@@ -255,7 +257,7 @@ class EshsCmpnyComp extends React.Component {
                     />
                   </InputGroup>
                   {/* &nbsp;&nbsp;
-                  <Button onClick={this.handleOnSearch}>검색</Button> */}
+                <Button onClick={this.handleOnSearch}>검색</Button> */}
                 </div>
               </StyledSearchWrap>
               <StyledVirtualizedTable>
@@ -278,9 +280,9 @@ class EshsCmpnyComp extends React.Component {
                 </Table>
               </StyledVirtualizedTable>
             </Modal>
-          </>
+          </div>
         )}
-      </div>
+      </>
     ) : (
       ''
     );

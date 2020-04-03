@@ -6,7 +6,23 @@ const StyledSelect = Component => styled(Component)`
     &.mr5 {
       margin-right: 5px;
     }
-    &.selectMid {
+    &.select-xs {
+      .ant-select-selection {
+        padding: 0.2rem 0.7rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        height: auto;
+      }
+    }
+    &.select-sm {
+      .ant-select-selection {
+        padding: 0.313rem 0.844rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        height: auto;
+      }
+    }
+    &.select-mid {
       .ant-select-selection {
         padding: 0.4rem 0.875rem;
         height: auto;
@@ -41,7 +57,7 @@ const StyledSelect = Component => styled(Component)`
     }
     &.ant-select-disabled {
       .ant-select-selection {
-        background: #e5e5e5;
+        background: #f5f5f5;
       }
     }
   }

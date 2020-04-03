@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import { Table, Icon, Modal, Button } from 'antd';
 
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
-import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
+import StyledContentsModal from 'commonStyled/MdcsStyled/Modal/StyledContentsModal';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
-const AntdModal = StyledModalWrapper(Modal);
+const AntdModal = StyledContentsModal(Modal);
 
 class HistoryList extends Component {
   state = {
@@ -22,16 +22,16 @@ class HistoryList extends Component {
     getCallDataHandler(id, apiAry, () => {});
   }
 
-  onClickRow = row => {
+  onClickRow = (row, rowIndex) => {
     this.setState({
       selectedRow: row,
       isShow: true,
     });
-  }
+  };
 
   onCancelPopup = () => {
     this.setState({ isShow: false });
-  }
+  };
 
   columns = [
     {
@@ -60,7 +60,6 @@ class HistoryList extends Component {
       dataIndex: 'TITLE',
       key: 'TITLE',
       ellipsis: true,
-      render: (text, record) => <Button type="link" onClick={() => this.onClickRow(record)}>{text}</Button>
     },
     {
       title: '배포자',
@@ -110,7 +109,15 @@ class HistoryList extends Component {
               <Icon type="form" /> 배포 이력
             </p>
           </div>
-          <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+          <AntdTable
+            dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))}
+            columns={this.columns}
+            onRow={(record, rowIndex) => ({
+              onClick: event => {
+                this.onClickRow(record, rowIndex);
+              }
+            })}
+          />
         </ContentsWrapper>
         <AntdModal
           width={700}

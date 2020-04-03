@@ -46,6 +46,12 @@ const StyledHtmlTable = styled.div`
             padding-left: 5px;
           }
         }
+        &.td-pointer {
+          cursor: pointer;
+          &:hover {
+            background: #e6f7ff;
+          }
+        }
       }
     }
   }

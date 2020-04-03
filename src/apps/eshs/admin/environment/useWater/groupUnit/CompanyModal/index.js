@@ -56,7 +56,7 @@ class CompanyModal extends Component {
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">검색구분</span>
-          <AntdSelect className="selectMid mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
+          <AntdSelect className="select-mid mr5" onChange={value => this.onChangetValue('modalSearchtype', value)} value={this.state.modalSearchtype}>
             <Option value="HST_CMPNY_CD">코드</Option>
             <Option value="HST_CMPNY_NM">회사명</Option>
           </AntdSelect>

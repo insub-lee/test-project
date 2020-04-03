@@ -123,15 +123,36 @@ class List extends Component {
   };
 
   render() {
-    const { sagaKey: id, formData, changeFormData } = this.props;
+    const {
+      sagaKey: id,
+      formData,
+      changeFormData,
+      columns,
+      result: { gasType },
+    } = this.props;
+    const dataSource = gasType && gasType.list;
     return (
-      <ContentsWrapper>
-        <div className="selSaveWrapper">
-          <StyledButton className="btn-primary" onClick={this.onModalChange}>
-            추가
-          </StyledButton>
-        </div>
-        {this.renderTable()}
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper">
+            <StyledButton className="btn-primary" onClick={this.onModalChange}>
+              추가
+            </StyledButton>
+          </div>
+          <AntdLineTable
+            className="tableWrapper"
+            rowKey={dataSource && dataSource.GAS_CD}
+            columns={columns}
+            dataSource={dataSource || []}
+            bordered
+            onRow={record => ({
+              onClick: () => {
+                this.selectedRecord(record);
+              },
+            })}
+            footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
+          />
+        </ContentsWrapper>
         <AntdModal
           className="modalWrapper modalTechDoc modalCustom"
           title="가스종류 등록"
@@ -144,8 +165,11 @@ class List extends Component {
         >
           <StyledHtmlTable>
             <table>
+              <colgroup>
+                <col width="20%"></col>
+                <col width="80%"></col>
+              </colgroup>
               <tbody>
-                <colgroup></colgroup>
                 {formData.GAS_CD ? (
                   <tr>
                     <th>가스종류코드</th>
@@ -158,7 +182,7 @@ class List extends Component {
                   <th>가스종류명</th>
                   <td>
                     <Input
-                      style={{ width: '250px' }}
+                      style={{ width: '100%' }}
                       defaultValue={formData && formData.GAS_NM}
                       onChange={e => this.onChangeValue('GAS_NM', e.target.value)}
                       name="gasNm"
@@ -169,7 +193,7 @@ class List extends Component {
                   <th>가스분자량</th>
                   <td>
                     <InputNumber
-                      style={{ width: '250px' }}
+                      style={{ width: '100%' }}
                       value={formData && formData.GAS_WEIGHT}
                       onChange={value => this.onChangeValue('GAS_WEIGHT', value)}
                       name="gasWeight"
@@ -181,7 +205,7 @@ class List extends Component {
                   <th>법적허용농도</th>
                   <td>
                     <InputNumber
-                      style={{ width: '250px' }}
+                      style={{ width: '100%' }}
                       value={formData && formData.PERMISSION_DENSITY}
                       onChange={value => this.onChangeValue('PERMISSION_DENSITY', value)}
                       name="permissionDensity"
@@ -218,7 +242,7 @@ class List extends Component {
             </StyledButtonWrapper>
           </StyledHtmlTable>
         </AntdModal>
-      </ContentsWrapper>
+      </>
     );
   }
 }

@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col, Table, Select, Input, message } from 'antd';
+import { Table, Select, Input, message } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import Moment from 'moment';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import TableTypeSelector from 'components/TableTypeSelector';
 
-const AntdTable = StyledAntdTable(Table);
+import Moment from 'moment';
+
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
 
 const { Option } = Select;
 
@@ -217,8 +221,8 @@ class List extends Component {
           <>
             <span>코드명</span>
             <br />
-            <div style={{ float: 'left' }}>
-              <Input style={{ width: '200px' }} value={this.state.warehouseNm} onChange={e => this.changeInputValue(e)} name="warehouseNm" />
+            <AntdInput style={{ width: '200px' }} value={this.state.warehouseNm} onChange={e => this.changeInputValue(e)} name="warehouseNm" />
+            <StyledButtonWrapper className="btn-wrap-inline">
               <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
                 추가
               </StyledButton>
@@ -231,33 +235,29 @@ class List extends Component {
               <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
                 Reset
               </StyledButton>
-            </div>
-            <div style={{ float: 'left' }}>
               <TableTypeSelector
-                style={{ float: 'left' }}
+                style={{ float: 'left', display: '' }}
                 leftTableColumns={leftTableColumns}
                 rightTableColumns={rightTableColumns}
                 apiList={itemList}
                 applyList={applyList}
                 handleApply={this.handleApply}
-                btnText="처리품목등록 등록"
-                modalTitle="처리품목등록 검색"
+                btnText="처리품목 등록"
+                modalTitle="처리품목 검색"
                 rowKey="ITEM_CD"
                 customVisible={this.state.warehouseCd}
                 customWarning="코드를 선택해주세요"
               />
-            </div>
+            </StyledButtonWrapper>
           </>
         ),
         dataIndex: 'WAREHOUSE_NM',
         align: 'left',
-        // width: 600,
       },
     ];
 
     return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
+      <AntdLineTable
         rowKey={wareHouseList && wareHouseList.WAREHOUSE_CD}
         columns={columns}
         dataSource={wareHouseList || []}
@@ -267,9 +267,7 @@ class List extends Component {
             this.selectedRecord(record);
           },
         })}
-        pagination={{ pageSize: 50 }}
-        scroll={{ y: 600 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${wareHouseList && wareHouseList.length} 건`}</div>}
+        footer={() => <span>{`${wareHouseList && wareHouseList.length} 건`}</span>}
       />
     );
   }
@@ -304,43 +302,37 @@ class List extends Component {
   render() {
     const { siteList } = this.state;
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                <Col span={12}>
-                  지역
-                  <Select
-                    style={{ width: '100px', margin: '10px' }}
-                    onChange={(value, option) => this.changeSelectValue(value, option)}
-                    value={this.state.site}
-                  >
-                    {siteList.map(item => (
-                      <Option value={item.NODE_ID} key="site">
-                        {item.NAME_KOR}
-                      </Option>
-                    ))}
-                  </Select>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
-                    검색
-                  </StyledButton>
-                </Col>
-              </Row>
-              {this.renderTable()}
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <ContentsWrapper>
+        <div>
+          <span>지역</span>
+          <AntdSelect onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site}>
+            {siteList.map(item => (
+              <Option value={item.NODE_ID} key="site">
+                {item.NAME_KOR}
+              </Option>
+            ))}
+          </AntdSelect>
+          <StyledButtonWrapper>
+            <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
+              검색
+            </StyledButton>
+          </StyledButtonWrapper>
+          {this.renderTable()}
+        </div>
+      </ContentsWrapper>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  submitHandlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  result: PropTypes.any,
+};
 
 List.defaultProps = {
   getCallDataHandler: () => {},
-  formData: {},
 };
 
 export default List;
