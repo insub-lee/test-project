@@ -7,6 +7,13 @@ export const getCallDataHandler = (id, apiArys, callbackFunc) => ({
   callbackFunc,
 });
 
+export const getCallDataHandlerReturnRes = (id, apiInfo, callbackFunc) => ({
+  type: `${actionTypes.GET_CALLDATA_SAGA_RETURN_RES}_${id}`,
+  id,
+  apiInfo,
+  callbackFunc,
+});
+
 export const setCallDataHandler = (id, apiKey, response) => ({
   type: `${actionTypes.SET_CALLDATA_SAGA}_${id}`,
   id,
