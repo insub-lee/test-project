@@ -109,7 +109,6 @@ class List extends React.Component {
               defaultValue={record.SHIPMENT}
               style={{ width: '70%' }}
               onChange={this.handleShipmentChange}
-              // value={requestValue.SHIPMENT}
               disabled={isModified && !index}
             />
           );
@@ -125,12 +124,10 @@ class List extends React.Component {
       render: (text, record, index) => {
         const { requestValue, selectedIndex, isModified } = this.state;
         if (index === 0) {
-          return (
-            <div>{Math.floor(isModified ? 0 : requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * requestValue.SHIPMENT * 100) / 100 || 0}</div>
-          );
+          return <div>{Math.floor(isModified ? 0 : requestValue.SHIPMENT * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0}</div>;
         }
         if (index === selectedIndex) {
-          return <div>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * requestValue.SHIPMENT * 100) / 100 || 0}</div>;
+          return <div>{Math.floor(!isModified ? 0 : requestValue.SHIPMENT * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0}</div>;
         }
         return <div>{text}</div>;
       },
@@ -144,7 +141,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
-              <StyledButton className="btn-primary btn-first" onClick={this.isValid() ? this.handleInputClick : null}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.isValid() ? this.handleInputClick : null}>
                 저장
               </StyledButton>
             </Popconfirm>
@@ -155,20 +152,20 @@ class List extends React.Component {
             <>
               <Popconfirm disabled={this.isValid()} title="중복된 연도가 있습니다.">
                 <StyledButton
-                  className="btn-primary btn-first"
+                  className="btn-primary btn-first btn-sm"
                   onClick={this.isValid() || this.isModifyValid() ? () => this.updateSapUsage(record, index) : null}
                 >
                   저장
                 </StyledButton>
               </Popconfirm>
-              <StyledButton className="btn-primary btn-first" onClick={this.handleCancelClick}>
+              <StyledButton className="btn-primary btn-first btn-sm" onClick={this.handleCancelClick}>
                 취소
               </StyledButton>
             </>
           );
         }
         return (
-          <StyledButton className="btn-primary btn-first" onClick={() => this.handleModifyClick(record, index)}>
+          <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.handleModifyClick(record, index)}>
             수정
           </StyledButton>
         );
@@ -179,6 +176,7 @@ class List extends React.Component {
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue } = this.state;
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
     submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, { SHIPMENT: 0, USAGE: 0, YEAR: moment().year() }),
@@ -196,14 +194,9 @@ class List extends React.Component {
   updateSapUsage = () => {
     const { requestValue } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const valueObj = {
-      YEAR: requestValue.YEAR,
-      SHIPMENT: requestValue.SHIPMENT,
-      USAGE: requestValue.USAGE,
-      SAP_ID: requestValue.SAP_ID,
-    };
 
-    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, valueObj, () => this.getSapUsage(requestValue));
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsap`, requestValue);
+    submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, requestValue, () => this.getSapUsage(requestValue));
     this.setState(prevState => ({
       isModified: false,
       selectedIndex: -1,
@@ -212,18 +205,19 @@ class List extends React.Component {
   };
 
   isValid = () => {
-    //   const { requestValue, dataSource } = this.state;
-    //   return dataSource.findIndex(item => item.YEAR === requestValue.YEAR) === -1;
-    // };
-    // isModifyValid = () => {
-    //   const { requestValue, dataSource, selectedIndex } = this.state;
-    //   return dataSource[selectedIndex].YEAR === requestValue.YEAR;
+    const { requestValue, dataSource } = this.state;
+    return dataSource.findIndex(item => item.YEAR === requestValue.YEAR) === -1;
+  };
+
+  isModifyValid = () => {
+    const { requestValue, dataSource, selectedIndex } = this.state;
+    return dataSource[selectedIndex].YEAR === requestValue.YEAR;
   };
 
   handleSapDeleteClick = () => {
     const { requestValue, selectedRecord } = this.state;
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const params = { SAP_ID: selectedRecord.SAP_ID };
+    const params = { USAGE_ID: selectedRecord.USAGE_ID };
     submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialsapusage`, params, () => this.getSapUsage(requestValue));
     this.setState({
       checkedIndex: -1,
@@ -276,7 +270,7 @@ class List extends React.Component {
       selectedIndex: -1,
       checkedIndex: -1,
     }));
-    // this.getSapUsage(record);
+    this.getSapUsage(record);
   };
 
   getSapUsage = ({ SAP_NO }) => {
@@ -292,9 +286,10 @@ class List extends React.Component {
   };
 
   handleShipmentChange = value => {
+    const { requestValue } = this.state;
     const valueObj = {
       SHIPMENT: value,
-      USAGE: Math.floor(this.state.requestValue.FIR_UNIT_EXCHANGE * this.state.requestValue.SEC_UNIT_EXCHANGE * value * 100) / 100,
+      USAGE: Math.floor(value * requestValue.CONVERT_COEFFICIENT * 100) / 100 || 0,
     };
 
     this.setState(prevState => ({
@@ -316,13 +311,14 @@ class List extends React.Component {
   };
 
   handleInputNumberChange = (value, name) => {
+    const { requestValue } = this.state;
     if (typeof value !== 'number') {
       const valueObj = { [name]: '' };
       this.setState(prevState => ({
         requestValue: Object.assign(prevState.requestValue, valueObj),
       }));
     }
-    const valueObj = { [name]: value };
+    const valueObj = { [name]: value, USAGE: Math.floor(value * requestValue.SHIPMENT * 100) / 100 || 0 };
     this.setState(prevState => ({
       requestValue: Object.assign(prevState.requestValue, valueObj),
     }));
@@ -332,14 +328,8 @@ class List extends React.Component {
     this.setState({
       requestValue: {
         SAP_NO: '',
-        CAS_NO: '',
-        NAME_KOR: '',
-        NAME_ENG: '',
         NAME_SAP: '',
-        NAME_ETC: '',
         UNIT: '',
-        FIR_UNIT_EXCHANGE: 0,
-        SEC_UNIT_EXCHANGE: 0,
       },
       dataSource: [],
       isModified: false,
@@ -445,7 +435,13 @@ class List extends React.Component {
                     <td>{requestValue.NAME_SAP}</td>
                     <th>단위</th>
                     <td>
-                      <AntdInput className="input-sm" name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} disabled={!isSelectSapMaterial()} />
+                      <AntdInput
+                        className="ant-input-sm"
+                        name="UNIT"
+                        value={requestValue.UNIT}
+                        onChange={handleInputChange}
+                        disabled={!isSelectSapMaterial()}
+                      />
                     </td>
                     <th>kg환산계수</th>
                     <td>

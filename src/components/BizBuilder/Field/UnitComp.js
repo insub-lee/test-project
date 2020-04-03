@@ -109,7 +109,7 @@ class UnitComp extends React.Component {
           value={colData}
           placeholder={CONFIG.property.placeholder}
           className={CONFIG.property.className || ''}
-          style={{ width: 150 }}
+          style={{ width: '100%' }}
           onClick={this.handleModalVisible}
           onSearch={this.handleModalVisible}
         />

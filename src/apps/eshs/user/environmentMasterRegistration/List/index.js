@@ -253,29 +253,29 @@ class List extends React.Component {
                   <tr>
                     <th colSpan={1}>SAP NO.</th>
                     <td colSpan={3}>
-                      <AntdInput name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
                     </td>
                     <th colSpan={1}>CAS NO.</th>
                     <td colSpan={3}>
-                      <AntdInput name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
                     </td>
                   </tr>
                   <tr>
                     <th>화학물질명_국문</th>
                     <td>
-                      <AntdInput name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
                     </td>
                     <th>화학물질명_영문</th>
                     <td>
-                      <AntdInput name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
                     </td>
                     <th>화학물질명_SAP</th>
                     <td>
-                      <AntdInput name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
                     </td>
                     <th>관용명 및 이명</th>
                     <td>
-                      <AntdInput name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
                     </td>
                   </tr>
                   <tr>
@@ -288,7 +288,7 @@ class List extends React.Component {
                         extraApiData={result}
                         colData={requestValue.VENDOR_CD}
                         visible
-                        CONFIG={{ property: { isRequired: false } }}
+                        CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
                         changeFormData={changeFormData}
                         COMP_FIELD="VENDOR_CD"
                         eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
@@ -296,14 +296,14 @@ class List extends React.Component {
                     </td>
                     <th>수입구분</th>
                     <td>
-                      <AntdSelect className="col-select" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
+                      <AntdSelect className="select-mid" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
                         <Select.Option value="N">내수</Select.Option>
                         <Select.Option value="Y">수입</Select.Option>
                       </AntdSelect>
                     </td>
                     <th>함량(%) 표현값</th>
                     <td>
-                      <AntdInput name="CONTENT_EXP" value={requestValue.CONTENT_EXP} onChange={handleInputChange} className="col-input-number" />
+                      <AntdInput name="CONTENT_EXP" value={requestValue.CONTENT_EXP} onChange={handleInputChange} className="col-input-number ant-input-sm" />
                     </td>
                     <th>함량(%) 정량</th>
                     <td>
@@ -318,7 +318,7 @@ class List extends React.Component {
               </table>
             </StyledHtmlTable>
           </div>
-          <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
+          <div className="div-comment selSaveWrapper">kg환산계수: 단위환산1 * 단위환산2</div>
         </ContentsWrapper>
         <Modal
           sagaKey={sagaKey}

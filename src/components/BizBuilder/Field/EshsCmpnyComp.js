@@ -6,10 +6,12 @@ import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTab
 // import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 
 const { Option } = Select;
 const { Search } = Input;
 const InputGroup = Input.Group;
+const AntdSearchInput = StyledSearchInput(Input.Search);
 class EshsCmpnyComp extends React.Component {
   constructor(props) {
     super(props);
@@ -172,7 +174,7 @@ class EshsCmpnyComp extends React.Component {
   };
 
   render() {
-    const { CONFIG, visible, readOnly, searchWidth } = this.props;
+    const { CONFIG, visible, readOnly, searchWidth, directSearchTable } = this.props;
     const { cmpnyModal, cmpny_nm, list, searchList, listType, cursor } = this.state;
     let cmpnyList = [];
     if (listType === 'search') {
@@ -184,59 +186,103 @@ class EshsCmpnyComp extends React.Component {
       return visible ? <span>&nbsp;{cmpny_nm}</span> : '';
     }
     return visible ? (
-      <div>
-        <Search
-          value={this.state.cmpny_cd}
-          readOnly
-          placeholder={CONFIG.property.placeholder}
-          className={CONFIG.property.className || ''}
-          style={{ width: searchWidth }}
-          onSearch={this.handleModalVisible}
-        />
-        {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
-        &nbsp; <span>{cmpny_nm}</span>
-        <Modal title="Vandor 검색" visible={cmpnyModal} width={800} height={600} onCancel={this.handleModalVisible}>
-          <StyledSearchWrap>
-            <div className="search-group-layer">
-              <InputGroup className="search-item search-input-group" compact>
-                <Select value={this.state.searchType} onChange={this.searchTypeChange}>
-                  <Option value="name">이름</Option>
-                  <Option value="code">코드</Option>
-                </Select>
-                <Search
-                  // className="search-item ant-input-group"
-                  value={this.state.searchText}
-                  name="searchName"
-                  onChange={this.handleOnChange}
-                  placeholder="검색어를 입력하시오"
-                  onSearch={this.handleOnSearch}
-                />
-              </InputGroup>
-              {/* &nbsp;&nbsp;
-              <Button onClick={this.handleOnSearch}>검색</Button> */}
-            </div>
-          </StyledSearchWrap>
-          <StyledVirtualizedTable>
-            <Table
-              width={750}
-              height={500}
-              headerHeight={40}
-              rowHeight={53}
-              rowCount={cmpnyList.length}
-              rowGetter={({ index }) => cmpnyList[index]}
-              noRowsRenderer={this.noRowsRenderer}
-              onRowClick={this.onRowClick}
-              onRowMouseOver={this.handleRowMouseOver}
-              onRowMouseOut={this.handleRowMouseOut}
-              style={cursor}
-            >
-              {this.getColumns().map(({ label, dataKey, ratio }) => (
-                <Column key={dataKey} label={label} dataKey={dataKey} width={(750 / 100) * ratio} />
-              ))}
-            </Table>
-          </StyledVirtualizedTable>
-        </Modal>
-      </div>
+      <>
+        {directSearchTable ? (
+          <>
+            <StyledSearchWrap>
+              <div className="search-group-layer">
+                <InputGroup className="search-item search-input-group" compact>
+                  <Select value={this.state.searchType} onChange={this.searchTypeChange}>
+                    <Option value="name">이름</Option>
+                    <Option value="code">코드</Option>
+                  </Select>
+                  <Search
+                    className="searchInput"
+                    value={this.state.searchText}
+                    name="searchName"
+                    onChange={this.handleOnChange}
+                    placeholder="검색어를 입력하시오"
+                    onSearch={this.handleOnSearch}
+                  />
+                </InputGroup>
+              </div>
+            </StyledSearchWrap>
+            <StyledVirtualizedTable>
+              <Table
+                width={750}
+                height={500}
+                headerHeight={40}
+                rowHeight={53}
+                rowCount={cmpnyList.length}
+                rowGetter={({ index }) => cmpnyList[index]}
+                noRowsRenderer={this.noRowsRenderer}
+                onRowClick={this.onRowClick}
+                onRowMouseOver={this.handleRowMouseOver}
+                onRowMouseOut={this.handleRowMouseOut}
+                style={cursor}
+              >
+                {this.getColumns().map(({ label, dataKey, ratio }) => (
+                  <Column key={dataKey} label={label} dataKey={dataKey} width={(750 / 100) * ratio} />
+                ))}
+              </Table>
+            </StyledVirtualizedTable>
+          </>
+        ) : (
+          <div>
+            <AntdSearchInput
+              value={this.state.cmpny_cd}
+              readOnly
+              placeholder={CONFIG.property.placeholder}
+              className={CONFIG.property.className}
+              style={{ width: searchWidth }}
+              onSearch={this.handleModalVisible}
+            />
+            {/* <Button shape="circle" icon="search" onClick={this.handleModalVisible} /> */}
+            &nbsp; <span>{cmpny_nm}</span>
+            <Modal title="Vandor 검색" visible={cmpnyModal} width={800} height={600} onCancel={this.handleModalVisible}>
+              <StyledSearchWrap>
+                <div className="search-group-layer">
+                  <InputGroup className="search-item search-input-group" compact>
+                    <Select value={this.state.searchType} onChange={this.searchTypeChange}>
+                      <Option value="name">이름</Option>
+                      <Option value="code">코드</Option>
+                    </Select>
+                    <Search
+                      // className="search-item ant-input-group"
+                      value={this.state.searchText}
+                      name="searchName"
+                      onChange={this.handleOnChange}
+                      placeholder="검색어를 입력하시오"
+                      onSearch={this.handleOnSearch}
+                    />
+                  </InputGroup>
+                  {/* &nbsp;&nbsp;
+                <Button onClick={this.handleOnSearch}>검색</Button> */}
+                </div>
+              </StyledSearchWrap>
+              <StyledVirtualizedTable>
+                <Table
+                  width={750}
+                  height={500}
+                  headerHeight={40}
+                  rowHeight={53}
+                  rowCount={cmpnyList.length}
+                  rowGetter={({ index }) => cmpnyList[index]}
+                  noRowsRenderer={this.noRowsRenderer}
+                  onRowClick={this.onRowClick}
+                  onRowMouseOver={this.handleRowMouseOver}
+                  onRowMouseOut={this.handleRowMouseOut}
+                  style={cursor}
+                >
+                  {this.getColumns().map(({ label, dataKey, ratio }) => (
+                    <Column key={dataKey} label={label} dataKey={dataKey} width={(750 / 100) * ratio} />
+                  ))}
+                </Table>
+              </StyledVirtualizedTable>
+            </Modal>
+          </div>
+        )}
+      </>
     ) : (
       ''
     );
@@ -257,10 +303,12 @@ EshsCmpnyComp.propTypes = {
   extraApiData: PropTypes.object,
   getExtraApiData: PropTypes.func,
   searchWidth: PropTypes.any,
+  directSearchForDevBase: PropTypes.bool,
 };
 
 EshsCmpnyComp.defaultProps = {
   searchWidth: 150,
+  directSearchForDevBase: false,
 };
 
 export default EshsCmpnyComp;

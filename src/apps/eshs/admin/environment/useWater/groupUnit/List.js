@@ -203,7 +203,7 @@ class List extends Component {
       <>
         <ContentsWrapper>
           <div className="selSaveWrapper alignLeft">
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.siteSBV}>
               <Option value="0" key="siteSBV">
                 지역전체
               </Option>
@@ -217,26 +217,26 @@ class List extends Component {
               onClick={() => this.setState({ modalCompany: true })}
               placeholder="여기를 클릭해주세요."
             />
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.filterPlantSBV}>
               <Option value="0" key="filterPlantSBV">
                 정수장전체
               </Option>
               {this.selectOptionRender('filterPlantSB')}
             </AntdSelect>
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.fabSBV}>
               <Option value="0" key="fabSBV">
                 FAB전체
               </Option>
               {this.selectOptionRender('fabSB')}
             </AntdSelect>
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.treatmentPlantSBV}>
               <Option value="0" key="treatmentPlantSBV">
                 처리장전체
               </Option>
               {this.selectOptionRender('treatmentPlantSB')}
             </AntdSelect>
             <span className="textLabel">DI 시설</span>
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.di}>
               <Option value="total" key="di">
                 전체
               </Option>
@@ -248,7 +248,7 @@ class List extends Component {
               </Option>
             </AntdSelect>
             <span className="textLabel">구분</span>
-            <AntdSelect className="selectMid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
+            <AntdSelect className="select-mid mr5" onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.gubun}>
               <Option value="0" key="gubun">
                 전체
               </Option>
@@ -287,7 +287,15 @@ class List extends Component {
             footer={() => <div style={{ textAlign: 'center' }}>{`${listData && listData.length} 건`}</div>}
           />
         </ContentsWrapper>
-        <AntdModal visible={this.state.modalEdit} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="관리 단위 등록/수정">
+        <AntdModal
+          className="modal-table-pad"
+          visible={this.state.modalEdit}
+          width="600px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={null}
+          title="관리 단위 등록/수정"
+        >
           <div>
             {this.state.modalEdit && (
               <Edit
@@ -305,7 +313,15 @@ class List extends Component {
             )}
           </div>
         </AntdModal>
-        <AntdModal visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
+        <AntdModal
+          className="modal-table-pad"
+          visible={this.state.modalCompany}
+          width="600px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={null}
+          title="회사 선택"
+        >
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />

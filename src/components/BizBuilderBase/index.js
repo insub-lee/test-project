@@ -294,6 +294,7 @@ BizBuilderBase.propTypes = {
   ViewCustomButtonsByModal: PropTypes.func,
   ListCustomButtonsByModal: PropTypes.func,
   getFileDownload: PropTypes.func,
+  setFormData: PropTypes.func,
 };
 
 BizBuilderBase.defaultProps = {
@@ -396,6 +397,7 @@ const mapDispatchToProps = dispatch => ({
   removeMultiTask: (id, reloadId, callbackFunc) => dispatch(actions.removeMultiTaskBySaga(id, reloadId, callbackFunc)),
   setIsLoading: (id, flag) => dispatch(actions.setIsLoadingByReducer(id, flag)),
   getFileDownload: (id, url, fileName) => dispatch(actions.getFileDownload(id, url, fileName)),
+  setFormData: (id, formData) => dispatch(actions.setFormDataByReducer(id, formData)),
 });
 
 const withReducer = injectReducer({ key: `apps.bizmicro.components.BizBuilderBase`, reducer });

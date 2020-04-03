@@ -179,74 +179,88 @@ class List extends Component {
     const { codeType, code, name, useYN } = this.state;
     const columns = [
       {
-        title: (
-          <>
-            <span className="th-label">상태</span>
-            <div className="td-input-wrapper">
-              {useYN === 'Y' ? (
-                <span className="span-item">사용</span>
-              ) : (
-                <StyledButton className="btn-gray btn-sm" onClick={() => this.onChangeData('R')}>
-                  삭제 취소
-                </StyledButton>
-              )}
-            </div>
-          </>
-        ),
-        dataIndex: 'USE_YN',
-        align: 'center',
         width: 150,
-        render: item => <span>{item === 'Y' ? '사용중' : '삭제'}</span>,
+        title: '상태',
+        align: 'center',
+        children: [
+          {
+            title: (
+              <>
+                {useYN === 'Y' ? (
+                  <span className="span-item">사용</span>
+                ) : (
+                  <StyledButton className="btn-gray btn-sm" onClick={() => this.onChangeData('R')}>
+                    삭제 취소
+                  </StyledButton>
+                )}
+              </>
+            ),
+            dataIndex: 'USE_YN',
+            className: 'th-form',
+            render: item => <span>{item === 'Y' ? '사용중' : '삭제'}</span>,
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span className="th-label">코드</span>
-            <div className="td-input-wrapper">
-              <AntdInput
-                className="input-sm input-center"
-                readOnly={codeType !== 'selfTyping'}
-                onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
-                value={code}
-                onChange={e => this.onChangeValue('code', e.target.value)}
-              />
-            </div>
-          </>
-        ),
-        dataIndex: 'CODE',
-        align: 'center',
+        title: '코드',
         width: 150,
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <AntdInput
+                    className="ant-input-sm input-center"
+                    readOnly={codeType !== 'selfTyping'}
+                    onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
+                    value={code}
+                    onChange={e => this.onChangeValue('code', e.target.value)}
+                  />
+                </div>
+              </>
+            ),
+            className: 'th-form',
+            dataIndex: 'CODE',
+            align: 'center',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span className="th-label th-label-left">코드명</span>
-            <div className="td-input-wrapper">
-              <AntdInput
-                className="ant-input-inline input-sm input-left"
-                style={{ width: '300px' }}
-                value={name}
-                onChange={e => this.onChangeValue('code', e.target.value)}
-              />
-              <StyledButtonWrapper className="btn-wrap-inline">
-                <StyledButton className="btn-gray btn-sm btn-first" onClick={this.insertOverlab}>
-                  추가
-                </StyledButton>
-                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('U')}>
-                  수정
-                </StyledButton>
-                <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.onChangeData('D')}>
-                  삭제
-                </StyledButton>
-                <StyledButton className="btn-light btn-sm" onClick={this.onReset}>
-                  Reset
-                </StyledButton>
-              </StyledButtonWrapper>
-            </div>
-          </>
-        ),
-        dataIndex: 'NAME_KOR',
         align: 'left',
+        title: '코드명',
+        children: [
+          {
+            title: (
+              <>
+                <div className="td-input-wrapper">
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    style={{ width: '300px' }}
+                    value={name}
+                    onChange={e => this.onChangeValue('code', e.target.value)}
+                  />
+                  <StyledButtonWrapper className="btn-wrap-inline">
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={this.insertOverlab}>
+                      추가
+                    </StyledButton>
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                      수정
+                    </StyledButton>
+                    <StyledButton className="btn-gray btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                      삭제
+                    </StyledButton>
+                    <StyledButton className="btn-gray btn-sm" onClick={this.onReset}>
+                      Reset
+                    </StyledButton>
+                  </StyledButtonWrapper>
+                </div>
+              </>
+            ),
+            className: 'th-form',
+            dataIndex: 'NAME_KOR',
+            align: 'left',
+          },
+        ],
       },
     ];
     this.setState({ columns });
@@ -270,21 +284,21 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
-          <AntdSelect className="selectMid mr5" onChange={value => this.changeSelectValue(value)} defaultValue="0">
+          <AntdSelect className="select-mid mr5" onChange={value => this.changeSelectValue(value)} defaultValue="0">
             <Option value="0" disabled>
               선택
             </Option>
             {selectBoxData && selectBoxData.map(itme => <Option value={itme.NODE_ID}>{itme.NAME_KOR}</Option>)}
           </AntdSelect>
           <StyledButtonWrapper className="btn-wrap-inline">
-            <StyledButton className="btn-primary btn-first btn-light btn-sm" onClick={this.selectCode}>
+            <StyledButton className="btn-gray btn-first" onClick={this.selectCode}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-light btn-sm">엑셀받기</StyledButton>
+            <StyledButton className="btn-gray">엑셀받기</StyledButton>
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
-          className="tableWrapper tableCodeWrapper"
+          className="tableWrapper"
           rowKey={listData.NODE_ID}
           key={listData.NODE_ID}
           columns={columns}
