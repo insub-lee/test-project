@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 // import { Table, Column, AutoSizer } from 'react-virtualized';
-import { Input, Modal, Table, Descriptions } from 'antd';
+import { Input, Modal, Table, Descriptions, Popconfirm } from 'antd';
 import { CaretDownOutlined, CloseOutlined, CheckOutlined } from '@ant-design/icons';
 import message from 'components/Feedback/message';
 import MessageContent from 'components/Feedback/message.style2';
@@ -26,6 +26,7 @@ class List extends Component {
         WRK_CMPNY_NM: '',
         WRK_CMPNY_CD: 'N/A',
       },
+      cmpnyNm: '',
       workerList: [],
       modalType: '',
       modalVisible: false,
@@ -77,11 +78,19 @@ class List extends Component {
     );
   };
 
-  // List Excel Download Func
-  handleGetExcel = () => {
-    const { workerList } = this.state;
-    const getType = 'excel';
-    console.debug('엑셀다운로드', getType, 'workerList', workerList);
+  handleSelectCmpnyReset = () => {
+    const { sagaKey: id, changeFormData } = this.props;
+    this.setState(
+      {
+        searchValue: {
+          WRK_CMPNY_NM: '',
+          WRK_CMPNY_CD: 'N/A',
+        },
+      },
+      () => {
+        changeFormData(id, 'WRK_CMPNY_CD', 'N/A');
+      },
+    );
   };
 
   // Search Worker func (GET API)
@@ -101,9 +110,11 @@ class List extends Component {
 
   // result setState func
   getSearchListData = () => {
+    const { searchValue } = this.state;
     const { result } = this.props;
     const workerList = (result && result.getWorkers && result.getWorkers.workerList) || [];
     this.setState({
+      cmpnyNm: searchValue.WRK_CMPNY_NM,
       workerList,
     });
   };
@@ -127,15 +138,39 @@ class List extends Component {
         }
         break;
       case 'D':
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsWorker', submitData, this.handleWorkDataCallback);
         break;
       default:
         break;
     }
   };
 
-  handleWorkDataCallback = () => {
+  handleWorkDataCallback = (id, response) => {
     const { searchValue } = this.state;
-    if (searchValue.WRK_CMPNY_CD !== '') this.handleGetWorkers();
+    const type = response.type || '';
+    switch (type) {
+      case 'insert':
+        message.success(<MessageContent>작업자 정보를 등록하였습니다.</MessageContent>);
+        break;
+      case 'modify':
+        message.success(<MessageContent>작업자 정보를 수정하였습니다.</MessageContent>);
+        break;
+      case 'delete':
+        message.success(<MessageContent>작업자 정보를 삭제하였습니다.</MessageContent>);
+        break;
+      case 'error':
+        message.error(
+          <MessageContent>
+            처리중 에러가 발생되었습니다.
+            <br />
+            관리자에게 문의바랍니다.
+          </MessageContent>,
+        );
+        break;
+      default:
+        break;
+    }
+    if (response && searchValue.WRK_CMPNY_CD !== '') this.handleGetWorkers();
     this.handleModal('', false);
   };
 
@@ -180,6 +215,10 @@ class List extends Component {
     return false;
   };
 
+  /* 
+      modify btn
+      info : formdata set => modify Modal
+  */
   handleModifyWorker = row => {
     const { sagaKey: id, setFormData } = this.props;
     const modifyFormData = {
@@ -192,6 +231,11 @@ class List extends Component {
     };
     setFormData(id, modifyFormData);
     this.handleModal('modify', true);
+  };
+
+  handleDeleteWorker = row => {
+    const { sagaKey: id, changeFormData } = this.props;
+    changeFormData(id, 'WORKER_SEQ', row.workerSeq);
   };
 
   // render Input Tag
@@ -207,15 +251,17 @@ class List extends Component {
     return <Input maxLength={keyField.size} value={value} onChange={e => changeFormData(id, key, e.target.value)} />;
   };
 
-  // render Table Action Buttons
+  // render Table Action Buttons (수정 = modify 모달 버튼)
   renderActionButtons = row => (
     <StyledButtonWrapper>
       <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleModifyWorker(row)}>
         수정
       </StyledButton>
-      <StyledButton className="btn-light btn-sm btn-first" onClick={() => console.debug('삭제')}>
-        삭제
-      </StyledButton>
+      <Popconfirm title="삭제하시겠습니까?" onConfirm={() => this.handleWorkerData('D')} onCancel={this.resetFormData} okText="Yes" cancelText="No">
+        <StyledButton className="btn-light btn-sm btn-first" onClick={() => this.handleDeleteWorker(row)}>
+          삭제
+        </StyledButton>
+      </Popconfirm>
     </StyledButtonWrapper>
   );
 
@@ -235,7 +281,7 @@ class List extends Component {
 
   render() {
     const { formData } = this.props;
-    const { searchValue, workerList, modalType, modalVisible } = this.state;
+    const { searchValue, cmpnyNm, workerList, modalType, modalVisible } = this.state;
     const columns = [
       {
         title: '교육이수여부',
@@ -285,15 +331,28 @@ class List extends Component {
       <Styled>
         <StyledSearchWrap>
           <div className="search-group-layer">
-            <label>
-              거래처
-              <Input
-                className="input-width200 use-label input-first use_addon"
-                readOnly
-                onClick={() => this.handleModal('search', true)}
-                value={searchValue.WRK_CMPNY_NM}
-              />
-            </label>
+            <div className="searchCmpnyWrap">
+              <label>
+                거래처
+                <Input
+                  className="input-width200 use-label input-first use_addon"
+                  readOnly
+                  onClick={() => this.handleModal('search', true)}
+                  value={searchValue.WRK_CMPNY_NM}
+                />
+              </label>
+              {searchValue.WRK_CMPNY_NM !== '' && (
+                <div
+                  className="clearInputBtn"
+                  tabIndex={0}
+                  onClick={this.handleSelectCmpnyReset}
+                  onKeyPress={this.handleSelectCmpnyReset} // esLint
+                  role="button" // esLint
+                >
+                  <CloseOutlined />
+                </div>
+              )}
+            </div>
             <div
               className="searchCmpnyBtn"
               tabIndex={0}
@@ -303,13 +362,13 @@ class List extends Component {
             >
               <CaretDownOutlined />
             </div>
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleGetWorkers}>
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={this.handleGetWorkers} style={{ marginBottom: '5px' }}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('insert', true)}>
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleModal('insert', true)} style={{ marginBottom: '5px' }}>
               작업자 추가
             </StyledButton>
-            {workerList.length > 0 && <ExcelDownloader dataList={workerList} wrkCmpnyNm={searchValue.WRK_CMPNY_NM} />}
+            {workerList.length > 0 && <ExcelDownloader dataList={workerList} wrkCmpnyNm={cmpnyNm} />}
           </div>
         </StyledSearchWrap>
         <>
@@ -349,7 +408,7 @@ class List extends Component {
                 <Descriptions.Item label="이름" span={4}>
                   {this.renderInputColumns('WORKER_NM', formData.WORKER_NM)}
                 </Descriptions.Item>
-                <Descriptions.Item label="주민등록번호" span={4}>
+                <Descriptions.Item label={`주민등록번호("-" 제외)`} span={4}>
                   {this.renderInputColumns('WORKER_SSN', formData.WORKER_SSN)}
                 </Descriptions.Item>
                 <Descriptions.Item label="휴대폰(연락처)" span={4}>
@@ -360,7 +419,7 @@ class List extends Component {
                 </Descriptions.Item>
               </Descriptions>
               <StyledButtonWrapper className="btn-wrap-right">
-                {formData.WORKER_SEQ === -1 ? (
+                {formData.WORKER_SEQ === undefined || formData.WORKER_SEQ === -1 ? (
                   <StyledButton className="btn-primary btn-first" onClick={() => this.handleWorkerData('I')}>
                     저장
                   </StyledButton>
