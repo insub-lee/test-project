@@ -202,7 +202,7 @@ class TableTypeSelector extends React.Component {
     };
     return (
       <>
-        <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+        <StyledButton className="btn-primary btn-sm" onClick={this.handleModalVisible}>
           {btnText}
         </StyledButton>
         <Modal title={modalTitle} visible={modalVisivle} width={870} height={520} onCancel={this.handleModalVisible} onOk={this.handleModalOk} okText="적용">

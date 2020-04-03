@@ -21,9 +21,9 @@ class List extends Component {
     this.state = {
       itemCd: '',
       itemNm: '',
-      shape: '961',
-      unit: '965',
-      isTransForm: '970',
+      shape: 0,
+      unit: 0,
+      isTransForm: 0,
       itemList: [],
       shapeList: [],
       unitList: [],
@@ -56,16 +56,19 @@ class List extends Component {
 
   initData = () => {
     const { result } = this.props;
-    this.setState({
-      itemList: result && result.wasteItem && result.wasteItem.list,
-      shapeList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 958 && f.USE_YN === 'Y'),
-      unitList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 959 && f.USE_YN === 'Y'),
-      transFormList:
-        result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 960 && f.USE_YN === 'Y'),
-    });
+    this.setState(
+      {
+        itemList: result && result.wasteItem && result.wasteItem.list,
+        shapeList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 958 && f.USE_YN === 'Y'),
+        unitList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 959 && f.USE_YN === 'Y'),
+        transFormList:
+          result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 960 && f.USE_YN === 'Y'),
+      },
+      this.setColumns,
+    );
   };
 
-  searchData = () => {
+  searchDataApi = () => {
     const { sagaKey: id, getCallDataHandler } = this.props;
     const { searchNm, orderbySelect } = this.state;
     const apiAry = [
@@ -75,30 +78,19 @@ class List extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry, this.initData);
+    getCallDataHandler(id, apiAry, this.searchData);
   };
 
-  changeSelectValue = (value, option) => {
-    this.setState({
-      [option.key]: value,
-    });
-  };
-
-  changeInputValue = e => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  warning = value => {
-    message.warning(value);
+  searchData = () => {
+    const { result } = this.props;
+    this.setState({ itemList: result && result.wasteItem && result.wasteItem.list });
   };
 
   insertOverlab = () => {
     const { itemList, itemNm } = this.state;
     const overlab = itemList.find(item => item.ITEM_NM === itemNm);
     if (overlab) {
-      this.warning('중복된 값이 존재합니다.');
+      message.warning('중복된 값이 존재합니다.');
     } else {
       this.onChangeData('I');
     }
@@ -116,64 +108,22 @@ class List extends Component {
     };
     if (this.state.itemNm) {
       if (value === 'U' && this.state.itemCd) {
-        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchData);
+        submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchDataApi);
       } else if (value === 'D' && this.state.itemCd) {
-        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchData);
+        submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchDataApi);
       } else if (value === 'I') {
-        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchData);
+        submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsWMItem', submitData, this.searchDataApi);
       } else if (!this.state.itemCd) {
-        this.warning('품목코드가 올바르지 않습니다.');
+        message.warning('품목코드가 올바르지 않습니다.');
       }
     } else {
-      this.warning('품목명을 올바르게 입력하시오.');
+      message.warning('품목명을 올바르게 입력하시오.');
     }
     this.onReset();
   };
 
-  onReset() {
-    this.setState({
-      itemCd: '',
-      itemNm: '',
-      shape: '',
-      unit: '',
-      isTransForm: '',
-    });
-  }
-
-  renderSelect = key => {
-    const { shapeList, unitList, transFormList } = this.state;
-    let selectData;
-    switch (key) {
-      case 'shape':
-        selectData = shapeList;
-        break;
-      case 'unit':
-        selectData = unitList;
-        break;
-      case 'isTransForm':
-        selectData = transFormList;
-        break;
-      default:
-        selectData = '';
-        break;
-    }
-    return (
-      <AntdSelect
-        onChange={(value, option) => this.changeSelectValue(value, option)}
-        value={Number(this.state[key]) || (selectData && selectData[0] && selectData[0].NODE_ID)}
-      >
-        {selectData &&
-          selectData.map(itme => (
-            <Option value={itme.NODE_ID} key={key}>
-              {itme.NAME_KOR}
-            </Option>
-          ))}
-      </AntdSelect>
-    );
-  };
-
-  renderTable() {
-    const { itemList } = this.state;
+  setColumns = () => {
+    const { unitList, shapeList, transFormList, itemCd, unit, shape, isTransForm, itemNm } = this.state;
     const columns = [
       {
         title: '품목코드',
@@ -181,7 +131,7 @@ class List extends Component {
         width: 100,
         children: [
           {
-            title: <>{this.state.itemCd}</>,
+            title: <span className="span-item">{itemCd}</span>,
             dataIndex: 'ITEM_CD',
             align: 'center',
           },
@@ -193,7 +143,7 @@ class List extends Component {
         width: 250,
         children: [
           {
-            title: <Input value={this.state.itemNm} onChange={e => this.changeInputValue(e)} name="itemNm" />,
+            title: <AntdInput className="ant-input-sm" value={itemNm} onChange={e => this.onChangeValue('itemNm', e.target.value)} />,
             dataIndex: 'ITEM_NM',
             align: 'left',
           },
@@ -205,7 +155,20 @@ class List extends Component {
         width: 150,
         children: [
           {
-            title: <>{this.renderSelect('shape')}</>,
+            title: (
+              <AntdSelect
+                className="select-sm"
+                onChange={value => this.onChangeValue('shape', value)}
+                value={Number(shape) || (shapeList && shapeList[0] && shapeList[0].NODE_ID)}
+              >
+                {shapeList &&
+                  shapeList.map(itme => (
+                    <Option value={itme.NODE_ID} key="shape">
+                      {itme.NAME_KOR}
+                    </Option>
+                  ))}
+              </AntdSelect>
+            ),
             dataIndex: 'SHAPE_NM',
             align: 'center',
           },
@@ -217,7 +180,20 @@ class List extends Component {
         width: 150,
         children: [
           {
-            title: <>{this.renderSelect('unit')}</>,
+            title: (
+              <AntdSelect
+                className="select-sm"
+                onChange={value => this.onChangeValue('unit', value)}
+                value={Number(unit) || (unitList && unitList[0] && unitList[0].NODE_ID)}
+              >
+                {unitList &&
+                  unitList.map(itme => (
+                    <Option value={itme.NODE_ID} key="unit">
+                      {itme.NAME_KOR}
+                    </Option>
+                  ))}
+              </AntdSelect>
+            ),
             dataIndex: 'UNIT_NM',
             align: 'center',
           },
@@ -230,18 +206,29 @@ class List extends Component {
           {
             title: (
               <>
-                {this.renderSelect('isTransForm')}
+                <AntdSelect
+                  className="select-sm"
+                  onChange={value => this.onChangeValue('isTransForm', value)}
+                  value={Number(isTransForm) || (transFormList && transFormList[0] && transFormList[0].NODE_ID)}
+                >
+                  {transFormList &&
+                    transFormList.map(itme => (
+                      <Option value={itme.NODE_ID} key="isTransForm">
+                        {itme.NAME_KOR}
+                      </Option>
+                    ))}
+                </AntdSelect>
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={this.insertOverlab}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
+                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
                     Reset
                   </StyledButton>
                 </StyledButtonWrapper>
@@ -253,60 +240,75 @@ class List extends Component {
         ],
       },
     ];
+    this.setState({ columns });
+  };
 
-    return (
-      <AntdLineTable
-        className="tableWrapper"
-        rowKey={itemList && itemList.ITEM_CD}
-        columns={columns}
-        dataSource={itemList || []}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedRecord(record);
-          },
-        })}
-        footer={() => <span>{`${itemList && itemList.length} 건`}</span>}
-      />
+  onChangeValue = (name, value) => {
+    this.setState({ [name]: value }, this.setColumns);
+  };
+
+  onReset() {
+    this.setState(
+      {
+        itemCd: '',
+        itemNm: '',
+        shape: '',
+        unit: '',
+        isTransForm: '',
+      },
+      this.setColumns,
     );
   }
 
   selectedRecord = record => {
-    if (typeof record.ITEM_NM === 'string') {
-      this.setState({
+    this.setState(
+      {
         itemCd: record.ITEM_CD,
         itemNm: record.ITEM_NM,
         shape: record.SHAPE,
         unit: record.UNIT,
         isTransForm: record.IS_TRANS_FORM,
-      });
-    }
+      },
+      this.setColumns,
+    );
   };
 
   render() {
+    const { itemList, columns } = this.state;
     return (
       <ContentsWrapper>
-        <div>
-          <span>품목명</span>
-          <AntdInput style={{ width: '200px', margin: '10px' }} value={this.state.searchNm} onChange={e => this.changeInputValue(e)} name="searchNm" />
-          <span>조회순서</span>
-          <AntdSelect
-            style={{ width: '100px', margin: '10px' }}
-            onChange={(value, option) => this.changeSelectValue(value, option)}
-            value={this.state.orderbySelect}
-          >
-            <Option value="1" key="orderbySelect">
-              품목명
-            </Option>
-            <Option value="2" key="orderbySelect">
-              코드
-            </Option>
+        <div className="selSaveWrapper alignLeft">
+          <span className="textLabel">품목명</span>
+          <AntdInput
+            className="ant-input-inline ant-input-mid"
+            style={{ width: '200px' }}
+            value={this.state.searchNm}
+            onChange={e => this.onChangeValue('searchNm', e.target.value)}
+          />
+          <span className="textLabel">조회순서</span>
+          <AntdSelect className="select-mid" onChange={value => this.onChangeValue('orderbySelect', value)} value={this.state.orderbySelect}>
+            <Option value="1">품목명</Option>
+            <Option value="2">코드</Option>
           </AntdSelect>
-          <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
-            검색
-          </StyledButton>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={this.searchDataApi}>
+              검색
+            </StyledButton>
+          </StyledButtonWrapper>
         </div>
-        {this.renderTable()}
+        <AntdLineTable
+          className="tableWrapper"
+          rowKey={itemList && itemList.ITEM_CD}
+          columns={columns}
+          dataSource={itemList || []}
+          bordered
+          onRow={record => ({
+            onClick: () => {
+              this.selectedRecord(record);
+            },
+          })}
+          footer={() => <span>{`${itemList && itemList.length} 건`}</span>}
+        />
       </ContentsWrapper>
     );
   }
