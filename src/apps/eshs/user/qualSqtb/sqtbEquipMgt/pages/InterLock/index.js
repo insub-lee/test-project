@@ -152,9 +152,8 @@ class InterLock extends Component {
           columns={columns}
           dataSource={interLockList || []}
           bordered
-          pagination={{ pageSize: 100 }}
-          scroll={{ x: 1500, y: 200 }}
-          pagination={false}
+          pagination={{ pageSize: 6 }}
+          scroll={{ x: 1500 }}
         />,
       ],
     });

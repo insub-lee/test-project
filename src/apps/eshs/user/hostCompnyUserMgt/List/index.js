@@ -68,7 +68,9 @@ class List extends Component {
     const list = this.setList();
     return (
       <ContentsWrapper>
-        <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
+        <div className="selSaveWrapper alignLeft">
+          <SearchBar {...this.props} handleAppStart={this.handleAppStart} />
+        </div>
         <StyledVirtualizedTable>
           <AutoSizer disableHeight>
             {({ width }) => (
