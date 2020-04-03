@@ -149,7 +149,7 @@ class DeptSearchBar extends Component {
             <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
           </AntdModal>
           <AntdInput className="ant-input-inline inputMid" value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
-          <StyledButtonWrapper className="btn-wrap-inline">
+          <StyledButtonWrapper className="btn-wrap-inline btn-wrap-ml-5">
             <StyledButton className="btn-primary btn-first" onClick={this.handleDeptSearch}>
               검색
             </StyledButton>
