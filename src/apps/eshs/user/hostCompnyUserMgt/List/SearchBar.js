@@ -148,6 +148,7 @@ class SearchBar extends Component {
       <div>
         <div className="selSaveWrapper alignLeft">
           <AntdSelect
+            className="select-mid mr5"
             style={{ width: '10%' }}
             defaultValue={formData.searchSite && formData.searchSite === 'all' ? formData.searchSite : '지역 전체'}
             onChange={this.handleSiteOnChange}
@@ -157,6 +158,7 @@ class SearchBar extends Component {
             <Option value="구미">구미</Option>
           </AntdSelect>
           <AntdSelect
+            className="select-mid mr5"
             style={{ width: '10%' }}
             defaultValue={formData.searchCmpny && formData.searchCmpny === 'all' ? formData.searchCmpny : '회사 전체'}
             onChange={this.handleCmpnyOnChange}
@@ -169,7 +171,7 @@ class SearchBar extends Component {
             ))}
           </AntdSelect>
           <AntdInput
-            className="ant-input-inline"
+            className="ant-input-inline mr5"
             style={{ width: '10%' }}
             value={formData.searchName || ''}
             name="searchName"

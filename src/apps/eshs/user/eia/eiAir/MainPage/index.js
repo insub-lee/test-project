@@ -263,7 +263,7 @@ class MainPage extends Component {
     const { columns } = this.state;
     return (
       <ContentsWrapper>
-        <div>
+        <div className="selSaveWrapper">
           <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
         </div>
         <div>
