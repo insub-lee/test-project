@@ -1,21 +1,31 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Select, Table } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import DeptModalStyled from '../styled/DeptModalStyled';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
 
 const { Option } = Select;
+const AntdLineTable = StyledLineTable(Table);
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 
 const columns = [
   {
     title: '부서코드',
     dataIndex: 'DEPT_CD',
     width: 150,
+    align: 'center',
   },
   {
     title: '부서명',
     dataIndex: 'NAME_KOR',
     width: 300,
+    align: 'center',
   },
 ];
 
@@ -100,35 +110,46 @@ class DeptModal extends Component {
       list = deptList;
     }
     return (
-      <div className="deptModal">
-        <div>
-          <span>&nbsp; 검색구분</span>
-          <Select value={searchType} style={{ width: 130, padding: 3 }} onChange={this.handleSearchType}>
-            <Option key="NAME_KOR" value="NAME_KOR" style={{ height: 30 }}>
+      <ContentsWrapper>
+        <div className="selSaveWrapper alignLeft">
+          <span className="textLabel">검색구분</span>
+          <AntdSelect className="selectMid mr5" value={searchType} style={{ width: 130 }} onChange={this.handleSearchType}>
+            <Option key="NAME_KOR" value="NAME_KOR">
               부서명
             </Option>
-            <Option key="DEPT_CD" value="DEPT_CD" style={{ height: 30 }}>
+            <Option key="DEPT_CD" value="DEPT_CD">
               부서코드
             </Option>
-          </Select>
-          <span>&nbsp; 검색어</span>
-          <Input value={searchText} style={{ width: 150 }} onChange={e => this.handleSearchInput(e.target.value)} placeholder="검색어" />
-          <StyledButton onClick={this.handleSearch}>검색</StyledButton>
-          <StyledButton onClick={this.handleReset}>Reset</StyledButton>
-        </div>
-        <DeptModalStyled>
-          <Table
-            columns={columns}
-            dataSource={list}
-            pagination={{ pageSize: 50 }}
-            scroll={{ y: 240 }}
-            rowKey="DEPT_CD"
-            onRow={(record, rowIndex) => ({
-              onClick: event => this.handleRowClick(record),
-            })}
+          </AntdSelect>
+          <span className="textLabel">검색어</span>
+          <AntdInput
+            className="ant-input-inline mr5"
+            value={searchText}
+            style={{ width: 150 }}
+            onChange={e => this.handleSearchInput(e.target.value)}
+            placeholder="검색어"
           />
-        </DeptModalStyled>
-      </div>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={this.handleSearch}>
+              검색
+            </StyledButton>
+            <StyledButton className="btn-primary" onClick={this.handleReset}>
+              Reset
+            </StyledButton>
+          </StyledButtonWrapper>
+        </div>
+        <AntdLineTable
+          className="tableWrapper"
+          columns={columns}
+          dataSource={list}
+          pagination={{ pageSize: 15 }}
+          rowKey="DEPT_CD"
+          onRow={(record, rowIndex) => ({
+            onClick: () => this.handleRowClick(record),
+          })}
+          footer={() => <div style={{ textAlign: 'center' }}>{`${list.length} 건`}</div>}
+        />
+      </ContentsWrapper>
     );
   }
 }
