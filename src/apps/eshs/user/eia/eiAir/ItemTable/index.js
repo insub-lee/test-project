@@ -132,7 +132,7 @@ class ItemTable extends Component {
     return (
       <ContentsWrapper>
         <StyledHtmlTable className="tableWrapper">
-          <StyledButtonWrapper className="btn-wrap-right">
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
             <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
               Excel Download
             </StyledButton>
@@ -289,7 +289,7 @@ class ItemTable extends Component {
             </tfoot>
             <tbody>
               {itemList.map(i => (
-                <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)} className="td-center">
+                <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)} className="tr-center tr-pointer">
                   <td>
                     <Checkbox
                       className="ant-checkbox-wrapper"
