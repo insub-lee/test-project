@@ -52,7 +52,7 @@ class UnitComp extends React.Component {
           cols.push(<th key={`${index}_${i}`}>{col}</th>);
         } else if (col.trim()) {
           cols.push(
-            <td key={`${index}_${i}`} className="td-pointer" onClick={() => this.handleOnclick(col)}>
+            <td key={`${index}_${i}`} align="center" className="td-pointer" onClick={() => this.handleOnclick(col)}>
               {col}
             </td>,
           );
@@ -60,11 +60,7 @@ class UnitComp extends React.Component {
           cols.push(<td key={`${index}_${i}`}>{col}</td>);
         }
       }
-      const rows = (
-        <tr gutter={[0, 0]} key={index}>
-          {cols}
-        </tr>
-      );
+      const rows = <tr key={index}>{cols}</tr>;
       modalGrid.push(rows);
     });
     this.setState({
@@ -113,11 +109,11 @@ class UnitComp extends React.Component {
           value={colData}
           placeholder={CONFIG.property.placeholder}
           className={CONFIG.property.className || ''}
-          style={{ width: 150 }}
+          style={{ width: '100%' }}
           onClick={this.handleModalVisible}
           onSearch={this.handleModalVisible}
         />
-        <AntdModal title="* 단위" visible={unitModal} width={600} height={400} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="* 단위" visible={unitModal} width={700} height={400} onCancel={this.handleModalVisible} footer={[null]}>
           <StyledHtmlTable>
             <table>
               <colgroup>

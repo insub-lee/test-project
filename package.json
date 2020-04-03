@@ -47,6 +47,7 @@
     "react-cookie": "^2.1.4",
     "react-copy-to-clipboard": "^5.0.1",
     "react-custom-scrollbars": "^4.1.2",
+    "react-data-export": "^0.6.0",
     "react-data-grid": "^6.1.0",
     "react-data-grid-addons": "^4.0.8",
     "react-dates": "^17.1.1",
@@ -99,9 +100,11 @@
     "summernote": "0.8.12",
     "superagent": "^5.1.0",
     "swagger-ui": "^3.21.0",
+    "tempa-xlsx": "^0.8.20",
     "vertx3-eventbus-client": "^3.8.4",
     "window-size": "^1.1.1",
-    "xeicon": "^2.3.3"
+    "xeicon": "^2.3.3",
+    "xlsx": "^0.15.6"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",

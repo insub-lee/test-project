@@ -312,7 +312,15 @@ class List extends Component {
             </StyledButton>
           </StyledButtonWrapper>
         </ContentsWrapper>
-        <AntdModal visible={this.state.modalCompany} width="600px" onCancel={this.onCancel} destroyOnClose footer={null} title="회사 선택">
+        <AntdModal
+          className="modal-table-pad"
+          visible={this.state.modalCompany}
+          width="600px"
+          onCancel={this.onCancel}
+          destroyOnClose
+          footer={null}
+          title="회사 선택"
+        >
           <div>
             {this.state.modalCompany && (
               <CompanyModal sagaKey={id} getCallDataHandler={getCallDataHandler} result={result} selectedModalRecord={this.selectedModalRecord} />
