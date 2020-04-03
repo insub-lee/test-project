@@ -36,28 +36,7 @@ class List extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry, this.renderTable);
-  };
-
-  renderTable = () => {
-    const { columns, result } = this.props;
-    return (
-      <AntdLineTable
-        style={{ cursor: 'pointer' }}
-        rowKey={result && result.gasType && result.gasType.list && result.gasType.list.GAS_CD}
-        columns={columns}
-        dataSource={result && result.gasType && result.gasType.list}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedRecord(record);
-          },
-        })}
-        pagination={{ pageSize: 100 }}
-        scroll={{ y: 500 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${result && result.gasType && result.gasType.list && result.gasType.list.length - 1} 건`}</div>}
-      />
-    );
+    getCallDataHandler(id, apiAry);
   };
 
   selectedRecord = record => {
@@ -154,14 +133,14 @@ class List extends Component {
           />
         </ContentsWrapper>
         <AntdModal
-          className="modalWrapper modalTechDoc modalCustom"
+          className="modal-table-pad"
           title="가스종류 등록"
           visible={this.state.modalEdit}
           width={600}
           onCancel={this.onModalChange}
           destroyOnClose
           afterClose={this.onReset}
-          footer={[]}
+          footer={null}
         >
           <StyledHtmlTable>
             <table>

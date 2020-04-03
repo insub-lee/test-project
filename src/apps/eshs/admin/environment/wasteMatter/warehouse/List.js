@@ -12,15 +12,11 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 
 import TableTypeSelector from 'components/TableTypeSelector';
 
-import Moment from 'moment';
-
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdLineTable = StyledLineTable(Table);
 
 const { Option } = Select;
-
-Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
@@ -48,6 +44,7 @@ class List extends Component {
 
   componentDidMount() {
     this.initDataApi();
+    this.setColumns();
   }
 
   initDataApi() {
@@ -77,7 +74,6 @@ class List extends Component {
     this.setState({
       itemList: result && result.wasteItem && result.wasteItem.list,
       siteList: result && result.site && result.site.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 635 && f.USE_YN === 'Y'),
-      wareHouseList: result && result.warehouse && result.warehouse.list,
     });
   };
 
@@ -90,12 +86,7 @@ class List extends Component {
         type: 'GET',
       },
     ];
-    getCallDataHandler(id, apiAry, this.searchDataSet);
-  };
-
-  searchDataSet = () => {
-    const { result } = this.props;
-    this.setState({ wareHouseList: result && result.warehouse && result.warehouse.list });
+    getCallDataHandler(id, apiAry);
   };
 
   handleApply = applyList => {
@@ -111,27 +102,20 @@ class List extends Component {
     this.onReset();
   };
 
-  changeSelectValue = (value, option) => {
-    this.setState({
-      [option.key]: value,
-    });
-  };
-
-  changeInputValue = e => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  warning = value => {
-    message.warning(value);
+  onChangeValue = (name, value) => {
+    this.setState(
+      {
+        [name]: value,
+      },
+      this.setColumns,
+    );
   };
 
   insertOverlab = () => {
     const { wareHouseList, warehouseNm } = this.state;
     const overlab = wareHouseList.find(item => item.WAREHOUSE_NM === warehouseNm);
     if (overlab) {
-      this.warning('중복된 코드명이 존재합니다.');
+      message.warning('중복된 코드명이 존재합니다.');
     } else {
       this.onChangeData('I');
     }
@@ -153,122 +137,90 @@ class List extends Component {
       } else if (value === 'I') {
         submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsWMWareHouse', submitData, this.searchData);
       } else if (!this.state.warehouseCd) {
-        this.warning('품목코드가 올바르지 않습니다.');
+        message.warning('품목코드가 올바르지 않습니다.');
       }
     } else {
-      this.warning('품목명을 올바르게 입력하시오.');
+      message.warning('품목명을 올바르게 입력하시오.');
     }
     this.onReset();
   };
 
-  onReset() {
-    this.setState({
-      warehouseCd: '',
-      warehouseNm: '',
-    });
-  }
+  setColumns = () => {
+    const { itemList, leftTableColumns, rightTableColumns, applyList, warehouseCd, warehouseNm } = this.state;
 
-  renderSelect = key => {
-    const { shapeList, unitList, transFormList } = this.state;
-    let selectData;
-    switch (key) {
-      case 'shape':
-        selectData = shapeList;
-        break;
-      case 'unit':
-        selectData = unitList;
-        break;
-      case 'isTransForm':
-        selectData = transFormList;
-        break;
-      default:
-        selectData = '';
-        break;
-    }
-    return (
-      <Select
-        style={{ width: '100px' }}
-        onChange={(value, option) => this.changeSelectValue(value, option)}
-        value={Number(this.state[key]) || (selectData && selectData[0] && selectData[0].NODE_ID)}
-      >
-        {selectData &&
-          selectData.map(itme => (
-            <Option value={itme.NODE_ID} key={key}>
-              {itme.NAME_KOR}
-            </Option>
-          ))}
-      </Select>
-    );
-  };
-
-  renderTable() {
-    const { itemList, leftTableColumns, rightTableColumns, applyList, wareHouseList } = this.state;
     const columns = [
       {
-        title: (
-          <>
-            <span>코드</span>
-            <br />
-            {this.state.warehouseCd}
-          </>
-        ),
-        dataIndex: 'WAREHOUSE_CD',
+        title: '코드',
         align: 'center',
         width: 100,
+        children: [
+          {
+            title: <>{warehouseCd}</>,
+            dataIndex: 'WAREHOUSE_CD',
+            className: 'hr-form',
+            align: 'center',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span>코드명</span>
-            <br />
-            <AntdInput style={{ width: '200px' }} value={this.state.warehouseNm} onChange={e => this.changeInputValue(e)} name="warehouseNm" />
-            <StyledButtonWrapper className="btn-wrap-inline">
-              <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
-                추가
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-                수정
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-                삭제
-              </StyledButton>
-              <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
-                Reset
-              </StyledButton>
-              <TableTypeSelector
-                style={{ float: 'left', display: '' }}
-                leftTableColumns={leftTableColumns}
-                rightTableColumns={rightTableColumns}
-                apiList={itemList}
-                applyList={applyList}
-                handleApply={this.handleApply}
-                btnText="처리품목 등록"
-                modalTitle="처리품목 검색"
-                rowKey="ITEM_CD"
-                customVisible={this.state.warehouseCd}
-                customWarning="코드를 선택해주세요"
-              />
-            </StyledButtonWrapper>
-          </>
-        ),
-        dataIndex: 'WAREHOUSE_NM',
+        title: '코드명',
         align: 'left',
+        children: [
+          {
+            title: (
+              <>
+                <AntdInput
+                  className="ant-input-inline"
+                  style={{ width: '200px' }}
+                  value={warehouseNm}
+                  onChange={e => this.onChangeValue('warehouseNm', e.target.value)}
+                  name="warehouseNm"
+                />
+                <StyledButtonWrapper className="btn-wrap-inline">
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
+                    추가
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                    수정
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
+                    삭제
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
+                    Reset
+                  </StyledButton>
+                  <TableTypeSelector
+                    leftTableColumns={leftTableColumns}
+                    rightTableColumns={rightTableColumns}
+                    apiList={itemList || []}
+                    applyList={applyList || []}
+                    handleApply={this.handleApply}
+                    btnText="처리품목 등록"
+                    modalTitle="처리품목 검색"
+                    rowKey="ITEM_CD"
+                    customVisible={warehouseCd}
+                    customWarning="코드를 선택해주세요"
+                  />
+                </StyledButtonWrapper>
+              </>
+            ),
+            align: 'left',
+            className: 'hr-form',
+            dataIndex: 'WAREHOUSE_NM',
+          },
+        ],
       },
     ];
+    this.setState({ columns });
+  };
 
-    return (
-      <AntdLineTable
-        rowKey={wareHouseList && wareHouseList.WAREHOUSE_CD}
-        columns={columns}
-        dataSource={wareHouseList || []}
-        bordered
-        onRow={record => ({
-          onClick: () => {
-            this.selectedRecord(record);
-          },
-        })}
-        footer={() => <span>{`${wareHouseList && wareHouseList.length} 건`}</span>}
-      />
+  onReset() {
+    this.setState(
+      {
+        warehouseCd: '',
+        warehouseNm: '',
+      },
+      this.setColumns,
     );
   }
 
@@ -278,7 +230,7 @@ class List extends Component {
         warehouseCd: record.WAREHOUSE_CD,
         warehouseNm: record.WAREHOUSE_NM,
       },
-      () => this.selectedRecordCallbackApi(),
+      this.selectedRecordCallbackApi,
     );
   };
 
@@ -296,28 +248,43 @@ class List extends Component {
 
   callbackItem = () => {
     const { result } = this.props;
-    this.setState({ applyList: result && result.wareHouseItem && result.wareHouseItem.list });
+    this.setState({ applyList: result && result.wareHouseItem && result.wareHouseItem.list }, this.setColumns);
   };
 
   render() {
-    const { siteList } = this.state;
+    const { siteList, columns } = this.state;
+    const {
+      result: { warehouse },
+    } = this.props;
+    const dataSource = warehouse && warehouse.list;
     return (
       <ContentsWrapper>
-        <div>
-          <span>지역</span>
-          <AntdSelect onChange={(value, option) => this.changeSelectValue(value, option)} value={this.state.site}>
+        <div className="selSaveWrapper alignLeft">
+          <span className="textLabel">지역</span>
+          <AntdSelect className="select-mid" onChange={value => this.onChangeValue('site', value)} value={this.state.site}>
             {siteList.map(item => (
               <Option value={item.NODE_ID} key="site">
                 {item.NAME_KOR}
               </Option>
             ))}
           </AntdSelect>
-          <StyledButtonWrapper>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary" onClick={() => this.searchData()}>
               검색
             </StyledButton>
           </StyledButtonWrapper>
-          {this.renderTable()}
+          <AntdLineTable
+            rowKey={dataSource && dataSource.WAREHOUSE_CD}
+            selectedRowKeys={[]}
+            columns={columns}
+            dataSource={dataSource || []}
+            onRow={record => ({
+              onClick: () => {
+                this.selectedRecord(record);
+              },
+            })}
+            footer={() => <span>{`${dataSource && dataSource.length} 건`}</span>}
+          />
         </div>
       </ContentsWrapper>
     );
