@@ -1,21 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Row, Col, Table, Select, Input, message } from 'antd';
+import { Table, Select, Input, message } from 'antd';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
-import StyledButton from 'apps/mdcs/styled/StyledButton';
-import Moment from 'moment';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
-
-const AntdTable = StyledAntdTable(Table);
-
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdLineTable = StyledLineTable(Table);
 const { Option } = Select;
-
-Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
@@ -107,7 +105,7 @@ class List extends Component {
   };
 
   onChangeData = value => {
-    const { sagaKey: id, submitHandlerBySaga, MAP_ID } = this.props;
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
 
     const submitData = {
       ITEM_CD: value === 'I' ? '' : this.state.itemCd,
@@ -160,8 +158,7 @@ class List extends Component {
         break;
     }
     return (
-      <Select
-        style={{ width: '100px' }}
+      <AntdSelect
         onChange={(value, option) => this.changeSelectValue(value, option)}
         value={Number(this.state[key]) || (selectData && selectData[0] && selectData[0].NODE_ID)}
       >
@@ -171,7 +168,7 @@ class List extends Component {
               {itme.NAME_KOR}
             </Option>
           ))}
-      </Select>
+      </AntdSelect>
     );
   };
 
@@ -179,93 +176,97 @@ class List extends Component {
     const { itemList } = this.state;
     const columns = [
       {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>품목코드</span>
-            <br />
-            {this.state.itemCd}
-          </>
-        ),
-        dataIndex: 'ITEM_CD',
+        title: '품목코드',
         align: 'center',
         width: 100,
+        children: [
+          {
+            title: <>{this.state.itemCd}</>,
+            dataIndex: 'ITEM_CD',
+            align: 'center',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>품목명</span>
-            <br />
-            <Input value={this.state.itemNm} onChange={e => this.changeInputValue(e)} name="itemNm" />
-          </>
-        ),
-        dataIndex: 'ITEM_NM',
+        title: '품목명',
         align: 'left',
         width: 250,
+        children: [
+          {
+            title: <Input value={this.state.itemNm} onChange={e => this.changeInputValue(e)} name="itemNm" />,
+            dataIndex: 'ITEM_NM',
+            align: 'left',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>성상</span>
-            <br />
-            {this.renderSelect('shape')}
-          </>
-        ),
-        dataIndex: 'SHAPE_NM',
+        title: '성상',
         align: 'center',
         width: 150,
+        children: [
+          {
+            title: <>{this.renderSelect('shape')}</>,
+            dataIndex: 'SHAPE_NM',
+            align: 'center',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>단위</span>
-            <br />
-            {this.renderSelect('unit')}
-          </>
-        ),
-        dataIndex: 'UNIT_NM',
+        title: '단위',
         align: 'center',
         width: 150,
+        children: [
+          {
+            title: <>{this.renderSelect('unit')}</>,
+            dataIndex: 'UNIT_NM',
+            align: 'center',
+          },
+        ],
       },
       {
-        title: (
-          <>
-            <span style={{ align: 'center' }}>인계서발행</span>
-            <br />
-            <span style={{ marginRight: '10px' }}>{this.renderSelect('isTransForm')}</span>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
-              추가
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
-              수정
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
-              삭제
-            </StyledButton>
-            <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
-              Reset
-            </StyledButton>
-          </>
-        ),
-        dataIndex: 'IS_TRANS_FORM_NM',
+        title: '인계서발행',
         align: 'left',
+        children: [
+          {
+            title: (
+              <>
+                {this.renderSelect('isTransForm')}
+                <StyledButtonWrapper className="btn-wrap-inline">
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
+                    추가
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                    수정
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
+                    삭제
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
+                    Reset
+                  </StyledButton>
+                </StyledButtonWrapper>
+              </>
+            ),
+            dataIndex: 'IS_TRANS_FORM_NM',
+            align: 'left',
+          },
+        ],
       },
     ];
 
     return (
-      <AntdTable
-        style={{ cursor: 'pointer' }}
-        rowKey={itemList.ITEM_CD}
+      <AntdLineTable
+        className="tableWrapper"
+        rowKey={itemList && itemList.ITEM_CD}
         columns={columns}
-        dataSource={itemList}
+        dataSource={itemList || []}
         bordered
         onRow={record => ({
           onClick: () => {
             this.selectedRecord(record);
           },
         })}
-        pagination={{ pageSize: 50 }}
-        scroll={{ y: 600 }}
-        footer={() => <div style={{ textAlign: 'center' }}>{`${itemList.length} 건`}</div>}
+        footer={() => <span>{`${itemList && itemList.length} 건`}</span>}
       />
     );
   }
@@ -284,46 +285,42 @@ class List extends Component {
 
   render() {
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Row>
-                <Col span={12}>
-                  품목명
-                  <Input style={{ width: '200px', margin: '10px' }} value={this.state.searchNm} onChange={e => this.changeInputValue(e)} name="searchNm" />
-                  조회순서
-                  <Select
-                    style={{ width: '100px', margin: '10px' }}
-                    onChange={(value, option) => this.changeSelectValue(value, option)}
-                    value={this.state.orderbySelect}
-                  >
-                    <Option value="1" key="orderbySelect">
-                      품목명
-                    </Option>
-                    <Option value="2" key="orderbySelect">
-                      코드
-                    </Option>
-                  </Select>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
-                    검색
-                  </StyledButton>
-                </Col>
-              </Row>
-              {this.renderTable()}
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <ContentsWrapper>
+        <div>
+          <span>품목명</span>
+          <AntdInput style={{ width: '200px', margin: '10px' }} value={this.state.searchNm} onChange={e => this.changeInputValue(e)} name="searchNm" />
+          <span>조회순서</span>
+          <AntdSelect
+            style={{ width: '100px', margin: '10px' }}
+            onChange={(value, option) => this.changeSelectValue(value, option)}
+            value={this.state.orderbySelect}
+          >
+            <Option value="1" key="orderbySelect">
+              품목명
+            </Option>
+            <Option value="2" key="orderbySelect">
+              코드
+            </Option>
+          </AntdSelect>
+          <StyledButton className="btn-primary btn-first" onClick={() => this.searchData()}>
+            검색
+          </StyledButton>
+        </div>
+        {this.renderTable()}
+      </ContentsWrapper>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  submitHandlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  result: PropTypes.any,
+};
 
 List.defaultProps = {
   getCallDataHandler: () => {},
-  formData: {},
 };
 
 export default List;
