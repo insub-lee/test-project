@@ -10,23 +10,22 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import TreeWrapper from 'commonStyled/Wrapper/TreeWrapper';
 
 // Component Attribute 및 Event Method 정리
-// <DeptSelect
-//   rootDeptChange={true} - root부서 변경가능여부
-//   defaultRootDeptId={1461} - defaultRootDeptId
-//   selectedDeptId={111} - 선택된 부서ID
+// <PstnSelect
+//   defaultRootPstnId={1461} - defaultRootPstnId(undefined시 rootPstnList 조회중 첫번째 값)
+//   selectedPstnId={111} - 선택된 직위ID
 //   onComplete={this.onComplete}  확인버튼 클릭이벤트
 //   onCancel={this.onCancel} 취소 버튼 이벤트
 // />
 
 const { Option } = Select;
 
-const getTreeData = deptList =>
-  deptList.length > 0
+const getTreeData = pstnList =>
+  pstnList.length > 0
     ? getTreeFromFlatData({
-        flatData: deptList.map(item => ({
+        flatData: pstnList.map(item => ({
           title: item.NAME_KOR,
-          value: `${item.DEPT_ID}`,
-          key: `${item.DEPT_ID}`,
+          value: `${item.PSTN_ID}`,
+          key: `${item.PSTN_ID}`,
           parentValue: `${item.PRNT_ID}`,
         })),
         getKey: node => node.key,
@@ -35,62 +34,73 @@ const getTreeData = deptList =>
       })
     : [];
 
-class DeptSelectComp extends Component {
+class PstnSelectComp extends Component {
   state = {
-    rootDeptId: -1,
-    selectedDeptId: -1,
+    rootPstnId: -1,
+    selectedPstnId: -1,
   }
 
   componentDidMount() {
-    const { defaultRootDeptId, selectedDeptId } = this.props;
-    this.getDeptList(defaultRootDeptId);
-    this.setState({
-      rootDeptId: defaultRootDeptId,
-      selectedDeptId,
-    });
+    const { defaultRootPstnId, selectedPstnId } = this.props;
+    this.getRootPstnList(defaultRootPstnId);
+    // this.setState({
+    //   rootPstnId: defaultRootPstnId,
+    //   selectedPstnId,
+    // });
   }
 
-  // 부서조회
-  getDeptList = defaultRootDeptId => {
+  // 루트 직위 조회
+  getRootPstnList = () => {
     const { id, getCallDataHandler } = this.props;
     const apiAry = [
       { 
-        key: 'deptList',
-        url: '/api/common/v1/account/deptSelectList',
-        type: 'POST',
-        params: { PARAM: { ROOT_DEPT_ID: defaultRootDeptId } } 
-      },
-      { 
-        key: 'companyList',
-        url: '/api/common/v1/account/organizationList',
+        key: 'rootPstnList',
+        url: '/api/common/v1/account/organizationPstnList',
         type: 'GET',
         params: {} 
       },
     ];
-    getCallDataHandler(id, apiAry);
+    getCallDataHandler(id, apiAry, (rId, res) => {
+      if (res && res.list) {
+        this.setState({ rootPstnId: res.list[0].PSTN_ID });
+        this.getPstnList(res.list[0].PSTN_ID);
+      }
+    });
+  }
+
+  // 직위조회
+  getPstnList = rootPstnId => {
+    const { id, getCallDataHandler } = this.props;
+    const apiAry = [
+      { 
+        key: 'pstnList',
+        url: `/api/common/v1/account/pstnList/${rootPstnId}`,
+        type: 'GET',
+        params: {}
+      },
+    ];
+    getCallDataHandler(id, apiAry, () => {});
   }
 
   // Root부서 변경
-  onChangeRootDept = val => {
-    if (this.props.rootDeptChange) {
-      this.setState({ rootDeptId: val });
-      this.getDeptList(val);
-    }
+  onChangeRootPstn = val => {
+    this.setState({ rootPstnId: val });
+    this.getPstnList(val);
   };
 
   // 트리데이터 클릭
   onTreeSelect = selectedKeys => {
     if (selectedKeys && selectedKeys.length === 1) {
-      this.setState({ selectedDeptId: Number(selectedKeys[0]) });
+      this.setState({ selectedPstnId: Number(selectedKeys[0]) });
     } else {
-      this.setState({ selectedDeptId: -1 });
+      this.setState({ selectedPstnId: -1 });
     } 
   };
 
   // 확인(선택된 부서 리턴)
   onCompletePopup = () => {
     const { result, onComplete } = this.props;
-    const filterRows = result.deptList.result.filter(item => item.DEPT_ID === this.state.selectedDeptId);
+    const filterRows = result.pstnList.list.filter(item => item.PSTN_ID === this.state.selectedPstnId);
     if (filterRows && filterRows.length === 1) {
       onComplete(filterRows[0]);
     } else {
@@ -104,17 +114,17 @@ class DeptSelectComp extends Component {
   };
 
   render() {
-    const { result, rootDeptChange, defaultRootDeptId } = this.props;
-    const treeData = result && result.deptList && result.deptList.result ? result.deptList.result : [];
-    const rootDeptList = result && result.companyList && result.companyList.list ? (rootDeptChange ? result.companyList.list : result.companyList.list.filter(item => item.DEPT_ID === defaultRootDeptId ) ) : [];
+    const { result } = this.props;
+    const treeData = result && result.pstnList && result.pstnList.list ? result.pstnList.list : [];
+    const rootPstnList = result && result.rootPstnList && result.rootPstnList.list ? result.rootPstnList.list : [];
 
     return (
       <TreeWrapper>
         <div className="tree-wrapper-inner">
-          <Select value={this.state.rootDeptId} onChange={val => this.onChangeRootDept(val)}>
-            {rootDeptList && (
-              rootDeptList.map((item, idx) => (
-                <Option value={item.DEPT_ID} key={idx}>
+          <Select value={this.state.rootPstnId} onChange={val => this.onChangeRootPstn(val)}>
+            {rootPstnList && (
+              rootPstnList.map((item, idx) => (
+                <Option value={item.PSTN_ID} key={idx}>
                   {item.NAME_KOR}
                 </Option>
               ))
@@ -132,12 +142,12 @@ class DeptSelectComp extends Component {
           <StyledButton className="btn-primary" onClick={this.onCompletePopup}>확인</StyledButton>
         </StyledButtonWrapper>
       </TreeWrapper>
-    );
+    )
   }
 }
 
-DeptSelectComp.propTypes = {
+PstnSelectComp.propTypes = {
 
 };
 
-export default DeptSelectComp;
+export default PstnSelectComp;

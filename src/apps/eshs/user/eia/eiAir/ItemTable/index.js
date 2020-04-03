@@ -1,7 +1,7 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Checkbox, Popconfirm, message } from 'antd';
-import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -131,8 +131,41 @@ class ItemTable extends Component {
     const btnOk = itemList.length >= 1;
     return (
       <ContentsWrapper>
-        <StyledHtmlTable>
-          <table>
+        <StyledHtmlTable className="tableWrapper">
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+              Excel Download
+            </StyledButton>
+            {!searchFlag && (
+              <>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+                  Excel Upload
+                </StyledButton>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+                  추가
+                </StyledButton>
+                {btnOk && (
+                  <>
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                      수정
+                    </StyledButton>
+                    <Popconfirm
+                      title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
+                      onConfirm={() => this.handleAction('DELETE')}
+                      okText="확인"
+                      cancelText="취소"
+                    >
+                      <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                    </Popconfirm>
+                    <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
+                      Reset
+                    </StyledButton>
+                  </>
+                )}
+              </>
+            )}
+          </StyledButtonWrapper>
+          <table className="table-border">
             <colgroup>
               <col width="3%" />
               <col width="8%" />
@@ -146,43 +179,6 @@ class ItemTable extends Component {
               <col width="10%" />
             </colgroup>
             <thead>
-              <tr>
-                <td colSpan={10} align="right">
-                  <StyledButtonWrapper className="btn-wrap-inline">
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-                      Excel Download
-                    </StyledButton>
-                    {!searchFlag && (
-                      <>
-                        <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
-                          Excel Upload
-                        </StyledButton>
-                        <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
-                          추가
-                        </StyledButton>
-                        {btnOk && (
-                          <>
-                            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
-                              수정
-                            </StyledButton>
-                            <Popconfirm
-                              title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
-                              onConfirm={() => this.handleAction('DELETE')}
-                              okText="확인"
-                              cancelText="취소"
-                            >
-                              <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
-                            </Popconfirm>
-                            <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
-                              Reset
-                            </StyledButton>
-                          </>
-                        )}
-                      </>
-                    )}
-                  </StyledButtonWrapper>
-                </td>
-              </tr>
               <tr>
                 <td></td>
                 <td>
@@ -286,9 +282,14 @@ class ItemTable extends Component {
                 <th>법규</th>
               </tr>
             </thead>
+            <tfoot>
+              <tr>
+                <td colSpan={10}>{itemList.length} 건</td>
+              </tr>
+            </tfoot>
             <tbody>
               {itemList.map(i => (
-                <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)}>
+                <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)} className="tr-center tr-pointer">
                   <td>
                     <Checkbox
                       className="ant-checkbox-wrapper"
@@ -308,9 +309,6 @@ class ItemTable extends Component {
                   <td>{i.LEGISLATION}</td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan={10}>{itemList.length} 건</td>
-              </tr>
             </tbody>
           </table>
         </StyledHtmlTable>
