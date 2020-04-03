@@ -4,6 +4,8 @@ import BizMicroDevBase from 'components/BizMicroDevBase';
 import List from './List';
 
 class EshsSafetyOfficial extends Component {
+  componentDidMount() {}
+
   render() {
     return <BizMicroDevBase sagaKey="eshsSafetyOfficial" component={List} />;
   }
