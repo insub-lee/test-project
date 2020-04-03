@@ -30,8 +30,8 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
 
 function* getCallDataHandler({ id, apiArys, callbackFunc }) {
   if (apiArys && apiArys.length > 0) {
+    let response = {};
     for (let i = 0; i < apiArys.length; i += 1) {
-      let response = {};
       const apiInfo = apiArys[i];
       if (apiInfo && apiInfo.url && apiInfo.url !== '') {
         switch (apiInfo.type.toUpperCase()) {
@@ -53,10 +53,10 @@ function* getCallDataHandler({ id, apiArys, callbackFunc }) {
       }
       yield put(actions.setCallDataHandler(id, apiInfo.key, response));
     }
-  }
-
-  if (typeof callbackFunc === 'function') {
-    callbackFunc(id);
+    
+    if (typeof callbackFunc === 'function') {
+      callbackFunc(id, response);
+    }
   }
 }
 
