@@ -30,6 +30,7 @@ class EiItemTable extends Component {
   handleInitColumns = () => {
     const { formData, dataKey, columns } = this.props;
     const itemList = (formData && formData.itemList) || [];
+    const itemData = (formData && formData.itemData) || {};
     const btnOk = itemList.length;
     const searchFlag = (formData && formData.searchFlag) || false;
     console.debug('columns', columns);
@@ -73,7 +74,7 @@ class EiItemTable extends Component {
               </StyledButtonWrapper>
             </div>
           ),
-          children: columns,
+          children: typeof columns === 'function' ? columns(itemData) : columns,
         },
       ],
     });
@@ -88,7 +89,7 @@ class EiItemTable extends Component {
     switch (type) {
       case ('SAVE', 'UPDATE'):
         if (typeof validationCheck === 'function') {
-          const msg = validationCheck();
+          const msg = validationCheck(itemData);
           if (msg) {
             return message.warning(msg);
           }
@@ -118,6 +119,19 @@ class EiItemTable extends Component {
       default:
         break;
     }
+  };
+
+  handleFormReset = () => {
+    const { id, setFormData, formData, handleSearchOnClick } = this.props;
+    setFormData(id, { ...formData, itemData: {} });
+    this.setState({ rowSelections: [] });
+    handleSearchOnClick();
+  };
+
+  handleRowClick = itemData => {
+    const { id, changeFormData } = this.props;
+    console.debug('여기는 rowClick', itemData);
+    changeFormData(id, 'itemData', itemData);
   };
 
   onSelectChange = selectedRowKeys => {
@@ -166,7 +180,6 @@ class EiItemTable extends Component {
         },
       ],
     };
-    console.debug('this.props', this.props);
     return (
       <ContentsWrapper>
         <AntdLineTable
@@ -175,10 +188,11 @@ class EiItemTable extends Component {
           rowKey={(itemList && itemList[dataKey]) || undefined}
           columns={btnPlusColumns}
           dataSource={itemList}
+          bordered
           // rowSelection={rowSelection}
           onRow={record => ({
             onClick: () => {
-              this.selectedRecord(record);
+              this.handleRowClick(record);
             },
           })}
           footer={() => <span>{`${itemList.length} 건`}</span>}
@@ -189,7 +203,7 @@ class EiItemTable extends Component {
 }
 
 EiItemTable.propTypes = {
-  columns: PropTypes.array,
+  columns: PropTypes.any,
   validationCheck: PropTypes.any,
   id: PropTypes.string,
   formData: PropTypes.object,

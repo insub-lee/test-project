@@ -4,7 +4,7 @@ import MainPage from './MainPage';
 
 class eiNatural extends Component {
   render() {
-    return <BizMicroDevBase component={MainPage} sagaKey="eiNatural" tb_name="NATURAL" />;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiNatural" tbName="NATURAL" />;
   }
 }
 
