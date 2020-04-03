@@ -4,7 +4,7 @@ import MainPage from './MainPage';
 
 class eiAir extends Component {
   render() {
-    return <BizMicroDevBase component={MainPage} sagaKey="eiAir" tb_name="AIR" />;
+    return <BizMicroDevBase component={MainPage} sagaKey="eiAir" tbName="AIR" />;
   }
 }
 

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Select, Input, Button, Modal, message } from 'antd';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
