@@ -32,6 +32,13 @@ const StyledButtonWrapper = styled.div`
   &.btn-wrap-ml-5 {
     margin-left: 5px;
   }
+
+  .btn-comment {
+    font-size: 12px;
+    color: #ff5f5f;
+    display: inline-block;
+    vertical-align: midde;
+  }
 `;
 
 export default StyledButtonWrapper;

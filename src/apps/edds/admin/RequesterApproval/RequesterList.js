@@ -124,6 +124,7 @@ class RequesterList extends Component {
           onCancel={this.onCancelPopup}
           destroyOnClose
           footer={null}
+          className="modal-table-pad"
         >
           <RequesterView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>

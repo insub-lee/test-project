@@ -1,6 +1,7 @@
 const prefix = 'apps/mdcs/components/BizMicroDevBase';
 
 export const GET_CALLDATA_SAGA = `${prefix}/GET_CALLDATA_SAGA`;
+export const GET_CALLDATA_SAGA_RETURN_RES = `${prefix}/GET_CALLDATA_SAGA_RETURN_RES`;
 export const SET_CALLDATA_SAGA = `${prefix}/SET_CALLDATA_SAGA`;
 export const CHANGE_FORMDATA = `${prefix}/CHANGE_FORMDATA`;
 export const SET_FORMDATA = `${prefix}/SET_FORMDATA`;

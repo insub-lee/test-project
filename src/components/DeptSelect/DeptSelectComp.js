@@ -11,11 +11,10 @@ import TreeWrapper from 'commonStyled/Wrapper/TreeWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <DeptSelect
-//   rootDeptChange={true} - root부서 변경가능여부
-//   defaultRootDeptId={1461} - defaultRootDeptId
-//   selectedDeptId={111} - 선택된 부서ID
-//   onComplete={this.onComplete}  확인버튼 클릭이벤트
-//   onCancel={this.onCancel} 취소 버튼 이벤트
+//   rootDeptChange={true} - root부서 변경가능여부(boolean) : 특정부서만 노출하기 위해 사용
+//   defaultRootDeptId={1461} - defaultRootDeptId(integer) : 특정부서만 노출하기 위해 사용
+//   onComplete={this.onComplete}  확인버튼 클릭이벤트(function)
+//   onCancel={this.onCancel} 취소 버튼 이벤트(function)
 // />
 
 const { Option } = Select;
@@ -37,37 +36,46 @@ const getTreeData = deptList =>
 
 class DeptSelectComp extends Component {
   state = {
-    rootDeptId: -1,
-    selectedDeptId: -1,
+    rootDeptId: 0,
+    selectedDeptId: 0,
   }
 
   componentDidMount() {
-    const { defaultRootDeptId, selectedDeptId } = this.props;
-    this.getDeptList(defaultRootDeptId);
-    this.setState({
-      rootDeptId: defaultRootDeptId,
-      selectedDeptId,
-    });
+    this.getRootDeptList();
   }
 
+  // 최상위 부서조회(PRNT_ID === -1)
+  getRootDeptList = () => {
+    const { id, getCallDataHandlerReturnRes, defaultRootDeptId } = this.props;
+    const apiInfo = { 
+      key: 'companyList',
+      url: '/api/common/v1/account/organizationList',
+      type: 'GET',
+      params: {} 
+    };
+
+    getCallDataHandlerReturnRes(id, apiInfo, (rId, res) => {
+      if (res && res.list) {
+        this.setState({ rootDeptId: res.list[0].DEPT_ID });
+        this.getDeptList(defaultRootDeptId ? defaultRootDeptId : res.list[0].DEPT_ID);
+      }
+    });
+  };
+
   // 부서조회
-  getDeptList = defaultRootDeptId => {
+  getDeptList = rootDeptId => {
     const { id, getCallDataHandler } = this.props;
     const apiAry = [
       { 
         key: 'deptList',
         url: '/api/common/v1/account/deptSelectList',
         type: 'POST',
-        params: { PARAM: { ROOT_DEPT_ID: defaultRootDeptId } } 
-      },
-      { 
-        key: 'companyList',
-        url: '/api/common/v1/account/organizationList',
-        type: 'GET',
-        params: {} 
+        params: { PARAM: { ROOT_DEPT_ID: rootDeptId } } 
       },
     ];
-    getCallDataHandler(id, apiAry);
+    getCallDataHandler(id, apiAry, () => {
+      this.setState({ rootDeptId });
+    });
   }
 
   // Root부서 변경

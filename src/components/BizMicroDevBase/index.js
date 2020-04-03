@@ -28,6 +28,7 @@ BizMicroDevBase.propTypes = {
   result: PropTypes.object,
   formData: PropTypes.object,
   getCallDataHandler: PropTypes.func,
+  getCallDataHandlerReturnRes: PropTypes.func,
   removeReduxState: PropTypes.func,
   changeFormData: PropTypes.func,
   setFormData: PropTypes.func,
@@ -39,6 +40,7 @@ BizMicroDevBase.defaultProps = {
   result: {},
   formData: {},
   getCallDataHandler: () => false,
+  getCallDataHandlerReturnRes: () => false,
   changeFormData: () => false,
   setFormData: () => false,
   submitHandlerBySaga: () => false,
@@ -52,6 +54,7 @@ const mapStateToProps = createStructuredSelector({
 
 const mapDispatchToProps = dispatch => ({
   getCallDataHandler: (id, apiAry, callbackFunc) => dispatch(actions.getCallDataHandler(id, apiAry, callbackFunc)),
+  getCallDataHandlerReturnRes: (id, apiInfo, callbackFunc) => dispatch(actions.getCallDataHandlerReturnRes(id, apiInfo, callbackFunc)),
   changeFormData: (id, key, val) => dispatch(actions.changeFormData(id, key, val)),
   setFormData: (id, obj) => dispatch(actions.setFormData(id, obj)),
   submitHandlerBySaga: (id, httpMethod, apiUrl, submitData, callbackFunc) =>

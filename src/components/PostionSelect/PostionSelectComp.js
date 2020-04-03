@@ -11,8 +11,6 @@ import TreeWrapper from 'commonStyled/Wrapper/TreeWrapper';
 
 // Component Attribute 및 Event Method 정리
 // <PstnSelect
-//   defaultRootPstnId={1461} - defaultRootPstnId(undefined시 rootPstnList 조회중 첫번째 값)
-//   selectedPstnId={111} - 선택된 직위ID
 //   onComplete={this.onComplete}  확인버튼 클릭이벤트
 //   onCancel={this.onCancel} 취소 버튼 이벤트
 // />
@@ -41,26 +39,20 @@ class PstnSelectComp extends Component {
   }
 
   componentDidMount() {
-    const { defaultRootPstnId, selectedPstnId } = this.props;
-    this.getRootPstnList(defaultRootPstnId);
-    // this.setState({
-    //   rootPstnId: defaultRootPstnId,
-    //   selectedPstnId,
-    // });
+    this.getRootPstnList();
   }
 
   // 루트 직위 조회
   getRootPstnList = () => {
-    const { id, getCallDataHandler } = this.props;
-    const apiAry = [
-      { 
-        key: 'rootPstnList',
-        url: '/api/common/v1/account/organizationPstnList',
-        type: 'GET',
-        params: {} 
-      },
-    ];
-    getCallDataHandler(id, apiAry, (rId, res) => {
+    const { id, getCallDataHandlerReturnRes } = this.props;
+    const apiInfo = { 
+      key: 'rootPstnList',
+      url: '/api/common/v1/account/organizationPstnList',
+      type: 'GET',
+      params: {} 
+    };
+
+    getCallDataHandlerReturnRes(id, apiInfo, (rId, res) => {
       if (res && res.list) {
         this.setState({ rootPstnId: res.list[0].PSTN_ID });
         this.getPstnList(res.list[0].PSTN_ID);

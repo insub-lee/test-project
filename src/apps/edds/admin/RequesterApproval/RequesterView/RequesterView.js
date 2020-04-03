@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Select, Modal } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import DeptSelect from 'components/DeptSelect';
 import PostionSelect from 'components/PostionSelect';
@@ -18,6 +19,7 @@ const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledContentsModal(Modal);
 const AntdInput = StyledInput(Input);
 const { Option } = Select;
+const { confirm } = Modal;
 
 class RequesterView extends Component {
   state = {
@@ -26,11 +28,11 @@ class RequesterView extends Component {
     userInfo: {
       statusCd: 'C',  //재직
       empType: 'E',   //본사협력사
-      deptId: -1,
+      deptId: 0,
       deptName: '',
-      pstnId: -1,
+      pstnId: 0,
       pstnName: '',
-      dutyId: -1,
+      dutyId: 73250,  //직책코드(담당-고정값)
       rankId: -1,
     }
   };
@@ -56,22 +58,27 @@ class RequesterView extends Component {
     if (this.state.userInfo.deptId !== -1 &&  this.state.userInfo.pstnId !== -1) {
       const userInfo = {
         ...this.state.userInfo,
-        deptName: detail.DEPT_ID,
+        deptName: detail.DEPT_NAME,
         empNo: detail.REQUEST_ID,
         nameKor: detail.REQUESTER_NAME,
         email: detail.EMAIL,
       };
-      console.debug('userInfo >> ', userInfo);
-      // submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/registUser/', userInfo, () => {
-      //   onCancelPopup();
-      // });
+      const saveAfterFunc = this.onClickDelete;
+      confirm({
+        title: '승인하시겠습니까?',
+        icon: <ExclamationCircleOutlined />,
+        onOk() {
+          submitHandlerBySaga(id, 'POST', '/api/admin/v1/common/registUser', userInfo, () => {
+            saveAfterFunc();
+          });
+        }
+      });
     } else {
       message.info(<MessageContent>회사와 직위를 선택해주세요.</MessageContent>);
     }
   };
 
-  onClickDelete = e => {
-    e.preventDefault();
+  onClickDelete = () => {
     const { id, submitHandlerBySaga, selectedRow, onCancelPopup } = this.props;
     submitHandlerBySaga(id, 'DELETE', `/api/edds/v1/common/eddsRequest/${selectedRow.REQUEST_ID}`, {}, () => {
       onCancelPopup();
@@ -184,7 +191,7 @@ class RequesterView extends Component {
               </table>
             </StyledTable>
             <StyledButtonWrapper className="btn-wrap-center">
-              <StyledButton className="btn-gray mr5" onClick={e => this.onClickDelete(e)}>삭제</StyledButton>
+              <StyledButton className="btn-gray mr5" onClick={this.onClickDelete}>삭제</StyledButton>
               <StyledButton className="btn-light mr5" onClick={this.props.onCancelPopup}>닫기</StyledButton>
               <StyledButton className="btn-primary" onClick={this.onClickApproval}>승인</StyledButton>
             </StyledButtonWrapper>

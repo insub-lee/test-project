@@ -30,8 +30,8 @@ function* submitHandlerBySaga({ id, httpMethod, apiUrl, submitData, callbackFunc
 
 function* getCallDataHandler({ id, apiArys, callbackFunc }) {
   if (apiArys && apiArys.length > 0) {
-    let response = {};
     for (let i = 0; i < apiArys.length; i += 1) {
+      let response = {};
       const apiInfo = apiArys[i];
       if (apiInfo && apiInfo.url && apiInfo.url !== '') {
         switch (apiInfo.type.toUpperCase()) {
@@ -53,7 +53,32 @@ function* getCallDataHandler({ id, apiArys, callbackFunc }) {
       }
       yield put(actions.setCallDataHandler(id, apiInfo.key, response));
     }
-    
+  }
+  if (typeof callbackFunc === 'function') {
+    callbackFunc(id);
+  }
+}
+
+function* getCallDataHandlerReturnRes({ id, apiInfo, callbackFunc }) {
+  let response = {};
+  if (apiInfo && apiInfo.url && apiInfo.url !== '') {
+    switch (apiInfo.type.toUpperCase()) {
+      case 'GET':
+        response = yield call(Axios.get, apiInfo.url);
+        break;
+      case 'POST':
+        response = yield call(Axios.post, apiInfo.url, apiInfo.params);
+        break;
+      case 'PUT':
+        response = yield call(Axios.put, apiInfo.url, apiInfo.params);
+        break;
+      case 'DELETE':
+        response = yield call(Axios.delete, apiInfo.url, apiInfo.params);
+        break;
+      default:
+        break;
+    }
+    yield put(actions.setCallDataHandler(id, apiInfo.key, response));
     if (typeof callbackFunc === 'function') {
       callbackFunc(id, response);
     }
@@ -79,5 +104,6 @@ function* getFileDownload({ url, fileName }) {
 export default function* watcher(arg) {
   yield takeEvery(`${actionTypes.PUBLIC_ACTIONMETHOD_SAGA}_${arg.sagaKey || arg.id}`, submitHandlerBySaga);
   yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA}_${arg.sagaKey || arg.id}`, getCallDataHandler);
+  yield takeEvery(`${actionTypes.GET_CALLDATA_SAGA_RETURN_RES}_${arg.sagaKey || arg.id}`, getCallDataHandlerReturnRes);
   yield takeEvery(`${actionTypes.GET_FILE_DOWNLOAD}_${arg.sagaKey || arg.id}`, getFileDownload);
 }
