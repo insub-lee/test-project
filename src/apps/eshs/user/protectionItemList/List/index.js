@@ -5,11 +5,14 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-balham.css';
 import { Select, Input, InputNumber, Modal } from 'antd';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+
 import request from 'utils/request';
 import { debounce } from 'lodash';
 
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import ImageUploader from 'components/FormStuff/Upload/ImageUploader';
@@ -17,6 +20,9 @@ import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import CustomTooltip from './customTooltip';
 
 const { Option } = Select;
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
+const AntdModal = StyledContentsModal(Modal);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -131,7 +137,7 @@ class List extends React.Component {
     {
       title: '지역',
       content: (
-        <Select
+        <AntdSelect
           name="site"
           defaultValue="313"
           width="300px"
@@ -139,13 +145,13 @@ class List extends React.Component {
         >
           <Option value="313">청주</Option>
           <Option value="314">구미</Option>
-        </Select>
+        </AntdSelect>
       ),
     },
     {
       title: '품목',
       content: (
-        <Input
+        <AntdInput
           name="kind"
           defaultValue={this.state.requestValue.kind}
           value={this.state.requestValue.kind}
@@ -158,7 +164,7 @@ class List extends React.Component {
     {
       title: '모델',
       content: (
-        <Input
+        <AntdInput
           name="model"
           defaultValue={this.state.requestValue.model}
           value={this.state.requestValue.model}
@@ -171,7 +177,7 @@ class List extends React.Component {
     {
       title: 'Size',
       content: (
-        <Input
+        <AntdInput
           name="size1"
           defaultValue={this.state.requestValue.size1}
           value={this.state.requestValue.size1}
@@ -184,7 +190,7 @@ class List extends React.Component {
     {
       title: '검정번호',
       content: (
-        <Input
+        <AntdInput
           name="app_no"
           defaultValue={this.state.requestValue.app_no}
           value={this.state.requestValue.app_no}
@@ -257,7 +263,7 @@ class List extends React.Component {
     {
       title: '단위',
       content: (
-        <Input
+        <AntdInput
           name="unit"
           defaultValue={this.state.requestValue.unit}
           value={this.state.requestValue.unit}
@@ -270,7 +276,7 @@ class List extends React.Component {
     {
       title: '유효기간',
       content: (
-        <Input
+        <AntdInput
           name="validity_term"
           defaultValue={this.state.requestValue.validity_term}
           value={this.state.requestValue.validity_term}
@@ -492,59 +498,56 @@ class List extends React.Component {
   ];
 
   render() {
-    const { visible, columnDefs, rowData, viewType, frameworkComponents } = this.state;
+    const { visible, columnDefs, rowData, viewType, frameworkComponents, tooltipShowDelay } = this.state;
     const { handleSelectChange, handleInputChange, initGridData, gridOptions, handleOk, handleCancel, modalContent, inputFooter, viewFooter } = this;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <div>
-            <Select defaultValue="청주" onChange={handleSelectChange}>
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper alignLeft">
+            <AntdSelect defaultValue="청주" onChange={handleSelectChange} className="ant-select-mid">
               <Option value="313">청주</Option>
               <Option value="314">구미</Option>
-            </Select>
-            <Input
-              onChange={handleInputChange}
-              style={{ width: '300px', marginRight: '10px', marginLeft: '10px', marginBottom: '10px' }}
-              placeholder="품목을 입력하세요."
-            />
+            </AntdSelect>
+            <AntdInput className="ant-input-inline mr5" onChange={handleInputChange} style={{ width: '300px' }} placeholder="품목을 입력하세요." />
             <StyledButton className="btn-primary" onClick={() => this.setState({ visible: true, viewType: 'INPUT' })}>
               등록
             </StyledButton>
           </div>
-          {/* <CustomTooltipStyled> */}
           <div style={{ width: '100%', height: '100%' }}>
-            <div id="myGrid" className="ag-theme-balham" style={{ height: '540px' }}>
+            <div className="ag-theme-balham tableWrapper" style={{ height: '540px' }}>
               <AgGridReact
                 columnDefs={columnDefs}
                 rowData={rowData}
                 onGridReady={initGridData}
                 gridOptions={gridOptions}
                 defaultColDef={gridOptions.defaultColDef}
-                tooltipShowDelay={this.state.tooltipShowDelay}
+                tooltipShowDelay={tooltipShowDelay}
                 suppressRowTransform
                 onRowClicked={e => this.handleRowClick(e.data)}
                 frameworkComponents={frameworkComponents}
               />
             </div>
           </div>
-          <Modal
-            visible={visible}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            width="600px"
-            closable
-            destroyOnClose
-            footer={viewType === 'INPUT' ? inputFooter() : viewFooter()}
-          >
-            {modalContent().map(item => (
-              <div>
-                <div>{item.title}</div>
-                <div>{item.content}</div>
-              </div>
-            ))}
-          </Modal>
-        </Sketch>
-      </StyledViewDesigner>
+        </ContentsWrapper>
+        <AntdModal
+          className="modal-table-pad"
+          visible={visible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          width="600px"
+          closable
+          destroyOnClose
+          title={viewType.toUpperCase() === 'INPUT' ? '등록' : '수정'}
+          footer={viewType.toUpperCase() === 'INPUT' ? inputFooter() : viewFooter()}
+        >
+          {modalContent().map(item => (
+            <div>
+              <div>{item.title}</div>
+              <div>{item.content}</div>
+            </div>
+          ))}
+        </AntdModal>
+      </>
     );
   }
 }

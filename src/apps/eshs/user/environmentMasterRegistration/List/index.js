@@ -228,11 +228,11 @@ class List extends React.Component {
               저장/수정
             </StyledButton>
             <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-              <StyledButton className="btn-primary btn-first" onClick={handleDeleteClick}>
+              <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
                 삭제
               </StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-primary" onClick={handleResetClick}>
+            <StyledButton className="btn-light" onClick={handleResetClick}>
               초기화
             </StyledButton>
           </div>
@@ -296,7 +296,7 @@ class List extends React.Component {
                     </td>
                     <th>수입구분</th>
                     <td>
-                      <AntdSelect className="select-mid" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
+                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
                         <Select.Option value="N">내수</Select.Option>
                         <Select.Option value="Y">수입</Select.Option>
                       </AntdSelect>
@@ -316,9 +316,9 @@ class List extends React.Component {
                   </tr>
                 </tbody>
               </table>
+              <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
             </StyledHtmlTable>
           </div>
-          <div className="div-comment selSaveWrapper">kg환산계수: 단위환산1 * 단위환산2</div>
         </ContentsWrapper>
         <Modal
           sagaKey={sagaKey}
