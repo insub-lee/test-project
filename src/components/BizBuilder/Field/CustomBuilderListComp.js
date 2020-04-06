@@ -2,6 +2,7 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Input, Modal } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import BizBuilderBase from 'components/BizBuilderBase';
 
 const { Search } = Input;
 
@@ -95,7 +96,7 @@ class CustomBuilderListComp extends React.Component {
 
     this.setState({
       ExtraBuilder: [
-        <ExtraBuilder
+        <BizBuilderBase
           key={listSagaKey}
           sagaKey={listSagaKey}
           baseSagaKey={id}
@@ -112,9 +113,29 @@ class CustomBuilderListComp extends React.Component {
         />,
       ],
     });
+    // this.setState({  ExtraBuilder오류..
+    //   ExtraBuilder: [
+    //     <ExtraBuilder
+    //       key={listSagaKey}
+    //       sagaKey={listSagaKey}
+    //       baseSagaKey={id}
+    //       workSeq={listWorkSeq}
+    //       taskSeq={-1}
+    //       listMetaSeq={listMetaSeq || undefined}
+    //       viewType={viewType}
+    //       CustomListPage={FieldCustomListPage}
+    //       CustomInputPage={FieldCustomInputPage}
+    //       loadingComplete={loadingComplete}
+    //       isModalChange={this.isModalChange}
+    //       saveTaskAfterCallbackFunc={() => this.extraBuilderRender('LIST')}
+    //       customOnRowClick={record => this.listOnRowClick(record)}
+    //     />,
+    //   ],
+    // });
   };
 
   listOnRowClick = record => {
+    console.debug('22222222222', record);
     const {
       customOnRowClick,
       sagaKey: id,
@@ -132,6 +153,7 @@ class CustomBuilderListComp extends React.Component {
 
     if (isFormData === 'Y') {
       const { formData, setFormData } = this.props;
+      console.debug('setFormData', setFormData);
       setFormData(id, { ...record, ...formData, [COMP_FIELD]: record[dataKey] });
     } else {
       changeFormData(id, COMP_FIELD, record[dataKey]);

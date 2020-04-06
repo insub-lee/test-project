@@ -5,6 +5,7 @@ const StyledHtmlTable = styled.div`
     border-top: 2px solid #888;
     border-spacing: 0;
     width: 100%;
+    table-layout: fixed;
     thead th {
       background: #f7f7f7;
       font-size: 14px;
@@ -32,8 +33,9 @@ const StyledHtmlTable = styled.div`
         width: auto;
         background-color: #ffffff;
         color: #666;
-        &:first {
-          border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        &:last-child {
+          border-right: 0;
         }
         .ant-radio-wrapper,
         .ant-checkbox-wrapper {
@@ -44,32 +46,6 @@ const StyledHtmlTable = styled.div`
             padding-left: 5px;
           }
         }
-        /* select */
-        .ant-select {
-          vertical-align: middle;
-          .ant-select-selection {
-            height: 30px;
-            .ant-select-selection__placeholder {
-              margin-top: -11px;
-              font-size: 12px;
-            }
-            .ant-select-search__field {
-              font-size: 12px;
-            }
-          }
-        }
-        /* select */
-        /* input */
-        .ant-input-affix-wrapper {
-          .ant-input {
-            font-size: 12px;
-            color: #666;
-            height: 30px;
-            border: 1px solid #d9d9d9;
-            border-radius: 4px;
-          }
-        }
-        /* input */
       }
     }
   }

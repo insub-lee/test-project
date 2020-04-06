@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import { DatePicker, Popconfirm } from 'antd';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-import { Row, Col, DatePicker, Popconfirm } from 'antd';
 
 import moment from 'moment';
 import request from 'utils/request';
@@ -212,49 +212,59 @@ class Input extends Component {
     const { userInfo, currentDate, reserveCount, selectedDate, noShowDate } = this.state;
     const { formData } = this.props;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <div style={{ marginBottom: '10px' }}>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={2}>사번</Col>
-              <Col span={4}>{userInfo.emp_no}</Col>
-              <Col span={2}>이름</Col>
-              <Col span={2}>{userInfo.name}</Col>
-              <Col span={2}>
-                <Popconfirm
-                  title={this.makePopconfirmTitle()}
-                  disabled={
-                    formData.checkedIndex !== undefined &&
-                    !this.isReservedToday() &&
-                    reserveCount < 3 &&
-                    moment(selectedDate).format('w') !==
-                      moment(noShowDate)
-                        .add('1', 'week')
-                        .format('w')
-                  }
-                >
-                  <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
-                    예약
-                  </StyledButton>
-                </Popconfirm>
-              </Col>
-              <Col span={2}>소속</Col>
-              <Col span={4}>{userInfo.dept}</Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={2}>직위</Col>
-              <Col span={4}>{userInfo.POSITION}</Col>
-              <Col span={2}>지역</Col>
-              <Col span={4}>{userInfo.barea_cd}</Col>
-              <Col span={2}>신청일</Col>
-              <Col span={4}>
-                <DatePicker disabledDate={this.disableDate} defaultValue={moment(currentDate)} onChange={this.handleOnDateChange} allowClear={false} />
-              </Col>
-            </Row>
-            <hr />
-          </div>
-        </Sketch>
-      </StyledViewDesigner>
+      <ContentsWrapper>
+        <div className="tableWrapper">
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="15%" />
+                <col width="18%" />
+                <col width="15%" />
+                <col width="18%" />
+                <col width="15%" />
+                <col width="18%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>사번</th>
+                  <td>{userInfo.EMP_NO}</td>
+                  <th>이름</th>
+                  <td>{userInfo.NAME}</td>
+                  <th>소속</th>
+                  <td>
+                    <Popconfirm
+                      title={this.makePopconfirmTitle()}
+                      disabled={
+                        formData.checkedIndex !== undefined &&
+                        !this.isReservedToday() &&
+                        reserveCount < 3 &&
+                        moment(selectedDate).format('w') !==
+                          moment(noShowDate)
+                            .add('1', 'week')
+                            .format('w')
+                      }
+                    >
+                      <StyledButton className="btn-primary btn-sm" onClick={this.handleButtonClick}>
+                        예약
+                      </StyledButton>
+                    </Popconfirm>
+                  </td>
+                </tr>
+                <tr>
+                  <th>직위</th>
+                  <td>{userInfo.POSITION}</td>
+                  <th>지역</th>
+                  <td>{userInfo.BAREA_CD}</td>
+                  <th>신청일</th>
+                  <td>
+                    <DatePicker disabledDate={this.disableDate} defaultValue={moment(currentDate)} onChange={this.handleOnDateChange} allowClear={false} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </div>
+      </ContentsWrapper>
     );
   }
 }

@@ -8,9 +8,11 @@ import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
@@ -19,10 +21,9 @@ import request from 'utils/request';
 import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
-const AntdTable = StyledAntdTable(Table);
+const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
 const { Option } = Select;
-
-Moment.locale('ko');
 
 class ListPage extends Component {
   constructor(props) {
@@ -150,6 +151,7 @@ class ListPage extends Component {
   };
 
   handleModifyClick = record => {
+    console.debug(record);
     this.setState({
       modalVisible: true,
       viewType: 'MODIFY',
@@ -182,6 +184,7 @@ class ListPage extends Component {
         title: '항목',
         key: 'category',
         width: '150px',
+        align: 'center',
         render: () => {
           switch (this.state.selectedCategory) {
             case '387':
@@ -199,8 +202,8 @@ class ListPage extends Component {
           }
         },
       },
-      { title: '연도', key: 'chk_date', width: '100px', render: (key, record) => <div>{Moment(record.chk_date).format('YYYY')}</div> },
-      { title: '월', key: 'chk_date', width: '60px', render: (key, record) => <div>{Moment(record.chk_date).format('M')}</div> },
+      { title: '연도', key: 'chk_date', width: '100px', align: 'center', render: (key, record) => <div>{Moment(record.chk_date).format('YYYY')}</div> },
+      { title: '월', key: 'chk_date', width: '60px', align: 'center', render: (key, record) => <div>{Moment(record.chk_date).format('M')}</div> },
       {
         title: '지역',
         children: [
@@ -208,12 +211,14 @@ class ListPage extends Component {
             title: '청주',
             dataIndex: 'c1_task_seq',
             key: 'c1',
+            align: 'center',
             render: (key, record) => <div>{Number(record.c1).toLocaleString(undefined, { maximumFractionDigits: 10 })}</div>,
           },
           {
             title: '구미',
             dataIndex: 'h3_task_seq',
             key: 'h3',
+            align: 'center',
             render: (key, record) => <div>{Number(record.h3).toLocaleString(undefined, { maximumFractionDigits: 10 })}</div>,
           },
         ],
@@ -222,13 +227,14 @@ class ListPage extends Component {
         title: '입력여부',
         key: 'RNUM',
         width: '180px',
+        align: 'center',
         render: (key, record) =>
           record.is_confirmed === 'N' ? (
             <div>
-              <StyledButton className="btn-primary" onClick={() => this.handleCompleteClick(record.chk_date, record.category)}>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleCompleteClick(record.chk_date, record.category)}>
                 완료
               </StyledButton>
-              <StyledButton className="btn-primary" onClick={() => this.handleModifyClick(record)}>
+              <StyledButton className="btn-primary btn-sm" onClick={() => this.handleModifyClick(record)}>
                 수정
               </StyledButton>
             </div>
@@ -236,45 +242,53 @@ class ListPage extends Component {
             <div>입력완료</div>
           ),
       },
-      { title: '작성자', dataIndex: 'reg_user_name', key: 'reg_user_name', width: '80px' },
+      { title: '작성자', dataIndex: 'reg_user_name', key: 'reg_user_name', width: '80px', align: 'center' },
     ];
 
     const { modalVisible, selectedTaskSeq, viewType, categoryLength, initList } = this.state;
     const { sagaKey: id } = this.props;
 
     return (
-      <div key={group.key}>
-        {group.useTitle && <GroupTitle title={group.title} />}
-        <Select defaultValue="387" onChange={this.handleChange} width="200px" style={{ marginBottom: '10px' }}>
-          <Option value="387">WF 생산량</Option>
-          <Option value="388">전력</Option>
-          <Option value="389">연료</Option>
-          <Option value="390">용수</Option>
-          <Option value="391">경미재해</Option>
-        </Select>
+      <ContentsWrapper>
+        <div key={group.key}>
+          {group.useTitle && <GroupTitle title={group.title} />}
+          <Select defaultValue="387" onChange={this.handleChange} width="200px" style={{ marginBottom: '10px' }}>
+            <Option value="387">WF 생산량</Option>
+            <Option value="388">전력</Option>
+            <Option value="389">연료</Option>
+            <Option value="390">용수</Option>
+            <Option value="391">경미재해</Option>
+          </Select>
 
-        <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-          <div>{`총 ${categoryLength}건`}</div>
-          <div className="alignRight">
-            <StyledButton className="btn-primary" onClick={this.handleAddClick} style={{ marginBottom: '5px' }}>
-              항목 추가
-            </StyledButton>
-          </div>
+          <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
+            <div className="selSaveWrapper alignRight">
+              <StyledButton className="btn-primary" onClick={this.handleAddClick} style={{ marginBottom: '5px' }}>
+                항목 추가
+              </StyledButton>
+            </div>
 
-          <AntdTable
-            rowKey="c1_task_seq"
-            key={`${group.key}_list`}
-            className="view-designer-list"
-            columns={columns}
-            dataSource={initList.filter(item => item.category === this.state.selectedCategory) || []}
-            bordered
-            pagination={false}
-          />
-        </Group>
-        <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
-          <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
-        </Modal>
-      </div>
+            <AntdTable
+              rowKey="c1_task_seq"
+              key={`${group.key}_list`}
+              className="view-designer-list"
+              columns={columns}
+              dataSource={initList.filter(item => item.category === this.state.selectedCategory) || []}
+              pagination={false}
+              footer={() => `총 ${categoryLength}건`}
+            />
+          </Group>
+          <AntdModal
+            title={viewType.toUpperCase() === 'INPUT' ? '등록' : '수정'}
+            visible={modalVisible}
+            closable
+            onCancel={this.handleOnCancel}
+            width={900}
+            footer={null}
+          >
+            <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
+          </AntdModal>
+        </div>
+      </ContentsWrapper>
     );
   };
 

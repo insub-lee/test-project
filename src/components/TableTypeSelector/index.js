@@ -2,6 +2,7 @@ import * as PropTypes from 'prop-types';
 import React from 'react';
 import { Table, Button, Modal, Icon, Input, message } from 'antd';
 import Highlighter from 'react-highlight-words';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 import TableTypeSelectorStyled from './TableTypeSelectorStyled';
 
 // Component Attribute 및 Event Method 정리
@@ -200,8 +201,10 @@ class TableTypeSelector extends React.Component {
       fixed: true,
     };
     return (
-      <div>
-        <Button onClick={this.handleModalVisible}>{btnText}</Button>
+      <>
+        <StyledButton className="btn-primary" onClick={this.handleModalVisible}>
+          {btnText}
+        </StyledButton>
         <Modal title={modalTitle} visible={modalVisivle} width={870} height={520} onCancel={this.handleModalVisible} onOk={this.handleModalOk} okText="적용">
           <TableTypeSelectorStyled>
             <div className="TableTypeSeletorStyled">
@@ -257,7 +260,7 @@ class TableTypeSelector extends React.Component {
             </div>
           </TableTypeSelectorStyled>
         </Modal>
-      </div>
+      </>
     );
   }
 }

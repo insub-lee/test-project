@@ -5,11 +5,11 @@ import { Row, Col } from 'antd';
 import Sketch from 'components/BizBuilder/Sketch';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import * as selectors from '../../../../../../containers/common/Auth/selectors';
 import DeptSearchBar from '../../eiDeptSearchBar';
 import ItemTable from '../ItemTable';
 import MaterialTable from '../../eiMaterialTable';
-import MainPageStyled from '../../styled/MainPageStyled';
 
 class MainPage extends Component {
   constructor(props) {
@@ -69,7 +69,7 @@ class MainPage extends Component {
     const materialCnt = (formData && formData.materialCnt) || 0;
     const searchFlag = (formData && formData.searchFlag) || false;
     return (
-      <MainPageStyled>
+      <ContentsWrapper>
         <StyledViewDesigner>
           <Sketch>
             <Row>
@@ -89,7 +89,7 @@ class MainPage extends Component {
             </Row>
           </Sketch>
         </StyledViewDesigner>
-      </MainPageStyled>
+      </ContentsWrapper>
     );
   }
 }

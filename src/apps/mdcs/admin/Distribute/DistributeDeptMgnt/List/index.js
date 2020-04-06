@@ -66,7 +66,7 @@ class List extends Component {
       render: (text, record) => (
         <div>
           {text}
-          <StyledButton style={{ float: 'right' }} className="btn-light btn-sm2 btn-radius" onClick={() => this.onClickDept(record)}>
+          <StyledButton style={{ float: 'right' }} className="btn-light btn-xs btn-radius" onClick={() => this.onClickDept(record)}>
             <Icon type="edit" />
           </StyledButton>
         </div>

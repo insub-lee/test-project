@@ -26,12 +26,12 @@ class InputModal extends React.Component {
   }
 
   getMaterialList = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
     const apiArr = [
       {
         key: 'materialList',
         type: 'GET',
-        url: '/api/eshs/v1/common/eshschemicalmaterialMaster',
+        url: apiUrl,
       },
     ];
     getCallDataHandler(id, apiArr, this.setDataSource);
@@ -53,45 +53,6 @@ class InputModal extends React.Component {
     return null;
   }
 
-  columns = [
-    {
-      title: 'SAP_NO',
-      dataIndex: 'SAP_NO',
-      key: 'SAP_NO',
-      align: 'center',
-    },
-    {
-      title: 'CAS_NO',
-      dataIndex: 'CAS_NO',
-      key: 'CAS_NO',
-      align: 'center',
-    },
-    {
-      title: '화학물질명_국문',
-      dataIndex: 'NAME_KOR',
-      key: 'NAME_KOR',
-      align: 'center',
-    },
-    {
-      title: '화학물질명_영문',
-      dataIndex: 'NAME_ENG',
-      key: 'NAME_ENG',
-      align: 'center',
-    },
-    {
-      title: '화학물질명_SAP',
-      dataIndex: 'NAME_SAP',
-      key: 'NAME_SAP',
-      align: 'center',
-    },
-    {
-      title: '관용명 및 이명',
-      dataIndex: 'NAME_ETC',
-      key: 'NAME_ETC',
-      align: 'center',
-    },
-  ];
-
   handleSearchChange = e => {
     this.setState(
       {
@@ -102,13 +63,13 @@ class InputModal extends React.Component {
   };
 
   getSearchData = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
+    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
     const { keyword } = this.state;
     const apiArr = [
       {
         key: 'materialList',
         type: 'GET',
-        url: `/api/eshs/v1/common/eshschemicalmaterialMaster?keyword=${keyword}`,
+        url: `${apiUrl}?keyword=${keyword}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.setDataSource);
@@ -137,9 +98,9 @@ class InputModal extends React.Component {
   };
 
   render() {
-    const { columns, handleSearchChange, handleModalClose, handleRowClick } = this;
+    const { handleSearchChange, handleModalClose, handleRowClick } = this;
     const { dataSource, keyword } = this.state;
-    const { visible } = this.props;
+    const { visible, tableColumns } = this.props;
     return (
       <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null}>
         <StyledSearchWrap>
@@ -147,9 +108,9 @@ class InputModal extends React.Component {
           <Input.Search className="search-item input-width160" placeHolder="검색" onChange={handleSearchChange} value={keyword} />
         </StyledSearchWrap>
         <AntdTable
-          columns={columns}
+          columns={tableColumns}
           dataSource={dataSource}
-          pagination={false}
+          pagination={{ pageSize: 10 }}
           onRow={record => ({
             onClick: () => handleRowClick(record),
           })}
@@ -166,6 +127,8 @@ InputModal.propTypes = {
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
   setRequestValue: PropTypes.func,
+  apiUrl: PropTypes.string,
+  tableColumns: PropTypes.arrayOf(PropTypes.object),
 };
 
 InputModal.defaultProps = {
@@ -175,6 +138,8 @@ InputModal.defaultProps = {
   getCallDataHandler: () => {},
   result: {},
   setRequestValue: () => {},
+  apiUrl: '',
+  tableColumns: [],
 };
 
 export default InputModal;

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { Row, Col, DatePicker, Typography, Popconfirm } from 'antd';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import moment from 'moment';
 import request from 'utils/request';
@@ -220,86 +220,93 @@ class Input extends Component {
     const { userInfo, currentDate, reserveCount, selectedDate, noShowDate } = this.state;
     const { formData } = this.props;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <div style={{ marginBottom: '10px' }}>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography.Title level={1} style={{ textAlign: 'center' }}>
-                  사용수칙
-                </Typography.Title>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>
-                  1. 건강관리실 내 건강증진실(안마의자)은 <span style={{ color: '#0000ff' }}>남/여 ROOM구분</span>
-                </Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>2. 운영시간 :월~금 08:30 ~ 17:30 (점심시간 제외 :12:00~13:00) </Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>3. 일주일 단위로 예약 ☞1인 1일 1회, 1주 3회만 가능</Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography>4. 예약 후 사용하지 못할 시 예약 취소.</Typography>
-              </Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={8}>
-                <Typography style={{ color: '#0000ff' }}>☞ 예약 후 미사용 시 다음주는 예약 불가 </Typography>
-              </Col>
-            </Row>
-            <hr />
-          </div>
-          <div style={{ marginBottom: '10px' }}>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={2}>사번</Col>
-              <Col span={4}>{userInfo.emp_no}</Col>
-              <Col span={2}>이름</Col>
-              <Col span={2}>{userInfo.name}</Col>
-              <Col span={2}>
-                <Popconfirm
-                  title={this.makePopconfirmTitle()}
-                  disabled={
-                    formData.checkedIndex !== undefined &&
-                    !this.isReservedToday() &&
-                    reserveCount < 3 &&
-                    moment(selectedDate).format('w') !==
-                      moment(noShowDate)
-                        .add('1', 'week')
-                        .format('w')
-                  }
-                >
-                  <StyledButton className="btn-primary" onClick={this.handleButtonClick}>
-                    예약
-                  </StyledButton>
-                </Popconfirm>
-              </Col>
-              <Col span={2}>소속</Col>
-              <Col span={4}>{userInfo.dept}</Col>
-            </Row>
-            <Row gutter={[24, 48]} type="flex" justify="center">
-              <Col span={2}>직위</Col>
-              <Col span={4}>{userInfo.POSITION}</Col>
-              <Col span={2}>지역</Col>
-              <Col span={4}>{userInfo.barea_cd}</Col>
-              <Col span={2}>신청일</Col>
-              <Col span={4}>
-                <DatePicker disabledDate={this.disableDate} defaultValue={moment(currentDate)} onChange={this.handleOnDateChange} allowClear={false} />
-              </Col>
-            </Row>
-            <hr />
-          </div>
-        </Sketch>
-      </StyledViewDesigner>
+      <ContentsWrapper>
+        <Row gutter={[24, 48]} type="flex" justify="center">
+          <Col span={8}>
+            <Typography.Title level={1} style={{ textAlign: 'center' }}>
+              사용수칙
+            </Typography.Title>
+          </Col>
+        </Row>
+        <Row gutter={[24, 48]} type="flex" justify="center">
+          <Col span={8}>
+            <Typography>
+              1. 건강관리실 내 건강증진실(안마의자)은 <span style={{ color: '#0000ff' }}>남/여 ROOM구분</span>
+            </Typography>
+          </Col>
+        </Row>
+        <Row gutter={[24, 48]} type="flex" justify="center">
+          <Col span={8}>
+            <Typography>2. 운영시간 :월~금 08:30 ~ 17:30 (점심시간 제외 :12:00~13:00) </Typography>
+          </Col>
+        </Row>
+        <Row gutter={[24, 48]} type="flex" justify="center">
+          <Col span={8}>
+            <Typography>3. 일주일 단위로 예약 ☞1인 1일 1회, 1주 3회만 가능</Typography>
+          </Col>
+        </Row>
+        <Row gutter={[24, 48]} type="flex" justify="center">
+          <Col span={8}>
+            <Typography>4. 예약 후 사용하지 못할 시 예약 취소.</Typography>
+          </Col>
+        </Row>
+        <Row gutter={[24, 48]} type="flex" justify="center">
+          <Col span={8}>
+            <Typography style={{ color: '#0000ff' }}>☞ 예약 후 미사용 시 다음주는 예약 불가 </Typography>
+          </Col>
+        </Row>
+        <div className="tableWrapper">
+          <StyledHtmlTable>
+            <table>
+              <colgroup>
+                <col width="15%" />
+                <col width="18%" />
+                <col width="15%" />
+                <col width="18%" />
+                <col width="15%" />
+                <col width="18%" />
+              </colgroup>
+              <tbody>
+                <tr>
+                  <th>사번</th>
+                  <td>{userInfo.EMP_NO}</td>
+                  <th>이름</th>
+                  <td>{userInfo.NAME}</td>
+                  <th>소속</th>
+                  <td>
+                    <Popconfirm
+                      title={this.makePopconfirmTitle()}
+                      disabled={
+                        formData.checkedIndex !== undefined &&
+                        !this.isReservedToday() &&
+                        reserveCount < 3 &&
+                        moment(selectedDate).format('w') !==
+                          moment(noShowDate)
+                            .add('1', 'week')
+                            .format('w')
+                      }
+                    >
+                      <StyledButton className="btn-primary btn-sm" onClick={this.handleButtonClick}>
+                        예약
+                      </StyledButton>
+                    </Popconfirm>
+                  </td>
+                </tr>
+                <tr>
+                  <th>직위</th>
+                  <td>{userInfo.POSITION}</td>
+                  <th>지역</th>
+                  <td>{userInfo.BAREA_CD}</td>
+                  <th>신청일</th>
+                  <td>
+                    <DatePicker disabledDate={this.disableDate} defaultValue={moment(currentDate)} onChange={this.handleOnDateChange} allowClear={false} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </StyledHtmlTable>
+        </div>
+      </ContentsWrapper>
     );
   }
 }

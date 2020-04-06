@@ -1,15 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Input, InputNumber, Select, Row, Col, Popconfirm } from 'antd';
+import { Input, InputNumber, Select, Popconfirm } from 'antd';
 
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from '../InputModal';
 
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -26,13 +30,9 @@ class List extends React.Component {
         VENDOR_CD: '',
         CONTENT_EXP: '',
         CONTENT_DOSE: 0,
-        UNIT: '',
-        FIR_UNIT_EXCHANGE: 0,
-        SEC_UNIT_EXCHANGE: 0,
+        MASTER_ID: '',
       },
       isModified: false,
-      originSapNo: '',
-      originCasNo: '',
       deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
@@ -79,12 +79,12 @@ class List extends React.Component {
 
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { requestValue, isModified, originSapNo, originCasNo } = this.state;
+    const { requestValue, isModified } = this.state;
     if (isModified) {
       this.setState({
         isModified: false,
       });
-      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, { requestValue, originSapNo, originCasNo }, this.getMaterialList);
+      return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialMaster`, { requestValue }, this.getMaterialList);
     }
     this.setState({
       isModified: false,
@@ -93,8 +93,8 @@ class List extends React.Component {
   };
 
   handleDeleteClick = () => {
-    const { originSapNo, originCasNo } = this.state;
-    if (!originSapNo && !originCasNo) {
+    const { requestValue } = this.state;
+    if (!requestValue.MASTER_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
@@ -106,9 +106,8 @@ class List extends React.Component {
 
   handleDeleteConfirm = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
-    const { originSapNo, originCasNo } = this.state;
-    const params = { SAP_NO: originSapNo, CAS_NO: originCasNo };
-    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, params, this.getMaterialList);
+    const { requestValue } = this.state;
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialMaster`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -141,8 +140,6 @@ class List extends React.Component {
         SEC_UNIT_EXCHANGE: 0,
       },
       isModified: false,
-      originSapNo: '',
-      originCasNo: '',
     });
   };
 
@@ -162,10 +159,47 @@ class List extends React.Component {
       requestValue: record,
       visible: false,
       isModified: true,
-      originSapNo: record.SAP_NO,
-      originCasNo: record.CAS_NO,
     });
   };
+
+  columns = [
+    {
+      title: 'SAP_NO',
+      dataIndex: 'SAP_NO',
+      key: 'SAP_NO',
+      align: 'center',
+    },
+    {
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_국문',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_SAP',
+      dataIndex: 'NAME_SAP',
+      key: 'NAME_SAP',
+      align: 'center',
+    },
+    {
+      title: '관용명 및 이명',
+      dataIndex: 'NAME_ETC',
+      key: 'NAME_ETC',
+      align: 'center',
+    },
+  ];
 
   render() {
     const {
@@ -179,161 +213,124 @@ class List extends React.Component {
       handleDeleteConfirm,
       handleDeleteClick,
     } = this;
+    const { columns } = this;
     const { requestValue, visible, deleteConfirmMessage } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData } = this.props;
     return (
-      <StyledViewDesigner>
-        <Sketch>
+      <>
+        <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
             <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
-          <div className="alignRight">
-            <StyledButton className="btn-primary" onClick={handleInputClick}>
+          <div className="selSaveWrapper">
+            <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
               저장/수정
             </StyledButton>
             <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
-              <StyledButton className="btn-primary" onClick={handleDeleteClick}>
+              <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
                 삭제
               </StyledButton>
             </Popconfirm>
-            <StyledButton className="btn-primary" onClick={handleResetClick}>
+            <StyledButton className="btn-light" onClick={handleResetClick}>
               초기화
             </StyledButton>
           </div>
-          <div className="data-grid">
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                SAP NO.
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                CAS NO.
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                화학물질명_국문
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                화학물질명_영문
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
-              </Col>
-            </Row>
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                화학물질명_SAP
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                관용명 및 이명
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                수입구분
-              </Col>
-              <Col span={4} className="col-input">
-                <Select className="col-select" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
-                  <Select.Option value="N">내수</Select.Option>
-                  <Select.Option value="Y">수입</Select.Option>
-                </Select>
-              </Col>
-            </Row>
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                공급업체
-              </Col>
-              <Col span={10}>
-                <div className="alignLeft company-comp">
-                  <EshsCmpnyComp
-                    searchWidth="50%"
-                    sagaKey={sagaKey}
-                    getExtraApiData={getCallDataHandler}
-                    extraApiData={result}
-                    colData={requestValue.VENDOR_CD}
-                    visible
-                    CONFIG={{ property: { isRequired: false } }}
-                    changeFormData={changeFormData}
-                    COMP_FIELD="VENDOR_CD"
-                    eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
-                  />
-                </div>
-              </Col>
-              <Col span={2} className="col-label">
-                함량(%) 표현값
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="CONTENT_EXP" value={requestValue.CONTENT_EXP} onChange={handleInputChange} className="col-input-number" />
-              </Col>
-              <Col span={2} className="col-label">
-                함량(%) 정량
-              </Col>
-              <Col span={4} className="col-input">
-                <InputNumber
-                  value={requestValue.CONTENT_DOSE}
-                  onChange={value => handleInputNumberChange(value, 'CONTENT_DOSE')}
-                  className="col-input-number"
-                />
-              </Col>
-            </Row>
-            <Row className="data-grid-row">
-              <Col span={2} className="col-label">
-                단위
-              </Col>
-              <Col span={4} className="col-input">
-                <Input name="UNIT" value={requestValue.UNIT} onChange={handleInputChange} />
-              </Col>
-              <Col span={2} className="col-label">
-                단위환산1
-              </Col>
-              <Col span={4} className="col-input">
-                <InputNumber
-                  value={requestValue.FIR_UNIT_EXCHANGE}
-                  onChange={value => handleInputNumberChange(value, 'FIR_UNIT_EXCHANGE')}
-                  className="col-input-number"
-                />
-              </Col>
-              <Col span={2} className="col-label">
-                단위환산2
-              </Col>
-              <Col span={4} className="col-input">
-                <InputNumber
-                  value={requestValue.SEC_UNIT_EXCHANGE}
-                  onChange={value => handleInputNumberChange(value, 'SEC_UNIT_EXCHANGE')}
-                  className="col-input-number"
-                />
-              </Col>
-              <Col span={2} className="col-label">
-                kg환산계수
-              </Col>
-              <Col span={4} className="col-input">
-                <div>{Math.floor(requestValue.FIR_UNIT_EXCHANGE * requestValue.SEC_UNIT_EXCHANGE * 100) / 100}</div>
-              </Col>
-            </Row>
+          <div className="tableWrapper">
+            <StyledHtmlTable>
+              <table>
+                <colgroup>
+                  <col width="8%" />
+                  <col width="17%" />
+                  <col width="8%" />
+                  <col width="17%" />
+                  <col width="8%" />
+                  <col width="17%" />
+                  <col width="8%" />
+                  <col width="17%" />
+                </colgroup>
+                <tbody>
+                  <tr>
+                    <th colSpan={1}>SAP NO.</th>
+                    <td colSpan={3}>
+                      <AntdInput className="ant-input-sm" name="SAP_NO" value={requestValue.SAP_NO} onChange={handleInputChange} />
+                    </td>
+                    <th colSpan={1}>CAS NO.</th>
+                    <td colSpan={3}>
+                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>화학물질명_국문</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
+                    </td>
+                    <th>화학물질명_영문</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
+                    </td>
+                    <th>화학물질명_SAP</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
+                    </td>
+                    <th>관용명 및 이명</th>
+                    <td>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>공급업체</th>
+                    <td>
+                      <EshsCmpnyComp
+                        searchWidth="50%"
+                        sagaKey={sagaKey}
+                        getExtraApiData={getCallDataHandler}
+                        extraApiData={result}
+                        colData={requestValue.VENDOR_CD}
+                        visible
+                        CONFIG={{ property: { isRequired: false, className: 'ant-input-search input-search-sm' } }}
+                        changeFormData={changeFormData}
+                        COMP_FIELD="VENDOR_CD"
+                        eshsCmpnyCompResult={(companyInfo, COMP_FIELD) => this.handleEshsCmpnyCompChange(companyInfo, COMP_FIELD)}
+                      />
+                    </td>
+                    <th>수입구분</th>
+                    <td>
+                      <AntdSelect className="select-sm" defaultValue="N" onChange={handleInputChange} value={requestValue.IS_IMPORT}>
+                        <Select.Option value="N">내수</Select.Option>
+                        <Select.Option value="Y">수입</Select.Option>
+                      </AntdSelect>
+                    </td>
+                    <th>함량(%) 표현값</th>
+                    <td>
+                      <AntdInput name="CONTENT_EXP" value={requestValue.CONTENT_EXP} onChange={handleInputChange} className="col-input-number ant-input-sm" />
+                    </td>
+                    <th>함량(%) 정량</th>
+                    <td>
+                      <InputNumber
+                        value={requestValue.CONTENT_DOSE}
+                        onChange={value => handleInputNumberChange(value, 'CONTENT_DOSE')}
+                        className="col-input-number"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div className="div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
+            </StyledHtmlTable>
           </div>
-          <div className="alignRight div-comment">kg환산계수: 단위환산1 * 단위환산2</div>
-          <Modal
-            sagaKey={sagaKey}
-            visible={visible}
-            modalClose={handleModalClose}
-            getCallDataHandler={getCallDataHandler}
-            result={result}
-            setRequestValue={setRequestValue}
-          />
-        </Sketch>
-      </StyledViewDesigner>
+        </ContentsWrapper>
+        <Modal
+          sagaKey={sagaKey}
+          visible={visible}
+          modalClose={handleModalClose}
+          getCallDataHandler={getCallDataHandler}
+          result={result}
+          setRequestValue={setRequestValue}
+          apiUrl="/api/eshs/v1/common/eshschemicalmaterialMaster"
+          tableColumns={columns}
+        />
+      </>
     );
   }
 }

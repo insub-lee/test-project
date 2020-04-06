@@ -27,7 +27,7 @@ const LabelComp = ({ NAME_KOR, CONFIG, changeFormData, formData, sagaKey: id, re
     <div className={CONFIG.property.className || ''}>
       <span>{NAME_KOR}</span>
       {CONFIG && CONFIG.property && CONFIG.property.optionCopyKey && CONFIG.property.optionCompKey && !readOnly && (
-        <StyledButton className="btn-gray btn-xs" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
+        <StyledButton className="btn-gray btn-xxs" onClick={() => onCopyHandler(CONFIG, changeFormData, formData, id)}>
           Copy Description
         </StyledButton>
       )}

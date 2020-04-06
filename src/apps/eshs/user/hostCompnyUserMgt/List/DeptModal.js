@@ -1,21 +1,27 @@
-/* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Input, Select, Button, message } from 'antd';
-import DeptModalStyled from './DeptModalStyled';
+import { Input, Select, message, Table } from 'antd';
+import PropTypes from 'prop-types';
+
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
 
 const { Option } = Select;
-const ReadStar = () => <label style={{ color: 'red' }}>* </label>;
+const AntdLineTable = StyledLineTable(Table);
+const AntdInput = StyledInput(Input);
 
 class DeptModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchDept: [],
+      selectedDept: {},
+      renderTable: [],
     };
   }
 
   componentDidMount = () => {
-    const { id, getCallDataHandler, changeFormData } = this.props;
+    const { id, getCallDataHandler } = this.props;
 
     const apiAry = [
       {
@@ -24,56 +30,156 @@ class DeptModal extends Component {
         url: '/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=02',
       },
     ];
-    getCallDataHandler(id, apiAry, this.setDept);
-    changeFormData(id, 'deptModal_cmpny', '02');
+    getCallDataHandler(id, apiAry, () => this.tableRender({ HST_CMPNY_CD: '02' }));
+  };
+
+  renderColumns = record => [
+    {
+      title: (
+        <>
+          <span>부서코드</span>
+          <AntdInput
+            className="ant-input-inline"
+            style={{ width: '100%' }}
+            name="DEPT_CD"
+            value={(record && record.DEPT_CD) || ''}
+            onChange={this.handleInputChange}
+            placeholder="부서코드"
+          />
+        </>
+      ),
+      dataIndex: 'DEPT_CD',
+      width: 250,
+    },
+    {
+      title: (
+        <>
+          <span>부서명</span>
+          <br />
+          <AntdInput
+            className="ant-input-inline"
+            name="DEPT_NM"
+            style={{ width: '350px' }}
+            value={(record && record.DEPT_NM) || ''}
+            onChange={this.handleInputChange}
+            placeholder="부서명"
+          />
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={this.handleDeptAdd}>
+              추가
+            </StyledButton>
+            <StyledButton className="btn-primary btn-first" onClick={this.handleDeptUpdate}>
+              저장
+            </StyledButton>
+            <StyledButton className="btn-primary " onClick={this.handleDeptDelete}>
+              삭제
+            </StyledButton>
+          </StyledButtonWrapper>
+        </>
+      ),
+      dataIndex: 'DEPT_NM',
+      width: 550,
+    },
+  ];
+
+  tableRender = selectedDept => {
+    const { result } = this.props;
+    const renderList = (result && result.deptList && result.deptList.eshsHstCmpnyDeptListByCmpny) || [];
+    const columns = this.renderColumns(selectedDept);
+    this.setState({
+      selectedDept,
+      renderTable: [
+        <AntdLineTable
+          key="renderTable"
+          className="tableWrapper"
+          style={{ cursor: 'pointer' }}
+          rowKey={renderList.DEPT_CD}
+          columns={columns}
+          dataSource={renderList}
+          bordered
+          onRow={record => ({
+            onClick: () => {
+              this.tableRender(record);
+            },
+          })}
+          pagination={{ pageSize: 100 }}
+          scroll={{ y: 800 }}
+          footer={() => <div style={{ textAlign: 'center' }}>{`${renderList.length} 건`}</div>}
+        />,
+      ],
+    });
+  };
+
+  handleSearchDept = e => {
+    const { id, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'deptList',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${e}`,
+      },
+    ];
+    getCallDataHandler(id, apiAry, () => this.tableRender({ HST_CMPNY_CD: e }));
+  };
+
+  handleInputChange = e => {
+    const { selectedDept } = this.state;
+    this.tableRender({ ...selectedDept, [e.target.name]: e.target.value });
   };
 
   handleDeptAdd = () => {
-    if (this.validationCheck()) {
-      const { id, formData, getCallDataHandler } = this.props;
-      const HST_CMPNY_CD = (formData && formData.deptModal_cmpny) || '';
-      const DEPT_CD = (formData && formData.selectedDept.DEPT_CD) || '';
-
-      const apiAry = [
-        {
-          key: 'deptCnt',
-          type: 'GET',
-          url: `/api/eshs/v1/common/eshsHstCmpnyDeptOverLap?HST_CMPNY_CD=${HST_CMPNY_CD}&&DEPT_CD=${DEPT_CD}`,
-        },
-      ];
-
-      getCallDataHandler(id, apiAry, this.handleDeptOverLab);
+    const { id, getCallDataHandler } = this.props;
+    const {
+      selectedDept: { HST_CMPNY_CD = '', DEPT_CD = '', DEPT_NM = '' },
+    } = this.state;
+    if (!DEPT_CD) {
+      return message.warning('부서코드를 입력하세요');
     }
+    if (!DEPT_NM) {
+      return message.warning('부서명을 입력하세요');
+    }
+    const apiAry = [
+      {
+        key: 'deptCnt',
+        type: 'GET',
+        url: `/api/eshs/v1/common/eshsHstCmpnyDeptOverLap?HST_CMPNY_CD=${HST_CMPNY_CD}&&DEPT_CD=${DEPT_CD}`,
+      },
+    ];
+
+    return getCallDataHandler(id, apiAry, this.handleDeptOverLab);
   };
 
   handleDeptOverLab = () => {
-    const { id, submitHandlerBySaga, formData, changeFormData, result } = this.props;
-    const HST_CMPNY_CD = (formData && formData.deptModal_cmpny) || '';
-    const submitData = { ...(formData && formData.selectedDept), HST_CMPNY_CD };
-
-    const is_ok = (result && result.deptCnt && result.deptCnt.deptCnt) || 0;
-    if (!is_ok) {
-      submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyDept', submitData, this.handleDeptReload);
-      changeFormData(id, 'selectedDept', {});
-    } else {
-      message.warning('이전에 사용되었던 코드는 다시 사용할 수 없습니다!');
+    const { id, submitHandlerBySaga, result } = this.props;
+    const { selectedDept } = this.state;
+    const HST_CMPNY_CD = (selectedDept && selectedDept.HST_CMPNY_CD) || '';
+    const cntOk = (result && result.deptCnt && result.deptCnt.deptCnt) || 0;
+    if (!cntOk) {
+      return submitHandlerBySaga(id, 'POST', '/api/eshs/v1/common/eshsHstCmpnyDept', selectedDept, () => this.handleSearchDept(HST_CMPNY_CD));
     }
+    return message.warning('이전에 사용되었던 코드는 다시 사용할 수 없습니다!');
   };
 
   handleDeptUpdate = () => {
-    if (this.validationCheck()) {
-      const { id, submitHandlerBySaga, formData, changeFormData } = this.props;
-      const submitData = (formData && formData.selectedDept) || {};
-
-      submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyDept', submitData, this.handleDeptReload);
-      changeFormData(id, 'selectedDept', {});
+    const { id, submitHandlerBySaga } = this.props;
+    const {
+      selectedDept,
+      selectedDept: { HST_CMPNY_CD = '', DEPT_CD = '', DEPT_NM = '' },
+    } = this.state;
+    if (!DEPT_CD) {
+      return message.warning('부서코드를 입력하세요');
     }
+    if (!DEPT_NM) {
+      return message.warning('부서명을 입력하세요');
+    }
+    return submitHandlerBySaga(id, 'PUT', '/api/eshs/v1/common/eshsHstCmpnyDept', selectedDept, () => this.handleSearchDept(HST_CMPNY_CD));
   };
 
   handleDeptDelete = () => {
-    const { id, formData, getCallDataHandler } = this.props;
-    const HST_CMPNY_CD = (formData && formData.deptModal_cmpny) || '';
-    const DEPT_CD = (formData && formData.selectedDept.DEPT_CD) || '';
+    const { id, getCallDataHandler } = this.props;
+    const {
+      selectedDept: { HST_CMPNY_CD = '', DEPT_CD = '' },
+    } = this.state;
     const apiAry = [
       {
         key: 'isDeleted',
@@ -86,76 +192,16 @@ class DeptModal extends Component {
   };
 
   handleIsDeleted = () => {
-    const { id, submitHandlerBySaga, formData, changeFormData, result } = this.props;
-    const submitData = (formData && formData.selectedDept) || {};
-    const is_deleted = result && result.isDeleted && result.isDeleted.isDeleted;
-    if (!is_deleted) {
-      submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsHstCmpnyDeptDelete', submitData, this.handleDeptReload);
-      changeFormData(id, 'selectedDept', {});
-    } else {
-      message.warning('해당 부서에 등록된 직원이 있습니다. 직원 삭제후 시도해 주십시오.');
+    const { id, submitHandlerBySaga, result } = this.props;
+    const {
+      selectedDept,
+      selectedDept: { HST_CMPNY_CD = '' },
+    } = this.state;
+    const isDel = result && result.isDeleted && result.isDeleted.isDeleted;
+    if (!isDel) {
+      return submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsHstCmpnyDeptDelete', selectedDept, () => this.handleSearchDept(HST_CMPNY_CD));
     }
-  };
-
-  handleSearchDept = e => {
-    const { id, getCallDataHandler, changeFormData } = this.props;
-
-    const apiAry = [
-      {
-        key: 'deptList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${e}`,
-      },
-    ];
-    getCallDataHandler(id, apiAry, this.setDept);
-    changeFormData(id, 'deptModal_cmpny', e);
-  };
-
-  setDept = () => {
-    const { result } = this.props;
-    const searchDept = (result && result.deptList && result.deptList.eshsHstCmpnyDeptListByCmpny) || [];
-
-    this.setState({
-      searchDept,
-    });
-  };
-
-  handleDeptReload = sagaKey => {
-    const { getCallDataHandler, formData } = this.props;
-    const apiAry = [
-      {
-        key: 'deptList',
-        type: 'GET',
-        url: `/api/eshs/v1/common/eshsHstCmpnyDept?CMPNY_CD=${formData && formData.deptModal_cmpny}`,
-      },
-    ];
-    getCallDataHandler(sagaKey, apiAry, this.setDept);
-  };
-
-  onRowClick = deptInfo => {
-    const { id, changeFormData } = this.props;
-    changeFormData(id, 'selectedDept', deptInfo);
-  };
-
-  handleInputChange = e => {
-    const { id, changeFormData, formData } = this.props;
-    const selectedDept = (formData && formData.selectedDept) || {};
-    changeFormData(id, 'selectedDept', { ...selectedDept, [e.target.name]: e.target.value });
-  };
-
-  validationCheck = () => {
-    let is_ok = true;
-    const { formData } = this.props;
-    const deptInfo = (formData && formData.selectedDept) || {};
-    if (!deptInfo.DEPT_CD) {
-      message.warning('부서코드를 입력하세요');
-      is_ok = false;
-    } else if (!deptInfo.DEPT_CD) {
-      message.warning('부서명을 입력하세요');
-      is_ok = false;
-    }
-
-    return is_ok;
+    return message.warning('해당 부서에 등록된 직원이 있습니다. 직원 삭제후 시도해 주십시오.');
   };
 
   handleDwExcel = () => {
@@ -163,68 +209,42 @@ class DeptModal extends Component {
   };
 
   render() {
-    const { result, formData } = this.props;
+    const { result } = this.props;
+    const { renderTable, selectedDept } = this.state;
     const cmpnyList = (result && result.cmpnyList && result.cmpnyList.eshsHstCmpnyList) || [];
     const dfValue = cmpnyList.length ? cmpnyList[0].HST_CMPNY_CD : ' ';
-    const selectedDept = (formData && formData.selectedDept) || {};
     return (
-      <DeptModalStyled>
-        <div className="deptModal">
-          <div>
-            <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
-              {cmpnyList.map(c => (
-                <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
-                  {c.hst_cmpny_nm}
-                </Option>
-              ))}
-            </Select>
-            <Button onClick={this.handleDwExcel}>엑셀받기</Button>
-          </div>
-          <div>
-            <table>
-              <thead>
-                <tr>
-                  <td>
-                    <ReadStar />
-                    부서코드
-                  </td>
-                  <td>
-                    <ReadStar />
-                    부서명
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <Input name="DEPT_CD" value={selectedDept.DEPT_CD} onChange={this.handleInputChange} placeholder="부서코드"></Input>
-                  </td>
-                  <td>
-                    <Input name="DEPT_NM" value={selectedDept.DEPT_NM} onChange={this.handleInputChange} placeholder="부서명"></Input>
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan={2}>
-                    <Button onClick={this.handleDeptAdd}>추가</Button>
-                    &nbsp; &nbsp;
-                    <Button onClick={this.handleDeptUpdate}>저장</Button>
-                    &nbsp; &nbsp;
-                    <Button onClick={this.handleDeptDelete}>삭제</Button>
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                {this.state.searchDept.map(d => (
-                  <tr key={d.DEPT_CD} onClick={() => this.onRowClick(d)} className="cell">
-                    <td>{d.DEPT_CD}</td>
-                    <td>{d.DEPT_NM}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+      <>
+        <div>
+          <Select defaultValue={dfValue} style={{ width: 130, padding: 3 }} onChange={this.handleSearchDept}>
+            {cmpnyList.map(c => (
+              <Option key={c.HST_CMPNY_CD} style={{ height: 30 }}>
+                {c.HST_CMPNY_NM}
+              </Option>
+            ))}
+          </Select>
+          <StyledButton className="btn-primary btn-first" onClick={this.handleDwExcel}>
+            엑셀받기
+          </StyledButton>
+          {renderTable}
         </div>
-      </DeptModalStyled>
+      </>
     );
   }
 }
-DeptModal.defaultProps = {};
+
+DeptModal.propTypes = {
+  result: PropTypes.object,
+  id: PropTypes.string,
+  getCallDataHandler: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
+};
+
+DeptModal.defaultProps = {
+  result: {},
+  id: '',
+  getCallDataHandler: () => {},
+  submitHandlerBySaga: () => {},
+};
+
 export default DeptModal;

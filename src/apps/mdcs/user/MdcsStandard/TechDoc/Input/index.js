@@ -375,7 +375,7 @@ class TechDocInput extends Component {
                   <div className="w100Table">
                     <Col span={4}>
                       재개정 이력
-                      <StyledButton className="btn-gray btn-xs" onClick={this.handlerCopyDesc}>
+                      <StyledButton className="btn-gray btn-xxs" onClick={this.handlerCopyDesc}>
                         Copy Description
                       </StyledButton>
                     </Col>

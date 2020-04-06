@@ -5,6 +5,8 @@ import { Table, Icon, Button, Modal } from 'antd';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
 import StyledModalWrapper from 'commonStyled/Modal/StyledModal';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
+
 import DocView from './DocView';
 
 const AntdTable = StyledAntdTable(Table);
@@ -100,24 +102,26 @@ class DistributeDocList extends Component {
     }
 
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <div style={{ marginBottom: '10px' }}>
-          <p style={{ fontSize: '22px', fontWeight: '500', color: '#000' }}>
-            <Icon type="form" /> 배포문서 목록
-          </p>
-        </div>
-        <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+      <>
+        <ContentsWrapper>
+          <div className="pageTitle">
+            <p>
+              <Icon type="form" /> 배포문서 목록
+            </p>
+          </div>
+          <AntdTable dataSource={list.map(item => ({ ...item, key: item.TRANS_NO }))} columns={this.columns} />
+        </ContentsWrapper>
         <AntdModal
           width={700}
           visible={this.state.isShow}
           title="배포문서 다운로드"
           onCancel={this.onCancelPopup}
           destroyOnClose
-          footer={[<Button onClick={this.onCancelPopup}>취소</Button>]}
+          footer={[<Button onClick={this.onCancelPopup}>닫기</Button>]}
         >
           <DocView selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
-      </div>
+      </>
     );
   }
 }

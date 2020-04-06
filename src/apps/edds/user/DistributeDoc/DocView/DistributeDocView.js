@@ -95,7 +95,7 @@ class DistributeDocView extends Component {
                 <tbody>
                   <tr>
                     <th>문서명</th>
-                    <td colSpan={3}>{detail.TITLE} / {detail.TASK_SEQ}</td>
+                    <td colSpan={3}>{detail.TITLE}</td>
                   </tr>
                   <tr>
                     <th>발송번호</th>

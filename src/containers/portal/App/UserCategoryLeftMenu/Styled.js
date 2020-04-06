@@ -64,10 +64,13 @@ const Styled = styled.div`
     cursor: pointer;
     width: 20px;
     color: white;
-    background-color: rgba(87, 71, 120, 1);
+    background-color: rgb(21, 36, 52);
     background-repeat: no-repeat;
-    border-top-left-radius: 3px;
-    border-bottom-left-radius: 3px;
+    border-radius: 0;
+  }
+
+  .btn-page-move {
+    background: transparent;
   }
 `;
 

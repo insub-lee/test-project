@@ -1,11 +1,22 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import { Modal, Button, Input, Select, Popconfirm, message } from 'antd';
+import { Modal, Input, Select, Popconfirm, message } from 'antd';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+
 import DeptModal from './DeptModal';
 
 const { Option } = Select;
+const AntdSearch = StyledSearchInput(Input.Search);
+
+const AntdModal = StyledContentsModal(Modal);
 const currentYear = new Date().getFullYear();
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 
 class DeptSearchBar extends Component {
   constructor(props) {
@@ -114,32 +125,41 @@ class DeptSearchBar extends Component {
     const itemList = (formData && formData.itemList) || [];
     return (
       <>
-        <div>
-          <span>평가년도</span>
-          <Select value={formData.CHK_YEAR} style={{ width: 130, padding: 3 }} onChange={this.handleYearChange}>
+        <div className="selSaveWrapper alignLeft">
+          <span className="textLabel">평가년도</span>
+          <AntdSelect className="selectMid mr5" value={formData.CHK_YEAR} style={{ width: 130 }} onChange={this.handleYearChange}>
             {years.map(y => (
               <Option key={y} value={y}>
                 {y}
               </Option>
             ))}
-          </Select>
-          &nbsp; <span>부서코드 </span>
-          <Input name="DEPT_CD" value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD} style={{ width: 150 }} readOnly placeholder="부서코드" />
-          <StyledButton className="btn-primary" shape="circle" icon="search" onClick={this.handleModal} />
-          <Modal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
+          </AntdSelect>
+          <span className="textLabel">부서코드</span>
+          <AntdSearch
+            className="ant-input-inline mr5"
+            name="DEPT_CD"
+            value={searchRow.DEPT_CD ? searchRow.DEPT_CD : myDept.DEPT_CD}
+            style={{ width: 150 }}
+            readOnly
+            placeholder="부서코드"
+            onClick={this.handleModal}
+            onSearch={this.handleModal}
+          />
+          <AntdModal title="주관회사 부서 검색" visible={this.state.modalVisible} onCancel={this.handleModal} width={900} height={600} footer={[null]}>
             <DeptModal deptList={deptList || []} handleModalRowClick={this.handleModalRowClick} handleModal={this.handleModal}></DeptModal>
-          </Modal>
-          <Input value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
-          <StyledButton className="btn-primary" onClick={this.handleDeptSearch}>
-            검색
-          </StyledButton>
-          {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
-            <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
-              <StyledButton className="btn-primary">완료</StyledButton>
-            </Popconfirm>
-          )}
+          </AntdModal>
+          <AntdInput className="ant-input-inline inputMid" value={searchRow.NAME_KOR ? searchRow.NAME_KOR : myDept.NAME_KOR} style={{ width: 150 }} readOnly />
+          <StyledButtonWrapper className="btn-wrap-inline">
+            <StyledButton className="btn-primary btn-first" onClick={this.handleDeptSearch}>
+              검색
+            </StyledButton>
+            {eiMaterialCnt > 0 && itemList.length > 0 && !searchFlag && (
+              <Popconfirm title="완료하시겠습니까?" onConfirm={this.handleFinsh} okText="확인" cancelText="취소">
+                <StyledButton className="btn-primary">완료</StyledButton>
+              </Popconfirm>
+            )}
+          </StyledButtonWrapper>
         </div>
-        <hr />
       </>
     );
   }

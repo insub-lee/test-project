@@ -2,18 +2,26 @@
 import React, { Component } from 'react';
 import { Select, Input, DatePicker, message } from 'antd';
 import { Table, Column, AutoSizer } from 'react-virtualized';
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import moment from 'moment';
 import { changeFormData } from 'components/BizBuilderBase/actions';
-import NothGateCmpnyModalStyled from './NothGateCmpnyModalStyled';
 
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
+
+const AntdInput = StyledInput(Input);
+const AntdSelect = StyledSelect(Select);
 const { Option } = Select;
-const { Search } = Input;
-const InputGroup = Input.Group;
+
 const format = 'YYYY-MM-DD HH:mm:ss';
+const AntdSearch = StyledSearchInput(Input.Search);
+
 moment.locale('ko');
 
 class NothGateCmpnyModal extends Component {
@@ -293,97 +301,132 @@ class NothGateCmpnyModal extends Component {
     const BIZ_REG_NO = (formData && formData.modal && formData.modal.info && formData.modal.info.BIZ_REG_NO) || '';
     return (
       <div>
-        <NothGateCmpnyModalStyled>
-          <div className="nothGateCmpny_modal">
-            <table>
-              <tbody>
-                <tr>
-                  <td>지역</td>
-                  <td colSpan="3">
-                    <Select value={info.WORK_AREA_CD ? info.WORK_AREA_CD : 'CJ'} onChange={this.handleSiteOnChange}>
-                      <Option value="CJ">청주</Option>
-                      <Option value="GM">구미</Option>
-                    </Select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>업체명</td>
-                  <td>
-                    <Input
-                      placeholder="업체명"
-                      name="WRK_CMPNY_NM"
-                      value={info.WRK_CMPNY_NM}
-                      onChange={this.handleInputChange}
-                      readOnly={BIZ_REG_NO !== '000-00-00000'}
-                    />
-                  </td>
-                  <td>사업자등록번호</td>
-                  <td>
-                    <Input placeholder="사업자등록번호" name="BIZ_REG_NO" value={info.BIZ_REG_NO} onChange={this.handleBusinessInputChange} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>방문자 성명</td>
-                  <td>
-                    <Input placeholder="방문자 성명" name="VISITOR_NAME" value={info.VISITOR_NAME} onChange={this.handleInputChange} />
-                  </td>
-                  <td>연락처</td>
-                  <td>
-                    <Input placeholder="연락처" name="PHONE_NUMBER" value={info.PHONE_NUMBER} onChange={this.handleInputChange} />
-                  </td>
-                </tr>
-                <tr>
-                  <td>출입시간</td>
-                  <td>
-                    <DatePicker
-                      disabledDate={this.disabledStartDate}
-                      showTime
-                      format="YYYY-MM-DD HH:mm:ss"
-                      value={moment(VISITOR_IN_DATE)}
-                      placeholder="Start"
-                      onChange={this.onStartChange}
-                      onOpenChange={this.handleStartOpenChange}
-                    />
-                  </td>
-                  <td>퇴장시간</td>
-                  <td>
-                    <DatePicker
-                      disabledDate={this.disabledEndDate}
-                      showTime
-                      format="YYYY-MM-DD HH:mm:ss"
-                      value={moment(VISITOR_OUT_DATE)}
-                      placeholder="End"
-                      onChange={this.onEndChange}
-                      open={endOpen}
-                      onOpenChange={this.handleEndOpenChange}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div>
-              <StyledButton classNmae="btn-gray btn-first" onClick={this.handleBtnOnClick}>
-                {modalType === 'INSERT' ? '등록' : '수정'}
+        <StyledHtmlTable>
+          <table>
+            <colgroup>
+              <col width="15%" />
+              <col width="35%" />
+              <col width="15%" />
+              <col width="35%" />
+            </colgroup>
+            <tbody>
+              <tr>
+                <th>지역</th>
+                <td colSpan="3">
+                  <AntdSelect value={info.WORK_AREA_CD ? info.WORK_AREA_CD : 'CJ'} style={{ width: '30%' }} onChange={this.handleSiteOnChange}>
+                    <Option value="CJ">청주</Option>
+                    <Option value="GM">구미</Option>
+                  </AntdSelect>
+                </td>
+              </tr>
+              <tr>
+                <th>업체명</th>
+                <td>
+                  <AntdInput
+                    placeholder="업체명"
+                    className="ant-input-inline"
+                    name="WRK_CMPNY_NM"
+                    value={info.WRK_CMPNY_NM}
+                    style={{ width: '80%' }}
+                    onChange={this.handleInputChange}
+                    readOnly={BIZ_REG_NO !== '000-00-00000'}
+                  />
+                </td>
+                <th>사업자등록번호</th>
+                <td>
+                  <AntdInput
+                    placeholder="사업자등록번호"
+                    className="ant-input-inline"
+                    style={{ width: '80%' }}
+                    name="BIZ_REG_NO"
+                    value={info.BIZ_REG_NO}
+                    onChange={this.handleBusinessInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th>방문자 성명</th>
+                <td>
+                  <AntdInput
+                    placeholder="방문자 성명"
+                    className="ant-input-inline"
+                    style={{ width: '80%' }}
+                    name="VISITOR_NAME"
+                    value={info.VISITOR_NAME}
+                    onChange={this.handleInputChange}
+                  />
+                </td>
+                <th>연락처</th>
+                <td>
+                  <AntdInput
+                    placeholder="연락처"
+                    className="ant-input-inline"
+                    style={{ width: '80%' }}
+                    name="PHONE_NUMBER"
+                    value={info.PHONE_NUMBER}
+                    onChange={this.handleInputChange}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <th>출입시간</th>
+                <td>
+                  <DatePicker
+                    style={{ width: '100%' }}
+                    disabledDate={this.disabledStartDate}
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value={moment(VISITOR_IN_DATE)}
+                    placeholder="Start"
+                    onChange={this.onStartChange}
+                    onOpenChange={this.handleStartOpenChange}
+                  />
+                </td>
+                <th>퇴장시간</th>
+                <td>
+                  <DatePicker
+                    disabledDate={this.disabledEndDate}
+                    showTime
+                    style={{ width: '50%' }}
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value={moment(VISITOR_OUT_DATE)}
+                    placeholder="End"
+                    onChange={this.onEndChange}
+                    open={endOpen}
+                    onOpenChange={this.handleEndOpenChange}
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+        <div>
+          <StyledButtonWrapper className="btn-wrap-center">
+            <StyledButton className="btn-primary btn-first" onClick={this.handleBtnOnClick}>
+              {modalType === 'INSERT' ? '등록' : '수정'}
+            </StyledButton>
+            {modalType !== 'INSERT' && (
+              <StyledButton className="btn-primary" onClick={this.handleDeleteBtn}>
+                삭제
               </StyledButton>
-              {modalType === 'INSERT' ? (
-                ''
-              ) : (
-                <StyledButton classNmae="btn-gray btn-first" onClick={this.handleDeleteBtn}>
-                  삭제
-                </StyledButton>
-              )}
-            </div>
-          </div>
-        </NothGateCmpnyModalStyled>
-        {modalType === 'INSERT' ? (
+            )}
+          </StyledButtonWrapper>
+        </div>
+        {modalType === 'INSERT' && (
           <>
             <StyledSearchWrap>
-              <div className="search-group-layer">
-                <Select defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange} className="search-item input-width160">
+              <div className="selSaveWrapper">
+                <AntdSelect defaultValue="사업자등록번호" onChange={this.handleSearchTypeOnChange} style={{ width: '20%' }}>
                   <Option value="BIZ_REG_NO">사업자등록번호</Option>
                   <Option value="WRK_CMPNY_NM">업체명</Option>
-                </Select>
-                <Search placeholder=" 검색어를 입력하세요" onChange={this.handleSearchOnChange} value={searchText} className="search-item input-width200" />
+                </AntdSelect>
+                <AntdSearch
+                  placeholder=" 검색어를 입력하세요"
+                  style={{ width: '30%' }}
+                  onChange={this.handleSearchOnChange}
+                  value={searchText}
+                  className="ant-search-inline input-search-mid mr5"
+                />
               </div>
             </StyledSearchWrap>
 
@@ -408,8 +451,6 @@ class NothGateCmpnyModal extends Component {
               </AutoSizer>
             </StyledVirtualizedTable>
           </>
-        ) : (
-          ''
         )}
       </div>
     );

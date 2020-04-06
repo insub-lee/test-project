@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table, Input, Popconfirm, TreeSelect } from 'antd';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledInput from 'commonStyled/Form/StyledInput';
 
 import selectTree from './industrialSafetyLawList';
 
+const AntdTable = StyledLineTable(Table);
+const AntdInput = StyledInput(Input);
 class List extends Component {
   constructor(props) {
     super(props);
@@ -43,22 +47,26 @@ class List extends Component {
       dataIndex: 'NAME_KOR',
       key: 'NAME_KOR',
       render: (text, record, index) => {
+        const { handleInputChange, handleAddClick, handleModifyClick, handleDeleteClick, handleResetClick } = this;
+        const { inputCode } = this.state;
         if (index === 0) {
           return (
             <div>
-              <Input value={this.state.inputCode} onChange={this.handleInputChange} style={{ width: 200 }} />
-              <StyledButton className="btn-primary" onClick={this.handleAddClick}>
-                추가
-              </StyledButton>
-              <Popconfirm title="수정하시겠습니까?" onConfirm={this.handleModifyClick}>
-                <StyledButton className="btn-primary">수정</StyledButton>
-              </Popconfirm>
-              <Popconfirm title="삭제하시겠습니까?" onConfirm={this.handleDeleteClick}>
-                <StyledButton className="btn-primary">삭제</StyledButton>
-              </Popconfirm>
-              <StyledButton className="btn-primary" onClick={this.handleResetClick}>
-                Reset
-              </StyledButton>
+              <AntdInput className="ant-input-inline " value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
+              <StyledButtonWrapper className="btn-wrap-inline">
+                <StyledButton className="btn-primary btn-first btn-sm" onClick={handleAddClick}>
+                  추가
+                </StyledButton>
+                <Popconfirm title="수정하시겠습니까?" onConfirm={handleModifyClick}>
+                  <StyledButton className="btn-primary btn-first btn-sm">수정</StyledButton>
+                </Popconfirm>
+                <Popconfirm title="삭제하시겠습니까?" onConfirm={handleDeleteClick}>
+                  <StyledButton className="btn-primary btn-first btn-sm btn-light">삭제</StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-primary btn-sm btn-light" onClick={handleResetClick}>
+                  Reset
+                </StyledButton>
+              </StyledButtonWrapper>
             </div>
           );
         }
@@ -176,13 +184,16 @@ class List extends Component {
     const { columns } = this;
     const dataLength = dataSource.length - 1;
     return (
-      <StyledViewDesigner>
-        <Sketch>
-          <TreeSelect treeData={selectTree} value={this.state.selectedCategory} treeDefaultExpandAll onChange={this.handleSelectChange} />
-          <Table columns={columns} dataSource={dataSource} bordered pagination={false} onRow={this.handleRowClick} />
-          <div className="alignCenter">{`총 ${dataLength.toLocaleString()} 건`}</div>
-        </Sketch>
-      </StyledViewDesigner>
+      <ContentsWrapper>
+        <TreeSelect treeData={selectTree} value={this.state.selectedCategory} treeDefaultExpandAll onChange={this.handleSelectChange} />
+        <AntdTable
+          columns={columns}
+          dataSource={dataSource}
+          pagination={false}
+          onRow={this.handleRowClick}
+          footer={() => <span>{`총 ${dataLength.toLocaleString()} 건`}</span>}
+        />
+      </ContentsWrapper>
     );
   }
 }
