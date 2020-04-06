@@ -8,6 +8,8 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 
+// import SearchComp from './SearchComp';
+
 const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledLineTable(Table);
 
@@ -38,10 +40,11 @@ class InputModal extends React.Component {
   };
 
   setDataSource = () => {
-    const { result } = this.props;
+    const { result, sagaKey: id, changeFormData } = this.props;
     this.setState({
       dataSource: (result.materialList && result.materialList.list) || [],
     });
+    changeFormData(id, 'dataSource', (result.materialList && result.materialList.list) || []);
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -100,16 +103,17 @@ class InputModal extends React.Component {
   render() {
     const { handleSearchChange, handleModalClose, handleRowClick } = this;
     const { dataSource, keyword } = this.state;
-    const { visible, tableColumns } = this.props;
+    const { sagaKey, visible, tableColumns, getCallDataHandler, apiUrl, SearchComp, formData } = this.props;
     return (
       <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null}>
-        <StyledSearchWrap>
+        {/* <StyledSearchWrap>
           <span className="input-label">화학물질 검색</span>
           <Input.Search className="search-item input-width160" placeHolder="검색" onChange={handleSearchChange} value={keyword} />
-        </StyledSearchWrap>
+        </StyledSearchWrap> */}
+        <SearchComp sagaKey={sagaKey} getCallDataHandler={getCallDataHandler} apiUrl={apiUrl} />
         <AntdTable
           columns={tableColumns}
-          dataSource={dataSource}
+          dataSource={formData.dataSource}
           pagination={{ pageSize: 10 }}
           onRow={record => ({
             onClick: () => handleRowClick(record),
@@ -129,6 +133,8 @@ InputModal.propTypes = {
   setRequestValue: PropTypes.func,
   apiUrl: PropTypes.string,
   tableColumns: PropTypes.arrayOf(PropTypes.object),
+  SearchComp: PropTypes.any, // React component
+  formData: PropTypes.object,
 };
 
 InputModal.defaultProps = {
@@ -140,6 +146,7 @@ InputModal.defaultProps = {
   setRequestValue: () => {},
   apiUrl: '',
   tableColumns: [],
+  formData: {},
 };
 
 export default InputModal;

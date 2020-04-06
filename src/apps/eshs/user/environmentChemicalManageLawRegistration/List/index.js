@@ -7,8 +7,8 @@ import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
-
-import { Popconfirm, Input, InputNumber, Select } from 'antd';
+import { Popconfirm, Input, Select } from 'antd';
+import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -18,7 +18,24 @@ class List extends React.Component {
     this.state = {
       visible: false,
       deleteConfirmMessage: '삭제하시겠습니까?',
-      requestValue: {},
+      requestValue: {
+        CATEGORY: '',
+        CAS_NO: '',
+        NAME_KOR: '',
+        NAME_ENG: '',
+        NAME_ETC: '',
+        EXISTING_MATERIAL: '',
+        HARMFUL_MATERIAL: '',
+        EMPHASIS_MANAGE: '',
+        CANCER_MATERIAL: '',
+        ACCIDENT_MATERIAL: '',
+        LIMIT_CONTENT: '',
+        CONTENT_FACTOR: '',
+        ETC: '',
+        EXPRESSION: '',
+        LIMIT_NO: 0,
+        PROHIBITION_NO: 0,
+      },
     };
   }
 
@@ -82,9 +99,82 @@ class List extends React.Component {
     }));
   };
 
+  handleModalClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  setRequestValue = record => {
+    this.setState({
+      requestValue: record,
+      visible: false,
+      isModified: true,
+    });
+  };
+
+  columns = [
+    {
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_국문',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_영문',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
+      align: 'center',
+    },
+    {
+      title: '화학물질명_SAP',
+      dataIndex: 'NAME_SAP',
+      key: 'NAME_SAP',
+      align: 'center',
+    },
+    {
+      title: '관용명 및 이명',
+      dataIndex: 'NAME_ETC',
+      key: 'NAME_ETC',
+      align: 'center',
+    },
+  ];
+
+  searchMenu = () => (
+    <>
+      <span>화학물질 검색</span>
+      <AntdSelect className="select-sm" defaultValue="사고대비물질 검색(함량기준 판단)">
+        <Select.Option value="ee" />
+        <Select.Option value="ee" />
+        <Select.Option value="ee" />
+        <Select.Option value="ee" />
+        <Select.Option value="ee" />
+      </AntdSelect>
+      <Input.Search className="search-item input-width160" placeHolder="검색" onChange={this.handleSearchChange} value={this.props.keyword} />
+    </>
+  );
+
   render() {
-    const { handleSearchClick, handleInputClick, handleDeleteConfirm, handleDeleteClick, handleResetClick, handleInputChange } = this;
-    const { deleteConfirmMessage, requestValue } = this.state;
+    const {
+      handleSearchClick,
+      handleInputClick,
+      handleDeleteConfirm,
+      handleDeleteClick,
+      handleResetClick,
+      handleInputChange,
+      handleModalClose,
+      setRequestValue,
+      columns,
+      searchMenu,
+    } = this;
+    const { visible, deleteConfirmMessage, requestValue } = this.state;
+    const { sagaKey, getCallDataHandler, result } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -109,55 +199,86 @@ class List extends React.Component {
             <StyledHtmlTable>
               <table>
                 <colgroup>
-                  <col width="8%" />
-                  <col width="17%" />
-                  <col width="8%" />
-                  <col width="17%" />
-                  <col width="8%" />
-                  <col width="17%" />
-                  <col width="8%" />
-                  <col width="17%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
+                  <col width="10%" />
+                  <col width="15%" />
                 </colgroup>
                 <tbody>
                   <tr>
                     <th colSpan={1}>분류</th>
                     <td colSpan={3}>
-                      <Select defaultValue="사고대비물질 검색(함량기준 판단)">
+                      <AntdSelect className="select-sm" defaultValue="사고대비물질 검색(함량기준 판단)">
                         <Select.Option value="ee" />
                         <Select.Option value="ee" />
                         <Select.Option value="ee" />
                         <Select.Option value="ee" />
                         <Select.Option value="ee" />
-                      </Select>
+                      </AntdSelect>
                     </td>
                     <th colSpan={1}>CAS_NO.</th>
-                    <td colSpan={3}>
-                      <AntdInput className="ant-input-sm" name="CAS_NO" value={requestValue.CAS_NO} onChange={handleInputChange} />
-                    </td>
+                    <td colSpan={3}>{requestValue.CAS_NO}</td>
                   </tr>
                   <tr>
                     <th>화학물질명_국문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_KOR" value={requestValue.NAME_KOR} onChange={handleInputChange} />
-                    </td>
+                    <td>{requestValue.NAME_KOR}</td>
                     <th>화학물질명_영문</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_ENG" value={requestValue.NAME_ENG} onChange={handleInputChange} />
-                    </td>
+                    <td>{requestValue.NAME_ENG}</td>
                     <th>화학물질명_SAP</th>
-                    <td>
-                      <AntdInput className="ant-input-sm" name="NAME_SAP" value={requestValue.NAME_SAP} onChange={handleInputChange} />
-                    </td>
+                    <td>{requestValue.NAME_SAP}</td>
                     <th>관용명 및 이명</th>
-                    <td>
+                    <td>{requestValue.NAME_ETC}</td>
+                  </tr>
+                  <tr>
+                    <th rowSpan={5}>고유번호</th>
+                    <th>기존화학물질</th>
+                    <td colSpan={2}>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
+                    <th rowSpan={3}>제한내용</th>
+                    <td rowSpan={3}>
+                      <Input.TextArea autoSize={{ minRows: 4, maxRows: 4 }} />
+                    </td>
+                    <th rowSpan={3}>함량정보</th>
+                    <td rowSpan={3}>
+                      <Input.TextArea autoSize={{ minRows: 4, maxRows: 4 }} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>유해화학물질</th>
+                    <td colSpan={2}>
                       <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
                     </td>
                   </tr>
-                  <tr rowSpan={5}>
-                    <th>고유번호</th>
-                    <tr rowSpan={1}>
-                      <th>기존화학물질</th>
-                    </tr>
+                  <tr>
+                    <th>중점관리물질</th>
+                    <td colSpan={2}>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>암, 돌연변이성물질</th>
+                    <td colSpan={2}>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
+                    <th rowSpan={2}>비고</th>
+                    <td rowSpan={2}>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
+                    <th rowSpan={2}>수식</th>
+                    <td rowSpan={2}>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th>사고대비물질</th>
+                    <td colSpan={2}>
+                      <AntdInput className="ant-input-sm" name="NAME_ETC" value={requestValue.NAME_ETC} onChange={handleInputChange} />
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -165,6 +286,17 @@ class List extends React.Component {
             </StyledHtmlTable>
           </div>
         </ContentsWrapper>
+        <Modal
+          sagaKey={sagaKey}
+          visible={visible}
+          modalClose={handleModalClose}
+          getCallDataHandler={getCallDataHandler}
+          result={result}
+          setRequestValue={setRequestValue}
+          apiUrl="/api/eshs/v1/common/eshschemicalmaterialMaster"
+          tableColumns={columns}
+          searchMenu={searchMenu}
+        />
       </>
     );
   }
@@ -173,6 +305,8 @@ class List extends React.Component {
 List.propTypes = {
   sagaKey: PropTypes.string,
   submitHandlerBySaga: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  result: PropTypes.object,
 };
 List.defaultProps = {};
 
