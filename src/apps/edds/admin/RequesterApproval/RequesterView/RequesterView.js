@@ -62,6 +62,7 @@ class RequesterView extends Component {
         empNo: detail.REQUEST_ID,
         nameKor: detail.REQUESTER_NAME,
         email: detail.EMAIL,
+        mobileTel: detail.PHONE,
       };
       const saveAfterFunc = this.onClickDelete;
       confirm({
