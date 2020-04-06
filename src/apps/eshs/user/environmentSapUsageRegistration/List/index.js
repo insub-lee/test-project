@@ -59,6 +59,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <AntdSelect
+              className="select-sm"
               defaultValue={moment()
                 .year()
                 .toString()}
@@ -206,7 +207,7 @@ class List extends React.Component {
 
   isValid = () => {
     const { requestValue, dataSource } = this.state;
-    return dataSource.findIndex(item => item.YEAR === requestValue.YEAR) === -1;
+    return dataSource.findIndex(item => item.YEAR === requestValue.YEAR.toString()) === -1;
   };
 
   isModifyValid = () => {

@@ -12,6 +12,7 @@ import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import Contents from 'components/BizBuilder/Common/Contents';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 import Moment from 'moment';
@@ -21,6 +22,7 @@ import Input from '../InputPage';
 import Modify from '../ModifyPage';
 
 const AntdTable = StyledLineTable(Table);
+const AntdModal = StyledContentsModal(Modal);
 const { Option } = Select;
 
 class ListPage extends Component {
@@ -149,6 +151,7 @@ class ListPage extends Component {
   };
 
   handleModifyClick = record => {
+    console.debug(record);
     this.setState({
       modalVisible: true,
       viewType: 'MODIFY',
@@ -258,7 +261,6 @@ class ListPage extends Component {
           </Select>
 
           <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
-            <div>{`총 ${categoryLength}건`}</div>
             <div className="selSaveWrapper alignRight">
               <StyledButton className="btn-primary" onClick={this.handleAddClick} style={{ marginBottom: '5px' }}>
                 항목 추가
@@ -272,11 +274,19 @@ class ListPage extends Component {
               columns={columns}
               dataSource={initList.filter(item => item.category === this.state.selectedCategory) || []}
               pagination={false}
+              footer={() => `총 ${categoryLength}건`}
             />
           </Group>
-          <Modal visible={modalVisible} closable onCancel={this.handleOnCancel} width={900} footer={null}>
+          <AntdModal
+            title={viewType.toUpperCase() === 'INPUT' ? '등록' : '수정'}
+            visible={modalVisible}
+            closable
+            onCancel={this.handleOnCancel}
+            width={900}
+            footer={null}
+          >
             <div>{modalVisible && this.handleOnBuild(`modal${id}`, selectedTaskSeq, viewType)}</div>
-          </Modal>
+          </AntdModal>
         </div>
       </ContentsWrapper>
     );
