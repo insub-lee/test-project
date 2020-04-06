@@ -59,6 +59,7 @@ class List extends React.Component {
         if (index === 0) {
           return (
             <AntdSelect
+              className="select-sm"
               defaultValue={moment()
                 .year()
                 .toString()}
@@ -206,7 +207,7 @@ class List extends React.Component {
 
   isValid = () => {
     const { requestValue, dataSource } = this.state;
-    return dataSource.findIndex(item => item.YEAR === requestValue.YEAR) === -1;
+    return dataSource.findIndex(item => item.YEAR === requestValue.YEAR.toString()) === -1;
   };
 
   isModifyValid = () => {
@@ -410,7 +411,7 @@ class List extends React.Component {
             <StyledButton className="btn-primary btn-first" onClick={handleMasterModifyClick}>
               수정
             </StyledButton>
-            <StyledButton className="btn-primary" onClick={handleResetClick}>
+            <StyledButton className="btn-light" onClick={handleResetClick}>
               초기화
             </StyledButton>
           </div>
@@ -463,7 +464,7 @@ class List extends React.Component {
               title={checkedIndex === -1 ? '삭제할 항목을 선택하세요.' : '삭제하시겠습니까?'}
               onConfirm={checkedIndex === -1 ? null : handleSapDeleteClick}
             >
-              <StyledButton className="btn-primary">선택 삭제</StyledButton>
+              <StyledButton className="btn-light">선택 삭제</StyledButton>
             </Popconfirm>
           </div>
           <AntdTable columns={columns} dataSource={dataSource} pagination={false} />

@@ -186,8 +186,13 @@ class List extends Component {
     return (
       <ContentsWrapper>
         <TreeSelect treeData={selectTree} value={this.state.selectedCategory} treeDefaultExpandAll onChange={this.handleSelectChange} />
-        <AntdTable columns={columns} dataSource={dataSource} pagination={false} onRow={this.handleRowClick} />
-        <div className="alignCenter">{`총 ${dataLength.toLocaleString()} 건`}</div>
+        <AntdTable
+          columns={columns}
+          dataSource={dataSource}
+          pagination={false}
+          onRow={this.handleRowClick}
+          footer={() => <span>{`총 ${dataLength.toLocaleString()} 건`}</span>}
+        />
       </ContentsWrapper>
     );
   }

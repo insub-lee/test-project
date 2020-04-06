@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
+
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 import { Table, Checkbox, Popconfirm } from 'antd';
@@ -10,13 +11,12 @@ import request from 'utils/request';
 
 import Input from '../Input';
 
-// moment.locale('ko');
+const AntdTable = StyledLineTable(Table);
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
       checkedIndex: '',
-      // currentDate: '',
       timetable: [],
     };
     this.handleGetTimeTable(
@@ -133,7 +133,7 @@ class List extends Component {
             return (
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
-                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index && formData.gender === 'm'}
                 disabled={
                   formData.gender !== 'm' ||
                   (moment() > moment(record.time.substring(0, 5), 'HH:mm') && moment().format('YYYY-MM-DD') >= moment(formData.APP_DT).format('YYYY-MM-DD'))
@@ -212,7 +212,7 @@ class List extends Component {
             return (
               <Checkbox
                 onChange={e => this.handleOnCheck(e, index, record)}
-                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index}
+                checked={this.state.checkedIndex !== '' && this.state.checkedIndex === index && formData.gender === 'f'}
                 disabled={formData.gender !== 'f' || (moment() > moment(record.time, 'HH:mm') && this.state.selectedDate < moment())}
               />
             );
@@ -335,7 +335,7 @@ class List extends Component {
   render() {
     const { changeFormData, getExtraApiData, extraApiData, saveTask, formData, sagaKey } = this.props;
     return (
-      <div>
+      <ContentsWrapper>
         <Input
           changeFormData={changeFormData}
           getExtraApiData={getExtraApiData}
@@ -346,12 +346,8 @@ class List extends Component {
           handleGetTimeTable={this.handleGetTimeTable}
           dateChange={this.dateChange}
         />
-        <StyledViewDesigner>
-          <Sketch>
-            <Table columns={this.columns} bordered dataSource={this.timeTable} pagination={false} />
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+        <AntdTable columns={this.columns} dataSource={this.timeTable} pagination={false} />
+      </ContentsWrapper>
     );
   }
 }
