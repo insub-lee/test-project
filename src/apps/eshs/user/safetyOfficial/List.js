@@ -183,7 +183,6 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
   removeStorageReduxState: PropTypes.func,
-  apiAry: PropTypes.array,
   changeFormData: PropTypes.any,
   result: PropTypes.any,
   formData: PropTypes.any,
