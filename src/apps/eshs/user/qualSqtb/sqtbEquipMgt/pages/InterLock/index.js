@@ -4,8 +4,13 @@ import { debounce } from 'lodash';
 import { TreeSelect, Input, Button, Checkbox, Table } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
 import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 
-const AntdTable = StyledAntdTable(Table);
+import StyledInput from 'commonStyled/Form/StyledInput';
+
+const AntdInput = StyledInput(Input);
+const AntdLineTable = StyledLineTable(Table);
+
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
     flatData: flatData.map(item => ({
@@ -58,7 +63,13 @@ class InterLock extends Component {
           width: 655,
           render: (text, record) => {
             if (this.props.viewPageData.viewType !== 'VIEW') {
-              return <Input defaultValue={record.IL_FUNC || ''} onChange={e => this.handleInputChange(e, record.INDEX)} />;
+              return (
+                <AntdInput
+                  className="ant-input-inline ant-input-sm input-left"
+                  defaultValue={record.IL_FUNC || ''}
+                  onChange={e => this.handleInputChange(e, record.INDEX)}
+                />
+              );
             }
 
             return <span>{record.IL_FUNC || ''}</span>;
@@ -147,12 +158,13 @@ class InterLock extends Component {
     const { interLockList } = formData;
     return this.setState({
       interLockTable: [
-        <AntdTable
+        <AntdLineTable
+          className="tableWrapper"
           rowKey={interLockList && interLockList.INDEX}
           columns={columns}
           dataSource={interLockList || []}
           bordered
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           scroll={{ x: 1500 }}
         />,
       ],
