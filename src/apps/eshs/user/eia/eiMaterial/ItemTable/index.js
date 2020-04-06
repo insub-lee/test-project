@@ -332,7 +332,7 @@ class ItemTable extends Component {
             </tfoot>
             <tbody>
               {itemList.map(m => (
-                <tr key={m.SEQ} className="tr-center" onClick={() => this.handleRowClick(m)}>
+                <tr key={m.SEQ} className="tr-center tr-pointer" onClick={() => this.handleRowClick(m)}>
                   <td>
                     <Checkbox
                       className="ant-checkbox-wrapper"
