@@ -84,7 +84,6 @@ class InterLock extends Component {
     const { getExtraApiData, id, apiArray, formData, changeFormData } = this.props;
     const taskSeq = (formData && formData.TASK_PREV_SEQ) || (formData && formData.TASK_SEQ) || 0;
 
-    console.debug('22222222222222222', this.props);
     changeFormData(id, 'interLockReload', qaulTaskSeq => {
       getExtraApiData(
         id,

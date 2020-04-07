@@ -238,7 +238,6 @@ class InputPage extends Component {
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
               viewPageData={{ viewType: 'VIEW' }}
-              handleReloadFlag={this.handleReloadFlag}
             />
             <Material
               id={id}
@@ -247,7 +246,6 @@ class InputPage extends Component {
               getExtraApiData={getExtraApiData}
               extraApiData={extraApiData}
               viewPageData={{ viewType: 'VIEW' }}
-              handleReloadFlag={this.handleReloadFlag}
             />
             ,
           </Sketch>

@@ -3,6 +3,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 
 import EquipInputPage from '../sqtbEquipMgt';
 import CustomInput from './pages/CustomInput';
+import CustomModify from './pages/CustomModify';
 
 class sqConfirmRequest extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class sqConfirmRequest extends Component {
   componentDidMount() {}
 
   customOnRowClick = selectedRowData => {
-    console.debug('...............', selectedRowData);
+    // console.debug('...............', selectedRowData);
   };
 
   render() {
@@ -33,6 +34,7 @@ class sqConfirmRequest extends Component {
           sagaKey={sagaKey}
           FieldCustomInputPage={EquipInputPage}
           CustomInputPage={CustomInput}
+          CustomModifyPage={CustomModify}
           workSeq={5561}
           viewType="INPUT"
           loadingComplete={this.loadingComplete}

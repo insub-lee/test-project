@@ -44,7 +44,7 @@ class Header extends Component {
   };
 
   handleAction = type => {
-    const { sagaKey, saveTask, changeViewPage, formData, viewPageData } = this.props;
+    const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask } = this.props;
     const { workSeq } = viewPageData;
     const selectTask = (formData && formData.selectRow && formData.selectRow.TASK_SEQ) || 0;
     switch (type) {
@@ -52,6 +52,7 @@ class Header extends Component {
         saveTask();
         break;
       case 'MODIFY':
+        modifySaveTask();
         break;
       case 'SEARCH':
         if (selectTask) {
@@ -143,6 +144,7 @@ Header.propTypes = {
   saveTask: PropTypes.func,
   changeViewPage: PropTypes.func,
   viewPageData: PropTypes.object,
+  modifySaveTask: PropTypes.func,
 };
 Header.defaultProps = {
   formData: {},
@@ -151,6 +153,7 @@ Header.defaultProps = {
   saveTask: () => {},
   changeViewPage: () => {},
   viewPageData: {},
+  modifySaveTask: () => {},
 };
 
 export default Header;
