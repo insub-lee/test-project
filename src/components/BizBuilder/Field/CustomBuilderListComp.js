@@ -30,7 +30,7 @@ class CustomBuilderListComp extends React.Component {
     } = this.props;
     if (viewType === 'INPUT' || viewType === 'MODIFY') this.extraBuilderRender('LIST');
     if (viewType === 'VIEW' || viewType === 'MODIFY') {
-      if ((isFormData === 'Y' && colData !== '') || colData !== undefined || colData !== null) {
+      if (dataKey && isFormData === 'Y' && colData) {
         const apiArray = [
           {
             key: 'CustomDetailData',
