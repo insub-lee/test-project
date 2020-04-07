@@ -184,9 +184,6 @@ class ItemTable extends Component {
             </colgroup>
             <thead>
               <tr>
-                <td colSpan={15}></td>
-              </tr>
-              <tr>
                 <td></td>
                 <td>
                   <AntdInput

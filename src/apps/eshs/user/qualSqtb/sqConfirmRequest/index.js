@@ -4,6 +4,7 @@ import BizBuilderBase from 'components/BizBuilderBase';
 import { Data } from 'react-data-grid-addons';
 import { Modal } from 'antd';
 import EquipInputPage from '../sqtbEquipMgt';
+import CustomInput from './pages/CustomInput';
 
 class sqConfirmRequest extends Component {
   state = {
@@ -26,8 +27,9 @@ class sqConfirmRequest extends Component {
         <BizBuilderBase
           sagaKey="sqConfirmRequest"
           FieldCustomInputPage={EquipInputPage}
+          CustomInputPage={CustomInput}
           workSeq={5561}
-          viewType="LIST"
+          viewType="INPUT"
           loadingComplete={this.loadingComplete}
           customOnRowClick={record => this.customOnRowClick(record)}
         />

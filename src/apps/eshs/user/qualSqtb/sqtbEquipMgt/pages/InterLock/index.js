@@ -3,7 +3,6 @@ import * as PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { TreeSelect, Input, Button, Checkbox, Table } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 
 import StyledInput from 'commonStyled/Form/StyledInput';
@@ -82,8 +81,20 @@ class InterLock extends Component {
   }
 
   componentDidMount() {
-    const { getExtraApiData, id, apiArray, formData, viewType } = this.props;
+    const { getExtraApiData, id, apiArray, formData, changeFormData } = this.props;
     const taskSeq = (formData && formData.TASK_SEQ) || 0;
+
+    changeFormData(id, 'interLockReload', qaulTaskSeq => {
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'interLockList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetInterLockList/${qaulTaskSeq}`,
+        }),
+        this.appStart,
+      );
+    });
     if (taskSeq > 0) {
       getExtraApiData(
         id,
@@ -104,7 +115,6 @@ class InterLock extends Component {
     const treeData = (extraApiData && extraApiData.treeData && extraApiData.treeData.categoryMapList) || [];
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
 
-    console.debug('ID ::: ', id, '  extraApiData :::: ', extraApiData);
     if (!interLockList.length) {
       interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 0 });
       interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 1 });
@@ -187,7 +197,7 @@ class InterLock extends Component {
   };
 
   render() {
-    const { viewPageData } = this.props;
+    const { viewPageData, formData } = this.props;
     const { interLockTable } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     return (
