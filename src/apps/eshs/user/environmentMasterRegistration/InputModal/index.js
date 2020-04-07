@@ -14,7 +14,7 @@ const AntdTable = StyledLineTable(Table);
 class InputModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {}; // state 만들어서 SearchComp에 props로 넣어주기
   }
 
   componentDidMount() {
@@ -62,6 +62,7 @@ class InputModal extends React.Component {
           changeFormData={changeFormData}
           formData={formData}
           result={result}
+          onCancel={handleModalClose}
         />
         <AntdTable
           columns={tableColumns}
