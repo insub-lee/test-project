@@ -11,7 +11,7 @@ import View from 'components/BizBuilder/PageComp/view';
 import { WORKFLOW_OPT_SEQ, CHANGE_VIEW_OPT_SEQ } from 'components/BizBuilder/Common/Constants';
 import InterLock from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/InterLock';
 import Material from 'apps/eshs/user/qualSqtb/sqtbEquipMgt/pages/Material';
-
+import Header from '../Header';
 class InputPage extends Component {
   constructor(props) {
     super(props);
@@ -38,16 +38,16 @@ class InputPage extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    const { interLockReload } = nextProps;
+    const {
+      formData: { interLockReload = '', materialReload = '' },
+    } = nextProps;
     const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
-    console.debug('qqqqqqqqqqqq', nextProps);
-    console.debug('wwwwwwwwwwww', prevState);
-    console.debug('1', qualTaskSeq);
-    console.debug('2', prevState.qualTaskSeq);
-    console.debug('3', prevState.qualTaskSeq !== qualTaskSeq);
     if (prevState.qualTaskSeq !== qualTaskSeq) {
       if (typeof interLockReload === 'function') {
         interLockReload(qualTaskSeq);
+      }
+      if (typeof materialReload === 'function') {
+        materialReload(qualTaskSeq);
       }
       return { qualTaskSeq };
     }
@@ -205,6 +205,7 @@ class InputPage extends Component {
       getExtraApiData,
       extraApiData,
       changeFormData,
+      setFormData,
     } = this.props;
     // Work Process 사용여부
     const isWorkflowUsed = !!(workInfo && workInfo.OPT_INFO && workInfo.OPT_INFO.findIndex(opt => opt.OPT_SEQ === WORKFLOW_OPT_SEQ) !== -1);
@@ -221,6 +222,14 @@ class InputPage extends Component {
             {isWorkflowUsed && PRC_ID && processRule && processRule.DRAFT_PROCESS_STEP && processRule.DRAFT_PROCESS_STEP.length > 0 && (
               <WorkProcess id={id} CustomWorkProcess={CustomWorkProcess} PRC_ID={PRC_ID} processRule={processRule} setProcessRule={setProcessRule} />
             )}
+            <Header
+              sagaKey={id}
+              formData={formData}
+              viewPageData={viewPageData}
+              setFormData={setFormData}
+              changeViewPage={changeViewPage}
+              saveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
+            />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
             <InterLock
               id={id}
@@ -263,6 +272,7 @@ InputPage.propTypes = {
   CustomWorkProcess: PropTypes.func,
   isLoading: PropTypes.bool,
   interLockReload: PropTypes.func,
+  setFormData: PropTypes.func,
 };
 
 InputPage.defaultProps = {
@@ -274,6 +284,7 @@ InputPage.defaultProps = {
   CustomWorkProcess: undefined,
   isLoading: false,
   interLockReload: () => {},
+  setFormData: () => {},
 };
 
 export default InputPage;

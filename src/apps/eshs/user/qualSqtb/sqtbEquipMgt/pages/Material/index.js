@@ -4,7 +4,6 @@ import { debounce } from 'lodash';
 
 import { Button, Select, Input, Table, Checkbox } from 'antd';
 import UnitComp from 'components/BizBuilder/Field/UnitComp';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
@@ -300,8 +299,19 @@ class Material extends Component {
   }
 
   componentDidMount() {
-    const { id, formData, apiArray, getExtraApiData, viewPageData } = this.props;
-    const taskSeq = (viewPageData && viewPageData.taskSeq) || 0;
+    const { id, formData, apiArray, getExtraApiData, changeFormData } = this.props;
+    const taskSeq = (formData && formData.TASK_PREV_SEQ) || (formData && formData.TASK_SEQ) || 0;
+    changeFormData(id, 'materialReload', qualTaskSeq => {
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'mtrlList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetMtrlList/${qualTaskSeq}`,
+        }),
+        this.handleStart,
+      );
+    });
     if (taskSeq > 0) {
       getExtraApiData(
         id,
@@ -318,9 +328,9 @@ class Material extends Component {
   }
 
   handleStart = () => {
-    const { extraApiData, formData, changeFormData, id } = this.props;
+    const { extraApiData, formData, changeFormData, id, viewPageData } = this.props;
     const { columns, initMaterialRow } = this.state;
-
+    const viewType = (viewPageData && viewPageData.viewType) || '';
     const pipeType = (extraApiData && extraApiData.pipe_type && extraApiData.pipe_type.categoryMapList) || [];
     const newColumn = {
       title: '배관재질/No/Size',
@@ -374,12 +384,12 @@ class Material extends Component {
         mtrlList.map((m, index) => true && { ...m, INDEX: index }),
       );
     } else {
-      const materialList = [];
-
-      materialList.push({ ...initMaterialRow, INDEX: 0 });
-      materialList.push({ ...initMaterialRow, INDEX: 1 });
-      materialList.push({ ...initMaterialRow, INDEX: 2 });
-      changeFormData(id, 'materialList', materialList);
+      if (viewType !== 'VIEW') {
+        mtrlList.push({ ...initMaterialRow, INDEX: 0 });
+        mtrlList.push({ ...initMaterialRow, INDEX: 1 });
+        mtrlList.push({ ...initMaterialRow, INDEX: 2 });
+      }
+      changeFormData(id, 'materialList', mtrlList);
     }
 
     this.setState({ columns: columns.map(c => (c.title === '배관재질/No/Size' ? newColumn : c)) });
@@ -413,12 +423,13 @@ class Material extends Component {
   };
 
   debouncehandleSetMaterialTable = () => {
-    const { formData } = this.props;
+    const { formData, sagaKey: id } = this.props;
     const { columns } = this.state;
     const materialList = (formData && formData.materialList) || [];
     return this.setState({
       materialTable: [
         <AntdLineTable
+          key={`${id}_material`}
           className="tableWrapper"
           rowKey={materialList && materialList.INDEX}
           columns={columns}
@@ -426,6 +437,7 @@ class Material extends Component {
           bordered
           pagination={{ pageSize: 10 }}
           scroll={{ x: 1500 }}
+          footer={() => <span>{`${materialList.length} 건`}</span>}
         />,
       ],
     });
@@ -469,7 +481,6 @@ class Material extends Component {
     const viewType = (viewPageData && viewPageData.viewType) || '';
     return (
       <>
-        <hr />
         <span>Material {viewType !== 'VIEW' && <Button onClick={this.handlePlusTd}>[+3]</Button>}</span>
         {materialTable}
       </>
@@ -487,6 +498,7 @@ Material.propTypes = {
   extraApiData: PropTypes.object,
   columns: PropTypes.array,
   viewPageData: PropTypes.object,
+  sagaKey: PropTypes.string,
 };
 Material.defaultProps = {
   apiArray: [
@@ -498,5 +510,6 @@ Material.defaultProps = {
   ],
   extraApiData: { pipe_type: [] },
   columns: [],
+  sagaKey: '',
 };
 export default Material;

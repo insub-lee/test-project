@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import BizBuilderBase from 'components/BizBuilderBase';
-import { Data } from 'react-data-grid-addons';
-import { Modal } from 'antd';
+
 import EquipInputPage from '../sqtbEquipMgt';
 import CustomInput from './pages/CustomInput';
 
 class sqConfirmRequest extends Component {
-  state = {
-    isLoading: true,
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isLoading: true,
+    };
+  }
 
   loadingComplete = () => {
     this.setState({
@@ -17,15 +19,18 @@ class sqConfirmRequest extends Component {
     });
   };
 
+  componentDidMount() {}
+
   customOnRowClick = selectedRowData => {
     console.debug('...............', selectedRowData);
   };
 
   render() {
+    const { sagaKey } = this.props;
     return (
       <>
         <BizBuilderBase
-          sagaKey="sqConfirmRequest"
+          sagaKey={sagaKey}
           FieldCustomInputPage={EquipInputPage}
           CustomInputPage={CustomInput}
           workSeq={5561}
@@ -38,8 +43,8 @@ class sqConfirmRequest extends Component {
   }
 }
 
-sqConfirmRequest.propTypes = {};
-
-sqConfirmRequest.defaultProps = {};
+sqConfirmRequest.defaultProps = {
+  sagaKey: 'sqConfirmRequest',
+};
 
 export default sqConfirmRequest;

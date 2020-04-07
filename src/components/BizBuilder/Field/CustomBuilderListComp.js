@@ -5,7 +5,6 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
-import { fromJS } from 'immutable';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdSearch = StyledSearchInput(Input.Search);
