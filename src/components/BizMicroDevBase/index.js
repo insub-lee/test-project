@@ -11,6 +11,7 @@ import reducer from './reducer';
 import saga from './saga';
 import * as selectors from './selectors';
 import * as actions from './actions';
+import * as authSelectors from 'containers/common/Auth/selectors';
 
 class BizMicroDevBase extends React.Component {
   render() {
@@ -50,6 +51,7 @@ BizMicroDevBase.defaultProps = {
 const mapStateToProps = createStructuredSelector({
   result: selectors.makeSelectResponseData(),
   formData: selectors.makeSelectFormData(),
+  profile: authSelectors.makeSelectProfile(),
 });
 
 const mapDispatchToProps = dispatch => ({
