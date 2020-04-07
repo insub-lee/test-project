@@ -42,7 +42,6 @@ class List extends React.Component {
   }
 
   componentDidMount() {
-    console.debug('wee');
   }
 
   handleSearchClick = () => {
@@ -171,7 +170,10 @@ class List extends React.Component {
           </StyledSearchWrap>
           <div className="selSaveWrapper">
             <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-              저장/수정
+              신규등록
+            </StyledButton>
+            <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
+              수정
             </StyledButton>
             <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
               <StyledButton className="btn-light btn-first" onClick={handleDeleteClick}>
@@ -299,6 +301,7 @@ List.propTypes = {
   changeFormData: PropTypes.func,
   formData: PropTypes.object,
 };
+
 List.defaultProps = {};
 
 export default List;

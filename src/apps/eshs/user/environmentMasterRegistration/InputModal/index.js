@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input, Table } from 'antd';
-import { debounce } from 'lodash';
+import { Modal, Table } from 'antd';
 
 // import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 
@@ -16,10 +14,7 @@ const AntdTable = StyledLineTable(Table);
 class InputModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      dataSource: [],
-      keyword: '',
-    };
+    this.state = {};
   }
 
   componentDidMount() {
