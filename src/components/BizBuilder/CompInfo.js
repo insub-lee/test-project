@@ -97,6 +97,7 @@ import CompNmLabel from 'components/BizBuilder/Field/CompNmLabel';
 import CoverViewComp from 'components/BizBuilder/Field/CoverViewComp';
 import SelectReadComp from 'components/BizBuilder/Field/SelectReadComp';
 import CustomBuilderListComp from 'components/BizBuilder/Field/CustomBuilderListComp';
+import ExcelDownloadComp from 'components/BizBuilder/Field/ExcelDownloadComp';
 
 export const CompInfo = {
   'components/BizBuilder/Field/SelectReadComp': { renderer: property => <SelectReadComp {...property} /> },
@@ -196,4 +197,5 @@ export const CompInfo = {
   'components/BizBuilder/Field/BareaLabel': { renderer: property => <BareaLabel {...property} /> },
   'components/BizBuilder/Field/CompNmLabel': { renderer: property => <CompNmLabel {...property} /> },
   'components/BizBuilder/Field/CustomBuilderListComp': { renderer: property => <CustomBuilderListComp {...property} /> },
+  'components/BizBuilder/Field/ExcelDownloadComp': { renderer: property => <ExcelDownloadComp {...property} /> },
 };
