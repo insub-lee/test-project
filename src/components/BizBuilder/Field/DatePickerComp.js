@@ -40,7 +40,7 @@ class DatePickerComp extends Component {
 
   render() {
     const { CONFIG, visible, isSearch, readOnly, viewPageData, colData, searchCompRenderer } = this.props;
-    console.debug('프롭스 딱대!', this.props);
+    // console.debug('프롭스 딱대!', this.props);
     if (!visible) {
       return '';
     }

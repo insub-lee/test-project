@@ -1,9 +1,7 @@
 import * as PropTypes from 'prop-types';
 import React from 'react';
-// import { Input, Button, Modal, Select } from 'antd';
 import { Input, Modal, Select } from 'antd';
 import StyledVirtualizedTable from 'components/CommonStyled/StyledVirtualizedTable';
-// import { Table, Column, AutoSizer } from 'react-virtualized';
 import { Table, Column } from 'react-virtualized';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
