@@ -3,9 +3,13 @@ import * as PropTypes from 'prop-types';
 import { debounce } from 'lodash';
 import { TreeSelect, Input, Button, Checkbox, Table } from 'antd';
 import { getTreeFromFlatData } from 'react-sortable-tree';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 
-const AntdTable = StyledAntdTable(Table);
+import StyledInput from 'commonStyled/Form/StyledInput';
+
+const AntdInput = StyledInput(Input);
+const AntdLineTable = StyledLineTable(Table);
+
 const getCategoryMapListAsTree = flatData =>
   getTreeFromFlatData({
     flatData: flatData.map(item => ({
@@ -58,7 +62,13 @@ class InterLock extends Component {
           width: 655,
           render: (text, record) => {
             if (this.props.viewPageData.viewType !== 'VIEW') {
-              return <Input defaultValue={record.IL_FUNC || ''} onChange={e => this.handleInputChange(e, record.INDEX)} />;
+              return (
+                <AntdInput
+                  className="ant-input-inline ant-input-sm input-left"
+                  defaultValue={record.IL_FUNC || ''}
+                  onChange={e => this.handleInputChange(e, record.INDEX)}
+                />
+              );
             }
 
             return <span>{record.IL_FUNC || ''}</span>;
@@ -71,8 +81,20 @@ class InterLock extends Component {
   }
 
   componentDidMount() {
-    const { getExtraApiData, id, apiArray, formData, viewType } = this.props;
+    const { getExtraApiData, id, apiArray, formData, changeFormData } = this.props;
     const taskSeq = (formData && formData.TASK_SEQ) || 0;
+
+    changeFormData(id, 'interLockReload', qaulTaskSeq => {
+      getExtraApiData(
+        id,
+        apiArray.concat({
+          key: 'interLockList',
+          type: 'GET',
+          url: `/api/eshs/v1/common/eshsGetInterLockList/${qaulTaskSeq}`,
+        }),
+        this.appStart,
+      );
+    });
     if (taskSeq > 0) {
       getExtraApiData(
         id,
@@ -93,7 +115,6 @@ class InterLock extends Component {
     const treeData = (extraApiData && extraApiData.treeData && extraApiData.treeData.categoryMapList) || [];
     const interLockList = (extraApiData && extraApiData.interLockList && extraApiData.interLockList.list) || [];
 
-    console.debug('ID ::: ', id, '  extraApiData :::: ', extraApiData);
     if (!interLockList.length) {
       interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 0 });
       interLockList.push({ IS_DEL: 0, IL_KIND_FORM: '', IL_FUNC: '', INDEX: 1 });
@@ -147,12 +168,13 @@ class InterLock extends Component {
     const { interLockList } = formData;
     return this.setState({
       interLockTable: [
-        <AntdTable
+        <AntdLineTable
+          className="tableWrapper"
           rowKey={interLockList && interLockList.INDEX}
           columns={columns}
           dataSource={interLockList || []}
           bordered
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           scroll={{ x: 1500 }}
         />,
       ],
@@ -175,7 +197,7 @@ class InterLock extends Component {
   };
 
   render() {
-    const { viewPageData } = this.props;
+    const { viewPageData, formData } = this.props;
     const { interLockTable } = this.state;
     const viewType = (viewPageData && viewPageData.viewType) || '';
     return (

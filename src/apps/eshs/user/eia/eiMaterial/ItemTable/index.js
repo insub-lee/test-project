@@ -100,8 +100,14 @@ class ItemTable extends Component {
   };
 
   handleVolumeOnChange = e => {
+    const reg = /^-?[0-9]*(\.[0-9]*)?$/;
     const { id, changeFormData, formData } = this.props;
     const itemData = (formData && formData.itemData) || {};
+
+    if (!reg.test(e)) {
+      return '';
+    }
+
     changeFormData(id, 'itemData', { ...itemData, VOLUME: e });
   };
 
@@ -186,7 +192,7 @@ class ItemTable extends Component {
               </>
             )}
           </StyledButtonWrapper>
-          <table>
+          <table className="table-border">
             <colgroup>
               <col width="4%" />
               <col width="4%" />
@@ -201,6 +207,75 @@ class ItemTable extends Component {
               <col width="14%" />
             </colgroup>
             <thead>
+              <tr>
+                <td></td>
+                <td></td>
+                <td>
+                  <AntdInput
+                    name="GUBUN"
+                    value={itemData.GUBUN || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdSelect className="selectMid" value={itemData.STATUS || '정상'} onChange={this.handleStatusOnChange}>
+                    <Option value="정상">정상</Option>
+                    <Option value="비정상">비정상</Option>
+                  </AntdSelect>{' '}
+                </td>
+                <td>
+                  <AntdInput
+                    name="MATTER"
+                    value={itemData.MATTER || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput
+                    name="INGREDIENT"
+                    value={itemData.INGREDIENT || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <InputNumber
+                    name="VOLUME"
+                    value={itemData.VOLUME || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleVolumeOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput name="UNIT" value={itemData.UNIT || ''} className="ant-input-inline ant-input-sm input-left" onChange={this.handleInputOnChange} />
+                </td>
+                <td>
+                  <AntdInput
+                    name="INPUT_TYPE"
+                    value={itemData.INPUT_TYPE || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput
+                    name="OUTPUT_TYPE"
+                    value={itemData.OUTPUT_TYPE || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+                <td>
+                  <AntdInput
+                    name="DISCHRGE"
+                    value={itemData.DISCHRGE || ''}
+                    className="ant-input-inline ant-input-sm input-left"
+                    onChange={this.handleInputOnChange}
+                  />
+                </td>
+              </tr>
               <tr>
                 <th rowSpan={2}>
                   <span>삭제</span>
@@ -250,15 +325,25 @@ class ItemTable extends Component {
                 </th>
               </tr>
             </thead>
+            <tfoot>
+              <tr>
+                <td colSpan={11}>{itemList.length} 건</td>
+              </tr>
+            </tfoot>
             <tbody>
               {itemList.map(m => (
-                <tr key={m.SEQ} onClick={() => this.handleRowClick(m)}>
-                  <td align="center">
-                    <Checkbox checked={rowSelections.indexOf(m.SEQ) > -1} onChange={() => this.handleRowSelection(m.SEQ)} />
+                <tr key={m.SEQ} className="tr-center tr-pointer" onClick={() => this.handleRowClick(m)}>
+                  <td>
+                    <Checkbox
+                      className="ant-checkbox-wrapper"
+                      defaultChecked={false}
+                      checked={rowSelections.indexOf(m.SEQ) > -1}
+                      onChange={() => this.handleRowSelection(m.SEQ)}
+                    />
                   </td>
-                  <td align="center">{m.SEQ}</td>
-                  <td align="center">{m.GUBUN}</td>
-                  <td align="center">{m.STATUS}</td>
+                  <td>{m.SEQ}</td>
+                  <td>{m.GUBUN}</td>
+                  <td>{m.STATUS}</td>
                   <td>{m.MATTER}</td>
                   <td>{m.INGREDIENT}</td>
                   <td>{m.VOLUME.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</td>
@@ -268,9 +353,6 @@ class ItemTable extends Component {
                   <td>{m.DISCHRGE}</td>
                 </tr>
               ))}
-              <tr>
-                <td colSpan={11}>{itemList.length} 건</td>
-              </tr>
             </tbody>
           </table>
         </StyledHtmlTable>

@@ -1,7 +1,14 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { Input, Button, Checkbox, Popconfirm, message } from 'antd';
+
+import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
+import StyledInput from 'commonStyled/Form/StyledInput';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+
+const AntdInput = StyledInput(Input);
 
 class ItemTable extends Component {
   constructor(props) {
@@ -124,111 +131,143 @@ class ItemTable extends Component {
     const itemData = (formData && formData.itemData) || {};
     const btnOk = itemList.length >= 1;
     return (
-      <div className="itemTable">
-        <table>
-          <colgroup>
-            <col width="4%" />
-            <col width="16%" />
-            <col width="16%" />
-            <col width="16%" />
-            <col width="16%" />
-            <col width="16%" />
-            <col width="16%" />
-          </colgroup>
-          <thead>
-            <tr>
-              <td colSpan={11}>
-                <StyledButton className="btn-primary" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
-                  Excel Download
+      <ContentsWrapper>
+        <StyledHtmlTable className="tableWrapper">
+          <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_DOWNLOAD')}>
+              Excel Download
+            </StyledButton>
+            {!searchFlag && (
+              <>
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
+                  Excel Upload
                 </StyledButton>
-                {!searchFlag && (
+                <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+                  추가
+                </StyledButton>
+                {btnOk && (
                   <>
-                    <StyledButton className="btn-primary" onClick={() => this.handleAction('EXCEL_UPLOAD')}>
-                      Excel Upload
+                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('UPDATE')}>
+                      수정
                     </StyledButton>
-                    <StyledButton className="btn-primary" onClick={() => this.handleAction('SAVE')}>
-                      추가
+                    <Popconfirm
+                      title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
+                      onConfirm={() => this.handleAction('DELETE')}
+                      okText="확인"
+                      cancelText="취소"
+                    >
+                      <StyledButton className="btn-primary btn-sm btn-first">삭제</StyledButton>
+                    </Popconfirm>
+                    <StyledButton className="btn-primary btn-sm" onClick={() => this.handleAction('RESET')}>
+                      Reset
                     </StyledButton>
-                    {btnOk && (
-                      <>
-                        <StyledButton className="btn-primary" onClick={() => this.handleAction('UPDATE')}>
-                          수정
-                        </StyledButton>
-                        <Popconfirm
-                          title="선택하신 내용을(를) 정말로 삭제하시겠습니끼?"
-                          onConfirm={() => this.handleAction('DELETE')}
-                          okText="확인"
-                          cancelText="취소"
-                        >
-                          <StyledButton className="btn-primary">삭제</StyledButton>
-                        </Popconfirm>
-                        <StyledButton className="btn-primary" onClick={() => this.handleAction('RESET')}>
-                          Reset
-                        </StyledButton>
-                      </>
-                    )}
                   </>
                 )}
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>
-                <Input name="FIRST_DEPTH" value={itemData.FIRST_DEPTH || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="SECOND_DEPTH" value={itemData.SECOND_DEPTH || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="USE_LOCATION" value={itemData.USE_LOCATION || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="LOAD_FACTOR" value={itemData.LOAD_FACTOR || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="USE_PERCENT" value={itemData.USE_PERCENT || ''} onChange={this.handleInputOnChange} />
-              </td>
-              <td>
-                <Input name="UNIT" value={itemData.UNIT || ''} onChange={this.handleInputOnChange} />
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td colSpan={2} className="text-align-center">
-                구분
-              </td>
-              <td rowSpan={2}>사용처</td>
-              <td rowSpan={2}>부하율</td>
-              <td colSpan={2}>사용량(月)</td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>대분류</td>
-              <td>소분류</td>
-              <td>사용량</td>
-              <td>단위</td>
-            </tr>
-          </thead>
-          <tbody>
-            {itemList.map(i => (
-              <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)}>
-                <td align="center">
-                  <Checkbox checked={rowSelections.indexOf(i.REQ_NO) > -1} onChange={() => this.handleRowSelection(i.REQ_NO)} />
-                </td>
-                <td>{i.FIRST_DEPTH}</td>
-                <td>{i.SECOND_DEPTH}</td>
-                <td>{i.USE_LOCATION}</td>
-                <td>{i.LOAD_FACTOR}</td>
-                <td>{i.USE_PERCENT}</td>
-                <td>{i.UNIT}</td>
+              </>
+            )}
+          </StyledButtonWrapper>
+
+          <table className="table-border">
+            <colgroup>
+              <col width="4%" />
+              <col width="16%" />
+              <col width="16%" />
+              <col width="16%" />
+              <col width="16%" />
+              <col width="16%" />
+              <col width="16%" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th> </th>
+                <th>
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="FIRST_DEPTH"
+                    value={itemData.FIRST_DEPTH || ''}
+                    onChange={this.handleInputOnChange}
+                  />
+                </th>
+                <th>
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="SECOND_DEPTH"
+                    value={itemData.SECOND_DEPTH || ''}
+                    onChange={this.handleInputOnChange}
+                  />
+                </th>
+                <th>
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="USE_LOCATION"
+                    value={itemData.USE_LOCATION || ''}
+                    onChange={this.handleInputOnChange}
+                  />
+                </th>
+                <th>
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="LOAD_FACTOR"
+                    value={itemData.LOAD_FACTOR || ''}
+                    onChange={this.handleInputOnChange}
+                  />
+                </th>
+                <th>
+                  <AntdInput
+                    className="ant-input-inline ant-input-sm input-left"
+                    name="USE_PERCENT"
+                    value={itemData.USE_PERCENT || ''}
+                    onChange={this.handleInputOnChange}
+                  />
+                </th>
+                <th>
+                  <AntdInput className="ant-input-inline ant-input-sm input-left" name="UNIT" value={itemData.UNIT || ''} onChange={this.handleInputOnChange} />
+                </th>
               </tr>
-            ))}
-            <tr>
-              <td colSpan={7}>{itemList.length} 건</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+              <tr>
+                <th> </th>
+                <th colSpan={2} className="text-align-center">
+                  구분
+                </th>
+                <th rowSpan={2}>사용처</th>
+                <th rowSpan={2}>부하율</th>
+                <th colSpan={2}>사용량(月)</th>
+              </tr>
+              <tr>
+                <th> </th>
+                <th>대분류</th>
+                <th>소분류</th>
+                <th>사용량</th>
+                <th>단위</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <td colSpan={7}>{itemList.length} 건</td>
+              </tr>
+            </tfoot>
+            <tbody>
+              {itemList.map(i => (
+                <tr key={i.REQ_NO} onClick={() => this.handleRowClick(i)} className="tr-center tr-pointer">
+                  <td>
+                    <Checkbox
+                      className="ant-checkbox-wrapper"
+                      checked={rowSelections.indexOf(i.REQ_NO) > -1}
+                      onChange={() => this.handleRowSelection(i.REQ_NO)}
+                    />
+                  </td>
+                  <td>{i.FIRST_DEPTH}</td>
+                  <td>{i.SECOND_DEPTH}</td>
+                  <td>{i.USE_LOCATION}</td>
+                  <td>{i.LOAD_FACTOR}</td>
+                  <td>{i.USE_PERCENT}</td>
+                  <td>{i.UNIT}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </StyledHtmlTable>
+      </ContentsWrapper>
     );
   }
 }

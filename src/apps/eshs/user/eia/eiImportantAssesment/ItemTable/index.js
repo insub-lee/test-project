@@ -309,7 +309,7 @@ class ItemTable extends Component {
                   <td>
                     <Checkbox className="ant-checkbox-wrapper" checked={item.PLAN_REVIEW === 'Y'} onChange={() => this.handleCheckBoxOnChange(item.SEQ)} />
                   </td>
-                  <td>
+                  <td className={item.PLAN_REVIEW === 'Y' && 'td-pointer'}>
                     {item.PLAN_REVIEW === 'N' ? (
                       <>
                         <span>{item.IMPROVEMENT_PLAN}</span>
@@ -350,6 +350,7 @@ class ItemTable extends Component {
           <AntdModal className="modal-table-pad" width={780} height={480} closable={false} visible={modalVisible} footer={null}>
             <div>
               <img src={popoverContent.Em1} alt="EM" />
+              <br />
               <br />
               <StyledButtonWrapper className="btn-wrap-center">
                 <StyledButton className="btn-primary btn-sm" onClick={this.handleModalVisible}>

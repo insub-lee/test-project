@@ -3,8 +3,12 @@ import React from 'react';
 import { Input, Modal } from 'antd';
 import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import BizBuilderBase from 'components/BizBuilderBase';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import { fromJS } from 'immutable';
 
-const { Search } = Input;
+const AntdModal = StyledContentsModal(Modal);
+const AntdSearch = StyledSearchInput(Input.Search);
 
 class CustomBuilderListComp extends React.Component {
   constructor(props) {
@@ -55,7 +59,7 @@ class CustomBuilderListComp extends React.Component {
     const apiData = (extraApiData && extraApiData.CustomDetailData && extraApiData.CustomDetailData.list) || [];
     if (apiData.length === 1) {
       // System field 값이 중복되어 스프레드로 apiData[0]먼저 넣어줌
-      setFormData(id, { ...apiData[0], ...formData });
+      setFormData(id, { ...apiData[0], CHILDREN_TASK_SEQ: apiData[0].TASK_SEQ, ...formData });
     } else {
       console.debug(`------ CustomBuilderListComp ------ colData [${colData}]로 [${dataKey}]컬럼 조회결과 [${apiData.length}건]`);
       console.debug(`------ CustomBuilderListComp ------ 조회결과가 1개여야 formData값이 설정됩니다.`);
@@ -135,7 +139,6 @@ class CustomBuilderListComp extends React.Component {
   };
 
   listOnRowClick = record => {
-    console.debug('22222222222', record);
     const {
       customOnRowClick,
       sagaKey: id,
@@ -146,15 +149,29 @@ class CustomBuilderListComp extends React.Component {
       },
       COMP_FIELD,
       NAME_KOR,
+      metaList,
+      formData,
+      setFormData,
     } = this.props;
+
     if (isRequired) {
       changeValidationData(id, COMP_FIELD, record[dataKey] !== '', record[dataKey] !== '' ? '' : `${NAME_KOR}항목은 필수 입력입니다.`);
     }
-
     if (isFormData === 'Y') {
-      const { formData, setFormData } = this.props;
-      console.debug('setFormData', setFormData);
-      setFormData(id, { ...record, ...formData, [COMP_FIELD]: record[dataKey] });
+      const fieldList = metaList.filter(m => m.FIELD_TYPE === 'SYS');
+
+      const sysField = fieldList.reduce((result, item, index, array) => {
+        result[fieldList[index].COMP_FIELD] = formData[fieldList[index].COMP_FIELD];
+        return result;
+      }, {});
+
+      setFormData(id, {
+        ...formData,
+        ...record,
+        ...sysField,
+        CHILDREN_TASK_SEQ: record.TASK_SEQ,
+        [COMP_FIELD]: record[dataKey],
+      });
     } else {
       changeFormData(id, COMP_FIELD, record[dataKey]);
     }
@@ -179,18 +196,26 @@ class CustomBuilderListComp extends React.Component {
     }
     return visible ? (
       <div>
-        <Search
+        <AntdSearch
           value={colData}
           placeholder={placeholder || ''}
           readOnly
           className={className || ''}
           style={{ width: 150 }}
           onClick={viewType === 'VIEW' ? () => {} : () => this.handleModalVisible('LIST')}
+          onSearch={viewType === 'VIEW' ? () => {} : () => this.handleModalVisible('LIST')}
         />
         {inputBtn === 'Y' && <StyledButton onClick={() => this.handleModalVisible('INPUT')}>등록</StyledButton>}
-        <Modal visible={modalVisible} width={modalWidth} height={modalHeight} onCancel={() => this.handleModalVisible('CANCEL')} footer={[null]}>
+        <AntdModal
+          title="검색"
+          visible={modalVisible}
+          width={modalWidth}
+          height={modalHeight}
+          onCancel={() => this.handleModalVisible('CANCEL')}
+          footer={[null]}
+        >
           {ExtraBuilder}
-        </Modal>
+        </AntdModal>
       </div>
     ) : (
       ''
@@ -218,6 +243,7 @@ CustomBuilderListComp.propTypes = {
   extraApiData: PropTypes.object,
   viewPageData: PropTypes.object,
   getExtraApiData: PropTypes.func,
+  metaList: PropTypes.array,
 };
 
 CustomBuilderListComp.defaultProps = {
@@ -244,6 +270,7 @@ CustomBuilderListComp.defaultProps = {
   extraApiData: {},
   viewPageData: {},
   getExtraApiData: () => {},
+  metaList: [],
 };
 
 export default CustomBuilderListComp;
