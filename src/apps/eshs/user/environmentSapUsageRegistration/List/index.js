@@ -13,6 +13,7 @@ import { Table, Input, InputNumber, Select, Checkbox, Popconfirm } from 'antd';
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import moment from 'moment';
 import request from 'utils/request';
+import SearchComp from '../../environmentMasterRegistration/InputModal/SearchComp';
 
 const { Option } = Select;
 const AntdTable = StyledLineTable(Table);
@@ -399,7 +400,7 @@ class List extends React.Component {
       isSelectSapMaterial,
     } = this;
     const { requestValue, visible, dataSource, checkedIndex } = this.state;
-    const { sagaKey, getCallDataHandler, result } = this.props;
+    const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -471,6 +472,7 @@ class List extends React.Component {
           <div className="div-comment div-comment-antd">제품사용량: 당해출고량 * kg환산계수</div>
         </ContentsWrapper>
         <Modal
+          SearchComp={SearchComp}
           sagaKey={sagaKey}
           visible={visible}
           modalClose={handleModalClose}
@@ -479,6 +481,8 @@ class List extends React.Component {
           setRequestValue={setRequestValue}
           tableColumns={ModalColumns}
           apiUrl="/api/eshs/v1/common/eshschemicalmaterialsap"
+          changeFormData={changeFormData}
+          formData={formData}
         />
       </>
     );
@@ -490,6 +494,8 @@ List.propTypes = {
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
   submitHandlerBySaga: PropTypes.func,
+  changeFormData: PropTypes.func,
+  formData: PropTypes.object,
 };
 
 List.defaultProps = {
@@ -497,6 +503,8 @@ List.defaultProps = {
   getCallDataHandler: () => {},
   result: {},
   submitHandlerBySaga: () => {},
+  changeFormData: () => {},
+  formData: {},
 };
 
 export default List;

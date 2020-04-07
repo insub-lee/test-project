@@ -50,7 +50,7 @@ class SearchComp extends React.Component {
       <>
         <StyledSearchWrap>
           <span className="input-label">화학물질 검색</span>
-          <AntdInput.Search className="search-item input-width160" placeHolder="검색" onChange={handleSearchChange} value={keyword} />
+          <AntdInput.Search className="search-item input-width160" placeholder="검색" onChange={handleSearchChange} value={keyword} />
         </StyledSearchWrap>
       </>
     );

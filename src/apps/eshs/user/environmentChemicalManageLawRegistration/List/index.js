@@ -8,7 +8,9 @@ import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { Popconfirm, Input, Select } from 'antd';
+
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
+import SearchComp from '../SearchComp';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -146,20 +148,6 @@ class List extends React.Component {
     },
   ];
 
-  searchMenu = () => (
-    <>
-      <span>화학물질 검색</span>
-      <AntdSelect className="select-sm" defaultValue="사고대비물질 검색(함량기준 판단)">
-        <Select.Option value="ee" />
-        <Select.Option value="ee" />
-        <Select.Option value="ee" />
-        <Select.Option value="ee" />
-        <Select.Option value="ee" />
-      </AntdSelect>
-      <Input.Search className="search-item input-width160" placeHolder="검색" onChange={this.handleSearchChange} value={this.props.keyword} />
-    </>
-  );
-
   render() {
     const {
       handleSearchClick,
@@ -171,16 +159,15 @@ class List extends React.Component {
       handleModalClose,
       setRequestValue,
       columns,
-      searchMenu,
     } = this;
     const { visible, deleteConfirmMessage, requestValue } = this.state;
-    const { sagaKey, getCallDataHandler, result } = this.props;
+    const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
         <ContentsWrapper>
           <StyledSearchWrap>
             <span className="input-label">화학물 추가</span>
-            <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
+            <Input.Search className="search-item input-width160" placeholder="검색" onClick={handleSearchClick} value="" />
           </StyledSearchWrap>
           <div className="selSaveWrapper">
             <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
@@ -295,7 +282,9 @@ class List extends React.Component {
           setRequestValue={setRequestValue}
           apiUrl="/api/eshs/v1/common/eshschemicalmaterialMaster"
           tableColumns={columns}
-          searchMenu={searchMenu}
+          SearchComp={SearchComp}
+          changeFormData={changeFormData}
+          formData={formData}
         />
       </>
     );
@@ -307,6 +296,8 @@ List.propTypes = {
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
+  changeFormData: PropTypes.func,
+  formData: PropTypes.object,
 };
 List.defaultProps = {};
 
