@@ -14,15 +14,11 @@ class SearchComp extends React.Component {
     super(props);
     this.state = {
       category: [],
-      keyword: '',
-      CATEGORY_ID: '',
     };
-    this.getSearchList = debounce(this.getSearchList, 300);
   }
 
   componentDidMount() {
     this.getCategoryList();
-    this.getSearchList();
   }
 
   getCategoryList = () => {
@@ -47,61 +43,25 @@ class SearchComp extends React.Component {
     });
   };
 
-  handleSearchChange = e => {
-    if (typeof e === 'object') {
-      return this.setState(
-        {
-          keyword: e.target.value,
-        },
-        this.getSearchList,
-      );
-    }
-    if (typeof e === 'number' || !e.length) {
-      console.debug(typeof e, e);
-      return this.setState(
-        {
-          CATEGORY_ID: e,
-        },
-        this.getSearchList,
-      );
-    }
-    return null;
-  };
-
-  handleCategoryChange = value => {
-    this.setState(
-      {
-        category: value,
-      },
-      this.getSearchList,
-    );
-  };
-
-  getSearchList = () => {
-    const { CATEGORY_ID, keyword } = this.state;
-    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
-    const apiArr = [
-      {
-        key: 'materialList',
-        type: 'GET',
-        url: `${apiUrl}?CATEGORY_ID=${CATEGORY_ID}&keyword=${keyword}`,
-      },
-    ];
-    getCallDataHandler(id, apiArr, this.setSearchList);
-  };
-
   setSearchList = () => {
     const { sagaKey: id, result, changeFormData } = this.props;
     changeFormData(id, 'dataSource', (result.materialList && result.materialList.list) || []);
   };
 
   render() {
-    const { handleSearchChange } = this;
-    const { category, keyword } = this.state;
+    // const { handleSearchChange } = this;
+    const { category } = this.state;
+    const { keyword, CATEGORY_ID, handleSearchChange } = this.props;
     return (
       <>
         <StyledSearchWrap>
-          <AntdSelect className="select-mid" defaultValue="전체 보기" onChange={handleSearchChange} style={{ width: '15%' }}>
+          <AntdSelect
+            className="select-mid"
+            defaultValue="전체 보기"
+            value={CATEGORY_ID}
+            onChange={value => handleSearchChange(value, 'SELECT')}
+            style={{ width: '15%' }}
+          >
             {category.map(item => (
               <Select.Option value={item.NODE_ID}>{item.NAME_KOR}</Select.Option>
             ))}
@@ -109,7 +69,7 @@ class SearchComp extends React.Component {
           </AntdSelect>
           <AntdInput.Search
             value={keyword}
-            onChange={handleSearchChange}
+            onChange={e => handleSearchChange(e, 'INPUT')}
             className="ant-input-mid ant-input-inline search-item input-width160"
             placeholder="검색"
             style={{ width: '20%' }}
@@ -124,8 +84,10 @@ SearchComp.propTypes = {
   sagaKey: PropTypes.string,
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
-  apiUrl: PropTypes.string,
   changeFormData: PropTypes.func,
+  keyword: PropTypes.string,
+  CATEGORY_ID: PropTypes.number,
+  handleSearchChange: PropTypes.func,
 };
 
 export default SearchComp;
