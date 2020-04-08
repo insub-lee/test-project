@@ -11,6 +11,7 @@ import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 import EshsCmpnyComp from 'components/BizBuilder/Field/EshsCmpnyComp';
 import Modal from '../InputModal';
+import SearchComp from '../InputModal/SearchComp';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -215,7 +216,7 @@ class List extends React.Component {
     } = this;
     const { columns } = this;
     const { requestValue, visible, deleteConfirmMessage } = this.state;
-    const { sagaKey, getCallDataHandler, result, changeFormData } = this.props;
+    const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
     return (
       <>
         <ContentsWrapper>
@@ -329,6 +330,9 @@ class List extends React.Component {
           setRequestValue={setRequestValue}
           apiUrl="/api/eshs/v1/common/eshschemicalmaterialMaster"
           tableColumns={columns}
+          SearchComp={SearchComp}
+          changeFormData={changeFormData}
+          formData={formData}
         />
       </>
     );
@@ -341,6 +345,7 @@ List.propTypes = {
   result: PropTypes.object,
   changeFormData: PropTypes.func,
   submitHandlerBySaga: PropTypes.func,
+  formData: PropTypes.object,
 };
 
 List.defaultProps = {
@@ -349,6 +354,7 @@ List.defaultProps = {
   result: {},
   changeFormData: () => {},
   submitHandlerBySaga: () => {},
+  formData: {},
 };
 
 export default List;

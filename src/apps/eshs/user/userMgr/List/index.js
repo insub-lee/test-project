@@ -45,7 +45,7 @@ class List extends Component {
       {
         key: 'deptList',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsHqAndDeptList?dept_id=${selectedHq}`,
+        url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${selectedHq}`,
       },
     ];
 
@@ -84,7 +84,7 @@ class List extends Component {
       {
         key: 'deptListUnderHq',
         type: 'GET',
-        url: `/api/eshs/v1/common/EshsHqAndDeptList?dept_id=${e}`,
+        url: `/api/eshs/v1/common/EshsHqAndDeptList?DEPT_ID=${e}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.getDeptList);

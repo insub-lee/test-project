@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Modal, Input, Table } from 'antd';
-import { debounce } from 'lodash';
+import { Modal, Table } from 'antd';
 
-// import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import { debounce } from 'lodash';
 
 const AntdModal = StyledContentsModal(Modal);
 const AntdTable = StyledLineTable(Table);
@@ -15,13 +13,14 @@ class InputModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: [],
+      CATEGORY_ID: '',
       keyword: '',
-    };
-    this.getSearchData = debounce(this.getSearchData, 300);
+    }; // state 만들어서 SearchComp에 props로 넣어주기
+    this.getSearchList = debounce(this.getSearchList, 300);
   }
 
   componentDidMount() {
+    this.getSearchList();
     this.getMaterialList();
   }
 
@@ -38,78 +37,84 @@ class InputModal extends React.Component {
   };
 
   setDataSource = () => {
-    const { result } = this.props;
-    this.setState({
-      dataSource: (result.materialList && result.materialList.list) || [],
-    });
-  };
-
-  static getDerivedStateFromProps(nextProps, prevState) {
-    if (nextProps.result.materialList && nextProps.result.materialList.list) {
-      if (nextProps.result.materialList.list !== prevState.dataSource) {
-        return { dataSource: nextProps.result.materialList.list };
-      }
-    }
-    return null;
-  }
-
-  handleSearchChange = e => {
-    this.setState(
-      {
-        keyword: e.target.value,
-      },
-      this.getSearchData,
-    );
-  };
-
-  getSearchData = () => {
-    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
-    const { keyword } = this.state;
-    const apiArr = [
-      {
-        key: 'materialList',
-        type: 'GET',
-        url: `${apiUrl}?keyword=${keyword}`,
-      },
-    ];
-    getCallDataHandler(id, apiArr, this.setDataSource);
+    const { result, sagaKey: id, changeFormData } = this.props;
+    changeFormData(id, 'dataSource', (result.materialList && result.materialList.list) || []);
   };
 
   handleModalClose = () => {
     const { modalClose } = this.props;
     modalClose();
-    this.setState(
-      {
-        keyword: '',
-      },
-      this.getMaterialList(),
-    );
+    this.getMaterialList();
+    this.setState({
+      CATEGORY_ID: '',
+      keyword: '',
+    });
   };
 
   handleRowClick = record => {
     const { setRequestValue } = this.props;
     setRequestValue(record);
-    this.setState(
+    this.getMaterialList();
+  };
+
+  handleSearchChange = (e, type) => {
+    if (type.toUpperCase() === 'INPUT') {
+      this.setState(
+        {
+          keyword: e.target.value,
+        },
+        this.getSearchList,
+      );
+    }
+    if (type.toUpperCase() === 'SELECT') {
+      this.setState(
+        {
+          CATEGORY_ID: e,
+        },
+        this.getSearchList,
+      );
+    }
+  };
+
+  getSearchList = () => {
+    const { CATEGORY_ID, keyword } = this.state;
+    const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
+    const apiArr = [
       {
-        keyword: '',
+        key: 'materialList',
+        type: 'GET',
+        url: `${apiUrl}?CATEGORY_ID=${CATEGORY_ID}&keyword=${keyword}`,
       },
-      this.getMaterialList(),
-    );
+    ];
+    getCallDataHandler(id, apiArr, this.setSearchList);
+  };
+
+  setSearchList = () => {
+    const { sagaKey: id, result, changeFormData } = this.props;
+    changeFormData(id, 'dataSource', (result.materialList && result.materialList.list) || []);
   };
 
   render() {
-    const { handleSearchChange, handleModalClose, handleRowClick } = this;
-    const { dataSource, keyword } = this.state;
-    const { visible, tableColumns } = this.props;
+    const { handleModalClose, handleRowClick, handleSearchChange } = this;
+    const { keyword, CATEGORY_ID } = this.state;
+    const { sagaKey, visible, tableColumns, getCallDataHandler, apiUrl, SearchComp, formData, changeFormData, result } = this.props;
     return (
       <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null}>
-        <StyledSearchWrap>
-          <span className="input-label">화학물질 검색</span>
-          <Input.Search className="search-item input-width160" placeHolder="검색" onChange={handleSearchChange} value={keyword} />
-        </StyledSearchWrap>
+        <SearchComp
+          apiUrl={apiUrl}
+          sagaKey={sagaKey}
+          getCallDataHandler={getCallDataHandler}
+          changeFormData={changeFormData}
+          formData={formData}
+          result={result}
+          onCancel={handleModalClose}
+          keyword={keyword}
+          CATEGORY_ID={CATEGORY_ID}
+          handleSearchChange={handleSearchChange}
+        />
         <AntdTable
           columns={tableColumns}
-          dataSource={dataSource}
+          dataSource={formData.dataSource}
           pagination={{ pageSize: 10 }}
           onRow={record => ({
             onClick: () => handleRowClick(record),
@@ -129,6 +134,9 @@ InputModal.propTypes = {
   setRequestValue: PropTypes.func,
   apiUrl: PropTypes.string,
   tableColumns: PropTypes.arrayOf(PropTypes.object),
+  SearchComp: PropTypes.any, // React component
+  formData: PropTypes.object,
+  changeFormData: PropTypes.func,
 };
 
 InputModal.defaultProps = {
@@ -140,6 +148,8 @@ InputModal.defaultProps = {
   setRequestValue: () => {},
   apiUrl: '',
   tableColumns: [],
+  formData: {},
+  changeFormData: () => {},
 };
 
 export default InputModal;
