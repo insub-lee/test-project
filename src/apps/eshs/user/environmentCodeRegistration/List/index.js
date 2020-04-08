@@ -55,7 +55,7 @@ class List extends Component {
         if (index === 0) {
           return (
             <div>
-              <AntdInput className="ant-input-inline " value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
+              <AntdInput className="ant-input-inline mr5" value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
               <StyledButtonWrapper className="btn-wrap-inline">
                 <StyledButton className="btn-primary btn-first btn-sm" onClick={handleAddClick}>
                   추가

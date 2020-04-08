@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { Input, InputNumber } from 'antd';
+import { Input, InputNumber, Popconfirm } from 'antd';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
-import SearchComp from '../SearchComp';
+import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
+// import SearchComp from '../SearchComp';
 
 const AntdInput = StyledInput(Input);
+const AntdSearch = StyledSearchInput(Input.Search);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -21,24 +25,42 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
-        GROUP: '',
+        GROUP_NAME: '',
         HANDLE_AMOUNT: 0,
         INVESTIGATION_TARGET_RANGE: 0,
         CATEGORY: '',
         SUB_CATEGORY: '',
       },
       isModified: false,
+      deleteConfirmMessage: '삭제하시겠습니까?',
     };
   }
 
   handleInputClick = () => {
     const { sagaKey: id, submitHandlerBySaga } = this.props;
     const { requestValue, isModified } = this.state;
-    console.debug(submitHandlerBySaga);
     if (isModified) {
       return submitHandlerBySaga(id, 'PUT', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, this.getMaterialList);
     }
     return submitHandlerBySaga(id, 'POST', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, this.getMaterialList);
+  };
+
+  handleDeleteClick = () => {
+    const { requestValue } = this.state;
+    if (!requestValue.REG_ID) {
+      return this.setState({
+        deleteConfirmMessage: '선택된 항목이 없습니다.',
+      });
+    }
+    return this.setState({
+      deleteConfirmMessage: '삭제하시겠습니까?',
+    });
+  };
+
+  handleDeleteConfirm = () => {
+    const { sagaKey: id, submitHandlerBySaga } = this.props;
+    const { requestValue } = this.state;
+    return submitHandlerBySaga(id, 'DELETE', `/api/eshs/v1/common/eshschemicalmaterialmanageactregistration`, requestValue, this.getMaterialList);
   };
 
   getMaterialList = () => {
@@ -50,8 +72,7 @@ class List extends React.Component {
         url: '/api/eshs/v1/common/eshschemicalmaterialmanageactregistration',
       },
     ];
-    // getCallDataHandler(id, apiArr, this.handleResetClick);
-    getCallDataHandler(id, apiArr);
+    getCallDataHandler(id, apiArr, this.handleResetClick);
   };
 
   handleSearchClick = () => {
@@ -73,7 +94,7 @@ class List extends React.Component {
         CAS_NO: '',
         NAME_KOR: '',
         NAME_ENG: '',
-        GROUP: '',
+        GROUP_NAME: '',
         HANDLE_AMOUNT: '',
 
         INVESTIGATION_TARGET_RANGE: '',
@@ -107,14 +128,32 @@ class List extends React.Component {
 
   columns = [
     {
+      title: 'CAS_NO',
+      dataIndex: 'CAS_NO',
+      key: 'CAS_NO',
+      align: 'center',
+    },
+    {
+      title: '물질명(국문)',
+      dataIndex: 'NAME_KOR',
+      key: 'NAME_KOR',
+      align: 'center',
+    },
+    {
+      title: '물질명(영문)',
+      dataIndex: 'NAME_ENG',
+      key: 'NAME_ENG',
+      align: 'center',
+    },
+    {
       title: '호',
-      dateIndex: 'CATEGORY',
+      dataIndex: 'CATEGORY',
       key: 'CATEGORY',
       align: 'center',
     },
     {
       title: '하위 호',
-      dateIndex: 'SUB_CATEGORY',
+      dataIndex: 'SUB_CATEGORY',
       key: 'SUB_CATEGORY',
       align: 'center',
     },
@@ -122,25 +161,48 @@ class List extends React.Component {
 
   render() {
     const { columns } = this;
-    const { handleInputClick, handleSearchClick, handleResetClick, handleModalClose, setRequestValue, handleInputChange, handleInputNumberChange } = this;
-    const { visible, requestValue } = this.state;
+    const {
+      handleInputClick,
+      handleSearchClick,
+      handleResetClick,
+      handleModalClose,
+      setRequestValue,
+      handleInputChange,
+      handleInputNumberChange,
+      handleDeleteClick,
+      handleDeleteConfirm,
+    } = this;
+    const { visible, requestValue, deleteConfirmMessage } = this.state;
     const { sagaKey, getCallDataHandler, result, changeFormData, formData } = this.props;
 
     return (
       <>
         <ContentsWrapper>
           <StyledSearchWrap>
-            <span className="input-label">화학물 추가</span>
-            <Input.Search className="search-item input-width160" placeHolder="검색" onClick={handleSearchClick} value="" />
+            <div className="search-inner">
+              <span className="input-label">화학물 추가</span>
+              <AntdSearch
+                className="ant-search-inline input-search-mid mr5"
+                placeHolder="검색"
+                onClick={handleSearchClick}
+                value=""
+                style={{ width: '200px' }}
+              />
+              <StyledButtonWrapper className="btn-wrap-inline">
+                <StyledButton className="btn-primary btn-first" onClick={handleInputClick} style={{ width: '91px' }}>
+                  저장/수정
+                </StyledButton>
+                <Popconfirm title={deleteConfirmMessage} onConfirm={handleDeleteConfirm} okText="삭제" cancelText="취소">
+                  <StyledButton className="btn-light btn-first" onClick={handleDeleteClick} style={{ width: '91px' }}>
+                    삭제
+                  </StyledButton>
+                </Popconfirm>
+                <StyledButton className="btn-light" onClick={handleResetClick} style={{ width: '91px' }}>
+                  초기화
+                </StyledButton>
+              </StyledButtonWrapper>
+            </div>
           </StyledSearchWrap>
-          <div className="selSaveWrapper">
-            <StyledButton className="btn-primary btn-first" onClick={handleInputClick}>
-              저장/수정
-            </StyledButton>
-            <StyledButton className="btn-light" onClick={handleResetClick}>
-              초기화
-            </StyledButton>
-          </div>
           <div className="tableWrapper">
             <StyledHtmlTable>
               <table>
@@ -170,7 +232,7 @@ class List extends React.Component {
                   <tr>
                     <th>그룹</th>
                     <td>
-                      <AntdInput className="ant-input-sm" name="GROUP" value={requestValue.GROUP} onChange={handleInputChange} />
+                      <AntdInput className="ant-input-sm" name="GROUP_NAME" value={requestValue.GROUP_NAME} onChange={handleInputChange} />
                     </td>
                     <th>취급량(kg/년)</th>
                     <td>
@@ -234,7 +296,6 @@ List.propTypes = {
 };
 
 List.defaultProps = {
-  sagaKey: '',
   getCallDataHandler: () => {},
   result: {},
   changeFormData: () => {},
