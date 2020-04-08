@@ -10,15 +10,11 @@ import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 
-import Moment from 'moment';
-
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdLineTable = StyledLineTable(Table);
 
 const { Option } = Select;
-
-Moment.locale('ko');
 
 class List extends Component {
   constructor(props) {
@@ -207,17 +203,13 @@ class List extends Component {
         children: [
           {
             title: (
-              <>
-                <div className="td-input-wrapper">
-                  <AntdInput
-                    className="ant-input-sm input-center"
-                    readOnly={codeType !== 'selfTyping'}
-                    onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
-                    value={code}
-                    onChange={e => this.onChangeValue('code', e.target.value)}
-                  />
-                </div>
-              </>
+              <AntdInput
+                className="ant-input-sm input-center"
+                readOnly={codeType !== 'selfTyping'}
+                onClick={codeType !== 'selfTyping' ? () => message.warning('입력하는 코드형식이 아닙니다') : ''}
+                value={code}
+                onChange={e => this.onChangeValue('code', e.target.value)}
+              />
             ),
             className: 'th-form',
             dataIndex: 'CODE',
@@ -232,28 +224,26 @@ class List extends Component {
           {
             title: (
               <>
-                <div className="td-input-wrapper">
-                  <AntdInput
-                    className="ant-input-inline ant-input-sm input-left"
-                    style={{ width: '300px' }}
-                    value={name}
-                    onChange={e => this.onChangeValue('code', e.target.value)}
-                  />
-                  <StyledButtonWrapper className="btn-wrap-inline">
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={this.insertOverlab}>
-                      추가
-                    </StyledButton>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
-                      수정
-                    </StyledButton>
-                    <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
-                      삭제
-                    </StyledButton>
-                    <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
-                      Reset
-                    </StyledButton>
-                  </StyledButtonWrapper>
-                </div>
+                <AntdInput
+                  className="ant-input-inline ant-input-sm input-left"
+                  style={{ width: '300px' }}
+                  value={name}
+                  onChange={e => this.onChangeValue('name', e.target.value)}
+                />
+                <StyledButtonWrapper className="btn-wrap-inline">
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={this.insertOverlab}>
+                    추가
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('U')}>
+                    수정
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.onChangeData('D')}>
+                    삭제
+                  </StyledButton>
+                  <StyledButton className="btn-primary btn-sm" onClick={this.onReset}>
+                    Reset
+                  </StyledButton>
+                </StyledButtonWrapper>
               </>
             ),
             className: 'th-form',
