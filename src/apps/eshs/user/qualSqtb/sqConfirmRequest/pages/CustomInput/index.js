@@ -40,6 +40,8 @@ class InputPage extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
       formData: { interLockReload = '', materialReload = '' },
+      changeFormData,
+      sagaKey,
     } = nextProps;
     const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
     if (prevState.qualTaskSeq !== qualTaskSeq) {
@@ -49,6 +51,7 @@ class InputPage extends Component {
       if (typeof materialReload === 'function') {
         materialReload(qualTaskSeq);
       }
+      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
       return { qualTaskSeq };
     }
     return null;
@@ -271,6 +274,7 @@ InputPage.propTypes = {
   isLoading: PropTypes.bool,
   interLockReload: PropTypes.func,
   setFormData: PropTypes.func,
+  changeFormData: PropTypes.func,
 };
 
 InputPage.defaultProps = {
@@ -283,6 +287,7 @@ InputPage.defaultProps = {
   isLoading: false,
   interLockReload: () => {},
   setFormData: () => {},
+  changeFormData: () => {},
 };
 
 export default InputPage;

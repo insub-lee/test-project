@@ -23,17 +23,18 @@ class ModifyPage extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     const {
       formData: { interLockReload = '', materialReload = '' },
+      sagaKey,
+      changeFormData,
     } = nextProps;
     const qualTaskSeq = (nextProps.formData && nextProps.formData.CHILDREN_TASK_SEQ) || 0;
     if (prevState.qualTaskSeq !== qualTaskSeq) {
-      console.debug('qualTaskSeq', qualTaskSeq);
-      console.debug('prevState.qualTaskSeq', prevState.qualTaskSeq);
       if (typeof interLockReload === 'function') {
         interLockReload(qualTaskSeq);
       }
       if (typeof materialReload === 'function') {
         materialReload(qualTaskSeq);
       }
+      changeFormData(sagaKey, 'EQUIP_TASK_SEQ', qualTaskSeq);
       return { qualTaskSeq };
     }
     return null;
@@ -150,6 +151,7 @@ class ModifyPage extends Component {
       extraApiData,
       getExtraApiData,
       changeFormData,
+      deleteTask,
     } = this.props;
 
     const { qualTaskSeq } = this.state;
@@ -166,6 +168,7 @@ class ModifyPage extends Component {
               viewPageData={viewPageData}
               setFormData={setFormData}
               changeViewPage={changeViewPage}
+              deleteTask={deleteTask}
               modifySaveTask={() => this.saveBeforeProcess(id, reloadId || id, this.saveTask)}
             />
             <View key={`${id}_${viewPageData.viewType}`} {...this.props} />
@@ -196,11 +199,15 @@ class ModifyPage extends Component {
 ModifyPage.propTypes = {
   isLoading: PropTypes.bool,
   formData: PropTypes.object,
+  changeFormData: PropTypes.func,
+  deleteTask: PropTypes.func,
 };
 
 ModifyPage.defaultProps = {
   isLoading: false,
   formData: {},
+  changeFormData: () => {},
+  deleteTask: () => {},
 };
 
 export default ModifyPage;

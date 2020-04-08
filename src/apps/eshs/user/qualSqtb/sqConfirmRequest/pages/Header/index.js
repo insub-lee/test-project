@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
-import { Input, Modal } from 'antd';
+import { Input, Modal, message, Popconfirm } from 'antd';
 
 import BizBuilderBase from 'components/BizBuilderBase';
 
@@ -44,20 +44,29 @@ class Header extends Component {
   };
 
   handleAction = type => {
-    const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask } = this.props;
-    const { workSeq } = viewPageData;
+    const { sagaKey, saveTask, changeViewPage, formData, viewPageData, modifySaveTask, deleteTask } = this.props;
+    const { workSeq, taskSeq } = viewPageData;
     const selectTask = (formData && formData.selectRow && formData.selectRow.TASK_SEQ) || 0;
     switch (type) {
-      case 'SAVE':
-        saveTask();
-        break;
-      case 'MODIFY':
-        modifySaveTask();
-        break;
       case 'SEARCH':
         if (selectTask) {
           changeViewPage(sagaKey, workSeq, selectTask, 'MODIFY');
         }
+        break;
+      case 'SAVE':
+        saveTask();
+        break;
+      case 'CONFIRM_LINE':
+        message.warning('미구현');
+        break;
+      case 'DELETE':
+        deleteTask(sagaKey, sagaKey, workSeq, taskSeq, changeViewPage);
+        break;
+      case 'MODIFY':
+        modifySaveTask();
+        break;
+      case '상신':
+        message.warning('미구현');
         break;
       default:
         break;
@@ -86,7 +95,10 @@ class Header extends Component {
 
   render() {
     const { searchList, modalVisible } = this.state;
-    const { formData, viewPageData } = this.props;
+    const {
+      formData,
+      viewPageData: { viewType },
+    } = this.props;
     return (
       <>
         <StyledButtonWrapper className="btn-wrap-left btn-wrap-mb-10">
@@ -101,11 +113,28 @@ class Header extends Component {
           <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SEARCH')}>
             검색
           </StyledButton>
-          <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
-            저장
-          </StyledButton>
+          {viewType === 'INPUT' ? (
+            <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('SAVE')}>
+              저장
+            </StyledButton>
+          ) : (
+            <>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('MODIFY')}>
+                저장
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('CONFIRM_LINE')}>
+                결제선지정
+              </StyledButton>
+              <StyledButton className="btn-primary btn-sm btn-first" onClick={() => this.handleAction('상신')}>
+                상신
+              </StyledButton>
+              <Popconfirm title="정말 삭제하시겠습니까?" onConfirm={() => this.handleAction('DELETE')} okText="확인" cancelText="취소">
+                <StyledButton className="btn-primary btn-sm">삭제</StyledButton>
+              </Popconfirm>
+            </>
+          )}
         </StyledButtonWrapper>
-        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1000} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
+        <AntdModal title="ESH Qual. 신청번호 검색" visible={modalVisible} width={1300} heigth={600} onCancel={this.handleModalVisible} footer={[null]}>
           {searchList}
         </AntdModal>
       </>
@@ -145,6 +174,7 @@ Header.propTypes = {
   changeViewPage: PropTypes.func,
   viewPageData: PropTypes.object,
   modifySaveTask: PropTypes.func,
+  deleteTask: PropTypes.func,
 };
 Header.defaultProps = {
   formData: {},
@@ -154,6 +184,7 @@ Header.defaultProps = {
   changeViewPage: () => {},
   viewPageData: {},
   modifySaveTask: () => {},
+  deleteTask: () => {},
 };
 
 export default Header;

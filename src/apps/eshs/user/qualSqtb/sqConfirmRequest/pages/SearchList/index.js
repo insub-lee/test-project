@@ -250,24 +250,6 @@ class ListPage extends Component {
                 )
               );
             })}
-            <div className="alignRight">
-              {isMultiDelete && (
-                <Popconfirm title="Are you sure delete this task?" onConfirm={() => removeMultiTask(id, id, -1, 'INPUT')} okText="Yes" cancelText="No">
-                  <Button type="primary" className="btn-primary">
-                    Delete
-                  </Button>
-                </Popconfirm>
-              )}
-              <Button
-                type="primary"
-                className="btn-primary"
-                onClick={() =>
-                  isBuilderModal ? changeBuilderModalState(true, 'INPUT', viewPageData.workSeq, -1) : changeViewPage(id, viewPageData.workSeq, -1, 'INPUT')
-                }
-              >
-                Add
-              </Button>
-            </div>
           </Sketch>
         </StyledViewDesigner>
       );
