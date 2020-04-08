@@ -8,7 +8,7 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import ContentsWrapper from 'commonStyled/MdcsStyled/Wrapper/ContentsWrapper';
 
 import DocView from './DocView';
-import ReTrans from './Retrans';
+import Redistribute from './Redistribute';
 
 const AntdTable = StyledAntdTable(Table);
 const AntdModal = StyledModalWrapper(Modal);
@@ -16,7 +16,7 @@ const AntdModal = StyledModalWrapper(Modal);
 class DistributeDocList extends Component {
   state = {
     isShow: false,
-    isRetransShow: false,
+    isRedistShow: false,
     selectedRow: {},
   };
   
@@ -35,14 +35,14 @@ class DistributeDocList extends Component {
   onCancelPopup = () => {
     this.setState({
       isShow: false,
-      isRetransShow: false,
+      isRedistShow: false,
     });
   };
 
   onClickMail = row => {
     this.setState({
       selectedRow: row,
-      isRetransShow: true,
+      isRedistShow: true,
     });
   };
 
@@ -135,13 +135,13 @@ class DistributeDocList extends Component {
         </AntdModal>
         <AntdModal
           width={500}
-          visible={this.state.isRetransShow}
+          visible={this.state.isRedistShow}
           title="재배포 요청"
           onCancel={this.onCancelPopup}
           destroyOnClose
           footer={null}
         >
-          <ReTrans selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
+          <Redistribute selectedRow={this.state.selectedRow} onCancelPopup={this.onCancelPopup} />
         </AntdModal>
       </>
     );
