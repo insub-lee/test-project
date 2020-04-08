@@ -8,7 +8,7 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 
 const AntdTextArea = StyledTextarea(Input.TextArea);
 
-class RetransRequest extends Component {
+class RedistributeRequest extends Component {
   state = {
     reason: '',
   }
@@ -62,4 +62,4 @@ class RetransRequest extends Component {
   }
 }
 
-export default RetransRequest;
+export default RedistributeRequest;
