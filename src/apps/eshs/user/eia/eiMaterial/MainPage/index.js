@@ -44,7 +44,7 @@ class MainPage extends Component {
 
   itemListReload = () => {
     const { id, getCallDataHandler, formData } = this.props;
-    const req_no = (formData && formData.materialData && formData.materialData.REQ_NO) || '';
+    const req_no = (formData && formData.materialData && formData.materialData.REQ_NO) || 'null';
     const chk_year = (formData && formData.CHK_YEAR) || '0';
     const apiAry = [
       {
@@ -70,25 +70,15 @@ class MainPage extends Component {
     const searchFlag = (formData && formData.searchFlag) || false;
     return (
       <ContentsWrapper>
-        <StyledViewDesigner>
-          <Sketch>
-            <Row>
-              <Col span={10}>
-                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-          </Sketch>
-        </StyledViewDesigner>
+        <div>
+          <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+        <div>
+          <MaterialTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+        <div>
+          <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
       </ContentsWrapper>
     );
   }

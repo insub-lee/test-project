@@ -1,99 +1,126 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { Table, Button, Popconfirm } from 'antd';
+import { Table, Modal } from 'antd';
 
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
-import Sketch from 'components/BizBuilder/Sketch';
-import Group from 'components/BizBuilder/Sketch/Group';
-import { CustomStyledAntdTable as StyledAntdTable } from 'components/CommonStyled/StyledAntdTable';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
+import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
+import StyledContentsModal from 'commonStyled/EshsStyled/Modal/StyledContentsModal';
+
 import Edit from './Edit';
 
-const AntdTable = StyledAntdTable(Table);
-const ButtonGroup = Button.Group;
+const AntdModal = StyledContentsModal(Modal);
+const AntdLineTable = StyledLineTable(Table);
 
 class List extends Component {
-  componentDidMount() {
-    const { id, getCallDataHandler, apiAry, changeFormData } = this.props;
-    changeFormData(id, 'actionType', 'I');
-    getCallDataHandler(id, apiAry);
+  constructor(props) {
+    super(props);
+    this.state = {
+      columns: [],
+      modalEdit: false,
+    };
   }
 
-  getTableColumns = () => [
-    {
-      title: '안전책임자 본부명',
-      dataIndex: 'OFFICER_M_DEPT_KOR',
-      align: 'center',
-    },
-    {
-      title: '안전책임자 부서명',
-      dataIndex: 'OFFICER_DEPT_KOR',
-      align: 'center',
-    },
-    {
-      title: '안전책임자',
-      dataIndex: 'OFFICER_NAME',
-      align: 'center',
-    },
-    {
-      title: '안전책임자 번호',
-      dataIndex: 'OFFICER_TEL',
-      align: 'center',
-    },
-    {
-      title: '안전유지자',
-      dataIndex: 'KEEPER_NAME',
-      align: 'center',
-    },
-    {
-      title: '안전유지자 번호',
-      dataIndex: 'KEEPER_TEL',
-      align: 'center',
-    },
-    {
-      title: '보건안전담당자',
-      dataIndex: 'MANAGER_NAME',
-      align: 'center',
-    },
-    {
-      title: '보건안전담당자 번호',
-      dataIndex: 'MANAGER_TEL',
-      align: 'center',
-    },
-    {
-      title: '삭제',
-      dataIndex: 'delete',
-      align: 'center',
-      render: (text, record, index) => (
-        <ButtonGroup>
-          <Button type="primary" icon="edit" onClick={() => this.onUpdateDo(record)} />
-          <Popconfirm title="삭제하시겠습니끼?" onConfirm={() => this.onRemoveDo(record)}>
-            <Button icon="delete" />
-          </Popconfirm>
-        </ButtonGroup>
-      ),
-    },
-  ];
+  componentDidMount() {
+    const { sagaKey: id, getCallDataHandler, changeFormData } = this.props;
+    changeFormData(id, 'actionType', 'I');
+    const apiAry = [
+      {
+        key: 'proposalOfficer',
+        url: '/api/eshs/v1/common/eshsproposalofficer',
+        type: 'GET',
+        params: {},
+      },
+    ];
+    getCallDataHandler(id, apiAry);
+    this.setColumns();
+  }
+
+  setColumns = () => {
+    const columns = [
+      {
+        title: '안전책임자 본부명',
+        dataIndex: 'OFFICER_M_DEPT_KOR',
+        align: 'center',
+      },
+      {
+        title: '안전책임자 부서명',
+        dataIndex: 'OFFICER_DEPT_KOR',
+        align: 'center',
+      },
+      {
+        title: '안전책임자',
+        dataIndex: 'OFFICER_NAME',
+        align: 'center',
+      },
+      {
+        title: '안전책임자 번호',
+        dataIndex: 'OFFICER_TEL',
+        align: 'center',
+      },
+      {
+        title: '안전유지자',
+        dataIndex: 'KEEPER_NAME',
+        align: 'center',
+      },
+      {
+        title: '안전유지자 번호',
+        dataIndex: 'KEEPER_TEL',
+        align: 'center',
+      },
+      {
+        title: '보건안전담당자',
+        dataIndex: 'MANAGER_NAME',
+        align: 'center',
+      },
+      {
+        title: '보건안전담당자 번호',
+        dataIndex: 'MANAGER_TEL',
+        align: 'center',
+      },
+      {
+        title: '삭제',
+        dataIndex: 'delete',
+        align: 'center',
+      },
+    ];
+    this.setState({ columns });
+  };
 
   onUpdateDo = record => {
-    const { id, setFormData } = this.props;
+    const { sagaKey: id, setFormData } = this.props;
     const nformData = { ...record, OFFICER_NO: record.OFFICER_NO, KEEPER_NO: record.OFFICER_NO, MANAGER_NO: record.MANAGER_NO, actionType: 'U' };
     setFormData(id, nformData);
+    this.onModalChange();
   };
 
-  onComplete = id => {
-    const { getCallDataHandler, apiAry } = this.props;
+  onComplete = () => {
+    const { getCallDataHandler, sagaKey: id } = this.props;
+    const apiAry = [
+      {
+        key: 'proposalOfficer',
+        url: '/api/eshs/v1/common/eshsproposalofficer',
+        type: 'GET',
+        params: {},
+      },
+    ];
     getCallDataHandler(id, apiAry);
+    this.onModalChange();
   };
 
-  onRemoveDo = record => {
-    const { id, submitHandlerBySaga } = this.props;
-    const param = { PARAM: { ...record } };
-    submitHandlerBySaga(id, 'DELETE', '/api/eshs/v1/common/eshsproposalofficer', param, this.onComplete);
+  onModalChange = () => {
+    const { modalEdit } = this.state;
+    const { sagaKey: id, setFormData } = this.props;
+    if (modalEdit === true) {
+      setFormData(id, {});
+    }
+    this.setState({ modalEdit: !modalEdit });
   };
 
   render() {
-    const { result } = this.props;
+    const { result, sagaKey: id, formData, getCallDataHandler, submitHandlerBySaga, removeStorageReduxState, changeFormData } = this.props;
+    const { columns } = this.state;
     let totalData;
     if (result && result.proposalOfficer && result.proposalOfficer.list) {
       totalData = result.proposalOfficer.list.map(item => ({
@@ -105,34 +132,64 @@ class List extends Component {
     }
 
     return (
-      <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
-        <StyledViewDesigner>
-          <Sketch>
-            <Group>
-              <Edit {...this.props}></Edit>
-              <AntdTable rowKey={totalData => totalData.SIPA_SEQ} pagination={false} dataSource={totalData} columns={this.getTableColumns()}></AntdTable>
-            </Group>
-          </Sketch>
-        </StyledViewDesigner>
-      </div>
+      <>
+        <ContentsWrapper>
+          <div className="selSaveWrapper">
+            <StyledButton className="btn-primary" onClick={this.onModalChange}>
+              추가
+            </StyledButton>
+          </div>
+          <AntdLineTable
+            className="tableWrapper"
+            rowKey={() => totalData.SIPA_SEQ}
+            pagination={false}
+            dataSource={totalData}
+            columns={columns}
+            onRow={record => ({
+              onClick: () => {
+                this.onUpdateDo(record);
+              },
+            })}
+          />
+        </ContentsWrapper>
+        <AntdModal
+          className="modal-table-pad"
+          title="안전관계자"
+          visible={this.state.modalEdit}
+          width={600}
+          onCancel={this.onModalChange}
+          destroyOnClose
+          afterClose={this.onReset}
+          footer={null}
+        >
+          <Edit
+            sagaKey={id}
+            formData={formData}
+            getCallDataHandler={getCallDataHandler}
+            submitHandlerBySaga={submitHandlerBySaga}
+            removeStorageReduxState={removeStorageReduxState}
+            changeFormData={changeFormData}
+            onComplete={this.onComplete}
+          ></Edit>
+        </AntdModal>
+      </>
     );
   }
 }
 
-List.propTypes = {};
+List.propTypes = {
+  sagaKey: PropTypes.string,
+  setFormData: PropTypes.func,
+  getCallDataHandler: PropTypes.func,
+  submitHandlerBySaga: PropTypes.func,
+  removeStorageReduxState: PropTypes.func,
+  changeFormData: PropTypes.any,
+  result: PropTypes.any,
+  formData: PropTypes.any,
+};
 
 List.defaultProps = {
-  id: 'eshsSafetyOfficial',
-  apiAry: [
-    {
-      key: 'proposalOfficer',
-      url: '/api/eshs/v1/common/eshsproposalofficer',
-      type: 'GET',
-      params: {},
-    },
-  ],
   getCallDataHandler: () => {},
-  formData: {},
 };
 
 export default List;

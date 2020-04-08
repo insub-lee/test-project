@@ -6,11 +6,14 @@ import StyledButton from 'commonStyled/Buttons/StyledButton';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
+import StyledTreeSelect from 'commonStyled/Form/StyledTreeSelect';
 
 import selectTree from './industrialSafetyLawList';
 
 const AntdTable = StyledLineTable(Table);
 const AntdInput = StyledInput(Input);
+const AntdTreeSelect = StyledTreeSelect(TreeSelect);
+
 class List extends Component {
   constructor(props) {
     super(props);
@@ -185,7 +188,15 @@ class List extends Component {
     const dataLength = dataSource.length - 1;
     return (
       <ContentsWrapper>
-        <TreeSelect treeData={selectTree} value={this.state.selectedCategory} treeDefaultExpandAll onChange={this.handleSelectChange} />
+        <AntdTreeSelect
+          treeData={selectTree}
+          value={this.state.selectedCategory}
+          treeDefaultExpandAll
+          onChange={this.handleSelectChange}
+          dropdownStyle={{ maxWidth: 350 }}
+          className="select-mid"
+          dropdownClassName="inner-ant-select-dropdown"
+        />
         <AntdTable
           columns={columns}
           dataSource={dataSource}

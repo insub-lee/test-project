@@ -1,9 +1,6 @@
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Row, Col } from 'antd';
-import Sketch from 'components/BizBuilder/Sketch';
-import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { createStructuredSelector } from 'reselect';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import * as selectors from '../../../../../../containers/common/Auth/selectors';
@@ -39,20 +36,12 @@ class MainPage extends Component {
   render() {
     return (
       <ContentsWrapper>
-        <StyledViewDesigner>
-          <Sketch>
-            <Row>
-              <Col span={10}>
-                <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
-              </Col>
-            </Row>
-          </Sketch>
-        </StyledViewDesigner>
+        <div className="selSaveWrapper">
+          <DeptSearchBar {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
+        <div>
+          <ItemTable {...this.props} handleSearchOnClick={this.handleSearchOnClick} />
+        </div>
       </ContentsWrapper>
     );
   }

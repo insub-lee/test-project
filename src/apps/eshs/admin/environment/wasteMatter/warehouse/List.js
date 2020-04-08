@@ -155,7 +155,7 @@ class List extends Component {
         width: 100,
         children: [
           {
-            title: <>{warehouseCd}</>,
+            title: <span>{warehouseCd}</span>,
             dataIndex: 'WAREHOUSE_CD',
             className: 'hr-form',
             align: 'center',
@@ -170,23 +170,23 @@ class List extends Component {
             title: (
               <>
                 <AntdInput
-                  className="ant-input-inline"
+                  className="ant-input-inline ant-input-sm"
                   style={{ width: '200px' }}
                   value={warehouseNm}
                   onChange={e => this.onChangeValue('warehouseNm', e.target.value)}
                   name="warehouseNm"
                 />
                 <StyledButtonWrapper className="btn-wrap-inline">
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.insertOverlab()}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.insertOverlab()}>
                     추가
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('U')}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('U')}>
                     수정
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onChangeData('D')}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onChangeData('D')}>
                     삭제
                   </StyledButton>
-                  <StyledButton className="btn-primary btn-first" onClick={() => this.onReset()}>
+                  <StyledButton className="btn-primary btn-first btn-sm" onClick={() => this.onReset()}>
                     Reset
                   </StyledButton>
                   <TableTypeSelector

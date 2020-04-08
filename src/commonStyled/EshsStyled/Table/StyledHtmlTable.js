@@ -10,11 +10,12 @@ const StyledHtmlTable = styled.div`
     thead th,
     thead td {
       background: #f7f7f7;
-      font-size: 14px;
+      font-size: 13px;
       text-align: center;
       color: #000;
       padding: 10px;
       border-bottom: 1px solid #ddd;
+      font-weight: 500;
     }
 
     tbody {
@@ -52,8 +53,14 @@ const StyledHtmlTable = styled.div`
             }
           }
         }
-        &.td-center td {
+        &.tr-center td {
           text-align: center;
+        }
+        &.tr-pointer {
+          &:hover td {
+            cursor: pointer;
+            background: #e6f7ff;
+          }
         }
       }
     }
@@ -67,6 +74,16 @@ const StyledHtmlTable = styled.div`
         text-align: center;
         padding: 5px;
       }
+    }
+
+    th.th-pointer:hover {
+      cursor: pointer;
+      color: #1fb5ad;
+    }
+
+    td.td-pointer:hover {
+      cursor: pointer;
+      background: #e6f7ff;
     }
 
     /* border 있는 버전 */

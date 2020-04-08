@@ -7,6 +7,7 @@ import StyledButton from 'components/BizBuilder/styled/StyledButton';
 import moment from 'moment';
 import StyledHtmlTable from 'commonStyled/MdcsStyled/Table/StyledHtmlTable';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import StyledPicker from 'commonStyled/Form/StyledPicker';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
@@ -17,6 +18,7 @@ const { Option } = Select;
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 const AntdModal = StyledContentsModal(Modal);
+const AntdPicker = StyledPicker(DatePicker.RangePicker);
 
 const { RangePicker } = DatePicker;
 const format = 'YYYY-MM-DD HH:mm:ss';
@@ -235,7 +237,7 @@ class List extends Component {
                 <tr>
                   <th>출입기간</th>
                   <td>
-                    <RangePicker onChange={this.handleDateOnChange} style={{ width: '100%' }} />
+                    <AntdPicker onChange={this.handleDateOnChange} style={{ width: '100%' }} />
                   </td>
                   <th>업체등록여부</th>
                   <td>

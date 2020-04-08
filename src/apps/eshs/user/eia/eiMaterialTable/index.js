@@ -30,10 +30,6 @@ class MaterialTable extends Component {
     }
   };
 
-  // handleReload = () => {
-  //   console.debug('저장완료.');
-  // };
-
   handleInputOnChange = e => {
     const { id, changeFormData, formData } = this.props;
     const materialData = (formData && formData.materialData) || {};
@@ -46,30 +42,26 @@ class MaterialTable extends Component {
     const searchFlag = (formData && formData.searchFlag) || false;
     return (
       <ContentsWrapper>
-        <StyledHtmlTable>
+        <StyledHtmlTable className="tableWrapper">
+          {!searchFlag && (
+            <StyledButtonWrapper className="btn-wrap-right btn-wrap-mb-10">
+              <StyledButton className="btn-primary" onClick={() => this.handleSaveOnClick()}>
+                저장
+              </StyledButton>
+            </StyledButtonWrapper>
+          )}
           <table>
             <colgroup>
-              <col width="15%" />
-              <col width="15%" />
-              <col width="15%" />
+              <col width="10%" />
               <col width="15%" />
               <col width="10%" />
+              <col width="15%" />
               <col width="10%" />
+              <col width="15%" />
               <col width="10%" />
-              <col width="10%" />
+              <col width="15%" />
             </colgroup>
             <tbody>
-              <tr align="right">
-                <td colSpan={8}>
-                  {!searchFlag && (
-                    <StyledButtonWrapper className="btn-wrap-inline">
-                      <StyledButton className="btn-primary" onClick={() => this.handleSaveOnClick()}>
-                        저장
-                      </StyledButton>
-                    </StyledButtonWrapper>
-                  )}
-                </td>
-              </tr>
               <tr>
                 <th>
                   <span>사업부명</span>
