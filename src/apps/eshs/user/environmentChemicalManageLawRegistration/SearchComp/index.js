@@ -5,8 +5,6 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
-import { debounce } from 'lodash';
-
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 class SearchComp extends React.Component {

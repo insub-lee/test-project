@@ -83,7 +83,7 @@ class InputModal extends React.Component {
       {
         key: 'materialList',
         type: 'GET',
-        url: `${apiUrl}?CATEGORY_ID=${CATEGORY_ID}&keyword=${keyword}`,
+        url: `${apiUrl}?CATEGORY_ID=${CATEGORY_ID}&KEYWORD=${keyword}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.setSearchList);
