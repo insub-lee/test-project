@@ -55,7 +55,7 @@ class List extends Component {
         if (index === 0) {
           return (
             <div>
-              <AntdInput className="ant-input-inline " value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
+              <AntdInput className="ant-input-inline mr5" value={inputCode} onChange={handleInputChange} style={{ width: 200 }} />
               <StyledButtonWrapper className="btn-wrap-inline">
                 <StyledButton className="btn-primary btn-first btn-sm" onClick={handleAddClick}>
                   추가
@@ -63,8 +63,8 @@ class List extends Component {
                 <Popconfirm title="수정하시겠습니까?" onConfirm={handleModifyClick}>
                   <StyledButton className="btn-primary btn-first btn-sm">수정</StyledButton>
                 </Popconfirm>
-                <Popconfirm title="삭제하시겠습니까?" onConfirm={handleDeleteClick}>
-                  <StyledButton className="btn-primary btn-first btn-sm btn-light">삭제</StyledButton>
+                <Popconfirm title="사용상태를 변경하시겠습니까?" onConfirm={handleDeleteClick}>
+                  <StyledButton className="btn-primary btn-first btn-sm btn-light">상태변경</StyledButton>
                 </Popconfirm>
                 <StyledButton className="btn-primary btn-sm btn-light" onClick={handleResetClick}>
                   Reset
@@ -81,6 +81,10 @@ class List extends Component {
   componentDidMount() {
     this.getListData();
   }
+
+  getCategoryData = () => {
+    const { sagaKey: id, getCallDataHandler } = this.state;
+  };
 
   commonDataHandler = (key, type, param) => {
     const { sagaKey: id, getCallDataHandler } = this.props;
@@ -148,7 +152,9 @@ class List extends Component {
 
   handleDeleteClick = () => {
     const { selectedIndex, dataSource } = this.state;
-    this.commonDataHandler('deleteData', 'delete', { CODE: dataSource[selectedIndex].CODE, IS_DELETE: 'Y' });
+    const params = { CODE: dataSource[selectedIndex].CODE, IS_DELETE: dataSource[selectedIndex].IS_DELETE === '사용' ? 'Y' : 'N' };
+    // this.commonDataHandler('deleteData', 'delete', { CODE: dataSource[selectedIndex].CODE, IS_DELETE: 'Y' });
+    this.commonDataHandler('deleteData', 'delete', params);
     this.setState({
       inputCode: '',
       selectedIndex: -1,
