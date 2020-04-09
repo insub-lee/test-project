@@ -10,6 +10,7 @@ import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 import StyledButton from 'commonStyled/Buttons/StyledButton';
 import { Popconfirm, Input, InputNumber, Select } from 'antd';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from '../SearchComp';
@@ -17,6 +18,7 @@ import SearchComp from '../SearchComp';
 const AntdSearch = StyledSearchInput(Input.Search);
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -343,18 +345,18 @@ class List extends React.Component {
                     </td>
                     <th>제한물질 NO.</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.RESTRICT_NO}
                         onChange={value => handleInputNumberChange(value, 'RESTRICT_NO')}
-                        className="col-input-number"
+                        className="ant-input-number input-number-sm"
                       />
                     </td>
                     <th>금지물질 NO.</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.PROHIBITION_NO}
                         onChange={value => handleInputNumberChange(value, 'PROHIBITION_NO')}
-                        className="col-input-number"
+                        className="ant-input-number input-number-sm"
                       />
                     </td>
                   </tr>

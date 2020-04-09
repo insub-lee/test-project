@@ -9,15 +9,16 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
 import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/SearchComp';
-// import SearchComp from '../SearchComp';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
 
 const AntdSelect = StyledSelect(Select);
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -207,10 +208,10 @@ class List extends React.Component {
                   <tr>
                     <th>순번</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
                         value={requestValue.ORDER_NO}
                         onChange={value => handleInputNumberChange(value, 'ORDER_NO')}
-                        className="col-input-number"
+                        className="ant-input-number input-number-sm"
                         style={{ width: '100%' }}
                       />
                     </td>

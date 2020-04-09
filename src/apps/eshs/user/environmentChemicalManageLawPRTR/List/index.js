@@ -8,6 +8,7 @@ import StyledButtonWrapper from 'commonStyled/Buttons/StyledButtonWrapper';
 import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSearchInput from 'commonStyled/Form/StyledSearchInput';
+import StyledInputNumber from 'commonStyled/Form/StyledInputNumber';
 import StyledHtmlTable from 'commonStyled/EshsStyled/Table/StyledHtmlTable';
 
 import Modal from 'apps/eshs/user/environmentMasterRegistration/InputModal';
@@ -16,6 +17,7 @@ import SearchComp from 'apps/eshs/user/environmentMasterRegistration/InputModal/
 
 const AntdInput = StyledInput(Input);
 const AntdSearch = StyledSearchInput(Input.Search);
+const AntdInputNumber = StyledInputNumber(InputNumber);
 class List extends React.Component {
   constructor(props) {
     super(props);
@@ -228,20 +230,18 @@ class List extends React.Component {
                     </td>
                     <th>취급량(kg/년)</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
                         value={requestValue.HANDLE_AMOUNT}
                         onChange={value => handleInputNumberChange(value, 'HANDLE_AMOUNT')}
-                        className="col-input-number"
-                        style={{ width: '100%' }}
                       />
                     </td>
                     <th>조사대상범위(무게함유율%)</th>
                     <td>
-                      <InputNumber
+                      <AntdInputNumber
+                        className="ant-input-number input-number-sm"
                         value={requestValue.INVESTIGATION_TARGET_RANGE}
                         onChange={value => handleInputNumberChange(value, 'INVESTIGATION_TARGET_RANGE')}
-                        className="col-input-number"
-                        style={{ width: '100%' }}
                       />
                     </td>
                   </tr>
