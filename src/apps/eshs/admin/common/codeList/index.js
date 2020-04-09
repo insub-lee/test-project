@@ -66,11 +66,9 @@ class List extends Component {
     const {
       result: { apiData },
       INIT_NODE_ID,
-      excelPullPath,
     } = this.props;
     const { changeSelectValue } = this.state;
     const initNodeData = apiData && apiData.categoryMapList.find(x => x.NODE_ID === INIT_NODE_ID);
-    // const initNodeData = apiData && apiData.categoryMapList.finde(x => x.NODE_ID === INIT_NODE_ID);
     const selectBoxData = apiData && apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === INIT_NODE_ID && x.LVL === 2 && x.USE_YN === 'Y');
     const listData = apiData && apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
     const excelData =
@@ -81,17 +79,6 @@ class List extends Component {
           ...item,
           PARENT_NODE: apiData && apiData.categoryMapList.find(f => item.PARENT_NODE_ID === f.NODE_ID).NAME_KOR,
         }));
-    // const excelData =
-    //   apiData &&
-    //   apiData.categoryMapList
-    //     .filter(x => x.FULLPATH.indexOf(excelPullPath) !== -1 && x.LVL > 2)
-    //     .map(item => ({
-    //       ...item,
-    //       PARENT_NODE: apiData && apiData.categoryMapList.find(f => item.PARENT_NODE_ID === f.NODE_ID).NAME_KOR,
-    //     }));
-    console.debug(excelData, 'excelDataexcelDataexcelData');
-    console.debug(apiData.categoryMapList, 'apiData.categoryMapList');
-    console.debug(initNodeData, 'apiData.categoryMapList');
     const pullpath = apiData && apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
     this.setState({
       selectBoxData,
@@ -257,7 +244,7 @@ class List extends Component {
             title: (
               <>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-sm input-left mr5"
                   style={{ width: '300px' }}
                   value={name}
                   onChange={e => this.onChangeValue('name', e.target.value)}
@@ -303,7 +290,6 @@ class List extends Component {
 
   render() {
     const { selectBoxData, listData, columns, excelData, excelNm } = this.state;
-    // const { excelNm } = this.props;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
@@ -344,8 +330,6 @@ List.propTypes = {
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
   MAP_ID: PropTypes.string,
-  excelNm: PropTypes.string,
-  excelPullPath: PropTypes.string,
   result: PropTypes.any,
   INIT_NODE_ID: PropTypes.number,
 };
