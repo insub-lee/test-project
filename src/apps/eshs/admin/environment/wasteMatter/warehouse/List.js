@@ -44,7 +44,6 @@ class List extends Component {
 
   componentDidMount() {
     this.initDataApi();
-    this.setColumns();
   }
 
   initDataApi() {
@@ -103,12 +102,7 @@ class List extends Component {
   };
 
   onChangeValue = (name, value) => {
-    this.setState(
-      {
-        [name]: value,
-      },
-      this.setColumns,
-    );
+    this.setState({ [name]: value });
   };
 
   insertOverlab = () => {
@@ -145,9 +139,37 @@ class List extends Component {
     this.onReset();
   };
 
-  setColumns = () => {
-    const { itemList, leftTableColumns, rightTableColumns, applyList, warehouseCd, warehouseNm } = this.state;
+  onReset() {
+    this.setState({ warehouseCd: '', warehouseNm: '' });
+  }
 
+  selectedRecord = record => {
+    this.setState({ warehouseCd: record.WAREHOUSE_CD, warehouseNm: record.WAREHOUSE_NM }, this.selectedRecordCallbackApi);
+  };
+
+  selectedRecordCallbackApi = () => {
+    const { sagaKey: id, getCallDataHandler } = this.props;
+    const apiAry = [
+      {
+        key: 'wareHouseItem',
+        url: `/api/eshs/v1/common/eshsWareHouseItem?WAREHOUSE_CD=${this.state.warehouseCd}`,
+        type: 'GET',
+      },
+    ];
+    getCallDataHandler(id, apiAry, this.callbackItem);
+  };
+
+  callbackItem = () => {
+    const { result } = this.props;
+    this.setState({ applyList: result && result.wareHouseItem && result.wareHouseItem.list });
+  };
+
+  render() {
+    const {
+      result: { warehouse },
+    } = this.props;
+    const dataSource = warehouse && warehouse.list;
+    const { siteList, itemList, leftTableColumns, rightTableColumns, applyList, warehouseCd, warehouseNm } = this.state;
     const columns = [
       {
         title: '코드',
@@ -170,7 +192,7 @@ class List extends Component {
             title: (
               <>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm"
+                  className="ant-input-inline ant-input-sm mr5"
                   style={{ width: '200px' }}
                   value={warehouseNm}
                   onChange={e => this.onChangeValue('warehouseNm', e.target.value)}
@@ -211,57 +233,11 @@ class List extends Component {
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  onReset() {
-    this.setState(
-      {
-        warehouseCd: '',
-        warehouseNm: '',
-      },
-      this.setColumns,
-    );
-  }
-
-  selectedRecord = record => {
-    this.setState(
-      {
-        warehouseCd: record.WAREHOUSE_CD,
-        warehouseNm: record.WAREHOUSE_NM,
-      },
-      this.selectedRecordCallbackApi,
-    );
-  };
-
-  selectedRecordCallbackApi = () => {
-    const { sagaKey: id, getCallDataHandler } = this.props;
-    const apiAry = [
-      {
-        key: 'wareHouseItem',
-        url: `/api/eshs/v1/common/eshsWareHouseItem?WAREHOUSE_CD=${this.state.warehouseCd}`,
-        type: 'GET',
-      },
-    ];
-    getCallDataHandler(id, apiAry, this.callbackItem);
-  };
-
-  callbackItem = () => {
-    const { result } = this.props;
-    this.setState({ applyList: result && result.wareHouseItem && result.wareHouseItem.list }, this.setColumns);
-  };
-
-  render() {
-    const { siteList, columns } = this.state;
-    const {
-      result: { warehouse },
-    } = this.props;
-    const dataSource = warehouse && warehouse.list;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           <span className="textLabel">지역</span>
-          <AntdSelect className="select-mid" onChange={value => this.onChangeValue('site', value)} value={this.state.site}>
+          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeValue('site', value)} value={this.state.site}>
             {siteList.map(item => (
               <Option value={item.NODE_ID} key="site">
                 {item.NAME_KOR}
