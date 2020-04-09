@@ -265,7 +265,7 @@ class List extends Component {
             title: (
               <>
                 <AntdInput
-                  className="ant-input-inline ant-input-sm input-left"
+                  className="ant-input-inline ant-input-sm input-left mr5"
                   style={{ width: '300px' }}
                   value={desciption}
                   onChange={e => this.onChangeValue('desciption', e.target.value)}
