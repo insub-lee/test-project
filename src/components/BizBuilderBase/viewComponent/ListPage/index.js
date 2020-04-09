@@ -6,7 +6,8 @@ import { isJSON } from 'utils/helpers';
 import Sketch from 'components/BizBuilder/Sketch';
 import Group from 'components/BizBuilder/Sketch/Group';
 import GroupTitle from 'components/BizBuilder/Sketch/GroupTitle';
-import StyledButton from 'components/BizBuilder/styled/StyledButton';
+import StyledButton from 'commonStyled/Buttons/StyledButton';
+import StyledSearchWrapper from 'commonStyled/Wrapper/StyledSearchWrapper';
 import StyledViewDesigner from 'components/BizBuilder/styled/StyledViewDesigner';
 import { CompInfo } from 'components/BizBuilder/CompInfo';
 import StyledAntdTable from 'commonStyled/MdcsStyled/Table/StyledLineTable';
@@ -199,7 +200,7 @@ class ListPage extends Component {
               }
               return (
                 (group.type === 'group' || (group.type === 'searchGroup' && group.useSearch)) && (
-                  <div key={group.key}>
+                  <StyledSearchWrapper key={group.key}>
                     {group.useTitle && <GroupTitle title={group.title} />}
                     <Group key={group.key} className={`view-designer-group group-${groupIndex}`}>
                       <div className={group.type === 'searchGroup' ? 'view-designer-group-search-wrap' : ''}>
@@ -240,13 +241,13 @@ class ListPage extends Component {
                       </div>
                       {group.type === 'searchGroup' && group.useSearch && (
                         <div className="view-designer-group-search-btn-wrap">
-                          <Button type="primary" className="btn-primary" onClick={() => getListData(id, workSeq)}>
+                          <StyledButton className="btn-primary" onClick={() => getListData(id, workSeq)}>
                             Search
-                          </Button>
+                          </StyledButton>
                         </div>
                       )}
                     </Group>
-                  </div>
+                  </StyledSearchWrapper>
                 )
               );
             })}

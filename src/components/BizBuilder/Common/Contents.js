@@ -4,7 +4,6 @@ import styled from 'styled-components';
 
 const StyledContents = styled.div`
   position: relative;
-  height: 100%;
 
   .cell-body {
     display: flex;
