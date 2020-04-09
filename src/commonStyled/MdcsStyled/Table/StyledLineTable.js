@@ -3,7 +3,7 @@ import styled from 'styled-components';
 const primaryColor = '#886ab5';
 
 const StyledLineTable = Component => styled(Component)`
-  padding: 10px;
+  /* padding: 10px; */
 
   .ant-table .ant-table-content {
     .ant-table-body {
