@@ -29,8 +29,9 @@ class Excel extends Component {
       <ExcelDownloadComp
         isBuilder={false}
         fileName={wrkCmpnyNm === '' ? 'N/A_작업자' : `${wrkCmpnyNm}_작업자`}
-        className="testClassName"
+        className="workerExcelBtn"
         btnText="엑셀받기"
+        btnSize="btn-sm"
         sheetName={wrkCmpnyNm === '' ? 'N/A' : wrkCmpnyNm}
         columns={columns}
         fields={fields}
