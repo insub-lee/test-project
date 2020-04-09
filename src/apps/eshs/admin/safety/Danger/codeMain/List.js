@@ -51,7 +51,6 @@ class List extends Component {
         : '',
     ];
     getCallDataHandler(id, apiAry, this.initData);
-    this.setColumns();
   }
 
   initData = () => {
@@ -88,12 +87,9 @@ class List extends Component {
   };
 
   changeValue = (name, value) => {
-    this.setState(
-      {
-        [name]: value,
-      },
-      this.setColumns,
-    );
+    this.setState({
+      [name]: value,
+    });
     if (name === 'selectedMajor') {
       this.changeSelectedData(value);
     }
@@ -173,25 +169,40 @@ class List extends Component {
   };
 
   onReset = () => {
-    this.setState(
-      {
-        majorCd: '',
-        minorCd: '',
-        cdNm: '',
-        useYN: '',
-        sysYN: '',
-        remark: '',
-        ref01: '',
-        ref02: '',
-        readType: false,
-      },
-      this.setColumns,
-    );
+    this.setState({
+      majorCd: '',
+      minorCd: '',
+      cdNm: '',
+      useYN: '',
+      sysYN: '',
+      remark: '',
+      ref01: '',
+      ref02: '',
+      readType: false,
+    });
   };
 
-  setColumns = () => {
-    const { dangerMainYN } = this.props;
-    const { majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, readType } = this.state;
+  selectedRecord = record => {
+    this.setState({
+      majorCd: record.MAJOR_CD,
+      minorCd: record.MINOR_CD,
+      cdNm: record.CD_NM,
+      useYN: record.USE_YN,
+      sysYN: record.SYS_YN,
+      remark: record.REMARK,
+      ref01: record.REF01,
+      ref02: record.REF02,
+      readType: true,
+    });
+  };
+
+  render() {
+    const {
+      dangerMainYN,
+      result: { subExcelList },
+    } = this.props;
+    const { dangerSelect, selectedMajor, dangerList, majorCd, minorCd, cdNm, useYN, sysYN, remark, ref01, ref02, readType } = this.state;
+    const excelList = subExcelList && subExcelList.list;
     const columns = [
       {
         title: 'SYS',
@@ -332,40 +343,18 @@ class List extends Component {
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  selectedRecord = record => {
-    this.setState(
-      {
-        majorCd: record.MAJOR_CD,
-        minorCd: record.MINOR_CD,
-        cdNm: record.CD_NM,
-        useYN: record.USE_YN,
-        sysYN: record.SYS_YN,
-        remark: record.REMARK,
-        ref01: record.REF01,
-        ref02: record.REF02,
-        readType: true,
-      },
-      this.setColumns,
-    );
-  };
-
-  render() {
-    const {
-      dangerMainYN,
-      result: { subExcelList },
-    } = this.props;
-    const { dangerSelect, selectedMajor, dangerList, columns } = this.state;
-    const excelList = subExcelList && subExcelList.list;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
           {dangerMainYN ? (
             ''
           ) : (
-            <AntdSelect className="select-mid mr5" onChange={value => this.changeValue('selectedMajor', value)} value={selectedMajor}>
+            <AntdSelect
+              style={{ width: '200px' }}
+              className="select-mid mr5"
+              onChange={value => this.changeValue('selectedMajor', value)}
+              value={selectedMajor}
+            >
               {dangerSelect && dangerSelect.map(itme => <Option value={itme.MAJOR_CD}>{itme.CD_NM}</Option>)}
             </AntdSelect>
           )}

@@ -45,7 +45,6 @@ class List extends Component {
 
   componentDidMount() {
     this.initDataApi();
-    this.setColumns();
   }
 
   changeSelectValue = value => {
@@ -53,7 +52,7 @@ class List extends Component {
   };
 
   onChangeValue = (name, value) => {
-    this.setState({ [name]: value }, this.setColumns);
+    this.setState({ [name]: value });
     if (name === 'useType') {
       this.selectCode();
     }
@@ -108,7 +107,7 @@ class List extends Component {
     if (changeSelectValue) {
       const listData = selectData && selectData.categoryMapList.filter(f => f.PARENT_NODE_ID === changeSelectValue && (useType ? f.USE_YN === useType : true));
       const pullpath = treeSelectData && treeSelectData.categoryMapList.find(x => x.NODE_ID === (changeSelectValue || 1831));
-      this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL, lvl: pullpath.LVL }, this.setColumns);
+      this.setState({ listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL, lvl: pullpath.LVL });
     } else {
       message.warning('코드 구분을 선택해주세요.');
     }
@@ -170,19 +169,27 @@ class List extends Component {
   };
 
   onReset = () => {
-    this.setState(
-      {
-        name: '',
-        code: '',
-        useYN: '',
-        desciption: '',
-      },
-      this.setColumns,
-    );
+    this.setState({
+      name: '',
+      code: '',
+      useYN: '',
+      desciption: '',
+    });
   };
 
-  setColumns = () => {
-    const { code, name, useYN, desciption, lvl } = this.state;
+  selectedRecord = record => {
+    this.setState({
+      changeSelectValue: record.PARENT_NODE_ID,
+      name: record.NAME_KOR,
+      code: record.CODE,
+      nodeId: record.NODE_ID,
+      useYN: record.USE_YN,
+      desciption: record.DESCIPTION,
+    });
+  };
+
+  render() {
+    const { nData, useType, listData, code, name, useYN, desciption, lvl } = this.state;
     let changeTitle;
     switch (lvl) {
       case 3:
@@ -293,25 +300,6 @@ class List extends Component {
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  selectedRecord = record => {
-    this.setState(
-      {
-        changeSelectValue: record.PARENT_NODE_ID,
-        name: record.NAME_KOR,
-        code: record.CODE,
-        nodeId: record.NODE_ID,
-        useYN: record.USE_YN,
-        desciption: record.DESCIPTION,
-      },
-      this.setColumns,
-    );
-  };
-
-  render() {
-    const { nData, useType, listData, columns } = this.state;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">

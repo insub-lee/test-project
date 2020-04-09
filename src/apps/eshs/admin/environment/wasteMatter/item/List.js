@@ -56,16 +56,13 @@ class List extends Component {
 
   initData = () => {
     const { result } = this.props;
-    this.setState(
-      {
-        itemList: result && result.wasteItem && result.wasteItem.list,
-        shapeList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 958 && f.USE_YN === 'Y'),
-        unitList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 959 && f.USE_YN === 'Y'),
-        transFormList:
-          result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 960 && f.USE_YN === 'Y'),
-      },
-      this.setColumns,
-    );
+    this.setState({
+      itemList: result && result.wasteItem && result.wasteItem.list,
+      shapeList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 958 && f.USE_YN === 'Y'),
+      unitList: result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 959 && f.USE_YN === 'Y'),
+      transFormList:
+        result && result.environment && result.environment.categoryMapList.filter(f => f.LVL === 3 && f.PARENT_NODE_ID === 960 && f.USE_YN === 'Y'),
+    });
   };
 
   searchDataApi = () => {
@@ -122,8 +119,32 @@ class List extends Component {
     this.onReset();
   };
 
-  setColumns = () => {
-    const { unitList, shapeList, transFormList, itemCd, unit, shape, isTransForm, itemNm } = this.state;
+  onChangeValue = (name, value) => {
+    this.setState({ [name]: value });
+  };
+
+  onReset() {
+    this.setState({
+      itemCd: '',
+      itemNm: '',
+      shape: '',
+      unit: '',
+      isTransForm: '',
+    });
+  }
+
+  selectedRecord = record => {
+    this.setState({
+      itemCd: record.ITEM_CD,
+      itemNm: record.ITEM_NM,
+      shape: record.SHAPE,
+      unit: record.UNIT,
+      isTransForm: record.IS_TRANS_FORM,
+    });
+  };
+
+  render() {
+    const { itemList, unitList, shapeList, transFormList, itemCd, unit, shape, isTransForm, itemNm } = this.state;
     const columns = [
       {
         title: '품목코드',
@@ -158,6 +179,7 @@ class List extends Component {
             title: (
               <AntdSelect
                 className="select-sm"
+                style={{ width: '150px' }}
                 onChange={value => this.onChangeValue('shape', value)}
                 value={Number(shape) || (shapeList && shapeList[0] && shapeList[0].NODE_ID)}
               >
@@ -183,6 +205,7 @@ class List extends Component {
             title: (
               <AntdSelect
                 className="select-sm"
+                style={{ width: '150px' }}
                 onChange={value => this.onChangeValue('unit', value)}
                 value={Number(unit) || (unitList && unitList[0] && unitList[0].NODE_ID)}
               >
@@ -207,7 +230,8 @@ class List extends Component {
             title: (
               <>
                 <AntdSelect
-                  className="select-sm"
+                  className="select-sm mr5"
+                  style={{ width: '150px' }}
                   onChange={value => this.onChangeValue('isTransForm', value)}
                   value={Number(isTransForm) || (transFormList && transFormList[0] && transFormList[0].NODE_ID)}
                 >
@@ -240,41 +264,6 @@ class List extends Component {
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  onChangeValue = (name, value) => {
-    this.setState({ [name]: value }, this.setColumns);
-  };
-
-  onReset() {
-    this.setState(
-      {
-        itemCd: '',
-        itemNm: '',
-        shape: '',
-        unit: '',
-        isTransForm: '',
-      },
-      this.setColumns,
-    );
-  }
-
-  selectedRecord = record => {
-    this.setState(
-      {
-        itemCd: record.ITEM_CD,
-        itemNm: record.ITEM_NM,
-        shape: record.SHAPE,
-        unit: record.UNIT,
-        isTransForm: record.IS_TRANS_FORM,
-      },
-      this.setColumns,
-    );
-  };
-
-  render() {
-    const { itemList, columns } = this.state;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
@@ -286,7 +275,7 @@ class List extends Component {
             onChange={e => this.onChangeValue('searchNm', e.target.value)}
           />
           <span className="textLabel">조회순서</span>
-          <AntdSelect className="select-mid" onChange={value => this.onChangeValue('orderbySelect', value)} value={this.state.orderbySelect}>
+          <AntdSelect className="select-mid mr5" onChange={value => this.onChangeValue('orderbySelect', value)} value={this.state.orderbySelect}>
             <Option value="1">품목명</Option>
             <Option value="2">코드</Option>
           </AntdSelect>

@@ -23,11 +23,10 @@ class List extends Component {
 
   componentDidMount() {
     this.listDataApi();
-    this.setColumns();
   }
 
   changeInputValue = value => {
-    this.setState({ exhuastNm: value }, this.setColumns);
+    this.setState({ exhuastNm: value });
   };
 
   listDataApi = () => {
@@ -63,26 +62,24 @@ class List extends Component {
   };
 
   onCancel() {
-    this.setState(
-      {
-        exhuastNm: '',
-        exhuastCd: '',
-      },
-      this.setColumns,
-    );
+    this.setState({
+      exhuastNm: '',
+      exhuastCd: '',
+    });
   }
 
   selectedRecord = record => {
-    this.setState(
-      {
-        exhuastNm: record.EXHAUST_NM,
-        exhuastCd: record.EXHAUST_CD,
-      },
-      this.setColumns,
-    );
+    this.setState({
+      exhuastNm: record.EXHAUST_NM,
+      exhuastCd: record.EXHAUST_CD,
+    });
   };
 
-  setColumns = () => {
+  render() {
+    const {
+      result: { eshsExhaust },
+    } = this.props;
+    const dataSource = eshsExhaust && eshsExhaust.list;
     const { exhuastNm, exhuastCd } = this.state;
     const columns = [
       {
@@ -98,6 +95,7 @@ class List extends Component {
                 </div>
               </>
             ),
+            align: 'center',
             dataIndex: 'EXHAUST_CD',
             className: 'th-form',
           },
@@ -120,21 +118,13 @@ class List extends Component {
                 </div>
               </>
             ),
+            align: 'center',
             dataIndex: 'EXHAUST_NM',
             className: 'th-form',
           },
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  render() {
-    const { columns } = this.state;
-    const {
-      result: { eshsExhaust },
-    } = this.props;
-    const dataSource = eshsExhaust && eshsExhaust.list;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
