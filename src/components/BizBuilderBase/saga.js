@@ -539,7 +539,8 @@ function* deleteTask({ id, reloadId, workSeq, taskSeq, changeViewPage, callbackF
     if (changeViewOptIdx !== -1) {
       const changeViewOpt = workInfo.OPT_INFO[changeViewOptIdx];
       const optValue = JSON.parse(changeViewOpt.OPT_VALUE);
-      changeViewPage(id, workSeq, taskSeq, optValue.DELETE);
+      changeViewPage(id, workSeq, -1, optValue.DELETE);
+      // changeViewPage(id, workSeq, taskSeq, optValue.DELETE);
     } else {
       changeViewPage(id, workSeq, taskSeq, 'LIST');
     }

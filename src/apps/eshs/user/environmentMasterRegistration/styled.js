@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 const Styled = styled.div`
   .input-label {
-    margin: 0px 10px;
+    margin: 0px 100px;
   }
 
   .search-item input {

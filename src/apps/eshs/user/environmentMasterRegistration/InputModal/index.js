@@ -14,7 +14,7 @@ class InputModal extends React.Component {
     super(props);
     this.state = {
       CATEGORY_ID: '',
-      keyword: '',
+      KEYWORD: '',
     }; // state 만들어서 SearchComp에 props로 넣어주기
     this.getSearchList = debounce(this.getSearchList, 300);
   }
@@ -47,7 +47,7 @@ class InputModal extends React.Component {
     this.getMaterialList();
     this.setState({
       CATEGORY_ID: '',
-      keyword: '',
+      KEYWORD: '',
     });
   };
 
@@ -61,7 +61,7 @@ class InputModal extends React.Component {
     if (type.toUpperCase() === 'INPUT') {
       this.setState(
         {
-          keyword: e.target.value,
+          KEYWORD: e.target.value,
         },
         this.getSearchList,
       );
@@ -77,13 +77,13 @@ class InputModal extends React.Component {
   };
 
   getSearchList = () => {
-    const { CATEGORY_ID, keyword } = this.state;
+    const { CATEGORY_ID, KEYWORD } = this.state;
     const { sagaKey: id, getCallDataHandler, apiUrl } = this.props;
     const apiArr = [
       {
         key: 'materialList',
         type: 'GET',
-        url: `${apiUrl}?CATEGORY_ID=${CATEGORY_ID}&keyword=${keyword}`,
+        url: `${apiUrl}?CATEGORY_ID=${CATEGORY_ID}&KEYWORD=${KEYWORD}`,
       },
     ];
     getCallDataHandler(id, apiArr, this.setSearchList);
@@ -96,7 +96,7 @@ class InputModal extends React.Component {
 
   render() {
     const { handleModalClose, handleRowClick, handleSearchChange } = this;
-    const { keyword, CATEGORY_ID } = this.state;
+    const { KEYWORD, CATEGORY_ID } = this.state;
     const { sagaKey, visible, tableColumns, getCallDataHandler, apiUrl, SearchComp, formData, changeFormData, result } = this.props;
     return (
       <AntdModal visible={visible} closable onCancel={handleModalClose} title="화학물질 검색" width="70%" footer={null}>
@@ -108,7 +108,7 @@ class InputModal extends React.Component {
           formData={formData}
           result={result}
           onCancel={handleModalClose}
-          keyword={keyword}
+          KEYWORD={KEYWORD}
           CATEGORY_ID={CATEGORY_ID}
           handleSearchChange={handleSearchChange}
         />

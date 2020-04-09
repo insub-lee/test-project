@@ -5,8 +5,6 @@ import StyledSelect from 'commonStyled/Form/StyledSelect';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSearchWrap from 'components/CommonStyled/StyledSearchWrap';
 
-import { debounce } from 'lodash';
-
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
 class SearchComp extends React.Component {
@@ -51,7 +49,7 @@ class SearchComp extends React.Component {
   render() {
     // const { handleSearchChange } = this;
     const { category } = this.state;
-    const { keyword, CATEGORY_ID, handleSearchChange } = this.props;
+    const { KEYWORD, CATEGORY_ID, handleSearchChange } = this.props;
     return (
       <>
         <StyledSearchWrap>
@@ -68,7 +66,7 @@ class SearchComp extends React.Component {
             <Select.Option value="">전체 보기</Select.Option>
           </AntdSelect>
           <AntdInput.Search
-            value={keyword}
+            value={KEYWORD}
             onChange={e => handleSearchChange(e, 'INPUT')}
             className="ant-input-mid ant-input-inline search-item input-width160"
             placeholder="검색"
@@ -85,7 +83,7 @@ SearchComp.propTypes = {
   getCallDataHandler: PropTypes.func,
   result: PropTypes.object,
   changeFormData: PropTypes.func,
-  keyword: PropTypes.string,
+  KEYWORD: PropTypes.string,
   CATEGORY_ID: PropTypes.number,
   handleSearchChange: PropTypes.func,
 };
