@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as PropTypes from 'prop-types';
 import { fromJS } from 'immutable';
+import { CompactPicker } from 'react-color';
 import { Input, Modal, Button, Checkbox, Collapse, Select } from 'antd';
 import { debounce } from 'lodash';
 import MoadalStyled from 'apps/WorkBuilderApp/Admin/WorkBuilderDetailPage/ViewDesigner/CompItem/Styled';
@@ -27,10 +28,43 @@ const Styled = styled.div`
   .checkboxGroup {
     margin-top: 5px;
   }
+  .selectedFgColorText {
+    width: 108px;
+    position: absolute;
+    bottom: 0px;
+  }
+  .selectedFillColorWrap {
+    width: 122px;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    padding: 2px;
+    position: absolute;
+    bottom: 0px;
+    left: 108px;
+    .selectedFillColor {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .selectedFontStyleWrap {
+    display: table;
+    width: 122px;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+    padding: 2px;
+    position: absolute;
+    bottom: 0px;
+    left: 108px;
+    .selectedFontStyle {
+      display: table-cell;
+      text-align: center;
+      vertical-align: middle;
+    }
+  }
 `;
 
 /*
-    목적 : dataPicker Default Value 설정
+    목적 : List Page - listData Excel Download 설정
     Config Info
       1. btnText (String) : '엑셀 다운로드'
       2. fileName (String) : 'ExcelFile'
@@ -136,11 +170,12 @@ class configer extends Component {
 
   // 폰트컬러 설정
   handleFontColor = (target, value) => {
+    const { hex } = value;
     const { field, column } = this.state;
     if (target === 'column') {
       const fontObj = column.getIn(['style', 'font']) || fromJS({});
       const colorObj = fontObj.get('color') || fromJS({});
-      const nextColorObj = colorObj.set('rgb', value);
+      const nextColorObj = colorObj.set('rgb', hex.slice(1));
       const nextFontObj = fontObj.set('color', nextColorObj);
       this.setState({
         column: column.setIn(['style', 'font'], nextFontObj),
@@ -149,7 +184,7 @@ class configer extends Component {
     }
     const fontObj = field.getIn(['style', 'font']) || fromJS({});
     const colorObj = fontObj.get('color') || fromJS({});
-    const nextColorObj = colorObj.set('rgb', value);
+    const nextColorObj = colorObj.set('rgb', hex.slice(1));
     const nextFontObj = fontObj.set('color', nextColorObj);
     this.setState({
       field: field.setIn(['style', 'font'], nextFontObj),
@@ -219,6 +254,62 @@ class configer extends Component {
     const nextAlignObj = alignObj.set('wrapText', value);
     this.setState({
       field: field.setIn(['style', 'alignment'], nextAlignObj),
+    });
+  };
+
+  // 정렬 스타일 변경
+  handleFillStyle = (target, type, value) => {
+    switch (type) {
+      case 'use':
+        this.handleFillColorUse(target, value);
+        break;
+      case 'color':
+        this.handleFillFgColor(target, value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 채우기 색 사용여부 변경 (none : 사용않함, solid : 사용)
+  handleFillColorUse = (target, value) => {
+    const { field, column } = this.state;
+    const nextFillObj = fromJS({
+      patternType: value,
+      fgColor: {
+        rgb: 'ffffff',
+      },
+    });
+    if (target === 'column') {
+      this.setState({
+        column: column.setIn(['style', 'fill'], nextFillObj),
+      });
+      return;
+    }
+    this.setState({
+      field: field.setIn(['style', 'fill'], nextFillObj),
+    });
+  };
+
+  handleFillFgColor = (target, value) => {
+    const { field, column } = this.state;
+    const { hex } = value;
+    if (target === 'column') {
+      const fillObj = column.getIn(['style', 'fill']) || fromJS({});
+      const colorObj = fillObj.get('fgColor') || fromJS({});
+      const nextColorObj = colorObj.set('rgb', hex.slice(1));
+      const nextFillObj = fillObj.set('patternType', 'solid').set('fgColor', nextColorObj);
+      this.setState({
+        column: column.setIn(['style', 'fill'], nextFillObj),
+      });
+      return;
+    }
+    const fillObj = field.getIn(['style', 'fill']) || fromJS({});
+    const colorObj = fillObj.get('fgColor') || fromJS({});
+    const nextColorObj = colorObj.set('rgb', hex.slice(1));
+    const nextFillObj = fillObj.set('patternType', 'solid').set('fgColor', nextColorObj);
+    this.setState({
+      field: field.setIn(['style', 'fill'], nextFillObj),
     });
   };
 
@@ -311,46 +402,81 @@ class configer extends Component {
   renderStyleSetComp = (type, style) => {
     const fontStyle = style.get('font');
     const alignStyle = style.get('alignment');
+    const fillStyle = style.get('fill');
+    const selectedFontColor = (fontStyle && fontStyle.getIn(['color', 'rgb'])) || '000000';
+    const selectedFontBold = (fontStyle && fontStyle.get('bold')) || false;
+    const selectedFontUnderline = (fontStyle && fontStyle.get('underline')) || false;
+    const selectedFontItalic = (fontStyle && fontStyle.get('italic')) || false;
+    const selectedFillColor = (fillStyle && fillStyle.getIn(['fgColor', 'rgb'])) || 'ffffff';
+
+    const fontStyleResult = {
+      color: `#${selectedFontColor}`,
+      fontWeight: selectedFontBold ? 'bold' : 'normal',
+      textDecoration: selectedFontUnderline ? 'underline' : 'none',
+      fontStyle: selectedFontItalic ? 'italic' : 'normal',
+    };
+
     return (
       <Styled>
         <Collapse>
-          <Panel header="Font" key="1">
-            <div className="excelConfig">
+          <Panel header="Fill Color" key="1">
+            <div style={{ position: 'relative' }}>
               <Input.Group compact>
-                <Input className="excelConfigLabel" value="폰트사이즈" readOnly style={{ width: '20%', textAlign: 'center' }} />
-                <Input
-                  className="excelConfigInput"
-                  placeholder="사이즈"
-                  style={{ width: '30%' }}
-                  value={(fontStyle && fontStyle.get('sz')) || ''}
-                  onChange={e => this.handleFontStyle(type, 'size', e.target.value)}
-                />
-                <Input className="excelConfigLabel" value="폰트컬러" readOnly style={{ width: '20%', textAlign: 'center' }} />
-                <Input
-                  className="excelConfigInput"
-                  placeholder="컬러(RGB)"
-                  style={{ width: '30%' }}
-                  value={(fontStyle && fontStyle.getIn(['color', 'rgb'])) || ''}
-                  onChange={e => this.handleFontStyle(type, 'color', e.target.value)}
-                />
+                <Input value="채우기색" readOnly style={{ width: '22%', textAlign: 'center', marginRight: '0px' }} />
+                <Select
+                  value={(fillStyle && fillStyle.get('patternType')) || 'none'}
+                  style={{ width: '25%', marginRight: '10px' }}
+                  onChange={e => this.handleFillStyle(type, 'use', e)}
+                >
+                  <Option value="none">사용안함</Option>
+                  <Option value="solid">사용</Option>
+                </Select>
+                <CompactPicker color={selectedFillColor} onChange={color => this.handleFillStyle(type, 'color', color)} />
               </Input.Group>
+              <div className="selectedFgColorText">
+                <Input value="선택색상" readOnly style={{ textAlign: 'center', height: '50px', marginRight: '0px' }} />
+              </div>
+              <div className="selectedFillColorWrap">
+                <div className="selectedFillColor" style={{ backgroundColor: `#${selectedFillColor}` }} />
+              </div>
+            </div>
+          </Panel>
+          <Panel header="Font" key="2">
+            <div>
+              <div style={{ position: 'relative' }}>
+                <Input.Group compact>
+                  <Input value="폰트사이즈" readOnly style={{ width: '22%', textAlign: 'center', marginRight: '0px' }} />
+                  <Input
+                    className="excelConfigInput"
+                    style={{ width: '25%', marginRight: '10px' }}
+                    value={(fontStyle && fontStyle.get('sz')) || ''}
+                    onChange={e => this.handleFontStyle(type, 'size', e.target.value)}
+                  />
+                  <CompactPicker color={selectedFontColor} onChange={color => this.handleFontStyle(type, 'color', color)} />
+                </Input.Group>
+                <div className="selectedFgColorText">
+                  <Input value="설정결과" readOnly style={{ textAlign: 'center', height: '50px', marginRight: '0px' }} />
+                </div>
+                <div className="selectedFontStyleWrap">
+                  <div className="selectedFontStyle" style={fontStyleResult}>
+                    가나다abc
+                  </div>
+                </div>
+              </div>
               <div className="checkboxGroup">
-                <Checkbox checked={(fontStyle && fontStyle.get('bold')) || false} onChange={e => this.handleFontStyle(type, 'bold', e.target.checked)}>
+                <Checkbox checked={selectedFontBold} onChange={e => this.handleFontStyle(type, 'bold', e.target.checked)}>
                   굵게
                 </Checkbox>
-                <Checkbox
-                  checked={(fontStyle && fontStyle.get('underline')) || false}
-                  onChange={e => this.handleFontStyle(type, 'underline', e.target.checked)}
-                >
+                <Checkbox checked={selectedFontUnderline} onChange={e => this.handleFontStyle(type, 'underline', e.target.checked)}>
                   밑줄
                 </Checkbox>
-                <Checkbox checked={(fontStyle && fontStyle.get('italic')) || false} onChange={e => this.handleFontStyle(type, 'italic', e.target.checked)}>
+                <Checkbox checked={selectedFontItalic} onChange={e => this.handleFontStyle(type, 'italic', e.target.checked)}>
                   기울임꼴
                 </Checkbox>
               </div>
             </div>
           </Panel>
-          <Panel header="Alignment" key="2">
+          <Panel header="Alignment" key="3">
             <Input.Group compact>
               <Input className="excelConfigLabel" value="세로정렬" readOnly style={{ width: '18%', textAlign: 'center', marginRight: '0px' }} />
               <Select
@@ -383,9 +509,6 @@ class configer extends Component {
                 줄바꿈
               </Checkbox>
             </div>
-          </Panel>
-          <Panel header="Border" key="3">
-            <p>테두리설정 개발중</p>
           </Panel>
         </Collapse>
       </Styled>

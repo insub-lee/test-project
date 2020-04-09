@@ -24,11 +24,10 @@ class List extends Component {
 
   componentDidMount() {
     this.listDataApi();
-    this.setColumns();
   }
 
   onChangeValue = (name, value) => {
-    this.setState({ [name]: value }, this.setColumns);
+    this.setState({ [name]: value });
   };
 
   listDataApi = () => {
@@ -64,29 +63,27 @@ class List extends Component {
   };
 
   onCancel() {
-    this.setState(
-      {
-        cleanNm: '',
-        cleanCd: '',
-        treatmentMethod: '',
-      },
-      this.setColumns,
-    );
+    this.setState({
+      cleanNm: '',
+      cleanCd: '',
+      treatmentMethod: '',
+    });
   }
 
   selectedRecord = record => {
-    this.setState(
-      {
-        cleanNm: record.CLEAN_NM,
-        cleanCd: record.CLEAN_CD,
-        treatmentMethod: record.TREATMENT_METHOD,
-      },
-      this.setColumns,
-    );
+    this.setState({
+      cleanNm: record.CLEAN_NM,
+      cleanCd: record.CLEAN_CD,
+      treatmentMethod: record.TREATMENT_METHOD,
+    });
   };
 
-  setColumns = () => {
+  render() {
     const { cleanCd, cleanNm, treatmentMethod } = this.state;
+    const {
+      result: { eshsclean },
+    } = this.props;
+    const dataSource = eshsclean && eshsclean.list;
     const columns = [
       {
         title: '코드',
@@ -101,6 +98,7 @@ class List extends Component {
                 </div>
               </>
             ),
+            align: 'center',
             dataIndex: 'CLEAN_CD',
             className: 'th-form',
           },
@@ -123,6 +121,7 @@ class List extends Component {
                 </div>
               </>
             ),
+            align: 'left',
             dataIndex: 'CLEAN_NM',
             className: 'th-form',
           },
@@ -145,21 +144,13 @@ class List extends Component {
                 </div>
               </>
             ),
+            align: 'left',
             dataIndex: 'TREATMENT_METHOD',
             className: 'th-form',
           },
         ],
       },
     ];
-    this.setState({ columns });
-  };
-
-  render() {
-    const { columns } = this.state;
-    const {
-      result: { eshsclean },
-    } = this.props;
-    const dataSource = eshsclean && eshsclean.list;
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <ContentsWrapper>

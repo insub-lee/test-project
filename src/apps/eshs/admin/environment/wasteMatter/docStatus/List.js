@@ -27,7 +27,6 @@ class List extends Component {
 
   componentDidMount() {
     this.initDataApi();
-    this.setColumns();
   }
 
   initDataApi = () => {
@@ -48,7 +47,7 @@ class List extends Component {
   };
 
   onChangeValue = (name, value) => {
-    this.setState({ [name]: value }, this.setColumns);
+    this.setState({ [name]: value });
   };
 
   insertOverlab = () => {
@@ -86,20 +85,27 @@ class List extends Component {
   };
 
   onReset() {
-    this.setState(
-      {
-        docGroupCd: '',
-        docGroupNm: '',
-        occurPart: '',
-        hynixDocGroup: '',
-        tableNm: '',
-      },
-      this.setColumns,
-    );
+    this.setState({
+      docGroupCd: '',
+      docGroupNm: '',
+      occurPart: '',
+      hynixDocGroup: '',
+      tableNm: '',
+    });
   }
 
-  setColumns() {
-    const { docGroupCd, docGroupNm, occurPart, hynixDocGroup, tableNm } = this.state;
+  selectedRecord = record => {
+    this.setState({
+      docGroupCd: record.DOC_GROUP_CD,
+      docGroupNm: record.DOC_GROUP_NM,
+      occurPart: record.OCCUR_PART,
+      hynixDocGroup: record.HYNIX_DOC_GROUP,
+      tableNm: record.TABLE_NM,
+    });
+  };
+
+  render() {
+    const { docList, docGroupCd, docGroupNm, occurPart, hynixDocGroup, tableNm } = this.state;
     const columns = [
       {
         title: '문서종류코드',
@@ -114,6 +120,7 @@ class List extends Component {
                 onChange={e => this.onChangeValue('docGroupCd', e.target.value)}
               />
             ),
+            align: 'center',
             dataIndex: 'DOC_GROUP_CD',
           },
         ],
@@ -131,6 +138,7 @@ class List extends Component {
                 onChange={e => this.onChangeValue('docGroupNm', e.target.value)}
               />
             ),
+            align: 'center',
             dataIndex: 'DOC_GROUP_NM',
           },
         ],
@@ -148,6 +156,7 @@ class List extends Component {
                 onChange={e => this.onChangeValue('occurPart', e.target.value)}
               />
             ),
+            align: 'center',
             dataIndex: 'OCCUR_PART',
           },
         ],
@@ -165,6 +174,7 @@ class List extends Component {
                 onChange={e => this.onChangeValue('hynixDocGroup', e.target.value)}
               />
             ),
+            align: 'center',
             dataIndex: 'HYNIX_DOC_GROUP',
           },
         ],
@@ -177,29 +187,12 @@ class List extends Component {
             title: (
               <AntdInput className="ant-input-sm" style={{ width: '200px' }} value={tableNm} onChange={e => this.onChangeValue('tableNm', e.target.value)} />
             ),
+            align: 'center',
             dataIndex: 'TABLE_NM',
           },
         ],
       },
     ];
-    this.setState({ columns });
-  }
-
-  selectedRecord = record => {
-    this.setState(
-      {
-        docGroupCd: record.DOC_GROUP_CD,
-        docGroupNm: record.DOC_GROUP_NM,
-        occurPart: record.OCCUR_PART,
-        hynixDocGroup: record.HYNIX_DOC_GROUP,
-        tableNm: record.TABLE_NM,
-      },
-      this.setColumns,
-    );
-  };
-
-  render() {
-    const { docList, columns } = this.state;
     return (
       <div style={{ padding: '10px 15px', backgroundColor: 'white' }}>
         <ContentsWrapper>

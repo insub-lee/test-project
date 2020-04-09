@@ -61,9 +61,6 @@ class ExcelDownloadComp extends Component {
       dataSet = this.makeExcelDataSet(this.props.columns, this.props.fields) || [];
     }
 
-    console.debug('데이터셋', dataSet);
-    console.debug('리스트', this.props.listData);
-
     // BuilderBase 에서 사용시 (개발중)
     if (isBuilder) {
       return visible && viewPageData.viewType === 'LIST' && CONFIG.property.columns && CONFIG.property.columns.length > 0 ? (
