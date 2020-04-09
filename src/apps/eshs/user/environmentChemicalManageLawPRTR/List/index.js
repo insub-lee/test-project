@@ -47,7 +47,7 @@ class List extends React.Component {
 
   handleDeleteClick = () => {
     const { requestValue } = this.state;
-    if (!requestValue.REG_ID) {
+    if (!requestValue.PRTR_ID) {
       return this.setState({
         deleteConfirmMessage: '선택된 항목이 없습니다.',
       });
