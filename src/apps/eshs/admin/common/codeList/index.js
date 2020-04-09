@@ -9,6 +9,7 @@ import ContentsWrapper from 'commonStyled/EshsStyled/Wrapper/ContentsWrapper';
 import StyledLineTable from 'commonStyled/EshsStyled/Table/StyledLineTable';
 import StyledInput from 'commonStyled/Form/StyledInput';
 import StyledSelect from 'commonStyled/Form/StyledSelect';
+import ExcelDownloader from '../Excel';
 
 const AntdInput = StyledInput(Input);
 const AntdSelect = StyledSelect(Select);
@@ -62,13 +63,44 @@ class List extends Component {
   }
 
   initData = () => {
-    const { result, INIT_NODE_ID } = this.props;
+    const {
+      result: { apiData },
+      INIT_NODE_ID,
+      excelPullPath,
+    } = this.props;
     const { changeSelectValue } = this.state;
-    const selectBoxData =
-      result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === INIT_NODE_ID && x.LVL === 2 && x.USE_YN === 'Y');
-    const listData = result && result.apiData && result.apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
-    const pullpath = result && result.apiData && result.apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
-    this.setState({ selectBoxData, listData, pullpath: pullpath && pullpath.FULLPATH, nodeOrdinal: pullpath && pullpath.NODE_ORDINAL });
+    const initNodeData = apiData && apiData.categoryMapList.find(x => x.NODE_ID === INIT_NODE_ID);
+    // const initNodeData = apiData && apiData.categoryMapList.finde(x => x.NODE_ID === INIT_NODE_ID);
+    const selectBoxData = apiData && apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === INIT_NODE_ID && x.LVL === 2 && x.USE_YN === 'Y');
+    const listData = apiData && apiData.categoryMapList.filter(x => x.PARENT_NODE_ID === changeSelectValue && x.LVL === 3);
+    const excelData =
+      apiData &&
+      apiData.categoryMapList
+        .filter(x => x.FULLPATH.indexOf(`${initNodeData.FULLPATH}`) !== -1 && x.LVL > 2)
+        .map(item => ({
+          ...item,
+          PARENT_NODE: apiData && apiData.categoryMapList.find(f => item.PARENT_NODE_ID === f.NODE_ID).NAME_KOR,
+        }));
+    // const excelData =
+    //   apiData &&
+    //   apiData.categoryMapList
+    //     .filter(x => x.FULLPATH.indexOf(excelPullPath) !== -1 && x.LVL > 2)
+    //     .map(item => ({
+    //       ...item,
+    //       PARENT_NODE: apiData && apiData.categoryMapList.find(f => item.PARENT_NODE_ID === f.NODE_ID).NAME_KOR,
+    //     }));
+    console.debug(excelData, 'excelDataexcelDataexcelData');
+    console.debug(apiData.categoryMapList, 'apiData.categoryMapList');
+    console.debug(initNodeData, 'apiData.categoryMapList');
+    const pullpath = apiData && apiData.categoryMapList.find(x => x.NODE_ID === changeSelectValue);
+    this.setState({
+      selectBoxData,
+      listData,
+      pullpath: pullpath && pullpath.FULLPATH,
+      nodeOrdinal: pullpath && pullpath.NODE_ORDINAL,
+      excelData,
+      excelNm: initNodeData.NAME_KOR,
+    });
     this.codeFomat(listData && listData[0]);
   };
 
@@ -270,7 +302,8 @@ class List extends Component {
   };
 
   render() {
-    const { selectBoxData, listData, columns } = this.state;
+    const { selectBoxData, listData, columns, excelData, excelNm } = this.state;
+    // const { excelNm } = this.props;
     return (
       <ContentsWrapper>
         <div className="selSaveWrapper alignLeft">
@@ -284,7 +317,7 @@ class List extends Component {
             <StyledButton className="btn-primary btn-first" onClick={this.selectCode}>
               검색
             </StyledButton>
-            <StyledButton className="btn-primary">엑셀받기</StyledButton>
+            <ExcelDownloader dataList={excelData} excelNm={excelNm} />
           </StyledButtonWrapper>
         </div>
         <AntdLineTable
@@ -311,6 +344,8 @@ List.propTypes = {
   submitHandlerBySaga: PropTypes.func,
   getCallDataHandler: PropTypes.func,
   MAP_ID: PropTypes.string,
+  excelNm: PropTypes.string,
+  excelPullPath: PropTypes.string,
   result: PropTypes.any,
   INIT_NODE_ID: PropTypes.number,
 };
